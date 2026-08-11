@@ -9,7 +9,7 @@
 const T = {
   pt:{
     updated:"Atualizado em", next:"Próxima atualização", by:"por",
-    tiles:{done:"Entregue", doing:"Em curso", asks:"Esperando vocês", nextd:"Próxima data prevista"},
+    tiles:{done:"Entregue", doing:"Em curso", asks:"Pendências", nextd:"Próxima data prevista"},
     tileFoot:{
       done:"no ar e em uso hoje",
       doing:"em construção agora",
@@ -23,11 +23,8 @@ const T = {
     mDone:"Concluído", mDoing:"Em curso", mLeft:"Não iniciado",
     alertTitle:"Atenção — fora do plano",
     alertBlocked:"Travado", alertWatch:"Em atenção",
-    navTop:"Panorama", navEss:"O essencial", navChg:"Mudou", navAsk:"Com vocês",
-    navBoard:"Projetos", navDet:"Detalhe", navHor:"Horizonte", navHow:"Como ler",
-    howTitle:"Como ler esta página",
-    howLegend:"As colunas e os selos", howItems:"Os projetos",
-    howChg:"O bloco “o que mudou”", howHor:"O horizonte", howSource:"Fonte e limites",
+    navTop:"Panorama", navChg:"Mudou", navAsk:"Pendências",
+    navBoard:"Board de entregas", navDet:"Projetos", navHor:"Horizonte",
     whyLink:"por quê?",
     themeDark:"Mudar para tema escuro", themeLight:"Mudar para tema claro",
     sumTitle:"O essencial",
@@ -40,14 +37,14 @@ const T = {
            moved:"Mudou", late:"Atrasou", newi:"Novo", out:"Saiu"},
     fromBase:"base",
     chgFirst:"Primeira edição: não há quinzena anterior para comparar.",
-    askTitle:"Precisamos de vocês",
+    askTitle:"Pendências",
     askSub:"O que está parado esperando uma decisão ou atenção de fora do time de produto.",
     askEmptyShort:"Nenhuma decisão esperando vocês nesta quinzena.",
     askEmptyT:"Nenhuma decisão registrada",
     askEmptyD:"As colunas <b>Decisões</b> e <b>Ações</b> da base Projetos estão vazias em todas as 32 linhas. Enquanto elas não forem preenchidas, esta seção não tem o que mostrar — e decisões travadas seguem invisíveis para quem precisa decidir.",
-    boardTitle:"Quadro de projetos",
+    boardTitle:"Board de entregas",
     boardSub:"Cada item está escrito pelo que o usuário passa a conseguir fazer. O nome original no Notion aparece embaixo, para rastreio.",
-    detTitle:"Projetos em detalhe",
+    detTitle:"Projetos",
     detSub:"O que é cada projeto e as demandas acompanhadas dentro dele. Abra um projeto para ler a descrição; a lista de demandas é mantida à mão na revisão quinzenal.",
     demandsTitle:"Demandas",
     demandsNone:"Sem demandas registradas ainda — entram na próxima revisão quinzenal.",
@@ -62,13 +59,6 @@ const T = {
     printPlanned:"Os {n} projetos planejados estão listados na seção Horizonte, adiante — sem repetir os cards aqui.",
     horTitle:"Horizonte",
     horSub:"Quanto mais longe, menos preciso — de propósito. As datas vêm do período de cada projeto no Notion.",
-    legTitle:"Como ler esta página",
-    legDone:"Entregue", legDoneD:"Está no ar e pode ser usado hoje. Vazio por ora: o histórico está sendo levantado à mão, porque a base não registra conclusão.",
-    legDoneFull:"Está no ar e pode ser usado hoje. Quando houver número medido, ele aparece na linha “Resultado” do card.",
-    legDoing:"Em curso", legDoingD:"Em construção agora. A barra mostra quanto da janela planejada já passou — não quanto do trabalho está pronto.",
-    legNext:"Planejado", legNextD:"Tem período definido no Notion e ainda não começou. A ordem pode mudar se a prioridade mudar.",
-    legHealth:"Atenção / Travado", legHealthD:"Card sem selo está no prazo. Selo amarelo é risco de atrasar; vermelho é parado esperando algo. Sempre vem com o motivo.",
-    legOwner:"Dono", legOwnerD:"Cada card traz o PO responsável. É com essa pessoa que você fala — não precisa procurar quem toca o assunto.",
     footSource:"Fonte: base Projetos (Notion · espaço Ecommerce & Growth), filtro Frente = USA — 14 de 32 projetos. Extração de 11/08/2026.",
     footCadence:"Cadência: uma atualização a cada duas semanas.",
     footLimit:"Limitação conhecida: esta base descreve projetos de 1 a 4 meses, não entregas de sprint. Ela responde bem “o que está planejado”; para “o que foi entregue nesta quinzena” a fonte é o board de sprints.",
@@ -77,7 +67,7 @@ const T = {
   },
   en:{
     updated:"Updated", next:"Next update", by:"by",
-    tiles:{done:"Shipped", doing:"In flight", asks:"Waiting on you", nextd:"Next expected date"},
+    tiles:{done:"Shipped", doing:"In flight", asks:"Pending", nextd:"Next expected date"},
     tileFoot:{
       done:"live and in use today",
       doing:"being built now",
@@ -91,11 +81,8 @@ const T = {
     mDone:"Complete", mDoing:"In flight", mLeft:"Not started",
     alertTitle:"Attention — off plan",
     alertBlocked:"Blocked", alertWatch:"At risk",
-    navTop:"Overview", navEss:"Essentials", navChg:"Changed", navAsk:"On you",
-    navBoard:"Projects", navDet:"Detail", navHor:"Horizon", navHow:"How to read",
-    howTitle:"How to read this page",
-    howLegend:"The columns and the badges", howItems:"The projects",
-    howChg:"The “what changed” block", howHor:"The horizon", howSource:"Source and limits",
+    navTop:"Overview", navChg:"Changed", navAsk:"Pending",
+    navBoard:"Delivery board", navDet:"Projects", navHor:"Horizon",
     whyLink:"why?",
     themeDark:"Switch to dark theme", themeLight:"Switch to light theme",
     sumTitle:"The essentials",
@@ -108,14 +95,14 @@ const T = {
            moved:"Changed", late:"Late", newi:"New", out:"Dropped"},
     fromBase:"source",
     chgFirst:"First edition: there is no previous cycle to compare against.",
-    askTitle:"We need you",
+    askTitle:"Pending",
     askSub:"What is stalled waiting on a decision or attention from outside the product team.",
     askEmptyShort:"No decision waiting on you this cycle.",
     askEmptyT:"No decisions recorded",
     askEmptyD:"The <b>Decisões</b> and <b>Ações</b> columns in the Projetos database are empty across all 32 rows. Until they're filled, this section has nothing to show — and blocked decisions stay invisible to the people who need to make them.",
-    boardTitle:"Project board",
+    boardTitle:"Delivery board",
     boardSub:"Every item is written as what the user can now do. The original Notion name appears below it, for traceability.",
-    detTitle:"Projects in detail",
+    detTitle:"Projects",
     detSub:"What each project is and the demands tracked inside it. Open a project to read its description; the demand list is maintained by hand during the biweekly review.",
     demandsTitle:"Demands",
     demandsNone:"No demands recorded yet — they land in the next biweekly review.",
@@ -130,13 +117,6 @@ const T = {
     printPlanned:"The {n} planned projects are listed in the Horizon section below — not repeated as cards here.",
     horTitle:"Horizon",
     horSub:"The further out, the vaguer — on purpose. Dates come from each project's period in Notion.",
-    legTitle:"How to read this page",
-    legDone:"Shipped", legDoneD:"Live and usable today. Empty for now: the history is being compiled by hand, because the source records no completion.",
-    legDoneFull:"Live and usable today. Once there is a measured number, it shows on the card's “Result” line.",
-    legDoing:"In flight", legDoingD:"Being built now. The bar shows how much of the planned window has passed — not how much work is done.",
-    legNext:"Planned", legNextD:"Has a defined period in Notion and hasn't started. Order may change if priorities change.",
-    legHealth:"At risk / Blocked", legHealthD:"No badge means on plan. A yellow badge means it may slip; red means it is stalled waiting on something. Always shown with the reason.",
-    legOwner:"Owner", legOwnerD:"Every card names the PO responsible. That is who you talk to — no need to hunt for who covers the topic.",
     footSource:"Source: Projetos database (Notion · Ecommerce & Growth space), filtered Frente = USA — 14 of 32 projects. Extracted 2026-08-11.",
     footCadence:"Cadence: one update every two weeks.",
     footLimit:"Known limitation: this database describes 1-to-4-month projects, not sprint deliveries. It answers “what's planned” well; for “what shipped this cycle” the source is the sprint board.",
@@ -255,13 +235,11 @@ function render(){
   const page = document.body.dataset.page || "index";
   const PM = {
     index:{h1:L(m.title), sub:L(m.sub)},
-    essencial:{num:"01", h1:t.sumTitle, sub:t.sumSub},
-    mudou:{num:"02", h1:t.chgTitle, sub:t.chgSub},
-    "com-voces":{num:"03", h1:t.askTitle, sub:t.askSub},
-    projetos:{num:"04", h1:t.boardTitle, sub:t.boardSub},
-    detalhe:{num:"05", h1:t.detTitle, sub:t.detSub},
-    "como-ler":{num:"07", h1:t.howTitle, sub:""},
-    horizonte:{num:"06", h1:t.horTitle, sub:t.horSub},
+    mudou:{num:"01", h1:t.chgTitle, sub:t.chgSub},
+    pendencias:{num:"02", h1:t.askTitle, sub:t.askSub},
+    board:{num:"03", h1:t.boardTitle, sub:t.boardSub},
+    projetos:{num:"04", h1:t.detTitle, sub:t.detSub},
+    horizonte:{num:"05", h1:t.horTitle, sub:t.horSub},
     completo:{h1:L(m.title), sub:L(m.sub)}
   };
   const pm = PM[page] || PM.index;
@@ -475,26 +453,6 @@ function render(){
       </div>`;
   }).join("");
 
-  /* Tudo que explica a página mora aqui, recolhido. A ressalva do "Entregue
-     vazio" desaparece sozinha quando o primeiro item entregue entrar —
-     legenda que mente é pior que legenda ausente. */
-  const legDoneD = n("done") ? t.legDoneFull : t.legDoneD;
-  $("howTitle").textContent = t.howTitle;
-  $("howBody").innerHTML = `
-    <h4>${esc(t.howLegend)}</h4>
-    <div class="legend"><dl>${[
-      ["var(--good)", t.legDone, legDoneD],
-      ["var(--accent)", t.legDoing, t.legDoingD],
-      ["var(--ink-3)", t.legNext, t.legNextD],
-      ["var(--warning)", t.legHealth, t.legHealthD],
-      ["var(--ink-2)", t.legOwner, t.legOwnerD]
-    ].map(([c, dt, dd]) =>
-      `<div><dt><span class="swatch" style="background:${c}"></span>${esc(dt)}</dt><dd>${esc(dd)}</dd></div>`
-    ).join("")}</dl></div>
-    <h4>${esc(t.howItems)}</h4><p>${esc(t.boardSub)}</p>
-    <h4>${esc(t.howChg)}</h4><p>${esc(t.chgSub)}</p>
-    <h4>${esc(t.howHor)}</h4><p>${esc(t.horSub)}</p>
-    <h4>${esc(t.howSource)}</h4><p>${esc(t.footSource)}</p><p>${esc(t.footCadence)}</p><p>${esc(t.footLimit)}</p>`;
   const footLines = [];
   /* "Fale com o PO" precisa ser um clique, não uma instrução. No papel o link
      não clica, então o endereço aparece escrito. */
@@ -503,6 +461,12 @@ function render(){
   const addr = c.address ? ` <span class="print-inline">&lt;${esc(c.address)}&gt;</span>` : "";
   footLines.push(`<span>${esc(t.footNote)} ${who}${addr} · ${esc(L(m.ownerRole))}</span>`);
   if(m.url) footLines.push(`<span>${esc(t.footUrl)} <a href="${esc(m.url)}">${esc(m.url)}</a></span>`);
+  /* A procedência ficava na página "Como ler", que saiu. Ela desce para o
+     rodapé em letra miúda: de onde vêm os números, de quanto em quanto tempo
+     mudam e o que esta base não responde. Sem isso a página vira afirmação
+     sem fonte. */
+  footLines.push(`<span class="fine">${esc(t.footSource)} ${esc(t.footCadence)}</span>`);
+  footLines.push(`<span class="fine">${esc(t.footLimit)}</span>`);
   $("foot").innerHTML = footLines.join("");
 
   $("navList").innerHTML = navHtml(t);
@@ -528,13 +492,11 @@ function navHtml(t){
   const nDem = DATA.items.reduce((n, i) => n + (i.demands || []).filter(d => d.status === "doing").length, 0);
   const defs = [
     {href:"index.html",     page:"index",     label:t.navTop},
-    {href:"essencial.html", page:"essencial", label:t.navEss},
-    {href:"mudou.html",     page:"mudou",     label:t.navChg,   badge:cycleChanges().length},
-    {href:"com-voces.html", page:"com-voces", label:t.navAsk,   badge:nAsk, hot:true},
-    {href:"projetos.html",  page:"projetos",  label:t.navBoard, badge:DATA.items.length, dot:flagged > 0},
-    {href:"detalhe.html",   page:"detalhe",   label:t.navDet,   badge:nDem},
-    {href:"horizonte.html", page:"horizonte", label:t.navHor},
-    {href:"como-ler.html",  page:"como-ler",  label:t.navHow}
+    {href:"mudou.html",      page:"mudou",      label:t.navChg,   badge:cycleChanges().length},
+    {href:"pendencias.html", page:"pendencias", label:t.navAsk,   badge:nAsk, hot:true},
+    {href:"board.html",      page:"board",      label:t.navBoard, badge:DATA.items.length, dot:flagged > 0},
+    {href:"projetos.html",   page:"projetos",   label:t.navDet,   badge:nDem},
+    {href:"horizonte.html",  page:"horizonte",  label:t.navHor}
   ];
   const cur = document.body.dataset.page || "index";
   return defs.map(d => {
@@ -618,13 +580,9 @@ $("btnTheme").addEventListener("click", () => {
 });
 window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", syncThemeBtn);
 
-/* No papel a explicação tem que sair impressa, não recolhida. */
+/* No papel os "por quê?" dos estados vazios saem escritos, não recolhidos. */
 window.addEventListener("beforeprint", () => {
-  const h = $("howBox"); if(h){ h.dataset.wasOpen = h.open; h.open = true; }
   document.querySelectorAll(".empty details").forEach(d => d.open = true);
-});
-window.addEventListener("afterprint", () => {
-  const h = $("howBox"); if(h) h.open = h.dataset.wasOpen === "true";
 });
 
 render();
