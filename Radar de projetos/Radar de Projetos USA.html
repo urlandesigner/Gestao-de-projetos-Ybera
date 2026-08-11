@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Radar De Entregas Usa",
+  "schemaVersion": 1,
+  "description": "Radar de Projetos — USA (Ybera, Ecommerce & Growth). Os 14 projetos com Frente = USA da base Projetos do Notion: 3 em curso, 11 planejados. Traz o bloco \"O que mudou nesta quinzena\" (parte derivada das datas do Notion), sinal de saúde por card (atenção/travado) com faixa de alerta no topo, dono responsável em cada item, Planejado colapsado e versão para impressão em paisagem. Bilíngue PT/EN. Dados extraídos em 11/08/2026.",
+  "mcpTools": [],
+  "mcpServerNames": []
+}
+</script>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radar de Projetos — USA · Ybera Group</title>
+<style>
+/* ===========================================================
+   TOKENS
+   =========================================================== */
+:root{
+  --page:#f9f9f7;
+  --surface:#fcfcfb;
+  --surface-2:#f4f4f1;
+  --ink:#0b0b0b;
+  --ink-2:#52514e;
+  --ink-3:#898781;
+  --hair:rgba(11,11,11,.10);
+  --grid:#e1e0d9;
+
+  --good:#0ca30c;
+  --warning:#fab219;
+  --serious:#ec835a;
+  --critical:#d03b3b;
+  --accent:#2a78d6;
+
+  --good-bg:rgba(12,163,12,.10);
+  --accent-bg:rgba(42,120,214,.10);
+  --neutral-bg:rgba(11,11,11,.05);
+  --critical-bg:rgba(208,59,59,.10);
+  --warning-bg:rgba(250,178,25,.16);
+  --serious-bg:rgba(236,131,90,.14);
+
+  --radius:14px;
+  --shadow:0 1px 2px rgba(11,11,11,.04), 0 8px 24px -18px rgba(11,11,11,.18);
+  --font:system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:where(:not([data-theme="light"])){
+    --page:#0d0d0d; --surface:#1a1a19; --surface-2:#232322;
+    --ink:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
+    --hair:rgba(255,255,255,.10); --grid:#2c2c2a; --accent:#3987e5;
+    --good-bg:rgba(12,163,12,.16); --accent-bg:rgba(57,135,229,.16);
+    --neutral-bg:rgba(255,255,255,.06); --critical-bg:rgba(208,59,59,.18);
+    --warning-bg:rgba(250,178,25,.18); --serious-bg:rgba(236,131,90,.18);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -18px rgba(0,0,0,.6);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --page:#0d0d0d; --surface:#1a1a19; --surface-2:#232322;
+  --ink:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
+  --hair:rgba(255,255,255,.10); --grid:#2c2c2a; --accent:#3987e5;
+  --good-bg:rgba(12,163,12,.16); --accent-bg:rgba(57,135,229,.16);
+  --neutral-bg:rgba(255,255,255,.06); --critical-bg:rgba(208,59,59,.18);
+  --warning-bg:rgba(250,178,25,.18); --serious-bg:rgba(236,131,90,.18);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -18px rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+
+/* ===========================================================
+   BASE
+   =========================================================== */
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--page);color:var(--ink);
+  font-family:var(--font);font-size:15px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+html{scroll-behavior:smooth}
+.shell{display:block}
+.wrap{max-width:1120px;margin:0 auto;padding:28px 22px 72px}
+.skip{position:absolute;left:-9999px;top:0;background:var(--surface);color:var(--ink);padding:10px 14px;border-radius:8px;z-index:50}
+.skip:focus{left:12px;top:12px}
+
+/* ===========================================================
+   MENU LATERAL — fixo em tela cheia, barra de atalhos no estreito
+   =========================================================== */
+.side{background:var(--surface);border-right:1px solid var(--hair)}
+.side-brand{display:none}
+.navlist{list-style:none;margin:0;padding:0;display:flex;gap:4px}
+.navlist a{
+  display:flex;align-items:center;gap:8px;text-decoration:none;
+  color:var(--ink-2);font-size:13px;font-weight:600;line-height:1.3;
+  padding:8px 12px;border-radius:9px;white-space:nowrap;
+}
+.navlist a:hover{background:var(--surface-2);color:var(--ink);text-decoration:none}
+.navlist a[aria-current="true"]{background:var(--ink);color:var(--page)}
+.navlist a[aria-current="true"] .nb{background:rgba(255,255,255,.22);color:var(--page)}
+.navlist .nb{margin-left:auto;font-size:11px;font-weight:700;background:var(--neutral-bg);color:var(--ink-2);border-radius:999px;padding:1px 7px;font-variant-numeric:tabular-nums}
+.navlist .nb.hot{background:var(--critical);color:#fff}
+.navlist .dot{width:7px;height:7px;border-radius:50%;background:var(--critical);flex:0 0 auto;margin-left:auto}
+
+@media (min-width:1060px){
+  .shell{display:grid;grid-template-columns:216px minmax(0,1fr);gap:34px;max-width:1400px;margin:0 auto}
+  .side{
+    position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;
+    display:flex;flex-direction:column;gap:18px;padding:26px 16px 20px;
+    background:transparent;border-right:1px solid var(--hair);
+  }
+  .side-brand{display:flex;flex-direction:column;gap:5px;padding:0 10px}
+  .side-brand strong{font-size:14.5px;font-weight:660;line-height:1.25;letter-spacing:-.01em}
+  .navlist{flex-direction:column;gap:2px;margin-bottom:auto}
+  .wrap{max-width:none;margin:0;padding:28px 30px 72px 0}
+}
+@media (max-width:1059px){
+  /* Fundo sólido de propósito: color-mix/backdrop-filter sem suporte deixaria
+     a barra transparente e o texto passaria por baixo dela. */
+  .side{
+    position:sticky;top:0;z-index:30;padding:7px 0;
+    border-right:0;border-bottom:1px solid var(--hair);
+    display:block;background:var(--page);
+  }
+  .navlist{
+    overflow-x:auto;scrollbar-width:none;padding:2px 14px;
+    -webkit-mask-image:linear-gradient(to right,#000 0,#000 calc(100% - 26px),transparent 100%);
+    mask-image:linear-gradient(to right,#000 0,#000 calc(100% - 26px),transparent 100%);
+  }
+  .navlist::-webkit-scrollbar{display:none}
+  .navlist .nb,.navlist .dot{margin-left:3px}
+  section{scroll-margin-top:60px}
+  #s-top{scroll-margin-top:60px}
+}
+h1,h2,h3,h4{margin:0;font-weight:640;letter-spacing:-.01em}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.mono-num{font-variant-numeric:tabular-nums}
+svg{width:13px;height:13px;flex:0 0 auto}
+.strip .meta svg{width:14px;height:14px;opacity:.8}
+
+/* ===========================================================
+   TOPBAR
+   =========================================================== */
+.topbar{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
+.brand{display:flex;flex-direction:column;gap:5px}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
+h1{font-size:26px;line-height:1.2}
+.brand .sub{font-size:13.5px;color:var(--ink-2);max-width:70ch}
+.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--hair);border-radius:999px;padding:2px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:600;color:var(--ink-2);line-height:1.4}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(11,11,11,.10)}
+.icon-btn{border:1px solid var(--hair);background:var(--surface);border-radius:999px;width:34px;height:34px;display:grid;place-items:center;color:var(--ink-2)}
+.icon-btn:hover{color:var(--ink)}
+.icon-btn svg{width:16px;height:16px;display:block}
+
+/* ===========================================================
+   STRIP
+   =========================================================== */
+.strip{
+  display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;
+  background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);
+  padding:12px 16px;margin-bottom:20px;box-shadow:var(--shadow);
+}
+.strip .cycle{display:flex;align-items:baseline;gap:9px;font-size:14px}
+.strip .cycle strong{font-size:15.5px}
+.strip .dot-sep{width:4px;height:4px;border-radius:50%;background:var(--ink-3);opacity:.6}
+.strip .meta{font-size:12.5px;color:var(--ink-2);display:flex;align-items:center;gap:7px}
+.strip .spacer{flex:1 1 40px}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:650;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-2);background:var(--neutral-bg);border-radius:999px;padding:4px 10px}
+.live i{width:7px;height:7px;border-radius:50%;background:var(--good);display:block}
+
+/* ===========================================================
+   ALERT BAND (só aparece se algum item estiver em atenção/travado)
+   =========================================================== */
+.alert{
+  border-radius:var(--radius);padding:13px 16px;margin-bottom:20px;
+  border:1px solid rgba(250,178,25,.5);background:var(--warning-bg);
+}
+.alert.blocked{border-color:rgba(208,59,59,.35);background:var(--critical-bg)}
+.alert .ah{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:680;margin-bottom:9px}
+.alert .ah svg{width:16px;height:16px;color:#8a6100}
+.alert.blocked .ah svg{color:var(--critical)}
+.alert ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.alert li{font-size:13px;line-height:1.5}
+.alert li b{font-weight:660}
+.alert li .who{color:var(--ink-2)}
+:root[data-theme="dark"] .alert .ah svg{color:var(--warning)}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])) .alert .ah svg{color:var(--warning)}}
+
+/* ===========================================================
+   TILES
+   =========================================================== */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:14px}
+.tile{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:14px 16px 15px;box-shadow:var(--shadow)}
+.tile .label{font-size:11.5px;font-weight:660;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;gap:6px;margin-bottom:7px}
+.tile .val{font-size:32px;font-weight:680;line-height:1.05;letter-spacing:-.02em}
+.tile .val.small{font-size:23px;line-height:1.25}
+.tile .val.zero{color:var(--ink-3)}
+.tile .foot{font-size:12px;color:var(--ink-2);margin-top:5px}
+.tile.flag{border-color:rgba(208,59,59,.35);background:var(--critical-bg)}
+.tile.flag .val{color:var(--critical)}
+.swatch{width:9px;height:9px;border-radius:2px;display:inline-block;flex:0 0 auto}
+
+.meter-card{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:14px 16px 16px;box-shadow:var(--shadow);margin-bottom:26px}
+.meter-head{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.meter-head .t{font-size:13.5px;font-weight:640}
+.meter-head .v{font-size:12.5px;color:var(--ink-2)}
+.meter{height:8px;border-radius:4px;background:var(--grid);overflow:hidden;display:flex}
+.meter i{display:block;height:100%;border-radius:4px}
+.meter i.done{background:var(--good)}
+.meter i.gap{width:2px;background:var(--surface);border-radius:0}
+.meter i.doing{background:var(--accent)}
+.meter-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:9px;font-size:12px;color:var(--ink-2)}
+.meter-legend span{display:inline-flex;align-items:center;gap:6px}
+
+/* ===========================================================
+   SECTIONS
+   =========================================================== */
+section{margin-bottom:30px}
+.sec-head{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin-bottom:13px}
+.sec-head h2{font-size:18px}
+
+.summary{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:6px 18px 8px;box-shadow:var(--shadow)}
+.summary ul{list-style:none;margin:0;padding:0}
+.summary li{display:flex;gap:11px;padding:11px 0;font-size:14.5px;line-height:1.55;border-bottom:1px solid var(--hair)}
+.summary li:last-child{border-bottom:0}
+.summary li b{font-weight:660}
+.summary li>span:last-child{max-width:76ch}
+/* Rótulo fixo de cada linha do essencial: Prazo · Mudou · Com vocês */
+.summary .tg{flex:0 0 auto;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  background:var(--neutral-bg);color:var(--ink-2);border-radius:5px;padding:4px 8px;margin-top:3px;
+  min-width:80px;text-align:center}
+@media (max-width:560px){.summary li{flex-direction:column;gap:7px}.summary .tg{min-width:0;align-self:flex-start}}
+
+/* ===========================================================
+   O QUE MUDOU
+   =========================================================== */
+.changes{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:6px 18px 8px;box-shadow:var(--shadow)}
+.changes ul{list-style:none;margin:0;padding:0}
+.changes li{display:flex;gap:11px;align-items:flex-start;padding:11px 0;font-size:14px;line-height:1.55;border-bottom:1px solid var(--hair)}
+.changes li:last-child{border-bottom:0}
+.changes li b{font-weight:660}
+.changes li>span:last-child{max-width:76ch}
+.kind{flex:0 0 auto;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:5px;padding:4px 7px;margin-top:2px;min-width:72px;text-align:center;background:var(--neutral-bg);color:var(--ink-2)}
+.kind.shipped{background:var(--good-bg);color:#0a7a0a}
+.kind.start{background:var(--accent-bg);color:var(--ink)}
+.kind.due{background:var(--warning-bg);color:#8a6100}
+.kind.late{background:var(--critical-bg);color:var(--critical)}
+:root[data-theme="dark"] .kind.shipped{color:var(--good)}
+:root[data-theme="dark"] .kind.due{color:var(--warning)}
+@media (prefers-color-scheme:dark){
+  :root:where(:not([data-theme="light"])) .kind.shipped{color:var(--good)}
+  :root:where(:not([data-theme="light"])) .kind.due{color:var(--warning)}
+}
+.chg-note{font-size:12px;color:var(--ink-3);line-height:1.5;border-top:1px solid var(--hair);padding:11px 0 4px;margin-top:0}
+.src-tag{font-size:10px;color:var(--ink-3);border:1px solid var(--hair);border-radius:4px;padding:1px 5px;margin-left:7px;white-space:nowrap;text-transform:uppercase;letter-spacing:.05em;font-weight:640}
+
+.filters{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:16px}
+.filters .flabel{font-size:12px;color:var(--ink-3);margin-right:2px}
+.chip{border:1px solid var(--hair);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:560;color:var(--ink-2);display:inline-flex;align-items:center;gap:7px}
+.chip:hover{color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--page);border-color:var(--ink)}
+
+/* ===========================================================
+   BOARD
+   =========================================================== */
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start}
+.col-head{display:flex;align-items:center;gap:9px;padding:0 4px 10px;border-bottom:2px solid var(--grid);margin-bottom:12px}
+.col-head .cdot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.col-head h3{font-size:14px;letter-spacing:.01em}
+.col-head .count{margin-left:auto;font-size:12px;font-weight:660;color:var(--ink-2);background:var(--neutral-bg);border-radius:999px;padding:2px 9px}
+.col[data-k="done"] .col-head{border-bottom-color:var(--grid)}
+.col[data-k="done"] .cdot{background:var(--good)}
+.col[data-k="doing"] .col-head{border-bottom-color:var(--accent)}
+.col[data-k="doing"] .cdot{background:var(--accent)}
+.col[data-k="next"] .col-head{border-bottom-color:var(--ink-3)}
+.col[data-k="next"] .cdot{background:var(--ink-3)}
+
+.cards{display:flex;flex-direction:column;gap:11px}
+.card{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:14px 15px 13px;box-shadow:var(--shadow)}
+.card .tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:660;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2);background:var(--neutral-bg);border-radius:999px;padding:3px 9px;margin-bottom:9px}
+.card h4{font-size:14.5px;line-height:1.35;margin-bottom:6px}
+.card .why{font-size:13px;color:var(--ink-2);line-height:1.5}
+.card .row{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;margin-top:11px;padding-top:10px;border-top:1px solid var(--hair);font-size:12px;color:var(--ink-2)}
+.card .row .k{display:inline-flex;align-items:center;gap:5px}
+.card .row svg{opacity:.75}
+.card .src{margin-top:8px;font-size:11px;color:var(--ink-3);display:flex;align-items:center;gap:5px}
+.card .src svg{width:11px;height:11px;opacity:.6}
+.elapsed{margin-top:12px}
+.elapsed .pl{display:flex;justify-content:space-between;align-items:baseline;font-size:11.5px;color:var(--ink-2);margin-bottom:6px}
+.elapsed .pl b{color:var(--ink);font-weight:660}
+.bar{height:6px;border-radius:3px;background:var(--grid);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:3px;background:var(--accent)}
+.bar i.over{background:var(--critical)}
+.empty{border:1px dashed var(--hair);border-radius:var(--radius);padding:14px 15px;font-size:12.5px;color:var(--ink-2);line-height:1.55}
+.empty .et{color:var(--ink);font-weight:660;font-size:13px}
+.empty b{color:var(--ink);font-weight:660}
+/* uma linha; o motivo só abre se pedirem */
+.empty details{margin-top:2px}
+.empty summary{list-style:none;cursor:pointer;color:var(--accent);font-size:12px;font-weight:600;display:inline-block;padding:4px 0 0}
+.empty summary::-webkit-details-marker{display:none}
+.empty summary::marker{content:""}
+.empty summary:hover{text-decoration:underline}
+.empty .why-full{margin-top:6px;padding-top:8px;border-top:1px solid var(--hair)}
+
+/* sinal de saúde — só aparece quando NÃO está no prazo */
+.hp{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:999px;padding:3px 9px;margin:0 0 9px 5px}
+.hp.watch{background:var(--warning-bg);color:#8a6100}
+.hp.blocked{background:var(--critical-bg);color:var(--critical)}
+.hp svg{width:11px;height:11px}
+:root[data-theme="dark"] .hp.watch{color:var(--warning)}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])) .hp.watch{color:var(--warning)}}
+.card.watch{border-color:rgba(250,178,25,.45)}
+.card.blocked{border-color:rgba(208,59,59,.35)}
+.hnote{font-size:12.5px;color:var(--ink-2);line-height:1.5;margin-top:8px;padding-left:10px;border-left:2px solid var(--warning)}
+.card.blocked .hnote{border-left-color:var(--critical)}
+
+/* resultado medido (itens entregues) */
+.result{margin-top:11px;padding-top:10px;border-top:1px solid var(--hair);font-size:12.5px;color:var(--ink-2);line-height:1.5;display:flex;gap:7px;align-items:flex-start}
+.result svg{width:13px;height:13px;color:var(--good);margin-top:3px}
+
+/* coluna Planejado colapsada */
+.fold{border:1px dashed var(--hair);border-radius:var(--radius);background:var(--surface-2)}
+.fold>summary{list-style:none;cursor:pointer;padding:13px 15px;font-size:12.5px;font-weight:640;color:var(--ink-2);display:flex;align-items:center;gap:8px}
+.fold>summary::-webkit-details-marker{display:none}
+.fold>summary::marker{content:""}
+.fold>summary:hover{color:var(--ink)}
+.fold>summary svg{width:14px;height:14px;transition:transform .16s ease}
+.fold[open]{background:transparent;border-color:transparent}
+.fold[open]>summary{padding:0 4px 11px}
+.fold[open]>summary svg{transform:rotate(90deg)}
+.fold .cards{padding:0}
+.fold[open] .lbl-show,.fold:not([open]) .lbl-hide{display:none}
+.print-only{display:none}
+.print-inline{display:none}
+.pnote{border:1px dashed var(--hair);border-radius:var(--radius);padding:14px 15px;font-size:11px;color:var(--ink-2);line-height:1.5}
+
+/* ===========================================================
+   HORIZON
+   =========================================================== */
+.horizon{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.hcard{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:15px 16px 16px;box-shadow:var(--shadow)}
+.hcard .ht{display:flex;align-items:baseline;gap:9px;margin-bottom:4px}
+.hcard h3{font-size:14px}
+.hcard .hw{font-size:11.5px;color:var(--ink-3);font-weight:600}
+.hcard .conf{font-size:11px;font-weight:660;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:3px 8px;margin-bottom:11px;display:inline-block}
+.hcard[data-h="now"] .conf{background:var(--accent-bg);color:var(--ink)}
+.hcard[data-h="next"] .conf{background:var(--neutral-bg);color:var(--ink-2)}
+.hcard[data-h="later"] .conf{background:var(--neutral-bg);color:var(--ink-2)}
+.hcard ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.hcard li{font-size:13.5px;line-height:1.45;display:flex;gap:9px;color:var(--ink-2)}
+.hcard li::before{content:"";flex:0 0 auto;width:5px;height:5px;border-radius:50%;background:var(--ink-3);margin-top:7px}
+
+/* ===========================================================
+   LEGEND / FOOTER
+   =========================================================== */
+.how{background:var(--surface-2);border:1px solid var(--hair);border-radius:var(--radius)}
+.how>summary{list-style:none;cursor:pointer;padding:13px 17px;font-size:13px;font-weight:650;color:var(--ink-2);display:flex;align-items:center;gap:9px}
+.how>summary::-webkit-details-marker{display:none}
+.how>summary::marker{content:""}
+.how>summary:hover{color:var(--ink)}
+.how .chev{width:0;height:0;border-left:5px solid currentColor;border-top:4px solid transparent;border-bottom:4px solid transparent;transition:transform .16s ease}
+.how[open] .chev{transform:rotate(90deg)}
+.how-body{padding:2px 17px 18px}
+.how-body h4{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);margin:16px 0 8px}
+.how-body h4:first-child{margin-top:4px}
+.how-body p{font-size:12.5px;color:var(--ink-2);line-height:1.55;margin-bottom:7px}
+.legend{padding:0}
+.legend h3{display:none}
+.legend dl{margin:0;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.legend dt{font-size:12.5px;font-weight:660;display:flex;align-items:center;gap:7px;margin-bottom:3px}
+.legend dd{margin:0;font-size:12.5px;color:var(--ink-2);line-height:1.45}
+.foot{margin-top:22px;padding-top:16px;border-top:1px solid var(--hair);display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--ink-3)}
+
+/* Antes o quadro caía de 3 para 1 coluna abaixo de 1024px e a página
+   esticava de 3,6 para 4,9 telas. Agora tem o passo do meio: 2 colunas. */
+@media (max-width:1180px){
+  .board{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .legend dl{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:760px){
+  .tiles{grid-template-columns:repeat(2,1fr)}
+  .board,.horizon{grid-template-columns:1fr}
+  .legend dl{grid-template-columns:1fr}
+  .col{margin-bottom:6px}
+}
+@media (max-width:560px){
+  .wrap{padding:18px 14px 56px}
+  h1{font-size:22px}
+  .tile .val{font-size:26px}
+  .topbar{flex-direction:column}
+}
+/* ===========================================================
+   IMPRESSÃO / PDF — uma página limpa para colar em deck.
+   Paisagem porque o quadro tem 3 colunas.
+   =========================================================== */
+@media print{
+  @page{size:A4 landscape;margin:11mm}
+  :root,:root[data-theme="dark"],:root[data-theme="light"]{
+    --page:#fff;--surface:#fff;--surface-2:#fff;
+    --ink:#000;--ink-2:#333;--ink-3:#5f5e59;
+    --hair:#d5d4cd;--grid:#e4e3dc;--shadow:none;color-scheme:light;
+  }
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{font-size:11.5px}
+  .wrap{max-width:none;padding:0}
+  h1{font-size:19px}
+  .brand .sub{font-size:11.5px}
+  /* Fora da versão impressa: controles, filtros e os cards de Planejado — no
+     papel eles repetiriam o Horizonte e custariam quatro páginas. A coluna
+     ganha uma linha apontando para lá. */
+  .controls,.icon-btn,.filters,.fold,.side,.skip{display:none!important}
+  .shell{display:block!important;max-width:none}
+  .how,.how>summary{border:0;background:transparent}
+  .how>summary{padding:0 0 8px;font-size:13px}
+  .how-body{padding:0}
+  .empty summary{display:none!important}
+  .print-only{display:block!important}
+  .print-inline{display:inline!important}
+  .foot a{color:var(--ink);text-decoration:none}
+  .tile .val{font-size:22px}
+  .tile .val.small{font-size:16px}
+  section{margin-bottom:15px}
+  .sec-head h2{font-size:15px}
+  .card{padding:11px 12px 10px}
+  .card h4{font-size:12.5px}
+  .card .why,.card .row,.result,.hnote{font-size:10.5px}
+  .card .src{font-size:9.5px}
+  /* Quebra onde não dói: a caixa pode partir entre páginas, a linha não.
+     Sem isso o "O essencial" inteiro pula para a página seguinte e sobra
+     um terço de folha branca. */
+  .card,.tile,.hcard,.strip,.meter-card,.alert,.legend>div,.col{break-inside:avoid}
+  .summary li,.changes li,.hcard li{break-inside:avoid}
+  .sec-head,.sec-sub,.col-head{break-after:avoid}
+  .foot{font-size:9.5px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#s-ess">Ir para o conteúdo</a>
+<div class="shell">
+
+  <nav class="side" id="side" aria-label="Seções">
+    <div class="side-brand"><strong id="sideTitle"></strong></div>
+    <ul class="navlist" id="navList"></ul>
+  </nav>
+
+  <main class="wrap">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="eyebrow" id="orgLine"></span>
+      <h1 id="pageTitle"></h1>
+      <span class="sub" id="pageSub"></span>
+    </div>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Language">
+        <button type="button" id="btnPT" aria-pressed="true">PT</button>
+        <button type="button" id="btnEN" aria-pressed="false">EN</button>
+      </div>
+      <button type="button" class="icon-btn" id="btnTheme" aria-label="Tema">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+      </button>
+      <button type="button" class="icon-btn" id="btnPrint" aria-label="Imprimir">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4v-6h16v6h-2M8 14h8v7H8z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div id="s-top">
+  <div class="strip">
+    <div class="cycle">
+      <strong id="cycleLabel"></strong>
+      <span class="dot-sep"></span>
+      <span id="cyclePeriod" style="color:var(--ink-2)"></span>
+    </div>
+    <div class="spacer"></div>
+    <div class="meta" id="updatedLine"></div>
+    <div class="live"><i></i><span id="nextLine"></span></div>
+  </div>
+
+  <div id="alertBand"></div>
+
+  <div class="tiles" id="tiles"></div>
+
+  <div class="meter-card">
+    <div class="meter-head">
+      <span class="t" id="meterTitle"></span>
+      <span class="v" id="meterValue"></span>
+    </div>
+    <div class="meter" id="meter" role="img" aria-label=""></div>
+    <div class="meter-legend" id="meterLegend"></div>
+  </div>
+  </div>
+
+  <section id="s-ess">
+    <div class="sec-head"><h2 id="sumTitle"></h2></div>
+    <div class="summary"><ul id="sumList"></ul></div>
+  </section>
+
+  <section id="s-chg">
+    <div class="sec-head"><h2 id="chgTitle"></h2></div>
+    <div id="chgList"></div>
+  </section>
+
+  <section id="s-ask">
+    <div class="sec-head"><h2 id="askTitle"></h2></div>
+    <div id="askList"></div>
+  </section>
+
+  <section id="s-board">
+    <div class="sec-head"><h2 id="boardTitle"></h2></div>
+    <div class="filters" id="filters"></div>
+    <div class="board" id="board"></div>
+  </section>
+
+  <section id="s-hor">
+    <div class="sec-head"><h2 id="horTitle"></h2></div>
+    <div class="horizon" id="horizon"></div>
+  </section>
+
+  <section id="s-how">
+    <details class="how" id="howBox">
+      <summary><span class="chev"></span><span id="howTitle"></span></summary>
+      <div class="how-body" id="howBody"></div>
+    </details>
+  </section>
+
+  <div class="foot" id="foot"></div>
+  </main>
+</div>
+
+<script>
+/* ==========================================================================
+   1) DADOS
+   --------------------------------------------------------------------------
+   ORIGEM: base "Projetos" do Notion (espaço Ecommerce & Growth),
+   filtro Frente = USA → 14 de 32 projetos. Extraído em 11/08/2026.
+
+   Campos vindos do Notion, verbatim: `notion` (nome do projeto),
+   `start`, `end` (coluna Período), `status`, `track` (coluna Produto).
+
+   Campos escritos por você/pela tradução: `title` e `why`.
+   `title` = o que o usuário passa a conseguir fazer.
+   `why`   = uma frase de impacto no negócio. Sem ela, o item não entra.
+
+   NÃO PREENCHIDO NA BASE: a coluna Status não tem nenhum valor "Concluído"
+   (32 linhas: 22 "Não iniciado", 9 "Em andamento", 1 "Descontinuado"), e as
+   colunas Ações, Decisões e PO Responsável estão vazias. Por isso a coluna
+   "Entregue" e a seção "Precisamos de vocês" aparecem com estado vazio.
+
+   --------------------------------------------------------------------------
+   CAMPOS OPCIONAIS DE CADA ITEM (todos podem ser omitidos)
+
+   health:"watch" | "blocked"   → sinal de saúde. Omitir = está no prazo.
+                                  Qualquer item marcado faz aparecer a faixa
+                                  "Atenção" no topo da página. Use com
+                                  parcimônia: faixa sempre acesa não é sinal.
+   healthNote:{pt,en}           → por que está em atenção/travado. Obrigatório
+                                  na prática se usar `health` — sem o motivo o
+                                  stakeholder não tem o que fazer com o alerta.
+   owner:"Nome"                 → sobrescreve o dono padrão (DATA.meta.owner).
+   shipped:"AAAA-MM"            → mês em que foi ao ar. Use com status:"done".
+   result:{pt,en}               → o que mudou no negócio depois de entregar.
+                                  Ex.: "No ar desde mai/26; conversão medida
+                                  até 30/09". É o que transforma entrega em
+                                  programa. Pode ficar vazio até ter número.
+
+   PARA ADICIONAR UM ENTREGUE: copie um item, troque status para "done",
+   preencha `shipped` e, se houver, `result`. A coluna Entregue, o tile e o
+   medidor do trimestre passam a contá-lo automaticamente.
+   ========================================================================== */
+const DATA = {
+  meta:{
+    org:"Ybera Group · Ecommerce & Growth",
+    title:{pt:"Radar de Projetos — USA", en:"Project Radar — USA"},
+    /* rótulo curto para a barra de navegação, onde o título inteiro quebraria */
+    shortTitle:{pt:"Radar USA", en:"USA Radar"},
+    sub:{
+      pt:"Os 14 projetos da frente USA: o que está em curso, o que está planejado e em que ordem. Atualizado a cada duas semanas.",
+      en:"All 14 projects on the USA front: what's in flight, what's planned and in what order. Updated every two weeks."
+    },
+    /* Janela que esta edição cobre: da atualização anterior até esta.
+       `to` acompanha `updated` — é o período olhado para trás, não o mês
+       corrente. É daqui que sai o bloco "O que mudou nesta quinzena". */
+    cycle:{pt:"Quinzena até 11 de agosto", en:"Cycle through August 11"},
+    from:"2026-07-28", to:"2026-08-11",
+    updated:"2026-08-11",
+    next:"2026-08-25",
+    /* Dono padrão de todos os itens USA. Um card pode sobrescrever com `owner`. */
+    owner:"Urlan Dipré",
+    ownerRole:{pt:"Product Owner · USA", en:"Product Owner · USA"},
+    /* Contato de uma tecla no rodapé. `href` aceita mailto: ou link de Slack;
+       `address` é o que aparece na versão impressa, onde link não clica. */
+    contact:{
+      href:"mailto:urlan.dipre@ybera.com?subject=Radar%20de%20Projetos%20USA",
+      address:"urlan.dipre@ybera.com"
+    },
+    /* URL estável da página. Preencha quando estiver hospedada: aparece no
+       rodapé e na versão impressa, para quem recebe o PDF voltar à página viva. */
+    url:"",
+    /* Trimestre em curso: os contadores são DERIVADOS dos itens com prazo
+       (`end`) até esta data. Não há número digitado aqui. */
+    quarter:{label:"Q3 2026", start:"2026-07-01", end:"2026-09-30"}
+  },
+
+  /* Trilhas = coluna "Produto" do Notion */
+  tracks:[
+    {id:"club",       name:"Loja Clube USA"},
+    {id:"interna",    name:{pt:"Loja Interna USA", en:"US Internal Store"}},
+    {id:"influencer", name:{pt:"Loja da Influencer", en:"Influencer Store"}},
+    {id:"reviews",    name:"Ybera Reviews"},
+    {id:"ia",         name:{pt:"Quiz AI Ybera", en:"Ybera AI Quiz"}},
+    {id:"europa",     name:{pt:"Crossborder Europa", en:"Europe Crossborder"}}
+  ],
+
+  /* ------------------------------------------------------------------------
+     O ESSENCIAL — três lugares fixos, na ordem em que o stakeholder pergunta:
+     estamos no prazo? · o que mudou? · o que precisam de mim?
+
+     O rótulo de cada linha é fixo. Ele existe para o formato não voltar a
+     virar descrição do plano ("o trimestre concentra seis projetos") — isso
+     o quadro já mostra, e é a parte que ninguém precisa ler duas vezes.
+
+     Regras de escrita:
+     · Prazo — diga se algo passou da janela planejada e qual é o item mais
+       apertado, com a data. Não escreva "está tudo bem" sem olhar as datas.
+     · Mudou — só o que mudou desde a edição anterior. Se nada mudou, diga
+       isso; quinzena parada é informação, não é vergonha.
+     · Com vocês — o pedido. Se não houver, diga que não há e que este é o
+       lugar onde vai aparecer. Nunca deixe a linha genérica para preencher.
+     ---------------------------------------------------------------------- */
+  summary:[
+    {tag:{pt:"Prazo", en:"Schedule"},
+     pt:"As três frentes em curso estão <b>dentro da janela planejada</b>. A mais apertada é a <b>nova página de produto</b>, que fecha em <b>31 de agosto</b> com dois terços da janela já corridos.",
+     en:"All three fronts in flight are <b>inside their planned window</b>. The tightest is the <b>new product page</b>, which closes on <b>August 31</b> with two-thirds of its window gone."},
+    {tag:{pt:"Mudou", en:"Changed"},
+     pt:"A <b>tradução da loja para o inglês</b> entrou em curso em 1º de agosto, e a <b>nova home da loja USA</b> abre a janela em 15 de agosto. São as duas novidades desta quinzena.",
+     en:"The <b>store's English translation</b> went into flight on August 1, and the <b>new US homepage</b> opens its window on August 15. Those are the two developments this cycle."},
+    {tag:{pt:"Com vocês", en:"On you"},
+     pt:"<b>Nada está travado esperando decisão de vocês</b> nesta quinzena. Quando algo parar fora do time de produto, aparece aqui primeiro — com nome do decisor e prazo.",
+     en:"<b>Nothing is blocked waiting on a decision from you</b> this cycle. When something stalls outside the product team, it shows up here first — with a named decision-maker and a due date."}
+  ],
+
+  /* Vazio: a base não registra decisões nem riscos. Ver estado vazio. */
+  asks:[],
+
+  /* ------------------------------------------------------------------------
+     O QUE MUDOU NESTA QUINZENA
+
+     Parte sai sozinha das datas do Notion (marcada "base" na página):
+     item que começou dentro da janela, item cuja janela fecha dentro dela,
+     item que foi ao ar no mês. Não precisa digitar nada para isso.
+
+     O que as datas NÃO contam vai em `manual` — é o que você escreve nos
+     20 minutos da revisão. Um item por mudança:
+
+       {kind:"moved", text:{pt:"Nova home adiada de 15/08 para 01/09 …",
+                            en:"New homepage moved from Aug 15 to Sep 1 …"}}
+
+     kind: "shipped" (foi ao ar) · "start" (começou) · "moved" (data/escopo
+     mudou) · "late" (atrasou) · "newi" (entrou no plano) · "out" (saiu).
+     Escreva a consequência, não o evento: "adiada duas semanas porque o
+     compliance vem primeiro" vale mais que "data alterada".
+
+     `firstEdition:true` mostra a nota de que não há edição anterior para
+     comparar. Troque para false na próxima atualização.
+     ---------------------------------------------------------------------- */
+  changes:{ firstEdition:true, manual:[] },
+
+  items:[
+    /* ---------- EM ANDAMENTO (status Notion: "Em andamento") ---------- */
+    {status:"doing", track:"club", start:"2026-07-01", end:"2026-09-30",
+     notion:"Ajustes Loja USA Compliance Google",
+     title:{pt:"Loja USA em conformidade com as políticas do Google",
+            en:"US store compliant with Google policies"},
+     why:{pt:"Sem conformidade, os anúncios da loja USA ficam expostos a reprovação e a suspensão de conta.",
+          en:"Without compliance, US store ads are exposed to disapproval and account suspension."}},
+    {status:"doing", track:"club", start:"2026-07-01", end:"2026-08-31",
+     notion:"Nova PDP USA",
+     title:{pt:"Nova página de produto na loja USA", en:"New product page on the US store"},
+     why:{pt:"A página de produto é onde a decisão de compra acontece — é a alavanca mais direta de conversão.",
+          en:"The product page is where the buying decision happens — the most direct conversion lever."}},
+    {status:"doing", track:"club", start:"2026-08-01", end:"2026-09-30",
+     notion:"Tradução",
+     title:{pt:"Loja USA inteiramente em inglês", en:"US store fully in English"},
+     why:{pt:"Conteúdo traduzido de ponta a ponta remove o principal atrito de confiança do comprador americano.",
+          en:"End-to-end translated content removes the American buyer's main trust barrier."}},
+
+    /* ---------- PLANEJADO (status Notion: "Não iniciado") ---------- */
+    {status:"next", track:"club", start:"2026-08-15", end:"2026-09-30",
+     notion:"Nova Homepage USA",
+     title:{pt:"Nova home da loja USA", en:"New US store homepage"},
+     why:{pt:"É a primeira impressão da marca no mercado americano e o principal ponto de entrada do tráfego pago.",
+          en:"It's the brand's first impression in the US market and the main landing point for paid traffic."}},
+    {status:"next", track:"club", start:"2026-09-01", end:"2026-09-30",
+     notion:"Novo Design System Shopify",
+     title:{pt:"Design system próprio no Shopify", en:"In-house design system on Shopify"},
+     why:{pt:"Faz cada página nova nascer padronizada, em vez de ser desenhada do zero a cada demanda.",
+          en:"Every new page starts standardized instead of being designed from scratch each time."}},
+    {status:"next", track:"club", start:"2026-09-01", end:"2026-09-30",
+     notion:"App de Reviews",
+     title:{pt:"Avaliações de clientes na loja", en:"Customer reviews on the store"},
+     why:{pt:"Prova social é o que sustenta a conversão de uma marca ainda pouco conhecida nos EUA.",
+          en:"Social proof is what sustains conversion for a brand still little known in the US."}},
+    {status:"next", track:"club", start:"2026-10-01", end:"2026-12-31",
+     notion:"Novo Tema da Loja USA/Global",
+     title:{pt:"Novo tema da loja USA e global", en:"New theme for the US and global store"},
+     why:{pt:"Um tema único elimina o retrabalho de manter duas lojas com aparência e código diferentes.",
+          en:"A single theme removes the rework of maintaining two stores with different looks and code."}},
+    {status:"next", track:"club", start:"2026-10-01", end:"2026-10-31",
+     notion:"App Subscription",
+     title:{pt:"Compra por assinatura", en:"Subscription purchase"},
+     why:{pt:"Transforma compra única em receita recorrente e previsível, sem depender de nova aquisição.",
+          en:"Turns one-off purchases into predictable recurring revenue, without new acquisition."}},
+    {status:"next", track:"interna", start:"2026-11-01", end:"2027-01-31",
+     notion:"Loja Interna USA - Shopify",
+     title:{pt:"Loja interna da operação USA", en:"Internal store for the US operation"},
+     why:{pt:"Atende o canal interno com regra própria de preço e acesso, separado da loja do consumidor.",
+          en:"Serves the internal channel with its own pricing and access rules, separate from the consumer store."}},
+    {status:"next", track:"club", start:"2026-11-01", end:"2026-11-30",
+     notion:"App Rewards Loyalty (Yotpo)",
+     title:{pt:"Programa de fidelidade com pontos", en:"Points-based loyalty program"},
+     why:{pt:"Dá motivo para o cliente voltar, em vez de a receita depender sempre de aquisição nova.",
+          en:"Gives customers a reason to come back, instead of revenue always depending on new acquisition."}},
+    {status:"next", track:"influencer", start:"2027-01-01", end:"2027-04-30",
+     notion:"Loja da Influencer - USA",
+     title:{pt:"Vitrine própria de cada influencer", en:"A storefront of their own for each influencer"},
+     why:{pt:"Cada influencer passa a vender por uma página própria, com link único para usar nas redes.",
+          en:"Each influencer sells through their own page, with a single link for their social bio."}},
+    {status:"next", track:"ia", start:"2027-01-01", end:"2027-02-28",
+     notion:"App Shopify Quiz Ybera AI - USA",
+     title:{pt:"Recomendação de produto guiada por IA", en:"AI-guided product recommendation"},
+     why:{pt:"Leva quem não conhece a linha até o produto certo, reduzindo a dúvida que trava a compra.",
+          en:"Takes someone unfamiliar with the line to the right product, cutting the doubt that stalls a purchase."}},
+    {status:"next", track:"reviews", start:"2027-03-01", end:"2027-04-30",
+     notion:"App Shopify - Ybera Reviews - USA",
+     title:{pt:"Avaliações próprias, sem app de terceiro", en:"In-house reviews, no third-party app"},
+     why:{pt:"Tira a dependência de fornecedor externo e o custo de assinatura que vem com ele.",
+          en:"Removes the external vendor dependency and the subscription cost that comes with it."}},
+    {status:"next", track:"europa", start:"2027-03-01", end:"2027-06-30",
+     notion:"Ybera Europa - Crossborder USA",
+     title:{pt:"Venda para a Europa a partir da operação USA", en:"Selling into Europe from the US operation"},
+     why:{pt:"Abre um segundo mercado reaproveitando a estrutura de loja e logística já montada nos EUA.",
+          en:"Opens a second market by reusing the store and logistics structure already built in the US."}}
+  ],
+
+  horizon:{
+    now:{ when:{pt:"até 30 de setembro", en:"through September 30"},
+      conf:{pt:"Janela atual", en:"Current window"},
+      list:[
+        {pt:"Conformidade da loja USA com o Google", en:"US store compliance with Google"},
+        {pt:"Nova página de produto", en:"New product page"},
+        {pt:"Loja inteiramente em inglês", en:"Store fully in English"},
+        {pt:"Nova home da loja USA", en:"New US store homepage"},
+        {pt:"Design system próprio no Shopify", en:"In-house design system on Shopify"},
+        {pt:"Avaliações de clientes na loja", en:"Customer reviews on the store"}
+      ]},
+    next:{ when:{pt:"Out – Dez 2026", en:"Oct – Dec 2026"},
+      conf:{pt:"Planejado", en:"Planned"},
+      list:[
+        {pt:"Novo tema da loja USA e global", en:"New US and global store theme"},
+        {pt:"Compra por assinatura", en:"Subscription purchase"},
+        {pt:"Programa de fidelidade com pontos", en:"Points-based loyalty program"},
+        {pt:"Loja interna da operação USA", en:"Internal store for the US operation"}
+      ]},
+    later:{ when:{pt:"2027", en:"2027"},
+      conf:{pt:"Roadmap", en:"Roadmap"},
+      list:[
+        {pt:"Vitrine própria de cada influencer", en:"A storefront for each influencer"},
+        {pt:"Recomendação de produto por IA", en:"AI product recommendation"},
+        {pt:"Avaliações próprias, sem terceiro", en:"In-house reviews, no third party"},
+        {pt:"Venda para a Europa via operação USA", en:"Selling into Europe via the US operation"}
+      ]}
+  }
+};
+
+/* ==========================================================================
+   2) TEXTOS FIXOS
+   ========================================================================== */
+const T = {
+  pt:{
+    updated:"Atualizado em", next:"Próxima atualização", by:"por",
+    tiles:{done:"Entregue", doing:"Em curso", asks:"Esperando vocês", nextd:"Próxima data prevista"},
+    tileFoot:{
+      done:"no ar e em uso hoje",
+      doing:"em construção agora",
+      asksSome:"decisão de fora do time travando trabalho",
+      asksNone:"nada registrado na base ainda",
+      nextdEnd:"fim da janela · ",
+      nextdStart:"começo previsto · ",
+      nextdNone:"sem data futura na base"
+    },
+    meter:"Projetos com prazo no trimestre", of:"de", initiatives:"concluídos",
+    mDone:"Concluído", mDoing:"Em curso", mLeft:"Não iniciado",
+    alertTitle:"Atenção — fora do plano",
+    alertBlocked:"Travado", alertWatch:"Em atenção",
+    navTop:"Panorama", navEss:"O essencial", navChg:"Mudou", navAsk:"Com vocês",
+    navBoard:"Projetos", navHor:"Horizonte", navHow:"Como ler",
+    howTitle:"Como ler esta página",
+    howLegend:"As colunas e os selos", howItems:"Os projetos",
+    howChg:"O bloco “o que mudou”", howHor:"O horizonte", howSource:"Fonte e limites",
+    whyLink:"por quê?",
+    sumTitle:"O essencial",
+    sumSub:"Se você só tiver um minuto, leia esta parte.",
+    chgTitle:"O que mudou nesta quinzena",
+    chgSub:"Para quem já leu a página antes: só o movimento, sem reler os cards. As linhas marcadas “base” saem das datas do Notion; as outras são escritas na revisão quinzenal.",
+    chgEmptyT:"Primeira edição desta página",
+    chgEmptyD:"Não há quinzena anterior para comparar. A partir da próxima atualização este bloco lista o que entrou, o que mudou de data, o que foi ao ar e o que saiu do plano.",
+    kinds:{shipped:"No ar", start:"Começou", starting:"Começa", due:"Fecha a janela",
+           moved:"Mudou", late:"Atrasou", newi:"Novo", out:"Saiu"},
+    fromBase:"base",
+    chgFirst:"Primeira edição: não há quinzena anterior para comparar.",
+    askTitle:"Precisamos de vocês",
+    askSub:"O que está parado esperando uma decisão ou atenção de fora do time de produto.",
+    askEmptyShort:"Nenhuma decisão esperando vocês nesta quinzena.",
+    askEmptyT:"Nenhuma decisão registrada",
+    askEmptyD:"As colunas <b>Decisões</b> e <b>Ações</b> da base Projetos estão vazias em todas as 32 linhas. Enquanto elas não forem preenchidas, esta seção não tem o que mostrar — e decisões travadas seguem invisíveis para quem precisa decidir.",
+    boardTitle:"Quadro de projetos",
+    boardSub:"Cada item está escrito pelo que o usuário passa a conseguir fazer. O nome original no Notion aparece embaixo, para rastreio.",
+    colDone:"Entregue", colDoing:"Em curso", colNext:"Planejado",
+    doneEmptyShort:"Histórico em levantamento — entra na próxima atualização.",
+    doneEmptyT:"Histórico em levantamento",
+    doneEmptyD:"Na base Projetos o campo Status nunca assume “Concluído” — só “Não iniciado”, “Em andamento” e “Descontinuado” — então não há de onde puxar entrega fechada. O que já está no ar está sendo levantado à mão e entra na próxima atualização. Enquanto isso, esta coluna vazia diz respeito à base, não ao trabalho.",
+    all:"Todos", filterLabel:"Filtrar por produto:",
+    window:"Janela", elapsed:"Janela decorrida", over:"Janela vencida",
+    live:"No ar desde", resultLabel:"Resultado:",
+    foldShow:"Ver os {n} projetos planejados", foldHide:"Esconder os planejados",
+    printPlanned:"Os {n} projetos planejados estão listados na seção Horizonte, adiante — sem repetir os cards aqui.",
+    horTitle:"Horizonte",
+    horSub:"Quanto mais longe, menos preciso — de propósito. As datas vêm do período de cada projeto no Notion.",
+    legTitle:"Como ler esta página",
+    legDone:"Entregue", legDoneD:"Está no ar e pode ser usado hoje. Vazio por ora: o histórico está sendo levantado à mão, porque a base não registra conclusão.",
+    legDoneFull:"Está no ar e pode ser usado hoje. Quando houver número medido, ele aparece na linha “Resultado” do card.",
+    legDoing:"Em curso", legDoingD:"Em construção agora. A barra mostra quanto da janela planejada já passou — não quanto do trabalho está pronto.",
+    legNext:"Planejado", legNextD:"Tem período definido no Notion e ainda não começou. A ordem pode mudar se a prioridade mudar.",
+    legHealth:"Atenção / Travado", legHealthD:"Card sem selo está no prazo. Selo amarelo é risco de atrasar; vermelho é parado esperando algo. Sempre vem com o motivo.",
+    legOwner:"Dono", legOwnerD:"Cada card traz o PO responsável. É com essa pessoa que você fala — não precisa procurar quem toca o assunto.",
+    footSource:"Fonte: base Projetos (Notion · espaço Ecommerce & Growth), filtro Frente = USA — 14 de 32 projetos. Extração de 11/08/2026.",
+    footCadence:"Cadência: uma atualização a cada duas semanas.",
+    footLimit:"Limitação conhecida: esta base descreve projetos de 1 a 4 meses, não entregas de sprint. Ela responde bem “o que está planejado”; para “o que foi entregue nesta quinzena” a fonte é o board de sprints.",
+    footNote:"Dúvida ou correção? Fale com",
+    footUrl:"Página sempre atualizada:"
+  },
+  en:{
+    updated:"Updated", next:"Next update", by:"by",
+    tiles:{done:"Shipped", doing:"In flight", asks:"Waiting on you", nextd:"Next expected date"},
+    tileFoot:{
+      done:"live and in use today",
+      doing:"being built now",
+      asksSome:"a decision outside the team is holding work",
+      asksNone:"nothing recorded in the source yet",
+      nextdEnd:"end of the window · ",
+      nextdStart:"planned start · ",
+      nextdNone:"no future date in the source"
+    },
+    meter:"Projects due this quarter", of:"of", initiatives:"complete",
+    mDone:"Complete", mDoing:"In flight", mLeft:"Not started",
+    alertTitle:"Attention — off plan",
+    alertBlocked:"Blocked", alertWatch:"At risk",
+    navTop:"Overview", navEss:"Essentials", navChg:"Changed", navAsk:"On you",
+    navBoard:"Projects", navHor:"Horizon", navHow:"How to read",
+    howTitle:"How to read this page",
+    howLegend:"The columns and the badges", howItems:"The projects",
+    howChg:"The “what changed” block", howHor:"The horizon", howSource:"Source and limits",
+    whyLink:"why?",
+    sumTitle:"The essentials",
+    sumSub:"If you only have a minute, read this part.",
+    chgTitle:"What changed this cycle",
+    chgSub:"For anyone who read this page before: the movement only, without re-reading the cards. Lines tagged “source” come from the Notion dates; the rest are written during the biweekly review.",
+    chgEmptyT:"First edition of this page",
+    chgEmptyD:"There is no previous cycle to compare against. From the next update on, this block lists what started, what moved, what shipped and what dropped out of the plan.",
+    kinds:{shipped:"Shipped", start:"Started", starting:"Starts", due:"Window closes",
+           moved:"Changed", late:"Late", newi:"New", out:"Dropped"},
+    fromBase:"source",
+    chgFirst:"First edition: there is no previous cycle to compare against.",
+    askTitle:"We need you",
+    askSub:"What is stalled waiting on a decision or attention from outside the product team.",
+    askEmptyShort:"No decision waiting on you this cycle.",
+    askEmptyT:"No decisions recorded",
+    askEmptyD:"The <b>Decisões</b> and <b>Ações</b> columns in the Projetos database are empty across all 32 rows. Until they're filled, this section has nothing to show — and blocked decisions stay invisible to the people who need to make them.",
+    boardTitle:"Project board",
+    boardSub:"Every item is written as what the user can now do. The original Notion name appears below it, for traceability.",
+    colDone:"Shipped", colDoing:"In flight", colNext:"Planned",
+    doneEmptyShort:"History being compiled — lands in the next update.",
+    doneEmptyT:"History being compiled",
+    doneEmptyD:"In the Projetos database, Status never takes “Concluído” — only “Não iniciado”, “Em andamento” and “Descontinuado” — so there is no closed delivery to pull. What is already live is being compiled by hand and lands in the next update. Until then, this empty column is about the database, not about the work.",
+    all:"All", filterLabel:"Filter by product:",
+    window:"Window", elapsed:"Window elapsed", over:"Window overdue",
+    live:"Live since", resultLabel:"Result:",
+    foldShow:"Show the {n} planned projects", foldHide:"Hide the planned ones",
+    printPlanned:"The {n} planned projects are listed in the Horizon section below — not repeated as cards here.",
+    horTitle:"Horizon",
+    horSub:"The further out, the vaguer — on purpose. Dates come from each project's period in Notion.",
+    legTitle:"How to read this page",
+    legDone:"Shipped", legDoneD:"Live and usable today. Empty for now: the history is being compiled by hand, because the source records no completion.",
+    legDoneFull:"Live and usable today. Once there is a measured number, it shows on the card's “Result” line.",
+    legDoing:"In flight", legDoingD:"Being built now. The bar shows how much of the planned window has passed — not how much work is done.",
+    legNext:"Planned", legNextD:"Has a defined period in Notion and hasn't started. Order may change if priorities change.",
+    legHealth:"At risk / Blocked", legHealthD:"No badge means on plan. A yellow badge means it may slip; red means it is stalled waiting on something. Always shown with the reason.",
+    legOwner:"Owner", legOwnerD:"Every card names the PO responsible. That is who you talk to — no need to hunt for who covers the topic.",
+    footSource:"Source: Projetos database (Notion · Ecommerce & Growth space), filtered Frente = USA — 14 of 32 projects. Extracted 2026-08-11.",
+    footCadence:"Cadence: one update every two weeks.",
+    footLimit:"Known limitation: this database describes 1-to-4-month projects, not sprint deliveries. It answers “what's planned” well; for “what shipped this cycle” the source is the sprint board.",
+    footNote:"Question or correction? Talk to",
+    footUrl:"Always-current page:"
+  }
+};
+
+/* ==========================================================================
+   3) MOTOR
+   ========================================================================== */
+let lang = "pt";
+let activeTracks = new Set();
+let foldOpen = false; /* coluna Planejado começa colapsada */
+/* Referência de "hoje" = a data da última atualização declarada. Mexer em
+   DATA.meta.updated move as barras de tempo decorrido junto. */
+const TODAY_ISO = DATA.meta.updated;
+
+const $ = id => document.getElementById(id);
+const L = v => (v == null ? "" : (typeof v === "object" ? (v[lang] ?? v.pt ?? "") : v));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const D = iso => { const [y,m,d] = iso.split("-").map(Number); return new Date(y, m-1, d); };
+const TODAY = D(TODAY_ISO);
+
+function fmtDate(iso, withYear){
+  if(!iso) return "";
+  const opt = {day:"numeric", month:"short"};
+  if(withYear) opt.year = "numeric";
+  return new Intl.DateTimeFormat(lang === "pt" ? "pt-BR" : "en-US", opt).format(D(iso)).replace(".", "");
+}
+/* "2026-05" → "mai/26" | "May/26" */
+function fmtMonth(ym){
+  if(!ym) return "";
+  const [y, m] = ym.split("-").map(Number);
+  const name = new Intl.DateTimeFormat(lang === "pt" ? "pt-BR" : "en-US", {month:"short"})
+    .format(new Date(y, m-1, 1)).replace(".", "");
+  return name + "/" + String(y).slice(2);
+}
+function windowLabel(a, b){
+  const sameYear = a.slice(0,4) === b.slice(0,4);
+  return fmtDate(a, !sameYear) + " → " + fmtDate(b, true);
+}
+function elapsedPct(a, b){
+  const s = D(a).getTime(), e = D(b).getTime(), n = TODAY.getTime();
+  if(n <= s) return 0;
+  if(e <= s) return 100;
+  return Math.min(120, Math.round((n - s) / (e - s) * 100));
+}
+function trackName(id){
+  const t = DATA.tracks.find(t => t.id === id);
+  return t ? L(t.name) : "";
+}
+const ICO = {
+  cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>',
+  db:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>',
+  user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c.9-3.5 3.7-5.2 7-5.2s6.1 1.7 7 5.2"/></svg>',
+  alert:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 2.6 20h18.8L12 4Z"/><path d="M12 10v4.2M12 17.4h.01"/></svg>',
+  chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>'
+};
+
+/* --------------------------------------------------------------------------
+   O QUE MUDOU: parte derivada das datas reais, parte escrita à mão.
+   Nada aqui é inventado — cada linha "base" aponta para um campo do Notion.
+   -------------------------------------------------------------------------- */
+function cycleChanges(){
+  const {from, to} = DATA.meta;
+  const inWin = iso => iso >= from && iso <= to;
+  const auto = [];
+  DATA.items.forEach(i => {
+    /* foi ao ar no mês desta janela */
+    /* sem selo "base": o mês de `shipped` é digitado na revisão, não vem do
+       Período do Notion — o selo só marca o que sai das datas da base. */
+    if(i.status === "done" && i.shipped && (i.shipped === from.slice(0,7) || i.shipped === to.slice(0,7)))
+      auto.push({kind:"shipped", item:i});
+    /* começou de fato: a base já move para "Em andamento" */
+    else if(i.status === "doing" && inWin(i.start))
+      auto.push({kind:"start", item:i, base:true, date:i.start});
+    /* data de início prevista cai na janela, mas a base ainda diz
+       "Não iniciado" — é "começa", não "começou". */
+    else if(i.status === "next" && inWin(i.start))
+      auto.push({kind:"starting", item:i, base:true, date:i.start});
+    /* janela planejada fecha dentro do período */
+    if(i.status === "doing" && inWin(i.end))
+      auto.push({kind:"due", item:i, base:true, date:i.end});
+  });
+  const order = {shipped:0, start:1, starting:2, due:3};
+  auto.sort((a, b) => order[a.kind] - order[b.kind] || (a.date || "").localeCompare(b.date || ""));
+  const manual = (DATA.changes && DATA.changes.manual) || [];
+  /* Escrito à mão vem antes do derivado, exceto o que foi ao ar — essa é a
+     melhor notícia da quinzena e fica no topo. */
+  return [...auto.filter(a => a.kind === "shipped"), ...manual, ...auto.filter(a => a.kind !== "shipped")];
+}
+
+function render(){
+  const t = T[lang], m = DATA.meta;
+  document.documentElement.lang = lang === "pt" ? "pt-BR" : "en-US";
+  document.title = L(m.title) + " · Ybera Group";
+
+  $("orgLine").textContent = m.org;
+  $("sideTitle").textContent = L(m.shortTitle || m.title);
+  $("pageTitle").textContent = L(m.title);
+  $("pageSub").textContent = L(m.sub);
+  $("btnPT").setAttribute("aria-pressed", lang === "pt");
+  $("btnEN").setAttribute("aria-pressed", lang === "en");
+
+  $("cycleLabel").textContent = L(m.cycle);
+  $("cyclePeriod").textContent = windowLabel(m.from, m.to);
+  $("updatedLine").innerHTML = ICO.clock + "<span>" + t.updated + " " + esc(fmtDate(m.updated, true)) +
+    " · " + t.by + " " + esc(m.owner) + "</span>";
+  $("nextLine").textContent = t.next + ": " + fmtDate(m.next);
+
+  const items = DATA.items;
+  const n = k => items.filter(i => i.status === k).length;
+  const nAsk = (DATA.asks || []).length;
+
+  /* --- faixa de atenção: só existe se algum item estiver marcado --- */
+  const flagged = items.filter(i => i.health === "watch" || i.health === "blocked");
+  const anyBlocked = flagged.some(i => i.health === "blocked");
+  $("alertBand").innerHTML = flagged.length ? `
+    <div class="alert${anyBlocked ? " blocked" : ""}">
+      <div class="ah">${ICO.alert}<span>${esc(t.alertTitle)}</span></div>
+      <ul>${flagged.map(i => `<li>
+        <b>${esc(L(i.title))}</b> — ${esc(i.health === "blocked" ? t.alertBlocked : t.alertWatch)}.
+        ${i.healthNote ? esc(L(i.healthNote)) : ""}
+        <span class="who">${esc(t.by)} ${esc(i.owner || m.owner)}.</span>
+      </li>`).join("")}</ul>
+    </div>` : "";
+
+  /* --- próxima data prevista: fim de janela mais próximo que ainda não passou.
+         Não é promessa de entrega — é o que a base planeja. --- */
+  let nd = null, ndIso = null, ndFoot = "";
+  const ends = items.filter(i => i.status === "doing" && i.end >= TODAY_ISO)
+                    .sort((a, b) => a.end.localeCompare(b.end));
+  if(ends.length){
+    nd = ends[0]; ndIso = nd.end; ndFoot = t.tileFoot.nextdEnd + L(nd.title);
+  } else {
+    const starts = items.filter(i => i.status === "next" && i.start >= TODAY_ISO)
+                        .sort((a, b) => a.start.localeCompare(b.start));
+    if(starts.length){ nd = starts[0]; ndIso = nd.start; ndFoot = t.tileFoot.nextdStart + L(nd.title); }
+  }
+
+  const tileDefs = [];
+  if(n("done")) tileDefs.push({label:t.tiles.done, v:n("done"), c:"var(--good)", foot:t.tileFoot.done});
+  tileDefs.push({label:t.tiles.doing, v:n("doing"), c:"var(--accent)", foot:t.tileFoot.doing});
+  tileDefs.push({label:t.tiles.asks, v:nAsk, c:"var(--critical)", flag:nAsk > 0,
+                 foot:nAsk ? t.tileFoot.asksSome : t.tileFoot.asksNone});
+  tileDefs.push({label:t.tiles.nextd, v:ndIso ? fmtDate(ndIso) : "—", small:true, c:"var(--ink-3)",
+                 foot:nd ? ndFoot : t.tileFoot.nextdNone});
+  $("tiles").innerHTML = tileDefs.map(d => `
+    <div class="tile${d.flag ? " flag" : ""}">
+      <div class="label"><span class="swatch" style="background:${d.c}"></span>${esc(d.label)}</div>
+      <div class="val mono-num${d.small ? " small" : ""}${d.v === 0 ? " zero" : ""}">${esc(String(d.v))}</div>
+      <div class="foot">${esc(d.foot)}</div>
+    </div>`).join("");
+
+  /* --- medidor do trimestre: contadores DERIVADOS dos itens com prazo na
+         janela do trimestre. Nenhum número digitado à mão. --- */
+  const inQ = items.filter(i => i.end >= m.quarter.start && i.end <= m.quarter.end);
+  const q = {
+    label:m.quarter.label,
+    done:inQ.filter(i => i.status === "done").length,
+    doing:inQ.filter(i => i.status === "doing").length,
+    total:inQ.length
+  };
+  const pDone = q.total ? Math.round(q.done / q.total * 100) : 0;
+  const pDoing = q.total ? Math.round(q.doing / q.total * 100) : 0;
+  $("meterTitle").textContent = t.meter + " · " + q.label;
+  $("meterValue").textContent = `${q.done} ${t.of} ${q.total} ${t.initiatives}`;
+  const mEl = $("meter");
+  mEl.innerHTML = `<i class="done" style="width:${pDone}%"></i>${pDone ? '<i class="gap"></i>' : ""}<i class="doing" style="width:${pDoing}%"></i>`;
+  mEl.setAttribute("aria-label", `${t.meter} ${q.label}: ${q.done} ${t.of} ${q.total} ${t.initiatives}`);
+  $("meterLegend").innerHTML = [
+    `<span><span class="swatch" style="background:var(--good)"></span>${esc(t.mDone)} ${q.done}</span>`,
+    `<span><span class="swatch" style="background:var(--accent)"></span>${esc(t.mDoing)} ${q.doing}</span>`,
+    `<span><span class="swatch" style="background:var(--grid)"></span>${esc(t.mLeft)} ${q.total - q.done - q.doing}</span>`
+  ].join("");
+
+  $("sumTitle").textContent = t.sumTitle;
+  $("sumList").innerHTML = DATA.summary
+    .map(s => `<li><span class="tg">${esc(L(s.tag))}</span><span>${L(s)}</span></li>`).join("");
+
+  $("chgTitle").textContent = t.chgTitle;
+  const chg = cycleChanges();
+  $("chgList").innerHTML = chg.length
+    ? `<div class="changes"><ul>${chg.map(c => {
+        const label = t.kinds[c.kind] || t.kinds.moved;
+        const when = c.kind === "shipped" ? fmtMonth(c.item && c.item.shipped) : (c.date ? fmtDate(c.date) : "");
+        const body = c.item
+          ? `<b>${esc(L(c.item.title))}</b>` +
+            (when ? ` <span style="color:var(--ink-3)">· ${esc(when)}</span>` : "")
+          : L(c.text);
+        return `<li><span class="kind ${esc(c.kind)}">${esc(label)}</span>
+          <span>${body}${c.base ? `<span class="src-tag">${esc(t.fromBase)}</span>` : ""}</span></li>`;
+      }).join("")}</ul>${DATA.changes && DATA.changes.firstEdition
+        ? `<p class="chg-note">${esc(t.chgFirst)}</p>` : ""}</div>`
+    : `<div class="empty"><span class="et">${esc(t.chgEmptyT)}</span>${esc(t.chgEmptyD)}</div>`;
+
+  $("askTitle").textContent = t.askTitle;
+  $("askList").innerHTML = emptyBox(t.askEmptyShort, t.askEmptyD, t);
+
+  const fEl = $("filters");
+  fEl.innerHTML = `<span class="flabel">${esc(t.filterLabel)}</span>` +
+    `<button type="button" class="chip" data-track="__all" aria-pressed="${activeTracks.size === 0}">${esc(t.all)}</button>` +
+    DATA.tracks.map(tr =>
+      `<button type="button" class="chip" data-track="${esc(tr.id)}" aria-pressed="${activeTracks.has(tr.id)}">${esc(L(tr.name))}</button>`
+    ).join("");
+  fEl.querySelectorAll(".chip").forEach(btn => btn.addEventListener("click", () => {
+    const id = btn.dataset.track;
+    if(id === "__all") activeTracks.clear();
+    else activeTracks.has(id) ? activeTracks.delete(id) : activeTracks.add(id);
+    /* No papel a explicação tem que sair impressa, não recolhida. */
+window.addEventListener("beforeprint", () => {
+  const h = $("howBox"); if(h){ h.dataset.wasOpen = h.open; h.open = true; }
+  document.querySelectorAll(".empty details").forEach(d => d.open = true);
+});
+window.addEventListener("afterprint", () => {
+  const h = $("howBox"); if(h) h.open = h.dataset.wasOpen === "true";
+});
+
+render();
+  }));
+
+  const visible = items.filter(i => activeTracks.size === 0 || activeTracks.has(i.track));
+  const cols = [{k:"done", title:t.colDone}, {k:"doing", title:t.colDoing}, {k:"next", title:t.colNext}];
+  $("boardTitle").textContent = t.boardTitle;
+  $("board").innerHTML = cols.map(c => {
+    const list = visible.filter(i => i.status === c.k);
+    let inner;
+    if(list.length) inner = list.map(i => card(i, t)).join("");
+    else if(c.k === "done") inner = emptyBox(t.doneEmptyShort, t.doneEmptyD, t);
+    else inner = `<div class="empty">—</div>`;
+    /* Planejado fica colapsado: é a coluna mais longa e a menos urgente —
+       aberta, ela rouba a atenção de "Em curso", onde está a notícia. */
+    if(c.k === "next" && list.length){
+      inner = `<details class="fold"${foldOpen ? " open" : ""}>
+          <summary>${ICO.chev}
+            <span class="lbl-show">${esc(t.foldShow.replace("{n}", list.length))}</span>
+            <span class="lbl-hide">${esc(t.foldHide)}</span>
+          </summary>
+          <div class="cards">${inner}</div>
+        </details>
+        <div class="print-only pnote">${esc(t.printPlanned.replace("{n}", list.length))}</div>`;
+    }
+    return `
+      <div class="col" data-k="${c.k}">
+        <div class="col-head">
+          <span class="cdot"></span><h3>${esc(c.title)}</h3>
+          <span class="count mono-num">${list.length}</span>
+        </div>
+        <div class="cards">${inner}</div>
+      </div>`;
+  }).join("");
+  const foldEl = $("board").querySelector(".fold");
+  if(foldEl) foldEl.addEventListener("toggle", () => { foldOpen = foldEl.open; });
+
+  $("horTitle").textContent = t.horTitle;
+  $("horizon").innerHTML = ["now","next","later"].map(k => {
+    const h = DATA.horizon[k];
+    if(!h) return "";
+    const label = {now:{pt:"Agora",en:"Now"}, next:{pt:"A seguir",en:"Next"}, later:{pt:"Depois",en:"Later"}}[k];
+    return `
+      <div class="hcard" data-h="${k}">
+        <div class="ht"><h3>${esc(L(label))}</h3><span class="hw">${esc(L(h.when))}</span></div>
+        <span class="conf">${esc(L(h.conf))}</span>
+        <ul>${h.list.map(x => `<li><span>${esc(L(x))}</span></li>`).join("")}</ul>
+      </div>`;
+  }).join("");
+
+  /* Tudo que explica a página mora aqui, recolhido. A ressalva do "Entregue
+     vazio" desaparece sozinha quando o primeiro item entregue entrar —
+     legenda que mente é pior que legenda ausente. */
+  const legDoneD = n("done") ? t.legDoneFull : t.legDoneD;
+  $("howTitle").textContent = t.howTitle;
+  $("howBody").innerHTML = `
+    <h4>${esc(t.howLegend)}</h4>
+    <div class="legend"><dl>${[
+      ["var(--good)", t.legDone, legDoneD],
+      ["var(--accent)", t.legDoing, t.legDoingD],
+      ["var(--ink-3)", t.legNext, t.legNextD],
+      ["var(--warning)", t.legHealth, t.legHealthD],
+      ["var(--ink-2)", t.legOwner, t.legOwnerD]
+    ].map(([c, dt, dd]) =>
+      `<div><dt><span class="swatch" style="background:${c}"></span>${esc(dt)}</dt><dd>${esc(dd)}</dd></div>`
+    ).join("")}</dl></div>
+    <h4>${esc(t.howItems)}</h4><p>${esc(t.boardSub)}</p>
+    <h4>${esc(t.howChg)}</h4><p>${esc(t.chgSub)}</p>
+    <h4>${esc(t.howHor)}</h4><p>${esc(t.horSub)}</p>
+    <h4>${esc(t.howSource)}</h4><p>${esc(t.footSource)}</p><p>${esc(t.footCadence)}</p><p>${esc(t.footLimit)}</p>`;
+  const footLines = [];
+  /* "Fale com o PO" precisa ser um clique, não uma instrução. No papel o link
+     não clica, então o endereço aparece escrito. */
+  const c = m.contact || {};
+  const who = c.href ? `<a href="${esc(c.href)}">${esc(m.owner)}</a>` : esc(m.owner);
+  const addr = c.address ? ` <span class="print-inline">&lt;${esc(c.address)}&gt;</span>` : "";
+  footLines.push(`<span>${esc(t.footNote)} ${who}${addr} · ${esc(L(m.ownerRole))}</span>`);
+  if(m.url) footLines.push(`<span>${esc(t.footUrl)} <a href="${esc(m.url)}">${esc(m.url)}</a></span>`);
+  $("foot").innerHTML = footLines.join("");
+
+  $("navList").innerHTML = navHtml(t);
+  initSpy();
+}
+
+/* Uma linha, e o motivo atrás de "por quê?". A explicação continua na
+   página — só não custa mais um parágrafo de leitura a cada visita. */
+function emptyBox(curta, longa, t){
+  return `<div class="empty">
+    <span class="et">${esc(curta)}</span>
+    <details><summary>${esc(t.whyLink)}</summary>
+      <div class="why-full">${longa}</div>
+    </details>
+  </div>`;
+}
+
+/* Navegação lateral. Os contadores são derivados; nada digitado. */
+function navHtml(t){
+  const flagged = DATA.items.filter(i => i.health === "watch" || i.health === "blocked").length;
+  const nAsk = (DATA.asks || []).length;
+  const defs = [
+    {id:"s-top",   label:t.navTop},
+    {id:"s-ess",   label:t.navEss},
+    {id:"s-chg",   label:t.navChg,   badge:cycleChanges().length},
+    {id:"s-ask",   label:t.navAsk,   badge:nAsk, hot:true},
+    {id:"s-board", label:t.navBoard, badge:DATA.items.length, dot:flagged > 0},
+    {id:"s-hor",   label:t.navHor},
+    {id:"s-how",   label:t.navHow}
+  ];
+  return defs.map(d => {
+    let extra = "";
+    if(d.dot) extra = `<span class="dot" title="${esc(t.alertTitle)}"></span>`;
+    else if(d.badge) extra = `<span class="nb${d.hot ? " hot" : ""} mono-num">${d.badge}</span>`;
+    return `<li><a href="#${d.id}" data-sec="${d.id}">${esc(d.label)}${extra}</a></li>`;
+  }).join("");
+}
+
+let spy = null;
+function markActive(id){
+  document.querySelectorAll("#navList a")
+    .forEach(a => a.setAttribute("aria-current", String(a.dataset.sec === id)));
+}
+function initSpy(){
+  if(spy) spy.disconnect();
+  const links = [...document.querySelectorAll("#navList a")];
+  spy = new IntersectionObserver(entries => {
+    const vis = entries.filter(e => e.isIntersecting)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    if(vis.length) markActive(vis[0].target.id);
+  }, {rootMargin:"-72px 0px -55% 0px", threshold:0});
+  links.forEach(a => {
+    const el = document.getElementById(a.dataset.sec);
+    if(el) spy.observe(el);
+    /* marca no clique: a última seção é curta e pode nunca cruzar a faixa do
+       observador, então sem isso o item clicado não acende. */
+    a.addEventListener("click", () => markActive(a.dataset.sec));
+  });
+  markActive("s-top");
+}
+
+function card(i, t){
+  const src = i.notion
+    ? `<div class="src">${ICO.db}<span>Notion: ${esc(i.notion)}</span></div>` : "";
+  let mid = "";
+  if(i.status === "doing"){
+    const p = elapsedPct(i.start, i.end);
+    const over = p >= 100;
+    mid = `<div class="elapsed">
+        <div class="pl"><span>${esc(over ? t.over : t.elapsed)}</span><b class="mono-num">${Math.min(p,100)}%</b></div>
+        <div class="bar" role="img" aria-label="${Math.min(p,100)}% ${esc(t.elapsed)}"><i class="${over ? "over" : ""}" style="width:${Math.min(p,100)}%"></i></div>
+      </div>`;
+  }
+  /* Selo de saúde só em quem está fora do prazo. Card sem selo = no prazo:
+     14 selos verdes não informam nada e ainda escondem o que importa. */
+  const bad = i.health === "watch" || i.health === "blocked";
+  const pill = bad
+    ? `<span class="hp ${esc(i.health)}">${ICO.alert}${esc(i.health === "blocked" ? t.alertBlocked : t.alertWatch)}</span>` : "";
+  const hnote = bad && i.healthNote ? `<p class="hnote">${esc(L(i.healthNote))}</p>` : "";
+  const result = i.result
+    ? `<div class="result">${ICO.check}<span><b>${esc(t.resultLabel)}</b> ${esc(L(i.result))}</span></div>` : "";
+  const when = i.status === "done" && i.shipped
+    ? `${ICO.cal}${esc(t.live)} ${esc(fmtMonth(i.shipped))}`
+    : `${ICO.cal}${esc(t.window)}: ${esc(windowLabel(i.start, i.end))}`;
+  return `<article class="card${bad ? " " + esc(i.health) : ""}">
+    <span class="tag">${esc(trackName(i.track))}</span>${pill}
+    <h4>${esc(L(i.title))}</h4>
+    <p class="why">${esc(L(i.why))}</p>
+    ${hnote}
+    ${mid}
+    ${result}
+    <div class="row">
+      <span class="k">${when}</span>
+      <span class="k">${ICO.user}${esc(i.owner || DATA.meta.owner)}</span>
+    </div>
+    ${src}
+  </article>`;
+}
+
+$("btnPT").addEventListener("click", () => { lang = "pt"; /* No papel a explicação tem que sair impressa, não recolhida. */
+window.addEventListener("beforeprint", () => {
+  const h = $("howBox"); if(h){ h.dataset.wasOpen = h.open; h.open = true; }
+  document.querySelectorAll(".empty details").forEach(d => d.open = true);
+});
+window.addEventListener("afterprint", () => {
+  const h = $("howBox"); if(h) h.open = h.dataset.wasOpen === "true";
+});
+
+render(); });
+$("btnEN").addEventListener("click", () => { lang = "en"; /* No papel a explicação tem que sair impressa, não recolhida. */
+window.addEventListener("beforeprint", () => {
+  const h = $("howBox"); if(h){ h.dataset.wasOpen = h.open; h.open = true; }
+  document.querySelectorAll(".empty details").forEach(d => d.open = true);
+});
+window.addEventListener("afterprint", () => {
+  const h = $("howBox"); if(h) h.open = h.dataset.wasOpen === "true";
+});
+
+render(); });
+$("btnPrint").addEventListener("click", () => window.print());
+$("btnTheme").addEventListener("click", () => {
+  const cur = document.documentElement.getAttribute("data-theme");
+  const sysDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const isDark = cur === "dark" || (cur !== "light" && sysDark);
+  document.documentElement.setAttribute("data-theme", isDark ? "light" : "dark");
+});
+
+/* No papel a explicação tem que sair impressa, não recolhida. */
+window.addEventListener("beforeprint", () => {
+  const h = $("howBox"); if(h){ h.dataset.wasOpen = h.open; h.open = true; }
+  document.querySelectorAll(".empty details").forEach(d => d.open = true);
+});
+window.addEventListener("afterprint", () => {
+  const h = $("howBox"); if(h) h.open = h.dataset.wasOpen === "true";
+});
+
+render();
+
+/* Fim da página: acende o último item, que o observador não alcança. */
+window.addEventListener("scroll", () => {
+  if(window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4){
+    const links = document.querySelectorAll("#navList a");
+    if(links.length) markActive(links[links.length - 1].dataset.sec);
+  }
+}, {passive:true});
+</script>
+</body>
+</html>
