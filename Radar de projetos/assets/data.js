@@ -91,13 +91,29 @@ const DATA = {
   },
 
   /* Trilhas = coluna "Produto" do Notion */
+  /* PRODUTOS = coluna "Produto" do Notion. É o nível de cima da página
+     Produtos: cada projeto abaixo aponta para um `track` e aparece dentro do
+     produto correspondente. `about` é a descrição do produto — escrita por
+     você, não vem da base. Produto sem nenhum projeto não é renderizado. */
   tracks:[
-    {id:"club",       name:"Loja Clube USA"},
-    {id:"interna",    name:{pt:"Loja Interna USA", en:"US Internal Store"}},
-    {id:"influencer", name:{pt:"Loja da Influencer", en:"Influencer Store"}},
-    {id:"reviews",    name:"Ybera Reviews"},
-    {id:"ia",         name:{pt:"Quiz AI Ybera", en:"Ybera AI Quiz"}},
-    {id:"europa",     name:{pt:"Crossborder Europa", en:"Europe Crossborder"}}
+    {id:"club",       name:"Loja Clube USA",
+     about:{pt:"A loja onde o consumidor americano compra. Concentra o essencial da operação USA — conformidade, página de produto, home, tradução, tema, assinatura e fidelidade — e é onde o tráfego pago aterriza.",
+            en:"The store where the American consumer buys. It concentrates the core of the US operation — compliance, product page, homepage, translation, theme, subscription and loyalty — and it's where paid traffic lands."}},
+    {id:"interna",    name:{pt:"Loja Interna USA", en:"US Internal Store"},
+     about:{pt:"Canal interno da operação americana, com regra própria de preço e de acesso, separado da loja do consumidor final.",
+            en:"The US operation's internal channel, with its own pricing and access rules, separate from the consumer store."}},
+    {id:"influencer", name:{pt:"Loja da Influencer", en:"Influencer Store"},
+     about:{pt:"Vitrine própria de cada influencer parceira: curadoria dela, link único para as redes e venda rastreável.",
+            en:"A storefront of their own for each partner influencer: their curation, a single link for social bios and trackable sales."}},
+    {id:"reviews",    name:"Ybera Reviews",
+     about:{pt:"Avaliação de clientes como produto próprio — coleta, moderação e exibição sob controle da Ybera, sem depender de app de terceiro.",
+            en:"Customer reviews as an in-house product — collection, moderation and display under Ybera's control, with no third-party app."}},
+    {id:"ia",         name:{pt:"Quiz AI Ybera", en:"Ybera AI Quiz"},
+     about:{pt:"Recomendação guiada por IA: leva quem não conhece a linha até o produto certo, reduzindo a dúvida que trava a primeira compra.",
+            en:"AI-guided recommendation: takes someone unfamiliar with the line to the right product, cutting the doubt that stalls a first purchase."}},
+    {id:"europa",     name:{pt:"Crossborder Europa", en:"Europe Crossborder"},
+     about:{pt:"Venda para a Europa a partir da estrutura de loja e logística já montada nos EUA — segundo mercado sem operação nova.",
+            en:"Selling into Europe from the store and logistics structure already built in the US — a second market with no new operation."}}
   ],
 
   /* ------------------------------------------------------------------------
