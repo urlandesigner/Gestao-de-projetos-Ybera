@@ -23,20 +23,12 @@ const T = {
     mDone:"Concluído", mDoing:"Em curso", mLeft:"Não iniciado",
     alertTitle:"Atenção — fora do plano",
     alertBlocked:"Travado", alertWatch:"Em atenção",
-    navTop:"Panorama", navChg:"Mudou", navAsk:"Pendências",
+    navTop:"Panorama", navAsk:"Pendências",
     navBoard:"Board de entregas", navDet:"Produtos", navHor:"Horizonte",
     whyLink:"por quê?",
     themeDark:"Mudar para tema escuro", themeLight:"Mudar para tema claro",
     sumTitle:"O essencial",
     sumSub:"Se você só tiver um minuto, leia esta parte.",
-    chgTitle:"O que mudou nesta quinzena",
-    chgSub:"Para quem já leu a página antes: só o movimento, sem reler os cards. As linhas marcadas “base” saem das datas do Notion; as outras são escritas na revisão quinzenal.",
-    chgEmptyT:"Primeira edição desta página",
-    chgEmptyD:"Não há quinzena anterior para comparar. A partir da próxima atualização este bloco lista o que entrou, o que mudou de data, o que foi ao ar e o que saiu do plano.",
-    kinds:{shipped:"No ar", start:"Começou", starting:"Começa", due:"Fecha a janela",
-           moved:"Mudou", late:"Atrasou", newi:"Novo", out:"Saiu"},
-    fromBase:"base",
-    chgFirst:"Primeira edição: não há quinzena anterior para comparar.",
     askTitle:"Pendências",
     askSub:"O que está parado esperando uma decisão ou atenção de fora do time de produto.",
     askEmptyShort:"Nenhuma decisão esperando vocês nesta quinzena.",
@@ -85,20 +77,12 @@ const T = {
     mDone:"Complete", mDoing:"In flight", mLeft:"Not started",
     alertTitle:"Attention — off plan",
     alertBlocked:"Blocked", alertWatch:"At risk",
-    navTop:"Overview", navChg:"Changed", navAsk:"Pending",
+    navTop:"Overview", navAsk:"Pending",
     navBoard:"Delivery board", navDet:"Products", navHor:"Horizon",
     whyLink:"why?",
     themeDark:"Switch to dark theme", themeLight:"Switch to light theme",
     sumTitle:"The essentials",
     sumSub:"If you only have a minute, read this part.",
-    chgTitle:"What changed this cycle",
-    chgSub:"For anyone who read this page before: the movement only, without re-reading the cards. Lines tagged “source” come from the Notion dates; the rest are written during the biweekly review.",
-    chgEmptyT:"First edition of this page",
-    chgEmptyD:"There is no previous cycle to compare against. From the next update on, this block lists what started, what moved, what shipped and what dropped out of the plan.",
-    kinds:{shipped:"Shipped", start:"Started", starting:"Starts", due:"Window closes",
-           moved:"Changed", late:"Late", newi:"New", out:"Dropped"},
-    fromBase:"source",
-    chgFirst:"First edition: there is no previous cycle to compare against.",
     askTitle:"Pending",
     askSub:"What is stalled waiting on a decision or attention from outside the product team.",
     askEmptyShort:"No decision waiting on you this cycle.",
@@ -230,39 +214,6 @@ const ICO = {
   sun:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.8v2.2M12 19v2.2M2.8 12H5M19 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/></svg>'
 };
 
-/* --------------------------------------------------------------------------
-   O QUE MUDOU: parte derivada das datas reais, parte escrita à mão.
-   Nada aqui é inventado — cada linha "base" aponta para um campo do Notion.
-   -------------------------------------------------------------------------- */
-function cycleChanges(){
-  const {from, to} = DATA.meta;
-  const inWin = iso => iso >= from && iso <= to;
-  const auto = [];
-  DATA.items.forEach(i => {
-    /* foi ao ar no mês desta janela */
-    /* sem selo "base": o mês de `shipped` é digitado na revisão, não vem do
-       Período do Notion — o selo só marca o que sai das datas da base. */
-    if(i.status === "done" && i.shipped && (i.shipped === from.slice(0,7) || i.shipped === to.slice(0,7)))
-      auto.push({kind:"shipped", item:i});
-    /* começou de fato: a base já move para "Em andamento" */
-    else if(i.status === "doing" && inWin(i.start))
-      auto.push({kind:"start", item:i, base:true, date:i.start});
-    /* data de início prevista cai na janela, mas a base ainda diz
-       "Não iniciado" — é "começa", não "começou". */
-    else if(i.status === "next" && inWin(i.start))
-      auto.push({kind:"starting", item:i, base:true, date:i.start});
-    /* janela planejada fecha dentro do período */
-    if(i.status === "doing" && inWin(i.end))
-      auto.push({kind:"due", item:i, base:true, date:i.end});
-  });
-  const order = {shipped:0, start:1, starting:2, due:3};
-  auto.sort((a, b) => order[a.kind] - order[b.kind] || (a.date || "").localeCompare(b.date || ""));
-  const manual = (DATA.changes && DATA.changes.manual) || [];
-  /* Escrito à mão vem antes do derivado, exceto o que foi ao ar — essa é a
-     melhor notícia da quinzena e fica no topo. */
-  return [...auto.filter(a => a.kind === "shipped"), ...manual, ...auto.filter(a => a.kind !== "shipped")];
-}
-
 function render(){
   const t = T[lang], m = DATA.meta;
   document.documentElement.lang = lang === "pt" ? "pt-BR" : "en-US";
@@ -271,11 +222,10 @@ function render(){
   const page = document.body.dataset.page || "index";
   const PM = {
     index:{h1:L(m.title), sub:L(m.sub)},
-    mudou:{num:"01", h1:t.chgTitle, sub:t.chgSub},
-    pendencias:{num:"02", h1:t.askTitle, sub:t.askSub},
-    board:{num:"03", h1:t.boardTitle, sub:t.boardSub},
-    produtos:{num:"04", h1:t.detTitle, sub:t.detSub},
-    horizonte:{num:"05", h1:t.horTitle, sub:t.horSub},
+    pendencias:{num:"01", h1:t.askTitle, sub:t.askSub},
+    board:{num:"02", h1:t.boardTitle, sub:t.boardSub},
+    produtos:{num:"03", h1:t.detTitle, sub:t.detSub},
+    horizonte:{num:"04", h1:t.horTitle, sub:t.horSub},
     completo:{h1:L(m.title), sub:L(m.sub)}
   };
   const pm = PM[page] || PM.index;
@@ -367,22 +317,6 @@ function render(){
   $("sumTitle").textContent = t.sumTitle;
   $("sumList").innerHTML = DATA.summary
     .map(s => `<li><span class="tg">${esc(L(s.tag))}</span><span>${L(s)}</span></li>`).join("");
-
-  $("chgTitle").textContent = t.chgTitle;
-  const chg = cycleChanges();
-  $("chgList").innerHTML = chg.length
-    ? `<div class="changes"><ul>${chg.map(c => {
-        const label = t.kinds[c.kind] || t.kinds.moved;
-        const when = c.kind === "shipped" ? fmtMonth(c.item && c.item.shipped) : (c.date ? fmtDate(c.date) : "");
-        const body = c.item
-          ? `<b>${esc(L(c.item.title))}</b>` +
-            (when ? ` <span style="color:var(--ink-3)">· ${esc(when)}</span>` : "")
-          : L(c.text);
-        return `<li><span class="kind ${esc(c.kind)}">${esc(label)}</span>
-          <span>${body}${c.base ? `<span class="src-tag">${esc(t.fromBase)}</span>` : ""}</span></li>`;
-      }).join("")}</ul>${DATA.changes && DATA.changes.firstEdition
-        ? `<p class="chg-note">${esc(t.chgFirst)}</p>` : ""}</div>`
-    : `<div class="empty"><span class="et">${esc(t.chgEmptyT)}</span>${esc(t.chgEmptyD)}</div>`;
 
   $("askTitle").textContent = t.askTitle;
   $("askList").innerHTML = emptyBox(t.askEmptyShort, t.askEmptyD, t);
@@ -524,7 +458,6 @@ function navHtml(t){
   const nDem = DATA.items.reduce((n, i) => n + (i.demands || []).filter(d => d.status === "doing").length, 0);
   const defs = [
     {href:"index.html",     page:"index",     label:t.navTop},
-    {href:"mudou.html",      page:"mudou",      label:t.navChg,   badge:cycleChanges().length},
     {href:"pendencias.html", page:"pendencias", label:t.navAsk,   badge:nAsk, hot:true},
     {href:"board.html",      page:"board",      label:t.navBoard, badge:DATA.items.length, dot:flagged > 0},
     {href:"produtos.html",   page:"produtos",   label:t.navDet,   badge:nDem},

@@ -147,28 +147,14 @@ const DATA = {
   /* Vazio: a base não registra decisões nem riscos. Ver estado vazio. */
   asks:[],
 
-  /* ------------------------------------------------------------------------
-     O QUE MUDOU NESTA QUINZENA
-
-     Parte sai sozinha das datas do Notion (marcada "base" na página):
-     item que começou dentro da janela, item cuja janela fecha dentro dela,
-     item que foi ao ar no mês. Não precisa digitar nada para isso.
-
-     O que as datas NÃO contam vai em `manual` — é o que você escreve nos
-     20 minutos da revisão. Um item por mudança:
-
-       {kind:"moved", text:{pt:"Nova home adiada de 15/08 para 01/09 …",
-                            en:"New homepage moved from Aug 15 to Sep 1 …"}}
-
-     kind: "shipped" (foi ao ar) · "start" (começou) · "moved" (data/escopo
-     mudou) · "late" (atrasou) · "newi" (entrou no plano) · "out" (saiu).
-     Escreva a consequência, não o evento: "adiada duas semanas porque o
-     compliance vem primeiro" vale mais que "data alterada".
-
-     `firstEdition:true` mostra a nota de que não há edição anterior para
-     comparar. Troque para false na próxima atualização.
-     ---------------------------------------------------------------------- */
-  changes:{ firstEdition:true, manual:[] },
+  /* NÃO HÁ MAIS BLOCO "O QUE MUDOU".
+     A página que listava o movimento da quinzena foi removida: no nível de
+     projeto (1 a 4 meses) quase nada muda em duas semanas, e a base do Notion
+     não registra conclusão — ela nunca teria o que dizer. O que mudou desde a
+     edição anterior é dito na linha "Mudou" de `summary`, escrita à mão, que é
+     a versão que as pessoas leem. Se um dia a fonte passar a registrar
+     conclusão com data (Azure DevOps, por exemplo), o lugar de reconstruir
+     isso é uma página "Entregue nesta quinzena" alimentada pelas demandas. */
 
   items:[
     /* ---------- EM ANDAMENTO (status Notion: "Em andamento") ---------- */
