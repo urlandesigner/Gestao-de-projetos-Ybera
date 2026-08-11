@@ -113,7 +113,7 @@ const DATA = {
        apertado, com a data. Não escreva "está tudo bem" sem olhar as datas.
      · Mudou — só o que mudou desde a edição anterior. Se nada mudou, diga
        isso; quinzena parada é informação, não é vergonha.
-     · Com vocês — o pedido. Se não houver, diga que não há e que este é o
+     · Pendências — o pedido. Se não houver, diga que não há e que este é o
        lugar onde vai aparecer. Nunca deixe a linha genérica para preencher.
      ---------------------------------------------------------------------- */
   summary:[
@@ -123,7 +123,7 @@ const DATA = {
     {tag:{pt:"Mudou", en:"Changed"},
      pt:"A <b>tradução da loja para o inglês</b> entrou em curso em 1º de agosto, e a <b>nova home da loja USA</b> abre a janela em 15 de agosto. São as duas novidades desta quinzena.",
      en:"The <b>store's English translation</b> went into flight on August 1, and the <b>new US homepage</b> opens its window on August 15. Those are the two developments this cycle."},
-    {tag:{pt:"Com vocês", en:"On you"},
+    {tag:{pt:"Pendências", en:"Pending"},
      pt:"<b>Nada está travado esperando decisão de vocês</b> nesta quinzena. Quando algo parar fora do time de produto, aparece aqui primeiro — com nome do decisor e prazo.",
      en:"<b>Nothing is blocked waiting on a decision from you</b> this cycle. When something stalls outside the product team, it shows up here first — with a named decision-maker and a due date."}
   ],
