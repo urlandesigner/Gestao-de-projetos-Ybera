@@ -1114,16 +1114,7 @@ function render(){
     const id = btn.dataset.track;
     if(id === "__all") activeTracks.clear();
     else activeTracks.has(id) ? activeTracks.delete(id) : activeTracks.add(id);
-    /* No papel a explicação tem que sair impressa, não recolhida. */
-window.addEventListener("beforeprint", () => {
-  const h = $("howBox"); if(h){ h.dataset.wasOpen = h.open; h.open = true; }
-  document.querySelectorAll(".empty details").forEach(d => d.open = true);
-});
-window.addEventListener("afterprint", () => {
-  const h = $("howBox"); if(h) h.open = h.dataset.wasOpen === "true";
-});
-
-render();
+    render();
   }));
 
   const visible = items.filter(i => activeTracks.size === 0 || activeTracks.has(i.track));
@@ -1299,26 +1290,8 @@ function card(i, t){
   </article>`;
 }
 
-$("btnPT").addEventListener("click", () => { lang = "pt"; /* No papel a explicação tem que sair impressa, não recolhida. */
-window.addEventListener("beforeprint", () => {
-  const h = $("howBox"); if(h){ h.dataset.wasOpen = h.open; h.open = true; }
-  document.querySelectorAll(".empty details").forEach(d => d.open = true);
-});
-window.addEventListener("afterprint", () => {
-  const h = $("howBox"); if(h) h.open = h.dataset.wasOpen === "true";
-});
-
-render(); });
-$("btnEN").addEventListener("click", () => { lang = "en"; /* No papel a explicação tem que sair impressa, não recolhida. */
-window.addEventListener("beforeprint", () => {
-  const h = $("howBox"); if(h){ h.dataset.wasOpen = h.open; h.open = true; }
-  document.querySelectorAll(".empty details").forEach(d => d.open = true);
-});
-window.addEventListener("afterprint", () => {
-  const h = $("howBox"); if(h) h.open = h.dataset.wasOpen === "true";
-});
-
-render(); });
+$("btnPT").addEventListener("click", () => { lang = "pt"; render(); });
+$("btnEN").addEventListener("click", () => { lang = "en"; render(); });
 $("btnPrint").addEventListener("click", () => window.print());
 $("btnTheme").addEventListener("click", () => {
   const cur = document.documentElement.getAttribute("data-theme");
