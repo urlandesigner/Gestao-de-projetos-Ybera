@@ -24,7 +24,7 @@ const T = {
     alertTitle:"Atenção — fora do plano",
     alertBlocked:"Travado", alertWatch:"Em atenção",
     navTop:"Panorama", navAsk:"Pendências",
-    navBoard:"Board de entregas", navDet:"Produtos", navHor:"Horizonte",
+    navBoard:"Board de entregas", navDet:"Produtos", navHor:"Futuro",
     whyLink:"por quê?",
     themeDark:"Mudar para tema escuro", themeLight:"Mudar para tema claro",
     sumTitle:"O essencial",
@@ -50,7 +50,7 @@ const T = {
     live:"No ar desde", resultLabel:"Resultado:",
     foldShow:"Ver os {n} projetos planejados", foldHide:"Esconder os planejados",
     printPlanned:"Os {n} projetos planejados estão listados na seção Horizonte, adiante — sem repetir os cards aqui.",
-    horTitle:"Horizonte",
+    horTitle:"Futuro",
     horSub:"Quanto mais longe, menos preciso — de propósito. As três faixas saem da data de início de cada projeto no Notion: mudar um período move o projeto de faixa sozinho.",
     horNow:"Agora", horNext:"A seguir", horLater:"Depois",
     horUntil:"até {d}",
@@ -78,7 +78,7 @@ const T = {
     alertTitle:"Attention — off plan",
     alertBlocked:"Blocked", alertWatch:"At risk",
     navTop:"Overview", navAsk:"Pending",
-    navBoard:"Delivery board", navDet:"Products", navHor:"Horizon",
+    navBoard:"Delivery board", navDet:"Products", navHor:"Future",
     whyLink:"why?",
     themeDark:"Switch to dark theme", themeLight:"Switch to light theme",
     sumTitle:"The essentials",
@@ -104,7 +104,7 @@ const T = {
     live:"Live since", resultLabel:"Result:",
     foldShow:"Show the {n} planned projects", foldHide:"Hide the planned ones",
     printPlanned:"The {n} planned projects are listed in the Horizon section below — not repeated as cards here.",
-    horTitle:"Horizon",
+    horTitle:"Future",
     horSub:"The further out, the vaguer — on purpose. The three bands come from each project's start date in Notion: change a period and the project moves band on its own.",
     horNow:"Now", horNext:"Next", horLater:"Later",
     horUntil:"through {d}",
@@ -222,8 +222,8 @@ function render(){
   const page = document.body.dataset.page || "index";
   const PM = {
     index:{h1:L(m.title), sub:L(m.sub)},
-    pendencias:{num:"01", h1:t.askTitle, sub:t.askSub},
-    board:{num:"02", h1:t.boardTitle, sub:t.boardSub},
+    board:{num:"01", h1:t.boardTitle, sub:t.boardSub},
+    pendencias:{num:"02", h1:t.askTitle, sub:t.askSub},
     produtos:{num:"03", h1:t.detTitle, sub:t.detSub},
     horizonte:{num:"04", h1:t.horTitle, sub:t.horSub},
     completo:{h1:L(m.title), sub:L(m.sub)}
@@ -457,9 +457,9 @@ function navHtml(t){
   const nAsk = (DATA.asks || []).length;
   const nDem = DATA.items.reduce((n, i) => n + (i.demands || []).filter(d => d.status === "doing").length, 0);
   const defs = [
-    {href:"index.html",     page:"index",     label:t.navTop},
-    {href:"pendencias.html", page:"pendencias", label:t.navAsk,   badge:nAsk, hot:true},
+    {href:"index.html",      page:"index",      label:t.navTop},
     {href:"board.html",      page:"board",      label:t.navBoard, badge:DATA.items.length, dot:flagged > 0},
+    {href:"pendencias.html", page:"pendencias", label:t.navAsk,   badge:nAsk, hot:true},
     {href:"produtos.html",   page:"produtos",   label:t.navDet,   badge:nDem},
     {href:"horizonte.html",  page:"horizonte",  label:t.navHor}
   ];
