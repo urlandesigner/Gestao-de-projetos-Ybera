@@ -383,7 +383,12 @@ section{margin-bottom:30px}
   .legend dl{grid-template-columns:repeat(2,1fr)}
 }
 @media (max-width:760px){
-  .tiles{grid-template-columns:repeat(2,1fr)}
+  .tiles{grid-template-columns:1fr;gap:9px}
+  .tile{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;column-gap:14px;padding:12px 16px}
+  .tile .label{margin-bottom:0}
+  .tile .val{grid-column:2;grid-row:1;font-size:24px}
+  .tile .val.small{font-size:17px}
+  .tile .foot{grid-column:1 / -1}
   .board,.horizon{grid-template-columns:1fr}
   .legend dl{grid-template-columns:1fr}
   .col{margin-bottom:6px}
@@ -391,7 +396,6 @@ section{margin-bottom:30px}
 @media (max-width:560px){
   .wrap{padding:18px 14px 56px}
   h1{font-size:22px}
-  .tile .val{font-size:26px}
   .topbar{flex-direction:column}
 }
 /* ===========================================================
@@ -1049,7 +1053,7 @@ function render(){
   const tileDefs = [];
   if(n("done")) tileDefs.push({label:t.tiles.done, v:n("done"), c:"var(--good)", foot:t.tileFoot.done});
   tileDefs.push({label:t.tiles.doing, v:n("doing"), c:"var(--accent)", foot:t.tileFoot.doing});
-  tileDefs.push({label:t.tiles.asks, v:nAsk, c:"var(--critical)", flag:nAsk > 0,
+  tileDefs.push({label:t.tiles.asks, v:nAsk, c:nAsk ? "var(--critical)" : "var(--ink-3)", flag:nAsk > 0,
                  foot:nAsk ? t.tileFoot.asksSome : t.tileFoot.asksNone});
   tileDefs.push({label:t.tiles.nextd, v:ndIso ? fmtDate(ndIso) : "—", small:true, c:"var(--ink-3)",
                  foot:nd ? ndFoot : t.tileFoot.nextdNone});
