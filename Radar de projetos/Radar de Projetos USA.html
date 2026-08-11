@@ -12,6 +12,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Os 14 projetos da frente USA da Ybera: o que está em curso, o que está planejado e em que ordem. Atualizado a cada duas semanas.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='11' fill='%232a78d6'/%3E%3Ccircle cx='12' cy='12' r='6.5' fill='none' stroke='white' stroke-width='1.5' opacity='.5'/%3E%3Ccircle cx='12' cy='12' r='2.2' fill='white'/%3E%3Cpath d='M12 12L18.3 5.7' stroke='white' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E">
 <title>Radar de Projetos — USA · Ybera Group</title>
 <style>
 /* ===========================================================
@@ -23,7 +25,7 @@
   --surface-2:#f4f4f1;
   --ink:#0b0b0b;
   --ink-2:#52514e;
-  --ink-3:#898781;
+  --ink-3:#706e67;
   --hair:rgba(11,11,11,.10);
   --grid:#e1e0d9;
 
@@ -77,7 +79,7 @@ body{
   font-family:var(--font);font-size:15px;line-height:1.5;
   -webkit-font-smoothing:antialiased;
 }
-html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: no-preference){html{scroll-behavior:smooth}}
 .shell{display:block}
 .wrap{max-width:1120px;margin:0 auto;padding:28px 22px 72px}
 .skip{position:absolute;left:-9999px;top:0;background:var(--surface);color:var(--ink);padding:10px 14px;border-radius:8px;z-index:50}
@@ -128,12 +130,14 @@ html{scroll-behavior:smooth}
   }
   .navlist::-webkit-scrollbar{display:none}
   .navlist .nb,.navlist .dot{margin-left:3px}
-  section{scroll-margin-top:60px}
-  #s-top{scroll-margin-top:60px}
+  .navlist a{padding:14px 12px}
+  section{scroll-margin-top:74px}
+  #s-top{scroll-margin-top:74px}
 }
 h1,h2,h3,h4{margin:0;font-weight:640;letter-spacing:-.01em}
 p{margin:0}
 button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
 .mono-num{font-variant-numeric:tabular-nums}
@@ -208,10 +212,9 @@ h1{font-size:26px;line-height:1.2}
 .meter-head{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:baseline;margin-bottom:10px}
 .meter-head .t{font-size:13.5px;font-weight:640}
 .meter-head .v{font-size:12.5px;color:var(--ink-2)}
-.meter{height:8px;border-radius:4px;background:var(--grid);overflow:hidden;display:flex}
-.meter i{display:block;height:100%;border-radius:4px}
+.meter{height:8px;display:flex;gap:3px}
+.meter i{display:block;height:100%;border-radius:3px;flex:1;min-width:6px;background:var(--grid)}
 .meter i.done{background:var(--good)}
-.meter i.gap{width:2px;background:var(--surface);border-radius:0}
 .meter i.doing{background:var(--accent)}
 .meter-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:9px;font-size:12px;color:var(--ink-2)}
 .meter-legend span{display:inline-flex;align-items:center;gap:6px}
@@ -382,16 +385,30 @@ section{margin-bottom:30px}
   .legend dl{grid-template-columns:repeat(2,1fr)}
 }
 @media (max-width:760px){
-  .tiles{grid-template-columns:repeat(2,1fr)}
+  .tiles{grid-template-columns:1fr;gap:9px}
+  .tile{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;column-gap:14px;padding:12px 16px}
+  .tile .label{margin-bottom:0}
+  .tile .val{grid-column:2;grid-row:1;font-size:24px}
+  .tile .val.small{font-size:17px}
+  .tile .foot{grid-column:1 / -1}
   .board,.horizon{grid-template-columns:1fr}
   .legend dl{grid-template-columns:1fr}
   .col{margin-bottom:6px}
+  .filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
+    -webkit-mask-image:linear-gradient(to right,#000 0,#000 calc(100% - 26px),transparent 100%);
+    mask-image:linear-gradient(to right,#000 0,#000 calc(100% - 26px),transparent 100%)}
+  .filters::-webkit-scrollbar{display:none}
+  .filters .flabel,.filters .chip{flex:0 0 auto}
+  .filters .chip{padding:11px 14px}
 }
 @media (max-width:560px){
   .wrap{padding:18px 14px 56px}
   h1{font-size:22px}
-  .tile .val{font-size:26px}
   .topbar{flex-direction:column}
+  .strip{flex-direction:column;align-items:flex-start;gap:8px}
+  .strip .cycle{flex-direction:column;align-items:flex-start;gap:3px}
+  .strip .dot-sep{display:none}
+  .strip .spacer{display:none}
 }
 /* ===========================================================
    IMPRESSÃO / PDF — uma página limpa para colar em deck.
@@ -804,6 +821,7 @@ const T = {
     howLegend:"As colunas e os selos", howItems:"Os projetos",
     howChg:"O bloco “o que mudou”", howHor:"O horizonte", howSource:"Fonte e limites",
     whyLink:"por quê?",
+    themeDark:"Mudar para tema escuro", themeLight:"Mudar para tema claro",
     sumTitle:"O essencial",
     sumSub:"Se você só tiver um minuto, leia esta parte.",
     chgTitle:"O que mudou nesta quinzena",
@@ -867,6 +885,7 @@ const T = {
     howLegend:"The columns and the badges", howItems:"The projects",
     howChg:"The “what changed” block", howHor:"The horizon", howSource:"Source and limits",
     whyLink:"why?",
+    themeDark:"Switch to dark theme", themeLight:"Switch to light theme",
     sumTitle:"The essentials",
     sumSub:"If you only have a minute, read this part.",
     chgTitle:"What changed this cycle",
@@ -961,7 +980,9 @@ const ICO = {
   user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c.9-3.5 3.7-5.2 7-5.2s6.1 1.7 7 5.2"/></svg>',
   alert:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 2.6 20h18.8L12 4Z"/><path d="M12 10v4.2M12 17.4h.01"/></svg>',
   chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
-  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>'
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>',
+  moon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>',
+  sun:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.8v2.2M12 19v2.2M2.8 12H5M19 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/></svg>'
 };
 
 /* --------------------------------------------------------------------------
@@ -1048,7 +1069,7 @@ function render(){
   const tileDefs = [];
   if(n("done")) tileDefs.push({label:t.tiles.done, v:n("done"), c:"var(--good)", foot:t.tileFoot.done});
   tileDefs.push({label:t.tiles.doing, v:n("doing"), c:"var(--accent)", foot:t.tileFoot.doing});
-  tileDefs.push({label:t.tiles.asks, v:nAsk, c:"var(--critical)", flag:nAsk > 0,
+  tileDefs.push({label:t.tiles.asks, v:nAsk, c:nAsk ? "var(--critical)" : "var(--ink-3)", flag:nAsk > 0,
                  foot:nAsk ? t.tileFoot.asksSome : t.tileFoot.asksNone});
   tileDefs.push({label:t.tiles.nextd, v:ndIso ? fmtDate(ndIso) : "—", small:true, c:"var(--ink-3)",
                  foot:nd ? ndFoot : t.tileFoot.nextdNone});
@@ -1068,12 +1089,13 @@ function render(){
     doing:inQ.filter(i => i.status === "doing").length,
     total:inQ.length
   };
-  const pDone = q.total ? Math.round(q.done / q.total * 100) : 0;
-  const pDoing = q.total ? Math.round(q.doing / q.total * 100) : 0;
   $("meterTitle").textContent = t.meter + " · " + q.label;
   $("meterValue").textContent = `${q.done} ${t.of} ${q.total} ${t.initiatives}`;
+  /* Um segmento por projeto: contagem se lê como contagem — barra meio cheia
+     se lia como "metade pronto" quando nada tinha concluído. */
   const mEl = $("meter");
-  mEl.innerHTML = `<i class="done" style="width:${pDone}%"></i>${pDone ? '<i class="gap"></i>' : ""}<i class="doing" style="width:${pDoing}%"></i>`;
+  mEl.innerHTML = Array.from({length:q.total}, (_, k) =>
+    `<i class="${k < q.done ? "done" : k < q.done + q.doing ? "doing" : ""}"></i>`).join("");
   mEl.setAttribute("aria-label", `${t.meter} ${q.label}: ${q.done} ${t.of} ${q.total} ${t.initiatives}`);
   $("meterLegend").innerHTML = [
     `<span><span class="swatch" style="background:var(--good)"></span>${esc(t.mDone)} ${q.done}</span>`,
@@ -1114,16 +1136,7 @@ function render(){
     const id = btn.dataset.track;
     if(id === "__all") activeTracks.clear();
     else activeTracks.has(id) ? activeTracks.delete(id) : activeTracks.add(id);
-    /* No papel a explicação tem que sair impressa, não recolhida. */
-window.addEventListener("beforeprint", () => {
-  const h = $("howBox"); if(h){ h.dataset.wasOpen = h.open; h.open = true; }
-  document.querySelectorAll(".empty details").forEach(d => d.open = true);
-});
-window.addEventListener("afterprint", () => {
-  const h = $("howBox"); if(h) h.open = h.dataset.wasOpen === "true";
-});
-
-render();
+    render();
   }));
 
   const visible = items.filter(i => activeTracks.size === 0 || activeTracks.has(i.track));
@@ -1203,6 +1216,7 @@ render();
   $("foot").innerHTML = footLines.join("");
 
   $("navList").innerHTML = navHtml(t);
+  syncThemeBtn();
   initSpy();
 }
 
@@ -1242,6 +1256,14 @@ let spy = null;
 function markActive(id){
   document.querySelectorAll("#navList a")
     .forEach(a => a.setAttribute("aria-current", String(a.dataset.sec === id)));
+  /* Barra estreita: mantém o "você está aqui" visível. No desktop a lista é
+     vertical e sem overflow — o guard de scrollWidth faz disso um no-op. */
+  const nav = $("navList");
+  const act = nav && nav.querySelector('a[aria-current="true"]');
+  if(act && nav.scrollWidth > nav.clientWidth){
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    act.scrollIntoView({inline:"center", block:"nearest", behavior:reduce ? "instant" : "smooth"});
+  }
 }
 function initSpy(){
   if(spy) spy.disconnect();
@@ -1299,33 +1321,24 @@ function card(i, t){
   </article>`;
 }
 
-$("btnPT").addEventListener("click", () => { lang = "pt"; /* No papel a explicação tem que sair impressa, não recolhida. */
-window.addEventListener("beforeprint", () => {
-  const h = $("howBox"); if(h){ h.dataset.wasOpen = h.open; h.open = true; }
-  document.querySelectorAll(".empty details").forEach(d => d.open = true);
-});
-window.addEventListener("afterprint", () => {
-  const h = $("howBox"); if(h) h.open = h.dataset.wasOpen === "true";
-});
-
-render(); });
-$("btnEN").addEventListener("click", () => { lang = "en"; /* No papel a explicação tem que sair impressa, não recolhida. */
-window.addEventListener("beforeprint", () => {
-  const h = $("howBox"); if(h){ h.dataset.wasOpen = h.open; h.open = true; }
-  document.querySelectorAll(".empty details").forEach(d => d.open = true);
-});
-window.addEventListener("afterprint", () => {
-  const h = $("howBox"); if(h) h.open = h.dataset.wasOpen === "true";
-});
-
-render(); });
+$("btnPT").addEventListener("click", () => { lang = "pt"; render(); });
+$("btnEN").addEventListener("click", () => { lang = "en"; render(); });
 $("btnPrint").addEventListener("click", () => window.print());
-$("btnTheme").addEventListener("click", () => {
+function isDarkNow(){
   const cur = document.documentElement.getAttribute("data-theme");
-  const sysDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const isDark = cur === "dark" || (cur !== "light" && sysDark);
-  document.documentElement.setAttribute("data-theme", isDark ? "light" : "dark");
+  return cur === "dark" || (cur !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+}
+/* O botão mostra o destino do clique: lua no claro, sol no escuro. */
+function syncThemeBtn(){
+  const dark = isDarkNow(), b = $("btnTheme");
+  b.innerHTML = dark ? ICO.sun : ICO.moon;
+  b.setAttribute("aria-label", dark ? T[lang].themeLight : T[lang].themeDark);
+}
+$("btnTheme").addEventListener("click", () => {
+  document.documentElement.setAttribute("data-theme", isDarkNow() ? "light" : "dark");
+  syncThemeBtn();
 });
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", syncThemeBtn);
 
 /* No papel a explicação tem que sair impressa, não recolhida. */
 window.addEventListener("beforeprint", () => {
