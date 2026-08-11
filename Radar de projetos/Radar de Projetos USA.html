@@ -391,6 +391,12 @@ section{margin-bottom:30px}
   .board,.horizon{grid-template-columns:1fr}
   .legend dl{grid-template-columns:1fr}
   .col{margin-bottom:6px}
+  .filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
+    -webkit-mask-image:linear-gradient(to right,#000 0,#000 calc(100% - 26px),transparent 100%);
+    mask-image:linear-gradient(to right,#000 0,#000 calc(100% - 26px),transparent 100%)}
+  .filters::-webkit-scrollbar{display:none}
+  .filters .flabel,.filters .chip{flex:0 0 auto}
+  .filters .chip{padding:11px 14px}
 }
 @media (max-width:560px){
   .wrap{padding:18px 14px 56px}
