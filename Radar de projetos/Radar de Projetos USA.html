@@ -128,8 +128,9 @@ html{scroll-behavior:smooth}
   }
   .navlist::-webkit-scrollbar{display:none}
   .navlist .nb,.navlist .dot{margin-left:3px}
-  section{scroll-margin-top:60px}
-  #s-top{scroll-margin-top:60px}
+  .navlist a{padding:14px 12px}
+  section{scroll-margin-top:74px}
+  #s-top{scroll-margin-top:74px}
 }
 h1,h2,h3,h4{margin:0;font-weight:640;letter-spacing:-.01em}
 p{margin:0}
@@ -1233,6 +1234,14 @@ let spy = null;
 function markActive(id){
   document.querySelectorAll("#navList a")
     .forEach(a => a.setAttribute("aria-current", String(a.dataset.sec === id)));
+  /* Barra estreita: mantém o "você está aqui" visível. No desktop a lista é
+     vertical e sem overflow — o guard de scrollWidth faz disso um no-op. */
+  const nav = $("navList");
+  const act = nav && nav.querySelector('a[aria-current="true"]');
+  if(act && nav.scrollWidth > nav.clientWidth){
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    act.scrollIntoView({inline:"center", block:"nearest", behavior:reduce ? "instant" : "smooth"});
+  }
 }
 function initSpy(){
   if(spy) spy.disconnect();
