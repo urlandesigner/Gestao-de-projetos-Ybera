@@ -259,33 +259,18 @@ const DATA = {
             en:"Selling into Europe from the US operation: currency, international shipping, taxes and the minimum localization needed to operate. Opens a second market by reusing the store and logistics structure already built in the US."}}
   ],
 
-  horizon:{
-    now:{ when:{pt:"até 30 de setembro", en:"through September 30"},
-      conf:{pt:"Janela atual", en:"Current window"},
-      list:[
-        {pt:"Conformidade da loja USA com o Google", en:"US store compliance with Google"},
-        {pt:"Nova página de produto", en:"New product page"},
-        {pt:"Loja inteiramente em inglês", en:"Store fully in English"},
-        {pt:"Nova home da loja USA", en:"New US store homepage"},
-        {pt:"Design system próprio no Shopify", en:"In-house design system on Shopify"},
-        {pt:"Avaliações de clientes na loja", en:"Customer reviews on the store"}
-      ]},
-    next:{ when:{pt:"Out – Dez 2026", en:"Oct – Dec 2026"},
-      conf:{pt:"Planejado", en:"Planned"},
-      list:[
-        {pt:"Novo tema da loja USA e global", en:"New US and global store theme"},
-        {pt:"Compra por assinatura", en:"Subscription purchase"},
-        {pt:"Programa de fidelidade com pontos", en:"Points-based loyalty program"},
-        {pt:"Loja interna da operação USA", en:"Internal store for the US operation"}
-      ]},
-    later:{ when:{pt:"2027", en:"2027"},
-      conf:{pt:"Roadmap", en:"Roadmap"},
-      list:[
-        {pt:"Vitrine própria de cada influencer", en:"A storefront for each influencer"},
-        {pt:"Recomendação de produto por IA", en:"AI product recommendation"},
-        {pt:"Avaliações próprias, sem terceiro", en:"In-house reviews, no third party"},
-        {pt:"Venda para a Europa via operação USA", en:"Selling into Europe via the US operation"}
-      ]}
-  }
+  /* O HORIZONTE NÃO SE DIGITA AQUI.
+     As três faixas (Agora · A seguir · Depois) são derivadas da data de
+     início de cada projeto acima, contra `quarter`:
+
+       Agora    → começa até o fim do trimestre corrente (ou já começou)
+       A seguir → começa no trimestre seguinte
+       Depois   → começa depois disso
+
+     Projetos com status "done" saem do horizonte: são história, e o lugar
+     deles é a coluna Entregue do board. Mudar o período de um projeto move
+     o card de faixa sozinho — não há segunda lista para manter em sincronia.
+     A única coisa que se atualiza à mão é `meta.quarter`, na virada do
+     trimestre. */
 };
 
