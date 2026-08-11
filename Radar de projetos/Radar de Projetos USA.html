@@ -209,10 +209,9 @@ h1{font-size:26px;line-height:1.2}
 .meter-head{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:baseline;margin-bottom:10px}
 .meter-head .t{font-size:13.5px;font-weight:640}
 .meter-head .v{font-size:12.5px;color:var(--ink-2)}
-.meter{height:8px;border-radius:4px;background:var(--grid);overflow:hidden;display:flex}
-.meter i{display:block;height:100%;border-radius:4px}
+.meter{height:8px;display:flex;gap:3px}
+.meter i{display:block;height:100%;border-radius:3px;flex:1;min-width:6px;background:var(--grid)}
 .meter i.done{background:var(--good)}
-.meter i.gap{width:2px;background:var(--surface);border-radius:0}
 .meter i.doing{background:var(--accent)}
 .meter-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:9px;font-size:12px;color:var(--ink-2)}
 .meter-legend span{display:inline-flex;align-items:center;gap:6px}
@@ -1073,12 +1072,13 @@ function render(){
     doing:inQ.filter(i => i.status === "doing").length,
     total:inQ.length
   };
-  const pDone = q.total ? Math.round(q.done / q.total * 100) : 0;
-  const pDoing = q.total ? Math.round(q.doing / q.total * 100) : 0;
   $("meterTitle").textContent = t.meter + " · " + q.label;
   $("meterValue").textContent = `${q.done} ${t.of} ${q.total} ${t.initiatives}`;
+  /* Um segmento por projeto: contagem se lê como contagem — barra meio cheia
+     se lia como "metade pronto" quando nada tinha concluído. */
   const mEl = $("meter");
-  mEl.innerHTML = `<i class="done" style="width:${pDone}%"></i>${pDone ? '<i class="gap"></i>' : ""}<i class="doing" style="width:${pDoing}%"></i>`;
+  mEl.innerHTML = Array.from({length:q.total}, (_, k) =>
+    `<i class="${k < q.done ? "done" : k < q.done + q.doing ? "doing" : ""}"></i>`).join("");
   mEl.setAttribute("aria-label", `${t.meter} ${q.label}: ${q.done} ${t.of} ${q.total} ${t.initiatives}`);
   $("meterLegend").innerHTML = [
     `<span><span class="swatch" style="background:var(--good)"></span>${esc(t.mDone)} ${q.done}</span>`,
