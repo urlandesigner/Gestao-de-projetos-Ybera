@@ -301,12 +301,12 @@ section{margin-bottom:30px}
 
 .cards{display:flex;flex-direction:column;gap:11px}
 .card{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:14px 15px 13px;box-shadow:var(--shadow)}
-.card .tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:660;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2);background:var(--neutral-bg);border-radius:999px;padding:3px 9px;margin-bottom:9px}
+.card .tag,.proj-body .tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:660;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2);background:var(--neutral-bg);border-radius:999px;padding:3px 9px;margin-bottom:9px}
 .card h4{font-size:14.5px;line-height:1.35;margin-bottom:6px}
 .card .why{font-size:13px;color:var(--ink-2);line-height:1.5}
-.card .row{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;margin-top:11px;padding-top:10px;border-top:1px solid var(--hair);font-size:12px;color:var(--ink-2)}
-.card .row .k{display:inline-flex;align-items:center;gap:5px}
-.card .row svg{opacity:.75}
+.card .row,.proj-body .row{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;margin-top:11px;padding-top:10px;border-top:1px solid var(--hair);font-size:12px;color:var(--ink-2)}
+.card .row .k,.proj-body .row .k{display:inline-flex;align-items:center;gap:5px}
+.card .row svg,.proj-body .row svg{opacity:.75}
 .card .src{margin-top:8px;font-size:11px;color:var(--ink-3);display:flex;align-items:center;gap:5px}
 .card .src svg{width:11px;height:11px;opacity:.6}
 .elapsed{margin-top:12px}
@@ -396,6 +396,44 @@ section{margin-bottom:30px}
 .foot{margin-top:22px;padding-top:16px;border-top:1px solid var(--hair);display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--ink-3)}
 
 /* ===========================================================
+   PROJETOS EM DETALHE — acordeão com descrição e demandas.
+   Fora da impressão: no papel esta seção viraria quatro páginas.
+   =========================================================== */
+.sec-sub{font-size:13px;color:var(--ink-2);margin:-7px 0 13px;max-width:76ch}
+.det{display:flex;flex-direction:column;gap:9px}
+.proj{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);box-shadow:var(--shadow)}
+.proj>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:13px 16px;font-size:14px}
+.proj>summary::-webkit-details-marker{display:none}
+.proj>summary::marker{content:""}
+.proj>summary svg{transition:transform .16s ease;color:var(--ink-3)}
+.proj[open]>summary svg{transform:rotate(90deg)}
+.ptitle{font-weight:640;line-height:1.35;color:var(--ink);flex:1 1 auto;min-width:0}
+.pstatus{flex:0 0 auto;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:999px;padding:3px 9px;background:var(--neutral-bg);color:var(--ink-2)}
+.pstatus.st-doing{background:var(--accent-bg);color:var(--ink)}
+.pstatus.st-done{background:var(--good-bg);color:#0a7a0a}
+:root[data-theme="dark"] .pstatus.st-done{color:var(--good)}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])) .pstatus.st-done{color:var(--good)}}
+.dprog{flex:0 0 auto;font-size:11.5px;color:var(--ink-2)}
+.dmeter{flex:0 0 auto;display:flex;gap:2px;width:52px;height:6px}
+.dmeter i{flex:1;border-radius:2px;background:var(--grid)}
+.dmeter i.done{background:var(--good)}
+.dmeter i.doing{background:var(--accent)}
+.proj-body{padding:12px 16px 15px;border-top:1px solid var(--hair)}
+.proj-body .about{font-size:13.5px;color:var(--ink-2);line-height:1.6;max-width:76ch;margin:8px 0 0}
+.dh{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3);margin:14px 0 8px;font-weight:700}
+.dlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.dlist li{display:flex;gap:9px;font-size:13.5px;line-height:1.5;align-items:flex-start}
+.dic{flex:0 0 auto;width:16px;height:16px;border-radius:50%;display:grid;place-items:center;margin-top:2px}
+.d-done .dic{background:var(--good-bg)}
+.d-done .dic svg{width:10px;height:10px;color:var(--good)}
+.d-doing .dic{background:var(--accent-bg)}
+.d-doing .dic::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.d-next .dic{border:1.5px solid var(--grid)}
+.d-done>span:last-child{color:var(--ink-2)}
+.ddue{color:var(--ink-3);font-size:12px}
+.dnone{font-size:12.5px;color:var(--ink-3);border:1px dashed var(--hair);border-radius:9px;padding:10px 12px;margin:0}
+
+/* ===========================================================
    EDITORIAL & MOTION — numeração de seções, feedback tátil e
    entrada escalonada. Tudo guardado por prefers-reduced-motion;
    a impressão desliga animação e textura no bloco @media print.
@@ -429,6 +467,7 @@ section{margin-bottom:30px}
   section:nth-of-type(6){animation-delay:.49s}
   .live i{animation:pulse 2.6s ease-in-out infinite}
   .fold[open] .cards{animation:rise .35s var(--ease-out-strong)}
+  .proj[open] .proj-body{animation:rise .3s var(--ease-out-strong)}
   .how[open] .how-body{animation:rise .3s var(--ease-out-strong)}
   .empty details[open] .why-full{animation:rise .3s var(--ease-out-strong)}
 }
@@ -485,7 +524,7 @@ section{margin-bottom:30px}
   /* Fora da versão impressa: controles, filtros e os cards de Planejado — no
      papel eles repetiriam o Horizonte e custariam quatro páginas. A coluna
      ganha uma linha apontando para lá. */
-  .controls,.icon-btn,.filters,.fold,.side,.skip{display:none!important}
+  .controls,.icon-btn,.filters,.fold,.side,.skip,#s-det{display:none!important}
   .shell{display:block!important;max-width:none}
   .how,.how>summary{border:0;background:transparent}
   .how>summary{padding:0 0 8px;font-size:13px}
@@ -590,6 +629,12 @@ section{margin-bottom:30px}
     <div class="board" id="board"></div>
   </section>
 
+  <section id="s-det">
+    <div class="sec-head"><h2 id="detTitle"></h2></div>
+    <p class="sec-sub" id="detSub"></p>
+    <div class="det" id="detList"></div>
+  </section>
+
   <section id="s-hor">
     <div class="sec-head"><h2 id="horTitle"></h2></div>
     <div class="horizon" id="horizon"></div>
@@ -645,6 +690,18 @@ section{margin-bottom:30px}
    PARA ADICIONAR UM ENTREGUE: copie um item, troque status para "done",
    preencha `shipped` e, se houver, `result`. A coluna Entregue, o tile e o
    medidor do trimestre passam a contá-lo automaticamente.
+
+   about:{pt,en}                → parágrafo "sobre o que se trata" do projeto.
+                                  Aparece na seção Projetos em detalhe.
+   demands:[...]                → demandas acompanhadas dentro do projeto, na
+                                  mesma seção. Cada demanda:
+                                    {t:{pt:"Texto", en:"Text"},
+                                     status:"done"|"doing"|"next",
+                                     due:"AAAA-MM-DD"}   ← due é opcional
+                                  A lista é mantida à mão na revisão quinzenal;
+                                  a contagem no acordeão e o badge "Detalhe" da
+                                  navegação são derivados dela. Sem `demands`,
+                                  o projeto mostra o estado vazio da seção.
    ========================================================================== */
 const DATA = {
   meta:{
@@ -751,74 +808,102 @@ const DATA = {
      title:{pt:"Loja USA em conformidade com as políticas do Google",
             en:"US store compliant with Google policies"},
      why:{pt:"Sem conformidade, os anúncios da loja USA ficam expostos a reprovação e a suspensão de conta.",
-          en:"Without compliance, US store ads are exposed to disapproval and account suspension."}},
+          en:"Without compliance, US store ads are exposed to disapproval and account suspension."},
+     about:{pt:"Adequação da loja Clube USA às políticas do Google (Merchant Center e Ads): revisão das páginas de política, informações de contato, trocas, devoluções e checkout, corrigindo os pontos que hoje expõem os anúncios a reprovação. É pré-requisito para escalar mídia paga com segurança.",
+            en:"Bringing the US Club store in line with Google's policies (Merchant Center and Ads): reviewing policy pages, contact information, exchanges, refunds and checkout, fixing the points that currently expose ads to disapproval. A prerequisite for scaling paid media safely."}},
     {status:"doing", track:"club", start:"2026-07-01", end:"2026-08-31",
      notion:"Nova PDP USA",
      title:{pt:"Nova página de produto na loja USA", en:"New product page on the US store"},
      why:{pt:"A página de produto é onde a decisão de compra acontece — é a alavanca mais direta de conversão.",
-          en:"The product page is where the buying decision happens — the most direct conversion lever."}},
+          en:"The product page is where the buying decision happens — the most direct conversion lever."},
+     about:{pt:"Redesenho completo da página de produto da loja USA — narrativa visual, benefícios, prova social, especificações e módulos de conversão. É a página onde a decisão de compra acontece, e por isso a alavanca mais direta de conversão do trimestre.",
+            en:"Full redesign of the US store's product page — visual narrative, benefits, social proof, specifications and conversion modules. It's the page where the buying decision happens, which makes it the quarter's most direct conversion lever."}},
     {status:"doing", track:"club", start:"2026-08-01", end:"2026-09-30",
      notion:"Tradução",
      title:{pt:"Loja USA inteiramente em inglês", en:"US store fully in English"},
      why:{pt:"Conteúdo traduzido de ponta a ponta remove o principal atrito de confiança do comprador americano.",
-          en:"End-to-end translated content removes the American buyer's main trust barrier."}},
+          en:"End-to-end translated content removes the American buyer's main trust barrier."},
+     about:{pt:"Tradução de ponta a ponta da loja para o inglês americano: catálogo, páginas institucionais, e-mails transacionais e os microtextos de navegação e checkout. Remove o principal atrito de confiança do comprador local, que hoje encontra conteúdo misto.",
+            en:"End-to-end translation of the store into US English: catalog, institutional pages, transactional e-mails and the microcopy across navigation and checkout. Removes the American buyer's main trust barrier — mixed-language content."}},
 
     /* ---------- PLANEJADO (status Notion: "Não iniciado") ---------- */
     {status:"next", track:"club", start:"2026-08-15", end:"2026-09-30",
      notion:"Nova Homepage USA",
      title:{pt:"Nova home da loja USA", en:"New US store homepage"},
      why:{pt:"É a primeira impressão da marca no mercado americano e o principal ponto de entrada do tráfego pago.",
-          en:"It's the brand's first impression in the US market and the main landing point for paid traffic."}},
+          en:"It's the brand's first impression in the US market and the main landing point for paid traffic."},
+     about:{pt:"Nova home da loja Clube USA como porta de entrada do tráfego pago: hero, vitrines por categoria, prova social e trilhas de navegação desenhadas para quem chega sem conhecer a marca. É a primeira impressão da Ybera no mercado americano.",
+            en:"New homepage for the US Club store as the landing point for paid traffic: hero, category showcases, social proof and navigation paths designed for first-time visitors. Ybera's first impression in the American market."}},
     {status:"next", track:"club", start:"2026-09-01", end:"2026-09-30",
      notion:"Novo Design System Shopify",
      title:{pt:"Design system próprio no Shopify", en:"In-house design system on Shopify"},
      why:{pt:"Faz cada página nova nascer padronizada, em vez de ser desenhada do zero a cada demanda.",
-          en:"Every new page starts standardized instead of being designed from scratch each time."}},
+          en:"Every new page starts standardized instead of being designed from scratch each time."},
+     about:{pt:"Biblioteca própria de seções e componentes no Shopify — tokens, tipografia, grids e módulos reutilizáveis. Faz cada página nova nascer padronizada e encurta qualquer demanda futura de página, em vez de desenhar do zero a cada pedido.",
+            en:"An in-house library of Shopify sections and components — tokens, typography, grids and reusable modules. Every new page starts standardized, shortening any future page demand instead of designing from scratch each time."}},
     {status:"next", track:"club", start:"2026-09-01", end:"2026-09-30",
      notion:"App de Reviews",
      title:{pt:"Avaliações de clientes na loja", en:"Customer reviews on the store"},
      why:{pt:"Prova social é o que sustenta a conversão de uma marca ainda pouco conhecida nos EUA.",
-          en:"Social proof is what sustains conversion for a brand still little known in the US."}},
+          en:"Social proof is what sustains conversion for a brand still little known in the US."},
+     about:{pt:"Implantação de app de avaliações na loja: coleta pós-compra automatizada, exibição de notas e depoimentos na página de produto e selos agregados. Prova social para sustentar a conversão de uma marca ainda pouco conhecida nos EUA.",
+            en:"Rolling out a reviews app on the store: automated post-purchase collection, ratings and testimonials on the product page, and aggregate badges. Social proof to sustain conversion for a brand still little known in the US."}},
     {status:"next", track:"club", start:"2026-10-01", end:"2026-12-31",
      notion:"Novo Tema da Loja USA/Global",
      title:{pt:"Novo tema da loja USA e global", en:"New theme for the US and global store"},
      why:{pt:"Um tema único elimina o retrabalho de manter duas lojas com aparência e código diferentes.",
-          en:"A single theme removes the rework of maintaining two stores with different looks and code."}},
+          en:"A single theme removes the rework of maintaining two stores with different looks and code."},
+     about:{pt:"Unificação do tema das lojas USA e global numa base única de código e aparência. Elimina o retrabalho de manter duas lojas com visuais e códigos diferentes e prepara o terreno para as próximas frentes internacionais.",
+            en:"Unifying the US and global store themes into a single codebase and look. Removes the rework of maintaining two different stores and lays the ground for the next international fronts."}},
     {status:"next", track:"club", start:"2026-10-01", end:"2026-10-31",
      notion:"App Subscription",
      title:{pt:"Compra por assinatura", en:"Subscription purchase"},
      why:{pt:"Transforma compra única em receita recorrente e previsível, sem depender de nova aquisição.",
-          en:"Turns one-off purchases into predictable recurring revenue, without new acquisition."}},
+          en:"Turns one-off purchases into predictable recurring revenue, without new acquisition."},
+     about:{pt:"Compra por assinatura na loja USA: planos recorrentes com desconto, gestão da assinatura pelo próprio cliente e cobrança automática. Transforma compra única em receita recorrente e previsível.",
+            en:"Subscription purchase on the US store: recurring plans with a discount, customer-managed subscriptions and automatic billing. Turns one-off purchases into predictable recurring revenue."}},
     {status:"next", track:"interna", start:"2026-11-01", end:"2027-01-31",
      notion:"Loja Interna USA - Shopify",
      title:{pt:"Loja interna da operação USA", en:"Internal store for the US operation"},
      why:{pt:"Atende o canal interno com regra própria de preço e acesso, separado da loja do consumidor.",
-          en:"Serves the internal channel with its own pricing and access rules, separate from the consumer store."}},
+          en:"Serves the internal channel with its own pricing and access rules, separate from the consumer store."},
+     about:{pt:"Loja Shopify separada para o canal interno da operação USA, com regras próprias de preço e de acesso, apartada da loja do consumidor final. Atende pedidos do time e de parceiros sem contaminar métricas e estoque do varejo.",
+            en:"A separate Shopify store for the US operation's internal channel, with its own pricing and access rules, apart from the consumer store. Serves team and partner orders without contaminating retail metrics and inventory."}},
     {status:"next", track:"club", start:"2026-11-01", end:"2026-11-30",
      notion:"App Rewards Loyalty (Yotpo)",
      title:{pt:"Programa de fidelidade com pontos", en:"Points-based loyalty program"},
      why:{pt:"Dá motivo para o cliente voltar, em vez de a receita depender sempre de aquisição nova.",
-          en:"Gives customers a reason to come back, instead of revenue always depending on new acquisition."}},
+          en:"Gives customers a reason to come back, instead of revenue always depending on new acquisition."},
+     about:{pt:"Programa de fidelidade com pontos via Yotpo: acúmulo por compra, resgate em desconto e níveis de benefício. Dá ao cliente um motivo concreto para voltar, reduzindo a dependência de aquisição nova.",
+            en:"A points-based loyalty program via Yotpo: earn on purchase, redeem as discounts, benefit tiers. Gives customers a concrete reason to return, reducing dependence on new acquisition."}},
     {status:"next", track:"influencer", start:"2027-01-01", end:"2027-04-30",
      notion:"Loja da Influencer - USA",
      title:{pt:"Vitrine própria de cada influencer", en:"A storefront of their own for each influencer"},
      why:{pt:"Cada influencer passa a vender por uma página própria, com link único para usar nas redes.",
-          en:"Each influencer sells through their own page, with a single link for their social bio."}},
+          en:"Each influencer sells through their own page, with a single link for their social bio."},
+     about:{pt:"Vitrine própria para cada influencer parceira: página com a curadoria dela, link único para usar nas redes e venda rastreável. Transforma a audiência das influencers em canal de venda direto.",
+            en:"A storefront of their own for each partner influencer: a curated page, a single link for their social bio and trackable sales. Turns influencer audiences into a direct sales channel."}},
     {status:"next", track:"ia", start:"2027-01-01", end:"2027-02-28",
      notion:"App Shopify Quiz Ybera AI - USA",
      title:{pt:"Recomendação de produto guiada por IA", en:"AI-guided product recommendation"},
      why:{pt:"Leva quem não conhece a linha até o produto certo, reduzindo a dúvida que trava a compra.",
-          en:"Takes someone unfamiliar with the line to the right product, cutting the doubt that stalls a purchase."}},
+          en:"Takes someone unfamiliar with the line to the right product, cutting the doubt that stalls a purchase."},
+     about:{pt:"Quiz de recomendação guiado por IA na loja: algumas perguntas sobre cabelo e objetivo levam quem não conhece a linha ao produto certo. Reduz a dúvida que trava a primeira compra.",
+            en:"An AI-guided recommendation quiz on the store: a few questions about hair and goals take someone unfamiliar with the line to the right product. Cuts the doubt that stalls a first purchase."}},
     {status:"next", track:"reviews", start:"2027-03-01", end:"2027-04-30",
      notion:"App Shopify - Ybera Reviews - USA",
      title:{pt:"Avaliações próprias, sem app de terceiro", en:"In-house reviews, no third-party app"},
      why:{pt:"Tira a dependência de fornecedor externo e o custo de assinatura que vem com ele.",
-          en:"Removes the external vendor dependency and the subscription cost that comes with it."}},
+          en:"Removes the external vendor dependency and the subscription cost that comes with it."},
+     about:{pt:"App próprio de avaliações para substituir o fornecedor terceiro: coleta, moderação e exibição sob controle da Ybera, sem custo de assinatura externo e com os dados em casa.",
+            en:"An in-house reviews app to replace the third-party vendor: collection, moderation and display under Ybera's control, with no external subscription cost and the data kept in-house."}},
     {status:"next", track:"europa", start:"2027-03-01", end:"2027-06-30",
      notion:"Ybera Europa - Crossborder USA",
      title:{pt:"Venda para a Europa a partir da operação USA", en:"Selling into Europe from the US operation"},
      why:{pt:"Abre um segundo mercado reaproveitando a estrutura de loja e logística já montada nos EUA.",
-          en:"Opens a second market by reusing the store and logistics structure already built in the US."}}
+          en:"Opens a second market by reusing the store and logistics structure already built in the US."},
+     about:{pt:"Venda para a Europa a partir da operação USA: moeda, frete internacional, impostos e a localização mínima necessária para operar. Abre um segundo mercado reaproveitando a estrutura de loja e logística já montada nos EUA.",
+            en:"Selling into Europe from the US operation: currency, international shipping, taxes and the minimum localization needed to operate. Opens a second market by reusing the store and logistics structure already built in the US."}}
   ],
 
   horizon:{
@@ -872,7 +957,7 @@ const T = {
     alertTitle:"Atenção — fora do plano",
     alertBlocked:"Travado", alertWatch:"Em atenção",
     navTop:"Panorama", navEss:"O essencial", navChg:"Mudou", navAsk:"Com vocês",
-    navBoard:"Projetos", navHor:"Horizonte", navHow:"Como ler",
+    navBoard:"Projetos", navDet:"Detalhe", navHor:"Horizonte", navHow:"Como ler",
     howTitle:"Como ler esta página",
     howLegend:"As colunas e os selos", howItems:"Os projetos",
     howChg:"O bloco “o que mudou”", howHor:"O horizonte", howSource:"Fonte e limites",
@@ -895,6 +980,10 @@ const T = {
     askEmptyD:"As colunas <b>Decisões</b> e <b>Ações</b> da base Projetos estão vazias em todas as 32 linhas. Enquanto elas não forem preenchidas, esta seção não tem o que mostrar — e decisões travadas seguem invisíveis para quem precisa decidir.",
     boardTitle:"Quadro de projetos",
     boardSub:"Cada item está escrito pelo que o usuário passa a conseguir fazer. O nome original no Notion aparece embaixo, para rastreio.",
+    detTitle:"Projetos em detalhe",
+    detSub:"O que é cada projeto e as demandas acompanhadas dentro dele. Abra um projeto para ler a descrição; a lista de demandas é mantida à mão na revisão quinzenal.",
+    demandsTitle:"Demandas",
+    demandsNone:"Sem demandas registradas ainda — entram na próxima revisão quinzenal.",
     colDone:"Entregue", colDoing:"Em curso", colNext:"Planejado",
     doneEmptyShort:"Histórico em levantamento — entra na próxima atualização.",
     doneEmptyT:"Histórico em levantamento",
@@ -936,7 +1025,7 @@ const T = {
     alertTitle:"Attention — off plan",
     alertBlocked:"Blocked", alertWatch:"At risk",
     navTop:"Overview", navEss:"Essentials", navChg:"Changed", navAsk:"On you",
-    navBoard:"Projects", navHor:"Horizon", navHow:"How to read",
+    navBoard:"Projects", navDet:"Detail", navHor:"Horizon", navHow:"How to read",
     howTitle:"How to read this page",
     howLegend:"The columns and the badges", howItems:"The projects",
     howChg:"The “what changed” block", howHor:"The horizon", howSource:"Source and limits",
@@ -959,6 +1048,10 @@ const T = {
     askEmptyD:"The <b>Decisões</b> and <b>Ações</b> columns in the Projetos database are empty across all 32 rows. Until they're filled, this section has nothing to show — and blocked decisions stay invisible to the people who need to make them.",
     boardTitle:"Project board",
     boardSub:"Every item is written as what the user can now do. The original Notion name appears below it, for traceability.",
+    detTitle:"Projects in detail",
+    detSub:"What each project is and the demands tracked inside it. Open a project to read its description; the demand list is maintained by hand during the biweekly review.",
+    demandsTitle:"Demands",
+    demandsNone:"No demands recorded yet — they land in the next biweekly review.",
     colDone:"Shipped", colDoing:"In flight", colNext:"Planned",
     doneEmptyShort:"History being compiled — lands in the next update.",
     doneEmptyT:"History being compiled",
@@ -1228,6 +1321,49 @@ function render(){
   const foldEl = $("board").querySelector(".fold");
   if(foldEl) foldEl.addEventListener("toggle", () => { foldOpen = foldEl.open; });
 
+  /* --- projetos em detalhe: descrição + demandas de cada item.
+         Em curso primeiro; dentro do grupo, pela data de início. --- */
+  $("detTitle").textContent = t.detTitle;
+  $("detSub").textContent = t.detSub;
+  const ordDet = {doing:0, next:1, done:2};
+  const stLabel = {done:t.colDone, doing:t.colDoing, next:t.colNext};
+  $("detList").innerHTML = [...items]
+    .sort((a, b) => ordDet[a.status] - ordDet[b.status] || a.start.localeCompare(b.start))
+    .map(i => {
+      const dm = i.demands || [];
+      const dDone = dm.filter(d => d.status === "done").length;
+      const dDoing = dm.filter(d => d.status === "doing").length;
+      const prog = dm.length ? `
+        <span class="dprog mono-num">${dDone}/${dm.length}</span>
+        <span class="dmeter">${dm.map((_, k) =>
+          `<i class="${k < dDone ? "done" : k < dDone + dDoing ? "doing" : ""}"></i>`).join("")}</span>` : "";
+      const list = dm.length
+        ? `<ul class="dlist">${dm.map(d => `<li class="d-${esc(d.status)}">
+            <span class="dic">${d.status === "done" ? ICO.check : ""}</span>
+            <span>${esc(L(d.t))}${d.due ? ` <span class="ddue mono-num">· ${esc(fmtDate(d.due))}</span>` : ""}</span>
+          </li>`).join("")}</ul>`
+        : `<p class="dnone">${esc(t.demandsNone)}</p>`;
+      return `<details class="proj">
+        <summary>
+          ${ICO.chev}
+          <span class="ptitle">${esc(L(i.title))}</span>
+          <span class="pstatus st-${esc(i.status)}">${esc(stLabel[i.status])}</span>
+          ${prog}
+        </summary>
+        <div class="proj-body">
+          <span class="tag">${esc(trackName(i.track))}</span>
+          <p class="about">${esc(L(i.about))}</p>
+          <h5 class="dh">${esc(t.demandsTitle)}</h5>
+          ${list}
+          <div class="row">
+            <span class="k">${ICO.cal}${esc(t.window)}: ${esc(windowLabel(i.start, i.end))}</span>
+            <span class="k">${ICO.user}${esc(i.owner || m.owner)}</span>
+            <span class="k">${ICO.db}<span>Notion: ${esc(i.notion)}</span></span>
+          </div>
+        </div>
+      </details>`;
+    }).join("");
+
   $("horTitle").textContent = t.horTitle;
   $("horizon").innerHTML = ["now","next","later"].map(k => {
     const h = DATA.horizon[k];
@@ -1297,6 +1433,8 @@ function navHtml(t){
     {id:"s-chg",   label:t.navChg,   badge:cycleChanges().length},
     {id:"s-ask",   label:t.navAsk,   badge:nAsk, hot:true},
     {id:"s-board", label:t.navBoard, badge:DATA.items.length, dot:flagged > 0},
+    {id:"s-det",   label:t.navDet,
+     badge:DATA.items.reduce((n, i) => n + (i.demands || []).filter(d => d.status === "doing").length, 0)},
     {id:"s-hor",   label:t.navHor},
     {id:"s-how",   label:t.navHow}
   ];
