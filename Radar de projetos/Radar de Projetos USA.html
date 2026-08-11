@@ -45,6 +45,10 @@
   --radius:14px;
   --shadow:0 1px 2px rgba(11,11,11,.04), 0 8px 24px -18px rgba(11,11,11,.18);
   --font:system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-display:ui-serif,"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --ease-out-strong:cubic-bezier(.23,1,.32,1);
+  --wash1:rgba(42,120,214,.055);
+  --wash2:rgba(236,131,90,.05);
 }
 @media (prefers-color-scheme:dark){
   :root:where(:not([data-theme="light"])){
@@ -55,6 +59,7 @@
     --neutral-bg:rgba(255,255,255,.06); --critical-bg:rgba(208,59,59,.18);
     --warning-bg:rgba(250,178,25,.18); --serious-bg:rgba(236,131,90,.18);
     --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -18px rgba(0,0,0,.6);
+    --wash1:rgba(57,135,229,.10); --wash2:rgba(236,131,90,.06);
     color-scheme:dark;
   }
 }
@@ -66,6 +71,7 @@
   --neutral-bg:rgba(255,255,255,.06); --critical-bg:rgba(208,59,59,.18);
   --warning-bg:rgba(250,178,25,.18); --serious-bg:rgba(236,131,90,.18);
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -18px rgba(0,0,0,.6);
+  --wash1:rgba(57,135,229,.10); --wash2:rgba(236,131,90,.06);
   color-scheme:dark;
 }
 
@@ -78,6 +84,17 @@ body{
   margin:0;background:var(--page);color:var(--ink);
   font-family:var(--font);font-size:15px;line-height:1.5;
   -webkit-font-smoothing:antialiased;
+}
+/* Atmosfera: dois washes de cor no canto + grão fino de papel. Dá profundidade
+   de "briefing impresso" sem imagem externa — e some na impressão. */
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(920px 440px at 84% -8%,var(--wash1),transparent 64%),
+             radial-gradient(720px 400px at -6% 2%,var(--wash2),transparent 58%);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 @media (prefers-reduced-motion: no-preference){html{scroll-behavior:smooth}}
 .shell{display:block}
@@ -111,7 +128,7 @@ body{
     background:transparent;border-right:1px solid var(--hair);
   }
   .side-brand{display:flex;flex-direction:column;gap:5px;padding:0 10px}
-  .side-brand strong{font-size:14.5px;font-weight:660;line-height:1.25;letter-spacing:-.01em}
+  .side-brand strong{font-family:var(--font-display);font-size:16px;font-weight:600;line-height:1.25;letter-spacing:0}
   .navlist{flex-direction:column;gap:2px;margin-bottom:auto}
   .wrap{max-width:none;margin:0;padding:28px 30px 72px 0}
 }
@@ -150,7 +167,7 @@ svg{width:13px;height:13px;flex:0 0 auto}
 .topbar{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
 .brand{display:flex;flex-direction:column;gap:5px}
 .eyebrow{font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
-h1{font-size:26px;line-height:1.2}
+h1{font-family:var(--font-display);font-size:31px;font-weight:600;letter-spacing:-.005em;line-height:1.16}
 .brand .sub{font-size:13.5px;color:var(--ink-2);max-width:70ch}
 .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--hair);border-radius:999px;padding:2px}
@@ -200,7 +217,7 @@ h1{font-size:26px;line-height:1.2}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:14px}
 .tile{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:14px 16px 15px;box-shadow:var(--shadow)}
 .tile .label{font-size:11.5px;font-weight:660;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;gap:6px;margin-bottom:7px}
-.tile .val{font-size:32px;font-weight:680;line-height:1.05;letter-spacing:-.02em}
+.tile .val{font-family:var(--font-display);font-size:32px;font-weight:600;line-height:1.05;letter-spacing:-.01em}
 .tile .val.small{font-size:23px;line-height:1.25}
 .tile .val.zero{color:var(--ink-3)}
 .tile .foot{font-size:12px;color:var(--ink-2);margin-top:5px}
@@ -224,7 +241,7 @@ h1{font-size:26px;line-height:1.2}
    =========================================================== */
 section{margin-bottom:30px}
 .sec-head{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin-bottom:13px}
-.sec-head h2{font-size:18px}
+.sec-head h2{font-family:var(--font-display);font-size:21px;font-weight:600;letter-spacing:0}
 
 .summary{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:6px 18px 8px;box-shadow:var(--shadow)}
 .summary ul{list-style:none;margin:0;padding:0}
@@ -378,6 +395,44 @@ section{margin-bottom:30px}
 .legend dd{margin:0;font-size:12.5px;color:var(--ink-2);line-height:1.45}
 .foot{margin-top:22px;padding-top:16px;border-top:1px solid var(--hair);display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--ink-3)}
 
+/* ===========================================================
+   EDITORIAL & MOTION — numeração de seções, feedback tátil e
+   entrada escalonada. Tudo guardado por prefers-reduced-motion;
+   a impressão desliga animação e textura no bloco @media print.
+   =========================================================== */
+.wrap{counter-reset:sec}
+.sec-head h2::before{
+  counter-increment:sec;content:counter(sec,decimal-leading-zero);
+  font-family:var(--font);font-size:11px;font-weight:700;letter-spacing:.1em;
+  color:var(--ink-3);margin-right:10px;vertical-align:4px;font-variant-numeric:tabular-nums;
+}
+.seg button,.icon-btn,.chip{transition:transform 140ms var(--ease-out-strong),background-color 150ms ease,color 150ms ease,box-shadow 150ms ease}
+.seg button:active,.icon-btn:active,.chip:active{transform:scale(.96)}
+.navlist a{transition:background-color 160ms ease,color 160ms ease,transform 140ms var(--ease-out-strong)}
+.navlist a:active{transform:scale(.97)}
+/* Janela atual do horizonte recebe um fio de acento no topo:
+   a hierarquia temporal fica visível antes de ler qualquer palavra. */
+.hcard{position:relative;overflow:hidden}
+.hcard[data-h="now"]::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,var(--accent),transparent 72%)}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@media (prefers-reduced-motion: no-preference){
+  .topbar{animation:rise .45s var(--ease-out-strong) backwards}
+  .strip{animation:rise .45s var(--ease-out-strong) .06s backwards}
+  .tiles{animation:rise .45s var(--ease-out-strong) .12s backwards}
+  .meter-card{animation:rise .45s var(--ease-out-strong) .18s backwards}
+  section{animation:rise .5s var(--ease-out-strong) .24s backwards}
+  section:nth-of-type(2){animation-delay:.29s}
+  section:nth-of-type(3){animation-delay:.34s}
+  section:nth-of-type(4){animation-delay:.39s}
+  section:nth-of-type(5){animation-delay:.44s}
+  section:nth-of-type(6){animation-delay:.49s}
+  .live i{animation:pulse 2.6s ease-in-out infinite}
+  .fold[open] .cards{animation:rise .35s var(--ease-out-strong)}
+  .how[open] .how-body{animation:rise .3s var(--ease-out-strong)}
+  .empty details[open] .why-full{animation:rise .3s var(--ease-out-strong)}
+}
+
 /* Antes o quadro caía de 3 para 1 coluna abaixo de 1024px e a página
    esticava de 3,6 para 4,9 telas. Agora tem o passo do meio: 2 colunas. */
 @media (max-width:1180px){
@@ -403,7 +458,7 @@ section{margin-bottom:30px}
 }
 @media (max-width:560px){
   .wrap{padding:18px 14px 56px}
-  h1{font-size:22px}
+  h1{font-size:25px}
   .topbar{flex-direction:column}
   .strip{flex-direction:column;align-items:flex-start;gap:8px}
   .strip .cycle{flex-direction:column;align-items:flex-start;gap:3px}
@@ -421,7 +476,8 @@ section{margin-bottom:30px}
     --ink:#000;--ink-2:#333;--ink-3:#5f5e59;
     --hair:#d5d4cd;--grid:#e4e3dc;--shadow:none;color-scheme:light;
   }
-  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;animation:none!important;transition:none!important}
+  body::before,body::after{display:none}
   body{font-size:11.5px}
   .wrap{max-width:none;padding:0}
   h1{font-size:19px}
