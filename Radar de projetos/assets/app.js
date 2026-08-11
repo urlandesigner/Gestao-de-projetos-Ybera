@@ -24,7 +24,7 @@ const T = {
     alertTitle:"Atenção — fora do plano",
     alertBlocked:"Travado", alertWatch:"Em atenção",
     navTop:"Panorama", navChg:"Mudou", navAsk:"Pendências",
-    navBoard:"Board de entregas", navDet:"Projetos", navHor:"Horizonte",
+    navBoard:"Board de entregas", navDet:"Produtos", navHor:"Horizonte",
     whyLink:"por quê?",
     themeDark:"Mudar para tema escuro", themeLight:"Mudar para tema claro",
     sumTitle:"O essencial",
@@ -44,8 +44,9 @@ const T = {
     askEmptyD:"As colunas <b>Decisões</b> e <b>Ações</b> da base Projetos estão vazias em todas as 32 linhas. Enquanto elas não forem preenchidas, esta seção não tem o que mostrar — e decisões travadas seguem invisíveis para quem precisa decidir.",
     boardTitle:"Board de entregas",
     boardSub:"Cada item está escrito pelo que o usuário passa a conseguir fazer. O nome original no Notion aparece embaixo, para rastreio.",
-    detTitle:"Projetos",
-    detSub:"O que é cada projeto e as demandas acompanhadas dentro dele. Abra um projeto para ler a descrição; a lista de demandas é mantida à mão na revisão quinzenal.",
+    detTitle:"Produtos",
+    detSub:"Os produtos da frente USA e os projetos dentro de cada um. Abra um projeto para ler o que ele é e as demandas acompanhadas nele; a lista de demandas é mantida à mão na revisão quinzenal.",
+    projectOne:"projeto", projectMany:"projetos", doingLower:"em curso",
     demandsTitle:"Demandas",
     demandsNone:"Sem demandas registradas ainda — entram na próxima revisão quinzenal.",
     colDone:"Entregue", colDoing:"Em curso", colNext:"Planejado",
@@ -85,7 +86,7 @@ const T = {
     alertTitle:"Attention — off plan",
     alertBlocked:"Blocked", alertWatch:"At risk",
     navTop:"Overview", navChg:"Changed", navAsk:"Pending",
-    navBoard:"Delivery board", navDet:"Projects", navHor:"Horizon",
+    navBoard:"Delivery board", navDet:"Products", navHor:"Horizon",
     whyLink:"why?",
     themeDark:"Switch to dark theme", themeLight:"Switch to light theme",
     sumTitle:"The essentials",
@@ -105,8 +106,9 @@ const T = {
     askEmptyD:"The <b>Decisões</b> and <b>Ações</b> columns in the Projetos database are empty across all 32 rows. Until they're filled, this section has nothing to show — and blocked decisions stay invisible to the people who need to make them.",
     boardTitle:"Delivery board",
     boardSub:"Every item is written as what the user can now do. The original Notion name appears below it, for traceability.",
-    detTitle:"Projects",
-    detSub:"What each project is and the demands tracked inside it. Open a project to read its description; the demand list is maintained by hand during the biweekly review.",
+    detTitle:"Products",
+    detSub:"The products on the USA front and the projects inside each one. Open a project to read what it is and the demands tracked in it; the demand list is maintained by hand during the biweekly review.",
+    projectOne:"project", projectMany:"projects", doingLower:"in flight",
     demandsTitle:"Demands",
     demandsNone:"No demands recorded yet — they land in the next biweekly review.",
     colDone:"Shipped", colDoing:"In flight", colNext:"Planned",
@@ -272,7 +274,7 @@ function render(){
     mudou:{num:"01", h1:t.chgTitle, sub:t.chgSub},
     pendencias:{num:"02", h1:t.askTitle, sub:t.askSub},
     board:{num:"03", h1:t.boardTitle, sub:t.boardSub},
-    projetos:{num:"04", h1:t.detTitle, sub:t.detSub},
+    produtos:{num:"04", h1:t.detTitle, sub:t.detSub},
     horizonte:{num:"05", h1:t.horTitle, sub:t.horSub},
     completo:{h1:L(m.title), sub:L(m.sub)}
   };
@@ -431,48 +433,28 @@ function render(){
   const foldEl = $("board").querySelector(".fold");
   if(foldEl) foldEl.addEventListener("toggle", () => { foldOpen = foldEl.open; });
 
-  /* --- projetos em detalhe: descrição + demandas de cada item.
-         Em curso primeiro; dentro do grupo, pela data de início. --- */
+  /* --- produtos: cada produto (coluna Produto do Notion) com os projetos
+         dentro dele. Dentro do produto, em curso primeiro e depois pela data
+         de início. Produto sem projeto não vira bloco vazio. --- */
   $("detTitle").textContent = t.detTitle;
   $("detSub").textContent = t.detSub;
   const ordDet = {doing:0, next:1, done:2};
-  const stLabel = {done:t.colDone, doing:t.colDoing, next:t.colNext};
-  $("detList").innerHTML = [...items]
-    .sort((a, b) => ordDet[a.status] - ordDet[b.status] || a.start.localeCompare(b.start))
-    .map(i => {
-      const dm = i.demands || [];
-      const dDone = dm.filter(d => d.status === "done").length;
-      const dDoing = dm.filter(d => d.status === "doing").length;
-      const prog = dm.length ? `
-        <span class="dprog mono-num">${dDone}/${dm.length}</span>
-        <span class="dmeter">${dm.map((_, k) =>
-          `<i class="${k < dDone ? "done" : k < dDone + dDoing ? "doing" : ""}"></i>`).join("")}</span>` : "";
-      const list = dm.length
-        ? `<ul class="dlist">${dm.map(d => `<li class="d-${esc(d.status)}">
-            <span class="dic">${d.status === "done" ? ICO.check : ""}</span>
-            <span>${esc(L(d.t))}${d.due ? ` <span class="ddue mono-num">· ${esc(fmtDate(d.due))}</span>` : ""}</span>
-          </li>`).join("")}</ul>`
-        : `<p class="dnone">${esc(t.demandsNone)}</p>`;
-      return `<details class="proj">
-        <summary>
-          ${ICO.chev}
-          <span class="ptitle">${esc(L(i.title))}</span>
-          <span class="pstatus st-${esc(i.status)}">${esc(stLabel[i.status])}</span>
-          ${prog}
-        </summary>
-        <div class="proj-body">
-          <span class="tag">${esc(trackName(i.track))}</span>
-          <p class="about">${esc(L(i.about))}</p>
-          <h5 class="dh">${esc(t.demandsTitle)}</h5>
-          ${list}
-          <div class="row">
-            <span class="k">${ICO.cal}${esc(t.window)}: ${esc(windowLabel(i.start, i.end))}</span>
-            <span class="k">${ICO.user}${esc(i.owner || m.owner)}</span>
-            <span class="k">${ICO.db}<span>Notion: ${esc(i.notion)}</span></span>
-          </div>
-        </div>
-      </details>`;
-    }).join("");
+  $("detList").innerHTML = DATA.tracks.map(tr => {
+    const list = items.filter(i => i.track === tr.id)
+      .sort((a, b) => ordDet[a.status] - ordDet[b.status] || a.start.localeCompare(b.start));
+    if(!list.length) return "";
+    const nDoing = list.filter(i => i.status === "doing").length;
+    const meta = [`${list.length} ${list.length === 1 ? t.projectOne : t.projectMany}`];
+    if(nDoing) meta.push(`${nDoing} ${t.doingLower}`);
+    return `<div class="prod" data-track="${esc(tr.id)}">
+      <div class="prod-head">
+        <h3>${esc(L(tr.name))}</h3>
+        <span class="pn mono-num">${esc(meta.join(" · "))}</span>
+      </div>
+      ${tr.about ? `<p class="prod-about">${esc(L(tr.about))}</p>` : ""}
+      <div class="det">${list.map(i => projRow(i, t, m)).join("")}</div>
+    </div>`;
+  }).join("");
 
   /* --- horizonte DERIVADO das datas dos projetos: cada um cai numa faixa
          pela data de início, contra o trimestre corrente. Antes as três
@@ -545,7 +527,7 @@ function navHtml(t){
     {href:"mudou.html",      page:"mudou",      label:t.navChg,   badge:cycleChanges().length},
     {href:"pendencias.html", page:"pendencias", label:t.navAsk,   badge:nAsk, hot:true},
     {href:"board.html",      page:"board",      label:t.navBoard, badge:DATA.items.length, dot:flagged > 0},
-    {href:"projetos.html",   page:"projetos",   label:t.navDet,   badge:nDem},
+    {href:"produtos.html",   page:"produtos",   label:t.navDet,   badge:nDem},
     {href:"horizonte.html",  page:"horizonte",  label:t.navHor}
   ];
   const cur = document.body.dataset.page || "index";
@@ -564,6 +546,43 @@ function navReveal(){
   const act = nav.querySelector && nav.querySelector('a[aria-current="true"]');
   if(act && nav.scrollWidth > nav.clientWidth)
     act.scrollIntoView({inline:"center", block:"nearest", behavior:"instant"});
+}
+
+/* Um projeto dentro do produto: descrição, demandas e rastreio. O selo de
+   produto saiu do corpo — o cabeçalho do bloco acima já diz de qual é. */
+function projRow(i, t, m){
+  const stLabel = {done:t.colDone, doing:t.colDoing, next:t.colNext};
+  const dm = i.demands || [];
+  const dDone = dm.filter(d => d.status === "done").length;
+  const dDoing = dm.filter(d => d.status === "doing").length;
+  const prog = dm.length ? `
+    <span class="dprog mono-num">${dDone}/${dm.length}</span>
+    <span class="dmeter">${dm.map((_, k) =>
+      `<i class="${k < dDone ? "done" : k < dDone + dDoing ? "doing" : ""}"></i>`).join("")}</span>` : "";
+  const list = dm.length
+    ? `<ul class="dlist">${dm.map(d => `<li class="d-${esc(d.status)}">
+        <span class="dic">${d.status === "done" ? ICO.check : ""}</span>
+        <span>${esc(L(d.t))}${d.due ? ` <span class="ddue mono-num">· ${esc(fmtDate(d.due))}</span>` : ""}</span>
+      </li>`).join("")}</ul>`
+    : `<p class="dnone">${esc(t.demandsNone)}</p>`;
+  return `<details class="proj">
+    <summary>
+      ${ICO.chev}
+      <span class="ptitle">${esc(L(i.title))}</span>
+      <span class="pstatus st-${esc(i.status)}">${esc(stLabel[i.status])}</span>
+      ${prog}
+    </summary>
+    <div class="proj-body">
+      <p class="about">${esc(L(i.about))}</p>
+      <h5 class="dh">${esc(t.demandsTitle)}</h5>
+      ${list}
+      <div class="row">
+        <span class="k">${ICO.cal}${esc(t.window)}: ${esc(windowLabel(i.start, i.end))}</span>
+        <span class="k">${ICO.user}${esc(i.owner || m.owner)}</span>
+        <span class="k">${ICO.db}<span>Notion: ${esc(i.notion)}</span></span>
+      </div>
+    </div>
+  </details>`;
 }
 
 function card(i, t){

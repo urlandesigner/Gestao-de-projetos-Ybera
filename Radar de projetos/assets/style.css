@@ -385,6 +385,12 @@ section{margin-bottom:30px}
    Fora da impressão: no papel esta seção viraria quatro páginas.
    =========================================================== */
 .sec-sub{font-size:13px;color:var(--ink-2);margin:-7px 0 13px;max-width:76ch}
+/* Produto = nível de cima; os projetos dele vêm no .det de dentro. */
+.prods{display:flex;flex-direction:column;gap:30px}
+.prod-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;padding:0 2px 9px;border-bottom:2px solid var(--grid);margin-bottom:11px}
+.prod-head h3{font-family:var(--font-display);font-size:20px;font-weight:600;letter-spacing:0}
+.prod-head .pn{margin-left:auto;font-size:12px;font-weight:600;color:var(--ink-2);background:var(--neutral-bg);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.prod-about{font-size:13.5px;color:var(--ink-2);line-height:1.6;max-width:76ch;margin:0 0 13px}
 .det{display:flex;flex-direction:column;gap:9px}
 .proj{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);box-shadow:var(--shadow)}
 .proj>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:13px 16px;font-size:14px}
