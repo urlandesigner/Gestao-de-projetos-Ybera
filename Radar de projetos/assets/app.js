@@ -58,7 +58,10 @@ const T = {
     foldShow:"Ver os {n} projetos planejados", foldHide:"Esconder os planejados",
     printPlanned:"Os {n} projetos planejados estão listados na seção Horizonte, adiante — sem repetir os cards aqui.",
     horTitle:"Horizonte",
-    horSub:"Quanto mais longe, menos preciso — de propósito. As datas vêm do período de cada projeto no Notion.",
+    horSub:"Quanto mais longe, menos preciso — de propósito. As três faixas saem da data de início de cada projeto no Notion: mudar um período move o projeto de faixa sozinho.",
+    horNow:"Agora", horNext:"A seguir", horLater:"Depois",
+    horUntil:"até {d}",
+    confNow:"Janela atual", confNext:"Planejado", confLater:"Roadmap",
     footSource:"Fonte: base Projetos (Notion · espaço Ecommerce & Growth), filtro Frente = USA — 14 de 32 projetos. Extração de 11/08/2026.",
     footCadence:"Cadência: uma atualização a cada duas semanas.",
     footLimit:"Limitação conhecida: esta base descreve projetos de 1 a 4 meses, não entregas de sprint. Ela responde bem “o que está planejado”; para “o que foi entregue nesta quinzena” a fonte é o board de sprints.",
@@ -116,7 +119,10 @@ const T = {
     foldShow:"Show the {n} planned projects", foldHide:"Hide the planned ones",
     printPlanned:"The {n} planned projects are listed in the Horizon section below — not repeated as cards here.",
     horTitle:"Horizon",
-    horSub:"The further out, the vaguer — on purpose. Dates come from each project's period in Notion.",
+    horSub:"The further out, the vaguer — on purpose. The three bands come from each project's start date in Notion: change a period and the project moves band on its own.",
+    horNow:"Now", horNext:"Next", horLater:"Later",
+    horUntil:"through {d}",
+    confNow:"Current window", confNext:"Planned", confLater:"Roadmap",
     footSource:"Source: Projetos database (Notion · Ecommerce & Growth space), filtered Frente = USA — 14 of 32 projects. Extracted 2026-08-11.",
     footCadence:"Cadence: one update every two weeks.",
     footLimit:"Known limitation: this database describes 1-to-4-month projects, not sprint deliveries. It answers “what's planned” well; for “what shipped this cycle” the source is the sprint board.",
@@ -171,6 +177,34 @@ function fmtMonth(ym){
 function windowLabel(a, b){
   const sameYear = a.slice(0,4) === b.slice(0,4);
   return fmtDate(a, !sameYear) + " → " + fmtDate(b, true);
+}
+/* "30 de setembro" | "September 30" — mês inteiro, para o rótulo do horizonte. */
+function fmtDateLong(iso){
+  return new Intl.DateTimeFormat(lang === "pt" ? "pt-BR" : "en-US",
+    {day:"numeric", month:"long"}).format(D(iso));
+}
+const isoOf = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+/* Trimestre seguinte ao que termina em `endIso`. */
+function nextQuarter(endIso){
+  const e = D(endIso);
+  const s = new Date(e.getFullYear(), e.getMonth() + 1, 1);
+  const f = new Date(s.getFullYear(), s.getMonth() + 3, 0);
+  return {start:isoOf(s), end:isoOf(f)};
+}
+/* "Out – Dez 2026" | "Oct – Dec 2026" */
+function monthRange(aIso, bIso){
+  const mn = iso => {
+    const s = new Intl.DateTimeFormat(lang === "pt" ? "pt-BR" : "en-US", {month:"short"})
+      .format(D(iso)).replace(".", "");
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  };
+  return `${mn(aIso)} – ${mn(bIso)} ${bIso.slice(0,4)}`;
+}
+/* "2027" quando tudo começa no mesmo ano; "2027+" quando passa dele. */
+function yearsLabel(list){
+  if(!list.length) return "";
+  const ys = [...new Set(list.map(i => i.start.slice(0,4)))].sort();
+  return ys.length === 1 ? ys[0] : ys[0] + "+";
 }
 function elapsedPct(a, b){
   const s = D(a).getTime(), e = D(b).getTime(), n = TODAY.getTime();
@@ -440,16 +474,32 @@ function render(){
       </details>`;
     }).join("");
 
+  /* --- horizonte DERIVADO das datas dos projetos: cada um cai numa faixa
+         pela data de início, contra o trimestre corrente. Antes as três
+         listas eram digitadas à mão e podiam discordar do board — agora
+         mudar um período move o card de faixa sozinho. Entregues saem: são
+         história, e o lugar deles é a coluna Entregue do board. --- */
   $("horTitle").textContent = t.horTitle;
+  const nq = nextQuarter(m.quarter.end);
+  const band = {now:[], next:[], later:[]};
+  items.filter(i => i.status !== "done")
+       .sort((a, b) => a.start.localeCompare(b.start) || a.end.localeCompare(b.end))
+       .forEach(i => band[i.start <= m.quarter.end ? "now" : i.start <= nq.end ? "next" : "later"].push(i));
+  const hLabel = {now:t.horNow, next:t.horNext, later:t.horLater};
+  const hConf  = {now:t.confNow, next:t.confNext, later:t.confLater};
+  const hWhen  = {
+    now:t.horUntil.replace("{d}", fmtDateLong(m.quarter.end)),
+    next:monthRange(nq.start, nq.end),
+    later:yearsLabel(band.later)
+  };
   $("horizon").innerHTML = ["now","next","later"].map(k => {
-    const h = DATA.horizon[k];
-    if(!h) return "";
-    const label = {now:{pt:"Agora",en:"Now"}, next:{pt:"A seguir",en:"Next"}, later:{pt:"Depois",en:"Later"}}[k];
+    const list = band[k];
+    if(!list.length) return "";
     return `
       <div class="hcard" data-h="${k}">
-        <div class="ht"><h3>${esc(L(label))}</h3><span class="hw">${esc(L(h.when))}</span></div>
-        <span class="conf">${esc(L(h.conf))}</span>
-        <ul>${h.list.map(x => `<li><span>${esc(L(x))}</span></li>`).join("")}</ul>
+        <div class="ht"><h3>${esc(hLabel[k])}</h3><span class="hw">${esc(hWhen[k])}</span></div>
+        <span class="conf">${esc(hConf[k])}</span>
+        <ul>${list.map(i => `<li><span>${esc(L(i.title))}</span></li>`).join("")}</ul>
       </div>`;
   }).join("");
 
