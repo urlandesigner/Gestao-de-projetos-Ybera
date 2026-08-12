@@ -222,10 +222,10 @@ function render(){
   const page = document.body.dataset.page || "index";
   const PM = {
     index:{h1:L(m.title), sub:L(m.sub)},
-    board:{num:"01", h1:t.boardTitle, sub:t.boardSub},
-    pendencias:{num:"02", h1:t.askTitle, sub:t.askSub},
-    produtos:{num:"03", h1:t.detTitle, sub:t.detSub},
-    horizonte:{num:"04", h1:t.horTitle, sub:t.horSub},
+    board:{h1:t.boardTitle, sub:t.boardSub},
+    pendencias:{h1:t.askTitle, sub:t.askSub},
+    produtos:{h1:t.detTitle, sub:t.detSub},
+    horizonte:{h1:t.horTitle, sub:t.horSub},
     completo:{h1:L(m.title), sub:L(m.sub)}
   };
   const pm = PM[page] || PM.index;
@@ -234,9 +234,7 @@ function render(){
 
   $("orgLine").textContent = m.org;
   $("sideTitle").textContent = L(m.shortTitle || m.title);
-  const h1El = $("pageTitle");
-  h1El.textContent = pm.h1;
-  if(pm.num) h1El.setAttribute("data-num", pm.num);
+  $("pageTitle").textContent = pm.h1;
   $("pageSub").textContent = pm.sub;
   $("btnPT").setAttribute("aria-pressed", lang === "pt");
   $("btnEN").setAttribute("aria-pressed", lang === "en");

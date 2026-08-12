@@ -405,18 +405,10 @@ section{margin-bottom:30px}
 .dnone{font-size:12.5px;color:var(--ink-3);border:1px dashed var(--hair);border-radius:9px;padding:10px 12px;margin:0}
 
 /* ===========================================================
-   EDITORIAL & MOTION — numeração de seções, feedback tátil e
-   entrada escalonada. Tudo guardado por prefers-reduced-motion;
-   a impressão desliga animação e textura no bloco @media print.
+   EDITORIAL & MOTION — feedback tátil e entrada escalonada.
+   Tudo guardado por prefers-reduced-motion; a impressão desliga
+   animação e textura no bloco @media print.
    =========================================================== */
-/* Ordinal editorial: cada página carrega seu número em data-num — o mesmo
-   nas páginas separadas (no h1) e na versão completa (nos h2 de seção). */
-h1[data-num]::before,.sec-head h2[data-num]::before{
-  content:attr(data-num);
-  font-family:var(--font);font-size:11px;font-weight:700;letter-spacing:.1em;
-  color:var(--ink-3);margin-right:10px;vertical-align:4px;font-variant-numeric:tabular-nums;
-}
-h1[data-num]::before{font-size:13px;vertical-align:6px}
 .seg button,.icon-btn,.chip{transition:transform 140ms var(--ease-out-strong),background-color 150ms ease,color 150ms ease,box-shadow 150ms ease}
 .seg button:active,.icon-btn:active,.chip:active{transform:scale(.96)}
 .navlist a{transition:background-color 160ms ease,color 160ms ease,transform 140ms var(--ease-out-strong)}
