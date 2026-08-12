@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Os produtos da frente USA e os projetos dentro de cada um, com as demandas acompanhadas.">
+<meta name="description" content="Todos os projetos da frente USA em tabela, com filtros por produto e por status e ordenação por coluna.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='11' fill='%232a78d6'/%3E%3Ccircle cx='12' cy='12' r='6.5' fill='none' stroke='white' stroke-width='1.5' opacity='.5'/%3E%3Ccircle cx='12' cy='12' r='2.2' fill='white'/%3E%3Cpath d='M12 12L18.3 5.7' stroke='white' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E">
-<title>Produtos · Radar USA · Ybera Group</title>
+<title>Produtos · tabela · Radar USA · Ybera Group</title>
 <link rel="stylesheet" href="assets/style.css">
 <script>(function(){var t=localStorage.getItem("radar-theme");if(t)document.documentElement.setAttribute("data-theme",t);})();</script>
 </head>
-<body data-page="produtos">
+<body data-page="tabela">
 <a class="skip" href="#conteudo">Ir para o conteúdo</a>
 <div class="shell">
 
@@ -40,7 +40,10 @@
 
   <section id="s-det">
     <div class="views" id="views"></div>
-    <div class="prods" id="detList"></div>
+    <div class="filters" id="filters"></div>
+    <div class="filters" id="sfilters"></div>
+    <div class="tscroll"><table class="ptable" id="projTable"></table></div>
+    <p class="tcount" id="tCount"></p>
   </section>
 
   <div class="foot" id="foot"></div>
