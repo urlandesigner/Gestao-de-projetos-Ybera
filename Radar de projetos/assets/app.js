@@ -38,6 +38,12 @@ const T = {
     boardSub:"Cada item está escrito pelo que o usuário passa a conseguir fazer. O nome original no Notion aparece embaixo, para rastreio.",
     detTitle:"Produtos",
     detSub:"Os produtos da frente USA e os projetos dentro de cada um. Abra um projeto para ler o que ele é e as demandas acompanhadas nele; a lista de demandas é mantida à mão na revisão quinzenal.",
+    tableSub:"Os 14 projetos numa tabela só, para comparar e ordenar. Filtre por produto e por status; clique no cabeçalho para reordenar.",
+    viewCards:"Por produto", viewTable:"Tabela",
+    colProd:"Produto", colProj:"Projeto", colStat:"Status", colWin:"Janela",
+    colElapsed:"Decorrido", colDem:"Demandas", colOwner:"Dono",
+    filterStatus:"Filtrar por status:",
+    tCount:"{n} de {total} projetos", tEmpty:"Nenhum projeto com esses filtros.",
     projectOne:"projeto", projectMany:"projetos", doingLower:"em curso",
     demandsTitle:"Demandas",
     demandsNone:"Sem demandas registradas ainda — entram na próxima revisão quinzenal.",
@@ -92,6 +98,12 @@ const T = {
     boardSub:"Every item is written as what the user can now do. The original Notion name appears below it, for traceability.",
     detTitle:"Products",
     detSub:"The products on the USA front and the projects inside each one. Open a project to read what it is and the demands tracked in it; the demand list is maintained by hand during the biweekly review.",
+    tableSub:"All 14 projects in a single table, to compare and sort. Filter by product and status; click a header to reorder.",
+    viewCards:"By product", viewTable:"Table",
+    colProd:"Product", colProj:"Project", colStat:"Status", colWin:"Window",
+    colElapsed:"Elapsed", colDem:"Demands", colOwner:"Owner",
+    filterStatus:"Filter by status:",
+    tCount:"{n} of {total} projects", tEmpty:"No project matches these filters.",
     projectOne:"project", projectMany:"projects", doingLower:"in flight",
     demandsTitle:"Demands",
     demandsNone:"No demands recorded yet — they land in the next biweekly review.",
@@ -122,6 +134,10 @@ const T = {
    ========================================================================== */
 let lang = localStorage.getItem("radar-lang") === "en" ? "en" : "pt";
 let activeTracks = new Set();
+/* Tabela: filtro de status e ordenação. Só a página tabela tem os
+   contêineres — nas outras, estes estados ficam inertes. */
+let activeStatus = new Set();
+let tSort = {key:"prod", dir:1};
 let foldOpen = false; /* coluna Planejado começa colapsada */
 /* Referência de "hoje" = a data da última atualização declarada. Mexer em
    DATA.meta.updated move as barras de tempo decorrido junto. */
@@ -225,6 +241,7 @@ function render(){
     board:{h1:t.boardTitle, sub:t.boardSub},
     pendencias:{h1:t.askTitle, sub:t.askSub},
     produtos:{h1:t.detTitle, sub:t.detSub},
+    tabela:{h1:t.detTitle, sub:t.tableSub},
     horizonte:{h1:t.horTitle, sub:t.horSub},
     completo:{h1:L(m.title), sub:L(m.sub)}
   };
@@ -388,6 +405,93 @@ function render(){
     </div>`;
   }).join("");
 
+  /* --- alternador: as duas telas mostram os mesmos projetos, uma agrupada
+         por produto e outra em tabela para comparar. --- */
+  $("views").innerHTML = [
+    {p:"produtos", href:"produtos.html",        label:t.viewCards},
+    {p:"tabela",   href:"produtos-tabela.html", label:t.viewTable}
+  ].map(v => `<a class="vbtn" href="${v.href}" aria-current="${String(v.p === page)}">${esc(v.label)}</a>`)
+   .join("");
+
+  /* --- tabela: os mesmos projetos em linhas comparáveis. O filtro de produto
+         reaproveita os chips do board (mesmo activeTracks); o de status é
+         próprio desta tela. Ordenação por clique no cabeçalho. --- */
+  const stLabel = {done:t.colDone, doing:t.colDoing, next:t.colNext};
+  const sEl = $("sfilters");
+  sEl.innerHTML = `<span class="flabel">${esc(t.filterStatus)}</span>` +
+    `<button type="button" class="chip" data-st="__all" aria-pressed="${activeStatus.size === 0}">${esc(t.all)}</button>` +
+    ["doing","next","done"].map(k =>
+      `<button type="button" class="chip" data-st="${k}" aria-pressed="${activeStatus.has(k)}">${esc(stLabel[k])}</button>`
+    ).join("");
+  sEl.querySelectorAll(".chip").forEach(b => b.addEventListener("click", () => {
+    const k = b.dataset.st;
+    if(k === "__all") activeStatus.clear();
+    else activeStatus.has(k) ? activeStatus.delete(k) : activeStatus.add(k);
+    render();
+  }));
+
+  const tIdx = {};
+  DATA.tracks.forEach((tr, k) => { tIdx[tr.id] = String(k).padStart(2, "0"); });
+  const ordSt = {doing:0, next:1, done:2};
+  const rows = items.filter(i =>
+    (activeTracks.size === 0 || activeTracks.has(i.track)) &&
+    (activeStatus.size === 0 || activeStatus.has(i.status)));
+  /* Cada coluna vira uma chave comparável. Produto ordena pela ordem dos
+     produtos na base (não alfabética) e desempata por status e início. */
+  const keyOf = {
+    prod:i => tIdx[i.track] + ordSt[i.status] + i.start,
+    proj:i => L(i.title).toLowerCase(),
+    stat:i => String(ordSt[i.status]) + i.start,
+    win:i => i.start + i.end,
+    elapsed:i => String(i.status === "doing" ? elapsedPct(i.start, i.end) : -1).padStart(4, "0"),
+    dem:i => {
+      const dm = i.demands || [];
+      return String(dm.length ? Math.round(dm.filter(d => d.status === "done").length / dm.length * 100) : -1).padStart(4, "0");
+    },
+    owner:i => (i.owner || m.owner).toLowerCase()
+  };
+  const kf = keyOf[tSort.key] || keyOf.prod;
+  rows.sort((a, b) => {
+    const x = kf(a), y = kf(b);
+    return (x < y ? -1 : x > y ? 1 : 0) * tSort.dir;
+  });
+  const tCols = [
+    {k:"prod", label:t.colProd},
+    {k:"proj", label:t.colProj},
+    {k:"stat", label:t.colStat},
+    {k:"win", label:t.colWin},
+    {k:"elapsed", label:t.colElapsed, num:true},
+    {k:"dem", label:t.colDem, num:true},
+    {k:"owner", label:t.colOwner}
+  ];
+  $("projTable").innerHTML = `
+    <thead><tr>${tCols.map(c => {
+      const on = tSort.key === c.k;
+      return `<th data-k="${c.k}"${c.num ? ' class="num"' : ""} aria-sort="${on ? (tSort.dir === 1 ? "ascending" : "descending") : "none"}">
+        <button type="button">${esc(c.label)}<span class="sar">${on ? (tSort.dir === 1 ? "↑" : "↓") : ""}</span></button></th>`;
+    }).join("")}</tr></thead>
+    <tbody>${rows.length ? rows.map(i => {
+      const dm = i.demands || [];
+      const p = i.status === "doing" ? Math.min(elapsedPct(i.start, i.end), 100) : null;
+      return `<tr>
+        <td class="tprod">${esc(trackName(i.track))}</td>
+        <td class="tproj">${esc(L(i.title))}</td>
+        <td><span class="pstatus st-${esc(i.status)}">${esc(stLabel[i.status])}</span></td>
+        <td class="mono-num">${esc(windowLabel(i.start, i.end))}</td>
+        <td class="num mono-num">${p === null ? "—" : p + "%"}</td>
+        <td class="num mono-num">${dm.length ? dm.filter(d => d.status === "done").length + "/" + dm.length : "—"}</td>
+        <td>${esc(i.owner || m.owner)}</td>
+      </tr>`;
+    }).join("") : `<tr><td colspan="${tCols.length}" class="tnone">${esc(t.tEmpty)}</td></tr>`}</tbody>`;
+  $("projTable").querySelectorAll("th button").forEach(b => b.addEventListener("click", () => {
+    const k = b.parentElement.dataset.k;
+    if(tSort.key === k) tSort.dir = -tSort.dir;
+    else { tSort.key = k; tSort.dir = 1; }
+    render();
+  }));
+  $("tCount").textContent = t.tCount
+    .replace("{n}", rows.length).replace("{total}", items.length);
+
   /* --- horizonte DERIVADO das datas dos projetos: cada um cai numa faixa
          pela data de início, contra o trimestre corrente. Antes as três
          listas eram digitadas à mão e podiam discordar do board — agora
@@ -461,7 +565,10 @@ function navHtml(t){
     {href:"produtos.html",   page:"produtos",   label:t.navDet,   badge:nDem},
     {href:"horizonte.html",  page:"horizonte",  label:t.navHor}
   ];
-  const cur = document.body.dataset.page || "index";
+  /* A tabela é outra vista de Produtos, não outra seção: o item da navegação
+     que acende é o mesmo. */
+  const page = document.body.dataset.page || "index";
+  const cur = page === "tabela" ? "produtos" : page;
   return defs.map(d => {
     let extra = "";
     if(d.dot) extra = `<span class="dot" title="${esc(t.alertTitle)}"></span>`;
