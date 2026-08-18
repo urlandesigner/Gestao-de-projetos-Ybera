@@ -70,7 +70,7 @@
         method: 'POST',
         body: JSON.stringify({ ids: ids.slice(i, i + 200), fields, errorPolicy: 'Omit' }),
       });
-      out.push(...data.value);
+      out.push(...data.value.filter(Boolean));
     }
     return out;
   }
