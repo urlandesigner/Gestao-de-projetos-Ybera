@@ -30,8 +30,17 @@
     }
     if (res.status === 401 || res.status === 403) throw new AuthError('PAT inválido ou vencido');
     const type = res.headers.get('content-type') || '';
+    if (!res.ok) {
+      if (type.includes('json')) {
+        const data = await res.json().catch(() => null);
+        throw new Error((data && data.message) || `HTTP ${res.status}`);
+      }
+      throw new Error(`HTTP ${res.status}`);
+    }
+    // PAT vencido no ADO não vem como 401: vem como 302 pra página de signin,
+    // que responde 200 text/html. Este check de content-type é o que detecta isso —
+    // não remova. (Verificado contra dev.azure.com em 2026-08.)
     if (!type.includes('json')) throw new AuthError('Resposta não-JSON — PAT provavelmente vencido');
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return res.json();
   }
 
@@ -59,7 +68,7 @@
     for (let i = 0; i < ids.length; i += 200) {
       const data = await adoFetch(ctx, `/_apis/wit/workitemsbatch?${API}`, {
         method: 'POST',
-        body: JSON.stringify({ ids: ids.slice(i, i + 200), fields }),
+        body: JSON.stringify({ ids: ids.slice(i, i + 200), fields, errorPolicy: 'Omit' }),
       });
       out.push(...data.value);
     }

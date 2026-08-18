@@ -12,7 +12,7 @@ function saveJSON(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
 const state = {
   config: null,
   pat: localStorage.getItem(LS.pat) || '',
-  cache: loadJSON(LS.cache) || { byCard: {}, myItems: null, myItemsError: null, fetchedAt: 0 },
+  cache: loadJSON(LS.cache) || { byCard: {}, myItems: null, myItemsError: null, fetchedAt: 0, lastSuccessAt: 0 },
   discovery: null,
   auth: null, // null | 'sem-token' | 'vencido' | 'atualizando' | 'conectado'
 };
@@ -97,7 +97,7 @@ function wizardConclude() {
   localStorage.setItem(LS.pat, state.discovery.pat);
   state.config = config;
   state.pat = state.discovery.pat;
-  state.cache = { byCard: {}, myItems: null, myItemsError: null, fetchedAt: 0 };
+  state.cache = { byCard: {}, myItems: null, myItemsError: null, fetchedAt: 0, lastSuccessAt: 0 };
   saveJSON(LS.cache, state.cache);
   $('wizard').close();
   boot();
@@ -108,7 +108,8 @@ const FIELDS_COUNTS = ['System.WorkItemType', 'System.State'];
 const FIELDS_ITEMS = ['System.Title', 'System.State', 'System.WorkItemType', 'System.TeamProject'];
 
 async function refreshCard(p) {
-  const entry = { counts: null, sprint: null, progress: null, error: null };
+  const anterior = state.cache.byCard[cardKey(p)] || {};
+  const entry = { counts: anterior.counts || null, sprint: anterior.sprint || null, progress: anterior.progress || null, error: null };
   try {
     const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlCounts());
     const items = ids.length ? await A.getFields(ctx(), ids, FIELDS_COUNTS) : [];
@@ -129,6 +130,7 @@ async function refreshCard(p) {
 }
 
 async function refreshMyItems() {
+  const itensAnteriores = state.cache.myItems;
   state.cache.myItemsError = null;
   try {
     const porProjeto = new Map(); // projectName -> teamName (qualquer time serve de contexto)
@@ -142,21 +144,28 @@ async function refreshMyItems() {
   } catch (e) {
     if (e instanceof A.AuthError) state.auth = 'vencido';
     state.cache.myItemsError = mensagemDeErro(e);
+    state.cache.myItems = itensAnteriores;
   }
   renderMyItems();
 }
 
 async function refreshAll(force) {
+  if (!state.config) return;
   if (!state.pat) { state.auth = 'sem-token'; renderBadge(); return; }
   if (!force && !C.isStale(state.cache.fetchedAt, Date.now())) { renderBadge(); return; }
   state.auth = 'atualizando';
   renderBadge();
-  const visiveis = state.config.projects.filter((p) => !p.hidden);
-  await Promise.all([...visiveis.map(refreshCard), refreshMyItems()]);
-  state.cache.fetchedAt = Date.now();
-  if (state.auth === 'atualizando') state.auth = 'conectado';
-  saveJSON(LS.cache, state.cache);
-  renderBadge();
+  try {
+    const visiveis = state.config.projects.filter((p) => !p.hidden);
+    await Promise.all([...visiveis.map(refreshCard), refreshMyItems()]);
+    state.cache.fetchedAt = Date.now();
+    const algumSucesso = visiveis.some((p) => !(state.cache.byCard[cardKey(p)] || {}).error);
+    if (state.auth !== 'vencido' && algumSucesso) state.cache.lastSuccessAt = Date.now();
+    if (state.auth === 'atualizando') state.auth = 'conectado';
+  } finally {
+    saveJSON(LS.cache, state.cache);
+    renderBadge();
+  }
 }
 
 /* ---------- Render ---------- */
@@ -168,7 +177,7 @@ function renderBadge() {
   const badge = $('badge');
   badge.textContent = rotulos[auth] || auth;
   badge.dataset.estado = auth;
-  $('carimbo').textContent = C.timeAgoLabel(state.cache.fetchedAt, Date.now());
+  $('carimbo').textContent = C.timeAgoLabel(state.cache.lastSuccessAt || 0, Date.now());
 }
 
 function renderGrid() {
@@ -209,8 +218,9 @@ function fillCardLive(card, p) {
     box.innerHTML = state.pat ? '<p class="mudo">carregando…</p>' : '<p class="mudo">— sem token: só atalhos —</p>';
     return;
   }
-  if (entry.error) { box.innerHTML = `<p class="erro">${escapeHtml(entry.error)}</p>`; return; }
+  if (entry.error && !entry.counts) { box.innerHTML = `<p class="erro">${escapeHtml(entry.error)}</p>`; return; }
   const linhas = [];
+  if (entry.error) linhas.push(`<p class="erro">${escapeHtml(entry.error)}</p>`);
   for (const par of [['epic', 'Epics'], ['feature', 'Features'], ['pbi', 'PBIs']]) {
     const chips = Object.entries(entry.counts[par[0]])
       .map(([estado, n]) => `<span class="chip">${n} ${escapeHtml(rotuloEstado(estado))}</span>`)
@@ -232,16 +242,17 @@ function rotuloEstado(estado) {
 
 function renderMyItems() {
   const box = $('meus-itens');
-  if (state.cache.myItemsError) { box.innerHTML = `<p class="erro">${escapeHtml(state.cache.myItemsError)}</p>`; return; }
   const items = state.cache.myItems;
+  const erroHtml = state.cache.myItemsError ? `<p class="erro">${escapeHtml(state.cache.myItemsError)}</p>` : '';
+  if (state.cache.myItemsError && !items) { box.innerHTML = erroHtml; return; }
   if (!items) { box.innerHTML = '<p class="mudo">— configure o token pra ver seus itens —</p>'; return; }
-  if (!items.length) { box.innerHTML = '<p class="mudo">Nada no seu nome.</p>'; return; }
+  if (!items.length) { box.innerHTML = erroHtml + '<p class="mudo">Nada no seu nome.</p>'; return; }
   const grupos = C.groupMyItems(items);
-  box.innerHTML = grupos.map((g) => `
+  box.innerHTML = erroHtml + grupos.map((g) => `
     <div class="grupo">
       <h4>${escapeHtml(g.state)} <span class="mudo">(${g.items.length})</span></h4>
       <ul>${g.items.map((it) => {
-        const f = it.fields;
+        const f = it.fields || {};
         const link = C.deepLinks(state.config.org, f['System.TeamProject'], '').workItem(it.id);
         return `<li><a href="${link}" target="_blank" rel="noopener">#${it.id} ${escapeHtml(f['System.Title'])}</a> <span class="mudo">${escapeHtml(f['System.TeamProject'])}</span></li>`;
       }).join('')}</ul>
@@ -259,6 +270,7 @@ function escapeHtml(s) { const d = document.createElement('div'); d.textContent 
 
 /* ---------- Configurações ---------- */
 function openSettings() {
+  if (!state.config) return;
   $('conf-pat').value = '';
   $('conf-erro').hidden = true;
   $('conf-lista').innerHTML = state.config.projects.map((p, i) => `
@@ -289,8 +301,9 @@ function settingsExport() {
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'central-projetos-config.json';
+  document.body.appendChild(a);
   a.click();
-  URL.revokeObjectURL(a.href);
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
 }
 
 function settingsImport(ev) {
@@ -302,7 +315,7 @@ function settingsImport(ev) {
       const config = C.normalizeConfig(JSON.parse(reader.result));
       saveJSON(LS.config, config);
       state.config = config;
-      state.cache = { byCard: {}, myItems: null, myItemsError: null, fetchedAt: 0 };
+      state.cache = { byCard: {}, myItems: null, myItemsError: null, fetchedAt: 0, lastSuccessAt: 0 };
       saveJSON(LS.cache, state.cache);
       $('config').close();
       renderAll();
@@ -329,7 +342,11 @@ function settingsRediscover() {
 function boot() {
   const raw = loadJSON(LS.config);
   if (raw) { try { state.config = C.normalizeConfig(raw); } catch (e) { state.config = null; } }
-  if (!state.config) { $('wizard').showModal(); return; }
+  if (!state.config) {
+    $('wizard').addEventListener('cancel', (ev) => { if (!state.config) ev.preventDefault(); });
+    $('wizard').showModal();
+    return;
+  }
   renderAll();
   refreshAll(false);
 }

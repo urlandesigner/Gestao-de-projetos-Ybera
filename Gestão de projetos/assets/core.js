@@ -12,8 +12,9 @@
     let s = String(input || '').trim();
     if (!s) throw new Error('URL da organização vazia');
     s = s.replace(/^https?:\/\//i, '').replace(/\/+$/, '');
+    if (s.toLowerCase() === 'dev.azure.com') throw new Error('Esperado dev.azure.com/SUA-ORG');
     if (!s.includes('/')) s = 'dev.azure.com/' + s; // aceita só o nome da org
-    if (!/^dev\.azure\.com\/[^/]+$/i.test(s)) throw new Error('Esperado dev.azure.com/SUA-ORG');
+    if (!/^dev\.azure\.com\/[^/?#]+$/i.test(s)) throw new Error('Esperado dev.azure.com/SUA-ORG');
     return 'https://' + s;
   }
 
@@ -59,6 +60,7 @@
   const TERMINAL_STATES = ['Done', 'Closed', 'Removed', 'Completed'];
 
   function wiqlCounts(doneCutoffDays = 30) {
+    const naoRemovidos = TERMINAL_STATES.filter((s) => s !== 'Removed').map((s) => `'${s}'`).join(',');
     return [
       'SELECT [System.Id] FROM WorkItems',
       'WHERE [System.TeamProject] = @project',
@@ -66,21 +68,26 @@
       "  OR [System.WorkItemType] IN GROUP 'Microsoft.FeatureCategory'",
       "  OR [System.WorkItemType] IN GROUP 'Microsoft.RequirementCategory')",
       "AND [System.State] <> 'Removed'",
-      `AND ([System.State] NOT IN ('Done','Closed','Completed') OR [System.ChangedDate] >= @Today - ${doneCutoffDays})`,
+      `AND ([System.State] NOT IN (${naoRemovidos}) OR [System.ChangedDate] >= @Today - ${doneCutoffDays})`,
     ].join('\n');
   }
 
   function wiqlMyItems() {
+    const terminais = TERMINAL_STATES.map((s) => `'${s}'`).join(',');
     return [
       'SELECT [System.Id] FROM WorkItems',
       'WHERE [System.TeamProject] = @project',
       'AND [System.AssignedTo] = @Me',
-      "AND [System.State] NOT IN ('Done','Closed','Removed','Completed')",
+      `AND [System.State] NOT IN (${terminais})`,
       'ORDER BY [System.ChangedDate] DESC',
     ].join('\n');
   }
 
   // ---- Classificação e agregação ----
+  // Limitação conhecida: o WIQL de contagens é agnóstico de template (usa categorias),
+  // mas este bucketing depende dos nomes de tipo em inglês ('Epic'/'Feature').
+  // Tipos renomeados/localizados caem em 'pbi'. Se as contagens parecerem erradas,
+  // o caminho certo é mapear via GET /{project}/_apis/wit/workitemtypecategories.
   function levelOf(typeName) {
     if (typeName === 'Epic') return 'epic';
     if (typeName === 'Feature') return 'feature';

@@ -8,6 +8,8 @@ test('orgBaseUrl normaliza variações', () => {
   assert.equal(C.orgBaseUrl('ybera'), 'https://dev.azure.com/ybera');
   assert.throws(() => C.orgBaseUrl(''));
   assert.throws(() => C.orgBaseUrl('dev.azure.com/a/b'));
+  assert.throws(() => C.orgBaseUrl('dev.azure.com'));
+  assert.throws(() => C.orgBaseUrl('dev.azure.com/org?x=1'));
 });
 
 test('deepLinks monta os cinco atalhos e o link de work item', () => {

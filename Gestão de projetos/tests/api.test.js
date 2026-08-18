@@ -24,6 +24,30 @@ test('adoFetch lança AuthError em 401 e em resposta não-JSON', async () => {
   await assert.rejects(A.adoFetch(ctxHtml, '/x'), A.AuthError);
 });
 
+test('adoFetch lança Error simples (não AuthError) em 404 com corpo JSON', async () => {
+  const ctx = {
+    base: 'b', pat: 'p',
+    fetchImpl: async () => jsonRes({ message: 'TF200016: projeto não existe' }, 404),
+  };
+  await assert.rejects(A.adoFetch(ctx, '/x'), (e) => {
+    assert.ok(e.message.includes('TF200016'));
+    assert.ok(!(e instanceof A.AuthError));
+    return true;
+  });
+});
+
+test('adoFetch lança Error simples (não AuthError) em 500 com corpo text/html', async () => {
+  const ctx = {
+    base: 'b', pat: 'p',
+    fetchImpl: async () => ({ status: 500, ok: false, headers: { get: () => 'text/html' }, json: async () => ({}) }),
+  };
+  await assert.rejects(A.adoFetch(ctx, '/x'), (e) => {
+    assert.equal(e.message, 'HTTP 500');
+    assert.ok(!(e instanceof A.AuthError));
+    return true;
+  });
+});
+
 test('adoFetch lança NetworkError quando o fetch rejeita', async () => {
   const ctx = { base: 'b', pat: 'p', fetchImpl: async () => { throw new TypeError('Failed to fetch'); } };
   await assert.rejects(A.adoFetch(ctx, '/x'), A.NetworkError);
