@@ -1,1 +1,142 @@
-/* Central de Projetos — estilo entra na tarefa de estética */
+/* Central de Projetos — eco do Radar: editorial executivo, wash discreto. */
+:root {
+  --tinta: #1c1917;
+  --mudo: #78716c;
+  --papel: #faf9f7;
+  --cartao: #ffffff;
+  --borda: #e7e5e4;
+  --acento: #0f766e;
+  --erro: #b91c1c;
+  --serifa: ui-serif, Georgia, 'Times New Roman', serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font: 15px/1.5 var(--sans);
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  padding: 1.5rem clamp(1rem, 4vw, 3rem) 1rem;
+  border-bottom: 1px solid var(--borda);
+}
+h1 { font-family: var(--serifa); font-size: 1.7rem; margin: 0; }
+.sub { margin: 0.15rem 0 0; color: var(--mudo); }
+.acoes { display: flex; align-items: center; gap: 0.6rem; }
+.acoes button {
+  font-size: 1.05rem;
+  border: 1px solid var(--borda);
+  background: var(--cartao);
+  border-radius: 8px;
+  padding: 0.35rem 0.6rem;
+  cursor: pointer;
+}
+.acoes button:hover { border-color: var(--acento); color: var(--acento); }
+#badge {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--borda);
+  color: var(--mudo);
+}
+#badge[data-estado='conectado'] { color: var(--acento); border-color: var(--acento); }
+#badge[data-estado='vencido'], #badge[data-estado='sem-token'] { color: var(--erro); border-color: var(--erro); }
+main { padding: 1rem clamp(1rem, 4vw, 3rem) 3rem; }
+h2 { font-family: var(--serifa); font-size: 1.15rem; margin: 1.6rem 0 0.7rem; }
+.mudo { color: var(--mudo); }
+.erro { color: var(--erro); }
+
+/* Meus itens */
+#meus-itens .grupo { margin-bottom: 0.8rem; }
+#meus-itens h4 { margin: 0 0 0.25rem; font-size: 0.95rem; }
+#meus-itens ul { margin: 0; padding-left: 1.1rem; }
+#meus-itens a { color: var(--tinta); text-decoration-color: var(--borda); }
+#meus-itens a:hover { color: var(--acento); }
+
+/* Grade de cartões */
+#grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+}
+.card {
+  background: var(--cartao);
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+}
+.card h3 { font-family: var(--serifa); margin: 0; font-size: 1.1rem; }
+.card .proj { margin: 0 0 0.6rem; color: var(--mudo); font-size: 0.85rem; }
+.atalhos { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.7rem; }
+.atalhos a {
+  font-size: 0.82rem;
+  text-decoration: none;
+  color: var(--acento);
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  padding: 0.3rem 0.6rem;
+}
+.atalhos a:hover { border-color: var(--acento); background: #f0fdfa; }
+.vivo { border-top: 1px dashed var(--borda); padding-top: 0.6rem; font-size: 0.88rem; }
+.nivel { margin-bottom: 0.3rem; }
+.nivel b { display: inline-block; min-width: 4.6rem; }
+.chip {
+  display: inline-block;
+  background: var(--papel);
+  border: 1px solid var(--borda);
+  border-radius: 999px;
+  padding: 0.05rem 0.5rem;
+  margin: 0.1rem 0.15rem 0.1rem 0;
+  font-size: 0.78rem;
+}
+.sprint { margin-top: 0.45rem; }
+
+/* Diálogos */
+dialog {
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  padding: 1.2rem 1.4rem;
+  max-width: 560px;
+  width: calc(100vw - 2rem);
+  max-height: 85vh;
+  overflow: auto;
+}
+dialog::backdrop { background: rgba(28, 25, 23, 0.35); }
+dialog h2 { margin-top: 0; }
+dialog label { display: block; margin: 0.6rem 0; }
+dialog input[type='text'], dialog input[type='password'], dialog input:not([type]) {
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  font: inherit;
+}
+dialog button, .botao {
+  font: inherit;
+  border: 1px solid var(--borda);
+  background: var(--cartao);
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+}
+dialog button:hover, .botao:hover { border-color: var(--acento); color: var(--acento); }
+#wizard-lista fieldset { border: 1px solid var(--borda); border-radius: 8px; margin: 0.6rem 0; }
+#wizard-lista label { display: block; margin: 0.2rem 0; }
+.linha-botoes { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem; }
+#conf-lista { list-style: none; padding: 0; }
+#conf-lista li { display: flex; justify-content: space-between; align-items: center; padding: 0.3rem 0; border-bottom: 1px dashed var(--borda); }
+.ordem button { padding: 0.1rem 0.45rem; margin-left: 0.25rem; }
+
+/* Celular */
+@media (max-width: 640px) {
+  header { flex-direction: column; align-items: flex-start; }
+  #grid { grid-template-columns: 1fr; }
+  .atalhos a { padding: 0.5rem 0.8rem; font-size: 0.9rem; } /* alvo de toque maior */
+}
