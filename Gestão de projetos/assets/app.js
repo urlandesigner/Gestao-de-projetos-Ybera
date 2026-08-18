@@ -257,6 +257,74 @@ function periodo(start, finish) {
 function cssId(s) { return s.replace(/[^a-z0-9]/gi, '-').toLowerCase(); }
 function escapeHtml(s) { const d = document.createElement('div'); d.textContent = String(s == null ? '' : s); return d.innerHTML; }
 
+/* ---------- Configurações ---------- */
+function openSettings() {
+  $('conf-pat').value = '';
+  $('conf-erro').hidden = true;
+  $('conf-lista').innerHTML = state.config.projects.map((p, i) => `
+    <li data-i="${i}">
+      <label><input type="checkbox" class="conf-visivel" ${p.hidden ? '' : 'checked'}> ${escapeHtml(p.teamName)} <span class="mudo">${escapeHtml(p.projectName)}</span></label>
+      <span class="ordem"><button type="button" class="subir" title="subir">↑</button><button type="button" class="descer" title="descer">↓</button></span>
+    </li>`).join('');
+  $('config').showModal();
+}
+
+function settingsSave() {
+  [...$('conf-lista').querySelectorAll('li')].forEach((li, ordem) => {
+    const p = state.config.projects[Number(li.dataset.i)];
+    p.order = ordem;
+    p.hidden = !li.querySelector('.conf-visivel').checked;
+  });
+  state.config.projects.sort((a, b) => a.order - b.order);
+  const novoPat = $('conf-pat').value.trim();
+  if (novoPat) { state.pat = novoPat; localStorage.setItem(LS.pat, novoPat); state.auth = null; }
+  saveJSON(LS.config, state.config);
+  $('config').close();
+  renderAll();
+  refreshAll(true);
+}
+
+function settingsExport() {
+  const blob = new Blob([C.exportConfig(state.config)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'central-projetos-config.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function settingsImport(ev) {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const config = C.normalizeConfig(JSON.parse(reader.result));
+      saveJSON(LS.config, config);
+      state.config = config;
+      state.cache = { byCard: {}, myItems: null, myItemsError: null, fetchedAt: 0 };
+      saveJSON(LS.cache, state.cache);
+      $('config').close();
+      renderAll();
+      refreshAll(true);
+    } catch (e) {
+      $('conf-erro').textContent = 'Arquivo inválido: ' + e.message;
+      $('conf-erro').hidden = false;
+    }
+  };
+  reader.readAsText(file);
+  ev.target.value = '';
+}
+
+function settingsRediscover() {
+  $('config').close();
+  $('wizard-org').value = state.config.org;
+  $('wizard-pat').value = state.pat;
+  $('wizard-passo-1').hidden = false;
+  $('wizard-passo-2').hidden = true;
+  $('wizard').showModal();
+}
+
 /* ---------- Boot ---------- */
 function boot() {
   const raw = loadJSON(LS.config);
@@ -270,6 +338,18 @@ document.addEventListener('DOMContentLoaded', () => {
   $('wizard-descobrir').addEventListener('click', wizardDiscover);
   $('wizard-concluir').addEventListener('click', wizardConclude);
   $('atualizar').addEventListener('click', () => refreshAll(true));
+  $('abrir-config').addEventListener('click', openSettings);
+  $('conf-salvar').addEventListener('click', settingsSave);
+  $('conf-redescobrir').addEventListener('click', settingsRediscover);
+  $('conf-exportar').addEventListener('click', settingsExport);
+  $('conf-importar').addEventListener('change', settingsImport);
+  $('conf-fechar').addEventListener('click', () => $('config').close());
+  $('conf-lista').addEventListener('click', (ev) => {
+    const li = ev.target.closest('li');
+    if (!li) return;
+    if (ev.target.classList.contains('subir') && li.previousElementSibling) li.parentNode.insertBefore(li, li.previousElementSibling);
+    else if (ev.target.classList.contains('descer') && li.nextElementSibling) li.parentNode.insertBefore(li.nextElementSibling, li);
+  });
   boot();
 });
 })();
