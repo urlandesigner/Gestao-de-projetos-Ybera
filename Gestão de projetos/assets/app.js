@@ -106,11 +106,12 @@ function wizardConclude() {
 
 /* ---------- Dados vivos ---------- */
 const FIELDS_COUNTS = ['System.WorkItemType', 'System.State'];
+const FIELDS_SPRINT = ['System.WorkItemType', 'System.State', 'System.Title'];
 const FIELDS_ITEMS = ['System.Title', 'System.State', 'System.WorkItemType', 'System.TeamProject'];
 
 async function refreshCard(p) {
   const anterior = state.cache.byCard[cardKey(p)] || {};
-  const entry = { counts: null, sprint: null, progress: null, error: null };
+  const entry = { counts: null, sprint: null, progress: null, sprintItems: null, error: null };
   try {
     const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlCounts());
     const items = ids.length ? await A.getFields(ctx(), ids, FIELDS_COUNTS) : [];
@@ -119,13 +120,16 @@ async function refreshCard(p) {
     if (sprint) {
       entry.sprint = sprint;
       const sids = await A.sprintItemIds(ctx(), p.projectName, p.teamName, sprint.id);
-      const sitems = sids.length ? await A.getFields(ctx(), sids, FIELDS_COUNTS) : [];
+      const sitems = sids.length ? await A.getFields(ctx(), sids, FIELDS_SPRINT) : [];
       entry.progress = C.sprintProgress(sitems);
+      // Itens da sprint sem as Tasks — mesmo recorte do contador done/total
+      entry.sprintItems = sitems.filter((it) => (it.fields || {})['System.WorkItemType'] !== 'Task');
     }
   } catch (e) {
     entry.counts = entry.counts || anterior.counts || null;
     entry.sprint = entry.sprint || anterior.sprint || null;
     entry.progress = entry.progress || anterior.progress || null;
+    entry.sprintItems = entry.sprintItems || anterior.sprintItems || null;
     entry.error = mensagemDeErro(e);
     if (e instanceof A.AuthError) state.auth = 'vencido';
   }
@@ -234,7 +238,28 @@ function fillCardLive(card, p) {
   }
   if (entry.sprint) {
     const prog = entry.progress || { done: 0, total: 0 };
-    linhas.push(`<div class="sprint"><b>${escapeHtml(entry.sprint.name)}</b> ${periodo(entry.sprint.start, entry.sprint.finish)} — ${prog.done}/${prog.total} concluídos</div>`);
+    const cab = `<b>${escapeHtml(entry.sprint.name)}</b> ${periodo(entry.sprint.start, entry.sprint.finish)} — ${prog.done}/${prog.total} concluídos`;
+    const itens = entry.sprintItems || [];
+    if (itens.length) {
+      // Em andamento primeiro, concluídos no fim
+      const ordenados = [...itens].sort((a, b) =>
+        Number(C.isTerminalState((a.fields || {})['System.State'])) -
+        Number(C.isTerminalState((b.fields || {})['System.State'])));
+      const lis = ordenados.map((it) => {
+        const f = it.fields || {};
+        const feito = C.isTerminalState(f['System.State']) ? ' feito' : '';
+        const link = C.deepLinks(state.config.org, p.projectName, '').workItem(it.id);
+        return `<li><a class="sprint-item tipo-${C.typeSlug(f['System.WorkItemType'])}${feito}" href="${link}" target="_blank" rel="noopener" title="${escapeHtml(f['System.WorkItemType'])}">
+          <span class="id">#${it.id}</span>
+          <span class="titulo">${escapeHtml(f['System.Title'])}</span>
+          <span class="estado">${escapeHtml(f['System.State'])}</span>
+        </a></li>`;
+      }).join('');
+      const aberta = box.querySelector('details.sprint[open]') ? ' open' : '';
+      linhas.push(`<details class="sprint"${aberta}><summary>${cab}</summary><ul class="sprint-itens">${lis}</ul></details>`);
+    } else {
+      linhas.push(`<div class="sprint">${cab}</div>`);
+    }
   } else {
     linhas.push('<div class="sprint mudo">sem sprint corrente</div>');
   }
