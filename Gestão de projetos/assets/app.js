@@ -352,26 +352,32 @@ function escapeHtml(s) { const d = document.createElement('div'); d.textContent 
 const boardState = { p: null, chave: null, items: null, columns: null, sprint: null, soSprint: false, carregando: false, erro: null, filtro: { tipos: null, resp: '', busca: '' } };
 
 function renderRoute() {
-  const m = (location.hash || '').match(/^#board\/([^/]+)\/([^/]+)(\/sprint)?$/);
+  const hash = location.hash || '';
+  const m = hash.match(/^#board\/([^/]+)\/([^/]+)(\/sprint)?$/);
   if (m && state.config) {
     const projectName = decodeURIComponent(m[1]);
     const teamName = decodeURIComponent(m[2]);
     const p = state.config.projects.find((x) => x.projectName === projectName && x.teamName === teamName);
-    if (p) { abrirBoard(p, !!m[3]); return; }
+    if (p) { abrirBoard(p, !!m[3]); setPagina('board'); return; }
   }
   fecharBoard();
+  setPagina(hash === '#projetos' ? 'projetos' : 'meus-itens');
+}
+
+function setPagina(pagina) {
+  document.body.dataset.pagina = pagina;
+  $('nav-meus-itens').classList.toggle('ativa', pagina === 'meus-itens');
+  $('nav-projetos').classList.toggle('ativa', pagina === 'projetos' || pagina === 'board');
 }
 
 function abrirBoard(p, comSprint) {
   boardState.p = p;
   if (comSprint) boardState.soSprint = true;
-  document.body.classList.add('modo-board');
   $('board-view').hidden = false;
   carregarBoard(p, false);
 }
 
 function fecharBoard() {
-  document.body.classList.remove('modo-board');
   const bv = $('board-view');
   if (bv) bv.hidden = true;
 }
@@ -570,7 +576,7 @@ document.addEventListener('DOMContentLoaded', () => {
   $('wizard-concluir').addEventListener('click', wizardConclude);
   $('atualizar').addEventListener('click', () => refreshAll(true));
   $('abrir-config').addEventListener('click', openSettings);
-  $('board-voltar').addEventListener('click', () => { location.hash = ''; });
+  $('board-voltar').addEventListener('click', () => { location.hash = '#projetos'; });
   $('board-atualizar').addEventListener('click', () => { if (boardState.p) carregarBoard(boardState.p, true); });
   $('board-filtro-sprint').addEventListener('click', () => {
     boardState.soSprint = !boardState.soSprint;
