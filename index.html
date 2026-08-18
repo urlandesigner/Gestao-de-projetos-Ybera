@@ -23,6 +23,11 @@
 <main>
   <section id="secao-meus-itens">
     <h2>Meus itens</h2>
+    <div class="filtros" id="mi-filtros" hidden>
+      <input id="mi-busca" type="search" placeholder="filtrar por título ou #id" autocomplete="off">
+      <div id="mi-tipos" class="chips-filtro"></div>
+      <div id="mi-projetos" class="chips-filtro"></div>
+    </div>
     <div id="meus-itens"></div>
   </section>
 
@@ -44,6 +49,11 @@
         <button id="board-atualizar" title="Atualizar board">↻</button>
       </div>
     </header>
+    <div class="filtros" id="board-filtros" hidden>
+      <input id="board-busca" type="search" placeholder="filtrar por título ou #id" autocomplete="off">
+      <div id="board-tipos" class="chips-filtro"></div>
+      <select id="board-resp"><option value="">todos os responsáveis</option></select>
+    </div>
     <p id="board-status" class="mudo" hidden></p>
     <div id="board-colunas" class="quadro quadro-board"></div>
   </section>

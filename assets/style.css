@@ -53,6 +53,67 @@ h2 { font-family: var(--serifa); font-size: 1.15rem; margin: 1.6rem 0 0.7rem; }
 .mudo { color: var(--mudo); }
 .erro { color: var(--erro); }
 
+/* Barra de filtros (Meus itens e Board) */
+.filtros {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.8rem;
+}
+.filtros input[type='search'] {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  background: var(--cartao);
+  min-width: 220px;
+}
+.filtros input[type='search']:focus { outline: none; border-color: var(--acento); }
+.filtros select {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  background: var(--cartao);
+  color: var(--tinta);
+}
+.chips-filtro { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+.chip-filtro {
+  font: inherit;
+  font-size: 0.78rem;
+  border: 1px solid var(--borda);
+  background: var(--cartao);
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  cursor: pointer;
+  color: var(--mudo);
+}
+.chip-filtro::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--borda);
+  margin-right: 0.35rem;
+}
+.chip-filtro.tipo-epic::before { background: #ff7b00; }
+.chip-filtro.tipo-feature::before { background: #773b93; }
+.chip-filtro.tipo-pbi::before { background: #009ccc; }
+.chip-filtro.tipo-bug::before { background: #cc293d; }
+.chip-filtro.tipo-task::before { background: #f2cb1d; }
+.chip-filtro .n { color: var(--mudo); font-size: 0.72rem; }
+.chip-filtro:hover { border-color: var(--acento); color: var(--tinta); }
+.chip-filtro.ativo {
+  border-color: var(--acento);
+  background: #f0fdfa;
+  color: var(--tinta);
+  font-weight: 600;
+}
+
 /* Meus itens — quadro pessoal (mini-kanban) */
 .quadro {
   display: grid;

@@ -3,7 +3,7 @@
 'use strict';
 const C = window.CentralCore;
 const A = window.CentralApi;
-const LS = { config: 'central.config', pat: 'central.pat', cache: 'central.cache' };
+const LS = { config: 'central.config', pat: 'central.pat', cache: 'central.cache', filtros: 'central.filtros' };
 const $ = (id) => document.getElementById(id);
 
 function loadJSON(key) { try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; } }
@@ -15,8 +15,61 @@ const state = {
   cache: loadJSON(LS.cache) || { byCard: {}, myItems: null, myItemsError: null, fetchedAt: 0, lastSuccessAt: 0 },
   discovery: null,
   auth: null, // null | 'sem-token' | 'vencido' | 'atualizando' | 'conectado'
+  filtrosMI: Object.assign({ tipos: null, projetos: null }, loadJSON(LS.filtros) || {}, { busca: '' }),
 };
 state.cache.lastSuccessAt = state.cache.lastSuccessAt || state.cache.fetchedAt || 0; // migração: cache antigo sem lastSuccessAt
+
+const ROTULOS_TIPO = { epic: 'Épicos', feature: 'Features', pbi: 'PBIs', bug: 'Bugs', task: 'Tasks', outro: 'Outros' };
+const ORDEM_TIPO = ['epic', 'feature', 'pbi', 'bug', 'task', 'outro'];
+
+// Chips de filtro por tipo — contagem sempre sobre o conjunto completo
+function renderChipsTipo(container, items, filtro, onChange) {
+  const contagem = {};
+  for (const it of items || []) {
+    const s = C.typeSlug((it.fields || {})['System.WorkItemType']);
+    contagem[s] = (contagem[s] || 0) + 1;
+  }
+  const presentes = ORDEM_TIPO.filter((s) => contagem[s]);
+  container.innerHTML = presentes.length < 2 ? '' : presentes.map((s) => {
+    const ativo = filtro.tipos && filtro.tipos.includes(s) ? ' ativo' : '';
+    return `<button type="button" class="chip-filtro tipo-${s}${ativo}" data-slug="${s}">${ROTULOS_TIPO[s]} <span class="n">${contagem[s]}</span></button>`;
+  }).join('');
+  container.onclick = (ev) => {
+    const b = ev.target.closest('button');
+    if (!b) return;
+    const s = b.dataset.slug;
+    let t = filtro.tipos ? [...filtro.tipos] : [];
+    t = t.includes(s) ? t.filter((x) => x !== s) : [...t, s];
+    filtro.tipos = t.length ? t : null;
+    onChange();
+  };
+}
+
+// Chips de filtro por projeto — só aparecem quando há mais de um projeto
+function renderChipsProjeto(container, items, filtro, onChange) {
+  const contagem = new Map();
+  for (const it of items || []) {
+    const nome = (it.fields || {})['System.TeamProject'] || '—';
+    contagem.set(nome, (contagem.get(nome) || 0) + 1);
+  }
+  container.innerHTML = contagem.size < 2 ? '' : [...contagem.entries()].map(([nome, n]) => {
+    const ativo = filtro.projetos && filtro.projetos.includes(nome) ? ' ativo' : '';
+    return `<button type="button" class="chip-filtro${ativo}" data-proj="${escapeHtml(nome)}">${escapeHtml(nome)} <span class="n">${n}</span></button>`;
+  }).join('');
+  container.onclick = (ev) => {
+    const b = ev.target.closest('button');
+    if (!b) return;
+    const nome = b.dataset.proj;
+    let pr = filtro.projetos ? [...filtro.projetos] : [];
+    pr = pr.includes(nome) ? pr.filter((x) => x !== nome) : [...pr, nome];
+    filtro.projetos = pr.length ? pr : null;
+    onChange();
+  };
+}
+
+function salvarFiltrosMI() {
+  saveJSON(LS.filtros, { tipos: state.filtrosMI.tipos, projetos: state.filtrosMI.projetos });
+}
 
 function ctx() { return { base: state.config.org, pat: state.pat, fetchImpl: window.fetch.bind(window) }; }
 function cardKey(p) { return p.projectName + '::' + p.teamName; }
@@ -254,12 +307,18 @@ function rotuloEstado(estado) {
 
 function renderMyItems() {
   const box = $('meus-itens');
+  const barra = $('mi-filtros');
   const items = state.cache.myItems;
   const erroHtml = state.cache.myItemsError ? `<p class="erro">${escapeHtml(state.cache.myItemsError)}</p>` : '';
-  if (state.cache.myItemsError && !items) { box.innerHTML = erroHtml; return; }
-  if (!items) { box.innerHTML = '<p class="mudo">— configure o token pra ver seus itens —</p>'; return; }
-  if (!items.length) { box.innerHTML = erroHtml + '<p class="mudo">Nada no seu nome.</p>'; return; }
-  const grupos = C.sortStateGroups(C.groupMyItems(items));
+  if (state.cache.myItemsError && !items) { barra.hidden = true; box.innerHTML = erroHtml; return; }
+  if (!items) { barra.hidden = true; box.innerHTML = '<p class="mudo">— configure o token pra ver seus itens —</p>'; return; }
+  if (!items.length) { barra.hidden = true; box.innerHTML = erroHtml + '<p class="mudo">Nada no seu nome.</p>'; return; }
+  barra.hidden = false;
+  renderChipsTipo($('mi-tipos'), items, state.filtrosMI, () => { salvarFiltrosMI(); renderMyItems(); });
+  renderChipsProjeto($('mi-projetos'), items, state.filtrosMI, () => { salvarFiltrosMI(); renderMyItems(); });
+  const filtrados = C.filterItems(items, state.filtrosMI);
+  if (!filtrados.length) { box.innerHTML = erroHtml + '<p class="mudo">Nada com esses filtros.</p>'; return; }
+  const grupos = C.sortStateGroups(C.groupMyItems(filtrados));
   // Tag de projeto só quando há mais de um projeto entre os itens — senão é ruído.
   const multiProjeto = new Set(items.map((it) => (it.fields || {})['System.TeamProject'])).size > 1;
   box.innerHTML = erroHtml + '<div class="quadro">' + grupos.map((g) => {
@@ -290,7 +349,7 @@ function cssId(s) { return s.replace(/[^a-z0-9]/gi, '-').toLowerCase(); }
 function escapeHtml(s) { const d = document.createElement('div'); d.textContent = String(s == null ? '' : s); return d.innerHTML.replace(/"/g, '&quot;'); }
 
 /* ---------- Board dedicado ---------- */
-const boardState = { p: null, chave: null, items: null, columns: null, sprint: null, soSprint: false, carregando: false, erro: null };
+const boardState = { p: null, chave: null, items: null, columns: null, sprint: null, soSprint: false, carregando: false, erro: null, filtro: { tipos: null, resp: '', busca: '' } };
 
 function renderRoute() {
   const m = (location.hash || '').match(/^#board\/([^/]+)\/([^/]+)(\/sprint)?$/);
@@ -325,6 +384,8 @@ async function carregarBoard(p, force) {
   boardState.columns = null;
   boardState.sprint = null;
   boardState.erro = null;
+  boardState.filtro = { tipos: null, resp: '', busca: '' };
+  $('board-busca').value = '';
   boardState.carregando = true;
   renderBoard(p);
   try {
@@ -356,10 +417,16 @@ function renderBoard(p) {
   filtro.hidden = !(boardState.sprint && boardState.sprint.path);
   filtro.setAttribute('aria-pressed', String(boardState.soSprint));
   filtro.classList.toggle('ativo', boardState.soSprint);
-  if (boardState.carregando) { st.textContent = 'carregando board…'; st.hidden = false; cols.innerHTML = ''; return; }
-  if (boardState.erro) { st.innerHTML = `<span class="erro">${escapeHtml(boardState.erro)}</span>`; st.hidden = false; cols.innerHTML = ''; return; }
-  let items = boardState.items || [];
+  const filtros = $('board-filtros');
+  if (boardState.carregando) { filtros.hidden = true; st.textContent = 'carregando board…'; st.hidden = false; cols.innerHTML = ''; return; }
+  if (boardState.erro) { filtros.hidden = true; st.innerHTML = `<span class="erro">${escapeHtml(boardState.erro)}</span>`; st.hidden = false; cols.innerHTML = ''; return; }
+  const todos = boardState.items || [];
+  filtros.hidden = !todos.length;
+  renderChipsTipo($('board-tipos'), todos, boardState.filtro, () => renderBoard(p));
+  renderRespSelect(todos);
+  let items = todos;
   if (boardState.soSprint && boardState.sprint) items = items.filter((it) => C.inSprint(it, boardState.sprint.path));
+  items = C.filterItems(items, boardState.filtro);
   const porColuna = new Map();
   for (const it of items) {
     const f = it.fields || {};
@@ -377,7 +444,8 @@ function renderBoard(p) {
     nomes = C.orderColumnsFallback([...porColuna.keys()], statesByColumn);
   }
   if (!nomes.length) {
-    st.textContent = boardState.soSprint ? 'nada na sprint corrente' : 'board vazio';
+    const temFiltro = boardState.filtro.busca || boardState.filtro.resp || boardState.filtro.tipos;
+    st.textContent = temFiltro ? 'nada com esses filtros' : (boardState.soSprint ? 'nada na sprint corrente' : 'board vazio');
     st.hidden = false;
     cols.innerHTML = '';
     return;
@@ -399,6 +467,18 @@ function renderBoard(p) {
       }).join('')}</ul>
     </section>`;
   }).join('');
+}
+
+// Seletor de responsável do board — opções vêm dos próprios itens
+function renderRespSelect(items) {
+  const sel = $('board-resp');
+  const atual = boardState.filtro.resp;
+  const nomes = [...new Set((items || [])
+    .map((it) => (it.fields || {})['System.AssignedTo'])
+    .filter((r) => r && r.displayName)
+    .map((r) => r.displayName))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  sel.innerHTML = '<option value="">todos os responsáveis</option>' +
+    nomes.map((n) => `<option value="${escapeHtml(n)}"${n === atual ? ' selected' : ''}>${escapeHtml(n)}</option>`).join('');
 }
 
 /* ---------- Configurações ---------- */
@@ -497,6 +577,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (boardState.p) renderBoard(boardState.p);
   });
   window.addEventListener('hashchange', renderRoute);
+  $('mi-busca').addEventListener('input', () => {
+    state.filtrosMI.busca = $('mi-busca').value;
+    renderMyItems();
+  });
+  $('board-busca').addEventListener('input', () => {
+    boardState.filtro.busca = $('board-busca').value;
+    if (boardState.p) renderBoard(boardState.p);
+  });
+  $('board-resp').addEventListener('change', () => {
+    boardState.filtro.resp = $('board-resp').value;
+    if (boardState.p) renderBoard(boardState.p);
+  });
   $('conf-salvar').addEventListener('click', settingsSave);
   $('conf-redescobrir').addEventListener('click', settingsRediscover);
   $('conf-exportar').addEventListener('click', settingsExport);

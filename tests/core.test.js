@@ -173,3 +173,19 @@ test('orderColumnsFallback ordena colunas pelo fluxo dos estados', () => {
   );
   assert.deepEqual(ordem, ['Novo', 'Fazendo', 'Concluído']);
 });
+
+test('filterItems recorta por tipo, projeto, responsável e busca', () => {
+  const items = [
+    { id: 1, fields: { 'System.WorkItemType': 'Epic', 'System.TeamProject': 'B2C', 'System.Title': 'Assinaturas', 'System.AssignedTo': { displayName: 'Urlan Dipre' } } },
+    { id: 2, fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.TeamProject': 'B2C', 'System.Title': 'Quiz AI', 'System.AssignedTo': { displayName: 'Carla Mota' } } },
+    { id: 3, fields: { 'System.WorkItemType': 'Bug', 'System.TeamProject': 'Global', 'System.Title': 'Erro no checkout', 'System.AssignedTo': null } },
+  ];
+  assert.equal(C.filterItems(items, null).length, 3);
+  assert.deepEqual(C.filterItems(items, { tipos: ['pbi'] }).map((i) => i.id), [2]);
+  assert.deepEqual(C.filterItems(items, { tipos: ['epic', 'bug'] }).map((i) => i.id), [1, 3]);
+  assert.deepEqual(C.filterItems(items, { projetos: ['Global'] }).map((i) => i.id), [3]);
+  assert.deepEqual(C.filterItems(items, { resp: 'Carla Mota' }).map((i) => i.id), [2]);
+  assert.deepEqual(C.filterItems(items, { busca: 'quiz' }).map((i) => i.id), [2]);
+  assert.deepEqual(C.filterItems(items, { busca: '#3' }).map((i) => i.id), [3]);
+  assert.deepEqual(C.filterItems(items, { tipos: ['pbi'], busca: 'checkout' }).length, 0);
+});
