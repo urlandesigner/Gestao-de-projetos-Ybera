@@ -11,11 +11,13 @@
   function orgBaseUrl(input) {
     let s = String(input || '').trim();
     if (!s) throw new Error('URL da organização vazia');
-    s = s.replace(/^https?:\/\//i, '').replace(/\/+$/, '');
-    if (s.toLowerCase() === 'dev.azure.com') throw new Error('Esperado dev.azure.com/SUA-ORG');
+    s = s.replace(/^https?:\/\//i, '').split(/[?#]/)[0].replace(/\/+$/, '');
+    if (/^dev\.azure\.com$/i.test(s)) throw new Error('Esperado dev.azure.com/SUA-ORG');
     if (!s.includes('/')) s = 'dev.azure.com/' + s; // aceita só o nome da org
-    if (!/^dev\.azure\.com\/[^/?#]+$/i.test(s)) throw new Error('Esperado dev.azure.com/SUA-ORG');
-    return 'https://' + s;
+    // aceita URL colada com projeto/board no caminho: usa só o primeiro segmento (a org)
+    const m = s.match(/^dev\.azure\.com\/([^/?#]+)/i);
+    if (!m) throw new Error('Esperado dev.azure.com/SUA-ORG');
+    return 'https://dev.azure.com/' + m[1];
   }
 
   function deepLinks(base, project, team) {

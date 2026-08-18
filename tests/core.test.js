@@ -7,9 +7,10 @@ test('orgBaseUrl normaliza variações', () => {
   assert.equal(C.orgBaseUrl('https://dev.azure.com/ybera/'), 'https://dev.azure.com/ybera');
   assert.equal(C.orgBaseUrl('ybera'), 'https://dev.azure.com/ybera');
   assert.throws(() => C.orgBaseUrl(''));
-  assert.throws(() => C.orgBaseUrl('dev.azure.com/a/b'));
+  assert.equal(C.orgBaseUrl('dev.azure.com/a/b'), 'https://dev.azure.com/a');
   assert.throws(() => C.orgBaseUrl('dev.azure.com'));
-  assert.throws(() => C.orgBaseUrl('dev.azure.com/org?x=1'));
+  assert.equal(C.orgBaseUrl('dev.azure.com/org?x=1'), 'https://dev.azure.com/org');
+  assert.equal(C.orgBaseUrl('https://dev.azure.com/nivello/B2C/_boards/board/t/Time%20X/'), 'https://dev.azure.com/nivello');
 });
 
 test('deepLinks monta os cinco atalhos e o link de work item', () => {
