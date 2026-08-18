@@ -42,3 +42,69 @@ test('exportConfig nunca inclui pat', () => {
   assert.ok(!json.includes('pat'));
   assert.ok(json.includes('"org"'));
 });
+
+test('wiqlCounts filtra por categorias e corta concluídos em 30d', () => {
+  const q = C.wiqlCounts();
+  assert.ok(q.includes("IN GROUP 'Microsoft.EpicCategory'"));
+  assert.ok(q.includes("IN GROUP 'Microsoft.FeatureCategory'"));
+  assert.ok(q.includes("IN GROUP 'Microsoft.RequirementCategory'"));
+  assert.ok(q.includes("[System.State] <> 'Removed'"));
+  assert.ok(q.includes('@Today - 30'));
+  assert.ok(C.wiqlCounts(7).includes('@Today - 7'));
+});
+
+test('wiqlMyItems usa @Me e exclui estados terminais', () => {
+  const q = C.wiqlMyItems();
+  assert.ok(q.includes('[System.AssignedTo] = @Me'));
+  assert.ok(q.includes("NOT IN ('Done','Closed','Removed','Completed')"));
+});
+
+test('aggregateCounts separa por nível e estado', () => {
+  const items = [
+    { id: 1, fields: { 'System.WorkItemType': 'Epic', 'System.State': 'Active' } },
+    { id: 2, fields: { 'System.WorkItemType': 'Feature', 'System.State': 'New' } },
+    { id: 3, fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.State': 'New' } },
+    { id: 4, fields: { 'System.WorkItemType': 'User Story', 'System.State': 'New' } },
+    { id: 5, fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.State': 'Done' } },
+  ];
+  const c = C.aggregateCounts(items);
+  assert.deepEqual(c.epic, { Active: 1 });
+  assert.deepEqual(c.feature, { New: 1 });
+  assert.deepEqual(c.pbi, { New: 2, Done: 1 });
+});
+
+test('sprintProgress conta concluídos e ignora Tasks', () => {
+  const items = [
+    { id: 1, fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.State': 'Done' } },
+    { id: 2, fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.State': 'Committed' } },
+    { id: 3, fields: { 'System.WorkItemType': 'Task', 'System.State': 'Done' } },
+  ];
+  assert.deepEqual(C.sprintProgress(items), { done: 1, total: 2 });
+});
+
+test('groupMyItems agrupa por estado', () => {
+  const g = C.groupMyItems([
+    { id: 1, fields: { 'System.State': 'Active' } },
+    { id: 2, fields: { 'System.State': 'New' } },
+    { id: 3, fields: { 'System.State': 'Active' } },
+  ]);
+  assert.equal(g.length, 2);
+  assert.equal(g[0].state, 'Active');
+  assert.equal(g[0].items.length, 2);
+});
+
+test('isStale e timeAgoLabel', () => {
+  const agora = 1_000_000_000;
+  assert.equal(C.isStale(agora - 5 * 60000, agora), false);
+  assert.equal(C.isStale(agora - 11 * 60000, agora), true);
+  assert.equal(C.isStale(0, agora), true);
+  assert.equal(C.timeAgoLabel(0, agora), 'nunca atualizado');
+  assert.equal(C.timeAgoLabel(agora - 30000, agora), 'atualizado agora');
+  assert.equal(C.timeAgoLabel(agora - 5 * 60000, agora), 'atualizado há 5 min');
+  assert.equal(C.timeAgoLabel(agora - 3 * 3600000, agora), 'atualizado há 3 h');
+});
+
+test('isTerminalState é case-insensitive', () => {
+  assert.equal(C.isTerminalState('done'), true);
+  assert.equal(C.isTerminalState('Active'), false);
+});
