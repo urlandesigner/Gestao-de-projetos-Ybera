@@ -103,11 +103,159 @@ function wizardConclude() {
   boot();
 }
 
-/* ---------- Render/refresh provisórios (substituídos na tarefa seguinte) ---------- */
-function renderAll() {
-  $('grid').textContent = 'Configuração carregada: ' + state.config.projects.length + ' cartão(ões). Render real na próxima tarefa.';
+/* ---------- Dados vivos ---------- */
+const FIELDS_COUNTS = ['System.WorkItemType', 'System.State'];
+const FIELDS_ITEMS = ['System.Title', 'System.State', 'System.WorkItemType', 'System.TeamProject'];
+
+async function refreshCard(p) {
+  const entry = { counts: null, sprint: null, progress: null, error: null };
+  try {
+    const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlCounts());
+    const items = ids.length ? await A.getFields(ctx(), ids, FIELDS_COUNTS) : [];
+    entry.counts = C.aggregateCounts(items);
+    const sprint = await A.currentSprint(ctx(), p.projectName, p.teamName);
+    if (sprint) {
+      entry.sprint = sprint;
+      const sids = await A.sprintItemIds(ctx(), p.projectName, p.teamName, sprint.id);
+      const sitems = sids.length ? await A.getFields(ctx(), sids, FIELDS_COUNTS) : [];
+      entry.progress = C.sprintProgress(sitems);
+    }
+  } catch (e) {
+    entry.error = mensagemDeErro(e);
+    if (e instanceof A.AuthError) state.auth = 'vencido';
+  }
+  state.cache.byCard[cardKey(p)] = entry;
+  renderCard(p);
 }
-function refreshAll(force) { /* dados vivos entram na próxima tarefa */ }
+
+async function refreshMyItems() {
+  state.cache.myItemsError = null;
+  try {
+    const porProjeto = new Map(); // projectName -> teamName (qualquer time serve de contexto)
+    for (const p of state.config.projects) if (!porProjeto.has(p.projectName)) porProjeto.set(p.projectName, p.teamName);
+    const allIds = [];
+    for (const [projeto, time] of porProjeto) {
+      allIds.push(...await A.runWiql(ctx(), projeto, time, C.wiqlMyItems()));
+    }
+    const unicos = [...new Set(allIds)];
+    state.cache.myItems = unicos.length ? await A.getFields(ctx(), unicos, FIELDS_ITEMS) : [];
+  } catch (e) {
+    if (e instanceof A.AuthError) state.auth = 'vencido';
+    state.cache.myItemsError = mensagemDeErro(e);
+  }
+  renderMyItems();
+}
+
+async function refreshAll(force) {
+  if (!state.pat) { state.auth = 'sem-token'; renderBadge(); return; }
+  if (!force && !C.isStale(state.cache.fetchedAt, Date.now())) { renderBadge(); return; }
+  state.auth = 'atualizando';
+  renderBadge();
+  const visiveis = state.config.projects.filter((p) => !p.hidden);
+  await Promise.all([...visiveis.map(refreshCard), refreshMyItems()]);
+  state.cache.fetchedAt = Date.now();
+  if (state.auth === 'atualizando') state.auth = 'conectado';
+  saveJSON(LS.cache, state.cache);
+  renderBadge();
+}
+
+/* ---------- Render ---------- */
+function renderAll() { renderBadge(); renderMyItems(); renderGrid(); }
+
+function renderBadge() {
+  const rotulos = { 'sem-token': 'sem token', vencido: 'token vencido', atualizando: 'atualizando…', conectado: 'conectado' };
+  const auth = state.auth || (state.pat ? 'conectado' : 'sem-token');
+  const badge = $('badge');
+  badge.textContent = rotulos[auth] || auth;
+  badge.dataset.estado = auth;
+  $('carimbo').textContent = C.timeAgoLabel(state.cache.fetchedAt, Date.now());
+}
+
+function renderGrid() {
+  const grid = $('grid');
+  grid.innerHTML = '';
+  for (const p of state.config.projects.filter((x) => !x.hidden)) grid.appendChild(buildCard(p));
+}
+
+function buildCard(p) {
+  const links = C.deepLinks(state.config.org, p.projectName, p.teamName);
+  const card = document.createElement('article');
+  card.className = 'card';
+  card.id = 'card-' + cssId(cardKey(p));
+  card.innerHTML = `
+    <h3>${escapeHtml(p.teamName)}</h3>
+    <p class="proj">${escapeHtml(p.projectName)}</p>
+    <nav class="atalhos">
+      <a href="${links.board}" target="_blank" rel="noopener">Board</a>
+      <a href="${links.backlog}" target="_blank" rel="noopener">Backlog</a>
+      <a href="${links.sprints}" target="_blank" rel="noopener">Sprints</a>
+      <a href="${links.queries}" target="_blank" rel="noopener">Queries</a>
+      <a href="${links.dashboards}" target="_blank" rel="noopener">Dashboards</a>
+    </nav>
+    <div class="vivo"></div>`;
+  fillCardLive(card, p);
+  return card;
+}
+
+function renderCard(p) {
+  const card = document.getElementById('card-' + cssId(cardKey(p)));
+  if (card) fillCardLive(card, p);
+}
+
+function fillCardLive(card, p) {
+  const box = card.querySelector('.vivo');
+  const entry = state.cache.byCard[cardKey(p)];
+  if (!entry) {
+    box.innerHTML = state.pat ? '<p class="mudo">carregando…</p>' : '<p class="mudo">— sem token: só atalhos —</p>';
+    return;
+  }
+  if (entry.error) { box.innerHTML = `<p class="erro">${escapeHtml(entry.error)}</p>`; return; }
+  const linhas = [];
+  for (const par of [['epic', 'Epics'], ['feature', 'Features'], ['pbi', 'PBIs']]) {
+    const chips = Object.entries(entry.counts[par[0]])
+      .map(([estado, n]) => `<span class="chip">${n} ${escapeHtml(rotuloEstado(estado))}</span>`)
+      .join(' ');
+    linhas.push(`<div class="nivel"><b>${par[1]}</b> ${chips || '<span class="mudo">nenhum</span>'}</div>`);
+  }
+  if (entry.sprint) {
+    const prog = entry.progress || { done: 0, total: 0 };
+    linhas.push(`<div class="sprint"><b>${escapeHtml(entry.sprint.name)}</b> ${periodo(entry.sprint.start, entry.sprint.finish)} — ${prog.done}/${prog.total} concluídos</div>`);
+  } else {
+    linhas.push('<div class="sprint mudo">sem sprint corrente</div>');
+  }
+  box.innerHTML = linhas.join('');
+}
+
+function rotuloEstado(estado) {
+  return C.isTerminalState(estado) ? `${estado} (30d)` : estado;
+}
+
+function renderMyItems() {
+  const box = $('meus-itens');
+  if (state.cache.myItemsError) { box.innerHTML = `<p class="erro">${escapeHtml(state.cache.myItemsError)}</p>`; return; }
+  const items = state.cache.myItems;
+  if (!items) { box.innerHTML = '<p class="mudo">— configure o token pra ver seus itens —</p>'; return; }
+  if (!items.length) { box.innerHTML = '<p class="mudo">Nada no seu nome.</p>'; return; }
+  const grupos = C.groupMyItems(items);
+  box.innerHTML = grupos.map((g) => `
+    <div class="grupo">
+      <h4>${escapeHtml(g.state)} <span class="mudo">(${g.items.length})</span></h4>
+      <ul>${g.items.map((it) => {
+        const f = it.fields;
+        const link = C.deepLinks(state.config.org, f['System.TeamProject'], '').workItem(it.id);
+        return `<li><a href="${link}" target="_blank" rel="noopener">#${it.id} ${escapeHtml(f['System.Title'])}</a> <span class="mudo">${escapeHtml(f['System.TeamProject'])}</span></li>`;
+      }).join('')}</ul>
+    </div>`).join('');
+}
+
+function periodo(start, finish) {
+  if (!start || !finish) return '';
+  const fmt = (iso) => new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+  return `${fmt(start)}–${fmt(finish)}`;
+}
+
+function cssId(s) { return s.replace(/[^a-z0-9]/gi, '-').toLowerCase(); }
+function escapeHtml(s) { const d = document.createElement('div'); d.textContent = String(s == null ? '' : s); return d.innerHTML; }
 
 /* ---------- Boot ---------- */
 function boot() {
