@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Central de Projetos</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header>
+  <div>
+    <h1>Central de Projetos</h1>
+    <p class="sub">Seus boards do Azure DevOps, sem procurar.</p>
+  </div>
+  <div class="acoes">
+    <span id="badge" data-estado="sem-token">sem token</span>
+    <span id="carimbo" class="mudo"></span>
+    <button id="atualizar" title="Atualizar agora">↻</button>
+    <button id="abrir-config" title="Configurações">⚙</button>
+  </div>
+</header>
+
+<main>
+  <section id="secao-meus-itens">
+    <h2>Meus itens</h2>
+    <div id="meus-itens"></div>
+  </section>
+
+  <section id="secao-projetos">
+    <h2>Projetos</h2>
+    <div id="grid"></div>
+  </section>
+</main>
+
+<dialog id="wizard">
+  <form method="dialog" onsubmit="return false">
+    <section id="wizard-passo-1">
+      <h2>Conectar ao Azure DevOps</h2>
+      <label>URL da organização
+        <input id="wizard-org" placeholder="dev.azure.com/sua-org" autocomplete="off">
+      </label>
+      <label>Personal Access Token (PAT)
+        <input id="wizard-pat" type="password" autocomplete="off">
+      </label>
+      <details>
+        <summary>Como gerar o PAT</summary>
+        <ol>
+          <li>No DevOps: avatar → <b>Personal access tokens</b> → <b>New Token</b></li>
+          <li>Escopos: <b>Work Items → Read</b> e <b>Project and Team → Read</b></li>
+          <li>Validade: 90 dias (o máximo). Copie e cole aqui.</li>
+        </ol>
+        <p>O token fica só neste navegador (localStorage) — não vai pra arquivo nem pra web.</p>
+      </details>
+      <p id="wizard-erro" class="erro" hidden></p>
+      <p id="wizard-descobrindo" hidden>Descobrindo projetos…</p>
+      <button id="wizard-descobrir">Descobrir projetos</button>
+    </section>
+    <section id="wizard-passo-2" hidden>
+      <h2>Marque os seus projetos</h2>
+      <div id="wizard-lista"></div>
+      <p id="wizard-erro-2" class="erro" hidden></p>
+      <button id="wizard-concluir">Montar a central</button>
+    </section>
+  </form>
+</dialog>
+
+<dialog id="config">
+  <form method="dialog" onsubmit="return false">
+    <h2>Configurações</h2>
+    <label>Novo PAT (deixe em branco pra manter)
+      <input id="conf-pat" type="password" autocomplete="off">
+    </label>
+    <h3>Projetos (visível / ordem)</h3>
+    <ul id="conf-lista"></ul>
+    <p id="conf-erro" class="erro" hidden></p>
+    <div class="linha-botoes">
+      <button id="conf-salvar">Salvar</button>
+      <button id="conf-redescobrir">Refazer descoberta</button>
+      <button id="conf-exportar">Exportar JSON</button>
+      <label class="botao">Importar JSON<input id="conf-importar" type="file" accept="application/json" hidden></label>
+      <button id="conf-fechar">Fechar</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="assets/core.js"></script>
+<script src="assets/api.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
