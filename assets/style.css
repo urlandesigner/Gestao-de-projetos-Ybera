@@ -249,9 +249,27 @@ h2 { font-family: var(--serifa); font-size: 1.15rem; margin: 1.6rem 0 0.7rem; }
 .atalhos a.interno { background: var(--acento); color: #fff; border-color: var(--acento); }
 .atalhos a.interno:hover { background: #0b5f58; }
 
+/* Navegação de páginas */
+.paginas { display: flex; gap: 1.1rem; margin-top: 0.55rem; }
+.paginas a {
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: var(--mudo);
+  padding-bottom: 0.15rem;
+  border-bottom: 2px solid transparent;
+}
+.paginas a:hover { color: var(--tinta); }
+.paginas a.ativa {
+  color: var(--tinta);
+  font-weight: 600;
+  border-bottom-color: var(--acento);
+}
+body[data-pagina='meus-itens'] #secao-projetos { display: none; }
+body[data-pagina='projetos'] #secao-meus-itens { display: none; }
+body[data-pagina='board'] #secao-meus-itens,
+body[data-pagina='board'] #secao-projetos { display: none; }
+
 /* Board dedicado */
-body.modo-board #secao-meus-itens,
-body.modo-board #secao-projetos { display: none; }
 .board-topo {
   display: flex;
   align-items: center;
