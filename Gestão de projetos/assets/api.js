@@ -83,6 +83,7 @@
     return {
       id: it.id,
       name: it.name,
+      path: it.path || null,
       start: it.attributes ? it.attributes.startDate : null,
       finish: it.attributes ? it.attributes.finishDate : null,
     };
@@ -94,5 +95,30 @@
     return (data.workItemRelations || []).map((r) => (r.target ? r.target.id : null)).filter(Boolean);
   }
 
-  return { adoFetch, listProjects, listTeams, runWiql, getFields, currentSprint, sprintItemIds, AuthError, NetworkError };
+  // Áreas do time — é o que delimita o board de um time dentro do projeto
+  async function teamAreas(ctx, project, team) {
+    const p = encodeURIComponent(project), t = encodeURIComponent(team);
+    const data = await adoFetch(ctx, `/${p}/${t}/_apis/work/teamsettings/teamfieldvalues?${API}`);
+    return (data.values || []).map((v) => ({ path: v.value, children: !!v.includeChildren }));
+  }
+
+  // Boards do time (um por nível: Epics, Features, Backlog items…)
+  async function listTeamBoards(ctx, project, team) {
+    const p = encodeURIComponent(project), t = encodeURIComponent(team);
+    const data = await adoFetch(ctx, `/${p}/${t}/_apis/work/boards?${API}`);
+    return (data.value || []).map((b) => ({ id: b.id, name: b.name }));
+  }
+
+  // Colunas reais de um board, na ordem do DevOps
+  async function boardColumns(ctx, project, team, boardId) {
+    const p = encodeURIComponent(project), t = encodeURIComponent(team);
+    const data = await adoFetch(ctx, `/${p}/${t}/_apis/work/boards/${boardId}/columns?${API}`);
+    return (data.value || []).map((c) => ({ name: c.name, type: c.columnType || '' }));
+  }
+
+  return {
+    adoFetch, listProjects, listTeams, runWiql, getFields, currentSprint, sprintItemIds,
+    teamAreas, listTeamBoards, boardColumns,
+    AuthError, NetworkError,
+  };
 });
