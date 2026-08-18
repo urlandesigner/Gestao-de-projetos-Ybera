@@ -139,3 +139,37 @@ test('typeSlug mapeia tipos pro acento visual', () => {
   assert.equal(C.typeSlug('Task'), 'task');
   assert.equal(C.typeSlug('Tipo Exótico'), 'outro');
 });
+
+test('wiqlBoard recorta por áreas do time e escapa aspas', () => {
+  const q = C.wiqlBoard([{ path: "Proj\\Time d'Água", children: true }, { path: 'Proj\\Outra', children: false }]);
+  assert.ok(q.includes("IN GROUP 'Microsoft.RequirementCategory'"));
+  assert.ok(q.includes("[System.AreaPath] UNDER 'Proj\\Time d''Água'"));
+  assert.ok(q.includes("[System.AreaPath] = 'Proj\\Outra'"));
+  assert.ok(q.includes('@Today - 30'));
+  const semArea = C.wiqlBoard([]);
+  assert.ok(!semArea.includes('AreaPath'));
+});
+
+test('initials extrai iniciais do nome', () => {
+  assert.equal(C.initials('Urlan Dipre'), 'UD');
+  assert.equal(C.initials('Ana Maria Souza Lima'), 'AL');
+  assert.equal(C.initials('Madonna'), 'MA');
+  assert.equal(C.initials(''), '?');
+  assert.equal(C.initials(null), '?');
+});
+
+test('inSprint compara iteration path exato', () => {
+  const item = { fields: { 'System.IterationPath': 'Proj\\Sprint 14' } };
+  assert.equal(C.inSprint(item, 'Proj\\Sprint 14'), true);
+  assert.equal(C.inSprint(item, 'Proj\\Sprint 13'), false);
+  assert.equal(C.inSprint(item, null), false);
+  assert.equal(C.inSprint({}, 'Proj\\Sprint 14'), false);
+});
+
+test('orderColumnsFallback ordena colunas pelo fluxo dos estados', () => {
+  const ordem = C.orderColumnsFallback(
+    ['Concluído', 'Novo', 'Fazendo'],
+    { 'Concluído': ['Done'], 'Novo': ['New', 'To Do'], 'Fazendo': ['In Progress'] }
+  );
+  assert.deepEqual(ordem, ['Novo', 'Fazendo', 'Concluído']);
+});

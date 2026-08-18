@@ -106,12 +106,12 @@ function wizardConclude() {
 
 /* ---------- Dados vivos ---------- */
 const FIELDS_COUNTS = ['System.WorkItemType', 'System.State'];
-const FIELDS_SPRINT = ['System.WorkItemType', 'System.State', 'System.Title'];
+const FIELDS_BOARD = ['System.Title', 'System.State', 'System.WorkItemType', 'System.BoardColumn', 'System.AssignedTo', 'System.IterationPath'];
 const FIELDS_ITEMS = ['System.Title', 'System.State', 'System.WorkItemType', 'System.TeamProject'];
 
 async function refreshCard(p) {
   const anterior = state.cache.byCard[cardKey(p)] || {};
-  const entry = { counts: null, sprint: null, progress: null, sprintItems: null, error: null };
+  const entry = { counts: null, sprint: null, progress: null, error: null };
   try {
     const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlCounts());
     const items = ids.length ? await A.getFields(ctx(), ids, FIELDS_COUNTS) : [];
@@ -120,16 +120,13 @@ async function refreshCard(p) {
     if (sprint) {
       entry.sprint = sprint;
       const sids = await A.sprintItemIds(ctx(), p.projectName, p.teamName, sprint.id);
-      const sitems = sids.length ? await A.getFields(ctx(), sids, FIELDS_SPRINT) : [];
+      const sitems = sids.length ? await A.getFields(ctx(), sids, FIELDS_COUNTS) : [];
       entry.progress = C.sprintProgress(sitems);
-      // Itens da sprint sem as Tasks — mesmo recorte do contador done/total
-      entry.sprintItems = sitems.filter((it) => (it.fields || {})['System.WorkItemType'] !== 'Task');
     }
   } catch (e) {
     entry.counts = entry.counts || anterior.counts || null;
     entry.sprint = entry.sprint || anterior.sprint || null;
     entry.progress = entry.progress || anterior.progress || null;
-    entry.sprintItems = entry.sprintItems || anterior.sprintItems || null;
     entry.error = mensagemDeErro(e);
     if (e instanceof A.AuthError) state.auth = 'vencido';
   }
@@ -204,6 +201,7 @@ function buildCard(p) {
     <h3>${escapeHtml(p.teamName)}</h3>
     <p class="proj">${escapeHtml(p.projectName)}</p>
     <nav class="atalhos">
+      <a class="interno" href="${rotaBoard(p, false)}">▦ Board aqui</a>
       <a href="${links.board}" target="_blank" rel="noopener">Board</a>
       <a href="${links.backlog}" target="_blank" rel="noopener">Backlog</a>
       <a href="${links.sprints}" target="_blank" rel="noopener">Sprints</a>
@@ -238,32 +236,16 @@ function fillCardLive(card, p) {
   }
   if (entry.sprint) {
     const prog = entry.progress || { done: 0, total: 0 };
-    const cab = `<b>${escapeHtml(entry.sprint.name)}</b> ${periodo(entry.sprint.start, entry.sprint.finish)} — ${prog.done}/${prog.total} concluídos`;
-    const itens = entry.sprintItems || [];
-    if (itens.length) {
-      // Em andamento primeiro, concluídos no fim
-      const ordenados = [...itens].sort((a, b) =>
-        Number(C.isTerminalState((a.fields || {})['System.State'])) -
-        Number(C.isTerminalState((b.fields || {})['System.State'])));
-      const lis = ordenados.map((it) => {
-        const f = it.fields || {};
-        const feito = C.isTerminalState(f['System.State']) ? ' feito' : '';
-        const link = C.deepLinks(state.config.org, p.projectName, '').workItem(it.id);
-        return `<li><a class="sprint-item tipo-${C.typeSlug(f['System.WorkItemType'])}${feito}" href="${link}" target="_blank" rel="noopener" title="${escapeHtml(f['System.WorkItemType'])}">
-          <span class="id">#${it.id}</span>
-          <span class="titulo">${escapeHtml(f['System.Title'])}</span>
-          <span class="estado">${escapeHtml(f['System.State'])}</span>
-        </a></li>`;
-      }).join('');
-      const aberta = box.querySelector('details.sprint[open]') ? ' open' : '';
-      linhas.push(`<details class="sprint"${aberta}><summary>${cab}</summary><ul class="sprint-itens">${lis}</ul></details>`);
-    } else {
-      linhas.push(`<div class="sprint">${cab}</div>`);
-    }
+    const rota = rotaBoard(p, true);
+    linhas.push(`<div class="sprint"><a class="sprint-link" href="${rota}" title="Ver a sprint no board"><b>${escapeHtml(entry.sprint.name)}</b> ${periodo(entry.sprint.start, entry.sprint.finish)} — ${prog.done}/${prog.total} concluídos <span class="seta">→</span></a></div>`);
   } else {
     linhas.push('<div class="sprint mudo">sem sprint corrente</div>');
   }
   box.innerHTML = linhas.join('');
+}
+
+function rotaBoard(p, comSprint) {
+  return `#board/${encodeURIComponent(p.projectName)}/${encodeURIComponent(p.teamName)}${comSprint ? '/sprint' : ''}`;
 }
 
 function rotuloEstado(estado) {
@@ -306,6 +288,118 @@ function periodo(start, finish) {
 
 function cssId(s) { return s.replace(/[^a-z0-9]/gi, '-').toLowerCase(); }
 function escapeHtml(s) { const d = document.createElement('div'); d.textContent = String(s == null ? '' : s); return d.innerHTML.replace(/"/g, '&quot;'); }
+
+/* ---------- Board dedicado ---------- */
+const boardState = { p: null, chave: null, items: null, columns: null, sprint: null, soSprint: false, carregando: false, erro: null };
+
+function renderRoute() {
+  const m = (location.hash || '').match(/^#board\/([^/]+)\/([^/]+)(\/sprint)?$/);
+  if (m && state.config) {
+    const projectName = decodeURIComponent(m[1]);
+    const teamName = decodeURIComponent(m[2]);
+    const p = state.config.projects.find((x) => x.projectName === projectName && x.teamName === teamName);
+    if (p) { abrirBoard(p, !!m[3]); return; }
+  }
+  fecharBoard();
+}
+
+function abrirBoard(p, comSprint) {
+  boardState.p = p;
+  if (comSprint) boardState.soSprint = true;
+  document.body.classList.add('modo-board');
+  $('board-view').hidden = false;
+  carregarBoard(p, false);
+}
+
+function fecharBoard() {
+  document.body.classList.remove('modo-board');
+  const bv = $('board-view');
+  if (bv) bv.hidden = true;
+}
+
+async function carregarBoard(p, force) {
+  const chave = cardKey(p);
+  if (!force && boardState.chave === chave && boardState.items) { renderBoard(p); return; }
+  boardState.chave = chave;
+  boardState.items = null;
+  boardState.columns = null;
+  boardState.sprint = null;
+  boardState.erro = null;
+  boardState.carregando = true;
+  renderBoard(p);
+  try {
+    let areas = [];
+    try { areas = await A.teamAreas(ctx(), p.projectName, p.teamName); } catch (e) { /* segue sem recorte de área */ }
+    const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlBoard(areas));
+    boardState.items = ids.length ? await A.getFields(ctx(), ids, FIELDS_BOARD) : [];
+    try {
+      const boards = await A.listTeamBoards(ctx(), p.projectName, p.teamName);
+      const nivelRequisito = boards.find((b) => !/^(epics|features)$/i.test(b.name)) || boards[boards.length - 1];
+      if (nivelRequisito) boardState.columns = await A.boardColumns(ctx(), p.projectName, p.teamName, nivelRequisito.id);
+    } catch (e) { /* sem colunas oficiais: ordenação por fallback */ }
+    try { boardState.sprint = await A.currentSprint(ctx(), p.projectName, p.teamName); } catch (e) { /* board segue sem filtro */ }
+  } catch (e) {
+    boardState.erro = mensagemDeErro(e);
+    if (e instanceof A.AuthError) { state.auth = 'vencido'; renderBadge(); }
+  }
+  boardState.carregando = false;
+  renderBoard(p);
+}
+
+function renderBoard(p) {
+  $('board-titulo').textContent = p.teamName;
+  $('board-sub').textContent = p.projectName + (boardState.sprint ? ' · ' + boardState.sprint.name : '');
+  $('board-devops').href = C.deepLinks(state.config.org, p.projectName, p.teamName).board;
+  const st = $('board-status');
+  const cols = $('board-colunas');
+  const filtro = $('board-filtro-sprint');
+  filtro.hidden = !(boardState.sprint && boardState.sprint.path);
+  filtro.setAttribute('aria-pressed', String(boardState.soSprint));
+  filtro.classList.toggle('ativo', boardState.soSprint);
+  if (boardState.carregando) { st.textContent = 'carregando board…'; st.hidden = false; cols.innerHTML = ''; return; }
+  if (boardState.erro) { st.innerHTML = `<span class="erro">${escapeHtml(boardState.erro)}</span>`; st.hidden = false; cols.innerHTML = ''; return; }
+  let items = boardState.items || [];
+  if (boardState.soSprint && boardState.sprint) items = items.filter((it) => C.inSprint(it, boardState.sprint.path));
+  const porColuna = new Map();
+  for (const it of items) {
+    const f = it.fields || {};
+    const col = f['System.BoardColumn'] || f['System.State'] || '—';
+    if (!porColuna.has(col)) porColuna.set(col, []);
+    porColuna.get(col).push(it);
+  }
+  let nomes;
+  if (boardState.columns && boardState.columns.length) {
+    nomes = boardState.columns.map((c) => c.name).filter((n) => porColuna.has(n));
+    for (const n of porColuna.keys()) if (!nomes.includes(n)) nomes.push(n); // colunas fora da lista oficial vão pro fim
+  } else {
+    const statesByColumn = {};
+    for (const [n, lista] of porColuna) statesByColumn[n] = lista.map((it) => (it.fields || {})['System.State']);
+    nomes = C.orderColumnsFallback([...porColuna.keys()], statesByColumn);
+  }
+  if (!nomes.length) {
+    st.textContent = boardState.soSprint ? 'nada na sprint corrente' : 'board vazio';
+    st.hidden = false;
+    cols.innerHTML = '';
+    return;
+  }
+  st.hidden = true;
+  cols.innerHTML = nomes.map((nome) => {
+    const lista = porColuna.get(nome) || [];
+    return `<section class="coluna">
+      <header><h4>${escapeHtml(nome)}</h4><span class="conta">${lista.length}</span></header>
+      <ul>${lista.map((it) => {
+        const f = it.fields || {};
+        const resp = f['System.AssignedTo'] && f['System.AssignedTo'].displayName ? f['System.AssignedTo'].displayName : '';
+        const link = C.deepLinks(state.config.org, p.projectName, '').workItem(it.id);
+        const dica = escapeHtml(f['System.WorkItemType']) + (resp ? ' · ' + escapeHtml(resp) : '');
+        return `<li><a class="item tipo-${C.typeSlug(f['System.WorkItemType'])}" href="${link}" target="_blank" rel="noopener" title="${dica}">
+          <span class="id">#${it.id}${resp ? ` <span class="resp">${escapeHtml(C.initials(resp))}</span>` : ''}</span>
+          <span class="titulo">${escapeHtml(f['System.Title'])}</span>
+        </a></li>`;
+      }).join('')}</ul>
+    </section>`;
+  }).join('');
+}
 
 /* ---------- Configurações ---------- */
 function openSettings() {
@@ -388,6 +482,7 @@ function boot() {
   }
   renderAll();
   refreshAll(false);
+  renderRoute(); // abre o board direto se a URL já apontar pra um (#board/...)
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -395,6 +490,13 @@ document.addEventListener('DOMContentLoaded', () => {
   $('wizard-concluir').addEventListener('click', wizardConclude);
   $('atualizar').addEventListener('click', () => refreshAll(true));
   $('abrir-config').addEventListener('click', openSettings);
+  $('board-voltar').addEventListener('click', () => { location.hash = ''; });
+  $('board-atualizar').addEventListener('click', () => { if (boardState.p) carregarBoard(boardState.p, true); });
+  $('board-filtro-sprint').addEventListener('click', () => {
+    boardState.soSprint = !boardState.soSprint;
+    if (boardState.p) renderBoard(boardState.p);
+  });
+  window.addEventListener('hashchange', renderRoute);
   $('conf-salvar').addEventListener('click', settingsSave);
   $('conf-redescobrir').addEventListener('click', settingsRediscover);
   $('conf-exportar').addEventListener('click', settingsExport);

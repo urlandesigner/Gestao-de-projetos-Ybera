@@ -30,6 +30,23 @@
     <h2>Projetos</h2>
     <div id="grid"></div>
   </section>
+
+  <section id="board-view" hidden>
+    <header class="board-topo">
+      <button id="board-voltar" title="Voltar pra central">←</button>
+      <div class="board-titulos">
+        <h2 id="board-titulo"></h2>
+        <p id="board-sub" class="mudo"></p>
+      </div>
+      <div class="board-acoes">
+        <button id="board-filtro-sprint" aria-pressed="false">Só sprint corrente</button>
+        <a id="board-devops" target="_blank" rel="noopener">Abrir no DevOps</a>
+        <button id="board-atualizar" title="Atualizar board">↻</button>
+      </div>
+    </header>
+    <p id="board-status" class="mudo" hidden></p>
+    <div id="board-colunas" class="quadro quadro-board"></div>
+  </section>
 </main>
 
 <dialog id="wizard">

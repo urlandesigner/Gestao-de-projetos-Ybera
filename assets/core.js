@@ -162,6 +162,59 @@
     return 'outro';
   }
 
+  // ---- Board dedicado ----
+  // WIQL do board de um time: itens de requisito (PBIs/Bugs), recortados
+  // pelas áreas do time — é o mesmo recorte que o board do DevOps usa.
+  function wiqlBoard(areas, doneCutoffDays = 30) {
+    const escapa = (s) => String(s).replace(/'/g, "''");
+    const areaClause = (areas && areas.length)
+      ? 'AND (' + areas.map((a) =>
+          `[System.AreaPath] ${a.children ? 'UNDER' : '='} '${escapa(a.path)}'`
+        ).join(' OR ') + ')'
+      : '';
+    const done = TERMINAL_STATES.filter((s) => s !== 'Removed').map((s) => `'${s}'`).join(',');
+    return [
+      'SELECT [System.Id] FROM WorkItems',
+      'WHERE [System.TeamProject] = @project',
+      "AND [System.WorkItemType] IN GROUP 'Microsoft.RequirementCategory'",
+      "AND [System.State] <> 'Removed'",
+      `AND ([System.State] NOT IN (${done}) OR [System.ChangedDate] >= @Today - ${doneCutoffDays})`,
+      areaClause,
+      'ORDER BY [Microsoft.VSTS.Common.BacklogPriority] ASC',
+    ].filter(Boolean).join('\n');
+  }
+
+  // Iniciais do responsável pro selo do cartão ("Urlan Dipre" → "UD")
+  function initials(displayName) {
+    const partes = String(displayName || '').trim().split(/\s+/).filter(Boolean);
+    if (!partes.length) return '?';
+    if (partes.length === 1) return partes[0].slice(0, 2).toUpperCase();
+    return (partes[0][0] + partes[partes.length - 1][0]).toUpperCase();
+  }
+
+  // Item pertence à sprint corrente? (comparação exata de iteration path)
+  function inSprint(item, sprintPath) {
+    if (!sprintPath) return false;
+    return ((item || {}).fields || {})['System.IterationPath'] === sprintPath;
+  }
+
+  // Fallback de ordenação de colunas quando a API de colunas falha:
+  // ranqueia cada coluna pelo menor rank de fluxo dos estados dos seus itens.
+  function orderColumnsFallback(columnNames, statesByColumn) {
+    const rankEstado = (s) => {
+      const low = String(s || '').toLowerCase();
+      if (isAttentionState(low)) return 1000;
+      const i = STATE_FLOW.indexOf(low);
+      return i === -1 ? 500 : i;
+    };
+    const rankColuna = (nome) => {
+      const estados = (statesByColumn && statesByColumn[nome]) || [];
+      if (!estados.length) return 500;
+      return Math.min(...estados.map(rankEstado));
+    };
+    return [...(columnNames || [])].sort((a, b) => rankColuna(a) - rankColuna(b));
+  }
+
   // ---- Cache ----
   function isStale(fetchedAt, now, maxAgeMinutes = 10) {
     if (!fetchedAt) return true;
@@ -183,6 +236,7 @@
     wiqlCounts, wiqlMyItems, levelOf, isTerminalState,
     aggregateCounts, sprintProgress, groupMyItems,
     sortStateGroups, isAttentionState, typeSlug,
+    wiqlBoard, initials, inSprint, orderColumnsFallback,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };
 });
