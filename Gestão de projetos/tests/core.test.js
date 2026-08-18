@@ -111,3 +111,81 @@ test('isTerminalState é case-insensitive', () => {
   assert.equal(C.isTerminalState('done'), true);
   assert.equal(C.isTerminalState('Active'), false);
 });
+
+test('sortStateGroups ordena por fluxo, desconhecidos após o fluxo, atenção no fim', () => {
+  const grupos = [
+    { state: 'Impediment', items: [1, 2] },
+    { state: 'In Progress', items: [1] },
+    { state: 'Estado Custom', items: [1] },
+    { state: 'To Do', items: [1] },
+    { state: 'Ready for Dev', items: [1] },
+  ];
+  const ordem = C.sortStateGroups(grupos).map((g) => g.state);
+  assert.deepEqual(ordem, ['To Do', 'Ready for Dev', 'In Progress', 'Estado Custom', 'Impediment']);
+});
+
+test('isAttentionState reconhece bloqueios, case-insensitive', () => {
+  assert.equal(C.isAttentionState('Impediment'), true);
+  assert.equal(C.isAttentionState('BLOCKED'), true);
+  assert.equal(C.isAttentionState('In Progress'), false);
+});
+
+test('typeSlug mapeia tipos pro acento visual', () => {
+  assert.equal(C.typeSlug('Epic'), 'epic');
+  assert.equal(C.typeSlug('Feature'), 'feature');
+  assert.equal(C.typeSlug('Product Backlog Item'), 'pbi');
+  assert.equal(C.typeSlug('User Story'), 'pbi');
+  assert.equal(C.typeSlug('Bug'), 'bug');
+  assert.equal(C.typeSlug('Task'), 'task');
+  assert.equal(C.typeSlug('Tipo Exótico'), 'outro');
+});
+
+test('wiqlBoard recorta por áreas do time e escapa aspas', () => {
+  const q = C.wiqlBoard([{ path: "Proj\\Time d'Água", children: true }, { path: 'Proj\\Outra', children: false }]);
+  assert.ok(q.includes("IN GROUP 'Microsoft.RequirementCategory'"));
+  assert.ok(q.includes("[System.AreaPath] UNDER 'Proj\\Time d''Água'"));
+  assert.ok(q.includes("[System.AreaPath] = 'Proj\\Outra'"));
+  assert.ok(q.includes('@Today - 30'));
+  const semArea = C.wiqlBoard([]);
+  assert.ok(!semArea.includes('AreaPath'));
+});
+
+test('initials extrai iniciais do nome', () => {
+  assert.equal(C.initials('Urlan Dipre'), 'UD');
+  assert.equal(C.initials('Ana Maria Souza Lima'), 'AL');
+  assert.equal(C.initials('Madonna'), 'MA');
+  assert.equal(C.initials(''), '?');
+  assert.equal(C.initials(null), '?');
+});
+
+test('inSprint compara iteration path exato', () => {
+  const item = { fields: { 'System.IterationPath': 'Proj\\Sprint 14' } };
+  assert.equal(C.inSprint(item, 'Proj\\Sprint 14'), true);
+  assert.equal(C.inSprint(item, 'Proj\\Sprint 13'), false);
+  assert.equal(C.inSprint(item, null), false);
+  assert.equal(C.inSprint({}, 'Proj\\Sprint 14'), false);
+});
+
+test('orderColumnsFallback ordena colunas pelo fluxo dos estados', () => {
+  const ordem = C.orderColumnsFallback(
+    ['Concluído', 'Novo', 'Fazendo'],
+    { 'Concluído': ['Done'], 'Novo': ['New', 'To Do'], 'Fazendo': ['In Progress'] }
+  );
+  assert.deepEqual(ordem, ['Novo', 'Fazendo', 'Concluído']);
+});
+
+test('filterItems recorta por tipo, projeto, responsável e busca', () => {
+  const items = [
+    { id: 1, fields: { 'System.WorkItemType': 'Epic', 'System.TeamProject': 'B2C', 'System.Title': 'Assinaturas', 'System.AssignedTo': { displayName: 'Urlan Dipre' } } },
+    { id: 2, fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.TeamProject': 'B2C', 'System.Title': 'Quiz AI', 'System.AssignedTo': { displayName: 'Carla Mota' } } },
+    { id: 3, fields: { 'System.WorkItemType': 'Bug', 'System.TeamProject': 'Global', 'System.Title': 'Erro no checkout', 'System.AssignedTo': null } },
+  ];
+  assert.equal(C.filterItems(items, null).length, 3);
+  assert.deepEqual(C.filterItems(items, { tipos: ['pbi'] }).map((i) => i.id), [2]);
+  assert.deepEqual(C.filterItems(items, { tipos: ['epic', 'bug'] }).map((i) => i.id), [1, 3]);
+  assert.deepEqual(C.filterItems(items, { projetos: ['Global'] }).map((i) => i.id), [3]);
+  assert.deepEqual(C.filterItems(items, { resp: 'Carla Mota' }).map((i) => i.id), [2]);
+  assert.deepEqual(C.filterItems(items, { busca: 'quiz' }).map((i) => i.id), [2]);
+  assert.deepEqual(C.filterItems(items, { busca: '#3' }).map((i) => i.id), [3]);
+  assert.deepEqual(C.filterItems(items, { tipos: ['pbi'], busca: 'checkout' }).length, 0);
+});

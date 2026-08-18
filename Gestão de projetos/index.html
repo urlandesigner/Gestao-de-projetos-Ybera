@@ -6,11 +6,15 @@
 <title>Central de Projetos</title>
 <link rel="stylesheet" href="assets/style.css">
 </head>
-<body>
+<body data-pagina="meus-itens">
 <header>
   <div>
     <h1>Central de Projetos</h1>
     <p class="sub">Seus boards do Azure DevOps, sem procurar.</p>
+    <nav class="paginas">
+      <a id="nav-meus-itens" href="#meus-itens">Meus itens</a>
+      <a id="nav-projetos" href="#projetos">Projetos</a>
+    </nav>
   </div>
   <div class="acoes">
     <span id="badge" data-estado="sem-token">sem token</span>
@@ -23,12 +27,39 @@
 <main>
   <section id="secao-meus-itens">
     <h2>Meus itens</h2>
+    <div class="filtros" id="mi-filtros" hidden>
+      <input id="mi-busca" type="search" placeholder="filtrar por título ou #id" autocomplete="off">
+      <div id="mi-tipos" class="chips-filtro"></div>
+      <div id="mi-projetos" class="chips-filtro"></div>
+    </div>
     <div id="meus-itens"></div>
   </section>
 
   <section id="secao-projetos">
     <h2>Projetos</h2>
     <div id="grid"></div>
+  </section>
+
+  <section id="board-view" hidden>
+    <header class="board-topo">
+      <button id="board-voltar" title="Voltar pra central">←</button>
+      <div class="board-titulos">
+        <h2 id="board-titulo"></h2>
+        <p id="board-sub" class="mudo"></p>
+      </div>
+      <div class="board-acoes">
+        <button id="board-filtro-sprint" aria-pressed="false">Só sprint corrente</button>
+        <a id="board-devops" target="_blank" rel="noopener">Abrir no DevOps</a>
+        <button id="board-atualizar" title="Atualizar board">↻</button>
+      </div>
+    </header>
+    <div class="filtros" id="board-filtros" hidden>
+      <input id="board-busca" type="search" placeholder="filtrar por título ou #id" autocomplete="off">
+      <div id="board-tipos" class="chips-filtro"></div>
+      <select id="board-resp"><option value="">todos os responsáveis</option></select>
+    </div>
+    <p id="board-status" class="mudo" hidden></p>
+    <div id="board-colunas" class="quadro quadro-board"></div>
   </section>
 </main>
 

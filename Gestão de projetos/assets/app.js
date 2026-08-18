@@ -3,7 +3,7 @@
 'use strict';
 const C = window.CentralCore;
 const A = window.CentralApi;
-const LS = { config: 'central.config', pat: 'central.pat', cache: 'central.cache' };
+const LS = { config: 'central.config', pat: 'central.pat', cache: 'central.cache', filtros: 'central.filtros' };
 const $ = (id) => document.getElementById(id);
 
 function loadJSON(key) { try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; } }
@@ -15,8 +15,61 @@ const state = {
   cache: loadJSON(LS.cache) || { byCard: {}, myItems: null, myItemsError: null, fetchedAt: 0, lastSuccessAt: 0 },
   discovery: null,
   auth: null, // null | 'sem-token' | 'vencido' | 'atualizando' | 'conectado'
+  filtrosMI: Object.assign({ tipos: null, projetos: null }, loadJSON(LS.filtros) || {}, { busca: '' }),
 };
 state.cache.lastSuccessAt = state.cache.lastSuccessAt || state.cache.fetchedAt || 0; // migração: cache antigo sem lastSuccessAt
+
+const ROTULOS_TIPO = { epic: 'Épicos', feature: 'Features', pbi: 'PBIs', bug: 'Bugs', task: 'Tasks', outro: 'Outros' };
+const ORDEM_TIPO = ['epic', 'feature', 'pbi', 'bug', 'task', 'outro'];
+
+// Chips de filtro por tipo — contagem sempre sobre o conjunto completo
+function renderChipsTipo(container, items, filtro, onChange) {
+  const contagem = {};
+  for (const it of items || []) {
+    const s = C.typeSlug((it.fields || {})['System.WorkItemType']);
+    contagem[s] = (contagem[s] || 0) + 1;
+  }
+  const presentes = ORDEM_TIPO.filter((s) => contagem[s]);
+  container.innerHTML = presentes.length < 2 ? '' : presentes.map((s) => {
+    const ativo = filtro.tipos && filtro.tipos.includes(s) ? ' ativo' : '';
+    return `<button type="button" class="chip-filtro tipo-${s}${ativo}" data-slug="${s}">${ROTULOS_TIPO[s]} <span class="n">${contagem[s]}</span></button>`;
+  }).join('');
+  container.onclick = (ev) => {
+    const b = ev.target.closest('button');
+    if (!b) return;
+    const s = b.dataset.slug;
+    let t = filtro.tipos ? [...filtro.tipos] : [];
+    t = t.includes(s) ? t.filter((x) => x !== s) : [...t, s];
+    filtro.tipos = t.length ? t : null;
+    onChange();
+  };
+}
+
+// Chips de filtro por projeto — só aparecem quando há mais de um projeto
+function renderChipsProjeto(container, items, filtro, onChange) {
+  const contagem = new Map();
+  for (const it of items || []) {
+    const nome = (it.fields || {})['System.TeamProject'] || '—';
+    contagem.set(nome, (contagem.get(nome) || 0) + 1);
+  }
+  container.innerHTML = contagem.size < 2 ? '' : [...contagem.entries()].map(([nome, n]) => {
+    const ativo = filtro.projetos && filtro.projetos.includes(nome) ? ' ativo' : '';
+    return `<button type="button" class="chip-filtro${ativo}" data-proj="${escapeHtml(nome)}">${escapeHtml(nome)} <span class="n">${n}</span></button>`;
+  }).join('');
+  container.onclick = (ev) => {
+    const b = ev.target.closest('button');
+    if (!b) return;
+    const nome = b.dataset.proj;
+    let pr = filtro.projetos ? [...filtro.projetos] : [];
+    pr = pr.includes(nome) ? pr.filter((x) => x !== nome) : [...pr, nome];
+    filtro.projetos = pr.length ? pr : null;
+    onChange();
+  };
+}
+
+function salvarFiltrosMI() {
+  saveJSON(LS.filtros, { tipos: state.filtrosMI.tipos, projetos: state.filtrosMI.projetos });
+}
 
 function ctx() { return { base: state.config.org, pat: state.pat, fetchImpl: window.fetch.bind(window) }; }
 function cardKey(p) { return p.projectName + '::' + p.teamName; }
@@ -106,6 +159,7 @@ function wizardConclude() {
 
 /* ---------- Dados vivos ---------- */
 const FIELDS_COUNTS = ['System.WorkItemType', 'System.State'];
+const FIELDS_BOARD = ['System.Title', 'System.State', 'System.WorkItemType', 'System.BoardColumn', 'System.AssignedTo', 'System.IterationPath'];
 const FIELDS_ITEMS = ['System.Title', 'System.State', 'System.WorkItemType', 'System.TeamProject'];
 
 async function refreshCard(p) {
@@ -200,6 +254,7 @@ function buildCard(p) {
     <h3>${escapeHtml(p.teamName)}</h3>
     <p class="proj">${escapeHtml(p.projectName)}</p>
     <nav class="atalhos">
+      <a class="interno" href="${rotaBoard(p, false)}">▦ Board aqui</a>
       <a href="${links.board}" target="_blank" rel="noopener">Board</a>
       <a href="${links.backlog}" target="_blank" rel="noopener">Backlog</a>
       <a href="${links.sprints}" target="_blank" rel="noopener">Sprints</a>
@@ -234,11 +289,16 @@ function fillCardLive(card, p) {
   }
   if (entry.sprint) {
     const prog = entry.progress || { done: 0, total: 0 };
-    linhas.push(`<div class="sprint"><b>${escapeHtml(entry.sprint.name)}</b> ${periodo(entry.sprint.start, entry.sprint.finish)} — ${prog.done}/${prog.total} concluídos</div>`);
+    const rota = rotaBoard(p, true);
+    linhas.push(`<div class="sprint"><a class="sprint-link" href="${rota}" title="Ver a sprint no board"><b>${escapeHtml(entry.sprint.name)}</b> ${periodo(entry.sprint.start, entry.sprint.finish)} — ${prog.done}/${prog.total} concluídos <span class="seta">→</span></a></div>`);
   } else {
     linhas.push('<div class="sprint mudo">sem sprint corrente</div>');
   }
   box.innerHTML = linhas.join('');
+}
+
+function rotaBoard(p, comSprint) {
+  return `#board/${encodeURIComponent(p.projectName)}/${encodeURIComponent(p.teamName)}${comSprint ? '/sprint' : ''}`;
 }
 
 function rotuloEstado(estado) {
@@ -247,21 +307,36 @@ function rotuloEstado(estado) {
 
 function renderMyItems() {
   const box = $('meus-itens');
+  const barra = $('mi-filtros');
   const items = state.cache.myItems;
   const erroHtml = state.cache.myItemsError ? `<p class="erro">${escapeHtml(state.cache.myItemsError)}</p>` : '';
-  if (state.cache.myItemsError && !items) { box.innerHTML = erroHtml; return; }
-  if (!items) { box.innerHTML = '<p class="mudo">— configure o token pra ver seus itens —</p>'; return; }
-  if (!items.length) { box.innerHTML = erroHtml + '<p class="mudo">Nada no seu nome.</p>'; return; }
-  const grupos = C.groupMyItems(items);
-  box.innerHTML = erroHtml + grupos.map((g) => `
-    <div class="grupo">
-      <h4>${escapeHtml(g.state)} <span class="mudo">(${g.items.length})</span></h4>
+  if (state.cache.myItemsError && !items) { barra.hidden = true; box.innerHTML = erroHtml; return; }
+  if (!items) { barra.hidden = true; box.innerHTML = '<p class="mudo">— configure o token pra ver seus itens —</p>'; return; }
+  if (!items.length) { barra.hidden = true; box.innerHTML = erroHtml + '<p class="mudo">Nada no seu nome.</p>'; return; }
+  barra.hidden = false;
+  renderChipsTipo($('mi-tipos'), items, state.filtrosMI, () => { salvarFiltrosMI(); renderMyItems(); });
+  renderChipsProjeto($('mi-projetos'), items, state.filtrosMI, () => { salvarFiltrosMI(); renderMyItems(); });
+  const filtrados = C.filterItems(items, state.filtrosMI);
+  if (!filtrados.length) { box.innerHTML = erroHtml + '<p class="mudo">Nada com esses filtros.</p>'; return; }
+  const grupos = C.sortStateGroups(C.groupMyItems(filtrados));
+  // Tag de projeto só quando há mais de um projeto entre os itens — senão é ruído.
+  const multiProjeto = new Set(items.map((it) => (it.fields || {})['System.TeamProject'])).size > 1;
+  box.innerHTML = erroHtml + '<div class="quadro">' + grupos.map((g) => {
+    const atencao = C.isAttentionState(g.state) ? ' atencao' : '';
+    return `
+    <section class="coluna${atencao}">
+      <header><h4>${escapeHtml(g.state)}</h4><span class="conta">${g.items.length}</span></header>
       <ul>${g.items.map((it) => {
         const f = it.fields || {};
         const link = C.deepLinks(state.config.org, f['System.TeamProject'], '').workItem(it.id);
-        return `<li><a href="${link}" target="_blank" rel="noopener">#${it.id} ${escapeHtml(f['System.Title'])}</a> <span class="mudo">${escapeHtml(f['System.TeamProject'])}</span></li>`;
+        const tag = multiProjeto ? `<span class="tag-proj">${escapeHtml(f['System.TeamProject'])}</span>` : '';
+        return `<li><a class="item tipo-${C.typeSlug(f['System.WorkItemType'])}" href="${link}" target="_blank" rel="noopener" title="${escapeHtml(f['System.WorkItemType'])}">
+          <span class="id">#${it.id}</span>
+          <span class="titulo">${escapeHtml(f['System.Title'])}</span>${tag}
+        </a></li>`;
       }).join('')}</ul>
-    </div>`).join('');
+    </section>`;
+  }).join('') + '</div>';
 }
 
 function periodo(start, finish) {
@@ -271,7 +346,146 @@ function periodo(start, finish) {
 }
 
 function cssId(s) { return s.replace(/[^a-z0-9]/gi, '-').toLowerCase(); }
-function escapeHtml(s) { const d = document.createElement('div'); d.textContent = String(s == null ? '' : s); return d.innerHTML; }
+function escapeHtml(s) { const d = document.createElement('div'); d.textContent = String(s == null ? '' : s); return d.innerHTML.replace(/"/g, '&quot;'); }
+
+/* ---------- Board dedicado ---------- */
+const boardState = { p: null, chave: null, items: null, columns: null, sprint: null, soSprint: false, carregando: false, erro: null, filtro: { tipos: null, resp: '', busca: '' } };
+
+function renderRoute() {
+  const hash = location.hash || '';
+  const m = hash.match(/^#board\/([^/]+)\/([^/]+)(\/sprint)?$/);
+  if (m && state.config) {
+    const projectName = decodeURIComponent(m[1]);
+    const teamName = decodeURIComponent(m[2]);
+    const p = state.config.projects.find((x) => x.projectName === projectName && x.teamName === teamName);
+    if (p) { abrirBoard(p, !!m[3]); setPagina('board'); return; }
+  }
+  fecharBoard();
+  setPagina(hash === '#projetos' ? 'projetos' : 'meus-itens');
+}
+
+function setPagina(pagina) {
+  document.body.dataset.pagina = pagina;
+  $('nav-meus-itens').classList.toggle('ativa', pagina === 'meus-itens');
+  $('nav-projetos').classList.toggle('ativa', pagina === 'projetos' || pagina === 'board');
+}
+
+function abrirBoard(p, comSprint) {
+  boardState.p = p;
+  if (comSprint) boardState.soSprint = true;
+  $('board-view').hidden = false;
+  carregarBoard(p, false);
+}
+
+function fecharBoard() {
+  const bv = $('board-view');
+  if (bv) bv.hidden = true;
+}
+
+async function carregarBoard(p, force) {
+  const chave = cardKey(p);
+  if (!force && boardState.chave === chave && boardState.items) { renderBoard(p); return; }
+  boardState.chave = chave;
+  boardState.items = null;
+  boardState.columns = null;
+  boardState.sprint = null;
+  boardState.erro = null;
+  boardState.filtro = { tipos: null, resp: '', busca: '' };
+  $('board-busca').value = '';
+  boardState.carregando = true;
+  renderBoard(p);
+  try {
+    let areas = [];
+    try { areas = await A.teamAreas(ctx(), p.projectName, p.teamName); } catch (e) { /* segue sem recorte de área */ }
+    const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlBoard(areas));
+    boardState.items = ids.length ? await A.getFields(ctx(), ids, FIELDS_BOARD) : [];
+    try {
+      const boards = await A.listTeamBoards(ctx(), p.projectName, p.teamName);
+      const nivelRequisito = boards.find((b) => !/^(epics|features)$/i.test(b.name)) || boards[boards.length - 1];
+      if (nivelRequisito) boardState.columns = await A.boardColumns(ctx(), p.projectName, p.teamName, nivelRequisito.id);
+    } catch (e) { /* sem colunas oficiais: ordenação por fallback */ }
+    try { boardState.sprint = await A.currentSprint(ctx(), p.projectName, p.teamName); } catch (e) { /* board segue sem filtro */ }
+  } catch (e) {
+    boardState.erro = mensagemDeErro(e);
+    if (e instanceof A.AuthError) { state.auth = 'vencido'; renderBadge(); }
+  }
+  boardState.carregando = false;
+  renderBoard(p);
+}
+
+function renderBoard(p) {
+  $('board-titulo').textContent = p.teamName;
+  $('board-sub').textContent = p.projectName + (boardState.sprint ? ' · ' + boardState.sprint.name : '');
+  $('board-devops').href = C.deepLinks(state.config.org, p.projectName, p.teamName).board;
+  const st = $('board-status');
+  const cols = $('board-colunas');
+  const filtro = $('board-filtro-sprint');
+  filtro.hidden = !(boardState.sprint && boardState.sprint.path);
+  filtro.setAttribute('aria-pressed', String(boardState.soSprint));
+  filtro.classList.toggle('ativo', boardState.soSprint);
+  const filtros = $('board-filtros');
+  if (boardState.carregando) { filtros.hidden = true; st.textContent = 'carregando board…'; st.hidden = false; cols.innerHTML = ''; return; }
+  if (boardState.erro) { filtros.hidden = true; st.innerHTML = `<span class="erro">${escapeHtml(boardState.erro)}</span>`; st.hidden = false; cols.innerHTML = ''; return; }
+  const todos = boardState.items || [];
+  filtros.hidden = !todos.length;
+  renderChipsTipo($('board-tipos'), todos, boardState.filtro, () => renderBoard(p));
+  renderRespSelect(todos);
+  let items = todos;
+  if (boardState.soSprint && boardState.sprint) items = items.filter((it) => C.inSprint(it, boardState.sprint.path));
+  items = C.filterItems(items, boardState.filtro);
+  const porColuna = new Map();
+  for (const it of items) {
+    const f = it.fields || {};
+    const col = f['System.BoardColumn'] || f['System.State'] || '—';
+    if (!porColuna.has(col)) porColuna.set(col, []);
+    porColuna.get(col).push(it);
+  }
+  let nomes;
+  if (boardState.columns && boardState.columns.length) {
+    nomes = boardState.columns.map((c) => c.name).filter((n) => porColuna.has(n));
+    for (const n of porColuna.keys()) if (!nomes.includes(n)) nomes.push(n); // colunas fora da lista oficial vão pro fim
+  } else {
+    const statesByColumn = {};
+    for (const [n, lista] of porColuna) statesByColumn[n] = lista.map((it) => (it.fields || {})['System.State']);
+    nomes = C.orderColumnsFallback([...porColuna.keys()], statesByColumn);
+  }
+  if (!nomes.length) {
+    const temFiltro = boardState.filtro.busca || boardState.filtro.resp || boardState.filtro.tipos;
+    st.textContent = temFiltro ? 'nada com esses filtros' : (boardState.soSprint ? 'nada na sprint corrente' : 'board vazio');
+    st.hidden = false;
+    cols.innerHTML = '';
+    return;
+  }
+  st.hidden = true;
+  cols.innerHTML = nomes.map((nome) => {
+    const lista = porColuna.get(nome) || [];
+    return `<section class="coluna">
+      <header><h4>${escapeHtml(nome)}</h4><span class="conta">${lista.length}</span></header>
+      <ul>${lista.map((it) => {
+        const f = it.fields || {};
+        const resp = f['System.AssignedTo'] && f['System.AssignedTo'].displayName ? f['System.AssignedTo'].displayName : '';
+        const link = C.deepLinks(state.config.org, p.projectName, '').workItem(it.id);
+        const dica = escapeHtml(f['System.WorkItemType']) + (resp ? ' · ' + escapeHtml(resp) : '');
+        return `<li><a class="item tipo-${C.typeSlug(f['System.WorkItemType'])}" href="${link}" target="_blank" rel="noopener" title="${dica}">
+          <span class="id">#${it.id}${resp ? ` <span class="resp">${escapeHtml(C.initials(resp))}</span>` : ''}</span>
+          <span class="titulo">${escapeHtml(f['System.Title'])}</span>
+        </a></li>`;
+      }).join('')}</ul>
+    </section>`;
+  }).join('');
+}
+
+// Seletor de responsável do board — opções vêm dos próprios itens
+function renderRespSelect(items) {
+  const sel = $('board-resp');
+  const atual = boardState.filtro.resp;
+  const nomes = [...new Set((items || [])
+    .map((it) => (it.fields || {})['System.AssignedTo'])
+    .filter((r) => r && r.displayName)
+    .map((r) => r.displayName))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  sel.innerHTML = '<option value="">todos os responsáveis</option>' +
+    nomes.map((n) => `<option value="${escapeHtml(n)}"${n === atual ? ' selected' : ''}>${escapeHtml(n)}</option>`).join('');
+}
 
 /* ---------- Configurações ---------- */
 function openSettings() {
@@ -354,6 +568,7 @@ function boot() {
   }
   renderAll();
   refreshAll(false);
+  renderRoute(); // abre o board direto se a URL já apontar pra um (#board/...)
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -361,6 +576,25 @@ document.addEventListener('DOMContentLoaded', () => {
   $('wizard-concluir').addEventListener('click', wizardConclude);
   $('atualizar').addEventListener('click', () => refreshAll(true));
   $('abrir-config').addEventListener('click', openSettings);
+  $('board-voltar').addEventListener('click', () => { location.hash = '#projetos'; });
+  $('board-atualizar').addEventListener('click', () => { if (boardState.p) carregarBoard(boardState.p, true); });
+  $('board-filtro-sprint').addEventListener('click', () => {
+    boardState.soSprint = !boardState.soSprint;
+    if (boardState.p) renderBoard(boardState.p);
+  });
+  window.addEventListener('hashchange', renderRoute);
+  $('mi-busca').addEventListener('input', () => {
+    state.filtrosMI.busca = $('mi-busca').value;
+    renderMyItems();
+  });
+  $('board-busca').addEventListener('input', () => {
+    boardState.filtro.busca = $('board-busca').value;
+    if (boardState.p) renderBoard(boardState.p);
+  });
+  $('board-resp').addEventListener('change', () => {
+    boardState.filtro.resp = $('board-resp').value;
+    if (boardState.p) renderBoard(boardState.p);
+  });
   $('conf-salvar').addEventListener('click', settingsSave);
   $('conf-redescobrir').addEventListener('click', settingsRediscover);
   $('conf-exportar').addEventListener('click', settingsExport);
