@@ -215,6 +215,28 @@
     return [...(columnNames || [])].sort((a, b) => rankColuna(a) - rankColuna(b));
   }
 
+  // ---- Filtro genérico de itens (Meus itens e Board) ----
+  // filtro: { tipos: [slug]|null, projetos: [nome]|null, resp: nome|'', busca: texto }
+  // null/vazio = sem recorte naquela dimensão.
+  function filterItems(items, filtro) {
+    const f = filtro || {};
+    const busca = String(f.busca || '').trim().toLowerCase();
+    return (items || []).filter((it) => {
+      const flds = (it || {}).fields || {};
+      if (f.tipos && f.tipos.length && !f.tipos.includes(typeSlug(flds['System.WorkItemType']))) return false;
+      if (f.projetos && f.projetos.length && !f.projetos.includes(flds['System.TeamProject'])) return false;
+      if (f.resp) {
+        const nome = flds['System.AssignedTo'] && flds['System.AssignedTo'].displayName;
+        if (nome !== f.resp) return false;
+      }
+      if (busca) {
+        const alvo = ('#' + it.id + ' ' + (flds['System.Title'] || '')).toLowerCase();
+        if (!alvo.includes(busca)) return false;
+      }
+      return true;
+    });
+  }
+
   // ---- Cache ----
   function isStale(fetchedAt, now, maxAgeMinutes = 10) {
     if (!fetchedAt) return true;
@@ -236,7 +258,7 @@
     wiqlCounts, wiqlMyItems, levelOf, isTerminalState,
     aggregateCounts, sprintProgress, groupMyItems,
     sortStateGroups, isAttentionState, typeSlug,
-    wiqlBoard, initials, inSprint, orderColumnsFallback,
+    wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };
 });
