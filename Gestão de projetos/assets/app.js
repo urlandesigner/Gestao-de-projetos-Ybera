@@ -252,16 +252,25 @@ function renderMyItems() {
   if (state.cache.myItemsError && !items) { box.innerHTML = erroHtml; return; }
   if (!items) { box.innerHTML = '<p class="mudo">— configure o token pra ver seus itens —</p>'; return; }
   if (!items.length) { box.innerHTML = erroHtml + '<p class="mudo">Nada no seu nome.</p>'; return; }
-  const grupos = C.groupMyItems(items);
-  box.innerHTML = erroHtml + grupos.map((g) => `
-    <div class="grupo">
-      <h4>${escapeHtml(g.state)} <span class="mudo">(${g.items.length})</span></h4>
+  const grupos = C.sortStateGroups(C.groupMyItems(items));
+  // Tag de projeto só quando há mais de um projeto entre os itens — senão é ruído.
+  const multiProjeto = new Set(items.map((it) => (it.fields || {})['System.TeamProject'])).size > 1;
+  box.innerHTML = erroHtml + '<div class="quadro">' + grupos.map((g) => {
+    const atencao = C.isAttentionState(g.state) ? ' atencao' : '';
+    return `
+    <section class="coluna${atencao}">
+      <header><h4>${escapeHtml(g.state)}</h4><span class="conta">${g.items.length}</span></header>
       <ul>${g.items.map((it) => {
         const f = it.fields || {};
         const link = C.deepLinks(state.config.org, f['System.TeamProject'], '').workItem(it.id);
-        return `<li><a href="${link}" target="_blank" rel="noopener">#${it.id} ${escapeHtml(f['System.Title'])}</a> <span class="mudo">${escapeHtml(f['System.TeamProject'])}</span></li>`;
+        const tag = multiProjeto ? `<span class="tag-proj">${escapeHtml(f['System.TeamProject'])}</span>` : '';
+        return `<li><a class="item tipo-${C.typeSlug(f['System.WorkItemType'])}" href="${link}" target="_blank" rel="noopener" title="${escapeHtml(f['System.WorkItemType'])}">
+          <span class="id">#${it.id}</span>
+          <span class="titulo">${escapeHtml(f['System.Title'])}</span>${tag}
+        </a></li>`;
       }).join('')}</ul>
-    </div>`).join('');
+    </section>`;
+  }).join('') + '</div>';
 }
 
 function periodo(start, finish) {
@@ -271,7 +280,7 @@ function periodo(start, finish) {
 }
 
 function cssId(s) { return s.replace(/[^a-z0-9]/gi, '-').toLowerCase(); }
-function escapeHtml(s) { const d = document.createElement('div'); d.textContent = String(s == null ? '' : s); return d.innerHTML; }
+function escapeHtml(s) { const d = document.createElement('div'); d.textContent = String(s == null ? '' : s); return d.innerHTML.replace(/"/g, '&quot;'); }
 
 /* ---------- Configurações ---------- */
 function openSettings() {

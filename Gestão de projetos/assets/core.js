@@ -128,6 +128,40 @@
     return [...grupos.entries()].map(([state, list]) => ({ state, items: list }));
   }
 
+  // ---- Meus itens: ordenação e classificação visual do quadro ----
+  // Ordem de fluxo pra colunas de estado; estados de atenção vão pro fim (em destaque).
+  const STATE_FLOW = [
+    'new', 'proposed', 'to do', 'backlog', 'approved', 'ready', 'ready for dev',
+    'committed', 'prototype', 'design', 'in progress', 'doing', 'active',
+    'in review', 'review', 'resolved', 'test', 'testing', 'qa', 'validação', 'validation',
+  ];
+  const STATE_ATTENTION = ['impediment', 'impediments', 'blocked', 'on hold', 'waiting'];
+
+  function isAttentionState(state) {
+    return STATE_ATTENTION.includes(String(state || '').toLowerCase());
+  }
+
+  function sortStateGroups(groups) {
+    const rank = (g) => {
+      const s = String(g.state || '').toLowerCase();
+      if (isAttentionState(s)) return 1000;
+      const i = STATE_FLOW.indexOf(s);
+      return i === -1 ? 500 : i; // desconhecidos ficam no meio, na ordem de chegada
+    };
+    return [...(groups || [])].sort((a, b) => rank(a) - rank(b));
+  }
+
+  // Slug do tipo pra acento visual (cores oficiais do DevOps ficam no CSS).
+  function typeSlug(typeName) {
+    const s = String(typeName || '').toLowerCase();
+    if (s === 'epic') return 'epic';
+    if (s === 'feature') return 'feature';
+    if (s === 'bug') return 'bug';
+    if (s === 'task') return 'task';
+    if (s === 'product backlog item' || s === 'user story') return 'pbi';
+    return 'outro';
+  }
+
   // ---- Cache ----
   function isStale(fetchedAt, now, maxAgeMinutes = 10) {
     if (!fetchedAt) return true;
@@ -148,6 +182,7 @@
     orgBaseUrl, deepLinks, normalizeConfig, exportConfig,
     wiqlCounts, wiqlMyItems, levelOf, isTerminalState,
     aggregateCounts, sprintProgress, groupMyItems,
+    sortStateGroups, isAttentionState, typeSlug,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };
 });
