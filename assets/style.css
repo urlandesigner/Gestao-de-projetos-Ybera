@@ -181,6 +181,51 @@ h2 { font-family: var(--serifa); font-size: 1.15rem; margin: 1.6rem 0 0.7rem; }
   font-size: 0.78rem;
 }
 .sprint { margin-top: 0.45rem; }
+/* Sprint expansível dentro do cartão */
+details.sprint summary {
+  cursor: pointer;
+  list-style: none;
+}
+details.sprint summary::-webkit-details-marker { display: none; }
+details.sprint summary::before { content: '▸ '; color: var(--mudo); font-size: 0.8em; }
+details.sprint[open] summary::before { content: '▾ '; }
+details.sprint summary:hover b { color: var(--acento); }
+.sprint-itens {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.sprint-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  background: var(--papel);
+  border: 1px solid var(--borda);
+  border-left: 3px solid var(--borda);
+  border-radius: 8px;
+  padding: 0.3rem 0.55rem;
+  text-decoration: none;
+  color: var(--tinta);
+  font-size: 0.82rem;
+  transition: border-color 0.15s ease;
+}
+.sprint-item:hover { border-color: var(--acento); }
+.sprint-item .id { font-size: 0.7rem; color: var(--mudo); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sprint-item .titulo { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sprint-item .estado {
+  font-size: 0.68rem;
+  color: var(--mudo);
+  border: 1px solid var(--borda);
+  border-radius: 999px;
+  padding: 0 0.4rem;
+  white-space: nowrap;
+}
+.sprint-item.feito { opacity: 0.55; }
+.sprint-item.feito .titulo { text-decoration: line-through; }
+/* O fio por tipo (.tipo-*) já está definido na seção do quadro e vale aqui também */
 
 /* Diálogos */
 dialog {
