@@ -16,6 +16,7 @@ const state = {
   discovery: null,
   auth: null, // null | 'sem-token' | 'vencido' | 'atualizando' | 'conectado'
 };
+state.cache.lastSuccessAt = state.cache.lastSuccessAt || state.cache.fetchedAt || 0; // migração: cache antigo sem lastSuccessAt
 
 function ctx() { return { base: state.config.org, pat: state.pat, fetchImpl: window.fetch.bind(window) }; }
 function cardKey(p) { return p.projectName + '::' + p.teamName; }
@@ -109,7 +110,7 @@ const FIELDS_ITEMS = ['System.Title', 'System.State', 'System.WorkItemType', 'Sy
 
 async function refreshCard(p) {
   const anterior = state.cache.byCard[cardKey(p)] || {};
-  const entry = { counts: anterior.counts || null, sprint: anterior.sprint || null, progress: anterior.progress || null, error: null };
+  const entry = { counts: null, sprint: null, progress: null, error: null };
   try {
     const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlCounts());
     const items = ids.length ? await A.getFields(ctx(), ids, FIELDS_COUNTS) : [];
@@ -122,6 +123,9 @@ async function refreshCard(p) {
       entry.progress = C.sprintProgress(sitems);
     }
   } catch (e) {
+    entry.counts = entry.counts || anterior.counts || null;
+    entry.sprint = entry.sprint || anterior.sprint || null;
+    entry.progress = entry.progress || anterior.progress || null;
     entry.error = mensagemDeErro(e);
     if (e instanceof A.AuthError) state.auth = 'vencido';
   }
@@ -159,10 +163,11 @@ async function refreshAll(force) {
     const visiveis = state.config.projects.filter((p) => !p.hidden);
     await Promise.all([...visiveis.map(refreshCard), refreshMyItems()]);
     state.cache.fetchedAt = Date.now();
-    const algumSucesso = visiveis.some((p) => !(state.cache.byCard[cardKey(p)] || {}).error);
+    const algumSucesso = (!visiveis.length && !state.cache.myItemsError)
+      || visiveis.some((p) => !(state.cache.byCard[cardKey(p)] || {}).error);
     if (state.auth !== 'vencido' && algumSucesso) state.cache.lastSuccessAt = Date.now();
-    if (state.auth === 'atualizando') state.auth = 'conectado';
   } finally {
+    if (state.auth === 'atualizando') state.auth = 'conectado';
     saveJSON(LS.cache, state.cache);
     renderBadge();
   }
