@@ -1,0 +1,7 @@
+{
+  "name": "central-de-projetos",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.js"
+  }
+}
