@@ -139,4 +139,5 @@ dialog button:hover, .botao:hover { border-color: var(--acento); color: var(--ac
   header { flex-direction: column; align-items: flex-start; }
   #grid { grid-template-columns: 1fr; }
   .atalhos a { padding: 0.5rem 0.8rem; font-size: 0.9rem; } /* alvo de toque maior */
+  .acoes { flex-wrap: wrap; }
 }
