@@ -1,0 +1,5 @@
+.DS_Store
+
+# Configuração local de ferramentas (caminhos de máquina/sessão)
+.claude/
+.superpowers/
