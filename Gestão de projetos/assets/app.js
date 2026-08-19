@@ -16,6 +16,7 @@ const state = {
   discovery: null,
   auth: null, // null | 'sem-token' | 'vencido' | 'atualizando' | 'conectado'
   filtrosMI: Object.assign({ tipos: null, projetos: null }, loadJSON(LS.filtros) || {}, { busca: '' }),
+  respProj: (loadJSON(LS.filtros) || {}).respProj || '', // filtro de responsável dos cartões
 };
 state.cache.lastSuccessAt = state.cache.lastSuccessAt || state.cache.fetchedAt || 0; // migração: cache antigo sem lastSuccessAt
 
@@ -77,7 +78,7 @@ function renderChipsProjeto(container, items, filtro, onChange) {
 }
 
 function salvarFiltrosMI() {
-  saveJSON(LS.filtros, { tipos: state.filtrosMI.tipos, projetos: state.filtrosMI.projetos });
+  saveJSON(LS.filtros, { tipos: state.filtrosMI.tipos, projetos: state.filtrosMI.projetos, respProj: state.respProj });
 }
 
 function ctx() { return { base: state.config.org, pat: state.pat, fetchImpl: window.fetch.bind(window) }; }
@@ -167,20 +168,30 @@ function wizardConclude() {
 }
 
 /* ---------- Dados vivos ---------- */
-const FIELDS_COUNTS = ['System.WorkItemType', 'System.State'];
+const FIELDS_COUNTS = ['System.WorkItemType', 'System.State', 'System.AssignedTo'];
 const FIELDS_BOARD = ['System.Title', 'System.State', 'System.WorkItemType', 'System.BoardColumn', 'System.AssignedTo', 'System.IterationPath'];
 const FIELDS_ITEMS = ['System.Title', 'System.State', 'System.WorkItemType', 'System.TeamProject'];
 
 async function refreshCard(p) {
   const anterior = state.cache.byCard[cardKey(p)] || {};
-  const entry = { counts: null, sprint: null, progress: null, error: null };
+  const entry = { items: null, counts: null, sprint: null, progress: null, error: null };
   try {
     // Recorte pelas áreas do time — senão times do mesmo projeto contam igual
     let areas = [];
     try { areas = await A.teamAreas(ctx(), p.projectName, p.teamName); } catch (e) { /* segue projeto inteiro */ }
     const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlCounts(30, areas));
     const items = ids.length ? await A.getFields(ctx(), ids, FIELDS_COUNTS) : [];
-    entry.counts = C.aggregateCounts(items);
+    // Guarda os itens enxutos (só o que filterItems/aggregateCounts leem) —
+    // o AssignedTo cru do ADO traz avatar, descriptor etc. e incharia o localStorage.
+    entry.items = items.map((it) => {
+      const f = it.fields || {};
+      const resp = f['System.AssignedTo'];
+      return { id: it.id, fields: {
+        'System.WorkItemType': f['System.WorkItemType'],
+        'System.State': f['System.State'],
+        'System.AssignedTo': resp && resp.displayName ? { displayName: resp.displayName } : undefined,
+      } };
+    });
     const sprint = await A.currentSprint(ctx(), p.projectName, p.teamName);
     if (sprint) {
       entry.sprint = sprint;
@@ -189,7 +200,8 @@ async function refreshCard(p) {
       entry.progress = C.sprintProgress(sitems);
     }
   } catch (e) {
-    entry.counts = entry.counts || anterior.counts || null;
+    entry.items = entry.items || anterior.items || null;
+    entry.counts = anterior.counts || null; // legado: cache antigo pré-filtro só tinha counts
     entry.sprint = entry.sprint || anterior.sprint || null;
     entry.progress = entry.progress || anterior.progress || null;
     entry.error = mensagemDeErro(e);
@@ -255,6 +267,24 @@ function renderGrid() {
   const grid = $('grid');
   grid.innerHTML = '';
   for (const p of state.config.projects.filter((x) => !x.hidden)) grid.appendChild(buildCard(p));
+  renderFiltroProj();
+}
+
+// Seletor de responsável dos cartões — opções vêm dos itens em cache de todos os times
+function renderFiltroProj() {
+  const barra = $('proj-filtros');
+  const sel = $('proj-resp');
+  const todos = Object.values(state.cache.byCard).flatMap((e) => (e && e.items) || []);
+  if (!todos.length && !state.respProj) { barra.hidden = true; return; }
+  barra.hidden = false;
+  const nomes = new Set(todos
+    .map((it) => (it.fields || {})['System.AssignedTo'])
+    .filter((r) => r && r.displayName)
+    .map((r) => r.displayName));
+  if (state.respProj) nomes.add(state.respProj); // seleção sobrevive mesmo sem itens no momento
+  const lista = [...nomes].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  sel.innerHTML = '<option value="">todos os responsáveis</option>' +
+    lista.map((n) => `<option value="${escapeHtml(n)}"${n === state.respProj ? ' selected' : ''}>${escapeHtml(n)}</option>`).join('');
 }
 
 function buildCard(p) {
@@ -279,6 +309,7 @@ function buildCard(p) {
 function renderCard(p) {
   const card = document.getElementById('card-' + cssId(cardKey(p)));
   if (card) fillCardLive(card, p);
+  renderFiltroProj(); // itens novos podem trazer responsáveis novos pro seletor
 }
 
 function fillCardLive(card, p) {
@@ -288,11 +319,15 @@ function fillCardLive(card, p) {
     box.innerHTML = state.pat ? '<p class="mudo">carregando…</p>' : '<p class="mudo">— sem token: só atalhos —</p>';
     return;
   }
-  if (entry.error && !entry.counts) { box.innerHTML = `<p class="erro">${escapeHtml(entry.error)}</p>`; return; }
+  // Contagem na hora, já com o recorte de responsável; cache legado (só counts) fica sem recorte.
+  const counts = entry.items
+    ? C.aggregateCounts(C.filterItems(entry.items, { resp: state.respProj }))
+    : entry.counts;
+  if (!counts) { box.innerHTML = `<p class="erro">${escapeHtml(entry.error || 'sem dados')}</p>`; return; }
   const partes = [];
   if (entry.error) partes.push(`<p class="erro">${escapeHtml(entry.error)}</p>`);
   const celulas = [['epic', 'Épicos'], ['feature', 'Features'], ['pbi', 'PBIs']].map(([nivel, rotulo]) => {
-    const b = C.bucketCounts(entry.counts[nivel]);
+    const b = C.bucketCounts(counts[nivel]);
     const quebra = [];
     if (b.todo) quebra.push(`<li>${b.todo} a fazer</li>`);
     if (b.andamento) quebra.push(`<li>${b.andamento} em andamento</li>`);
@@ -626,6 +661,11 @@ document.addEventListener('DOMContentLoaded', () => {
   $('board-resp').addEventListener('change', () => {
     boardState.filtro.resp = $('board-resp').value;
     if (boardState.p) renderBoard(boardState.p);
+  });
+  $('proj-resp').addEventListener('change', () => {
+    state.respProj = $('proj-resp').value;
+    salvarFiltrosMI();
+    renderGrid();
   });
   $('conf-salvar').addEventListener('click', settingsSave);
   $('conf-redescobrir').addEventListener('click', settingsRediscover);
