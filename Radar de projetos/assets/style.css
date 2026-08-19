@@ -249,6 +249,12 @@ section{margin-bottom:30px}
 .sec-head h2{font-family:var(--font-display);font-size:21px;font-weight:600;letter-spacing:0}
 /* Meses anteriores do report: mesma dobra do board, empilhados. */
 #repPast{display:flex;flex-direction:column;gap:9px;margin-top:22px}
+/* Aberta, a dobra tem de anunciar um mês irmão do que está acima, não uma
+   subseção dele: o rótulo assume a mesma serifa do cabeçalho do mês aberto.
+   Fechada, ele continua discreto — ali o papel dele é afordância de "ver mais".
+   Escopado em #repPast para não mexer na dobra do Planejado, no board. */
+#repPast .fold[open]>summary{font-family:var(--font-display);font-size:19px;
+  font-weight:600;color:var(--ink);padding-bottom:13px}
 
 .summary{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:6px 18px 8px;box-shadow:var(--shadow)}
 .summary ul{list-style:none;margin:0;padding:0}
