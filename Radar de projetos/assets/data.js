@@ -170,7 +170,13 @@ const DATA = {
      Enquanto a coluna Status não tiver nenhum "Concluído", `extra` é o que dá
      corpo ao report — sem ele a página fica no estado vazio.
      Um mês não precisa existir aqui para aparecer: se houver entrega ou
-     demanda concluída naquele mês, o bloco do mês é criado do mesmo jeito. */
+     demanda concluída naquele mês, o bloco do mês é criado do mesmo jeito.
+     Cada registro:
+       {m:"AAAA-MM",                     ← obrigatório, é a chave do mês
+        summary:{pt:"...", en:"..."},    ← opcional: o parágrafo do mês
+        extra:[{t:{pt:"...", en:"..."}}] ← opcional: concluído fora do Notion
+       }
+     Registro sem `m` bem formado é ignorado. */
   reports:[],
 
   items:[

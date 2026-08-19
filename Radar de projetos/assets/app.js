@@ -246,11 +246,15 @@ function trackName(id){
    uma entrega e esquecer de criar o registro do mês não faça a entrega sumir
    em silêncio. Ordem decrescente: o mês mais recente é o que interessa. */
 function reportMonths(){
-  const regs = DATA.reports || [];
+  /* A chave de mês tem de ser "AAAA-MM". O data.js é mantido à mão e este
+     render é o mesmo das outras sete páginas: um `m` esquecido levaria a
+     navegação de todas elas junto. Registro fora de forma é ignorado. */
+  const ok = v => /^\d{4}-(0[1-9]|1[0-2])$/.test(v || "");
+  const regs = (DATA.reports || []).filter(r => ok(r.m));
   const keys = new Set(regs.map(r => r.m));
   DATA.items.forEach(i => {
-    if(i.status === "done" && i.shipped) keys.add(i.shipped);
-    (i.demands || []).forEach(d => { if(d.status === "done" && d.done) keys.add(d.done); });
+    if(i.status === "done" && ok(i.shipped)) keys.add(i.shipped);
+    (i.demands || []).forEach(d => { if(d.status === "done" && ok(d.done)) keys.add(d.done); });
   });
   return [...keys].sort().reverse().map(m => {
     const reg = regs.find(r => r.m === m) || {};
@@ -268,6 +272,7 @@ function reportMonths(){
 /* "Agosto de 2026" | "August 2026" — cabeçalho do mês. O fmtMonth existente
    devolve a forma curta ("ago/26"), que é a dos cartões, não a de título. */
 function fmtMonthLong(ym){
+  if(!ym) return "";
   const [y, mo] = ym.split("-").map(Number);
   const name = new Intl.DateTimeFormat(lang === "pt" ? "pt-BR" : "en-US", {month:"long"})
     .format(new Date(y, mo - 1, 1));
