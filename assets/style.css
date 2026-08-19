@@ -276,57 +276,110 @@ body[data-pagina='board'] #secao-projetos { display: none; }
 .card {
   background: var(--superficie-2);
   border-radius: 16px;
-  padding: 1.05rem 1.1rem;
+  padding: 1.1rem 1.15rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+/* Cabeçalho: identidade à esquerda, UMA ação primária à direita */
+.card-cabeca { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+.card-nomes { min-width: 0; }
+.card .proj {
+  margin: 0 0 0.2rem;
+  color: var(--mudo);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
 }
 .card h3 { margin: 0; font-size: 1.05rem; }
-.card .proj { margin: 0.1rem 0 0.75rem; color: var(--mudo); font-size: 0.82rem; }
-.atalhos { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.8rem; }
-.atalhos a {
+.abrir-board {
+  flex-shrink: 0;
+  background: var(--tinta);
+  color: #fff;
+  text-decoration: none;
   font-size: 0.8rem;
-  font-weight: 550;
-  text-decoration: none;
-  color: var(--tinta);
-  background: var(--superficie);
-  border-radius: 999px;
-  padding: 0.35rem 0.75rem;
-  box-shadow: var(--sombra-cartao);
-}
-.atalhos a:hover { background: #fafafa; }
-.atalhos a.interno { background: var(--tinta); color: #fff; }
-.atalhos a.interno:hover { background: #3f3f46; }
-.vivo { padding-top: 0.2rem; font-size: 0.87rem; }
-.nivel {
-  display: flex;
-  align-items: baseline;
-  gap: 0.55rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.45rem;
-  font-size: 0.85rem;
-}
-.nivel-rot { min-width: 4.4rem; font-weight: 600; }
-.nivel-total { font-variant-numeric: tabular-nums; }
-.nivel-segs { font-size: 0.8rem; }
-.bloq {
-  background: var(--erro-fundo);
-  color: var(--erro);
-  border-radius: 999px;
-  padding: 0.08rem 0.55rem;
-  font-size: 0.73rem;
   font-weight: 600;
-}
-.sprint { margin-top: 0.55rem; }
-.sprint-link {
-  display: inline-block;
-  color: var(--tinta);
-  text-decoration: none;
-  font-size: 0.85rem;
-  background: var(--superficie);
   border-radius: 999px;
-  padding: 0.35rem 0.75rem;
+  padding: 0.45rem 0.9rem;
+  white-space: nowrap;
+}
+.abrir-board:hover { background: #3f3f46; }
+.abrir-board .seta { opacity: 0.65; }
+/* Estatísticas: três células iguais, quebra empilhada — nada de linhas que dobram */
+.vivo { display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.87rem; }
+.vivo > .erro { margin: 0; }
+.niveis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.55rem; }
+.nivel {
+  background: var(--superficie);
+  border-radius: 12px;
+  padding: 0.6rem 0.7rem 0.55rem;
   box-shadow: var(--sombra-cartao);
+  min-width: 0;
+}
+.nivel-rot {
+  display: block;
+  color: var(--mudo);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.nivel-total {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+.nivel.vazio .nivel-total { color: var(--mudo); }
+.nivel-quebra {
+  list-style: none;
+  margin: 0.15rem 0 0;
+  padding: 0;
+  color: var(--mudo);
+  font-size: 0.73rem;
+  line-height: 1.45;
+}
+.nivel-quebra .bloq-linha { color: var(--erro); font-weight: 600; }
+/* Sprint: faixa cheia com barra de progresso */
+.sprint-link {
+  display: block;
+  background: var(--superficie);
+  border-radius: 12px;
+  padding: 0.6rem 0.75rem 0.65rem;
+  box-shadow: var(--sombra-cartao);
+  text-decoration: none;
+  color: var(--tinta);
 }
 .sprint-link:hover { background: #fafafa; }
+.sprint-linha { display: flex; justify-content: space-between; align-items: baseline; gap: 0.6rem; font-size: 0.8rem; }
+.sprint-nome { min-width: 0; }
+.sprint-prog { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--mudo); font-weight: 600; }
 .sprint-link .seta { color: var(--mudo); }
+.barra { display: block; height: 5px; border-radius: 999px; background: #e4e4e7; margin-top: 0.5rem; overflow: hidden; }
+.barra-cheia { display: block; height: 100%; border-radius: 999px; background: var(--positivo); }
+.sprint-vazia { margin: 0; font-size: 0.8rem; }
+/* Rodapé: atalhos do DevOps rebaixados a links de texto */
+.atalhos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.1rem 0.9rem;
+  margin: 0;
+  padding-top: 0.7rem;
+  border-top: 1px solid #e6e6e9;
+}
+.atalhos-rot {
+  color: var(--mudo);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.atalhos a { font-size: 0.78rem; font-weight: 550; color: var(--mudo); text-decoration: none; }
+.atalhos a::after { content: ' ↗'; font-size: 0.7em; opacity: 0.7; }
+.atalhos a:hover { color: var(--tinta); }
 
 /* ---------- Board dedicado ---------- */
 .board-topo {
@@ -434,7 +487,9 @@ details summary { cursor: pointer; color: var(--mudo); font-size: 0.88rem; }
   #carimbo { display: none; }
   main > section { padding: 1.1rem 1rem 1.2rem; }
   #grid { grid-template-columns: 1fr; }
-  .atalhos a { padding: 0.5rem 0.85rem; font-size: 0.88rem; } /* alvo de toque maior */
+  .atalhos a { padding: 0.45rem 0; font-size: 0.85rem; } /* alvo de toque maior */
+  .niveis { gap: 0.45rem; }
+  .nivel { padding: 0.55rem 0.6rem 0.5rem; }
   /* Quadro vira deck de swipe horizontal com snap */
   .quadro { grid-auto-columns: 84vw; scroll-snap-type: x mandatory; }
   .coluna { scroll-snap-align: start; }
