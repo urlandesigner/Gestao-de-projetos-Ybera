@@ -58,6 +58,16 @@ const T = {
     printPlanned:"Os {n} projetos planejados estão listados na seção Futuro, adiante — sem repetir os cards aqui.",
     horTitle:"Futuro",
     horSub:"Quanto mais longe, menos preciso — de propósito. As três faixas saem da data de início de cada projeto no Notion: mudar um período move o projeto de faixa sozinho.",
+    navRep:"Report mensal",
+    repTitle:"Report mensal",
+    repSub:"O que foi concluído em cada mês. O mês mais recente abre aberto; os anteriores ficam recolhidos abaixo.",
+    repExtra:"Também concluído",
+    repMonthEmpty:"Nada registrado neste mês.",
+    repEmptyShort:"Nenhum mês com item concluído ainda.",
+    repEmptyD:"Na base Projetos o campo Status nunca assume “Concluído”, e nenhum projeto tem demandas registradas — não há de onde derivar o que fechou. Enquanto isso, o mês pode ser escrito à mão no bloco <b>reports</b> do arquivo de dados. Esta página vazia diz respeito à base, não ao trabalho.",
+    repOneDelivery:"entrega", repManyDeliveries:"entregas",
+    repOneDemand:"demanda concluída", repManyDemands:"demandas concluídas",
+    repOneExtra:"outro item", repManyExtra:"outros itens",
     horNow:"Agora", horNext:"A seguir", horLater:"Depois",
     horUntil:"até {d}",
     confNow:"Janela atual", confNext:"Planejado", confLater:"Roadmap",
@@ -118,6 +128,16 @@ const T = {
     printPlanned:"The {n} planned projects are listed in the Future section below — not repeated as cards here.",
     horTitle:"Future",
     horSub:"The further out, the vaguer — on purpose. The three bands come from each project's start date in Notion: change a period and the project moves band on its own.",
+    navRep:"Monthly report",
+    repTitle:"Monthly report",
+    repSub:"What was completed each month. The most recent month opens expanded; earlier ones stay collapsed below.",
+    repExtra:"Also completed",
+    repMonthEmpty:"Nothing recorded this month.",
+    repEmptyShort:"No month with completed items yet.",
+    repEmptyD:"In the Projects base the Status field never takes the value “Done”, and no project has demands recorded — there is nothing to derive closed work from. In the meantime a month can be written by hand in the <b>reports</b> block of the data file. This empty page is about the base, not about the work.",
+    repOneDelivery:"delivery", repManyDeliveries:"deliveries",
+    repOneDemand:"completed demand", repManyDemands:"completed demands",
+    repOneExtra:"other item", repManyExtra:"other items",
     horNow:"Now", horNext:"Next", horLater:"Later",
     horUntil:"through {d}",
     confNow:"Current window", confNext:"Planned", confLater:"Roadmap",
@@ -218,6 +238,48 @@ function trackName(id){
   const t = DATA.tracks.find(t => t.id === id);
   return t ? L(t.name) : "";
 }
+
+/* --- REPORT MENSAL --------------------------------------------------------
+   Um mês do report é a união de três fontes: o registro escrito em
+   DATA.reports, as entregas (status "done" com `shipped`) e as demandas
+   concluídas (status "done" com `done`). A união é o que garante que marcar
+   uma entrega e esquecer de criar o registro do mês não faça a entrega sumir
+   em silêncio. Ordem decrescente: o mês mais recente é o que interessa. */
+function reportMonths(){
+  /* A chave de mês tem de ser "AAAA-MM". O data.js é mantido à mão e este
+     render é o mesmo das outras sete páginas: um `m` esquecido levaria a
+     navegação de todas elas junto. Registro fora de forma é ignorado. */
+  const ok = v => /^\d{4}-(0[1-9]|1[0-2])$/.test(v || "");
+  const regs = (DATA.reports || []).filter(r => ok(r.m));
+  const keys = new Set(regs.map(r => r.m));
+  DATA.items.forEach(i => {
+    if(i.status === "done" && ok(i.shipped)) keys.add(i.shipped);
+    (i.demands || []).forEach(d => { if(d.status === "done" && ok(d.done)) keys.add(d.done); });
+  });
+  return [...keys].sort().reverse().map(m => {
+    const reg = regs.find(r => r.m === m) || {};
+    const deliveries = DATA.items.filter(i => i.status === "done" && i.shipped === m);
+    const demands = DATA.items
+      .map(i => ({proj:i, list:(i.demands || []).filter(d => d.status === "done" && d.done === m)}))
+      .filter(g => g.list.length);
+    const extra = reg.extra || [];
+    const nDem = demands.reduce((s, g) => s + g.list.length, 0);
+    return {m, summary:reg.summary || null, deliveries, demands, extra,
+            n:deliveries.length + nDem + extra.length};
+  });
+}
+
+/* "Agosto de 2026" | "August 2026" — cabeçalho do mês. O fmtMonth existente
+   devolve a forma curta ("ago/26"), que é a dos cartões, não a de título. */
+function fmtMonthLong(ym){
+  if(!ym) return "";
+  const [y, mo] = ym.split("-").map(Number);
+  const name = new Intl.DateTimeFormat(lang === "pt" ? "pt-BR" : "en-US", {month:"long"})
+    .format(new Date(y, mo - 1, 1));
+  const cap = name.charAt(0).toUpperCase() + name.slice(1);
+  return lang === "pt" ? `${cap} de ${y}` : `${cap} ${y}`;
+}
+
 const ICO = {
   cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>',
   clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>',
@@ -243,6 +305,7 @@ function render(){
     produtos:{h1:t.detTitle, sub:t.detSub},
     tabela:{h1:t.detTitle, sub:t.tableSub},
     horizonte:{h1:t.horTitle, sub:t.horSub},
+    report:{h1:t.repTitle, sub:t.repSub},
     completo:{h1:L(m.title), sub:L(m.sub)}
   };
   const pm = PM[page] || PM.index;
@@ -545,6 +608,32 @@ function render(){
   footLines.push(`<span class="fine">${esc(t.footLimit)}</span>`);
   $("foot").innerHTML = footLines.join("");
 
+  /* --- REPORT MENSAL -----------------------------------------------------
+     Abre no mês mais recente. `?m=AAAA-MM` abre naquele mês; parâmetro
+     ausente, inválido ou de mês inexistente cai no mais recente sem erro —
+     é a mesma tolerância do `?print=1`. Os demais meses vão recolhidos: a
+     regra de impressão já esconde `.fold`, então no papel sai só o mês
+     aberto, que é o que se cola num deck. --- */
+  const months = reportMonths();
+  if(!months.length){
+    $("repNow").innerHTML = emptyBox(t.repEmptyShort, t.repEmptyD, t);
+    $("repPast").innerHTML = "";
+  } else {
+    const wanted = new URLSearchParams(location.search).get("m");
+    const openIdx = Math.max(0, months.findIndex(r => r.m === wanted));
+    const cur = months[openIdx];
+    const count = monthCount(cur, t);
+    $("repNow").innerHTML =
+      `<div class="sec-head"><h2>${esc(fmtMonthLong(cur.m))}</h2></div>` +
+      (count ? `<div class="strip"><span class="meta">${esc(count)}</span></div>` : "") +
+      monthBlock(cur, t);
+    $("repPast").innerHTML = months.filter((_, k) => k !== openIdx).map(r =>
+      `<details class="fold">
+        <summary>${ICO.chev}<span>${esc(fmtMonthLong(r.m))}</span></summary>
+        <div class="det">${monthBlock(r, t)}</div>
+      </details>`).join("");
+  }
+
   $("navList").innerHTML = navHtml(t);
   syncThemeBtn();
   navReveal();
@@ -566,11 +655,13 @@ function navHtml(t){
   const flagged = DATA.items.filter(i => i.health === "watch" || i.health === "blocked").length;
   const nAsk = (DATA.asks || []).length;
   const nDem = DATA.items.reduce((n, i) => n + (i.demands || []).filter(d => d.status === "doing").length, 0);
+  const nRep = (reportMonths()[0] || {}).n || 0;
   const defs = [
     {href:"index.html",      page:"index",      label:t.navTop},
     {href:"board.html",      page:"board",      label:t.navBoard, badge:DATA.items.length, dot:flagged > 0},
     {href:"pendencias.html", page:"pendencias", label:t.navAsk,   badge:nAsk, hot:true},
     {href:"produtos.html",   page:"produtos",   label:t.navDet,   badge:nDem},
+    {href:"report.html",     page:"report",     label:t.navRep,   badge:nRep},
     {href:"horizonte.html",  page:"horizonte",  label:t.navHor}
   ];
   /* A tabela é outra vista de Produtos, não outra seção: o item da navegação
@@ -637,6 +728,42 @@ function projRow(i, t, m){
   </details>`;
 }
 
+/* Contagem do mês. Só conta o que pertence ao mês: "3 frentes em curso" seria
+   fato do presente e estaria errado num mês passado. */
+function monthCount(r, t){
+  const nDem = r.demands.reduce((s, g) => s + g.list.length, 0);
+  const bits = [];
+  if(r.deliveries.length) bits.push(r.deliveries.length + " " +
+    (r.deliveries.length === 1 ? t.repOneDelivery : t.repManyDeliveries));
+  if(nDem) bits.push(nDem + " " + (nDem === 1 ? t.repOneDemand : t.repManyDemands));
+  if(r.extra.length) bits.push(r.extra.length + " " +
+    (r.extra.length === 1 ? t.repOneExtra : t.repManyExtra));
+  return bits.join(" · ");
+}
+
+/* O corpo de um mês. Nenhum componente novo: entrega é o mesmo card da coluna
+   Entregue do board, demanda concluída é a mesma lista com check do acordeão
+   de Produtos, e o que foi escrito à mão usa exatamente a mesma lista. */
+function doneList(rows){
+  return `<ul class="dlist">${rows.map(d => `<li class="d-done">
+      <span class="dic">${ICO.check}</span>
+      <span>${esc(L(d.t))}</span>
+    </li>`).join("")}</ul>`;
+}
+function monthBlock(r, t){
+  const parts = [];
+  if(r.summary) parts.push(
+    `<div class="summary"><ul><li><span>${esc(L(r.summary))}</span></li></ul></div>`);
+  if(r.deliveries.length) parts.push(
+    `<div class="cards">${r.deliveries.map(i => card(i, t)).join("")}</div>`);
+  r.demands.forEach(g => parts.push(
+    `<h4 class="dh">${esc(L(g.proj.title))}</h4>${doneList(g.list)}`));
+  if(r.extra.length) parts.push(
+    `<h4 class="dh">${esc(t.repExtra)}</h4>${doneList(r.extra)}`);
+  if(!parts.length) parts.push(`<div class="empty">${esc(t.repMonthEmpty)}</div>`);
+  return parts.join("");
+}
+
 function card(i, t){
   const src = i.notion
     ? `<div class="src">${ICO.db}<span>Notion: ${esc(i.notion)}</span></div>` : "";
@@ -677,10 +804,11 @@ function card(i, t){
 
 $("btnPT").addEventListener("click", () => { lang = "pt"; localStorage.setItem("radar-lang", "pt"); render(); });
 $("btnEN").addEventListener("click", () => { lang = "en"; localStorage.setItem("radar-lang", "en"); render(); });
-/* Das páginas de seção, a impressão passa pela versão completa — é ela que
-   tem o briefing de uma página pensado para papel. */
+/* Report e versão completa se imprimem; as páginas de seção passam pela
+   completa, que é a que tem o briefing de uma página pensado para papel. */
 $("btnPrint").addEventListener("click", () => {
-  if((document.body.dataset.page || "") === "completo") window.print();
+  const p = document.body.dataset.page || "";
+  if(p === "completo" || p === "report") window.print();
   else location.href = "completo.html?print=1";
 });
 function isDarkNow(){
