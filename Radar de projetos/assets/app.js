@@ -455,31 +455,39 @@ function render(){
     const x = kf(a), y = kf(b);
     return (x < y ? -1 : x > y ? 1 : 0) * tSort.dir;
   });
+  /* Coluna sem um unico valor nao e informacao, e largura gasta: Demandas so
+     entra na grade quando alguem registrou alguma. */
+  const anyDem = items.some(i => (i.demands || []).length);
   const tCols = [
-    {k:"prod", label:t.colProd},
+    {k:"prod", label:t.colProd, cls:"tprod"},
     {k:"proj", label:t.colProj},
     {k:"stat", label:t.colStat},
     {k:"win", label:t.colWin},
     {k:"elapsed", label:t.colElapsed, num:true},
     {k:"dem", label:t.colDem, num:true},
     {k:"owner", label:t.colOwner}
-  ];
+  ].filter(c => c.k !== "dem" || anyDem);
+  if(!anyDem && tSort.key === "dem") tSort.key = "prod";
   $("projTable").innerHTML = `
     <thead><tr>${tCols.map(c => {
       const on = tSort.key === c.k;
-      return `<th data-k="${c.k}"${c.num ? ' class="num"' : ""} aria-sort="${on ? (tSort.dir === 1 ? "ascending" : "descending") : "none"}">
+      const cls = [c.num ? "num" : "", c.cls || ""].filter(Boolean).join(" ");
+      return `<th data-k="${c.k}"${cls ? ` class="${cls}"` : ""} aria-sort="${on ? (tSort.dir === 1 ? "ascending" : "descending") : "none"}">
         <button type="button">${esc(c.label)}<span class="sar">${on ? (tSort.dir === 1 ? "↑" : "↓") : ""}</span></button></th>`;
     }).join("")}</tr></thead>
     <tbody>${rows.length ? rows.map(i => {
       const dm = i.demands || [];
       const p = i.status === "doing" ? Math.min(elapsedPct(i.start, i.end), 100) : null;
+      const el = p === null
+        ? "—"
+        : `<span class="tel" aria-hidden="true"><i style="width:${p}%"></i></span>${p}%`;
       return `<tr>
         <td class="tprod">${esc(trackName(i.track))}</td>
-        <td class="tproj">${esc(L(i.title))}</td>
+        <td class="tproj">${esc(L(i.title))}<span class="tprod-in">${esc(trackName(i.track))}</span></td>
         <td><span class="pstatus st-${esc(i.status)}">${esc(stLabel[i.status])}</span></td>
         <td class="mono-num">${esc(windowLabel(i.start, i.end))}</td>
-        <td class="num mono-num">${p === null ? "—" : p + "%"}</td>
-        <td class="num mono-num">${dm.length ? dm.filter(d => d.status === "done").length + "/" + dm.length : "—"}</td>
+        <td class="num mono-num">${el}</td>
+        ${anyDem ? `<td class="num mono-num">${dm.length ? dm.filter(d => d.status === "done").length + "/" + dm.length : "—"}</td>` : ""}
         <td>${esc(i.owner || m.owner)}</td>
       </tr>`;
     }).join("") : `<tr><td colspan="${tCols.length}" class="tnone">${esc(t.tEmpty)}</td></tr>`}</tbody>`;
@@ -603,7 +611,12 @@ function projRow(i, t, m){
         <span>${esc(L(d.t))}${d.due ? ` <span class="ddue mono-num">· ${esc(fmtDate(d.due))}</span>` : ""}</span>
       </li>`).join("")}</ul>`
     : `<p class="dnone">${esc(t.demandsNone)}</p>`;
-  return `<details class="proj">
+  const ep = i.status === "doing" ? Math.min(elapsedPct(i.start, i.end), 100) : null;
+  const elapsed = ep === null ? "" : `<div class="elapsed">
+      <div class="pl"><span>${esc(t.elapsed)}</span><b class="mono-num">${ep}%</b></div>
+      <div class="bar"><i style="width:${ep}%"></i></div>
+    </div>`;
+  return `<details class="proj" data-st="${esc(i.status)}">
     <summary>
       ${ICO.chev}
       <span class="ptitle">${esc(L(i.title))}</span>
@@ -614,6 +627,7 @@ function projRow(i, t, m){
       <p class="about">${esc(L(i.about))}</p>
       <h5 class="dh">${esc(t.demandsTitle)}</h5>
       ${list}
+      ${elapsed}
       <div class="row">
         <span class="k">${ICO.cal}${esc(t.window)}: ${esc(windowLabel(i.start, i.end))}</span>
         <span class="k">${ICO.user}${esc(i.owner || m.owner)}</span>
