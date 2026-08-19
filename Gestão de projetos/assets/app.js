@@ -263,17 +263,22 @@ function buildCard(p) {
   card.className = 'card';
   card.id = 'card-' + cssId(cardKey(p));
   card.innerHTML = `
-    <h3>${escapeHtml(p.teamName)}</h3>
-    <p class="proj">${escapeHtml(p.projectName)}</p>
+    <header class="card-cabeca">
+      <div class="card-nomes">
+        <p class="proj">${escapeHtml(p.projectName)}</p>
+        <h3>${escapeHtml(p.teamName)}</h3>
+      </div>
+      <a class="abrir-board" href="${rotaBoard(p, false)}">Board <span class="seta">→</span></a>
+    </header>
+    <div class="vivo"></div>
     <nav class="atalhos">
-      <a class="interno" href="${rotaBoard(p, false)}">▦ Board aqui</a>
+      <span class="atalhos-rot">DevOps</span>
       <a href="${links.board}" target="_blank" rel="noopener">Board</a>
       <a href="${links.backlog}" target="_blank" rel="noopener">Backlog</a>
       <a href="${links.sprints}" target="_blank" rel="noopener">Sprints</a>
       <a href="${links.queries}" target="_blank" rel="noopener">Queries</a>
       <a href="${links.dashboards}" target="_blank" rel="noopener">Dashboards</a>
-    </nav>
-    <div class="vivo"></div>`;
+    </nav>`;
   fillCardLive(card, p);
   return card;
 }
@@ -291,29 +296,34 @@ function fillCardLive(card, p) {
     return;
   }
   if (entry.error && !entry.counts) { box.innerHTML = `<p class="erro">${escapeHtml(entry.error)}</p>`; return; }
-  const linhas = [];
-  if (entry.error) linhas.push(`<p class="erro">${escapeHtml(entry.error)}</p>`);
-  for (const par of [['epic', 'Épicos'], ['feature', 'Features'], ['pbi', 'PBIs']]) {
-    const b = C.bucketCounts(entry.counts[par[0]]);
-    if (!b.total) {
-      linhas.push(`<div class="nivel"><span class="nivel-rot">${par[1]}</span><span class="mudo">nenhum</span></div>`);
-      continue;
-    }
-    const segs = [];
-    if (b.todo) segs.push(`${b.todo} a fazer`);
-    if (b.andamento) segs.push(`${b.andamento} em andamento`);
-    if (b.feito) segs.push(`${b.feito} concluídos (30d)`);
-    const bloq = b.atencao ? ` <span class="bloq">${b.atencao} bloqueado${b.atencao > 1 ? 's' : ''}</span>` : '';
-    linhas.push(`<div class="nivel"><span class="nivel-rot">${par[1]}</span><b class="nivel-total">${b.total}</b><span class="nivel-segs mudo">${segs.join(' · ')}</span>${bloq}</div>`);
-  }
+  const partes = [];
+  if (entry.error) partes.push(`<p class="erro">${escapeHtml(entry.error)}</p>`);
+  const celulas = [['epic', 'Épicos'], ['feature', 'Features'], ['pbi', 'PBIs']].map(([nivel, rotulo]) => {
+    const b = C.bucketCounts(entry.counts[nivel]);
+    const quebra = [];
+    if (b.todo) quebra.push(`<li>${b.todo} a fazer</li>`);
+    if (b.andamento) quebra.push(`<li>${b.andamento} em andamento</li>`);
+    if (b.feito) quebra.push(`<li>${b.feito} concluído${b.feito > 1 ? 's' : ''} (30d)</li>`);
+    if (b.atencao) quebra.push(`<li class="bloq-linha">${b.atencao} bloqueado${b.atencao > 1 ? 's' : ''}</li>`);
+    if (!b.total) quebra.push('<li>nenhum</li>');
+    return `<div class="nivel${b.total ? '' : ' vazio'}">
+      <span class="nivel-rot">${rotulo}</span>
+      <b class="nivel-total">${b.total}</b>
+      <ul class="nivel-quebra">${quebra.join('')}</ul>
+    </div>`;
+  });
+  partes.push(`<div class="niveis">${celulas.join('')}</div>`);
   if (entry.sprint) {
     const prog = entry.progress || { done: 0, total: 0 };
-    const rota = rotaBoard(p, true);
-    linhas.push(`<div class="sprint"><a class="sprint-link" href="${rota}" title="Ver a sprint no board"><b>${escapeHtml(entry.sprint.name)}</b> ${periodo(entry.sprint.start, entry.sprint.finish)} — ${prog.done}/${prog.total} concluídos <span class="seta">→</span></a></div>`);
+    const pct = prog.total ? Math.round((prog.done / prog.total) * 100) : 0;
+    partes.push(`<a class="sprint-link" href="${rotaBoard(p, true)}" title="Ver a sprint no board">
+      <span class="sprint-linha"><span class="sprint-nome"><b>${escapeHtml(entry.sprint.name)}</b> <span class="mudo">${periodo(entry.sprint.start, entry.sprint.finish)}</span></span><span class="sprint-prog">${prog.done}/${prog.total} <span class="seta">→</span></span></span>
+      <span class="barra"><span class="barra-cheia" style="width:${pct}%"></span></span>
+    </a>`);
   } else {
-    linhas.push('<div class="sprint mudo">sem sprint corrente</div>');
+    partes.push('<p class="sprint-vazia mudo">sem sprint corrente</p>');
   }
-  box.innerHTML = linhas.join('');
+  box.innerHTML = partes.join('');
 }
 
 function rotaBoard(p, comSprint) {
