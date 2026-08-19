@@ -1,21 +1,22 @@
 /* Central de Projetos — SaaS clean: canvas cinza, superfícies brancas
    flutuantes, raios generosos, pills e badges com tinta suave. */
 :root {
-  --fundo: #f4f4f5;
+  /* Neutros levemente quentes (stone), como na referência */
+  --fundo: #f2f2f0;
   --superficie: #ffffff;
-  --superficie-2: #f4f4f5;
-  --tinta: #18181b;
-  --mudo: #71717a;
-  --borda: #e4e4e7;
+  --superficie-2: #f4f4f2;
+  --tinta: #1c1c1a;
+  --mudo: #78716c;
+  --borda: #e7e5e4;
   --positivo: #15803d;
   --positivo-fundo: #e7f8ef;
   --erro: #b91c1c;
   --erro-fundo: #fee2e2;
   --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-  --sombra-painel: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.05);
-  --sombra-cartao: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --raio-painel: 20px;
-  --raio-cartao: 12px;
+  --sombra-painel: 0 1px 2px rgba(28, 25, 23, 0.03), 0 12px 32px rgba(28, 25, 23, 0.05);
+  --sombra-cartao: 0 1px 2px rgba(28, 25, 23, 0.05);
+  --raio-painel: 24px;
+  --raio-cartao: 16px;
 }
 * { box-sizing: border-box; }
 body {
@@ -47,59 +48,77 @@ body > header.topo {
   font-size: 1.1rem;
 }
 .nome-app { font-size: 1rem; margin: 0; font-weight: 650; }
-.paginas { display: flex; gap: 0.4rem; margin-left: 0.6rem; }
+.acoes { margin-left: auto; display: flex; align-items: center; gap: 0.55rem; }
+.acoes button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  font-size: 1rem;
+  border: none;
+  background: var(--superficie);
+  border-radius: 12px;
+  box-shadow: var(--sombra-cartao);
+  cursor: pointer;
+  color: var(--tinta);
+}
+.acoes button:hover { background: #fafaf9; }
+
+/* ---------- Corpo: sidebar + conteúdo (como na referência) ---------- */
+.corpo {
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+  gap: 1.1rem;
+  align-items: start;
+  padding: 0.2rem clamp(1rem, 3vw, 2rem) 2.5rem;
+}
+.lateral { position: sticky; top: 1rem; display: flex; flex-direction: column; gap: 0.9rem; }
+.paginas { display: flex; flex-direction: column; gap: 0.3rem; }
 .paginas a {
-  font-size: 0.88rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.92rem;
   font-weight: 550;
   text-decoration: none;
   color: var(--mudo);
-  background: transparent;
-  border-radius: 999px;
-  padding: 0.45rem 0.95rem;
+  border-radius: 14px;
+  padding: 0.7rem 0.9rem;
 }
+.paginas a::before { font-size: 0.95rem; opacity: 0.75; }
+#nav-meus-itens::before { content: '▤'; }
+#nav-projetos::before { content: '▦'; }
 .paginas a:hover { color: var(--tinta); }
 .paginas a.ativa {
   color: var(--tinta);
   background: var(--superficie);
   box-shadow: var(--sombra-cartao);
 }
-.acoes { margin-left: auto; display: flex; align-items: center; gap: 0.55rem; }
-.acoes button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  font-size: 1rem;
-  border: none;
-  background: var(--superficie);
-  border-radius: 999px;
-  box-shadow: var(--sombra-cartao);
-  cursor: pointer;
-  color: var(--tinta);
+.conta-nav { margin-left: auto; font-size: 0.8rem; color: var(--mudo); font-variant-numeric: tabular-nums; }
+/* Status da conexão: linhas com bolinha, como "Open / Ongoing Engagement" */
+.conexao {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  border-top: 1px solid var(--borda);
+  padding: 0.9rem 0.9rem 0;
 }
-.acoes button:hover { background: #fafafa; }
-#badge {
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 0.3rem 0.7rem;
-  border-radius: 999px;
-  background: var(--superficie-2);
-  color: var(--mudo);
-}
-#badge[data-estado='conectado'] { background: var(--positivo-fundo); color: var(--positivo); }
-#badge[data-estado='vencido'], #badge[data-estado='sem-token'] { background: var(--erro-fundo); color: var(--erro); }
-#carimbo { font-size: 0.78rem; }
+#badge { display: flex; align-items: center; gap: 0.55rem; font-size: 0.85rem; font-weight: 550; color: var(--tinta); }
+#badge::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #a8a29e; flex: none; }
+#badge[data-estado='conectado']::before { background: #22c55e; }
+#badge[data-estado='atualizando']::before { background: #eab308; }
+#badge[data-estado='vencido'], #badge[data-estado='sem-token'] { color: var(--erro); }
+#badge[data-estado='vencido']::before, #badge[data-estado='sem-token']::before { background: #ef4444; }
+#carimbo { font-size: 0.78rem; padding-left: 1.15rem; }
 
 /* ---------- Páginas como painéis flutuantes ---------- */
-main { padding: 0.4rem clamp(1rem, 3vw, 2rem) 2.5rem; }
+main { min-width: 0; }
 main > section {
   background: var(--superficie);
   border-radius: var(--raio-painel);
   box-shadow: var(--sombra-painel);
-  padding: 1.4rem 1.5rem 1.5rem;
+  padding: 1.6rem 1.7rem 1.7rem;
 }
 h2 { font-size: 1.25rem; margin: 0 0 1rem; }
 /* Nota de recorte logo abaixo do h2 da seção */
@@ -183,8 +202,8 @@ body[data-pagina='board'] #secao-projetos { display: none; }
 .coluna-vazia { margin: 0.2rem 0.2rem 0.3rem; font-size: 0.82rem; }
 .coluna {
   background: var(--superficie-2);
-  border-radius: 16px;
-  padding: 0.85rem 0.8rem;
+  border-radius: 18px;
+  padding: 1rem 0.9rem;
   min-width: 0;
 }
 .coluna > header {
@@ -215,11 +234,12 @@ body[data-pagina='board'] #secao-projetos { display: none; }
   overflow-y: auto;
 }
 .item {
-  display: block;
+  display: flex;
+  flex-direction: column;
   background: var(--superficie);
   border-radius: var(--raio-cartao);
   box-shadow: var(--sombra-cartao);
-  padding: 0.75rem 0.85rem;
+  padding: 0.85rem 0.95rem 0.9rem;
   text-decoration: none;
   color: var(--tinta);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -235,38 +255,26 @@ body[data-pagina='board'] #secao-projetos { display: none; }
   font-weight: 600;
   line-height: 1.35;
 }
-.item .meta { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.45rem; }
-.item .id { font-size: 0.74rem; color: var(--mudo); font-variant-numeric: tabular-nums; margin-left: auto; }
-/* Estado real do DevOps — etiqueta neutra (as colunas agora são etapas) */
-.item .estado {
-  font-size: 0.68rem;
-  font-weight: 600;
-  color: var(--mudo);
-  background: var(--superficie-2);
-  border-radius: 999px;
-  padding: 0.12rem 0.5rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 9rem;
-}
+.item .id { font-size: 0.74rem; color: var(--mudo); font-variant-numeric: tabular-nums; flex: none; }
+/* Badge de tipo em linha própria, como o "84% Match" da referência */
 .badge-tipo {
   display: inline-block;
   font-size: 0.72rem;
   font-weight: 600;
   border-radius: 999px;
-  padding: 0.14rem 0.55rem;
+  padding: 0.16rem 0.6rem;
   background: var(--superficie-2);
   color: var(--mudo);
 }
+.item .badge-tipo { margin-top: 0.5rem; align-self: flex-start; }
 .badge-tipo.tipo-epic { background: #ffefdd; color: #b45309; }
 .badge-tipo.tipo-feature { background: #f3e8fa; color: #7e22ce; }
 .badge-tipo.tipo-pbi { background: #e0f2fe; color: #0369a1; }
 .badge-tipo.tipo-bug { background: #fee2e2; color: #b91c1c; }
 .badge-tipo.tipo-task { background: #fef9c3; color: #a16207; }
-.item .linha { display: flex; justify-content: space-between; gap: 0.6rem; margin-top: 0.4rem; font-size: 0.78rem; }
+.item .linha { display: flex; justify-content: space-between; gap: 0.6rem; margin-top: 0.45rem; font-size: 0.8rem; }
 .item .linha .rot { color: var(--mudo); }
-.item .linha .val { text-align: right; }
+.item .linha .val { text-align: right; font-weight: 500; }
 .avatar {
   display: inline-flex;
   align-items: center;
@@ -469,10 +477,7 @@ details summary { cursor: pointer; color: var(--mudo); font-size: 0.88rem; }
 
 /* ---------- Celular ---------- */
 @media (max-width: 640px) {
-  body > header.topo { flex-wrap: wrap; }
   .nome-app { display: none; } /* a marca segura a identidade; sobram as abas */
-  .acoes { flex-wrap: wrap; }
-  #carimbo { display: none; }
   main > section { padding: 1.1rem 1rem 1.2rem; }
   #grid { grid-template-columns: 1fr; }
   .atalhos a { padding: 0.45rem 0; font-size: 0.85rem; } /* alvo de toque maior */
@@ -482,4 +487,11 @@ details summary { cursor: pointer; color: var(--mudo); font-size: 0.88rem; }
   .quadro { grid-auto-columns: 84vw; scroll-snap-type: x mandatory; }
   .quadro-etapas { grid-template-columns: repeat(3, 84vw); } /* etapas seguem o deck no celular */
   .coluna { scroll-snap-align: start; }
+  /* Sidebar vira barra horizontal acima do conteúdo */
+  .corpo { display: block; }
+  .lateral { position: static; flex-direction: row; align-items: center; gap: 0.6rem; margin-bottom: 0.9rem; }
+  .paginas { flex-direction: row; gap: 0.35rem; }
+  .paginas a { padding: 0.5rem 0.85rem; }
+  .conexao { border: none; padding: 0; margin-left: auto; }
+  #carimbo { display: none; }
 }
