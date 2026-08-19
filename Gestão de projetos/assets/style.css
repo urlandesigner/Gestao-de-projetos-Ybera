@@ -296,7 +296,9 @@ body[data-pagina='board'] #secao-projetos { display: none; }
 /* ---------- Cartões de projeto ---------- */
 #grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  /* auto-fit (não auto-fill): trilhas vazias colapsam e os cartões
+     existentes esticam — com 2 times, cada um toma metade do painel */
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
   gap: 1rem;
 }
 .card {
