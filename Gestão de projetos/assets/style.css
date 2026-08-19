@@ -301,7 +301,6 @@ body[data-pagina='board'] #secao-projetos { display: none; }
   overflow: hidden;
   text-overflow: ellipsis; /* pai com título longo não dobra o cartão */
 }
-.item .linha .val-alerta, .val-alerta { color: #b45309; font-weight: 650; }
 .avatar {
   display: inline-flex;
   align-items: center;

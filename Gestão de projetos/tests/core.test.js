@@ -117,20 +117,6 @@ test('iterationLabel: sprint pelo último segmento, raiz vira Backlog', () => {
   assert.equal(C.iterationLabel(''), 'Backlog');
 });
 
-test('areaTeamLabel: time é o último segmento do area path', () => {
-  assert.equal(C.areaTeamLabel('B2C\\Squad Ecommerce'), 'Squad Ecommerce');
-  assert.equal(C.areaTeamLabel('B2C'), 'B2C');
-  assert.equal(C.areaTeamLabel(''), '');
-});
-
-test('idleDays: dias sem atualização, nunca negativo, null se inválido', () => {
-  const agora = Date.parse('2026-08-19T12:00:00Z');
-  assert.equal(C.idleDays('2026-08-07T10:00:00Z', agora), 12);
-  assert.equal(C.idleDays('2026-08-19T11:00:00Z', agora), 0);
-  assert.equal(C.idleDays('2026-08-20T00:00:00Z', agora), 0); // clock skew não fica negativo
-  assert.equal(C.idleDays(null, agora), null);
-});
-
 test('isTerminalState é case-insensitive', () => {
   assert.equal(C.isTerminalState('done'), true);
   assert.equal(C.isTerminalState('Active'), false);
