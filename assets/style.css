@@ -281,35 +281,13 @@ body[data-pagina='board'] #secao-projetos { display: none; }
   flex-direction: column;
   gap: 0.85rem;
 }
-/* Cabeçalho: identidade à esquerda, UMA ação primária à direita */
-.card-cabeca { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
-.card-nomes { min-width: 0; }
-.card .proj {
-  margin: 0 0 0.2rem;
-  color: var(--mudo);
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-}
 .card h3 { margin: 0; font-size: 1.05rem; }
-.abrir-board {
-  flex-shrink: 0;
-  background: var(--tinta);
-  color: #fff;
-  text-decoration: none;
-  font-size: 0.8rem;
-  font-weight: 600;
-  border-radius: 999px;
-  padding: 0.45rem 0.9rem;
-  white-space: nowrap;
-}
-.abrir-board:hover { background: #3f3f46; }
-.abrir-board .seta { opacity: 0.65; }
-/* Estatísticas: três células iguais, quebra empilhada — nada de linhas que dobram */
-.vivo { display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.87rem; }
+/* Estatísticas: três células iguais, quebra empilhada — nada de linhas que dobram.
+   .vivo e .niveis crescem pra que a faixa de sprint e o rodapé fiquem
+   ancorados embaixo — cartões lado a lado alinham zona a zona. */
+.vivo { display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.87rem; flex: 1; }
 .vivo > .erro { margin: 0; }
-.niveis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.55rem; }
+.niveis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.55rem; flex: 1; }
 .nivel {
   background: var(--superficie);
   border-radius: 12px;
@@ -359,7 +337,6 @@ body[data-pagina='board'] #secao-projetos { display: none; }
 .sprint-link .seta { color: var(--mudo); }
 .barra { display: block; height: 5px; border-radius: 999px; background: #e4e4e7; margin-top: 0.5rem; overflow: hidden; }
 .barra-cheia { display: block; height: 100%; border-radius: 999px; background: var(--positivo); }
-.sprint-vazia { margin: 0; font-size: 0.8rem; }
 /* Rodapé: atalhos do DevOps rebaixados a links de texto */
 .atalhos {
   display: flex;
@@ -369,13 +346,6 @@ body[data-pagina='board'] #secao-projetos { display: none; }
   margin: 0;
   padding-top: 0.7rem;
   border-top: 1px solid #e6e6e9;
-}
-.atalhos-rot {
-  color: var(--mudo);
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 .atalhos a { font-size: 0.78rem; font-weight: 550; color: var(--mudo); text-decoration: none; }
 .atalhos a::after { content: ' ↗'; font-size: 0.7em; opacity: 0.7; }

@@ -263,16 +263,9 @@ function buildCard(p) {
   card.className = 'card';
   card.id = 'card-' + cssId(cardKey(p));
   card.innerHTML = `
-    <header class="card-cabeca">
-      <div class="card-nomes">
-        <p class="proj">${escapeHtml(p.projectName)}</p>
-        <h3>${escapeHtml(p.teamName)}</h3>
-      </div>
-      <a class="abrir-board" href="${rotaBoard(p, false)}">Board <span class="seta">→</span></a>
-    </header>
+    <h3>${escapeHtml(p.teamName)}</h3>
     <div class="vivo"></div>
     <nav class="atalhos">
-      <span class="atalhos-rot">DevOps</span>
       <a href="${links.board}" target="_blank" rel="noopener">Board</a>
       <a href="${links.backlog}" target="_blank" rel="noopener">Backlog</a>
       <a href="${links.sprints}" target="_blank" rel="noopener">Sprints</a>
@@ -321,7 +314,12 @@ function fillCardLive(card, p) {
       <span class="barra"><span class="barra-cheia" style="width:${pct}%"></span></span>
     </a>`);
   } else {
-    partes.push('<p class="sprint-vazia mudo">sem sprint corrente</p>');
+    // Sem sprint a faixa continua sendo a única porta pro board interno — sem filtro.
+    // O trilho vazio mantém a mesma altura da faixa com barra (cartões vizinhos alinham).
+    partes.push(`<a class="sprint-link" href="${rotaBoard(p, false)}" title="Abrir o board">
+      <span class="sprint-linha"><span class="sprint-nome"><b>Board</b> <span class="mudo">sem sprint corrente</span></span><span class="sprint-prog"><span class="seta">→</span></span></span>
+      <span class="barra"></span>
+    </a>`);
   }
   box.innerHTML = partes.join('');
 }
