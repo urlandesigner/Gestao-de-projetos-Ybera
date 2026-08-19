@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=20260819m">
+<link rel="stylesheet" href="assets/style.css?v=20260819n">
 </head>
 <body data-pagina="meus-itens">
 <div class="app">
@@ -15,6 +15,8 @@
   <h1 class="nome-app">Central de Projetos</h1>
   <button id="alternar-lateral" title="Recolher/expandir menu">◧</button>
   <div class="acoes">
+    <span id="badge" data-estado="sem-token">sem token</span>
+    <span id="carimbo" class="mudo"></span>
     <button id="atualizar" title="Atualizar agora">↻</button>
     <button id="abrir-config" title="Configurações">⚙</button>
   </div>
@@ -26,10 +28,6 @@
     <a id="nav-meus-itens" href="#meus-itens"><span class="rotulo-nav">Meus itens</span> <span id="conta-nav-mi" class="conta-nav"></span></a>
     <a id="nav-projetos" href="#projetos"><span class="rotulo-nav">Projetos</span> <span id="conta-nav-proj" class="conta-nav"></span></a>
   </nav>
-  <div class="conexao">
-    <span id="badge" data-estado="sem-token">sem token</span>
-    <span id="carimbo" class="mudo"></span>
-  </div>
 </aside>
 
 <main>
@@ -127,8 +125,8 @@
   </form>
 </dialog>
 
-<script src="assets/core.js?v=20260819m"></script>
-<script src="assets/api.js?v=20260819m"></script>
-<script src="assets/app.js?v=20260819m"></script>
+<script src="assets/core.js?v=20260819n"></script>
+<script src="assets/api.js?v=20260819n"></script>
+<script src="assets/app.js?v=20260819n"></script>
 </body>
 </html>
