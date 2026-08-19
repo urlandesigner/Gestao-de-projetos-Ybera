@@ -295,16 +295,24 @@ body[data-pagina='board'] #secao-projetos { display: none; }
 .atalhos a.interno { background: var(--tinta); color: #fff; }
 .atalhos a.interno:hover { background: #3f3f46; }
 .vivo { padding-top: 0.2rem; font-size: 0.87rem; }
-.nivel { margin-bottom: 0.35rem; }
-.nivel b { display: inline-block; min-width: 4.6rem; font-weight: 600; }
-.chip {
-  display: inline-block;
-  background: var(--superficie);
+.nivel {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.45rem;
+  font-size: 0.85rem;
+}
+.nivel-rot { min-width: 4.4rem; font-weight: 600; }
+.nivel-total { font-variant-numeric: tabular-nums; }
+.nivel-segs { font-size: 0.8rem; }
+.bloq {
+  background: var(--erro-fundo);
+  color: var(--erro);
   border-radius: 999px;
-  padding: 0.1rem 0.55rem;
-  margin: 0.1rem 0.15rem 0.1rem 0;
-  font-size: 0.76rem;
-  box-shadow: var(--sombra-cartao);
+  padding: 0.08rem 0.55rem;
+  font-size: 0.73rem;
+  font-weight: 600;
 }
 .sprint { margin-top: 0.55rem; }
 .sprint-link {

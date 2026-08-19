@@ -189,3 +189,25 @@ test('filterItems recorta por tipo, projeto, responsável e busca', () => {
   assert.deepEqual(C.filterItems(items, { busca: '#3' }).map((i) => i.id), [3]);
   assert.deepEqual(C.filterItems(items, { tipos: ['pbi'], busca: 'checkout' }).length, 0);
 });
+
+test('wiqlCounts com áreas recorta por time', () => {
+  const q = C.wiqlCounts(30, [{ path: 'B2C\\Squad', children: true }]);
+  assert.ok(q.includes("[System.AreaPath] UNDER 'B2C\\Squad'"));
+  assert.ok(!C.wiqlCounts().includes('AreaPath'));
+});
+
+test('stateBucket classifica em quatro grupos', () => {
+  assert.equal(C.stateBucket('New'), 'todo');
+  assert.equal(C.stateBucket('Ready for Dev'), 'todo');
+  assert.equal(C.stateBucket('Grooming'), 'todo');
+  assert.equal(C.stateBucket('In Progress'), 'andamento');
+  assert.equal(C.stateBucket('Prototype'), 'andamento');
+  assert.equal(C.stateBucket('Estado Custom'), 'andamento');
+  assert.equal(C.stateBucket('Impediment'), 'atencao');
+  assert.equal(C.stateBucket('Done'), 'feito');
+});
+
+test('bucketCounts soma por grupo e total', () => {
+  const b = C.bucketCounts({ 'To Do': 115, 'In Progress': 31, Grooming: 23, Testing: 6, Impediment: 3, Done: 64 });
+  assert.deepEqual(b, { todo: 138, andamento: 37, atencao: 3, feito: 64, total: 242 });
+});

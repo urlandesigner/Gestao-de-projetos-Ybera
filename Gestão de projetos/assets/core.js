@@ -61,7 +61,16 @@
   // ---- WIQL ----
   const TERMINAL_STATES = ['Done', 'Closed', 'Removed', 'Completed'];
 
-  function wiqlCounts(doneCutoffDays = 30) {
+  // Recorte pelas áreas do time — sem ele, times do mesmo projeto contam igual
+  function areaClause(areas) {
+    if (!areas || !areas.length) return '';
+    const escapa = (s) => String(s).replace(/'/g, "''");
+    return 'AND (' + areas.map((a) =>
+      `[System.AreaPath] ${a.children ? 'UNDER' : '='} '${escapa(a.path)}'`
+    ).join(' OR ') + ')';
+  }
+
+  function wiqlCounts(doneCutoffDays = 30, areas = []) {
     const naoRemovidos = TERMINAL_STATES.filter((s) => s !== 'Removed').map((s) => `'${s}'`).join(',');
     return [
       'SELECT [System.Id] FROM WorkItems',
@@ -71,7 +80,8 @@
       "  OR [System.WorkItemType] IN GROUP 'Microsoft.RequirementCategory')",
       "AND [System.State] <> 'Removed'",
       `AND ([System.State] NOT IN (${naoRemovidos}) OR [System.ChangedDate] >= @Today - ${doneCutoffDays})`,
-    ].join('\n');
+      areaClause(areas),
+    ].filter(Boolean).join('\n');
   }
 
   function wiqlMyItems() {
@@ -166,12 +176,6 @@
   // WIQL do board de um time: itens de requisito (PBIs/Bugs), recortados
   // pelas áreas do time — é o mesmo recorte que o board do DevOps usa.
   function wiqlBoard(areas, doneCutoffDays = 30) {
-    const escapa = (s) => String(s).replace(/'/g, "''");
-    const areaClause = (areas && areas.length)
-      ? 'AND (' + areas.map((a) =>
-          `[System.AreaPath] ${a.children ? 'UNDER' : '='} '${escapa(a.path)}'`
-        ).join(' OR ') + ')'
-      : '';
     const done = TERMINAL_STATES.filter((s) => s !== 'Removed').map((s) => `'${s}'`).join(',');
     return [
       'SELECT [System.Id] FROM WorkItems',
@@ -179,7 +183,7 @@
       "AND [System.WorkItemType] IN GROUP 'Microsoft.RequirementCategory'",
       "AND [System.State] <> 'Removed'",
       `AND ([System.State] NOT IN (${done}) OR [System.ChangedDate] >= @Today - ${doneCutoffDays})`,
-      areaClause,
+      areaClause(areas),
       'ORDER BY [Microsoft.VSTS.Common.BacklogPriority] ASC',
     ].filter(Boolean).join('\n');
   }
@@ -213,6 +217,31 @@
       return Math.min(...estados.map(rankEstado));
     };
     return [...(columnNames || [])].sort((a, b) => rankColuna(a) - rankColuna(b));
+  }
+
+  // ---- Resumo por grupos semânticos (cartões de projeto) ----
+  // Em vez de um chip por estado (sopa visual), cada nível resume em:
+  // a fazer · em andamento · bloqueados · concluídos (30d)
+  const TODO_STATES = [
+    'new', 'proposed', 'to do', 'todo', 'backlog', 'approved', 'grooming',
+    'refinement', 'ready', 'ready for dev', 'committed',
+  ];
+
+  function stateBucket(state) {
+    const s = String(state || '').toLowerCase();
+    if (isAttentionState(s)) return 'atencao';
+    if (isTerminalState(s)) return 'feito';
+    if (TODO_STATES.includes(s)) return 'todo';
+    return 'andamento'; // In Progress, Prototype, Testing, Research, Validation…
+  }
+
+  function bucketCounts(porEstado) {
+    const out = { todo: 0, andamento: 0, atencao: 0, feito: 0, total: 0 };
+    for (const [estado, n] of Object.entries(porEstado || {})) {
+      out[stateBucket(estado)] += n;
+      out.total += n;
+    }
+    return out;
   }
 
   // ---- Filtro genérico de itens (Meus itens e Board) ----
@@ -259,6 +288,7 @@
     aggregateCounts, sprintProgress, groupMyItems,
     sortStateGroups, isAttentionState, typeSlug,
     wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
+    stateBucket, bucketCounts,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };
 });

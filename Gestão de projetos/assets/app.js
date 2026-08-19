@@ -172,7 +172,10 @@ async function refreshCard(p) {
   const anterior = state.cache.byCard[cardKey(p)] || {};
   const entry = { counts: null, sprint: null, progress: null, error: null };
   try {
-    const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlCounts());
+    // Recorte pelas áreas do time — senão times do mesmo projeto contam igual
+    let areas = [];
+    try { areas = await A.teamAreas(ctx(), p.projectName, p.teamName); } catch (e) { /* segue projeto inteiro */ }
+    const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlCounts(30, areas));
     const items = ids.length ? await A.getFields(ctx(), ids, FIELDS_COUNTS) : [];
     entry.counts = C.aggregateCounts(items);
     const sprint = await A.currentSprint(ctx(), p.projectName, p.teamName);
@@ -287,11 +290,18 @@ function fillCardLive(card, p) {
   if (entry.error && !entry.counts) { box.innerHTML = `<p class="erro">${escapeHtml(entry.error)}</p>`; return; }
   const linhas = [];
   if (entry.error) linhas.push(`<p class="erro">${escapeHtml(entry.error)}</p>`);
-  for (const par of [['epic', 'Epics'], ['feature', 'Features'], ['pbi', 'PBIs']]) {
-    const chips = Object.entries(entry.counts[par[0]])
-      .map(([estado, n]) => `<span class="chip">${n} ${escapeHtml(rotuloEstado(estado))}</span>`)
-      .join(' ');
-    linhas.push(`<div class="nivel"><b>${par[1]}</b> ${chips || '<span class="mudo">nenhum</span>'}</div>`);
+  for (const par of [['epic', 'Épicos'], ['feature', 'Features'], ['pbi', 'PBIs']]) {
+    const b = C.bucketCounts(entry.counts[par[0]]);
+    if (!b.total) {
+      linhas.push(`<div class="nivel"><span class="nivel-rot">${par[1]}</span><span class="mudo">nenhum</span></div>`);
+      continue;
+    }
+    const segs = [];
+    if (b.todo) segs.push(`${b.todo} a fazer`);
+    if (b.andamento) segs.push(`${b.andamento} em andamento`);
+    if (b.feito) segs.push(`${b.feito} concluídos (30d)`);
+    const bloq = b.atencao ? ` <span class="bloq">${b.atencao} bloqueado${b.atencao > 1 ? 's' : ''}</span>` : '';
+    linhas.push(`<div class="nivel"><span class="nivel-rot">${par[1]}</span><b class="nivel-total">${b.total}</b><span class="nivel-segs mudo">${segs.join(' · ')}</span>${bloq}</div>`);
   }
   if (entry.sprint) {
     const prog = entry.progress || { done: 0, total: 0 };
@@ -305,10 +315,6 @@ function fillCardLive(card, p) {
 
 function rotaBoard(p, comSprint) {
   return `#board/${encodeURIComponent(p.projectName)}/${encodeURIComponent(p.teamName)}${comSprint ? '/sprint' : ''}`;
-}
-
-function rotuloEstado(estado) {
-  return C.isTerminalState(estado) ? `${estado} (30d)` : estado;
 }
 
 function renderMyItems() {
