@@ -20,7 +20,13 @@ const state = {
 state.cache.lastSuccessAt = state.cache.lastSuccessAt || state.cache.fetchedAt || 0; // migração: cache antigo sem lastSuccessAt
 
 const ROTULOS_TIPO = { epic: 'Épicos', feature: 'Features', pbi: 'PBIs', bug: 'Bugs', task: 'Tasks', outro: 'Outros' };
+const ROTULO_TIPO_CURTO = { epic: 'Épico', feature: 'Feature', pbi: 'PBI', bug: 'Bug', task: 'Task', outro: 'Item' };
 const ORDEM_TIPO = ['epic', 'feature', 'pbi', 'bug', 'task', 'outro'];
+// Pontos das colunas (estilo do print): paleta cíclica; estados de atenção em vermelho
+const CORES_COLUNA = ['#f97316', '#eab308', '#3b82f6', '#8b5cf6', '#14b8a6', '#ec4899'];
+function corColuna(indice, atencao) {
+  return atencao ? '#ef4444' : CORES_COLUNA[indice % CORES_COLUNA.length];
+}
 
 // Chips de filtro por tipo — contagem sempre sobre o conjunto completo
 function renderChipsTipo(container, items, filtro, onChange) {
@@ -321,18 +327,19 @@ function renderMyItems() {
   const grupos = C.sortStateGroups(C.groupMyItems(filtrados));
   // Tag de projeto só quando há mais de um projeto entre os itens — senão é ruído.
   const multiProjeto = new Set(items.map((it) => (it.fields || {})['System.TeamProject'])).size > 1;
-  box.innerHTML = erroHtml + '<div class="quadro">' + grupos.map((g) => {
-    const atencao = C.isAttentionState(g.state) ? ' atencao' : '';
+  box.innerHTML = erroHtml + '<div class="quadro">' + grupos.map((g, i) => {
+    const atencao = C.isAttentionState(g.state);
     return `
-    <section class="coluna${atencao}">
-      <header><h4>${escapeHtml(g.state)}</h4><span class="conta">${g.items.length}</span></header>
+    <section class="coluna${atencao ? ' atencao' : ''}">
+      <header><h4><span class="ponto" style="background:${corColuna(i, atencao)}"></span>${escapeHtml(g.state)}</h4><span class="conta">${g.items.length}</span></header>
       <ul>${g.items.map((it) => {
         const f = it.fields || {};
+        const slug = C.typeSlug(f['System.WorkItemType']);
         const link = C.deepLinks(state.config.org, f['System.TeamProject'], '').workItem(it.id);
-        const tag = multiProjeto ? `<span class="tag-proj">${escapeHtml(f['System.TeamProject'])}</span>` : '';
-        return `<li><a class="item tipo-${C.typeSlug(f['System.WorkItemType'])}" href="${link}" target="_blank" rel="noopener" title="${escapeHtml(f['System.WorkItemType'])}">
-          <span class="id">#${it.id}</span>
-          <span class="titulo">${escapeHtml(f['System.Title'])}</span>${tag}
+        const linha = multiProjeto ? `<span class="linha"><span class="rot">Projeto</span><span class="val">${escapeHtml(f['System.TeamProject'])}</span></span>` : '';
+        return `<li><a class="item" href="${link}" target="_blank" rel="noopener" title="${escapeHtml(f['System.WorkItemType'])}">
+          <span class="titulo">${escapeHtml(f['System.Title'])}</span>
+          <span class="meta"><span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span><span class="id">#${it.id}</span></span>${linha}
         </a></li>`;
       }).join('')}</ul>
     </section>`;
@@ -457,18 +464,20 @@ function renderBoard(p) {
     return;
   }
   st.hidden = true;
-  cols.innerHTML = nomes.map((nome) => {
+  cols.innerHTML = nomes.map((nome, i) => {
     const lista = porColuna.get(nome) || [];
+    const atencao = C.isAttentionState(nome) || lista.some((it) => C.isAttentionState((it.fields || {})['System.State']));
     return `<section class="coluna">
-      <header><h4>${escapeHtml(nome)}</h4><span class="conta">${lista.length}</span></header>
+      <header><h4><span class="ponto" style="background:${corColuna(i, atencao)}"></span>${escapeHtml(nome)}</h4><span class="conta">${lista.length}</span></header>
       <ul>${lista.map((it) => {
         const f = it.fields || {};
+        const slug = C.typeSlug(f['System.WorkItemType']);
         const resp = f['System.AssignedTo'] && f['System.AssignedTo'].displayName ? f['System.AssignedTo'].displayName : '';
         const link = C.deepLinks(state.config.org, p.projectName, '').workItem(it.id);
         const dica = escapeHtml(f['System.WorkItemType']) + (resp ? ' · ' + escapeHtml(resp) : '');
-        return `<li><a class="item tipo-${C.typeSlug(f['System.WorkItemType'])}" href="${link}" target="_blank" rel="noopener" title="${dica}">
-          <span class="id">#${it.id}${resp ? ` <span class="resp">${escapeHtml(C.initials(resp))}</span>` : ''}</span>
-          <span class="titulo">${escapeHtml(f['System.Title'])}</span>
+        return `<li><a class="item" href="${link}" target="_blank" rel="noopener" title="${dica}">
+          <span class="cabeca"><span class="titulo">${escapeHtml(f['System.Title'])}</span>${resp ? `<span class="avatar">${escapeHtml(C.initials(resp))}</span>` : ''}</span>
+          <span class="meta"><span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span><span class="id">#${it.id}</span></span>
         </a></li>`;
       }).join('')}</ul>
     </section>`;
