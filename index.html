@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=20260819p">
+<link rel="stylesheet" href="assets/style.css?v=20260819q">
 </head>
 <body data-pagina="meus-itens">
 <div class="app">
@@ -95,7 +95,10 @@
       </details>
       <p id="wizard-erro" class="erro" hidden></p>
       <p id="wizard-descobrindo" hidden>Descobrindo projetos…</p>
-      <button id="wizard-descobrir">Descobrir projetos</button>
+      <div class="linha-botoes">
+        <button id="wizard-descobrir">Descobrir projetos</button>
+        <label class="botao" title="Restaura uma config exportada em outro navegador — cole o PAT acima antes">Importar JSON<input id="wizard-importar" type="file" accept="application/json" hidden></label>
+      </div>
     </section>
     <section id="wizard-passo-2" hidden>
       <h2>Marque os seus projetos</h2>
@@ -125,8 +128,8 @@
   </form>
 </dialog>
 
-<script src="assets/core.js?v=20260819p"></script>
-<script src="assets/api.js?v=20260819p"></script>
-<script src="assets/app.js?v=20260819p"></script>
+<script src="assets/core.js?v=20260819q"></script>
+<script src="assets/api.js?v=20260819q"></script>
+<script src="assets/app.js?v=20260819q"></script>
 </body>
 </html>

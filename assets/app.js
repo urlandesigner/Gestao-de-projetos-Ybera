@@ -616,6 +616,42 @@ function settingsExport() {
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
 }
 
+// Import no wizard: restaura config exportada numa origem virgem (Vercel,
+// file://, outra máquina). O PAT nunca vai no arquivo — precisa estar colado.
+function wizardImport(ev) {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const err = $('wizard-erro');
+  err.hidden = true;
+  const pat = $('wizard-pat').value.trim();
+  if (!pat) {
+    err.textContent = 'Cole o PAT antes de importar — o token nunca vai no arquivo exportado.';
+    err.hidden = false;
+    ev.target.value = '';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const config = C.normalizeConfig(JSON.parse(reader.result));
+      saveJSON(LS.config, config);
+      localStorage.setItem(LS.pat, pat);
+      state.config = config;
+      state.pat = pat;
+      state.auth = null;
+      state.cache = { byCard: {}, myItems: null, myItemsError: null, fetchedAt: 0, lastSuccessAt: 0 };
+      saveJSON(LS.cache, state.cache);
+      $('wizard').close();
+      boot();
+    } catch (e) {
+      err.textContent = 'Arquivo inválido: ' + e.message;
+      err.hidden = false;
+    }
+  };
+  reader.readAsText(file);
+  ev.target.value = '';
+}
+
 function settingsImport(ev) {
   const file = ev.target.files[0];
   if (!file) return;
@@ -664,6 +700,7 @@ function boot() {
 
 document.addEventListener('DOMContentLoaded', () => {
   $('wizard-descobrir').addEventListener('click', wizardDiscover);
+  $('wizard-importar').addEventListener('change', wizardImport);
   $('wizard-concluir').addEventListener('click', wizardConclude);
   $('atualizar').addEventListener('click', () => refreshAll(true));
   $('abrir-config').addEventListener('click', openSettings);
