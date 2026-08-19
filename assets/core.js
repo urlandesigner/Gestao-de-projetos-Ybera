@@ -278,19 +278,6 @@
     return partes.length > 1 ? partes[partes.length - 1] : 'Backlog';
   }
 
-  // Time dono pelo area path (último segmento; raiz = nome do projeto).
-  function areaTeamLabel(path) {
-    const partes = String(path || '').split('\\').filter(Boolean);
-    return partes.length ? partes[partes.length - 1] : '';
-  }
-
-  // Dias sem atualização (null se a data for inválida/ausente).
-  function idleDays(changedIso, now) {
-    const t = Date.parse(changedIso || '');
-    if (Number.isNaN(t)) return null;
-    return Math.max(0, Math.floor((now - t) / 86400000));
-  }
-
   // ---- Cache ----
   function isStale(fetchedAt, now, maxAgeMinutes = 10) {
     if (!fetchedAt) return true;
@@ -314,7 +301,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, areaTeamLabel, idleDays,
+    iterationLabel,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };
 });
