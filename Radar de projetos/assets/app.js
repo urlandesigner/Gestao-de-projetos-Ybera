@@ -603,18 +603,30 @@ function render(){
   footLines.push(`<span class="fine">${esc(t.footLimit)}</span>`);
   $("foot").innerHTML = footLines.join("");
 
-  /* --- REPORT MENSAL: o mês mais recente aberto. Os anteriores entram na
-         Task 5, no contêiner #repPast. --- */
+  /* --- REPORT MENSAL -----------------------------------------------------
+     Abre no mês mais recente. `?m=AAAA-MM` abre naquele mês; parâmetro
+     ausente, inválido ou de mês inexistente cai no mais recente sem erro —
+     é a mesma tolerância do `?print=1`. Os demais meses vão recolhidos: a
+     regra de impressão já esconde `.fold`, então no papel sai só o mês
+     aberto, que é o que se cola num deck. --- */
   const months = reportMonths();
   if(!months.length){
     $("repNow").innerHTML = emptyBox(t.repEmptyShort, t.repEmptyD, t);
+    $("repPast").innerHTML = "";
   } else {
-    const cur = months[0];
+    const wanted = new URLSearchParams(location.search).get("m");
+    const openIdx = Math.max(0, months.findIndex(r => r.m === wanted));
+    const cur = months[openIdx];
     const count = monthCount(cur, t);
     $("repNow").innerHTML =
       `<div class="sec-head"><h2>${esc(fmtMonthLong(cur.m))}</h2></div>` +
       (count ? `<div class="strip"><span class="meta">${esc(count)}</span></div>` : "") +
       monthBlock(cur, t);
+    $("repPast").innerHTML = months.filter((_, k) => k !== openIdx).map(r =>
+      `<details class="fold">
+        <summary>${ICO.chev}<span>${esc(fmtMonthLong(r.m))}</span></summary>
+        <div class="det">${monthBlock(r, t)}</div>
+      </details>`).join("");
   }
 
   $("navList").innerHTML = navHtml(t);
@@ -787,10 +799,11 @@ function card(i, t){
 
 $("btnPT").addEventListener("click", () => { lang = "pt"; localStorage.setItem("radar-lang", "pt"); render(); });
 $("btnEN").addEventListener("click", () => { lang = "en"; localStorage.setItem("radar-lang", "en"); render(); });
-/* Das páginas de seção, a impressão passa pela versão completa — é ela que
-   tem o briefing de uma página pensado para papel. */
+/* Report e versão completa se imprimem; as páginas de seção passam pela
+   completa, que é a que tem o briefing de uma página pensado para papel. */
 $("btnPrint").addEventListener("click", () => {
-  if((document.body.dataset.page || "") === "completo") window.print();
+  const p = document.body.dataset.page || "";
+  if(p === "completo" || p === "report") window.print();
   else location.href = "completo.html?print=1";
 });
 function isDarkNow(){
