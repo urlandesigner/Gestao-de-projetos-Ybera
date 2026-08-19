@@ -283,14 +283,25 @@ body[data-pagina='board'] #secao-projetos { display: none; }
   color: var(--mudo);
 }
 .item .badge-tipo { margin-top: 0.5rem; align-self: flex-start; }
+/* Selos lado a lado: tipo + sprint/backlog */
+.item .selos { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.5rem; }
+.item .selos .badge-tipo { margin-top: 0; }
 .badge-tipo.tipo-epic { background: #ffefdd; color: #b45309; }
 .badge-tipo.tipo-feature { background: #f3e8fa; color: #7e22ce; }
 .badge-tipo.tipo-pbi { background: #e0f2fe; color: #0369a1; }
 .badge-tipo.tipo-bug { background: #fee2e2; color: #b91c1c; }
 .badge-tipo.tipo-task { background: #fef9c3; color: #a16207; }
 .item .linha { display: flex; justify-content: space-between; gap: 0.6rem; margin-top: 0.45rem; font-size: 0.8rem; }
-.item .linha .rot { color: var(--mudo); }
-.item .linha .val { text-align: right; font-weight: 500; }
+.item .linha .rot { color: var(--mudo); flex: none; }
+.item .linha .val {
+  text-align: right;
+  font-weight: 500;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* pai com título longo não dobra o cartão */
+}
+.item .linha .val-alerta, .val-alerta { color: #b45309; font-weight: 650; }
 .avatar {
   display: inline-flex;
   align-items: center;

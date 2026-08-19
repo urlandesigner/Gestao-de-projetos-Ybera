@@ -170,7 +170,10 @@ function wizardConclude() {
 /* ---------- Dados vivos ---------- */
 const FIELDS_COUNTS = ['System.WorkItemType', 'System.State', 'System.AssignedTo'];
 const FIELDS_BOARD = ['System.Title', 'System.State', 'System.WorkItemType', 'System.BoardColumn', 'System.AssignedTo', 'System.IterationPath'];
-const FIELDS_ITEMS = ['System.Title', 'System.State', 'System.WorkItemType', 'System.TeamProject'];
+const FIELDS_ITEMS = [
+  'System.Title', 'System.State', 'System.WorkItemType', 'System.TeamProject',
+  'System.Parent', 'System.IterationPath', 'System.AreaPath', 'System.ChangedDate',
+];
 
 async function refreshCard(p) {
   const anterior = state.cache.byCard[cardKey(p)] || {};
@@ -223,6 +226,11 @@ async function refreshMyItems() {
     }
     const unicos = [...new Set(allIds)];
     state.cache.myItems = unicos.length ? await A.getFields(ctx(), unicos, FIELDS_ITEMS) : [];
+    // Pai de cada item (Feature/Épico) — um lote só, pro contexto no cartão
+    const paiIds = [...new Set(state.cache.myItems.map((it) => (it.fields || {})['System.Parent']).filter(Boolean))];
+    const pais = paiIds.length ? await A.getFields(ctx(), paiIds, ['System.Title', 'System.WorkItemType']) : [];
+    state.cache.myParents = {};
+    for (const p of pais) state.cache.myParents[p.id] = { titulo: (p.fields || {})['System.Title'], tipo: (p.fields || {})['System.WorkItemType'] };
   } catch (e) {
     if (e instanceof A.AuthError) state.auth = 'vencido';
     state.cache.myItemsError = mensagemDeErro(e);
@@ -390,15 +398,23 @@ function renderMyItems() {
   const multiProjeto = new Set(items.map((it) => (it.fields || {})['System.TeamProject'])).size > 1;
   const ROTULO_ETAPA = { todo: 'A fazer', andamento: 'Em andamento', atencao: 'Atenção' };
   box.innerHTML = erroHtml + '<div class="quadro quadro-etapas">' + grupos.map((g) => {
+    const agora = Date.now();
     const cartoes = g.items.map((it) => {
       const f = it.fields || {};
       const slug = C.typeSlug(f['System.WorkItemType']);
       const link = C.deepLinks(state.config.org, f['System.TeamProject'], '').workItem(it.id);
-      const linha = multiProjeto ? `<span class="linha"><span class="rot">Projeto</span><span class="val">${escapeHtml(f['System.TeamProject'])}</span></span>` : '';
+      const pai = (state.cache.myParents || {})[f['System.Parent']];
+      const linhaPai = pai ? `<span class="linha"><span class="rot">Pai</span><span class="val" title="${escapeHtml((pai.tipo ? pai.tipo + ' · ' : '') + pai.titulo)}">${escapeHtml(pai.titulo || '')}</span></span>` : '';
+      const linhaTime = f['System.AreaPath'] ? `<span class="linha"><span class="rot">Time</span><span class="val">${escapeHtml(C.areaTeamLabel(f['System.AreaPath']))}</span></span>` : '';
+      const linhaProjeto = multiProjeto ? `<span class="linha"><span class="rot">Projeto</span><span class="val">${escapeHtml(f['System.TeamProject'])}</span></span>` : '';
+      const dias = C.idleDays(f['System.ChangedDate'], agora);
+      const linhaAtividade = dias == null ? '' : `<span class="linha"><span class="rot">Atividade</span><span class="val${dias >= 7 ? ' val-alerta' : ''}">${dias === 0 ? 'hoje' : 'há ' + dias + ' d'}</span></span>`;
       return `<li><a class="item" href="${link}" target="_blank" rel="noopener" title="${escapeHtml(f['System.WorkItemType'])}">
         <span class="cabeca"><span class="titulo">${escapeHtml(f['System.Title'])}</span><span class="id">#${it.id}</span></span>
-        <span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span>
-        <span class="linha"><span class="rot">Estado</span><span class="val">${escapeHtml(f['System.State'])}</span></span>${linha}
+        <span class="selos"><span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span><span class="badge-tipo">${escapeHtml(C.iterationLabel(f['System.IterationPath']))}</span></span>
+        ${linhaPai}
+        <span class="linha"><span class="rot">Estado</span><span class="val">${escapeHtml(f['System.State'])}</span></span>
+        ${linhaTime}${linhaAtividade}${linhaProjeto}
       </a></li>`;
     }).join('');
     return `
