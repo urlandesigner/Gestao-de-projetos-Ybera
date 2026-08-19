@@ -39,6 +39,13 @@
                                   Ex.: "No ar desde mai/26; conversão medida
                                   até 30/09". É o que transforma entrega em
                                   programa. Pode ficar vazio até ter número.
+   demands[].done:"AAAA-MM"     → mês em que a demanda foi concluída. Só faz
+                                  sentido com status:"done". É ele que atribui
+                                  a demanda a um mês do report — `due` é prazo,
+                                  não data de conclusão, e usar `due` colocaria
+                                  no mês errado toda demanda entregue atrasada.
+                                  Demanda concluída sem `done` continua no site
+                                  normalmente, só não entra em nenhum mês.
 
    PARA ADICIONAR UM ENTREGUE: copie um item, troque status para "done",
    preencha `shipped` e, se houver, `result`. A coluna Entregue, o tile e o
@@ -155,6 +162,16 @@ const DATA = {
      a versão que as pessoas leem. Se um dia a fonte passar a registrar
      conclusão com data (Azure DevOps, por exemplo), o lugar de reconstruir
      isso é uma página "Entregue nesta quinzena" alimentada pelas demandas. */
+
+  /* REPORT MENSAL — a parte escrita à mão.
+     O que a base sabe (entrega com `shipped`, demanda com `done`) é derivado
+     sozinho; aqui entra só o que ela não sabe: o parágrafo do mês e os itens
+     concluídos que não estão registrados no Notion.
+     Enquanto a coluna Status não tiver nenhum "Concluído", `extra` é o que dá
+     corpo ao report — sem ele a página fica no estado vazio.
+     Um mês não precisa existir aqui para aparecer: se houver entrega ou
+     demanda concluída naquele mês, o bloco do mês é criado do mesmo jeito. */
+  reports:[],
 
   items:[
     /* ---------- EM ANDAMENTO (status Notion: "Em andamento") ---------- */
