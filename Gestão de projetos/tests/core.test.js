@@ -86,15 +86,17 @@ test('sprintProgress conta concluídos e ignora Tasks', () => {
   assert.deepEqual(C.sprintProgress(items), { done: 1, total: 2 });
 });
 
-test('groupMyItems agrupa por estado', () => {
-  const g = C.groupMyItems([
-    { id: 1, fields: { 'System.State': 'Active' } },
-    { id: 2, fields: { 'System.State': 'New' } },
-    { id: 3, fields: { 'System.State': 'Active' } },
+test('groupMyItemsBuckets colapsa em 3 etapas fixas, ordena pelo fluxo e descarta terminais', () => {
+  const mk = (id, estado) => ({ id, fields: { 'System.State': estado } });
+  const grupos = C.groupMyItemsBuckets([
+    mk(1, 'Prototype'), mk(2, 'New'), mk(3, 'Blocked'),
+    mk(4, 'In Progress'), mk(5, 'Ready'), mk(6, 'Done'),
   ]);
-  assert.equal(g.length, 2);
-  assert.equal(g[0].state, 'Active');
-  assert.equal(g[0].items.length, 2);
+  assert.deepEqual(grupos.map((g) => g.bucket), ['todo', 'andamento', 'atencao']); // sempre as 3, nessa ordem
+  assert.deepEqual(grupos[0].items.map((i) => i.id), [2, 5]); // New antes de Ready
+  assert.deepEqual(grupos[1].items.map((i) => i.id), [1, 4]); // Prototype antes de In Progress
+  assert.deepEqual(grupos[2].items.map((i) => i.id), [3]);
+  assert.ok(!grupos.some((g) => g.items.some((i) => i.id === 6))); // Done fora
 });
 
 test('isStale e timeAgoLabel', () => {
@@ -111,18 +113,6 @@ test('isStale e timeAgoLabel', () => {
 test('isTerminalState é case-insensitive', () => {
   assert.equal(C.isTerminalState('done'), true);
   assert.equal(C.isTerminalState('Active'), false);
-});
-
-test('sortStateGroups ordena por fluxo, desconhecidos após o fluxo, atenção no fim', () => {
-  const grupos = [
-    { state: 'Impediment', items: [1, 2] },
-    { state: 'In Progress', items: [1] },
-    { state: 'Estado Custom', items: [1] },
-    { state: 'To Do', items: [1] },
-    { state: 'Ready for Dev', items: [1] },
-  ];
-  const ordem = C.sortStateGroups(grupos).map((g) => g.state);
-  assert.deepEqual(ordem, ['To Do', 'Ready for Dev', 'In Progress', 'Estado Custom', 'Impediment']);
 });
 
 test('isAttentionState reconhece bloqueios, case-insensitive', () => {
