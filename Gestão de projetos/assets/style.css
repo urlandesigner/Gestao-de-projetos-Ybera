@@ -1,22 +1,20 @@
 /* Central de Projetos — SaaS clean: canvas cinza, superfícies brancas
    flutuantes, raios generosos, pills e badges com tinta suave. */
 :root {
-  /* Neutros levemente quentes (stone), como na referência.
-     Três camadas de fundo: página (master, mais escuro) → contêiner
-     do app (claro, cantos grandes) → painéis brancos de conteúdo. */
-  --fundo-pagina: #e9e9e6;
-  --fundo: #f4f4f2;
+  /* Camadas do print: página master QUASE BRANCA → superfícies cinzas
+     (sidebar e colunas do quadro) → folhas brancas de conteúdo. */
+  --fundo-pagina: #fafaf9;
   --superficie: #ffffff;
-  --superficie-2: #f4f4f2;
+  --superficie-2: #f3f3f1;
   --tinta: #1c1c1a;
   --mudo: #78716c;
-  --borda: #e7e5e4;
+  --borda: #e9e7e4;
   --positivo: #15803d;
   --positivo-fundo: #e7f8ef;
   --erro: #b91c1c;
   --erro-fundo: #fee2e2;
-  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-  --sombra-painel: 0 1px 2px rgba(28, 25, 23, 0.03), 0 12px 32px rgba(28, 25, 23, 0.05);
+  --sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --sombra-painel: 0 1px 2px rgba(28, 25, 23, 0.03), 0 16px 40px rgba(28, 25, 23, 0.06);
   --sombra-cartao: 0 1px 2px rgba(28, 25, 23, 0.05);
   --raio-painel: 24px;
   --raio-cartao: 16px;
@@ -24,18 +22,13 @@
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  padding: clamp(0.6rem, 1.5vw, 1.25rem);
+  padding: clamp(0.5rem, 1.2vw, 1rem);
   background: var(--fundo-pagina);
   color: var(--tinta);
   font: 15px/1.5 var(--sans);
   min-height: 100vh;
 }
-/* Contêiner do app: a camada intermediária entre a página e os painéis */
-.app {
-  background: var(--fundo);
-  border-radius: 28px;
-  min-height: calc(100vh - 2 * clamp(0.6rem, 1.5vw, 1.25rem));
-}
+h1, h2, h3, h4 { letter-spacing: -0.01em; }
 h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
 .mudo { color: var(--mudo); }
 .erro { color: var(--erro); }
@@ -54,13 +47,14 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
   width: 40px;
   height: 40px;
   background: var(--superficie);
+  border: 1px solid var(--borda);
   border-radius: 12px;
-  box-shadow: var(--sombra-cartao);
   font-size: 1.1rem;
 }
-.nome-app { font-size: 1rem; margin: 0; font-weight: 650; }
+.nome-app { font-size: 1rem; margin: 0; font-weight: 700; }
 .acoes { margin-left: auto; display: flex; align-items: center; gap: 0.55rem; }
-.acoes button {
+/* Chips do topo: cinza sobre a página clara, como "Search"/"Create Job" */
+.acoes button, #alternar-lateral {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -68,13 +62,13 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
   height: 38px;
   font-size: 1rem;
   border: none;
-  background: var(--superficie);
+  background: var(--superficie-2);
   border-radius: 12px;
-  box-shadow: var(--sombra-cartao);
   cursor: pointer;
   color: var(--tinta);
 }
-.acoes button:hover { background: #fafaf9; }
+.acoes button:hover, #alternar-lateral:hover { background: #ebebe8; }
+#alternar-lateral { color: var(--mudo); }
 
 /* ---------- Corpo: sidebar + conteúdo (como na referência) ---------- */
 .corpo {
@@ -84,7 +78,17 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
   align-items: start;
   padding: 0.2rem clamp(1rem, 3vw, 2rem) 2.5rem;
 }
-.lateral { position: sticky; top: 1rem; display: flex; flex-direction: column; gap: 0.9rem; }
+/* Sidebar: painel cinza próprio — a nav ativa (branca) salta dele */
+.lateral {
+  position: sticky;
+  top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  background: var(--superficie-2);
+  border-radius: 20px;
+  padding: 0.8rem 0.7rem 1rem;
+}
 .paginas { display: flex; flex-direction: column; gap: 0.3rem; }
 .paginas a {
   display: flex;
@@ -127,10 +131,21 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
 main { min-width: 0; }
 main > section {
   background: var(--superficie);
+  border: 1px solid rgba(28, 25, 23, 0.05); /* folha branca sobre página quase branca */
   border-radius: var(--raio-painel);
   box-shadow: var(--sombra-painel);
   padding: 1.6rem 1.7rem 1.7rem;
 }
+
+/* Sidebar recolhida: só ícones e a bolinha de status */
+body.lateral-recolhida .corpo { grid-template-columns: 62px minmax(0, 1fr); }
+body.lateral-recolhida .lateral { padding: 0.8rem 0.45rem 1rem; }
+body.lateral-recolhida .rotulo-nav,
+body.lateral-recolhida .conta-nav,
+body.lateral-recolhida #carimbo { display: none; }
+body.lateral-recolhida .paginas a { justify-content: center; padding: 0.7rem 0; gap: 0; }
+body.lateral-recolhida .conexao { padding-left: 0; padding-right: 0; align-items: center; }
+body.lateral-recolhida #badge { font-size: 0; gap: 0; }
 h2 { font-size: 1.25rem; margin: 0 0 1rem; }
 /* Nota de recorte logo abaixo do h2 da seção */
 .secao-nota { margin: -0.8rem 0 1rem; font-size: 0.8rem; }
@@ -500,11 +515,15 @@ details summary { cursor: pointer; color: var(--mudo); font-size: 0.88rem; }
   .quadro { grid-auto-columns: 84vw; scroll-snap-type: x mandatory; }
   .quadro-etapas { grid-template-columns: repeat(3, 84vw); } /* etapas seguem o deck no celular */
   .coluna { scroll-snap-align: start; }
-  /* Sidebar vira barra horizontal acima do conteúdo */
+  /* Sidebar vira barra horizontal acima do conteúdo; recolher não se aplica */
   .corpo { display: block; }
-  .lateral { position: static; flex-direction: row; align-items: center; gap: 0.6rem; margin-bottom: 0.9rem; }
+  .lateral { position: static; flex-direction: row; align-items: center; gap: 0.6rem; margin-bottom: 0.9rem; padding: 0.5rem 0.6rem; }
   .paginas { flex-direction: row; gap: 0.35rem; }
   .paginas a { padding: 0.5rem 0.85rem; }
   .conexao { border: none; padding: 0; margin-left: auto; }
   #carimbo { display: none; }
+  #alternar-lateral { display: none; }
+  body.lateral-recolhida .rotulo-nav, body.lateral-recolhida .conta-nav { display: inline; }
+  body.lateral-recolhida .paginas a { justify-content: flex-start; padding: 0.5rem 0.85rem; gap: 0.6rem; }
+  body.lateral-recolhida #badge { font-size: 0.85rem; gap: 0.55rem; }
 }

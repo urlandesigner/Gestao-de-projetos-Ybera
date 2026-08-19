@@ -3,7 +3,7 @@
 'use strict';
 const C = window.CentralCore;
 const A = window.CentralApi;
-const LS = { config: 'central.config', pat: 'central.pat', cache: 'central.cache', filtros: 'central.filtros' };
+const LS = { config: 'central.config', pat: 'central.pat', cache: 'central.cache', filtros: 'central.filtros', ui: 'central.ui' };
 const $ = (id) => document.getElementById(id);
 
 function loadJSON(key) { try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; } }
@@ -678,6 +678,12 @@ document.addEventListener('DOMContentLoaded', () => {
     state.respProj = $('proj-resp').value;
     salvarFiltrosMI();
     renderGrid();
+  });
+  // Sidebar colapsável — preferência persiste entre visitas
+  if ((loadJSON(LS.ui) || {}).lateralRecolhida) document.body.classList.add('lateral-recolhida');
+  $('alternar-lateral').addEventListener('click', () => {
+    const recolhida = document.body.classList.toggle('lateral-recolhida');
+    saveJSON(LS.ui, { lateralRecolhida: recolhida });
   });
   $('conf-salvar').addEventListener('click', settingsSave);
   $('conf-redescobrir').addEventListener('click', settingsRediscover);
