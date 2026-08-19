@@ -1,3 +1,8 @@
 .DS_Store
 .superpowers/
 .claude/
+
+# A Central de Projetos virou repositório próprio, ligado direto ao
+# github.com/urlandesigner/Gestao-de-projetos-Ybera (que a Vercel publica).
+# Os arquivos seguem nesta pasta; quem versiona é o repo de lá dentro.
+Gestão de projetos/
