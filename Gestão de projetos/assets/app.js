@@ -22,10 +22,13 @@ state.cache.lastSuccessAt = state.cache.lastSuccessAt || state.cache.fetchedAt |
 const ROTULOS_TIPO = { epic: 'Épicos', feature: 'Features', pbi: 'PBIs', bug: 'Bugs', task: 'Tasks', outro: 'Outros' };
 const ROTULO_TIPO_CURTO = { epic: 'Épico', feature: 'Feature', pbi: 'PBI', bug: 'Bug', task: 'Task', outro: 'Item' };
 const ORDEM_TIPO = ['epic', 'feature', 'pbi', 'bug', 'task', 'outro'];
-// Pontos das colunas (estilo do print): paleta cíclica; estados de atenção em vermelho
-const CORES_COLUNA = ['#f97316', '#eab308', '#3b82f6', '#8b5cf6', '#14b8a6', '#ec4899'];
-function corColuna(indice, atencao) {
-  return atencao ? '#ef4444' : CORES_COLUNA[indice % CORES_COLUNA.length];
+// Ponto da coluna: código semântico próprio — NUNCA as cores de tipo
+// (laranja/roxo/azul/vermelho/amarelo são de Épico/Feature/PBI/Bug/Task).
+// cinza = fila/andamento · verde = concluído · vermelho = atenção
+function corColunaPorBucket(bucket) {
+  if (bucket === 'atencao') return '#ef4444';
+  if (bucket === 'feito') return '#22c55e';
+  return '#a1a1aa';
 }
 
 // Chips de filtro por tipo — contagem sempre sobre o conjunto completo
@@ -333,11 +336,11 @@ function renderMyItems() {
   const grupos = C.sortStateGroups(C.groupMyItems(filtrados));
   // Tag de projeto só quando há mais de um projeto entre os itens — senão é ruído.
   const multiProjeto = new Set(items.map((it) => (it.fields || {})['System.TeamProject'])).size > 1;
-  box.innerHTML = erroHtml + '<div class="quadro">' + grupos.map((g, i) => {
+  box.innerHTML = erroHtml + '<div class="quadro">' + grupos.map((g) => {
     const atencao = C.isAttentionState(g.state);
     return `
     <section class="coluna${atencao ? ' atencao' : ''}">
-      <header><h4><span class="ponto" style="background:${corColuna(i, atencao)}"></span>${escapeHtml(g.state)}</h4><span class="conta">${g.items.length}</span></header>
+      <header><h4><span class="ponto" style="background:${corColunaPorBucket(C.stateBucket(g.state))}"></span>${escapeHtml(g.state)}</h4><span class="conta">${g.items.length}</span></header>
       <ul>${g.items.map((it) => {
         const f = it.fields || {};
         const slug = C.typeSlug(f['System.WorkItemType']);
@@ -470,11 +473,17 @@ function renderBoard(p) {
     return;
   }
   st.hidden = true;
-  cols.innerHTML = nomes.map((nome, i) => {
+  const tipoOficial = new Map((boardState.columns || []).map((c) => [c.name, String(c.type || '').toLowerCase()]));
+  cols.innerHTML = nomes.map((nome) => {
     const lista = porColuna.get(nome) || [];
     const atencao = C.isAttentionState(nome) || lista.some((it) => C.isAttentionState((it.fields || {})['System.State']));
-    return `<section class="coluna">
-      <header><h4><span class="ponto" style="background:${corColuna(i, atencao)}"></span>${escapeHtml(nome)}</h4><span class="conta">${lista.length}</span></header>
+    // Bucket da coluna: tipo oficial do board quando existe; senão, pelos estados dos itens
+    let bucket = 'andamento';
+    if (atencao) bucket = 'atencao';
+    else if (tipoOficial.get(nome) === 'outgoing') bucket = 'feito';
+    else if (lista.length && lista.every((it) => C.isTerminalState((it.fields || {})['System.State']))) bucket = 'feito';
+    return `<section class="coluna${bucket === 'atencao' ? ' atencao' : ''}">
+      <header><h4><span class="ponto" style="background:${corColunaPorBucket(bucket)}"></span>${escapeHtml(nome)}</h4><span class="conta">${lista.length}</span></header>
       <ul>${lista.map((it) => {
         const f = it.fields || {};
         const slug = C.typeSlug(f['System.WorkItemType']);
