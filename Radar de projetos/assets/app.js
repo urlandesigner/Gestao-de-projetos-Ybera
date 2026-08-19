@@ -58,6 +58,16 @@ const T = {
     printPlanned:"Os {n} projetos planejados estão listados na seção Futuro, adiante — sem repetir os cards aqui.",
     horTitle:"Futuro",
     horSub:"Quanto mais longe, menos preciso — de propósito. As três faixas saem da data de início de cada projeto no Notion: mudar um período move o projeto de faixa sozinho.",
+    navRep:"Report mensal",
+    repTitle:"Report mensal",
+    repSub:"O que foi concluído em cada mês. O mês mais recente abre aberto; os anteriores ficam recolhidos abaixo.",
+    repExtra:"Também concluído",
+    repMonthEmpty:"Nada registrado neste mês.",
+    repEmptyShort:"Nenhum mês com item concluído ainda.",
+    repEmptyD:"Na base Projetos o campo Status nunca assume “Concluído”, e nenhum projeto tem demandas registradas — não há de onde derivar o que fechou. Enquanto isso, o mês pode ser escrito à mão no bloco <b>reports</b> do arquivo de dados. Esta página vazia diz respeito à base, não ao trabalho.",
+    repOneDelivery:"entrega", repManyDeliveries:"entregas",
+    repOneDemand:"demanda concluída", repManyDemands:"demandas concluídas",
+    repOneExtra:"outro item", repManyExtra:"outros itens",
     horNow:"Agora", horNext:"A seguir", horLater:"Depois",
     horUntil:"até {d}",
     confNow:"Janela atual", confNext:"Planejado", confLater:"Roadmap",
@@ -118,6 +128,16 @@ const T = {
     printPlanned:"The {n} planned projects are listed in the Future section below — not repeated as cards here.",
     horTitle:"Future",
     horSub:"The further out, the vaguer — on purpose. The three bands come from each project's start date in Notion: change a period and the project moves band on its own.",
+    navRep:"Monthly report",
+    repTitle:"Monthly report",
+    repSub:"What was completed each month. The most recent month opens expanded; earlier ones stay collapsed below.",
+    repExtra:"Also completed",
+    repMonthEmpty:"Nothing recorded this month.",
+    repEmptyShort:"No month with completed items yet.",
+    repEmptyD:"In the Projects base the Status field never takes the value “Done”, and no project has demands recorded — there is nothing to derive closed work from. In the meantime a month can be written by hand in the <b>reports</b> block of the data file. This empty page is about the base, not about the work.",
+    repOneDelivery:"delivery", repManyDeliveries:"deliveries",
+    repOneDemand:"completed demand", repManyDemands:"completed demands",
+    repOneExtra:"other item", repManyExtra:"other items",
     horNow:"Now", horNext:"Next", horLater:"Later",
     horUntil:"through {d}",
     confNow:"Current window", confNext:"Planned", confLater:"Roadmap",
@@ -280,6 +300,7 @@ function render(){
     produtos:{h1:t.detTitle, sub:t.detSub},
     tabela:{h1:t.detTitle, sub:t.tableSub},
     horizonte:{h1:t.horTitle, sub:t.horSub},
+    report:{h1:t.repTitle, sub:t.repSub},
     completo:{h1:L(m.title), sub:L(m.sub)}
   };
   const pm = PM[page] || PM.index;
@@ -603,11 +624,13 @@ function navHtml(t){
   const flagged = DATA.items.filter(i => i.health === "watch" || i.health === "blocked").length;
   const nAsk = (DATA.asks || []).length;
   const nDem = DATA.items.reduce((n, i) => n + (i.demands || []).filter(d => d.status === "doing").length, 0);
+  const nRep = (reportMonths()[0] || {}).n || 0;
   const defs = [
     {href:"index.html",      page:"index",      label:t.navTop},
     {href:"board.html",      page:"board",      label:t.navBoard, badge:DATA.items.length, dot:flagged > 0},
     {href:"pendencias.html", page:"pendencias", label:t.navAsk,   badge:nAsk, hot:true},
     {href:"produtos.html",   page:"produtos",   label:t.navDet,   badge:nDem},
+    {href:"report.html",     page:"report",     label:t.navRep,   badge:nRep},
     {href:"horizonte.html",  page:"horizonte",  label:t.navHor}
   ];
   /* A tabela é outra vista de Produtos, não outra seção: o item da navegação
