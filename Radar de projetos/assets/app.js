@@ -603,6 +603,20 @@ function render(){
   footLines.push(`<span class="fine">${esc(t.footLimit)}</span>`);
   $("foot").innerHTML = footLines.join("");
 
+  /* --- REPORT MENSAL: o mês mais recente aberto. Os anteriores entram na
+         Task 5, no contêiner #repPast. --- */
+  const months = reportMonths();
+  if(!months.length){
+    $("repNow").innerHTML = emptyBox(t.repEmptyShort, t.repEmptyD, t);
+  } else {
+    const cur = months[0];
+    const count = monthCount(cur, t);
+    $("repNow").innerHTML =
+      `<div class="sec-head"><h2>${esc(fmtMonthLong(cur.m))}</h2></div>` +
+      (count ? `<div class="strip"><span class="meta">${esc(count)}</span></div>` : "") +
+      monthBlock(cur, t);
+  }
+
   $("navList").innerHTML = navHtml(t);
   syncThemeBtn();
   navReveal();
@@ -695,6 +709,42 @@ function projRow(i, t, m){
       </div>
     </div>
   </details>`;
+}
+
+/* Contagem do mês. Só conta o que pertence ao mês: "3 frentes em curso" seria
+   fato do presente e estaria errado num mês passado. */
+function monthCount(r, t){
+  const nDem = r.demands.reduce((s, g) => s + g.list.length, 0);
+  const bits = [];
+  if(r.deliveries.length) bits.push(r.deliveries.length + " " +
+    (r.deliveries.length === 1 ? t.repOneDelivery : t.repManyDeliveries));
+  if(nDem) bits.push(nDem + " " + (nDem === 1 ? t.repOneDemand : t.repManyDemands));
+  if(r.extra.length) bits.push(r.extra.length + " " +
+    (r.extra.length === 1 ? t.repOneExtra : t.repManyExtra));
+  return bits.join(" · ");
+}
+
+/* O corpo de um mês. Nenhum componente novo: entrega é o mesmo card da coluna
+   Entregue do board, demanda concluída é a mesma lista com check do acordeão
+   de Produtos, e o que foi escrito à mão usa exatamente a mesma lista. */
+function doneList(rows){
+  return `<ul class="dlist">${rows.map(d => `<li class="d-done">
+      <span class="dic">${ICO.check}</span>
+      <span>${esc(L(d.t))}</span>
+    </li>`).join("")}</ul>`;
+}
+function monthBlock(r, t){
+  const parts = [];
+  if(r.summary) parts.push(
+    `<div class="summary"><ul><li><span>${esc(L(r.summary))}</span></li></ul></div>`);
+  if(r.deliveries.length) parts.push(
+    `<div class="cards">${r.deliveries.map(i => card(i, t)).join("")}</div>`);
+  r.demands.forEach(g => parts.push(
+    `<h4 class="dh">${esc(L(g.proj.title))}</h4>${doneList(g.list)}`));
+  if(r.extra.length) parts.push(
+    `<h4 class="dh">${esc(t.repExtra)}</h4>${doneList(r.extra)}`);
+  if(!parts.length) parts.push(`<div class="empty">${esc(t.repMonthEmpty)}</div>`);
+  return parts.join("");
 }
 
 function card(i, t){
