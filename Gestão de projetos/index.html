@@ -4,23 +4,29 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Central de Projetos</title>
-<link rel="stylesheet" href="assets/style.css?v=20260819g">
+<link rel="stylesheet" href="assets/style.css?v=20260819h">
 </head>
 <body data-pagina="meus-itens">
 <header class="topo">
   <span class="marca" aria-hidden="true">▦</span>
   <h1 class="nome-app">Central de Projetos</h1>
-  <nav class="paginas">
-    <a id="nav-meus-itens" href="#meus-itens">Meus itens</a>
-    <a id="nav-projetos" href="#projetos">Projetos</a>
-  </nav>
   <div class="acoes">
-    <span id="badge" data-estado="sem-token">sem token</span>
-    <span id="carimbo" class="mudo"></span>
     <button id="atualizar" title="Atualizar agora">↻</button>
     <button id="abrir-config" title="Configurações">⚙</button>
   </div>
 </header>
+
+<div class="corpo">
+<aside class="lateral">
+  <nav class="paginas">
+    <a id="nav-meus-itens" href="#meus-itens">Meus itens <span id="conta-nav-mi" class="conta-nav"></span></a>
+    <a id="nav-projetos" href="#projetos">Projetos <span id="conta-nav-proj" class="conta-nav"></span></a>
+  </nav>
+  <div class="conexao">
+    <span id="badge" data-estado="sem-token">sem token</span>
+    <span id="carimbo" class="mudo"></span>
+  </div>
+</aside>
 
 <main>
   <section id="secao-meus-itens">
@@ -64,6 +70,7 @@
     <div id="board-colunas" class="quadro quadro-board"></div>
   </section>
 </main>
+</div>
 
 <dialog id="wizard">
   <form method="dialog" onsubmit="return false">
@@ -116,8 +123,8 @@
   </form>
 </dialog>
 
-<script src="assets/core.js?v=20260819g"></script>
-<script src="assets/api.js?v=20260819g"></script>
-<script src="assets/app.js?v=20260819g"></script>
+<script src="assets/core.js?v=20260819h"></script>
+<script src="assets/api.js?v=20260819h"></script>
+<script src="assets/app.js?v=20260819h"></script>
 </body>
 </html>

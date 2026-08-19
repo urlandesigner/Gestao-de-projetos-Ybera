@@ -254,6 +254,13 @@ async function refreshAll(force) {
 /* ---------- Render ---------- */
 function renderAll() { renderBadge(); renderMyItems(); renderGrid(); }
 
+// Contadores das linhas de navegação (eco do "Applicants 23" da referência)
+function renderNavContas() {
+  const mi = state.cache.myItems;
+  $('conta-nav-mi').textContent = mi ? String(mi.length) : '';
+  $('conta-nav-proj').textContent = state.config ? String(state.config.projects.filter((x) => !x.hidden).length) : '';
+}
+
 function renderBadge() {
   const rotulos = { 'sem-token': 'sem token', vencido: 'token vencido', atualizando: 'atualizando…', conectado: 'conectado' };
   const auth = state.auth || (state.pat ? 'conectado' : 'sem-token');
@@ -268,6 +275,7 @@ function renderGrid() {
   grid.innerHTML = '';
   for (const p of state.config.projects.filter((x) => !x.hidden)) grid.appendChild(buildCard(p));
   renderFiltroProj();
+  renderNavContas();
 }
 
 // Seletor de responsável dos cartões — opções vêm dos itens em cache de todos os times
@@ -364,6 +372,7 @@ function rotaBoard(p, comSprint) {
 }
 
 function renderMyItems() {
+  renderNavContas();
   const box = $('meus-itens');
   const barra = $('mi-filtros');
   const items = state.cache.myItems;
@@ -387,8 +396,9 @@ function renderMyItems() {
       const link = C.deepLinks(state.config.org, f['System.TeamProject'], '').workItem(it.id);
       const linha = multiProjeto ? `<span class="linha"><span class="rot">Projeto</span><span class="val">${escapeHtml(f['System.TeamProject'])}</span></span>` : '';
       return `<li><a class="item" href="${link}" target="_blank" rel="noopener" title="${escapeHtml(f['System.WorkItemType'])}">
-        <span class="titulo">${escapeHtml(f['System.Title'])}</span>
-        <span class="meta"><span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span><span class="estado">${escapeHtml(f['System.State'])}</span><span class="id">#${it.id}</span></span>${linha}
+        <span class="cabeca"><span class="titulo">${escapeHtml(f['System.Title'])}</span><span class="id">#${it.id}</span></span>
+        <span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span>
+        <span class="linha"><span class="rot">Estado</span><span class="val">${escapeHtml(f['System.State'])}</span></span>${linha}
       </a></li>`;
     }).join('');
     return `
@@ -536,7 +546,8 @@ function renderBoard(p) {
         const dica = escapeHtml(f['System.WorkItemType']) + (resp ? ' · ' + escapeHtml(resp) : '');
         return `<li><a class="item" href="${link}" target="_blank" rel="noopener" title="${dica}">
           <span class="cabeca"><span class="titulo">${escapeHtml(f['System.Title'])}</span>${resp ? `<span class="avatar">${escapeHtml(C.initials(resp))}</span>` : ''}</span>
-          <span class="meta"><span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span><span class="id">#${it.id}</span></span>
+          <span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span>
+          <span class="linha"><span class="rot">Item</span><span class="val">#${it.id}</span></span>
         </a></li>`;
       }).join('')}</ul>
     </section>`;
