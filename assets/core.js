@@ -70,11 +70,15 @@
     ).join(' OR ') + ')';
   }
 
+  // Recorte pessoal (pedido do Urlan, 2026-08-19): os cartões contam só o que
+  // está no nome dele — sem isso mostravam o backlog inteiro do time.
+  // A barra de sprint segue sendo do time (sprintItemIds não filtra por @Me).
   function wiqlCounts(doneCutoffDays = 30, areas = []) {
     const naoRemovidos = TERMINAL_STATES.filter((s) => s !== 'Removed').map((s) => `'${s}'`).join(',');
     return [
       'SELECT [System.Id] FROM WorkItems',
       'WHERE [System.TeamProject] = @project',
+      'AND [System.AssignedTo] = @Me',
       "AND ([System.WorkItemType] IN GROUP 'Microsoft.EpicCategory'",
       "  OR [System.WorkItemType] IN GROUP 'Microsoft.FeatureCategory'",
       "  OR [System.WorkItemType] IN GROUP 'Microsoft.RequirementCategory')",

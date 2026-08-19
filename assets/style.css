@@ -102,6 +102,8 @@ main > section {
   padding: 1.4rem 1.5rem 1.5rem;
 }
 h2 { font-size: 1.25rem; margin: 0 0 1rem; }
+/* Nota de recorte logo abaixo do h2 da seção */
+.secao-nota { margin: -0.8rem 0 1rem; font-size: 0.8rem; }
 body[data-pagina='meus-itens'] #secao-projetos { display: none; }
 body[data-pagina='projetos'] #secao-meus-itens { display: none; }
 body[data-pagina='board'] #secao-meus-itens,
