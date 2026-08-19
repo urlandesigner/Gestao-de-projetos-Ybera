@@ -40,17 +40,6 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
   gap: 0.9rem;
   padding: 0.9rem clamp(1rem, 3vw, 2rem);
 }
-.marca {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: var(--superficie);
-  border: 1px solid var(--borda);
-  border-radius: 12px;
-  font-size: 1.1rem;
-}
 .nome-app { font-size: 1rem; margin: 0; font-weight: 700; }
 .acoes { margin-left: auto; display: flex; align-items: center; gap: 0.55rem; }
 /* Chips do topo: cinza sobre a página clara, como "Search"/"Create Job" */
@@ -147,8 +136,6 @@ body.lateral-recolhida .paginas a { justify-content: center; padding: 0.7rem 0; 
 body.lateral-recolhida .conexao { padding-left: 0; padding-right: 0; align-items: center; }
 body.lateral-recolhida #badge { font-size: 0; gap: 0; }
 h2 { font-size: 1.25rem; margin: 0 0 1rem; }
-/* Nota de recorte logo abaixo do h2 da seção */
-.secao-nota { margin: -0.8rem 0 1rem; font-size: 0.8rem; }
 body[data-pagina='meus-itens'] #secao-projetos { display: none; }
 body[data-pagina='projetos'] #secao-meus-itens { display: none; }
 body[data-pagina='board'] #secao-meus-itens,
@@ -177,11 +164,24 @@ body[data-pagina='board'] #secao-projetos { display: none; }
 .filtros select {
   font: inherit;
   font-size: 0.86rem;
-  padding: 0.42rem 0.7rem;
+  font-weight: 550;
+  padding: 0.45rem 2.2rem 0.45rem 0.95rem; /* espaço reservado pra seta */
   border: none;
   border-radius: 999px;
-  background: var(--superficie-2);
+  background-color: var(--superficie-2);
   color: var(--tinta);
+  appearance: none;
+  -webkit-appearance: none;
+  /* seta própria, com folga da borda — a nativa colava e esticava o controle */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2378716c' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  width: auto;
+  max-width: 15rem;
+  flex: none;
+  align-self: flex-start;
+  cursor: pointer;
+  text-overflow: ellipsis;
 }
 .chips-filtro { display: flex; gap: 0.35rem; flex-wrap: wrap; }
 .chip-filtro {
@@ -505,7 +505,6 @@ details summary { cursor: pointer; color: var(--mudo); font-size: 0.88rem; }
 
 /* ---------- Celular ---------- */
 @media (max-width: 640px) {
-  .nome-app { display: none; } /* a marca segura a identidade; sobram as abas */
   main > section { padding: 1.1rem 1rem 1.2rem; }
   #grid { grid-template-columns: 1fr; }
   .atalhos a { padding: 0.45rem 0; font-size: 0.85rem; } /* alvo de toque maior */
