@@ -4,13 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Central de Projetos</title>
-<link rel="stylesheet" href="assets/style.css?v=20260819j">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=20260819k">
 </head>
 <body data-pagina="meus-itens">
 <div class="app">
 <header class="topo">
   <span class="marca" aria-hidden="true">▦</span>
   <h1 class="nome-app">Central de Projetos</h1>
+  <button id="alternar-lateral" title="Recolher/expandir menu">◧</button>
   <div class="acoes">
     <button id="atualizar" title="Atualizar agora">↻</button>
     <button id="abrir-config" title="Configurações">⚙</button>
@@ -20,8 +24,8 @@
 <div class="corpo">
 <aside class="lateral">
   <nav class="paginas">
-    <a id="nav-meus-itens" href="#meus-itens">Meus itens <span id="conta-nav-mi" class="conta-nav"></span></a>
-    <a id="nav-projetos" href="#projetos">Projetos <span id="conta-nav-proj" class="conta-nav"></span></a>
+    <a id="nav-meus-itens" href="#meus-itens"><span class="rotulo-nav">Meus itens</span> <span id="conta-nav-mi" class="conta-nav"></span></a>
+    <a id="nav-projetos" href="#projetos"><span class="rotulo-nav">Projetos</span> <span id="conta-nav-proj" class="conta-nav"></span></a>
   </nav>
   <div class="conexao">
     <span id="badge" data-estado="sem-token">sem token</span>
@@ -125,8 +129,8 @@
   </form>
 </dialog>
 
-<script src="assets/core.js?v=20260819j"></script>
-<script src="assets/api.js?v=20260819j"></script>
-<script src="assets/app.js?v=20260819j"></script>
+<script src="assets/core.js?v=20260819k"></script>
+<script src="assets/api.js?v=20260819k"></script>
+<script src="assets/app.js?v=20260819k"></script>
 </body>
 </html>
