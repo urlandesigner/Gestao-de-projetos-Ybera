@@ -1,8 +1,11 @@
 /* Central de Projetos — SaaS clean: canvas cinza, superfícies brancas
    flutuantes, raios generosos, pills e badges com tinta suave. */
 :root {
-  /* Neutros levemente quentes (stone), como na referência */
-  --fundo: #f2f2f0;
+  /* Neutros levemente quentes (stone), como na referência.
+     Três camadas de fundo: página (master, mais escuro) → contêiner
+     do app (claro, cantos grandes) → painéis brancos de conteúdo. */
+  --fundo-pagina: #e9e9e6;
+  --fundo: #f4f4f2;
   --superficie: #ffffff;
   --superficie-2: #f4f4f2;
   --tinta: #1c1c1a;
@@ -21,16 +24,24 @@
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  background: var(--fundo);
+  padding: clamp(0.6rem, 1.5vw, 1.25rem);
+  background: var(--fundo-pagina);
   color: var(--tinta);
   font: 15px/1.5 var(--sans);
+  min-height: 100vh;
+}
+/* Contêiner do app: a camada intermediária entre a página e os painéis */
+.app {
+  background: var(--fundo);
+  border-radius: 28px;
+  min-height: calc(100vh - 2 * clamp(0.6rem, 1.5vw, 1.25rem));
 }
 h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
 .mudo { color: var(--mudo); }
 .erro { color: var(--erro); }
 
 /* ---------- Barra superior ---------- */
-body > header.topo {
+.app > header.topo {
   display: flex;
   align-items: center;
   gap: 0.9rem;
