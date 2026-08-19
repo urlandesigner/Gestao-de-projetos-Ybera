@@ -3,7 +3,7 @@
 'use strict';
 const C = window.CentralCore;
 const A = window.CentralApi;
-const LS = { config: 'central.config', pat: 'central.pat', cache: 'central.cache', filtros: 'central.filtros' };
+const LS = { config: 'central.config', pat: 'central.pat', cache: 'central.cache', filtros: 'central.filtros', ui: 'central.ui' };
 const $ = (id) => document.getElementById(id);
 
 function loadJSON(key) { try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; } }
@@ -16,11 +16,21 @@ const state = {
   discovery: null,
   auth: null, // null | 'sem-token' | 'vencido' | 'atualizando' | 'conectado'
   filtrosMI: Object.assign({ tipos: null, projetos: null }, loadJSON(LS.filtros) || {}, { busca: '' }),
+  respProj: (loadJSON(LS.filtros) || {}).respProj || '', // filtro de responsável dos cartões
 };
 state.cache.lastSuccessAt = state.cache.lastSuccessAt || state.cache.fetchedAt || 0; // migração: cache antigo sem lastSuccessAt
 
 const ROTULOS_TIPO = { epic: 'Épicos', feature: 'Features', pbi: 'PBIs', bug: 'Bugs', task: 'Tasks', outro: 'Outros' };
+const ROTULO_TIPO_CURTO = { epic: 'Épico', feature: 'Feature', pbi: 'PBI', bug: 'Bug', task: 'Task', outro: 'Item' };
 const ORDEM_TIPO = ['epic', 'feature', 'pbi', 'bug', 'task', 'outro'];
+// Ponto da coluna: código semântico próprio — NUNCA as cores de tipo
+// (laranja/roxo/azul/vermelho/amarelo são de Épico/Feature/PBI/Bug/Task).
+// cinza = fila/andamento · verde = concluído · vermelho = atenção
+function corColunaPorBucket(bucket) {
+  if (bucket === 'atencao') return '#ef4444';
+  if (bucket === 'feito') return '#22c55e';
+  return '#a1a1aa';
+}
 
 // Chips de filtro por tipo — contagem sempre sobre o conjunto completo
 function renderChipsTipo(container, items, filtro, onChange) {
@@ -68,7 +78,7 @@ function renderChipsProjeto(container, items, filtro, onChange) {
 }
 
 function salvarFiltrosMI() {
-  saveJSON(LS.filtros, { tipos: state.filtrosMI.tipos, projetos: state.filtrosMI.projetos });
+  saveJSON(LS.filtros, { tipos: state.filtrosMI.tipos, projetos: state.filtrosMI.projetos, respProj: state.respProj });
 }
 
 function ctx() { return { base: state.config.org, pat: state.pat, fetchImpl: window.fetch.bind(window) }; }
@@ -158,17 +168,33 @@ function wizardConclude() {
 }
 
 /* ---------- Dados vivos ---------- */
-const FIELDS_COUNTS = ['System.WorkItemType', 'System.State'];
+const FIELDS_COUNTS = ['System.WorkItemType', 'System.State', 'System.AssignedTo'];
 const FIELDS_BOARD = ['System.Title', 'System.State', 'System.WorkItemType', 'System.BoardColumn', 'System.AssignedTo', 'System.IterationPath'];
-const FIELDS_ITEMS = ['System.Title', 'System.State', 'System.WorkItemType', 'System.TeamProject'];
+const FIELDS_ITEMS = [
+  'System.Title', 'System.State', 'System.WorkItemType', 'System.TeamProject',
+  'System.Parent', 'System.IterationPath', 'System.AreaPath', 'System.ChangedDate',
+];
 
 async function refreshCard(p) {
   const anterior = state.cache.byCard[cardKey(p)] || {};
-  const entry = { counts: null, sprint: null, progress: null, error: null };
+  const entry = { items: null, counts: null, sprint: null, progress: null, error: null };
   try {
-    const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlCounts());
+    // Recorte pelas áreas do time — senão times do mesmo projeto contam igual
+    let areas = [];
+    try { areas = await A.teamAreas(ctx(), p.projectName, p.teamName); } catch (e) { /* segue projeto inteiro */ }
+    const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlCounts(30, areas));
     const items = ids.length ? await A.getFields(ctx(), ids, FIELDS_COUNTS) : [];
-    entry.counts = C.aggregateCounts(items);
+    // Guarda os itens enxutos (só o que filterItems/aggregateCounts leem) —
+    // o AssignedTo cru do ADO traz avatar, descriptor etc. e incharia o localStorage.
+    entry.items = items.map((it) => {
+      const f = it.fields || {};
+      const resp = f['System.AssignedTo'];
+      return { id: it.id, fields: {
+        'System.WorkItemType': f['System.WorkItemType'],
+        'System.State': f['System.State'],
+        'System.AssignedTo': resp && resp.displayName ? { displayName: resp.displayName } : undefined,
+      } };
+    });
     const sprint = await A.currentSprint(ctx(), p.projectName, p.teamName);
     if (sprint) {
       entry.sprint = sprint;
@@ -177,7 +203,8 @@ async function refreshCard(p) {
       entry.progress = C.sprintProgress(sitems);
     }
   } catch (e) {
-    entry.counts = entry.counts || anterior.counts || null;
+    entry.items = entry.items || anterior.items || null;
+    entry.counts = anterior.counts || null; // legado: cache antigo pré-filtro só tinha counts
     entry.sprint = entry.sprint || anterior.sprint || null;
     entry.progress = entry.progress || anterior.progress || null;
     entry.error = mensagemDeErro(e);
@@ -199,6 +226,11 @@ async function refreshMyItems() {
     }
     const unicos = [...new Set(allIds)];
     state.cache.myItems = unicos.length ? await A.getFields(ctx(), unicos, FIELDS_ITEMS) : [];
+    // Pai de cada item (Feature/Épico) — um lote só, pro contexto no cartão
+    const paiIds = [...new Set(state.cache.myItems.map((it) => (it.fields || {})['System.Parent']).filter(Boolean))];
+    const pais = paiIds.length ? await A.getFields(ctx(), paiIds, ['System.Title', 'System.WorkItemType']) : [];
+    state.cache.myParents = {};
+    for (const p of pais) state.cache.myParents[p.id] = { titulo: (p.fields || {})['System.Title'], tipo: (p.fields || {})['System.WorkItemType'] };
   } catch (e) {
     if (e instanceof A.AuthError) state.auth = 'vencido';
     state.cache.myItemsError = mensagemDeErro(e);
@@ -230,6 +262,13 @@ async function refreshAll(force) {
 /* ---------- Render ---------- */
 function renderAll() { renderBadge(); renderMyItems(); renderGrid(); }
 
+// Contadores das linhas de navegação (eco do "Applicants 23" da referência)
+function renderNavContas() {
+  const mi = state.cache.myItems;
+  $('conta-nav-mi').textContent = mi ? String(mi.length) : '';
+  $('conta-nav-proj').textContent = state.config ? String(state.config.projects.filter((x) => !x.hidden).length) : '';
+}
+
 function renderBadge() {
   const rotulos = { 'sem-token': 'sem token', vencido: 'token vencido', atualizando: 'atualizando…', conectado: 'conectado' };
   const auth = state.auth || (state.pat ? 'conectado' : 'sem-token');
@@ -243,6 +282,25 @@ function renderGrid() {
   const grid = $('grid');
   grid.innerHTML = '';
   for (const p of state.config.projects.filter((x) => !x.hidden)) grid.appendChild(buildCard(p));
+  renderFiltroProj();
+  renderNavContas();
+}
+
+// Seletor de responsável dos cartões — opções vêm dos itens em cache de todos os times
+function renderFiltroProj() {
+  const barra = $('proj-filtros');
+  const sel = $('proj-resp');
+  const todos = Object.values(state.cache.byCard).flatMap((e) => (e && e.items) || []);
+  if (!todos.length && !state.respProj) { barra.hidden = true; return; }
+  barra.hidden = false;
+  const nomes = new Set(todos
+    .map((it) => (it.fields || {})['System.AssignedTo'])
+    .filter((r) => r && r.displayName)
+    .map((r) => r.displayName));
+  if (state.respProj) nomes.add(state.respProj); // seleção sobrevive mesmo sem itens no momento
+  const lista = [...nomes].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  sel.innerHTML = '<option value="">todos os responsáveis</option>' +
+    lista.map((n) => `<option value="${escapeHtml(n)}"${n === state.respProj ? ' selected' : ''}>${escapeHtml(n)}</option>`).join('');
 }
 
 function buildCard(p) {
@@ -252,16 +310,14 @@ function buildCard(p) {
   card.id = 'card-' + cssId(cardKey(p));
   card.innerHTML = `
     <h3>${escapeHtml(p.teamName)}</h3>
-    <p class="proj">${escapeHtml(p.projectName)}</p>
+    <div class="vivo"></div>
     <nav class="atalhos">
-      <a class="interno" href="${rotaBoard(p, false)}">▦ Board aqui</a>
       <a href="${links.board}" target="_blank" rel="noopener">Board</a>
       <a href="${links.backlog}" target="_blank" rel="noopener">Backlog</a>
       <a href="${links.sprints}" target="_blank" rel="noopener">Sprints</a>
       <a href="${links.queries}" target="_blank" rel="noopener">Queries</a>
       <a href="${links.dashboards}" target="_blank" rel="noopener">Dashboards</a>
-    </nav>
-    <div class="vivo"></div>`;
+    </nav>`;
   fillCardLive(card, p);
   return card;
 }
@@ -269,6 +325,7 @@ function buildCard(p) {
 function renderCard(p) {
   const card = document.getElementById('card-' + cssId(cardKey(p)));
   if (card) fillCardLive(card, p);
+  renderFiltroProj(); // itens novos podem trazer responsáveis novos pro seletor
 }
 
 function fillCardLive(card, p) {
@@ -278,34 +335,52 @@ function fillCardLive(card, p) {
     box.innerHTML = state.pat ? '<p class="mudo">carregando…</p>' : '<p class="mudo">— sem token: só atalhos —</p>';
     return;
   }
-  if (entry.error && !entry.counts) { box.innerHTML = `<p class="erro">${escapeHtml(entry.error)}</p>`; return; }
-  const linhas = [];
-  if (entry.error) linhas.push(`<p class="erro">${escapeHtml(entry.error)}</p>`);
-  for (const par of [['epic', 'Epics'], ['feature', 'Features'], ['pbi', 'PBIs']]) {
-    const chips = Object.entries(entry.counts[par[0]])
-      .map(([estado, n]) => `<span class="chip">${n} ${escapeHtml(rotuloEstado(estado))}</span>`)
-      .join(' ');
-    linhas.push(`<div class="nivel"><b>${par[1]}</b> ${chips || '<span class="mudo">nenhum</span>'}</div>`);
-  }
+  // Contagem na hora, já com o recorte de responsável; cache legado (só counts) fica sem recorte.
+  const counts = entry.items
+    ? C.aggregateCounts(C.filterItems(entry.items, { resp: state.respProj }))
+    : entry.counts;
+  if (!counts) { box.innerHTML = `<p class="erro">${escapeHtml(entry.error || 'sem dados')}</p>`; return; }
+  const partes = [];
+  if (entry.error) partes.push(`<p class="erro">${escapeHtml(entry.error)}</p>`);
+  const celulas = [['epic', 'Épicos'], ['feature', 'Features'], ['pbi', 'PBIs']].map(([nivel, rotulo]) => {
+    const b = C.bucketCounts(counts[nivel]);
+    const quebra = [];
+    if (b.todo) quebra.push(`<li>${b.todo} a fazer</li>`);
+    if (b.andamento) quebra.push(`<li>${b.andamento} em andamento</li>`);
+    if (b.feito) quebra.push(`<li>${b.feito} concluído${b.feito > 1 ? 's' : ''} (30d)</li>`);
+    if (b.atencao) quebra.push(`<li class="bloq-linha">${b.atencao} bloqueado${b.atencao > 1 ? 's' : ''}</li>`);
+    if (!b.total) quebra.push('<li>nenhum</li>');
+    return `<div class="nivel${b.total ? '' : ' vazio'}">
+      <span class="nivel-rot">${rotulo}</span>
+      <b class="nivel-total">${b.total}</b>
+      <ul class="nivel-quebra">${quebra.join('')}</ul>
+    </div>`;
+  });
+  partes.push(`<div class="niveis">${celulas.join('')}</div>`);
   if (entry.sprint) {
     const prog = entry.progress || { done: 0, total: 0 };
-    const rota = rotaBoard(p, true);
-    linhas.push(`<div class="sprint"><a class="sprint-link" href="${rota}" title="Ver a sprint no board"><b>${escapeHtml(entry.sprint.name)}</b> ${periodo(entry.sprint.start, entry.sprint.finish)} — ${prog.done}/${prog.total} concluídos <span class="seta">→</span></a></div>`);
+    const pct = prog.total ? Math.round((prog.done / prog.total) * 100) : 0;
+    partes.push(`<a class="sprint-link" href="${rotaBoard(p, true)}" title="Ver a sprint no board">
+      <span class="sprint-linha"><span class="sprint-nome"><b>${escapeHtml(entry.sprint.name)}</b> <span class="mudo">${periodo(entry.sprint.start, entry.sprint.finish)}</span></span><span class="sprint-prog">${prog.done}/${prog.total} <span class="seta">→</span></span></span>
+      <span class="barra"><span class="barra-cheia" style="width:${pct}%"></span></span>
+    </a>`);
   } else {
-    linhas.push('<div class="sprint mudo">sem sprint corrente</div>');
+    // Sem sprint a faixa continua sendo a única porta pro board interno — sem filtro.
+    // O trilho vazio mantém a mesma altura da faixa com barra (cartões vizinhos alinham).
+    partes.push(`<a class="sprint-link" href="${rotaBoard(p, false)}" title="Abrir o board">
+      <span class="sprint-linha"><span class="sprint-nome"><b>Board</b> <span class="mudo">sem sprint corrente</span></span><span class="sprint-prog"><span class="seta">→</span></span></span>
+      <span class="barra"></span>
+    </a>`);
   }
-  box.innerHTML = linhas.join('');
+  box.innerHTML = partes.join('');
 }
 
 function rotaBoard(p, comSprint) {
   return `#board/${encodeURIComponent(p.projectName)}/${encodeURIComponent(p.teamName)}${comSprint ? '/sprint' : ''}`;
 }
 
-function rotuloEstado(estado) {
-  return C.isTerminalState(estado) ? `${estado} (30d)` : estado;
-}
-
 function renderMyItems() {
+  renderNavContas();
   const box = $('meus-itens');
   const barra = $('mi-filtros');
   const items = state.cache.myItems;
@@ -318,23 +393,34 @@ function renderMyItems() {
   renderChipsProjeto($('mi-projetos'), items, state.filtrosMI, () => { salvarFiltrosMI(); renderMyItems(); });
   const filtrados = C.filterItems(items, state.filtrosMI);
   if (!filtrados.length) { box.innerHTML = erroHtml + '<p class="mudo">Nada com esses filtros.</p>'; return; }
-  const grupos = C.sortStateGroups(C.groupMyItems(filtrados));
+  const grupos = C.groupMyItemsBuckets(filtrados);
   // Tag de projeto só quando há mais de um projeto entre os itens — senão é ruído.
   const multiProjeto = new Set(items.map((it) => (it.fields || {})['System.TeamProject'])).size > 1;
-  box.innerHTML = erroHtml + '<div class="quadro">' + grupos.map((g) => {
-    const atencao = C.isAttentionState(g.state) ? ' atencao' : '';
+  const ROTULO_ETAPA = { todo: 'A fazer', andamento: 'Em andamento', atencao: 'Atenção' };
+  box.innerHTML = erroHtml + '<div class="quadro quadro-etapas">' + grupos.map((g) => {
+    const agora = Date.now();
+    const cartoes = g.items.map((it) => {
+      const f = it.fields || {};
+      const slug = C.typeSlug(f['System.WorkItemType']);
+      const link = C.deepLinks(state.config.org, f['System.TeamProject'], '').workItem(it.id);
+      const pai = (state.cache.myParents || {})[f['System.Parent']];
+      const linhaPai = pai ? `<span class="linha"><span class="rot">Pai</span><span class="val" title="${escapeHtml((pai.tipo ? pai.tipo + ' · ' : '') + pai.titulo)}">${escapeHtml(pai.titulo || '')}</span></span>` : '';
+      const linhaTime = f['System.AreaPath'] ? `<span class="linha"><span class="rot">Time</span><span class="val">${escapeHtml(C.areaTeamLabel(f['System.AreaPath']))}</span></span>` : '';
+      const linhaProjeto = multiProjeto ? `<span class="linha"><span class="rot">Projeto</span><span class="val">${escapeHtml(f['System.TeamProject'])}</span></span>` : '';
+      const dias = C.idleDays(f['System.ChangedDate'], agora);
+      const linhaAtividade = dias == null ? '' : `<span class="linha"><span class="rot">Atividade</span><span class="val${dias >= 7 ? ' val-alerta' : ''}">${dias === 0 ? 'hoje' : 'há ' + dias + ' d'}</span></span>`;
+      return `<li><a class="item" href="${link}" target="_blank" rel="noopener" title="${escapeHtml(f['System.WorkItemType'])}">
+        <span class="cabeca"><span class="titulo">${escapeHtml(f['System.Title'])}</span><span class="id">#${it.id}</span></span>
+        <span class="selos"><span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span><span class="badge-tipo">${escapeHtml(C.iterationLabel(f['System.IterationPath']))}</span></span>
+        ${linhaPai}
+        <span class="linha"><span class="rot">Estado</span><span class="val">${escapeHtml(f['System.State'])}</span></span>
+        ${linhaTime}${linhaAtividade}${linhaProjeto}
+      </a></li>`;
+    }).join('');
     return `
-    <section class="coluna${atencao}">
-      <header><h4>${escapeHtml(g.state)}</h4><span class="conta">${g.items.length}</span></header>
-      <ul>${g.items.map((it) => {
-        const f = it.fields || {};
-        const link = C.deepLinks(state.config.org, f['System.TeamProject'], '').workItem(it.id);
-        const tag = multiProjeto ? `<span class="tag-proj">${escapeHtml(f['System.TeamProject'])}</span>` : '';
-        return `<li><a class="item tipo-${C.typeSlug(f['System.WorkItemType'])}" href="${link}" target="_blank" rel="noopener" title="${escapeHtml(f['System.WorkItemType'])}">
-          <span class="id">#${it.id}</span>
-          <span class="titulo">${escapeHtml(f['System.Title'])}</span>${tag}
-        </a></li>`;
-      }).join('')}</ul>
+    <section class="coluna${g.bucket === 'atencao' && g.items.length ? ' atencao' : ''}">
+      <header><h4><span class="ponto" style="background:${corColunaPorBucket(g.bucket)}"></span>${ROTULO_ETAPA[g.bucket]}</h4><span class="conta">${g.items.length}</span></header>
+      ${g.items.length ? `<ul>${cartoes}</ul>` : '<p class="coluna-vazia mudo">nada aqui</p>'}
     </section>`;
   }).join('') + '</div>';
 }
@@ -457,18 +543,27 @@ function renderBoard(p) {
     return;
   }
   st.hidden = true;
+  const tipoOficial = new Map((boardState.columns || []).map((c) => [c.name, String(c.type || '').toLowerCase()]));
   cols.innerHTML = nomes.map((nome) => {
     const lista = porColuna.get(nome) || [];
-    return `<section class="coluna">
-      <header><h4>${escapeHtml(nome)}</h4><span class="conta">${lista.length}</span></header>
+    const atencao = C.isAttentionState(nome) || lista.some((it) => C.isAttentionState((it.fields || {})['System.State']));
+    // Bucket da coluna: tipo oficial do board quando existe; senão, pelos estados dos itens
+    let bucket = 'andamento';
+    if (atencao) bucket = 'atencao';
+    else if (tipoOficial.get(nome) === 'outgoing') bucket = 'feito';
+    else if (lista.length && lista.every((it) => C.isTerminalState((it.fields || {})['System.State']))) bucket = 'feito';
+    return `<section class="coluna${bucket === 'atencao' ? ' atencao' : ''}">
+      <header><h4><span class="ponto" style="background:${corColunaPorBucket(bucket)}"></span>${escapeHtml(nome)}</h4><span class="conta">${lista.length}</span></header>
       <ul>${lista.map((it) => {
         const f = it.fields || {};
+        const slug = C.typeSlug(f['System.WorkItemType']);
         const resp = f['System.AssignedTo'] && f['System.AssignedTo'].displayName ? f['System.AssignedTo'].displayName : '';
         const link = C.deepLinks(state.config.org, p.projectName, '').workItem(it.id);
         const dica = escapeHtml(f['System.WorkItemType']) + (resp ? ' · ' + escapeHtml(resp) : '');
-        return `<li><a class="item tipo-${C.typeSlug(f['System.WorkItemType'])}" href="${link}" target="_blank" rel="noopener" title="${dica}">
-          <span class="id">#${it.id}${resp ? ` <span class="resp">${escapeHtml(C.initials(resp))}</span>` : ''}</span>
-          <span class="titulo">${escapeHtml(f['System.Title'])}</span>
+        return `<li><a class="item" href="${link}" target="_blank" rel="noopener" title="${dica}">
+          <span class="cabeca"><span class="titulo">${escapeHtml(f['System.Title'])}</span>${resp ? `<span class="avatar">${escapeHtml(C.initials(resp))}</span>` : ''}</span>
+          <span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span>
+          <span class="linha"><span class="rot">Item</span><span class="val">#${it.id}</span></span>
         </a></li>`;
       }).join('')}</ul>
     </section>`;
@@ -594,6 +689,17 @@ document.addEventListener('DOMContentLoaded', () => {
   $('board-resp').addEventListener('change', () => {
     boardState.filtro.resp = $('board-resp').value;
     if (boardState.p) renderBoard(boardState.p);
+  });
+  $('proj-resp').addEventListener('change', () => {
+    state.respProj = $('proj-resp').value;
+    salvarFiltrosMI();
+    renderGrid();
+  });
+  // Sidebar colapsável — preferência persiste entre visitas
+  if ((loadJSON(LS.ui) || {}).lateralRecolhida) document.body.classList.add('lateral-recolhida');
+  $('alternar-lateral').addEventListener('click', () => {
+    const recolhida = document.body.classList.toggle('lateral-recolhida');
+    saveJSON(LS.ui, { lateralRecolhida: recolhida });
   });
   $('conf-salvar').addEventListener('click', settingsSave);
   $('conf-redescobrir').addEventListener('click', settingsRediscover);

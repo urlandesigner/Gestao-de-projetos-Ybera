@@ -61,7 +61,19 @@
   // ---- WIQL ----
   const TERMINAL_STATES = ['Done', 'Closed', 'Removed', 'Completed'];
 
-  function wiqlCounts(doneCutoffDays = 30) {
+  // Recorte pelas áreas do time — sem ele, times do mesmo projeto contam igual
+  function areaClause(areas) {
+    if (!areas || !areas.length) return '';
+    const escapa = (s) => String(s).replace(/'/g, "''");
+    return 'AND (' + areas.map((a) =>
+      `[System.AreaPath] ${a.children ? 'UNDER' : '='} '${escapa(a.path)}'`
+    ).join(' OR ') + ')';
+  }
+
+  // A query traz o time inteiro de propósito: o recorte por responsável é
+  // client-side (seletor na página filtra os itens do cache) — assim trocar
+  // de pessoa não custa outra chamada à API.
+  function wiqlCounts(doneCutoffDays = 30, areas = []) {
     const naoRemovidos = TERMINAL_STATES.filter((s) => s !== 'Removed').map((s) => `'${s}'`).join(',');
     return [
       'SELECT [System.Id] FROM WorkItems',
@@ -71,7 +83,8 @@
       "  OR [System.WorkItemType] IN GROUP 'Microsoft.RequirementCategory')",
       "AND [System.State] <> 'Removed'",
       `AND ([System.State] NOT IN (${naoRemovidos}) OR [System.ChangedDate] >= @Today - ${doneCutoffDays})`,
-    ].join('\n');
+      areaClause(areas),
+    ].filter(Boolean).join('\n');
   }
 
   function wiqlMyItems() {
@@ -118,16 +131,6 @@
     return { done, total: uteis.length };
   }
 
-  function groupMyItems(items) {
-    const grupos = new Map();
-    for (const it of items || []) {
-      const state = (it.fields || {})['System.State'] || '—';
-      if (!grupos.has(state)) grupos.set(state, []);
-      grupos.get(state).push(it);
-    }
-    return [...grupos.entries()].map(([state, list]) => ({ state, items: list }));
-  }
-
   // ---- Meus itens: ordenação e classificação visual do quadro ----
   // Ordem de fluxo pra colunas de estado; estados de atenção vão pro fim (em destaque).
   const STATE_FLOW = [
@@ -141,14 +144,26 @@
     return STATE_ATTENTION.includes(String(state || '').toLowerCase());
   }
 
-  function sortStateGroups(groups) {
-    const rank = (g) => {
-      const s = String(g.state || '').toLowerCase();
-      if (isAttentionState(s)) return 1000;
-      const i = STATE_FLOW.indexOf(s);
-      return i === -1 ? 500 : i; // desconhecidos ficam no meio, na ordem de chegada
+  // Meus itens: três colunas fixas por etapa. Estados crus de vários times
+  // multiplicam colunas sem limite (New, Ready, Ready for Dev, Prototype…);
+  // a visão pessoal colapsa nos grupos semânticos e o estado real vira
+  // etiqueta no cartão. Dentro da etapa, ordena pelo fluxo (sort estável
+  // preserva o ChangedDate DESC da query entre itens do mesmo estado).
+  function groupMyItemsBuckets(items) {
+    const rankEstado = (s) => {
+      const i = STATE_FLOW.indexOf(String(s || '').toLowerCase());
+      return i === -1 ? 500 : i; // desconhecidos no meio, na ordem de chegada
     };
-    return [...(groups || [])].sort((a, b) => rank(a) - rank(b));
+    const grupos = { todo: [], andamento: [], atencao: [] };
+    for (const it of items || []) {
+      const bucket = stateBucket(((it || {}).fields || {})['System.State']);
+      if (bucket === 'feito') continue; // terminal não é acionável — fora da visão pessoal
+      grupos[bucket].push(it);
+    }
+    for (const lista of Object.values(grupos)) {
+      lista.sort((a, b) => rankEstado((a.fields || {})['System.State']) - rankEstado((b.fields || {})['System.State']));
+    }
+    return ['todo', 'andamento', 'atencao'].map((bucket) => ({ bucket, items: grupos[bucket] }));
   }
 
   // Slug do tipo pra acento visual (cores oficiais do DevOps ficam no CSS).
@@ -166,12 +181,6 @@
   // WIQL do board de um time: itens de requisito (PBIs/Bugs), recortados
   // pelas áreas do time — é o mesmo recorte que o board do DevOps usa.
   function wiqlBoard(areas, doneCutoffDays = 30) {
-    const escapa = (s) => String(s).replace(/'/g, "''");
-    const areaClause = (areas && areas.length)
-      ? 'AND (' + areas.map((a) =>
-          `[System.AreaPath] ${a.children ? 'UNDER' : '='} '${escapa(a.path)}'`
-        ).join(' OR ') + ')'
-      : '';
     const done = TERMINAL_STATES.filter((s) => s !== 'Removed').map((s) => `'${s}'`).join(',');
     return [
       'SELECT [System.Id] FROM WorkItems',
@@ -179,7 +188,7 @@
       "AND [System.WorkItemType] IN GROUP 'Microsoft.RequirementCategory'",
       "AND [System.State] <> 'Removed'",
       `AND ([System.State] NOT IN (${done}) OR [System.ChangedDate] >= @Today - ${doneCutoffDays})`,
-      areaClause,
+      areaClause(areas),
       'ORDER BY [Microsoft.VSTS.Common.BacklogPriority] ASC',
     ].filter(Boolean).join('\n');
   }
@@ -215,6 +224,31 @@
     return [...(columnNames || [])].sort((a, b) => rankColuna(a) - rankColuna(b));
   }
 
+  // ---- Resumo por grupos semânticos (cartões de projeto) ----
+  // Em vez de um chip por estado (sopa visual), cada nível resume em:
+  // a fazer · em andamento · bloqueados · concluídos (30d)
+  const TODO_STATES = [
+    'new', 'proposed', 'to do', 'todo', 'backlog', 'approved', 'grooming',
+    'refinement', 'ready', 'ready for dev', 'committed',
+  ];
+
+  function stateBucket(state) {
+    const s = String(state || '').toLowerCase();
+    if (isAttentionState(s)) return 'atencao';
+    if (isTerminalState(s)) return 'feito';
+    if (TODO_STATES.includes(s)) return 'todo';
+    return 'andamento'; // In Progress, Prototype, Testing, Research, Validation…
+  }
+
+  function bucketCounts(porEstado) {
+    const out = { todo: 0, andamento: 0, atencao: 0, feito: 0, total: 0 };
+    for (const [estado, n] of Object.entries(porEstado || {})) {
+      out[stateBucket(estado)] += n;
+      out.total += n;
+    }
+    return out;
+  }
+
   // ---- Filtro genérico de itens (Meus itens e Board) ----
   // filtro: { tipos: [slug]|null, projetos: [nome]|null, resp: nome|'', busca: texto }
   // null/vazio = sem recorte naquela dimensão.
@@ -237,6 +271,26 @@
     });
   }
 
+  // ---- Contexto do cartão (Meus itens, visão de PO) ----
+  // Rótulo da iteração: último segmento do path; raiz do projeto = Backlog.
+  function iterationLabel(path) {
+    const partes = String(path || '').split('\\').filter(Boolean);
+    return partes.length > 1 ? partes[partes.length - 1] : 'Backlog';
+  }
+
+  // Time dono pelo area path (último segmento; raiz = nome do projeto).
+  function areaTeamLabel(path) {
+    const partes = String(path || '').split('\\').filter(Boolean);
+    return partes.length ? partes[partes.length - 1] : '';
+  }
+
+  // Dias sem atualização (null se a data for inválida/ausente).
+  function idleDays(changedIso, now) {
+    const t = Date.parse(changedIso || '');
+    if (Number.isNaN(t)) return null;
+    return Math.max(0, Math.floor((now - t) / 86400000));
+  }
+
   // ---- Cache ----
   function isStale(fetchedAt, now, maxAgeMinutes = 10) {
     if (!fetchedAt) return true;
@@ -256,9 +310,11 @@
   return {
     orgBaseUrl, deepLinks, normalizeConfig, exportConfig,
     wiqlCounts, wiqlMyItems, levelOf, isTerminalState,
-    aggregateCounts, sprintProgress, groupMyItems,
-    sortStateGroups, isAttentionState, typeSlug,
+    aggregateCounts, sprintProgress, groupMyItemsBuckets,
+    isAttentionState, typeSlug,
     wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
+    stateBucket, bucketCounts,
+    iterationLabel, areaTeamLabel, idleDays,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };
 });

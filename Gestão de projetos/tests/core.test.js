@@ -48,6 +48,7 @@ test('exportConfig nunca inclui pat', () => {
 
 test('wiqlCounts filtra por categorias e corta concluídos em 30d', () => {
   const q = C.wiqlCounts();
+  assert.ok(!q.includes('@Me')); // recorte por responsável é client-side (seletor na página)
   assert.ok(q.includes("IN GROUP 'Microsoft.EpicCategory'"));
   assert.ok(q.includes("IN GROUP 'Microsoft.FeatureCategory'"));
   assert.ok(q.includes("IN GROUP 'Microsoft.RequirementCategory'"));
@@ -85,15 +86,17 @@ test('sprintProgress conta concluídos e ignora Tasks', () => {
   assert.deepEqual(C.sprintProgress(items), { done: 1, total: 2 });
 });
 
-test('groupMyItems agrupa por estado', () => {
-  const g = C.groupMyItems([
-    { id: 1, fields: { 'System.State': 'Active' } },
-    { id: 2, fields: { 'System.State': 'New' } },
-    { id: 3, fields: { 'System.State': 'Active' } },
+test('groupMyItemsBuckets colapsa em 3 etapas fixas, ordena pelo fluxo e descarta terminais', () => {
+  const mk = (id, estado) => ({ id, fields: { 'System.State': estado } });
+  const grupos = C.groupMyItemsBuckets([
+    mk(1, 'Prototype'), mk(2, 'New'), mk(3, 'Blocked'),
+    mk(4, 'In Progress'), mk(5, 'Ready'), mk(6, 'Done'),
   ]);
-  assert.equal(g.length, 2);
-  assert.equal(g[0].state, 'Active');
-  assert.equal(g[0].items.length, 2);
+  assert.deepEqual(grupos.map((g) => g.bucket), ['todo', 'andamento', 'atencao']); // sempre as 3, nessa ordem
+  assert.deepEqual(grupos[0].items.map((i) => i.id), [2, 5]); // New antes de Ready
+  assert.deepEqual(grupos[1].items.map((i) => i.id), [1, 4]); // Prototype antes de In Progress
+  assert.deepEqual(grupos[2].items.map((i) => i.id), [3]);
+  assert.ok(!grupos.some((g) => g.items.some((i) => i.id === 6))); // Done fora
 });
 
 test('isStale e timeAgoLabel', () => {
@@ -107,21 +110,30 @@ test('isStale e timeAgoLabel', () => {
   assert.equal(C.timeAgoLabel(agora - 3 * 3600000, agora), 'atualizado há 3 h');
 });
 
+test('iterationLabel: sprint pelo último segmento, raiz vira Backlog', () => {
+  assert.equal(C.iterationLabel('B2C\\Sprint 17'), 'Sprint 17');
+  assert.equal(C.iterationLabel('B2C\\2026\\Sprint 17'), 'Sprint 17');
+  assert.equal(C.iterationLabel('B2C'), 'Backlog');
+  assert.equal(C.iterationLabel(''), 'Backlog');
+});
+
+test('areaTeamLabel: time é o último segmento do area path', () => {
+  assert.equal(C.areaTeamLabel('B2C\\Squad Ecommerce'), 'Squad Ecommerce');
+  assert.equal(C.areaTeamLabel('B2C'), 'B2C');
+  assert.equal(C.areaTeamLabel(''), '');
+});
+
+test('idleDays: dias sem atualização, nunca negativo, null se inválido', () => {
+  const agora = Date.parse('2026-08-19T12:00:00Z');
+  assert.equal(C.idleDays('2026-08-07T10:00:00Z', agora), 12);
+  assert.equal(C.idleDays('2026-08-19T11:00:00Z', agora), 0);
+  assert.equal(C.idleDays('2026-08-20T00:00:00Z', agora), 0); // clock skew não fica negativo
+  assert.equal(C.idleDays(null, agora), null);
+});
+
 test('isTerminalState é case-insensitive', () => {
   assert.equal(C.isTerminalState('done'), true);
   assert.equal(C.isTerminalState('Active'), false);
-});
-
-test('sortStateGroups ordena por fluxo, desconhecidos após o fluxo, atenção no fim', () => {
-  const grupos = [
-    { state: 'Impediment', items: [1, 2] },
-    { state: 'In Progress', items: [1] },
-    { state: 'Estado Custom', items: [1] },
-    { state: 'To Do', items: [1] },
-    { state: 'Ready for Dev', items: [1] },
-  ];
-  const ordem = C.sortStateGroups(grupos).map((g) => g.state);
-  assert.deepEqual(ordem, ['To Do', 'Ready for Dev', 'In Progress', 'Estado Custom', 'Impediment']);
 });
 
 test('isAttentionState reconhece bloqueios, case-insensitive', () => {
@@ -188,4 +200,26 @@ test('filterItems recorta por tipo, projeto, responsável e busca', () => {
   assert.deepEqual(C.filterItems(items, { busca: 'quiz' }).map((i) => i.id), [2]);
   assert.deepEqual(C.filterItems(items, { busca: '#3' }).map((i) => i.id), [3]);
   assert.deepEqual(C.filterItems(items, { tipos: ['pbi'], busca: 'checkout' }).length, 0);
+});
+
+test('wiqlCounts com áreas recorta por time', () => {
+  const q = C.wiqlCounts(30, [{ path: 'B2C\\Squad', children: true }]);
+  assert.ok(q.includes("[System.AreaPath] UNDER 'B2C\\Squad'"));
+  assert.ok(!C.wiqlCounts().includes('AreaPath'));
+});
+
+test('stateBucket classifica em quatro grupos', () => {
+  assert.equal(C.stateBucket('New'), 'todo');
+  assert.equal(C.stateBucket('Ready for Dev'), 'todo');
+  assert.equal(C.stateBucket('Grooming'), 'todo');
+  assert.equal(C.stateBucket('In Progress'), 'andamento');
+  assert.equal(C.stateBucket('Prototype'), 'andamento');
+  assert.equal(C.stateBucket('Estado Custom'), 'andamento');
+  assert.equal(C.stateBucket('Impediment'), 'atencao');
+  assert.equal(C.stateBucket('Done'), 'feito');
+});
+
+test('bucketCounts soma por grupo e total', () => {
+  const b = C.bucketCounts({ 'To Do': 115, 'In Progress': 31, Grooming: 23, Testing: 6, Impediment: 3, Done: 64 });
+  assert.deepEqual(b, { todo: 138, andamento: 37, atencao: 3, feito: 64, total: 242 });
 });
