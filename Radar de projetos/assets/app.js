@@ -218,6 +218,43 @@ function trackName(id){
   const t = DATA.tracks.find(t => t.id === id);
   return t ? L(t.name) : "";
 }
+
+/* --- REPORT MENSAL --------------------------------------------------------
+   Um mês do report é a união de três fontes: o registro escrito em
+   DATA.reports, as entregas (status "done" com `shipped`) e as demandas
+   concluídas (status "done" com `done`). A união é o que garante que marcar
+   uma entrega e esquecer de criar o registro do mês não faça a entrega sumir
+   em silêncio. Ordem decrescente: o mês mais recente é o que interessa. */
+function reportMonths(){
+  const regs = DATA.reports || [];
+  const keys = new Set(regs.map(r => r.m));
+  DATA.items.forEach(i => {
+    if(i.status === "done" && i.shipped) keys.add(i.shipped);
+    (i.demands || []).forEach(d => { if(d.status === "done" && d.done) keys.add(d.done); });
+  });
+  return [...keys].sort().reverse().map(m => {
+    const reg = regs.find(r => r.m === m) || {};
+    const deliveries = DATA.items.filter(i => i.status === "done" && i.shipped === m);
+    const demands = DATA.items
+      .map(i => ({proj:i, list:(i.demands || []).filter(d => d.status === "done" && d.done === m)}))
+      .filter(g => g.list.length);
+    const extra = reg.extra || [];
+    const nDem = demands.reduce((s, g) => s + g.list.length, 0);
+    return {m, summary:reg.summary || null, deliveries, demands, extra,
+            n:deliveries.length + nDem + extra.length};
+  });
+}
+
+/* "Agosto de 2026" | "August 2026" — cabeçalho do mês. O fmtMonth existente
+   devolve a forma curta ("ago/26"), que é a dos cartões, não a de título. */
+function fmtMonthLong(ym){
+  const [y, mo] = ym.split("-").map(Number);
+  const name = new Intl.DateTimeFormat(lang === "pt" ? "pt-BR" : "en-US", {month:"long"})
+    .format(new Date(y, mo - 1, 1));
+  const cap = name.charAt(0).toUpperCase() + name.slice(1);
+  return lang === "pt" ? `${cap} de ${y}` : `${cap} ${y}`;
+}
+
 const ICO = {
   cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>',
   clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>',
