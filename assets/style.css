@@ -178,6 +178,9 @@ body[data-pagina='board'] #secao-projetos { display: none; }
   overflow-x: auto;
   padding-bottom: 0.4rem;
 }
+/* Meus itens: três colunas fixas por etapa — sempre cabem, sem scroll lateral */
+.quadro-etapas { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.coluna-vazia { margin: 0.2rem 0.2rem 0.3rem; font-size: 0.82rem; }
 .coluna {
   background: var(--superficie-2);
   border-radius: 16px;
@@ -232,8 +235,21 @@ body[data-pagina='board'] #secao-projetos { display: none; }
   font-weight: 600;
   line-height: 1.35;
 }
-.item .meta { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-top: 0.45rem; }
-.item .id { font-size: 0.74rem; color: var(--mudo); font-variant-numeric: tabular-nums; }
+.item .meta { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.45rem; }
+.item .id { font-size: 0.74rem; color: var(--mudo); font-variant-numeric: tabular-nums; margin-left: auto; }
+/* Estado real do DevOps — etiqueta neutra (as colunas agora são etapas) */
+.item .estado {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--mudo);
+  background: var(--superficie-2);
+  border-radius: 999px;
+  padding: 0.12rem 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 9rem;
+}
 .badge-tipo {
   display: inline-block;
   font-size: 0.72rem;
@@ -464,5 +480,6 @@ details summary { cursor: pointer; color: var(--mudo); font-size: 0.88rem; }
   .nivel { padding: 0.55rem 0.6rem 0.5rem; }
   /* Quadro vira deck de swipe horizontal com snap */
   .quadro { grid-auto-columns: 84vw; scroll-snap-type: x mandatory; }
+  .quadro-etapas { grid-template-columns: repeat(3, 84vw); } /* etapas seguem o deck no celular */
   .coluna { scroll-snap-align: start; }
 }

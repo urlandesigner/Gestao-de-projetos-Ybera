@@ -376,24 +376,25 @@ function renderMyItems() {
   renderChipsProjeto($('mi-projetos'), items, state.filtrosMI, () => { salvarFiltrosMI(); renderMyItems(); });
   const filtrados = C.filterItems(items, state.filtrosMI);
   if (!filtrados.length) { box.innerHTML = erroHtml + '<p class="mudo">Nada com esses filtros.</p>'; return; }
-  const grupos = C.sortStateGroups(C.groupMyItems(filtrados));
+  const grupos = C.groupMyItemsBuckets(filtrados);
   // Tag de projeto só quando há mais de um projeto entre os itens — senão é ruído.
   const multiProjeto = new Set(items.map((it) => (it.fields || {})['System.TeamProject'])).size > 1;
-  box.innerHTML = erroHtml + '<div class="quadro">' + grupos.map((g) => {
-    const atencao = C.isAttentionState(g.state);
+  const ROTULO_ETAPA = { todo: 'A fazer', andamento: 'Em andamento', atencao: 'Atenção' };
+  box.innerHTML = erroHtml + '<div class="quadro quadro-etapas">' + grupos.map((g) => {
+    const cartoes = g.items.map((it) => {
+      const f = it.fields || {};
+      const slug = C.typeSlug(f['System.WorkItemType']);
+      const link = C.deepLinks(state.config.org, f['System.TeamProject'], '').workItem(it.id);
+      const linha = multiProjeto ? `<span class="linha"><span class="rot">Projeto</span><span class="val">${escapeHtml(f['System.TeamProject'])}</span></span>` : '';
+      return `<li><a class="item" href="${link}" target="_blank" rel="noopener" title="${escapeHtml(f['System.WorkItemType'])}">
+        <span class="titulo">${escapeHtml(f['System.Title'])}</span>
+        <span class="meta"><span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span><span class="estado">${escapeHtml(f['System.State'])}</span><span class="id">#${it.id}</span></span>${linha}
+      </a></li>`;
+    }).join('');
     return `
-    <section class="coluna${atencao ? ' atencao' : ''}">
-      <header><h4><span class="ponto" style="background:${corColunaPorBucket(C.stateBucket(g.state))}"></span>${escapeHtml(g.state)}</h4><span class="conta">${g.items.length}</span></header>
-      <ul>${g.items.map((it) => {
-        const f = it.fields || {};
-        const slug = C.typeSlug(f['System.WorkItemType']);
-        const link = C.deepLinks(state.config.org, f['System.TeamProject'], '').workItem(it.id);
-        const linha = multiProjeto ? `<span class="linha"><span class="rot">Projeto</span><span class="val">${escapeHtml(f['System.TeamProject'])}</span></span>` : '';
-        return `<li><a class="item" href="${link}" target="_blank" rel="noopener" title="${escapeHtml(f['System.WorkItemType'])}">
-          <span class="titulo">${escapeHtml(f['System.Title'])}</span>
-          <span class="meta"><span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span><span class="id">#${it.id}</span></span>${linha}
-        </a></li>`;
-      }).join('')}</ul>
+    <section class="coluna${g.bucket === 'atencao' && g.items.length ? ' atencao' : ''}">
+      <header><h4><span class="ponto" style="background:${corColunaPorBucket(g.bucket)}"></span>${ROTULO_ETAPA[g.bucket]}</h4><span class="conta">${g.items.length}</span></header>
+      ${g.items.length ? `<ul>${cartoes}</ul>` : '<p class="coluna-vazia mudo">nada aqui</p>'}
     </section>`;
   }).join('') + '</div>';
 }

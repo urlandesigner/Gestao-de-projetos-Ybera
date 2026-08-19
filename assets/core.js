@@ -131,16 +131,6 @@
     return { done, total: uteis.length };
   }
 
-  function groupMyItems(items) {
-    const grupos = new Map();
-    for (const it of items || []) {
-      const state = (it.fields || {})['System.State'] || '—';
-      if (!grupos.has(state)) grupos.set(state, []);
-      grupos.get(state).push(it);
-    }
-    return [...grupos.entries()].map(([state, list]) => ({ state, items: list }));
-  }
-
   // ---- Meus itens: ordenação e classificação visual do quadro ----
   // Ordem de fluxo pra colunas de estado; estados de atenção vão pro fim (em destaque).
   const STATE_FLOW = [
@@ -154,14 +144,26 @@
     return STATE_ATTENTION.includes(String(state || '').toLowerCase());
   }
 
-  function sortStateGroups(groups) {
-    const rank = (g) => {
-      const s = String(g.state || '').toLowerCase();
-      if (isAttentionState(s)) return 1000;
-      const i = STATE_FLOW.indexOf(s);
-      return i === -1 ? 500 : i; // desconhecidos ficam no meio, na ordem de chegada
+  // Meus itens: três colunas fixas por etapa. Estados crus de vários times
+  // multiplicam colunas sem limite (New, Ready, Ready for Dev, Prototype…);
+  // a visão pessoal colapsa nos grupos semânticos e o estado real vira
+  // etiqueta no cartão. Dentro da etapa, ordena pelo fluxo (sort estável
+  // preserva o ChangedDate DESC da query entre itens do mesmo estado).
+  function groupMyItemsBuckets(items) {
+    const rankEstado = (s) => {
+      const i = STATE_FLOW.indexOf(String(s || '').toLowerCase());
+      return i === -1 ? 500 : i; // desconhecidos no meio, na ordem de chegada
     };
-    return [...(groups || [])].sort((a, b) => rank(a) - rank(b));
+    const grupos = { todo: [], andamento: [], atencao: [] };
+    for (const it of items || []) {
+      const bucket = stateBucket(((it || {}).fields || {})['System.State']);
+      if (bucket === 'feito') continue; // terminal não é acionável — fora da visão pessoal
+      grupos[bucket].push(it);
+    }
+    for (const lista of Object.values(grupos)) {
+      lista.sort((a, b) => rankEstado((a.fields || {})['System.State']) - rankEstado((b.fields || {})['System.State']));
+    }
+    return ['todo', 'andamento', 'atencao'].map((bucket) => ({ bucket, items: grupos[bucket] }));
   }
 
   // Slug do tipo pra acento visual (cores oficiais do DevOps ficam no CSS).
@@ -288,8 +290,8 @@
   return {
     orgBaseUrl, deepLinks, normalizeConfig, exportConfig,
     wiqlCounts, wiqlMyItems, levelOf, isTerminalState,
-    aggregateCounts, sprintProgress, groupMyItems,
-    sortStateGroups, isAttentionState, typeSlug,
+    aggregateCounts, sprintProgress, groupMyItemsBuckets,
+    isAttentionState, typeSlug,
     wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
     isStale, timeAgoLabel, TERMINAL_STATES,
