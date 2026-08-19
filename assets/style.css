@@ -100,21 +100,14 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
   box-shadow: var(--sombra-cartao);
 }
 .conta-nav { margin-left: auto; font-size: 0.8rem; color: var(--mudo); font-variant-numeric: tabular-nums; }
-/* Status da conexão: linhas com bolinha, como "Open / Ongoing Engagement" */
-.conexao {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  border-top: 1px solid var(--borda);
-  padding: 0.9rem 0.9rem 0;
-}
-#badge { display: flex; align-items: center; gap: 0.55rem; font-size: 0.85rem; font-weight: 550; color: var(--tinta); }
+/* Status da conexão: no topo, à esquerda das ações — linha com bolinha */
+#badge { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; font-weight: 550; color: var(--tinta); white-space: nowrap; }
 #badge::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #a8a29e; flex: none; }
 #badge[data-estado='conectado']::before { background: #22c55e; }
 #badge[data-estado='atualizando']::before { background: #eab308; }
 #badge[data-estado='vencido'], #badge[data-estado='sem-token'] { color: var(--erro); }
 #badge[data-estado='vencido']::before, #badge[data-estado='sem-token']::before { background: #ef4444; }
-#carimbo { font-size: 0.78rem; padding-left: 1.15rem; }
+#carimbo { font-size: 0.78rem; margin-right: 0.3rem; white-space: nowrap; }
 
 /* ---------- Páginas como painéis flutuantes ---------- */
 main { min-width: 0; }
@@ -126,15 +119,12 @@ main > section {
   padding: 1.6rem 1.7rem 1.7rem;
 }
 
-/* Sidebar recolhida: só ícones e a bolinha de status */
+/* Sidebar recolhida: só os ícones */
 body.lateral-recolhida .corpo { grid-template-columns: 62px minmax(0, 1fr); }
 body.lateral-recolhida .lateral { padding: 0.8rem 0.45rem 1rem; }
 body.lateral-recolhida .rotulo-nav,
-body.lateral-recolhida .conta-nav,
-body.lateral-recolhida #carimbo { display: none; }
+body.lateral-recolhida .conta-nav { display: none; }
 body.lateral-recolhida .paginas a { justify-content: center; padding: 0.7rem 0; gap: 0; }
-body.lateral-recolhida .conexao { padding-left: 0; padding-right: 0; align-items: center; }
-body.lateral-recolhida #badge { font-size: 0; gap: 0; }
 h2 { font-size: 1.25rem; margin: 0 0 1rem; }
 body[data-pagina='meus-itens'] #secao-projetos { display: none; }
 body[data-pagina='projetos'] #secao-meus-itens { display: none; }
@@ -519,10 +509,8 @@ details summary { cursor: pointer; color: var(--mudo); font-size: 0.88rem; }
   .lateral { position: static; flex-direction: row; align-items: center; gap: 0.6rem; margin-bottom: 0.9rem; padding: 0.5rem 0.6rem; }
   .paginas { flex-direction: row; gap: 0.35rem; }
   .paginas a { padding: 0.5rem 0.85rem; }
-  .conexao { border: none; padding: 0; margin-left: auto; }
-  #carimbo { display: none; }
+  #carimbo { display: none; } /* no topo só cabe a bolinha + estado */
   #alternar-lateral { display: none; }
   body.lateral-recolhida .rotulo-nav, body.lateral-recolhida .conta-nav { display: inline; }
   body.lateral-recolhida .paginas a { justify-content: flex-start; padding: 0.5rem 0.85rem; gap: 0.6rem; }
-  body.lateral-recolhida #badge { font-size: 0.85rem; gap: 0.55rem; }
 }
