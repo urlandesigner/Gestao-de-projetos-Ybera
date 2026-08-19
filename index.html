@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Central de Projetos</title>
-<link rel="stylesheet" href="assets/style.css?v=20260819e">
+<link rel="stylesheet" href="assets/style.css?v=20260819f">
 </head>
 <body data-pagina="meus-itens">
 <header class="topo">
@@ -35,7 +35,10 @@
 
   <section id="secao-projetos">
     <h2>Projetos</h2>
-    <p class="secao-nota mudo">contando só o que está no seu nome · sprint é do time todo</p>
+    <p class="secao-nota mudo">o filtro recorta as contagens — a barra de sprint é sempre do time todo</p>
+    <div class="filtros" id="proj-filtros" hidden>
+      <select id="proj-resp"><option value="">todos os responsáveis</option></select>
+    </div>
     <div id="grid"></div>
   </section>
 
@@ -113,8 +116,8 @@
   </form>
 </dialog>
 
-<script src="assets/core.js?v=20260819e"></script>
-<script src="assets/api.js?v=20260819e"></script>
-<script src="assets/app.js?v=20260819e"></script>
+<script src="assets/core.js?v=20260819f"></script>
+<script src="assets/api.js?v=20260819f"></script>
+<script src="assets/app.js?v=20260819f"></script>
 </body>
 </html>

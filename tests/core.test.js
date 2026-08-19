@@ -48,7 +48,7 @@ test('exportConfig nunca inclui pat', () => {
 
 test('wiqlCounts filtra por categorias e corta concluídos em 30d', () => {
   const q = C.wiqlCounts();
-  assert.ok(q.includes('[System.AssignedTo] = @Me')); // cartões contam só o que é do usuário
+  assert.ok(!q.includes('@Me')); // recorte por responsável é client-side (seletor na página)
   assert.ok(q.includes("IN GROUP 'Microsoft.EpicCategory'"));
   assert.ok(q.includes("IN GROUP 'Microsoft.FeatureCategory'"));
   assert.ok(q.includes("IN GROUP 'Microsoft.RequirementCategory'"));
