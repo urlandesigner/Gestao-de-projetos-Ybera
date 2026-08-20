@@ -115,6 +115,10 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
 #nav-meus-itens {
   --icone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 7 2 2 4-4'/%3E%3Cpath d='m3 17 2 2 4-4'/%3E%3Cpath d='M13 6h8'/%3E%3Cpath d='M13 18h8'/%3E%3C/svg%3E");
 }
+/* Panorama: medidor — a leitura do estado num relance */
+#nav-panorama {
+  --icone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 18a8 8 0 1 1 16 0'/%3E%3Cpath d='m12 18 4.5-5.5'/%3E%3C/svg%3E");
+}
 /* Projetos: kanban (colunas do board) */
 #nav-projetos {
   --icone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='3'/%3E%3Cpath d='M8 7v10'/%3E%3Cpath d='M12 7v6'/%3E%3Cpath d='M16 7v8'/%3E%3C/svg%3E");
@@ -152,10 +156,13 @@ body.lateral-recolhida .rotulo-nav,
 body.lateral-recolhida .conta-nav { display: none; }
 body.lateral-recolhida .paginas a { justify-content: center; padding: 0.7rem 0; gap: 0; }
 h2 { font-size: 1.25rem; margin: 0 0 1rem; }
-body[data-pagina='meus-itens'] #secao-projetos { display: none; }
-body[data-pagina='projetos'] #secao-meus-itens { display: none; }
-body[data-pagina='board'] #secao-meus-itens,
-body[data-pagina='board'] #secao-projetos { display: none; }
+/* Troca de página: esconde todas e mostra só a ativa. Antes era par a par
+   ("meus-itens esconde projetos"…), o que multiplicava regras a cada página
+   nova. O board tem o próprio atributo hidden e não entra aqui. */
+#secao-panorama, #secao-meus-itens, #secao-projetos { display: none; }
+body[data-pagina='panorama'] #secao-panorama,
+body[data-pagina='meus-itens'] #secao-meus-itens,
+body[data-pagina='projetos'] #secao-projetos { display: block; }
 
 /* ---------- Barra de filtros ---------- */
 .filtros {
@@ -430,6 +437,49 @@ body[data-pagina='board'] #secao-projetos { display: none; }
 .atalhos a { font-size: 0.78rem; font-weight: 550; color: var(--mudo); text-decoration: none; }
 .atalhos a::after { content: ' ↗'; font-size: 0.7em; opacity: 0.7; }
 .atalhos a:hover { color: var(--tinta); }
+
+/* ---------- Panorama ---------- */
+.blocos { display: flex; flex-direction: column; gap: 0.85rem; }
+.bloco { background: var(--superficie-2); border-radius: 18px; padding: 1rem 0.95rem; }
+/* seletor com .blocos na frente pra vencer ".card h3" sem depender da ordem */
+.blocos .bloco > h3 {
+  margin: 0 0 0.7rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--mudo);
+}
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.55rem; }
+.tile {
+  background: var(--superficie);
+  border-radius: 12px;
+  padding: 0.7rem 0.8rem 0.75rem;
+  box-shadow: var(--sombra-cartao);
+  min-width: 0;
+}
+.tile-rot {
+  display: block;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mudo);
+}
+.tile-num { display: block; font-size: 1.55rem; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.tile-num.alerta { color: var(--erro); }
+.tile-nota { display: block; margin-top: 0.15rem; font-size: 0.68rem; line-height: 1.35; color: var(--mudo); }
+.sprints { display: flex; flex-direction: column; gap: 0.5rem; }
+.pan-atencao {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0.5rem;
+}
+/* Selo do motivo (bloqueado/atrasado): vermelho de alerta, nunca cor de tipo */
+.badge-tipo.selo-alerta { background: var(--erro-fundo); color: var(--erro); }
 
 /* ---------- Board dedicado ---------- */
 .board-topo {

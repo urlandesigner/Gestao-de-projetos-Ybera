@@ -23,10 +23,19 @@ Quatro blocos, todos derivados dos itens que a Central já busca por time.
 | Indicador | Regra |
 |---|---|
 | Bloqueados | `stateBucket(estado) === 'atencao'` (Impediment, Blocked, On Hold, Waiting) |
-| Fecham este mês | data-alvo dentro do mês corrente **e** não concluído |
+| Fecham este mês | data-alvo no mês corrente, **ainda não vencida**, e não concluído |
 | Atrasados | data-alvo anterior a hoje **e** não concluído |
 | Parados 14d+ | última alteração há 14 dias ou mais **e** não concluído |
 | Meus itens | tamanho de `cache.myItems` |
+
+"Fecham este mês" e "Atrasados" são **disjuntos**: um item vencido conta só como
+atrasado, nunca nos dois — somar o mesmo item duas vezes infla a urgência e faz
+a conta não fechar com a lista de "Atenção agora".
+
+Já "Bloqueados" mede outra dimensão (impedimento, não prazo), então um item pode
+aparecer em Bloqueados **e** em Atrasados: ele está travado E passou da data. Na
+lista de "Atenção agora", porém, ele aparece uma única vez, marcado como
+bloqueado — que é a informação mais forte.
 
 Bloqueados e Atrasados ganham destaque vermelho quando maiores que zero; os
 demais são neutros. Zero é informação legítima e aparece como `0`, não vazio.

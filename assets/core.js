@@ -278,6 +278,75 @@
     return partes.length > 1 ? partes[partes.length - 1] : 'Backlog';
   }
 
+  // ---- Panorama (página de abertura) ----
+  // As datas do DevOps chegam em ISO com hora (campos de data vêm à meia-noite
+  // UTC), então mês e dia são comparados em UTC de propósito: comparar em fuso
+  // local jogaria "2026-09-01T00:00:00Z" para agosto aqui no Brasil.
+  const DIAS_PARADO = 14;
+  const CAMPO_ALVO = 'Microsoft.VSTS.Scheduling.TargetDate';
+
+  function mesUTC(t) {
+    const d = new Date(t);
+    return d.getUTCFullYear() * 12 + d.getUTCMonth(); // índice comparável entre anos
+  }
+
+  function diaUTC(t) {
+    const d = new Date(t);
+    return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+  }
+
+  function dataValida(v) {
+    if (!v) return null;
+    const t = Date.parse(v);
+    return Number.isNaN(t) ? null : t;
+  }
+
+  // Números do Panorama. Item concluído nunca conta como atrasado nem parado.
+  // `fechamMes` e `atrasados` são DISJUNTOS: o que ainda vai fechar no mês
+  // versus o que já passou da data. Contar o mesmo item nos dois infla a
+  // urgência e faz a soma não bater com a lista de "atenção agora".
+  // `semDatas` = nenhum item em aberto tem data-alvo; é o que faz a tela dizer
+  // "não preenchida no DevOps" em vez de afirmar zero atraso.
+  function panoramaKpis(items, agora) {
+    const out = { bloqueados: 0, fechamMes: 0, atrasados: 0, parados: 0, semDatas: true };
+    const hoje = diaUTC(agora);
+    const mesAgora = mesUTC(agora);
+    for (const it of items || []) {
+      const f = (it || {}).fields || {};
+      const estado = f['System.State'];
+      if (stateBucket(estado) === 'atencao') out.bloqueados += 1;
+      if (isTerminalState(estado)) continue;
+      const alvo = dataValida(f[CAMPO_ALVO]);
+      if (alvo !== null) {
+        out.semDatas = false;
+        if (diaUTC(alvo) < hoje) out.atrasados += 1;
+        else if (mesUTC(alvo) === mesAgora) out.fechamMes += 1;
+      }
+      const mudou = dataValida(f['System.ChangedDate']);
+      if (mudou !== null && (hoje - diaUTC(mudou)) / 86400000 >= DIAS_PARADO) out.parados += 1;
+    }
+    return out;
+  }
+
+  // Lista curta de "atenção agora": bloqueados primeiro, depois atrasados com a
+  // data-alvo mais antiga na frente. Devolve o item ORIGINAL junto do motivo —
+  // quem renderiza é que sabe de onde tirar título e link.
+  function itensAtencao(items, agora, limite = 6) {
+    const hoje = diaUTC(agora);
+    const bloqueados = [];
+    const atrasados = [];
+    for (const it of items || []) {
+      const f = (it || {}).fields || {};
+      const estado = f['System.State'];
+      const alvo = dataValida(f[CAMPO_ALVO]);
+      if (stateBucket(estado) === 'atencao') { bloqueados.push({ item: it, motivo: 'bloqueado', alvo }); continue; }
+      if (isTerminalState(estado)) continue;
+      if (alvo !== null && diaUTC(alvo) < hoje) atrasados.push({ item: it, motivo: 'atrasado', alvo });
+    }
+    atrasados.sort((a, b) => a.alvo - b.alvo);
+    return [...bloqueados, ...atrasados].slice(0, limite);
+  }
+
   // ---- Cache ----
   function isStale(fetchedAt, now, maxAgeMinutes = 10) {
     if (!fetchedAt) return true;
@@ -301,7 +370,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel,
+    iterationLabel, panoramaKpis, itensAtencao,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };
 });

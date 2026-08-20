@@ -168,7 +168,12 @@ function wizardConclude() {
 }
 
 /* ---------- Dados vivos ---------- */
-const FIELDS_COUNTS = ['System.WorkItemType', 'System.State', 'System.AssignedTo'];
+// Title/TargetDate/ChangedDate entram por causa do Panorama (prazo, parado e a
+// lista de atenção). Mesmo lote da contagem — nenhuma requisição a mais.
+const FIELDS_COUNTS = [
+  'System.WorkItemType', 'System.State', 'System.AssignedTo',
+  'System.Title', 'Microsoft.VSTS.Scheduling.TargetDate', 'System.ChangedDate',
+];
 const FIELDS_BOARD = ['System.Title', 'System.State', 'System.WorkItemType', 'System.BoardColumn', 'System.AssignedTo', 'System.IterationPath'];
 const FIELDS_ITEMS = [
   'System.Title', 'System.State', 'System.WorkItemType', 'System.TeamProject',
@@ -193,6 +198,9 @@ async function refreshCard(p) {
         'System.WorkItemType': f['System.WorkItemType'],
         'System.State': f['System.State'],
         'System.AssignedTo': resp && resp.displayName ? { displayName: resp.displayName } : undefined,
+        'System.Title': f['System.Title'],
+        'Microsoft.VSTS.Scheduling.TargetDate': f['Microsoft.VSTS.Scheduling.TargetDate'],
+        'System.ChangedDate': f['System.ChangedDate'],
       } };
     });
     const sprint = await A.currentSprint(ctx(), p.projectName, p.teamName);
@@ -260,7 +268,7 @@ async function refreshAll(force) {
 }
 
 /* ---------- Render ---------- */
-function renderAll() { renderBadge(); renderMyItems(); renderGrid(); }
+function renderAll() { renderBadge(); renderPanorama(); renderMyItems(); renderGrid(); }
 
 // Contadores das linhas de navegação (eco do "Applicants 23" da referência)
 function renderNavContas() {
@@ -276,6 +284,82 @@ function renderBadge() {
   badge.textContent = rotulos[auth] || auth;
   badge.dataset.estado = auth;
   $('carimbo').textContent = C.timeAgoLabel(state.cache.lastSuccessAt || 0, Date.now());
+}
+
+/* ---------- Panorama ---------- */
+// Tudo aqui é derivado dos itens que os cartões já buscaram — nenhuma chamada
+// própria à API. Junta os times num só conjunto e conta.
+function renderPanorama() {
+  const box = $('panorama');
+  if (!box || !state.config) return;
+  const visiveis = state.config.projects.filter((x) => !x.hidden);
+  const todos = [];
+  let temCache = false;
+  for (const pr of visiveis) {
+    const e = state.cache.byCard[cardKey(pr)] || {};
+    if (e.items) temCache = true;
+    // anota o projeto pra montar o link do item mais adiante
+    for (const it of e.items || []) todos.push(Object.assign({ projeto: pr.projectName }, it));
+  }
+  const erro = visiveis.map((pr) => (state.cache.byCard[cardKey(pr)] || {}).error).filter(Boolean)[0];
+  const erroHtml = erro ? `<p class="erro">${escapeHtml(erro)}</p>` : '';
+  if (!temCache) {
+    box.innerHTML = erroHtml + (state.pat
+      ? '<p class="mudo">carregando…</p>'
+      : '<p class="mudo">— configure o token pra ver o panorama —</p>');
+    return;
+  }
+
+  const agora = Date.now();
+  const k = C.panoramaKpis(todos, agora);
+  const meus = state.cache.myItems ? state.cache.myItems.length : null;
+  const NOTA_SEM_DATA = 'data-alvo não preenchida no DevOps';
+  const tile = (rot, valor, alerta, nota) => `<div class="tile">
+    <span class="tile-rot">${rot}</span>
+    <b class="tile-num${alerta ? ' alerta' : ''}">${valor}</b>
+    ${nota ? `<span class="tile-nota">${nota}</span>` : ''}
+  </div>`;
+  // Sem data-alvo, prazo e atraso mostram traço: zero afirmaria "não há atraso".
+  const tiles = [
+    tile('Bloqueados', k.bloqueados, k.bloqueados > 0),
+    k.semDatas ? tile('Fecham este mês', '—', false, NOTA_SEM_DATA) : tile('Fecham este mês', k.fechamMes, false),
+    k.semDatas ? tile('Atrasados', '—', false, NOTA_SEM_DATA) : tile('Atrasados', k.atrasados, k.atrasados > 0),
+    tile('Parados 14d+', k.parados, false),
+    tile('Meus itens', meus == null ? '—' : meus, false),
+  ].join('');
+
+  const sprints = visiveis.map((pr) => {
+    const e = state.cache.byCard[cardKey(pr)] || {};
+    if (!e.sprint) return '';
+    const prog = e.progress || { done: 0, total: 0 };
+    const pct = prog.total ? Math.round((prog.done / prog.total) * 100) : 0;
+    return `<a class="sprint-link" href="${rotaBoard(pr, true)}" title="Ver a sprint no board">
+      <span class="sprint-linha"><span class="sprint-nome"><b>${escapeHtml(e.sprint.name)}</b> <span class="mudo">${escapeHtml(pr.teamName)}</span></span><span class="sprint-prog">${prog.done}/${prog.total} <span class="seta">→</span></span></span>
+      <span class="barra"><span class="barra-cheia" style="width:${pct}%"></span></span>
+    </a>`;
+  }).filter(Boolean).join('');
+
+  const atencao = C.itensAtencao(todos, agora, 6);
+  const listaAtencao = atencao.length
+    ? `<ul class="pan-atencao">${atencao.map(({ item, motivo }) => {
+        const f = item.fields || {};
+        const slug = C.typeSlug(f['System.WorkItemType']);
+        const link = C.deepLinks(state.config.org, item.projeto, '').workItem(item.id);
+        const titulo = f['System.Title'] || ('item #' + item.id); // cache antigo não guardava título
+        return `<li><a class="item" href="${link}" target="_blank" rel="noopener">
+          <span class="cabeca"><span class="titulo">${escapeHtml(titulo)}</span><span class="id">#${item.id}</span></span>
+          <span class="selos"><span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span><span class="badge-tipo selo-alerta">${motivo}</span></span>
+          <span class="linha"><span class="rot">Estado</span><span class="val">${escapeHtml(f['System.State'])}</span></span>
+        </a></li>`;
+      }).join('')}</ul>`
+    : '<p class="mudo">Nada bloqueado nem atrasado.</p>';
+
+  box.innerHTML = erroHtml + `<div class="blocos">
+    <section class="bloco"><h3>Agora</h3><div class="tiles">${tiles}</div></section>
+    ${sprints ? `<section class="bloco"><h3>Sprints em curso</h3><div class="sprints">${sprints}</div></section>` : ''}
+    <section class="bloco"><h3>Por nível</h3>${htmlNiveis(C.aggregateCounts(todos))}</section>
+    <section class="bloco"><h3>Atenção agora</h3>${listaAtencao}</section>
+  </div>`;
 }
 
 function renderGrid() {
@@ -326,6 +410,27 @@ function renderCard(p) {
   const card = document.getElementById('card-' + cssId(cardKey(p)));
   if (card) fillCardLive(card, p);
   renderFiltroProj(); // itens novos podem trazer responsáveis novos pro seletor
+  renderPanorama(); // os números do panorama saem destes mesmos itens
+}
+
+// Células por nível (Épicos/Features/PBIs) — usadas no cartão de projeto e no
+// Panorama. Mesma anatomia nos dois lugares de propósito: é a mesma leitura.
+function htmlNiveis(counts) {
+  const celulas = [['epic', 'Épicos'], ['feature', 'Features'], ['pbi', 'PBIs']].map(([nivel, rotulo]) => {
+    const b = C.bucketCounts(counts[nivel]);
+    const quebra = [];
+    if (b.todo) quebra.push(`<li>${b.todo} a fazer</li>`);
+    if (b.andamento) quebra.push(`<li>${b.andamento} em andamento</li>`);
+    if (b.feito) quebra.push(`<li>${b.feito} concluído${b.feito > 1 ? 's' : ''} (30d)</li>`);
+    if (b.atencao) quebra.push(`<li class="bloq-linha">${b.atencao} bloqueado${b.atencao > 1 ? 's' : ''}</li>`);
+    if (!b.total) quebra.push('<li>nenhum</li>');
+    return `<div class="nivel${b.total ? '' : ' vazio'}">
+      <span class="nivel-rot">${rotulo}</span>
+      <b class="nivel-total">${b.total}</b>
+      <ul class="nivel-quebra">${quebra.join('')}</ul>
+    </div>`;
+  });
+  return `<div class="niveis">${celulas.join('')}</div>`;
 }
 
 function fillCardLive(card, p) {
@@ -342,21 +447,7 @@ function fillCardLive(card, p) {
   if (!counts) { box.innerHTML = `<p class="erro">${escapeHtml(entry.error || 'sem dados')}</p>`; return; }
   const partes = [];
   if (entry.error) partes.push(`<p class="erro">${escapeHtml(entry.error)}</p>`);
-  const celulas = [['epic', 'Épicos'], ['feature', 'Features'], ['pbi', 'PBIs']].map(([nivel, rotulo]) => {
-    const b = C.bucketCounts(counts[nivel]);
-    const quebra = [];
-    if (b.todo) quebra.push(`<li>${b.todo} a fazer</li>`);
-    if (b.andamento) quebra.push(`<li>${b.andamento} em andamento</li>`);
-    if (b.feito) quebra.push(`<li>${b.feito} concluído${b.feito > 1 ? 's' : ''} (30d)</li>`);
-    if (b.atencao) quebra.push(`<li class="bloq-linha">${b.atencao} bloqueado${b.atencao > 1 ? 's' : ''}</li>`);
-    if (!b.total) quebra.push('<li>nenhum</li>');
-    return `<div class="nivel${b.total ? '' : ' vazio'}">
-      <span class="nivel-rot">${rotulo}</span>
-      <b class="nivel-total">${b.total}</b>
-      <ul class="nivel-quebra">${quebra.join('')}</ul>
-    </div>`;
-  });
-  partes.push(`<div class="niveis">${celulas.join('')}</div>`);
+  partes.push(htmlNiveis(counts));
   if (entry.sprint) {
     const prog = entry.progress || { done: 0, total: 0 };
     const pct = prog.total ? Math.round((prog.done / prog.total) * 100) : 0;
@@ -381,6 +472,7 @@ function rotaBoard(p, comSprint) {
 
 function renderMyItems() {
   renderNavContas();
+  renderPanorama(); // o indicador "Meus itens" vive lá
   const box = $('meus-itens');
   const barra = $('mi-filtros');
   const items = state.cache.myItems;
@@ -443,11 +535,14 @@ function renderRoute() {
     if (p) { abrirBoard(p, !!m[3]); setPagina('board'); return; }
   }
   fecharBoard();
-  setPagina(hash === '#projetos' ? 'projetos' : 'meus-itens');
+  if (hash === '#projetos') { setPagina('projetos'); return; }
+  if (hash === '#meus-itens') { setPagina('meus-itens'); return; }
+  setPagina('panorama'); // abertura: visão geral antes do detalhe
 }
 
 function setPagina(pagina) {
   document.body.dataset.pagina = pagina;
+  $('nav-panorama').classList.toggle('ativa', pagina === 'panorama');
   $('nav-meus-itens').classList.toggle('ativa', pagina === 'meus-itens');
   $('nav-projetos').classList.toggle('ativa', pagina === 'projetos' || pagina === 'board');
 }

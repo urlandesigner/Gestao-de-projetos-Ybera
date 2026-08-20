@@ -209,3 +209,73 @@ test('bucketCounts soma por grupo e total', () => {
   const b = C.bucketCounts({ 'To Do': 115, 'In Progress': 31, Grooming: 23, Testing: 6, Impediment: 3, Done: 64 });
   assert.deepEqual(b, { todo: 138, andamento: 37, atencao: 3, feito: 64, total: 242 });
 });
+
+/* ---- Panorama ---- */
+const AGORA = Date.parse('2026-08-20T12:00:00Z');
+// item de teste: estado, data-alvo, data da última alteração
+const pit = (id, estado, alvo, mudou) => ({ id, fields: {
+  'System.WorkItemType': 'Product Backlog Item',
+  'System.State': estado,
+  'Microsoft.VSTS.Scheduling.TargetDate': alvo || undefined,
+  'System.ChangedDate': mudou || '2026-08-19T10:00:00Z',
+} });
+
+test('panoramaKpis conta bloqueado, atrasado, do mês e parado', () => {
+  const k = C.panoramaKpis([
+    pit(1, 'Blocked'),
+    pit(2, 'New', '2026-08-05T00:00:00Z'),   // alvo já passou → atrasado
+    pit(3, 'New', '2026-08-31T00:00:00Z'),   // alvo neste mês, à frente → fecha no mês
+    pit(4, 'New', '2026-09-15T00:00:00Z'),   // mês que vem → nenhum dos dois
+    pit(5, 'New', null, '2026-08-01T10:00:00Z'), // 19 dias sem tocar → parado
+  ], AGORA);
+  assert.equal(k.bloqueados, 1);
+  assert.equal(k.atrasados, 1);
+  assert.equal(k.fechamMes, 1);
+  assert.equal(k.parados, 1);
+  assert.equal(k.semDatas, false);
+});
+
+test('panoramaKpis: concluído nunca é atrasado nem parado', () => {
+  const k = C.panoramaKpis([
+    pit(1, 'Done', '2026-07-01T00:00:00Z', '2026-06-01T10:00:00Z'),
+    pit(2, 'Closed', '2026-07-01T00:00:00Z', '2026-06-01T10:00:00Z'),
+  ], AGORA);
+  assert.deepEqual(
+    { a: k.atrasados, p: k.parados, b: k.bloqueados },
+    { a: 0, p: 0, b: 0 }
+  );
+});
+
+test('panoramaKpis: fechamMes e atrasados são disjuntos', () => {
+  // alvo no mês corrente mas já vencido: conta só como atrasado
+  const k = C.panoramaKpis([pit(1, 'New', '2026-08-05T00:00:00Z')], AGORA);
+  assert.equal(k.atrasados, 1);
+  assert.equal(k.fechamMes, 0);
+});
+
+test('panoramaKpis: limite exato de parado são 14 dias', () => {
+  const treze = C.panoramaKpis([pit(1, 'New', null, '2026-08-07T12:00:00Z')], AGORA);
+  const quatorze = C.panoramaKpis([pit(1, 'New', null, '2026-08-06T12:00:00Z')], AGORA);
+  assert.equal(treze.parados, 0);
+  assert.equal(quatorze.parados, 1);
+});
+
+test('panoramaKpis: semDatas quando nenhum item em aberto tem data-alvo', () => {
+  assert.equal(C.panoramaKpis([pit(1, 'New'), pit(2, 'In Progress')], AGORA).semDatas, true);
+  assert.equal(C.panoramaKpis([], AGORA).semDatas, true);
+  // data inválida não vale como data
+  assert.equal(C.panoramaKpis([pit(1, 'New', 'nao-e-data')], AGORA).semDatas, true);
+});
+
+test('itensAtencao: bloqueados na frente, atrasados por data mais antiga, com limite', () => {
+  const lista = C.itensAtencao([
+    pit(1, 'New', '2026-08-10T00:00:00Z'),
+    pit(2, 'Impediment'),
+    pit(3, 'New', '2026-08-02T00:00:00Z'),
+    pit(4, 'Done', '2026-01-01T00:00:00Z'), // concluído fica fora
+    pit(5, 'New', '2026-12-01T00:00:00Z'),  // ainda no prazo, fica fora
+  ], AGORA);
+  assert.deepEqual(lista.map((x) => x.item.id), [2, 3, 1]);
+  assert.deepEqual(lista.map((x) => x.motivo), ['bloqueado', 'atrasado', 'atrasado']);
+  assert.equal(C.itensAtencao([pit(1, 'Blocked'), pit(2, 'Blocked'), pit(3, 'Blocked')], AGORA, 2).length, 2);
+});
