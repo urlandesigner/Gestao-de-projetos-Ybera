@@ -279,3 +279,38 @@ test('itensAtencao: bloqueados na frente, atrasados por data mais antiga, com li
   assert.deepEqual(lista.map((x) => x.motivo), ['bloqueado', 'atrasado', 'atrasado']);
   assert.equal(C.itensAtencao([pit(1, 'Blocked'), pit(2, 'Blocked'), pit(3, 'Blocked')], AGORA, 2).length, 2);
 });
+
+test('pendencias agrupa em três, exclusivo por precedência, com marcas secundárias', () => {
+  const g = C.pendencias([
+    pit(1, 'Blocked', '2026-08-01T00:00:00Z', '2026-07-01T10:00:00Z'), // travado + vencido + parado
+    pit(2, 'New', '2026-08-10T00:00:00Z'),                             // só atrasado
+    pit(3, 'New', null, '2026-07-20T10:00:00Z'),                       // só parado
+    pit(4, 'New', '2026-12-01T00:00:00Z'),                             // nada: em dia
+    pit(5, 'Done', '2026-01-01T00:00:00Z', '2026-01-01T10:00:00Z'),    // concluído fica fora
+  ], AGORA);
+  assert.deepEqual(g.bloqueados.map((x) => x.item.id), [1]);
+  assert.deepEqual(g.atrasados.map((x) => x.item.id), [2]);
+  assert.deepEqual(g.parados.map((x) => x.item.id), [3]);
+  // o item 1 aparece uma vez só, mas não perde as outras condições
+  assert.deepEqual(g.bloqueados[0].tambem, ['atrasado', 'parado']);
+  assert.deepEqual(g.atrasados[0].tambem, []);
+});
+
+test('pendencias ordena cada grupo pela própria gravidade', () => {
+  const g = C.pendencias([
+    pit(1, 'Blocked', null, '2026-08-18T10:00:00Z'), // travado há 2 dias
+    pit(2, 'Blocked', null, '2026-07-01T10:00:00Z'), // travado há 50 dias
+    pit(3, 'New', '2026-08-19T00:00:00Z'),           // venceu ontem
+    pit(4, 'New', '2026-06-01T00:00:00Z'),           // venceu em junho
+    pit(5, 'New', null, '2026-08-01T10:00:00Z'),     // parado há 19 dias
+    pit(6, 'New', null, '2026-07-01T10:00:00Z'),     // parado há 50 dias
+  ], AGORA);
+  assert.deepEqual(g.bloqueados.map((x) => x.item.id), [2, 1]); // travado há mais tempo na frente
+  assert.deepEqual(g.atrasados.map((x) => x.item.id), [4, 3]);  // mais vencido na frente
+  assert.deepEqual(g.parados.map((x) => x.item.id), [6, 5]);    // mais tempo sem toque na frente
+});
+
+test('pendencias: sem nada pendente devolve os três grupos vazios', () => {
+  const g = C.pendencias([pit(1, 'New', '2026-12-01T00:00:00Z')], AGORA);
+  assert.deepEqual([g.bloqueados.length, g.atrasados.length, g.parados.length], [0, 0, 0]);
+});

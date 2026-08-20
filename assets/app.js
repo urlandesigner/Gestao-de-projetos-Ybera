@@ -268,7 +268,7 @@ async function refreshAll(force) {
 }
 
 /* ---------- Render ---------- */
-function renderAll() { renderBadge(); renderPanorama(); renderMyItems(); renderGrid(); }
+function renderAll() { renderBadge(); renderPanorama(); renderPendencias(); renderMyItems(); renderGrid(); }
 
 // Contadores das linhas de navegação (eco do "Applicants 23" da referência)
 function renderNavContas() {
@@ -286,29 +286,43 @@ function renderBadge() {
   $('carimbo').textContent = C.timeAgoLabel(state.cache.lastSuccessAt || 0, Date.now());
 }
 
+/* ---------- Visões que olham todos os times ---------- */
+// O cache guarda os itens por cartão; Panorama e Pendências precisam do
+// conjunto. Anota projeto e time em cada item — o cache não guarda de quem é.
+function itensDeTodosOsTimes() {
+  const visiveis = state.config.projects.filter((x) => !x.hidden);
+  const todos = [];
+  const erros = [];
+  let temCache = false;
+  for (const pr of visiveis) {
+    const e = state.cache.byCard[cardKey(pr)] || {};
+    if (e.items) temCache = true;
+    if (e.error) erros.push(e.error);
+    for (const it of e.items || []) todos.push(Object.assign({ projeto: pr.projectName, time: pr.teamName }, it));
+  }
+  return {
+    visiveis, todos, temCache,
+    erroHtml: erros.length ? `<p class="erro">${escapeHtml(erros[0])}</p>` : '',
+  };
+}
+
+function semDados(oQue) {
+  return state.pat ? '<p class="mudo">carregando…</p>' : `<p class="mudo">— configure o token pra ver ${oQue} —</p>`;
+}
+
+function dataCurta(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', timeZone: 'UTC' });
+}
+
 /* ---------- Panorama ---------- */
 // Tudo aqui é derivado dos itens que os cartões já buscaram — nenhuma chamada
 // própria à API. Junta os times num só conjunto e conta.
 function renderPanorama() {
   const box = $('panorama');
   if (!box || !state.config) return;
-  const visiveis = state.config.projects.filter((x) => !x.hidden);
-  const todos = [];
-  let temCache = false;
-  for (const pr of visiveis) {
-    const e = state.cache.byCard[cardKey(pr)] || {};
-    if (e.items) temCache = true;
-    // anota o projeto pra montar o link do item mais adiante
-    for (const it of e.items || []) todos.push(Object.assign({ projeto: pr.projectName }, it));
-  }
-  const erro = visiveis.map((pr) => (state.cache.byCard[cardKey(pr)] || {}).error).filter(Boolean)[0];
-  const erroHtml = erro ? `<p class="erro">${escapeHtml(erro)}</p>` : '';
-  if (!temCache) {
-    box.innerHTML = erroHtml + (state.pat
-      ? '<p class="mudo">carregando…</p>'
-      : '<p class="mudo">— configure o token pra ver o panorama —</p>');
-    return;
-  }
+  const { visiveis, todos, temCache, erroHtml } = itensDeTodosOsTimes();
+  if (!temCache) { box.innerHTML = erroHtml + semDados('o panorama'); return; }
 
   const agora = Date.now();
   const k = C.panoramaKpis(todos, agora);
@@ -339,7 +353,11 @@ function renderPanorama() {
     </a>`;
   }).filter(Boolean).join('');
 
-  const atencao = C.itensAtencao(todos, agora, 6);
+  const todaAtencao = C.itensAtencao(todos, agora, 9999);
+  const atencao = todaAtencao.slice(0, 6);
+  const verTodas = todaAtencao.length > atencao.length
+    ? `<a class="ver-todas" href="#pendencias">ver todas (${todaAtencao.length}) →</a>`
+    : '';
   const listaAtencao = atencao.length
     ? `<ul class="pan-atencao">${atencao.map(({ item, motivo }) => {
         const f = item.fields || {};
@@ -358,8 +376,63 @@ function renderPanorama() {
     <section class="bloco"><h3>Agora</h3><div class="tiles">${tiles}</div></section>
     ${sprints ? `<section class="bloco"><h3>Sprints em curso</h3><div class="sprints">${sprints}</div></section>` : ''}
     <section class="bloco"><h3>Por nível</h3>${htmlNiveis(C.aggregateCounts(todos))}</section>
-    <section class="bloco"><h3>Atenção agora</h3>${listaAtencao}</section>
+    <section class="bloco"><h3>Atenção agora${verTodas}</h3>${listaAtencao}</section>
   </div>`;
+}
+
+/* ---------- Pendências ---------- */
+// Três colunas por motivo, exclusivas (ver C.pendencias). O Panorama dá o
+// número e um vislumbre; aqui é a lista de trabalho inteira, com quem destrava.
+const ROTULO_PEND = { bloqueados: 'Bloqueados', atrasados: 'Atrasados', parados: 'Parados' };
+// Rampa de gravidade — vermelho, âmbar, cinza. É a única cor âmbar do projeto e
+// existe pra separar "travado" de "esquecido" sem usar duas vezes o vermelho.
+const COR_PEND = { bloqueados: '#ef4444', atrasados: '#f59e0b', parados: '#a1a1aa' };
+
+function renderPendencias() {
+  const box = $('pendencias');
+  if (!box || !state.config) return;
+  const { todos, temCache, erroHtml } = itensDeTodosOsTimes();
+  if (!temCache) { box.innerHTML = erroHtml + semDados('as pendências'); return; }
+  const grupos = C.pendencias(todos, Date.now());
+  const total = grupos.bloqueados.length + grupos.atrasados.length + grupos.parados.length;
+  if (!total) {
+    box.innerHTML = erroHtml + '<p class="mudo">Nada bloqueado, atrasado ou parado. Nenhuma pendência agora.</p>';
+    return;
+  }
+  const colunas = ['bloqueados', 'atrasados', 'parados'].map((chave) => {
+    const lista = grupos[chave];
+    const cartoes = lista.map((reg) => htmlPendencia(reg)).join('');
+    return `<section class="coluna${chave === 'bloqueados' && lista.length ? ' atencao' : ''}">
+      <header><h4><span class="ponto" style="background:${COR_PEND[chave]}"></span>${ROTULO_PEND[chave]}</h4><span class="conta">${lista.length}</span></header>
+      ${lista.length ? `<ul>${cartoes}</ul>` : '<p class="coluna-vazia mudo">nada aqui</p>'}
+    </section>`;
+  }).join('');
+  box.innerHTML = erroHtml + `<div class="quadro quadro-etapas">${colunas}</div>`;
+}
+
+function htmlPendencia(reg) {
+  const it = reg.item;
+  const f = it.fields || {};
+  const slug = C.typeSlug(f['System.WorkItemType']);
+  const link = C.deepLinks(state.config.org, it.projeto, '').workItem(it.id);
+  const titulo = f['System.Title'] || ('item #' + it.id); // cache antigo não guardava título
+  const resp = f['System.AssignedTo'] && f['System.AssignedTo'].displayName;
+  // A linha do motivo só entra quando diz algo que o estado não diz.
+  const linhaMotivo = reg.motivo === 'atrasado' || reg.tambem.includes('atrasado')
+    ? `<span class="linha"><span class="rot">Prazo</span><span class="val val-alerta">venceu ${dataCurta(reg.alvo)}</span></span>`
+    : '';
+  const linhaParado = reg.motivo === 'parado' || reg.tambem.includes('parado')
+    ? `<span class="linha"><span class="rot">Sem toque</span><span class="val">há ${reg.dias} d</span></span>`
+    : '';
+  // Uma marca só, com os motivos juntos: duas etiquetas quebravam linha na coluna
+  const secundarias = reg.tambem.length ? `<span class="badge-tipo">também ${reg.tambem.join(' · ')}</span>` : '';
+  return `<li><a class="item" href="${link}" target="_blank" rel="noopener" title="${escapeHtml(f['System.WorkItemType'])}">
+    <span class="cabeca"><span class="titulo">${escapeHtml(titulo)}</span><span class="id">#${it.id}</span></span>
+    <span class="selos"><span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span>${secundarias}</span>
+    <span class="linha"><span class="rot">Estado</span><span class="val">${escapeHtml(f['System.State'])}</span></span>
+    <span class="linha"><span class="rot">Responsável</span><span class="val">${resp ? escapeHtml(resp) : 'sem responsável'}</span></span>
+    ${linhaMotivo}${linhaParado}
+  </a></li>`;
 }
 
 function renderGrid() {
@@ -411,6 +484,7 @@ function renderCard(p) {
   if (card) fillCardLive(card, p);
   renderFiltroProj(); // itens novos podem trazer responsáveis novos pro seletor
   renderPanorama(); // os números do panorama saem destes mesmos itens
+  renderPendencias();
 }
 
 // Células por nível (Épicos/Features/PBIs) — usadas no cartão de projeto e no
@@ -535,6 +609,7 @@ function renderRoute() {
     if (p) { abrirBoard(p, !!m[3]); setPagina('board'); return; }
   }
   fecharBoard();
+  if (hash === '#pendencias') { setPagina('pendencias'); return; }
   if (hash === '#projetos') { setPagina('projetos'); return; }
   if (hash === '#meus-itens') { setPagina('meus-itens'); return; }
   setPagina('panorama'); // abertura: visão geral antes do detalhe
@@ -543,6 +618,7 @@ function renderRoute() {
 function setPagina(pagina) {
   document.body.dataset.pagina = pagina;
   $('nav-panorama').classList.toggle('ativa', pagina === 'panorama');
+  $('nav-pendencias').classList.toggle('ativa', pagina === 'pendencias');
   $('nav-meus-itens').classList.toggle('ativa', pagina === 'meus-itens');
   $('nav-projetos').classList.toggle('ativa', pagina === 'projetos' || pagina === 'board');
 }

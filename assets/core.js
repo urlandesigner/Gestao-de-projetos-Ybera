@@ -347,6 +347,51 @@
     return [...bloqueados, ...atrasados].slice(0, limite);
   }
 
+  // Pendências: tudo que exige ação, em três grupos EXCLUSIVOS.
+  // Precedência: bloqueado > atrasado > parado. Um item travado E vencido cai
+  // só em bloqueados (impedimento é o fato mais forte), mas carrega marcas
+  // secundárias em `tambem` pra informação não se perder. Sem exclusividade,
+  // a soma dos grupos não fecharia com o total e o mesmo item apareceria três
+  // vezes na mesma tela.
+  function pendencias(items, agora, diasParado = DIAS_PARADO) {
+    const hoje = diaUTC(agora);
+    const grupos = { bloqueados: [], atrasados: [], parados: [] };
+    for (const it of items || []) {
+      const f = (it || {}).fields || {};
+      const estado = f['System.State'];
+      if (isTerminalState(estado)) continue; // concluído não é pendência
+      const alvo = dataValida(f[CAMPO_ALVO]);
+      const mudou = dataValida(f['System.ChangedDate']);
+      const atrasado = alvo !== null && diaUTC(alvo) < hoje;
+      const dias = mudou === null ? null : Math.floor((hoje - diaUTC(mudou)) / 86400000);
+      const parado = dias !== null && dias >= diasParado;
+      const bloqueado = stateBucket(estado) === 'atencao';
+      if (!bloqueado && !atrasado && !parado) continue;
+      const tambem = [];
+      const registro = { item: it, alvo, dias, motivo: null, tambem };
+      if (bloqueado) {
+        registro.motivo = 'bloqueado';
+        if (atrasado) tambem.push('atrasado');
+        if (parado) tambem.push('parado');
+        grupos.bloqueados.push(registro);
+      } else if (atrasado) {
+        registro.motivo = 'atrasado';
+        if (parado) tambem.push('parado');
+        grupos.atrasados.push(registro);
+      } else {
+        registro.motivo = 'parado';
+        grupos.parados.push(registro);
+      }
+    }
+    // Cada grupo ordena pelo que o torna grave: travado há mais tempo, mais
+    // vencido, mais tempo sem ninguém tocar.
+    const maisParado = (a, b) => (b.dias || 0) - (a.dias || 0);
+    grupos.bloqueados.sort(maisParado);
+    grupos.atrasados.sort((a, b) => a.alvo - b.alvo);
+    grupos.parados.sort(maisParado);
+    return grupos;
+  }
+
   // ---- Cache ----
   function isStale(fetchedAt, now, maxAgeMinutes = 10) {
     if (!fetchedAt) return true;
@@ -370,7 +415,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, panoramaKpis, itensAtencao,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };
 });
