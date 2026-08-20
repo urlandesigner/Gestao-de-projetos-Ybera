@@ -127,6 +127,10 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
 #nav-produtos {
   --icone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 8v8a2 2 0 0 1-1 1.7l-7 4a2 2 0 0 1-2 0l-7-4A2 2 0 0 1 3 16V8a2 2 0 0 1 1-1.7l7-4a2 2 0 0 1 2 0l7 4A2 2 0 0 1 21 8Z'/%3E%3Cpath d='m3.3 7 8.7 5 8.7-5'/%3E%3Cpath d='M12 22V12'/%3E%3C/svg%3E");
 }
+/* Futuro: calendário — quando cada projeto começa */
+#nav-futuro {
+  --icone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='3'/%3E%3Cpath d='M8 3v4'/%3E%3Cpath d='M16 3v4'/%3E%3Cpath d='M3 11h18'/%3E%3C/svg%3E");
+}
 /* Report: documento com linhas (o que foi entregue, mês a mês) */
 #nav-report {
   --icone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3v4a1 1 0 0 0 1 1h4'/%3E%3Cpath d='M19 8v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7Z'/%3E%3Cpath d='M9 13h6'/%3E%3Cpath d='M9 17h4'/%3E%3C/svg%3E");
@@ -171,10 +175,11 @@ h2 { font-size: 1.25rem; margin: 0 0 1rem; }
 /* Troca de página: esconde todas e mostra só a ativa. Antes era par a par
    ("meus-itens esconde projetos"…), o que multiplicava regras a cada página
    nova. O board tem o próprio atributo hidden e não entra aqui. */
-#secao-panorama, #secao-pendencias, #secao-produtos, #secao-report, #secao-meus-itens, #secao-projetos { display: none; }
+#secao-panorama, #secao-pendencias, #secao-produtos, #secao-futuro, #secao-report, #secao-meus-itens, #secao-projetos { display: none; }
 body[data-pagina='panorama'] #secao-panorama,
 body[data-pagina='pendencias'] #secao-pendencias,
 body[data-pagina='produtos'] #secao-produtos,
+body[data-pagina='futuro'] #secao-futuro,
 body[data-pagina='report'] #secao-report,
 body[data-pagina='meus-itens'] #secao-meus-itens,
 body[data-pagina='projetos'] #secao-projetos { display: block; }
@@ -539,6 +544,20 @@ body[data-pagina='projetos'] #secao-projetos { display: block; }
 /* contador ao lado do nome do time, no cabeçalho do bloco */
 .blocos .bloco > h3 .conta { margin-left: auto; }
 
+/* ---------- Futuro ---------- */
+/* "até 30 de set." ao lado do nome da faixa: o rótulo diz quando, não só o quê */
+.faixa-ate {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--mudo);
+  padding: 0.1rem 0.45rem;
+  background: var(--superficie);
+  border-radius: 999px;
+}
+.faixa-vazia { margin: 0 0.2rem 0.2rem; font-size: 0.82rem; }
+
 /* ---------- Report mensal ---------- */
 .mes { background: var(--superficie-2); border-radius: 16px; margin-bottom: 0.6rem; }
 .mes > summary {
@@ -562,7 +581,7 @@ body[data-pagina='projetos'] #secao-projetos { display: block; }
 .mes-nome { font-weight: 700; }
 .mes-resumo { margin-left: auto; font-size: 0.8rem; color: var(--mudo); text-align: right; }
 .nota-report { margin: 0 0.9rem 0.55rem; font-size: 0.74rem; line-height: 1.4; }
-.lista-report {
+.lista-linhas {
   list-style: none;
   margin: 0;
   padding: 0 0.4rem 0.5rem;
@@ -570,7 +589,7 @@ body[data-pagina='projetos'] #secao-projetos { display: block; }
   flex-direction: column;
   gap: 0.3rem;
 }
-.lista-report a {
+.lista-linhas a {
   display: flex;
   align-items: center;
   gap: 0.55rem;
@@ -582,9 +601,9 @@ body[data-pagina='projetos'] #secao-projetos { display: block; }
   color: var(--tinta);
   font-size: 0.85rem;
 }
-.lista-report a:hover { background: #fafaf9; }
-.lista-report .badge-tipo { flex: none; }
-.lista-report .titulo {
+.lista-linhas a:hover { background: #fafaf9; }
+.lista-linhas .badge-tipo { flex: none; }
+.lista-linhas .titulo {
   flex: 1;
   min-width: 0;
   font-weight: 500;
@@ -592,7 +611,7 @@ body[data-pagina='projetos'] #secao-projetos { display: block; }
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.lista-report .quando, .lista-report .id {
+.lista-linhas .quando, .lista-linhas .id {
   flex: none;
   font-size: 0.74rem;
   color: var(--mudo);

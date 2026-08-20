@@ -489,6 +489,64 @@
       .sort((a, b) => (a.mes < b.mes ? 1 : a.mes > b.mes ? -1 : 0)); // mês mais novo primeiro
   }
 
+  // ---- Futuro (faixas por trimestre) ----
+  // Mesmo raciocínio do Radar: a faixa sai da DATA DE INÍCIO do épico contra o
+  // trimestre corrente — mudar o período no DevOps move o projeto de faixa
+  // sozinho, sem ninguém redigitar lista.
+  const CAMPO_INICIO = 'Microsoft.VSTS.Scheduling.StartDate';
+
+  // Último instante do trimestre que contém `t`; `adiante` avança trimestres
+  // (1 = o próximo), atravessando o ano quando precisa.
+  function fimDoTrimestre(t, adiante) {
+    const d = new Date(t);
+    const q = Math.floor(d.getUTCMonth() / 3) + (adiante || 0);
+    const ano = d.getUTCFullYear() + Math.floor(q / 4);
+    const qn = ((q % 4) + 4) % 4;
+    // dia 0 do mês seguinte ao trimestre = último dia do trimestre
+    return Date.UTC(ano, qn * 3 + 3, 0, 23, 59, 59, 999);
+  }
+
+  // Épicos em aberto distribuídos em Agora / A seguir / Depois / sem data.
+  // Concluído sai: é história, e o lugar dele é o Report.
+  // Épico sem StartDate NÃO cai em "Depois" — `null <= data` é false em JS e o
+  // item acabaria afirmando "começa depois do próximo trimestre", fato que a
+  // base não sustenta. Vai para o grupo "sem data", explícito.
+  function futuroPorFaixa(items, agora) {
+    const fimAgora = fimDoTrimestre(agora, 0);
+    const fimSeguir = fimDoTrimestre(agora, 1);
+    const g = { agora: [], seguir: [], depois: [], semData: [] };
+    for (const it of items || []) {
+      const f = (it || {}).fields || {};
+      if (isTerminalState(f['System.State'])) continue;
+      if (levelOf(f['System.WorkItemType']) !== 'epic') continue; // faixa é de projeto
+      const inicio = dataValida(f[CAMPO_INICIO]);
+      if (inicio === null) { g.semData.push(it); continue; }
+      if (inicio <= fimAgora) g.agora.push(it);
+      else if (inicio <= fimSeguir) g.seguir.push(it);
+      else g.depois.push(it);
+    }
+    // ordena por início, desempata pelo fim; sem data vai por último dentro do
+    // grupo. Comparação por !== evita Infinity - Infinity = NaN.
+    const quando = (it, campo) => {
+      const v = dataValida(((it || {}).fields || {})[campo]);
+      return v === null ? Infinity : v;
+    };
+    const ordena = (a, b) => {
+      const ia = quando(a, CAMPO_INICIO), ib = quando(b, CAMPO_INICIO);
+      if (ia !== ib) return ia < ib ? -1 : 1;
+      const fa = quando(a, CAMPO_ALVO), fb = quando(b, CAMPO_ALVO);
+      if (fa !== fb) return fa < fb ? -1 : 1;
+      return 0;
+    };
+    for (const k of Object.keys(g)) g[k].sort(ordena);
+    return [
+      { faixa: 'agora', ate: fimAgora, itens: g.agora },
+      { faixa: 'seguir', ate: fimSeguir, itens: g.seguir },
+      { faixa: 'depois', ate: null, itens: g.depois },
+      { faixa: 'semData', ate: null, itens: g.semData },
+    ];
+  }
+
   // ---- Cache ----
   function isStale(fetchedAt, now, maxAgeMinutes = 10) {
     if (!fetchedAt) return true;
@@ -512,7 +570,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, reportPorMes,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, reportPorMes, futuroPorFaixa, fimDoTrimestre,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };
 });

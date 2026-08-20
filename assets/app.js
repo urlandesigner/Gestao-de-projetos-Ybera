@@ -393,19 +393,20 @@ function renderPanorama() {
 // (só ao abrir a página), como o board dedicado — o refresh geral não paga por
 // ela. Estado em memória, não no localStorage: são centenas de itens que só
 // servem a esta tela.
-// Base completa, sob demanda: uma consulta serve Produtos E Report. Guarda os
+// Base completa, sob demanda: uma consulta serve Produtos, Report E Futuro. Guarda os
 // itens crus além dos épicos rolados — o Report precisa de todos, e buscar duas
 // vezes a mesma coisa seria desperdício.
 const baseState = { porTime: null, carregando: false, erro: null, fetchedAt: 0 };
 
 async function carregarBase(forcar) {
   if (!state.config || baseState.carregando) return;
-  if (!state.pat) { renderProdutos(); renderReport(); return; }
+  if (!state.pat) { renderProdutos(); renderReport(); renderFuturo(); return; }
   if (!forcar && baseState.porTime && !C.isStale(baseState.fetchedAt, Date.now())) return;
   baseState.carregando = true;
   baseState.erro = null;
   renderProdutos();
   renderReport();
+  renderFuturo();
   try {
     const porTime = [];
     for (const p of state.config.projects.filter((x) => !x.hidden)) {
@@ -426,6 +427,7 @@ async function carregarBase(forcar) {
     baseState.carregando = false;
     renderProdutos();
     renderReport();
+    renderFuturo();
     renderBadge();
   }
 }
@@ -483,6 +485,51 @@ function htmlProduto(reg, p) {
   </article>`;
 }
 
+/* ---------- Futuro ---------- */
+// Vocabulário do Radar de propósito (a página lá se chama Futuro, com as faixas
+// Agora / A seguir / Depois): é o modelo mental que o Urlan já tem.
+const FAIXAS_FUTURO = {
+  agora: { rotulo: 'Agora', confianca: 'Janela atual' },
+  seguir: { rotulo: 'A seguir', confianca: 'Planejado' },
+  depois: { rotulo: 'Depois', confianca: 'Roadmap' },
+  semData: { rotulo: 'Sem data de início', confianca: 'não entra em faixa' },
+};
+
+function renderFuturo() {
+  const box = $('futuro');
+  if (!box || !state.config) return;
+  if (!state.pat) { box.innerHTML = semDados('o futuro'); return; }
+  const erroHtml = baseState.erro ? `<p class="erro">${escapeHtml(baseState.erro)}</p>` : '';
+  if (!baseState.porTime) {
+    box.innerHTML = erroHtml + (baseState.erro ? '' : '<p class="mudo">carregando projetos…</p>');
+    return;
+  }
+  const faixas = C.futuroPorFaixa(baseState.porTime.flatMap(({ items }) => items), Date.now());
+  // As três faixas aparecem sempre, mesmo vazias: "nada começa no próximo
+  // trimestre" é informação. "Sem data" só aparece quando existe.
+  const blocos = faixas
+    .filter((f) => f.faixa !== 'semData' || f.itens.length)
+    .map((f) => {
+      const def = FAIXAS_FUTURO[f.faixa];
+      const ate = f.ate ? `até ${dataCurta(f.ate)}` : def.confianca;
+      const linhas = f.itens.map((it) => {
+        const fl = it.fields || {};
+        const link = C.deepLinks(state.config.org, it.projeto, '').workItem(it.id);
+        return `<li><a href="${link}" target="_blank" rel="noopener">
+          <span class="badge-tipo tipo-epic">Épico</span>
+          <span class="titulo">${escapeHtml(fl['System.Title'] || ('item #' + it.id))}</span>
+          <span class="quando">${janela(fl['Microsoft.VSTS.Scheduling.StartDate'], fl['Microsoft.VSTS.Scheduling.TargetDate'])}</span>
+          <span class="id">#${it.id}</span>
+        </a></li>`;
+      }).join('');
+      return `<section class="bloco">
+        <h3>${def.rotulo}<span class="faixa-ate">${ate}</span><span class="conta">${f.itens.length}</span></h3>
+        ${f.itens.length ? `<ul class="lista-linhas">${linhas}</ul>` : '<p class="mudo faixa-vazia">Nada começa nesta faixa.</p>'}
+      </section>`;
+    }).join('');
+  box.innerHTML = erroHtml + `<div class="blocos">${blocos}</div>`;
+}
+
 /* ---------- Report mensal ---------- */
 // Meses recolhidos, o mais recente aberto — mesma leitura do report do Radar.
 // Usa <details> nativo: zero JS pra abrir e fechar.
@@ -532,7 +579,7 @@ function htmlMesReport(m, aberto) {
   }).join('');
   return `<details class="mes"${aberto ? ' open' : ''}>
     <summary><span class="mes-nome">${mesPorExtenso(m.mes)}</span><span class="mes-resumo">${m.total} ${m.total > 1 ? 'itens' : 'item'}${partes.length ? ' · ' + partes.join(' · ') : ''}</span></summary>
-    ${nota}<ul class="lista-report">${linhas}</ul>
+    ${nota}<ul class="lista-linhas">${linhas}</ul>
   </details>`;
 }
 
@@ -768,6 +815,7 @@ function renderRoute() {
   if (hash === '#pendencias') { setPagina('pendencias'); return; }
   if (hash === '#produtos') { setPagina('produtos'); carregarBase(false); return; }
   if (hash === '#report') { setPagina('report'); carregarBase(false); return; }
+  if (hash === '#futuro') { setPagina('futuro'); carregarBase(false); return; }
   if (hash === '#projetos') { setPagina('projetos'); return; }
   if (hash === '#meus-itens') { setPagina('meus-itens'); return; }
   setPagina('panorama'); // abertura: visão geral antes do detalhe
@@ -779,6 +827,7 @@ function setPagina(pagina) {
   $('nav-pendencias').classList.toggle('ativa', pagina === 'pendencias');
   $('nav-produtos').classList.toggle('ativa', pagina === 'produtos');
   $('nav-report').classList.toggle('ativa', pagina === 'report');
+  $('nav-futuro').classList.toggle('ativa', pagina === 'futuro');
   $('nav-meus-itens').classList.toggle('ativa', pagina === 'meus-itens');
   $('nav-projetos').classList.toggle('ativa', pagina === 'projetos' || pagina === 'board');
 }
@@ -1036,7 +1085,7 @@ document.addEventListener('DOMContentLoaded', () => {
   $('atualizar').addEventListener('click', () => {
     refreshAll(true);
     // as duas páginas que leem a base têm cache próprio
-    if (['produtos', 'report'].includes(document.body.dataset.pagina)) carregarBase(true);
+    if (['produtos', 'report', 'futuro'].includes(document.body.dataset.pagina)) carregarBase(true);
   });
   $('abrir-config').addEventListener('click', openSettings);
   $('board-voltar').addEventListener('click', () => { location.hash = '#projetos'; });
