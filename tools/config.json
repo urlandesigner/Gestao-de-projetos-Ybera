@@ -12,13 +12,19 @@
     "Grooming": "next",
     "Prototype": "next"
   },
-  "estadosExcluidos": ["Removed"],
+  "estadosExcluidos": [
+    "Removed"
+  ],
   "produtos": {
     "49290": "club",
     "49294": "interna",
     "49291": "influencer",
     "49302": "reviews",
     "49284": "ia",
-    "49280": "europa"
+    "49280": "europa",
+    "49301": "tema",
+    "49296": "marketplace",
+    "49282": "erp",
+    "49283": "hub"
   }
 }

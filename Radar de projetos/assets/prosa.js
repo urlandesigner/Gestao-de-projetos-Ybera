@@ -163,7 +163,22 @@ const PROSA = {
             en:"AI-guided recommendation: takes someone unfamiliar with the line to the right product, cutting the doubt that stalls a first purchase."}},
     {id:"europa",     name:{pt:"Crossborder Europa", en:"Europe Crossborder"},
      about:{pt:"Venda para a Europa a partir da estrutura de loja e logística já montada nos EUA — segundo mercado sem operação nova.",
-            en:"Selling into Europe from the store and logistics structure already built in the US — a second market with no new operation."}}
+            en:"Selling into Europe from the store and logistics structure already built in the US — a second market with no new operation."}},
+    /* Os quatro abaixo são o Epic homônimo na vertical Ecommerce e Growth do
+       DevOps. O `about` de cada um foi escrito a partir do nome e das Features
+       penduradas nele — confira e corrija onde eu inferi errado. */
+    {id:"tema",       name:{pt:"Tema Global", en:"Global Theme"},
+     about:{pt:"A base visual e técnica compartilhada pelas lojas de todos os países. Mexer aqui muda todas as lojas de uma vez — é o que faz um ajuste caber num lugar em vez de em cinco.",
+            en:"The visual and technical foundation shared by every country's store. A change here changes all of them at once — it's what makes a fix fit in one place instead of five."}},
+    {id:"marketplace", name:{pt:"Marketplaces", en:"Marketplaces"},
+     about:{pt:"Venda fora da loja própria, nos canais onde o consumidor já procura — Amazon à frente. Alcança quem nunca chegaria ao site da marca.",
+            en:"Selling outside our own store, in the channels where the shopper already searches — Amazon first. Reaches people who would never land on the brand's site."}},
+    {id:"erp",        name:"ERP",
+     about:{pt:"O sistema que cuida do pedido depois da compra: estoque, expedição, imposto e nota. Quando ele falha, o cliente sente na entrega, não na loja.",
+            en:"The system that handles the order after checkout: stock, fulfillment, tax and invoicing. When it fails, the customer feels it in delivery, not in the store."}},
+    {id:"hub",        name:{pt:"Hub de Produtos", en:"Product Hub"},
+     about:{pt:"Cadastro central de produto que alimenta as lojas e os canais, para o mesmo item não ser mantido à mão em cada lugar.",
+            en:"A central product registry feeding the stores and channels, so the same item isn't maintained by hand in each place."}}
   ],
 
   /* ------------------------------------------------------------------------
