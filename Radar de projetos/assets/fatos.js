@@ -2,9 +2,9 @@
    Fatos vindos do Azure DevOps. Todo texto editorial (título legível, why,
    about, result, healthNote) vive em prosa.js, indexado pelo mesmo id.
    Para regerar:  ADO_PAT=xxx node tools/sync.mjs
-   Gerado em: 2026-08-20T20:28:31.865Z */
+   Gerado em: 2026-08-20T21:04:02.380Z */
 const RADAR_FATOS = {
-  "geradoEm": "2026-08-20T20:28:31.865Z",
+  "geradoEm": "2026-08-20T21:04:02.380Z",
   "epics": [
     {
       "id": 32829,
@@ -189,6 +189,19 @@ const RADAR_FATOS = {
       "demands": []
     },
     {
+      "id": 43320,
+      "azureTitle": "[EUA] Discovery Integração Amazon - Shopify Marketplace Connector - Rootstock",
+      "track": "marketplace",
+      "start": null,
+      "end": null,
+      "status": "doing",
+      "estadoCru": "Ready",
+      "health": null,
+      "shipped": null,
+      "owner": "Urlan Dipre",
+      "demands": []
+    },
+    {
       "id": 43389,
       "azureTitle": "[GLOBAL] Clear Cart Inteligente na Cart Drawer",
       "track": "club",
@@ -274,6 +287,19 @@ const RADAR_FATOS = {
       "end": null,
       "status": "doing",
       "estadoCru": "In Progress",
+      "health": null,
+      "shipped": null,
+      "owner": "Urlan Dipre",
+      "demands": []
+    },
+    {
+      "id": 45421,
+      "azureTitle": "[GLOBAL] Governança do Tema Global",
+      "track": "tema",
+      "start": null,
+      "end": null,
+      "status": "doing",
+      "estadoCru": "Ready",
       "health": null,
       "shipped": null,
       "owner": "Urlan Dipre",
