@@ -1,6 +1,24 @@
 {
   "org": "https://dev.azure.com/nivello",
   "projeto": "B2C",
-  "estados": {},
-  "areas": {}
+  "estados": {
+    "Done": "done",
+    "In Progress": "doing",
+    "Testing": "doing",
+    "Ready for Dev": "doing",
+    "Ready": "doing",
+    "Impediment": "doing",
+    "To Do": "next",
+    "Grooming": "next",
+    "Prototype": "next"
+  },
+  "estadosExcluidos": ["Removed"],
+  "produtos": {
+    "49290": "club",
+    "49294": "interna",
+    "49291": "influencer",
+    "49302": "reviews",
+    "49284": "ia",
+    "49280": "europa"
+  }
 }

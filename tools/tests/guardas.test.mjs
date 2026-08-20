@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { guardaEsvaziamento, guardaStatusVazio, guardaLeituraAnterior, decidirGravacao, serializarFatos, relatorio, parsearFatos, coletarPendencias } from '../guardas.mjs';
+import { guardaEsvaziamento, guardaStatusVazio, guardaLeituraAnterior, decidirGravacao, serializarFatos, relatorio, parsearFatos, coletarPendencias, epicsSemProduto } from '../guardas.mjs';
 
 test('primeira rodada passa quando ha itens', () => {
   assert.equal(guardaEsvaziamento(14, null).ok, true);
@@ -51,12 +51,12 @@ test('crescer sempre passa', () => {
 });
 
 /* guardaStatusVazio: tools/config.json com "estados" vazio não derruba a
-   contagem de Epics (guardaEsvaziamento não vê problema), mas grava o board
+   contagem de itens (guardaEsvaziamento não vê problema), mas grava o board
    inteiro sem status. É uma guarda separada, e nunca aceita --forcar. */
 test('guardaStatusVazio recusa quando todo item esta sem status', () => {
   const r = guardaStatusVazio([{ status:null }, { status:null }]);
   assert.equal(r.ok, false);
-  assert.match(r.motivo, /2 Epics/);
+  assert.match(r.motivo, /2 itens/);
   assert.match(r.motivo, /estados/);
 });
 
@@ -85,23 +85,29 @@ test('serializarFatos produz JS valido e sem PAT', () => {
 test('relatorio lista o que precisa de acao humana', () => {
   const txt = relatorio({
     itens:[{ id:1 }, { id:2 }],
-    orfas:[{ id:99, fields:{ 'System.Title':'Solta' } }],
+    excluidos:[{ id:50, azureTitle:'Cancelada', estadoCru:'Removed' }],
+    semPai:[{ id:99, fields:{ 'System.Title':'Solta' } }],
+    epicsNovos:[{ id:77, titulo:'Loja Clube Peru', qtd:3 }],
     semStatus:[{ id:2, estadoCru:'Em Homologação' }],
-    semTrack:[{ id:1, azureTitle:'X' }],
     mudancas:[{ id:1, tipo:'status', de:'next', para:'doing', titulo:'X' }]
   });
-  assert.match(txt, /2 Epics/);
+  assert.match(txt, /2 projetos/);
   assert.match(txt, /Em Homologação/);
+  assert.match(txt, /Cancelada/);
+  assert.match(txt, /Removed/);
   assert.match(txt, /Solta/);
-  assert.match(txt, /sem produto/i);
+  assert.match(txt, /Loja Clube Peru/);
+  assert.match(txt, /3 Feature/);
   assert.match(txt, /next → doing/);
 });
 
 test('relatorio de rodada limpa nao inventa alarme', () => {
-  const txt = relatorio({ itens:[{ id:1 }], orfas:[], semStatus:[], semTrack:[], mudancas:[] });
-  assert.match(txt, /1 Epic/);
+  const txt = relatorio({ itens:[{ id:1 }], excluidos:[], semPai:[], epicsNovos:[], semStatus:[], mudancas:[] });
+  assert.match(txt, /1 projeto\b/);
   assert.doesNotMatch(txt, /não mapeado/);
-  assert.doesNotMatch(txt, /órfã/);
+  assert.doesNotMatch(txt, /Excluídos do Radar/);
+  assert.doesNotMatch(txt, /Sem pai/);
+  assert.doesNotMatch(txt, /Epics sem produto/);
 });
 
 /* parsearFatos e serializarFatos precisam concordar: e o contrato que o
@@ -188,39 +194,45 @@ test('guardaLeituraAnterior aceita dados bem formados', () => {
 });
 
 test('coletarPendencias ve estado nao mapeado em item', () => {
-  const { semStatus, semTrack } = coletarPendencias([
-    { id:1, status:null, estadoCru:'Em Homologação', track:'loja', demands:[] }
+  const { semStatus } = coletarPendencias([
+    { id:1, status:null, estadoCru:'Em Homologação', track:'loja' }
   ]);
   assert.equal(semStatus.length, 1);
   assert.equal(semStatus[0].id, 1);
-  assert.equal(semTrack.length, 0);
-});
-
-test('coletarPendencias ve estado nao mapeado em demanda', () => {
-  const { semStatus } = coletarPendencias([
-    { id:1, status:'doing', track:'loja', demands:[
-      { id:10, status:null, estadoCru:'Em Homologação' },
-      { id:11, status:'next', estadoCru:'Em Andamento' }
-    ] }
-  ]);
-  assert.equal(semStatus.length, 1);
-  assert.equal(semStatus[0].id, 10);
-});
-
-test('coletarPendencias ve item sem track', () => {
-  const { semTrack } = coletarPendencias([
-    { id:1, status:'doing', track:null, demands:[] }
-  ]);
-  assert.equal(semTrack.length, 1);
-  assert.equal(semTrack[0].id, 1);
 });
 
 test('coletarPendencias na rodada limpa nao acusa nada', () => {
-  const { semStatus, semTrack } = coletarPendencias([
-    { id:1, status:'doing', track:'loja', demands:[{ id:10, status:'next', estadoCru:'Em Andamento' }] }
+  const { semStatus } = coletarPendencias([
+    { id:1, status:'doing', track:'loja' }
   ]);
   assert.equal(semStatus.length, 0);
-  assert.equal(semTrack.length, 0);
+});
+
+/* epicsSemProduto: o risco que a inversão Epic↔Feature cria. Um Epic novo
+   ("Loja Clube Peru") sem entrada em produtos faz as Features filhas dele
+   desaparecerem em silêncio — esta função é o que torna essa ausência
+   visível, ao nível do Epic (id + quantas filhas), em vez de ao nível de
+   cada Feature isolada. */
+test('epicsSemProduto lista Epic pai fora da tabela de produtos, com quantidade', () => {
+  const porPai = new Map([
+    [49290, [{ id:1 }, { id:2 }]],   // cadastrado
+    [77, [{ id:3 }, { id:4 }, { id:5 }]] // NÃO cadastrado
+  ]);
+  const r = epicsSemProduto(porPai, { '49290':'club' });
+  assert.deepEqual(r, [{ id:77, qtd:3 }]);
+});
+
+test('epicsSemProduto nao acusa nada quando todo pai esta cadastrado', () => {
+  const porPai = new Map([[49290, [{ id:1 }]]]);
+  assert.deepEqual(epicsSemProduto(porPai, { '49290':'club' }), []);
+});
+
+test('epicsSemProduto ordena por quantidade de filhas descendente', () => {
+  const porPai = new Map([
+    [10, [{ id:1 }]],
+    [20, [{ id:2 }, { id:3 }, { id:4 }]]
+  ]);
+  assert.deepEqual(epicsSemProduto(porPai, {}), [{ id:20, qtd:3 }, { id:10, qtd:1 }]);
 });
 
 /* decidirGravacao concentra a combinacao de guarda.ok/forcavel/--forcar/

@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mesDe, diaDe, statusDe, healthDe, trackDe, agruparPorPai, itemDe, diffRodadas } from '../mapa.mjs';
+import { mesDe, diaDe, statusDe, healthDe, trackDoPai, agruparPorPai, itemDe, diffRodadas } from '../mapa.mjs';
 
 test('mesDe extrai AAAA-MM e recusa lixo', () => {
   assert.equal(mesDe('2026-08-14T12:00:00Z'), '2026-08');
@@ -17,21 +17,41 @@ test('diaDe extrai AAAA-MM-DD', () => {
 });
 
 const ESTADOS = { 'Aguardando Início':'next', 'Em Andamento':'doing', 'Concluído':'done' };
+const EXCLUIDOS = ['Removed'];
 
 test('statusDe usa o mapa de configuracao', () => {
-  assert.equal(statusDe('Em Andamento', ESTADOS), 'doing');
-  assert.equal(statusDe('Concluído', ESTADOS), 'done');
+  assert.equal(statusDe('Em Andamento', ESTADOS, EXCLUIDOS), 'doing');
+  assert.equal(statusDe('Concluído', ESTADOS, EXCLUIDOS), 'done');
 });
 
 /* Estado fora do mapa NAO pode virar "next" em silencio: viraria mudanca de
    processo escondida de quem precisa saber. */
-test('estado fora do mapa devolve null', () => {
-  assert.equal(statusDe('Em Homologação', ESTADOS), null);
-  assert.equal(statusDe(null, ESTADOS), null);
+test('estado fora do mapa (desconhecido) devolve null', () => {
+  assert.equal(statusDe('Em Homologação', ESTADOS, EXCLUIDOS), null);
+  assert.equal(statusDe(null, ESTADOS, EXCLUIDOS), null);
 });
 
 test('valor invalido no mapa e tratado como nao mapeado', () => {
-  assert.equal(statusDe('X', { X:'qualquer' }), null);
+  assert.equal(statusDe('X', { X:'qualquer' }, []), null);
+});
+
+/* O terceiro resultado: estado excluido (Removed) nao e "nao mapeado", e
+   descarte deliberado. Tem de sair diferente de null e diferente do valor
+   mapeado, para quem chama poder tratar os tres casos separadamente. */
+test('estado em estadosExcluidos devolve "excluido", nao null e nao o valor do mapa', () => {
+  assert.equal(statusDe('Removed', ESTADOS, EXCLUIDOS), 'excluido');
+});
+
+test('estadosExcluidos vazio ou ausente nao exclui nada', () => {
+  assert.equal(statusDe('Removed', ESTADOS, []), null);
+  assert.equal(statusDe('Removed', ESTADOS, undefined), null);
+});
+
+/* Exclusao vence se por algum motivo um estado aparecer nas duas tabelas ao
+   mesmo tempo — nao deveria acontecer na configuracao real, mas a funcao nao
+   deve depender disso para estar certa. */
+test('estado excluido vence mesmo se tambem estiver mapeado', () => {
+  assert.equal(statusDe('Removed', { Removed:'done' }, ['Removed']), 'excluido');
 });
 
 test('healthDe marca impedimento e mais nada', () => {
@@ -41,57 +61,66 @@ test('healthDe marca impedimento e mais nada', () => {
   assert.equal(healthDe(null), null);
 });
 
-const AREAS = { 'Ecommerce USA\\Loja Clube':'club', 'Ecommerce USA\\Loja Clube\\Checkout':'checkout' };
+const PRODUTOS = { '49290':'club', '49294':'interna' };
 
-test('trackDe casa por prefixo e prefere o mais especifico', () => {
-  assert.equal(trackDe('Ecommerce USA\\Loja Clube', AREAS), 'club');
-  assert.equal(trackDe('Ecommerce USA\\Loja Clube\\PDP', AREAS), 'club');
-  assert.equal(trackDe('Ecommerce USA\\Loja Clube\\Checkout\\Pix', AREAS), 'checkout');
+test('trackDoPai casa por id exato contra a tabela de produtos', () => {
+  assert.equal(trackDoPai(49290, PRODUTOS), 'club');
+  assert.equal(trackDoPai(49294, PRODUTOS), 'interna');
 });
 
-test('area fora da tabela devolve null em vez de descartar o item', () => {
-  assert.equal(trackDe('Ecommerce USA\\Nova Area', AREAS), null);
-  assert.equal(trackDe(null, AREAS), null);
+/* A chave do JSON e string; o System.Parent que a API devolve e number. Sem
+   o String() dentro de trackDoPai, este teste falharia mesmo com o id certo
+   — foi exatamente esse detalhe de tipo que o enunciado da tarefa avisou
+   para nao esquecer. */
+test('trackDoPai casa number contra chave string sem exigir conversao de quem chama', () => {
+  assert.equal(trackDoPai(49290, { '49290':'club' }), 'club');
 });
 
-/* Regressão: "startsWith(k)" sem o separador de path casaria
-   "...\Loja Nova\Sub" com a chave "...\Loja" por serem prefixo em string,
-   mesmo sendo áreas irmãs (Loja e Loja Nova), não uma dentro da outra. O
-   código já exige o "\" logo depois da chave — este teste tranca esse
-   comportamento em vez de deixá-lo provado só de cabeça. */
-test('trackDe nao casa area irma cujo nome comeca igual', () => {
-  const IRMAS = { 'Ecommerce USA\\Loja': 'loja' };
-  assert.equal(trackDe('Ecommerce USA\\Loja Nova\\Sub', IRMAS), null);
-  assert.equal(trackDe('Ecommerce USA\\Loja Nova', IRMAS), null);
+test('trackDoPai com pai fora da tabela devolve null', () => {
+  assert.equal(trackDoPai(999999, PRODUTOS), null);
 });
 
-test('agruparPorPai separa filhas e orfas', () => {
+test('trackDoPai sem pai (undefined ou null) devolve null', () => {
+  assert.equal(trackDoPai(undefined, PRODUTOS), null);
+  assert.equal(trackDoPai(null, PRODUTOS), null);
+});
+
+test('agruparPorPai separa Features por pai e isola as sem pai', () => {
   const fs = [
-    { id:11, fields:{ 'System.Parent':1 } },
-    { id:12, fields:{ 'System.Parent':1 } },
-    { id:13, fields:{ 'System.Parent':99 } },
+    { id:11, fields:{ 'System.Parent':49290 } },
+    { id:12, fields:{ 'System.Parent':49290 } },
+    { id:13, fields:{ 'System.Parent':77 } },
     { id:14, fields:{} }
   ];
-  const { porPai, orfas } = agruparPorPai(fs, [1, 2]);
-  assert.deepEqual(porPai.get(1).map(w => w.id), [11, 12]);
-  assert.equal(porPai.has(2), false);
-  assert.deepEqual(orfas.map(w => w.id), [13, 14]);
+  const { porPai, semPai } = agruparPorPai(fs);
+  assert.deepEqual(porPai.get(49290).map(w => w.id), [11, 12]);
+  assert.deepEqual(porPai.get(77).map(w => w.id), [13]);
+  assert.deepEqual(semPai.map(w => w.id), [14]);
 });
 
-const CFG = { estados: ESTADOS, areas: AREAS };
+test('agruparPorPai nao filtra por produto cadastrado — isso e trabalho de quem chama', () => {
+  /* Pai 77 nao esta em nenhuma tabela de produtos, mas agruparPorPai nao
+     sabe disso e nao precisa saber: ela so agrupa. Quem decide se 77 e um
+     Epic sem produto cadastrado e sync.mjs, com a ajuda da guarda
+     epicsSemProduto (guardas.mjs). */
+  const { porPai } = agruparPorPai([{ id:1, fields:{ 'System.Parent':77 } }]);
+  assert.equal(porPai.has(77), true);
+});
 
-test('itemDe monta o item do Radar a partir do Epic', () => {
-  const epic = { id:47688, fields:{
-    'System.Title':'Nova PDP USA',
+const CFG = { estados: ESTADOS, estadosExcluidos: EXCLUIDOS, produtos: PRODUTOS };
+
+test('itemDe monta o item do Radar a partir da Feature, com produto vindo do pai', () => {
+  const feature = { id:47688, fields:{
+    'System.Title':'[EUA] Nova Home',
     'System.State':'Em Andamento',
-    'System.AreaPath':'Ecommerce USA\\Loja Clube',
+    'System.Parent':49290,
     'System.AssignedTo':{ displayName:'Urlan Dipré' },
     'Microsoft.VSTS.Scheduling.StartDate':'2026-07-01T00:00:00Z',
     'Microsoft.VSTS.Scheduling.TargetDate':'2026-08-31T00:00:00Z'
   }};
-  const it = itemDe(epic, [], CFG);
+  const it = itemDe(feature, CFG);
   assert.equal(it.id, 47688);
-  assert.equal(it.azureTitle, 'Nova PDP USA');
+  assert.equal(it.azureTitle, '[EUA] Nova Home');
   assert.equal(it.track, 'club');
   assert.equal(it.start, '2026-07-01');
   assert.equal(it.end, '2026-08-31');
@@ -103,57 +132,57 @@ test('itemDe monta o item do Radar a partir do Epic', () => {
   assert.deepEqual(it.demands, []);
 });
 
-test('Epic concluido gera shipped a partir de ClosedDate', () => {
-  const epic = { id:1, fields:{
-    'System.Title':'X', 'System.State':'Concluído',
+test('Feature com pai fora da tabela de produtos fica com track null', () => {
+  const feature = { id:1, fields:{ 'System.Title':'X', 'System.State':'Em Andamento', 'System.Parent':77 } };
+  const it = itemDe(feature, CFG);
+  assert.equal(it.track, null);
+});
+
+test('Feature sem pai fica com track null', () => {
+  const feature = { id:1, fields:{ 'System.Title':'X', 'System.State':'Em Andamento' } };
+  const it = itemDe(feature, CFG);
+  assert.equal(it.track, null);
+});
+
+test('Feature com estado excluido (Removed) sai com status "excluido"', () => {
+  const feature = { id:1, fields:{ 'System.Title':'X', 'System.State':'Removed', 'System.Parent':49290 } };
+  const it = itemDe(feature, CFG);
+  assert.equal(it.status, 'excluido');
+  assert.equal(it.estadoCru, 'Removed');
+});
+
+test('Feature concluida gera shipped a partir de ClosedDate', () => {
+  const feature = { id:1, fields:{
+    'System.Title':'X', 'System.State':'Concluído', 'System.Parent':49290,
     'Microsoft.VSTS.Common.ClosedDate':'2026-08-14T10:00:00Z'
   }};
-  const it = itemDe(epic, [], CFG);
+  const it = itemDe(feature, CFG);
   assert.equal(it.status, 'done');
   assert.equal(it.shipped, '2026-08');
 });
 
-test('Epic sem data alguma nao explode e fica sem janela', () => {
-  const it = itemDe({ id:2, fields:{ 'System.Title':'Y', 'System.State':'Em Andamento' } }, [], CFG);
+test('Feature sem data alguma nao explode e fica sem janela', () => {
+  const it = itemDe({ id:2, fields:{ 'System.Title':'Y', 'System.State':'Em Andamento', 'System.Parent':49290 } }, CFG);
   assert.equal(it.start, null);
   assert.equal(it.end, null);
   assert.equal(it.owner, null);
 });
 
-test('Epic sem fields nao explode', () => {
-  const it = itemDe({ id:3 }, [], CFG);
+test('Feature sem fields nao explode', () => {
+  const it = itemDe({ id:3 }, CFG);
   assert.equal(it.id, 3);
   assert.equal(it.azureTitle, '');
   assert.equal(it.status, null);
+  assert.equal(it.track, null);
+  assert.deepEqual(it.demands, []);
 });
 
-test('demandas viram a lista do Radar, com done em mes', () => {
-  const epic = { id:1, fields:{ 'System.Title':'X', 'System.State':'Em Andamento' } };
-  const fs = [
-    { id:11, fields:{ 'System.Title':'Revisão do checkout', 'System.State':'Concluído',
-                      'Microsoft.VSTS.Scheduling.TargetDate':'2026-08-15T00:00:00Z',
-                      'Microsoft.VSTS.Common.ClosedDate':'2026-08-20T00:00:00Z' } },
-    { id:12, fields:{ 'System.Title':'Pendente', 'System.State':'Aguardando Início' } }
-  ];
-  const it = itemDe(epic, fs, CFG);
-  assert.deepEqual(it.demands, [
-    { id:11, t:'Revisão do checkout', status:'done', estadoCru:'Concluído', due:'2026-08-15', done:'2026-08' },
-    { id:12, t:'Pendente', status:'next', estadoCru:'Aguardando Início', due:null, done:null }
-  ]);
-});
-
-/* A API de lote não garante ordem. Sem ordenar por id, a ordem das demandas
-   no fatos.js commitado seguiria a ordem de retorno da API — produzindo
-   diff sem mudança real de dado a cada rodada. */
-test('demandas saem ordenadas por id, nao na ordem em que a API devolveu', () => {
-  const epic = { id:1, fields:{ 'System.Title':'X', 'System.State':'Em Andamento' } };
-  const fs = [
-    { id:30, fields:{ 'System.Title':'C', 'System.State':'Aguardando Início' } },
-    { id:10, fields:{ 'System.Title':'A', 'System.State':'Aguardando Início' } },
-    { id:20, fields:{ 'System.Title':'B', 'System.State':'Aguardando Início' } }
-  ];
-  const it = itemDe(epic, fs, CFG);
-  assert.deepEqual(it.demands.map(d => d.id), [10, 20, 30]);
+/* demands e sempre [], de proposito: nao ha terceiro nivel de hierarquia
+   neste desenho. Este teste tranca isso, para uma mudanca futura que volte a
+   preencher demands ter de mexer aqui de olhos abertos, nao por acidente. */
+test('demands sai sempre vazio, mesmo com pai valido e estado mapeado', () => {
+  const feature = { id:1, fields:{ 'System.Title':'X', 'System.State':'Em Andamento', 'System.Parent':49290 } };
+  assert.deepEqual(itemDe(feature, CFG).demands, []);
 });
 
 test('diffRodadas aponta novo, saiu, status, janela e entrega', () => {

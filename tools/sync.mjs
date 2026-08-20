@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { runWiql, getFields, AuthError, NetworkError } from './ado.mjs';
 import { itemDe, agruparPorPai, diffRodadas } from './mapa.mjs';
-import { guardaEsvaziamento, guardaStatusVazio, guardaLeituraAnterior, decidirGravacao, serializarFatos, relatorio, parsearFatos, coletarPendencias } from './guardas.mjs';
+import { guardaEsvaziamento, guardaStatusVazio, guardaLeituraAnterior, decidirGravacao, serializarFatos, relatorio, parsearFatos, coletarPendencias, epicsSemProduto } from './guardas.mjs';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const RAIZ = path.resolve(AQUI, '..');
@@ -26,8 +26,11 @@ if(!pat){
 const cfg = JSON.parse(await readFile(path.join(AQUI, 'config.json'), 'utf8'));
 const ctx = { base: cfg.org, pat, fetchImpl: (...a) => fetch(...a) };
 
+/* System.AreaPath saiu da lista: o produto agora vem do Epic pai
+   (System.Parent), nunca mais da área — ver o comentário no topo de
+   tools/mapa.mjs. */
 const CAMPOS = [
-  'System.Id', 'System.Title', 'System.State', 'System.AreaPath',
+  'System.Id', 'System.Title', 'System.State',
   'System.AssignedTo', 'System.Parent',
   'Microsoft.VSTS.Scheduling.StartDate',
   'Microsoft.VSTS.Scheduling.TargetDate',
@@ -96,27 +99,66 @@ async function gravarAtomico(destino, conteudo){
 }
 
 try {
-  const idsEpics = await runWiql(ctx, cfg.projeto, wiql('Epic'));
+  /* Uma única consulta de Feature basta: a descoberta contra a org real
+     (nivello/B2C) provou que ela sozinha já traz as 646 Features do
+     projeto. O filtro por pai acontece em memória (agruparPorPai, abaixo),
+     não no WIQL — um WIQL com "System.Parent IN (...)" arriscaria dialeto
+     que este projeto não testou, por um ganho que a API de lote (getFields,
+     no máximo 646/200 ≈ 4 chamadas) já entrega sem risco nenhum. Não há mais
+     consulta de Epic: o pai de cada Feature já vem no próprio campo
+     System.Parent, e o único uso que a rodada faz de dados de Epic — pegar
+     título para a guarda de "Epic sem produto cadastrado" — busca só os
+     poucos ids que sobrarem depois do agrupamento, não o projeto inteiro. */
   const idsFeatures = await runWiql(ctx, cfg.projeto, wiql('Feature'));
-  const epics = idsEpics.length ? await getFields(ctx, idsEpics, CAMPOS) : [];
   const features = idsFeatures.length ? await getFields(ctx, idsFeatures, CAMPOS) : [];
 
-  const { porPai, orfas } = agruparPorPai(features, idsEpics);
-  const itens = epics.map(e => itemDe(e, porPai.get(e.id) || [], cfg))
-                     .sort((a, b) => a.id - b.id);
+  const { porPai, semPai } = agruparPorPai(features);
+
+  /* Cada grupo de Features por Epic pai vai para um de dois destinos:
+     `produtos` cadastrado vira item do Radar; fora da tabela é descartado
+     (é trabalho de outra frente da empresa — o mesmo projeto B2C tem 646
+     Features de times que não são deste Radar) e alimenta a guarda abaixo. */
+  const paiCadastrado = paiId => Object.prototype.hasOwnProperty.call(cfg.produtos || {}, String(paiId));
+  const featuresValidas = [];
+  for(const [paiId, filhas] of porPai){
+    if(paiCadastrado(paiId)) featuresValidas.push(...filhas);
+  }
+
+  /* Julgamento puro (quais Epics pai não estão cadastrados, e quantas
+     Features cada um esconde) em epicsSemProduto, guardas.mjs — só o
+     I/O de buscar o título de cada um mora aqui, no orquestrador. Busca só
+     os ids que sobraram (não o projeto inteiro), continuando só-leitura. */
+  const epicsFaltandoBase = epicsSemProduto(porPai, cfg.produtos);
+  const idsEpicsFaltando = epicsFaltandoBase.map(e => e.id);
+  const epicsFaltandoInfo = idsEpicsFaltando.length
+    ? await getFields(ctx, idsEpicsFaltando, ['System.Id', 'System.Title'])
+    : [];
+  const tituloDoEpic = new Map(epicsFaltandoInfo.map(e => [e.id, (e.fields || {})['System.Title'] || '(sem título)']));
+  const epicsNovos = epicsFaltandoBase.map(e => ({ ...e, titulo: tituloDoEpic.get(e.id) || '(sem título)' }));
+
+  const itensTodos = featuresValidas.map(w => itemDe(w, cfg));
+
+  /* Excluído (Removed) não é item do Radar de forma nenhuma — sai do array
+     antes de guardas, diff e gravação, não só da tela. `itens` a partir
+     daqui nunca contém status:'excluido': é por isso que guardaStatusVazio e
+     coletarPendencias, mais abaixo, não precisam saber que esse terceiro
+     valor existe. */
+  const excluidos = itensTodos.filter(i => i.status === 'excluido');
+  const itens = itensTodos.filter(i => i.status !== 'excluido')
+                          .sort((a, b) => a.id - b.id);
 
   const antes = await fatosAnteriores();
   const g = guardaEsvaziamento(itens.length, antes ? antes.epics.length : null);
 
-  const { semStatus, semTrack } = coletarPendencias(itens);
+  const { semStatus } = coletarPendencias(itens);
   const mudancas = diffRodadas(antes ? antes.epics : null, itens);
 
-  console.log(relatorio({ itens, orfas, semStatus, semTrack, mudancas }));
+  console.log(relatorio({ itens, excluidos, semPai, epicsNovos, semStatus, mudancas }));
 
   /* Calculada aqui, antes de decidirGravacao, para que --dry-run possa
      avisar sobre ela também (ver abaixo) — não só na hora de gravar de
      verdade. "estados" vazio em tools/config.json não derruba a contagem de
-     Epics (guardaEsvaziamento não vê nada de errado), mas grava o board
+     itens (guardaEsvaziamento não vê nada de errado), mas grava o board
      inteiro sem status. Ao contrário da guarda de esvaziamento, esta nunca
      aceita --forcar — não há "config vazio real" para publicar, só falta
      preencher o mapa. */
