@@ -123,6 +123,10 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
 #nav-pendencias {
   --icone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.3 4.3 2.5 18a2 2 0 0 0 1.7 3h15.6a2 2 0 0 0 1.7-3L13.7 4.3a2 2 0 0 0-3.4 0Z'/%3E%3Cpath d='M12 9v4'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E");
 }
+/* Produtos: caixa (o produto em si) */
+#nav-produtos {
+  --icone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 8v8a2 2 0 0 1-1 1.7l-7 4a2 2 0 0 1-2 0l-7-4A2 2 0 0 1 3 16V8a2 2 0 0 1 1-1.7l7-4a2 2 0 0 1 2 0l7 4A2 2 0 0 1 21 8Z'/%3E%3Cpath d='m3.3 7 8.7 5 8.7-5'/%3E%3Cpath d='M12 22V12'/%3E%3C/svg%3E");
+}
 /* Projetos: kanban (colunas do board) */
 #nav-projetos {
   --icone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='3'/%3E%3Cpath d='M8 7v10'/%3E%3Cpath d='M12 7v6'/%3E%3Cpath d='M16 7v8'/%3E%3C/svg%3E");
@@ -163,9 +167,10 @@ h2 { font-size: 1.25rem; margin: 0 0 1rem; }
 /* Troca de página: esconde todas e mostra só a ativa. Antes era par a par
    ("meus-itens esconde projetos"…), o que multiplicava regras a cada página
    nova. O board tem o próprio atributo hidden e não entra aqui. */
-#secao-panorama, #secao-pendencias, #secao-meus-itens, #secao-projetos { display: none; }
+#secao-panorama, #secao-pendencias, #secao-produtos, #secao-meus-itens, #secao-projetos { display: none; }
 body[data-pagina='panorama'] #secao-panorama,
 body[data-pagina='pendencias'] #secao-pendencias,
+body[data-pagina='produtos'] #secao-produtos,
 body[data-pagina='meus-itens'] #secao-meus-itens,
 body[data-pagina='projetos'] #secao-projetos { display: block; }
 
@@ -499,6 +504,35 @@ body[data-pagina='projetos'] #secao-projetos { display: block; }
 .item .linha .val-alerta { color: #b45309; font-weight: 650; }
 /* Selo do motivo (bloqueado/atrasado): vermelho de alerta, nunca cor de tipo */
 .badge-tipo.selo-alerta { background: var(--erro-fundo); color: var(--erro); }
+
+/* ---------- Produtos ---------- */
+.grid-produtos { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 0.8rem; }
+.card.produto { gap: 0.5rem; }
+.card.produto h3 { font-size: 0.98rem; line-height: 1.35; }
+.card.produto h3 a { color: inherit; text-decoration: none; }
+.card.produto h3 a:hover { text-decoration: underline; }
+.card.produto h3 .id { font-size: 0.74rem; color: var(--mudo); font-weight: 550; }
+.produto .selos { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.produto .linha { display: flex; justify-content: space-between; gap: 0.6rem; font-size: 0.8rem; }
+.produto .linha .rot { color: var(--mudo); flex: none; }
+.produto .linha .val {
+  text-align: right;
+  font-weight: 500;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* margin-top:auto encosta a barra na base — cartões vizinhos alinham */
+.progresso {
+  background: var(--superficie);
+  border-radius: 12px;
+  padding: 0.55rem 0.7rem 0.65rem;
+  box-shadow: var(--sombra-cartao);
+  margin-top: auto;
+}
+/* contador ao lado do nome do time, no cabeçalho do bloco */
+.blocos .bloco > h3 .conta { margin-left: auto; }
 
 /* ---------- Board dedicado ---------- */
 .board-topo {

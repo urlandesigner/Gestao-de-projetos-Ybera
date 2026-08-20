@@ -392,6 +392,64 @@
     return grupos;
   }
 
+  // ---- Produtos (os épicos como produtos) ----
+  // Consulta própria, SEM o corte de 30 dias do wiqlCounts: progresso precisa
+  // do histórico inteiro. Um filho concluído em maio conta tanto quanto um de
+  // ontem — com o corte, "3 de 8" mentiria quando o certo fosse "3 de 20".
+  function wiqlProdutos(areas) {
+    return [
+      'SELECT [System.Id] FROM WorkItems',
+      'WHERE [System.TeamProject] = @project',
+      "AND ([System.WorkItemType] IN GROUP 'Microsoft.EpicCategory'",
+      "  OR [System.WorkItemType] IN GROUP 'Microsoft.FeatureCategory'",
+      "  OR [System.WorkItemType] IN GROUP 'Microsoft.RequirementCategory')",
+      "AND [System.State] <> 'Removed'",
+      areaClause(areas),
+    ].filter(Boolean).join('\n');
+  }
+
+  // Épicos com o progresso rolado dos descendentes (Features e PBIs, em
+  // qualquer profundidade). Tasks ficam fora porque a consulta não as traz —
+  // mesma régua do sprintProgress, que também ignora Task.
+  // Descendente cujo pai não veio na consulta (fora da área do time) não é
+  // contado: o roll-up só afirma o que enxerga.
+  function produtos(items) {
+    const filhosDe = new Map();
+    for (const it of items || []) {
+      const pai = ((it || {}).fields || {})['System.Parent'];
+      if (!pai) continue;
+      if (!filhosDe.has(pai)) filhosDe.set(pai, []);
+      filhosDe.get(pai).push(it);
+    }
+    const lista = (items || [])
+      .filter((it) => levelOf(((it || {}).fields || {})['System.WorkItemType']) === 'epic')
+      .map((ep) => {
+        let total = 0;
+        let feitos = 0;
+        const pilha = [...(filhosDe.get(ep.id) || [])];
+        const vistos = new Set([ep.id]); // guarda contra ciclo de link no DevOps
+        while (pilha.length) {
+          const filho = pilha.pop();
+          if (vistos.has(filho.id)) continue;
+          vistos.add(filho.id);
+          total += 1;
+          if (isTerminalState((filho.fields || {})['System.State'])) feitos += 1;
+          for (const neto of filhosDe.get(filho.id) || []) pilha.push(neto);
+        }
+        return { item: ep, filhos: { total, feitos } };
+      });
+    // O que fecha primeiro na frente; sem data-alvo vai pro fim — não há prazo
+    // a cobrar, e deixar no topo empurraria pra baixo o que tem data.
+    return lista.sort((a, b) => {
+      const da = dataValida((a.item.fields || {})[CAMPO_ALVO]);
+      const db = dataValida((b.item.fields || {})[CAMPO_ALVO]);
+      if (da === null && db === null) return 0;
+      if (da === null) return 1;
+      if (db === null) return -1;
+      return da - db;
+    });
+  }
+
   // ---- Cache ----
   function isStale(fetchedAt, now, maxAgeMinutes = 10) {
     if (!fetchedAt) return true;
@@ -415,7 +473,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, panoramaKpis, itensAtencao, pendencias,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };
 });

@@ -314,3 +314,53 @@ test('pendencias: sem nada pendente devolve os três grupos vazios', () => {
   const g = C.pendencias([pit(1, 'New', '2026-12-01T00:00:00Z')], AGORA);
   assert.deepEqual([g.bloqueados.length, g.atrasados.length, g.parados.length], [0, 0, 0]);
 });
+
+/* ---- Produtos ---- */
+// épico/feature/pbi com pai, estado e data-alvo
+const wit = (id, tipo, estado, pai, alvo) => ({ id, fields: {
+  'System.WorkItemType': tipo, 'System.State': estado,
+  'System.Parent': pai || undefined,
+  'Microsoft.VSTS.Scheduling.TargetDate': alvo || undefined,
+} });
+
+test('wiqlProdutos não tem corte de data (progresso precisa do histórico todo)', () => {
+  const q = C.wiqlProdutos([{ path: 'B2C\\Squad', children: true }]);
+  assert.ok(!q.includes('@Today'));
+  assert.ok(q.includes("IN GROUP 'Microsoft.EpicCategory'"));
+  assert.ok(q.includes("[System.AreaPath] UNDER 'B2C\\Squad'"));
+});
+
+test('produtos rola o progresso por netos e ignora quem não é descendente', () => {
+  const p = C.produtos([
+    wit(1, 'Epic', 'New', null, '2026-09-30T00:00:00Z'),
+    wit(10, 'Feature', 'Done', 1),
+    wit(11, 'Feature', 'New', 1),
+    wit(100, 'Product Backlog Item', 'Done', 10),  // neto concluído
+    wit(101, 'Product Backlog Item', 'New', 10),   // neto em aberto
+    wit(2, 'Epic', 'New', null, '2026-12-31T00:00:00Z'),
+    wit(20, 'Feature', 'New', 999),                // pai que não veio: fora
+  ]);
+  const porId = Object.fromEntries(p.map((x) => [x.item.id, x.filhos]));
+  assert.deepEqual(porId[1], { total: 4, feitos: 2 }); // 2 features + 2 PBIs
+  assert.deepEqual(porId[2], { total: 0, feitos: 0 }); // épico sem filhos
+});
+
+test('produtos ordena pelo que fecha primeiro, sem data-alvo no fim', () => {
+  const p = C.produtos([
+    wit(1, 'Epic', 'New', null, null),
+    wit(2, 'Epic', 'New', null, '2026-12-01T00:00:00Z'),
+    wit(3, 'Epic', 'New', null, '2026-09-01T00:00:00Z'),
+  ]);
+  assert.deepEqual(p.map((x) => x.item.id), [3, 2, 1]);
+});
+
+test('produtos sobrevive a ciclo de link sem travar', () => {
+  const p = C.produtos([
+    wit(1, 'Epic', 'New', null, null),
+    wit(10, 'Feature', 'New', 1),
+    wit(11, 'Feature', 'New', 10),
+    wit(12, 'Feature', 'New', 11),
+  ]);
+  // 10 → 11 → 12 são descendentes; o épico não se conta
+  assert.deepEqual(p[0].filhos, { total: 3, feitos: 0 });
+});

@@ -175,6 +175,10 @@ const FIELDS_COUNTS = [
   'System.Title', 'Microsoft.VSTS.Scheduling.TargetDate', 'System.ChangedDate',
 ];
 const FIELDS_BOARD = ['System.Title', 'System.State', 'System.WorkItemType', 'System.BoardColumn', 'System.AssignedTo', 'System.IterationPath'];
+const FIELDS_PRODUTOS = [
+  'System.Title', 'System.State', 'System.WorkItemType', 'System.Parent',
+  'System.AssignedTo', 'Microsoft.VSTS.Scheduling.StartDate', 'Microsoft.VSTS.Scheduling.TargetDate',
+];
 const FIELDS_ITEMS = [
   'System.Title', 'System.State', 'System.WorkItemType', 'System.TeamProject',
   'System.Parent', 'System.IterationPath',
@@ -378,6 +382,95 @@ function renderPanorama() {
     <section class="bloco"><h3>Por nível</h3>${htmlNiveis(C.aggregateCounts(todos))}</section>
     <section class="bloco"><h3>Atenção agora${verTodas}</h3>${listaAtencao}</section>
   </div>`;
+}
+
+/* ---------- Produtos ---------- */
+// Única página com consulta própria: progresso por filhos exige o histórico
+// inteiro, sem o corte de 30 dias do wiqlCounts. Por isso carrega SOB DEMANDA
+// (só ao abrir a página), como o board dedicado — o refresh geral não paga por
+// ela. Estado em memória, não no localStorage: são centenas de itens que só
+// servem a esta tela.
+const produtosState = { porTime: null, carregando: false, erro: null, fetchedAt: 0 };
+
+async function carregarProdutos(forcar) {
+  if (!state.config || produtosState.carregando) return;
+  if (!state.pat) { renderProdutos(); return; }
+  if (!forcar && produtosState.porTime && !C.isStale(produtosState.fetchedAt, Date.now())) return;
+  produtosState.carregando = true;
+  produtosState.erro = null;
+  renderProdutos();
+  try {
+    const porTime = [];
+    for (const p of state.config.projects.filter((x) => !x.hidden)) {
+      let areas = [];
+      try { areas = await A.teamAreas(ctx(), p.projectName, p.teamName); } catch (e) { /* segue projeto inteiro */ }
+      const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlProdutos(areas));
+      const items = ids.length ? await A.getFields(ctx(), ids, FIELDS_PRODUTOS) : [];
+      porTime.push({ p, produtos: C.produtos(items) });
+    }
+    produtosState.porTime = porTime;
+    produtosState.fetchedAt = Date.now();
+  } catch (e) {
+    if (e instanceof A.AuthError) state.auth = 'vencido';
+    produtosState.erro = mensagemDeErro(e);
+  } finally {
+    produtosState.carregando = false;
+    renderProdutos();
+    renderBadge();
+  }
+}
+
+// "1 de jul. – 30 de set.", ou o que houver. Sem nenhuma data, diz que não há.
+function janela(inicio, fim) {
+  const i = dataCurta(inicio);
+  const f = dataCurta(fim);
+  if (i && f) return i + ' – ' + f;
+  if (f) return 'até ' + f;
+  if (i) return 'desde ' + i;
+  return 'sem janela';
+}
+
+function renderProdutos() {
+  const box = $('produtos');
+  if (!box || !state.config) return;
+  if (!state.pat) { box.innerHTML = semDados('os produtos'); return; }
+  const erroHtml = produtosState.erro ? `<p class="erro">${escapeHtml(produtosState.erro)}</p>` : '';
+  if (!produtosState.porTime) {
+    box.innerHTML = erroHtml + (produtosState.erro ? '' : '<p class="mudo">carregando produtos…</p>');
+    return;
+  }
+  const multi = produtosState.porTime.length > 1;
+  const blocos = produtosState.porTime.map(({ p, produtos }) => {
+    const corpo = produtos.length
+      ? `<div class="grid-produtos">${produtos.map((reg) => htmlProduto(reg, p)).join('')}</div>`
+      : '<p class="mudo">Nenhum épico neste time.</p>';
+    return multi
+      ? `<section class="bloco"><h3>${escapeHtml(p.teamName)}<span class="conta">${produtos.length}</span></h3>${corpo}</section>`
+      : corpo;
+  }).join('');
+  box.innerHTML = erroHtml + (multi ? `<div class="blocos">${blocos}</div>` : blocos);
+}
+
+function htmlProduto(reg, p) {
+  const f = reg.item.fields || {};
+  const link = C.deepLinks(state.config.org, p.projectName, '').workItem(reg.item.id);
+  const resp = f['System.AssignedTo'] && f['System.AssignedTo'].displayName;
+  const { total, feitos } = reg.filhos;
+  const pct = total ? Math.round((feitos / total) * 100) : 0;
+  const bloqueado = C.stateBucket(f['System.State']) === 'atencao';
+  return `<article class="card produto">
+    <h3><a href="${link}" target="_blank" rel="noopener">${escapeHtml(f['System.Title'] || ('item #' + reg.item.id))}</a> <span class="id">#${reg.item.id}</span></h3>
+    <div class="selos">
+      <span class="badge-tipo tipo-epic">Épico</span>
+      <span class="badge-tipo${bloqueado ? ' selo-alerta' : ''}">${escapeHtml(f['System.State'])}</span>
+    </div>
+    <div class="linha"><span class="rot">Janela</span><span class="val">${janela(f['Microsoft.VSTS.Scheduling.StartDate'], f['Microsoft.VSTS.Scheduling.TargetDate'])}</span></div>
+    <div class="linha"><span class="rot">Responsável</span><span class="val">${resp ? escapeHtml(resp) : 'sem responsável'}</span></div>
+    <div class="progresso">
+      <span class="sprint-linha"><span class="sprint-nome">${total ? 'Entregue' : 'Sem filhos'}</span><span class="sprint-prog">${total ? feitos + '/' + total : '—'}</span></span>
+      <span class="barra"><span class="barra-cheia" style="width:${pct}%"></span></span>
+    </div>
+  </article>`;
 }
 
 /* ---------- Pendências ---------- */
@@ -610,6 +703,7 @@ function renderRoute() {
   }
   fecharBoard();
   if (hash === '#pendencias') { setPagina('pendencias'); return; }
+  if (hash === '#produtos') { setPagina('produtos'); carregarProdutos(false); return; }
   if (hash === '#projetos') { setPagina('projetos'); return; }
   if (hash === '#meus-itens') { setPagina('meus-itens'); return; }
   setPagina('panorama'); // abertura: visão geral antes do detalhe
@@ -619,6 +713,7 @@ function setPagina(pagina) {
   document.body.dataset.pagina = pagina;
   $('nav-panorama').classList.toggle('ativa', pagina === 'panorama');
   $('nav-pendencias').classList.toggle('ativa', pagina === 'pendencias');
+  $('nav-produtos').classList.toggle('ativa', pagina === 'produtos');
   $('nav-meus-itens').classList.toggle('ativa', pagina === 'meus-itens');
   $('nav-projetos').classList.toggle('ativa', pagina === 'projetos' || pagina === 'board');
 }
@@ -873,7 +968,10 @@ document.addEventListener('DOMContentLoaded', () => {
   $('wizard-descobrir').addEventListener('click', wizardDiscover);
   $('wizard-importar').addEventListener('change', wizardImport);
   $('wizard-concluir').addEventListener('click', wizardConclude);
-  $('atualizar').addEventListener('click', () => refreshAll(true));
+  $('atualizar').addEventListener('click', () => {
+    refreshAll(true);
+    if (document.body.dataset.pagina === 'produtos') carregarProdutos(true); // tem cache próprio
+  });
   $('abrir-config').addEventListener('click', openSettings);
   $('board-voltar').addEventListener('click', () => { location.hash = '#projetos'; });
   $('board-atualizar').addEventListener('click', () => { if (boardState.p) carregarBoard(boardState.p, true); });
