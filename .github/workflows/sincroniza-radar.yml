@@ -1,0 +1,93 @@
+# Sincroniza o Radar de Projetos USA com o Azure DevOps.
+#
+# POR QUE ISTO EXISTE: o Radar é uma página estática publicada, e os fatos que
+# ela mostra (estado, janela, produto, dono, conclusão) vivem no Azure DevOps.
+# Antes alguém reescrevia o arquivo de dados à mão a cada quinzena. Este job
+# faz isso sozinho, e ninguém precisa abrir um terminal.
+#
+# SETUP, UMA VEZ SÓ: crie o segredo `ADO_PAT` em
+#   Settings → Secrets and variables → Actions → New repository secret
+# com um Personal Access Token do Azure DevOps de escopo **Work Items (Read)**.
+# Só leitura: este job nunca escreve no DevOps.
+#
+# PARA RODAR NA MÃO: aba Actions → "Sincroniza o Radar com o Azure DevOps" →
+# "Run workflow". Marque `dry_run` para ler o relatório sem gravar nada.
+
+name: Sincroniza o Radar com o Azure DevOps
+
+on:
+  schedule:
+    # 09:00 UTC = 06:00 em São Paulo. Antes de alguém abrir a página.
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Só ler e relatar, sem gravar nem commitar'
+        type: boolean
+        default: false
+
+# O job commita o arquivo gerado; nada além disso.
+permissions:
+  contents: write
+
+# Duas rodadas ao mesmo tempo poderiam commitar em cima uma da outra.
+concurrency:
+  group: sincroniza-radar
+  cancel-in-progress: false
+
+jobs:
+  sincroniza:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      # Se o mapeamento quebrou, é melhor falhar antes de escrever na página
+      # publicada do que depois.
+      - name: Testes das ferramentas
+        working-directory: tools
+        run: node --test
+
+      - name: Sincroniza (dry-run)
+        if: ${{ inputs.dry_run }}
+        env:
+          ADO_PAT: ${{ secrets.ADO_PAT }}
+        # pipefail é obrigatório: sem ele o status do pipeline é o do `tee`,
+        # e uma rodada recusada pelas guardas (PAT vencido, consulta vazia)
+        # passaria por bem-sucedida.
+        run: |
+          set -o pipefail
+          node tools/sync.mjs --dry-run | tee "$GITHUB_STEP_SUMMARY"
+
+      - name: Sincroniza
+        if: ${{ !inputs.dry_run }}
+        env:
+          ADO_PAT: ${{ secrets.ADO_PAT }}
+        run: |
+          set -o pipefail
+          node tools/sync.mjs | tee "$GITHUB_STEP_SUMMARY"
+
+      # As guardas do sync.mjs já barram rodada ruim: PAT vencido, consulta
+      # vazia e queda abaixo do piso saem com código de erro e o job falha sem
+      # ter gravado. Aqui só resta decidir se vale um commit.
+      - name: Commita se o dado mudou
+        if: ${{ !inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          ARQ="Radar de projetos/assets/fatos.js"
+          # `geradoEm` muda a cada rodada mesmo quando nada mais mudou; comparar
+          # só as demais linhas evita um commit por dia sem conteúdo.
+          if git diff --unified=0 -- "$ARQ" | grep -E '^[+-]' | grep -vE '^(\+\+\+|---)' | grep -qv 'geradoEm'; then
+            git config user.name  'radar-sync[bot]'
+            git config user.email 'radar-sync[bot]@users.noreply.github.com'
+            git add "$ARQ"
+            git commit -m 'chore(dados): sincroniza fatos.js com o Azure DevOps'
+            git push
+            echo 'Commitado e publicado.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            git checkout -- "$ARQ"
+            echo 'Nada mudou no DevOps desde a última rodada — sem commit.' >> "$GITHUB_STEP_SUMMARY"
+          fi
