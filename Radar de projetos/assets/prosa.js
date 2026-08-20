@@ -193,7 +193,48 @@ const PROSA = {
      en:"<b>Nothing is blocked waiting on a decision from you</b> this cycle. When something stalls outside the product team, it shows up here first — with a named decision-maker and a due date."}
   ],
 
-  /* Vazio: a base não registra decisões nem riscos. Ver estado vazio. */
+  /* PENDÊNCIAS ("asks") — a forma que cumpre o que a linha "Pendências" do
+     essencial, acima, já promete ao leitor: uma pendência aparece "com nome
+     do decisor e prazo". Assim como `texto`, mais abaixo, é 100% editorial —
+     nenhuma ferramenta em tools/ lê ou escreve este campo, porque o Azure
+     DevOps não tem um conceito de "decisão pendente de fora do time" para
+     extrair (ver o aviso no topo deste arquivo). app.js só CONTA o tamanho
+     deste array para os tiles e o badge da navegação; a forma de cada
+     entrada é definida aqui, não lá.
+
+     Cada entrada:
+       what:{pt,en}    → o que está parado. Obrigatório — vira o título do
+                         cartão, do mesmo jeito que `title` vira o h4 do
+                         cartão de um projeto.
+       who:"Nome"      → quem precisa decidir. Obrigatório. String simples,
+                         não bilíngue — nome próprio não se traduz.
+       by:"AAAA-MM-DD" → opcional, em ISO. Quando essa data já passou de
+                         `meta.updated` (o "hoje" que o Radar usa), o cartão
+                         ganha o mesmo selo vermelho que o resto da página já
+                         usa para impedimento ("blocked") — um prazo
+                         estourado é a informação mais importante desta
+                         página, e por isso pega emprestada a cor mais forte
+                         que o Radar já tem, em vez de inventar uma nova.
+       impact:{pt,en}  → opcional. O que acontece se ninguém decidir a
+                         tempo — é o que transforma "está parado" em "por
+                         que isso importa" para quem só tem um minuto.
+       item:47688      → opcional. O `id` do work item afetado (a mesma
+                         chave numérica de `texto`, mais abaixo). Quando
+                         presente, o cartão mostra a que projeto a pendência
+                         se refere usando o título EDITORIAL dele (o mesmo
+                         que aparece no board) — nunca o título cru do Azure
+                         DevOps, que quem lê esta página não abriu.
+
+     Exemplo preenchido (ilustrativo — não é pendência real):
+       {what:{pt:"Aprovar o novo domínio da loja USA",
+              en:"Approve the new US store domain"},
+        who:"Fernanda (Jurídico)",
+        by:"2026-09-05",
+        impact:{pt:"Sem o domínio aprovado, a nova home não pode ir ao ar.",
+                en:"Without the approved domain, the new homepage can't go live."},
+        item:4}
+
+     Vazio: a base não registra decisões nem riscos. Ver estado vazio. */
   asks:[],
 
   /* NÃO HÁ MAIS BLOCO "O QUE MUDOU".

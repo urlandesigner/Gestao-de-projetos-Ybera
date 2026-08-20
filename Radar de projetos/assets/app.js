@@ -35,7 +35,12 @@ const T = {
     askSub:"O que está parado esperando uma decisão ou atenção de fora do time de produto.",
     askEmptyShort:"Nenhuma decisão esperando vocês nesta quinzena.",
     askEmptyT:"Nenhuma decisão registrada",
-    askEmptyD:"Nenhum item está registrado como travado no Azure DevOps, esperando decisão ou ação de fora do time de produto. Enquanto isso não acontecer, esta seção não tem o que mostrar — e decisões travadas seguem invisíveis para quem precisa decidir.",
+    /* Corrigido: esta lista nunca veio do Azure DevOps (ele não tem o
+       conceito de "decisão pendente de fora do time" para extrair — ver
+       prosa.js) — é mantida à mão, e some daqui só porque ninguém escreveu
+       nada nesta edição. A frase antiga culpava a ferramenta errada. */
+    askEmptyD:"Esta lista é mantida à mão — o Azure DevOps não tem como saber o que está parado esperando decisão ou ação de fora do time de produto. Nesta edição, nada foi registrado, então esta seção não tem o que mostrar. Enquanto isso não acontecer, decisões travadas seguem invisíveis para quem precisa decidir.",
+    askWhoLabel:"Decisor", askByLabel:"Prazo", askOverdue:"Prazo vencido",
     boardTitle:"Board de entregas",
     boardSub:"Cada item está escrito pelo que o usuário passa a conseguir fazer. O título original no Azure DevOps aparece embaixo, para rastreio.",
     detTitle:"Produtos",
@@ -113,7 +118,8 @@ const T = {
     askSub:"What is stalled waiting on a decision or attention from outside the product team.",
     askEmptyShort:"No decision waiting on you this cycle.",
     askEmptyT:"No decisions recorded",
-    askEmptyD:"No item is registered as blocked in Azure DevOps, waiting on a decision or action from outside the product team. Until that happens, this section has nothing to show — and blocked decisions stay invisible to the people who need to make them.",
+    askEmptyD:"This list is kept by hand — Azure DevOps has no way to know what's stalled waiting on a decision or action from outside the product team. Nothing was recorded for this edition, so this section has nothing to show. Until that happens, blocked decisions stay invisible to the people who need to make them.",
+    askWhoLabel:"Decision maker", askByLabel:"Due", askOverdue:"Overdue",
     boardTitle:"Delivery board",
     boardSub:"Every item is written as what the user can now do. The original Azure DevOps title appears below it, for traceability.",
     detTitle:"Products",
@@ -504,7 +510,15 @@ function render(){
     .map(s => `<li><span class="tg">${esc(L(s.tag))}</span><span>${L(s)}</span></li>`).join("");
 
   $("askTitle").textContent = t.askTitle;
-  $("askList").innerHTML = emptyBox(t.askEmptyShort, t.askEmptyD, t);
+  /* Antes esta linha ia direto pro estado vazio, sempre — então uma
+     pendência escrita em prosa.js fazia o tile do Panorama contar "1" e
+     esta página continuar dizendo que não há nada registrado, uma
+     contradição na cara do leitor. Agora quem decide é o tamanho do array,
+     igual a toda outra lista/estado-vazio do Radar (board, produtos,
+     report). */
+  $("askList").innerHTML = (DATA.asks || []).length
+    ? `<div class="cards">${DATA.asks.map(a => askCard(a, t)).join("")}</div>`
+    : emptyBox(t.askEmptyShort, t.askEmptyD, t);
 
   const fEl = $("filters");
   fEl.innerHTML = `<span class="flabel">${esc(t.filterLabel)}</span>` +
@@ -990,6 +1004,34 @@ function card(i, t){
       <span class="k">${ICO.user}${esc(i.owner || DATA.meta.owner)}</span>
     </div>
     ${src}
+  </article>`;
+}
+
+/* Cartão de uma pendência. Mesmo vocabulário do cartão de projeto acima —
+   chip, título, nota e linha de meta — para não inventar um padrão novo só
+   porque a fonte do dado é outra. Prazo estourado é a informação mais
+   importante desta página, então empresta o selo e a borda vermelha que o
+   resto do Radar já usa para "travado" (.hp.blocked / .card.blocked), em vez
+   de criar uma terceira cor de alerta. */
+function askCard(a, t){
+  const overdue = !!(a.by && a.by < TODAY_ISO);
+  /* item aponta pro id do work item em fatos.js/prosa.js — mostra o título
+     EDITORIAL (o mesmo do board), nunca o azureTitle cru: quem lê esta
+     página não abriu o Azure DevOps. */
+  const proj = a.item != null ? DATA.items.find(i => i.id === a.item) : null;
+  const tag = proj ? `<span class="tag">${esc(L(proj.title))}</span>` : "";
+  const pill = overdue ? `<span class="hp blocked">${ICO.alert}${esc(t.askOverdue)}</span>` : "";
+  const impact = a.impact ? `<p class="hnote">${esc(L(a.impact))}</p>` : "";
+  const by = a.by
+    ? `<span class="k">${ICO.cal}${esc(t.askByLabel)}: ${esc(fmtDate(a.by, true))}</span>` : "";
+  return `<article class="card${overdue ? " blocked" : ""}">
+    ${tag}${pill}
+    <h4>${esc(L(a.what))}</h4>
+    ${impact}
+    <div class="row">
+      <span class="k">${ICO.user}${esc(t.askWhoLabel)}: ${esc(a.who)}</span>
+      ${by}
+    </div>
   </article>`;
 }
 
