@@ -60,8 +60,7 @@ Por Epic: `id`, `azureTitle`, `track`, `start`, `end`, `status`, `health`,
 
 **`assets/prosa.js`** — escrito à mão. Contém o `meta` inteiro, os `tracks`
 com seus textos de produto, o `summary` do "O essencial", os `asks`, os
-`reports`, a tabela de mapeamento Area Path → `track`, e o dicionário
-editorial indexado por id do work item:
+`reports`, e o dicionário editorial indexado por id do work item:
 
 ```js
 texto:{
@@ -100,8 +99,8 @@ avisa, para a decisão ser sua: apagar o texto ou consertar o DevOps.
 ### Escopo da consulta
 
 Todos os Epics do projeto `Ecommerce USA`, sem filtro de área no WIQL. É a
-tabela Area Path → `track` do `prosa.js` que decide a qual produto cada um
-pertence. Epic cuja área não está na tabela **não é descartado**: entra com
+tabela Area Path → `track` do `tools/config.json` que decide a qual produto
+cada um pertence. Epic cuja área não está na tabela **não é descartado**: entra com
 `track` nulo, renderiza num grupo "sem produto" e é listado no relatório.
 Filtrar no WIQL esconderia Epic novo; filtrar na tabela o mostra e cobra o
 cadastro.
@@ -112,10 +111,10 @@ cadastro.
 |---|---|
 | `id` *(novo)* | `System.Id` do Epic — chave de junção com a prosa |
 | `azureTitle` | `System.Title` — assume o papel de rastreio que o campo `notion` tem hoje |
-| `track` | `System.AreaPath`, via tabela Area Path → `track` no `prosa.js` |
+| `track` | `System.AreaPath`, via tabela Area Path → `track` em `tools/config.json` |
 | `start` | `Microsoft.VSTS.Scheduling.StartDate` |
 | `end` | `Microsoft.VSTS.Scheduling.TargetDate` |
-| `status` | `System.State`, por mapa estado → `done` \| `doing` \| `next` |
+| `status` | `System.State`, por mapa estado → `done` \| `doing` \| `next` em `tools/config.json` |
 | `health` | `System.State` cujo nome contém "impediment"/"impedimento" → `blocked`. O `watch` ("em atenção") **continua editorial**: não há sinal equivalente no DevOps, e inferir atenção de atraso de data produziria alerta aceso o tempo todo |
 | `shipped` | `Microsoft.VSTS.Common.ClosedDate` → `"AAAA-MM"` |
 | `owner` | `System.AssignedTo.displayName` |
@@ -153,6 +152,13 @@ disso e o site continua tão estático quanto hoje.
 | `tools/descobrir.mjs` | só-leitura: imprime tipos, estados, áreas e campos preenchidos |
 | `tools/tests/mapa.test.mjs` | `node --test` sobre o `mapa.mjs` |
 | `tools/package.json` | só o script de teste; nenhuma dependência |
+| `tools/config.json` | org, projeto, mapa de estados e tabela de áreas |
+
+O mapa de estados e a tabela de áreas são **configuração de geração**, não de
+renderização: o script resolve `status` e `track` antes de gravar, então o site
+nunca vê esses nomes. Ficam em `tools/config.json` e não no `prosa.js` — ler um
+global de browser a partir do Node seria contorcionismo sem ganho. Os valores
+saem da rodada de descoberta, não de palpite.
 
 `tools/ado.mjs` é **cópia reduzida** do `assets/api.js` da Central de Projetos
 — já é UMD e sem DOM, roda em Node sem adaptação. Cópia e não dependência
