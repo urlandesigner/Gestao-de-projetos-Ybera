@@ -180,7 +180,9 @@ ADO_PAT=xxx node tools/sync.mjs             # grava assets/fatos.js
 
 PAT por variável de ambiente, nunca por argumento — argumento vaza no
 histórico do shell e em `ps`. O PAT não entra em nenhum arquivo, e a saída do
-script mascara qualquer coisa que se pareça com ele.
+script nunca imprime o PAT — não há mascaramento algum, e não precisa haver,
+porque o valor simplesmente não passa por nenhum `console.log`/`console.error`
+do script.
 
 ## Tratamento de erro — as cinco guardas
 
@@ -200,9 +202,14 @@ script mascara qualquer coisa que se pareça com ele.
    mapa entra com o estado cru e é listado no relatório. Mapear o desconhecido
    para "planejado" esconderia mudança de processo de quem precisa saber.
 5. **Relatório no fim, sempre.** Contagem de Epics e demandas, itens sem
-   prosa, prosas órfãs, estados não mapeados, e o que mudou desde a última
-   rodada. Quando o GitHub Action estiver ligado, este relatório substitui o
-   olhar humano no `git diff`.
+   produto (área fora da tabela de `tools/config.json`), estados não
+   mapeados, Features órfãs e o que mudou desde a última rodada. O script
+   nunca lê `prosa.js` — não tem como saber quais Epics ficaram sem texto
+   editorial nem quais entradas de `texto` ficaram órfãs. Esses dois avisos
+   são do lado do site: `fundir()`, em `app.js`, os emite como
+   `console.warn` no navegador quando a página carrega. Quando o GitHub
+   Action estiver ligado, este relatório substitui o olhar humano no
+   `git diff`.
 
 ## Verificação
 

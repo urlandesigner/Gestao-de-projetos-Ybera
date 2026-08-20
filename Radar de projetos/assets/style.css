@@ -328,6 +328,13 @@ section{margin-bottom:30px}
 @media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])) .hp.watch{color:var(--warning)}}
 .card.watch{border-color:rgba(250,178,25,.45)}
 .card.blocked{border-color:rgba(208,59,59,.35)}
+
+/* "sem redação": mesmo vocabulário do selo de saúde (.hp), mas neutro —
+   fato existe, texto editorial ainda não. É lembrete de tarefa para quem
+   mantém a página, não alerta para quem lê: por isso cor neutra (--ink-3
+   sobre --neutral-bg), nunca âmbar ou vermelho. */
+.noprosa{display:inline-flex;align-items:center;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:999px;padding:3px 9px;margin:0 0 9px 5px;background:var(--neutral-bg);color:var(--ink-3)}
+.proj .noprosa,.tproj .noprosa{margin:0 0 0 7px}
 .hnote{font-size:12.5px;color:var(--ink-2);line-height:1.5;margin-top:8px;padding-left:10px;border-left:2px solid var(--warning)}
 .card.blocked .hnote{border-left-color:var(--critical)}
 

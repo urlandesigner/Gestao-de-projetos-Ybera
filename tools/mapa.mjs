@@ -101,7 +101,10 @@ export function itemDe(epic, features, cfg){
     health: healthDe(estado),
     shipped: mesDe(f['Microsoft.VSTS.Common.ClosedDate']),
     owner: (dono && dono.displayName) || null,
-    demands: (features || []).map(w => demandaDe(w, cfg))
+    /* Ordenado por id, como os Epics: sem isto a ordem segue o que a API de
+       lote devolveu (não garantida), produzindo diff gratuito no fatos.js
+       commitado a cada rodada mesmo quando nada mudou de fato. */
+    demands: (features || []).map(w => demandaDe(w, cfg)).sort((a, b) => a.id - b.id)
   };
 }
 

@@ -686,7 +686,7 @@ git commit -m "feat(tools): mapeamento puro de work item para item do Radar"
 **Interfaces:**
 - Consumes: `tools/ado.mjs` (Task 1), `tools/mapa.mjs` (Task 2)
 - Produces:
-  - `guardaEsvaziamento(qtdNova, qtdAntiga) → {ok:boolean, motivo:string|null}`
+  - `guardaEsvaziamento(qtdNova, qtdAntiga) → {ok:boolean, forcavel:boolean, motivo:string|null}`
   - `serializarFatos(geradoEm, itens) → string` (o conteúdo de `fatos.js`)
   - `relatorio({itens, orfas, semStatus, semTrack, mudancas}) → string`
   - `tools/sync.mjs` executável: grava `Radar de projetos/assets/fatos.js`
@@ -852,7 +852,7 @@ Os nomes de estado e de área saem da rodada de descoberta (Task 1). Este arquiv
 }
 ```
 
-Com `estados` vazio, todo item cai em "estado não mapeado" e o relatório lista os nomes reais — que é exatamente o comportamento desejado antes da Task 5. O script grava normalmente: o Radar mostra os itens sem status até o mapa ser preenchido.
+Com `estados` vazio, todo item cai em "estado não mapeado" e o relatório lista os nomes reais — que é exatamente o comportamento desejado antes da Task 5. O script NÃO grava nesse estado: com todo item sem status mapeado, a guarda de `guardaStatusVazio` (`tools/guardas.mjs`) recusa a gravação, porque isso não é dado real — é a ferramenta ainda desconfigurada, e gravar assim esvaziaria as três colunas do board na página no ar. O relatório sai normalmente (ele imprime antes da guarda decidir); só a escrita em `fatos.js` é que espera o mapa ser preenchido.
 
 - [ ] **Step 6: Escrever o `tools/sync.mjs`**
 
@@ -1226,7 +1226,7 @@ Se a linha `TargetDate: N de M` mostrar que as datas **não** estão preenchidas
 
 - [ ] **Step 3: Preencher o `tools/config.json`**
 
-Colar o esqueleto que o `descobrir.mjs` imprimiu e trocar cada `null` por `"done"`, `"doing"` ou `"next"` nos estados, e pelo id do produto (`club`, `interna`, `influencer`, `reviews`, `quiz`, `europa`) nas áreas.
+Colar o esqueleto que o `descobrir.mjs` imprimiu e trocar cada `null` por `"done"`, `"doing"` ou `"next"` nos estados, e pelo id do produto (`club`, `interna`, `influencer`, `reviews`, `ia`, `europa` — conferir sempre contra `PROSA.tracks` em `prosa.js`, que é quem define os ids de verdade) nas áreas.
 
 - [ ] **Step 4: Rodar em seco e ler o relatório**
 

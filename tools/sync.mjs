@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { runWiql, getFields, AuthError, NetworkError } from './ado.mjs';
 import { itemDe, agruparPorPai, diffRodadas } from './mapa.mjs';
-import { guardaEsvaziamento, decidirGravacao, serializarFatos, relatorio, parsearFatos, coletarPendencias } from './guardas.mjs';
+import { guardaEsvaziamento, guardaStatusVazio, guardaLeituraAnterior, decidirGravacao, serializarFatos, relatorio, parsearFatos, coletarPendencias } from './guardas.mjs';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const RAIZ = path.resolve(AQUI, '..');
@@ -40,12 +40,26 @@ const wiql = tipo =>
      AND [System.WorkItemType] = '${tipo}'`;
 
 /* Lê a rodada anterior para o diff e para a guarda de esvaziamento. Arquivo
-   ausente é primeira rodada, não erro. */
+   ausente (ENOENT) é primeira rodada, não erro — qualquer outro problema de
+   leitura ou de forma é decidido por guardaLeituraAnterior (guardas.mjs,
+   pura e testada) e vira exceção aqui, capturada pelo try/catch geral lá
+   embaixo. Ver o comentário daquela função para o porquê de não tratar tudo
+   como "primeira rodada" igual ao catch único de antes fazia. */
 async function fatosAnteriores(){
+  let txt = null, erroLeitura = null;
   try {
-    const txt = await readFile(DESTINO, 'utf8');
-    return parsearFatos(txt);
-  } catch { return null; }
+    txt = await readFile(DESTINO, 'utf8');
+  } catch (e) { erroLeitura = e; }
+
+  let dados = null;
+  if(erroLeitura === null){
+    try { dados = parsearFatos(txt); }
+    catch (e) { erroLeitura = e; }
+  }
+
+  const r = guardaLeituraAnterior(erroLeitura, dados);
+  if(!r.ok) throw new Error(r.motivo);
+  return r.ausente ? null : dados;
 }
 
 try {
@@ -83,6 +97,17 @@ try {
     process.exit(decisao.saida);
   }
   if(!decisao.deveGravar) process.exit(decisao.saida);
+
+  /* Guarda extra, depois da de esvaziamento: "estados" vazio em
+     tools/config.json não derruba a contagem de Epics (guardaEsvaziamento
+     não vê nada de errado), mas grava o board inteiro sem status. Ao
+     contrário da guarda de esvaziamento, esta nunca aceita --forcar — não
+     há "config vazio real" para publicar, só falta preencher o mapa. */
+  const gStatus = guardaStatusVazio(itens);
+  if(!gStatus.ok){
+    console.error('\n' + gStatus.motivo);
+    process.exit(1);
+  }
 
   /* Monta o arquivo inteiro antes de gravar: falha no meio deixa o fatos.js
      anterior intacto, em vez de meio arquivo. */

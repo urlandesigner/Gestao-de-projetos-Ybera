@@ -1,6 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { guardaEsvaziamento, decidirGravacao, serializarFatos, relatorio, parsearFatos, coletarPendencias } from '../guardas.mjs';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+import { guardaEsvaziamento, guardaStatusVazio, guardaLeituraAnterior, decidirGravacao, serializarFatos, relatorio, parsearFatos, coletarPendencias } from '../guardas.mjs';
 
 test('primeira rodada passa quando ha itens', () => {
   assert.equal(guardaEsvaziamento(14, null).ok, true);
@@ -37,6 +40,28 @@ test('queda dentro de 20 por cento passa', () => {
 
 test('crescer sempre passa', () => {
   assert.equal(guardaEsvaziamento(30, 14).ok, true);
+});
+
+/* guardaStatusVazio: tools/config.json com "estados" vazio não derruba a
+   contagem de Epics (guardaEsvaziamento não vê problema), mas grava o board
+   inteiro sem status. É uma guarda separada, e nunca aceita --forcar. */
+test('guardaStatusVazio recusa quando todo item esta sem status', () => {
+  const r = guardaStatusVazio([{ status:null }, { status:null }]);
+  assert.equal(r.ok, false);
+  assert.match(r.motivo, /2 Epics/);
+  assert.match(r.motivo, /estados/);
+});
+
+test('guardaStatusVazio deixa passar quando so alguns itens estao sem status', () => {
+  assert.equal(guardaStatusVazio([{ status:'doing' }, { status:null }]).ok, true);
+});
+
+test('guardaStatusVazio passa com lista vazia (nada a recusar)', () => {
+  assert.equal(guardaStatusVazio([]).ok, true);
+});
+
+test('guardaStatusVazio passa quando todos os itens tem status mapeado', () => {
+  assert.equal(guardaStatusVazio([{ status:'doing' }, { status:'done' }]).ok, true);
 });
 
 test('serializarFatos produz JS valido e sem PAT', () => {
@@ -89,6 +114,60 @@ test('parsearFatos ignora chaves dentro do comentario de cabecalho', () => {
   const texto = '/* exemplo de uso: { "a": 1 } no comentario */\n' +
     'const RADAR_FATOS = {\n  "geradoEm": "x",\n  "epics": []\n};\n';
   assert.deepEqual(parsearFatos(texto), { geradoEm:'x', epics:[] });
+});
+
+/* A semente commitada em Radar de projetos/assets/fatos.js precisa
+   continuar parseável pelo próprio parsearFatos que tools/sync.mjs vai usar
+   para ler a "rodada anterior" na primeira vez que rodar de verdade. Isto
+   tranca a forma da semente por teste em vez de checagem manual. */
+test('parsearFatos le a semente commitada em Radar de projetos/assets/fatos.js', () => {
+  const AQUI = path.dirname(fileURLToPath(import.meta.url));
+  const SEED = path.join(AQUI, '..', '..', 'Radar de projetos', 'assets', 'fatos.js');
+  const dados = parsearFatos(readFileSync(SEED, 'utf8'));
+  assert.equal(typeof dados.geradoEm, 'string');
+  assert.ok(Array.isArray(dados.epics));
+  assert.equal(dados.epics.length, 14);
+  for(const e of dados.epics){
+    assert.equal(typeof e.id, 'number');
+    assert.equal(typeof e.azureTitle, 'string');
+    assert.ok(Array.isArray(e.demands));
+  }
+});
+
+/* guardaLeituraAnterior: ENOENT (arquivo ausente) é primeira rodada de
+   verdade; qualquer outro problema (permissão, JSON quebrado, forma errada)
+   é uma rodada anterior que existe mas não pôde ser lida — e tratar isso
+   como "primeira rodada" desligaria a guarda de esvaziamento bem no momento
+   em que ela mais importa. */
+test('guardaLeituraAnterior trata ENOENT como primeira rodada', () => {
+  const erro = Object.assign(new Error('no such file'), { code:'ENOENT' });
+  const r = guardaLeituraAnterior(erro, null);
+  assert.equal(r.ok, true);
+  assert.equal(r.ausente, true);
+});
+
+test('guardaLeituraAnterior recusa erro que nao e ausencia (permissao, parse)', () => {
+  const erroPermissao = Object.assign(new Error('permission denied'), { code:'EACCES' });
+  const r1 = guardaLeituraAnterior(erroPermissao, null);
+  assert.equal(r1.ok, false);
+  assert.match(r1.motivo, /permission denied/);
+
+  const erroParse = new SyntaxError('Unexpected token');
+  const r2 = guardaLeituraAnterior(erroParse, null);
+  assert.equal(r2.ok, false);
+  assert.match(r2.motivo, /Unexpected token/);
+});
+
+test('guardaLeituraAnterior recusa JSON valido mas sem epics', () => {
+  const r = guardaLeituraAnterior(null, { geradoEm:'x' });
+  assert.equal(r.ok, false);
+  assert.match(r.motivo, /forma esperada/);
+});
+
+test('guardaLeituraAnterior aceita dados bem formados', () => {
+  const r = guardaLeituraAnterior(null, { geradoEm:'x', epics:[] });
+  assert.equal(r.ok, true);
+  assert.equal(r.ausente, false);
 });
 
 test('coletarPendencias ve estado nao mapeado em item', () => {

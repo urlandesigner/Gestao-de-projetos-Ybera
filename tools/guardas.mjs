@@ -33,6 +33,28 @@ export function guardaEsvaziamento(qtdNova, qtdAntiga){
   return { ok:true, forcavel:false, motivo:null };
 }
 
+/* Todo item sem status mapeado não é queda de dado — é tools/config.json com
+   "estados" ainda vazio (ferramenta desconfigurada, não realidade do
+   DevOps). Gravar assim esvaziaria as três colunas do board na página no
+   ar: cada item cai fora de "done"/"doing"/"next" ao mesmo tempo. Diferente
+   da guarda de esvaziamento, esta nunca aceita --forcar — não existe um
+   "config vazio real" que alguém precise publicar, só falta preencher o
+   mapa. Alguns itens sem status (um estado novo, ainda não mapeado) seguem
+   passando normalmente: é só o caso em que NENHUM item tem status que
+   indica que o mapa inteiro está por preencher. */
+export function guardaStatusVazio(itens){
+  const lista = itens || [];
+  if(lista.length && lista.every(i => i.status === null)){
+    return {
+      ok:false,
+      motivo:`Nenhum dos ${lista.length} Epics tem status mapeado — tools/config.json ` +
+             'provavelmente tem "estados" vazio. Rode "node tools/descobrir.mjs", preencha o mapa ' +
+             'e rode de novo. Nada foi gravado.'
+    };
+  }
+  return { ok:true, motivo:null };
+}
+
 /* Consome o que guardaEsvaziamento decidiu e diz a sync.mjs o que fazer com
    isso: gravar, avisar, recusar ou não gravar por causa de --dry-run. É
    exatamente a combinação de `guarda.ok`/`guarda.forcavel`/`--forcar`/
@@ -67,6 +89,15 @@ export function decidirGravacao(guarda, { forcar, seco }){
   return { deveGravar:true, avisos, erro:null, saida:null };
 }
 
+/* Único lugar onde o literal "const RADAR_FATOS = " é escrito no código.
+   serializarFatos o interpola no arquivo que grava; parsearFatos o usa para
+   achar onde o JSON começa. Antes das duas funções concordarem por
+   construção, esta string vivia duplicada (uma vez no template de
+   serializarFatos, outra no MARCADOR de parsearFatos) — bastava uma mudar
+   sem a outra para o parser parar de achar o arquivo que o próprio script
+   acabou de gravar. */
+const MARCADOR = 'const RADAR_FATOS = ';
+
 /* JSON.stringify é o que garante escape correto: título do DevOps vem com
    aspas no texto e com "\" nas Area Paths. Montar a string à mão aqui já
    produziu arquivo inválido em outros projetos. */
@@ -77,11 +108,9 @@ export function serializarFatos(geradoEm, itens){
    about, result, healthNote) vive em prosa.js, indexado pelo mesmo id.
    Para regerar:  ADO_PAT=xxx node tools/sync.mjs
    Gerado em: ${geradoEm} */
-const RADAR_FATOS = ${corpo};
+${MARCADOR}${corpo};
 `;
 }
-
-const MARCADOR = 'const RADAR_FATOS = ';
 
 /* Faz o caminho inverso de serializarFatos. Ancorado no marcador que ela
    emite, não no primeiro "{" do arquivo: o comentário de cabeçalho hoje não
@@ -95,6 +124,38 @@ export function parsearFatos(texto){
   const resto = texto.slice(i + MARCADOR.length);
   const fim = resto.lastIndexOf('}');
   return JSON.parse(resto.slice(0, fim + 1));
+}
+
+/* Um fatos.js anterior ILEGÍVEL não é a mesma coisa que AUSENTE. ENOENT é
+   primeira rodada de verdade — não há o que comparar, e só a regra do zero
+   vale. Qualquer outro erro (permissão, JSON inválido, marcador ausente, ou
+   JSON válido mas sem `epics`) significa que EXISTE uma rodada anterior que
+   a guarda de esvaziamento não conseguiu ler — e tratar isso como primeira
+   rodada desligaria a guarda bem no momento em que ela mais importa: um
+   fatos.js corrompido por edição manual deixaria 1 Epic novo sobrescrever
+   os 14 publicados, sem nenhum aviso. Por isso este caso PARA a rodada em
+   vez de silenciosamente virar `null`, como o `catch { return null }` de
+   antes fazia para qualquer erro, ENOENT ou não. */
+export function guardaLeituraAnterior(erro, dados){
+  if(erro){
+    if(erro.code === 'ENOENT') return { ok:true, ausente:true, motivo:null };
+    return {
+      ok:false,
+      ausente:false,
+      motivo:'Não foi possível ler nem interpretar o fatos.js anterior: ' + erro.message +
+             '. A guarda de esvaziamento não tem contra o que comparar — corrija ou remova o ' +
+             'arquivo antes de rodar de novo.'
+    };
+  }
+  if(!dados || typeof dados !== 'object' || !Array.isArray(dados.epics)){
+    return {
+      ok:false,
+      ausente:false,
+      motivo:'O fatos.js anterior não tem a forma esperada ({geradoEm, epics:[...]}) — corrija ou ' +
+             'remova o arquivo antes de rodar de novo.'
+    };
+  }
+  return { ok:true, ausente:false, motivo:null };
 }
 
 /* Separado do orquestrador para poder testar direto: é isto que faz um

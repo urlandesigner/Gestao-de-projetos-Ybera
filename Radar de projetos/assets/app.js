@@ -40,7 +40,9 @@ const T = {
     boardSub:"Cada item está escrito pelo que o usuário passa a conseguir fazer. O nome original no Notion aparece embaixo, para rastreio.",
     detTitle:"Produtos",
     detSub:"Os produtos da frente USA e os projetos dentro de cada um. Abra um projeto para ler o que ele é e as demandas acompanhadas nele; a lista de demandas é mantida à mão na revisão quinzenal.",
-    tableSub:"Os 14 projetos numa tabela só, para comparar e ordenar. Filtre por produto e por status; clique no cabeçalho para reordenar.",
+    noTrackTitle:"Sem produto",
+    noTrackDesc:"A Area Path deste item no Azure DevOps ainda não está mapeada para um produto em tools/config.json.",
+    tableSub:"Os projetos numa tabela só, para comparar e ordenar. Filtre por produto e por status; clique no cabeçalho para reordenar.",
     viewCards:"Por produto", viewTable:"Tabela",
     colProd:"Produto", colProj:"Projeto", colStat:"Status", colWin:"Janela",
     colElapsed:"Decorrido", colDem:"Demandas", colOwner:"Dono",
@@ -56,6 +58,8 @@ const T = {
     all:"Todos", filterLabel:"Filtrar por produto:",
     window:"Janela", elapsed:"Janela decorrida", over:"Janela vencida",
     live:"No ar desde", resultLabel:"Resultado:",
+    noProsa:"Sem redação", noProsaTitle:"Item com fato no Azure DevOps mas sem texto editorial em prosa.js ainda.",
+    srcLabel:"Azure DevOps:",
     foldShow:"Ver os {n} projetos planejados", foldHide:"Esconder os planejados",
     printPlanned:"Os {n} projetos planejados estão listados na seção Futuro, adiante — sem repetir os cards aqui.",
     horTitle:"Futuro",
@@ -110,7 +114,9 @@ const T = {
     boardSub:"Every item is written as what the user can now do. The original Notion name appears below it, for traceability.",
     detTitle:"Products",
     detSub:"The products on the USA front and the projects inside each one. Open a project to read what it is and the demands tracked in it; the demand list is maintained by hand during the biweekly review.",
-    tableSub:"All 14 projects in a single table, to compare and sort. Filter by product and status; click a header to reorder.",
+    noTrackTitle:"No product",
+    noTrackDesc:"This item's Area Path in Azure DevOps isn't mapped to a product in tools/config.json yet.",
+    tableSub:"All projects in a single table, to compare and sort. Filter by product and status; click a header to reorder.",
     viewCards:"By product", viewTable:"Table",
     colProd:"Product", colProj:"Project", colStat:"Status", colWin:"Window",
     colElapsed:"Elapsed", colDem:"Demands", colOwner:"Owner",
@@ -126,6 +132,8 @@ const T = {
     all:"All", filterLabel:"Filter by product:",
     window:"Window", elapsed:"Window elapsed", over:"Window overdue",
     live:"Live since", resultLabel:"Result:",
+    noProsa:"No copy", noProsaTitle:"Item with facts from Azure DevOps but no editorial text in prosa.js yet.",
+    srcLabel:"Azure DevOps:",
     foldShow:"Show the {n} planned projects", foldHide:"Hide the planned ones",
     printPlanned:"The {n} planned projects are listed in the Future section below — not repeated as cards here.",
     horTitle:"Future",
@@ -171,8 +179,14 @@ function fundir(prosa, fatos){
   const items = ((fatos && fatos.epics) || []).map(f => {
     const t = texto[f.id] || null;
     return {
-      id:f.id, notion:f.azureTitle, track:f.track, start:f.start, end:f.end,
-      status:f.status, health:f.health, shipped:f.shipped,
+      id:f.id, azureTitle:f.azureTitle, track:f.track, start:f.start, end:f.end,
+      status:f.status,
+      /* Travado ("blocked") só existe no Azure DevOps — vem sempre de `f`.
+         Em atenção ("watch") não tem sinal equivalente lá: continua editorial,
+         e só entra quando o fato não trouxer nada (fato manda quando os dois
+         existem — um impedimento real supera uma nota manual desatualizada). */
+      health:f.health || (t && t.health) || null,
+      shipped:f.shipped,
       owner:f.owner || undefined,
       demands:f.demands || [],
       semProsa:!t,
@@ -190,6 +204,17 @@ function fundir(prosa, fatos){
   if(orfaos.length) console.warn(
     "prosa.js: " + orfaos.length + " entrada(s) de texto sem work item correspondente: " +
     orfaos.join(", ") + " — o Epic saiu do filtro, foi apagado ou mudou de área.");
+
+  /* Track desconhecido: nem tools/sync.mjs (que nunca lê prosa.js) nem esta
+     função checavam se o `track` de um item batia com um id real de produto.
+     Um id digitado errado em fatos.js faz o projeto sumir de produtos.html
+     sem aviso nenhum — mesmo espírito do aviso de prosa órfã acima. */
+  const idsDeProdutos = new Set((prosa.tracks || []).map(tr => tr.id));
+  const trackInvalido = items.filter(i => i.track !== null && !idsDeProdutos.has(i.track));
+  if(trackInvalido.length) console.warn(
+    "fatos.js: " + trackInvalido.length + " item(ns) com track desconhecido: " +
+    trackInvalido.map(i => `#${i.id} "${i.track}"`).join(", ") +
+    " — confira o id contra PROSA.tracks em prosa.js.");
 
   const meta = Object.assign({}, prosa.meta);
   /* A data de atualização passa a ser quando o snapshot rodou; o valor
@@ -250,6 +275,10 @@ function fmtMonth(ym){
   return name + "/" + String(y).slice(2);
 }
 function windowLabel(a, b){
+  /* Azure DevOps sem StartDate/TargetDate emite null por design (tools/mapa.mjs)
+     — mesmo travessão usado no resto da página para "sem valor", em vez de
+     estourar no primeiro Epic sem data. */
+  if(!a || !b) return "—";
   const sameYear = a.slice(0,4) === b.slice(0,4);
   return fmtDate(a, !sameYear) + " → " + fmtDate(b, true);
 }
@@ -277,11 +306,17 @@ function monthRange(aIso, bIso){
 }
 /* "2027" quando tudo começa no mesmo ano; "2027+" quando passa dele. */
 function yearsLabel(list){
-  if(!list.length) return "";
-  const ys = [...new Set(list.map(i => i.start.slice(0,4)))].sort();
+  /* Item sem `start` (Azure DevOps sem StartDate) não tem ano para contar —
+     ele ainda aparece na lista da faixa, só não entra no cálculo do rótulo. */
+  const ys = [...new Set(list.map(i => i.start).filter(Boolean).map(s => s.slice(0,4)))].sort();
+  if(!ys.length) return "";
   return ys.length === 1 ? ys[0] : ys[0] + "+";
 }
+/* null quando falta `start` ou `end`: dado incompleto, não "0% decorrido" —
+   0% afirmaria "acabou de começar", o que seria inventar informação que a
+   base não tem. Quem chama trata null como "omitir a barra". */
 function elapsedPct(a, b){
+  if(!a || !b) return null;
   const s = D(a).getTime(), e = D(b).getTime(), n = TODAY.getTime();
   if(n <= s) return 0;
   if(e <= s) return 100;
@@ -504,9 +539,12 @@ function render(){
   $("detTitle").textContent = t.detTitle;
   $("detSub").textContent = t.detSub;
   const ordDet = {doing:0, next:1, done:2};
+  /* Data ausente não pode estourar o sort: cai por último entre iguais,
+     ordem estável em vez de exceção. */
+  const byStartThenStatus = (a, b) =>
+    ordDet[a.status] - ordDet[b.status] || (a.start || "").localeCompare(b.start || "");
   $("detList").innerHTML = DATA.tracks.map(tr => {
-    const list = items.filter(i => i.track === tr.id)
-      .sort((a, b) => ordDet[a.status] - ordDet[b.status] || a.start.localeCompare(b.start));
+    const list = items.filter(i => i.track === tr.id).sort(byStartThenStatus);
     if(!list.length) return "";
     const nDoing = list.filter(i => i.status === "doing").length;
     const meta = [`${list.length} ${list.length === 1 ? t.projectOne : t.projectMany}`];
@@ -519,7 +557,23 @@ function render(){
       ${tr.about ? `<p class="prod-about">${esc(L(tr.about))}</p>` : ""}
       <div class="det">${list.map(i => projRow(i, t, m)).join("")}</div>
     </div>`;
-  }).join("");
+  }).join("") + (() => {
+    /* "Sem produto": Area Path fora da tabela de tools/config.json vira
+       track:null por design (tools/mapa.mjs), não item descartado. Sem este
+       grupo, DATA.tracks.map acima nunca itera esses itens e eles somem da
+       página sem deixar rastro — com o config.json de areas vazio hoje, seria
+       os 14 de uma vez. Só aparece quando existe pelo menos um caso. */
+    const semProduto = items.filter(i => i.track === null).sort(byStartThenStatus);
+    if(!semProduto.length) return "";
+    return `<div class="prod" data-track="__sem-produto">
+      <div class="prod-head">
+        <h3>${esc(t.noTrackTitle)}</h3>
+        <span class="pn mono-num">${semProduto.length} ${semProduto.length === 1 ? t.projectOne : t.projectMany}</span>
+      </div>
+      <p class="prod-about">${esc(t.noTrackDesc)}</p>
+      <div class="det">${semProduto.map(i => projRow(i, t, m)).join("")}</div>
+    </div>`;
+  })();
 
   /* --- alternador: as duas telas mostram os mesmos projetos, uma agrupada
          por produto e outra em tabela para comparar. --- */
@@ -559,7 +613,7 @@ function render(){
     proj:i => L(i.title).toLowerCase(),
     stat:i => String(ordSt[i.status]) + i.start,
     win:i => i.start + i.end,
-    elapsed:i => String(i.status === "doing" ? elapsedPct(i.start, i.end) : -1).padStart(4, "0"),
+    elapsed:i => String(i.status === "doing" ? (elapsedPct(i.start, i.end) ?? -1) : -1).padStart(4, "0"),
     dem:i => {
       const dm = i.demands || [];
       return String(dm.length ? Math.round(dm.filter(d => d.status === "done").length / dm.length * 100) : -1).padStart(4, "0");
@@ -593,14 +647,15 @@ function render(){
     }).join("")}</tr></thead>
     <tbody>${rows.length ? rows.map(i => {
       const dm = i.demands || [];
-      const p = i.status === "doing" ? Math.min(elapsedPct(i.start, i.end), 100) : null;
+      const raw = i.status === "doing" ? elapsedPct(i.start, i.end) : null;
+      const p = raw === null ? null : Math.min(raw, 100);
       const el = p === null
         ? "—"
         : `<span class="tel" aria-hidden="true"><i style="width:${p}%"></i></span>${p}%`;
       return `<tr>
         <td class="tprod">${esc(trackName(i.track))}</td>
-        <td class="tproj">${esc(L(i.title))}<span class="tprod-in">${esc(trackName(i.track))}</span></td>
-        <td><span class="pstatus st-${esc(i.status)}">${esc(stLabel[i.status])}</span></td>
+        <td class="tproj">${esc(L(i.title))}${i.semProsa ? `<span class="noprosa" title="${esc(t.noProsaTitle)}">${esc(t.noProsa)}</span>` : ""}<span class="tprod-in">${esc(trackName(i.track))}</span></td>
+        <td><span class="pstatus st-${esc(i.status)}">${esc(stLabel[i.status] || "—")}</span></td>
         <td class="mono-num">${esc(windowLabel(i.start, i.end))}</td>
         <td class="num mono-num">${el}</td>
         ${anyDem ? `<td class="num mono-num">${dm.length ? dm.filter(d => d.status === "done").length + "/" + dm.length : "—"}</td>` : ""}
@@ -625,7 +680,7 @@ function render(){
   const nq = nextQuarter(m.quarter.end);
   const band = {now:[], next:[], later:[]};
   items.filter(i => i.status !== "done")
-       .sort((a, b) => a.start.localeCompare(b.start) || a.end.localeCompare(b.end))
+       .sort((a, b) => (a.start || "").localeCompare(b.start || "") || (a.end || "").localeCompare(b.end || ""))
        .forEach(i => band[i.start <= m.quarter.end ? "now" : i.start <= nq.end ? "next" : "later"].push(i));
   const hLabel = {now:t.horNow, next:t.horNext, later:t.horLater};
   const hConf  = {now:t.confNow, next:t.confNext, later:t.confLater};
@@ -755,16 +810,19 @@ function projRow(i, t, m){
         <span>${esc(L(d.t))}${d.due ? ` <span class="ddue mono-num">· ${esc(fmtDate(d.due))}</span>` : ""}</span>
       </li>`).join("")}</ul>`
     : `<p class="dnone">${esc(t.demandsNone)}</p>`;
-  const ep = i.status === "doing" ? Math.min(elapsedPct(i.start, i.end), 100) : null;
+  const rawEp = i.status === "doing" ? elapsedPct(i.start, i.end) : null;
+  const ep = rawEp === null ? null : Math.min(rawEp, 100);
   const elapsed = ep === null ? "" : `<div class="elapsed">
       <div class="pl"><span>${esc(t.elapsed)}</span><b class="mono-num">${ep}%</b></div>
       <div class="bar"><i style="width:${ep}%"></i></div>
     </div>`;
+  const noProsa = i.semProsa ? `<span class="noprosa" title="${esc(t.noProsaTitle)}">${esc(t.noProsa)}</span>` : "";
   return `<details class="proj" data-st="${esc(i.status)}">
     <summary>
       ${ICO.chev}
       <span class="ptitle">${esc(L(i.title))}</span>
-      <span class="pstatus st-${esc(i.status)}">${esc(stLabel[i.status])}</span>
+      ${noProsa}
+      <span class="pstatus st-${esc(i.status)}">${esc(stLabel[i.status] || "—")}</span>
       ${prog}
     </summary>
     <div class="proj-body">
@@ -775,7 +833,7 @@ function projRow(i, t, m){
       <div class="row">
         <span class="k">${ICO.cal}${esc(t.window)}: ${esc(windowLabel(i.start, i.end))}</span>
         <span class="k">${ICO.user}${esc(i.owner || m.owner)}</span>
-        <span class="k">${ICO.db}<span>Notion: ${esc(i.notion)}</span></span>
+        <span class="k">${ICO.db}<span>${esc(t.srcLabel)} ${esc(i.azureTitle)}</span></span>
       </div>
     </div>
   </details>`;
@@ -818,22 +876,30 @@ function monthBlock(r, t){
 }
 
 function card(i, t){
-  const src = i.notion
-    ? `<div class="src">${ICO.db}<span>Notion: ${esc(i.notion)}</span></div>` : "";
+  const src = i.azureTitle
+    ? `<div class="src">${ICO.db}<span>${esc(t.srcLabel)} ${esc(i.azureTitle)}</span></div>` : "";
   let mid = "";
   if(i.status === "doing"){
     const p = elapsedPct(i.start, i.end);
-    const over = p >= 100;
-    mid = `<div class="elapsed">
-        <div class="pl"><span>${esc(over ? t.over : t.elapsed)}</span><b class="mono-num">${Math.min(p,100)}%</b></div>
-        <div class="bar" role="img" aria-label="${Math.min(p,100)}% ${esc(t.elapsed)}"><i class="${over ? "over" : ""}" style="width:${Math.min(p,100)}%"></i></div>
-      </div>`;
+    /* p null (sem start/end) omite a barra inteira em vez de assumir 0% —
+       0% diria "acabou de começar", que a base não tem como afirmar. */
+    if(p !== null){
+      const over = p >= 100;
+      mid = `<div class="elapsed">
+          <div class="pl"><span>${esc(over ? t.over : t.elapsed)}</span><b class="mono-num">${Math.min(p,100)}%</b></div>
+          <div class="bar" role="img" aria-label="${Math.min(p,100)}% ${esc(t.elapsed)}"><i class="${over ? "over" : ""}" style="width:${Math.min(p,100)}%"></i></div>
+        </div>`;
+    }
   }
   /* Selo de saúde só em quem está fora do prazo. Card sem selo = no prazo:
      14 selos verdes não informam nada e ainda escondem o que importa. */
   const bad = i.health === "watch" || i.health === "blocked";
   const pill = bad
     ? `<span class="hp ${esc(i.health)}">${ICO.alert}${esc(i.health === "blocked" ? t.alertBlocked : t.alertWatch)}</span>` : "";
+  /* Sem redação: fato existe, texto editorial não — mesmo vocabulário visual
+     do selo de saúde, mas neutro (não é alarme, é lembrete de tarefa). */
+  const noProsa = i.semProsa
+    ? `<span class="noprosa" title="${esc(t.noProsaTitle)}">${esc(t.noProsa)}</span>` : "";
   const hnote = bad && i.healthNote ? `<p class="hnote">${esc(L(i.healthNote))}</p>` : "";
   const result = i.result
     ? `<div class="result">${ICO.check}<span><b>${esc(t.resultLabel)}</b> ${esc(L(i.result))}</span></div>` : "";
@@ -841,7 +907,7 @@ function card(i, t){
     ? `${ICO.cal}${esc(t.live)} ${esc(fmtMonth(i.shipped))}`
     : `${ICO.cal}${esc(t.window)}: ${esc(windowLabel(i.start, i.end))}`;
   return `<article class="card${bad ? " " + esc(i.health) : ""}">
-    <span class="tag">${esc(trackName(i.track))}</span>${pill}
+    <span class="tag">${esc(trackName(i.track))}</span>${pill}${noProsa}
     <h4>${esc(L(i.title))}</h4>
     <p class="why">${esc(L(i.why))}</p>
     ${hnote}

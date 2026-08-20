@@ -8,60 +8,96 @@
    ==========================================================================
    1) DADOS
    --------------------------------------------------------------------------
-   ORIGEM: base "Projetos" do Notion (espaço Ecommerce & Growth),
-   filtro Frente = USA → 14 de 32 projetos. Extraído em 11/08/2026.
+   ESTE ARQUIVO É A METADE EDITORIAL do Radar, não a fonte inteira. A outra
+   metade — fato (janela, status, produto, dono, entrega, demandas) — vem do
+   Azure DevOps, é gerada por `tools/sync.mjs` e mora em `fatos.js`, ao lado
+   deste. `fundir()`, em `app.js`, junta os dois na hora de carregar a página.
+   NÃO edite `fatos.js` à mão — ele é sobrescrito a cada rodada do script.
 
-   Campos vindos do Notion, verbatim: `notion` (nome do projeto),
-   `start`, `end` (coluna Período), `status`, `track` (coluna Produto).
+   O ÍNDICE de `texto` (a seção 3, abaixo) é o `id` numérico do work item
+   (Epic) no Azure DevOps — não mais um número sequencial inventado aqui.
+   Isso significa que você não pode simplesmente "adicionar o próximo item":
+   o id só existe depois que o Epic existe no DevOps e uma rodada do
+   `tools/sync.mjs` o traz para `fatos.js`.
 
-   Campos escritos por você/pela tradução: `title` e `why`.
-   `title` = o que o usuário passa a conseguir fazer.
-   `why`   = uma frase de impacto no negócio. Sem ela, o item não entra.
+   CAMPOS QUE VIVEM AQUI (você escreve, à mão):
+     title:{pt,en}     → o que o usuário passa a conseguir fazer. Vira o h4
+                         do card e o título do acordeão em Produtos.
+     why:{pt,en}       → uma frase de impacto no negócio. Sem ela, o card
+                         fica com a linha "por quê" vazia — escreva sempre.
+     about:{pt,en}     → parágrafo "sobre o que se trata", na seção Produtos
+                         em detalhe.
+     result:{pt,en}    → opcional. O que mudou no negócio depois de entregar
+                         (ex.: "No ar desde mai/26; conversão medida até
+                         30/09"). É o que transforma entrega em programa;
+                         pode ficar vazio até ter número.
+     health:"watch"    → opcional, e é o ÚNICO valor de `health` que se
+                         escreve aqui. "blocked" (travado) vem do Azure
+                         DevOps sempre que o item está com o estado de
+                         impedimento — não se escreve à mão. "watch" (em
+                         atenção) não tem sinal equivalente no DevOps, então
+                         continua sendo você quem liga e desliga esse alerta.
+                         Se os dois existirem para o mesmo item, o fato do
+                         DevOps (blocked) prevalece sobre o seu "watch" — um
+                         impedimento real supera uma nota manual desatualizada.
+     healthNote:{pt,en}→ por que está em atenção. Obrigatório na prática se
+                         usar `health:"watch"` — sem o motivo o stakeholder
+                         não tem o que fazer com o alerta.
 
-   NÃO PREENCHIDO NA BASE: a coluna Status não tem nenhum valor "Concluído"
-   (32 linhas: 22 "Não iniciado", 9 "Em andamento", 1 "Descontinuado"), e as
-   colunas Ações, Decisões e PO Responsável estão vazias. Por isso a coluna
-   "Entregue" e a seção "Precisamos de vocês" aparecem com estado vazio.
+   CAMPOS GERADOS, que NÃO se escreve aqui (vêm de fatos.js via fundir()):
+     start, end        → StartDate/TargetDate do Epic no Azure DevOps. Podem
+                         vir `null` quando o campo está vazio lá — a página
+                         trata isso mostrando "—" em vez de quebrar.
+     status            → "done" | "doing" | "next" | null, mapeado do estado
+                         do DevOps por `tools/config.json` → `estados`.
+     track             → produto (ver seção 2, `tracks`), mapeado da Area
+                         Path do DevOps por `tools/config.json` → `areas`.
+     owner             → System.AssignedTo do Epic. Sem override editorial:
+                         se o dono no DevOps mudar, o Radar segue sozinho.
+     shipped           → mês da ClosedDate, só quando status é "done".
+     demands           → as Features filhas do Epic, com o mesmo tratamento
+                         de status. A lista já vem ordenada por id.
+     health:"blocked"  → ver acima.
+
+   Item com fato no Azure DevOps e SEM entrada aqui em `texto` aparece assim
+   mesmo — com o título cru do DevOps, why/about vazios e um selo "sem
+   redação" no card, no acordeão e na tabela. Ele não some: sumir em
+   silêncio seria pior, porque falta não se percebe. Entrada em `texto` sem
+   Epic correspondente (o Epic saiu do filtro, foi apagado, mudou de área)
+   também não quebra a página — vira um `console.warn` no navegador.
+
+   NÃO PREENCHIDO NA BASE (herdado do levantamento original em Notion, antes
+   da integração com o DevOps): a seção "Precisamos de vocês" segue vazia
+   até o Azure DevOps registrar decisões/ações pendentes — a estrutura já
+   existe (ver `asks`, adiante) e passa a preencher sozinha quando a fonte
+   tiver o que reportar.
 
    --------------------------------------------------------------------------
-   CAMPOS OPCIONAIS DE CADA ITEM (todos podem ser omitidos)
+   `meta.updated` (seção 2, abaixo) É MACHINE-SET: `fundir()` o sobrescreve
+   com a data da última rodada do `tools/sync.mjs` (o `geradoEm` de
+   `fatos.js`) sempre que esse arquivo existe. O valor escrito aqui só serve
+   de reserva para quando `fatos.js` ainda não foi gerado. `cycle`, `from` e
+   `to`, por outro lado, continuam 100% editoriais — são a janela que VOCÊ
+   decide que esta edição cobre, não algo que o DevOps sabe calcular.
 
-   health:"watch" | "blocked"   → sinal de saúde. Omitir = está no prazo.
-                                  Qualquer item marcado faz aparecer a faixa
-                                  "Atenção" no topo da página. Use com
-                                  parcimônia: faixa sempre acesa não é sinal.
-   healthNote:{pt,en}           → por que está em atenção/travado. Obrigatório
-                                  na prática se usar `health` — sem o motivo o
-                                  stakeholder não tem o que fazer com o alerta.
-   owner:"Nome"                 → sobrescreve o dono padrão (DATA.meta.owner).
-   shipped:"AAAA-MM"            → mês em que foi ao ar. Use com status:"done".
-   result:{pt,en}               → o que mudou no negócio depois de entregar.
-                                  Ex.: "No ar desde mai/26; conversão medida
-                                  até 30/09". É o que transforma entrega em
-                                  programa. Pode ficar vazio até ter número.
-   demands[].done:"AAAA-MM"     → mês em que a demanda foi concluída. Só faz
-                                  sentido com status:"done". É ele que atribui
-                                  a demanda a um mês do report — `due` é prazo,
-                                  não data de conclusão, e usar `due` colocaria
-                                  no mês errado toda demanda entregue atrasada.
-                                  Demanda concluída sem `done` continua no site
-                                  normalmente, só não entra em nenhum mês.
+   --------------------------------------------------------------------------
+   PARA ESCREVER A ENTRADA DE UM EPIC NOVO: ele vai aparecer no Radar com o
+   selo "sem redação" assim que uma rodada do `tools/sync.mjs` o trouxer para
+   `fatos.js`. Abra `fatos.js`, ache o item pelo `azureTitle` (o título cru
+   do DevOps) e copie o `id` numérico dele para uma chave nova em `texto`,
+   abaixo. Escreva pelo menos `title`, `why` e `about`.
 
-   PARA ADICIONAR UM ENTREGUE: copie um item, troque status para "done",
-   preencha `shipped` e, se houver, `result`. A coluna Entregue, o tile e o
-   medidor do trimestre passam a contá-lo automaticamente.
+   PARA CORRIGIR UMA ENTRADA EXISTENTE: ache a chave pelo `id` (o comentário
+   "Notion: ..." ao lado de cada entrada é rastro histórico do levantamento
+   original, útil para achar o item certo por nome) e edite os campos
+   direto. Não mexa em `start`, `end`, `status`, `track`, `owner`,
+   `shipped` ou `demands` aqui — eles não existem neste arquivo, e escrevê-los
+   não tem efeito nenhum: quem manda é `fatos.js`.
 
-   about:{pt,en}                → parágrafo "sobre o que se trata" do projeto.
-                                  Aparece na seção Projetos em detalhe.
-   demands:[...]                → demandas acompanhadas dentro do projeto, na
-                                  mesma seção. Cada demanda:
-                                    {t:{pt:"Texto", en:"Text"},
-                                     status:"done"|"doing"|"next",
-                                     due:"AAAA-MM-DD"}   ← due é opcional
-                                  A lista é mantida à mão na revisão quinzenal;
-                                  a contagem no acordeão e o badge "Detalhe" da
-                                  navegação são derivados dela. Sem `demands`,
-                                  o projeto mostra o estado vazio da seção.
+   Depois de editar, recarregue a página e olhe o console do navegador: um
+   `console.warn` ali aponta prosa órfã (chave sem Epic correspondente) ou
+   `track` desconhecido — os dois jeitos de um erro de digitação aqui virar
+   um item sumido em silêncio, se ninguém checar.
    ========================================================================== */
 const PROSA = {
   meta:{
@@ -70,8 +106,8 @@ const PROSA = {
     /* rótulo curto para a barra de navegação, onde o título inteiro quebraria */
     shortTitle:{pt:"Radar USA", en:"USA Radar"},
     sub:{
-      pt:"Os 14 projetos da frente USA: o que está em curso, o que está planejado e em que ordem. Atualizado a cada duas semanas.",
-      en:"All 14 projects on the USA front: what's in flight, what's planned and in what order. Updated every two weeks."
+      pt:"Os projetos da frente USA: o que está em curso, o que está planejado e em que ordem. Atualizado a cada duas semanas.",
+      en:"The projects on the USA front: what's in flight, what's planned and in what order. Updated every two weeks."
     },
     /* Janela que esta edição cobre: da atualização anterior até esta.
        `to` acompanha `updated` — é o período olhado para trás, não o mês

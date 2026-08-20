@@ -54,6 +54,17 @@ test('area fora da tabela devolve null em vez de descartar o item', () => {
   assert.equal(trackDe(null, AREAS), null);
 });
 
+/* Regressão: "startsWith(k)" sem o separador de path casaria
+   "...\Loja Nova\Sub" com a chave "...\Loja" por serem prefixo em string,
+   mesmo sendo áreas irmãs (Loja e Loja Nova), não uma dentro da outra. O
+   código já exige o "\" logo depois da chave — este teste tranca esse
+   comportamento em vez de deixá-lo provado só de cabeça. */
+test('trackDe nao casa area irma cujo nome comeca igual', () => {
+  const IRMAS = { 'Ecommerce USA\\Loja': 'loja' };
+  assert.equal(trackDe('Ecommerce USA\\Loja Nova\\Sub', IRMAS), null);
+  assert.equal(trackDe('Ecommerce USA\\Loja Nova', IRMAS), null);
+});
+
 test('agruparPorPai separa filhas e orfas', () => {
   const fs = [
     { id:11, fields:{ 'System.Parent':1 } },
@@ -129,6 +140,20 @@ test('demandas viram a lista do Radar, com done em mes', () => {
     { id:11, t:'Revisão do checkout', status:'done', estadoCru:'Concluído', due:'2026-08-15', done:'2026-08' },
     { id:12, t:'Pendente', status:'next', estadoCru:'Aguardando Início', due:null, done:null }
   ]);
+});
+
+/* A API de lote não garante ordem. Sem ordenar por id, a ordem das demandas
+   no fatos.js commitado seguiria a ordem de retorno da API — produzindo
+   diff sem mudança real de dado a cada rodada. */
+test('demandas saem ordenadas por id, nao na ordem em que a API devolveu', () => {
+  const epic = { id:1, fields:{ 'System.Title':'X', 'System.State':'Em Andamento' } };
+  const fs = [
+    { id:30, fields:{ 'System.Title':'C', 'System.State':'Aguardando Início' } },
+    { id:10, fields:{ 'System.Title':'A', 'System.State':'Aguardando Início' } },
+    { id:20, fields:{ 'System.Title':'B', 'System.State':'Aguardando Início' } }
+  ];
+  const it = itemDe(epic, fs, CFG);
+  assert.deepEqual(it.demands.map(d => d.id), [10, 20, 30]);
 });
 
 test('diffRodadas aponta novo, saiu, status, janela e entrega', () => {

@@ -4,10 +4,20 @@
 
    Uso:  ADO_PAT=xxx node tools/descobrir.mjs
          ADO_PAT=xxx node tools/descobrir.mjs "Outro Projeto" */
+import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 import { runWiql, getFields, listProjects, AuthError, NetworkError } from './ado.mjs';
 
-const ORG = 'https://dev.azure.com/nivello';
-const PROJETO = process.argv[2] || 'Ecommerce USA';
+/* org lida de tools/config.json — o mesmo arquivo que sync.mjs lê — em vez
+   de hardcoded aqui. Antes as duas ficavam duplicadas, e uma correção de org
+   (uma já aconteceu) tinha que ser feita nos dois lugares; esquecer um dos
+   dois faz descobrir.mjs investigar uma org e sync.mjs gravar de outra, sem
+   erro nenhum avisando da divergência. */
+const AQUI = path.dirname(fileURLToPath(import.meta.url));
+const cfg = JSON.parse(await readFile(path.join(AQUI, 'config.json'), 'utf8'));
+const ORG = cfg.org;
+const PROJETO = process.argv[2] || cfg.projeto;
 
 const pat = process.env.ADO_PAT;
 if(!pat){
