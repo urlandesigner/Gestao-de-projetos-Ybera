@@ -39,7 +39,10 @@ export function guardaEsvaziamento(qtdNova, qtdAntiga){
    `--dry-run` que já produziu um bug real (--forcar sobrescrevendo a recusa
    de zero Epics sobre a página publicada) — isolar a decisão aqui em vez de
    deixá-la espalhada no orquestrador permite testar as quatro saídas sem
-   precisar simular I/O. */
+   precisar simular I/O.
+
+   Avisos vêm como {stream, texto} para que sync.mjs saiba se cada mensagem
+   vai para stdout (informacional/confirmação) ou stderr (aviso/atenção). */
 export function decidirGravacao(guarda, { forcar, seco }){
   const avisos = [];
 
@@ -52,12 +55,12 @@ export function decidirGravacao(guarda, { forcar, seco }){
       return { deveGravar:false, avisos, erro, saida:1 };
     }
     avisos.push(seco
-      ? '\n--forcar contornaria a guarda, mas --dry-run não grava nada: ' + guarda.motivo
-      : '\n--forcar: gravando apesar de ' + guarda.motivo);
+      ? { stream:'out', texto:'\n--forcar contornaria a guarda, mas --dry-run não grava nada: ' + guarda.motivo }
+      : { stream:'err', texto:'\n--forcar: gravando apesar de ' + guarda.motivo });
   }
 
   if(seco){
-    avisos.push('\n--dry-run: nada gravado.');
+    avisos.push({ stream:'out', texto:'\n--dry-run: nada gravado.' });
     return { deveGravar:false, avisos, erro:null, saida:0 };
   }
 

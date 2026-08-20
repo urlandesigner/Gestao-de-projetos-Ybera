@@ -155,7 +155,7 @@ test('decidirGravacao: recusa forcavel com --forcar grava e avisa', () => {
   const d = decidirGravacao(RECUSA_FORCAVEL, { forcar:true, seco:false });
   assert.equal(d.deveGravar, true);
   assert.equal(d.erro, null);
-  assert.ok(d.avisos.some(a => /--forcar: gravando apesar de/.test(a)));
+  assert.ok(d.avisos.some(a => a.stream === 'err' && /--forcar: gravando apesar de/.test(a.texto)));
 });
 
 /* O caso central do achado: zero Epics nao e forcavel, entao --forcar nunca
@@ -174,7 +174,7 @@ test('decidirGravacao: passagem limpa com --dry-run nunca grava nem afirma ter g
   assert.equal(d.deveGravar, false);
   assert.equal(d.erro, null);
   assert.equal(d.saida, 0);
-  assert.ok(d.avisos.some(a => /--dry-run: nada gravado/.test(a)));
+  assert.ok(d.avisos.some(a => a.stream === 'out' && /--dry-run: nada gravado/.test(a.texto)));
 });
 
 test('decidirGravacao: recusa forcavel + --forcar + --dry-run nunca grava nem afirma ter gravado', () => {
@@ -182,8 +182,8 @@ test('decidirGravacao: recusa forcavel + --forcar + --dry-run nunca grava nem af
   assert.equal(d.deveGravar, false);
   assert.equal(d.erro, null);
   assert.equal(d.saida, 0);
-  assert.ok(d.avisos.some(a => /--forcar contornaria a guarda, mas --dry-run não grava nada/.test(a)));
-  assert.ok(d.avisos.some(a => /--dry-run: nada gravado/.test(a)));
+  assert.ok(d.avisos.some(a => a.stream === 'out' && /--forcar contornaria a guarda, mas --dry-run não grava nada/.test(a.texto)));
+  assert.ok(d.avisos.some(a => a.stream === 'out' && /--dry-run: nada gravado/.test(a.texto)));
 });
 
 test('decidirGravacao: recusa nao forcavel + --forcar + --dry-run bloqueia pelo motivo de sempre, nao pelo dry-run', () => {
@@ -198,4 +198,16 @@ test('decidirGravacao: recusa forcavel sem --forcar + --dry-run bloqueia pelo mo
   assert.equal(d.deveGravar, false);
   assert.match(d.erro, /queda abrupta/);
   assert.equal(d.saida, 1);
+});
+
+/* Verifica explicitamente a separacao entre streams: a confirmacao de
+   --dry-run (informacional) sai em 'out' (stdout), enquanto avisos reais
+   (--forcar sobrescrevendo) saem em 'err' (stderr). Isto preserva o
+   significado para log consumers. */
+test('decidirGravacao: --dry-run confirmacao vai para stdout, --forcar aviso vai para stderr', () => {
+  const dDryRun = decidirGravacao(PASSA, { forcar:false, seco:true });
+  const dForcar = decidirGravacao(RECUSA_FORCAVEL, { forcar:true, seco:false });
+
+  assert.ok(dDryRun.avisos.some(a => a.stream === 'out' && /--dry-run: nada gravado/.test(a.texto)));
+  assert.ok(dForcar.avisos.some(a => a.stream === 'err' && /--forcar: gravando apesar de/.test(a.texto)));
 });

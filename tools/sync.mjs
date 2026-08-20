@@ -68,9 +68,16 @@ try {
 
   /* Toda a lógica de --forcar/--dry-run sobre a guarda vive em
      decidirGravacao (guardas.mjs), testada lá. Aqui só imprimimos o que ela
-     manda e saímos com o código que ela manda — nenhuma decisão própria. */
+     manda e saímos com o código que ela manda — nenhuma decisão própria.
+
+     Avisos vêm marcados com stream ('out' ou 'err') para que mensagens
+     informacionais (--dry-run confirmação) vão para stdout e avisos reais
+     vão para stderr, preservando o significado para log consumers. */
   const decisao = decidirGravacao(g, { forcar, seco });
-  for(const aviso of decisao.avisos) console.warn(aviso);
+  for(const aviso of decisao.avisos){
+    if(aviso.stream === 'out') console.log(aviso.texto);
+    else console.warn(aviso.texto);
+  }
   if(decisao.erro){
     console.error(decisao.erro);
     process.exit(decisao.saida);
