@@ -38,6 +38,14 @@ test('queda dentro de 20 por cento passa', () => {
   assert.equal(guardaEsvaziamento(12, 14).ok, true); // 85,7%
 });
 
+/* Fronteira exata do piso: a comparação é "menor que" (estrito), não
+   "menor ou igual". Sem este teste, trocar `<` por `<=` na implementação
+   passaria despercebido — os outros testes usam 78,6% e 85,7%, nenhum bate
+   exatamente nos 80%, então nenhum deles pegaria essa inversão. */
+test('queda de exatamente 80 por cento (o piso) ainda passa', () => {
+  assert.equal(guardaEsvaziamento(8, 10).ok, true); // exatamente 80%
+});
+
 test('crescer sempre passa', () => {
   assert.equal(guardaEsvaziamento(30, 14).ok, true);
 });

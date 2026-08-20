@@ -3,7 +3,7 @@
    SÓ-LEITURA no DevOps. NUNCA escreve em prosa.js.
 
    Uso:  ADO_PAT=xxx node tools/sync.mjs [--dry-run] [--forcar] */
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, writeFile, rename, unlink } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { runWiql, getFields, AuthError, NetworkError } from './ado.mjs';
@@ -60,6 +60,39 @@ async function fatosAnteriores(){
   const r = guardaLeituraAnterior(erroLeitura, dados);
   if(!r.ok) throw new Error(r.motivo);
   return r.ausente ? null : dados;
+}
+
+/* Grava atomicamente: escreve o conteúdo inteiro num arquivo temporário na
+   MESMA pasta do destino e troca pelo destino com rename — rename() no
+   mesmo sistema de arquivos é atômico, então o arquivo final ou é o antigo
+   por inteiro ou o novo por inteiro, nunca uma mistura dos dois. Antes,
+   writeFile direto no destino truncava o arquivo antes de escrever nele: um
+   processo morto no meio (SIGKILL, disco cheio) deixava um fatos.js
+   truncado — e truncado é exatamente o arquivo que o site publicado
+   carrega. Isto é o que falta para a guarda 1 ("nunca grava parcial")
+   valer contra QUALQUER interrupção no meio da escrita, não só contra
+   falha de lógica antes dela.
+
+   O temporário sai da mesma pasta do destino de propósito: se saísse de
+   outro ponto de montagem (ex.: os.tmpdir()), o rename deixaria de ser
+   atômico — o SO faria copy+delete por baixo, reabrindo a mesma janela de
+   meio-arquivo que esta função existe para fechar. O nome carrega o nome
+   do destino, o pid e um timestamp, para dar pra reconhecer de onde veio
+   se um temporário ficar para trás por acidente; e o catch remove esse
+   temporário quando a escrita ou o rename falham, para não deixar lixo na
+   pasta do site publicado. */
+async function gravarAtomico(destino, conteudo){
+  const tmp = path.join(
+    path.dirname(destino),
+    `.${path.basename(destino)}.tmp-${process.pid}-${Date.now()}`
+  );
+  try {
+    await writeFile(tmp, conteudo, 'utf8');
+    await rename(tmp, destino);
+  } catch (e) {
+    await unlink(tmp).catch(() => {}); // best-effort: não mascara o erro original se a limpeza falhar
+    throw e;
+  }
 }
 
 try {
@@ -120,10 +153,12 @@ try {
     process.exit(1);
   }
 
-  /* Monta o arquivo inteiro antes de gravar: falha no meio deixa o fatos.js
-     anterior intacto, em vez de meio arquivo. */
+  /* Monta o arquivo inteiro antes de gravar, e a gravação em si é atômica
+     (gravarAtomico, acima): falha de lógica antes daqui, ou processo morto
+     durante a escrita, deixam o fatos.js anterior intacto — nunca meio
+     arquivo. */
   const conteudo = serializarFatos(new Date().toISOString(), itens);
-  await writeFile(DESTINO, conteudo, 'utf8');
+  await gravarAtomico(DESTINO, conteudo);
   console.log(`\nGravado: ${path.relative(RAIZ, DESTINO)}`);
 } catch (e) {
   if(e instanceof AuthError) console.error('PAT inválido ou vencido. Gere outro com escopo Work Items (Read).');

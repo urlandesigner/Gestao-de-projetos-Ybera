@@ -186,8 +186,13 @@ do script.
 
 ## Tratamento de erro — as seis guardas
 
-1. **Nunca grava parcial.** O arquivo é montado inteiro em memória e gravado
-   de uma vez. Falha no meio = nada gravado, `fatos.js` anterior intacto.
+1. **Nunca grava parcial.** O arquivo é montado inteiro em memória e a
+   gravação em si é atômica: escreve num arquivo temporário na mesma pasta
+   do destino e troca pelo destino com `rename` (atômico no mesmo sistema de
+   arquivos — o arquivo final é sempre o antigo por inteiro ou o novo por
+   inteiro). Isso cobre tanto falha de lógica antes da gravação quanto
+   processo morto (SIGKILL, disco cheio) no meio dela: nos dois casos o
+   `fatos.js` anterior fica intacto, nunca meio arquivo.
 2. **Guarda de esvaziamento.** O `fatos.js` é JS válido e exporta
    `{geradoEm, epics:[...]}`, então o script carrega o arquivo anterior e lê
    `epics.length`. Se a consulta nova voltar com zero, ou com menos de 80%
