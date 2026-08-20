@@ -88,7 +88,7 @@ const T = {
     confNow:"Janela atual", confNext:"Planejado", confLater:"Roadmap",
     footSource:"Fonte: Azure DevOps (projeto Ecommerce USA) — status, janela, produto e dono saem de lá automaticamente; o texto editorial (título, por quê, sobre) é mantido à mão. Último snapshot: {d}.",
     footCadence:"Cadência: uma atualização a cada duas semanas.",
-    footLimit:"Limitação conhecida: esta base descreve projetos de 1 a 4 meses, não entregas de sprint. Ela responde bem “o que está planejado”; para “o que foi entregue nesta quinzena” a fonte é o board de sprints.",
+    footLimit:"Limitação conhecida: a janela de cada item só aparece quando há data prevista registrada no Azure DevOps. Onde não há, o cartão mostra “—” e o item não entra nas faixas do Futuro — é ausência de dado na origem, não ausência de trabalho.",
     footNote:"Dúvida ou correção? Fale com",
     footUrl:"Página sempre atualizada:"
   },
@@ -167,7 +167,7 @@ const T = {
     confNow:"Current window", confNext:"Planned", confLater:"Roadmap",
     footSource:"Source: Azure DevOps (Ecommerce USA project) — status, window, product and owner come from there automatically; the editorial text (title, why, about) is maintained by hand. Last snapshot: {d}.",
     footCadence:"Cadence: one update every two weeks.",
-    footLimit:"Known limitation: this database describes 1-to-4-month projects, not sprint deliveries. It answers “what's planned” well; for “what shipped this cycle” the source is the sprint board.",
+    footLimit:"Known limitation: an item's window only appears when a target date is recorded in Azure DevOps. Where there is none, the card shows “—” and the item stays out of the Future bands — that's missing data at the source, not missing work.",
     footNote:"Question or correction? Talk to",
     footUrl:"Always-current page:"
   }
@@ -919,7 +919,7 @@ function projRow(i, t, m){
       <div class="row">
         <span class="k">${ICO.cal}${esc(t.window)}: ${esc(windowLabel(i.start, i.end))}</span>
         <span class="k">${ICO.user}${esc(i.owner || m.owner)}</span>
-        <span class="k">${ICO.db}<span>${esc(t.srcLabel)} ${esc(i.azureTitle)}</span></span>
+        ${i.semProsa ? "" : `<span class="k">${ICO.db}<span>${esc(t.srcLabel)} ${esc(i.azureTitle)}</span></span>`}
       </div>
     </div>
   </details>`;
@@ -962,7 +962,11 @@ function monthBlock(r, t){
 }
 
 function card(i, t){
-  const src = i.azureTitle
+  /* A linha de rastreio existe para ligar um título reescrito ao item de
+     origem. Sem redação, o título exibido JÁ é o do Azure, e a linha só
+     repetia o mesmo texto duas vezes no cartão — o selo "sem redação" já diz
+     que a origem é crua. */
+  const src = (i.azureTitle && !i.semProsa)
     ? `<div class="src">${ICO.db}<span>${esc(t.srcLabel)} ${esc(i.azureTitle)}</span></div>` : "";
   let mid = "";
   if(i.status === "doing"){
