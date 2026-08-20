@@ -1014,7 +1014,7 @@ Regra mecânica, item por item, na ordem em que aparecem no `data.js` de hoje
 - **nada é inventado:** se um item não tem `about`, a entrada dele não tem
   `about`.
 
-O Step 6 é o portão desta migração: se faltar uma entrada, `semProsa` não vem
+O Step 7 é o portão desta migração: se faltar uma entrada, `semProsa` não vem
 zero; se sobrar ou faltar item, a contagem não vem 14. Não confie na leitura —
 rode o check.
 
@@ -1125,13 +1125,41 @@ A ordem importa: prosa e fatos antes do motor, e fatos depois de prosa porque é
 
 NÃO tocar em `Radar de Projetos USA.html` — a versão legada tem cópia própria dos dados embutida e segue congelada.
 
-- [ ] **Step 5: Apagar o `data.js`**
+- [ ] **Step 5: Atualizar os dois comentários obsoletos do `app.js`**
+
+O `app.js` cita o `data.js` em dois comentários que deixam de ser verdade.
+
+Linha 3, no cabeçalho do arquivo — trocar:
+
+```
+   Os dados moram em data.js (carregado antes deste arquivo). Cada página
+```
+
+por:
+
+```
+   Os dados moram em prosa.js (texto, à mão) e fatos.js (fatos, gerados por
+   tools/sync.mjs), ambos carregados antes deste arquivo e fundidos por
+   fundir(). Cada página
+```
+
+Linha ~249, no comentário sobre a chave de mês — trocar `O data.js é mantido à
+mão e este` por `O prosa.js é mantido à mão e este`. Confirmar que não sobrou
+nenhuma menção:
+
+```bash
+grep -n "data\.js" assets/app.js
+```
+
+Esperado: nenhuma linha.
+
+- [ ] **Step 6: Apagar o `data.js`**
 
 ```bash
 git rm "Radar de projetos/assets/data.js"
 ```
 
-- [ ] **Step 6: Verificar que a tela não mudou**
+- [ ] **Step 7: Verificar que a tela não mudou**
 
 ```bash
 cd "Radar de projetos" && python3 -m http.server 8001
@@ -1162,7 +1190,7 @@ não deve ter nenhum aviso de "entrada(s) de texto sem work item".
 
 Testar também a regra de borda: no console, `RADAR_FATOS.epics.push({id:999, azureTitle:"Epic novo sem texto", track:null, start:null, end:null, status:"next", health:null, shipped:null, owner:null, demands:[]})` e recarregar não funciona (o push não persiste) — em vez disso, adicione temporariamente essa entrada no `fatos.js`, recarregue, confirme que o item aparece com o título cru, e desfaça com `git checkout -- "Radar de projetos/assets/fatos.js"`.
 
-- [ ] **Step 7: Commit**
+- [ ] **Step 8: Commit**
 
 ```bash
 git add -A "Radar de projetos"
