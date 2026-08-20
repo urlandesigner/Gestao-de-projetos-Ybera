@@ -364,3 +364,49 @@ test('produtos sobrevive a ciclo de link sem travar', () => {
   // 10 → 11 → 12 são descendentes; o épico não se conta
   assert.deepEqual(p[0].filhos, { total: 3, feitos: 0 });
 });
+
+/* ---- Report mensal ---- */
+// item concluído: tipo, data de fechamento, data de alteração
+const fim = (id, tipo, estado, fechado, alterado) => ({ id, fields: {
+  'System.WorkItemType': tipo, 'System.State': estado,
+  'Microsoft.VSTS.Common.ClosedDate': fechado || undefined,
+  'System.ChangedDate': alterado || undefined,
+} });
+
+test('reportPorMes agrupa concluídos por mês, mais recente primeiro', () => {
+  const r = C.reportPorMes([
+    fim(1, 'Epic', 'Done', '2026-08-10T12:00:00Z'),
+    fim(2, 'Feature', 'Closed', '2026-08-28T12:00:00Z'),
+    fim(3, 'Product Backlog Item', 'Done', '2026-07-03T12:00:00Z'),
+    fim(4, 'Product Backlog Item', 'New', '2026-07-03T12:00:00Z'), // em aberto: fora
+  ]);
+  assert.deepEqual(r.map((m) => m.mes), ['2026-08', '2026-07']);
+  assert.equal(r[0].total, 2);
+  assert.deepEqual(r[0].porNivel, { epic: 1, feature: 1, pbi: 0 });
+  assert.deepEqual(r[1].itens.map((x) => x.item.id), [3]);
+});
+
+test('reportPorMes ordena épico > feature > PBI e o mais recente dentro do nível', () => {
+  const r = C.reportPorMes([
+    fim(1, 'Product Backlog Item', 'Done', '2026-08-01T12:00:00Z'),
+    fim(2, 'Epic', 'Done', '2026-08-02T12:00:00Z'),
+    fim(3, 'Feature', 'Done', '2026-08-05T12:00:00Z'),
+    fim(4, 'Feature', 'Done', '2026-08-20T12:00:00Z'),
+  ]);
+  assert.deepEqual(r[0].itens.map((x) => x.item.id), [2, 4, 3, 1]);
+});
+
+test('reportPorMes cai em ChangedDate quando não há ClosedDate, e marca', () => {
+  const r = C.reportPorMes([
+    fim(1, 'Done', 'Done', null, '2026-08-15T12:00:00Z'), // só alteração
+    fim(2, 'Feature', 'Done', '2026-08-16T12:00:00Z', '2026-08-30T12:00:00Z'),
+  ]);
+  assert.equal(r[0].aproximados, 1);
+  assert.equal(r[0].itens.find((x) => x.item.id === 1).aproximada, true);
+  assert.equal(r[0].itens.find((x) => x.item.id === 2).aproximada, false);
+});
+
+test('reportPorMes ignora concluído sem data nenhuma e devolve vazio sem entregas', () => {
+  assert.deepEqual(C.reportPorMes([fim(1, 'Feature', 'Done', null, null)]), []);
+  assert.deepEqual(C.reportPorMes([]), []);
+});

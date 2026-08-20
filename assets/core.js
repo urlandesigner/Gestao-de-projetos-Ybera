@@ -450,6 +450,45 @@
     });
   }
 
+  // ---- Report mensal (o que foi concluído) ----
+  const CAMPO_FECHADO = 'Microsoft.VSTS.Common.ClosedDate';
+  const ORDEM_NIVEL = { epic: 0, feature: 1, pbi: 2 };
+
+  // Agrupa os itens concluídos por mês, mais recente primeiro.
+  // A data de conclusão preferida é ClosedDate. Quando o template do processo
+  // não a preenche, cai em ChangedDate — que para um item terminal é a melhor
+  // aproximação disponível, mas erra se alguém editar o item meses depois. Por
+  // isso o item volta marcado (`aproximada`) e o mês conta quantos foram assim:
+  // a tela avisa em vez de afirmar uma data que não tem.
+  function reportPorMes(items) {
+    const meses = new Map();
+    for (const it of items || []) {
+      const f = (it || {}).fields || {};
+      if (!isTerminalState(f['System.State'])) continue;
+      const fechado = dataValida(f[CAMPO_FECHADO]);
+      const alterado = dataValida(f['System.ChangedDate']);
+      const quando = fechado !== null ? fechado : alterado;
+      if (quando === null) continue; // sem nenhuma data não há mês onde colocar
+      const d = new Date(quando);
+      const chave = d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0');
+      if (!meses.has(chave)) meses.set(chave, { mes: chave, itens: [], aproximados: 0, total: 0, porNivel: null });
+      const registro = meses.get(chave);
+      registro.itens.push({ item: it, quando, aproximada: fechado === null });
+      if (fechado === null) registro.aproximados += 1;
+    }
+    const nivelDe = (r) => levelOf(((r.item || {}).fields || {})['System.WorkItemType']);
+    return [...meses.values()]
+      .map((m) => {
+        // épico antes de feature antes de PBI; dentro do nível, o mais recente
+        m.itens.sort((a, b) => (ORDEM_NIVEL[nivelDe(a)] - ORDEM_NIVEL[nivelDe(b)]) || (b.quando - a.quando));
+        m.total = m.itens.length;
+        m.porNivel = { epic: 0, feature: 0, pbi: 0 };
+        for (const r of m.itens) m.porNivel[nivelDe(r)] += 1;
+        return m;
+      })
+      .sort((a, b) => (a.mes < b.mes ? 1 : a.mes > b.mes ? -1 : 0)); // mês mais novo primeiro
+  }
+
   // ---- Cache ----
   function isStale(fetchedAt, now, maxAgeMinutes = 10) {
     if (!fetchedAt) return true;
@@ -473,7 +512,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, reportPorMes,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };
 });

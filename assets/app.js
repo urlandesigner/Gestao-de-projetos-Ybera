@@ -175,9 +175,12 @@ const FIELDS_COUNTS = [
   'System.Title', 'Microsoft.VSTS.Scheduling.TargetDate', 'System.ChangedDate',
 ];
 const FIELDS_BOARD = ['System.Title', 'System.State', 'System.WorkItemType', 'System.BoardColumn', 'System.AssignedTo', 'System.IterationPath'];
-const FIELDS_PRODUTOS = [
+// A consulta sem corte de data alimenta Produtos (progresso) e Report (entregas
+// por mês). ClosedDate é a data de conclusão; ChangedDate é o plano B dela.
+const FIELDS_BASE = [
   'System.Title', 'System.State', 'System.WorkItemType', 'System.Parent',
   'System.AssignedTo', 'Microsoft.VSTS.Scheduling.StartDate', 'Microsoft.VSTS.Scheduling.TargetDate',
+  'Microsoft.VSTS.Common.ClosedDate', 'System.ChangedDate',
 ];
 const FIELDS_ITEMS = [
   'System.Title', 'System.State', 'System.WorkItemType', 'System.TeamProject',
@@ -390,32 +393,39 @@ function renderPanorama() {
 // (só ao abrir a página), como o board dedicado — o refresh geral não paga por
 // ela. Estado em memória, não no localStorage: são centenas de itens que só
 // servem a esta tela.
-const produtosState = { porTime: null, carregando: false, erro: null, fetchedAt: 0 };
+// Base completa, sob demanda: uma consulta serve Produtos E Report. Guarda os
+// itens crus além dos épicos rolados — o Report precisa de todos, e buscar duas
+// vezes a mesma coisa seria desperdício.
+const baseState = { porTime: null, carregando: false, erro: null, fetchedAt: 0 };
 
-async function carregarProdutos(forcar) {
-  if (!state.config || produtosState.carregando) return;
-  if (!state.pat) { renderProdutos(); return; }
-  if (!forcar && produtosState.porTime && !C.isStale(produtosState.fetchedAt, Date.now())) return;
-  produtosState.carregando = true;
-  produtosState.erro = null;
+async function carregarBase(forcar) {
+  if (!state.config || baseState.carregando) return;
+  if (!state.pat) { renderProdutos(); renderReport(); return; }
+  if (!forcar && baseState.porTime && !C.isStale(baseState.fetchedAt, Date.now())) return;
+  baseState.carregando = true;
+  baseState.erro = null;
   renderProdutos();
+  renderReport();
   try {
     const porTime = [];
     for (const p of state.config.projects.filter((x) => !x.hidden)) {
       let areas = [];
       try { areas = await A.teamAreas(ctx(), p.projectName, p.teamName); } catch (e) { /* segue projeto inteiro */ }
       const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlProdutos(areas));
-      const items = ids.length ? await A.getFields(ctx(), ids, FIELDS_PRODUTOS) : [];
-      porTime.push({ p, produtos: C.produtos(items) });
+      const crus = ids.length ? await A.getFields(ctx(), ids, FIELDS_BASE) : [];
+      // anota o projeto: o Report junta os times e ainda precisa montar o link
+      const items = crus.map((it) => Object.assign({ projeto: p.projectName, time: p.teamName }, it));
+      porTime.push({ p, items, produtos: C.produtos(items) });
     }
-    produtosState.porTime = porTime;
-    produtosState.fetchedAt = Date.now();
+    baseState.porTime = porTime;
+    baseState.fetchedAt = Date.now();
   } catch (e) {
     if (e instanceof A.AuthError) state.auth = 'vencido';
-    produtosState.erro = mensagemDeErro(e);
+    baseState.erro = mensagemDeErro(e);
   } finally {
-    produtosState.carregando = false;
+    baseState.carregando = false;
     renderProdutos();
+    renderReport();
     renderBadge();
   }
 }
@@ -434,13 +444,13 @@ function renderProdutos() {
   const box = $('produtos');
   if (!box || !state.config) return;
   if (!state.pat) { box.innerHTML = semDados('os produtos'); return; }
-  const erroHtml = produtosState.erro ? `<p class="erro">${escapeHtml(produtosState.erro)}</p>` : '';
-  if (!produtosState.porTime) {
-    box.innerHTML = erroHtml + (produtosState.erro ? '' : '<p class="mudo">carregando produtos…</p>');
+  const erroHtml = baseState.erro ? `<p class="erro">${escapeHtml(baseState.erro)}</p>` : '';
+  if (!baseState.porTime) {
+    box.innerHTML = erroHtml + (baseState.erro ? '' : '<p class="mudo">carregando produtos…</p>');
     return;
   }
-  const multi = produtosState.porTime.length > 1;
-  const blocos = produtosState.porTime.map(({ p, produtos }) => {
+  const multi = baseState.porTime.length > 1;
+  const blocos = baseState.porTime.map(({ p, produtos }) => {
     const corpo = produtos.length
       ? `<div class="grid-produtos">${produtos.map((reg) => htmlProduto(reg, p)).join('')}</div>`
       : '<p class="mudo">Nenhum épico neste time.</p>';
@@ -471,6 +481,59 @@ function htmlProduto(reg, p) {
       <span class="barra"><span class="barra-cheia" style="width:${pct}%"></span></span>
     </div>
   </article>`;
+}
+
+/* ---------- Report mensal ---------- */
+// Meses recolhidos, o mais recente aberto — mesma leitura do report do Radar.
+// Usa <details> nativo: zero JS pra abrir e fechar.
+function mesPorExtenso(chave) {
+  const [ano, mes] = String(chave).split('-');
+  const nome = new Date(Date.UTC(Number(ano), Number(mes) - 1, 1))
+    .toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' });
+  return nome.charAt(0).toUpperCase() + nome.slice(1) + ' de ' + ano;
+}
+
+function renderReport() {
+  const box = $('report');
+  if (!box || !state.config) return;
+  if (!state.pat) { box.innerHTML = semDados('o report'); return; }
+  const erroHtml = baseState.erro ? `<p class="erro">${escapeHtml(baseState.erro)}</p>` : '';
+  if (!baseState.porTime) {
+    box.innerHTML = erroHtml + (baseState.erro ? '' : '<p class="mudo">carregando entregas…</p>');
+    return;
+  }
+  const meses = C.reportPorMes(baseState.porTime.flatMap(({ items }) => items));
+  if (!meses.length) {
+    box.innerHTML = erroHtml + '<p class="mudo">Nada concluído registrado ainda.</p>';
+    return;
+  }
+  box.innerHTML = erroHtml + meses.map((m, i) => htmlMesReport(m, i === 0)).join('');
+}
+
+function htmlMesReport(m, aberto) {
+  const n = m.porNivel;
+  const partes = [];
+  if (n.epic) partes.push(n.epic + (n.epic > 1 ? ' épicos' : ' épico'));
+  if (n.feature) partes.push(n.feature + (n.feature > 1 ? ' features' : ' feature'));
+  if (n.pbi) partes.push(n.pbi + ' PBI' + (n.pbi > 1 ? 's' : ''));
+  const nota = m.aproximados
+    ? `<p class="mudo nota-report">${m.aproximados} ${m.aproximados > 1 ? 'itens sem data de conclusão' : 'item sem data de conclusão'} registrada no DevOps — para ${m.aproximados > 1 ? 'esses' : 'esse'} usei a data da última alteração, marcada com ~.</p>`
+    : '';
+  const linhas = m.itens.map(({ item, quando, aproximada }) => {
+    const f = item.fields || {};
+    const slug = C.typeSlug(f['System.WorkItemType']);
+    const link = C.deepLinks(state.config.org, item.projeto, '').workItem(item.id);
+    return `<li><a href="${link}" target="_blank" rel="noopener">
+      <span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span>
+      <span class="titulo">${escapeHtml(f['System.Title'] || ('item #' + item.id))}</span>
+      <span class="quando"${aproximada ? ' title="data aproximada — sem data de conclusão no DevOps"' : ''}>${aproximada ? '~' : ''}${dataCurta(quando)}</span>
+      <span class="id">#${item.id}</span>
+    </a></li>`;
+  }).join('');
+  return `<details class="mes"${aberto ? ' open' : ''}>
+    <summary><span class="mes-nome">${mesPorExtenso(m.mes)}</span><span class="mes-resumo">${m.total} ${m.total > 1 ? 'itens' : 'item'}${partes.length ? ' · ' + partes.join(' · ') : ''}</span></summary>
+    ${nota}<ul class="lista-report">${linhas}</ul>
+  </details>`;
 }
 
 /* ---------- Pendências ---------- */
@@ -703,7 +766,8 @@ function renderRoute() {
   }
   fecharBoard();
   if (hash === '#pendencias') { setPagina('pendencias'); return; }
-  if (hash === '#produtos') { setPagina('produtos'); carregarProdutos(false); return; }
+  if (hash === '#produtos') { setPagina('produtos'); carregarBase(false); return; }
+  if (hash === '#report') { setPagina('report'); carregarBase(false); return; }
   if (hash === '#projetos') { setPagina('projetos'); return; }
   if (hash === '#meus-itens') { setPagina('meus-itens'); return; }
   setPagina('panorama'); // abertura: visão geral antes do detalhe
@@ -714,6 +778,7 @@ function setPagina(pagina) {
   $('nav-panorama').classList.toggle('ativa', pagina === 'panorama');
   $('nav-pendencias').classList.toggle('ativa', pagina === 'pendencias');
   $('nav-produtos').classList.toggle('ativa', pagina === 'produtos');
+  $('nav-report').classList.toggle('ativa', pagina === 'report');
   $('nav-meus-itens').classList.toggle('ativa', pagina === 'meus-itens');
   $('nav-projetos').classList.toggle('ativa', pagina === 'projetos' || pagina === 'board');
 }
@@ -970,7 +1035,8 @@ document.addEventListener('DOMContentLoaded', () => {
   $('wizard-concluir').addEventListener('click', wizardConclude);
   $('atualizar').addEventListener('click', () => {
     refreshAll(true);
-    if (document.body.dataset.pagina === 'produtos') carregarProdutos(true); // tem cache próprio
+    // as duas páginas que leem a base têm cache próprio
+    if (['produtos', 'report'].includes(document.body.dataset.pagina)) carregarBase(true);
   });
   $('abrir-config').addEventListener('click', openSettings);
   $('board-voltar').addEventListener('click', () => { location.hash = '#projetos'; });
