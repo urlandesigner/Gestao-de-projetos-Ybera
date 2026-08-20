@@ -92,9 +92,11 @@ entra no Radar com o `azureTitle` e um marcador discreto de "sem redação". Se
 sumisse em silêncio, a falta só seria percebida por ausência — e ausência não
 se percebe.
 
-**Prosa sem fato sai da página e entra no relatório.** Texto órfão significa
-Epic apagado, movido de área ou fora do filtro. Não renderiza, mas o script
-avisa, para a decisão ser sua: apagar o texto ou consertar o DevOps.
+**Prosa sem fato sai da página e avisa no console.** Texto órfão significa
+Epic apagado, movido de área ou fora do filtro. Não renderiza, e quem avisa é
+a fusão no `app.js`, não o script: o script nunca lê o `prosa.js`, então não
+tem como saber que existe texto sobrando. O aviso é um `console.warn` com os
+ids, para a decisão ser sua — apagar o texto ou consertar o DevOps.
 
 ### Escopo da consulta
 
