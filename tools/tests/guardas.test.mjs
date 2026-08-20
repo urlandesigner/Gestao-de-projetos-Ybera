@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { guardaEsvaziamento, serializarFatos, relatorio, parsearFatos, coletarPendencias } from '../guardas.mjs';
+import { guardaEsvaziamento, decidirGravacao, serializarFatos, relatorio, parsearFatos, coletarPendencias } from '../guardas.mjs';
 
 test('primeira rodada passa quando ha itens', () => {
   assert.equal(guardaEsvaziamento(14, null).ok, true);
@@ -125,4 +125,77 @@ test('coletarPendencias na rodada limpa nao acusa nada', () => {
   ]);
   assert.equal(semStatus.length, 0);
   assert.equal(semTrack.length, 0);
+});
+
+/* decidirGravacao concentra a combinacao de guarda.ok/forcavel/--forcar/
+   --dry-run que antes vivia so em sync.mjs, sem nenhum teste cobrindo a
+   consumacao da guarda (so a classificacao, em guardaEsvaziamento, era
+   testada). E exatamente essa combinacao que ja produziu um bug real
+   (--forcar sobrescrevendo a recusa de zero Epics). */
+const PASSA = { ok:true, forcavel:false, motivo:null };
+const RECUSA_FORCAVEL = { ok:false, forcavel:true, motivo:'queda abrupta' };
+const RECUSA_ZERO = { ok:false, forcavel:false, motivo:'zero epics' };
+
+test('decidirGravacao: passagem limpa grava', () => {
+  const d = decidirGravacao(PASSA, { forcar:false, seco:false });
+  assert.equal(d.deveGravar, true);
+  assert.equal(d.erro, null);
+  assert.equal(d.saida, null);
+});
+
+test('decidirGravacao: recusa forcavel sem --forcar bloqueia', () => {
+  const d = decidirGravacao(RECUSA_FORCAVEL, { forcar:false, seco:false });
+  assert.equal(d.deveGravar, false);
+  assert.match(d.erro, /queda abrupta/);
+  assert.doesNotMatch(d.erro, /--forcar não pode contornar/);
+  assert.equal(d.saida, 1);
+});
+
+test('decidirGravacao: recusa forcavel com --forcar grava e avisa', () => {
+  const d = decidirGravacao(RECUSA_FORCAVEL, { forcar:true, seco:false });
+  assert.equal(d.deveGravar, true);
+  assert.equal(d.erro, null);
+  assert.ok(d.avisos.some(a => /--forcar: gravando apesar de/.test(a)));
+});
+
+/* O caso central do achado: zero Epics nao e forcavel, entao --forcar nunca
+   deve conseguir contornar essa recusa especifica — mesmo que o flag tenha
+   sido passado. */
+test('decidirGravacao: recusa nao forcavel com --forcar continua bloqueando e avisa que o flag nao vale aqui', () => {
+  const d = decidirGravacao(RECUSA_ZERO, { forcar:true, seco:false });
+  assert.equal(d.deveGravar, false);
+  assert.match(d.erro, /zero epics/);
+  assert.match(d.erro, /--forcar não pode contornar isto\./);
+  assert.equal(d.saida, 1);
+});
+
+test('decidirGravacao: passagem limpa com --dry-run nunca grava nem afirma ter gravado', () => {
+  const d = decidirGravacao(PASSA, { forcar:false, seco:true });
+  assert.equal(d.deveGravar, false);
+  assert.equal(d.erro, null);
+  assert.equal(d.saida, 0);
+  assert.ok(d.avisos.some(a => /--dry-run: nada gravado/.test(a)));
+});
+
+test('decidirGravacao: recusa forcavel + --forcar + --dry-run nunca grava nem afirma ter gravado', () => {
+  const d = decidirGravacao(RECUSA_FORCAVEL, { forcar:true, seco:true });
+  assert.equal(d.deveGravar, false);
+  assert.equal(d.erro, null);
+  assert.equal(d.saida, 0);
+  assert.ok(d.avisos.some(a => /--forcar contornaria a guarda, mas --dry-run não grava nada/.test(a)));
+  assert.ok(d.avisos.some(a => /--dry-run: nada gravado/.test(a)));
+});
+
+test('decidirGravacao: recusa nao forcavel + --forcar + --dry-run bloqueia pelo motivo de sempre, nao pelo dry-run', () => {
+  const d = decidirGravacao(RECUSA_ZERO, { forcar:true, seco:true });
+  assert.equal(d.deveGravar, false);
+  assert.match(d.erro, /--forcar não pode contornar isto\./);
+  assert.equal(d.saida, 1);
+});
+
+test('decidirGravacao: recusa forcavel sem --forcar + --dry-run bloqueia pelo motivo de sempre, nao pelo dry-run', () => {
+  const d = decidirGravacao(RECUSA_FORCAVEL, { forcar:false, seco:true });
+  assert.equal(d.deveGravar, false);
+  assert.match(d.erro, /queda abrupta/);
+  assert.equal(d.saida, 1);
 });

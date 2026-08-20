@@ -33,6 +33,37 @@ export function guardaEsvaziamento(qtdNova, qtdAntiga){
   return { ok:true, forcavel:false, motivo:null };
 }
 
+/* Consome o que guardaEsvaziamento decidiu e diz a sync.mjs o que fazer com
+   isso: gravar, avisar, recusar ou não gravar por causa de --dry-run. É
+   exatamente a combinação de `guarda.ok`/`guarda.forcavel`/`--forcar`/
+   `--dry-run` que já produziu um bug real (--forcar sobrescrevendo a recusa
+   de zero Epics sobre a página publicada) — isolar a decisão aqui em vez de
+   deixá-la espalhada no orquestrador permite testar as quatro saídas sem
+   precisar simular I/O. */
+export function decidirGravacao(guarda, { forcar, seco }){
+  const avisos = [];
+
+  if(!guarda.ok){
+    /* Mesma regra de sempre: zero Epics nunca é forçável, então --forcar só
+       vence quando a recusa admite isso (forcavel) E o flag foi de fato
+       passado. Qualquer outra combinação cai na recusa. */
+    if(!forcar || !guarda.forcavel){
+      const erro = '\n' + guarda.motivo + (forcar ? '\n--forcar não pode contornar isto.' : '');
+      return { deveGravar:false, avisos, erro, saida:1 };
+    }
+    avisos.push(seco
+      ? '\n--forcar contornaria a guarda, mas --dry-run não grava nada: ' + guarda.motivo
+      : '\n--forcar: gravando apesar de ' + guarda.motivo);
+  }
+
+  if(seco){
+    avisos.push('\n--dry-run: nada gravado.');
+    return { deveGravar:false, avisos, erro:null, saida:0 };
+  }
+
+  return { deveGravar:true, avisos, erro:null, saida:null };
+}
+
 /* JSON.stringify é o que garante escape correto: título do DevOps vem com
    aspas no texto e com "\" nas Area Paths. Montar a string à mão aqui já
    produziu arquivo inválido em outros projetos. */

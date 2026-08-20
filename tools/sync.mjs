@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { runWiql, getFields, AuthError, NetworkError } from './ado.mjs';
 import { itemDe, agruparPorPai, diffRodadas } from './mapa.mjs';
-import { guardaEsvaziamento, serializarFatos, relatorio, parsearFatos, coletarPendencias } from './guardas.mjs';
+import { guardaEsvaziamento, decidirGravacao, serializarFatos, relatorio, parsearFatos, coletarPendencias } from './guardas.mjs';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const RAIZ = path.resolve(AQUI, '..');
@@ -66,19 +66,16 @@ try {
 
   console.log(relatorio({ itens, orfas, semStatus, semTrack, mudancas }));
 
-  if(!g.ok){
-    /* --forcar só existe para a queda abrupta, que pode ser real. Zero
-       Epics é sempre indistinguível de área renomeada — não há "zero real"
-       pra alguém publicar — então --forcar nunca some essa recusa; se foi
-       passado mesmo assim, dizemos isso em vez de ignorar o flag calado. */
-    if(!forcar || !g.forcavel){
-      console.error('\n' + g.motivo + (forcar ? '\n--forcar não pode contornar isto.' : ''));
-      process.exit(1);
-    }
-    if(seco) console.warn('\n--forcar contornaria a guarda, mas --dry-run não grava nada: ' + g.motivo);
-    else console.warn('\n--forcar: gravando apesar de ' + g.motivo);
+  /* Toda a lógica de --forcar/--dry-run sobre a guarda vive em
+     decidirGravacao (guardas.mjs), testada lá. Aqui só imprimimos o que ela
+     manda e saímos com o código que ela manda — nenhuma decisão própria. */
+  const decisao = decidirGravacao(g, { forcar, seco });
+  for(const aviso of decisao.avisos) console.warn(aviso);
+  if(decisao.erro){
+    console.error(decisao.erro);
+    process.exit(decisao.saida);
   }
-  if(seco){ console.log('\n--dry-run: nada gravado.'); process.exit(0); }
+  if(!decisao.deveGravar) process.exit(decisao.saida);
 
   /* Monta o arquivo inteiro antes de gravar: falha no meio deixa o fatos.js
      anterior intacto, em vez de meio arquivo. */
