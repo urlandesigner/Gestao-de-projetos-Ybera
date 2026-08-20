@@ -573,7 +573,7 @@ function render(){
   const foldEl = $("board").querySelector(".fold");
   if(foldEl) foldEl.addEventListener("toggle", () => { foldOpen = foldEl.open; });
 
-  /* --- produtos: cada produto (coluna Produto do Notion) com os projetos
+  /* --- produtos: cada produto (derivado da Area Path no Azure DevOps) com os projetos
          dentro dele. Dentro do produto, em curso primeiro e depois pela data
          de início. Produto sem projeto não vira bloco vazio. --- */
   $("detTitle").textContent = t.detTitle;
