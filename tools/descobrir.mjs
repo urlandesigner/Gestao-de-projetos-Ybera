@@ -3,7 +3,15 @@
    escrito contra a realidade em vez de contra palpite. Não grava nada.
 
    Uso:  ADO_PAT=xxx node tools/descobrir.mjs
-         ADO_PAT=xxx node tools/descobrir.mjs "Outro Projeto" */
+         ADO_PAT=xxx node tools/descobrir.mjs "Outro Projeto"
+         ADO_PAT=xxx node tools/descobrir.mjs "Projeto" --titulos
+
+   --titulos lista todo Epic com id, estado, área e título. Existe porque a
+   contagem por área não basta para decidir QUAIS itens entram no Radar: uma
+   área pode misturar frentes (a org tem 70 Epics num projeto para um Radar de
+   14 projetos), e só os títulos dizem qual é qual. Sem isso o mapeamento
+   voltaria a ser palpite, que é justamente o que este script existe para
+   evitar. */
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -17,7 +25,9 @@ import { runWiql, getFields, listProjects, AuthError, NetworkError } from './ado
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const cfg = JSON.parse(await readFile(path.join(AQUI, 'config.json'), 'utf8'));
 const ORG = cfg.org;
-const PROJETO = process.argv[2] || cfg.projeto;
+const ARGS = process.argv.slice(2);
+const TITULOS = ARGS.includes('--titulos');
+const PROJETO = ARGS.find(a => !a.startsWith('--')) || cfg.projeto;
 
 const pat = process.env.ADO_PAT;
 if(!pat){
@@ -77,8 +87,24 @@ try {
       console.log(`  com System.Parent: ${preenchido('System.Parent')} de ${itens.length}`);
     }
 
-    console.log('\nTrês exemplos crus:');
-    for(const w of itens.slice(0, 3)) console.log('  ' + JSON.stringify({ id: w.id, fields: w.fields }));
+    if(TITULOS){
+      /* Ordenado por área e depois por título: agrupa visualmente o que
+         provavelmente é a mesma frente, que é a pergunta que a listagem
+         serve para responder. */
+      console.log(`\nTodos os ${itens.length} itens (id · estado · área · título):`);
+      const linhas = itens.map(w => {
+        const f = w.fields || {};
+        return {
+          area: f['System.AreaPath'] || '(sem área)',
+          txt: `  #${String(w.id).padEnd(6)} ${String(f['System.State'] || '?').padEnd(12)} ` +
+               `${(f['System.AreaPath'] || '(sem área)').padEnd(34)} ${f['System.Title'] || ''}`
+        };
+      }).sort((a, b) => a.area.localeCompare(b.area) || a.txt.localeCompare(b.txt));
+      for(const l of linhas) console.log(l.txt);
+    } else {
+      console.log('\nTrês exemplos crus:');
+      for(const w of itens.slice(0, 3)) console.log('  ' + JSON.stringify({ id: w.id, fields: w.fields }));
+    }
 
     /* Esqueleto pronto para colar no config, já com os nomes reais. */
     if(tipo === 'Epic'){
