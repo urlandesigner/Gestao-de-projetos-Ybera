@@ -1238,7 +1238,16 @@ Conferir: a contagem de Epics bate com o esperado, não há estado não mapeado,
 
 - [ ] **Step 5: Reindexar o `prosa.js` pelos ids verdadeiros**
 
-O relatório e a saída da descoberta dão o id real de cada Epic. Trocar as chaves provisórias (1 a 14) do objeto `texto` pelos ids do DevOps, casando pelo `azureTitle` — que é o campo `notion` que o `data.js` tinha.
+O relatório e a saída da descoberta dão o id real de cada Epic. Trocar as chaves provisórias (1 a 14) do objeto `texto` pelos ids do DevOps, casando pelo `azureTitle` — que é o campo `notion` que o `data.js` tinha. Fazer isto **antes** da primeira gravação de verdade (Step 6) — depois, os ids provisórios já terão saído do arquivo commitado e ficará mais difícil casar um pelo outro.
+
+**Avisos operacionais — ler antes de rodar qualquer coisa, não enquanto se olha para uma recusa:**
+
+1. **A semente de 14 Epics vira a base de comparação da guarda de esvaziamento.** Uma rodada real que volte com menos de 12 Epics (80% de 14) é recusada, com uma mensagem sugerindo Area Path renomeada — plausível, já que o 14 veio de uma contagem do Notion, não do Azure DevOps. Duas saídas limpas: ler o relatório do `--dry-run` e, se a queda for real, rodar com `--forcar`; ou mover a semente para fora do caminho antes da primeira rodada, para que a ausência genuína do arquivo dê a semântica de primeira rodada de verdade (só a regra do zero vale). Decidir isto antes de rodar, não na hora de encarar a recusa.
+2. **Preencher `estados` antes da primeira rodada sem `--dry-run`.** Com ele vazio, a gravação é recusada por `guardaStatusVazio` (guarda 5 da spec) — e `--forcar` não se aplica a essa recusa.
+3. **Um relatório limpo é pré-requisito de um board correto, não capricho.** Qualquer Epic que fique num estado fora do mapa some das três colunas do board (agora com um grupo "sem status" que o torna visível, mas ainda fora da classificação) enquanto a tabela de produtos continua contando esse Epic no total.
+4. **Os valores de `areas` têm de bater caractere a caractere com os ids de produto em `prosa.js`** (`club`, `interna`, `influencer`, `reviews`, `ia`, `europa`). Um id digitado errado não derruba a rodada — o item cai no grupo "sem produto", com aviso no console — mas ainda assim é bom acertar de primeira.
+5. **Reindexar o `prosa.js` pelos ids reais (Step 5) antes da primeira gravação de verdade**, não depois — ver a nota acima.
+6. **Se as datas voltarem vazias**, esperar janelas mostrando "—" e sem barra de decorrido (intencional) e todos os projetos caindo no grupo "sem data" da página Futuro (também intencional) — não é bug.
 
 - [ ] **Step 6: Gravar e verificar o site**
 

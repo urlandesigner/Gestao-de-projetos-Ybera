@@ -184,7 +184,7 @@ script nunca imprime o PAT — não há mascaramento algum, e não precisa haver
 porque o valor simplesmente não passa por nenhum `console.log`/`console.error`
 do script.
 
-## Tratamento de erro — as cinco guardas
+## Tratamento de erro — as seis guardas
 
 1. **Nunca grava parcial.** O arquivo é montado inteiro em memória e gravado
    de uma vez. Falha no meio = nada gravado, `fatos.js` anterior intacto.
@@ -201,7 +201,17 @@ do script.
 4. **Estado desconhecido não vira `next` em silêncio.** `System.State` fora do
    mapa entra com o estado cru e é listado no relatório. Mapear o desconhecido
    para "planejado" esconderia mudança de processo de quem precisa saber.
-5. **Relatório no fim, sempre.** Contagem de Epics e demandas, itens sem
+5. **Guarda de status vazio.** Estado fora do mapa em *alguns* itens passa
+   normalmente (guarda 4, acima) — mas se **nenhum** Epic tiver status
+   mapeado, isso não é dado real, é `tools/config.json` com `estados` ainda
+   vazio (ferramenta desconfigurada). Gravar assim esvaziaria as três colunas
+   do board na página no ar de uma vez só. `guardaStatusVazio`
+   (`tools/guardas.mjs`) recusa gravar nesse caso, e — ao contrário da guarda
+   de esvaziamento — nunca aceita `--forcar`: não existe um "config vazio
+   real" que alguém precise publicar, só falta preencher o mapa. É a guarda
+   com mais chance de ser a primeira que o operador encontra, porque
+   `tools/config.json` chega com `estados` e `areas` vazios por padrão.
+6. **Relatório no fim, sempre.** Contagem de Epics e demandas, itens sem
    produto (área fora da tabela de `tools/config.json`), estados não
    mapeados, Features órfãs e o que mudou desde a última rodada. O script
    nunca lê `prosa.js` — não tem como saber quais Epics ficaram sem texto

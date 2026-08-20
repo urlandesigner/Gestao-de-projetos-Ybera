@@ -1,10 +1,15 @@
 /* ==========================================================================
-   DADOS DO RADAR — única fonte das páginas (index, essencial, ..., completo).
-   É ESTE arquivo que se edita na revisão quinzenal.
+   TEXTO EDITORIAL DO RADAR — a METADE editorial das páginas (index, board,
+   pendencias, produtos, produtos-tabela, report, horizonte, completo), não a
+   fonte inteira. A outra metade — fato — vem do Azure DevOps e mora em
+   fatos.js, ao lado deste; fundir(), em app.js, junta os dois na hora de
+   carregar a página. É ESTE arquivo que se edita na revisão quinzenal.
 
    ATENÇÃO: o arquivo antigo "Radar de Projetos USA.html" (versão de página
-   única, autocontida) carrega uma CÓPIA própria destes dados embutida nele.
-   Enquanto os dois existirem, atualize os dois — ou aposente um.
+   única, autocontida) está CONGELADO — carrega sua própria cópia embutida
+   dos dados, no formato de antes da integração com o DevOps (com os campos
+   `notion`, `start`, `status`, que não têm equivalente aqui), e não é mais
+   mantido em conjunto com este arquivo.
    ==========================================================================
    1) DADOS
    --------------------------------------------------------------------------
@@ -66,11 +71,12 @@
    Epic correspondente (o Epic saiu do filtro, foi apagado, mudou de área)
    também não quebra a página — vira um `console.warn` no navegador.
 
-   NÃO PREENCHIDO NA BASE (herdado do levantamento original em Notion, antes
-   da integração com o DevOps): a seção "Precisamos de vocês" segue vazia
-   até o Azure DevOps registrar decisões/ações pendentes — a estrutura já
-   existe (ver `asks`, adiante) e passa a preencher sozinha quando a fonte
-   tiver o que reportar.
+   "PRECISAMOS DE VOCÊS" (`asks`, adiante) É E CONTINUA SENDO ESCRITO À MÃO.
+   Nenhuma ferramenta em tools/ produz ou lê esse campo — fundir(), em
+   app.js, o pega direto daqui; sync.mjs nunca escreve nele, porque o Azure
+   DevOps não tem um conceito de "decisão pendente de fora do time" para
+   extrair. Preencha uma entrada quando houver algo parado esperando decisão
+   ou ação de fora do time de produto; deixe `[]` quando não houver nenhuma.
 
    --------------------------------------------------------------------------
    `meta.updated` (seção 2, abaixo) É MACHINE-SET: `fundir()` o sobrescreve

@@ -80,9 +80,18 @@ try {
 
   console.log(relatorio({ itens, orfas, semStatus, semTrack, mudancas }));
 
-  /* Toda a lógica de --forcar/--dry-run sobre a guarda vive em
-     decidirGravacao (guardas.mjs), testada lá. Aqui só imprimimos o que ela
-     manda e saímos com o código que ela manda — nenhuma decisão própria.
+  /* Calculada aqui, antes de decidirGravacao, para que --dry-run possa
+     avisar sobre ela também (ver abaixo) — não só na hora de gravar de
+     verdade. "estados" vazio em tools/config.json não derruba a contagem de
+     Epics (guardaEsvaziamento não vê nada de errado), mas grava o board
+     inteiro sem status. Ao contrário da guarda de esvaziamento, esta nunca
+     aceita --forcar — não há "config vazio real" para publicar, só falta
+     preencher o mapa. */
+  const gStatus = guardaStatusVazio(itens);
+
+  /* Toda a lógica de --forcar/--dry-run sobre a guarda de esvaziamento vive
+     em decidirGravacao (guardas.mjs), testada lá. Aqui só imprimimos o que
+     ela manda e saímos com o código que ela manda — nenhuma decisão própria.
 
      Avisos vêm marcados com stream ('out' ou 'err') para que mensagens
      informacionais (--dry-run confirmação) vão para stdout e avisos reais
@@ -96,14 +105,16 @@ try {
     console.error(decisao.erro);
     process.exit(decisao.saida);
   }
-  if(!decisao.deveGravar) process.exit(decisao.saida);
+  if(!decisao.deveGravar){
+    /* Antes, guardaStatusVazio só rodava depois deste exit — um --dry-run
+       nunca chegava a mencioná-la, mesmo quando a gravação de verdade seria
+       recusada por causa dela. --dry-run é o ensaio do operador para a
+       rodada real; ele tem de prever a recusa que está ensaiando, não deixar
+       para ele descobrir só quando rodar sem --dry-run. */
+    if(!gStatus.ok) console.log('\n--dry-run: a gravação de verdade também seria recusada: ' + gStatus.motivo);
+    process.exit(decisao.saida);
+  }
 
-  /* Guarda extra, depois da de esvaziamento: "estados" vazio em
-     tools/config.json não derruba a contagem de Epics (guardaEsvaziamento
-     não vê nada de errado), mas grava o board inteiro sem status. Ao
-     contrário da guarda de esvaziamento, esta nunca aceita --forcar — não
-     há "config vazio real" para publicar, só falta preencher o mapa. */
-  const gStatus = guardaStatusVazio(itens);
   if(!gStatus.ok){
     console.error('\n' + gStatus.motivo);
     process.exit(1);

@@ -281,6 +281,12 @@ section{margin-bottom:30px}
    BOARD
    =========================================================== */
 .board{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start}
+/* "Sem status" (tools/config.json com estado não mapeado): reaproveita o
+   bloco .prod do padrão "sem produto" em vez de virar uma quarta coluna —
+   uma quarta coluna daria ao estado desconfigurado o mesmo peso visual de
+   uma etapa real do fluxo. grid-column faz o bloco ocupar a linha inteira,
+   abaixo das três colunas, em vez de brigar por 1/3 da grade com elas. */
+.board .prod{grid-column:1 / -1}
 .col-head{display:flex;align-items:center;gap:9px;padding:0 4px 10px;border-bottom:2px solid var(--grid);margin-bottom:12px}
 .col-head .cdot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
 .col-head h3{font-size:14px;letter-spacing:.01em}
@@ -362,6 +368,10 @@ section{margin-bottom:30px}
    HORIZON
    =========================================================== */
 .horizon{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+/* "Sem data" (Epic sem StartDate no Azure DevOps): mesmo raciocínio do
+   ".board .prod" acima — bloco cheio abaixo das três faixas, não uma quarta
+   faixa do mesmo peso visual das outras. */
+.horizon .prod{grid-column:1 / -1}
 .hcard{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:15px 16px 16px;box-shadow:var(--shadow)}
 .hcard .ht{display:flex;align-items:baseline;gap:9px;margin-bottom:4px}
 .hcard h3{font-size:14px}

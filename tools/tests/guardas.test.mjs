@@ -119,14 +119,23 @@ test('parsearFatos ignora chaves dentro do comentario de cabecalho', () => {
 /* A semente commitada em Radar de projetos/assets/fatos.js precisa
    continuar parseável pelo próprio parsearFatos que tools/sync.mjs vai usar
    para ler a "rodada anterior" na primeira vez que rodar de verdade. Isto
-   tranca a forma da semente por teste em vez de checagem manual. */
+   tranca a forma da semente por teste em vez de checagem manual.
+
+   NÃO trava a contagem em 14: a Task 5 do plano substitui este arquivo por
+   uma rodada real contra o DevOps, e o número de Epics de lá não tem por que
+   bater com a semente (que veio de uma contagem do Notion, não do DevOps).
+   Travar em 14 faria este teste ficar vermelho no exato momento em que o
+   operador faz o que o plano manda — com uma mensagem que parece bug da
+   ferramenta, não aviso de que o teste precisa ser atualizado. O que importa
+   aqui é a FORMA do arquivo (ids numéricos, `demands` array, o marcador que
+   parsearFatos ancora), não a contagem de um dia específico. */
 test('parsearFatos le a semente commitada em Radar de projetos/assets/fatos.js', () => {
   const AQUI = path.dirname(fileURLToPath(import.meta.url));
   const SEED = path.join(AQUI, '..', '..', 'Radar de projetos', 'assets', 'fatos.js');
   const dados = parsearFatos(readFileSync(SEED, 'utf8'));
   assert.equal(typeof dados.geradoEm, 'string');
   assert.ok(Array.isArray(dados.epics));
-  assert.equal(dados.epics.length, 14);
+  assert.ok(dados.epics.length > 0);
   for(const e of dados.epics){
     assert.equal(typeof e.id, 'number');
     assert.equal(typeof e.azureTitle, 'string');
