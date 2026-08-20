@@ -147,16 +147,23 @@ try {
       for(const w of itens.slice(0, 3)) console.log('  ' + JSON.stringify({ id: w.id, fields: w.fields }));
     }
 
-    /* Esqueleto pronto para colar no config, já com os nomes reais. */
-    if(tipo === 'Epic'){
+    /* Esqueleto pronto para colar no config, já com os nomes reais.
+
+       Sai do nível de FEATURE, não de Epic: a Feature é o projeto do Radar, e
+       são os estados dela que precisam de mapa (os três estados de Epic não
+       entram na página). O produto não aparece aqui porque ele vem do id do
+       Epic pai, e ids se descobrem com --arvore, não contando ocorrências. */
+    if(tipo === 'Feature'){
       const estados = conta(itens, 'System.State').map(([k]) => k).filter(k => k !== '(vazio)');
-      const areas = conta(itens, 'System.AreaPath').map(([k]) => k).filter(k => k !== '(vazio)');
       console.log('\n--- cole em tools/config.json e preencha os valores ---');
       console.log(JSON.stringify({
         org: ORG, projeto: PROJETO,
         estados: Object.fromEntries(estados.map(e => [e, null])),
-        areas: Object.fromEntries(areas.map(a => [a, null]))
+        estadosExcluidos: [],
+        produtos: { '<id do Epic>': '<id do track em prosa.js>' }
       }, null, 2));
+      console.log('\nOs ids dos Epics-produto saem de: node tools/descobrir.mjs ' +
+                  `"${PROJETO}" --titulos`);
     }
   }
 } catch (e) {
