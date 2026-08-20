@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { runWiql, getFields, AuthError, NetworkError } from './ado.mjs';
 import { itemDe, agruparPorPai, diffRodadas } from './mapa.mjs';
-import { guardaEsvaziamento, serializarFatos, relatorio } from './guardas.mjs';
+import { guardaEsvaziamento, serializarFatos, relatorio, parsearFatos, coletarPendencias } from './guardas.mjs';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const RAIZ = path.resolve(AQUI, '..');
@@ -44,8 +44,7 @@ const wiql = tipo =>
 async function fatosAnteriores(){
   try {
     const txt = await readFile(DESTINO, 'utf8');
-    const i = txt.indexOf('{');
-    return JSON.parse(txt.slice(i, txt.lastIndexOf('}') + 1));
+    return parsearFatos(txt);
   } catch { return null; }
 }
 
@@ -62,15 +61,23 @@ try {
   const antes = await fatosAnteriores();
   const g = guardaEsvaziamento(itens.length, antes ? antes.epics.length : null);
 
-  const semStatus = itens.filter(i => i.status === null)
-    .concat(itens.flatMap(i => (i.demands || []).filter(d => d.status === null)));
-  const semTrack = itens.filter(i => i.track === null);
+  const { semStatus, semTrack } = coletarPendencias(itens);
   const mudancas = diffRodadas(antes ? antes.epics : null, itens);
 
   console.log(relatorio({ itens, orfas, semStatus, semTrack, mudancas }));
 
-  if(!g.ok && !forcar){ console.error('\n' + g.motivo); process.exit(1); }
-  if(!g.ok && forcar) console.warn('\n--forcar: gravando apesar de ' + g.motivo);
+  if(!g.ok){
+    /* --forcar só existe para a queda abrupta, que pode ser real. Zero
+       Epics é sempre indistinguível de área renomeada — não há "zero real"
+       pra alguém publicar — então --forcar nunca some essa recusa; se foi
+       passado mesmo assim, dizemos isso em vez de ignorar o flag calado. */
+    if(!forcar || !g.forcavel){
+      console.error('\n' + g.motivo + (forcar ? '\n--forcar não pode contornar isto.' : ''));
+      process.exit(1);
+    }
+    if(seco) console.warn('\n--forcar contornaria a guarda, mas --dry-run não grava nada: ' + g.motivo);
+    else console.warn('\n--forcar: gravando apesar de ' + g.motivo);
+  }
   if(seco){ console.log('\n--dry-run: nada gravado.'); process.exit(0); }
 
   /* Monta o arquivo inteiro antes de gravar: falha no meio deixa o fatos.js
