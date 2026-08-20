@@ -3,31 +3,32 @@
 
 const PISO = 0.8;
 
-/* Um WIQL que não acha nada é indistinguível de uma área renomeada no DevOps.
-   Sem esta guarda, uma rodada agendada apagaria os projetos da página no ar —
-   e o erro só apareceria quando alguém abrisse o link.
+/* Um WIQL que não acha nada é indistinguível de um Epic (produto) removido de
+   tools/config.json, ou renomeado/reorganizado no DevOps. Sem esta guarda,
+   uma rodada agendada apagaria os projetos da página no ar — e o erro só
+   apareceria quando alguém abrisse o link.
 
    `forcavel` existe porque nem toda recusa é a mesma coisa: a queda abrupta
-   pode ser real (projeto encerrou uma leva de Epics de verdade) e por isso
-   aceita --forcar; zero é sempre indistinguível de área renomeada — não há
-   "zero real" que alguém precise publicar — então --forcar nunca se aplica
-   a este caso, e quem chama (sync.mjs) não deveria ter que redescobrir essa
-   distinção sozinho. */
+   pode ser real (projeto encerrou uma leva de Features de verdade) e por
+   isso aceita --forcar; zero é sempre indistinguível de falha de consulta —
+   não há "zero real" que alguém precise publicar — então --forcar nunca se
+   aplica a este caso, e quem chama (sync.mjs) não deveria ter que
+   redescobrir essa distinção sozinho. */
 export function guardaEsvaziamento(qtdNova, qtdAntiga){
   if(!qtdNova) {
     return {
       ok:false,
       forcavel:false,
-      motivo:'A consulta não devolveu nenhum Epic. Nada foi gravado.'
+      motivo:'A consulta não devolveu nenhum projeto. Nada foi gravado.'
     };
   }
   if(qtdAntiga && qtdNova < qtdAntiga * PISO){
     return {
       ok:false,
       forcavel:true,
-      motivo:`A consulta devolveu ${qtdNova} Epics, contra ${qtdAntiga} da rodada anterior ` +
-             `(abaixo do piso de ${Math.round(PISO * 100)}%). Nada foi gravado — confira se uma área ` +
-             `foi renomeada no DevOps ou rode com --forcar se a queda é real.`
+      motivo:`A consulta devolveu ${qtdNova} projetos, contra ${qtdAntiga} da rodada anterior ` +
+             `(abaixo do piso de ${Math.round(PISO * 100)}%). Nada foi gravado — confira se um Epic ` +
+             `(produto) saiu de tools/config.json → produtos, ou rode com --forcar se a queda é real.`
     };
   }
   return { ok:true, forcavel:false, motivo:null };
@@ -47,7 +48,7 @@ export function guardaStatusVazio(itens){
   if(lista.length && lista.every(i => i.status === null)){
     return {
       ok:false,
-      motivo:`Nenhum dos ${lista.length} Epics tem status mapeado — tools/config.json ` +
+      motivo:`Nenhum dos ${lista.length} itens tem status mapeado — tools/config.json ` +
              'provavelmente tem "estados" vazio. Rode "node tools/descobrir.mjs", preencha o mapa ' +
              'e rode de novo. Nada foi gravado.'
     };
@@ -159,33 +160,82 @@ export function guardaLeituraAnterior(erro, dados){
 }
 
 /* Separado do orquestrador para poder testar direto: é isto que faz um
-   estado ou uma área fora do mapa aparecer no relatório em vez de virar
-   "planned" (ou sumir) sem ninguém perceber. */
+   estado fora do mapa aparecer no relatório em vez de virar "planned" (ou
+   sumir) sem ninguém perceber.
+
+   Não olha mais `demands` (a lista sempre vem vazia agora — ver o comentário
+   em itemDe, tools/mapa.mjs) nem calcula "sem produto": todo item que chega
+   até aqui já passou pelo filtro de `cfg.produtos` em sync.mjs, então
+   `track` nunca é null neste ponto. O risco que "sem produto" cobria — um
+   produto novo não cadastrado — passou a ser coberto por `epicsSemProduto`,
+   abaixo, que enxerga o problema um nível acima (no Epic pai, antes do
+   descarte), onde dá para reportar id, título e quantidade em vez de só
+   "faltou produto". */
 export function coletarPendencias(itens){
   const lista = itens || [];
-  const semStatus = lista.filter(i => i.status === null)
-    .concat(lista.flatMap(i => (i.demands || []).filter(d => d.status === null)));
-  const semTrack = lista.filter(i => i.track === null);
-  return { semStatus, semTrack };
+  const semStatus = lista.filter(i => i.status === null);
+  return { semStatus };
+}
+
+/* O risco que esta função cobre: alguém cria um Epic novo na vertical (ex.:
+   "Loja Clube Peru") e esquece de cadastrá-lo em tools/config.json →
+   produtos. Sem esta guarda, TODAS as Features filhas desse Epic são
+   descartadas em sync.mjs de forma indistinguível de "trabalho de outra
+   frente da empresa" — o mesmo `B2C` tem 646 Features de times que não são
+   deste Radar — e ninguém percebe que falta cadastrar, porque ausência não
+   se percebe sozinha (é o mesmo problema que guardaStatusVazio e
+   guardaEsvaziamento tratam para status e para contagem).
+
+   Recebe `porPai` já pronto de agruparPorPai (mapa.mjs) — todas as Features
+   agrupadas por Epic pai, sem filtrar — e a tabela `produtos` de
+   tools/config.json, e devolve, para cada Epic pai QUE NÃO está cadastrado,
+   quantas Features dele ficariam invisíveis. Não devolve título: função pura
+   não busca nada no DevOps, e o título do Epic só existe do lado de lá; quem
+   chama (sync.mjs) busca os títulos dos ids que sobrarem aqui e monta a
+   linha final do relatório. Ordenado por quantidade decrescente para que o
+   Epic com mais Features escondidas apareça primeiro — é o que mais
+   distorce o Radar se ninguém notar. */
+export function epicsSemProduto(porPai, produtos){
+  const linhas = [];
+  for(const [paiId, filhas] of (porPai || new Map())){
+    if(!Object.prototype.hasOwnProperty.call(produtos || {}, String(paiId))){
+      linhas.push({ id: paiId, qtd: filhas.length });
+    }
+  }
+  return linhas.sort((a, b) => b.qtd - a.qtd || a.id - b.id);
 }
 
 function bloco(titulo, linhas){
   return linhas.length ? `\n${titulo}\n` + linhas.map(l => '  ' + l).join('\n') : '';
 }
 
-export function relatorio({ itens, orfas, semStatus, semTrack, mudancas }){
-  const nDem = itens.reduce((s, i) => s + ((i.demands || []).length), 0);
-  let txt = `${itens.length} ${itens.length === 1 ? 'Epic' : 'Epics'}, ${nDem} demandas.`;
+/* `itens` aqui já são só as Features que sobreviveram ao filtro de produto
+   E ao filtro de exclusão — cada bloco abaixo existe para que o que ficou
+   de fora não fique apenas de fora, mas visível para alguém decidir se está
+   certo. */
+export function relatorio({ itens, excluidos, semPai, epicsNovos, semStatus, mudancas }){
+  let txt = `${itens.length} ${itens.length === 1 ? 'projeto' : 'projetos'}.`;
 
-  txt += bloco('Estados não mapeados (mapeie em tools/config.json):',
+  txt += bloco('Estados não mapeados (mapeie em tools/config.json → estados):',
     [...new Set(semStatus.map(i => i.estadoCru))].map(e =>
       `"${e}" — ${semStatus.filter(i => i.estadoCru === e).length} itens`));
 
-  txt += bloco('Sem produto (área fora da tabela de tools/config.json):',
-    semTrack.map(i => `#${i.id} ${i.azureTitle}`));
+  /* Contado à parte de "estados não mapeados" de propósito: Removed não é
+     configuração faltando, é descarte deliberado (ver o comentário de
+     statusDe em mapa.mjs). Misturar as duas contagens faria os 62 Removed
+     de hoje parecerem 62 estados por mapear. */
+  txt += bloco('Excluídos do Radar (estado em estadosExcluidos, ex.: Removed):',
+    (excluidos || []).map(i => `#${i.id} ${i.azureTitle} (${i.estadoCru})`));
 
-  txt += bloco('Features órfãs (sem pai, ou com pai fora do filtro):',
-    orfas.map(w => `#${w.id} ${(w.fields || {})['System.Title'] || ''}`));
+  txt += bloco('Sem pai (Feature sem System.Parent — produto desconhecido):',
+    (semPai || []).map(w => `#${w.id} ${(w.fields || {})['System.Title'] || ''}`));
+
+  /* Substitui o antigo bloco "Sem produto (área fora da tabela)": agora que
+     o produto vem do Epic pai, o alerta certo é no Epic — id, título e
+     quantas Features dele ficariam invisíveis — em vez de listar Feature por
+     Feature sem dizer que elas têm uma origem comum. */
+  txt += bloco('Epics sem produto cadastrado em tools/config.json → produtos (Features filhas descartadas):',
+    (epicsNovos || []).map(e => `#${e.id} ${e.titulo} — ${e.qtd} Feature(s)`));
 
   txt += bloco('Mudou desde a última rodada:', mudancas.map(m => {
     if(m.tipo === 'novo') return `+ #${m.id} ${m.titulo}`;

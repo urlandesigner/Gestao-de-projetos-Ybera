@@ -20,6 +20,55 @@ Os 14 projetos da frente USA existem no Azure DevOps, no projeto
 **`Ecommerce USA`** da org `nivello`, como **Epics**, com as demandas de cada um
 como **Features** filhas.
 
+## Correção de 2026-08-21: a hierarquia real
+
+Este spec foi escrito assumindo **Epic = projeto do Radar, Feature = demanda**.
+A primeira rodada de descoberta contra a organização real mostrou que está
+invertido um nível, e que dois outros pressupostos estavam errados. O que
+segue abaixo permanece como registro do que se acreditava; esta seção manda.
+
+**O que se confirmou errado:**
+
+| Pressuposto | Realidade |
+|---|---|
+| Org `ybera` | `nivello` — o nome vinha de fixture de teste da Central |
+| Projeto `Ecommerce USA` | **não existe**. A org tem `MMNDemo` (vazio), `B2C` (70 Epics) e `Novo PRO` (5). A frente USA está em `B2C` |
+| Epic = projeto do Radar | **Epic = produto.** Os Epics em `B2C\Vertical Ecommerce e Growth` são `Loja Clube USA`, `Loja Interna USA/MX/CL/PA`, `Loja da Influencer`, `Ybera Reviews`, `IA de Recomendação / Quiz AI Ybera`, `Ecommerce Europa / Crossborder USA` — nome por nome, os seis produtos que o Radar já tinha |
+| Feature = demanda | **Feature = projeto do Radar.** `[EUA] Nova Home`, `[EUA] Subscriptions`, `[EUA] Ajustes Compliance Google Shopping/Ads` |
+| Estados customizados em português | No nível de Epic são `New`/`In Progress`/`Done`. Os dez estados ricos — incluindo `Impediment` — são de **Feature**, o que corrobora que é ali que o Radar vive |
+
+**Três evidências independentes** sustentam a inversão: Epic tem `TargetDate`
+preenchido em 3 de 70 (não tem janela), Feature em 205 de 646; o estado
+`Impediment`, que `healthDe` procura, só existe em Feature; e 559 das 646
+Features têm `System.Parent`.
+
+**O que muda no desenho:**
+
+- A consulta é de **Feature**, não de Epic. Todas as Features do projeto numa
+  consulta, filtradas por pai **em memória** — evita risco de dialeto WIQL com
+  `IN` e reaproveita o agrupamento já testado.
+- O `track` sai do **id do Epic pai**, via a tabela `produtos` em
+  `tools/config.json`. A tabela `areas` (Area Path → produto) deixa de existir:
+  casar id é exato, casar texto de área era frágil.
+- Feature cujo pai não está em `produtos` **é descartada** — é trabalho de
+  outra frente, e o projeto `B2C` tem 646 Features de toda a empresa. O
+  desenho anterior a renderizaria num grupo "sem produto", o que encheria a
+  página com o backlog alheio.
+- **`estadosExcluidos` é conceito novo**, distinto de "não mapeado". `Removed`
+  são 62 Features canceladas: não entram no Radar de forma alguma, e também
+  não são alerta de configuração faltando. São três resultados, não dois:
+  mapeado, excluído e desconhecido.
+- **Guarda nova, que o descarte por pai torna necessária:** um Epic-produto
+  novo na vertical (digamos `Loja Clube Peru`) teria todas as filhas
+  descartadas em silêncio. O relatório lista Epics com Features filhas que não
+  estão em `produtos`, com id, título e contagem — é o que substitui o papel
+  que o grupo "sem produto" tinha antes.
+- `demands` continua sempre `[]`. O `data.js` original nunca teve demanda
+  alguma, e descer um terceiro nível é escopo que ninguém pediu.
+
+**O que não muda:** o formato do `fatos.js`, campo por campo — `fundir()` no
+`app.js` depende dele, e o site inteiro depende de `fundir()`.
+
 ## Decisões
 
 | Decisão | Escolha | Por quê |
@@ -186,8 +235,13 @@ do script.
 
 ## Tratamento de erro — as seis guardas
 
-1. **Nunca grava parcial.** O arquivo é montado inteiro em memória e gravado
-   de uma vez. Falha no meio = nada gravado, `fatos.js` anterior intacto.
+1. **Nunca grava parcial.** O arquivo é montado inteiro em memória e a
+   gravação em si é atômica: escreve num arquivo temporário na mesma pasta
+   do destino e troca pelo destino com `rename` (atômico no mesmo sistema de
+   arquivos — o arquivo final é sempre o antigo por inteiro ou o novo por
+   inteiro). Isso cobre tanto falha de lógica antes da gravação quanto
+   processo morto (SIGKILL, disco cheio) no meio dela: nos dois casos o
+   `fatos.js` anterior fica intacto, nunca meio arquivo.
 2. **Guarda de esvaziamento.** O `fatos.js` é JS válido e exporta
    `{geradoEm, epics:[...]}`, então o script carrega o arquivo anterior e lê
    `epics.length`. Se a consulta nova voltar com zero, ou com menos de 80%

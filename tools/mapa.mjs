@@ -1,10 +1,18 @@
 /* Mapeamento puro: work item do DevOps → item do Radar. Sem I/O, sem DOM.
 
-   Todo nome que vem do processo do time — estado, área — é CONFIGURAÇÃO e
+   Todo nome que vem do processo do time — estado, produto — é CONFIGURAÇÃO e
    entra por parâmetro. Os estados de vocês são customizados e em português
    ("Aguardando Início", "Em Andamento", "Em Teste"), então um mapa fixo aqui
    envelheceria na primeira mudança de processo, num arquivo que ninguém
-   lembraria de abrir. */
+   lembraria de abrir.
+
+   O item do Radar é a Feature, não o Epic. Uma rodada de descoberta contra a
+   org real (nivello/B2C, ver tools/descobrir.mjs --arvore) mostrou a
+   hierarquia invertida em relação ao que o plano original assumiu: o Epic é
+   o PRODUTO ("Loja Clube USA") e a Feature é o PROJETO que o Radar mostra
+   ("[EUA] Nova Home"). Por isso o produto de um item agora vem do Epic pai
+   (System.Parent), consultado em tools/config.json → produtos — nunca mais
+   da Area Path. */
 
 /* "2026-08-14T12:00:00Z" → "2026-08" */
 export function mesDe(iso){
@@ -20,11 +28,27 @@ export function diaDe(iso){
   return m ? m[1] : null;
 }
 
-/* Estado fora do mapa devolve null de propósito: quem chama registra no
-   relatório. Cair em "next" por padrão esconderia mudança de processo
-   justamente de quem precisa saber dela. */
-export function statusDe(estado, mapaEstados){
+/* Três resultados possíveis, não dois: MAPEADO ('done'|'doing'|'next'),
+   EXCLUÍDO ('excluido') e DESCONHECIDO (null). Antes desta mudança só havia
+   "mapeado ou null", e null cobria dois casos bem diferentes — estado que
+   falta cadastrar (alerta de configuração) e estado que representa descarte
+   deliberado (Removed: 62 Features canceladas que não devem aparecer no
+   Radar de forma nenhuma). Misturar os dois faria o relatório cobrar
+   preenchimento de tools/config.json para uma coisa que já está correta —
+   Removed não é lacuna, é decisão.
+
+   O terceiro resultado sai como a mesma string sentinela que os outros dois
+   ('excluido', comparável com "==="), não como um objeto {tipo, valor}: é o
+   padrão que o resto deste arquivo já usa (healthDe também devolve uma
+   string ou null), e um objeto obrigaria itemDe, coletarPendencias e todo
+   teste existente a trocar comparação direta por acesso a campo, para um
+   ganho que a string sentinela já entrega. A checagem de exclusão vem antes
+   da checagem no mapa de propósito: um estado nunca deveria estar nas duas
+   listas ao mesmo tempo, mas se algum dia estiver, exclusão deliberada tem
+   de vencer. */
+export function statusDe(estado, mapaEstados, estadosExcluidos){
   if(!estado) return null;
+  if((estadosExcluidos || []).includes(estado)) return 'excluido';
   const v = (mapaEstados || {})[estado];
   return v === 'done' || v === 'doing' || v === 'next' ? v : null;
 }
@@ -38,73 +62,81 @@ export function healthDe(estado){
   return /impediment|impedimento/i.test(estado) ? 'blocked' : null;
 }
 
-/* Casa por prefixo e prefere a chave mais específica, para
-   "Ecommerce USA\Loja Clube\Checkout" poder ter produto próprio sem deixar
-   de existir dentro de "Loja Clube". Área fora da tabela devolve null: o item
-   aparece num grupo "sem produto" e é cobrado no relatório, em vez de
-   desaparecer. */
-export function trackDe(areaPath, tabelaAreas){
-  if(!areaPath) return null;
-  const chaves = Object.keys(tabelaAreas || {}).sort((a, b) => b.length - a.length);
-  for(const k of chaves){
-    if(areaPath === k || areaPath.startsWith(k + '\\')) return tabelaAreas[k];
-  }
-  return null;
+/* Casa por id exato — troca o antigo casamento por prefixo de Area Path
+   ("Ecommerce USA\Loja Clube\..."), que era frágil: bastava alguém
+   reorganizar ou renomear um nó da árvore de áreas no DevOps (coisa que já
+   aconteceu) para o produto de itens inteiros sumir em silêncio. Id de Epic
+   não se reorganiza.
+
+   As chaves de `produtos` em tools/config.json são strings — é assim que
+   todo JSON grava chave de objeto — mas o System.Parent que a API do DevOps
+   devolve é number. Sem o String() abaixo, `produtos['49290']` nunca bateria
+   com `paiId === 49290`, e todo item perderia o produto silenciosamente por
+   causa de um detalhe de tipo, não por Epic de fato não cadastrado. Pai
+   ausente (Feature sem System.Parent) ou id sem entrada na tabela devolvem
+   null; quem chama decide o que fazer com isso (ver epicsSemProduto e
+   coletarPendencias, em guardas.mjs). */
+export function trackDoPai(paiId, produtos){
+  if(paiId === undefined || paiId === null) return null;
+  const v = (produtos || {})[String(paiId)];
+  return typeof v === 'string' ? v : null;
 }
 
-/* Feature sem pai, ou com pai fora da lista de Epics, não é descartada em
-   silêncio: volta em `orfas` para o relatório. */
-export function agruparPorPai(features, idsDeEpics){
-  const set = new Set(idsDeEpics);
+/* Agrupa Features por Epic pai (System.Parent), sem julgar se aquele pai é
+   um produto cadastrado — essa decisão saiu desta função porque agora
+   depende de tools/config.json (produtos), um dado de configuração que esta
+   função não recebe mais (antes recebia `idsDeEpics`, vindo de uma consulta
+   à API que deixou de existir: a rodada agora consulta só Feature, nunca
+   Epic). Quem chama (sync.mjs) decide o destino de cada grupo: os que caem
+   em `produtos` viram itens do Radar; os que não caem alimentam a guarda de
+   "Epic sem produto cadastrado" (guardas.mjs) — ali dá para cobrar o
+   cadastro com id, título e quantidade, coisa que esta função não tem como
+   fazer sozinha, pois não sabe título de Epic (não busca nada, é pura).
+   Feature sem pai nenhum vai para `semPai`: não há id de Epic para cobrar,
+   então essa lista só serve para o relatório contar quantas ficaram assim. */
+export function agruparPorPai(features){
   const porPai = new Map();
-  const orfas = [];
+  const semPai = [];
   for(const w of (features || [])){
     const pai = (w.fields || {})['System.Parent'];
-    if(pai && set.has(pai)){
-      if(!porPai.has(pai)) porPai.set(pai, []);
-      porPai.get(pai).push(w);
-    } else {
-      orfas.push(w);
-    }
+    if(pai === undefined || pai === null){ semPai.push(w); continue; }
+    if(!porPai.has(pai)) porPai.set(pai, []);
+    porPai.get(pai).push(w);
   }
-  return { porPai, orfas };
-}
-
-function demandaDe(w, cfg){
-  const g = w.fields || {};
-  const estado = g['System.State'] || null;
-  return {
-    id: w.id,
-    t: g['System.Title'] || '',
-    status: statusDe(estado, cfg.estados),
-    estadoCru: estado,
-    due: diaDe(g['Microsoft.VSTS.Scheduling.TargetDate']),
-    done: mesDe(g['Microsoft.VSTS.Common.ClosedDate'])
-  };
+  return { porPai, semPai };
 }
 
 /* `estadoCru` viaja junto do `status` porque o relatório precisa dizer QUAL
    estado não estava mapeado — sem ele a mensagem seria "3 itens sem status",
-   que não ajuda ninguém. */
-export function itemDe(epic, features, cfg){
-  const f = epic.fields || {};
+   que não ajuda ninguém.
+
+   `feature` aqui é sempre uma Feature do DevOps, não um Epic — é ela que o
+   Radar mostra como projeto. Quem chama só deve invocar esta função para
+   Features cujo pai já bateu contra `cfg.produtos`; itemDe não filtra nada
+   disso sozinha, ela só monta o item a partir do work item que recebeu. */
+export function itemDe(feature, cfg){
+  const f = feature.fields || {};
   const estado = f['System.State'] || null;
   const dono = f['System.AssignedTo'];
+  const pai = f['System.Parent'];
   return {
-    id: epic.id,
+    id: feature.id,
     azureTitle: f['System.Title'] || '',
-    track: trackDe(f['System.AreaPath'], cfg.areas),
+    track: trackDoPai(pai, cfg.produtos),
     start: diaDe(f['Microsoft.VSTS.Scheduling.StartDate']),
     end: diaDe(f['Microsoft.VSTS.Scheduling.TargetDate']),
-    status: statusDe(estado, cfg.estados),
+    status: statusDe(estado, cfg.estados, cfg.estadosExcluidos),
     estadoCru: estado,
     health: healthDe(estado),
     shipped: mesDe(f['Microsoft.VSTS.Common.ClosedDate']),
     owner: (dono && dono.displayName) || null,
-    /* Ordenado por id, como os Epics: sem isto a ordem segue o que a API de
-       lote devolveu (não garantida), produzindo diff gratuito no fatos.js
-       commitado a cada rodada mesmo quando nada mudou de fato. */
-    demands: (features || []).map(w => demandaDe(w, cfg)).sort((a, b) => a.id - b.id)
+    /* Sempre vazio, de propósito: o data.js original (antes desta ferramenta
+       existir) nunca teve um terceiro nível de hierarquia, e descer da
+       Feature para buscar as filhas dela seria escopo que ninguém pediu
+       nesta mudança — que já é, sozinha, uma inversão de nível. Não é
+       esquecimento: se demandas voltarem a fazer sentido, é decisão nova, com
+       consulta e mapeamento próprios. */
+    demands: []
   };
 }
 

@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { adoFetch, runWiql, getFields, AuthError, NetworkError } from '../ado.mjs';
+import { adoFetch, runWiql, getFields, listProjects, AuthError, NetworkError } from '../ado.mjs';
 
 /* fetch falso: o ctx.fetchImpl injetado é o que torna o tratamento de erro
    testável sem rede. */
@@ -45,6 +45,38 @@ test('erro HTTP com JSON usa a mensagem da API', async () => {
     () => adoFetch(ctx(resposta({status:400, corpo:{message:'WIQL torto'}})), '/x'),
     err => err.message === 'WIQL torto'
   );
+});
+
+/* O ramo que faltava: erro HTTP cujo corpo NÃO é JSON (ex.: proxy devolvendo
+   HTML de erro 502, ou API fora do ar respondendo texto puro). Sem este
+   teste, o `throw new Error('HTTP ' + status)` do else podia quebrar (ex.:
+   alguém tenta ler `data.message` de um corpo que não é JSON e explode com
+   outro erro) sem que nenhum teste acusasse. */
+test('erro HTTP com corpo nao-JSON usa "HTTP <status>"', async () => {
+  await assert.rejects(
+    () => adoFetch(ctx(resposta({status:502, tipo:'text/plain', corpo:'Bad Gateway'})), '/x'),
+    err => err.message === 'HTTP 502'
+  );
+});
+
+/* Distinto do teste acima: aqui o corpo É JSON, só que sem campo `message`
+   (a API do ADO faz isso em alguns erros genéricos). Cai no mesmo fallback
+   "HTTP <status>" pelo lado do `||`, não pelo `tipo.includes('json')` — é
+   um caminho de código diferente chegando na mesma frase, e um erro de
+   digitação em `data.message` (ex.: `data.mensagem`) só apareceria aqui. */
+test('erro HTTP com JSON sem campo message cai no fallback "HTTP <status>"', async () => {
+  await assert.rejects(
+    () => adoFetch(ctx(resposta({status:503, corpo:{}})), '/x'),
+    err => err.message === 'HTTP 503'
+  );
+});
+
+/* listProjects não tinha teste nenhum: é o que descobrir.mjs usa para achar
+   o projeto certo entre todos da org, e nunca foi exercitado nem com fetch
+   falso. */
+test('listProjects devolve so id e name, descartando o resto do objeto', async () => {
+  const r = resposta({corpo:{value:[{id:'abc', name:'Ecommerce USA', url:'lixo'}]}});
+  assert.deepEqual(await listProjects(ctx(r)), [{id:'abc', name:'Ecommerce USA'}]);
 });
 
 test('runWiql devolve só os ids', async () => {

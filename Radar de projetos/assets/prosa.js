@@ -112,16 +112,17 @@ const PROSA = {
     /* rótulo curto para a barra de navegação, onde o título inteiro quebraria */
     shortTitle:{pt:"Radar USA", en:"USA Radar"},
     sub:{
-      pt:"Os projetos da frente USA: o que está em curso, o que está planejado e em que ordem. Atualizado a cada duas semanas.",
-      en:"The projects on the USA front: what's in flight, what's planned and in what order. Updated every two weeks."
+      pt:"Os projetos da frente USA: o que está em curso, o que está planejado e em que ordem. Espelha o Azure DevOps a cada sincronização.",
+      en:"The projects on the USA front: what's in flight, what's planned and in what order. Mirrors Azure DevOps at each sync."
     },
-    /* Janela que esta edição cobre: da atualização anterior até esta.
-       `to` acompanha `updated` — é o período olhado para trás, não o mês
-       corrente. É daqui que sai o bloco "O que mudou nesta quinzena". */
-    cycle:{pt:"Quinzena até 11 de agosto", en:"Cycle through August 11"},
-    from:"2026-07-28", to:"2026-08-11",
-    updated:"2026-08-11",
-    next:"2026-08-25",
+    /* `cycle`, `from`, `to` e `next` são EDITORIAIS: a janela que você declara
+       que esta edição cobre. Não são derivados do DevOps, porque o DevOps não
+       tem o conceito de "edição do Radar". `updated` é o único machine-set —
+       fundir() o sobrescreve com o geradoEm da última rodada do sync. */
+    cycle:{pt:"Espelho do Azure DevOps", en:"Mirror of Azure DevOps"},
+    from:"2026-08-01", to:"2026-08-21",
+    updated:"2026-08-21",
+    next:"2026-09-04",
     /* Dono padrão de todos os itens USA. Um card pode sobrescrever com `owner`. */
     owner:"Urlan Dipré",
     ownerRole:{pt:"Product Owner · USA", en:"Product Owner · USA"},
@@ -182,18 +183,64 @@ const PROSA = {
        lugar onde vai aparecer. Nunca deixe a linha genérica para preencher.
      ---------------------------------------------------------------------- */
   summary:[
+    /* AS TRÊS LINHAS SÃO EDITORIAIS e não derivam de nada — reescreva a cada
+       edição. Evite citar projeto por nome e data por número: os cartões vêm
+       do DevOps e mudam sem passar por aqui, então nome e data envelhecem
+       sozinhos e a página passa a se contradizer. Fale do quadro, não do item. */
+    {tag:{pt:"Fonte", en:"Source"},
+     pt:"Esta página espelha o <b>Azure DevOps</b> direto. Cada cartão é um item que o time mantém lá — o estado muda quando o time move o item, não quando alguém reescreve esta página.",
+     en:"This page mirrors <b>Azure DevOps</b> directly. Each card is an item the team maintains there — the state changes when the team moves the item, not when someone rewrites this page."},
     {tag:{pt:"Prazo", en:"Schedule"},
-     pt:"As três frentes em curso estão <b>dentro da janela planejada</b>. A mais apertada é a <b>nova página de produto</b>, que fecha em <b>31 de agosto</b> com dois terços da janela já corridos.",
-     en:"All three fronts in flight are <b>inside their planned window</b>. The tightest is the <b>new product page</b>, which closes on <b>August 31</b> with two-thirds of its window gone."},
-    {tag:{pt:"Mudou", en:"Changed"},
-     pt:"A <b>tradução da loja para o inglês</b> entrou em curso em 1º de agosto, e a <b>nova home da loja USA</b> abre a janela em 15 de agosto. São as duas novidades desta quinzena.",
-     en:"The <b>store's English translation</b> went into flight on August 1, and the <b>new US homepage</b> opens its window on August 15. Those are the two developments this cycle."},
+     pt:"A maioria dos itens <b>ainda não tem data prevista registrada na origem</b>, então o Futuro e as barras de andamento aparecem vazios. É ausência de dado, não ausência de trabalho.",
+     en:"Most items <b>have no target date recorded at the source</b> yet, so the Future view and the progress bars come up empty. That's missing data, not missing work."},
     {tag:{pt:"Pendências", en:"Pending"},
-     pt:"<b>Nada está travado esperando decisão de vocês</b> nesta quinzena. Quando algo parar fora do time de produto, aparece aqui primeiro — com nome do decisor e prazo.",
-     en:"<b>Nothing is blocked waiting on a decision from you</b> this cycle. When something stalls outside the product team, it shows up here first — with a named decision-maker and a due date."}
+     pt:"<b>Nada está travado esperando decisão de vocês</b> nesta edição. Quando algo parar fora do time de produto, aparece aqui primeiro — com nome do decisor e prazo.",
+     en:"<b>Nothing is blocked waiting on a decision from you</b> in this edition. When something stalls outside the product team, it shows up here first — with a named decision-maker and a due date."}
   ],
 
-  /* Vazio: a base não registra decisões nem riscos. Ver estado vazio. */
+
+  /* PENDÊNCIAS ("asks") — a forma que cumpre o que a linha "Pendências" do
+     essencial, acima, já promete ao leitor: uma pendência aparece "com nome
+     do decisor e prazo". Assim como `texto`, mais abaixo, é 100% editorial —
+     nenhuma ferramenta em tools/ lê ou escreve este campo, porque o Azure
+     DevOps não tem um conceito de "decisão pendente de fora do time" para
+     extrair (ver o aviso no topo deste arquivo). app.js só CONTA o tamanho
+     deste array para os tiles e o badge da navegação; a forma de cada
+     entrada é definida aqui, não lá.
+
+     Cada entrada:
+       what:{pt,en}    → o que está parado. Obrigatório — vira o título do
+                         cartão, do mesmo jeito que `title` vira o h4 do
+                         cartão de um projeto.
+       who:"Nome"      → quem precisa decidir. Obrigatório. String simples,
+                         não bilíngue — nome próprio não se traduz.
+       by:"AAAA-MM-DD" → opcional, em ISO. Quando essa data já passou de
+                         `meta.updated` (o "hoje" que o Radar usa), o cartão
+                         ganha o mesmo selo vermelho que o resto da página já
+                         usa para impedimento ("blocked") — um prazo
+                         estourado é a informação mais importante desta
+                         página, e por isso pega emprestada a cor mais forte
+                         que o Radar já tem, em vez de inventar uma nova.
+       impact:{pt,en}  → opcional. O que acontece se ninguém decidir a
+                         tempo — é o que transforma "está parado" em "por
+                         que isso importa" para quem só tem um minuto.
+       item:47688      → opcional. O `id` do work item afetado (a mesma
+                         chave numérica de `texto`, mais abaixo). Quando
+                         presente, o cartão mostra a que projeto a pendência
+                         se refere usando o título EDITORIAL dele (o mesmo
+                         que aparece no board) — nunca o título cru do Azure
+                         DevOps, que quem lê esta página não abriu.
+
+     Exemplo preenchido (ilustrativo — não é pendência real):
+       {what:{pt:"Aprovar o novo domínio da loja USA",
+              en:"Approve the new US store domain"},
+        who:"Fernanda (Jurídico)",
+        by:"2026-09-05",
+        impact:{pt:"Sem o domínio aprovado, a nova home não pode ir ao ar.",
+                en:"Without the approved domain, the new homepage can't go live."},
+        item:4}
+
+     Vazio: a base não registra decisões nem riscos. Ver estado vazio. */
   asks:[],
 
   /* NÃO HÁ MAIS BLOCO "O QUE MUDOU".
@@ -228,117 +275,21 @@ const PROSA = {
      Item que existe no DevOps e não tem entrada aqui aparece no Radar com o
      título cru e um marcador de "sem redação" — some em silêncio seria pior. */
   texto:{
-    1:{ /* Notion: Ajustes Loja USA Compliance Google */
-      title:{pt:"Loja USA em conformidade com as políticas do Google",
-             en:"US store compliant with Google policies"},
-      why:{pt:"Sem conformidade, os anúncios da loja USA ficam expostos a reprovação e a suspensão de conta.",
-           en:"Without compliance, US store ads are exposed to disapproval and account suspension."},
-      about:{pt:"Adequação da loja Clube USA às políticas do Google (Merchant Center e Ads): revisão das páginas de política, informações de contato, trocas, devoluções e checkout, corrigindo os pontos que hoje expõem os anúncios a reprovação. É pré-requisito para escalar mídia paga com segurança.",
-            en:"Bringing the US Club store in line with Google's policies (Merchant Center and Ads): reviewing policy pages, contact information, exchanges, refunds and checkout, fixing the points that currently expose ads to disapproval. A prerequisite for scaling paid media safely."}
-    },
-    2:{ /* Notion: Nova PDP USA */
-      title:{pt:"Nova página de produto na loja USA",
-             en:"New product page on the US store"},
-      why:{pt:"A página de produto é onde a decisão de compra acontece — é a alavanca mais direta de conversão.",
-           en:"The product page is where the buying decision happens — the most direct conversion lever."},
-      about:{pt:"Redesenho completo da página de produto da loja USA — narrativa visual, benefícios, prova social, especificações e módulos de conversão. É a página onde a decisão de compra acontece, e por isso a alavanca mais direta de conversão do trimestre.",
-            en:"Full redesign of the US store's product page — visual narrative, benefits, social proof, specifications and conversion modules. It's the page where the buying decision happens, which makes it the quarter's most direct conversion lever."}
-    },
-    3:{ /* Notion: Tradução */
-      title:{pt:"Loja USA inteiramente em inglês",
-             en:"US store fully in English"},
-      why:{pt:"Conteúdo traduzido de ponta a ponta remove o principal atrito de confiança do comprador americano.",
-           en:"End-to-end translated content removes the American buyer's main trust barrier."},
-      about:{pt:"Tradução de ponta a ponta da loja para o inglês americano: catálogo, páginas institucionais, e-mails transacionais e os microtextos de navegação e checkout. Remove o principal atrito de confiança do comprador local, que hoje encontra conteúdo misto.",
-            en:"End-to-end translation of the store into US English: catalog, institutional pages, transactional e-mails and the microcopy across navigation and checkout. Removes the American buyer's main trust barrier — mixed-language content."}
-    },
-    4:{ /* Notion: Nova Homepage USA */
-      title:{pt:"Nova home da loja USA",
-             en:"New US store homepage"},
-      why:{pt:"É a primeira impressão da marca no mercado americano e o principal ponto de entrada do tráfego pago.",
-           en:"It's the brand's first impression in the US market and the main landing point for paid traffic."},
-      about:{pt:"Nova home da loja Clube USA como porta de entrada do tráfego pago: hero, vitrines por categoria, prova social e trilhas de navegação desenhadas para quem chega sem conhecer a marca. É a primeira impressão da Ybera no mercado americano.",
-            en:"New homepage for the US Club store as the landing point for paid traffic: hero, category showcases, social proof and navigation paths designed for first-time visitors. Ybera's first impression in the American market."}
-    },
-    5:{ /* Notion: Novo Design System Shopify */
-      title:{pt:"Design system próprio no Shopify",
-             en:"In-house design system on Shopify"},
-      why:{pt:"Faz cada página nova nascer padronizada, em vez de ser desenhada do zero a cada demanda.",
-           en:"Every new page starts standardized instead of being designed from scratch each time."},
-      about:{pt:"Biblioteca própria de seções e componentes no Shopify — tokens, tipografia, grids e módulos reutilizáveis. Faz cada página nova nascer padronizada e encurta qualquer demanda futura de página, em vez de desenhar do zero a cada pedido.",
-            en:"An in-house library of Shopify sections and components — tokens, typography, grids and reusable modules. Every new page starts standardized, shortening any future page demand instead of designing from scratch each time."}
-    },
-    6:{ /* Notion: App de Reviews */
-      title:{pt:"Avaliações de clientes na loja",
-             en:"Customer reviews on the store"},
-      why:{pt:"Prova social é o que sustenta a conversão de uma marca ainda pouco conhecida nos EUA.",
-           en:"Social proof is what sustains conversion for a brand still little known in the US."},
-      about:{pt:"Implantação de app de avaliações na loja: coleta pós-compra automatizada, exibição de notas e depoimentos na página de produto e selos agregados. Prova social para sustentar a conversão de uma marca ainda pouco conhecida nos EUA.",
-            en:"Rolling out a reviews app on the store: automated post-purchase collection, ratings and testimonials on the product page, and aggregate badges. Social proof to sustain conversion for a brand still little known in the US."}
-    },
-    7:{ /* Notion: Novo Tema da Loja USA/Global */
-      title:{pt:"Novo tema da loja USA e global",
-             en:"New theme for the US and global store"},
-      why:{pt:"Um tema único elimina o retrabalho de manter duas lojas com aparência e código diferentes.",
-           en:"A single theme removes the rework of maintaining two stores with different looks and code."},
-      about:{pt:"Unificação do tema das lojas USA e global numa base única de código e aparência. Elimina o retrabalho de manter duas lojas com visuais e códigos diferentes e prepara o terreno para as próximas frentes internacionais.",
-            en:"Unifying the US and global store themes into a single codebase and look. Removes the rework of maintaining two different stores and lays the ground for the next international fronts."}
-    },
-    8:{ /* Notion: App Subscription */
-      title:{pt:"Compra por assinatura",
-             en:"Subscription purchase"},
-      why:{pt:"Transforma compra única em receita recorrente e previsível, sem depender de nova aquisição.",
-           en:"Turns one-off purchases into predictable recurring revenue, without new acquisition."},
-      about:{pt:"Compra por assinatura na loja USA: planos recorrentes com desconto, gestão da assinatura pelo próprio cliente e cobrança automática. Transforma compra única em receita recorrente e previsível.",
-            en:"Subscription purchase on the US store: recurring plans with a discount, customer-managed subscriptions and automatic billing. Turns one-off purchases into predictable recurring revenue."}
-    },
-    9:{ /* Notion: Loja Interna USA - Shopify */
-      title:{pt:"Loja interna da operação USA",
-             en:"Internal store for the US operation"},
-      why:{pt:"Atende o canal interno com regra própria de preço e acesso, separado da loja do consumidor.",
-           en:"Serves the internal channel with its own pricing and access rules, separate from the consumer store."},
-      about:{pt:"Loja Shopify separada para o canal interno da operação USA, com regras próprias de preço e de acesso, apartada da loja do consumidor final. Atende pedidos do time e de parceiros sem contaminar métricas e estoque do varejo.",
-            en:"A separate Shopify store for the US operation's internal channel, with its own pricing and access rules, apart from the consumer store. Serves team and partner orders without contaminating retail metrics and inventory."}
-    },
-    10:{ /* Notion: App Rewards Loyalty (Yotpo) */
-      title:{pt:"Programa de fidelidade com pontos",
-             en:"Points-based loyalty program"},
-      why:{pt:"Dá motivo para o cliente voltar, em vez de a receita depender sempre de aquisição nova.",
-           en:"Gives customers a reason to come back, instead of revenue always depending on new acquisition."},
-      about:{pt:"Programa de fidelidade com pontos via Yotpo: acúmulo por compra, resgate em desconto e níveis de benefício. Dá ao cliente um motivo concreto para voltar, reduzindo a dependência de aquisição nova.",
-            en:"A points-based loyalty program via Yotpo: earn on purchase, redeem as discounts, benefit tiers. Gives customers a concrete reason to return, reducing dependence on new acquisition."}
-    },
-    11:{ /* Notion: Loja da Influencer - USA */
-      title:{pt:"Vitrine própria de cada influencer",
-             en:"A storefront of their own for each influencer"},
-      why:{pt:"Cada influencer passa a vender por uma página própria, com link único para usar nas redes.",
-           en:"Each influencer sells through their own page, with a single link for their social bio."},
-      about:{pt:"Vitrine própria para cada influencer parceira: página com a curadoria dela, link único para usar nas redes e venda rastreável. Transforma a audiência das influencers em canal de venda direto.",
-            en:"A storefront of their own for each partner influencer: a curated page, a single link for their social bio and trackable sales. Turns influencer audiences into a direct sales channel."}
-    },
-    12:{ /* Notion: App Shopify Quiz Ybera AI - USA */
-      title:{pt:"Recomendação de produto guiada por IA",
-             en:"AI-guided product recommendation"},
-      why:{pt:"Leva quem não conhece a linha até o produto certo, reduzindo a dúvida que trava a compra.",
-           en:"Takes someone unfamiliar with the line to the right product, cutting the doubt that stalls a purchase."},
-      about:{pt:"Quiz de recomendação guiado por IA na loja: algumas perguntas sobre cabelo e objetivo levam quem não conhece a linha ao produto certo. Reduz a dúvida que trava a primeira compra.",
-            en:"An AI-guided recommendation quiz on the store: a few questions about hair and goals take someone unfamiliar with the line to the right product. Cuts the doubt that stalls a first purchase."}
-    },
-    13:{ /* Notion: App Shopify - Ybera Reviews - USA */
-      title:{pt:"Avaliações próprias, sem app de terceiro",
-             en:"In-house reviews, no third-party app"},
-      why:{pt:"Tira a dependência de fornecedor externo e o custo de assinatura que vem com ele.",
-           en:"Removes the external vendor dependency and the subscription cost that comes with it."},
-      about:{pt:"App próprio de avaliações para substituir o fornecedor terceiro: coleta, moderação e exibição sob controle da Ybera, sem custo de assinatura externo e com os dados em casa.",
-            en:"An in-house reviews app to replace the third-party vendor: collection, moderation and display under Ybera's control, with no external subscription cost and the data kept in-house."}
-    },
-    14:{ /* Notion: Ybera Europa - Crossborder USA */
-      title:{pt:"Venda para a Europa a partir da operação USA",
-             en:"Selling into Europe from the US operation"},
-      why:{pt:"Abre um segundo mercado reaproveitando a estrutura de loja e logística já montada nos EUA.",
-           en:"Opens a second market by reusing the store and logistics structure already built in the US."},
-      about:{pt:"Venda para a Europa a partir da operação USA: moeda, frete internacional, impostos e a localização mínima necessária para operar. Abre um segundo mercado reaproveitando a estrutura de loja e logística já montada nos EUA.",
-            en:"Selling into Europe from the US operation: currency, international shipping, taxes and the minimum localization needed to operate. Opens a second market by reusing the store and logistics structure already built in the US."}
-    }
-  }
+    /* VAZIO DE PROPÓSITO. As 14 entradas antigas estavam presas aos ids
+       provisórios 1..14, que nenhum work item real tem — sobreviveriam só
+       como prosa órfã. Elas continuam recuperáveis no histórico do git.
+
+       Enquanto isto está vazio, cada cartão aparece com o título cru do
+       Azure DevOps e o selo "sem redação". Para melhorar um cartão, ache o
+       id dele em fatos.js e escreva a entrada:
+
+         48588:{title:{pt:"Loja USA em conformidade com as políticas do Google",
+                       en:"US store compliant with Google policies"},
+                why:{pt:"Sem conformidade, os anúncios ficam expostos a reprovação.",
+                     en:"Without compliance, ads are exposed to disapproval."}}
+
+       Não é preciso escrever todos. Cada um que você escrever troca um título
+       de ticket por uma frase que um stakeholder entende. */
+  },
+
 };

@@ -256,6 +256,19 @@ section{margin-bottom:30px}
 #repPast .fold[open]>summary{font-family:var(--font-display);font-size:19px;
   font-weight:600;color:var(--ink);padding-bottom:13px}
 
+/* Cartão de entrega, só dentro do report: no board o mesmo .card vive numa
+   coluna de ~370px, de uma grade de três, e foi desenhado pra essa largura —
+   chip, título e uma linha fina de meta, nada mais. Aqui a coluna é única e
+   larga (~620px+ num desktop), e o cartão esticado até a borda não ganha
+   conteúdo novo, só sobra em branco por dentro dele — o card não está
+   quebrado, está solto. Não mexe em .card/.cards (o board depende das duas):
+   só limita a medida do cartão dentro do report, pra ele voltar a caber no
+   próprio conteúdo, como já cabe no board. Em @media screen para não encolher
+   o cartão na versão impressa, que já tem sua própria regra de largura. */
+@media screen{
+  #repNow .cards .card,#repPast .cards .card{max-width:380px}
+}
+
 .summary{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:6px 18px 8px;box-shadow:var(--shadow)}
 .summary ul{list-style:none;margin:0;padding:0}
 .summary li{display:flex;gap:11px;padding:11px 0;font-size:14.5px;line-height:1.55;border-bottom:1px solid var(--hair)}
