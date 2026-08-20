@@ -1,6 +1,8 @@
 /* ==========================================================================
    Radar de Projetos USA — motor compartilhado das páginas.
-   Os dados moram em data.js (carregado antes deste arquivo). Cada página
+   Os dados moram em prosa.js (texto, à mão) e fatos.js (fatos, gerados por
+   tools/sync.mjs), ambos carregados antes deste arquivo e fundidos por
+   fundir(). Cada página
    declara body[data-page] e contém só os contêineres da sua seção; o motor
    preenche o que existir. A versão completa (completo.html) contém tudo.
    ==========================================================================
@@ -152,6 +154,57 @@ const T = {
 /* ==========================================================================
    3) MOTOR
    ========================================================================== */
+
+/* --- FUSÃO PROSA + FATOS ------------------------------------------------
+   O Radar tem dois tipos de campo. Fato (estado, janela, produto, dono,
+   conclusão) vem do Azure DevOps, gerado em fatos.js por tools/sync.mjs.
+   Editorial (título legível, why, about, result, healthNote) é escrito à mão
+   em prosa.js, indexado pelo mesmo id do work item.
+
+   Item com fato e sem prosa APARECE, com o título cru do DevOps e a marca
+   `semProsa` — some em silêncio seria pior, porque falta não se percebe.
+   Prosa sem fato não renderiza: o work item saiu do filtro, foi apagado ou
+   mudou de área. Quem avisa é ESTA função, num console.warn — o script não
+   pode avisar porque ele nunca lê o prosa.js. --- */
+function fundir(prosa, fatos){
+  const texto = prosa.texto || {};
+  const items = ((fatos && fatos.epics) || []).map(f => {
+    const t = texto[f.id] || null;
+    return {
+      id:f.id, notion:f.azureTitle, track:f.track, start:f.start, end:f.end,
+      status:f.status, health:f.health, shipped:f.shipped,
+      owner:f.owner || undefined,
+      demands:f.demands || [],
+      semProsa:!t,
+      title:t ? t.title : f.azureTitle,
+      why:t ? t.why : "",
+      about:t ? t.about : "",
+      result:t ? t.result : undefined,
+      healthNote:t ? t.healthNote : undefined
+    };
+  });
+  /* Texto órfão: entrada em `texto` sem Epic correspondente no fatos.js.
+     Não renderiza (não há fato para mostrar), mas não pode passar calado. */
+  const vivos = new Set(items.map(i => i.id));
+  const orfaos = Object.keys(texto).map(Number).filter(id => !vivos.has(id));
+  if(orfaos.length) console.warn(
+    "prosa.js: " + orfaos.length + " entrada(s) de texto sem work item correspondente: " +
+    orfaos.join(", ") + " — o Epic saiu do filtro, foi apagado ou mudou de área.");
+
+  const meta = Object.assign({}, prosa.meta);
+  /* A data de atualização passa a ser quando o snapshot rodou; o valor
+     editorial fica como reserva para quando o fatos.js ainda não existe. */
+  if(fatos && fatos.geradoEm) meta.updated = fatos.geradoEm.slice(0, 10);
+  return {
+    meta, tracks:prosa.tracks, summary:prosa.summary,
+    asks:prosa.asks || [], reports:prosa.reports || [], items
+  };
+}
+const DATA = fundir(
+  typeof PROSA !== "undefined" ? PROSA : {},
+  typeof RADAR_FATOS !== "undefined" ? RADAR_FATOS : null
+);
+
 let lang = localStorage.getItem("radar-lang") === "en" ? "en" : "pt";
 let activeTracks = new Set();
 /* Tabela: filtro de status e ordenação. Só a página tabela tem os
@@ -246,7 +299,7 @@ function trackName(id){
    uma entrega e esquecer de criar o registro do mês não faça a entrega sumir
    em silêncio. Ordem decrescente: o mês mais recente é o que interessa. */
 function reportMonths(){
-  /* A chave de mês tem de ser "AAAA-MM". O data.js é mantido à mão e este
+  /* A chave de mês tem de ser "AAAA-MM". O prosa.js é mantido à mão e este
      render é o mesmo das outras sete páginas: um `m` esquecido levaria a
      navegação de todas elas junto. Registro fora de forma é ignorado. */
   const ok = v => /^\d{4}-(0[1-9]|1[0-2])$/.test(v || "");

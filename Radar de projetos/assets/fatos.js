@@ -1,0 +1,191 @@
+/* SEMENTE — os fatos que estavam no data.js, no formato que tools/sync.mjs
+   grava. Existe para provar que a quebra em dois arquivos não muda nada na
+   tela, antes de o DevOps entrar na história. A Task 5 substitui este arquivo
+   por uma rodada real, com os ids verdadeiros. */
+const RADAR_FATOS = {
+  "geradoEm": "2026-08-11T00:00:00Z",
+  "epics": [
+    {
+      "id": 1,
+      "azureTitle": "Ajustes Loja USA Compliance Google",
+      "track": "club",
+      "start": "2026-07-01",
+      "end": "2026-09-30",
+      "status": "doing",
+      "estadoCru": null,
+      "health": null,
+      "shipped": null,
+      "owner": null,
+      "demands": []
+    },
+    {
+      "id": 2,
+      "azureTitle": "Nova PDP USA",
+      "track": "club",
+      "start": "2026-07-01",
+      "end": "2026-08-31",
+      "status": "doing",
+      "estadoCru": null,
+      "health": null,
+      "shipped": null,
+      "owner": null,
+      "demands": []
+    },
+    {
+      "id": 3,
+      "azureTitle": "Tradução",
+      "track": "club",
+      "start": "2026-08-01",
+      "end": "2026-09-30",
+      "status": "doing",
+      "estadoCru": null,
+      "health": null,
+      "shipped": null,
+      "owner": null,
+      "demands": []
+    },
+    {
+      "id": 4,
+      "azureTitle": "Nova Homepage USA",
+      "track": "club",
+      "start": "2026-08-15",
+      "end": "2026-09-30",
+      "status": "next",
+      "estadoCru": null,
+      "health": null,
+      "shipped": null,
+      "owner": null,
+      "demands": []
+    },
+    {
+      "id": 5,
+      "azureTitle": "Novo Design System Shopify",
+      "track": "club",
+      "start": "2026-09-01",
+      "end": "2026-09-30",
+      "status": "next",
+      "estadoCru": null,
+      "health": null,
+      "shipped": null,
+      "owner": null,
+      "demands": []
+    },
+    {
+      "id": 6,
+      "azureTitle": "App de Reviews",
+      "track": "club",
+      "start": "2026-09-01",
+      "end": "2026-09-30",
+      "status": "next",
+      "estadoCru": null,
+      "health": null,
+      "shipped": null,
+      "owner": null,
+      "demands": []
+    },
+    {
+      "id": 7,
+      "azureTitle": "Novo Tema da Loja USA/Global",
+      "track": "club",
+      "start": "2026-10-01",
+      "end": "2026-12-31",
+      "status": "next",
+      "estadoCru": null,
+      "health": null,
+      "shipped": null,
+      "owner": null,
+      "demands": []
+    },
+    {
+      "id": 8,
+      "azureTitle": "App Subscription",
+      "track": "club",
+      "start": "2026-10-01",
+      "end": "2026-10-31",
+      "status": "next",
+      "estadoCru": null,
+      "health": null,
+      "shipped": null,
+      "owner": null,
+      "demands": []
+    },
+    {
+      "id": 9,
+      "azureTitle": "Loja Interna USA - Shopify",
+      "track": "interna",
+      "start": "2026-11-01",
+      "end": "2027-01-31",
+      "status": "next",
+      "estadoCru": null,
+      "health": null,
+      "shipped": null,
+      "owner": null,
+      "demands": []
+    },
+    {
+      "id": 10,
+      "azureTitle": "App Rewards Loyalty (Yotpo)",
+      "track": "club",
+      "start": "2026-11-01",
+      "end": "2026-11-30",
+      "status": "next",
+      "estadoCru": null,
+      "health": null,
+      "shipped": null,
+      "owner": null,
+      "demands": []
+    },
+    {
+      "id": 11,
+      "azureTitle": "Loja da Influencer - USA",
+      "track": "influencer",
+      "start": "2027-01-01",
+      "end": "2027-04-30",
+      "status": "next",
+      "estadoCru": null,
+      "health": null,
+      "shipped": null,
+      "owner": null,
+      "demands": []
+    },
+    {
+      "id": 12,
+      "azureTitle": "App Shopify Quiz Ybera AI - USA",
+      "track": "ia",
+      "start": "2027-01-01",
+      "end": "2027-02-28",
+      "status": "next",
+      "estadoCru": null,
+      "health": null,
+      "shipped": null,
+      "owner": null,
+      "demands": []
+    },
+    {
+      "id": 13,
+      "azureTitle": "App Shopify - Ybera Reviews - USA",
+      "track": "reviews",
+      "start": "2027-03-01",
+      "end": "2027-04-30",
+      "status": "next",
+      "estadoCru": null,
+      "health": null,
+      "shipped": null,
+      "owner": null,
+      "demands": []
+    },
+    {
+      "id": 14,
+      "azureTitle": "Ybera Europa - Crossborder USA",
+      "track": "europa",
+      "start": "2027-03-01",
+      "end": "2027-06-30",
+      "status": "next",
+      "estadoCru": null,
+      "health": null,
+      "shipped": null,
+      "owner": null,
+      "demands": []
+    }
+  ]
+};
