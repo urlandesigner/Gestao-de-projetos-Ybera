@@ -17,7 +17,7 @@ do Notion. Duas consequências:
    nada aconteceu, mas porque a fonte não registra.
 
 Os 14 projetos da frente USA existem no Azure DevOps, no projeto
-**`Ecommerce USA`** da org `ybera`, como **Epics**, com as demandas de cada um
+**`Ecommerce USA`** da org `nivello`, como **Epics**, com as demandas de cada um
 como **Features** filhas.
 
 ## Decisões

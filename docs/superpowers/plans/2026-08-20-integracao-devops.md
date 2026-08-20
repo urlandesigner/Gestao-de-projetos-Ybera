@@ -4,7 +4,7 @@
 
 **Goal:** Fazer os fatos do Radar (estado, janela, produto, dono, conclusão) virem do Azure DevOps por um snapshot gerado fora da página, mantendo o texto editorial escrito à mão e o site 100% estático.
 
-**Architecture:** Um script Node sem dependência (`tools/`, na raiz do repositório, fora do alcance da Vercel) consulta o projeto `Ecommerce USA` da org `ybera`, mapeia Epics para itens do Radar e Features filhas para demandas, e grava `Radar de projetos/assets/fatos.js`. O texto editorial migra para `assets/prosa.js`, indexado por id de work item. O `app.js` funde os dois na carga. O script é só-leitura no DevOps e nunca escreve no `prosa.js`.
+**Architecture:** Um script Node sem dependência (`tools/`, na raiz do repositório, fora do alcance da Vercel) consulta o projeto `Ecommerce USA` da org `nivello`, mapeia Epics para itens do Radar e Features filhas para demandas, e grava `Radar de projetos/assets/fatos.js`. O texto editorial migra para `assets/prosa.js`, indexado por id de work item. O `app.js` funde os dois na carga. O script é só-leitura no DevOps e nunca escreve no `prosa.js`.
 
 **Tech Stack:** Node (ESM, `.mjs`), `node --test`, API REST do Azure DevOps 7.1, WIQL. Zero dependência de terceiros.
 
@@ -59,7 +59,7 @@ function resposta({status = 200, tipo = 'application/json', corpo = {}} = {}){
     json: async () => corpo
   };
 }
-const ctx = r => ({ base:'https://dev.azure.com/ybera', pat:'x', fetchImpl: async () => r });
+const ctx = r => ({ base:'https://dev.azure.com/nivello', pat:'x', fetchImpl: async () => r });
 
 test('200 com JSON devolve o corpo', async () => {
   const out = await adoFetch(ctx(resposta({corpo:{value:[1,2]}})), '/x');
@@ -240,7 +240,7 @@ Esperado: `# pass 9`, `# fail 0`.
          ADO_PAT=xxx node tools/descobrir.mjs "Outro Projeto" */
 import { runWiql, getFields, listProjects, AuthError, NetworkError } from './ado.mjs';
 
-const ORG = 'https://dev.azure.com/ybera';
+const ORG = 'https://dev.azure.com/nivello';
 const PROJETO = process.argv[2] || 'Ecommerce USA';
 
 const pat = process.env.ADO_PAT;
@@ -845,7 +845,7 @@ Os nomes de estado e de área saem da rodada de descoberta (Task 1). Este arquiv
 
 ```json
 {
-  "org": "https://dev.azure.com/ybera",
+  "org": "https://dev.azure.com/nivello",
   "projeto": "Ecommerce USA",
   "estados": {},
   "areas": {}

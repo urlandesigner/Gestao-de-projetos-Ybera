@@ -11,7 +11,7 @@ function resposta({status = 200, tipo = 'application/json', corpo = {}} = {}){
     json: async () => corpo
   };
 }
-const ctx = r => ({ base:'https://dev.azure.com/ybera', pat:'x', fetchImpl: async () => r });
+const ctx = r => ({ base:'https://dev.azure.com/nivello', pat:'x', fetchImpl: async () => r });
 
 test('200 com JSON devolve o corpo', async () => {
   const out = await adoFetch(ctx(resposta({corpo:{value:[1,2]}})), '/x');

@@ -6,7 +6,7 @@
          ADO_PAT=xxx node tools/descobrir.mjs "Outro Projeto" */
 import { runWiql, getFields, listProjects, AuthError, NetworkError } from './ado.mjs';
 
-const ORG = 'https://dev.azure.com/ybera';
+const ORG = 'https://dev.azure.com/nivello';
 const PROJETO = process.argv[2] || 'Ecommerce USA';
 
 const pat = process.env.ADO_PAT;
