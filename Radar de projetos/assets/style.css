@@ -430,6 +430,13 @@ section{margin-bottom:30px}
 .prod-head h3{font-family:var(--font-display);font-size:20px;font-weight:600;letter-spacing:0}
 .prod-head .pn{font-size:12px;font-weight:600;color:var(--ink-2);background:var(--neutral-bg);border-radius:999px;padding:3px 10px;white-space:nowrap}
 .prod-about{font-size:13.5px;color:var(--ink-2);line-height:1.6;max-width:76ch;margin:0 0 13px}
+/* Linha que nomeia os produtos sem nenhum projeto pendurado. Discreta de
+   propósito — é nota de rodapé da página, não seção: informa onde nada está
+   sendo construído sem competir com os produtos que têm trabalho. `.fine` só
+   tem tamanho dentro de `.foot`, então o tamanho vem daqui. */
+.prod-vazios{font-size:11.5px;line-height:1.6;color:var(--ink-3);
+  margin:18px 0 0;padding-top:14px;border-top:1px solid var(--hair)}
+.prod-vazios b{color:var(--ink-2);font-weight:640}
 
 /* Alternador entre as duas visualizações dos mesmos projetos. */
 .views{display:inline-flex;gap:2px;background:var(--surface-2);border:1px solid var(--hair);border-radius:999px;padding:3px;margin:0 0 15px}

@@ -44,7 +44,7 @@ const T = {
     boardTitle:"Board de entregas",
     boardSub:"Cada item está escrito pelo que o usuário passa a conseguir fazer. O título original no Azure DevOps aparece embaixo, para rastreio.",
     detTitle:"Produtos",
-    detSub:"Os produtos da frente USA e os projetos dentro de cada um. Abra um projeto para ler o que ele é e as demandas acompanhadas nele; a lista de demandas é mantida à mão na revisão quinzenal.",
+    detSub:"Os produtos da frente USA e os projetos dentro de cada um. Cada produto é uma iniciativa no Azure DevOps, e os projetos são o trabalho pendurado nela.",
     noTrackTitle:"Sem produto",
     noTrackDesc:"A Area Path deste item no Azure DevOps ainda não está mapeada para um produto em tools/config.json.",
     noStatusTitle:"Sem status",
@@ -58,6 +58,8 @@ const T = {
     filterStatus:"Filtrar por status:",
     tCount:"{n} de {total} projetos", tEmpty:"Nenhum projeto com esses filtros.",
     projectOne:"projeto", projectMany:"projetos", doingLower:"em curso",
+    prodVazios:"Sem projeto registrado:",
+    prodVaziosD:"Existem no Azure DevOps, mas ainda não têm nenhuma Feature pendurada.",
     demandsTitle:"Demandas",
     demandsNone:"Sem demandas registradas ainda — entram na próxima revisão quinzenal.",
     colDone:"Entregue", colDoing:"Em curso", colNext:"Planejado",
@@ -122,7 +124,7 @@ const T = {
     boardTitle:"Delivery board",
     boardSub:"Every item is written as what the user can now do. The original Azure DevOps title appears below it, for traceability.",
     detTitle:"Products",
-    detSub:"The products on the USA front and the projects inside each one. Open a project to read what it is and the demands tracked in it; the demand list is maintained by hand during the biweekly review.",
+    detSub:"The products on the USA front and the projects inside each one. Each product is an initiative in Azure DevOps, and the projects are the work attached to it.",
     noTrackTitle:"No product",
     noTrackDesc:"This item's Area Path in Azure DevOps isn't mapped to a product in tools/config.json yet.",
     noStatusTitle:"No status",
@@ -136,6 +138,8 @@ const T = {
     filterStatus:"Filter by status:",
     tCount:"{n} of {total} projects", tEmpty:"No project matches these filters.",
     projectOne:"project", projectMany:"projects", doingLower:"in flight",
+    prodVazios:"No project recorded:",
+    prodVaziosD:"They exist in Azure DevOps but have no Feature attached yet.",
     demandsTitle:"Demands",
     demandsNone:"No demands recorded yet — they land in the next biweekly review.",
     colDone:"Shipped", colDoing:"In flight", colNext:"Planned",
@@ -576,9 +580,14 @@ function render(){
     : emptyBox(t.askEmptyShort, t.askEmptyD, t);
 
   const fEl = $("filters");
+  /* Só produto que tem pelo menos um projeto ganha chip. Um chip que filtra
+     para nada é beco sem saída: o leitor clica, a página esvazia e ele não
+     sabe se errou ou se não há trabalho. A ausência desses produtos aparece
+     onde ela informa — no rodapé da página Produtos, nomeada. */
+  const tracksComTrabalho = DATA.tracks.filter(tr => items.some(i => i.track === tr.id));
   fEl.innerHTML = `<span class="flabel">${esc(t.filterLabel)}</span>` +
     `<button type="button" class="chip" data-track="__all" aria-pressed="${activeTracks.size === 0}">${esc(t.all)}</button>` +
-    DATA.tracks.map(tr =>
+    tracksComTrabalho.map(tr =>
       `<button type="button" class="chip" data-track="${esc(tr.id)}" aria-pressed="${activeTracks.has(tr.id)}">${esc(L(tr.name))}</button>`
     ).join("");
   fEl.querySelectorAll(".chip").forEach(btn => btn.addEventListener("click", () => {
@@ -685,6 +694,16 @@ function render(){
       <p class="prod-about">${esc(t.noTrackDesc)}</p>
       <div class="det">${semProduto.map(i => projRow(i, t, m)).join("")}</div>
     </div>`;
+  })() + (() => {
+    /* Produto cadastrado em tools/config.json que ainda não tem Feature
+       nenhuma pendurada. Ele perdeu o chip de filtro (um chip que filtra para
+       nada é beco sem saída), então some do resto da página — e "produto sem
+       trabalho nenhum" é informação, não vazio: diz onde nada está sendo
+       construído. Aparece aqui, nomeado, em uma linha discreta. */
+    const vazios = DATA.tracks.filter(tr => !items.some(i => i.track === tr.id));
+    if(!vazios.length) return "";
+    return `<p class="fine prod-vazios"><b>${esc(t.prodVazios)}</b> ` +
+      `${vazios.map(tr => esc(L(tr.name))).join(" · ")}. ${esc(t.prodVaziosD)}</p>`;
   })();
 
   /* --- alternador: as duas telas mostram os mesmos projetos, uma agrupada
