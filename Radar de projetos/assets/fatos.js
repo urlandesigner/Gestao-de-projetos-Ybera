@@ -2,9 +2,9 @@
    Fatos vindos do Azure DevOps. Todo texto editorial (título legível, why,
    about, result, healthNote) vive em prosa.js, indexado pelo mesmo id.
    Para regerar:  ADO_PAT=xxx node tools/sync.mjs
-   Gerado em: 2026-08-20T21:04:02.380Z */
+   Gerado em: 2026-08-21T09:35:52.064Z */
 const RADAR_FATOS = {
-  "geradoEm": "2026-08-20T21:04:02.380Z",
+  "geradoEm": "2026-08-21T09:35:52.064Z",
   "epics": [
     {
       "id": 32829,
