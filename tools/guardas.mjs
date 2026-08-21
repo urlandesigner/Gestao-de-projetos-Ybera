@@ -101,12 +101,26 @@ const MARCADOR = 'const RADAR_FATOS = ';
 
 /* JSON.stringify é o que garante escape correto: título do DevOps vem com
    aspas no texto e com "\" nas Area Paths. Montar a string à mão aqui já
-   produziu arquivo inválido em outros projetos. */
-export function serializarFatos(geradoEm, itens){
-  const corpo = JSON.stringify({ geradoEm, epics: itens }, null, 2);
+   produziu arquivo inválido em outros projetos.
+
+   `extra.produtos`, `extra.resumo` e `extra.quarter` são as três coisas que
+   até esta mudança eram escritas à mão em prosa.js (nome de produto,
+   "O essencial", trimestre) e passaram a ser derivadas: sync.mjs as calcula
+   (buscando título de Epic, ou chamando tools/resumo.mjs e
+   tools/trimestre.mjs) e só entrega aqui para virar JSON, junto com `itens`
+   de sempre. Default {} para as chamadas antigas (e os testes que só
+   verificavam `itens`) continuarem funcionando sem precisar passar as três
+   de uma vez. */
+export function serializarFatos(geradoEm, itens, extra = {}){
+  const { produtos = [], resumo = [], quarter = null } = extra;
+  const corpo = JSON.stringify({ geradoEm, quarter, resumo, produtos, epics: itens }, null, 2);
   return `/* GERADO POR tools/sync.mjs — NÃO EDITE À MÃO.
-   Fatos vindos do Azure DevOps. Todo texto editorial (título legível, why,
-   about, result, healthNote) vive em prosa.js, indexado pelo mesmo id.
+   Fatos vindos do Azure DevOps: produtos (nome = título do Epic), o
+   trimestre em curso e "O essencial" (resumo), calculados a cada rodada, e
+   os itens (Features, uma por projeto do Radar). Todo texto editorial POR
+   ITEM (título legível, why, about, result, healthNote) continua em
+   prosa.js, indexado pelo mesmo id — mas o nome de produto e "O essencial"
+   não são mais escritos à mão em lugar nenhum.
    Para regerar:  ADO_PAT=xxx node tools/sync.mjs
    Gerado em: ${geradoEm} */
 ${MARCADOR}${corpo};
@@ -196,11 +210,15 @@ export function coletarPendencias(itens){
    Epic com mais Features escondidas apareça primeiro — é o que mais
    distorce o Radar se ninguém notar. */
 export function epicsSemProduto(porPai, produtos){
+  /* `produtos` (tools/config.json) virou lista de ids de Epic, não mais
+     objeto {id: slug} — Number() dos dois lados pelo mesmo motivo de
+     trackDoPai (mapa.mjs): o paiId que chega de agruparPorPai é number, e um
+     id na lista pode ter sido colado como string sem que isso deva importar
+     aqui. */
+  const ids = new Set((produtos || []).map(Number));
   const linhas = [];
   for(const [paiId, filhas] of (porPai || new Map())){
-    if(!Object.prototype.hasOwnProperty.call(produtos || {}, String(paiId))){
-      linhas.push({ id: paiId, qtd: filhas.length });
-    }
+    if(!ids.has(Number(paiId))) linhas.push({ id: paiId, qtd: filhas.length });
   }
   return linhas.sort((a, b) => b.qtd - a.qtd || a.id - b.id);
 }

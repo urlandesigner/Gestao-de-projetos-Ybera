@@ -9,6 +9,8 @@ import path from 'node:path';
 import { runWiql, getFields, AuthError, NetworkError } from './ado.mjs';
 import { itemDe, agruparPorPai, diffRodadas } from './mapa.mjs';
 import { guardaEsvaziamento, guardaStatusVazio, guardaLeituraAnterior, decidirGravacao, serializarFatos, relatorio, parsearFatos, coletarPendencias, epicsSemProduto } from './guardas.mjs';
+import { calcularResumo } from './resumo.mjs';
+import { trimestreDe } from './trimestre.mjs';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const RAIZ = path.resolve(AQUI, '..');
@@ -114,11 +116,17 @@ try {
 
   const { porPai, semPai } = agruparPorPai(features);
 
+  /* `cfg.produtos` (tools/config.json) é a lista de ids de Epic deste Radar
+     — não mais um mapa id→slug. Number() dos dois lados pelo mesmo motivo de
+     trackDoPai (mapa.mjs): paiId vem number da API, um id colado no config
+     pode ter entrado como string. */
+  const idsProdutos = new Set((cfg.produtos || []).map(Number));
+
   /* Cada grupo de Features por Epic pai vai para um de dois destinos:
      `produtos` cadastrado vira item do Radar; fora da tabela é descartado
      (é trabalho de outra frente da empresa — o mesmo projeto B2C tem 646
      Features de times que não são deste Radar) e alimenta a guarda abaixo. */
-  const paiCadastrado = paiId => Object.prototype.hasOwnProperty.call(cfg.produtos || {}, String(paiId));
+  const paiCadastrado = paiId => idsProdutos.has(Number(paiId));
   const featuresValidas = [];
   for(const [paiId, filhas] of porPai){
     if(paiCadastrado(paiId)) featuresValidas.push(...filhas);
@@ -135,6 +143,22 @@ try {
     : [];
   const tituloDoEpic = new Map(epicsFaltandoInfo.map(e => [e.id, (e.fields || {})['System.Title'] || '(sem título)']));
   const epicsNovos = epicsFaltandoBase.map(e => ({ ...e, titulo: tituloDoEpic.get(e.id) || '(sem título)' }));
+
+  /* Nome do produto = título do Epic no Azure DevOps, buscado aqui pelos
+     mesmos motivos de epicsFaltandoInfo acima: função pura não busca nada
+     (mapa.mjs/guardas.mjs continuam sem I/O), então o fetch mora no
+     orquestrador. Busca só os ids cadastrados em cfg.produtos — não o
+     projeto inteiro — continuando só-leitura. Epic cadastrado mas apagado
+     do DevOps (errorPolicy:'Omit' na resposta) simplesmente não aparece na
+     lista; não é erro de rodada, é o config.json com uma entrada obsoleta. */
+  const produtosInfo = idsProdutos.size
+    ? await getFields(ctx, [...idsProdutos], ['System.Id', 'System.Title'])
+    : [];
+  /* Ordenado por nome para o fatos.js gerado não ter churn de posição a cada
+     rodada por causa da ordem, não previsível, em que a API devolve o lote. */
+  const produtos = produtosInfo
+    .map(e => ({ id: String(e.id), name: (e.fields || {})['System.Title'] || '(sem título)' }))
+    .sort((a, b) => a.name.localeCompare(b.name, 'pt'));
 
   const itensTodos = featuresValidas.map(w => itemDe(w, cfg));
 
@@ -195,11 +219,22 @@ try {
     process.exit(1);
   }
 
+  /* "O essencial" (resumo) e o trimestre em curso eram escritos à mão em
+     prosa.js; agora são calculados aqui, contra os mesmos `itens` que o
+     restante da rodada já produziu, e gravados em fatos.js — o site (app.js)
+     só renderiza o que vier pronto. calcularResumo e trimestreDe são puras e
+     testadas (tools/resumo.mjs, tools/trimestre.mjs); a única coisa impura
+     é `geradoEm`, capturado uma vez para os dois usarem o mesmo instante do
+     cabeçalho do arquivo. */
+  const geradoEm = new Date().toISOString();
+  const resumo = calcularResumo(itens);
+  const quarter = trimestreDe(geradoEm);
+
   /* Monta o arquivo inteiro antes de gravar, e a gravação em si é atômica
      (gravarAtomico, acima): falha de lógica antes daqui, ou processo morto
      durante a escrita, deixam o fatos.js anterior intacto — nunca meio
      arquivo. */
-  const conteudo = serializarFatos(new Date().toISOString(), itens);
+  const conteudo = serializarFatos(geradoEm, itens, { produtos, resumo, quarter });
   await gravarAtomico(DESTINO, conteudo);
   console.log(`\nGravado: ${path.relative(RAIZ, DESTINO)}`);
 } catch (e) {

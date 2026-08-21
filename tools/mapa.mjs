@@ -68,18 +68,27 @@ export function healthDe(estado){
    aconteceu) para o produto de itens inteiros sumir em silêncio. Id de Epic
    não se reorganiza.
 
-   As chaves de `produtos` em tools/config.json são strings — é assim que
-   todo JSON grava chave de objeto — mas o System.Parent que a API do DevOps
-   devolve é number. Sem o String() abaixo, `produtos['49290']` nunca bateria
-   com `paiId === 49290`, e todo item perderia o produto silenciosamente por
-   causa de um detalhe de tipo, não por Epic de fato não cadastrado. Pai
-   ausente (Feature sem System.Parent) ou id sem entrada na tabela devolvem
-   null; quem chama decide o que fazer com isso (ver epicsSemProduto e
-   coletarPendencias, em guardas.mjs). */
+   `produtos` (tools/config.json) deixou de mapear id de Epic → slug/nome
+   escrito à mão: agora é só a LISTA de ids de Epic que entram neste Radar —
+   o recorte é a única decisão que não dá para derivar do Azure DevOps, e
+   continua sendo configuração. O nome do produto não mora mais aqui: vem do
+   título do Epic, buscado e gravado em fatos.js por tools/sync.mjs. Por
+   isso o identificador do produto de um item passa a ser o próprio id do
+   Epic pai — devolvido como string para casar com o resto do código que
+   sempre tratou `track` como string (data-track no HTML, chaves de tIdx em
+   app.js), mesmo antes de o valor ser um id numérico.
+
+   Number() dos dois lados do `some` porque o System.Parent que a API do
+   DevOps devolve é number, e um id colado em tools/config.json por alguém
+   pode entrar como number ou como string — sem essa normalização, um dos
+   dois formatos faria o produto sumir silenciosamente por detalhe de tipo,
+   não por Epic de fato não cadastrado. Pai ausente (Feature sem
+   System.Parent) ou id fora da lista devolvem null; quem chama decide o que
+   fazer com isso (ver epicsSemProduto e coletarPendencias, em guardas.mjs). */
 export function trackDoPai(paiId, produtos){
   if(paiId === undefined || paiId === null) return null;
-  const v = (produtos || {})[String(paiId)];
-  return typeof v === 'string' ? v : null;
+  const lista = produtos || [];
+  return lista.some(id => Number(id) === Number(paiId)) ? String(paiId) : null;
 }
 
 /* Agrupa Features por Epic pai (System.Parent), sem julgar se aquele pai é

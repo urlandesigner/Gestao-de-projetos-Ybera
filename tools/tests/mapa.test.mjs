@@ -61,22 +61,27 @@ test('healthDe marca impedimento e mais nada', () => {
   assert.equal(healthDe(null), null);
 });
 
-const PRODUTOS = { '49290':'club', '49294':'interna' };
+const PRODUTOS = [49290, 49294];
 
-test('trackDoPai casa por id exato contra a tabela de produtos', () => {
-  assert.equal(trackDoPai(49290, PRODUTOS), 'club');
-  assert.equal(trackDoPai(49294, PRODUTOS), 'interna');
+/* trackDoPai devolve o proprio id do Epic pai (como string), nao mais um
+   slug/nome escrito a mao — o nome do produto agora vem do titulo do Epic,
+   buscado em sync.mjs, nao desta funcao pura. */
+test('trackDoPai casa por id exato e devolve o id do Epic como string', () => {
+  assert.equal(trackDoPai(49290, PRODUTOS), '49290');
+  assert.equal(trackDoPai(49294, PRODUTOS), '49294');
 });
 
-/* A chave do JSON e string; o System.Parent que a API devolve e number. Sem
-   o String() dentro de trackDoPai, este teste falharia mesmo com o id certo
-   — foi exatamente esse detalhe de tipo que o enunciado da tarefa avisou
-   para nao esquecer. */
-test('trackDoPai casa number contra chave string sem exigir conversao de quem chama', () => {
-  assert.equal(trackDoPai(49290, { '49290':'club' }), 'club');
+/* O System.Parent que a API devolve e number; um id colado em
+   tools/config.json pode ter entrado como string. Sem o Number() dos dois
+   lados dentro de trackDoPai, um dos dois formatos faria o produto sumir
+   silenciosamente por detalhe de tipo — foi exatamente esse risco que o
+   enunciado da tarefa avisou para nao esquecer. */
+test('trackDoPai casa number contra id em string na lista, e vice-versa', () => {
+  assert.equal(trackDoPai(49290, ['49290']), '49290');
+  assert.equal(trackDoPai('49290', [49290]), '49290');
 });
 
-test('trackDoPai com pai fora da tabela devolve null', () => {
+test('trackDoPai com pai fora da lista devolve null', () => {
   assert.equal(trackDoPai(999999, PRODUTOS), null);
 });
 
@@ -121,7 +126,7 @@ test('itemDe monta o item do Radar a partir da Feature, com produto vindo do pai
   const it = itemDe(feature, CFG);
   assert.equal(it.id, 47688);
   assert.equal(it.azureTitle, '[EUA] Nova Home');
-  assert.equal(it.track, 'club');
+  assert.equal(it.track, '49290');
   assert.equal(it.start, '2026-07-01');
   assert.equal(it.end, '2026-08-31');
   assert.equal(it.status, 'doing');

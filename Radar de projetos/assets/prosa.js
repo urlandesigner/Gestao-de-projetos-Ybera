@@ -1,9 +1,12 @@
 /* ==========================================================================
-   TEXTO EDITORIAL DO RADAR — a METADE editorial das páginas (index, board,
-   pendencias, produtos, produtos-tabela, report, horizonte, completo), não a
-   fonte inteira. A outra metade — fato — vem do Azure DevOps e mora em
-   fatos.js, ao lado deste; fundir(), em app.js, junta os dois na hora de
-   carregar a página. É ESTE arquivo que se edita na revisão quinzenal.
+   TEXTO EDITORIAL DO RADAR — o que sobrou de escrito à mão depois que nome
+   de produto, "O essencial" e o trimestre viraram cálculo do sync (ver
+   fatos.js). O que resta aqui é só o que o Azure DevOps genuinamente não
+   tem como saber: identidade da página (org, título, dono, contato) e o
+   texto por item em `texto`, abaixo — mais `asks` e `reports`, os dois
+   mecanismos que continuam vazios de propósito (ver os comentários deles).
+   A outra metade — fato — vem do Azure DevOps e mora em fatos.js, ao lado
+   deste; fundir(), em app.js, junta os dois na hora de carregar a página.
 
    ATENÇÃO: o arquivo antigo "Radar de Projetos USA.html" (versão de página
    única, autocontida) está CONGELADO — carrega sua própria cópia embutida
@@ -14,10 +17,22 @@
    1) DADOS
    --------------------------------------------------------------------------
    ESTE ARQUIVO É A METADE EDITORIAL do Radar, não a fonte inteira. A outra
-   metade — fato (janela, status, produto, dono, entrega, demandas) — vem do
-   Azure DevOps, é gerada por `tools/sync.mjs` e mora em `fatos.js`, ao lado
-   deste. `fundir()`, em `app.js`, junta os dois na hora de carregar a página.
-   NÃO edite `fatos.js` à mão — ele é sobrescrito a cada rodada do script.
+   metade — fato (janela, status, produto, dono, entrega, demandas) E TAMBÉM,
+   desde esta mudança, nome de produto, "O essencial" e o trimestre em curso —
+   vem do Azure DevOps, é gerada por `tools/sync.mjs` e mora em `fatos.js`, ao
+   lado deste. `fundir()`, em `app.js`, junta os dois na hora de carregar a
+   página. NÃO edite `fatos.js` à mão — ele é sobrescrito a cada rodada do
+   script.
+
+   `PROSA.tracks` e `PROSA.summary` NÃO EXISTEM MAIS. Nome de produto vinha
+   daqui como um slug e uma descrição inventados à mão (`{id:"club",
+   name:"Loja Clube USA", about:{...}}`); agora o produto de cada item é o
+   próprio id do Epic pai no Azure DevOps, e o nome é o título desse Epic —
+   os dois vêm prontos em `fatos.js` → `produtos`. "O essencial" (as três
+   linhas do topo do Panorama) era reescrito à mão a cada edição; agora é
+   calculado dos itens por `tools/resumo.mjs` e vem pronto em `fatos.js` →
+   `resumo`. Nenhum dos dois se edita mais em lugar nenhum — se o nome de um
+   produto estiver errado, corrija o título do Epic no Azure DevOps.
 
    O ÍNDICE de `texto` (a seção 3, abaixo) é o `id` numérico do work item
    (Epic) no Azure DevOps — não mais um número sequencial inventado aqui.
@@ -55,8 +70,11 @@
                          trata isso mostrando "—" em vez de quebrar.
      status            → "done" | "doing" | "next" | null, mapeado do estado
                          do DevOps por `tools/config.json` → `estados`.
-     track             → produto (ver seção 2, `tracks`), mapeado da Area
-                         Path do DevOps por `tools/config.json` → `areas`.
+     track             → o id do Epic pai (System.Parent) do work item, como
+                         string — não mais um slug. Só existe quando esse
+                         Epic está na lista `tools/config.json` → `produtos`;
+                         o nome exibido vem de `fatos.js` → `produtos`, que
+                         casa por este mesmo id.
      owner             → System.AssignedTo do Epic. Sem override editorial:
                          se o dono no DevOps mudar, o Radar segue sozinho.
      shipped           → mês da ClosedDate, só quando status é "done".
@@ -79,12 +97,21 @@
    ou ação de fora do time de produto; deixe `[]` quando não houver nenhuma.
 
    --------------------------------------------------------------------------
-   `meta.updated` (seção 2, abaixo) É MACHINE-SET: `fundir()` o sobrescreve
-   com a data da última rodada do `tools/sync.mjs` (o `geradoEm` de
-   `fatos.js`) sempre que esse arquivo existe. O valor escrito aqui só serve
-   de reserva para quando `fatos.js` ainda não foi gerado. `cycle`, `from` e
-   `to`, por outro lado, continuam 100% editoriais — são a janela que VOCÊ
-   decide que esta edição cobre, não algo que o DevOps sabe calcular.
+   `meta.updated` É MACHINE-SET: `fundir()` o sobrescreve com a data da
+   última rodada do `tools/sync.mjs` (o `geradoEm` de `fatos.js`) sempre que
+   esse arquivo existe — não há valor de reserva escrito aqui, porque não há
+   mais "meta" editorial de janela nenhuma para servir de reserva (ver
+   abaixo). `meta.quarter` (trimestre em curso, usado no medidor e nas
+   faixas do Futuro) também é MACHINE-SET, e nem aparece mais neste arquivo:
+   vem inteiro de `fatos.js`, calculado por `tools/trimestre.mjs` a partir da
+   data em que o sync roda — não escreva `quarter` aqui, `fundir()` não olha.
+
+   `meta.cycle`, `meta.from`, `meta.to` e `meta.next` NÃO EXISTEM MAIS. Eles
+   descreviam uma "edição quinzenal" do Radar — uma janela que alguém
+   declarava por escrito a cada revisão. Essa edição parou de existir: a
+   página passou a espelhar o Azure DevOps continuamente, sem quinzena
+   nenhuma para abrir ou fechar, então não havia mais o que esses quatro
+   campos descrevessem. Não recrie nenhum deles.
 
    --------------------------------------------------------------------------
    PARA ESCREVER A ENTRADA DE UM EPIC NOVO: ele vai aparecer no Radar com o
@@ -115,14 +142,12 @@ const PROSA = {
       pt:"Os projetos da frente USA: o que está em curso, o que está planejado e em que ordem. Espelha o Azure DevOps a cada sincronização.",
       en:"The projects on the USA front: what's in flight, what's planned and in what order. Mirrors Azure DevOps at each sync."
     },
-    /* `cycle`, `from`, `to` e `next` são EDITORIAIS: a janela que você declara
-       que esta edição cobre. Não são derivados do DevOps, porque o DevOps não
-       tem o conceito de "edição do Radar". `updated` é o único machine-set —
-       fundir() o sobrescreve com o geradoEm da última rodada do sync. */
-    cycle:{pt:"Espelho do Azure DevOps", en:"Mirror of Azure DevOps"},
-    from:"2026-08-01", to:"2026-08-21",
+    /* `updated` é MACHINE-SET: fundir() o sobrescreve com o geradoEm da
+       última rodada do sync sempre que fatos.js existe. O valor abaixo só
+       importa antes da primeira rodada — não há mais janela editorial
+       (`cycle`/`from`/`to`/`next`) para servir de contexto a ele: a página
+       parou de ter "edição" e passou a espelhar o DevOps continuamente. */
     updated:"2026-08-21",
-    next:"2026-09-04",
     /* Dono padrão de todos os itens USA. Um card pode sobrescrever com `owner`. */
     owner:"Urlan Dipré",
     ownerRole:{pt:"Product Owner · USA", en:"Product Owner · USA"},
@@ -134,89 +159,35 @@ const PROSA = {
     },
     /* URL estável da página. Preencha quando estiver hospedada: aparece no
        rodapé e na versão impressa, para quem recebe o PDF voltar à página viva. */
-    url:"",
-    /* Trimestre em curso: os contadores são DERIVADOS dos itens com prazo
-       (`end`) até esta data. Não há número digitado aqui. */
-    quarter:{label:"Q3 2026", start:"2026-07-01", end:"2026-09-30"}
+    url:""
+    /* `quarter` NÃO EXISTE MAIS AQUI. O trimestre em curso é calendário puro
+       (Q1 jan-mar, Q2 abr-jun, ...) — não pede decisão editorial nenhuma, só
+       a data de hoje — e passou a ser calculado por tools/trimestre.mjs a
+       cada rodada do sync, chegando pronto em fatos.js → quarter. */
   },
 
-  /* Trilhas = coluna "Produto" do Notion */
-  /* PRODUTOS = coluna "Produto" do Notion. É o nível de cima da página
-     Produtos: cada projeto abaixo aponta para um `track` e aparece dentro do
-     produto correspondente. `about` é a descrição do produto — escrita por
-     você, não vem da base. Produto sem nenhum projeto não é renderizado. */
-  tracks:[
-    {id:"club",       name:"Loja Clube USA",
-     about:{pt:"A loja onde o consumidor americano compra. Concentra o essencial da operação USA — conformidade, página de produto, home, tradução, tema, assinatura e fidelidade — e é onde o tráfego pago aterriza.",
-            en:"The store where the American consumer buys. It concentrates the core of the US operation — compliance, product page, homepage, translation, theme, subscription and loyalty — and it's where paid traffic lands."}},
-    {id:"interna",    name:{pt:"Loja Interna USA", en:"US Internal Store"},
-     about:{pt:"Canal interno da operação americana, com regra própria de preço e de acesso, separado da loja do consumidor final.",
-            en:"The US operation's internal channel, with its own pricing and access rules, separate from the consumer store."}},
-    {id:"influencer", name:{pt:"Loja da Influencer", en:"Influencer Store"},
-     about:{pt:"Vitrine própria de cada influencer parceira: curadoria dela, link único para as redes e venda rastreável.",
-            en:"A storefront of their own for each partner influencer: their curation, a single link for social bios and trackable sales."}},
-    {id:"reviews",    name:"Ybera Reviews",
-     about:{pt:"Avaliação de clientes como produto próprio — coleta, moderação e exibição sob controle da Ybera, sem depender de app de terceiro.",
-            en:"Customer reviews as an in-house product — collection, moderation and display under Ybera's control, with no third-party app."}},
-    {id:"ia",         name:{pt:"Quiz AI Ybera", en:"Ybera AI Quiz"},
-     about:{pt:"Recomendação guiada por IA: leva quem não conhece a linha até o produto certo, reduzindo a dúvida que trava a primeira compra.",
-            en:"AI-guided recommendation: takes someone unfamiliar with the line to the right product, cutting the doubt that stalls a first purchase."}},
-    {id:"europa",     name:{pt:"Crossborder Europa", en:"Europe Crossborder"},
-     about:{pt:"Venda para a Europa a partir da estrutura de loja e logística já montada nos EUA — segundo mercado sem operação nova.",
-            en:"Selling into Europe from the store and logistics structure already built in the US — a second market with no new operation."}},
-    /* Os quatro abaixo são o Epic homônimo na vertical Ecommerce e Growth do
-       DevOps. O `about` de cada um foi escrito a partir do nome e das Features
-       penduradas nele — confira e corrija onde eu inferi errado. */
-    {id:"tema",       name:{pt:"Tema Global", en:"Global Theme"},
-     about:{pt:"A base visual e técnica compartilhada pelas lojas de todos os países. Mexer aqui muda todas as lojas de uma vez — é o que faz um ajuste caber num lugar em vez de em cinco.",
-            en:"The visual and technical foundation shared by every country's store. A change here changes all of them at once — it's what makes a fix fit in one place instead of five."}},
-    {id:"marketplace", name:{pt:"Marketplaces", en:"Marketplaces"},
-     about:{pt:"Venda fora da loja própria, nos canais onde o consumidor já procura — Amazon à frente. Alcança quem nunca chegaria ao site da marca.",
-            en:"Selling outside our own store, in the channels where the shopper already searches — Amazon first. Reaches people who would never land on the brand's site."}},
-    {id:"erp",        name:"ERP",
-     about:{pt:"O sistema que cuida do pedido depois da compra: estoque, expedição, imposto e nota. Quando ele falha, o cliente sente na entrega, não na loja.",
-            en:"The system that handles the order after checkout: stock, fulfillment, tax and invoicing. When it fails, the customer feels it in delivery, not in the store."}},
-    {id:"hub",        name:{pt:"Hub de Produtos", en:"Product Hub"},
-     about:{pt:"Cadastro central de produto que alimenta as lojas e os canais, para o mesmo item não ser mantido à mão em cada lugar.",
-            en:"A central product registry feeding the stores and channels, so the same item isn't maintained by hand in each place."}}
-  ],
+  /* `tracks` NÃO EXISTE MAIS AQUI. Produto (antes uma lista escrita à mão
+     com slug + nome + descrição) virou o próprio Epic pai no Azure DevOps:
+     id e nome vêm prontos em fatos.js → produtos, buscados pelo sync a cada
+     rodada. Produto não tem mais descrição (`about`) — o Azure DevOps não
+     tem esse campo preenchido para Epic, e inventar uma aqui voltaria a ser
+     o mesmo texto à mão que esta mudança removeu. Se o nome de um produto
+     estiver errado ou faltando, o lugar de corrigir é o título do Epic no
+     Azure DevOps, não este arquivo. */
 
-  /* ------------------------------------------------------------------------
-     O ESSENCIAL — três lugares fixos, na ordem em que o stakeholder pergunta:
-     estamos no prazo? · o que mudou? · o que precisam de mim?
+  /* `summary` ("O essencial") NÃO EXISTE MAIS AQUI. As três linhas fixas do
+     topo do Panorama — Projetos, Entregas, Atenção — eram reescritas à mão a
+     cada edição quinzenal; agora são calculadas dos itens por
+     tools/resumo.mjs a cada rodada do sync, e chegam prontas em
+     fatos.js → resumo. Não escreva `summary` aqui — fundir() não olha mais
+     para PROSA.summary, só para RADAR_FATOS.resumo. */
 
-     O rótulo de cada linha é fixo. Ele existe para o formato não voltar a
-     virar descrição do plano ("o trimestre concentra seis projetos") — isso
-     o quadro já mostra, e é a parte que ninguém precisa ler duas vezes.
-
-     Regras de escrita:
-     · Prazo — diga se algo passou da janela planejada e qual é o item mais
-       apertado, com a data. Não escreva "está tudo bem" sem olhar as datas.
-     · Mudou — só o que mudou desde a edição anterior. Se nada mudou, diga
-       isso; quinzena parada é informação, não é vergonha.
-     · Pendências — o pedido. Se não houver, diga que não há e que este é o
-       lugar onde vai aparecer. Nunca deixe a linha genérica para preencher.
-     ---------------------------------------------------------------------- */
-  summary:[
-    /* AS TRÊS LINHAS SÃO EDITORIAIS e não derivam de nada — reescreva a cada
-       edição. Evite citar projeto por nome e data por número: os cartões vêm
-       do DevOps e mudam sem passar por aqui, então nome e data envelhecem
-       sozinhos e a página passa a se contradizer. Fale do quadro, não do item. */
-    {tag:{pt:"Fonte", en:"Source"},
-     pt:"Esta página espelha o <b>Azure DevOps</b> direto. Cada cartão é um item que o time mantém lá — o estado muda quando o time move o item, não quando alguém reescreve esta página.",
-     en:"This page mirrors <b>Azure DevOps</b> directly. Each card is an item the team maintains there — the state changes when the team moves the item, not when someone rewrites this page."},
-    {tag:{pt:"Prazo", en:"Schedule"},
-     pt:"A maioria dos itens <b>ainda não tem data prevista registrada na origem</b>, então o Futuro e as barras de andamento aparecem vazios. É ausência de dado, não ausência de trabalho.",
-     en:"Most items <b>have no target date recorded at the source</b> yet, so the Future view and the progress bars come up empty. That's missing data, not missing work."},
-    {tag:{pt:"Pendências", en:"Pending"},
-     pt:"<b>Nada está travado esperando decisão de vocês</b> nesta edição. Quando algo parar fora do time de produto, aparece aqui primeiro — com nome do decisor e prazo.",
-     en:"<b>Nothing is blocked waiting on a decision from you</b> in this edition. When something stalls outside the product team, it shows up here first — with a named decision-maker and a due date."}
-  ],
-
-
-  /* PENDÊNCIAS ("asks") — a forma que cumpre o que a linha "Pendências" do
-     essencial, acima, já promete ao leitor: uma pendência aparece "com nome
-     do decisor e prazo". Assim como `texto`, mais abaixo, é 100% editorial —
+  /* PENDÊNCIAS ("asks") — cumpre o que a linha "Atenção" do essencial
+     (calculada, ver acima) NÃO cobre: aquele número conta só impedimento
+     vindo do próprio Azure DevOps ("blocked"), nunca uma decisão parada fora
+     do time de produto — o DevOps não tem esse conceito para extrair. É
+     aqui, e só aqui, que esse tipo de pendência aparece, "com nome do
+     decisor e prazo". Assim como `texto`, mais abaixo, é 100% editorial —
      nenhuma ferramenta em tools/ lê ou escreve este campo, porque o Azure
      DevOps não tem um conceito de "decisão pendente de fora do time" para
      extrair (ver o aviso no topo deste arquivo). app.js só CONTA o tamanho
@@ -260,12 +231,11 @@ const PROSA = {
 
   /* NÃO HÁ MAIS BLOCO "O QUE MUDOU".
      A página que listava o movimento da quinzena foi removida: no nível de
-     projeto (1 a 4 meses) quase nada muda em duas semanas, e a base do Notion
-     não registra conclusão — ela nunca teria o que dizer. O que mudou desde a
-     edição anterior é dito na linha "Mudou" de `summary`, escrita à mão, que é
-     a versão que as pessoas leem. Se um dia a fonte passar a registrar
-     conclusão com data (Azure DevOps, por exemplo), o lugar de reconstruir
-     isso é uma página "Entregue nesta quinzena" alimentada pelas demandas. */
+     projeto (1 a 4 meses) quase nada muda em duas semanas. O Azure DevOps
+     hoje registra conclusão com data (`shipped`, `ClosedDate`), e é isso que
+     alimenta a linha "Entregas" de "O essencial" (fatos.js → resumo,
+     calculada por tools/resumo.mjs) e a página Report mensal — nenhuma das
+     duas é este bloco, e nenhuma é escrita à mão. */
 
   /* REPORT MENSAL — a parte escrita à mão.
      O que a base sabe (entrega com `shipped`, demanda com `done`) é derivado

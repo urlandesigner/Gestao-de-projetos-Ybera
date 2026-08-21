@@ -82,6 +82,31 @@ test('serializarFatos produz JS valido e sem PAT', () => {
   assert.ok(js.includes('A\\"quote'));
 });
 
+/* Sem o terceiro argumento, produtos/resumo ficam [] e quarter fica null —
+   nenhuma chamada antiga (nem o teste acima) precisa saber que estas tres
+   chaves passaram a existir. */
+test('serializarFatos sem o terceiro argumento grava produtos/resumo vazios e quarter nulo', () => {
+  const fatos = parsearFatos(serializarFatos('2026-08-20T10:00:00Z', []));
+  assert.deepEqual(fatos.produtos, []);
+  assert.deepEqual(fatos.resumo, []);
+  assert.equal(fatos.quarter, null);
+});
+
+/* produtos (nome de produto), resumo ("O essencial") e quarter (trimestre)
+   sao as tres coisas que passaram a ser calculadas em vez de escritas a mao
+   em prosa.js — este teste tranca que elas de fato chegam ao arquivo
+   gerado, e que parsearFatos as devolve intactas. */
+test('serializarFatos grava produtos, resumo e quarter, e parsearFatos os devolve', () => {
+  const produtos = [{ id:'49290', name:'Loja Clube USA' }];
+  const resumo = [{ tag:{ pt:'Projetos', en:'Projects' }, pt:'1 projeto...', en:'1 project...' }];
+  const quarter = { label:'Q3 2026', start:'2026-07-01', end:'2026-09-30' };
+  const js = serializarFatos('2026-08-20T10:00:00Z', [{ id:1 }], { produtos, resumo, quarter });
+  const fatos = parsearFatos(js);
+  assert.deepEqual(fatos.produtos, produtos);
+  assert.deepEqual(fatos.resumo, resumo);
+  assert.deepEqual(fatos.quarter, quarter);
+});
+
 test('relatorio lista o que precisa de acao humana', () => {
   const txt = relatorio({
     itens:[{ id:1 }, { id:2 }],
@@ -213,18 +238,18 @@ test('coletarPendencias na rodada limpa nao acusa nada', () => {
    desaparecerem em silêncio — esta função é o que torna essa ausência
    visível, ao nível do Epic (id + quantas filhas), em vez de ao nível de
    cada Feature isolada. */
-test('epicsSemProduto lista Epic pai fora da tabela de produtos, com quantidade', () => {
+test('epicsSemProduto lista Epic pai fora da lista de produtos, com quantidade', () => {
   const porPai = new Map([
     [49290, [{ id:1 }, { id:2 }]],   // cadastrado
     [77, [{ id:3 }, { id:4 }, { id:5 }]] // NÃO cadastrado
   ]);
-  const r = epicsSemProduto(porPai, { '49290':'club' });
+  const r = epicsSemProduto(porPai, [49290]);
   assert.deepEqual(r, [{ id:77, qtd:3 }]);
 });
 
 test('epicsSemProduto nao acusa nada quando todo pai esta cadastrado', () => {
   const porPai = new Map([[49290, [{ id:1 }]]]);
-  assert.deepEqual(epicsSemProduto(porPai, { '49290':'club' }), []);
+  assert.deepEqual(epicsSemProduto(porPai, [49290]), []);
 });
 
 test('epicsSemProduto ordena por quantidade de filhas descendente', () => {
@@ -232,7 +257,14 @@ test('epicsSemProduto ordena por quantidade de filhas descendente', () => {
     [10, [{ id:1 }]],
     [20, [{ id:2 }, { id:3 }, { id:4 }]]
   ]);
-  assert.deepEqual(epicsSemProduto(porPai, {}), [{ id:20, qtd:3 }, { id:10, qtd:1 }]);
+  assert.deepEqual(epicsSemProduto(porPai, []), [{ id:20, qtd:3 }, { id:10, qtd:1 }]);
+});
+
+/* Mesmo risco de tipo de trackDoPai (mapa.mjs): paiId vem number da API, um
+   id na lista de produtos pode ter sido colado como string. */
+test('epicsSemProduto casa number contra id em string na lista', () => {
+  const porPai = new Map([[49290, [{ id:1 }]]]);
+  assert.deepEqual(epicsSemProduto(porPai, ['49290']), []);
 });
 
 /* decidirGravacao concentra a combinacao de guarda.ok/forcavel/--forcar/

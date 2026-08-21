@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Os 14 projetos da frente USA da Ybera: o que está em curso, o que está planejado e em que ordem. Atualizado a cada duas semanas.">
+<meta name="description" content="Os projetos da frente USA da Ybera: o que está em curso, o que está planejado e em que ordem. Espelha o Azure DevOps a cada sincronização.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='11' fill='%232a78d6'/%3E%3Ccircle cx='12' cy='12' r='6.5' fill='none' stroke='white' stroke-width='1.5' opacity='.5'/%3E%3Ccircle cx='12' cy='12' r='2.2' fill='white'/%3E%3Cpath d='M12 12L18.3 5.7' stroke='white' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E">
 <title>Radar de Projetos — USA · Ybera Group</title>
 <link rel="stylesheet" href="assets/style.css">
@@ -40,14 +40,7 @@
 
   <div id="s-top">
   <div class="strip">
-    <div class="cycle">
-      <strong id="cycleLabel"></strong>
-      <span class="dot-sep"></span>
-      <span id="cyclePeriod" style="color:var(--ink-2)"></span>
-    </div>
-    <div class="spacer"></div>
     <div class="meta" id="updatedLine"></div>
-    <div class="live"><i></i><span id="nextLine"></span></div>
   </div>
 
   <div id="alertBand"></div>
@@ -66,7 +59,7 @@
 
   <section id="s-ess">
     <div class="sec-head"><h2 id="sumTitle"></h2></div>
-    <div class="summary"><ul id="sumList"></ul></div>
+    <div class="summary" id="sumBox"><ul id="sumList"></ul></div>
   </section>
 
   <div class="foot" id="foot"></div>

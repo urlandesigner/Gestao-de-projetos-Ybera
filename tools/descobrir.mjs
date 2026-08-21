@@ -151,8 +151,10 @@ try {
 
        Sai do nível de FEATURE, não de Epic: a Feature é o projeto do Radar, e
        são os estados dela que precisam de mapa (os três estados de Epic não
-       entram na página). O produto não aparece aqui porque ele vem do id do
-       Epic pai, e ids se descobrem com --arvore, não contando ocorrências. */
+       entram na página). `produtos` só pede os ids dos Epics: o nome de cada
+       produto não se cadastra mais aqui — vem do título do Epic no Azure
+       DevOps, buscado pela própria rodada de tools/sync.mjs — e ids se
+       descobrem com --arvore, não contando ocorrências. */
     if(tipo === 'Feature'){
       const estados = conta(itens, 'System.State').map(([k]) => k).filter(k => k !== '(vazio)');
       console.log('\n--- cole em tools/config.json e preencha os valores ---');
@@ -160,7 +162,7 @@ try {
         org: ORG, projeto: PROJETO,
         estados: Object.fromEntries(estados.map(e => [e, null])),
         estadosExcluidos: [],
-        produtos: { '<id do Epic>': '<id do track em prosa.js>' }
+        produtos: ['<id do Epic 1>', '<id do Epic 2>']
       }, null, 2));
       console.log('\nOs ids dos Epics-produto saem de: node tools/descobrir.mjs ' +
                   `"${PROJETO}" --titulos`);

@@ -10,7 +10,7 @@
    ========================================================================== */
 const T = {
   pt:{
-    updated:"Atualizado em", next:"Próxima atualização", by:"por",
+    updated:"Atualizado em", by:"por",
     tiles:{done:"Entregue", doing:"Em curso", asks:"Pendências", nextd:"Próxima data prevista"},
     tileFoot:{
       done:"no ar e em uso hoje",
@@ -86,14 +86,13 @@ const T = {
     horNow:"Agora", horNext:"A seguir", horLater:"Depois",
     horUntil:"até {d}",
     confNow:"Janela atual", confNext:"Planejado", confLater:"Roadmap",
-    footSource:"Fonte: Azure DevOps (projeto B2C, vertical Ecommerce e Growth) — status, janela, produto e dono saem de lá automaticamente; o texto editorial (título, por quê, sobre) é mantido à mão. Último snapshot: {d}.",
-    footCadence:"Cadência: uma atualização a cada duas semanas.",
+    footSource:"Fonte: Azure DevOps (projeto B2C, vertical Ecommerce e Growth) — status, janela, produto e dono saem de lá automaticamente; o texto editorial por item (título, por quê, sobre) é mantido à mão. Último snapshot: {d}.",
     footLimit:"Limitação conhecida: a janela de cada item só aparece quando há data prevista registrada no Azure DevOps. Onde não há, o cartão mostra “—” e o item não entra nas faixas do Futuro — é ausência de dado na origem, não ausência de trabalho.",
     footNote:"Dúvida ou correção? Fale com",
     footUrl:"Página sempre atualizada:"
   },
   en:{
-    updated:"Updated", next:"Next update", by:"by",
+    updated:"Updated", by:"by",
     tiles:{done:"Shipped", doing:"In flight", asks:"Pending", nextd:"Next expected date"},
     tileFoot:{
       done:"live and in use today",
@@ -165,8 +164,7 @@ const T = {
     horNow:"Now", horNext:"Next", horLater:"Later",
     horUntil:"through {d}",
     confNow:"Current window", confNext:"Planned", confLater:"Roadmap",
-    footSource:"Source: Azure DevOps (B2C project, Ecommerce e Growth vertical) — status, window, product and owner come from there automatically; the editorial text (title, why, about) is maintained by hand. Last snapshot: {d}.",
-    footCadence:"Cadence: one update every two weeks.",
+    footSource:"Source: Azure DevOps (B2C project, Ecommerce e Growth vertical) — status, window, product and owner come from there automatically; the per-item editorial text (title, why, about) is maintained by hand. Last snapshot: {d}.",
     footLimit:"Known limitation: an item's window only appears when a target date is recorded in Azure DevOps. Where there is none, the card shows “—” and the item stays out of the Future bands — that's missing data at the source, not missing work.",
     footNote:"Question or correction? Talk to",
     footUrl:"Always-current page:"
@@ -222,17 +220,21 @@ function fundir(prosa, fatos){
   /* Track desconhecido: nem tools/sync.mjs (que nunca lê prosa.js) nem esta
      função checavam se o `track` de um item batia com um id real de produto.
      Um id digitado errado em fatos.js faz o projeto sumir de produtos.html
-     sem aviso nenhum — mesmo espírito do aviso de prosa órfã acima. */
-  const idsDeProdutos = new Set((prosa.tracks || []).map(tr => tr.id));
+     sem aviso nenhum — mesmo espírito do aviso de prosa órfã acima. Produto
+     não é mais editorial (prosa.tracks não existe): a lista de referência
+     agora é `fatos.produtos`, gravada pelo próprio sync a partir do Epic pai
+     de cada item — então esta checagem também cobre um id de Epic que
+     ficou fora de tools/config.json → produtos entre uma rodada e outra. */
+  const idsDeProdutos = new Set(((fatos && fatos.produtos) || []).map(tr => tr.id));
   const trackInvalido = items.filter(i => i.track !== null && !idsDeProdutos.has(i.track));
   if(trackInvalido.length){
     console.warn(
       "fatos.js: " + trackInvalido.length + " item(ns) com track desconhecido: " +
       trackInvalido.map(i => `#${i.id} "${i.track}"`).join(", ") +
-      " — confira o id contra PROSA.tracks em prosa.js.");
-    /* Normaliza para null DEPOIS de avisar: um id digitado errado em areas
-       (tools/config.json) não pode sumir o item da página — cai no mesmo
-       grupo "sem produto" que já existe para track:null, com a mesma
+      " — confira o id do Epic pai contra tools/config.json → produtos.");
+    /* Normaliza para null DEPOIS de avisar: um Epic pai fora de
+       tools/config.json → produtos não pode sumir o item da página — cai no
+       mesmo grupo "sem produto" que já existe para track:null, com a mesma
        explicação. O console.warn acima é quem nomeia o valor errado; o
        grupo não teria como. */
     trackInvalido.forEach(i => { i.track = null; });
@@ -242,8 +244,41 @@ function fundir(prosa, fatos){
   /* A data de atualização passa a ser quando o snapshot rodou; o valor
      editorial fica como reserva para quando o fatos.js ainda não existe. */
   if(fatos && fatos.geradoEm) meta.updated = fatos.geradoEm.slice(0, 10);
+  /* Trimestre: calculado por tools/trimestre.mjs a cada rodada do sync
+     (calendário puro, não decisão editorial) — prosa.js não tem mais
+     `meta.quarter` para servir de reserva, então sem fatos.js ainda não há
+     trimestre nenhum (o medidor e o Futuro tratam isso como "sem dado", do
+     mesmo jeito que já tratam qualquer outra ausência na base). */
+  /* O trimestre vem calculado da rodada do sync. Quando não vem — fatos.js
+     antigo, ausente, ou uma rodada que falhou antes de gravar — o site NÃO
+     pode ficar sem ele: `m.quarter.start` é lido sem guarda pelo medidor do
+     trimestre e pelas faixas do Futuro, e um `undefined` ali estoura o
+     render() inteiro, deixando as 8 páginas sem navegação. Verificado: com
+     fatos.js sem `quarter`, todas as páginas ficavam ocas com
+     "Cannot read properties of undefined (reading 'start')".
+
+     Então há reserva local, e ela é honesta: é a mesma matemática de
+     calendário de tools/trimestre.mjs (Q1 jan-mar … Q4 out-dez), duplicada
+     aqui de propósito em seis linhas para o site não depender de o gerador
+     ter rodado. Não é decisão editorial — é o trimestre em que hoje cai. */
+  meta.quarter = (fatos && fatos.quarter) || (() => {
+    const d = new Date();
+    const y = d.getFullYear(), q = Math.floor(d.getMonth() / 3);
+    const mi = q * 3 + 1, mf = mi + 2;
+    const pad = n => String(n).padStart(2, "0");
+    return { label:`Q${q + 1} ${y}`, start:`${y}-${pad(mi)}-01`,
+             end:`${y}-${pad(mf)}-${pad(new Date(y, mf, 0).getDate())}` };
+  })();
   return {
-    meta, tracks:prosa.tracks, summary:prosa.summary,
+    meta,
+    /* Produto (nome + id) vem pronto do fatos.js — não mais de prosa.tracks —
+       porque o nome agora é o título do Epic no Azure DevOps, não algo que
+       se escreve à mão aqui (ver o comentário de idsDeProdutos, acima). */
+    tracks:(fatos && fatos.produtos) || [],
+    /* "O essencial": calculado por tools/resumo.mjs a cada rodada do sync,
+       pelo mesmo motivo do trimestre acima — julgamento sobre dado pede
+       teste, e teste pede tools/, não este arquivo sem build. */
+    summary:(fatos && fatos.resumo) || [],
     asks:prosa.asks || [], reports:prosa.reports || [], items
   };
 }
@@ -432,11 +467,12 @@ function render(){
   $("btnPT").setAttribute("aria-pressed", lang === "pt");
   $("btnEN").setAttribute("aria-pressed", lang === "en");
 
-  $("cycleLabel").textContent = L(m.cycle);
-  $("cyclePeriod").textContent = windowLabel(m.from, m.to);
+  /* A "janela desta edição" (cycle/from/to/next) saiu com a edição quinzenal
+     que ela descrevia — a página agora espelha o Azure DevOps continuamente,
+     e não há mais um período fixo para anunciar aqui. Só resta o timestamp
+     de quando a última rodada do sync rodou, que é `m.updated`. */
   $("updatedLine").innerHTML = ICO.clock + "<span>" + t.updated + " " + esc(fmtDate(m.updated, true)) +
     " · " + t.by + " " + esc(m.owner) + "</span>";
-  $("nextLine").textContent = t.next + ": " + fmtDate(m.next);
 
   const items = DATA.items;
   const n = k => items.filter(i => i.status === k).length;
@@ -505,9 +541,28 @@ function render(){
     `<span><span class="swatch" style="background:var(--grid)"></span>${esc(t.mLeft)} ${q.total - q.done - q.doing}</span>`
   ].join("");
 
-  $("sumTitle").textContent = t.sumTitle;
-  $("sumList").innerHTML = DATA.summary
-    .map(s => `<li><span class="tg">${esc(L(s.tag))}</span><span>${L(s)}</span></li>`).join("");
+  /* "O essencial" agora vem calculado do dado, em fatos.js. Quando não vem
+     — fatos.js antigo, ou rodada que falhou antes de gravar — a seção inteira
+     sai da página em vez de deixar uma caixa com borda e 16px de altura, que
+     é o que acontecia antes desta guarda. Mesmo princípio dos grupos "sem
+     produto" e "sem status": só renderiza quando há o que mostrar. */
+  /* "O essencial" agora vem calculado do dado, em fatos.js. Quando não vem —
+     fatos.js antigo, ou rodada que falhou antes de gravar — a caixa inteira
+     sai da página, em vez de sobrar uma borda com 16px de altura. Mesmo
+     princípio dos grupos "sem produto" e "sem status": só renderiza quando há
+     o que mostrar.
+
+     Escondida por id (#sumBox), não via closest(): nas seis páginas que não
+     têm este bloco, $() devolve o NULL_EL, e nele `closest` não é função —
+     chamar derrubava o render() e deixava as seis sem navegação. Atribuir
+     propriedade no NULL_EL é inofensivo, que é o idioma do resto do arquivo. */
+  const temResumo = (DATA.summary || []).length > 0;
+  $("sumBox").hidden = !temResumo;
+  if(temResumo){
+    $("sumTitle").textContent = t.sumTitle;
+    $("sumList").innerHTML = DATA.summary
+      .map(s => `<li><span class="tg">${esc(L(s.tag))}</span><span>${L(s)}</span></li>`).join("");
+  }
 
   $("askTitle").textContent = t.askTitle;
   /* Antes esta linha ia direto pro estado vazio, sempre — então uma
@@ -603,12 +658,15 @@ function render(){
     const nDoing = list.filter(i => i.status === "doing").length;
     const meta = [`${list.length} ${list.length === 1 ? t.projectOne : t.projectMany}`];
     if(nDoing) meta.push(`${nDoing} ${t.doingLower}`);
+    /* Produto não tem mais `about`: o nome vem do título do Epic no Azure
+       DevOps, que não tem esse campo preenchido — o parágrafo de descrição
+       que existia aqui (escrito à mão) saiu junto, sem deixar um <p> vazio
+       ou espaço órfão entre o cabeçalho do produto e a lista de projetos. */
     return `<div class="prod" data-track="${esc(tr.id)}">
       <div class="prod-head">
         <h3>${esc(L(tr.name))}</h3>
         <span class="pn mono-num">${esc(meta.join(" · "))}</span>
       </div>
-      ${tr.about ? `<p class="prod-about">${esc(L(tr.about))}</p>` : ""}
       <div class="det">${list.map(i => projRow(i, t, m)).join("")}</div>
     </div>`;
   }).join("") + (() => {
@@ -798,7 +856,12 @@ function render(){
      rodapé em letra miúda: de onde vêm os números, de quanto em quanto tempo
      mudam e o que esta base não responde. Sem isso a página vira afirmação
      sem fonte. */
-  footLines.push(`<span class="fine">${esc(t.footSource.replace("{d}", fmtDate(m.updated, true)))} ${esc(t.footCadence)}</span>`);
+  /* footCadence ("uma atualização a cada duas semanas") saiu junto da
+     "janela desta edição": a rodada de tools/sync.mjs não tem mais cadência
+     fixa (um GitHub Action a dispara diariamente hoje, e isso pode mudar sem
+     esta página precisar saber) — afirmar uma cadência quinzenal aqui seria
+     voltar a escrever à mão algo que a página não tem como garantir. */
+  footLines.push(`<span class="fine">${esc(t.footSource.replace("{d}", fmtDate(m.updated, true)))}</span>`);
   footLines.push(`<span class="fine">${esc(t.footLimit)}</span>`);
   $("foot").innerHTML = footLines.join("");
 

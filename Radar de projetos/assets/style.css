@@ -189,13 +189,11 @@ h1{font-family:var(--font-display);font-size:31px;font-weight:600;letter-spacing
   background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);
   padding:12px 16px;margin-bottom:20px;box-shadow:var(--shadow);
 }
-.strip .cycle{display:flex;align-items:baseline;gap:9px;font-size:14px}
-.strip .cycle strong{font-size:15.5px}
-.strip .dot-sep{width:4px;height:4px;border-radius:50%;background:var(--ink-3);opacity:.6}
 .strip .meta{font-size:12.5px;color:var(--ink-2);display:flex;align-items:center;gap:7px}
-.strip .spacer{flex:1 1 40px}
-.live{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:650;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-2);background:var(--neutral-bg);border-radius:999px;padding:4px 10px}
-.live i{width:7px;height:7px;border-radius:50%;background:var(--good);display:block}
+/* .cycle, .dot-sep, .spacer e .live desapareceram junto com a "janela desta
+   edição" (meta.cycle/from/to/next) — eram só o layout daquele bloco, e o
+   Radar de Projetos USA.html legado tem sua própria cópia inline destas
+   mesmas regras, então não sobrevivem em uso nenhum aqui. */
 
 /* ===========================================================
    ALERT BAND (só aparece se algum item estiver em atenção/travado)
@@ -529,7 +527,6 @@ section{margin-bottom:30px}
 .hcard{position:relative;overflow:hidden}
 .hcard[data-h="now"]::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,var(--accent),transparent 72%)}
 @keyframes rise{from{opacity:0;transform:translateY(8px)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 @media (prefers-reduced-motion: no-preference){
   .topbar{animation:rise .45s var(--ease-out-strong) backwards}
   .strip{animation:rise .45s var(--ease-out-strong) .06s backwards}
@@ -541,7 +538,6 @@ section{margin-bottom:30px}
   section:nth-of-type(4){animation-delay:.39s}
   section:nth-of-type(5){animation-delay:.44s}
   section:nth-of-type(6){animation-delay:.49s}
-  .live i{animation:pulse 2.6s ease-in-out infinite}
   .fold[open] .cards{animation:rise .35s var(--ease-out-strong)}
   .proj[open] .proj-body{animation:rise .3s var(--ease-out-strong)}
   .how[open] .how-body{animation:rise .3s var(--ease-out-strong)}
@@ -593,9 +589,6 @@ section{margin-bottom:30px}
   h1{font-size:25px}
   .topbar{flex-direction:column}
   .strip{flex-direction:column;align-items:flex-start;gap:8px}
-  .strip .cycle{flex-direction:column;align-items:flex-start;gap:3px}
-  .strip .dot-sep{display:none}
-  .strip .spacer{display:none}
 }
 /* ===========================================================
    IMPRESSÃO / PDF — uma página limpa para colar em deck.
