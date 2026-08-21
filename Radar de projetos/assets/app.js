@@ -50,6 +50,11 @@ const T = {
     noStatusTitle:"Sem status",
     noStatusDesc:"O estado deste item no Azure DevOps ainda não está mapeado para um status do board em tools/config.json.",
     noDateTitle:"Sem data de início",
+    /* Quando NENHUM projeto tem data, a página não é um horizonte — é a lista
+       do que falta entregar. Nesse caso o rótulo "sem data de início" seria
+       redundante (vale para todos) e o texto soaria como desculpa. */
+    horAllTitle:"Ainda não entregues",
+    horAllSub:"Os projetos que ainda não foram entregues, na ordem em que aparecem no Azure DevOps. A divisão por trimestre aparece quando houver prazo registrado.",
     noDateDesc:"Este item ainda não tem data de início registrada no Azure DevOps, então não há como posicioná-lo numa das três faixas.",
     tableSub:"Os projetos numa tabela só, para comparar e ordenar. Filtre por produto e por status; clique no cabeçalho para reordenar.",
     viewCards:"Por produto", viewTable:"Tabela",
@@ -130,6 +135,8 @@ const T = {
     noStatusTitle:"No status",
     noStatusDesc:"This item's state in Azure DevOps isn't mapped to a board status in tools/config.json yet.",
     noDateTitle:"No start date",
+    horAllTitle:"Not yet delivered",
+    horAllSub:"The projects not yet delivered, in the order they appear in Azure DevOps. The split by quarter shows up once target dates are recorded.",
     noDateDesc:"This item doesn't have a start date recorded in Azure DevOps yet, so there's no way to place it in one of the three bands.",
     tableSub:"All projects in a single table, to compare and sort. Filter by product and status; click a header to reorder.",
     viewCards:"By product", viewTable:"Table",
@@ -450,13 +457,26 @@ function render(){
 
   /* Título e subtítulo dependem da página atual (body[data-page]). */
   const page = document.body.dataset.page || "index";
+  /* O Futuro só é um horizonte se a MAIORIA dos projetos puder ser
+     posicionada no tempo. Com 1 projeto datado e 25 sem data, as faixas
+     existem tecnicamente e não informam nada — a página fica prometendo uma
+     ordenação que vale para um item em vinte e seis. É comparação, não
+     limiar arbitrário: se mais projetos ficam de fora das faixas do que
+     dentro, a página deixa de se anunciar como horizonte e passa a ser a
+     lista do que falta entregar. Volta sozinha quando os prazos entrarem.
+
+     Calculado aqui porque o subtítulo é montado antes da lógica das faixas,
+     mais abaixo — e a mesma expressão é reusada lá. */
+  const naoEntregues = DATA.items.filter(i => i.status !== "done");
+  const semHorizonte = naoEntregues.filter(i => !i.start).length
+                     > naoEntregues.filter(i => i.start).length;
   const PM = {
     index:{h1:L(m.title), sub:L(m.sub)},
     board:{h1:t.boardTitle, sub:t.boardSub},
     pendencias:{h1:t.askTitle, sub:t.askSub},
     produtos:{h1:t.detTitle, sub:t.detSub},
     tabela:{h1:t.detTitle, sub:t.tableSub},
-    horizonte:{h1:t.horTitle, sub:t.horSub},
+    horizonte:{h1:t.horTitle, sub:semHorizonte ? t.horAllSub : t.horSub},
     report:{h1:t.repTitle, sub:t.repSub},
     completo:{h1:L(m.title), sub:L(m.sub)}
   };
@@ -513,8 +533,12 @@ function render(){
   tileDefs.push({label:t.tiles.doing, v:n("doing"), c:"var(--accent)", foot:t.tileFoot.doing});
   tileDefs.push({label:t.tiles.asks, v:nAsk, c:nAsk ? "var(--critical)" : "var(--ink-3)", flag:nAsk > 0,
                  foot:nAsk ? t.tileFoot.asksSome : t.tileFoot.asksNone});
-  tileDefs.push({label:t.tiles.nextd, v:ndIso ? fmtDate(ndIso) : "—", small:true, c:"var(--ink-3)",
-                 foot:nd ? ndFoot : t.tileFoot.nextdNone});
+  /* Só entra quando existe data futura de verdade. Um tile permanente com
+     "—" e "sem data futura na base" é peso morto: ocupa um quarto da fileira
+     para informar que não há informação. Os outros tiles já aparecem por
+     condição (Entregue só com concluído), então a fileira já é variável. */
+  if(ndIso) tileDefs.push({label:t.tiles.nextd, v:fmtDate(ndIso), small:true,
+                           c:"var(--ink-3)", foot:ndFoot});
   $("tiles").innerHTML = tileDefs.map(d => `
     <div class="tile${d.flag ? " flag" : ""}">
       <div class="label"><span class="swatch" style="background:${d.c}"></span>${esc(d.label)}</div>
@@ -531,6 +555,12 @@ function render(){
     doing:inQ.filter(i => i.status === "doing").length,
     total:inQ.length
   };
+  /* O medidor conta projetos com prazo DENTRO do trimestre. Quando nenhum
+     tem — que é o caso quando o Azure DevOps não traz TargetDate — ele
+     mostrava "0 de 0 concluídos", que lê como fracasso em vez de ausência de
+     dado, e ocupa um cartão inteiro do Panorama para não dizer nada. Sai da
+     página inteiro, e volta sozinho no dia em que existir prazo. */
+  $("meterCard").hidden = q.total === 0;
   $("meterTitle").textContent = t.meter + " · " + q.label;
   $("meterValue").textContent = `${q.done} ${t.of} ${q.total} ${t.initiatives}`;
   /* Um segmento por projeto: contagem se lê como contagem — barra meio cheia
@@ -815,7 +845,6 @@ function render(){
          listas eram digitadas à mão e podiam discordar do board — agora
          mudar um período move o card de faixa sozinho. Entregues saem: são
          história, e o lugar deles é a coluna Entregue do board. --- */
-  $("horTitle").textContent = t.horTitle;
   const nq = nextQuarter(m.quarter.end);
   const band = {now:[], next:[], later:[]};
   /* Item sem `start` (Azure DevOps sem StartDate) não entra em NENHUMA
@@ -828,9 +857,15 @@ function render(){
   items.filter(i => i.status !== "done")
        .sort((a, b) => (a.start || "").localeCompare(b.start || "") || (a.end || "").localeCompare(b.end || ""))
        .forEach(i => {
-         if(!i.start){ semData.push(i); return; }
+         /* Quando a página desistiu de ser horizonte (semHorizonte), até o
+            projeto datado entra na lista única: uma faixa com um item em cima
+            de uma lista com vinte e cinco não ordena nada — só privilegia um
+            cartão. Uma lista só, e as faixas voltam quando houver prazo que
+            as sustente. */
+         if(!i.start || semHorizonte){ semData.push(i); return; }
          band[i.start <= m.quarter.end ? "now" : i.start <= nq.end ? "next" : "later"].push(i);
        });
+  $("horTitle").textContent = t.horTitle;
   const hLabel = {now:t.horNow, next:t.horNext, later:t.horLater};
   const hConf  = {now:t.confNow, next:t.confNext, later:t.confLater};
   const hWhen  = {
@@ -855,10 +890,10 @@ function render(){
     if(!semData.length) return "";
     return `<div class="prod" data-track="__sem-data">
       <div class="prod-head">
-        <h3>${esc(t.noDateTitle)}</h3>
+        <h3>${esc(semHorizonte ? t.horAllTitle : t.noDateTitle)}</h3>
         <span class="pn mono-num">${semData.length} ${semData.length === 1 ? t.projectOne : t.projectMany}</span>
       </div>
-      <p class="prod-about">${esc(t.noDateDesc)}</p>
+      ${semHorizonte ? "" : `<p class="prod-about">${esc(t.noDateDesc)}</p>`}
       <div class="cards">${semData.map(i => card(i, t)).join("")}</div>
     </div>`;
   })();
