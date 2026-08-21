@@ -44,6 +44,14 @@
     return res.json();
   }
 
+  // Nome de quem gerou o PAT. Serve pra o filtro global já abrir no dono da
+  // conta em vez de exigir que ele se procure numa lista.
+  async function currentUser(ctx) {
+    const data = await adoFetch(ctx, `/_apis/connectionData?${API}`);
+    const u = data.authenticatedUser || data.authorizedUser || {};
+    return u.providerDisplayName || u.displayName || '';
+  }
+
   async function listProjects(ctx) {
     const data = await adoFetch(ctx, `/_apis/projects?$top=500&${API}`);
     return data.value.map((p) => ({ id: p.id, name: p.name }));
@@ -117,7 +125,7 @@
   }
 
   return {
-    adoFetch, listProjects, listTeams, runWiql, getFields, currentSprint, sprintItemIds,
+    adoFetch, currentUser, listProjects, listTeams, runWiql, getFields, currentSprint, sprintItemIds,
     teamAreas, listTeamBoards, boardColumns,
     AuthError, NetworkError,
   };

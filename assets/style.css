@@ -69,6 +69,10 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
   mask: var(--icone) no-repeat center / contain;
 }
 
+/* Filtro global no topo: é escopo, não ação — fica à esquerda das ações */
+.filtro-topo { margin: 0; }
+.filtro-topo select { font-weight: 600; }
+
 /* ---------- Corpo: sidebar + conteúdo (como na referência) ---------- */
 .corpo {
   display: grid;
@@ -718,6 +722,7 @@ details summary { cursor: pointer; color: var(--mudo); font-size: 0.88rem; }
 
 /* ---------- Celular ---------- */
 @media (max-width: 640px) {
+  .app > header.topo { flex-wrap: wrap; } /* o seletor global cabe na 2ª linha */
   main > section { padding: 1.1rem 1rem 1.2rem; }
   #grid { grid-template-columns: 1fr; }
   .atalhos a { padding: 0.45rem 0; font-size: 0.85rem; } /* alvo de toque maior */

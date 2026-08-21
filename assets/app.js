@@ -16,7 +16,14 @@ const state = {
   discovery: null,
   auth: null, // null | 'sem-token' | 'vencido' | 'atualizando' | 'conectado'
   filtrosMI: Object.assign({ tipos: null, projetos: null }, loadJSON(LS.filtros) || {}, { busca: '' }),
-  respProj: (loadJSON(LS.filtros) || {}).respProj || '', // filtro de responsável dos cartões
+  // Filtro GLOBAL de responsável: vale em todas as páginas derivadas de dado.
+  // null = ainda não escolhido → cai no dono do PAT. '' = escolheu "todos".
+  resp: (() => {
+    const f = loadJSON(LS.filtros) || {};
+    if (f.resp !== undefined) return f.resp;
+    if (f.respProj) return f.respProj; // migra a escolha antiga, que era só dos cartões
+    return null;
+  })(),
 };
 state.cache.lastSuccessAt = state.cache.lastSuccessAt || state.cache.fetchedAt || 0; // migração: cache antigo sem lastSuccessAt
 
@@ -78,7 +85,20 @@ function renderChipsProjeto(container, items, filtro, onChange) {
 }
 
 function salvarFiltrosMI() {
-  saveJSON(LS.filtros, { tipos: state.filtrosMI.tipos, projetos: state.filtrosMI.projetos, respProj: state.respProj });
+  saveJSON(LS.filtros, { tipos: state.filtrosMI.tipos, projetos: state.filtrosMI.projetos, resp: state.resp });
+}
+
+// Responsável em vigor. Enquanto ninguém escolhe, é o dono do PAT.
+function respAtivo() {
+  return state.resp === null ? (state.cache.usuario || '') : state.resp;
+}
+
+// Item está no nome de quem está filtrado? Sem filtro, tudo passa.
+function noNome(it) {
+  const alvo = respAtivo();
+  if (!alvo) return true;
+  const r = ((it || {}).fields || {})['System.AssignedTo'];
+  return !!r && r.displayName === alvo;
 }
 
 function ctx() { return { base: state.config.org, pat: state.pat, fetchImpl: window.fetch.bind(window) }; }
@@ -261,6 +281,11 @@ async function refreshAll(force) {
   state.auth = 'atualizando';
   renderBadge();
   try {
+    // quem é o dono do PAT: uma vez só, pra o filtro global abrir nele
+    if (!state.cache.usuario) {
+      try { state.cache.usuario = await A.currentUser(ctx()); }
+      catch (e) { /* sem isso o filtro só começa em "todos" — não é motivo pra falhar */ }
+    }
     const visiveis = state.config.projects.filter((p) => !p.hidden);
     await Promise.all([...visiveis.map(refreshCard), refreshMyItems()]);
     state.cache.fetchedAt = Date.now();
@@ -328,8 +353,9 @@ function dataCurta(iso) {
 function renderPanorama() {
   const box = $('panorama');
   if (!box || !state.config) return;
-  const { visiveis, todos, temCache, erroHtml } = itensDeTodosOsTimes();
+  const { visiveis, todos: brutos, temCache, erroHtml } = itensDeTodosOsTimes();
   if (!temCache) { box.innerHTML = erroHtml + semDados('o panorama'); return; }
+  const todos = brutos.filter(noNome);
 
   const agora = Date.now();
   const k = C.panoramaKpis(todos, agora);
@@ -452,7 +478,10 @@ function renderProdutos() {
     return;
   }
   const multi = baseState.porTime.length > 1;
-  const blocos = baseState.porTime.map(({ p, produtos }) => {
+  const blocos = baseState.porTime.map(({ p, produtos: todosProdutos }) => {
+    // filtra pelo dono do ÉPICO; o roll-up já foi feito com a árvore inteira,
+    // senão o progresso viraria "1/1" ao esconder filhos de outras pessoas
+    const produtos = todosProdutos.filter((reg) => noNome(reg.item));
     const corpo = produtos.length
       ? `<div class="grid-produtos">${produtos.map((reg) => htmlProduto(reg, p)).join('')}</div>`
       : '<p class="mudo">Nenhum épico neste time.</p>';
@@ -504,7 +533,7 @@ function renderFuturo() {
     box.innerHTML = erroHtml + (baseState.erro ? '' : '<p class="mudo">carregando projetos…</p>');
     return;
   }
-  const faixas = C.futuroPorFaixa(baseState.porTime.flatMap(({ items }) => items), Date.now());
+  const faixas = C.futuroPorFaixa(baseState.porTime.flatMap(({ items }) => items).filter(noNome), Date.now());
   // As três faixas aparecem sempre, mesmo vazias: "nada começa no próximo
   // trimestre" é informação. "Sem data" só aparece quando existe.
   const blocos = faixas
@@ -549,7 +578,7 @@ function renderReport() {
     box.innerHTML = erroHtml + (baseState.erro ? '' : '<p class="mudo">carregando entregas…</p>');
     return;
   }
-  const meses = C.reportPorMes(baseState.porTime.flatMap(({ items }) => items));
+  const meses = C.reportPorMes(baseState.porTime.flatMap(({ items }) => items).filter(noNome));
   if (!meses.length) {
     box.innerHTML = erroHtml + '<p class="mudo">Nada concluído registrado ainda.</p>';
     return;
@@ -594,8 +623,9 @@ const COR_PEND = { bloqueados: '#ef4444', atrasados: '#f59e0b', parados: '#a1a1a
 function renderPendencias() {
   const box = $('pendencias');
   if (!box || !state.config) return;
-  const { todos, temCache, erroHtml } = itensDeTodosOsTimes();
+  const { todos: brutos, temCache, erroHtml } = itensDeTodosOsTimes();
   if (!temCache) { box.innerHTML = erroHtml + semDados('as pendências'); return; }
+  const todos = brutos.filter(noNome);
   const grupos = C.pendencias(todos, Date.now());
   const total = grupos.bloqueados.length + grupos.atrasados.length + grupos.parados.length;
   if (!total) {
@@ -642,25 +672,26 @@ function renderGrid() {
   const grid = $('grid');
   grid.innerHTML = '';
   for (const p of state.config.projects.filter((x) => !x.hidden)) grid.appendChild(buildCard(p));
-  renderFiltroProj();
+  renderFiltroGlobal();
   renderNavContas();
 }
 
 // Seletor de responsável dos cartões — opções vêm dos itens em cache de todos os times
-function renderFiltroProj() {
-  const barra = $('proj-filtros');
-  const sel = $('proj-resp');
+function renderFiltroGlobal() {
+  const barra = $('filtro-global');
+  const sel = $('resp-global');
   const todos = Object.values(state.cache.byCard).flatMap((e) => (e && e.items) || []);
-  if (!todos.length && !state.respProj) { barra.hidden = true; return; }
+  if (!todos.length && !respAtivo()) { barra.hidden = true; return; }
   barra.hidden = false;
   const nomes = new Set(todos
     .map((it) => (it.fields || {})['System.AssignedTo'])
     .filter((r) => r && r.displayName)
     .map((r) => r.displayName));
-  if (state.respProj) nomes.add(state.respProj); // seleção sobrevive mesmo sem itens no momento
+  if (respAtivo()) nomes.add(respAtivo()); // seleção sobrevive mesmo sem itens no momento
+  if (state.cache.usuario) nomes.add(state.cache.usuario);
   const lista = [...nomes].sort((a, b) => a.localeCompare(b, 'pt-BR'));
   sel.innerHTML = '<option value="">todos os responsáveis</option>' +
-    lista.map((n) => `<option value="${escapeHtml(n)}"${n === state.respProj ? ' selected' : ''}>${escapeHtml(n)}</option>`).join('');
+    lista.map((n) => `<option value="${escapeHtml(n)}"${n === respAtivo() ? ' selected' : ''}>${escapeHtml(n)}</option>`).join('');
 }
 
 function buildCard(p) {
@@ -685,7 +716,7 @@ function buildCard(p) {
 function renderCard(p) {
   const card = document.getElementById('card-' + cssId(cardKey(p)));
   if (card) fillCardLive(card, p);
-  renderFiltroProj(); // itens novos podem trazer responsáveis novos pro seletor
+  renderFiltroGlobal(); // itens novos podem trazer responsáveis novos pro seletor
   renderPanorama(); // os números do panorama saem destes mesmos itens
   renderPendencias();
 }
@@ -719,7 +750,7 @@ function fillCardLive(card, p) {
   }
   // Contagem na hora, já com o recorte de responsável; cache legado (só counts) fica sem recorte.
   const counts = entry.items
-    ? C.aggregateCounts(C.filterItems(entry.items, { resp: state.respProj }))
+    ? C.aggregateCounts(C.filterItems(entry.items, { resp: respAtivo() }))
     : entry.counts;
   if (!counts) { box.innerHTML = `<p class="erro">${escapeHtml(entry.error || 'sem dados')}</p>`; return; }
   const partes = [];
@@ -1107,10 +1138,13 @@ document.addEventListener('DOMContentLoaded', () => {
     boardState.filtro.resp = $('board-resp').value;
     if (boardState.p) renderBoard(boardState.p);
   });
-  $('proj-resp').addEventListener('change', () => {
-    state.respProj = $('proj-resp').value;
+  $('resp-global').addEventListener('change', () => {
+    state.resp = $('resp-global').value; // '' = todos, escolha explícita
     salvarFiltrosMI();
-    renderGrid();
+    renderAll();
+    renderProdutos();
+    renderReport();
+    renderFuturo();
   });
   // Sidebar colapsável — preferência persiste entre visitas
   if ((loadJSON(LS.ui) || {}).lateralRecolhida) document.body.classList.add('lateral-recolhida');

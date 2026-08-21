@@ -7,13 +7,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=20260820f">
+<link rel="stylesheet" href="assets/style.css?v=20260820g">
 </head>
 <body data-pagina="panorama">
 <div class="app">
 <header class="topo">
   <h1 class="nome-app">Central de Projetos</h1>
   <button id="alternar-lateral" title="Recolher/expandir menu" aria-label="Recolher ou expandir o menu"></button>
+  <div class="filtros filtro-topo" id="filtro-global" hidden>
+    <select id="resp-global" title="Filtra todas as páginas por responsável"><option value="">todos os responsáveis</option></select>
+  </div>
   <div class="acoes">
     <span id="badge" data-estado="sem-token">sem token</span>
     <span id="carimbo" class="mudo"></span>
@@ -73,9 +76,6 @@
 
   <section id="secao-projetos">
     <h2>Projetos</h2>
-    <div class="filtros" id="proj-filtros" hidden>
-      <select id="proj-resp"><option value="">todos os responsáveis</option></select>
-    </div>
     <div id="grid"></div>
   </section>
 
@@ -158,8 +158,8 @@
   </form>
 </dialog>
 
-<script src="assets/core.js?v=20260820f"></script>
-<script src="assets/api.js?v=20260820f"></script>
-<script src="assets/app.js?v=20260820f"></script>
+<script src="assets/core.js?v=20260820g"></script>
+<script src="assets/api.js?v=20260820g"></script>
+<script src="assets/app.js?v=20260820g"></script>
 </body>
 </html>
