@@ -578,12 +578,61 @@ function renderReport() {
     box.innerHTML = erroHtml + (baseState.erro ? '' : '<p class="mudo">carregando entregas…</p>');
     return;
   }
-  const meses = C.reportPorMes(baseState.porTime.flatMap(({ items }) => items).filter(noNome));
+  // o mapa de épicos usa TODOS os itens: o pai de um PBI pode estar no nome de
+  // outra pessoa, e ainda assim é o produto onde o trabalho caiu
+  const todosOsItens = baseState.porTime.flatMap(({ items }) => items);
+  const meses = C.resumoMensal(C.reportPorMes(todosOsItens.filter(noNome)), C.mapaDeEpicos(todosOsItens));
   if (!meses.length) {
     box.innerHTML = erroHtml + '<p class="mudo">Nada concluído registrado ainda.</p>';
     return;
   }
   box.innerHTML = erroHtml + meses.map((m, i) => htmlMesReport(m, i === 0)).join('');
+}
+
+function plural(n, um, muitos) { return n + ' ' + (n === 1 ? um : muitos); }
+
+// O parágrafo do mês. No Radar isso era escrito à mão; aqui é derivado dos
+// fatos — volume, comparação com o mês anterior, onde o trabalho caiu e épico
+// que fechou. Nada aqui afirma o que os dados não mostram.
+function comunicadoDoMes(m) {
+  const n = m.porNivel;
+  const r = m.resumo || {};
+  const niveis = [];
+  if (n.epic) niveis.push(plural(n.epic, 'épico', 'épicos'));
+  if (n.feature) niveis.push(plural(n.feature, 'feature', 'features'));
+  if (n.pbi) niveis.push(n.pbi + ' PBI' + (n.pbi > 1 ? 's' : ''));
+  const escopo = respAtivo() ? ` no nome de <b>${escapeHtml(respAtivo())}</b>` : '';
+  const frases1 = [`Em ${mesPorExtenso(m.mes).toLowerCase()}, <b>${plural(m.total, 'item', 'itens')}</b>${escopo} ${m.total === 1 ? 'foi concluído' : 'foram concluídos'} — ${niveis.join(', ')}.`];
+  if (r.delta === null || r.delta === undefined) {
+    frases1.push('É o registro mais antigo que o DevOps guarda para este recorte.');
+  } else if (r.delta > 0) {
+    frases1.push(`São <b>${r.delta} a mais</b> que em ${mesPorExtenso(r.mesAnterior).toLowerCase()}.`);
+  } else if (r.delta < 0) {
+    frases1.push(`São <b>${-r.delta} a menos</b> que em ${mesPorExtenso(r.mesAnterior).toLowerCase()}.`);
+  } else {
+    frases1.push(`Mesmo volume de ${mesPorExtenso(r.mesAnterior).toLowerCase()}.`);
+  }
+
+  const frases2 = [];
+  const prods = r.produtos || [];
+  if (prods.length === 1) {
+    frases2.push(`Todo o esforço caiu em <b>${escapeHtml(prods[0].titulo)}</b>.`);
+  } else if (prods.length > 1) {
+    const topo = prods.slice(0, 3).map((p) => `<b>${escapeHtml(p.titulo)}</b> (${p.n})`);
+    const resto = prods.length - topo.length;
+    frases2.push(`O esforço se distribuiu em ${plural(prods.length, 'produto', 'produtos')}: ${topo.join(', ')}${resto > 0 ? `, e outros ${resto}` : ''}.`);
+  }
+  const fech = r.epicosFechados || [];
+  if (fech.length === 1) {
+    frases2.push(`<b>${escapeHtml(fech[0].titulo)}</b> fechou por completo.`);
+  } else if (fech.length > 1) {
+    frases2.push(`${plural(fech.length, 'épico fechou', 'épicos fecharam')} por completo: ${fech.map((e) => `<b>${escapeHtml(e.titulo)}</b>`).join(', ')}.`);
+  }
+
+  return `<div class="comunicado">
+    <p>${frases1.join(' ')}</p>
+    ${frases2.length ? `<p>${frases2.join(' ')}</p>` : ''}
+  </div>`;
 }
 
 function htmlMesReport(m, aberto) {
@@ -608,7 +657,9 @@ function htmlMesReport(m, aberto) {
   }).join('');
   return `<details class="mes"${aberto ? ' open' : ''}>
     <summary><span class="mes-nome">${mesPorExtenso(m.mes)}</span><span class="mes-resumo">${m.total} ${m.total > 1 ? 'itens' : 'item'}${partes.length ? ' · ' + partes.join(' · ') : ''}</span></summary>
-    ${nota}<ul class="lista-linhas">${linhas}</ul>
+    ${comunicadoDoMes(m)}${nota}
+    <p class="sub-lista">Itens concluídos</p>
+    <ul class="lista-linhas">${linhas}</ul>
   </details>`;
 }
 

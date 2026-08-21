@@ -563,6 +563,23 @@ body[data-pagina='projetos'] #secao-projetos { display: block; }
 .faixa-vazia { margin: 0 0.2rem 0.2rem; font-size: 0.82rem; }
 
 /* ---------- Report mensal ---------- */
+/* O comunicado: medida curta e entrelinha alta — texto pra ler, não pra varrer */
+.comunicado { padding: 0 0.9rem; }
+.comunicado p {
+  margin: 0 0 0.7rem;
+  max-width: 64ch;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+.comunicado b { font-weight: 700; }
+.sub-lista {
+  margin: 0.2rem 0.9rem 0.45rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--mudo);
+}
 .mes { background: var(--superficie-2); border-radius: 16px; margin-bottom: 0.6rem; }
 .mes > summary {
   display: flex;

@@ -547,6 +547,63 @@
     ];
   }
 
+  // Épico ancestral de cada item — sobe a cadeia de pais até achar um Epic.
+  // O Report usa isso pra dizer EM QUE produto o mês caiu, em vez de só listar
+  // títulos soltos. Épico aponta pra si mesmo. Cadeia com ciclo para sozinha.
+  function mapaDeEpicos(items) {
+    const porId = new Map((items || []).map((it) => [it.id, it]));
+    const achar = (id) => {
+      const vistos = new Set();
+      let atual = porId.get(id);
+      while (atual && !vistos.has(atual.id)) {
+        vistos.add(atual.id);
+        const f = atual.fields || {};
+        if (levelOf(f['System.WorkItemType']) === 'epic') {
+          return { id: atual.id, titulo: f['System.Title'] || ('item #' + atual.id) };
+        }
+        atual = porId.get(f['System.Parent']);
+      }
+      return null; // pai fora do conjunto consultado: não se afirma produto
+    };
+    const saida = new Map();
+    for (const it of items || []) {
+      const e = achar(it.id);
+      if (e) saida.set(it.id, e);
+    }
+    return saida;
+  }
+
+  // Fatos que sustentam o parágrafo de cada mês. Só conta o que está nos dados:
+  // volume contra o mês anterior, onde o trabalho caiu, e épico que fechou —
+  // um épico concluído é notícia maior que um PBI, por isso sai destacado.
+  // `meses` vem do mais novo pro mais velho, então o anterior no tempo é i+1.
+  function resumoMensal(meses, mapa) {
+    return (meses || []).map((m, i) => {
+      const anterior = (meses || [])[i + 1] || null;
+      const contagem = new Map();
+      const epicosFechados = [];
+      for (const r of m.itens) {
+        const f = (r.item || {}).fields || {};
+        if (levelOf(f['System.WorkItemType']) === 'epic') {
+          epicosFechados.push({ id: r.item.id, titulo: f['System.Title'] || ('item #' + r.item.id) });
+        }
+        const ep = mapa && mapa.get(r.item.id);
+        if (ep) contagem.set(ep.titulo, (contagem.get(ep.titulo) || 0) + 1);
+      }
+      const produtos = [...contagem.entries()]
+        .map(([titulo, n]) => ({ titulo, n }))
+        .sort((a, b) => (b.n - a.n) || (a.titulo < b.titulo ? -1 : 1));
+      return Object.assign({}, m, {
+        resumo: {
+          delta: anterior ? m.total - anterior.total : null,
+          mesAnterior: anterior ? anterior.mes : null,
+          produtos,
+          epicosFechados,
+        },
+      });
+    });
+  }
+
   // ---- Cache ----
   function isStale(fetchedAt, now, maxAgeMinutes = 10) {
     if (!fetchedAt) return true;
@@ -570,7 +627,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, reportPorMes, futuroPorFaixa, fimDoTrimestre,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, reportPorMes, mapaDeEpicos, resumoMensal, futuroPorFaixa, fimDoTrimestre,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };
 });

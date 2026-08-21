@@ -463,3 +463,55 @@ test('futuroPorFaixa ordena por início e desempata pelo alvo', () => {
   ], AGORA);
   assert.deepEqual(faixas[0].itens.map((i) => i.id), [3, 2, 1]);
 });
+
+/* ---- Report: resumo em prosa ---- */
+const nod = (id, tipo, titulo, pai) => ({ id, fields: {
+  'System.WorkItemType': tipo, 'System.Title': titulo, 'System.Parent': pai || undefined, 'System.State': 'New',
+} });
+
+test('mapaDeEpicos sobe a cadeia até o épico e aponta o épico pra si mesmo', () => {
+  const mapa = C.mapaDeEpicos([
+    nod(1, 'Epic', 'Nova PDP'),
+    nod(10, 'Feature', 'Galeria', 1),
+    nod(100, 'Product Backlog Item', 'Zoom', 10), // neto: sobe dois níveis
+    nod(200, 'Product Backlog Item', 'Órfão', 999), // pai fora do conjunto
+  ]);
+  assert.equal(mapa.get(100).titulo, 'Nova PDP');
+  assert.equal(mapa.get(10).titulo, 'Nova PDP');
+  assert.equal(mapa.get(1).titulo, 'Nova PDP'); // épico é o próprio produto
+  assert.equal(mapa.has(200), false);
+});
+
+test('mapaDeEpicos não trava em ciclo de pai', () => {
+  const mapa = C.mapaDeEpicos([nod(1, 'Feature', 'A', 2), nod(2, 'Feature', 'B', 1)]);
+  assert.equal(mapa.size, 0); // ninguém acha épico, e a busca termina
+});
+
+test('resumoMensal compara com o mês anterior e ranqueia produtos', () => {
+  const itens = [
+    nod(1, 'Epic', 'Nova PDP'),
+    nod(2, 'Epic', 'Tema Global'),
+    fim(10, 'Product Backlog Item', 'Done', '2026-08-05T00:00:00Z'),
+    fim(11, 'Product Backlog Item', 'Done', '2026-08-06T00:00:00Z'),
+    fim(12, 'Product Backlog Item', 'Done', '2026-08-07T00:00:00Z'),
+    fim(20, 'Product Backlog Item', 'Done', '2026-07-05T00:00:00Z'),
+  ];
+  itens[2].fields['System.Parent'] = 1;
+  itens[3].fields['System.Parent'] = 1;
+  itens[4].fields['System.Parent'] = 2;
+  itens[5].fields['System.Parent'] = 2;
+  const mapa = C.mapaDeEpicos(itens);
+  const meses = C.resumoMensal(C.reportPorMes(itens), mapa);
+  assert.equal(meses[0].mes, '2026-08');
+  assert.equal(meses[0].resumo.delta, 2);            // 3 em agosto contra 1 em julho
+  assert.equal(meses[0].resumo.mesAnterior, '2026-07');
+  assert.deepEqual(meses[0].resumo.produtos, [{ titulo: 'Nova PDP', n: 2 }, { titulo: 'Tema Global', n: 1 }]);
+  assert.equal(meses[1].resumo.delta, null);         // não há mês antes de julho
+});
+
+test('resumoMensal destaca épico concluído no mês', () => {
+  const itens = [fim(1, 'Epic', 'Done', '2026-08-10T00:00:00Z')];
+  itens[0].fields['System.Title'] = 'Compliance Google';
+  const meses = C.resumoMensal(C.reportPorMes(itens), C.mapaDeEpicos(itens));
+  assert.deepEqual(meses[0].resumo.epicosFechados, [{ id: 1, titulo: 'Compliance Google' }]);
+});
