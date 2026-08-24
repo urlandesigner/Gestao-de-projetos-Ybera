@@ -30,7 +30,7 @@ const base = () => [
 test('htmlReport monta as seções do briefing', () => {
   const { vazio, html } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://dev.azure.com/nivello' });
   assert.equal(vazio, false);
-  for (const secao of ['Resumo', 'Entregue no mês', 'Em execução', 'Prazos', 'Travado — depende de decisão', 'Meses anteriores']) {
+  for (const secao of ['Resumo', 'Entregue no mês', 'Em execução', 'Prazos', 'Travado — depende de decisão']) {
     assert.ok(html.includes(secao), 'falta a seção: ' + secao);
   }
   assert.ok(html.includes('Agosto de 2026'));
@@ -89,4 +89,69 @@ test('htmlReport acha o produto pelo pai fora do recorte', () => {
   assert.ok(!comTodos.html.includes('Sem produto associado'));
   assert.ok(!comTodos.html.includes('Zoom na imagem') === false); // o PBI segue listado
   assert.ok(!comTodos.html.includes('Prova social'), 'item fora do recorte não pode aparecer');
+});
+
+test('htmlReport lista os meses com entrega e o mês corrente', () => {
+  const { meses } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://x/y' });
+  assert.deepEqual(meses, ['2026-08', '2026-07']); // mais novo primeiro
+});
+
+// Mês fechado só pode afirmar o que é histórico. Estado, prazo e trava são
+// leitura de agora — o DevOps não guarda o estado que o item tinha em julho.
+test('htmlReport em mês fechado mostra entregas e explica o que ficou de fora', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://x/y', mes: '2026-07' });
+  assert.ok(html.includes('Julho de 2026'));
+  assert.ok(html.includes('Item de julho'));
+  assert.ok(!html.includes('Zoom na imagem'), 'item de agosto não entra no mês de julho');
+  assert.ok(html.includes('Só aparecem no mês corrente'));
+  assert.ok(!html.includes('Travado — depende de decisão'));
+  assert.ok(!html.includes('<h4>Prazos'));
+});
+
+test('htmlReport aceita mês sem nenhuma entrega', () => {
+  const { vazio, html } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://x/y', mes: '2026-06' });
+  assert.equal(vazio, false);
+  assert.ok(html.includes('Junho de 2026'));
+  assert.ok(html.includes('Nada foi concluído neste mês'));
+});
+
+// O produto deixou de ser texto solto: virou o próprio item, com selo e link.
+test('htmlReport mostra o épico do grupo com selo e link', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://dev.azure.com/nivello' });
+  assert.match(html, /<h5 class="cab-produto">\s*<span class="badge-tipo tipo-epic">Épico<\/span>/);
+  assert.ok(html.includes('_workitems/edit/1"'), 'o épico tem link pro DevOps');
+});
+
+test('htmlReport joga "sem produto" pro fim, mesmo sendo o maior grupo', () => {
+  const itens = [
+    it(1, 'Epic', 'In Progress', 'Com produto', null, 5),
+    it(11, 'Product Backlog Item', 'Done', 'Filho do épico', 1, null, 3),
+    it(90, 'Product Backlog Item', 'Done', 'Solto A', null, null, 3),
+    it(91, 'Product Backlog Item', 'Done', 'Solto B', null, null, 3),
+  ];
+  const { html } = B.htmlReport({ items: itens, agora: AGORA, org: 'https://x/y' });
+  assert.ok(html.indexOf('Com produto') < html.indexOf('Sem produto associado'));
+});
+
+// Um épico é o produto de si mesmo: ele já é o cabeçalho do grupo. Repetir a
+// linha embaixo parecia defeito — o que a linha diria vai pro cabeçalho.
+test('htmlReport não repete o épico como cabeçalho e como linha', () => {
+  const itens = [
+    it(1, 'Epic', 'In Progress', 'Tema Global', null, 12),
+    it(11, 'Product Backlog Item', 'In Progress', 'Filho ativo', 1, 3),
+  ];
+  const { html } = B.htmlReport({ items: itens, agora: AGORA, org: 'https://x/y' });
+  const execucao = html.slice(html.indexOf('Em execução'), html.indexOf('Prazos'));
+  assert.equal((execucao.match(/Tema Global/g) || []).length, 1);
+  assert.ok(execucao.includes('Filho ativo'));
+});
+
+test('htmlReport não mostra prazo de produto já concluído', () => {
+  const itens = [
+    it(1, 'Epic', 'Done', 'Compliance', null, 5, 2),
+    it(11, 'Product Backlog Item', 'Done', 'Última etapa', 1, null, 1),
+  ];
+  const { html } = B.htmlReport({ items: itens, agora: AGORA, org: 'https://x/y' });
+  const cab = html.slice(html.indexOf('cab-produto'), html.indexOf('lista-linhas'));
+  assert.ok(!cab.includes('prazo '), 'produto fechado não anuncia prazo: ' + cab);
 });

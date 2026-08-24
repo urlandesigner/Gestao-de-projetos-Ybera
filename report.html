@@ -7,13 +7,17 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=20260824c">
+<link rel="stylesheet" href="assets/style.css?v=20260824d">
 </head>
 <!-- Página autônoma: só o report, sem as telas de acompanhamento do PO. -->
 <body data-pagina="report" class="pagina-report">
 <div class="app">
 <header class="topo">
   <h1 class="nome-app">Report</h1>
+  <!-- O mês fica visível também em modo leitura: quem recebe o link pode navegar -->
+  <div class="filtros filtro-topo" id="filtro-mes" hidden>
+    <select id="mes-global" title="Mês do report"></select>
+  </div>
   <div class="filtros filtro-topo" id="filtro-global" hidden>
     <select id="resp-global" title="Recorte por responsável"><option value="">todos os responsáveis</option></select>
   </div>
@@ -35,9 +39,9 @@
 </div>
 </div>
 
-<script src="assets/core.js?v=20260824c"></script>
-<script src="assets/api.js?v=20260824c"></script>
-<script src="assets/briefing.js?v=20260824c"></script>
-<script src="assets/report.js?v=20260824c"></script>
+<script src="assets/core.js?v=20260824d"></script>
+<script src="assets/api.js?v=20260824d"></script>
+<script src="assets/briefing.js?v=20260824d"></script>
+<script src="assets/report.js?v=20260824d"></script>
 </body>
 </html>

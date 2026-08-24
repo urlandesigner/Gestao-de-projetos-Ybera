@@ -642,14 +642,34 @@ body.modo-leitura #voltar { display: none; }
   font-weight: 700;
 }
 .grupo-produto h5.h5-alerta { color: var(--erro); }
-.historico { margin-top: 0.5rem; }
-.historico .mes { background: var(--superficie); }
+/* O produto é um item de verdade: selo, título clicável e, à direita, situação */
+.grupo-produto h5.cab-produto {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0.2rem 0.45rem;
+}
+.cab-produto a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.cab-produto a:hover { border-bottom-color: var(--mudo); }
+.cab-produto .cab-detalhe {
+  margin-left: auto;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--mudo);
+}
+.cab-produto .cab-sem { color: var(--mudo); }
+.nota-report { margin: 0.1rem 0.2rem 0; font-size: 0.78rem; line-height: 1.5; }
+.bloco-report .nota-report { margin: 0 0.2rem; }
 
 /* Impressão: a página vira o documento que vai pro stakeholder. Fora navegação,
    sombras e tudo que só serve na tela; os meses recolhidos abrem. */
 @media print {
   body { padding: 0; background: #fff; }
-  .app > header.topo, .lateral, .historico { display: none !important; }
+  .app > header.topo, .lateral { display: none !important; }
   .corpo { display: block; padding: 0; }
   main > section { box-shadow: none; border: none; padding: 0; }
   #secao-report { display: block !important; }
@@ -838,6 +858,9 @@ details summary { cursor: pointer; color: var(--mudo); font-size: 0.88rem; }
 /* ---------- Celular ---------- */
 @media (max-width: 640px) {
   .app > header.topo { flex-wrap: wrap; } /* o seletor global cabe na 2ª linha */
+  /* Título do produto ganha a linha inteira; situação desce pra própria linha */
+  .grupo-produto h5.cab-produto { flex-wrap: wrap; }
+  .cab-produto .cab-detalhe { margin-left: 0; flex-basis: 100%; }
   main > section { padding: 1.1rem 1rem 1.2rem; }
   #grid { grid-template-columns: 1fr; }
   .atalhos a { padding: 0.45rem 0; font-size: 0.85rem; } /* alvo de toque maior */

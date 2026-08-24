@@ -32,7 +32,10 @@ const CAMPOS = [
 // a cadeia do produto quebra no primeiro salto e tudo cai em "sem produto".
 // workitemsbatch busca POR ID e não olha área: então pedimos os pais que
 // faltam, um nível por volta, até a cadeia fechar.
-const CAMPOS_PAI = ['System.WorkItemType', 'System.Title', 'System.Parent'];
+// Estado e prazo entram porque o produto virou cabeçalho de grupo no report —
+// ele mostra em que pé o épico está, não só o nome.
+const CAMPOS_PAI = ['System.WorkItemType', 'System.Title', 'System.Parent',
+  'System.State', 'Microsoft.VSTS.Scheduling.TargetDate'];
 const NIVEIS_ACIMA = 4; // PBI → Feature → Épico usa 2; 4 é folga pra hierarquia torta
 
 const st = {
@@ -46,6 +49,14 @@ const st = {
   carregando: false,
   vazio: false,
   link: '',
+  mes: null,       // null = mês corrente
+  // Modo leitura: o dado veio do link, não do DevOps. Aí org, times, recorte e
+  // a data do report saem do pacote — não há config nem PAT neste navegador.
+  leitura: false,
+  org: '',
+  times: [],
+  escopo: '',
+  agora: 0,
 };
 
 function respAtivo() { return st.resp === null ? (st.usuario || '') : st.resp; }
@@ -86,29 +97,47 @@ function renderFiltro() {
     lista.map((n) => `<option value="${B.esc(n)}"${n === respAtivo() ? ' selected' : ''}>${B.esc(n)}</option>`).join('');
 }
 
+// Meses vêm do próprio report (só os que têm entrega, mais o corrente). Um mês
+// só não é escolha: o seletor some.
+function renderMeses(meses) {
+  const barra = $('filtro-mes');
+  const sel = $('mes-global');
+  const lista = meses || [];
+  if (lista.length < 2) { barra.hidden = true; return; }
+  barra.hidden = false;
+  const atual = lista.indexOf(st.mes) >= 0 ? st.mes : lista[0];
+  sel.innerHTML = lista
+    .map((m) => `<option value="${m}"${m === atual ? ' selected' : ''}>${B.mesPorExtenso(m)}</option>`)
+    .join('');
+}
+
 function render() {
   renderBadge();
   const box = $('report');
-  if (!st.config) {
-    box.innerHTML = '<p class="mudo">Nenhuma configuração encontrada. Abra a <a href="index.html">Central</a> e conecte o Azure DevOps primeiro.</p>';
-    return;
-  }
-  if (!st.pat) {
-    box.innerHTML = '<p class="mudo">Sem token neste navegador. Abra a <a href="index.html">Central</a> e cole o PAT.</p>';
-    return;
+  if (!st.leitura) {
+    if (!st.config) {
+      box.innerHTML = '<p class="mudo">Nenhuma configuração encontrada. Abra a <a href="index.html">Central</a> e conecte o Azure DevOps primeiro.</p>';
+      return;
+    }
+    if (!st.pat) {
+      box.innerHTML = '<p class="mudo">Sem token neste navegador. Abra a <a href="index.html">Central</a> e cole o PAT.</p>';
+      return;
+    }
   }
   const erroHtml = st.erro ? `<p class="erro">${B.esc(st.erro)}</p>` : '';
   if (!st.items) { box.innerHTML = erroHtml + (st.erro ? '' : '<p class="mudo">carregando…</p>'); return; }
-  renderFiltro();
+  if (!st.leitura) renderFiltro();
   const r = B.htmlReport({
-    items: st.items.filter(noNome),
+    items: st.leitura ? st.items : st.items.filter(noNome),
     todos: st.items.concat(st.pais), // o produto mora no pai — de outro dono, ou de outra área
-    agora: Date.now(),
-    org: st.config.org,
-    escopo: respAtivo(),
-    times: st.config.projects.filter((p) => !p.hidden).map((p) => p.teamName),
+    agora: st.leitura ? st.agora : Date.now(),
+    org: st.leitura ? st.org : st.config.org,
+    escopo: st.leitura ? st.escopo : respAtivo(),
+    times: st.leitura ? st.times : st.config.projects.filter((p) => !p.hidden).map((p) => p.teamName),
+    mes: st.mes,
   });
   box.innerHTML = erroHtml + r.html;
+  renderMeses(r.meses);
   st.vazio = r.vazio;
   $('copiar').disabled = r.vazio;
 }
@@ -183,19 +212,22 @@ function deB64url(txt) {
   return Uint8Array.from(bin, (c) => c.charCodeAt(0));
 }
 
+// O writer tem promessa própria: quando o gzip é inválido ela rejeita junto com
+// a leitura. Sem o catch, ela virava "unhandled rejection" no console mesmo com
+// o erro já tratado embaixo. Quem reporta é o await da leitura.
 async function comprimir(txt) {
   const cs = new CompressionStream('gzip');
   const w = cs.writable.getWriter();
-  w.write(new TextEncoder().encode(txt));
-  w.close();
+  w.write(new TextEncoder().encode(txt)).catch(() => {});
+  w.close().catch(() => {});
   return b64url(await new Response(cs.readable).arrayBuffer());
 }
 
 async function descomprimir(txt) {
   const ds = new DecompressionStream('gzip');
   const w = ds.writable.getWriter();
-  w.write(deB64url(txt));
-  w.close();
+  w.write(deB64url(txt)).catch(() => {});
+  w.close().catch(() => {});
   return new TextDecoder().decode(await new Response(ds.readable).arrayBuffer());
 }
 
@@ -216,7 +248,8 @@ function enxugar(items) {
 // Pais que sustentam o "produto" de cada item. Entram no link só com o mínimo
 // pra montar a cadeia PBI → Feature → Épico — não aparecem em lista nenhuma do
 // report, e sem eles o leitor do link veria tudo em "Sem produto associado".
-const CAMPOS_CADEIA = ['System.WorkItemType', 'System.Title', 'System.Parent'];
+const CAMPOS_CADEIA = ['System.WorkItemType', 'System.Title', 'System.Parent',
+  'System.State', 'Microsoft.VSTS.Scheduling.TargetDate'];
 function cadeiaDeProdutos(mostrados, todos) {
   const porId = new Map((todos || []).map((it) => [it.id, it]));
   const dentro = new Set(mostrados.map((it) => it.id));
@@ -237,6 +270,7 @@ function cadeiaDeProdutos(mostrados, todos) {
 }
 
 async function gravarLink() {
+  if (st.leitura) return; // o link já É a página: reescrever apagaria o dado
   st.link = '';
   if (!st.items || st.vazio) { history.replaceState(null, '', location.pathname); return; }
   try {
@@ -247,6 +281,7 @@ async function gravarLink() {
       org: st.config.org,
       escopo: respAtivo(),
       times: st.config.projects.filter((p) => !p.hidden).map((p) => p.teamName),
+      mes: st.mes, // quem abrir o link cai no mês que eu estava vendo
       items: enxugar(mostrados),
       ancestrais: cadeiaDeProdutos(mostrados, st.items.concat(st.pais)),
     };
@@ -285,17 +320,20 @@ async function lerDoLink() {
   const m = (location.hash || '').match(/^#r=(.+)$/);
   if (!m) return false;
   document.body.classList.add('modo-leitura');
+  st.leitura = true;
+  // Colar outro link na mesma aba só troca o fragmento: o navegador não recarrega
+  // nada e a página ficaria mostrando o report antigo. Recarrega na mão.
+  window.addEventListener('hashchange', () => location.reload());
   try {
     const pacote = JSON.parse(await descomprimir(m[1]));
-    const r = B.htmlReport({
-      items: pacote.items || [],
-      todos: (pacote.items || []).concat(pacote.ancestrais || []),
-      agora: pacote.em || Date.now(),
-      org: pacote.org || '',
-      escopo: pacote.escopo || '',
-      times: pacote.times || [],
-    });
-    $('report').innerHTML = r.html;
+    st.items = pacote.items || [];
+    st.pais = pacote.ancestrais || [];
+    st.org = pacote.org || '';
+    st.escopo = pacote.escopo || '';
+    st.times = pacote.times || [];
+    st.agora = pacote.em || Date.now();
+    st.mes = pacote.mes || null;
+    render(); // daqui pra frente o seletor de mês redesenha do próprio pacote
   } catch (e) {
     $('report').innerHTML = '<p class="erro">Este link não pôde ser lido. Ele pode ter sido cortado ao ser copiado — peça outro a quem enviou.</p>';
   }
@@ -306,6 +344,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   try { st.config = C.normalizeConfig(loadJSON(LS.config)); } catch (e) { st.config = null; }
   // Quem tem token manda: busca ao vivo e reescreve o link, mesmo se a URL já
   // trouxer um. Sem token, o link é a única fonte — é o caso do stakeholder.
+  $('mes-global').addEventListener('change', async () => {
+    st.mes = $('mes-global').value || null;
+    render();
+    await gravarLink(); // mês novo, link novo
+  });
   if (!(st.config && st.pat) && await lerDoLink()) return;
   $('atualizar').addEventListener('click', carregar);
   $('copiar').addEventListener('click', copiarLink);

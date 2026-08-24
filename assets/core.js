@@ -29,7 +29,9 @@
       sprints: `${base}/${p}/_sprints/taskboard/${t}/`,
       queries: `${base}/${p}/_queries`,
       dashboards: `${base}/${p}/_dashboards`,
-      workItem: (id) => `${base}/${p}/_workitems/edit/${id}`,
+      // Sem projeto (pai vindo de outro lugar da org) o link vale igual: o
+      // DevOps resolve o item pelo id. Com '//' no meio, não.
+      workItem: (id) => `${base}${project ? '/' + p : ''}/_workitems/edit/${id}`,
     };
   }
 
@@ -555,10 +557,19 @@
   // títulos soltos.
   function mapaDeProdutos(items) {
     const porId = new Map((items || []).map((it) => [it.id, it]));
-    const reg = (it) => ({
-      id: it.id,
-      titulo: (it.fields || {})['System.Title'] || ('item #' + it.id),
-    });
+    // O produto vai pro cabeçalho do grupo no Report, com selo e link — então
+    // carrega o que identifica: tipo, estado e prazo.
+    const reg = (it) => {
+      const f = it.fields || {};
+      return {
+        id: it.id,
+        titulo: f['System.Title'] || ('item #' + it.id),
+        tipo: f['System.WorkItemType'] || '',
+        estado: f['System.State'] || '',
+        alvo: f[CAMPO_ALVO] || null,
+        projeto: it.projeto || '',
+      };
+    };
     const achar = (id) => {
       const eu = porId.get(id);
       if (!eu) return null;
