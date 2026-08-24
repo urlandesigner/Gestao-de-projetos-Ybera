@@ -37,13 +37,17 @@
   function plural(n, um, muitos) { return n + ' ' + (n === 1 ? um : muitos); }
 
   // ---- Peças ----
-  function linha(it, org, direita, titulo) {
+  // `chave` é o produto do item; os data-* alimentam o filtro do bloco de
+  // entregas — quem filtra é o report.js, escondendo linha, sem redesenhar nada.
+  function linha(it, org, direita, titulo, chave) {
     const f = it.fields || {};
     const slug = C.typeSlug(f['System.WorkItemType']);
     const url = C.deepLinks(org, it.projeto || '', '').workItem(it.id);
-    return `<li><a href="${url}" target="_blank" rel="noopener">
+    const nome = f['System.Title'] || ('item #' + it.id);
+    const dados = ` data-tipo="${slug}" data-produto="${chave || 'sem'}" data-busca="${esc((nome + ' #' + it.id).toLowerCase())}"`;
+    return `<li${dados}><a href="${url}" target="_blank" rel="noopener">
       <span class="badge-tipo tipo-${slug}">${ROTULO_CURTO[slug]}</span>
-      <span class="titulo">${esc(f['System.Title'] || ('item #' + it.id))}</span>
+      <span class="titulo">${esc(nome)}</span>
       <span class="quando"${titulo ? ` title="${esc(titulo)}"` : ''}>${direita || ''}</span>
       <span class="id">#${it.id}</span>
     </a></li>`;
@@ -88,19 +92,28 @@
     </h5>`;
   }
 
+  const chaveDe = (p) => (p ? 'p' + p.id : 'sem');
+
+  function grupoHtml(g, org, direita) {
+    // Um épico é o produto de si mesmo. Ele já é o cabeçalho — repetir a mesma
+    // linha embaixo parece defeito. O que a linha diria vai pro cabeçalho.
+    const proprio = g.produto ? g.itens.find((r) => (r.item || r).id === g.produto.id) : null;
+    const linhas = g.itens.filter((r) => r !== proprio);
+    const chave = chaveDe(g.produto);
+    // O épico que entregou por si virou cabeçalho e perdeu a linha. Ele ainda é
+    // um item: vai nos data-* pra o contador do filtro não mentir.
+    const dadosProprio = proprio
+      ? ` data-proprio-tipo="${C.typeSlug(g.produto.tipo)}" data-proprio-busca="${esc((g.produto.titulo + ' #' + g.produto.id).toLowerCase())}"`
+      : '';
+    return `<div class="grupo-produto" data-produto="${chave}"${dadosProprio}>
+      ${cabecalhoProduto(g.produto, org, proprio ? direita(proprio) : '')}
+      ${linhas.length ? `<ul class="lista-linhas">${linhas.map((r) => linha(r.item || r, org, direita(r), '', chave)).join('')}</ul>` : ''}
+    </div>`;
+  }
+
   function secaoPorProduto(titulo, registros, mapa, org, direita) {
     if (!registros.length) return '';
-    const grupos = porProduto(registros, mapa).map((g) => {
-      // Um épico é o produto de si mesmo. Ele já é o cabeçalho — repetir a mesma
-      // linha embaixo parece defeito. O que a linha diria vai pro cabeçalho.
-      const proprio = g.produto ? g.itens.find((r) => (r.item || r).id === g.produto.id) : null;
-      const linhas = g.itens.filter((r) => r !== proprio);
-      return `
-      <div class="grupo-produto">
-        ${cabecalhoProduto(g.produto, org, proprio ? direita(proprio) : '')}
-        ${linhas.length ? `<ul class="lista-linhas">${linhas.map((r) => linha(r.item || r, org, direita(r))).join('')}</ul>` : ''}
-      </div>`;
-    }).join('');
+    const grupos = porProduto(registros, mapa).map((g) => grupoHtml(g, org, direita)).join('');
     return `<section class="bloco-report"><h4>${titulo}<span class="conta">${registros.length}</span></h4>${grupos}</section>`;
   }
 
@@ -172,13 +185,151 @@
     return `<p class="mudo nota-report">${n} ${n > 1 ? 'itens sem data de conclusão' : 'item sem data de conclusão'} registrada no DevOps — para ${n > 1 ? 'esses' : 'esse'} usei a data da última alteração, marcada com ~.</p>`;
   }
 
+  // ---- Documento ----
+  // A estrutura é a do Relatório Mensal de Tecnologia da Ybera: capa escura com
+  // os números do ciclo, navegação em pílulas, seções numeradas com rótulo em
+  // inglês por cima do título. O que aquele report escreve à mão — BVS, narrativa
+  // de impacto, vídeo da entrega — não existe aqui: cada número abaixo sai dos
+  // itens do DevOps, e o que os dados não sustentam não é afirmado.
+  const CAMPO_ALVO = 'Microsoft.VSTS.Scheduling.TargetDate';
+  const DESTAQUES = 3;
+  const MESES_COMPARATIVO = 12;
+  // Destaque só faz sentido quando há de onde destacar: com um produto ou meia
+  // dúzia de itens, a seção seria a de entregas repetida.
+  const MIN_DESTAQUE_PRODUTOS = 2;
+  const MIN_DESTAQUE_ITENS = 4;
+
+  function tile(n, rotulo, alerta) {
+    return `<li${alerta && n ? ' class="kpi-alerta"' : ''}><b>${n}</b><span>${esc(rotulo)}</span></li>`;
+  }
+
+  function capa(escolhido, meta, tiles) {
+    return `<header class="doc-capa">
+      <div class="doc-limite">
+        <p class="doc-en doc-en-capa">Monthly report</p>
+        <h3 class="doc-titulo"><span>Relatório de</span><b>${mesPorExtenso(escolhido)}</b></h3>
+        <p class="doc-meta">${esc(meta)}</p>
+        ${tiles ? `<ul class="doc-kpis">${tiles}</ul>` : ''}
+      </div>
+    </header>`;
+  }
+
+  function secaoHtml(numero, s) {
+    return `<section class="doc-sec" id="${s.id}">
+      <div class="doc-limite">
+        <div class="doc-sec-topo">
+          <div class="doc-sec-tit">
+            <span class="doc-num" aria-hidden="true">${String(numero).padStart(2, '0')}</span>
+            <p class="doc-en">${esc(s.en)}</p>
+            <h4>${esc(s.titulo)}</h4>
+          </div>
+          <p class="doc-intro">${esc(s.intro)}</p>
+        </div>
+        ${s.corpo}
+      </div>
+    </section>`;
+  }
+
+  // Destaques: os produtos que concentraram entrega no mês. Sem BVS pra ranquear,
+  // o critério é volume — e o report diz que é volume, não valor.
+  function corpoDestaques(grupos, org) {
+    return grupos.slice(0, DESTAQUES).map((g, i) => {
+      const url = C.deepLinks(org, g.produto.projeto || '', '').workItem(g.produto.id);
+      const slug = C.typeSlug(g.produto.tipo);
+      const proprio = g.itens.find((r) => (r.item || r).id === g.produto.id);
+      const linhas = g.itens.filter((r) => r !== proprio);
+      return `<article class="destaque">
+        <header class="destaque-topo">
+          <span class="destaque-pos">${i + 1}</span>
+          <div class="destaque-nome">
+            <h5><a href="${url}" target="_blank" rel="noopener">${esc(g.produto.titulo)}</a></h5>
+            <p><span class="badge-tipo tipo-${slug}">${ROTULO_CURTO[slug]}</span> ${plural(g.itens.length, 'entrega no mês', 'entregas no mês')}${g.produto.estado ? ' · ' + esc(g.produto.estado) : ''}</p>
+          </div>
+        </header>
+        ${linhas.length ? `<ul class="lista-linhas">${linhas.map((r) => linha(r.item || r, org, (r.aproximada ? '~' : '') + dataCurta(r.quando))).join('')}</ul>` : ''}
+      </article>`;
+    }).join('');
+  }
+
+  // Entregas: tudo do mês, agrupado por produto, com chips e busca. Os chips e o
+  // contador são estáticos aqui; quem esconde linha é o report.js.
+  function corpoEntregas(regs, mapa, org) {
+    const grupos = porProduto(regs, mapa);
+    const tipos = new Map();
+    for (const r of regs) {
+      const slug = C.typeSlug(((r.item || r).fields || {})['System.WorkItemType']);
+      tipos.set(slug, (tipos.get(slug) || 0) + 1);
+    }
+    const chip = (filtro, valor, rotulo, n) =>
+      `<button type="button" class="chip-doc" data-filtro="${filtro}" data-valor="${esc(valor)}">${esc(rotulo)} <span class="n">${n}</span></button>`;
+    const chips = grupos.map((g) => chip('produto', chaveDe(g.produto), nomeProduto(g.produto), g.itens.length)).join('')
+      + [...tipos.entries()].map(([slug, n]) => chip('tipo', slug, ROTULO_CURTO[slug], n)).join('');
+    const lista = grupos.map((g) => grupoHtml(g, org, (r) => (r.aproximada ? '~' : '') + dataCurta(r.quando))).join('');
+    return `<div class="doc-filtros">
+      <input id="busca-entregas" type="search" placeholder="buscar por título ou #id" autocomplete="off">
+      <div class="chips-doc">${chips}</div>
+      <button type="button" class="limpar-doc" id="limpar-entregas" hidden>limpar</button>
+      <span class="conta-doc" id="conta-entregas">${regs.length} de ${regs.length}</span>
+    </div>
+    <div class="doc-lista doc-bloco" id="lista-entregas">${lista}</div>`;
+  }
+
+  function corpoComparativo(meses, escolhido) {
+    const lista = meses.slice(0, MESES_COMPARATIVO);
+    const max = lista.reduce((m, x) => Math.max(m, x.total), 1);
+    return `<ol class="comparativo doc-bloco">${lista.map((m) => {
+      const d = m.resumo.delta;
+      const sinal = d === null || d === undefined ? '—' : d > 0 ? '+' + d : d < 0 ? String(d) : '=';
+      const classe = d > 0 ? ' sobe' : d < 0 ? ' desce' : '';
+      return `<li${m.mes === escolhido ? ' class="comp-atual"' : ''}>
+        <span class="comp-mes">${mesPorExtenso(m.mes)}</span>
+        <span class="comp-barra"><span style="width:${Math.round((m.total / max) * 100)}%"></span></span>
+        <span class="comp-n">${m.total}</span>
+        <span class="comp-delta${classe}" title="contra o mês anterior deste recorte">${sinal}</span>
+      </li>`;
+    }).join('')}</ol>
+    <p class="mudo nota-report">Volume de entregas por mês neste recorte. A coluna da
+    direita compara com o mês anterior. Não é medida de valor — é contagem de itens concluídos.</p>`;
+  }
+
+  // O item travado sai de "Próximos passos" pra não aparecer duas vezes no mesmo
+  // documento. Em troca, o prazo dele vem pra cá: quem lê precisa saber que,
+  // além de parado, já passou da data.
+  function corpoDecisao(travados, org, agora) {
+    const hoje = new Date(agora);
+    const direita = (r) => {
+      const partes = [];
+      const alvo = (r.item.fields || {})[CAMPO_ALVO];
+      if (alvo) partes.push((Date.parse(alvo) < hoje.getTime() ? 'atrasado desde ' : 'prazo ') + dataCurta(alvo));
+      if (r.dias != null) partes.push(`parado há ${r.dias} d`);
+      if (!partes.length) partes.push(esc((r.item.fields || {})['System.State']));
+      return partes.join(' · ');
+    };
+    return `<div class="doc-bloco"><div class="grupo-produto"><ul class="lista-linhas">${
+      travados.map((r) => linha(r.item, org, direita(r))).join('')}</ul></div></div>`;
+  }
+
+  function corpoProximos(b, org) {
+    const bloco = (titulo, regs, alerta, direita) => regs.length ? `
+      <div class="grupo-produto">
+        <h5${alerta ? ' class="h5-alerta"' : ''}>${titulo}</h5>
+        <ul class="lista-linhas">${regs.map((r) => linha(r.item, org, direita(r))).join('')}</ul>
+      </div>` : '';
+    const semPrazo = b.execucao.filter((r) => !(r.item.fields || {})[CAMPO_ALVO]);
+    return '<div class="doc-bloco">'
+      + bloco('Já passou do prazo', b.prazos.atrasados, true, (r) => dataCurta(r.alvo))
+      + bloco('Vence ainda este mês', b.prazos.esteMes, false, (r) => dataCurta(r.alvo))
+      + bloco('Vence no mês que vem', b.prazos.proximoMes, false, (r) => dataCurta(r.alvo))
+      + bloco('Em curso, sem prazo definido', semPrazo, false, (r) => esc((r.item.fields || {})['System.State']))
+      + '</div>';
+  }
+
   // ---- Entrada ----
   // opcoes: { items, agora, org, escopo, times, todos, mes }
   // `items` é o recorte que aparece no report. `todos` é o conjunto inteiro
   // consultado, usado SÓ pra descobrir o produto de cada item: a cadeia
   // PBI → Feature → Épico só se monta se os pais estiverem presentes, e o pai
-  // costuma estar em outro nome (ou sem ninguém). Sem isso, filtrar por
-  // responsável jogava todo mundo em "Sem produto associado".
+  // costuma estar em outro nome (ou sem ninguém).
   // `mes` ('2026-07') escolhe o mês do report; sem ele, o mês corrente. Mês
   // fechado mostra só o que é fato histórico: o que foi entregue. Execução,
   // prazos e travas são o AGORA — o DevOps guarda o estado atual, não o estado
@@ -202,13 +353,30 @@
       return { vazio: true, meses: listaMeses, html: '<p class="mudo">Nada registrado ainda para este recorte.</p>' };
     }
 
+    // Um item travado e atrasado responde às duas perguntas do core. Num
+    // documento, porém, aparecer duas vezes lado a lado parece defeito: ele fica
+    // em "Depende de decisão", com o prazo na linha, e sai de "Próximos passos".
+    const idsTravados = new Set(b.travados.map((r) => r.item.id));
+    const semTravados = (regs) => regs.filter((r) => !idsTravados.has(r.item.id));
+    const bVivo = Object.assign({}, b, {
+      prazos: {
+        atrasados: semTravados(b.prazos.atrasados),
+        esteMes: semTravados(b.prazos.esteMes),
+        proximoMes: semTravados(b.prazos.proximoMes),
+      },
+    });
+
+    const entregas = (mesAlvo && mesAlvo.itens) || [];
+    const grupos = porProduto(entregas, mapa);
+    const comProduto = grupos.filter((g) => g.produto);
+
     const prosa = (fechado ? [
       mesAlvo ? paragrafoVolume(mesAlvo, escopo) : 'Nada foi concluído neste mês.',
       mesAlvo ? paragrafoProdutos(mesAlvo) : '',
     ] : [
       mesAlvo ? paragrafoVolume(mesAlvo, escopo) : 'Nada foi concluído neste mês até agora.',
       mesAlvo ? paragrafoProdutos(mesAlvo) : '',
-      paragrafoSituacao(b),
+      paragrafoSituacao(bVivo),
     ]).filter(Boolean);
 
     const meta = [];
@@ -216,41 +384,72 @@
     if (o.times && o.times.length) meta.push(o.times.join(', '));
     meta.push('gerado em ' + dataCurta(agora));
 
-    const prazoLista = (titulo, regs, alerta) => regs.length ? `
-      <div class="grupo-produto">
-        <h5${alerta ? ' class="h5-alerta"' : ''}>${titulo}</h5>
-        <ul class="lista-linhas">${regs.map((r) => linha(r.item, org, dataCurta(r.alvo))).join('')}</ul>
-      </div>` : '';
-    const totalPrazos = b.prazos.atrasados.length + b.prazos.esteMes.length + b.prazos.proximoMes.length;
+    const tiles = tile(entregas.length, entregas.length === 1 ? 'entrega' : 'entregas')
+      + tile(comProduto.length, comProduto.length === 1 ? 'produto' : 'produtos')
+      + (fechado ? '' : tile(b.execucao.length, 'em execução') + tile(bVivo.prazos.atrasados.length, 'fora do prazo', true));
 
-    const agoraSo = `<section class="bloco-report"><h4>Em execução, prazos e travas</h4>
-      <p class="mudo nota-report">Só aparecem no mês corrente: o DevOps guarda o estado
-      de agora, não o estado que cada item tinha em ${mesPorExtenso(escolhido).toLowerCase()}.</p></section>`;
+    const secoes = [];
+    secoes.push({
+      id: 'resumo', en: 'Executive summary', titulo: 'Resumo', rotulo: 'Resumo',
+      intro: 'O que o mês registrou, lido dos itens do Azure DevOps. Nenhuma afirmação aqui vai além do que os dados mostram.',
+      corpo: `<div class="comunicado">${prosa.map((x) => `<p>${x}</p>`).join('')}</div>`,
+    });
+    if (comProduto.length >= MIN_DESTAQUE_PRODUTOS && entregas.length >= MIN_DESTAQUE_ITENS) {
+      secoes.push({
+        id: 'destaques', en: 'Highlights', titulo: 'Destaques', rotulo: 'Destaques',
+        intro: 'Os produtos que concentraram entrega no mês, do maior volume para o menor. O critério é quantidade de itens concluídos.',
+        corpo: corpoDestaques(comProduto, org),
+      });
+    }
+    if (entregas.length) {
+      secoes.push({
+        id: 'entregas', en: 'Deliveries', titulo: 'Entregas do mês', rotulo: 'Entregas',
+        intro: 'Tudo que foi concluído no mês, agrupado por produto. Filtre por produto ou tipo, ou busque por título e número do item.',
+        corpo: corpoEntregas(entregas, mapa, org) + notaAproximados(mesAlvo),
+      });
+    }
+    if (meses.length > 1) {
+      secoes.push({
+        id: 'comparativo', en: 'Comparative', titulo: 'Comparativo', rotulo: 'Comparativo',
+        intro: 'Volume de entregas mês a mês, no que o DevOps guarda deste recorte.',
+        corpo: corpoComparativo(meses, escolhido),
+      });
+    }
+    if (fechado) {
+      secoes.push({
+        id: 'agora', en: 'Present state', titulo: 'Situação de hoje', rotulo: 'Hoje',
+        intro: 'Execução, prazos e travas aparecem só no mês corrente.',
+        corpo: `<p class="mudo nota-report">O DevOps guarda o estado de agora, não o estado
+        que cada item tinha em ${mesPorExtenso(escolhido).toLowerCase()}. Para ver o que está em curso,
+        troque para o mês corrente no seletor do topo.</p>`,
+      });
+    } else {
+      if (b.travados.length) {
+        secoes.push({
+          id: 'decisao', en: 'Blocked', titulo: 'Depende de decisão', rotulo: 'Decisão',
+          intro: 'Itens em estado de bloqueio. Cada um espera uma decisão para voltar a andar.',
+          corpo: corpoDecisao(b.travados, org, agora),
+        });
+      }
+      const totalProximos = bVivo.prazos.atrasados.length + bVivo.prazos.esteMes.length
+        + bVivo.prazos.proximoMes.length + b.execucao.length;
+      if (totalProximos) {
+        secoes.push({
+          id: 'proximos', en: 'Next steps', titulo: 'Próximos passos', rotulo: 'Próximos',
+          intro: 'O que está em curso e quando vence, do prazo mais apertado para o mais folgado.',
+          corpo: corpoProximos(bVivo, org),
+        });
+      }
+    }
 
-    const html = `<article class="briefing">
-      <header class="briefing-topo">
-        <h3>${mesPorExtenso(escolhido)}</h3>
-        <p class="briefing-meta">${esc(meta.join(' · '))}</p>
-      </header>
-      <section class="bloco-report"><h4>Resumo</h4>
-        <div class="comunicado">${prosa.map((p) => `<p>${p}</p>`).join('')}</div>
-      </section>
-      ${secaoPorProduto('Entregue no mês', (mesAlvo && mesAlvo.itens) || [], mapa, org, (r) => (r.aproximada ? '~' : '') + dataCurta(r.quando))}
-      ${notaAproximados(mesAlvo)}
-      ${fechado ? agoraSo : `
-      ${secaoPorProduto('Em execução', b.execucao, mapa, org, (r) => esc((r.item.fields || {})['System.State']))}
-      ${totalPrazos ? `<section class="bloco-report"><h4>Prazos<span class="conta">${totalPrazos}</span></h4>
-        ${prazoLista('Já passaram do prazo', b.prazos.atrasados, true)}
-        ${prazoLista('Vencem ainda este mês', b.prazos.esteMes)}
-        ${prazoLista('Vencem no mês que vem', b.prazos.proximoMes)}
-      </section>` : ''}
-      ${b.travados.length ? `<section class="bloco-report"><h4>Travado — depende de decisão<span class="conta">${b.travados.length}</span></h4>
-        <div class="grupo-produto"><ul class="lista-linhas">${b.travados.map((r) => linha(
-          r.item, org,
-          r.dias == null ? esc((r.item.fields || {})['System.State']) : `sem movimento há ${r.dias} d`
-        )).join('')}</ul></div>
-      </section>` : ''}`}
-    </article>`;
+    const nav = `<nav class="doc-nav"><div class="doc-nav-int">${secoes
+      .map((x) => `<a href="#${x.id}">${esc(x.rotulo)}</a>`).join('')}</div></nav>`;
+
+    const html = `<div class="report-doc">
+      ${capa(escolhido, meta.join(' · '), tiles)}
+      ${nav}
+      ${secoes.map((x, i) => secaoHtml(i + 1, x)).join('')}
+    </div>`;
 
     return { vazio: false, meses: listaMeses, html };
   }

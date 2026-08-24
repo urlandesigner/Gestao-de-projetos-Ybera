@@ -50,6 +50,8 @@ const st = {
   vazio: false,
   link: '',
   mes: null,       // null = mês corrente
+  fTipos: new Set(),     // filtro do bloco de entregas
+  fProdutos: new Set(),
   // Modo leitura: o dado veio do link, não do DevOps. Aí org, times, recorte e
   // a data do report saem do pacote — não há config nem PAT neste navegador.
   leitura: false,
@@ -111,6 +113,85 @@ function renderMeses(meses) {
     .join('');
 }
 
+/* ---------- Filtro do bloco de entregas ---------- */
+// Os chips, a lista e os data-* vêm prontos do briefing. Aqui só escondemos
+// linha: nada é redesenhado a cada tecla, e a regra de agrupamento não é
+// duplicada em dois lugares.
+function aplicarFiltroEntregas() {
+  const lista = $('lista-entregas');
+  if (!lista) return;
+  const campo = $('busca-entregas');
+  const q = ((campo && campo.value) || '').trim().toLowerCase();
+  let visiveis = 0;
+  let total = 0;
+  for (const grupo of lista.querySelectorAll('.grupo-produto')) {
+    const okGrupo = !st.fProdutos.size || st.fProdutos.has(grupo.dataset.produto);
+    let n = 0;
+    for (const li of grupo.querySelectorAll('li')) {
+      total += 1;
+      const ok = okGrupo
+        && (!st.fTipos.size || st.fTipos.has(li.dataset.tipo))
+        && (!q || (li.dataset.busca || '').includes(q));
+      li.hidden = !ok;
+      if (ok) n += 1;
+    }
+    // O épico que virou cabeçalho conta como item. O cabeçalho em si é rótulo do
+    // grupo: nunca se esconde sozinho, só junto com o grupo inteiro.
+    const tipoProprio = grupo.dataset.proprioTipo;
+    if (tipoProprio) {
+      total += 1;
+      if (okGrupo
+        && (!st.fTipos.size || st.fTipos.has(tipoProprio))
+        && (!q || (grupo.dataset.proprioBusca || '').includes(q))) n += 1;
+    }
+    grupo.hidden = n === 0;
+    visiveis += n;
+  }
+  const conta = $('conta-entregas');
+  if (conta) conta.textContent = visiveis + ' de ' + total;
+  const limpar = $('limpar-entregas');
+  if (limpar) limpar.hidden = !(st.fTipos.size || st.fProdutos.size || q);
+}
+
+function limparFiltroEntregas() {
+  st.fTipos.clear();
+  st.fProdutos.clear();
+  const campo = $('busca-entregas');
+  if (campo) campo.value = '';
+  for (const c of document.querySelectorAll('.chip-doc.ativo')) c.classList.remove('ativo');
+  aplicarFiltroEntregas();
+}
+
+// Delegação: o documento é redesenhado a cada mês, então ouvir no container é o
+// que sobrevive. E a navegação NÃO usa o href: mexer no hash apagaria o dado do
+// link — quem abriu por link perderia o report ao clicar num item do menu.
+function ligarDocumento() {
+  const box = $('report');
+  box.addEventListener('click', (ev) => {
+    const item = ev.target.closest('.doc-nav a');
+    if (item) {
+      ev.preventDefault();
+      // Salto direto, não deslizado: é o que uma âncora faz, funciona em qualquer
+      // ambiente e dá pra verificar. Scroll animado some sem aviso onde o
+      // compositor não anima — nav morta é pior que nav sem gracinha.
+      const alvo = document.getElementById(item.getAttribute('href').slice(1));
+      if (alvo) alvo.scrollIntoView({ behavior: 'instant', block: 'start' });
+      return;
+    }
+    if (ev.target.closest('#limpar-entregas')) { limparFiltroEntregas(); return; }
+    const chip = ev.target.closest('.chip-doc');
+    if (!chip) return;
+    const conjunto = chip.dataset.filtro === 'tipo' ? st.fTipos : st.fProdutos;
+    const valor = chip.dataset.valor;
+    if (conjunto.has(valor)) conjunto.delete(valor); else conjunto.add(valor);
+    chip.classList.toggle('ativo', conjunto.has(valor));
+    aplicarFiltroEntregas();
+  });
+  box.addEventListener('input', (ev) => {
+    if (ev.target.id === 'busca-entregas') aplicarFiltroEntregas();
+  });
+}
+
 function render() {
   renderBadge();
   const box = $('report');
@@ -136,7 +217,10 @@ function render() {
     times: st.leitura ? st.times : st.config.projects.filter((p) => !p.hidden).map((p) => p.teamName),
     mes: st.mes,
   });
+  st.fTipos.clear(); // documento novo, chips novos: o estado anterior não vale
+  st.fProdutos.clear();
   box.innerHTML = erroHtml + r.html;
+  aplicarFiltroEntregas(); // acerta o contador e esconde o "limpar"
   renderMeses(r.meses);
   st.vazio = r.vazio;
   $('copiar').disabled = r.vazio;
@@ -322,8 +406,13 @@ async function lerDoLink() {
   document.body.classList.add('modo-leitura');
   st.leitura = true;
   // Colar outro link na mesma aba só troca o fragmento: o navegador não recarrega
-  // nada e a página ficaria mostrando o report antigo. Recarrega na mão.
-  window.addEventListener('hashchange', () => location.reload());
+  // nada e a página ficaria mostrando o report antigo. Recarrega na mão — mas só
+  // se o fragmento novo for outro report, senão qualquer âncora derrubaria a tela.
+  const carga = m[1];
+  window.addEventListener('hashchange', () => {
+    const novo = (location.hash || '').match(/^#r=(.+)$/);
+    if (novo && novo[1] !== carga) location.reload();
+  });
   try {
     const pacote = JSON.parse(await descomprimir(m[1]));
     st.items = pacote.items || [];
@@ -344,6 +433,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   try { st.config = C.normalizeConfig(loadJSON(LS.config)); } catch (e) { st.config = null; }
   // Quem tem token manda: busca ao vivo e reescreve o link, mesmo se a URL já
   // trouxer um. Sem token, o link é a única fonte — é o caso do stakeholder.
+  ligarDocumento();
   $('mes-global').addEventListener('change', async () => {
     st.mes = $('mes-global').value || null;
     render();

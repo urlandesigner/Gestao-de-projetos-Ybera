@@ -880,3 +880,306 @@ details summary { cursor: pointer; color: var(--mudo); font-size: 0.88rem; }
   body.lateral-recolhida .rotulo-nav, body.lateral-recolhida .conta-nav { display: inline; }
   body.lateral-recolhida .paginas a { justify-content: flex-start; padding: 0.5rem 0.85rem; gap: 0.6rem; }
 }
+
+/* ---------- Report: documento para stakeholder ---------- */
+/* A linguagem é a do Relatório Mensal de Tecnologia da Ybera: capa escura com os
+   números do ciclo, navegação em pílulas flutuando na borda, seções numeradas com
+   um rótulo em inglês por cima do título e o numeral gigante ao fundo.
+   Tudo escopado em body.pagina-report / .report-doc — a Central não muda. */
+body.pagina-report {
+  --doc-fundo: #f8fafc;
+  --doc-tinta: #16181d;
+  --doc-mudo: #5c6370;
+  --doc-linha: #e7ebf0;
+  --doc-numeral: #e9ebf2;
+  background: var(--doc-fundo);
+  padding: 0; /* a capa é sangria total: nada de moldura em volta do documento */
+}
+/* O documento é largura cheia: a folha branca da Central sai de cena */
+body.pagina-report .corpo { display: block; padding: 0; }
+body.pagina-report main > section {
+  background: none;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+}
+body.pagina-report .app > header.topo { padding-bottom: 0.7rem; }
+.report-doc { color: var(--doc-tinta); }
+.doc-limite { max-width: 1120px; margin: 0 auto; padding: 0 clamp(1rem, 3vw, 2.2rem); }
+
+/* Capa */
+.doc-capa {
+  padding: 2.4rem 0 2.9rem;
+  color: #fff;
+  background:
+    radial-gradient(circle at 6% 12%, rgba(138, 92, 255, 0.2), transparent 46%),
+    radial-gradient(circle at 92% 72%, rgba(168, 85, 247, 0.13), transparent 44%),
+    radial-gradient(circle at 22% 88%, rgba(95, 205, 145, 0.11), transparent 48%),
+    linear-gradient(90deg, #1e1e1f 0%, #1e1e1f 42%, #171718 100%);
+}
+.doc-en {
+  margin: 0 0 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--doc-mudo);
+}
+.doc-en-capa { color: rgba(255, 255, 255, 0.55); }
+.doc-titulo {
+  margin: 0;
+  font-size: clamp(2rem, 5.2vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+}
+.doc-titulo span {
+  display: block;
+  font-size: 0.42em;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.5);
+}
+/* O mês é o assunto do documento — é ele que ganha o gradiente da marca */
+.doc-titulo b {
+  background: linear-gradient(90deg, #83ff8f, #b89ef5, #cc7ff0, #83ff8f);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.doc-meta { margin: 1rem 0 0; font-size: 0.78rem; color: rgba(255, 255, 255, 0.55); }
+.doc-kpis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.1rem 2.2rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.doc-kpis li { display: flex; flex-direction: column; gap: 0.1rem; }
+.doc-kpis b { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+.doc-kpis span {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+.doc-kpis .kpi-alerta b { color: #ff9b8f; }
+
+/* Navegação: pílula flutuando na fronteira entre a capa e o corpo */
+.doc-nav {
+  position: sticky;
+  top: 0.4rem;
+  z-index: 6;
+  display: flex;
+  justify-content: center;
+  margin: -1.35rem auto 0;
+  padding: 0 1rem;
+}
+.doc-nav-int {
+  display: flex;
+  gap: 0.1rem;
+  max-width: 100%;
+  padding: 0.28rem;
+  overflow-x: auto;
+  background: rgba(240, 241, 246, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 99px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 26px rgba(18, 18, 28, 0.16);
+  scrollbar-width: none;
+}
+.doc-nav-int::-webkit-scrollbar { display: none; }
+.doc-nav a {
+  padding: 0.42rem 0.85rem;
+  border-radius: 99px;
+  font-size: 0.81rem;
+  font-weight: 600;
+  color: #3d434f;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.doc-nav a:hover { background: #fff; color: var(--doc-tinta); }
+
+/* Seções numeradas */
+.doc-sec { padding: 2.7rem 0 0.3rem; scroll-margin-top: 4rem; }
+.doc-sec:last-child { padding-bottom: 3rem; }
+.doc-sec-topo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+  gap: 1.4rem 2rem;
+  align-items: end;
+  margin-bottom: 1.3rem;
+}
+.doc-sec-tit { position: relative; padding-top: 1.5rem; }
+.doc-num {
+  position: absolute;
+  top: -0.28em;
+  left: -0.05em;
+  z-index: 0;
+  font-size: 7.5rem;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  color: var(--doc-numeral);
+  user-select: none;
+}
+.doc-sec-tit .doc-en, .doc-sec-tit h4 { position: relative; z-index: 1; }
+.doc-sec-tit h4 {
+  margin: 0;
+  font-size: clamp(1.5rem, 3.2vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+.doc-intro { margin: 0 0 0.25rem; font-size: 0.86rem; line-height: 1.6; color: var(--doc-mudo); }
+
+/* Cartão do documento: branco sobre o cinza da página */
+.doc-bloco, .report-doc .comunicado, .destaque {
+  background: #fff;
+  border: 1px solid var(--doc-linha);
+  border-radius: 18px;
+}
+.report-doc .comunicado { padding: 1.25rem 1.4rem 0.6rem; }
+.report-doc .comunicado p { max-width: 68ch; }
+.doc-bloco { padding: 0.9rem 0.95rem; }
+/* Dentro do cartão branco a linha precisa de outro tom pra existir */
+.report-doc .lista-linhas a {
+  background: var(--doc-fundo);
+  border: 1px solid var(--doc-linha);
+  box-shadow: none;
+}
+.report-doc .lista-linhas a:hover { border-color: #cfd6e0; }
+.report-doc .grupo-produto h5 { font-size: 0.82rem; }
+
+/* Destaques */
+.destaque { padding: 1.05rem 1.1rem; }
+.destaque + .destaque { margin-top: 0.7rem; }
+.destaque-topo { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 0.75rem; }
+.destaque-pos {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 2.15rem;
+  height: 2.15rem;
+  border-radius: 13px;
+  background: #f3f4f8;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+.destaque-nome h5 { margin: 0; font-size: 1rem; font-weight: 800; letter-spacing: -0.01em; }
+.destaque-nome h5 a { color: inherit; text-decoration: none; }
+.destaque-nome h5 a:hover { text-decoration: underline; }
+.destaque-nome p {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.2rem 0 0;
+  font-size: 0.75rem;
+  color: var(--doc-mudo);
+}
+
+/* Filtro do bloco de entregas */
+.doc-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.75rem;
+}
+.doc-filtros input[type="search"] {
+  min-width: 13rem;
+  padding: 0.44rem 0.75rem;
+  font: inherit;
+  font-size: 0.82rem;
+  color: var(--doc-tinta);
+  background: #fff;
+  border: 1px solid var(--doc-linha);
+  border-radius: 99px;
+  outline: none;
+}
+.doc-filtros input[type="search"]:focus { border-color: #b9c2cf; }
+.chips-doc { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.chip-doc {
+  padding: 0.36rem 0.7rem;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--doc-tinta);
+  background: #fff;
+  border: 1px solid var(--doc-linha);
+  border-radius: 99px;
+  cursor: pointer;
+}
+.chip-doc:hover { border-color: #c3ccd8; }
+.chip-doc.ativo { background: var(--doc-tinta); border-color: var(--doc-tinta); color: #fff; }
+.chip-doc .n { opacity: 0.55; margin-left: 0.2rem; }
+.limpar-doc {
+  padding: 0.36rem 0.6rem;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--doc-mudo);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.limpar-doc[hidden] { display: none; }
+.conta-doc { margin-left: auto; font-size: 0.74rem; font-weight: 600; color: var(--doc-mudo); }
+
+/* Comparativo */
+.comparativo { list-style: none; margin: 0; padding: 0.9rem 1rem; }
+.comparativo li {
+  display: grid;
+  grid-template-columns: 10.5rem minmax(0, 1fr) 2.4rem 2.2rem;
+  gap: 0.8rem;
+  align-items: center;
+  margin: 0 -0.45rem;
+  padding: 0.36rem 0.45rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+}
+.comparativo .comp-mes { color: var(--doc-mudo); }
+.comparativo .comp-barra {
+  height: 8px;
+  background: #eef1f5;
+  border-radius: 99px;
+  overflow: hidden;
+}
+.comparativo .comp-barra span {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #b89ef5, #83ff8f);
+}
+.comparativo .comp-n { text-align: right; font-weight: 700; }
+.comparativo .comp-delta { text-align: right; font-size: 0.74rem; font-weight: 700; color: var(--doc-mudo); }
+.comparativo .comp-delta.sobe { color: #15794a; }
+.comparativo .comp-delta.desce { color: #b3261e; }
+.comparativo .comp-atual { background: #f3f4f8; }
+.comparativo .comp-atual .comp-mes { font-weight: 800; color: var(--doc-tinta); }
+
+/* Impressão do documento: sem tinta desperdiçada na capa */
+@media print {
+  .doc-nav { display: none !important; }
+  .doc-capa {
+    padding: 0 0 1rem;
+    color: #000;
+    background: #fff !important;
+    border-bottom: 1px solid #ddd;
+  }
+  .doc-titulo span, .doc-meta, .doc-kpis span { color: #555 !important; }
+  .doc-titulo b { -webkit-text-fill-color: #000; color: #000; }
+  .doc-num { color: #f2f2f2 !important; }
+  .doc-filtros { display: none !important; }
+  .doc-sec { break-inside: avoid; padding-top: 1.2rem; }
+  .doc-bloco, .destaque, .report-doc .comunicado { border: 1px solid #e5e5e5; }
+}
+
+@media (max-width: 720px) {
+  .doc-sec-topo { grid-template-columns: 1fr; align-items: start; }
+  .doc-num { font-size: 5.5rem; }
+  .doc-kpis { gap: 0.9rem 1.4rem; }
+  .doc-kpis b { font-size: 1.5rem; }
+  .comparativo li { grid-template-columns: 7rem minmax(0, 1fr) 2rem 2rem; gap: 0.5rem; font-size: 0.8rem; }
+  .conta-doc { margin-left: 0; }
+}

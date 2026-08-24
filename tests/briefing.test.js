@@ -30,11 +30,16 @@ const base = () => [
 test('htmlReport monta as seções do briefing', () => {
   const { vazio, html } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://dev.azure.com/nivello' });
   assert.equal(vazio, false);
-  for (const secao of ['Resumo', 'Entregue no mês', 'Em execução', 'Prazos', 'Travado — depende de decisão']) {
+  for (const secao of ['Resumo', 'Entregas do mês', 'Comparativo', 'Depende de decisão', 'Próximos passos']) {
     assert.ok(html.includes(secao), 'falta a seção: ' + secao);
   }
   assert.ok(html.includes('Agosto de 2026'));
   assert.ok(html.includes('Nova PDP USA')); // agrupou por produto
+  // Seções numeradas em sequência, como no report do time
+  assert.match(html, /doc-num[^>]*>01</);
+  assert.match(html, /doc-num[^>]*>05</);   // 5 seções neste recorte, numeradas em sequência
+  assert.ok(!html.includes('Destaques'));   // 2 entregas não sustentam um bloco de destaque
+  assert.ok(html.includes('Executive summary'));
 });
 
 test('htmlReport escreve a prosa com volume, comparação e situação', () => {
@@ -43,8 +48,21 @@ test('htmlReport escreve a prosa com volume, comparação e situação', () => {
   assert.ok(/Em agosto de 2026, <b>2 itens<\/b>/.test(html));       // 2 fechados em agosto
   assert.ok(html.includes('<b>1 a mais</b> que em julho de 2026'));  // 1 fechado em julho
   assert.ok(html.includes('em execução agora'));
-  assert.ok(html.includes('já passou do prazo'));
   assert.ok(html.includes('sem movimento há 31 dias'));
+  // O único atrasado do recorte está travado: ele conta em "Depende de decisão",
+  // não em "Próximos passos" — e a prosa não pode contá-lo duas vezes.
+  assert.ok(!html.includes('já passou do prazo'));
+});
+
+test('htmlReport não repete o item travado em Próximos passos', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://x/y' });
+  const decisao = html.slice(html.indexOf('id="decisao"'), html.indexOf('id="proximos"'));
+  const proximos = html.slice(html.indexOf('id="proximos"'));
+  assert.ok(decisao.includes('Integração ERP'));
+  assert.ok(decisao.includes('atrasado desde'));   // o prazo vem pra cá
+  assert.ok(decisao.includes('parado há 31 d'));
+  assert.ok(!proximos.includes('Integração ERP'));
+  assert.ok(!proximos.includes('Já passou do prazo'));
 });
 
 test('htmlReport gera link do work item e escapa título', () => {
@@ -103,9 +121,10 @@ test('htmlReport em mês fechado mostra entregas e explica o que ficou de fora',
   assert.ok(html.includes('Julho de 2026'));
   assert.ok(html.includes('Item de julho'));
   assert.ok(!html.includes('Zoom na imagem'), 'item de agosto não entra no mês de julho');
-  assert.ok(html.includes('Só aparecem no mês corrente'));
-  assert.ok(!html.includes('Travado — depende de decisão'));
-  assert.ok(!html.includes('<h4>Prazos'));
+  assert.ok(html.includes('Situação de hoje'));
+  assert.ok(html.includes('troque para o mês corrente'));
+  assert.ok(!html.includes('Depende de decisão'));
+  assert.ok(!html.includes('Próximos passos'));
 });
 
 test('htmlReport aceita mês sem nenhuma entrega', () => {
@@ -137,13 +156,52 @@ test('htmlReport joga "sem produto" pro fim, mesmo sendo o maior grupo', () => {
 // linha embaixo parecia defeito — o que a linha diria vai pro cabeçalho.
 test('htmlReport não repete o épico como cabeçalho e como linha', () => {
   const itens = [
-    it(1, 'Epic', 'In Progress', 'Tema Global', null, 12),
-    it(11, 'Product Backlog Item', 'In Progress', 'Filho ativo', 1, 3),
+    it(1, 'Epic', 'Done', 'Tema Global', null, null, 2),
+    it(11, 'Product Backlog Item', 'Done', 'Filho ativo', 1, null, 1),
   ];
   const { html } = B.htmlReport({ items: itens, agora: AGORA, org: 'https://x/y' });
-  const execucao = html.slice(html.indexOf('Em execução'), html.indexOf('Prazos'));
-  assert.equal((execucao.match(/Tema Global/g) || []).length, 1);
-  assert.ok(execucao.includes('Filho ativo'));
+  // Na lista o épico é cabeçalho do grupo — não pode virar linha também.
+  // (O nome aparece de novo no chip de filtro, que fica fora da lista.)
+  const lista = html.slice(html.indexOf('id="lista-entregas"'), html.indexOf('id="comparativo"'));
+  assert.equal((lista.match(/Tema Global/g) || []).length, 1);
+  assert.ok(lista.includes('Filho ativo'));
+});
+
+// Destaque precisa de material: com um produto só, ou meia dúzia de itens, a
+// seção seria a de entregas repetida.
+test('htmlReport ranqueia destaques por volume quando há material', () => {
+  const itens = [
+    it(1, 'Epic', 'In Progress', 'Produto grande', null, 20),
+    it(2, 'Epic', 'In Progress', 'Produto pequeno', null, 20),
+    it(11, 'Product Backlog Item', 'Done', 'A', 1, null, 1),
+    it(12, 'Product Backlog Item', 'Done', 'B', 1, null, 2),
+    it(13, 'Product Backlog Item', 'Done', 'C', 1, null, 3),
+    it(21, 'Product Backlog Item', 'Done', 'D', 2, null, 4),
+  ];
+  const { html } = B.htmlReport({ items: itens, agora: AGORA, org: 'https://x/y' });
+  const bloco = html.slice(html.indexOf('id="destaques"'), html.indexOf('id="entregas"'));
+  assert.ok(bloco.includes('Produto grande'));
+  assert.ok(bloco.indexOf('Produto grande') < bloco.indexOf('Produto pequeno'));
+  assert.ok(bloco.includes('3 entregas no mês'));
+  assert.ok(bloco.includes('1 entrega no mês'));
+});
+
+test('htmlReport monta chips e contador no bloco de entregas', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://x/y' });
+  assert.ok(html.includes('id="busca-entregas"'));
+  assert.ok(html.includes('>2 de 2<'));
+  assert.match(html, /data-filtro="produto" data-valor="p1"/);
+  assert.match(html, /data-filtro="tipo" data-valor="pbi"/);
+  assert.match(html, /<li data-tipo="pbi" data-produto="p1" data-busca="zoom na imagem #11"/);
+});
+
+test('htmlReport lista os meses no comparativo com a variação', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://x/y' });
+  const comp = html.slice(html.indexOf('id="comparativo"'), html.indexOf('id="decisao"'));
+  assert.ok(comp.includes('Agosto de 2026'));
+  assert.ok(comp.includes('Julho de 2026'));
+  assert.match(comp, /comp-delta sobe[^>]*>\+1</);   // 2 em agosto contra 1 em julho
+  assert.match(comp, /comp-delta[^>]*>—</);           // julho não tem mês anterior
 });
 
 test('htmlReport não mostra prazo de produto já concluído', () => {
