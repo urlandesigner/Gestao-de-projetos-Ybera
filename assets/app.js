@@ -15,7 +15,13 @@ const state = {
   cache: loadJSON(LS.cache) || { byCard: {}, myItems: null, myItemsError: null, fetchedAt: 0, lastSuccessAt: 0 },
   discovery: null,
   auth: null, // null | 'sem-token' | 'vencido' | 'atualizando' | 'conectado'
-  filtrosMI: Object.assign({ tipos: null, projetos: null }, loadJSON(LS.filtros) || {}, { busca: '' }),
+  // Só tipos e projetos vêm do armazenamento: `resp` vive no estado global e é
+  // aplicado na hora de filtrar. Herdar o objeto inteiro trazia `resp` de
+  // carona e zerava a página quando o responsável não vinha nos campos.
+  filtrosMI: (() => {
+    const f = loadJSON(LS.filtros) || {};
+    return { tipos: f.tipos || null, projetos: f.projetos || null, busca: '' };
+  })(),
   // Filtro GLOBAL de responsável: vale em todas as páginas derivadas de dado.
   // null = ainda não escolhido → cai no dono do PAT. '' = escolheu "todos".
   resp: (() => {
@@ -205,6 +211,9 @@ const FIELDS_BASE = [
 const FIELDS_ITEMS = [
   'System.Title', 'System.State', 'System.WorkItemType', 'System.TeamProject',
   'System.Parent', 'System.IterationPath',
+  // Sem este campo o filtro por responsável não tem o que comparar: comparava
+  // undefined com o nome e derrubava a lista inteira.
+  'System.AssignedTo',
 ];
 
 async function refreshCard(p) {
@@ -736,8 +745,18 @@ function renderMyItems() {
   barra.hidden = false;
   renderChipsTipo($('mi-tipos'), items, state.filtrosMI, () => { salvarFiltrosMI(); renderMyItems(); });
   renderChipsProjeto($('mi-projetos'), items, state.filtrosMI, () => { salvarFiltrosMI(); renderMyItems(); });
-  const filtrados = C.filterItems(items, state.filtrosMI);
-  if (!filtrados.length) { box.innerHTML = erroHtml + '<p class="mudo">Nada com esses filtros.</p>'; return; }
+  const filtrados = C.filterItems(items, Object.assign({}, state.filtrosMI, { resp: respAtivo() }));
+  if (!filtrados.length) {
+    // A consulta desta página é @Me: só traz item do dono do token. Se o filtro
+    // global aponta pra outra pessoa, vazio é o resultado certo — mas tem que
+    // dizer por quê, senão parece defeito.
+    const dono = state.cache.usuario || '';
+    const outro = respAtivo() && dono && respAtivo() !== dono;
+    box.innerHTML = erroHtml + (outro
+      ? `<p class="mudo">Esta página traz só o que está no nome de <b>${escapeHtml(dono)}</b> (dono do token). O filtro está em <b>${escapeHtml(respAtivo())}</b>.</p>`
+      : '<p class="mudo">Nada com esses filtros.</p>');
+    return;
+  }
   const grupos = C.groupMyItemsBuckets(filtrados);
   // Tag de projeto só quando há mais de um projeto entre os itens — senão é ruído.
   const multiProjeto = new Set(items.map((it) => (it.fields || {})['System.TeamProject'])).size > 1;
