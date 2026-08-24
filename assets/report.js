@@ -1,8 +1,15 @@
 /* Página report.html — autônoma, para stakeholder ver só o report.
-   Lê a mesma configuração e o mesmo PAT do localStorage da Central (mesma
-   origem), busca os itens e renderiza via CentralBriefing. O botão "Baixar
-   report" gera um HTML AUTOCONTIDO (CSS embutido, dado embutido, zero
-   JavaScript) — é esse arquivo que vai pro stakeholder, que não tem token. */
+
+   Dois modos, decididos no carregamento:
+
+   1. NESTE navegador (o do PO) existe config + PAT no localStorage: busca no
+      DevOps, mostra o report na hora e GRAVA o dado no fragmento da URL. A
+      barra de endereços passa a ser, ela mesma, o link que vai pro stakeholder.
+   2. Não existe token (qualquer outro navegador): lê o dado do fragmento do
+      link. Sem token, sem acesso ao DevOps, sem requisição nenhuma.
+
+   O PAT vive só no localStorage de quem o colou — localStorage é por navegador
+   e por origem, não viaja com o site. Por isso o dado precisa ir no link. */
 (function () {
 'use strict';
 const C = window.CentralCore;
@@ -28,6 +35,8 @@ const st = {
   items: null,
   erro: null,
   carregando: false,
+  vazio: false,
+  link: '',
 };
 
 function respAtivo() { return st.resp === null ? (st.usuario || '') : st.resp; }
@@ -90,7 +99,8 @@ function render() {
     times: st.config.projects.filter((p) => !p.hidden).map((p) => p.teamName),
   });
   box.innerHTML = erroHtml + r.html;
-  $('link').disabled = r.vazio;
+  st.vazio = r.vazio;
+  $('copiar').disabled = r.vazio;
 }
 
 async function carregar() {
@@ -116,6 +126,7 @@ async function carregar() {
   } finally {
     st.carregando = false;
     render();
+    if (st.items) await gravarLink();
   }
 }
 
@@ -169,11 +180,12 @@ function enxugar(items) {
   });
 }
 
-async function gerarLink() {
-  const btn = $('link');
-  const rotulo = btn.textContent;
-  btn.disabled = true;
-  btn.textContent = 'gerando…';
+// Grava o report no próprio endereço da página. Sem botão, sem etapa: quando o
+// report aparece, o link já está pronto na barra de endereços. replaceState não
+// cria entrada nova no histórico — o botão "voltar" continua indo pra Central.
+async function gravarLink() {
+  st.link = '';
+  if (!st.items || st.vazio) { history.replaceState(null, '', location.pathname); return; }
   try {
     const pacote = {
       v: 1,
@@ -183,16 +195,19 @@ async function gerarLink() {
       times: st.config.projects.filter((p) => !p.hidden).map((p) => p.teamName),
       items: enxugar(st.items.filter(noNome)),
     };
-    const url = location.origin + location.pathname + '#r=' + await comprimir(JSON.stringify(pacote));
-    mostrarLink(url);
-    try { await navigator.clipboard.writeText(url); } catch (e) { /* sem permissão: o campo abaixo resolve */ }
+    st.link = location.origin + location.pathname + '#r=' + await comprimir(JSON.stringify(pacote));
+    history.replaceState(null, '', st.link);
   } catch (e) {
-    st.erro = 'Não deu pra gerar o link: ' + e.message;
+    st.erro = 'Não deu pra montar o link: ' + e.message;
     render();
-  } finally {
-    btn.disabled = false;
-    btn.textContent = rotulo;
   }
+}
+
+async function copiarLink() {
+  if (!st.link) await gravarLink();
+  if (!st.link) return;
+  try { await navigator.clipboard.writeText(st.link); } catch (e) { /* sem permissão: o campo abaixo resolve */ }
+  mostrarLink(st.link);
 }
 
 function mostrarLink(url) {
@@ -201,7 +216,7 @@ function mostrarLink(url) {
   caixa.hidden = false;
   caixa.innerHTML = `
     <p class="link-aviso">${longo
-      ? 'Link gerado, mas está <b>longo (' + url.length.toLocaleString('pt-BR') + ' caracteres)</b> — alguns aplicativos de mensagem cortam. Recorte por responsável pra encurtar.'
+      ? 'Link copiado, mas está <b>longo (' + url.length.toLocaleString('pt-BR') + ' caracteres)</b> — alguns aplicativos de mensagem cortam. Recorte por responsável pra encurtar.'
       : 'Link copiado. Ele carrega o report inteiro — quem abrir não precisa de token nem de acesso ao DevOps.'}</p>
     <input id="campo-link" type="text" readonly value="${B.esc(url)}">
     <p class="link-aviso mudo">O conteúdo viaja depois do <b>#</b>, que o navegador não envia ao servidor: nada fica guardado em host nenhum. Quem tiver o link, porém, lê o report — trate como documento confidencial.</p>`;
@@ -233,15 +248,18 @@ async function lerDoLink() {
 
 document.addEventListener('DOMContentLoaded', async () => {
   try { st.config = C.normalizeConfig(loadJSON(LS.config)); } catch (e) { st.config = null; }
-  if (await lerDoLink()) return; // link com dado: não busca nada, não precisa de token
+  // Quem tem token manda: busca ao vivo e reescreve o link, mesmo se a URL já
+  // trouxer um. Sem token, o link é a única fonte — é o caso do stakeholder.
+  if (!(st.config && st.pat) && await lerDoLink()) return;
   $('atualizar').addEventListener('click', carregar);
-  $('link').addEventListener('click', gerarLink);
-  $('resp-global').addEventListener('change', () => {
+  $('copiar').addEventListener('click', copiarLink);
+  $('resp-global').addEventListener('change', async () => {
     st.resp = $('resp-global').value;
     const f = loadJSON(LS.filtros) || {};
     f.resp = st.resp;
     localStorage.setItem(LS.filtros, JSON.stringify(f)); // mesma preferência da Central
     render();
+    await gravarLink(); // recorte novo, link novo
   });
   render();
   carregar();

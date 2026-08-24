@@ -613,7 +613,7 @@ body.gerado .nome-app { font-size: 1.15rem; }
 /* Modo leitura (aberto por link): não há o que atualizar nem filtrar */
 body.modo-leitura #filtro-global,
 body.modo-leitura #atualizar,
-body.modo-leitura #link,
+body.modo-leitura #copiar,
 body.modo-leitura #badge,
 body.modo-leitura #voltar { display: none; }
 
