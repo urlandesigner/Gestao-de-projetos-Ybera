@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Report — Central de Projetos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=20260821b">
+</head>
+<!-- Página autônoma: só o report, sem as telas de acompanhamento do PO. -->
+<body data-pagina="report" class="pagina-report">
+<div class="app">
+<header class="topo">
+  <h1 class="nome-app">Report</h1>
+  <div class="filtros filtro-topo" id="filtro-global" hidden>
+    <select id="resp-global" title="Recorte por responsável"><option value="">todos os responsáveis</option></select>
+  </div>
+  <div class="acoes">
+    <span id="badge" data-estado="sem-token">sem token</span>
+    <button id="baixar" class="botao-texto" title="Baixa um HTML com os dados embutidos, pra enviar">Baixar report</button>
+    <button id="atualizar" title="Atualizar agora">↻</button>
+    <a id="voltar" class="botao-texto" href="index.html#panorama" title="Voltar para a Central">Central</a>
+  </div>
+</header>
+
+<div class="corpo">
+<main>
+  <section id="secao-report">
+    <div id="report"><p class="mudo">carregando…</p></div>
+  </section>
+</main>
+</div>
+</div>
+
+<script src="assets/core.js?v=20260821b"></script>
+<script src="assets/api.js?v=20260821b"></script>
+<script src="assets/briefing.js?v=20260821b"></script>
+<script src="assets/report.js?v=20260821b"></script>
+</body>
+</html>

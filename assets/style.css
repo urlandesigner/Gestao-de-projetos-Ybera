@@ -565,6 +565,32 @@ body[data-pagina='projetos'] #secao-projetos { display: block; }
 }
 .faixa-vazia { margin: 0 0.2rem 0.2rem; font-size: 0.82rem; }
 
+/* Página report.html: sem sidebar, uma coluna. O botão de texto conviveria
+   mal com os quadrados de ícone, então tem largura própria. */
+body.pagina-report .corpo { grid-template-columns: minmax(0, 1fr); }
+.acoes .botao-texto {
+  width: auto;
+  height: 38px;
+  padding: 0 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 12px;
+  background: var(--superficie-2);
+  color: var(--tinta);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+.acoes .botao-texto:hover { background: #ebebe8; }
+.acoes .botao-texto:disabled { opacity: 0.45; cursor: default; }
+#baixar { background: var(--tinta); color: #fff; }
+#baixar:hover { background: #3f3f46; }
+/* No arquivo gerado não há nada pra clicar no topo — só o título do documento */
+body.gerado .topo { padding-bottom: 0.2rem; }
+body.gerado .nome-app { font-size: 1.15rem; }
+
 /* ---------- Report: briefing para stakeholder ---------- */
 .briefing { display: flex; flex-direction: column; gap: 0.75rem; }
 .briefing-topo { margin-bottom: 0.1rem; }

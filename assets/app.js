@@ -426,12 +426,11 @@ const baseState = { porTime: null, carregando: false, erro: null, fetchedAt: 0 }
 
 async function carregarBase(forcar) {
   if (!state.config || baseState.carregando) return;
-  if (!state.pat) { renderProdutos(); renderReport(); renderFuturo(); return; }
+  if (!state.pat) { renderProdutos(); renderFuturo(); return; }
   if (!forcar && baseState.porTime && !C.isStale(baseState.fetchedAt, Date.now())) return;
   baseState.carregando = true;
   baseState.erro = null;
   renderProdutos();
-  renderReport();
   renderFuturo();
   try {
     const porTime = [];
@@ -452,7 +451,6 @@ async function carregarBase(forcar) {
   } finally {
     baseState.carregando = false;
     renderProdutos();
-    renderReport();
     renderFuturo();
     renderBadge();
   }
@@ -557,211 +555,6 @@ function renderFuturo() {
       </section>`;
     }).join('');
   box.innerHTML = erroHtml + `<div class="blocos">${blocos}</div>`;
-}
-
-/* ---------- Report mensal ---------- */
-// Meses recolhidos, o mais recente aberto — mesma leitura do report do Radar.
-// Usa <details> nativo: zero JS pra abrir e fechar.
-function mesPorExtenso(chave) {
-  const [ano, mes] = String(chave).split('-');
-  const nome = new Date(Date.UTC(Number(ano), Number(mes) - 1, 1))
-    .toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' });
-  return nome.charAt(0).toUpperCase() + nome.slice(1) + ' de ' + ano;
-}
-
-function renderReport() {
-  const box = $('report');
-  if (!box || !state.config) return;
-  if (!state.pat) { box.innerHTML = semDados('o report'); return; }
-  const erroHtml = baseState.erro ? `<p class="erro">${escapeHtml(baseState.erro)}</p>` : '';
-  if (!baseState.porTime) {
-    box.innerHTML = erroHtml + (baseState.erro ? '' : '<p class="mudo">carregando entregas…</p>');
-    return;
-  }
-  // o mapa de épicos usa TODOS os itens: o pai de um PBI pode estar no nome de
-  // outra pessoa, e ainda assim é o produto onde o trabalho caiu
-  const todosOsItens = baseState.porTime.flatMap(({ items }) => items);
-  const mapa = C.mapaDeEpicos(todosOsItens);
-  const doRecorte = todosOsItens.filter(noNome);
-  const meses = C.resumoMensal(C.reportPorMes(doRecorte), mapa);
-  const b = C.briefingDoMes(doRecorte, Date.now());
-  const mesCorrente = meses.find((m) => m.mes === b.mes) || null;
-  const anteriores = meses.filter((m) => m.mes !== b.mes);
-  const nada = !mesCorrente && !b.execucao.length && !b.travados.length && !anteriores.length;
-  if (nada) {
-    box.innerHTML = erroHtml + '<p class="mudo">Nada registrado ainda para este recorte.</p>';
-    return;
-  }
-  box.innerHTML = erroHtml + htmlBriefing(b, mesCorrente, mapa)
-    + (anteriores.length ? `<section class="bloco-report historico">
-        <h4>Meses anteriores</h4>
-        ${anteriores.map((m) => htmlMesReport(m, false)).join('')}
-      </section>` : '');
-}
-
-// Uma linha de item no briefing: tipo, título, o dado que importa na seção, id.
-function linhaBriefing(it, direita) {
-  const f = it.fields || {};
-  const slug = C.typeSlug(f['System.WorkItemType']);
-  const link = C.deepLinks(state.config.org, it.projeto, '').workItem(it.id);
-  return `<li><a href="${link}" target="_blank" rel="noopener">
-    <span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span>
-    <span class="titulo">${escapeHtml(f['System.Title'] || ('item #' + it.id))}</span>
-    <span class="quando">${direita || ''}</span>
-    <span class="id">#${it.id}</span>
-  </a></li>`;
-}
-
-// Agrupa por produto (o épico ancestral) — stakeholder pensa em produto, não em
-// item solto. Produto com mais itens na frente; sem épico conhecido vai por fim.
-function porProduto(registros, mapa) {
-  const grupos = new Map();
-  for (const r of registros) {
-    const it = r.item || r;
-    const ep = mapa.get(it.id);
-    const chave = ep ? ep.titulo : 'Sem produto associado';
-    if (!grupos.has(chave)) grupos.set(chave, []);
-    grupos.get(chave).push(r);
-  }
-  return [...grupos.entries()]
-    .map(([produto, itens]) => ({ produto, itens }))
-    .sort((a, b) => (b.itens.length - a.itens.length) || (a.produto < b.produto ? -1 : 1));
-}
-
-function secaoPorProduto(titulo, registros, mapa, direita) {
-  if (!registros.length) return '';
-  const grupos = porProduto(registros, mapa).map((g) => `
-    <div class="grupo-produto">
-      <h5>${escapeHtml(g.produto)}</h5>
-      <ul class="lista-linhas">${g.itens.map((r) => linhaBriefing(r.item || r, direita(r))).join('')}</ul>
-    </div>`).join('');
-  return `<section class="bloco-report"><h4>${titulo}<span class="conta">${registros.length}</span></h4>${grupos}</section>`;
-}
-
-// O parágrafo de situação: execução, prazos e travas. Complementa o de volume.
-function paragrafoSituacao(b) {
-  const frases = [];
-  if (b.execucao.length) {
-    frases.push(`<b>${plural(b.execucao.length, 'item', 'itens')}</b> em execução agora.`);
-  }
-  const p = b.prazos;
-  const prazo = [];
-  if (p.atrasados.length) prazo.push(`<b>${p.atrasados.length} ${p.atrasados.length === 1 ? 'já passou' : 'já passaram'} do prazo</b>`);
-  if (p.esteMes.length) prazo.push(`${p.esteMes.length} ${p.esteMes.length === 1 ? 'vence' : 'vencem'} ainda este mês`);
-  if (p.proximoMes.length) prazo.push(`${p.proximoMes.length} no mês que vem`);
-  if (prazo.length) frases.push('Nos prazos: ' + prazo.join(', ') + '.');
-  if (b.travados.length) {
-    const maisAntigo = b.travados[0];
-    const tempo = maisAntigo.dias == null ? '' : ` — o mais antigo sem movimento há ${maisAntigo.dias} ${maisAntigo.dias === 1 ? 'dia' : 'dias'}`;
-    frases.push(`<b>${plural(b.travados.length, 'item está travado', 'itens estão travados')}</b>${tempo}. ${b.travados.length === 1 ? 'É o ponto' : 'São os pontos'} que dependem de decisão.`);
-  }
-  if (!frases.length) return '';
-  return `<p>${frases.join(' ')}</p>`;
-}
-
-function htmlBriefing(b, m, mapa) {
-  const escopo = [];
-  if (respAtivo()) escopo.push('recorte: ' + respAtivo());
-  escopo.push('gerado em ' + dataCurta(Date.now()));
-  const resumo = (m ? comunicadoDoMes(m) : '<div class="comunicado"><p>Nada concluído neste mês até agora.</p></div>')
-    .replace('</div>', paragrafoSituacao(b) + '</div>');
-  const prazoLista = (titulo, regs, alerta) => regs.length ? `
-    <div class="grupo-produto">
-      <h5${alerta ? ' class="h5-alerta"' : ''}>${titulo}</h5>
-      <ul class="lista-linhas">${regs.map((r) => linhaBriefing(r.item, dataCurta(r.alvo))).join('')}</ul>
-    </div>` : '';
-  const prazos = b.prazos.atrasados.length + b.prazos.esteMes.length + b.prazos.proximoMes.length;
-  return `<article class="briefing">
-    <header class="briefing-topo">
-      <h3>${mesPorExtenso(b.mes)}</h3>
-      <p class="briefing-meta">${escapeHtml(escopo.join(' · '))}</p>
-    </header>
-    <section class="bloco-report"><h4>Resumo</h4>${resumo}</section>
-    ${secaoPorProduto('Entregue no mês', (m && m.itens) || [], mapa, (r) => dataCurta(r.quando))}
-    ${secaoPorProduto('Em execução', b.execucao, mapa, (r) => escapeHtml((r.item.fields || {})['System.State']))}
-    ${prazos ? `<section class="bloco-report"><h4>Prazos<span class="conta">${prazos}</span></h4>
-      ${prazoLista('Já passaram do prazo', b.prazos.atrasados, true)}
-      ${prazoLista('Vencem ainda este mês', b.prazos.esteMes)}
-      ${prazoLista('Vencem no mês que vem', b.prazos.proximoMes)}
-    </section>` : ''}
-    ${b.travados.length ? `<section class="bloco-report"><h4>Travado — depende de decisão<span class="conta">${b.travados.length}</span></h4>
-      <div class="grupo-produto"><ul class="lista-linhas">${b.travados.map((r) => linhaBriefing(r.item, r.dias == null ? escapeHtml((r.item.fields || {})['System.State']) : `sem movimento há ${r.dias} d`)).join('')}</ul></div>
-    </section>` : ''}
-  </article>`;
-}
-
-function plural(n, um, muitos) { return n + ' ' + (n === 1 ? um : muitos); }
-
-// O parágrafo do mês. No Radar isso era escrito à mão; aqui é derivado dos
-// fatos — volume, comparação com o mês anterior, onde o trabalho caiu e épico
-// que fechou. Nada aqui afirma o que os dados não mostram.
-function comunicadoDoMes(m) {
-  const n = m.porNivel;
-  const r = m.resumo || {};
-  const niveis = [];
-  if (n.epic) niveis.push(plural(n.epic, 'épico', 'épicos'));
-  if (n.feature) niveis.push(plural(n.feature, 'feature', 'features'));
-  if (n.pbi) niveis.push(n.pbi + ' PBI' + (n.pbi > 1 ? 's' : ''));
-  const escopo = respAtivo() ? ` no nome de <b>${escapeHtml(respAtivo())}</b>` : '';
-  const frases1 = [`Em ${mesPorExtenso(m.mes).toLowerCase()}, <b>${plural(m.total, 'item', 'itens')}</b>${escopo} ${m.total === 1 ? 'foi concluído' : 'foram concluídos'} — ${niveis.join(', ')}.`];
-  if (r.delta === null || r.delta === undefined) {
-    frases1.push('É o registro mais antigo que o DevOps guarda para este recorte.');
-  } else if (r.delta > 0) {
-    frases1.push(`São <b>${r.delta} a mais</b> que em ${mesPorExtenso(r.mesAnterior).toLowerCase()}.`);
-  } else if (r.delta < 0) {
-    frases1.push(`São <b>${-r.delta} a menos</b> que em ${mesPorExtenso(r.mesAnterior).toLowerCase()}.`);
-  } else {
-    frases1.push(`Mesmo volume de ${mesPorExtenso(r.mesAnterior).toLowerCase()}.`);
-  }
-
-  const frases2 = [];
-  const prods = r.produtos || [];
-  if (prods.length === 1) {
-    frases2.push(`Todo o esforço caiu em <b>${escapeHtml(prods[0].titulo)}</b>.`);
-  } else if (prods.length > 1) {
-    const topo = prods.slice(0, 3).map((p) => `<b>${escapeHtml(p.titulo)}</b> (${p.n})`);
-    const resto = prods.length - topo.length;
-    frases2.push(`O esforço se distribuiu em ${plural(prods.length, 'produto', 'produtos')}: ${topo.join(', ')}${resto > 0 ? `, e outros ${resto}` : ''}.`);
-  }
-  const fech = r.epicosFechados || [];
-  if (fech.length === 1) {
-    frases2.push(`<b>${escapeHtml(fech[0].titulo)}</b> fechou por completo.`);
-  } else if (fech.length > 1) {
-    frases2.push(`${plural(fech.length, 'épico fechou', 'épicos fecharam')} por completo: ${fech.map((e) => `<b>${escapeHtml(e.titulo)}</b>`).join(', ')}.`);
-  }
-
-  return `<div class="comunicado">
-    <p>${frases1.join(' ')}</p>
-    ${frases2.length ? `<p>${frases2.join(' ')}</p>` : ''}
-  </div>`;
-}
-
-function htmlMesReport(m, aberto) {
-  const n = m.porNivel;
-  const partes = [];
-  if (n.epic) partes.push(n.epic + (n.epic > 1 ? ' épicos' : ' épico'));
-  if (n.feature) partes.push(n.feature + (n.feature > 1 ? ' features' : ' feature'));
-  if (n.pbi) partes.push(n.pbi + ' PBI' + (n.pbi > 1 ? 's' : ''));
-  const nota = m.aproximados
-    ? `<p class="mudo nota-report">${m.aproximados} ${m.aproximados > 1 ? 'itens sem data de conclusão' : 'item sem data de conclusão'} registrada no DevOps — para ${m.aproximados > 1 ? 'esses' : 'esse'} usei a data da última alteração, marcada com ~.</p>`
-    : '';
-  const linhas = m.itens.map(({ item, quando, aproximada }) => {
-    const f = item.fields || {};
-    const slug = C.typeSlug(f['System.WorkItemType']);
-    const link = C.deepLinks(state.config.org, item.projeto, '').workItem(item.id);
-    return `<li><a href="${link}" target="_blank" rel="noopener">
-      <span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span>
-      <span class="titulo">${escapeHtml(f['System.Title'] || ('item #' + item.id))}</span>
-      <span class="quando"${aproximada ? ' title="data aproximada — sem data de conclusão no DevOps"' : ''}>${aproximada ? '~' : ''}${dataCurta(quando)}</span>
-      <span class="id">#${item.id}</span>
-    </a></li>`;
-  }).join('');
-  return `<details class="mes"${aberto ? ' open' : ''}>
-    <summary><span class="mes-nome">${mesPorExtenso(m.mes)}</span><span class="mes-resumo">${m.total} ${m.total > 1 ? 'itens' : 'item'}${partes.length ? ' · ' + partes.join(' · ') : ''}</span></summary>
-    ${comunicadoDoMes(m)}${nota}
-    <p class="sub-lista">Itens concluídos</p>
-    <ul class="lista-linhas">${linhas}</ul>
-  </details>`;
 }
 
 /* ---------- Pendências ---------- */
@@ -997,7 +790,6 @@ function renderRoute() {
   fecharBoard();
   if (hash === '#pendencias') { setPagina('pendencias'); return; }
   if (hash === '#produtos') { setPagina('produtos'); carregarBase(false); return; }
-  if (hash === '#report') { setPagina('report'); carregarBase(false); return; }
   if (hash === '#futuro') { setPagina('futuro'); carregarBase(false); return; }
   if (hash === '#projetos') { setPagina('projetos'); return; }
   if (hash === '#meus-itens') { setPagina('meus-itens'); return; }
@@ -1009,7 +801,6 @@ function setPagina(pagina) {
   $('nav-panorama').classList.toggle('ativa', pagina === 'panorama');
   $('nav-pendencias').classList.toggle('ativa', pagina === 'pendencias');
   $('nav-produtos').classList.toggle('ativa', pagina === 'produtos');
-  $('nav-report').classList.toggle('ativa', pagina === 'report');
   $('nav-futuro').classList.toggle('ativa', pagina === 'futuro');
   $('nav-meus-itens').classList.toggle('ativa', pagina === 'meus-itens');
   $('nav-projetos').classList.toggle('ativa', pagina === 'projetos' || pagina === 'board');
@@ -1268,7 +1059,7 @@ document.addEventListener('DOMContentLoaded', () => {
   $('atualizar').addEventListener('click', () => {
     refreshAll(true);
     // as duas páginas que leem a base têm cache próprio
-    if (['produtos', 'report', 'futuro'].includes(document.body.dataset.pagina)) carregarBase(true);
+    if (['produtos', 'futuro'].includes(document.body.dataset.pagina)) carregarBase(true);
   });
   $('abrir-config').addEventListener('click', openSettings);
   $('board-voltar').addEventListener('click', () => { location.hash = '#projetos'; });
@@ -1295,7 +1086,6 @@ document.addEventListener('DOMContentLoaded', () => {
     salvarFiltrosMI();
     renderAll();
     renderProdutos();
-    renderReport();
     renderFuturo();
   });
   // Sidebar colapsável — preferência persiste entre visitas
