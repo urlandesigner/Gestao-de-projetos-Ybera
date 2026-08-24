@@ -27,12 +27,21 @@ const CAMPOS = [
   'Microsoft.VSTS.Common.ClosedDate', 'System.ChangedDate',
 ];
 
+// A consulta é presa à área do time (areaClause). Épico e Feature costumam
+// morar em outra área — ou em outro projeto — e simplesmente não vêm. Sem eles
+// a cadeia do produto quebra no primeiro salto e tudo cai em "sem produto".
+// workitemsbatch busca POR ID e não olha área: então pedimos os pais que
+// faltam, um nível por volta, até a cadeia fechar.
+const CAMPOS_PAI = ['System.WorkItemType', 'System.Title', 'System.Parent'];
+const NIVEIS_ACIMA = 4; // PBI → Feature → Épico usa 2; 4 é folga pra hierarquia torta
+
 const st = {
   config: null,
   pat: localStorage.getItem(LS.pat) || '',
   usuario: (loadJSON(LS.cache) || {}).usuario || '',
   resp: (() => { const f = loadJSON(LS.filtros) || {}; return f.resp === undefined ? null : f.resp; })(),
   items: null,
+  pais: [],        // pais buscados por id, fora da consulta por área
   erro: null,
   carregando: false,
   vazio: false,
@@ -93,7 +102,7 @@ function render() {
   renderFiltro();
   const r = B.htmlReport({
     items: st.items.filter(noNome),
-    todos: st.items, // o produto de um PBI mora no pai, que pode ser de outro dono
+    todos: st.items.concat(st.pais), // o produto mora no pai — de outro dono, ou de outra área
     agora: Date.now(),
     org: st.config.org,
     escopo: respAtivo(),
@@ -104,10 +113,29 @@ function render() {
   $('copiar').disabled = r.vazio;
 }
 
+async function buscarPais(base) {
+  const porId = new Map(base.map((it) => [it.id, it]));
+  const tentados = new Set();
+  const extras = [];
+  for (let volta = 0; volta < NIVEIS_ACIMA; volta++) {
+    const faltando = [...new Set([...porId.values()]
+      .map((it) => (it.fields || {})['System.Parent'])
+      .filter((pai) => pai && !porId.has(pai) && !tentados.has(pai)))];
+    if (!faltando.length) break;
+    faltando.forEach((id) => tentados.add(id)); // pai sem permissão não volta: não insiste
+    let crus = [];
+    try { crus = await A.getFields(ctx(), faltando, CAMPOS_PAI); } catch (e) { break; }
+    if (!crus.length) break;
+    for (const it of crus) { porId.set(it.id, it); extras.push(it); }
+  }
+  return extras;
+}
+
 async function carregar() {
   if (!st.config || !st.pat || st.carregando) return;
   st.carregando = true;
   st.erro = null;
+  st.pais = [];
   render();
   try {
     if (!st.usuario) {
@@ -122,6 +150,7 @@ async function carregar() {
       for (const it of crus) todos.push(Object.assign({ projeto: p.projectName }, it));
     }
     st.items = todos;
+    st.pais = await buscarPais(todos);
   } catch (e) {
     st.erro = mensagemDeErro(e);
   } finally {
@@ -219,7 +248,7 @@ async function gravarLink() {
       escopo: respAtivo(),
       times: st.config.projects.filter((p) => !p.hidden).map((p) => p.teamName),
       items: enxugar(mostrados),
-      ancestrais: cadeiaDeProdutos(mostrados, st.items),
+      ancestrais: cadeiaDeProdutos(mostrados, st.items.concat(st.pais)),
     };
     st.link = location.origin + location.pathname + '#r=' + await comprimir(JSON.stringify(pacote));
     history.replaceState(null, '', st.link);

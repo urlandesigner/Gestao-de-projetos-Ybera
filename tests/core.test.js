@@ -469,8 +469,8 @@ const nod = (id, tipo, titulo, pai) => ({ id, fields: {
   'System.WorkItemType': tipo, 'System.Title': titulo, 'System.Parent': pai || undefined, 'System.State': 'New',
 } });
 
-test('mapaDeEpicos sobe a cadeia até o épico e aponta o épico pra si mesmo', () => {
-  const mapa = C.mapaDeEpicos([
+test('mapaDeProdutos sobe a cadeia até o épico e aponta o épico pra si mesmo', () => {
+  const mapa = C.mapaDeProdutos([
     nod(1, 'Epic', 'Nova PDP'),
     nod(10, 'Feature', 'Galeria', 1),
     nod(100, 'Product Backlog Item', 'Zoom', 10), // neto: sobe dois níveis
@@ -482,9 +482,26 @@ test('mapaDeEpicos sobe a cadeia até o épico e aponta o épico pra si mesmo', 
   assert.equal(mapa.has(200), false);
 });
 
-test('mapaDeEpicos não trava em ciclo de pai', () => {
-  const mapa = C.mapaDeEpicos([nod(1, 'Feature', 'A', 2), nod(2, 'Feature', 'B', 1)]);
-  assert.equal(mapa.size, 0); // ninguém acha épico, e a busca termina
+test('mapaDeProdutos não trava em ciclo de pai', () => {
+  const mapa = C.mapaDeProdutos([nod(1, 'Feature', 'A', 2), nod(2, 'Feature', 'B', 1)]);
+  assert.equal(mapa.size, 2);          // sem épico, cada um cai no ancestral que achou
+  assert.equal(mapa.get(1).titulo, 'B'); // e a busca termina em vez de girar
+});
+
+// Hierarquia sem épico é comum: PBI pendurado direto numa Feature. A Feature é
+// o produto mais concreto que existe ali — melhor que "sem produto associado".
+test('mapaDeProdutos usa a Feature quando não há épico na cadeia', () => {
+  const mapa = C.mapaDeProdutos([
+    nod(10, 'Feature', 'Template global'),
+    nod(100, 'Product Backlog Item', 'Componentes de ícones', 10),
+  ]);
+  assert.equal(mapa.get(100).titulo, 'Template global');
+  assert.equal(mapa.has(10), false); // a própria Feature raiz não é produto de si mesma
+});
+
+test('mapaDeProdutos não inventa produto para item sem pai', () => {
+  const mapa = C.mapaDeProdutos([nod(100, 'Product Backlog Item', 'PBI solto')]);
+  assert.equal(mapa.has(100), false);
 });
 
 test('resumoMensal compara com o mês anterior e ranqueia produtos', () => {
@@ -500,7 +517,7 @@ test('resumoMensal compara com o mês anterior e ranqueia produtos', () => {
   itens[3].fields['System.Parent'] = 1;
   itens[4].fields['System.Parent'] = 2;
   itens[5].fields['System.Parent'] = 2;
-  const mapa = C.mapaDeEpicos(itens);
+  const mapa = C.mapaDeProdutos(itens);
   const meses = C.resumoMensal(C.reportPorMes(itens), mapa);
   assert.equal(meses[0].mes, '2026-08');
   assert.equal(meses[0].resumo.delta, 2);            // 3 em agosto contra 1 em julho
@@ -512,7 +529,7 @@ test('resumoMensal compara com o mês anterior e ranqueia produtos', () => {
 test('resumoMensal destaca épico concluído no mês', () => {
   const itens = [fim(1, 'Epic', 'Done', '2026-08-10T00:00:00Z')];
   itens[0].fields['System.Title'] = 'Compliance Google';
-  const meses = C.resumoMensal(C.reportPorMes(itens), C.mapaDeEpicos(itens));
+  const meses = C.resumoMensal(C.reportPorMes(itens), C.mapaDeProdutos(itens));
   assert.deepEqual(meses[0].resumo.epicosFechados, [{ id: 1, titulo: 'Compliance Google' }]);
 });
 

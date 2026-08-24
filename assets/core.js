@@ -547,23 +547,34 @@
     ];
   }
 
-  // Épico ancestral de cada item — sobe a cadeia de pais até achar um Epic.
+  // Produto de cada item: sobe a cadeia de pais e devolve o primeiro Épico.
+  // Sem épico na cadeia, devolve o ancestral mais alto que achou — uma Feature
+  // já diz muito mais que "sem produto associado", e é o que o DevOps tem.
+  // Épico aponta pra si mesmo. Cadeia com ciclo para sozinha.
   // O Report usa isso pra dizer EM QUE produto o mês caiu, em vez de só listar
-  // títulos soltos. Épico aponta pra si mesmo. Cadeia com ciclo para sozinha.
-  function mapaDeEpicos(items) {
+  // títulos soltos.
+  function mapaDeProdutos(items) {
     const porId = new Map((items || []).map((it) => [it.id, it]));
+    const reg = (it) => ({
+      id: it.id,
+      titulo: (it.fields || {})['System.Title'] || ('item #' + it.id),
+    });
     const achar = (id) => {
-      const vistos = new Set();
-      let atual = porId.get(id);
+      const eu = porId.get(id);
+      if (!eu) return null;
+      if (levelOf((eu.fields || {})['System.WorkItemType']) === 'epic') return reg(eu);
+      const vistos = new Set([id]);
+      let atual = porId.get((eu.fields || {})['System.Parent']);
+      let maisAlto = null;
       while (atual && !vistos.has(atual.id)) {
         vistos.add(atual.id);
         const f = atual.fields || {};
-        if (levelOf(f['System.WorkItemType']) === 'epic') {
-          return { id: atual.id, titulo: f['System.Title'] || ('item #' + atual.id) };
-        }
+        if (levelOf(f['System.WorkItemType']) === 'epic') return reg(atual);
+        maisAlto = atual; // guarda a Feature: sem épico na cadeia, ela é o produto
         atual = porId.get(f['System.Parent']);
       }
-      return null; // pai fora do conjunto consultado: não se afirma produto
+      // Sem pai nenhum: não se inventa produto. É o DevOps que está incompleto.
+      return maisAlto ? reg(maisAlto) : null;
     };
     const saida = new Map();
     for (const it of items || []) {
@@ -690,7 +701,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, reportPorMes, mapaDeEpicos, resumoMensal, briefingDoMes, futuroPorFaixa, fimDoTrimestre,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, reportPorMes, mapaDeProdutos, resumoMensal, briefingDoMes, futuroPorFaixa, fimDoTrimestre,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };
 });

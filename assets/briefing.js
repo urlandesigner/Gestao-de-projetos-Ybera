@@ -173,7 +173,7 @@
     const agora = o.agora || Date.now();
     const org = o.org || '';
     const escopo = o.escopo || '';
-    const mapa = C.mapaDeEpicos(o.todos || items);
+    const mapa = C.mapaDeProdutos(o.todos || items);
     const meses = C.resumoMensal(C.reportPorMes(items), mapa);
     const b = C.briefingDoMes(items, agora);
     const mesAtual = meses.find((m) => m.mes === b.mes) || null;
