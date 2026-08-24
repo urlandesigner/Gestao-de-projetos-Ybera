@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=20260821b">
+<link rel="stylesheet" href="assets/style.css?v=20260821c">
 </head>
 <!-- Página autônoma: só o report, sem as telas de acompanhamento do PO. -->
 <body data-pagina="report" class="pagina-report">
@@ -19,7 +19,7 @@
   </div>
   <div class="acoes">
     <span id="badge" data-estado="sem-token">sem token</span>
-    <button id="baixar" class="botao-texto" title="Baixa um HTML com os dados embutidos, pra enviar">Baixar report</button>
+    <button id="link" class="botao-texto" title="Gera um link que carrega este report — quem abrir não precisa de token">Gerar link</button>
     <button id="atualizar" title="Atualizar agora">↻</button>
     <a id="voltar" class="botao-texto" href="index.html#panorama" title="Voltar para a Central">Central</a>
   </div>
@@ -28,15 +28,16 @@
 <div class="corpo">
 <main>
   <section id="secao-report">
+    <div id="caixa-link" class="caixa-link" hidden></div>
     <div id="report"><p class="mudo">carregando…</p></div>
   </section>
 </main>
 </div>
 </div>
 
-<script src="assets/core.js?v=20260821b"></script>
-<script src="assets/api.js?v=20260821b"></script>
-<script src="assets/briefing.js?v=20260821b"></script>
-<script src="assets/report.js?v=20260821b"></script>
+<script src="assets/core.js?v=20260821c"></script>
+<script src="assets/api.js?v=20260821c"></script>
+<script src="assets/briefing.js?v=20260821c"></script>
+<script src="assets/report.js?v=20260821c"></script>
 </body>
 </html>

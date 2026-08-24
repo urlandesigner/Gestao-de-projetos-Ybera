@@ -90,7 +90,7 @@ function render() {
     times: st.config.projects.filter((p) => !p.hidden).map((p) => p.teamName),
   });
   box.innerHTML = erroHtml + r.html;
-  $('baixar').disabled = r.vazio;
+  $('link').disabled = r.vazio;
 }
 
 async function carregar() {
@@ -119,48 +119,75 @@ async function carregar() {
   }
 }
 
-/* ---------- Arquivo autocontido ---------- */
-// O stakeholder não tem PAT: o que vai pra ele é o RESULTADO, não a ferramenta.
-// Por isso o arquivo gerado leva o HTML já renderizado + o CSS embutido, e
-// nenhum JavaScript — abre em qualquer computador, inclusive offline (a fonte
-// cai pra do sistema). Nunca vai pro repositório: é download.
-async function baixar() {
-  const btn = $('baixar');
+/* ---------- Link de leitura ---------- */
+// O stakeholder abre um LINK, não um arquivo. E ele não tem PAT — então o dado
+// viaja no FRAGMENTO da URL (depois do #), que o navegador jamais envia ao
+// servidor: a Vercel entrega só a página estática, e o conteúdo existe apenas
+// dentro do link. Nada de dado de negócio parado em host público.
+const CAMPOS_LINK = [
+  'System.WorkItemType', 'System.State', 'System.Title', 'System.Parent',
+  'Microsoft.VSTS.Scheduling.TargetDate', 'Microsoft.VSTS.Common.ClosedDate', 'System.ChangedDate',
+];
+const LIMITE_LINK = 8000; // acima disso ferramentas de mensagem começam a cortar
+
+function b64url(bytes) {
+  let bin = '';
+  new Uint8Array(bytes).forEach((b) => { bin += String.fromCharCode(b); });
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function deB64url(txt) {
+  const b64 = txt.replace(/-/g, '+').replace(/_/g, '/');
+  const bin = atob(b64 + '='.repeat((4 - (b64.length % 4)) % 4));
+  return Uint8Array.from(bin, (c) => c.charCodeAt(0));
+}
+
+async function comprimir(txt) {
+  const cs = new CompressionStream('gzip');
+  const w = cs.writable.getWriter();
+  w.write(new TextEncoder().encode(txt));
+  w.close();
+  return b64url(await new Response(cs.readable).arrayBuffer());
+}
+
+async function descomprimir(txt) {
+  const ds = new DecompressionStream('gzip');
+  const w = ds.writable.getWriter();
+  w.write(deB64url(txt));
+  w.close();
+  return new TextDecoder().decode(await new Response(ds.readable).arrayBuffer());
+}
+
+// Só os campos que o report lê: responsável já foi aplicado antes, e data de
+// início não entra em nada aqui. Menos dado = link mais curto.
+function enxugar(items) {
+  return items.map((it) => {
+    const f = it.fields || {};
+    const campos = {};
+    for (const c of CAMPOS_LINK) if (f[c] !== undefined) campos[c] = f[c];
+    return { id: it.id, projeto: it.projeto, fields: campos };
+  });
+}
+
+async function gerarLink() {
+  const btn = $('link');
   const rotulo = btn.textContent;
   btn.disabled = true;
   btn.textContent = 'gerando…';
   try {
-    const css = await (await fetch('assets/style.css')).text();
-    const corpo = $('report').innerHTML;
-    const titulo = 'Report — ' + (document.querySelector('.briefing-topo h3') || {}).textContent;
-    const doc = `<!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${B.esc(titulo)}</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
-<style>
-${css}
-</style>
-</head>
-<body data-pagina="report" class="pagina-report gerado">
-<div class="app">
-<header class="topo"><h1 class="nome-app">${B.esc(titulo)}</h1></header>
-<div class="corpo"><main><section id="secao-report">${corpo}</section></main></div>
-</div>
-</body>
-</html>`;
-    const url = URL.createObjectURL(new Blob([doc], { type: 'text/html;charset=utf-8' }));
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'report-' + (new Date().toISOString().slice(0, 10)) + '.html';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    const pacote = {
+      v: 1,
+      em: Date.now(),
+      org: st.config.org,
+      escopo: respAtivo(),
+      times: st.config.projects.filter((p) => !p.hidden).map((p) => p.teamName),
+      items: enxugar(st.items.filter(noNome)),
+    };
+    const url = location.origin + location.pathname + '#r=' + await comprimir(JSON.stringify(pacote));
+    mostrarLink(url);
+    try { await navigator.clipboard.writeText(url); } catch (e) { /* sem permissão: o campo abaixo resolve */ }
   } catch (e) {
-    st.erro = 'Não deu pra gerar o arquivo: ' + e.message;
+    st.erro = 'Não deu pra gerar o link: ' + e.message;
     render();
   } finally {
     btn.disabled = false;
@@ -168,10 +195,47 @@ ${css}
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+function mostrarLink(url) {
+  const caixa = $('caixa-link');
+  const longo = url.length > LIMITE_LINK;
+  caixa.hidden = false;
+  caixa.innerHTML = `
+    <p class="link-aviso">${longo
+      ? 'Link gerado, mas está <b>longo (' + url.length.toLocaleString('pt-BR') + ' caracteres)</b> — alguns aplicativos de mensagem cortam. Recorte por responsável pra encurtar.'
+      : 'Link copiado. Ele carrega o report inteiro — quem abrir não precisa de token nem de acesso ao DevOps.'}</p>
+    <input id="campo-link" type="text" readonly value="${B.esc(url)}">
+    <p class="link-aviso mudo">O conteúdo viaja depois do <b>#</b>, que o navegador não envia ao servidor: nada fica guardado em host nenhum. Quem tiver o link, porém, lê o report — trate como documento confidencial.</p>`;
+  const campo = $('campo-link');
+  campo.focus();
+  campo.select();
+}
+
+// Modo leitura: o link traz o dado, então não há nada a buscar nem a filtrar.
+async function lerDoLink() {
+  const m = (location.hash || '').match(/^#r=(.+)$/);
+  if (!m) return false;
+  document.body.classList.add('modo-leitura');
+  try {
+    const pacote = JSON.parse(await descomprimir(m[1]));
+    const r = B.htmlReport({
+      items: pacote.items || [],
+      agora: pacote.em || Date.now(),
+      org: pacote.org || '',
+      escopo: pacote.escopo || '',
+      times: pacote.times || [],
+    });
+    $('report').innerHTML = r.html;
+  } catch (e) {
+    $('report').innerHTML = '<p class="erro">Este link não pôde ser lido. Ele pode ter sido cortado ao ser copiado — peça outro a quem enviou.</p>';
+  }
+  return true;
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
   try { st.config = C.normalizeConfig(loadJSON(LS.config)); } catch (e) { st.config = null; }
+  if (await lerDoLink()) return; // link com dado: não busca nada, não precisa de token
   $('atualizar').addEventListener('click', carregar);
-  $('baixar').addEventListener('click', baixar);
+  $('link').addEventListener('click', gerarLink);
   $('resp-global').addEventListener('change', () => {
     st.resp = $('resp-global').value;
     const f = loadJSON(LS.filtros) || {};

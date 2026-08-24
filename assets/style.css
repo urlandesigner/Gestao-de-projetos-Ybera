@@ -591,6 +591,32 @@ body.pagina-report .corpo { grid-template-columns: minmax(0, 1fr); }
 body.gerado .topo { padding-bottom: 0.2rem; }
 body.gerado .nome-app { font-size: 1.15rem; }
 
+/* Caixa do link compartilhável */
+.caixa-link {
+  background: var(--superficie-2);
+  border-radius: 14px;
+  padding: 0.8rem 0.9rem;
+  margin-bottom: 1rem;
+}
+.caixa-link .link-aviso { margin: 0 0 0.5rem; font-size: 0.8rem; line-height: 1.5; }
+.caixa-link .link-aviso:last-child { margin: 0.5rem 0 0; }
+.caixa-link input {
+  width: 100%;
+  font: inherit;
+  font-size: 0.78rem;
+  padding: 0.5rem 0.7rem;
+  border: none;
+  border-radius: 10px;
+  background: var(--superficie);
+  color: var(--mudo);
+}
+/* Modo leitura (aberto por link): não há o que atualizar nem filtrar */
+body.modo-leitura #filtro-global,
+body.modo-leitura #atualizar,
+body.modo-leitura #link,
+body.modo-leitura #badge,
+body.modo-leitura #voltar { display: none; }
+
 /* ---------- Report: briefing para stakeholder ---------- */
 .briefing { display: flex; flex-direction: column; gap: 0.75rem; }
 .briefing-topo { margin-bottom: 0.1rem; }
