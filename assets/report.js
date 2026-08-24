@@ -38,6 +38,12 @@ const CAMPOS_PAI = ['System.WorkItemType', 'System.Title', 'System.Parent',
   'System.State', 'Microsoft.VSTS.Scheduling.TargetDate'];
 const NIVEIS_ACIMA = 4; // PBI → Feature → Épico usa 2; 4 é folga pra hierarquia torta
 
+// As ferramentas do PO só existem quando a URL pede: é assim que a Central
+// chama esta página (report.html?po=1). O link que vai pro stakeholder é montado
+// sem query nenhuma, então ele nunca vê ferramenta — não por estar escondida,
+// mas por não ser montada. Abrindo a URL crua, esta é uma página de leitura.
+const FERRAMENTAS = /(?:^|[?&])po=1(?:&|$)/.test(location.search);
+
 const st = {
   config: null,
   pat: localStorage.getItem(LS.pat) || '',
@@ -189,7 +195,7 @@ function render() {
   renderBadge();
   // Antes de qualquer saída antecipada: quem não tem token nem config também
   // precisa ver a barra (é onde está o caminho de volta pra Central).
-  $('ferramentas').hidden = st.leitura;
+  $('ferramentas').hidden = st.leitura || !FERRAMENTAS;
   const box = $('report');
   if (!st.leitura) {
     if (!st.config) {
@@ -351,7 +357,7 @@ function cadeiaDeProdutos(mostrados, todos) {
 async function gravarLink() {
   if (st.leitura) return; // o link já É a página: reescrever apagaria o dado
   st.link = '';
-  if (!st.items || st.vazio) { history.replaceState(null, '', location.pathname); return; }
+  if (!st.items || st.vazio) { history.replaceState(null, '', location.pathname + location.search); return; }
   try {
     const mostrados = st.items.filter(noNome);
     const pacote = {
@@ -364,8 +370,11 @@ async function gravarLink() {
       items: enxugar(mostrados),
       ancestrais: cadeiaDeProdutos(mostrados, st.items.concat(st.pais)),
     };
-    st.link = location.origin + location.pathname + '#r=' + await comprimir(JSON.stringify(pacote));
-    history.replaceState(null, '', st.link);
+    const carga = '#r=' + await comprimir(JSON.stringify(pacote));
+    // O link que ele copia é limpo. O que fica na barra de endereços preserva o
+    // ?po=1, senão um F5 tiraria as ferramentas dele.
+    st.link = location.origin + location.pathname + carga;
+    history.replaceState(null, '', location.pathname + location.search + carga);
   } catch (e) {
     st.erro = 'Não deu pra montar o link: ' + e.message;
     render();
