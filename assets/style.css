@@ -565,6 +565,49 @@ body[data-pagina='projetos'] #secao-projetos { display: block; }
 }
 .faixa-vazia { margin: 0 0.2rem 0.2rem; font-size: 0.82rem; }
 
+/* ---------- Report: briefing para stakeholder ---------- */
+.briefing { display: flex; flex-direction: column; gap: 0.75rem; }
+.briefing-topo { margin-bottom: 0.1rem; }
+.briefing-topo h3 { margin: 0; font-size: 1.35rem; }
+.briefing-meta { margin: 0.15rem 0 0; font-size: 0.78rem; color: var(--mudo); }
+.bloco-report { background: var(--superficie-2); border-radius: 18px; padding: 1rem 0.95rem; }
+.bloco-report > h4 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--mudo);
+}
+.bloco-report > h4 .conta { margin-left: auto; }
+.grupo-produto + .grupo-produto { margin-top: 0.7rem; }
+.grupo-produto h5 {
+  margin: 0 0.2rem 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.grupo-produto h5.h5-alerta { color: var(--erro); }
+.historico { margin-top: 0.5rem; }
+.historico .mes { background: var(--superficie); }
+
+/* Impressão: a página vira o documento que vai pro stakeholder. Fora navegação,
+   sombras e tudo que só serve na tela; os meses recolhidos abrem. */
+@media print {
+  body { padding: 0; background: #fff; }
+  .app > header.topo, .lateral, .historico { display: none !important; }
+  .corpo { display: block; padding: 0; }
+  main > section { box-shadow: none; border: none; padding: 0; }
+  #secao-report { display: block !important; }
+  .bloco-report { background: #fff; border: 1px solid #e5e5e5; break-inside: avoid; }
+  .lista-linhas a { box-shadow: none; border: 1px solid #eee; }
+  .mes { break-inside: avoid; }
+  details { display: block; }
+  details > summary { list-style: none; }
+}
+
 /* ---------- Report mensal ---------- */
 /* O comunicado: medida curta e entrelinha alta — texto pra ler, não pra varrer */
 .comunicado { padding: 0 0.9rem; }

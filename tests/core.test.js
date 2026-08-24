@@ -515,3 +515,66 @@ test('resumoMensal destaca épico concluído no mês', () => {
   const meses = C.resumoMensal(C.reportPorMes(itens), C.mapaDeEpicos(itens));
   assert.deepEqual(meses[0].resumo.epicosFechados, [{ id: 1, titulo: 'Compliance Google' }]);
 });
+
+/* ---- Briefing do mês (Report para stakeholder) ---- */
+// item completo: tipo, estado, alvo (dias), fechado (dias atrás), alterado (dias atrás)
+const bi = (id, tipo, estado, titulo, alvoDias, fechadoDias, alteradoDias) => {
+  const dia = 86400000;
+  return { id, fields: {
+    'System.WorkItemType': tipo, 'System.State': estado, 'System.Title': titulo,
+    'Microsoft.VSTS.Scheduling.TargetDate': alvoDias == null ? undefined : new Date(AGORA + alvoDias * dia).toISOString(),
+    'Microsoft.VSTS.Common.ClosedDate': fechadoDias == null ? undefined : new Date(AGORA - fechadoDias * dia).toISOString(),
+    'System.ChangedDate': new Date(AGORA - (alteradoDias == null ? 1 : alteradoDias) * dia).toISOString(),
+  } };
+};
+
+test('briefingDoMes separa feito, execução, travado e prazos', () => {
+  const b = C.briefingDoMes([
+    bi(1, 'Feature', 'Done', 'Entregue neste mês', null, 5),
+    bi(2, 'Feature', 'Done', 'Entregue mês passado', null, 45),
+    bi(3, 'Product Backlog Item', 'In Progress', 'Em curso', 6),
+    bi(4, 'Product Backlog Item', 'New', 'Na fila', 8),        // fila não é execução
+    bi(5, 'Feature', 'Blocked', 'Travado', -2, null, 20),
+  ], AGORA);
+  assert.deepEqual(b.feitos.map((x) => x.item.id), [1]);        // só o do mês corrente
+  assert.deepEqual(b.execucao.map((x) => x.item.id), [3]);      // 'New' fica fora
+  assert.deepEqual(b.travados.map((x) => x.item.id), [5]);
+  assert.deepEqual(b.prazos.atrasados.map((x) => x.item.id), [5]); // travado e vencido: nos dois
+  assert.deepEqual(b.prazos.esteMes.map((x) => x.item.id), [3, 4]);
+  assert.equal(b.travados[0].dias, 20);
+});
+
+test('briefingDoMes classifica prazo deste mês, do próximo e ignora o distante', () => {
+  const agosto = Date.parse('2026-08-10T12:00:00Z');
+  const b = C.briefingDoMes([
+    bi(1, 'Feature', 'New', 'Fecha em agosto', null),
+    bi(2, 'Feature', 'New', 'Fecha em setembro', null),
+    bi(3, 'Feature', 'New', 'Fecha em dezembro', null),
+  ].map((it, i) => {
+    it.fields['Microsoft.VSTS.Scheduling.TargetDate'] = ['2026-08-25', '2026-09-15', '2026-12-01'][i] + 'T00:00:00Z';
+    return it;
+  }), agosto);
+  assert.deepEqual(b.prazos.esteMes.map((x) => x.item.id), [1]);
+  assert.deepEqual(b.prazos.proximoMes.map((x) => x.item.id), [2]);
+  assert.equal(b.prazos.atrasados.length, 0);
+  assert.equal(b.mes, '2026-08');
+});
+
+test('briefingDoMes: virada de ano no "próximo mês"', () => {
+  const dezembro = Date.parse('2026-12-10T12:00:00Z');
+  const it = bi(1, 'Feature', 'New', 'Fecha em janeiro', null);
+  it.fields['Microsoft.VSTS.Scheduling.TargetDate'] = '2027-01-20T00:00:00Z';
+  const b = C.briefingDoMes([it], dezembro);
+  assert.deepEqual(b.prazos.proximoMes.map((x) => x.item.id), [1]);
+});
+
+test('briefingDoMes ordena: entrega recente, prazo mais próximo, travado mais antigo', () => {
+  const b = C.briefingDoMes([
+    bi(1, 'Feature', 'Done', 'Fechou hoje', null, 1),
+    bi(2, 'Feature', 'Done', 'Fechou semana passada', null, 7),
+    bi(3, 'Feature', 'Blocked', 'Travado 5d', null, null, 5),
+    bi(4, 'Feature', 'Blocked', 'Travado 30d', null, null, 30),
+  ], AGORA);
+  assert.deepEqual(b.feitos.map((x) => x.item.id), [1, 2]);
+  assert.deepEqual(b.travados.map((x) => x.item.id), [4, 3]);
+});

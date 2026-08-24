@@ -581,12 +581,113 @@ function renderReport() {
   // o mapa de épicos usa TODOS os itens: o pai de um PBI pode estar no nome de
   // outra pessoa, e ainda assim é o produto onde o trabalho caiu
   const todosOsItens = baseState.porTime.flatMap(({ items }) => items);
-  const meses = C.resumoMensal(C.reportPorMes(todosOsItens.filter(noNome)), C.mapaDeEpicos(todosOsItens));
-  if (!meses.length) {
-    box.innerHTML = erroHtml + '<p class="mudo">Nada concluído registrado ainda.</p>';
+  const mapa = C.mapaDeEpicos(todosOsItens);
+  const doRecorte = todosOsItens.filter(noNome);
+  const meses = C.resumoMensal(C.reportPorMes(doRecorte), mapa);
+  const b = C.briefingDoMes(doRecorte, Date.now());
+  const mesCorrente = meses.find((m) => m.mes === b.mes) || null;
+  const anteriores = meses.filter((m) => m.mes !== b.mes);
+  const nada = !mesCorrente && !b.execucao.length && !b.travados.length && !anteriores.length;
+  if (nada) {
+    box.innerHTML = erroHtml + '<p class="mudo">Nada registrado ainda para este recorte.</p>';
     return;
   }
-  box.innerHTML = erroHtml + meses.map((m, i) => htmlMesReport(m, i === 0)).join('');
+  box.innerHTML = erroHtml + htmlBriefing(b, mesCorrente, mapa)
+    + (anteriores.length ? `<section class="bloco-report historico">
+        <h4>Meses anteriores</h4>
+        ${anteriores.map((m) => htmlMesReport(m, false)).join('')}
+      </section>` : '');
+}
+
+// Uma linha de item no briefing: tipo, título, o dado que importa na seção, id.
+function linhaBriefing(it, direita) {
+  const f = it.fields || {};
+  const slug = C.typeSlug(f['System.WorkItemType']);
+  const link = C.deepLinks(state.config.org, it.projeto, '').workItem(it.id);
+  return `<li><a href="${link}" target="_blank" rel="noopener">
+    <span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span>
+    <span class="titulo">${escapeHtml(f['System.Title'] || ('item #' + it.id))}</span>
+    <span class="quando">${direita || ''}</span>
+    <span class="id">#${it.id}</span>
+  </a></li>`;
+}
+
+// Agrupa por produto (o épico ancestral) — stakeholder pensa em produto, não em
+// item solto. Produto com mais itens na frente; sem épico conhecido vai por fim.
+function porProduto(registros, mapa) {
+  const grupos = new Map();
+  for (const r of registros) {
+    const it = r.item || r;
+    const ep = mapa.get(it.id);
+    const chave = ep ? ep.titulo : 'Sem produto associado';
+    if (!grupos.has(chave)) grupos.set(chave, []);
+    grupos.get(chave).push(r);
+  }
+  return [...grupos.entries()]
+    .map(([produto, itens]) => ({ produto, itens }))
+    .sort((a, b) => (b.itens.length - a.itens.length) || (a.produto < b.produto ? -1 : 1));
+}
+
+function secaoPorProduto(titulo, registros, mapa, direita) {
+  if (!registros.length) return '';
+  const grupos = porProduto(registros, mapa).map((g) => `
+    <div class="grupo-produto">
+      <h5>${escapeHtml(g.produto)}</h5>
+      <ul class="lista-linhas">${g.itens.map((r) => linhaBriefing(r.item || r, direita(r))).join('')}</ul>
+    </div>`).join('');
+  return `<section class="bloco-report"><h4>${titulo}<span class="conta">${registros.length}</span></h4>${grupos}</section>`;
+}
+
+// O parágrafo de situação: execução, prazos e travas. Complementa o de volume.
+function paragrafoSituacao(b) {
+  const frases = [];
+  if (b.execucao.length) {
+    frases.push(`<b>${plural(b.execucao.length, 'item', 'itens')}</b> em execução agora.`);
+  }
+  const p = b.prazos;
+  const prazo = [];
+  if (p.atrasados.length) prazo.push(`<b>${p.atrasados.length} ${p.atrasados.length === 1 ? 'já passou' : 'já passaram'} do prazo</b>`);
+  if (p.esteMes.length) prazo.push(`${p.esteMes.length} ${p.esteMes.length === 1 ? 'vence' : 'vencem'} ainda este mês`);
+  if (p.proximoMes.length) prazo.push(`${p.proximoMes.length} no mês que vem`);
+  if (prazo.length) frases.push('Nos prazos: ' + prazo.join(', ') + '.');
+  if (b.travados.length) {
+    const maisAntigo = b.travados[0];
+    const tempo = maisAntigo.dias == null ? '' : ` — o mais antigo sem movimento há ${maisAntigo.dias} ${maisAntigo.dias === 1 ? 'dia' : 'dias'}`;
+    frases.push(`<b>${plural(b.travados.length, 'item está travado', 'itens estão travados')}</b>${tempo}. ${b.travados.length === 1 ? 'É o ponto' : 'São os pontos'} que dependem de decisão.`);
+  }
+  if (!frases.length) return '';
+  return `<p>${frases.join(' ')}</p>`;
+}
+
+function htmlBriefing(b, m, mapa) {
+  const escopo = [];
+  if (respAtivo()) escopo.push('recorte: ' + respAtivo());
+  escopo.push('gerado em ' + dataCurta(Date.now()));
+  const resumo = (m ? comunicadoDoMes(m) : '<div class="comunicado"><p>Nada concluído neste mês até agora.</p></div>')
+    .replace('</div>', paragrafoSituacao(b) + '</div>');
+  const prazoLista = (titulo, regs, alerta) => regs.length ? `
+    <div class="grupo-produto">
+      <h5${alerta ? ' class="h5-alerta"' : ''}>${titulo}</h5>
+      <ul class="lista-linhas">${regs.map((r) => linhaBriefing(r.item, dataCurta(r.alvo))).join('')}</ul>
+    </div>` : '';
+  const prazos = b.prazos.atrasados.length + b.prazos.esteMes.length + b.prazos.proximoMes.length;
+  return `<article class="briefing">
+    <header class="briefing-topo">
+      <h3>${mesPorExtenso(b.mes)}</h3>
+      <p class="briefing-meta">${escapeHtml(escopo.join(' · '))}</p>
+    </header>
+    <section class="bloco-report"><h4>Resumo</h4>${resumo}</section>
+    ${secaoPorProduto('Entregue no mês', (m && m.itens) || [], mapa, (r) => dataCurta(r.quando))}
+    ${secaoPorProduto('Em execução', b.execucao, mapa, (r) => escapeHtml((r.item.fields || {})['System.State']))}
+    ${prazos ? `<section class="bloco-report"><h4>Prazos<span class="conta">${prazos}</span></h4>
+      ${prazoLista('Já passaram do prazo', b.prazos.atrasados, true)}
+      ${prazoLista('Vencem ainda este mês', b.prazos.esteMes)}
+      ${prazoLista('Vencem no mês que vem', b.prazos.proximoMes)}
+    </section>` : ''}
+    ${b.travados.length ? `<section class="bloco-report"><h4>Travado — depende de decisão<span class="conta">${b.travados.length}</span></h4>
+      <div class="grupo-produto"><ul class="lista-linhas">${b.travados.map((r) => linhaBriefing(r.item, r.dias == null ? escapeHtml((r.item.fields || {})['System.State']) : `sem movimento há ${r.dias} d`)).join('')}</ul></div>
+    </section>` : ''}
+  </article>`;
 }
 
 function plural(n, um, muitos) { return n + ' ' + (n === 1 ? um : muitos); }

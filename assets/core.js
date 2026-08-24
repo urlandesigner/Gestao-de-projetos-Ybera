@@ -604,6 +604,69 @@
     });
   }
 
+  // Briefing do mês corrente, para stakeholder: o que fechou, o que está em
+  // curso, que prazos vencem e o que está travado. Tudo dos mesmos itens que as
+  // outras páginas já leem — nenhuma consulta nova.
+  // Um item pode aparecer em "travado" E em "prazos": são perguntas diferentes
+  // (o que está impedido vs. o que vence), e um travado vencido é justamente a
+  // notícia mais importante da reunião.
+  function briefingDoMes(items, agora) {
+    const mesAgora = mesUTC(agora);
+    const hoje = diaUTC(agora);
+    const feitos = [];
+    const execucao = [];
+    const travados = [];
+    const prazos = { atrasados: [], esteMes: [], proximoMes: [] };
+    for (const it of items || []) {
+      const f = (it || {}).fields || {};
+      const estado = f['System.State'];
+      if (isTerminalState(estado)) {
+        // fechado neste mês? ClosedDate manda; ChangedDate é o plano B, marcado
+        const fechado = dataValida(f[CAMPO_FECHADO]);
+        const alterado = dataValida(f['System.ChangedDate']);
+        const quando = fechado !== null ? fechado : alterado;
+        if (quando !== null && mesUTC(quando) === mesAgora) {
+          feitos.push({ item: it, quando, aproximada: fechado === null });
+        }
+        continue; // concluído não está em execução nem tem prazo a vencer
+      }
+      const bucket = stateBucket(estado);
+      if (bucket === 'atencao') travados.push({ item: it, dias: diasSemToque(f, hoje) });
+      else if (bucket === 'andamento') execucao.push({ item: it });
+      const alvo = dataValida(f[CAMPO_ALVO]);
+      if (alvo === null) continue;
+      if (diaUTC(alvo) < hoje) prazos.atrasados.push({ item: it, alvo });
+      else if (mesUTC(alvo) === mesAgora) prazos.esteMes.push({ item: it, alvo });
+      else if (mesUTC(alvo) === mesAgora + 1) prazos.proximoMes.push({ item: it, alvo });
+      // prazo mais distante não entra: não é assunto desta reunião
+    }
+    const porAlvo = (a, b) => a.alvo - b.alvo;
+    feitos.sort((a, b) => b.quando - a.quando); // entrega mais recente na frente
+    prazos.atrasados.sort(porAlvo);
+    prazos.esteMes.sort(porAlvo);
+    prazos.proximoMes.sort(porAlvo);
+    travados.sort((a, b) => (b.dias || 0) - (a.dias || 0)); // travado há mais tempo primeiro
+    execucao.sort((a, b) => {
+      const va = dataValida((a.item.fields || {})[CAMPO_ALVO]);
+      const vb = dataValida((b.item.fields || {})[CAMPO_ALVO]);
+      if (va === null && vb === null) return 0;
+      if (va === null) return 1;
+      if (vb === null) return -1;
+      return va - vb;
+    });
+    return { mes: rotuloMes(agora), feitos, execucao, travados, prazos };
+  }
+
+  function diasSemToque(f, hoje) {
+    const mudou = dataValida(f['System.ChangedDate']);
+    return mudou === null ? null : Math.floor((hoje - diaUTC(mudou)) / 86400000);
+  }
+
+  function rotuloMes(t) {
+    const d = new Date(t);
+    return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0');
+  }
+
   // ---- Cache ----
   function isStale(fetchedAt, now, maxAgeMinutes = 10) {
     if (!fetchedAt) return true;
@@ -627,7 +690,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, reportPorMes, mapaDeEpicos, resumoMensal, futuroPorFaixa, fimDoTrimestre,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, reportPorMes, mapaDeEpicos, resumoMensal, briefingDoMes, futuroPorFaixa, fimDoTrimestre,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };
 });
