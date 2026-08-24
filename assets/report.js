@@ -58,10 +58,9 @@ const st = {
   mes: null,       // null = mês corrente
   fTipos: new Set(),     // filtro do bloco de entregas
   fProdutos: new Set(),
-  // Modo leitura: o dado veio do link, não do DevOps. Aí org, times, recorte e
-  // a data do report saem do pacote — não há config nem PAT neste navegador.
+  // Modo leitura: o dado veio do link, não do DevOps. Aí times, recorte e a data
+  // do report saem do pacote — não há config nem PAT neste navegador.
   leitura: false,
-  org: '',
   times: [],
   escopo: '',
   agora: 0,
@@ -214,7 +213,6 @@ function render() {
     items: st.leitura ? st.items : st.items.filter(noNome),
     todos: st.items.concat(st.pais), // o produto mora no pai — de outro dono, ou de outra área
     agora: st.leitura ? st.agora : Date.now(),
-    org: st.leitura ? st.org : st.config.org,
     escopo: st.leitura ? st.escopo : respAtivo(),
     times: st.leitura ? st.times : st.config.projects.filter((p) => !p.hidden).map((p) => p.teamName),
     mes: st.mes,
@@ -363,7 +361,6 @@ async function gravarLink() {
     const pacote = {
       v: 1,
       em: Date.now(),
-      org: st.config.org,
       escopo: respAtivo(),
       times: st.config.projects.filter((p) => !p.hidden).map((p) => p.teamName),
       mes: st.mes, // quem abrir o link cai no mês que eu estava vendo
@@ -421,7 +418,6 @@ async function lerDoLink() {
     const pacote = JSON.parse(await descomprimir(m[1]));
     st.items = pacote.items || [];
     st.pais = pacote.ancestrais || [];
-    st.org = pacote.org || '';
     st.escopo = pacote.escopo || '';
     st.times = pacote.times || [];
     st.agora = pacote.em || Date.now();

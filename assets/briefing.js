@@ -39,18 +39,20 @@
   // ---- Peças ----
   // `chave` é o produto do item; os data-* alimentam o filtro do bloco de
   // entregas — quem filtra é o report.js, escondendo linha, sem redesenhar nada.
-  function linha(it, org, direita, titulo, chave) {
+  // Sem link pro DevOps: o stakeholder não tem acesso, e mandar ele pra uma tela
+  // de login é pior que não oferecer nada. O número do item fica como texto —
+  // serve pra quem tem acesso procurar lá dentro.
+  function linha(it, direita, titulo, chave) {
     const f = it.fields || {};
     const slug = C.typeSlug(f['System.WorkItemType']);
-    const url = C.deepLinks(org, it.projeto || '', '').workItem(it.id);
     const nome = f['System.Title'] || ('item #' + it.id);
     const dados = ` data-tipo="${slug}" data-produto="${chave || 'sem'}" data-busca="${esc((nome + ' #' + it.id).toLowerCase())}"`;
-    return `<li${dados}><a href="${url}" target="_blank" rel="noopener">
+    return `<li${dados}><div class="item-linha">
       <span class="badge-tipo tipo-${slug}">${ROTULO_CURTO[slug]}</span>
       <span class="titulo">${esc(nome)}</span>
       <span class="quando"${titulo ? ` title="${esc(titulo)}"` : ''}>${direita || ''}</span>
       <span class="id">#${it.id}</span>
-    </a></li>`;
+    </div></li>`;
   }
 
   // Agrupa por produto (o épico, ou a Feature mais alta): stakeholder pensa em
@@ -77,24 +79,23 @@
   // O produto não era clicável nem dizia o que era — só um texto em negrito.
   // Aqui ele aparece como item de verdade: selo do nível, link pro DevOps e,
   // quando existe, estado e prazo. É o épico ganhando corpo no report.
-  function cabecalhoProduto(p, org, extra) {
+  function cabecalhoProduto(p, extra) {
     if (!p) return `<h3 class="cab-produto"><span class="cab-sem">${SEM_PRODUTO}</span></h3>`;
     const slug = C.typeSlug(p.tipo);
-    const url = C.deepLinks(org, p.projeto || '', '').workItem(p.id);
     const partes = [extra || p.estado];
     // Prazo de item já concluído é ruído: o que importa é quando fechou.
     if (p.alvo && !C.isTerminalState(p.estado)) partes.push('prazo ' + dataCurta(p.alvo));
     const detalhe = partes.filter(Boolean).join(' · ');
     return `<h3 class="cab-produto">
       <span class="badge-tipo tipo-${slug}">${ROTULO_CURTO[slug]}</span>
-      <a href="${url}" target="_blank" rel="noopener">${esc(p.titulo)}</a>
+      <span class="cab-nome">${esc(p.titulo)}</span>
       ${detalhe ? `<span class="cab-detalhe">${esc(detalhe)}</span>` : ''}
     </h3>`;
   }
 
   const chaveDe = (p) => (p ? 'p' + p.id : 'sem');
 
-  function grupoHtml(g, org, direita) {
+  function grupoHtml(g, direita) {
     // Um épico é o produto de si mesmo. Ele já é o cabeçalho — repetir a mesma
     // linha embaixo parece defeito. O que a linha diria vai pro cabeçalho.
     const proprio = g.produto ? g.itens.find((r) => (r.item || r).id === g.produto.id) : null;
@@ -106,8 +107,8 @@
       ? ` data-proprio-tipo="${C.typeSlug(g.produto.tipo)}" data-proprio-busca="${esc((g.produto.titulo + ' #' + g.produto.id).toLowerCase())}"`
       : '';
     return `<div class="grupo-produto" data-produto="${chave}"${dadosProprio}>
-      ${cabecalhoProduto(g.produto, org, proprio ? direita(proprio) : '')}
-      ${linhas.length ? `<ul class="lista-linhas">${linhas.map((r) => linha(r.item || r, org, direita(r), '', chave)).join('')}</ul>` : ''}
+      ${cabecalhoProduto(g.produto, proprio ? direita(proprio) : '')}
+      ${linhas.length ? `<ul class="lista-linhas">${linhas.map((r) => linha(r.item || r, direita(r), '', chave)).join('')}</ul>` : ''}
     </div>`;
   }
 
@@ -225,9 +226,8 @@
 
   // Destaques: os produtos que concentraram entrega no mês. Sem BVS pra ranquear,
   // o critério é volume — e o report diz que é volume, não valor.
-  function corpoDestaques(grupos, org) {
+  function corpoDestaques(grupos) {
     return grupos.slice(0, DESTAQUES).map((g, i) => {
-      const url = C.deepLinks(org, g.produto.projeto || '', '').workItem(g.produto.id);
       const slug = C.typeSlug(g.produto.tipo);
       const proprio = g.itens.find((r) => (r.item || r).id === g.produto.id);
       const linhas = g.itens.filter((r) => r !== proprio);
@@ -235,18 +235,18 @@
         <header class="destaque-topo">
           <span class="destaque-pos">${i + 1}</span>
           <div class="destaque-nome">
-            <h3><a href="${url}" target="_blank" rel="noopener">${esc(g.produto.titulo)}</a></h3>
+            <h3>${esc(g.produto.titulo)}</h3>
             <p><span class="badge-tipo tipo-${slug}">${ROTULO_CURTO[slug]}</span> ${plural(g.itens.length, 'entrega no mês', 'entregas no mês')}${g.produto.estado ? ' · ' + esc(g.produto.estado) : ''}</p>
           </div>
         </header>
-        ${linhas.length ? `<ul class="lista-linhas">${linhas.map((r) => linha(r.item || r, org, (r.aproximada ? '~' : '') + dataCurta(r.quando))).join('')}</ul>` : ''}
+        ${linhas.length ? `<ul class="lista-linhas">${linhas.map((r) => linha(r.item || r, (r.aproximada ? '~' : '') + dataCurta(r.quando))).join('')}</ul>` : ''}
       </article>`;
     }).join('');
   }
 
   // Entregas: tudo do mês, agrupado por produto, com chips e busca. Os chips e o
   // contador são estáticos aqui; quem esconde linha é o report.js.
-  function corpoEntregas(regs, mapa, org) {
+  function corpoEntregas(regs, mapa) {
     const grupos = porProduto(regs, mapa);
     const tipos = new Map();
     for (const r of regs) {
@@ -257,7 +257,7 @@
       `<button type="button" class="chip-doc" data-filtro="${filtro}" data-valor="${esc(valor)}">${esc(rotulo)} <span class="n">${n}</span></button>`;
     const chips = grupos.map((g) => chip('produto', chaveDe(g.produto), nomeProduto(g.produto), g.itens.length)).join('')
       + [...tipos.entries()].map(([slug, n]) => chip('tipo', slug, ROTULO_CURTO[slug], n)).join('');
-    const lista = grupos.map((g) => grupoHtml(g, org, (r) => (r.aproximada ? '~' : '') + dataCurta(r.quando))).join('');
+    const lista = grupos.map((g) => grupoHtml(g, (r) => (r.aproximada ? '~' : '') + dataCurta(r.quando))).join('');
     return `<div class="doc-filtros">
       <input id="busca-entregas" type="search" placeholder="buscar por título ou #id" autocomplete="off">
       <div class="chips-doc">${chips}</div>
@@ -288,7 +288,7 @@
   // O item travado sai de "Próximos passos" pra não aparecer duas vezes no mesmo
   // documento. Em troca, o prazo dele vem pra cá: quem lê precisa saber que,
   // além de parado, já passou da data.
-  function corpoDecisao(travados, org, agora) {
+  function corpoDecisao(travados, agora) {
     const hoje = new Date(agora);
     const direita = (r) => {
       const partes = [];
@@ -299,14 +299,14 @@
       return partes.join(' · ');
     };
     return `<div class="doc-bloco"><div class="grupo-produto"><ul class="lista-linhas">${
-      travados.map((r) => linha(r.item, org, direita(r))).join('')}</ul></div></div>`;
+      travados.map((r) => linha(r.item, direita(r))).join('')}</ul></div></div>`;
   }
 
-  function corpoProximos(b, org) {
+  function corpoProximos(b) {
     const bloco = (titulo, regs, alerta, direita) => regs.length ? `
       <div class="grupo-produto">
         <h3${alerta ? ' class="rotulo-alerta"' : ''}>${titulo}</h3>
-        <ul class="lista-linhas">${regs.map((r) => linha(r.item, org, direita(r))).join('')}</ul>
+        <ul class="lista-linhas">${regs.map((r) => linha(r.item, direita(r))).join('')}</ul>
       </div>` : '';
     const semPrazo = b.execucao.filter((r) => !(r.item.fields || {})[CAMPO_ALVO]);
     return '<div class="doc-bloco">'
@@ -318,7 +318,9 @@
   }
 
   // ---- Entrada ----
-  // opcoes: { items, agora, org, escopo, times, todos, mes }
+  // opcoes: { items, agora, escopo, times, todos, mes }
+  // Não recebe mais `org`: o documento não tem link pro DevOps. Quem lê não tem
+  // acesso, e oferecer um caminho que termina em tela de login é pior que nada.
   // `items` é o recorte que aparece no report. `todos` é o conjunto inteiro
   // consultado, usado SÓ pra descobrir o produto de cada item: a cadeia
   // PBI → Feature → Épico só se monta se os pais estiverem presentes, e o pai
@@ -332,7 +334,6 @@
     const o = opcoes || {};
     const items = o.items || [];
     const agora = o.agora || Date.now();
-    const org = o.org || '';
     const escopo = o.escopo || '';
     const mapa = C.mapaDeProdutos(o.todos || items);
     const meses = C.resumoMensal(C.reportPorMes(items), mapa);
@@ -395,14 +396,14 @@
       secoes.push({
         id: 'destaques', titulo: 'Destaques', rotulo: 'Destaques',
         intro: 'Os produtos que concentraram entrega no mês, do maior volume para o menor. O critério é quantidade de itens concluídos.',
-        corpo: corpoDestaques(comProduto, org),
+        corpo: corpoDestaques(comProduto),
       });
     }
     if (entregas.length) {
       secoes.push({
         id: 'entregas', titulo: 'Entregas do mês', rotulo: 'Entregas',
         intro: 'Tudo que foi concluído no mês, agrupado por produto. Filtre por produto ou tipo, ou busque por título e número do item.',
-        corpo: corpoEntregas(entregas, mapa, org) + notaAproximados(mesAlvo),
+        corpo: corpoEntregas(entregas, mapa) + notaAproximados(mesAlvo),
       });
     }
     if (meses.length > 1) {
@@ -425,7 +426,7 @@
         secoes.push({
           id: 'decisao', titulo: 'Depende de decisão', rotulo: 'Decisão',
           intro: 'Itens em estado de bloqueio. Cada um espera uma decisão para voltar a andar.',
-          corpo: corpoDecisao(b.travados, org, agora),
+          corpo: corpoDecisao(b.travados, agora),
         });
       }
       const totalProximos = bVivo.prazos.atrasados.length + bVivo.prazos.esteMes.length
@@ -434,7 +435,7 @@
         secoes.push({
           id: 'proximos', titulo: 'Próximos passos', rotulo: 'Próximos',
           intro: 'O que está em curso e quando vence, do prazo mais apertado para o mais folgado.',
-          corpo: corpoProximos(bVivo, org),
+          corpo: corpoProximos(bVivo),
         });
       }
     }

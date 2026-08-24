@@ -65,12 +65,21 @@ test('htmlReport não repete o item travado em Próximos passos', () => {
   assert.ok(!proximos.includes('Já passou do prazo'));
 });
 
-test('htmlReport gera link do work item e escapa título', () => {
+test('htmlReport escapa título', () => {
   const itens = [it(7, 'Product Backlog Item', 'Done', 'Aspas " e <script>', null, null, 2)];
-  const { html } = B.htmlReport({ items: itens, agora: AGORA, org: 'https://dev.azure.com/org' });
-  assert.ok(html.includes('https://dev.azure.com/org/B2C/_workitems/edit/7'));
+  const { html } = B.htmlReport({ items: itens, agora: AGORA });
   assert.ok(!html.includes('<script>'));
   assert.ok(html.includes('&lt;script&gt;'));
+});
+
+// Documento pra quem não tem acesso ao DevOps: mandar essa pessoa pra uma tela de
+// login é pior que não oferecer caminho nenhum. O número do item fica como texto.
+test('htmlReport não põe nenhum link pro DevOps', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://dev.azure.com/nivello' });
+  assert.ok(!html.includes('_workitems'), 'nenhum link de work item');
+  assert.ok(!html.includes('dev.azure.com'), 'nenhuma menção à URL da organização');
+  assert.ok(!/href="http/.test(html), 'nenhum link externo');
+  assert.ok(html.includes('#11'), 'o número do item continua legível');
 });
 
 test('htmlReport avisa quando não há nada no recorte', () => {
@@ -134,11 +143,11 @@ test('htmlReport aceita mês sem nenhuma entrega', () => {
   assert.ok(html.includes('Nada foi concluído neste mês'));
 });
 
-// O produto deixou de ser texto solto: virou o próprio item, com selo e link.
-test('htmlReport mostra o épico do grupo com selo e link', () => {
-  const { html } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://dev.azure.com/nivello' });
+// O produto deixou de ser texto solto: virou o próprio item, com selo e situação.
+test('htmlReport mostra o épico do grupo com selo', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA });
   assert.match(html, /<h3 class="cab-produto">\s*<span class="badge-tipo tipo-epic">Épico<\/span>/);
-  assert.ok(html.includes('_workitems/edit/1"'), 'o épico tem link pro DevOps');
+  assert.ok(html.includes('<span class="cab-nome">Nova PDP USA</span>'));
 });
 
 test('htmlReport joga "sem produto" pro fim, mesmo sendo o maior grupo', () => {
