@@ -74,3 +74,19 @@ test('mesPorExtenso e dataCurta formatam em pt-BR sobre UTC', () => {
   assert.equal(B.dataCurta('2026-09-01T00:00:00Z'), '01 de set.');
   assert.equal(B.dataCurta(null), '');
 });
+
+// O filtro por responsável recorta o que aparece, mas o produto de um PBI mora
+// no pai — que quase sempre está em outro nome, ou sem ninguém. Se o mapa fosse
+// montado só com o recorte, tudo cairia em "Sem produto associado".
+test('htmlReport acha o produto pelo pai fora do recorte', () => {
+  const todos = base();
+  const recorte = todos.filter((x) => x.id === 11); // só o PBI; Feature 10 e Épico 1 ficaram de fora
+  const semTodos = B.htmlReport({ items: recorte, agora: AGORA, org: 'https://x/y' });
+  assert.ok(semTodos.html.includes('Sem produto associado'), 'sem `todos` a cadeia quebra');
+
+  const comTodos = B.htmlReport({ items: recorte, todos, agora: AGORA, org: 'https://x/y' });
+  assert.ok(comTodos.html.includes('Nova PDP USA'), 'devia agrupar no épico do pai');
+  assert.ok(!comTodos.html.includes('Sem produto associado'));
+  assert.ok(!comTodos.html.includes('Zoom na imagem') === false); // o PBI segue listado
+  assert.ok(!comTodos.html.includes('Prova social'), 'item fora do recorte não pode aparecer');
+});

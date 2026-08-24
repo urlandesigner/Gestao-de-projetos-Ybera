@@ -93,6 +93,7 @@ function render() {
   renderFiltro();
   const r = B.htmlReport({
     items: st.items.filter(noNome),
+    todos: st.items, // o produto de um PBI mora no pai, que pode ser de outro dono
     agora: Date.now(),
     org: st.config.org,
     escopo: respAtivo(),
@@ -183,17 +184,42 @@ function enxugar(items) {
 // Grava o report no próprio endereço da página. Sem botão, sem etapa: quando o
 // report aparece, o link já está pronto na barra de endereços. replaceState não
 // cria entrada nova no histórico — o botão "voltar" continua indo pra Central.
+// Pais que sustentam o "produto" de cada item. Entram no link só com o mínimo
+// pra montar a cadeia PBI → Feature → Épico — não aparecem em lista nenhuma do
+// report, e sem eles o leitor do link veria tudo em "Sem produto associado".
+const CAMPOS_CADEIA = ['System.WorkItemType', 'System.Title', 'System.Parent'];
+function cadeiaDeProdutos(mostrados, todos) {
+  const porId = new Map((todos || []).map((it) => [it.id, it]));
+  const dentro = new Set(mostrados.map((it) => it.id));
+  const extras = new Map();
+  for (const it of mostrados) {
+    let pai = (it.fields || {})['System.Parent'];
+    while (pai && !dentro.has(pai) && !extras.has(pai)) {
+      const p = porId.get(pai);
+      if (!p) break; // pai fora da consulta: a cadeia para aqui, sem inventar
+      const f = p.fields || {};
+      const campos = {};
+      for (const c of CAMPOS_CADEIA) if (f[c] !== undefined) campos[c] = f[c];
+      extras.set(pai, { id: p.id, fields: campos });
+      pai = f['System.Parent'];
+    }
+  }
+  return [...extras.values()];
+}
+
 async function gravarLink() {
   st.link = '';
   if (!st.items || st.vazio) { history.replaceState(null, '', location.pathname); return; }
   try {
+    const mostrados = st.items.filter(noNome);
     const pacote = {
       v: 1,
       em: Date.now(),
       org: st.config.org,
       escopo: respAtivo(),
       times: st.config.projects.filter((p) => !p.hidden).map((p) => p.teamName),
-      items: enxugar(st.items.filter(noNome)),
+      items: enxugar(mostrados),
+      ancestrais: cadeiaDeProdutos(mostrados, st.items),
     };
     st.link = location.origin + location.pathname + '#r=' + await comprimir(JSON.stringify(pacote));
     history.replaceState(null, '', st.link);
@@ -234,6 +260,7 @@ async function lerDoLink() {
     const pacote = JSON.parse(await descomprimir(m[1]));
     const r = B.htmlReport({
       items: pacote.items || [],
+      todos: (pacote.items || []).concat(pacote.ancestrais || []),
       agora: pacote.em || Date.now(),
       org: pacote.org || '',
       escopo: pacote.escopo || '',

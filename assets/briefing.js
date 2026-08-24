@@ -160,7 +160,12 @@
   }
 
   // ---- Entrada ----
-  // opcoes: { items, agora, org, escopo, times }
+  // opcoes: { items, agora, org, escopo, times, todos }
+  // `items` é o recorte que aparece no report. `todos` é o conjunto inteiro
+  // consultado, usado SÓ pra descobrir o produto de cada item: a cadeia
+  // PBI → Feature → Épico só se monta se os pais estiverem presentes, e o pai
+  // costuma estar em outro nome (ou sem ninguém). Sem isso, filtrar por
+  // responsável jogava todo mundo em "Sem produto associado".
   // Devolve { vazio, html } — quem chama decide o que fazer com o vazio.
   function htmlReport(opcoes) {
     const o = opcoes || {};
@@ -168,7 +173,7 @@
     const agora = o.agora || Date.now();
     const org = o.org || '';
     const escopo = o.escopo || '';
-    const mapa = C.mapaDeEpicos(items);
+    const mapa = C.mapaDeEpicos(o.todos || items);
     const meses = C.resumoMensal(C.reportPorMes(items), mapa);
     const b = C.briefingDoMes(items, agora);
     const mesAtual = meses.find((m) => m.mes === b.mes) || null;
