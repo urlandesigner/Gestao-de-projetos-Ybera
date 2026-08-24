@@ -35,11 +35,11 @@ test('htmlReport monta as seções do briefing', () => {
   }
   assert.ok(html.includes('Agosto de 2026'));
   assert.ok(html.includes('Nova PDP USA')); // agrupou por produto
-  // Seções numeradas em sequência, como no report do time
-  assert.match(html, /doc-num[^>]*>01</);
-  assert.match(html, /doc-num[^>]*>05</);   // 5 seções neste recorte, numeradas em sequência
   assert.ok(!html.includes('Destaques'));   // 2 entregas não sustentam um bloco de destaque
-  assert.ok(html.includes('Executive summary'));
+  // Cabeçalho de seção é só título e a frase que o explica
+  assert.ok(!html.includes('doc-num'), 'numeral gigante saiu do cabeçalho');
+  assert.ok(!html.includes('Executive summary'), 'rótulo em inglês saiu das seções');
+  assert.match(html, /<h2>Resumo<\/h2>\s*<p class="doc-intro">/);
 });
 
 test('htmlReport escreve a prosa com volume, comparação e situação', () => {
@@ -223,4 +223,19 @@ test('htmlReport tem uma hierarquia de títulos sem salto', () => {
   assert.equal(niveis[0], 1);
   assert.equal(Math.max(...niveis), 3);
   assert.ok(!niveis.includes(4) && !niveis.includes(5));
+});
+
+// O resumo responde três perguntas diferentes (volume, onde caiu, situação):
+// cada uma no seu cartão, não numa massa de texto só.
+test('htmlReport separa o resumo em um cartão por parágrafo', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://x/y' });
+  const resumo = html.slice(html.indexOf('id="resumo"'), html.indexOf('id="entregas"'));
+  assert.equal((resumo.match(/class="resumo-cartao"/g) || []).length, 3);
+  assert.ok(resumo.includes('resumo-cartoes'));
+});
+
+test('htmlReport em mês fechado tem só os dois cartões de fato histórico', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://x/y', mes: '2026-07' });
+  const resumo = html.slice(html.indexOf('id="resumo"'), html.indexOf('id="entregas"'));
+  assert.equal((resumo.match(/class="resumo-cartao"/g) || []).length, 2);
 });

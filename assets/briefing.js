@@ -208,15 +208,14 @@
     </header>`;
   }
 
-  function secaoHtml(numero, s) {
+  // Título e a frase que o explica, um embaixo do outro. Sem numeral gigante ao
+  // fundo e sem rótulo em inglês: eram enfeite do report do time, e aqui só
+  // competiam com o que a seção tem pra dizer.
+  function secaoHtml(s) {
     return `<section class="doc-sec" id="${s.id}">
       <div class="doc-limite">
         <div class="doc-sec-topo">
-          <div class="doc-sec-tit">
-            <span class="doc-num" aria-hidden="true">${String(numero).padStart(2, '0')}</span>
-            <p class="doc-en">${esc(s.en)}</p>
-            <h2>${esc(s.titulo)}</h2>
-          </div>
+          <h2>${esc(s.titulo)}</h2>
           <p class="doc-intro">${esc(s.intro)}</p>
         </div>
         ${s.corpo}
@@ -384,34 +383,38 @@
 
     const secoes = [];
     secoes.push({
-      id: 'resumo', en: 'Executive summary', titulo: 'Resumo', rotulo: 'Resumo',
+      id: 'resumo', titulo: 'Resumo', rotulo: 'Resumo',
       intro: 'O que o mês registrou, lido dos itens do Azure DevOps. Nenhuma afirmação aqui vai além do que os dados mostram.',
-      corpo: `<div class="comunicado">${prosa.map((x) => `<p>${x}</p>`).join('')}</div>`,
+      // Um cartão por parágrafo, lado a lado: cada um responde uma pergunta
+      // diferente (volume, onde caiu, situação). Num bloco só, viravam massa de
+      // texto. A prosa tem no máximo 3 parágrafos, então a linha nunca passa de 3.
+      corpo: `<div class="resumo-cartoes">${prosa
+        .map((x) => `<article class="resumo-cartao"><p>${x}</p></article>`).join('')}</div>`,
     });
     if (comProduto.length >= MIN_DESTAQUE_PRODUTOS && entregas.length >= MIN_DESTAQUE_ITENS) {
       secoes.push({
-        id: 'destaques', en: 'Highlights', titulo: 'Destaques', rotulo: 'Destaques',
+        id: 'destaques', titulo: 'Destaques', rotulo: 'Destaques',
         intro: 'Os produtos que concentraram entrega no mês, do maior volume para o menor. O critério é quantidade de itens concluídos.',
         corpo: corpoDestaques(comProduto, org),
       });
     }
     if (entregas.length) {
       secoes.push({
-        id: 'entregas', en: 'Deliveries', titulo: 'Entregas do mês', rotulo: 'Entregas',
+        id: 'entregas', titulo: 'Entregas do mês', rotulo: 'Entregas',
         intro: 'Tudo que foi concluído no mês, agrupado por produto. Filtre por produto ou tipo, ou busque por título e número do item.',
         corpo: corpoEntregas(entregas, mapa, org) + notaAproximados(mesAlvo),
       });
     }
     if (meses.length > 1) {
       secoes.push({
-        id: 'comparativo', en: 'Comparative', titulo: 'Comparativo', rotulo: 'Comparativo',
+        id: 'comparativo', titulo: 'Comparativo', rotulo: 'Comparativo',
         intro: 'Volume de entregas mês a mês, no que o DevOps guarda deste recorte.',
         corpo: corpoComparativo(meses, escolhido),
       });
     }
     if (fechado) {
       secoes.push({
-        id: 'agora', en: 'Present state', titulo: 'Situação de hoje', rotulo: 'Hoje',
+        id: 'agora', titulo: 'Situação de hoje', rotulo: 'Hoje',
         intro: 'Execução, prazos e travas aparecem só no mês corrente.',
         corpo: `<p class="mudo nota-report">O DevOps guarda o estado de agora, não o estado
         que cada item tinha em ${mesPorExtenso(escolhido).toLowerCase()}. Para ver o que está em curso,
@@ -420,7 +423,7 @@
     } else {
       if (b.travados.length) {
         secoes.push({
-          id: 'decisao', en: 'Blocked', titulo: 'Depende de decisão', rotulo: 'Decisão',
+          id: 'decisao', titulo: 'Depende de decisão', rotulo: 'Decisão',
           intro: 'Itens em estado de bloqueio. Cada um espera uma decisão para voltar a andar.',
           corpo: corpoDecisao(b.travados, org, agora),
         });
@@ -429,7 +432,7 @@
         + bVivo.prazos.proximoMes.length + b.execucao.length;
       if (totalProximos) {
         secoes.push({
-          id: 'proximos', en: 'Next steps', titulo: 'Próximos passos', rotulo: 'Próximos',
+          id: 'proximos', titulo: 'Próximos passos', rotulo: 'Próximos',
           intro: 'O que está em curso e quando vence, do prazo mais apertado para o mais folgado.',
           corpo: corpoProximos(bVivo, org),
         });
@@ -450,7 +453,7 @@
     const html = `<div class="report-doc">
       ${capa(escolhido, meta.join(' · '), tiles)}
       ${nav}
-      ${secoes.map((x, i) => secaoHtml(i + 1, x)).join('')}
+      ${secoes.map((x) => secaoHtml(x)).join('')}
     </div>`;
 
     return { vazio: false, meses: listaMeses, html };
