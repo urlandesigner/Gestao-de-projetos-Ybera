@@ -78,18 +78,18 @@
   // Aqui ele aparece como item de verdade: selo do nível, link pro DevOps e,
   // quando existe, estado e prazo. É o épico ganhando corpo no report.
   function cabecalhoProduto(p, org, extra) {
-    if (!p) return `<h5 class="cab-produto"><span class="cab-sem">${SEM_PRODUTO}</span></h5>`;
+    if (!p) return `<h3 class="cab-produto"><span class="cab-sem">${SEM_PRODUTO}</span></h3>`;
     const slug = C.typeSlug(p.tipo);
     const url = C.deepLinks(org, p.projeto || '', '').workItem(p.id);
     const partes = [extra || p.estado];
     // Prazo de item já concluído é ruído: o que importa é quando fechou.
     if (p.alvo && !C.isTerminalState(p.estado)) partes.push('prazo ' + dataCurta(p.alvo));
     const detalhe = partes.filter(Boolean).join(' · ');
-    return `<h5 class="cab-produto">
+    return `<h3 class="cab-produto">
       <span class="badge-tipo tipo-${slug}">${ROTULO_CURTO[slug]}</span>
       <a href="${url}" target="_blank" rel="noopener">${esc(p.titulo)}</a>
       ${detalhe ? `<span class="cab-detalhe">${esc(detalhe)}</span>` : ''}
-    </h5>`;
+    </h3>`;
   }
 
   const chaveDe = (p) => (p ? 'p' + p.id : 'sem');
@@ -109,12 +109,6 @@
       ${cabecalhoProduto(g.produto, org, proprio ? direita(proprio) : '')}
       ${linhas.length ? `<ul class="lista-linhas">${linhas.map((r) => linha(r.item || r, org, direita(r), '', chave)).join('')}</ul>` : ''}
     </div>`;
-  }
-
-  function secaoPorProduto(titulo, registros, mapa, org, direita) {
-    if (!registros.length) return '';
-    const grupos = porProduto(registros, mapa).map((g) => grupoHtml(g, org, direita)).join('');
-    return `<section class="bloco-report"><h4>${titulo}<span class="conta">${registros.length}</span></h4>${grupos}</section>`;
   }
 
   // ---- Prosa ----
@@ -207,7 +201,7 @@
     return `<header class="doc-capa">
       <div class="doc-limite">
         <p class="doc-en doc-en-capa">Monthly report</p>
-        <h3 class="doc-titulo"><span>Relatório de</span><b>${mesPorExtenso(escolhido)}</b></h3>
+        <h1 class="doc-titulo"><span>Relatório de</span><b>${mesPorExtenso(escolhido)}</b></h1>
         <p class="doc-meta">${esc(meta)}</p>
         ${tiles ? `<ul class="doc-kpis">${tiles}</ul>` : ''}
       </div>
@@ -221,7 +215,7 @@
           <div class="doc-sec-tit">
             <span class="doc-num" aria-hidden="true">${String(numero).padStart(2, '0')}</span>
             <p class="doc-en">${esc(s.en)}</p>
-            <h4>${esc(s.titulo)}</h4>
+            <h2>${esc(s.titulo)}</h2>
           </div>
           <p class="doc-intro">${esc(s.intro)}</p>
         </div>
@@ -242,7 +236,7 @@
         <header class="destaque-topo">
           <span class="destaque-pos">${i + 1}</span>
           <div class="destaque-nome">
-            <h5><a href="${url}" target="_blank" rel="noopener">${esc(g.produto.titulo)}</a></h5>
+            <h3><a href="${url}" target="_blank" rel="noopener">${esc(g.produto.titulo)}</a></h3>
             <p><span class="badge-tipo tipo-${slug}">${ROTULO_CURTO[slug]}</span> ${plural(g.itens.length, 'entrega no mês', 'entregas no mês')}${g.produto.estado ? ' · ' + esc(g.produto.estado) : ''}</p>
           </div>
         </header>
@@ -312,7 +306,7 @@
   function corpoProximos(b, org) {
     const bloco = (titulo, regs, alerta, direita) => regs.length ? `
       <div class="grupo-produto">
-        <h5${alerta ? ' class="h5-alerta"' : ''}>${titulo}</h5>
+        <h3${alerta ? ' class="rotulo-alerta"' : ''}>${titulo}</h3>
         <ul class="lista-linhas">${regs.map((r) => linha(r.item, org, direita(r))).join('')}</ul>
       </div>` : '';
     const semPrazo = b.execucao.filter((r) => !(r.item.fields || {})[CAMPO_ALVO]);
@@ -442,8 +436,16 @@
       }
     }
 
+    // O mês é eixo do documento, não controle de ferramenta: mora na própria
+    // navegação, na ponta direita — como no report do time. Serve o PO e o
+    // stakeholder pela mesma peça. Um mês só não é escolha: não desenha.
+    const seletorMes = listaMeses.length > 1
+      ? `<select id="mes-global" class="doc-mes" title="Mês do report">${listaMeses
+        .map((m) => `<option value="${m}"${m === escolhido ? ' selected' : ''}>${mesPorExtenso(m)}</option>`)
+        .join('')}</select>`
+      : '';
     const nav = `<nav class="doc-nav"><div class="doc-nav-int">${secoes
-      .map((x) => `<a href="#${x.id}">${esc(x.rotulo)}</a>`).join('')}</div></nav>`;
+      .map((x) => `<a href="#${x.id}">${esc(x.rotulo)}</a>`).join('')}${seletorMes}</div></nav>`;
 
     const html = `<div class="report-doc">
       ${capa(escolhido, meta.join(' · '), tiles)}

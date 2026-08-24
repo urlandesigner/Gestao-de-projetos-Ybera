@@ -84,7 +84,6 @@ function renderBadge() {
 }
 
 function renderFiltro() {
-  const barra = $('filtro-global');
   const sel = $('resp-global');
   const nomes = new Set();
   for (const it of st.items || []) {
@@ -92,25 +91,11 @@ function renderFiltro() {
     if (r && r.displayName) nomes.add(r.displayName);
   }
   if (respAtivo()) nomes.add(respAtivo());
-  if (!nomes.size) { barra.hidden = true; return; }
-  barra.hidden = false;
+  if (!nomes.size) { sel.hidden = true; return; }
+  sel.hidden = false;
   const lista = [...nomes].sort((a, b) => a.localeCompare(b, 'pt-BR'));
   sel.innerHTML = '<option value="">todos os responsáveis</option>' +
     lista.map((n) => `<option value="${B.esc(n)}"${n === respAtivo() ? ' selected' : ''}>${B.esc(n)}</option>`).join('');
-}
-
-// Meses vêm do próprio report (só os que têm entrega, mais o corrente). Um mês
-// só não é escolha: o seletor some.
-function renderMeses(meses) {
-  const barra = $('filtro-mes');
-  const sel = $('mes-global');
-  const lista = meses || [];
-  if (lista.length < 2) { barra.hidden = true; return; }
-  barra.hidden = false;
-  const atual = lista.indexOf(st.mes) >= 0 ? st.mes : lista[0];
-  sel.innerHTML = lista
-    .map((m) => `<option value="${m}"${m === atual ? ' selected' : ''}>${B.mesPorExtenso(m)}</option>`)
-    .join('');
 }
 
 /* ---------- Filtro do bloco de entregas ---------- */
@@ -190,10 +175,21 @@ function ligarDocumento() {
   box.addEventListener('input', (ev) => {
     if (ev.target.id === 'busca-entregas') aplicarFiltroEntregas();
   });
+  // O seletor de mês é redesenhado junto com o documento: ouvir aqui é o que
+  // sobrevive a cada troca.
+  box.addEventListener('change', async (ev) => {
+    if (ev.target.id !== 'mes-global') return;
+    st.mes = ev.target.value || null;
+    render();
+    await gravarLink(); // mês novo, link novo
+  });
 }
 
 function render() {
   renderBadge();
+  // Antes de qualquer saída antecipada: quem não tem token nem config também
+  // precisa ver a barra (é onde está o caminho de volta pra Central).
+  $('ferramentas').hidden = st.leitura;
   const box = $('report');
   if (!st.leitura) {
     if (!st.config) {
@@ -221,7 +217,6 @@ function render() {
   st.fProdutos.clear();
   box.innerHTML = erroHtml + r.html;
   aplicarFiltroEntregas(); // acerta o contador e esconde o "limpar"
-  renderMeses(r.meses);
   st.vazio = r.vazio;
   $('copiar').disabled = r.vazio;
 }
@@ -434,11 +429,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Quem tem token manda: busca ao vivo e reescreve o link, mesmo se a URL já
   // trouxer um. Sem token, o link é a única fonte — é o caso do stakeholder.
   ligarDocumento();
-  $('mes-global').addEventListener('change', async () => {
-    st.mes = $('mes-global').value || null;
-    render();
-    await gravarLink(); // mês novo, link novo
-  });
   if (!(st.config && st.pat) && await lerDoLink()) return;
   $('atualizar').addEventListener('click', carregar);
   $('copiar').addEventListener('click', copiarLink);

@@ -7,41 +7,36 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=20260824f">
+<link rel="stylesheet" href="assets/style.css?v=20260824h">
 </head>
-<!-- Página autônoma: só o report, sem as telas de acompanhamento do PO. -->
+<!-- Página autônoma: só o report, sem as telas de acompanhamento do PO.
+     Não existe header de aplicação aqui, de propósito: o documento é a página
+     inteira, da primeira linha à última. O mês mora na navegação do próprio
+     documento, e as ferramentas do PO ficam numa barra flutuante que só aparece
+     pra quem tem token. Quem abre pelo link não vê ferramenta nenhuma. -->
 <body data-pagina="report" class="pagina-report">
 <div class="app">
-<header class="topo">
-  <h1 class="nome-app">Report</h1>
-  <!-- O mês fica visível também em modo leitura: quem recebe o link pode navegar -->
-  <div class="filtros filtro-topo" id="filtro-mes" hidden>
-    <select id="mes-global" title="Mês do report"></select>
-  </div>
-  <div class="filtros filtro-topo" id="filtro-global" hidden>
-    <select id="resp-global" title="Recorte por responsável"><option value="">todos os responsáveis</option></select>
-  </div>
-  <div class="acoes">
-    <span id="badge" data-estado="sem-token">sem token</span>
-    <button id="copiar" class="botao-texto" title="Copia o endereço desta página — quem abrir lê o report sem token">Copiar link</button>
-    <button id="atualizar" title="Atualizar agora">↻</button>
-    <a id="voltar" class="botao-texto" href="index.html#panorama" title="Voltar para a Central">Central</a>
-  </div>
-</header>
-
 <div class="corpo">
 <main>
   <section id="secao-report">
-    <div id="caixa-link" class="caixa-link" hidden></div>
     <div id="report"><p class="mudo">carregando…</p></div>
   </section>
 </main>
 </div>
 </div>
 
-<script src="assets/core.js?v=20260824f"></script>
-<script src="assets/api.js?v=20260824f"></script>
-<script src="assets/briefing.js?v=20260824f"></script>
-<script src="assets/report.js?v=20260824f"></script>
+<div class="ferramentas" id="ferramentas" hidden>
+  <span id="badge" data-estado="sem-token">sem token</span>
+  <select id="resp-global" title="Recorte por responsável" hidden><option value="">todos os responsáveis</option></select>
+  <button id="atualizar" title="Atualizar agora">↻</button>
+  <button id="copiar" class="botao-texto" title="Copia o endereço desta página — quem abrir lê o report sem token">Copiar link</button>
+  <a id="voltar" class="botao-texto" href="index.html#panorama" title="Voltar para a Central">Central</a>
+</div>
+<div id="caixa-link" class="caixa-link" hidden></div>
+
+<script src="assets/core.js?v=20260824h"></script>
+<script src="assets/api.js?v=20260824h"></script>
+<script src="assets/briefing.js?v=20260824h"></script>
+<script src="assets/report.js?v=20260824h"></script>
 </body>
 </html>

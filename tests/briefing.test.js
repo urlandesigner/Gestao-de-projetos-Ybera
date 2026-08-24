@@ -137,7 +137,7 @@ test('htmlReport aceita mês sem nenhuma entrega', () => {
 // O produto deixou de ser texto solto: virou o próprio item, com selo e link.
 test('htmlReport mostra o épico do grupo com selo e link', () => {
   const { html } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://dev.azure.com/nivello' });
-  assert.match(html, /<h5 class="cab-produto">\s*<span class="badge-tipo tipo-epic">Épico<\/span>/);
+  assert.match(html, /<h3 class="cab-produto">\s*<span class="badge-tipo tipo-epic">Épico<\/span>/);
   assert.ok(html.includes('_workitems/edit/1"'), 'o épico tem link pro DevOps');
 });
 
@@ -212,4 +212,15 @@ test('htmlReport não mostra prazo de produto já concluído', () => {
   const { html } = B.htmlReport({ items: itens, agora: AGORA, org: 'https://x/y' });
   const cab = html.slice(html.indexOf('cab-produto'), html.indexOf('lista-linhas'));
   assert.ok(!cab.includes('prazo '), 'produto fechado não anuncia prazo: ' + cab);
+});
+
+// Documento sem h1, ou com salto de h1 pra h4, é documento mal formado pra quem
+// navega por leitor de tela.
+test('htmlReport tem uma hierarquia de títulos sem salto', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://x/y' });
+  const niveis = [...html.matchAll(/<h([1-6])[\s>]/g)].map((m) => Number(m[1]));
+  assert.equal(niveis.filter((n) => n === 1).length, 1); // um h1: o título do documento
+  assert.equal(niveis[0], 1);
+  assert.equal(Math.max(...niveis), 3);
+  assert.ok(!niveis.includes(4) && !niveis.includes(5));
 });
