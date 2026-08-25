@@ -638,7 +638,7 @@
     const feitos = [];
     const execucao = [];
     const travados = [];
-    const prazos = { atrasados: [], esteMes: [], proximoMes: [] };
+    const prazos = { atrasados: [], esteMes: [], proximoMes: [], depois: [] };
     for (const it of items || []) {
       const f = (it || {}).fields || {};
       const estado = f['System.State'];
@@ -660,13 +660,17 @@
       if (diaUTC(alvo) < hoje) prazos.atrasados.push({ item: it, alvo });
       else if (mesUTC(alvo) === mesAgora) prazos.esteMes.push({ item: it, alvo });
       else if (mesUTC(alvo) === mesAgora + 1) prazos.proximoMes.push({ item: it, alvo });
-      // prazo mais distante não entra: não é assunto desta reunião
+      // Prazo mais distante entra num balde próprio. Sem ele, um item em curso
+      // com alvo daqui a três meses sumia do documento: contava na capa como
+      // "em execução" e não aparecia em seção nenhuma.
+      else prazos.depois.push({ item: it, alvo });
     }
     const porAlvo = (a, b) => a.alvo - b.alvo;
     feitos.sort((a, b) => b.quando - a.quando); // entrega mais recente na frente
     prazos.atrasados.sort(porAlvo);
     prazos.esteMes.sort(porAlvo);
     prazos.proximoMes.sort(porAlvo);
+    prazos.depois.sort(porAlvo);
     travados.sort((a, b) => (b.dias || 0) - (a.dias || 0)); // travado há mais tempo primeiro
     execucao.sort((a, b) => {
       const va = dataValida((a.item.fields || {})[CAMPO_ALVO]);

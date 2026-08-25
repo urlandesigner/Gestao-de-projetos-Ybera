@@ -342,3 +342,73 @@ test('htmlReport ignora mês fora do formato AAAA-MM', () => {
     assert.ok(!html.includes('Invalid'), 'sem Invalid Date para: ' + mes);
   }
 });
+
+/* ---- O documento não pode se contradizer ---- */
+// Um travado com prazo estourado: a capa dizia "0 fora do prazo" enquanto a
+// seção Decisão mostrava "atrasado desde..." na mesma página.
+test('htmlReport conta o travado vencido no KPI de fora do prazo', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA });
+  const capa = html.slice(html.indexOf('doc-kpis'), html.indexOf('</ul>'));
+  assert.match(capa, /kpi-alerta"><b>1<\/b><span>fora do prazo/);
+});
+
+// Item em curso com prazo daqui a 3 meses: contava na capa e não aparecia em
+// seção nenhuma — o diretor via "7 em execução" e achava 5.
+test('htmlReport lista prazo distante em "Vence mais adiante"', () => {
+  const itens = [
+    ...base(),
+    it(50, 'Product Backlog Item', 'In Progress', 'Entrega de novembro', null, 90),
+  ];
+  const { html } = B.htmlReport({ items: itens, agora: AGORA });
+  const proximos = html.slice(html.indexOf('id="proximos"'));
+  assert.ok(proximos.includes('Vence mais adiante'));
+  assert.ok(proximos.includes('Entrega de novembro'));
+  assert.ok(html.includes('1 mais adiante')); // e a prosa também conta
+});
+
+test('htmlReport não diz "nada registrado" quando há prazos vivos', () => {
+  const itens = [it(60, 'Product Backlog Item', 'New', 'Planejado e vencido', null, -10)];
+  const { vazio, html } = B.htmlReport({ items: itens, agora: AGORA });
+  assert.equal(vazio, false);
+  assert.ok(html.includes('Planejado e vencido'));
+});
+
+test('htmlReport conta Bug como bug na prosa, com "e" final', () => {
+  const itens = [
+    it(1, 'Product Backlog Item', 'Done', 'PBI um', null, null, 2),
+    it(2, 'Bug', 'Done', 'Bug um', null, null, 3),
+    it(3, 'Bug', 'Done', 'Bug dois', null, null, 4),
+  ];
+  const { html } = B.htmlReport({ items: itens, agora: AGORA });
+  assert.ok(html.includes('1 PBI e 2 bugs'), 'contagem por tipo real');
+  assert.ok(!html.includes('3 PBIs'));
+});
+
+test('htmlReport não diz "todo o esforço" quando há item sem produto', () => {
+  const itens = [
+    it(1, 'Epic', 'In Progress', 'Produto A', null, 5),
+    it(11, 'Product Backlog Item', 'Done', 'Com produto', 1, null, 2),
+    it(90, 'Product Backlog Item', 'Done', 'Solto', null, null, 3),
+  ];
+  const { html } = B.htmlReport({ items: itens, agora: AGORA });
+  assert.ok(!html.includes('Todo o esforço'));
+  assert.ok(html.includes('1 item sem produto associado'));
+});
+
+test('htmlReport avisa quantos produtos ficaram fora dos Destaques', () => {
+  const itens = [];
+  for (let p = 1; p <= 5; p += 1) {
+    itens.push(it(p, 'Epic', 'In Progress', 'Produto ' + p, null, 20));
+    itens.push(it(100 + p, 'Product Backlog Item', 'Done', 'Entrega ' + p, p, null, p));
+    itens.push(it(200 + p, 'Product Backlog Item', 'Done', 'Extra ' + p, p, null, p));
+  }
+  const { html } = B.htmlReport({ items: itens, agora: AGORA });
+  const destaques = html.slice(html.indexOf('id="destaques"'), html.indexOf('id="entregas"'));
+  assert.ok(destaques.includes('2 outros produtos do mês estão na seção Entregas'));
+});
+
+test('htmlReport corrige a concordância do travado único', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA });
+  assert.ok(html.includes('É o ponto que depende de decisão'));
+  assert.ok(!html.includes('É o ponto que dependem'));
+});

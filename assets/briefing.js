@@ -115,17 +115,31 @@
   // ---- Prosa ----
   // Derivada dos fatos. No Radar era escrita à mão; aqui nada afirma o que os
   // dados não mostram.
+  // "3 PBIs" quando um deles tem selo de Bug na lista logo abaixo é o documento
+  // se contradizendo. A contagem usa o tipo real do item, não o nível.
+  const NOME_TIPO = {
+    epic: ['épico', 'épicos'], feature: ['feature', 'features'], pbi: ['PBI', 'PBIs'],
+    bug: ['bug', 'bugs'], task: ['task', 'tasks'], outro: ['item de outro tipo', 'itens de outros tipos'],
+  };
+  function enumerar(partes) {
+    if (partes.length <= 1) return partes.join('');
+    return partes.slice(0, -1).join(', ') + ' e ' + partes[partes.length - 1];
+  }
+
   function paragrafoVolume(m, escopo) {
-    const n = m.porNivel;
     const r = m.resumo || {};
-    const niveis = [];
-    if (n.epic) niveis.push(plural(n.epic, 'épico', 'épicos'));
-    if (n.feature) niveis.push(plural(n.feature, 'feature', 'features'));
-    if (n.pbi) niveis.push(n.pbi + ' PBI' + (n.pbi > 1 ? 's' : ''));
+    const porTipo = new Map();
+    for (const reg of m.itens || []) {
+      const slug = C.typeSlug(((reg.item || {}).fields || {})['System.WorkItemType']);
+      porTipo.set(slug, (porTipo.get(slug) || 0) + 1);
+    }
+    const ordem = ['epic', 'feature', 'pbi', 'bug', 'task', 'outro'];
+    const niveis = ordem.filter((t) => porTipo.get(t))
+      .map((t) => porTipo.get(t) + ' ' + NOME_TIPO[t][porTipo.get(t) > 1 ? 1 : 0]);
     const deQuem = escopo ? ` no nome de <b>${esc(escopo)}</b>` : '';
-    const frases = [`Em ${mesPorExtenso(m.mes).toLowerCase()}, <b>${plural(m.total, 'item', 'itens')}</b>${deQuem} ${m.total === 1 ? 'foi concluído' : 'foram concluídos'} — ${niveis.join(', ')}.`];
+    const frases = [`Em ${mesPorExtenso(m.mes).toLowerCase()}, <b>${plural(m.total, 'item', 'itens')}</b>${deQuem} ${m.total === 1 ? 'foi concluído' : 'foram concluídos'} — ${enumerar(niveis)}.`];
     if (r.delta === null || r.delta === undefined) {
-      frases.push('É o registro mais antigo que o DevOps guarda para este recorte.');
+      frases.push('É o registro mais antigo que o DevOps guarda para este escopo.');
     } else if (r.delta > 0) {
       frases.push(`São <b>${r.delta} a mais</b> que em ${mesPorExtenso(r.mesAnterior).toLowerCase()}.`);
     } else if (r.delta < 0) {
@@ -140,12 +154,18 @@
     const prods = (m.resumo || {}).produtos || [];
     const fech = (m.resumo || {}).epicosFechados || [];
     const frases = [];
+    // Itens sem produto contam no total mas não em produto nenhum: "todo o
+    // esforço caiu em X" seria mentira quando eles existem.
+    const soltos = (m.total || 0) - prods.reduce((soma, p) => soma + p.n, 0);
+    const aviso = soltos > 0 ? ` — além de ${plural(soltos, 'item sem produto associado', 'itens sem produto associado')}` : '';
     if (prods.length === 1) {
-      frases.push(`Todo o esforço caiu em <b>${esc(prods[0].titulo)}</b>.`);
+      frases.push(soltos > 0
+        ? `O esforço com produto caiu todo em <b>${esc(prods[0].titulo)}</b>${aviso}.`
+        : `Todo o esforço caiu em <b>${esc(prods[0].titulo)}</b>.`);
     } else if (prods.length > 1) {
       const topo = prods.slice(0, 3).map((p) => `<b>${esc(p.titulo)}</b> (${p.n})`);
       const resto = prods.length - topo.length;
-      frases.push(`O esforço se distribuiu em ${plural(prods.length, 'produto', 'produtos')}: ${topo.join(', ')}${resto > 0 ? `, e outros ${resto}` : ''}.`);
+      frases.push(`O esforço se distribuiu em ${plural(prods.length, 'produto', 'produtos')}: ${topo.join(', ')}${resto > 0 ? `, e outros ${resto}` : ''}${aviso}.`);
     }
     if (fech.length === 1) {
       frases.push(`<b>${esc(fech[0].titulo)}</b> fechou por completo.`);
@@ -163,21 +183,28 @@
     if (p.atrasados.length) prazo.push(`<b>${p.atrasados.length} ${p.atrasados.length === 1 ? 'já passou' : 'já passaram'} do prazo</b>`);
     if (p.esteMes.length) prazo.push(`${p.esteMes.length} ${p.esteMes.length === 1 ? 'vence' : 'vencem'} ainda este mês`);
     if (p.proximoMes.length) prazo.push(`${p.proximoMes.length} no mês que vem`);
+    if (p.depois && p.depois.length) prazo.push(`${p.depois.length} mais adiante`);
     if (prazo.length) frases.push('Nos prazos: ' + prazo.join(', ') + '.');
     if (b.travados.length) {
       const velho = b.travados[0];
       const tempo = velho.dias == null ? '' : ` — o mais antigo sem movimento há ${velho.dias} ${velho.dias === 1 ? 'dia' : 'dias'}`;
-      frases.push(`<b>${plural(b.travados.length, 'item está travado', 'itens estão travados')}</b>${tempo}. ${b.travados.length === 1 ? 'É o ponto' : 'São os pontos'} que dependem de decisão.`);
+      frases.push(`<b>${plural(b.travados.length, 'item está travado', 'itens estão travados')}</b>${tempo}. ${b.travados.length === 1 ? 'É o ponto que depende' : 'São os pontos que dependem'} de decisão.`);
     }
     return frases.join(' ');
   }
 
-  // Data de conclusão em branco no DevOps: uso a última alteração e marco com ~.
+  // Data de conclusão em branco no DevOps: vale a última alteração, marcada com ~.
   // Quem lê tem que saber quando a data é aproximada.
   function notaAproximados(m) {
     if (!m || !m.aproximados) return '';
     const n = m.aproximados;
-    return `<p class="mudo nota-report">${n} ${n > 1 ? 'itens sem data de conclusão' : 'item sem data de conclusão'} registrada no DevOps — para ${n > 1 ? 'esses' : 'esse'} usei a data da última alteração, marcada com ~.</p>`;
+    return `<p class="mudo nota-report">${n} ${n > 1 ? 'itens sem data de conclusão' : 'item sem data de conclusão'} registrada no DevOps — ${n > 1 ? 'nesses' : 'nesse'} vale a data da última alteração, marcada com ~.</p>`;
+  }
+
+  // O ~ não pode aparecer antes da explicação: se algum registro exibido nos
+  // Destaques é aproximado, a nota vai junto ali também.
+  function temAproximado(grupos, limite) {
+    return grupos.slice(0, limite).some((g) => g.itens.some((r) => r.aproximada));
   }
 
   // ---- Documento ----
@@ -225,7 +252,12 @@
 
   // Destaques: os produtos que concentraram entrega no mês. Sem BVS pra ranquear,
   // o critério é volume — e o report diz que é volume, não valor.
-  function corpoDestaques(grupos) {
+  function corpoDestaques(grupos, mesAlvo) {
+    const alem = grupos.length - DESTAQUES;
+    const rodape = alem > 0
+      ? `<p class="mudo nota-report">${plural(alem, 'outro produto do mês está', 'outros produtos do mês estão')} na seção Entregas.</p>`
+      : '';
+    const nota = temAproximado(grupos, DESTAQUES) ? notaAproximados(mesAlvo) : '';
     return grupos.slice(0, DESTAQUES).map((g, i) => {
       const slug = C.typeSlug(g.produto.tipo);
       const proprio = g.itens.find((r) => (r.item || r).id === g.produto.id);
@@ -240,7 +272,7 @@
         </header>
         ${linhas.length ? `<ul class="lista-linhas">${linhas.map((r) => linha(r.item || r, (r.aproximada ? '~' : '') + dataCurta(r.quando))).join('')}</ul>` : ''}
       </article>`;
-    }).join('');
+    }).join('') + nota + rodape;
   }
 
   // Entregas: tudo do mês, agrupado por produto, com chips e busca. Os chips e o
@@ -277,11 +309,11 @@
         <span class="comp-mes">${mesPorExtenso(m.mes)}</span>
         <span class="comp-barra"><span style="width:${Math.round((m.total / max) * 100)}%"></span></span>
         <span class="comp-n">${m.total}</span>
-        <span class="comp-delta${classe}" title="contra o mês anterior deste recorte">${sinal}</span>
+        <span class="comp-delta${classe}" title="contra o mês anterior">${sinal}</span>
       </li>`;
     }).join('')}</ol>
-    <p class="mudo nota-report">Volume de entregas por mês neste recorte. A coluna da
-    direita compara com o mês anterior. Não é medida de valor — é contagem de itens concluídos.</p>`;
+    <p class="mudo nota-report">A coluna da direita compara com o mês anterior.
+    Não é medida de valor — é contagem de itens concluídos.</p>`;
   }
 
   // O item travado sai de "Próximos passos" pra não aparecer duas vezes no mesmo
@@ -312,6 +344,7 @@
       + bloco('Já passou do prazo', b.prazos.atrasados, true, (r) => dataCurta(r.alvo))
       + bloco('Vence ainda este mês', b.prazos.esteMes, false, (r) => dataCurta(r.alvo))
       + bloco('Vence no mês que vem', b.prazos.proximoMes, false, (r) => dataCurta(r.alvo))
+      + bloco('Vence mais adiante', b.prazos.depois, false, (r) => dataCurta(r.alvo))
       + bloco('Em curso, sem prazo definido', semPrazo, false, (r) => esc((r.item.fields || {})['System.State']))
       + '</div>';
   }
@@ -360,8 +393,10 @@
     // O comparativo continua só com os meses que têm entrega: barra de mês vazio
     // exigiria inventar registro, e o que falta já se lê pela ausência.
     const mesesDoAno = meses.filter((m) => m.mes.slice(0, 4) === ano);
-    if (!mesAlvo && !fechado && !b.execucao.length && !b.travados.length && !meses.length) {
-      return { vazio: true, meses: listaMeses, html: '<p class="mudo">Nada registrado ainda para este recorte.</p>' };
+    const temPrazoVivo = b.prazos.atrasados.length + b.prazos.esteMes.length
+      + b.prazos.proximoMes.length + b.prazos.depois.length > 0;
+    if (!mesAlvo && !fechado && !b.execucao.length && !b.travados.length && !meses.length && !temPrazoVivo) {
+      return { vazio: true, meses: listaMeses, html: '<p class="mudo">Nada registrado ainda para este escopo.</p>' };
     }
 
     // Um item travado e atrasado responde às duas perguntas do core. Num
@@ -374,6 +409,7 @@
         atrasados: semTravados(b.prazos.atrasados),
         esteMes: semTravados(b.prazos.esteMes),
         proximoMes: semTravados(b.prazos.proximoMes),
+        depois: semTravados(b.prazos.depois),
       },
     });
 
@@ -396,7 +432,10 @@
 
     const tiles = tile(entregas.length, entregas.length === 1 ? 'entrega' : 'entregas')
       + tile(comProduto.length, comProduto.length === 1 ? 'produto' : 'produtos')
-      + (fechado ? '' : tile(b.execucao.length, 'em execução') + tile(bVivo.prazos.atrasados.length, 'fora do prazo', true));
+      // "Fora do prazo" é pergunta de prazo, não de fluxo: um item travado com
+      // prazo estourado CONTA — senão a capa diz "0" e a seção Decisão mostra
+      // "atrasado desde...", o documento se contradizendo na mesma página.
+      + (fechado ? '' : tile(b.execucao.length, 'em execução') + tile(b.prazos.atrasados.length, 'fora do prazo', true));
 
     const secoes = [];
     secoes.push({
@@ -412,7 +451,7 @@
       secoes.push({
         id: 'destaques', titulo: 'Destaques', rotulo: 'Destaques',
         intro: 'Os produtos que concentraram entrega no mês, do maior volume para o menor. O critério é quantidade de itens concluídos.',
-        corpo: corpoDestaques(comProduto),
+        corpo: corpoDestaques(comProduto, mesAlvo),
       });
     }
     if (entregas.length) {
@@ -425,7 +464,7 @@
     if (mesesDoAno.length > 1) {
       secoes.push({
         id: 'comparativo', titulo: 'Comparativo', rotulo: 'Comparativo',
-        intro: 'Volume de entregas mês a mês em ' + ano + ', neste recorte.',
+        intro: 'Volume de entregas mês a mês em ' + ano + '.',
         // A variação de cada mês continua sendo contra o mês anterior de verdade,
         // mesmo quando ele é de dezembro do ano passado e não aparece na lista.
         corpo: corpoComparativo(mesesDoAno, escolhido),
@@ -448,7 +487,7 @@
         });
       }
       const totalProximos = bVivo.prazos.atrasados.length + bVivo.prazos.esteMes.length
-        + bVivo.prazos.proximoMes.length + b.execucao.length;
+        + bVivo.prazos.proximoMes.length + bVivo.prazos.depois.length + b.execucao.length;
       if (totalProximos) {
         secoes.push({
           id: 'proximos', titulo: 'Próximos passos', rotulo: 'Próximos',
