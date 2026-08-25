@@ -950,7 +950,7 @@ body.pagina-report main > section {
 }
 
 /* Cartão do documento: branco sobre o cinza da página */
-.doc-bloco, .resumo-cartao, .destaque {
+.doc-bloco, .resumo-cartao {
   background: #fff;
   border: 1px solid var(--doc-linha);
   border-radius: 18px;
@@ -977,31 +977,6 @@ body.pagina-report main > section {
   box-shadow: none;
 }
 .report-doc .grupo-produto h3 { font-size: 0.82rem; }
-
-/* Destaques */
-.destaque { padding: 1.05rem 1.1rem; }
-.destaque + .destaque { margin-top: 0.7rem; }
-.destaque-topo { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 0.75rem; }
-.destaque-pos {
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  width: 2.15rem;
-  height: 2.15rem;
-  border-radius: 13px;
-  background: #f3f4f8;
-  font-size: 0.95rem;
-  font-weight: 800;
-}
-.destaque-nome h3 { margin: 0; font-size: 1rem; font-weight: 800; letter-spacing: -0.01em; }
-.destaque-nome p {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin: 0.2rem 0 0;
-  font-size: 0.75rem;
-  color: var(--doc-mudo);
-}
 
 /* Filtro do bloco de entregas */
 .doc-filtros {
@@ -1121,9 +1096,9 @@ body.pagina-report main > section {
   /* Quebra por bloco, não por seção: "Entregas do mês" pode ter uma página
      inteira — travar a seção criava vão em branco e estouro. */
   .doc-sec { padding-top: 1.2rem; }
-  .doc-sec-topo, .doc-bloco, .destaque, .resumo-cartao, .comparativo li,
+  .doc-sec-topo, .doc-bloco, .resumo-cartao, .comparativo li,
   .grupo-produto, .lista-linhas li { break-inside: avoid; }
-  .doc-bloco, .destaque, .resumo-cartao { border: 1px solid #e5e5e5; }
+  .doc-bloco, .resumo-cartao { border: 1px solid #e5e5e5; }
   /* Barras do comparativo são só background — sem isto o papel sai em branco */
   .comparativo .comp-barra, .comparativo .comp-barra span {
     -webkit-print-color-adjust: exact;

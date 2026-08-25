@@ -13,8 +13,6 @@
 })(typeof self !== 'undefined' ? self : this, function (C) {
   'use strict';
 
-  const ROTULO_CURTO = { epic: 'Épico', feature: 'Feature', pbi: 'PBI', bug: 'Bug', task: 'Task', outro: 'Item' };
-
   // Escape sem DOM: este módulo roda no Node (testes) e dentro do arquivo gerado
   function esc(s) {
     return String(s == null ? '' : s)
@@ -47,8 +45,10 @@
     const slug = C.typeSlug(f['System.WorkItemType']);
     const nome = f['System.Title'] || ('item #' + it.id);
     const dados = ` data-tipo="${slug}" data-produto="${esc(chave || 'sem')}" data-busca="${esc((nome + ' #' + it.id).toLowerCase())}"`;
+    // Sem selo de tipo: "Feature/PBI/Bug" é jargão de DevOps e, agrupado por
+    // produto, repete o que o stakeholder já lê. Cada item fica só com título,
+    // data/prazo e o #id (que serve a quem tem acesso pra procurar lá dentro).
     return `<li${dados}><div class="item-linha">
-      <span class="badge-tipo tipo-${slug}">${ROTULO_CURTO[slug]}</span>
       <span class="titulo">${esc(nome)}</span>
       <span class="quando"${titulo ? ` title="${esc(titulo)}"` : ''}>${direita || ''}</span>
       <span class="id">#${esc(it.id)}</span>
@@ -76,18 +76,17 @@
       || (nomeProduto(a.produto) < nomeProduto(b.produto) ? -1 : 1));
   }
 
-  // O produto não era clicável nem dizia o que era — só um texto em negrito.
-  // Aqui ele aparece como item de verdade: selo do nível, link pro DevOps e,
-  // quando existe, estado e prazo. É o épico ganhando corpo no report.
+  // O cabeçalho do grupo é o produto: nome à esquerda e, quando existe, estado e
+  // prazo no canto direito, na linha do título. Sem selo de tipo — pro stakeholder
+  // o produto é o produto; "Épico"/"Feature" é jargão de DevOps e só competia com
+  // o nome.
   function cabecalhoProduto(p, extra) {
     if (!p) return `<h3 class="cab-produto"><span class="cab-sem">${SEM_PRODUTO}</span></h3>`;
-    const slug = C.typeSlug(p.tipo);
     const partes = [extra || p.estado];
     // Prazo de item já concluído é ruído: o que importa é quando fechou.
     if (p.alvo && !C.isTerminalState(p.estado)) partes.push('prazo ' + dataCurta(p.alvo));
     const detalhe = partes.filter(Boolean).join(' · ');
     return `<h3 class="cab-produto">
-      <span class="badge-tipo tipo-${slug}">${ROTULO_CURTO[slug]}</span>
       <span class="cab-nome">${esc(p.titulo)}</span>
       ${detalhe ? `<span class="cab-detalhe">${esc(detalhe)}</span>` : ''}
     </h3>`;
@@ -206,25 +205,14 @@
     return `<p class="mudo nota-report">${n} ${n > 1 ? 'itens sem data de conclusão' : 'item sem data de conclusão'} registrada no DevOps — ${n > 1 ? 'nesses' : 'nesse'} vale a data da última alteração, marcada com ~.</p>`;
   }
 
-  // O ~ não pode aparecer antes da explicação: se algum registro exibido nos
-  // Destaques é aproximado, a nota vai junto ali também.
-  function temAproximado(grupos, limite) {
-    return grupos.slice(0, limite).some((g) => g.itens.some((r) => r.aproximada));
-  }
-
   // ---- Documento ----
-  // A estrutura é a do Relatório Mensal de Tecnologia da Ybera: capa escura com
-  // os números do ciclo, navegação em pílulas, seções numeradas com rótulo em
-  // inglês por cima do título. O que aquele report escreve à mão — BVS, narrativa
-  // de impacto, vídeo da entrega — não existe aqui: cada número abaixo sai dos
-  // itens do DevOps, e o que os dados não sustentam não é afirmado.
+  // A estrutura segue o Relatório Mensal de Tecnologia da Ybera: capa escura com
+  // os números do ciclo, navegação em pílulas e seções com título e a frase que
+  // as explica. O que aquele report escreve à mão — BVS, narrativa de impacto,
+  // vídeo da entrega — não existe aqui: cada número abaixo sai dos itens do
+  // DevOps, e o que os dados não sustentam não é afirmado.
   const CAMPO_ALVO = 'Microsoft.VSTS.Scheduling.TargetDate';
-  const DESTAQUES = 3;
   const MESES_COMPARATIVO = 12;
-  // Destaque só faz sentido quando há de onde destacar: com um produto ou meia
-  // dúzia de itens, a seção seria a de entregas repetida.
-  const MIN_DESTAQUE_PRODUTOS = 2;
-  const MIN_DESTAQUE_ITENS = 4;
 
   function tile(n, rotulo, alerta) {
     return `<li${alerta && n ? ' class="kpi-alerta"' : ''}><b>${n}</b><span>${esc(rotulo)}</span></li>`;
@@ -255,44 +243,16 @@
     </section>`;
   }
 
-  // Destaques: os produtos que concentraram entrega no mês. Sem BVS pra ranquear,
-  // o critério é volume — e o report diz que é volume, não valor.
-  function corpoDestaques(grupos, mesAlvo) {
-    const alem = grupos.length - DESTAQUES;
-    const rodape = alem > 0
-      ? `<p class="mudo nota-report">${plural(alem, 'outro produto do mês está', 'outros produtos do mês estão')} na seção Entregas.</p>`
-      : '';
-    const nota = temAproximado(grupos, DESTAQUES) ? notaAproximados(mesAlvo) : '';
-    return grupos.slice(0, DESTAQUES).map((g, i) => {
-      const slug = C.typeSlug(g.produto.tipo);
-      const proprio = g.itens.find((r) => (r.item || r).id === g.produto.id);
-      const linhas = g.itens.filter((r) => r !== proprio);
-      return `<article class="destaque">
-        <header class="destaque-topo">
-          <span class="destaque-pos">${i + 1}</span>
-          <div class="destaque-nome">
-            <h3>${esc(g.produto.titulo)}</h3>
-            <p><span class="badge-tipo tipo-${slug}">${ROTULO_CURTO[slug]}</span> ${plural(g.itens.length, 'entrega no mês', 'entregas no mês')}${g.produto.estado ? ' · ' + esc(g.produto.estado) : ''}</p>
-          </div>
-        </header>
-        ${linhas.length ? `<ul class="lista-linhas">${linhas.map((r) => linha(r.item || r, (r.aproximada ? '~' : '') + dataCurta(r.quando))).join('')}</ul>` : ''}
-      </article>`;
-    }).join('') + nota + rodape;
-  }
-
   // Entregas: tudo do mês, agrupado por produto, com chips e busca. Os chips e o
   // contador são estáticos aqui; quem esconde linha é o report.js.
   function corpoEntregas(regs, mapa) {
     const grupos = porProduto(regs, mapa);
-    const tipos = new Map();
-    for (const r of regs) {
-      const slug = C.typeSlug(((r.item || r).fields || {})['System.WorkItemType']);
-      tipos.set(slug, (tipos.get(slug) || 0) + 1);
-    }
     const chip = (filtro, valor, rotulo, n) =>
       `<button type="button" class="chip-doc" aria-pressed="false" data-filtro="${filtro}" data-valor="${esc(valor)}" title="${esc(rotulo)}"><span>${esc(rotulo)}</span><span class="n">${n}</span></button>`;
-    const chips = grupos.map((g) => chip('produto', chaveDe(g.produto), nomeProduto(g.produto), g.itens.length)).join('')
-      + [...tipos.entries()].map(([slug, n]) => chip('tipo', slug, ROTULO_CURTO[slug], n)).join('');
+    // Só chips de produto: filtrar por tipo (Feature, PBI…) repete o recorte por
+    // produto pra quem lê, e é jargão de DevOps. O filtro fica no eixo que o
+    // stakeholder usa; nas linhas, item nenhum carrega mais selo de tipo.
+    const chips = grupos.map((g) => chip('produto', chaveDe(g.produto), nomeProduto(g.produto), g.itens.length)).join('');
     const lista = grupos.map((g) => grupoHtml(g, (r) => (r.aproximada ? '~' : '') + dataCurta(r.quando))).join('');
     return `<div class="doc-filtros">
       <input id="busca-entregas" type="search" placeholder="buscar por título ou #id" aria-label="Buscar entregas por título ou número" autocomplete="off">
@@ -300,20 +260,7 @@
       <button type="button" class="limpar-doc" id="limpar-entregas" hidden>limpar</button>
       <span class="conta-doc" id="conta-entregas" aria-live="polite">${regs.length} de ${regs.length}</span>
     </div>
-    <div class="doc-lista doc-bloco" id="lista-entregas">${lista}</div>
-    ${legendaTipos(tipos)}`;
-  }
-
-  // Uma linha explicando só os tipos que aparecem no mês. 'PBI'/'Feature' são
-  // sopa de letras pra quem nunca abriu o DevOps; a legenda traduz sem encher.
-  const GLOSSARIO = {
-    epic: '<b>Épico</b>, uma frente de produto', feature: '<b>Feature</b>, um bloco de entrega',
-    pbi: '<b>PBI</b>, um item de backlog', bug: '<b>Bug</b>, uma correção', task: '<b>Task</b>, uma tarefa',
-  };
-  function legendaTipos(tipos) {
-    const partes = ['epic', 'feature', 'pbi', 'bug', 'task'].filter((t) => tipos.has(t)).map((t) => GLOSSARIO[t]);
-    if (partes.length < 2) return ''; // um tipo só não precisa de legenda
-    return `<p class="mudo nota-report">${partes.join(' · ')}.</p>`;
+    <div class="doc-lista doc-bloco" id="lista-entregas">${lista}</div>`;
   }
 
   function corpoComparativo(meses, escolhido) {
@@ -465,17 +412,10 @@
       corpo: `<div class="resumo-cartoes">${prosa
         .map((x) => `<article class="resumo-cartao"><p>${x}</p></article>`).join('')}</div>`,
     });
-    if (comProduto.length >= MIN_DESTAQUE_PRODUTOS && entregas.length >= MIN_DESTAQUE_ITENS) {
-      secoes.push({
-        id: 'destaques', titulo: 'Destaques', rotulo: 'Destaques',
-        intro: 'Os produtos que concentraram entrega no mês, do maior volume para o menor. O critério é quantidade de itens concluídos.',
-        corpo: corpoDestaques(comProduto, mesAlvo),
-      });
-    }
     if (entregas.length) {
       secoes.push({
         id: 'entregas', titulo: 'Entregas do mês', rotulo: 'Entregas',
-        intro: 'Tudo que foi concluído no mês, agrupado por produto. Filtre por produto ou tipo, ou busque por título e número do item.',
+        intro: 'Tudo que foi concluído no mês, agrupado por produto. Filtre por produto ou busque por título e número do item.',
         corpo: corpoEntregas(entregas, mapa) + notaAproximados(mesAlvo),
       });
     }

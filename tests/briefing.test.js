@@ -35,7 +35,7 @@ test('htmlReport monta as seções do briefing', () => {
   }
   assert.ok(html.includes('Agosto de 2026'));
   assert.ok(html.includes('Nova PDP USA')); // agrupou por produto
-  assert.ok(!html.includes('Destaques'));   // 2 entregas não sustentam um bloco de destaque
+  assert.ok(!html.includes('Destaques'));   // Destaques saiu: repetia os itens de Entregas
   // Cabeçalho de seção é só título e a frase que o explica
   assert.ok(!html.includes('doc-num'), 'numeral gigante saiu do cabeçalho');
   assert.ok(!html.includes('Executive summary'), 'rótulo em inglês saiu das seções');
@@ -157,11 +157,12 @@ test('htmlReport aceita mês sem nenhuma entrega', () => {
   assert.ok(html.includes('Nada foi concluído neste mês'));
 });
 
-// O produto deixou de ser texto solto: virou o próprio item, com selo e situação.
-test('htmlReport mostra o épico do grupo com selo', () => {
+// O produto vira o cabeçalho do grupo pelo nome, sem selo de tipo: "Épico"/
+// "Feature" é jargão de DevOps e só competia com o nome do produto.
+test('htmlReport mostra o produto no cabeçalho sem selo de tipo', () => {
   const { html } = B.htmlReport({ items: base(), agora: AGORA });
-  assert.match(html, /<h3 class="cab-produto">\s*<span class="badge-tipo tipo-epic">Épico<\/span>/);
   assert.ok(html.includes('<span class="cab-nome">Nova PDP USA</span>'));
+  assert.doesNotMatch(html, /<h3 class="cab-produto">\s*<span class="badge-tipo/);
 });
 
 test('htmlReport joga "sem produto" pro fim, mesmo sendo o maior grupo', () => {
@@ -190,9 +191,7 @@ test('htmlReport não repete o épico como cabeçalho e como linha', () => {
   assert.ok(lista.includes('Filho ativo'));
 });
 
-// Destaque precisa de material: com um produto só, ou meia dúzia de itens, a
-// seção seria a de entregas repetida.
-test('htmlReport ranqueia destaques por volume quando há material', () => {
+test('htmlReport não tem mais seção de destaques (repetia Entregas)', () => {
   const itens = [
     it(1, 'Epic', 'In Progress', 'Produto grande', null, 20),
     it(2, 'Epic', 'In Progress', 'Produto pequeno', null, 20),
@@ -201,12 +200,13 @@ test('htmlReport ranqueia destaques por volume quando há material', () => {
     it(13, 'Product Backlog Item', 'Done', 'C', 1, null, 3),
     it(21, 'Product Backlog Item', 'Done', 'D', 2, null, 4),
   ];
-  const { html } = B.htmlReport({ items: itens, agora: AGORA, org: 'https://x/y' });
-  const bloco = html.slice(html.indexOf('id="destaques"'), html.indexOf('id="entregas"'));
-  assert.ok(bloco.includes('Produto grande'));
-  assert.ok(bloco.indexOf('Produto grande') < bloco.indexOf('Produto pequeno'));
-  assert.ok(bloco.includes('3 entregas no mês'));
-  assert.ok(bloco.includes('1 entrega no mês'));
+  const { html } = B.htmlReport({ items: itens, agora: AGORA });
+  assert.ok(!html.includes('id="destaques"'));
+  assert.ok(!html.includes('Destaques'));
+  assert.ok(!html.includes('entregas no mês')); // rótulo era só do card de destaque
+  // Os produtos continuam aparecendo — agora só em Entregas do mês
+  assert.ok(html.includes('Produto grande'));
+  assert.ok(html.includes('Produto pequeno'));
 });
 
 test('htmlReport monta chips e contador no bloco de entregas', () => {
@@ -214,7 +214,8 @@ test('htmlReport monta chips e contador no bloco de entregas', () => {
   assert.ok(html.includes('id="busca-entregas"'));
   assert.ok(html.includes('>2 de 2<'));
   assert.match(html, /data-filtro="produto" data-valor="p1"/);
-  assert.match(html, /data-filtro="tipo" data-valor="pbi"/);
+  // Só chips de produto: filtrar por tipo repetia o recorte por produto
+  assert.doesNotMatch(html, /data-filtro="tipo"/);
   assert.match(html, /<li data-tipo="pbi" data-produto="p1" data-busca="zoom na imagem #11"/);
 });
 
@@ -395,7 +396,7 @@ test('htmlReport não diz "todo o esforço" quando há item sem produto', () => 
   assert.ok(html.includes('1 item sem produto associado'));
 });
 
-test('htmlReport avisa quantos produtos ficaram fora dos Destaques', () => {
+test('htmlReport com muitos produtos lista todos em Entregas', () => {
   const itens = [];
   for (let p = 1; p <= 5; p += 1) {
     itens.push(it(p, 'Epic', 'In Progress', 'Produto ' + p, null, 20));
@@ -403,8 +404,10 @@ test('htmlReport avisa quantos produtos ficaram fora dos Destaques', () => {
     itens.push(it(200 + p, 'Product Backlog Item', 'Done', 'Extra ' + p, p, null, p));
   }
   const { html } = B.htmlReport({ items: itens, agora: AGORA });
-  const destaques = html.slice(html.indexOf('id="destaques"'), html.indexOf('id="entregas"'));
-  assert.ok(destaques.includes('2 outros produtos do mês estão na seção Entregas'));
+  const entregas = html.slice(html.indexOf('id="entregas"'));
+  for (let p = 1; p <= 5; p += 1) {
+    assert.ok(entregas.includes('Produto ' + p), 'falta o produto ' + p + ' em Entregas');
+  }
 });
 
 test('htmlReport corrige a concordância do travado único', () => {
@@ -430,11 +433,14 @@ test('htmlReport nomeia os controles e expõe estado dos chips', () => {
   assert.match(html, /<button type="button" class="chip-doc" aria-pressed="false"/);
 });
 
-test('htmlReport traduz os tipos numa legenda ao fim das Entregas', () => {
+test('htmlReport não põe selo de tipo nem legenda nas linhas de Entregas', () => {
   const { html } = B.htmlReport({ items: base(), agora: AGORA });
   const entregas = html.slice(html.indexOf('id="lista-entregas"'), html.indexOf('id="comparativo"'));
-  assert.ok(entregas.includes('item de backlog'));
-  assert.ok(entregas.includes('bloco de entrega') || entregas.includes('frente de produto'));
+  assert.ok(!entregas.includes('badge-tipo'), 'nenhum selo de tipo nas linhas');
+  assert.ok(!entregas.includes('item de backlog'), 'sem legenda de tipos');
+  // O item segue lá, só que sem selo — pelo título e pelo #id
+  assert.ok(entregas.includes('Zoom na imagem'));
+  assert.ok(entregas.includes('#11'));
 });
 
 test('htmlReport não afirma o motivo do bloqueio', () => {
