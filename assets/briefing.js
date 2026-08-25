@@ -46,12 +46,12 @@
     const f = it.fields || {};
     const slug = C.typeSlug(f['System.WorkItemType']);
     const nome = f['System.Title'] || ('item #' + it.id);
-    const dados = ` data-tipo="${slug}" data-produto="${chave || 'sem'}" data-busca="${esc((nome + ' #' + it.id).toLowerCase())}"`;
+    const dados = ` data-tipo="${slug}" data-produto="${esc(chave || 'sem')}" data-busca="${esc((nome + ' #' + it.id).toLowerCase())}"`;
     return `<li${dados}><div class="item-linha">
       <span class="badge-tipo tipo-${slug}">${ROTULO_CURTO[slug]}</span>
       <span class="titulo">${esc(nome)}</span>
       <span class="quando"${titulo ? ` title="${esc(titulo)}"` : ''}>${direita || ''}</span>
-      <span class="id">#${it.id}</span>
+      <span class="id">#${esc(it.id)}</span>
     </div></li>`;
   }
 
@@ -106,7 +106,7 @@
     const dadosProprio = proprio
       ? ` data-proprio-tipo="${C.typeSlug(g.produto.tipo)}" data-proprio-busca="${esc((g.produto.titulo + ' #' + g.produto.id).toLowerCase())}"`
       : '';
-    return `<div class="grupo-produto" data-produto="${chave}"${dadosProprio}>
+    return `<div class="grupo-produto" data-produto="${esc(chave)}"${dadosProprio}>
       ${cabecalhoProduto(g.produto, proprio ? direita(proprio) : '')}
       ${linhas.length ? `<ul class="lista-linhas">${linhas.map((r) => linha(r.item || r, direita(r), '', chave)).join('')}</ul>` : ''}
     </div>`;
@@ -201,7 +201,7 @@
   function capa(escolhido, meta, tiles) {
     return `<header class="doc-capa">
       <div class="doc-limite">
-        <h1 class="doc-titulo"><span>Relatório de</span><b>${mesPorExtenso(escolhido)}</b></h1>
+        <h1 class="doc-titulo"><span>Relatório de</span><b>${esc(mesPorExtenso(escolhido))}</b></h1>
         <p class="doc-meta">${esc(meta)}</p>
         ${tiles ? `<ul class="doc-kpis">${tiles}</ul>` : ''}
       </div>
@@ -340,7 +340,9 @@
     const mapa = C.mapaDeProdutos(o.todos || items);
     const meses = C.resumoMensal(C.reportPorMes(items), mapa);
     const b = C.briefingDoMes(items, agora);
-    const escolhido = o.mes || b.mes;
+    // O `mes` pode vir do fragmento do link — dado que qualquer um forja. Formato
+    // inválido cai no mês corrente em vez de virar "Invalid Date" (ou HTML) na capa.
+    const escolhido = /^\d{4}-(0[1-9]|1[0-2])$/.test(o.mes || '') ? o.mes : b.mes;
     const fechado = escolhido !== b.mes; // mês que já passou
     const mesAlvo = meses.find((m) => m.mes === escolhido) || null;
     // Seletor: TODO mês do ano corrente até hoje, tenha tido entrega ou não.
@@ -434,7 +436,7 @@
         id: 'agora', titulo: 'Situação de hoje', rotulo: 'Hoje',
         intro: 'Execução, prazos e travas aparecem só no mês corrente.',
         corpo: `<p class="mudo nota-report">O DevOps guarda o estado de agora, não o estado
-        que cada item tinha em ${mesPorExtenso(escolhido).toLowerCase()}. Para ver o que está em curso,
+        que cada item tinha em ${esc(mesPorExtenso(escolhido).toLowerCase())}. Para ver o que está em curso,
         troque para o mês corrente no seletor do topo.</p>`,
       });
     } else {
@@ -461,7 +463,7 @@
     // stakeholder pela mesma peça. Um mês só não é escolha: não desenha.
     const seletorMes = listaMeses.length > 1
       ? `<select id="mes-global" class="doc-mes" title="Mês do report">${listaMeses
-        .map((m) => `<option value="${m}"${m === escolhido ? ' selected' : ''}>${mesPorExtenso(m)}</option>`)
+        .map((m) => `<option value="${esc(m)}"${m === escolhido ? ' selected' : ''}>${esc(mesPorExtenso(m))}</option>`)
         .join('')}</select>`
       : '';
     const nav = `<nav class="doc-nav"><div class="doc-nav-int">${secoes

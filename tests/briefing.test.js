@@ -315,3 +315,30 @@ test('htmlReport omite o P.O quando não há recorte por responsável', () => {
   assert.ok(!capa.includes('P.O responsável'));
   assert.ok(capa.includes('Ybera US'));
 });
+
+/* ---- O pacote do link é dado não confiável ---- */
+// Qualquer um forja um #r=. Nada que venha dele pode virar HTML na página.
+test('htmlReport escapa id e mês vindos de pacote forjado', () => {
+  const maligno = [{
+    id: '"><img src=x onerror=alert(1)>',
+    projeto: 'B2C',
+    fields: {
+      'System.WorkItemType': 'Product Backlog Item', 'System.State': 'Done',
+      'System.Title': 'Item forjado',
+      'Microsoft.VSTS.Common.ClosedDate': iso(AGORA - 2 * dia),
+      'System.ChangedDate': iso(AGORA - dia),
+    },
+  }];
+  const { html } = B.htmlReport({ items: maligno, agora: AGORA, mes: '<img src=x onerror=alert(2)>' });
+  assert.ok(!html.includes('<img'), 'nenhuma tag injetada sobrevive');
+  assert.ok(html.includes('&lt;img') || !html.includes('onerror'), 'payload aparece só escapado');
+});
+
+test('htmlReport ignora mês fora do formato AAAA-MM', () => {
+  const casos = ['2026-13', '2026-0', 'x-y', '<b>x</b>', '2026-08-01'];
+  for (const mes of casos) {
+    const { html } = B.htmlReport({ items: base(), agora: AGORA, mes });
+    assert.ok(html.includes('Agosto de 2026'), 'caiu no mês corrente para: ' + mes);
+    assert.ok(!html.includes('Invalid'), 'sem Invalid Date para: ' + mes);
+  }
+});

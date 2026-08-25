@@ -455,8 +455,14 @@ async function lerDoLink() {
   });
   try {
     const pacote = JSON.parse(await descomprimir(m[1]));
-    st.items = pacote.items || [];
-    st.pais = pacote.ancestrais || [];
+    // O fragmento é dado que QUALQUER UM pode forjar — um link malicioso não pode
+    // virar HTML dentro da página. O briefing escapa toda interpolação; aqui vai a
+    // segunda tranca: id numérico de verdade, e só os campos que o report conhece.
+    const sanear = (lista) => (Array.isArray(lista) ? lista : [])
+      .filter((it) => it && Number.isFinite(Number(it.id)))
+      .map((it) => ({ id: Number(it.id), projeto: it.projeto, fields: it.fields || {} }));
+    st.items = sanear(pacote.items);
+    st.pais = sanear(pacote.ancestrais);
     st.escopo = pacote.escopo || '';
     st.agora = pacote.em || Date.now();
     st.mes = pacote.mes || null;
