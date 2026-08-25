@@ -118,9 +118,21 @@ test('htmlReport acha o produto pelo pai fora do recorte', () => {
   assert.ok(!comTodos.html.includes('Prova social'), 'item fora do recorte não pode aparecer');
 });
 
-test('htmlReport lista os meses com entrega e o mês corrente', () => {
-  const { meses } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://x/y' });
-  assert.deepEqual(meses, ['2026-08', '2026-07']); // mais novo primeiro
+// O ano inteiro até hoje, tenha tido entrega ou não: mês vazio é informação, e
+// listar só os meses com entrega deixava o PO sem como olhar os outros.
+test('htmlReport lista todos os meses do ano até hoje', () => {
+  const { meses } = B.htmlReport({ items: base(), agora: AGORA });
+  assert.deepEqual(meses, ['2026-08', '2026-07', '2026-06', '2026-05', '2026-04',
+    '2026-03', '2026-02', '2026-01']); // agosto é o mês de AGORA; setembro não entra
+});
+
+test('htmlReport abre mês vazio sem quebrar', () => {
+  const { vazio, html } = B.htmlReport({ items: base(), agora: AGORA, mes: '2026-03' });
+  assert.equal(vazio, false);
+  assert.ok(html.includes('Março de 2026'));
+  assert.ok(html.includes('Nada foi concluído neste mês'));
+  assert.ok(!html.includes('id="entregas"')); // sem entrega, sem bloco de entregas
+  assert.ok(html.includes('Situação de hoje'));
 });
 
 // Mês fechado só pode afirmar o que é histórico. Estado, prazo e trava são
@@ -255,14 +267,16 @@ const dez2025 = () => [
   it(60, 'Product Backlog Item', 'Done', 'Coisa de dezembro', null, null, 260),
 ];
 
-test('htmlReport lista no seletor só os meses do ano corrente', () => {
+test('htmlReport não lista mês de ano anterior no seletor', () => {
   const { meses } = B.htmlReport({ items: dez2025(), agora: AGORA });
-  assert.deepEqual(meses, ['2026-08', '2026-07']);
+  assert.ok(!meses.some((m) => m.startsWith('2025')));
+  assert.equal(meses.length, 8);
 });
 
 test('htmlReport mantém no seletor o mês escolhido, mesmo de outro ano', () => {
   const { meses, html } = B.htmlReport({ items: dez2025(), agora: AGORA, mes: '2025-12' });
-  assert.deepEqual(meses, ['2026-08', '2026-07', '2025-12']);
+  assert.equal(meses[meses.length - 1], '2025-12');
+  assert.equal(meses.length, 9);
   assert.ok(html.includes('Dezembro de 2025')); // link antigo continua abrindo
 });
 

@@ -341,14 +341,20 @@
     const escolhido = o.mes || b.mes;
     const fechado = escolhido !== b.mes; // mês que já passou
     const mesAlvo = meses.find((m) => m.mes === escolhido) || null;
-    // Seletor: os meses do ano corrente com entrega, mais o mês de hoje (que pode
-    // estar vazio). Ano anterior não entra — o report é documento do ano, e a
-    // lista crescia pra sempre. O mês escolhido entra de todo jeito, senão um
-    // link antigo apontando pra dezembro passado abriria fora da lista.
-    const ano = String(new Date(agora).getUTCFullYear());
-    const listaMeses = [...new Set([b.mes, ...meses.map((m) => m.mes)])]
-      .filter((m) => m.slice(0, 4) === ano || m === escolhido)
-      .sort().reverse();
+    // Seletor: TODO mês do ano corrente até hoje, tenha tido entrega ou não.
+    // Listar só os meses com entrega deixava o PO sem como olhar um mês vazio —
+    // e um mês vazio é informação. Mês à frente não entra: não há o que mostrar.
+    // Ano anterior também não, senão a lista cresce pra sempre; a exceção é o mês
+    // escolhido, pra um link antigo continuar abrindo e dar como voltar.
+    const dAgora = new Date(agora);
+    const ano = String(dAgora.getUTCFullYear());
+    const doAno = [];
+    for (let m = dAgora.getUTCMonth() + 1; m >= 1; m -= 1) {
+      doAno.push(ano + '-' + String(m).padStart(2, '0'));
+    }
+    const listaMeses = doAno.includes(escolhido) ? doAno : doAno.concat(escolhido);
+    // O comparativo continua só com os meses que têm entrega: barra de mês vazio
+    // exigiria inventar registro, e o que falta já se lê pela ausência.
     const mesesDoAno = meses.filter((m) => m.mes.slice(0, 4) === ano);
     if (!mesAlvo && !fechado && !b.execucao.length && !b.travados.length && !meses.length) {
       return { vazio: true, meses: listaMeses, html: '<p class="mudo">Nada registrado ainda para este recorte.</p>' };
