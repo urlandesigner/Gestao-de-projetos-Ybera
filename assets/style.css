@@ -1039,12 +1039,16 @@ body.pagina-report main > section {
   border: 1px solid var(--doc-linha);
   border-radius: 18px;
 }
-/* Resumo em cartões: um por parágrafo, no máximo 3 por linha. auto-fit dá 1, 2
-   ou 3 colunas conforme o número de parágrafos — e a prosa não passa de 3. */
+/* Resumo em cartões: um por parágrafo. Duas colunas fixas (2×2 quando são 4 no
+   mês corrente, 2×1 no mês fechado) — assim nenhum card fica gigante e sozinho
+   numa linha, como acontecia com auto-fit em tela larga. Empilha no celular. */
 .resumo-cartoes {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.7rem;
+}
+@media (max-width: 560px) {
+  .resumo-cartoes { grid-template-columns: 1fr; }
 }
 .resumo-cartao { padding: 1.1rem 1.2rem; }
 .resumo-cartao p {

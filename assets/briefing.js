@@ -210,10 +210,10 @@
     return [...porProd.values()].sort((a, b) => b.n - a.n);
   }
 
-  // `travadosVencidos` reconcilia a prosa com a capa: o KPI "fora do prazo"
-  // conta o travado vencido, então a frase dos travados diz qual deles é.
-  // `frentes` é a triagem de risco: quais produtos têm item atrasado.
-  function paragrafoSituacao(b, travadosVencidos, frentes) {
+  // A situação virou dois cards pra não empilhar quatro ideias num paredão só:
+  // "Em curso" (o que flui — execução e prazos) e "Atenção" (o que trava — frentes
+  // atrasadas e o travado que pede decisão). Grid de 4 cards fecha 2×2, equilibrado.
+  function paragrafoEmCurso(b) {
     const frases = [];
     if (b.execucao.length) frases.push(`<b>${plural(b.execucao.length, 'item', 'itens')}</b> em execução agora.`);
     const p = b.prazos;
@@ -223,6 +223,14 @@
     if (p.proximoMes.length) prazo.push(`${p.proximoMes.length} no mês que vem`);
     if (p.depois && p.depois.length) prazo.push(`${p.depois.length} mais adiante`);
     if (prazo.length) frases.push('Nos prazos: ' + prazo.join(', ') + '.');
+    return frases.join(' ');
+  }
+
+  // `travadosVencidos` reconcilia a prosa com a capa: o KPI "fora do prazo" conta
+  // o travado vencido, então a frase dos travados diz qual deles é. `frentes` é a
+  // triagem de risco: quais produtos têm item atrasado.
+  function paragrafoAtencao(b, travadosVencidos, frentes) {
+    const frases = [];
     if (frentes && frentes.length) {
       const lista = frentes.map((f) => `<b>${esc(f.titulo)}</b> (${f.n} ${f.n === 1 ? 'item' : 'itens'})`);
       frases.push('Frentes com item atrasado: ' + enumerar(lista) + '.');
@@ -231,7 +239,7 @@
       const velho = b.travados[0];
       const partes = [];
       if (velho.dias != null) partes.push(`o mais antigo sem movimento há ${velho.dias} ${velho.dias === 1 ? 'dia' : 'dias'}`);
-      if (travadosVencidos) partes.push(b.travados.length === 1 ? 'com o prazo estourado' : `${travadosVencidos} ${travadosVencidos === 1 ? 'deles com o prazo estourado' : 'deles com o prazo estourado'}`);
+      if (travadosVencidos) partes.push(b.travados.length === 1 ? 'com o prazo estourado' : `${travadosVencidos} deles com o prazo estourado`);
       const tempo = partes.length ? ' — ' + partes.join(', ') : '';
       frases.push(`<b>${plural(b.travados.length, 'item está travado', 'itens estão travados')}</b>${tempo}. ${b.travados.length === 1 ? 'É o ponto que depende' : 'São os pontos que dependem'} de decisão.`);
     }
@@ -259,25 +267,22 @@
     return `<li${alerta && n ? ' class="kpi-alerta"' : ''}><b>${n}</b><span>${esc(rotulo)}</span></li>`;
   }
 
-  // Manchete: a punchline do mês, derivada dos fatos. Volume + o produto que
-  // concentrou entrega, e — no mês corrente — o que pede ação (decisão, prazo).
+  // Manchete: a punchline do mês. Foca no que os KPIs NÃO dizem — o produto que
+  // puxou as entregas e a ação que depende do leitor (decisão). Volume e "fora do
+  // prazo" ficam nos tiles logo abaixo; repeti-los aqui seria eco.
   // Mês fechado não fala de ação: situação é sempre do agora, não do passado.
-  function manchete(mesChave, fechado, nEntregas, topNome, nTravados, nAtrasados) {
+  function manchete(mesChave, fechado, nEntregas, topNome, nTravados) {
     const mes = mesPorExtenso(mesChave).toLowerCase().replace(/ de \d{4}$/, '');
     const frases = [];
     if (nEntregas > 0) {
-      frases.push(`Em ${mes}, <b>${plural(nEntregas, 'entrega', 'entregas')}</b>${topNome ? ` — ${esc(topNome)} na frente` : ''}.`);
+      frases.push(topNome
+        ? `Em ${mes}, <b>${esc(topNome)}</b> na frente das entregas.`
+        : `Em ${mes}, ${plural(nEntregas, 'entrega concluída', 'entregas concluídas')}.`);
     } else {
       frases.push(`Em ${mes}, nenhuma entrega registrada ainda.`);
     }
-    if (!fechado) {
-      const acao = [];
-      if (nTravados) acao.push(`<b>${nTravados}</b> ${nTravados === 1 ? 'depende' : 'dependem'} de decisão`);
-      if (nAtrasados) acao.push(`<b>${nAtrasados}</b> fora do prazo`);
-      if (acao.length) {
-        const t = enumerar(acao);
-        frases.push(t.charAt(0).toUpperCase() + t.slice(1) + '.');
-      }
+    if (!fechado && nTravados) {
+      frases.push(`<b>${nTravados}</b> ${nTravados === 1 ? 'item depende' : 'itens dependem'} da sua decisão.`);
     }
     return frases.join(' ');
   }
@@ -496,10 +501,11 @@
     ] : [
       mesAlvo ? paragrafoVolume(mesAlvo, escopo) : 'Nada foi concluído neste mês até agora.',
       mesAlvo ? paragrafoProdutos(mesAlvo) : '',
+      paragrafoEmCurso(bVivo),
       // Triagem de risco sobre bVivo (sem o travado): o travado atrasado já é
       // contado à parte na mesma frase e vai em Decisão. Somar os dois aqui faria
       // o card dizer "2 já passaram do prazo" e listar frentes com 3.
-      paragrafoSituacao(bVivo, b.prazos.atrasados.filter((r) => idsTravados.has(r.item.id)).length, frentesEmRisco(bVivo.prazos.atrasados, mapa)),
+      paragrafoAtencao(bVivo, b.prazos.atrasados.filter((r) => idsTravados.has(r.item.id)).length, frentesEmRisco(bVivo.prazos.atrasados, mapa)),
     ]).filter(Boolean);
 
     const meta = [];
@@ -509,7 +515,7 @@
     // Manchete e recorte da capa: o produto em destaque é o de maior volume do
     // mês (comProduto já vem ordenado por volume em porProduto).
     const topNome = comProduto.length ? comProduto[0].produto.titulo : '';
-    const frase = manchete(escolhido, fechado, entregas.length, topNome, b.travados.length, b.prazos.atrasados.length);
+    const frase = manchete(escolhido, fechado, entregas.length, topNome, b.travados.length);
     const notaRecorte = recorte(escopo, o.unidade);
 
     const tiles = tile(entregas.length, entregas.length === 1 ? 'entrega' : 'entregas')
@@ -524,8 +530,9 @@
       id: 'resumo', titulo: 'Resumo', rotulo: 'Resumo',
       intro: 'O que o mês registrou, lido dos itens do Azure DevOps. Nenhuma afirmação aqui vai além do que os dados mostram.',
       // Um cartão por parágrafo, lado a lado: cada um responde uma pergunta
-      // diferente (volume, onde caiu, situação). Num bloco só, viravam massa de
-      // texto. A prosa tem no máximo 3 parágrafos, então a linha nunca passa de 3.
+      // diferente (volume, onde caiu, o que flui, o que trava). No mês corrente são
+      // até 4 — o grid fecha 2×2 e nenhum card vira paredão. Num bloco só, viravam
+      // massa de texto. O auto-fit acomoda também os 2 do mês fechado.
       corpo: `<div class="resumo-cartoes">${prosa
         .map((x) => `<article class="resumo-cartao"><p>${x}</p></article>`).join('')}</div>`,
     });

@@ -217,13 +217,14 @@ test('htmlReport usa o.decisoes (link) no pedido de decisão', () => {
   assert.ok(decisao.includes('Pedido assado no link.'));
 });
 
-// Etapa #4: manchete derivada na capa, nomeando o produto de maior volume.
+// Etapa #4 (refinada): a manchete lidera com o produto top e a ação (decisão);
+// contagem e "fora do prazo" ficam só nos KPIs, sem eco.
 test('htmlReport monta a manchete e a nota de recorte na capa', () => {
   const { html } = B.htmlReport({ items: base(), agora: AGORA, escopo: 'Urlan Dipre', unidade: 'Ybera US' });
   const capa = html.slice(0, html.indexOf('doc-nav'));
-  assert.ok(capa.includes('Em agosto, <b>2 entregas</b> — Nova PDP USA na frente.'), 'manchete com volume + produto top');
-  assert.ok(capa.includes('depende de decisão'), 'manchete cita a ação de decisão');
-  assert.ok(capa.includes('fora do prazo'), 'manchete cita o prazo');
+  assert.ok(capa.includes('Em agosto, <b>Nova PDP USA</b> na frente das entregas.'), 'manchete lidera com o produto top');
+  assert.ok(capa.includes('depende da sua decisão'), 'manchete cita a ação de decisão');
+  assert.ok(!capa.includes('entregas</b>'), 'não repete a contagem em negrito (papel dos KPIs)');
   assert.ok(capa.includes('Recorte: entregas sob responsabilidade de Urlan Dipre em Ybera US — não o total da unidade.'), 'nota de recorte de um responsável');
 });
 
@@ -238,7 +239,7 @@ test('htmlReport: manchete de mês fechado não cita decisão nem prazo', () => 
   const { html } = B.htmlReport({ items: base(), agora: AGORA, mes: '2026-07' });
   const capa = html.slice(0, html.indexOf('doc-nav'));
   assert.ok(capa.includes('Em julho'));
-  assert.ok(!capa.includes('depende de decisão'), 'mês passado não pede ação na manchete');
+  assert.ok(!capa.includes('depende da sua decisão'), 'mês passado não pede ação na manchete');
 });
 
 // Etapa #6: triagem de risco derivada — nomeia as frentes com item atrasado.
@@ -365,7 +366,8 @@ test('htmlReport tem uma hierarquia de títulos sem salto', () => {
 test('htmlReport separa o resumo em um cartão por parágrafo', () => {
   const { html } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://x/y' });
   const resumo = html.slice(html.indexOf('id="resumo"'), html.indexOf('id="entregas"'));
-  assert.equal((resumo.match(/class="resumo-cartao"/g) || []).length, 3);
+  // 4 no mês corrente: volume, produtos, Em curso e Atenção (a situação virou dois)
+  assert.equal((resumo.match(/class="resumo-cartao"/g) || []).length, 4);
   assert.ok(resumo.includes('resumo-cartoes'));
 });
 
