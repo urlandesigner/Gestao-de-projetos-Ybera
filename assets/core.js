@@ -581,6 +581,17 @@
       .replace(/\n{3,}/g, '\n\n').trim();
   }
 
+  // Pedido de decisão de um item travado: a linha da descrição que começa com
+  // "Decisão:" (com/sem acento, maiúsc./minúsc.). O texto depois do marcador é o
+  // pedido — o PO escreve ali de quem depende e o impacto. Sem marcador, string
+  // vazia: o report não inventa pedido, o item segue como só "parado".
+  function pedidoDeDecisao(item) {
+    const texto = descricaoLimpa(((item || {}).fields || {})['System.Description']);
+    if (!texto) return '';
+    const m = texto.match(/^[ \t]*decis[aã]o[ \t]*:[ \t]*(.+)$/im);
+    return m ? m[1].trim() : '';
+  }
+
   // Épico aponta pra si mesmo. Cadeia com ciclo para sozinha.
   // O Report usa isso pra dizer EM QUE produto o mês caiu, em vez de só listar
   // títulos soltos.
@@ -784,7 +795,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, reportPorMes, mapaDeProdutos, descricaoLimpa, resumoProdutos, resumoMensal, briefingDoMes, futuroPorFaixa, fimDoTrimestre,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, reportPorMes, mapaDeProdutos, descricaoLimpa, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, futuroPorFaixa, fimDoTrimestre,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };

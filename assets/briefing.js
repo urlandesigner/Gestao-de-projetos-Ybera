@@ -40,7 +40,7 @@
   // Sem link pro DevOps: o stakeholder não tem acesso, e mandar ele pra uma tela
   // de login é pior que não oferecer nada. O número do item fica como texto —
   // serve pra quem tem acesso procurar lá dentro.
-  function linha(it, direita, titulo, chave) {
+  function linha(it, direita, titulo, chave, extra) {
     const f = it.fields || {};
     const slug = C.typeSlug(f['System.WorkItemType']);
     const nome = f['System.Title'] || ('item #' + it.id);
@@ -48,11 +48,12 @@
     // Sem selo de tipo: "Feature/PBI/Bug" é jargão de DevOps e, agrupado por
     // produto, repete o que o stakeholder já lê. Cada item fica só com título,
     // data/prazo e o #id (que serve a quem tem acesso pra procurar lá dentro).
+    // `extra` é HTML já montado que entra dentro do <li> (ex.: o pedido de decisão).
     return `<li${dados}><div class="item-linha">
       <span class="titulo">${esc(nome)}</span>
       <span class="quando"${titulo ? ` title="${esc(titulo)}"` : ''}>${direita || ''}</span>
       <span class="id">#${esc(it.id)}</span>
-    </div></li>`;
+    </div>${extra || ''}</li>`;
   }
 
   // Agrupa por produto (o épico, ou a Feature mais alta): stakeholder pensa em
@@ -303,8 +304,9 @@
 
   // O item travado sai de "Próximos passos" pra não aparecer duas vezes no mesmo
   // documento. Em troca, o prazo dele vem pra cá: quem lê precisa saber que,
-  // além de parado, já passou da data.
-  function corpoDecisao(travados, agora) {
+  // além de parado, já passou da data. E o pedido de decisão (marcador "Decisão:"
+  // na descrição) vem embaixo — o que precisa ser decidido pra destravar.
+  function corpoDecisao(travados, agora, decisoes) {
     const hoje = new Date(agora);
     const direita = (r) => {
       const partes = [];
@@ -314,8 +316,13 @@
       if (!partes.length) partes.push(esc((r.item.fields || {})['System.State']));
       return partes.join(' · ');
     };
+    // No link o pedido vem assado (`decisoes`); ao vivo, extrai da descrição.
+    const pedidoDe = (r) => {
+      const p = decisoes ? decisoes[r.item.id] : C.pedidoDeDecisao(r.item);
+      return p ? `<p class="pedido-decisao"><span class="pedido-rot">Decisão a tomar</span>${esc(p)}</p>` : '';
+    };
     return `<div class="doc-bloco"><div class="grupo-produto"><ul class="lista-linhas">${
-      travados.map((r) => linha(r.item, direita(r))).join('')}</ul></div></div>`;
+      travados.map((r) => linha(r.item, direita(r), '', '', pedidoDe(r))).join('')}</ul></div></div>`;
   }
 
   function corpoProximos(b) {
@@ -465,7 +472,7 @@
         secoes.push({
           id: 'decisao', titulo: 'Depende de decisão', rotulo: 'Decisão',
           intro: 'Itens marcados como bloqueados ou em espera no DevOps. O quadro mostra o que está parado — de quem depende cada destrave, o P.O. detalha na reunião.',
-          corpo: corpoDecisao(b.travados, agora),
+          corpo: corpoDecisao(b.travados, agora, o.decisoes || null),
         });
       }
       const totalProximos = bVivo.prazos.atrasados.length + bVivo.prazos.esteMes.length

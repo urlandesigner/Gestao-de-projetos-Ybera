@@ -682,6 +682,27 @@ body.modo-leitura .caixa-link { display: none !important; }
   color: var(--doc-mudo, var(--mudo));
   font-variant-numeric: tabular-nums;
 }
+/* Pedido de decisão: entra embaixo do item travado, com acento de atenção pra
+   dizer que é a AÇÃO que o documento pede — não só mais um dado do item. */
+.pedido-decisao {
+  margin: 0.4rem 0 0.1rem 0.55rem;
+  padding: 0.45rem 0.65rem;
+  border-left: 3px solid var(--erro, #b3261e);
+  border-radius: 0 8px 8px 0;
+  background: var(--doc-fundo, #f8fafc);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--doc-tinta, var(--tinta));
+}
+.pedido-decisao .pedido-rot {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--erro, #b3261e);
+  margin-bottom: 0.15rem;
+}
 .nota-report { margin: 0.5rem 0.2rem 0; font-size: 0.78rem; line-height: 1.5; }
 
 /* Impressão: a página vira o documento que vai pro stakeholder. Fora navegação,

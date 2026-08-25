@@ -261,9 +261,10 @@ function render() {
   const r = B.htmlReport({
     items: st.leitura ? st.items : st.items.filter(noNome),
     todos: st.items.concat(st.pais), // o produto mora no pai — de outro dono, ou de outra área
-    // No link, o objetivo + rumo vêm prontos (o backlog inteiro não viaja, então
-    // recalcular ali subcontaria). Ao vivo (PO), fica undefined e o briefing calcula.
+    // No link, o objetivo + rumo e os pedidos de decisão vêm prontos (o backlog
+    // inteiro não viaja). Ao vivo (PO), ficam undefined e o briefing calcula.
     produtos: st.leitura ? st.produtos : undefined,
+    decisoes: st.leitura ? st.decisoes : undefined,
     agora: st.leitura ? st.agora : Date.now(),
     escopo: st.leitura ? st.escopo : respAtivo(),
     unidade: UNIDADE,
@@ -423,6 +424,14 @@ function produtosDoLink(mostrados) {
   return out;
 }
 
+// Pedido de decisão (marcador "Decisão:" na descrição) dos itens que têm um —
+// só esses viajam no link, então fica enxuto.
+function decisoesDoLink(mostrados) {
+  const out = {};
+  for (const it of mostrados) { const p = C.pedidoDeDecisao(it); if (p) out[it.id] = p; }
+  return out;
+}
+
 let geracaoLink = 0; // troca rápida de mês: só a gravação mais nova pode escrever
 
 async function gravarLink() {
@@ -440,6 +449,7 @@ async function gravarLink() {
       items: enxugar(mostrados),
       ancestrais: cadeiaDeProdutos(mostrados, st.items.concat(st.pais)),
       produtos: produtosDoLink(mostrados), // objetivo + rumo, prontos
+      decisoes: decisoesDoLink(mostrados), // pedido de decisão por item travado
     };
     const carga = '#r=' + await comprimir(JSON.stringify(pacote));
     if (minha !== geracaoLink) return; // outra gravação começou depois: ela manda
@@ -521,9 +531,16 @@ async function lerDoLink() {
       }
       return out;
     };
+    // Decisões também são forjáveis: cada uma vira texto (o briefing escapa).
+    const saneMapaTexto = (obj) => {
+      const out = {};
+      if (obj && typeof obj === 'object') for (const k of Object.keys(obj)) out[k] = String(obj[k] || '');
+      return out;
+    };
     st.items = sanear(pacote.items);
     st.pais = sanear(pacote.ancestrais);
     st.produtos = saneProdutos(pacote.produtos);
+    st.decisoes = saneMapaTexto(pacote.decisoes);
     st.escopo = pacote.escopo || '';
     st.agora = pacote.em || Date.now();
     st.mes = pacote.mes || null;

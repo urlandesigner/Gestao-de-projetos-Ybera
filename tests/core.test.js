@@ -548,6 +548,18 @@ test('resumoProdutos junta objetivo (descrição) e rumo (% de filhos) por produ
   assert.equal(info[1].total, 2);
 });
 
+test('pedidoDeDecisao pega a linha marcada "Decisão:" da descrição', () => {
+  const bloqueado = { id: 30, fields: {
+    'System.WorkItemType': 'Feature', 'System.State': 'Blocked',
+    'System.Description': '<p>Integração com o ERP.</p><p>Decisão: aprovar o orçamento do ERP — com a Diretoria de TI.</p>',
+  } };
+  assert.equal(C.pedidoDeDecisao(bloqueado), 'aprovar o orçamento do ERP — com a Diretoria de TI.');
+  assert.equal(C.pedidoDeDecisao({ id: 31, fields: { 'System.Description': '<p>Só a spec, sem marcador.</p>' } }), '');
+  assert.equal(C.pedidoDeDecisao({ id: 32, fields: {} }), '');
+  // aceita sem acento e sem ligar pra caixa
+  assert.equal(C.pedidoDeDecisao({ id: 33, fields: { 'System.Description': 'DECISAO: seguir com o fornecedor B.' } }), 'seguir com o fornecedor B.');
+});
+
 test('resumoMensal compara com o mês anterior e ranqueia produtos', () => {
   const itens = [
     nod(1, 'Epic', 'Nova PDP'),

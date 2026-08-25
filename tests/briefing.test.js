@@ -197,6 +197,26 @@ test('htmlReport usa o.produtos (link) em vez de recalcular o rumo', () => {
   assert.ok(html.includes('8 de 10 itens concluídos · 80%'));
 });
 
+// Etapa #5: o pedido de decisão (marcador "Decisão:" na descrição do item travado)
+// aparece embaixo do item em "Depende de decisão".
+test('htmlReport põe o pedido de decisão no item travado', () => {
+  const itens = base().map((x) => (x.id === 30
+    ? { id: x.id, projeto: x.projeto, fields: Object.assign({}, x.fields, {
+      'System.Description': 'Decisão: destravar a integração ERP — com a Diretoria de TI.',
+    }) }
+    : x));
+  const { html } = B.htmlReport({ items: itens, agora: AGORA });
+  const decisao = html.slice(html.indexOf('id="decisao"'), html.indexOf('id="proximos"'));
+  assert.ok(decisao.includes('Decisão a tomar'));
+  assert.ok(decisao.includes('destravar a integração ERP — com a Diretoria de TI.'));
+});
+
+test('htmlReport usa o.decisoes (link) no pedido de decisão', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, decisoes: { 30: 'Pedido assado no link.' } });
+  const decisao = html.slice(html.indexOf('id="decisao"'), html.indexOf('id="proximos"'));
+  assert.ok(decisao.includes('Pedido assado no link.'));
+});
+
 test('htmlReport joga "sem produto" pro fim, mesmo sendo o maior grupo', () => {
   const itens = [
     it(1, 'Epic', 'In Progress', 'Com produto', null, 5),
