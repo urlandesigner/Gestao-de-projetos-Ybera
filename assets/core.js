@@ -689,6 +689,26 @@
     return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0');
   }
 
+  // ---- Rolagem animada ----
+  // A curva e o tempo da rolagem do menu do report. Vivem aqui, e não enterrados
+  // num closure, porque são a parte do movimento que dá pra conferir sem olhar:
+  // onde a animação roda eu vejo, onde não roda (compositor pausado) eu não vejo.
+  const ROLAGEM_MIN = 220;
+  const ROLAGEM_MAX = 600;
+
+  // easeInOutCubic: sai devagar, corre no meio, encosta devagar. Aceleração
+  // constante (linear) é o que faz rolagem animada parecer elevador.
+  function suavizarRolagem(t) {
+    const x = Math.min(1, Math.max(0, t));
+    return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+  }
+
+  // Salto curto anda rápido; travessia de página inteira ganha mais tempo, com
+  // teto — passar de meio segundo já parece travamento, não elegância.
+  function duracaoRolagem(distancia) {
+    return Math.min(ROLAGEM_MAX, Math.max(ROLAGEM_MIN, Math.abs(distancia) * 0.5));
+  }
+
   // ---- Cache ----
   function isStale(fetchedAt, now, maxAgeMinutes = 10) {
     if (!fetchedAt) return true;
@@ -713,6 +733,7 @@
     wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
     iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, reportPorMes, mapaDeProdutos, resumoMensal, briefingDoMes, futuroPorFaixa, fimDoTrimestre,
+    suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };
 });

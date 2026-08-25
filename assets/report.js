@@ -156,6 +156,45 @@ function limparFiltroEntregas() {
   aplicarFiltroEntregas();
 }
 
+// A rolagem é animada à mão, quadro a quadro, em vez de `behavior: 'smooth'`.
+// Motivo prático: o smooth nativo simplesmente não anima em alguns ambientes — e
+// quando não anima, não rola nada, o que deixa a navegação morta. Animando aqui,
+// o movimento é o mesmo em todo lugar. A curva e o tempo estão no core, com teste.
+let rolagemAtual = 0; // clique novo cancela o anterior, senão as duas se brigam
+
+function rolarAte(alvo) {
+  // A distância do topo vem do CSS (scroll-margin-top), que já reserva a altura
+  // da navegação fixa. Duplicar esse número aqui seria pedir pra desencontrar.
+  const margem = parseFloat(getComputedStyle(alvo).scrollMarginTop) || 0;
+  const inicio = window.scrollY;
+  const destino = Math.max(0, Math.round(alvo.getBoundingClientRect().top + inicio - margem));
+  const distancia = destino - inicio;
+  if (!distancia) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    window.scrollTo(0, destino);
+    return;
+  }
+  const duracao = C.duracaoRolagem(distancia);
+  const meu = ++rolagemAtual;
+  let t0 = null;
+  let chegou = false;
+  const passo = (agora) => {
+    if (meu !== rolagemAtual) return;
+    if (t0 === null) t0 = agora;
+    const t = Math.min(1, (agora - t0) / duracao);
+    window.scrollTo(0, inicio + distancia * C.suavizarRolagem(t));
+    if (t < 1) requestAnimationFrame(passo);
+    else chegou = true;
+  };
+  requestAnimationFrame(passo);
+  // Rede de segurança: requestAnimationFrame não roda com o compositor pausado
+  // (aba em segundo plano, por exemplo). Sem isso a animação nunca começaria e o
+  // clique no menu não levaria a lugar nenhum. Aqui ele chega — sem deslizar.
+  setTimeout(() => {
+    if (!chegou && meu === rolagemAtual) window.scrollTo(0, destino);
+  }, duracao + 150);
+}
+
 // Delegação: o documento é redesenhado a cada mês, então ouvir no container é o
 // que sobrevive. E a navegação NÃO usa o href: mexer no hash apagaria o dado do
 // link — quem abriu por link perderia o report ao clicar num item do menu.
@@ -165,11 +204,8 @@ function ligarDocumento() {
     const item = ev.target.closest('.doc-nav a');
     if (item) {
       ev.preventDefault();
-      // Salto direto, não deslizado: é o que uma âncora faz, funciona em qualquer
-      // ambiente e dá pra verificar. Scroll animado some sem aviso onde o
-      // compositor não anima — nav morta é pior que nav sem gracinha.
       const alvo = document.getElementById(item.getAttribute('href').slice(1));
-      if (alvo) alvo.scrollIntoView({ behavior: 'instant', block: 'start' });
+      if (alvo) rolarAte(alvo);
       return;
     }
     if (ev.target.closest('#limpar-entregas')) { limparFiltroEntregas(); return; }

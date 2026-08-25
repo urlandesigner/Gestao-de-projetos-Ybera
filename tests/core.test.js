@@ -595,3 +595,37 @@ test('briefingDoMes ordena: entrega recente, prazo mais próximo, travado mais a
   assert.deepEqual(b.feitos.map((x) => x.item.id), [1, 2]);
   assert.deepEqual(b.travados.map((x) => x.item.id), [4, 3]);
 });
+
+/* ---- Rolagem animada do menu do report ---- */
+test('suavizarRolagem sai de 0, chega em 1 e nunca volta atrás', () => {
+  assert.equal(C.suavizarRolagem(0), 0);
+  assert.equal(C.suavizarRolagem(1), 1);
+  assert.equal(C.suavizarRolagem(0.5), 0.5);   // simétrica no meio
+  let anterior = -1;
+  for (let t = 0; t <= 1.0001; t += 0.05) {
+    const v = C.suavizarRolagem(t);
+    assert.ok(v >= anterior, 'curva não pode recuar em t=' + t.toFixed(2));
+    anterior = v;
+  }
+});
+
+test('suavizarRolagem começa e termina mais devagar que o meio', () => {
+  const arranque = C.suavizarRolagem(0.1) - C.suavizarRolagem(0);
+  const meio = C.suavizarRolagem(0.55) - C.suavizarRolagem(0.45);
+  const chegada = C.suavizarRolagem(1) - C.suavizarRolagem(0.9);
+  assert.ok(meio > arranque, 'o meio tem que ser o trecho mais rápido');
+  assert.ok(meio > chegada);
+  assert.ok(Math.abs(arranque - chegada) < 1e-9); // entra e sai no mesmo ritmo
+});
+
+test('suavizarRolagem segura t fora da faixa', () => {
+  assert.equal(C.suavizarRolagem(-3), 0);
+  assert.equal(C.suavizarRolagem(9), 1);
+});
+
+test('duracaoRolagem tem piso, teto e não liga pro sentido', () => {
+  assert.equal(C.duracaoRolagem(10), 220);      // piso: salto curto não fica lento
+  assert.equal(C.duracaoRolagem(800), 400);
+  assert.equal(C.duracaoRolagem(5000), 600);    // teto: página inteira não arrasta
+  assert.equal(C.duracaoRolagem(-800), 400);    // subir custa o mesmo que descer
+});
