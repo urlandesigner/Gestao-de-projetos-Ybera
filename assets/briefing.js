@@ -212,12 +212,23 @@
   // A situação virou dois cards pra não empilhar quatro ideias num paredão só:
   // "Em curso" (o que flui — execução e prazos) e "Atenção" (o que trava — frentes
   // atrasadas e o travado que pede decisão). Grid de 4 cards fecha 2×2, equilibrado.
-  function paragrafoEmCurso(b) {
+  // `totalAtrasados` é o mesmo número do KPI "fora do prazo" da capa (inclui o
+  // travado). Quando sobra atraso fora do travado, a frase reconcilia os dois em
+  // vez de recontar só o que ainda está vivo — senão a capa diz "3" e este card
+  // diz "2", parecendo contradição. Quando TODO atrasado está travado (nada vivo
+  // pra contar aqui), a frase fica calada: já é dito em "Depende de decisão".
+  function paragrafoEmCurso(b, totalAtrasados) {
     const frases = [];
     if (b.execucao.length) frases.push(`<b>${plural(b.execucao.length, 'item', 'itens')}</b> em execução agora.`);
     const p = b.prazos;
     const prazo = [];
-    if (p.atrasados.length) prazo.push(`<b>${p.atrasados.length} ${p.atrasados.length === 1 ? 'já passou' : 'já passaram'} do prazo</b>`);
+    if (p.atrasados.length) {
+      const travados = totalAtrasados - p.atrasados.length;
+      const aparte = travados
+        ? ` (${travados} ${travados === 1 ? 'deles travado' : 'deles travados'} — ver Depende de decisão)`
+        : '';
+      prazo.push(`<b>${totalAtrasados} ${totalAtrasados === 1 ? 'já passou' : 'já passaram'} do prazo</b>${aparte}`);
+    }
     if (p.esteMes.length) prazo.push(`${p.esteMes.length} ${p.esteMes.length === 1 ? 'vence' : 'vencem'} ainda este mês`);
     if (p.proximoMes.length) prazo.push(`${p.proximoMes.length} no mês que vem`);
     if (p.depois && p.depois.length) prazo.push(`${p.depois.length} mais adiante`);
@@ -481,6 +492,7 @@
     // em "Depende de decisão", com o prazo na linha, e sai de "Próximos passos".
     const idsTravados = new Set(b.travados.map((r) => r.item.id));
     const semTravados = (regs) => regs.filter((r) => !idsTravados.has(r.item.id));
+    const travadosVencidos = b.prazos.atrasados.filter((r) => idsTravados.has(r.item.id)).length;
     const bVivo = Object.assign({}, b, {
       prazos: {
         atrasados: semTravados(b.prazos.atrasados),
@@ -494,18 +506,22 @@
     const grupos = porProduto(entregas, mapa);
     const comProduto = grupos.filter((g) => g.produto);
 
-    const prosa = (fechado ? [
-      mesAlvo ? paragrafoVolume(mesAlvo, escopo) : 'Nada foi concluído neste mês.',
-      mesAlvo ? paragrafoProdutos(mesAlvo) : '',
+    // Cada cartão carrega o rótulo junto com o texto — sem isso os quatro
+    // cartões viram prosa idêntica e o leitor tem que ler os quatro pra achar
+    // qual responde o quê. `alerta` pinta o rótulo do cartão que pede atenção,
+    // sem ícone nem número: só o mesmo acento que "Já passou do prazo" já usa.
+    const cartoesResumo = (fechado ? [
+      { rotulo: 'Volume', texto: mesAlvo ? paragrafoVolume(mesAlvo, escopo) : 'Nada foi concluído neste mês.' },
+      { rotulo: 'Onde caiu o esforço', texto: mesAlvo ? paragrafoProdutos(mesAlvo) : '' },
     ] : [
-      mesAlvo ? paragrafoVolume(mesAlvo, escopo) : 'Nada foi concluído neste mês até agora.',
-      mesAlvo ? paragrafoProdutos(mesAlvo) : '',
-      paragrafoEmCurso(bVivo),
+      { rotulo: 'Volume', texto: mesAlvo ? paragrafoVolume(mesAlvo, escopo) : 'Nada foi concluído neste mês até agora.' },
+      { rotulo: 'Onde caiu o esforço', texto: mesAlvo ? paragrafoProdutos(mesAlvo) : '' },
+      { rotulo: 'Em curso', texto: paragrafoEmCurso(bVivo, b.prazos.atrasados.length) },
       // Triagem de risco sobre bVivo (sem o travado): o travado atrasado já é
       // contado à parte na mesma frase e vai em Decisão. Somar os dois aqui faria
       // o card dizer "2 já passaram do prazo" e listar frentes com 3.
-      paragrafoAtencao(bVivo, b.prazos.atrasados.filter((r) => idsTravados.has(r.item.id)).length, frentesEmRisco(bVivo.prazos.atrasados, mapa)),
-    ]).filter(Boolean);
+      { rotulo: 'Atenção', alerta: true, texto: paragrafoAtencao(bVivo, travadosVencidos, frentesEmRisco(bVivo.prazos.atrasados, mapa)) },
+    ]).filter((c) => c.texto);
 
     const meta = [];
     if (escopo) meta.push('P.O responsável: ' + escopo);
@@ -532,8 +548,8 @@
       // diferente (volume, onde caiu, o que flui, o que trava). No mês corrente são
       // até 4 — o grid fecha 2×2 e nenhum card vira paredão. Num bloco só, viravam
       // massa de texto. O auto-fit acomoda também os 2 do mês fechado.
-      corpo: `<div class="resumo-cartoes">${prosa
-        .map((x) => `<article class="resumo-cartao"><p>${x}</p></article>`).join('')}</div>`,
+      corpo: `<div class="resumo-cartoes">${cartoesResumo
+        .map((c) => `<article class="resumo-cartao${c.alerta ? ' resumo-cartao-alerta' : ''}"><p class="cartao-rotulo">${esc(c.rotulo)}</p><p>${c.texto}</p></article>`).join('')}</div>`,
     });
     if (entregas.length) {
       secoes.push({

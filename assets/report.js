@@ -199,6 +199,19 @@ function rolarAte(alvo) {
   }, duracao + 150);
 }
 
+// A pílula de navegação quebra em 1 ou 2 linhas dependendo da largura da tela
+// e de quantas seções o mês tem — o CSS não sabe a própria altura de antemão.
+// Medindo aqui e escrevendo numa custom property (que --nav-alt em .doc-sec
+// lê), o scroll-margin-top nunca fica desatualizado: no celular a pílula em 2
+// linhas passava de um valor fixo de 4rem, e a âncora rolava o título da
+// seção pra debaixo da nav sticky.
+function medirAlturaNav() {
+  const doc = document.querySelector('.report-doc');
+  const nav = doc && doc.querySelector('.doc-nav');
+  if (!doc || !nav) return;
+  doc.style.setProperty('--nav-alt', (nav.offsetHeight + 12) + 'px');
+}
+
 // Delegação: o documento é redesenhado a cada mês, então ouvir no container é o
 // que sobrevive. E a navegação NÃO usa o href: mexer no hash apagaria o dado do
 // link — quem abriu por link perderia o report ao clicar num item do menu.
@@ -277,6 +290,7 @@ function render() {
   const caixa = $('caixa-link');
   if (caixa && !caixa.hidden) caixa.hidden = true;
   box.innerHTML = erroHtml + r.html;
+  medirAlturaNav();
   aplicarFiltroEntregas(); // acerta o contador e esconde o "limpar"
   st.vazio = r.vazio;
   $('copiar').disabled = r.vazio;
@@ -556,6 +570,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Quem tem token manda: busca ao vivo e reescreve o link, mesmo se a URL já
   // trouxer um. Sem token, o link é a única fonte — é o caso do stakeholder.
   ligarDocumento();
+  // Rotação de tela ou redimensionar a janela pode mudar em quantas linhas a
+  // nav quebra — antes do early return de leitura, senão o stakeholder (que é
+  // quem mais lê no celular) nunca ganharia essa remedição.
+  let temporizadorRedimensiona = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(temporizadorRedimensiona);
+    temporizadorRedimensiona = setTimeout(medirAlturaNav, 150);
+  });
   if (!(st.config && st.pat) && await lerDoLink()) return;
   $('atualizar').addEventListener('click', carregar);
   $('copiar').addEventListener('click', copiarLink);

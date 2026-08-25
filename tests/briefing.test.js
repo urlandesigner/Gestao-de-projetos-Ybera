@@ -376,14 +376,28 @@ test('htmlReport separa o resumo em um cartão por parágrafo', () => {
   const { html } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://x/y' });
   const resumo = html.slice(html.indexOf('id="resumo"'), html.indexOf('id="entregas"'));
   // 4 no mês corrente: volume, produtos, Em curso e Atenção (a situação virou dois)
-  assert.equal((resumo.match(/class="resumo-cartao"/g) || []).length, 4);
+  assert.equal((resumo.match(/class="resumo-cartao/g) || []).length, 4);
   assert.ok(resumo.includes('resumo-cartoes'));
+});
+
+// Sem retranca os 4 cartões viram prosa idêntica; cada um agora abre com o
+// rótulo da pergunta que responde, e o de atenção pinta o rótulo no alerta.
+test('htmlReport rotula cada cartão do resumo, e o de atenção com o acento certo', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://x/y' });
+  const resumo = html.slice(html.indexOf('id="resumo"'), html.indexOf('id="entregas"'));
+  for (const rotulo of ['Volume', 'Onde caiu o esforço', 'Em curso', 'Atenção']) {
+    assert.ok(resumo.includes(`class="cartao-rotulo">${rotulo}<`), 'falta o rótulo: ' + rotulo);
+  }
+  assert.match(resumo, /<article class="resumo-cartao resumo-cartao-alerta"><p class="cartao-rotulo">Atenção/);
 });
 
 test('htmlReport em mês fechado tem só os dois cartões de fato histórico', () => {
   const { html } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://x/y', mes: '2026-07' });
   const resumo = html.slice(html.indexOf('id="resumo"'), html.indexOf('id="entregas"'));
-  assert.equal((resumo.match(/class="resumo-cartao"/g) || []).length, 2);
+  assert.equal((resumo.match(/class="resumo-cartao/g) || []).length, 2);
+  assert.ok(resumo.includes('class="cartao-rotulo">Volume<'));
+  assert.ok(resumo.includes('class="cartao-rotulo">Onde caiu o esforço<'));
+  assert.ok(!resumo.includes('resumo-cartao-alerta'), 'mês fechado não tem cartão de Em curso/Atenção');
 });
 
 // O report é documento do ano. Ano anterior no seletor só fazia a lista crescer.
@@ -543,6 +557,21 @@ test('htmlReport diz na prosa qual travado está com o prazo estourado', () => {
   // base(): 1 travado (Integração ERP) com alvo vencido — capa e prosa concordam
   assert.ok(html.includes('com o prazo estourado'));
   assert.match(html, /kpi-alerta"><b>1<\/b><span>fora do prazo/);
+});
+
+// Quando só PARTE do atraso está travada, o card "Em curso" recontava só os
+// vivos (2) enquanto a capa contava todos (3) — o documento parecia se
+// contradizer. Agora o card usa o mesmo total da capa e decompõe o travado.
+test('htmlReport não contradiz a capa quando parte do atraso está travada', () => {
+  const itens = [
+    ...base(),
+    it(50, 'Product Backlog Item', 'In Progress', 'Frete atrasado', null, -2),
+    it(51, 'Product Backlog Item', 'In Progress', 'Outro atrasado', null, -1),
+  ];
+  const { html } = B.htmlReport({ items: itens, agora: AGORA });
+  assert.match(html, /kpi-alerta"><b>3<\/b><span>fora do prazo/);
+  assert.ok(html.includes('<b>3 já passaram do prazo</b> (1 deles travado — ver Depende de decisão)'));
+  assert.ok(!html.includes('<b>2 já passaram do prazo</b>'), 'não deve recontar só os vivos');
 });
 
 /* ---- Acessibilidade do HTML gerado ---- */

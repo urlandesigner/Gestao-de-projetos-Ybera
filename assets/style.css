@@ -1008,7 +1008,9 @@ body.pagina-report main > section {
 .doc-nav a:hover { background: #fff; color: var(--doc-tinta); }
 
 /* Seções numeradas */
-.doc-sec { padding: 2.7rem 0 0.3rem; scroll-margin-top: 4rem; }
+/* --nav-alt vem do JS (mede a pílula de verdade): ela quebra em 2 linhas no
+   celular, e um valor fixo não acompanha. Sem JS, cai no palpite de 1 linha. */
+.doc-sec { padding: 2.7rem 0 0.3rem; scroll-margin-top: var(--nav-alt, 4rem); }
 .doc-sec:last-child { padding-bottom: 3rem; }
 .doc-sec-topo { margin-bottom: 1.3rem; }
 .doc-sec-topo h2 {
@@ -1050,6 +1052,18 @@ body.pagina-report main > section {
   line-height: 1.65;
 }
 .resumo-cartao b { font-weight: 700; }
+/* Retranca: sem ela os 4 cartões são prosa idêntica e o leitor lê os quatro
+   pra achar qual responde o quê. O cartão de atenção pinta só o rótulo — sem
+   ícone, sem número — reaproveitando o mesmo acento do alerta de prazo. */
+.resumo-cartao .cartao-rotulo {
+  margin: 0 0 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--doc-mudo);
+}
+.resumo-cartao-alerta .cartao-rotulo { color: var(--erro); }
 .doc-bloco { padding: 0.9rem 0.95rem; }
 /* Dentro do cartão branco a linha precisa de outro tom pra existir */
 .report-doc .lista-linhas .item-linha {
