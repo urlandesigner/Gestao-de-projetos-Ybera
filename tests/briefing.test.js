@@ -241,6 +241,26 @@ test('htmlReport: manchete de mês fechado não cita decisão nem prazo', () => 
   assert.ok(!capa.includes('depende de decisão'), 'mês passado não pede ação na manchete');
 });
 
+// Etapa #6: triagem de risco derivada — nomeia as frentes com item atrasado.
+// O travado atrasado não entra aqui: ele já vai em "Depende de decisão".
+test('triagem de risco exclui o travado (base() só tem o travado atrasado)', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA });
+  assert.ok(!html.includes('Frentes com item atrasado'), 'o travado não vira frente em risco aqui');
+});
+
+test('triagem de risco agrupa por frente e ordena pelo mais afetado', () => {
+  const itens = [
+    it(1, 'Epic', 'In Progress', 'Frente A', null, 3),
+    it(2, 'Epic', 'In Progress', 'Frente B', null, 3),
+    it(10, 'Product Backlog Item', 'In Progress', 'A1', 1, -2), // atrasado
+    it(11, 'Product Backlog Item', 'In Progress', 'A2', 1, -3), // atrasado
+    it(20, 'Product Backlog Item', 'In Progress', 'B1', 2, -1), // atrasado
+  ];
+  const { html } = B.htmlReport({ items: itens, agora: AGORA });
+  assert.ok(html.includes('Frentes com item atrasado:'));
+  assert.ok(html.indexOf('Frente A</b> (2 itens)') < html.indexOf('Frente B</b> (1 item)'));
+});
+
 test('htmlReport joga "sem produto" pro fim, mesmo sendo o maior grupo', () => {
   const itens = [
     it(1, 'Epic', 'In Progress', 'Com produto', null, 5),

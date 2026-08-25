@@ -195,9 +195,25 @@
     return frases.join(' ');
   }
 
+  // Triagem de risco derivada: agrupa os itens atrasados por produto, do mais
+  // afetado pro menos. Diz QUAL frente está em risco de prazo — o "3 fora do
+  // prazo" da capa vira "onde". Sem inventar consequência: só conta o atraso.
+  function frentesEmRisco(regs, mapa) {
+    const porProd = new Map();
+    for (const r of regs) {
+      const it = r.item || r;
+      const prod = mapa.get(it.id) || null;
+      const chave = prod ? prod.id : 'sem';
+      if (!porProd.has(chave)) porProd.set(chave, { titulo: prod ? prod.titulo : SEM_PRODUTO, n: 0 });
+      porProd.get(chave).n += 1;
+    }
+    return [...porProd.values()].sort((a, b) => b.n - a.n);
+  }
+
   // `travadosVencidos` reconcilia a prosa com a capa: o KPI "fora do prazo"
   // conta o travado vencido, então a frase dos travados diz qual deles é.
-  function paragrafoSituacao(b, travadosVencidos) {
+  // `frentes` é a triagem de risco: quais produtos têm item atrasado.
+  function paragrafoSituacao(b, travadosVencidos, frentes) {
     const frases = [];
     if (b.execucao.length) frases.push(`<b>${plural(b.execucao.length, 'item', 'itens')}</b> em execução agora.`);
     const p = b.prazos;
@@ -207,6 +223,10 @@
     if (p.proximoMes.length) prazo.push(`${p.proximoMes.length} no mês que vem`);
     if (p.depois && p.depois.length) prazo.push(`${p.depois.length} mais adiante`);
     if (prazo.length) frases.push('Nos prazos: ' + prazo.join(', ') + '.');
+    if (frentes && frentes.length) {
+      const lista = frentes.map((f) => `<b>${esc(f.titulo)}</b> (${f.n} ${f.n === 1 ? 'item' : 'itens'})`);
+      frases.push('Frentes com item atrasado: ' + enumerar(lista) + '.');
+    }
     if (b.travados.length) {
       const velho = b.travados[0];
       const partes = [];
@@ -451,7 +471,10 @@
     ] : [
       mesAlvo ? paragrafoVolume(mesAlvo, escopo) : 'Nada foi concluído neste mês até agora.',
       mesAlvo ? paragrafoProdutos(mesAlvo) : '',
-      paragrafoSituacao(bVivo, b.prazos.atrasados.filter((r) => idsTravados.has(r.item.id)).length),
+      // Triagem de risco sobre bVivo (sem o travado): o travado atrasado já é
+      // contado à parte na mesma frase e vai em Decisão. Somar os dois aqui faria
+      // o card dizer "2 já passaram do prazo" e listar frentes com 3.
+      paragrafoSituacao(bVivo, b.prazos.atrasados.filter((r) => idsTravados.has(r.item.id)).length, frentesEmRisco(bVivo.prazos.atrasados, mapa)),
     ]).filter(Boolean);
 
     const meta = [];
