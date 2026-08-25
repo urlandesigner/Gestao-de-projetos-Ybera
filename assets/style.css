@@ -648,13 +648,6 @@ body.modo-leitura .caixa-link { display: none !important; }
   white-space: nowrap;
 }
 .cab-produto .cab-sem { color: var(--mudo); font-weight: 700; }
-.cab-produto .cab-objetivo {
-  margin: 0.3rem 0 0;
-  font-size: 0.8rem;
-  line-height: 1.5;
-  color: var(--doc-mudo, var(--mudo));
-  white-space: pre-line; /* respeita as quebras que descricaoLimpa deixou */
-}
 .cab-rumo {
   display: flex;
   align-items: center;
@@ -1068,6 +1061,19 @@ body.pagina-report main > section {
 /* Nome do produto um pouco maior que os outros h3 do bloco: é o título da frente */
 .report-doc .cab-produto .cab-nome { font-size: 0.98rem; }
 
+/* Entregas: cada produto é um card próprio, não uma lista contínua num card só.
+   Assim fica claro que são frentes diferentes. O card branco flutua sobre o cinza
+   da página; as linhas cinza dentro pertencem visualmente a ele. */
+.doc-lista .grupo-produto {
+  background: #fff;
+  border: 1px solid var(--doc-linha);
+  border-radius: 14px;
+  padding: 0.85rem 0.9rem;
+}
+.doc-lista .grupo-produto + .grupo-produto { margin-top: 0.75rem; }
+.doc-lista .cab-produto { margin: 0 0 0.8rem; }
+.doc-lista .lista-linhas { padding: 0; }
+
 /* Filtro do bloco de entregas */
 .doc-filtros {
   display: flex;
@@ -1188,7 +1194,7 @@ body.pagina-report main > section {
   .doc-sec { padding-top: 1.2rem; }
   .doc-sec-topo, .doc-bloco, .resumo-cartao, .comparativo li,
   .grupo-produto, .lista-linhas li { break-inside: avoid; }
-  .doc-bloco, .resumo-cartao { border: 1px solid #e5e5e5; }
+  .doc-bloco, .resumo-cartao, .doc-lista .grupo-produto { border: 1px solid #e5e5e5; }
   /* Barras do comparativo são só background — sem isto o papel sai em branco */
   .comparativo .comp-barra, .comparativo .comp-barra span,
   .cab-barra, .cab-barra > span {

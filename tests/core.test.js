@@ -533,28 +533,15 @@ test('descendentesConcluidos rola total e feitos por nó, em qualquer profundida
   assert.deepEqual(roll.get(100), { total: 0, feitos: 0 }); // folha não tem descendente
 });
 
-test('resumoProdutos junta objetivo (descrição) e rumo (% de filhos) por produto', () => {
-  const epico = { id: 1, projeto: 'B2C', fields: {
-    'System.WorkItemType': 'Epic', 'System.Title': 'Nova PDP', 'System.State': 'New',
-    'System.Description': '<p>Aumentar a conversão da PDP.</p>',
-  } };
+test('resumoProdutos dá o rumo (% de filhos concluídos) por produto', () => {
   const info = C.resumoProdutos([
-    epico,
+    wit(1, 'Epic', 'New'),
     wit(10, 'Feature', 'Done', 1),
     wit(100, 'Product Backlog Item', 'New', 10),
   ]);
-  assert.equal(info[1].descricao, 'Aumentar a conversão da PDP.');
   assert.equal(info[1].feitos, 1);
   assert.equal(info[1].total, 2);
-});
-
-test('resumoProdutos: objetivo é só o primeiro parágrafo (corta nota interna)', () => {
-  const epico = { id: 1, projeto: 'B2C', fields: {
-    'System.WorkItemType': 'Epic', 'System.Title': 'Loja Clube USA', 'System.State': 'New',
-    'System.Description': '<p>Épico do produto Loja Clube USA.</p><p></p><p>Criado vazio: mover as Features pra cá.<br>O id fica no Notion.</p>',
-  } };
-  const info = C.resumoProdutos([epico, wit(10, 'Feature', 'Done', 1)]);
-  assert.equal(info[1].descricao, 'Épico do produto Loja Clube USA.'); // sem o 2º bloco
+  assert.ok(!('descricao' in info[1]), 'não carrega mais objetivo');
 });
 
 test('pedidoDeDecisao pega a linha marcada "Decisão:" da descrição', () => {

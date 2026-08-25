@@ -165,9 +165,9 @@ test('htmlReport mostra o produto no cabeçalho sem selo de tipo', () => {
   assert.ok(!html.includes('badge-tipo'), 'nenhum selo de tipo no documento');
 });
 
-// Etapas #1 (objetivo, do System.Description) e #2 (rumo, % dos filhos) no
-// cabeçalho de produto da Entregas.
-test('htmlReport põe objetivo e barra de rumo no cabeçalho de produto', () => {
+// Etapa #2 (rumo, % dos filhos) no cabeçalho de produto da Entregas. O objetivo
+// (descrição) foi removido: a descrição real é boilerplate, não agrega ao leitor.
+test('htmlReport põe a barra de rumo no cabeçalho de produto, sem objetivo', () => {
   const epico = { id: 1, projeto: 'B2C', fields: {
     'System.WorkItemType': 'Epic', 'System.State': 'In Progress', 'System.Title': 'Nova PDP USA',
     'System.Description': '<p>Aumentar a conversão da PDP nos EUA.</p>',
@@ -179,21 +179,21 @@ test('htmlReport põe objetivo e barra de rumo no cabeçalho de produto', () => 
     it(12, 'Product Backlog Item', 'In Progress', 'Prova social', 1, 5), // filho em aberto
   ];
   const { html } = B.htmlReport({ items: itens, agora: AGORA });
-  assert.ok(html.includes('Aumentar a conversão da PDP nos EUA.'), 'objetivo aparece');
+  assert.ok(!html.includes('cab-objetivo'), 'não há mais linha de objetivo');
+  assert.ok(!html.includes('Aumentar a conversão da PDP nos EUA.'), 'a descrição não aparece');
   assert.match(html, /class="cab-barra"[^>]*aria-label="[^"]*concluíd/);   // barra rotulada
   assert.ok(html.includes('2 de 3 itens concluídos · 67%'), 'rumo: 2 de 3, 67%');
 });
 
-// Modo leitura: o link traz o resuminho pronto (o.produtos). Sem ele, o % seria
+// Modo leitura: o rumo vem pronto no link (o.produtos). Sem ele, o % seria
 // recalculado de um backlog incompleto e subcontaria.
 test('htmlReport usa o.produtos (link) em vez de recalcular o rumo', () => {
   const itens = [
     it(1, 'Epic', 'In Progress', 'Nova PDP USA', null, 6),
     it(11, 'Product Backlog Item', 'Done', 'Zoom', 1, null, 4),
   ];
-  const produtos = { 1: { descricao: 'Objetivo assado no link.', feitos: 8, total: 10 } };
+  const produtos = { 1: { feitos: 8, total: 10 } };
   const { html } = B.htmlReport({ items: itens, agora: AGORA, produtos });
-  assert.ok(html.includes('Objetivo assado no link.'));
   assert.ok(html.includes('8 de 10 itens concluídos · 80%'));
 });
 

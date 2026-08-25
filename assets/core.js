@@ -581,14 +581,6 @@
       .replace(/\n{3,}/g, '\n\n').trim();
   }
 
-  // Só o primeiro parágrafo da descrição vira objetivo: o resto costuma ser nota
-  // interna (como montar o épico, id no Notion) que não é pro stakeholder. Corta
-  // na primeira linha em branco.
-  function primeiroParagrafo(texto) {
-    if (!texto) return '';
-    return String(texto).split(/\n\s*\n/)[0].trim();
-  }
-
   // Pedido de decisão de um item travado: a linha da descrição que começa com
   // "Decisão:" (com/sem acento, maiúsc./minúsc.). O texto depois do marcador é o
   // pedido — o PO escreve ali de quem depende e o impacto. Sem marcador, string
@@ -616,7 +608,6 @@
         estado: f['System.State'] || '',
         alvo: f[CAMPO_ALVO] || null,
         projeto: it.projeto || '',
-        descricao: descricaoLimpa(f['System.Description']),
       };
     };
     const achar = (id) => {
@@ -644,12 +635,11 @@
     return saida;
   }
 
-  // Por produto (id do épico/Feature que vira cabeçalho): o objetivo (descrição
-  // limpa) e o rumo (descendentes concluídos/total). É o que alimenta o cabeçalho
-  // de produto do report. Calculado sobre `todos` (backlog inteiro do escopo) pra
-  // o % contar todos os filhos, não só os do mês. No link de leitura este mapa
-  // viaja pronto: o pacote não carrega o backlog inteiro, então recalcular ali
-  // subcontaria.
+  // Por produto (id do épico/Feature que vira cabeçalho): o rumo (descendentes
+  // concluídos/total). É o que alimenta a barra do cabeçalho de produto no report.
+  // Calculado sobre `todos` (backlog inteiro do escopo) pra o % contar todos os
+  // filhos, não só os do mês. No link de leitura este mapa viaja pronto: o pacote
+  // não carrega o backlog inteiro, então recalcular ali subcontaria.
   function resumoProdutos(todos) {
     const mapa = mapaDeProdutos(todos);
     const roll = descendentesConcluidos(todos);
@@ -657,7 +647,7 @@
     for (const node of mapa.values()) {
       if (out[node.id]) continue;
       const r = roll.get(node.id) || { total: 0, feitos: 0 };
-      out[node.id] = { descricao: primeiroParagrafo(node.descricao), feitos: r.feitos, total: r.total };
+      out[node.id] = { feitos: r.feitos, total: r.total };
     }
     return out;
   }

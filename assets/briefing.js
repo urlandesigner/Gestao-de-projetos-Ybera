@@ -90,24 +90,22 @@
   }
 
   // O cabeçalho do grupo é o produto: nome à esquerda, estado/prazo no canto
-  // direito, e — quando o produto tem descrição e filhos — o objetivo (o "e daí?"
-  // do negócio) e a barra de rumo. Sem selo de tipo: "Épico"/"Feature" é jargão de
-  // DevOps. `info` (objetivo + progresso) vem pronto pra não recontar no link.
+  // direito, e a barra de rumo (quanto do produto já fechou). Sem selo de tipo
+  // ("Épico"/"Feature" é jargão de DevOps) e sem descrição — a descrição real é
+  // padronizada/interna, não agrega pro stakeholder. `info` traz o progresso
+  // pronto pra não recontar no link.
   function cabecalhoProduto(p, extra, info) {
     if (!p) return `<div class="cab-produto"><h3 class="cab-nome"><span class="cab-sem">${SEM_PRODUTO}</span></h3></div>`;
     const partes = [extra || p.estado];
     // Prazo de item já concluído é ruído: o que importa é quando fechou.
     if (p.alvo && !C.isTerminalState(p.estado)) partes.push('prazo ' + dataCurta(p.alvo));
     const detalhe = partes.filter(Boolean).join(' · ');
-    const objetivo = info && info.descricao
-      ? `<p class="cab-objetivo">${esc(info.descricao)}</p>` : '';
     const rumo = info && info.total > 0 ? barraProgresso(info.feitos, info.total) : '';
     return `<div class="cab-produto">
       <div class="cab-topo">
         <h3 class="cab-nome">${esc(p.titulo)}</h3>
         ${detalhe ? `<span class="cab-detalhe">${esc(detalhe)}</span>` : ''}
       </div>
-      ${objetivo}
       ${rumo}
     </div>`;
   }
@@ -338,7 +336,7 @@
       <button type="button" class="limpar-doc" id="limpar-entregas" hidden>limpar</button>
       <span class="conta-doc" id="conta-entregas" aria-live="polite">${regs.length} de ${regs.length}</span>
     </div>
-    <div class="doc-lista doc-bloco" id="lista-entregas">${lista}</div>`;
+    <div class="doc-lista" id="lista-entregas">${lista}</div>`;
   }
 
   function corpoComparativo(meses, escolhido) {
