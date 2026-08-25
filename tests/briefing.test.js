@@ -412,3 +412,10 @@ test('htmlReport corrige a concordância do travado único', () => {
   assert.ok(html.includes('É o ponto que depende de decisão'));
   assert.ok(!html.includes('É o ponto que dependem'));
 });
+
+test('htmlReport diz na prosa qual travado está com o prazo estourado', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA });
+  // base(): 1 travado (Integração ERP) com alvo vencido — capa e prosa concordam
+  assert.ok(html.includes('com o prazo estourado'));
+  assert.match(html, /kpi-alerta"><b>1<\/b><span>fora do prazo/);
+});

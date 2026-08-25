@@ -175,7 +175,9 @@
     return frases.join(' ');
   }
 
-  function paragrafoSituacao(b) {
+  // `travadosVencidos` reconcilia a prosa com a capa: o KPI "fora do prazo"
+  // conta o travado vencido, então a frase dos travados diz qual deles é.
+  function paragrafoSituacao(b, travadosVencidos) {
     const frases = [];
     if (b.execucao.length) frases.push(`<b>${plural(b.execucao.length, 'item', 'itens')}</b> em execução agora.`);
     const p = b.prazos;
@@ -187,7 +189,10 @@
     if (prazo.length) frases.push('Nos prazos: ' + prazo.join(', ') + '.');
     if (b.travados.length) {
       const velho = b.travados[0];
-      const tempo = velho.dias == null ? '' : ` — o mais antigo sem movimento há ${velho.dias} ${velho.dias === 1 ? 'dia' : 'dias'}`;
+      const partes = [];
+      if (velho.dias != null) partes.push(`o mais antigo sem movimento há ${velho.dias} ${velho.dias === 1 ? 'dia' : 'dias'}`);
+      if (travadosVencidos) partes.push(b.travados.length === 1 ? 'com o prazo estourado' : `${travadosVencidos} ${travadosVencidos === 1 ? 'deles com o prazo estourado' : 'deles com o prazo estourado'}`);
+      const tempo = partes.length ? ' — ' + partes.join(', ') : '';
       frases.push(`<b>${plural(b.travados.length, 'item está travado', 'itens estão travados')}</b>${tempo}. ${b.travados.length === 1 ? 'É o ponto que depende' : 'São os pontos que dependem'} de decisão.`);
     }
     return frases.join(' ');
@@ -423,7 +428,7 @@
     ] : [
       mesAlvo ? paragrafoVolume(mesAlvo, escopo) : 'Nada foi concluído neste mês até agora.',
       mesAlvo ? paragrafoProdutos(mesAlvo) : '',
-      paragrafoSituacao(bVivo),
+      paragrafoSituacao(bVivo, b.prazos.atrasados.filter((r) => idsTravados.has(r.item.id)).length),
     ]).filter(Boolean);
 
     const meta = [];

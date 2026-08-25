@@ -87,7 +87,7 @@ function mensagemDeErro(e) {
 
 function renderBadge() {
   const b = $('badge');
-  const estado = !st.pat ? 'sem-token' : st.erro ? 'vencido' : st.carregando ? 'atualizando' : 'conectado';
+  const estado = (!st.pat || !st.config) ? 'sem-token' : st.erro ? 'vencido' : st.carregando ? 'atualizando' : 'conectado';
   b.dataset.estado = estado;
   b.textContent = { 'sem-token': 'sem token', vencido: 'erro', atualizando: 'atualizando…', conectado: 'conectado' }[estado];
 }
@@ -191,7 +191,9 @@ function rolarAte(alvo) {
   // (aba em segundo plano, por exemplo). Sem isso a animação nunca começaria e o
   // clique no menu não levaria a lugar nenhum. Aqui ele chega — sem deslizar.
   setTimeout(() => {
-    if (!chegou && meu === rolagemAtual) window.scrollTo(0, destino);
+    if (chegou || meu !== rolagemAtual) return;
+    rolagemAtual += 1; // mata a animação: senão, ao voltar pra aba, o rAF acorda,
+    window.scrollTo(0, destino); // pula de volta pro início e rola tudo de novo
   }, duracao + 150);
 }
 
@@ -226,6 +228,10 @@ function ligarDocumento() {
     if (ev.target.id !== 'mes-global') return;
     st.mes = ev.target.value || null;
     render();
+    // O redesenho matou o select no meio do gesto: devolve o foco pro novo,
+    // senão quem navega por teclado é jogado pro começo da página.
+    const sel = $('mes-global');
+    if (sel) sel.focus();
     await gravarLink(); // mês novo, link novo
   });
 }
@@ -259,6 +265,10 @@ function render() {
   });
   st.fTipos.clear(); // documento novo, chips novos: o estado anterior não vale
   st.fProdutos.clear();
+  // A caixa do link é confirmação de UM momento. Documento novo = link novo: a
+  // caixa aberta mostrando URL velha mandava o stakeholder pro report errado.
+  const caixa = $('caixa-link');
+  if (caixa && !caixa.hidden) caixa.hidden = true;
   box.innerHTML = erroHtml + r.html;
   aplicarFiltroEntregas(); // acerta o contador e esconde o "limpar"
   st.vazio = r.vazio;
@@ -287,7 +297,6 @@ async function carregar() {
   if (!st.config || !st.pat || st.carregando) return;
   st.carregando = true;
   st.erro = null;
-  st.pais = [];
   render();
   try {
     if (!st.usuario) {
@@ -301,14 +310,19 @@ async function carregar() {
       const crus = ids.length ? await A.getFields(ctx(), ids, CAMPOS) : [];
       for (const it of crus) todos.push(Object.assign({ projeto: p.projectName }, it));
     }
-    st.items = todos;
+    // Itens e pais são UM par: atribuir separado fazia o documento degradar no
+    // meio do refresh (grupos desmontando na tela) e, num fetch falho, deixava
+    // itens novos com pais de ninguém — e o link era reescrito desse estado.
     st.pais = await buscarPais(todos);
+    st.items = todos;
   } catch (e) {
     st.erro = mensagemDeErro(e);
   } finally {
     st.carregando = false;
     render();
-    if (st.items) await gravarLink();
+    // Com erro no caminho, o par em memória pode ser o antigo — o link que já
+    // está na barra corresponde a ele. Não se publica estado incerto.
+    if (st.items && !st.erro) await gravarLink();
   }
 }
 
@@ -392,8 +406,11 @@ function cadeiaDeProdutos(mostrados, todos) {
   return [...extras.values()];
 }
 
+let geracaoLink = 0; // troca rápida de mês: só a gravação mais nova pode escrever
+
 async function gravarLink() {
   if (st.leitura) return; // o link já É a página: reescrever apagaria o dado
+  const minha = ++geracaoLink;
   st.link = '';
   if (!st.items || st.vazio) { history.replaceState(null, '', location.pathname + location.search); return; }
   try {
@@ -407,32 +424,42 @@ async function gravarLink() {
       ancestrais: cadeiaDeProdutos(mostrados, st.items.concat(st.pais)),
     };
     const carga = '#r=' + await comprimir(JSON.stringify(pacote));
+    if (minha !== geracaoLink) return; // outra gravação começou depois: ela manda
     // O link que ele copia é limpo. O que fica na barra de endereços preserva o
     // ?po=1, senão um F5 tiraria as ferramentas dele.
     st.link = location.origin + location.pathname + carga;
     history.replaceState(null, '', location.pathname + location.search + carga);
   } catch (e) {
-    st.erro = 'Não deu pra montar o link: ' + e.message;
-    render();
+    // Link é conveniência: falhar em montá-lo não é falha do DOCUMENTO, que está
+    // na tela. Reportar como erro derrubava badge e redesenho — avisa na caixa.
+    if (minha === geracaoLink) mostrarLink('', 'Não deu pra montar o link agora: ' + e.message);
   }
 }
 
 async function copiarLink() {
   if (!st.link) await gravarLink();
   if (!st.link) return;
-  try { await navigator.clipboard.writeText(st.link); } catch (e) { /* sem permissão: o campo abaixo resolve */ }
-  mostrarLink(st.link);
+  // "Link copiado" só quando copiou de verdade: clipboard falha por permissão, e
+  // afirmar cópia que não houve manda o PO colar coisa velha no Slack.
+  let copiou = true;
+  try { await navigator.clipboard.writeText(st.link); } catch (e) { copiou = false; }
+  mostrarLink(st.link, copiou ? '' : 'Não consegui copiar sozinho — copie o link abaixo (já está selecionado).');
 }
 
-function mostrarLink(url) {
+function mostrarLink(url, aviso) {
   const caixa = $('caixa-link');
-  const longo = url.length > LIMITE_LINK;
   caixa.hidden = false;
+  if (!url) { // só o aviso: link nem chegou a existir
+    caixa.innerHTML = `<p class="link-aviso">${B.esc(aviso || '')}</p>`;
+    return;
+  }
+  const longo = url.length > LIMITE_LINK;
+  const cabeca = aviso ? B.esc(aviso) : longo
+    ? 'Link copiado, mas está <b>longo (' + url.length.toLocaleString('pt-BR') + ' caracteres)</b> — alguns aplicativos de mensagem cortam. Recorte por responsável pra encurtar.'
+    : 'Link copiado. Ele carrega o report inteiro — quem abrir não precisa de token nem de acesso ao DevOps.';
   caixa.innerHTML = `
-    <p class="link-aviso">${longo
-      ? 'Link copiado, mas está <b>longo (' + url.length.toLocaleString('pt-BR') + ' caracteres)</b> — alguns aplicativos de mensagem cortam. Recorte por responsável pra encurtar.'
-      : 'Link copiado. Ele carrega o report inteiro — quem abrir não precisa de token nem de acesso ao DevOps.'}</p>
-    <input id="campo-link" type="text" readonly value="${B.esc(url)}">
+    <p class="link-aviso">${cabeca}</p>
+    <input id="campo-link" type="text" readonly aria-label="Link do report" value="${B.esc(url)}">
     <p class="link-aviso mudo">O conteúdo viaja depois do <b>#</b>, que o navegador não envia ao servidor: nada fica guardado em host nenhum. Quem tiver o link, porém, lê o report — trate como documento confidencial.</p>`;
   const campo = $('campo-link');
   campo.focus();
