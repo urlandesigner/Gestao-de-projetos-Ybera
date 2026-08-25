@@ -341,8 +341,15 @@
     const escolhido = o.mes || b.mes;
     const fechado = escolhido !== b.mes; // mês que já passou
     const mesAlvo = meses.find((m) => m.mes === escolhido) || null;
-    // Seletor: todo mês com entrega, mais o corrente (que pode estar vazio)
-    const listaMeses = [...new Set([b.mes, ...meses.map((m) => m.mes)])].sort().reverse();
+    // Seletor: os meses do ano corrente com entrega, mais o mês de hoje (que pode
+    // estar vazio). Ano anterior não entra — o report é documento do ano, e a
+    // lista crescia pra sempre. O mês escolhido entra de todo jeito, senão um
+    // link antigo apontando pra dezembro passado abriria fora da lista.
+    const ano = String(new Date(agora).getUTCFullYear());
+    const listaMeses = [...new Set([b.mes, ...meses.map((m) => m.mes)])]
+      .filter((m) => m.slice(0, 4) === ano || m === escolhido)
+      .sort().reverse();
+    const mesesDoAno = meses.filter((m) => m.mes.slice(0, 4) === ano);
     if (!mesAlvo && !fechado && !b.execucao.length && !b.travados.length && !meses.length) {
       return { vazio: true, meses: listaMeses, html: '<p class="mudo">Nada registrado ainda para este recorte.</p>' };
     }
@@ -406,11 +413,13 @@
         corpo: corpoEntregas(entregas, mapa) + notaAproximados(mesAlvo),
       });
     }
-    if (meses.length > 1) {
+    if (mesesDoAno.length > 1) {
       secoes.push({
         id: 'comparativo', titulo: 'Comparativo', rotulo: 'Comparativo',
-        intro: 'Volume de entregas mês a mês, no que o DevOps guarda deste recorte.',
-        corpo: corpoComparativo(meses, escolhido),
+        intro: 'Volume de entregas mês a mês em ' + ano + ', neste recorte.',
+        // A variação de cada mês continua sendo contra o mês anterior de verdade,
+        // mesmo quando ele é de dezembro do ano passado e não aparece na lista.
+        corpo: corpoComparativo(mesesDoAno, escolhido),
       });
     }
     if (fechado) {

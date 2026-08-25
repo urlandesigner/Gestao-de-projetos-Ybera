@@ -248,3 +248,34 @@ test('htmlReport em mês fechado tem só os dois cartões de fato histórico', (
   const resumo = html.slice(html.indexOf('id="resumo"'), html.indexOf('id="entregas"'));
   assert.equal((resumo.match(/class="resumo-cartao"/g) || []).length, 2);
 });
+
+// O report é documento do ano. Ano anterior no seletor só fazia a lista crescer.
+const dez2025 = () => [
+  ...base(),
+  it(60, 'Product Backlog Item', 'Done', 'Coisa de dezembro', null, null, 260),
+];
+
+test('htmlReport lista no seletor só os meses do ano corrente', () => {
+  const { meses } = B.htmlReport({ items: dez2025(), agora: AGORA });
+  assert.deepEqual(meses, ['2026-08', '2026-07']);
+});
+
+test('htmlReport mantém no seletor o mês escolhido, mesmo de outro ano', () => {
+  const { meses, html } = B.htmlReport({ items: dez2025(), agora: AGORA, mes: '2025-12' });
+  assert.deepEqual(meses, ['2026-08', '2026-07', '2025-12']);
+  assert.ok(html.includes('Dezembro de 2025')); // link antigo continua abrindo
+});
+
+test('htmlReport limita o comparativo ao ano corrente', () => {
+  const { html } = B.htmlReport({ items: dez2025(), agora: AGORA });
+  const comp = html.slice(html.indexOf('id="comparativo"'), html.indexOf('id="decisao"'));
+  assert.ok(comp.includes('Agosto de 2026'));
+  assert.ok(comp.includes('Julho de 2026'));
+  assert.ok(!comp.includes('Dezembro de 2025'));
+  assert.ok(comp.includes('mês a mês em 2026'));
+  // Julho segue comparado com dezembro/2025, que existe mas não aparece: mesmo
+  // volume, então "=". Se a comparação tivesse sido cortada junto, julho seria o
+  // mês mais antigo da lista e mostraria "—".
+  assert.match(comp, /comp-delta[^>]*>=</);
+  assert.ok(!comp.includes('>—<'));
+});

@@ -208,7 +208,12 @@ body[data-pagina='projetos'] #secao-projetos { display: block; }
 }
 .filtros input[type='search']::placeholder { color: var(--mudo); }
 .filtros input[type='search']:focus { outline: 2px solid #d4d4d8; }
-.filtros select {
+/* Vale pros três selects do projeto: o dos filtros, o mês no documento e o
+   recorte na barra de ferramentas. Fora daqui eles caíam na aparência nativa,
+   com a seta colada na borda e o controle mais alto que o resto. */
+.filtros select,
+.doc-nav .doc-mes,
+.ferramentas select {
   font: inherit;
   font-size: 0.86rem;
   font-weight: 550;
@@ -1160,7 +1165,7 @@ body.pagina-report main > section {
   max-width: 11rem;
   font-size: 0.78rem;
   font-weight: 600;
-  padding: 0.34rem 1.7rem 0.34rem 0.7rem;
+  padding: 0.3rem 2rem 0.3rem 0.75rem; /* a direita reserva a seta em right 0.85rem */
 }
 .ferramentas select[hidden] { display: none; }
 .ferramentas button, .ferramentas .botao-texto {
@@ -1199,16 +1204,16 @@ body.pagina-report .caixa-link {
 }
 body.pagina-report .caixa-link input { background: var(--doc-fundo); }
 
-/* Seletor de mês: mora na navegação do documento, na ponta direita */
+/* Seletor de mês: mora na navegação do documento, na ponta direita. Mesma altura
+   dos links ao lado — é irmão deles, não um controle de formulário. */
 .doc-nav .doc-mes {
   margin-left: 0.3rem;
-  padding: 0.4rem 1.7rem 0.4rem 0.75rem;
-  font-size: 0.81rem;
-  font-weight: 700;
+  padding: 0.36rem 1.95rem 0.36rem 0.8rem;
+  font-size: 0.79rem;
+  font-weight: 600;
   color: #3d434f;
   background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 99px;
 }
 
 /* A barra flutuante não pode cobrir a última linha do documento */
