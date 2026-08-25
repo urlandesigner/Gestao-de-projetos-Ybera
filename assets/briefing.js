@@ -89,14 +89,15 @@
     </div>`;
   }
 
-  // O cabeçalho do grupo é o produto: nome à esquerda, estado/prazo no canto
-  // direito, e a barra de rumo (quanto do produto já fechou). Sem selo de tipo
-  // ("Épico"/"Feature" é jargão de DevOps) e sem descrição — a descrição real é
-  // padronizada/interna, não agrega pro stakeholder. `info` traz o progresso
-  // pronto pra não recontar no link.
+  // O cabeçalho do grupo é o produto: nome à esquerda, prazo no canto direito, e a
+  // barra de rumo (quanto do produto já fechou). Sem selo de tipo, sem descrição e
+  // sem o estado (System.State): além de jargão em inglês, o campo vem
+  // desatualizado (épico "New" com 30% dos filhos feitos), então engana. O rumo
+  // (barra) diz melhor em que pé a frente está. `extra` é a data quando o próprio
+  // épico entregou no mês. `info` traz o progresso pronto pra não recontar no link.
   function cabecalhoProduto(p, extra, info) {
     if (!p) return `<div class="cab-produto"><h3 class="cab-nome"><span class="cab-sem">${SEM_PRODUTO}</span></h3></div>`;
-    const partes = [extra || p.estado];
+    const partes = [extra];
     // Prazo de item já concluído é ruído: o que importa é quando fechou.
     if (p.alvo && !C.isTerminalState(p.estado)) partes.push('prazo ' + dataCurta(p.alvo));
     const detalhe = partes.filter(Boolean).join(' · ');

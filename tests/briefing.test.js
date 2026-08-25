@@ -165,6 +165,15 @@ test('htmlReport mostra o produto no cabeçalho sem selo de tipo', () => {
   assert.ok(!html.includes('badge-tipo'), 'nenhum selo de tipo no documento');
 });
 
+// O System.State do épico ("New", "In Progress") saiu do cabeçalho: é jargão em
+// inglês e costuma estar desatualizado — a barra de rumo diz melhor. Sobra o prazo.
+test('htmlReport não mostra o estado do produto no cabeçalho, só o prazo', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA });
+  const cab = html.slice(html.indexOf('id="lista-entregas"'), html.indexOf('lista-linhas'));
+  assert.ok(!cab.includes('In Progress'), 'estado não aparece no cabeçalho');
+  assert.ok(cab.includes('prazo '), 'prazo continua');
+});
+
 // Etapa #2 (rumo, % dos filhos) no cabeçalho de produto da Entregas. O objetivo
 // (descrição) foi removido: a descrição real é boilerplate, não agrega ao leitor.
 test('htmlReport põe a barra de rumo no cabeçalho de produto, sem objetivo', () => {
