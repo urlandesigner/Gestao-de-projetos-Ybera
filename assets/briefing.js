@@ -239,12 +239,44 @@
     return `<li${alerta && n ? ' class="kpi-alerta"' : ''}><b>${n}</b><span>${esc(rotulo)}</span></li>`;
   }
 
-  function capa(escolhido, meta, tiles) {
+  // Manchete: a punchline do mês, derivada dos fatos. Volume + o produto que
+  // concentrou entrega, e — no mês corrente — o que pede ação (decisão, prazo).
+  // Mês fechado não fala de ação: situação é sempre do agora, não do passado.
+  function manchete(mesChave, fechado, nEntregas, topNome, nTravados, nAtrasados) {
+    const mes = mesPorExtenso(mesChave).toLowerCase().replace(/ de \d{4}$/, '');
+    const frases = [];
+    if (nEntregas > 0) {
+      frases.push(`Em ${mes}, <b>${plural(nEntregas, 'entrega', 'entregas')}</b>${topNome ? ` — ${esc(topNome)} na frente` : ''}.`);
+    } else {
+      frases.push(`Em ${mes}, nenhuma entrega registrada ainda.`);
+    }
+    if (!fechado) {
+      const acao = [];
+      if (nTravados) acao.push(`<b>${nTravados}</b> ${nTravados === 1 ? 'depende' : 'dependem'} de decisão`);
+      if (nAtrasados) acao.push(`<b>${nAtrasados}</b> fora do prazo`);
+      if (acao.length) {
+        const t = enumerar(acao);
+        frases.push(t.charAt(0).toUpperCase() + t.slice(1) + '.');
+      }
+    }
+    return frases.join(' ');
+  }
+
+  // Recorte: deixa explícito que o report é de UM responsável, não o total da
+  // unidade — senão "Ybera US" na capa se lê como se fosse tudo.
+  function recorte(escopo, unidade) {
+    if (escopo) return `Recorte: entregas sob responsabilidade de ${esc(escopo)}${unidade ? ' em ' + esc(unidade) : ''} — não o total da unidade.`;
+    return `Recorte: todas as entregas${unidade ? ' de ' + esc(unidade) : ''}.`;
+  }
+
+  function capa(escolhido, meta, tiles, frase, notaRecorte) {
     return `<header class="doc-capa">
       <div class="doc-limite">
         <h1 class="doc-titulo"><span>Relatório de</span><b>${esc(mesPorExtenso(escolhido))}</b></h1>
-        <p class="doc-meta">${esc(meta)}</p>
+        ${frase ? `<p class="doc-manchete">${frase}</p>` : ''}
+        ${meta ? `<p class="doc-meta">${esc(meta)}</p>` : ''}
         ${tiles ? `<ul class="doc-kpis">${tiles}</ul>` : ''}
+        ${notaRecorte ? `<p class="doc-recorte">${notaRecorte}</p>` : ''}
       </div>
     </header>`;
   }
@@ -426,6 +458,12 @@
     if (escopo) meta.push('P.O responsável: ' + escopo);
     if (o.unidade) meta.push(o.unidade);
 
+    // Manchete e recorte da capa: o produto em destaque é o de maior volume do
+    // mês (comProduto já vem ordenado por volume em porProduto).
+    const topNome = comProduto.length ? comProduto[0].produto.titulo : '';
+    const frase = manchete(escolhido, fechado, entregas.length, topNome, b.travados.length, b.prazos.atrasados.length);
+    const notaRecorte = recorte(escopo, o.unidade);
+
     const tiles = tile(entregas.length, entregas.length === 1 ? 'entrega' : 'entregas')
       + tile(comProduto.length, comProduto.length === 1 ? 'produto' : 'produtos')
       // "Fora do prazo" é pergunta de prazo, não de fluxo: um item travado com
@@ -498,7 +536,7 @@
       .map((x) => `<a href="#${x.id}">${esc(x.rotulo)}</a>`).join('')}${seletorMes}</div></nav>`;
 
     const html = `<div class="report-doc">
-      ${capa(escolhido, meta.join(' · '), tiles)}
+      ${capa(escolhido, meta.join(' · '), tiles, frase, notaRecorte)}
       ${nav}
       ${secoes.map((x) => secaoHtml(x)).join('')}
     </div>`;

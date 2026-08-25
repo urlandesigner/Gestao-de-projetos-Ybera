@@ -217,6 +217,30 @@ test('htmlReport usa o.decisoes (link) no pedido de decisão', () => {
   assert.ok(decisao.includes('Pedido assado no link.'));
 });
 
+// Etapa #4: manchete derivada na capa, nomeando o produto de maior volume.
+test('htmlReport monta a manchete e a nota de recorte na capa', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, escopo: 'Urlan Dipre', unidade: 'Ybera US' });
+  const capa = html.slice(0, html.indexOf('doc-nav'));
+  assert.ok(capa.includes('Em agosto, <b>2 entregas</b> — Nova PDP USA na frente.'), 'manchete com volume + produto top');
+  assert.ok(capa.includes('depende de decisão'), 'manchete cita a ação de decisão');
+  assert.ok(capa.includes('fora do prazo'), 'manchete cita o prazo');
+  assert.ok(capa.includes('Recorte: entregas sob responsabilidade de Urlan Dipre em Ybera US — não o total da unidade.'), 'nota de recorte de um responsável');
+});
+
+// Etapa #7: sem responsável ativo, o recorte é o total da unidade.
+test('htmlReport: recorte sem responsável vira "todas as entregas"', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, unidade: 'Ybera US' });
+  assert.ok(html.includes('Recorte: todas as entregas de Ybera US.'));
+});
+
+// Mês fechado (passado) não fala de ação: situação é sempre do mês corrente.
+test('htmlReport: manchete de mês fechado não cita decisão nem prazo', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, mes: '2026-07' });
+  const capa = html.slice(0, html.indexOf('doc-nav'));
+  assert.ok(capa.includes('Em julho'));
+  assert.ok(!capa.includes('depende de decisão'), 'mês passado não pede ação na manchete');
+});
+
 test('htmlReport joga "sem produto" pro fim, mesmo sendo o maior grupo', () => {
   const itens = [
     it(1, 'Epic', 'In Progress', 'Com produto', null, 5),
