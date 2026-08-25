@@ -548,6 +548,15 @@ test('resumoProdutos junta objetivo (descrição) e rumo (% de filhos) por produ
   assert.equal(info[1].total, 2);
 });
 
+test('resumoProdutos: objetivo é só o primeiro parágrafo (corta nota interna)', () => {
+  const epico = { id: 1, projeto: 'B2C', fields: {
+    'System.WorkItemType': 'Epic', 'System.Title': 'Loja Clube USA', 'System.State': 'New',
+    'System.Description': '<p>Épico do produto Loja Clube USA.</p><p></p><p>Criado vazio: mover as Features pra cá.<br>O id fica no Notion.</p>',
+  } };
+  const info = C.resumoProdutos([epico, wit(10, 'Feature', 'Done', 1)]);
+  assert.equal(info[1].descricao, 'Épico do produto Loja Clube USA.'); // sem o 2º bloco
+});
+
 test('pedidoDeDecisao pega a linha marcada "Decisão:" da descrição', () => {
   const bloqueado = { id: 30, fields: {
     'System.WorkItemType': 'Feature', 'System.State': 'Blocked',

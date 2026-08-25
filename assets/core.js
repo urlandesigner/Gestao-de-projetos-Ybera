@@ -581,6 +581,14 @@
       .replace(/\n{3,}/g, '\n\n').trim();
   }
 
+  // Só o primeiro parágrafo da descrição vira objetivo: o resto costuma ser nota
+  // interna (como montar o épico, id no Notion) que não é pro stakeholder. Corta
+  // na primeira linha em branco.
+  function primeiroParagrafo(texto) {
+    if (!texto) return '';
+    return String(texto).split(/\n\s*\n/)[0].trim();
+  }
+
   // Pedido de decisão de um item travado: a linha da descrição que começa com
   // "Decisão:" (com/sem acento, maiúsc./minúsc.). O texto depois do marcador é o
   // pedido — o PO escreve ali de quem depende e o impacto. Sem marcador, string
@@ -649,7 +657,7 @@
     for (const node of mapa.values()) {
       if (out[node.id]) continue;
       const r = roll.get(node.id) || { total: 0, feitos: 0 };
-      out[node.id] = { descricao: node.descricao || '', feitos: r.feitos, total: r.total };
+      out[node.id] = { descricao: primeiroParagrafo(node.descricao), feitos: r.feitos, total: r.total };
     }
     return out;
   }

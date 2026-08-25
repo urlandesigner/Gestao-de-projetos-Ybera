@@ -631,7 +631,7 @@ body.modo-leitura .caixa-link { display: none !important; }
 /* O produto vira cabeçalho: nome + situação na primeira linha, objetivo (o
    "e daí?" do negócio) embaixo, e a barra de rumo (quanto já fechou) por fim. */
 .grupo-produto .cab-produto {
-  margin: 0 0.2rem 0.55rem;
+  margin: 0 0.2rem 0.95rem; /* respiro entre a barra de rumo e os itens abaixo */
 }
 .cab-produto .cab-topo {
   display: flex;
@@ -1065,6 +1065,8 @@ body.pagina-report main > section {
   box-shadow: none;
 }
 .report-doc .grupo-produto h3 { font-size: 0.82rem; }
+/* Nome do produto um pouco maior que os outros h3 do bloco: é o título da frente */
+.report-doc .cab-produto .cab-nome { font-size: 0.98rem; }
 
 /* Filtro do bloco de entregas */
 .doc-filtros {
