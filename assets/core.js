@@ -410,36 +410,46 @@
     ].filter(Boolean).join('\n');
   }
 
-  // Épicos com o progresso rolado dos descendentes (Features e PBIs, em
-  // qualquer profundidade). Tasks ficam fora porque a consulta não as traz —
-  // mesma régua do sprintProgress, que também ignora Task.
-  // Descendente cujo pai não veio na consulta (fora da área do time) não é
-  // contado: o roll-up só afirma o que enxerga.
-  function produtos(items) {
+  // Rollup de descendentes por nó: total e concluídos, em qualquer profundidade,
+  // à prova de ciclo de link no DevOps. A consulta de produtos não traz Task,
+  // então nada de Task entra na conta; descendente cujo pai ficou fora da
+  // consulta (fora da área do time) não é contado — o roll-up só afirma o que
+  // enxerga. Serve à página Produtos e ao % de rumo que o report põe no
+  // cabeçalho de cada produto.
+  function descendentesConcluidos(items) {
     const filhosDe = new Map();
     for (const it of items || []) {
       const pai = ((it || {}).fields || {})['System.Parent'];
-      if (!pai) continue;
+      if (pai == null) continue;
       if (!filhosDe.has(pai)) filhosDe.set(pai, []);
       filhosDe.get(pai).push(it);
     }
+    const out = new Map();
+    for (const raiz of items || []) {
+      let total = 0;
+      let feitos = 0;
+      const pilha = [...(filhosDe.get(raiz.id) || [])];
+      const vistos = new Set([raiz.id]); // guarda contra ciclo de link no DevOps
+      while (pilha.length) {
+        const filho = pilha.pop();
+        if (vistos.has(filho.id)) continue;
+        vistos.add(filho.id);
+        total += 1;
+        if (isTerminalState((filho.fields || {})['System.State'])) feitos += 1;
+        for (const neto of filhosDe.get(filho.id) || []) pilha.push(neto);
+      }
+      out.set(raiz.id, { total, feitos });
+    }
+    return out;
+  }
+
+  // Épicos com o progresso rolado dos descendentes (Features e PBIs, em
+  // qualquer profundidade).
+  function produtos(items) {
+    const roll = descendentesConcluidos(items);
     const lista = (items || [])
       .filter((it) => levelOf(((it || {}).fields || {})['System.WorkItemType']) === 'epic')
-      .map((ep) => {
-        let total = 0;
-        let feitos = 0;
-        const pilha = [...(filhosDe.get(ep.id) || [])];
-        const vistos = new Set([ep.id]); // guarda contra ciclo de link no DevOps
-        while (pilha.length) {
-          const filho = pilha.pop();
-          if (vistos.has(filho.id)) continue;
-          vistos.add(filho.id);
-          total += 1;
-          if (isTerminalState((filho.fields || {})['System.State'])) feitos += 1;
-          for (const neto of filhosDe.get(filho.id) || []) pilha.push(neto);
-        }
-        return { item: ep, filhos: { total, feitos } };
-      });
+      .map((ep) => ({ item: ep, filhos: roll.get(ep.id) || { total: 0, feitos: 0 } }));
     // O que fecha primeiro na frente; sem data-alvo vai pro fim — não há prazo
     // a cobrar, e deixar no topo empurraria pra baixo o que tem data.
     return lista.sort((a, b) => {
@@ -552,6 +562,25 @@
   // Produto de cada item: sobe a cadeia de pais e devolve o primeiro Épico.
   // Sem épico na cadeia, devolve o ancestral mais alto que achou — uma Feature
   // já diz muito mais que "sem produto associado", e é o que o DevOps tem.
+  // Descrição do épico vem como HTML do editor do DevOps. Pro report vira texto:
+  // quebras de bloco viram linha, o resto das tags sai, entidades voltam ao
+  // caractere. Não é sanitização de HTML confiável — é extração de texto; quem
+  // renderiza (briefing) ESCAPA o resultado, então nada de tag sobra viva.
+  function descricaoLimpa(html) {
+    if (!html) return '';
+    let s = String(html)
+      .replace(/<\s*br\s*\/?>/gi, '\n')
+      .replace(/<\/\s*(p|div|li|tr|h[1-6])\s*>/gi, '\n')
+      .replace(/<\s*li[^>]*>/gi, '\n')
+      .replace(/<[^>]+>/g, '');
+    s = s
+      .replace(/&nbsp;/gi, ' ').replace(/&lt;/gi, '<').replace(/&gt;/gi, '>')
+      .replace(/&quot;/gi, '"').replace(/&#39;/gi, "'").replace(/&apos;/gi, "'")
+      .replace(/&amp;/gi, '&'); // &amp; por último pra não desfazer duas vezes
+    return s.replace(/[ \t]+/g, ' ').replace(/ *\n */g, '\n')
+      .replace(/\n{3,}/g, '\n\n').trim();
+  }
+
   // Épico aponta pra si mesmo. Cadeia com ciclo para sozinha.
   // O Report usa isso pra dizer EM QUE produto o mês caiu, em vez de só listar
   // títulos soltos.
@@ -568,6 +597,7 @@
         estado: f['System.State'] || '',
         alvo: f[CAMPO_ALVO] || null,
         projeto: it.projeto || '',
+        descricao: descricaoLimpa(f['System.Description']),
       };
     };
     const achar = (id) => {
@@ -593,6 +623,24 @@
       if (e) saida.set(it.id, e);
     }
     return saida;
+  }
+
+  // Por produto (id do épico/Feature que vira cabeçalho): o objetivo (descrição
+  // limpa) e o rumo (descendentes concluídos/total). É o que alimenta o cabeçalho
+  // de produto do report. Calculado sobre `todos` (backlog inteiro do escopo) pra
+  // o % contar todos os filhos, não só os do mês. No link de leitura este mapa
+  // viaja pronto: o pacote não carrega o backlog inteiro, então recalcular ali
+  // subcontaria.
+  function resumoProdutos(todos) {
+    const mapa = mapaDeProdutos(todos);
+    const roll = descendentesConcluidos(todos);
+    const out = {};
+    for (const node of mapa.values()) {
+      if (out[node.id]) continue;
+      const r = roll.get(node.id) || { total: 0, feitos: 0 };
+      out[node.id] = { descricao: node.descricao || '', feitos: r.feitos, total: r.total };
+    }
+    return out;
   }
 
   // Fatos que sustentam o parágrafo de cada mês. Só conta o que está nos dados:
@@ -736,7 +784,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, reportPorMes, mapaDeProdutos, resumoMensal, briefingDoMes, futuroPorFaixa, fimDoTrimestre,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, reportPorMes, mapaDeProdutos, descricaoLimpa, resumoProdutos, resumoMensal, briefingDoMes, futuroPorFaixa, fimDoTrimestre,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };

@@ -161,8 +161,40 @@ test('htmlReport aceita mês sem nenhuma entrega', () => {
 // "Feature" é jargão de DevOps e só competia com o nome do produto.
 test('htmlReport mostra o produto no cabeçalho sem selo de tipo', () => {
   const { html } = B.htmlReport({ items: base(), agora: AGORA });
-  assert.ok(html.includes('<span class="cab-nome">Nova PDP USA</span>'));
-  assert.doesNotMatch(html, /<h3 class="cab-produto">\s*<span class="badge-tipo/);
+  assert.ok(html.includes('<h3 class="cab-nome">Nova PDP USA</h3>'));
+  assert.ok(!html.includes('badge-tipo'), 'nenhum selo de tipo no documento');
+});
+
+// Etapas #1 (objetivo, do System.Description) e #2 (rumo, % dos filhos) no
+// cabeçalho de produto da Entregas.
+test('htmlReport põe objetivo e barra de rumo no cabeçalho de produto', () => {
+  const epico = { id: 1, projeto: 'B2C', fields: {
+    'System.WorkItemType': 'Epic', 'System.State': 'In Progress', 'System.Title': 'Nova PDP USA',
+    'System.Description': '<p>Aumentar a conversão da PDP nos EUA.</p>',
+  } };
+  const itens = [
+    epico,
+    it(10, 'Feature', 'Done', 'Galeria', 1, null, 3),          // filho concluído no mês
+    it(11, 'Product Backlog Item', 'Done', 'Zoom', 1, null, 4), // outro concluído
+    it(12, 'Product Backlog Item', 'In Progress', 'Prova social', 1, 5), // filho em aberto
+  ];
+  const { html } = B.htmlReport({ items: itens, agora: AGORA });
+  assert.ok(html.includes('Aumentar a conversão da PDP nos EUA.'), 'objetivo aparece');
+  assert.match(html, /class="cab-barra"[^>]*aria-label="[^"]*concluíd/);   // barra rotulada
+  assert.ok(html.includes('2 de 3 itens concluídos · 67%'), 'rumo: 2 de 3, 67%');
+});
+
+// Modo leitura: o link traz o resuminho pronto (o.produtos). Sem ele, o % seria
+// recalculado de um backlog incompleto e subcontaria.
+test('htmlReport usa o.produtos (link) em vez de recalcular o rumo', () => {
+  const itens = [
+    it(1, 'Epic', 'In Progress', 'Nova PDP USA', null, 6),
+    it(11, 'Product Backlog Item', 'Done', 'Zoom', 1, null, 4),
+  ];
+  const produtos = { 1: { descricao: 'Objetivo assado no link.', feitos: 8, total: 10 } };
+  const { html } = B.htmlReport({ items: itens, agora: AGORA, produtos });
+  assert.ok(html.includes('Objetivo assado no link.'));
+  assert.ok(html.includes('8 de 10 itens concluídos · 80%'));
 });
 
 test('htmlReport joga "sem produto" pro fim, mesmo sendo o maior grupo', () => {

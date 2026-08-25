@@ -504,6 +504,50 @@ test('mapaDeProdutos não inventa produto para item sem pai', () => {
   assert.equal(mapa.has(100), false);
 });
 
+test('descricaoLimpa tira o HTML e devolve texto legível', () => {
+  const html = '<div>Aumentar a <b>conversão</b> da PDP.<br>Foco em prova social &amp; mídia rica.</div><p>Segunda linha &lt;importante&gt;.</p>';
+  const txt = C.descricaoLimpa(html);
+  assert.ok(!txt.includes('<b>') && !txt.includes('<div>') && !txt.includes('<p>')); // tags foram
+  assert.ok(txt.includes('Aumentar a conversão da PDP.'));
+  assert.ok(txt.includes('prova social & mídia rica')); // &amp; decodificado
+  assert.ok(txt.includes('<importante>'));               // &lt;/&gt; decodificados
+  assert.ok(txt.includes('\n'));                          // <br> e </p> viraram linha
+});
+
+test('descricaoLimpa: vazio, nulo e indefinido viram string vazia', () => {
+  assert.equal(C.descricaoLimpa(''), '');
+  assert.equal(C.descricaoLimpa(null), '');
+  assert.equal(C.descricaoLimpa(undefined), '');
+});
+
+test('descendentesConcluidos rola total e feitos por nó, em qualquer profundidade', () => {
+  const roll = C.descendentesConcluidos([
+    wit(1, 'Epic', 'New'),
+    wit(10, 'Feature', 'Done', 1),
+    wit(11, 'Feature', 'New', 1),
+    wit(100, 'Product Backlog Item', 'Done', 10),
+    wit(101, 'Product Backlog Item', 'New', 10),
+  ]);
+  assert.deepEqual(roll.get(1), { total: 4, feitos: 2 });  // 2 features + 2 pbis
+  assert.deepEqual(roll.get(10), { total: 2, feitos: 1 }); // rollup vale pra Feature também
+  assert.deepEqual(roll.get(100), { total: 0, feitos: 0 }); // folha não tem descendente
+});
+
+test('resumoProdutos junta objetivo (descrição) e rumo (% de filhos) por produto', () => {
+  const epico = { id: 1, projeto: 'B2C', fields: {
+    'System.WorkItemType': 'Epic', 'System.Title': 'Nova PDP', 'System.State': 'New',
+    'System.Description': '<p>Aumentar a conversão da PDP.</p>',
+  } };
+  const info = C.resumoProdutos([
+    epico,
+    wit(10, 'Feature', 'Done', 1),
+    wit(100, 'Product Backlog Item', 'New', 10),
+  ]);
+  assert.equal(info[1].descricao, 'Aumentar a conversão da PDP.');
+  assert.equal(info[1].feitos, 1);
+  assert.equal(info[1].total, 2);
+});
+
 test('resumoMensal compara com o mês anterior e ranqueia produtos', () => {
   const itens = [
     nod(1, 'Epic', 'Nova PDP'),

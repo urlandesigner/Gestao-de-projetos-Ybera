@@ -26,10 +26,12 @@ const $ = (id) => document.getElementById(id);
 function loadJSON(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
 
 // Mesmos campos da base da Central: o report precisa de conclusão, prazo e pai.
+// Description entra pra virar o "objetivo" do produto no cabeçalho (só o épico/
+// Feature usa; nas linhas ela é ignorada).
 const CAMPOS = [
   'System.Title', 'System.State', 'System.WorkItemType', 'System.Parent',
   'System.AssignedTo', 'Microsoft.VSTS.Scheduling.StartDate', 'Microsoft.VSTS.Scheduling.TargetDate',
-  'Microsoft.VSTS.Common.ClosedDate', 'System.ChangedDate',
+  'Microsoft.VSTS.Common.ClosedDate', 'System.ChangedDate', 'System.Description',
 ];
 
 // A consulta é presa à área do time (areaClause). Épico e Feature costumam
@@ -37,10 +39,10 @@ const CAMPOS = [
 // a cadeia do produto quebra no primeiro salto e tudo cai em "sem produto".
 // workitemsbatch busca POR ID e não olha área: então pedimos os pais que
 // faltam, um nível por volta, até a cadeia fechar.
-// Estado e prazo entram porque o produto virou cabeçalho de grupo no report —
-// ele mostra em que pé o épico está, não só o nome.
+// Estado, prazo e descrição entram porque o produto virou cabeçalho de grupo no
+// report — mostra em que pé o épico está e o objetivo dele, não só o nome.
 const CAMPOS_PAI = ['System.WorkItemType', 'System.Title', 'System.Parent',
-  'System.State', 'Microsoft.VSTS.Scheduling.TargetDate'];
+  'System.State', 'Microsoft.VSTS.Scheduling.TargetDate', 'System.Description'];
 const NIVEIS_ACIMA = 4; // PBI → Feature → Épico usa 2; 4 é folga pra hierarquia torta
 
 // As ferramentas do PO só existem quando a URL pede: é assim que a Central
@@ -259,6 +261,9 @@ function render() {
   const r = B.htmlReport({
     items: st.leitura ? st.items : st.items.filter(noNome),
     todos: st.items.concat(st.pais), // o produto mora no pai — de outro dono, ou de outra área
+    // No link, o objetivo + rumo vêm prontos (o backlog inteiro não viaja, então
+    // recalcular ali subcontaria). Ao vivo (PO), fica undefined e o briefing calcula.
+    produtos: st.leitura ? st.produtos : undefined,
     agora: st.leitura ? st.agora : Date.now(),
     escopo: st.leitura ? st.escopo : respAtivo(),
     unidade: UNIDADE,
@@ -407,6 +412,17 @@ function cadeiaDeProdutos(mostrados, todos) {
   return [...extras.values()];
 }
 
+// Objetivo + rumo por produto, assados no link. O % é calculado do backlog
+// inteiro (st.items + pais), mas só viajam os produtos que o leitor vai ver
+// (os referenciados pelos itens mostrados) — link enxuto e % honesto.
+function produtosDoLink(mostrados) {
+  const info = C.resumoProdutos(st.items.concat(st.pais));
+  const ids = new Set([...C.mapaDeProdutos(mostrados.concat(st.pais)).values()].map((p) => p.id));
+  const out = {};
+  for (const id of ids) if (info[id]) out[id] = info[id];
+  return out;
+}
+
 let geracaoLink = 0; // troca rápida de mês: só a gravação mais nova pode escrever
 
 async function gravarLink() {
@@ -423,6 +439,7 @@ async function gravarLink() {
       mes: st.mes, // quem abrir o link cai no mês que eu estava vendo
       items: enxugar(mostrados),
       ancestrais: cadeiaDeProdutos(mostrados, st.items.concat(st.pais)),
+      produtos: produtosDoLink(mostrados), // objetivo + rumo, prontos
     };
     const carga = '#r=' + await comprimir(JSON.stringify(pacote));
     if (minha !== geracaoLink) return; // outra gravação começou depois: ela manda
@@ -489,8 +506,24 @@ async function lerDoLink() {
     const sanear = (lista) => (Array.isArray(lista) ? lista : [])
       .filter((it) => it && Number.isFinite(Number(it.id)))
       .map((it) => ({ id: Number(it.id), projeto: it.projeto, fields: it.fields || {} }));
+    // Objetivo + rumo também são forjáveis: número vira número (feitos nunca passa
+    // do total, senão a barra estoura de 100%), e a descrição é texto que o
+    // briefing escapa. Sem isso, um link torto pintaria %/HTML na tela.
+    const saneProdutos = (obj) => {
+      const out = {};
+      if (obj && typeof obj === 'object') {
+        for (const k of Object.keys(obj)) {
+          const v = obj[k] || {};
+          const total = Math.max(0, Math.floor(Number(v.total)) || 0);
+          const feitos = Math.min(total, Math.max(0, Math.floor(Number(v.feitos)) || 0));
+          out[k] = { descricao: String(v.descricao || ''), feitos, total };
+        }
+      }
+      return out;
+    };
     st.items = sanear(pacote.items);
     st.pais = sanear(pacote.ancestrais);
+    st.produtos = saneProdutos(pacote.produtos);
     st.escopo = pacote.escopo || '';
     st.agora = pacote.em || Date.now();
     st.mes = pacote.mes || null;

@@ -76,25 +76,44 @@
       || (nomeProduto(a.produto) < nomeProduto(b.produto) ? -1 : 1));
   }
 
-  // O cabeçalho do grupo é o produto: nome à esquerda e, quando existe, estado e
-  // prazo no canto direito, na linha do título. Sem selo de tipo — pro stakeholder
-  // o produto é o produto; "Épico"/"Feature" é jargão de DevOps e só competia com
-  // o nome.
-  function cabecalhoProduto(p, extra) {
-    if (!p) return `<h3 class="cab-produto"><span class="cab-sem">${SEM_PRODUTO}</span></h3>`;
+  // Barra de rumo: quanto do produto já fechou. Contagem absoluta ao lado, porque
+  // "70%" de uma frente de 3 itens não é o mesmo peso que de 30. aria-label carrega
+  // o mesmo texto pra quem usa leitor de tela.
+  function barraProgresso(feitos, total) {
+    const pct = Math.round((feitos / total) * 100);
+    const texto = `${feitos} de ${total} ${total === 1 ? 'item concluído' : 'itens concluídos'} · ${pct}%`;
+    return `<div class="cab-rumo">
+      <div class="cab-barra" role="img" aria-label="${esc(texto)}"><span style="width:${pct}%"></span></div>
+      <span class="cab-rumo-txt">${esc(texto)}</span>
+    </div>`;
+  }
+
+  // O cabeçalho do grupo é o produto: nome à esquerda, estado/prazo no canto
+  // direito, e — quando o produto tem descrição e filhos — o objetivo (o "e daí?"
+  // do negócio) e a barra de rumo. Sem selo de tipo: "Épico"/"Feature" é jargão de
+  // DevOps. `info` (objetivo + progresso) vem pronto pra não recontar no link.
+  function cabecalhoProduto(p, extra, info) {
+    if (!p) return `<div class="cab-produto"><h3 class="cab-nome"><span class="cab-sem">${SEM_PRODUTO}</span></h3></div>`;
     const partes = [extra || p.estado];
     // Prazo de item já concluído é ruído: o que importa é quando fechou.
     if (p.alvo && !C.isTerminalState(p.estado)) partes.push('prazo ' + dataCurta(p.alvo));
     const detalhe = partes.filter(Boolean).join(' · ');
-    return `<h3 class="cab-produto">
-      <span class="cab-nome">${esc(p.titulo)}</span>
-      ${detalhe ? `<span class="cab-detalhe">${esc(detalhe)}</span>` : ''}
-    </h3>`;
+    const objetivo = info && info.descricao
+      ? `<p class="cab-objetivo">${esc(info.descricao)}</p>` : '';
+    const rumo = info && info.total > 0 ? barraProgresso(info.feitos, info.total) : '';
+    return `<div class="cab-produto">
+      <div class="cab-topo">
+        <h3 class="cab-nome">${esc(p.titulo)}</h3>
+        ${detalhe ? `<span class="cab-detalhe">${esc(detalhe)}</span>` : ''}
+      </div>
+      ${objetivo}
+      ${rumo}
+    </div>`;
   }
 
   const chaveDe = (p) => (p ? 'p' + p.id : 'sem');
 
-  function grupoHtml(g, direita) {
+  function grupoHtml(g, direita, info) {
     // Um épico é o produto de si mesmo. Ele já é o cabeçalho — repetir a mesma
     // linha embaixo parece defeito. O que a linha diria vai pro cabeçalho.
     const proprio = g.produto ? g.itens.find((r) => (r.item || r).id === g.produto.id) : null;
@@ -105,8 +124,9 @@
     const dadosProprio = proprio
       ? ` data-proprio-tipo="${C.typeSlug(g.produto.tipo)}" data-proprio-busca="${esc((g.produto.titulo + ' #' + g.produto.id).toLowerCase())}"`
       : '';
+    const infoProduto = g.produto && info ? info[g.produto.id] : null;
     return `<div class="grupo-produto" data-produto="${esc(chave)}"${dadosProprio}>
-      ${cabecalhoProduto(g.produto, proprio ? direita(proprio) : '')}
+      ${cabecalhoProduto(g.produto, proprio ? direita(proprio) : '', infoProduto)}
       ${linhas.length ? `<ul class="lista-linhas">${linhas.map((r) => linha(r.item || r, direita(r), '', chave)).join('')}</ul>` : ''}
     </div>`;
   }
@@ -245,7 +265,7 @@
 
   // Entregas: tudo do mês, agrupado por produto, com chips e busca. Os chips e o
   // contador são estáticos aqui; quem esconde linha é o report.js.
-  function corpoEntregas(regs, mapa) {
+  function corpoEntregas(regs, mapa, info) {
     const grupos = porProduto(regs, mapa);
     const chip = (filtro, valor, rotulo, n) =>
       `<button type="button" class="chip-doc" aria-pressed="false" data-filtro="${filtro}" data-valor="${esc(valor)}" title="${esc(rotulo)}"><span>${esc(rotulo)}</span><span class="n">${n}</span></button>`;
@@ -253,7 +273,7 @@
     // produto pra quem lê, e é jargão de DevOps. O filtro fica no eixo que o
     // stakeholder usa; nas linhas, item nenhum carrega mais selo de tipo.
     const chips = grupos.map((g) => chip('produto', chaveDe(g.produto), nomeProduto(g.produto), g.itens.length)).join('');
-    const lista = grupos.map((g) => grupoHtml(g, (r) => (r.aproximada ? '~' : '') + dataCurta(r.quando))).join('');
+    const lista = grupos.map((g) => grupoHtml(g, (r) => (r.aproximada ? '~' : '') + dataCurta(r.quando), info)).join('');
     return `<div class="doc-filtros">
       <input id="busca-entregas" type="search" placeholder="buscar por título ou #id" aria-label="Buscar entregas por título ou número" autocomplete="off">
       <div class="chips-doc">${chips}</div>
@@ -336,6 +356,10 @@
     const agora = o.agora || Date.now();
     const escopo = o.escopo || '';
     const mapa = C.mapaDeProdutos(o.todos || items);
+    // Objetivo + rumo por produto. No modo PO calcula do backlog inteiro (`todos`);
+    // no link de leitura vem pronto (`o.produtos`), porque o pacote não carrega o
+    // backlog completo e recalcular ali subcontaria o progresso.
+    const infoProd = o.produtos || C.resumoProdutos(o.todos || items);
     const meses = C.resumoMensal(C.reportPorMes(items), mapa);
     const b = C.briefingDoMes(items, agora);
     // O `mes` pode vir do fragmento do link — dado que qualquer um forja. Formato
@@ -416,7 +440,7 @@
       secoes.push({
         id: 'entregas', titulo: 'Entregas do mês', rotulo: 'Entregas',
         intro: 'Tudo que foi concluído no mês, agrupado por produto. Filtre por produto ou busque por título e número do item.',
-        corpo: corpoEntregas(entregas, mapa) + notaAproximados(mesAlvo),
+        corpo: corpoEntregas(entregas, mapa, infoProd) + notaAproximados(mesAlvo),
       });
     }
     if (mesesDoAno.length > 1) {

@@ -628,20 +628,60 @@ body.modo-leitura .caixa-link { display: none !important; }
   font-weight: 700;
 }
 .grupo-produto .rotulo-alerta { color: var(--erro); }
-/* O produto é um item de verdade: selo, título clicável e, à direita, situação */
+/* O produto vira cabeçalho: nome + situação na primeira linha, objetivo (o
+   "e daí?" do negócio) embaixo, e a barra de rumo (quanto já fechou) por fim. */
 .grupo-produto .cab-produto {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  margin: 0 0.2rem 0.45rem;
+  margin: 0 0.2rem 0.55rem;
 }
+.cab-produto .cab-topo {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+}
+.cab-produto .cab-nome { margin: 0; flex: 1; min-width: 0; }
 .cab-produto .cab-detalhe {
   margin-left: auto;
+  flex: none;
   font-size: 0.72rem;
   font-weight: 600;
-  color: var(--mudo);
+  color: var(--doc-mudo, var(--mudo));
+  white-space: nowrap;
 }
-.cab-produto .cab-sem { color: var(--mudo); }
+.cab-produto .cab-sem { color: var(--mudo); font-weight: 700; }
+.cab-produto .cab-objetivo {
+  margin: 0.3rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--doc-mudo, var(--mudo));
+  white-space: pre-line; /* respeita as quebras que descricaoLimpa deixou */
+}
+.cab-rumo {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.45rem;
+}
+.cab-barra {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--doc-linha, #e7ebf0);
+  overflow: hidden;
+}
+.cab-barra > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #7c5cff, #34d399);
+  min-width: 3px;
+}
+.cab-rumo-txt {
+  flex: none;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--doc-mudo, var(--mudo));
+  font-variant-numeric: tabular-nums;
+}
 .nota-report { margin: 0.5rem 0.2rem 0; font-size: 0.78rem; line-height: 1.5; }
 
 /* Impressão: a página vira o documento que vai pro stakeholder. Fora navegação,
@@ -794,8 +834,8 @@ details summary { cursor: pointer; color: var(--mudo); font-size: 0.88rem; }
 @media (max-width: 640px) {
   .app > header.topo { flex-wrap: wrap; } /* o seletor global cabe na 2ª linha */
   /* Título do produto ganha a linha inteira; situação desce pra própria linha */
-  .grupo-produto .cab-produto { flex-wrap: wrap; }
-  .cab-produto .cab-detalhe { margin-left: 0; flex-basis: 100%; }
+  .cab-produto .cab-topo { flex-wrap: wrap; }
+  .cab-produto .cab-detalhe { margin-left: 0; flex-basis: 100%; white-space: normal; }
   main > section { padding: 1.1rem 1rem 1.2rem; }
   #grid { grid-template-columns: 1fr; }
   .atalhos a { padding: 0.45rem 0; font-size: 0.85rem; } /* alvo de toque maior */
@@ -1100,11 +1140,12 @@ body.pagina-report main > section {
   .grupo-produto, .lista-linhas li { break-inside: avoid; }
   .doc-bloco, .resumo-cartao { border: 1px solid #e5e5e5; }
   /* Barras do comparativo são só background — sem isto o papel sai em branco */
-  .comparativo .comp-barra, .comparativo .comp-barra span {
+  .comparativo .comp-barra, .comparativo .comp-barra span,
+  .cab-barra, .cab-barra > span {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
-  .comparativo .comp-barra { border: 1px solid #e5e5e5; }
+  .comparativo .comp-barra, .cab-barra { border: 1px solid #e5e5e5; }
 }
 
 @media (max-width: 720px) {
