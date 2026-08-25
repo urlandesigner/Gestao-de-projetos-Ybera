@@ -377,14 +377,39 @@
       travados.map((r) => linha(r.item, direita(r), '', '', pedidoDe(r))).join('')}</ul></div></div>`;
   }
 
-  function corpoProximos(b) {
+  // #8 Compromisso pra frente: resume por frente o que vem a seguir (itens com
+  // data futura), do prazo mais próximo pro mais distante. Reenquadra a lista de
+  // prazos (que é por urgência) como "o que cada frente entrega adiante".
+  // Derivado — sem convenção nova. Atrasado não entra: é risco, não compromisso.
+  function proximasPorFrente(prazos, mapa) {
+    const regs = [...(prazos.esteMes || []), ...(prazos.proximoMes || []), ...(prazos.depois || [])];
+    const porProd = new Map();
+    for (const r of regs) {
+      const prod = mapa.get(r.item.id) || null;
+      const chave = prod ? prod.id : 'sem';
+      if (!porProd.has(chave)) porProd.set(chave, { titulo: prod ? prod.titulo : SEM_PRODUTO, n: 0, prox: null });
+      const g = porProd.get(chave);
+      g.n += 1;
+      if (r.alvo && (!g.prox || Date.parse(r.alvo) < Date.parse(g.prox))) g.prox = r.alvo;
+    }
+    return [...porProd.values()].sort((a, b) => Date.parse(a.prox || '2999-01-01') - Date.parse(b.prox || '2999-01-01'));
+  }
+
+  function corpoProximos(b, mapa) {
     const bloco = (titulo, regs, alerta, direita) => regs.length ? `
       <div class="grupo-produto">
         <h3${alerta ? ' class="rotulo-alerta"' : ''}>${titulo}</h3>
         <ul class="lista-linhas">${regs.map((r) => linha(r.item, direita(r))).join('')}</ul>
       </div>` : '';
     const semPrazo = b.execucao.filter((r) => !(r.item.fields || {})[CAMPO_ALVO]);
+    const frentes = mapa ? proximasPorFrente(b.prazos, mapa) : [];
+    const lead = frentes.length
+      ? `<p class="proximos-lead">Por frente, o que vem a seguir: ${frentes
+        .map((f) => `<b>${esc(f.titulo)}</b> (${f.n} ${f.n === 1 ? 'item' : 'itens'}${f.prox ? ', próximo em ' + dataCurta(f.prox) : ''})`)
+        .join(' · ')}.</p>`
+      : '';
     return '<div class="doc-bloco">'
+      + lead
       + bloco('Já passou do prazo', b.prazos.atrasados, true, (r) => dataCurta(r.alvo))
       + bloco('Vence ainda este mês', b.prazos.esteMes, false, (r) => dataCurta(r.alvo))
       + bloco('Vence no mês que vem', b.prazos.proximoMes, false, (r) => dataCurta(r.alvo))
@@ -542,7 +567,7 @@
         secoes.push({
           id: 'proximos', titulo: 'Próximos passos', rotulo: 'Próximos',
           intro: 'O que está em curso e quando vence, do prazo mais apertado para o mais folgado.',
-          corpo: corpoProximos(bVivo),
+          corpo: corpoProximos(bVivo, mapa),
         });
       }
     }

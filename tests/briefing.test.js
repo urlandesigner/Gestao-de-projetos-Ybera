@@ -261,6 +261,21 @@ test('triagem de risco agrupa por frente e ordena pelo mais afetado', () => {
   assert.ok(html.indexOf('Frente A</b> (2 itens)') < html.indexOf('Frente B</b> (1 item)'));
 });
 
+// Etapa #8: resumo forward-looking por frente no topo de "Próximos passos",
+// do prazo mais próximo pro mais distante. Atrasado (risco) não entra.
+test('htmlReport resume os próximos por frente, do prazo mais próximo pro distante', () => {
+  const itens = [
+    it(1, 'Epic', 'In Progress', 'Frente A', null),
+    it(2, 'Epic', 'In Progress', 'Frente B', null),
+    it(10, 'Product Backlog Item', 'In Progress', 'A1', 1, 25), // vence mais adiante
+    it(20, 'Product Backlog Item', 'In Progress', 'B1', 2, 3),  // vence este mês
+  ];
+  const { html } = B.htmlReport({ items: itens, agora: AGORA });
+  assert.ok(html.includes('Por frente, o que vem a seguir:'));
+  // Frente B (prazo mais próximo) vem antes de Frente A
+  assert.ok(html.indexOf('Frente B</b> (1 item') < html.indexOf('Frente A</b> (1 item'));
+});
+
 test('htmlReport joga "sem produto" pro fim, mesmo sendo o maior grupo', () => {
   const itens = [
     it(1, 'Epic', 'In Progress', 'Com produto', null, 5),

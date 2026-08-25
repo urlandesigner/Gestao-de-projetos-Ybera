@@ -704,6 +704,15 @@ body.modo-leitura .caixa-link { display: none !important; }
   margin-bottom: 0.15rem;
 }
 .nota-report { margin: 0.5rem 0.2rem 0; font-size: 0.78rem; line-height: 1.5; }
+/* Lead de "Próximos passos": o resumo por frente do que vem a seguir. Mais
+   presente que uma nota (é síntese, não rodapé), sem competir com os blocos. */
+.proximos-lead {
+  margin: 0 0.2rem 0.7rem;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--doc-tinta, var(--tinta));
+}
+.proximos-lead b { font-weight: 700; }
 
 /* Impressão: a página vira o documento que vai pro stakeholder. Fora navegação,
    sombras e tudo que só serve na tela; os meses recolhidos abrem. */
