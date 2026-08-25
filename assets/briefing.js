@@ -290,15 +290,15 @@
       tipos.set(slug, (tipos.get(slug) || 0) + 1);
     }
     const chip = (filtro, valor, rotulo, n) =>
-      `<button type="button" class="chip-doc" data-filtro="${filtro}" data-valor="${esc(valor)}">${esc(rotulo)} <span class="n">${n}</span></button>`;
+      `<button type="button" class="chip-doc" aria-pressed="false" data-filtro="${filtro}" data-valor="${esc(valor)}">${esc(rotulo)} <span class="n">${n}</span></button>`;
     const chips = grupos.map((g) => chip('produto', chaveDe(g.produto), nomeProduto(g.produto), g.itens.length)).join('')
       + [...tipos.entries()].map(([slug, n]) => chip('tipo', slug, ROTULO_CURTO[slug], n)).join('');
     const lista = grupos.map((g) => grupoHtml(g, (r) => (r.aproximada ? '~' : '') + dataCurta(r.quando))).join('');
     return `<div class="doc-filtros">
-      <input id="busca-entregas" type="search" placeholder="buscar por título ou #id" autocomplete="off">
+      <input id="busca-entregas" type="search" placeholder="buscar por título ou #id" aria-label="Buscar entregas por título ou número" autocomplete="off">
       <div class="chips-doc">${chips}</div>
       <button type="button" class="limpar-doc" id="limpar-entregas" hidden>limpar</button>
-      <span class="conta-doc" id="conta-entregas">${regs.length} de ${regs.length}</span>
+      <span class="conta-doc" id="conta-entregas" aria-live="polite">${regs.length} de ${regs.length}</span>
     </div>
     <div class="doc-lista doc-bloco" id="lista-entregas">${lista}</div>`;
   }
@@ -506,11 +506,11 @@
     // navegação, na ponta direita — como no report do time. Serve o PO e o
     // stakeholder pela mesma peça. Um mês só não é escolha: não desenha.
     const seletorMes = listaMeses.length > 1
-      ? `<select id="mes-global" class="doc-mes" title="Mês do report">${listaMeses
+      ? `<select id="mes-global" class="doc-mes" aria-label="Mês do report" title="Mês do report">${listaMeses
         .map((m) => `<option value="${esc(m)}"${m === escolhido ? ' selected' : ''}>${esc(mesPorExtenso(m))}</option>`)
         .join('')}</select>`
       : '';
-    const nav = `<nav class="doc-nav"><div class="doc-nav-int">${secoes
+    const nav = `<nav class="doc-nav" aria-label="Seções do report"><div class="doc-nav-int">${secoes
       .map((x) => `<a href="#${x.id}">${esc(x.rotulo)}</a>`).join('')}${seletorMes}</div></nav>`;
 
     const html = `<div class="report-doc">

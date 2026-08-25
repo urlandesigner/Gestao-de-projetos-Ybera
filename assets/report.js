@@ -217,6 +217,7 @@ function ligarDocumento() {
     const valor = chip.dataset.valor;
     if (conjunto.has(valor)) conjunto.delete(valor); else conjunto.add(valor);
     chip.classList.toggle('ativo', conjunto.has(valor));
+    chip.setAttribute('aria-pressed', conjunto.has(valor) ? 'true' : 'false');
     aplicarFiltroEntregas();
   });
   box.addEventListener('input', (ev) => {

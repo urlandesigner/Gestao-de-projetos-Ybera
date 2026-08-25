@@ -655,37 +655,7 @@ body.modo-leitura .caixa-link { display: none !important; }
   .lista-linhas .item-linha { box-shadow: none; border: 1px solid #eee; }
 }
 
-/* ---------- Report mensal ---------- */
-.sub-lista {
-  margin: 0.2rem 0.9rem 0.45rem;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--mudo);
-}
-.mes { background: var(--superficie-2); border-radius: 16px; margin-bottom: 0.6rem; }
-.mes > summary {
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  padding: 0.8rem 0.9rem;
-  cursor: pointer;
-  list-style: none;
-}
-.mes > summary::-webkit-details-marker { display: none; }
-/* seta que gira ao abrir — o único indicador de que o mês é clicável */
-.mes > summary::before {
-  content: '›';
-  display: inline-block;
-  color: var(--mudo);
-  font-weight: 700;
-  transition: transform 0.15s ease;
-}
-.mes[open] > summary::before { transform: rotate(90deg); }
-.mes-nome { font-weight: 700; }
-.mes-resumo { margin-left: auto; font-size: 0.8rem; color: var(--mudo); text-align: right; }
-.nota-report { margin: 0 0.9rem 0.55rem; font-size: 0.74rem; line-height: 1.4; }
+/* ---------- Report: listas ---------- */
 .lista-linhas {
   list-style: none;
   margin: 0;
@@ -892,16 +862,20 @@ body.pagina-report main > section {
   font-size: 0.42em;
   font-weight: 400;
   letter-spacing: 0;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.66); /* .5 ficava no limite exato do contraste AA */
 }
-/* O mês é o assunto do documento — é ele que ganha o gradiente da marca */
-.doc-titulo b {
-  background: linear-gradient(90deg, #83ff8f, #b89ef5, #cc7ff0, #83ff8f);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+/* O mês é o assunto do documento — é ele que ganha o gradiente da marca.
+   Fora do @supports o texto ficaria transparente sobre nada: cor sólida antes. */
+.doc-titulo b { color: #b89ef5; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .doc-titulo b {
+    background: linear-gradient(90deg, #83ff8f, #b89ef5, #cc7ff0, #83ff8f);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 }
-.doc-meta { margin: 1rem 0 0; font-size: 0.78rem; color: rgba(255, 255, 255, 0.55); }
+.doc-meta { margin: 1rem 0 0; font-size: 0.78rem; color: rgba(255, 255, 255, 0.68); }
 .doc-kpis {
   display: flex;
   flex-wrap: wrap;
@@ -917,7 +891,7 @@ body.pagina-report main > section {
   font-weight: 600;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.66);
 }
 .doc-kpis .kpi-alerta b { color: #ff9b8f; }
 
@@ -1049,6 +1023,18 @@ body.pagina-report main > section {
   outline: none;
 }
 .doc-filtros input[type="search"]:focus { border-color: #b9c2cf; }
+/* Foco de teclado tem que EXISTIR: chips, nav, seletor e busca */
+.chip-doc:focus-visible,
+.limpar-doc:focus-visible,
+.doc-nav a:focus-visible,
+.doc-nav .doc-mes:focus-visible,
+.doc-filtros input[type="search"]:focus-visible,
+.ferramentas button:focus-visible,
+.ferramentas .botao-texto:focus-visible,
+.ferramentas select:focus-visible {
+  outline: 2px solid #6c63d2;
+  outline-offset: 2px;
+}
 .chips-doc { display: flex; flex-wrap: wrap; gap: 0.3rem; }
 .chip-doc {
   padding: 0.36rem 0.7rem;
@@ -1121,12 +1107,35 @@ body.pagina-report main > section {
   }
   .doc-titulo span, .doc-meta, .doc-kpis span { color: #555 !important; }
   .doc-titulo b { -webkit-text-fill-color: #000; color: #000; }
+  /* Salmão sobre branco é ilegível no papel: alerta vira o vermelho de tela */
+  .doc-kpis .kpi-alerta b { color: #b3261e; }
   .doc-filtros { display: none !important; }
-  .doc-sec { break-inside: avoid; padding-top: 1.2rem; }
+  /* Quebra por bloco, não por seção: "Entregas do mês" pode ter uma página
+     inteira — travar a seção criava vão em branco e estouro. */
+  .doc-sec { padding-top: 1.2rem; }
+  .doc-sec-topo, .doc-bloco, .destaque, .resumo-cartao, .comparativo li,
+  .grupo-produto, .lista-linhas li { break-inside: avoid; }
   .doc-bloco, .destaque, .resumo-cartao { border: 1px solid #e5e5e5; }
+  /* Barras do comparativo são só background — sem isto o papel sai em branco */
+  .comparativo .comp-barra, .comparativo .comp-barra span {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .comparativo .comp-barra { border: 1px solid #e5e5e5; }
 }
 
 @media (max-width: 720px) {
+  /* A pílula estourava 2x a largura da tela e rolava com scrollbar invisível:
+     o seletor de mês ficava fora da tela sem nenhuma pista de que existia. */
+  .doc-nav-int {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 0.15rem;
+    border-radius: 22px;
+  }
+  /* Alvo de toque decente nos controles do documento */
+  .doc-nav a { padding: 0.5rem 0.8rem; }
+  .chip-doc { padding: 0.48rem 0.8rem; }
   .doc-kpis { gap: 0.9rem 1.4rem; }
   .doc-kpis b { font-size: 1.5rem; }
   .comparativo li { grid-template-columns: 7rem minmax(0, 1fr) 2rem 2rem; gap: 0.5rem; font-size: 0.8rem; }

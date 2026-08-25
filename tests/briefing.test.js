@@ -419,3 +419,13 @@ test('htmlReport diz na prosa qual travado está com o prazo estourado', () => {
   assert.ok(html.includes('com o prazo estourado'));
   assert.match(html, /kpi-alerta"><b>1<\/b><span>fora do prazo/);
 });
+
+/* ---- Acessibilidade do HTML gerado ---- */
+test('htmlReport nomeia os controles e expõe estado dos chips', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA });
+  assert.ok(html.includes('aria-label="Seções do report"'));
+  assert.ok(html.includes('aria-label="Mês do report"'));
+  assert.ok(html.includes('aria-label="Buscar entregas'));
+  assert.ok(html.includes('aria-live="polite"'));
+  assert.match(html, /<button type="button" class="chip-doc" aria-pressed="false"/);
+});
