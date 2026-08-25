@@ -290,7 +290,7 @@
       tipos.set(slug, (tipos.get(slug) || 0) + 1);
     }
     const chip = (filtro, valor, rotulo, n) =>
-      `<button type="button" class="chip-doc" aria-pressed="false" data-filtro="${filtro}" data-valor="${esc(valor)}">${esc(rotulo)} <span class="n">${n}</span></button>`;
+      `<button type="button" class="chip-doc" aria-pressed="false" data-filtro="${filtro}" data-valor="${esc(valor)}" title="${esc(rotulo)}"><span>${esc(rotulo)}</span><span class="n">${n}</span></button>`;
     const chips = grupos.map((g) => chip('produto', chaveDe(g.produto), nomeProduto(g.produto), g.itens.length)).join('')
       + [...tipos.entries()].map(([slug, n]) => chip('tipo', slug, ROTULO_CURTO[slug], n)).join('');
     const lista = grupos.map((g) => grupoHtml(g, (r) => (r.aproximada ? '~' : '') + dataCurta(r.quando))).join('');
@@ -300,7 +300,20 @@
       <button type="button" class="limpar-doc" id="limpar-entregas" hidden>limpar</button>
       <span class="conta-doc" id="conta-entregas" aria-live="polite">${regs.length} de ${regs.length}</span>
     </div>
-    <div class="doc-lista doc-bloco" id="lista-entregas">${lista}</div>`;
+    <div class="doc-lista doc-bloco" id="lista-entregas">${lista}</div>
+    ${legendaTipos(tipos)}`;
+  }
+
+  // Uma linha explicando só os tipos que aparecem no mês. 'PBI'/'Feature' são
+  // sopa de letras pra quem nunca abriu o DevOps; a legenda traduz sem encher.
+  const GLOSSARIO = {
+    epic: '<b>Épico</b>, uma frente de produto', feature: '<b>Feature</b>, um bloco de entrega',
+    pbi: '<b>PBI</b>, um item de backlog', bug: '<b>Bug</b>, uma correção', task: '<b>Task</b>, uma tarefa',
+  };
+  function legendaTipos(tipos) {
+    const partes = ['epic', 'feature', 'pbi', 'bug', 'task'].filter((t) => tipos.has(t)).map((t) => GLOSSARIO[t]);
+    if (partes.length < 2) return ''; // um tipo só não precisa de legenda
+    return `<p class="mudo nota-report">${partes.join(' · ')}.</p>`;
   }
 
   function corpoComparativo(meses, escolhido) {
@@ -487,7 +500,7 @@
       if (b.travados.length) {
         secoes.push({
           id: 'decisao', titulo: 'Depende de decisão', rotulo: 'Decisão',
-          intro: 'Itens em estado de bloqueio. Cada um espera uma decisão para voltar a andar.',
+          intro: 'Itens marcados como bloqueados ou em espera no DevOps. O quadro mostra o que está parado — de quem depende cada destrave, o P.O. detalha na reunião.',
           corpo: corpoDecisao(b.travados, agora),
         });
       }

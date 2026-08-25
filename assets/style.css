@@ -1037,6 +1037,10 @@ body.pagina-report main > section {
 }
 .chips-doc { display: flex; flex-wrap: wrap; gap: 0.3rem; }
 .chip-doc {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  max-width: 18rem;
   padding: 0.36rem 0.7rem;
   font: inherit;
   font-size: 0.76rem;
@@ -1046,7 +1050,11 @@ body.pagina-report main > section {
   border: 1px solid var(--doc-linha);
   border-radius: 99px;
   cursor: pointer;
+  white-space: nowrap;
 }
+/* o rótulo trunca; o contador nunca some */
+.chip-doc > :first-child { overflow: hidden; text-overflow: ellipsis; }
+.chip-doc .n { flex: none; }
 .chip-doc:hover { border-color: #c3ccd8; }
 .chip-doc.ativo { background: var(--doc-tinta); border-color: var(--doc-tinta); color: #fff; }
 .chip-doc .n { opacity: 0.55; margin-left: 0.2rem; }

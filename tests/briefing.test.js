@@ -429,3 +429,16 @@ test('htmlReport nomeia os controles e expõe estado dos chips', () => {
   assert.ok(html.includes('aria-live="polite"'));
   assert.match(html, /<button type="button" class="chip-doc" aria-pressed="false"/);
 });
+
+test('htmlReport traduz os tipos numa legenda ao fim das Entregas', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA });
+  const entregas = html.slice(html.indexOf('id="lista-entregas"'), html.indexOf('id="comparativo"'));
+  assert.ok(entregas.includes('item de backlog'));
+  assert.ok(entregas.includes('bloco de entrega') || entregas.includes('frente de produto'));
+});
+
+test('htmlReport não afirma o motivo do bloqueio', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA });
+  assert.ok(!html.includes('espera uma decisão para voltar a andar'));
+  assert.ok(html.includes('o P.O. detalha na reunião'));
+});
