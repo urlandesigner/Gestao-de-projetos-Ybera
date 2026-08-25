@@ -201,7 +201,6 @@
   function capa(escolhido, meta, tiles) {
     return `<header class="doc-capa">
       <div class="doc-limite">
-        <p class="doc-en doc-en-capa">Monthly report</p>
         <h1 class="doc-titulo"><span>Relatório de</span><b>${mesPorExtenso(escolhido)}</b></h1>
         <p class="doc-meta">${esc(meta)}</p>
         ${tiles ? `<ul class="doc-kpis">${tiles}</ul>` : ''}
@@ -318,7 +317,10 @@
   }
 
   // ---- Entrada ----
-  // opcoes: { items, agora, escopo, times, todos, mes }
+  // opcoes: { items, agora, escopo, unidade, todos, mes }
+  // `unidade` é o nome do escopo como o stakeholder o conhece ("Ybera US"). Quem
+  // chama decide: a lista de times do DevOps é jargão interno e não diz nada pra
+  // quem lê o report.
   // Não recebe mais `org`: o documento não tem link pro DevOps. Quem lê não tem
   // acesso, e oferecer um caminho que termina em tela de login é pior que nada.
   // `items` é o recorte que aparece no report. `todos` é o conjunto inteiro
@@ -387,9 +389,8 @@
     ]).filter(Boolean);
 
     const meta = [];
-    if (escopo) meta.push('recorte: ' + escopo);
-    if (o.times && o.times.length) meta.push(o.times.join(', '));
-    meta.push('gerado em ' + dataCurta(agora));
+    if (escopo) meta.push('P.O responsável: ' + escopo);
+    if (o.unidade) meta.push(o.unidade);
 
     const tiles = tile(entregas.length, entregas.length === 1 ? 'entrega' : 'entregas')
       + tile(comProduto.length, comProduto.length === 1 ? 'produto' : 'produtos')

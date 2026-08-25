@@ -39,6 +39,8 @@ test('htmlReport monta as seções do briefing', () => {
   // Cabeçalho de seção é só título e a frase que o explica
   assert.ok(!html.includes('doc-num'), 'numeral gigante saiu do cabeçalho');
   assert.ok(!html.includes('Executive summary'), 'rótulo em inglês saiu das seções');
+  assert.ok(!html.includes('Monthly report'), 'e saiu da capa também');
+  assert.ok(!html.includes('doc-en'), 'nenhum rótulo em inglês sobrou no documento');
   assert.match(html, /<h2>Resumo<\/h2>\s*<p class="doc-intro">/);
 });
 
@@ -292,4 +294,24 @@ test('htmlReport limita o comparativo ao ano corrente', () => {
   // mês mais antigo da lista e mostraria "—".
   assert.match(comp, /comp-delta[^>]*>=</);
   assert.ok(!comp.includes('>—<'));
+});
+
+// A linha de identificação do documento: quem responde e por qual escopo. Lista
+// de times do DevOps é organograma interno e não entra.
+test('htmlReport identifica o PO e a unidade na capa', () => {
+  const { html } = B.htmlReport({
+    items: base(), agora: AGORA, escopo: 'Urlan Dipre', unidade: 'Ybera US',
+  });
+  const capa = html.slice(html.indexOf('doc-meta'), html.indexOf('</p>', html.indexOf('doc-meta')));
+  assert.ok(capa.includes('P.O responsável: Urlan Dipre'));
+  assert.ok(capa.includes('Ybera US'));
+  assert.ok(!capa.includes('recorte'));
+  assert.ok(!capa.includes('gerado em'));
+});
+
+test('htmlReport omite o P.O quando não há recorte por responsável', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, unidade: 'Ybera US' });
+  const capa = html.slice(html.indexOf('doc-meta'), html.indexOf('</p>', html.indexOf('doc-meta')));
+  assert.ok(!capa.includes('P.O responsável'));
+  assert.ok(capa.includes('Ybera US'));
 });

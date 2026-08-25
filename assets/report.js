@@ -15,6 +15,11 @@
 const C = window.CentralCore;
 const A = window.CentralApi;
 const B = window.CentralBriefing;
+// Como o escopo se chama pra quem lê o report. A lista de times do DevOps
+// ("Squad Ecommerce, Vertical Ecommerce e Growth") é organograma interno — não
+// diz nada a um diretor, e ainda muda quando o time se reorganiza.
+const UNIDADE = 'Ybera US';
+
 const LS = { config: 'central.config', pat: 'central.pat', filtros: 'central.filtros', cache: 'central.cache' };
 const $ = (id) => document.getElementById(id);
 
@@ -58,10 +63,9 @@ const st = {
   mes: null,       // null = mês corrente
   fTipos: new Set(),     // filtro do bloco de entregas
   fProdutos: new Set(),
-  // Modo leitura: o dado veio do link, não do DevOps. Aí times, recorte e a data
-  // do report saem do pacote — não há config nem PAT neste navegador.
+  // Modo leitura: o dado veio do link, não do DevOps. Aí recorte e data do report
+  // saem do pacote — não há config nem PAT neste navegador.
   leitura: false,
-  times: [],
   escopo: '',
   agora: 0,
 };
@@ -214,7 +218,7 @@ function render() {
     todos: st.items.concat(st.pais), // o produto mora no pai — de outro dono, ou de outra área
     agora: st.leitura ? st.agora : Date.now(),
     escopo: st.leitura ? st.escopo : respAtivo(),
-    times: st.leitura ? st.times : st.config.projects.filter((p) => !p.hidden).map((p) => p.teamName),
+    unidade: UNIDADE,
     mes: st.mes,
   });
   st.fTipos.clear(); // documento novo, chips novos: o estado anterior não vale
@@ -362,7 +366,6 @@ async function gravarLink() {
       v: 1,
       em: Date.now(),
       escopo: respAtivo(),
-      times: st.config.projects.filter((p) => !p.hidden).map((p) => p.teamName),
       mes: st.mes, // quem abrir o link cai no mês que eu estava vendo
       items: enxugar(mostrados),
       ancestrais: cadeiaDeProdutos(mostrados, st.items.concat(st.pais)),
@@ -419,7 +422,6 @@ async function lerDoLink() {
     st.items = pacote.items || [];
     st.pais = pacote.ancestrais || [];
     st.escopo = pacote.escopo || '';
-    st.times = pacote.times || [];
     st.agora = pacote.em || Date.now();
     st.mes = pacote.mes || null;
     render(); // daqui pra frente o seletor de mês redesenha do próprio pacote
