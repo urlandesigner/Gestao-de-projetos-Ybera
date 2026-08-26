@@ -938,21 +938,7 @@ body.pagina-report main > section {
     color: transparent;
   }
 }
-/* Manchete: a punchline do mês, logo abaixo do título. É o que o diretor lê nos
-   primeiros segundos — vem antes da identidade e dos números. */
-.doc-manchete {
-  margin: 0.9rem 0 0;
-  max-width: 44rem;
-  font-size: 1.05rem;
-  line-height: 1.5;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.92);
-}
-.doc-manchete b { font-weight: 800; color: #fff; }
 .doc-meta { margin: 0.7rem 0 0; font-size: 0.78rem; color: rgba(255, 255, 255, 0.68); }
-/* Recorte: nota de rodapé da capa — de quem é o report, pra não se ler como o
-   total da unidade. Discreta, mas legível (AA sobre o fundo escuro). */
-.doc-recorte { margin: 0.9rem 0 0; font-size: 0.76rem; color: rgba(255, 255, 255, 0.66); }
 .doc-kpis {
   display: flex;
   flex-wrap: wrap;

@@ -136,16 +136,20 @@
   // dados não mostram.
   // "3 PBIs" quando um deles tem selo de Bug na lista logo abaixo é o documento
   // se contradizendo. A contagem usa o tipo real do item, não o nível.
+  // Vocabulário de negócio, não de ferramenta: o stakeholder não sabe (nem
+  // precisa saber) o que é feature, PBI ou DevOps. A contagem por trás continua
+  // pelo tipo real do item — só o nome que aparece na frase é que muda.
   const NOME_TIPO = {
-    epic: ['épico', 'épicos'], feature: ['feature', 'features'], pbi: ['PBI', 'PBIs'],
-    bug: ['bug', 'bugs'], task: ['task', 'tasks'], outro: ['item de outro tipo', 'itens de outros tipos'],
+    epic: ['frente', 'frentes'], feature: ['funcionalidade nova', 'funcionalidades novas'],
+    pbi: ['melhoria', 'melhorias'], bug: ['correção', 'correções'], task: ['tarefa', 'tarefas'],
+    outro: ['item de outro tipo', 'itens de outros tipos'],
   };
   function enumerar(partes) {
     if (partes.length <= 1) return partes.join('');
     return partes.slice(0, -1).join(', ') + ' e ' + partes[partes.length - 1];
   }
 
-  function paragrafoVolume(m, escopo) {
+  function paragrafoVolume(m) {
     const r = m.resumo || {};
     const porTipo = new Map();
     for (const reg of m.itens || []) {
@@ -155,10 +159,11 @@
     const ordem = ['epic', 'feature', 'pbi', 'bug', 'task', 'outro'];
     const niveis = ordem.filter((t) => porTipo.get(t))
       .map((t) => porTipo.get(t) + ' ' + NOME_TIPO[t][porTipo.get(t) > 1 ? 1 : 0]);
-    const deQuem = escopo ? ` no nome de <b>${esc(escopo)}</b>` : '';
-    const frases = [`Em ${mesPorExtenso(m.mes).toLowerCase()}, <b>${plural(m.total, 'item', 'itens')}</b>${deQuem} ${m.total === 1 ? 'foi concluído' : 'foram concluídos'} — ${enumerar(niveis)}.`];
+    // Sem "no nome de X": o P.O. já é quem o report inteiro é sobre — repetir
+    // o nome aqui seria eco (ele mora só na capa, uma vez).
+    const frases = [`Em ${mesPorExtenso(m.mes).toLowerCase()}, <b>${plural(m.total, 'item', 'itens')}</b> ${m.total === 1 ? 'foi concluído' : 'foram concluídos'} — ${enumerar(niveis)}.`];
     if (r.delta === null || r.delta === undefined) {
-      frases.push('É o registro mais antigo que o DevOps guarda para este escopo.');
+      frases.push('É o mês mais antigo com registro disponível.');
     } else if (r.delta > 0) {
       frases.push(`São <b>${r.delta} a mais</b> que em ${mesPorExtenso(r.mesAnterior).toLowerCase()}.`);
     } else if (r.delta < 0) {
@@ -246,11 +251,11 @@
       frases.push('Frentes com item atrasado: ' + enumerar(lista) + '.');
     }
     if (b.travados.length) {
-      const velho = b.travados[0];
-      const partes = [];
-      if (velho.dias != null) partes.push(`o mais antigo sem movimento há ${velho.dias} ${velho.dias === 1 ? 'dia' : 'dias'}`);
-      if (travadosVencidos) partes.push(b.travados.length === 1 ? 'com o prazo estourado' : `${travadosVencidos} deles com o prazo estourado`);
-      const tempo = partes.length ? ' — ' + partes.join(', ') : '';
+      // Sem "sem movimento há N dias": pra um stakeholder soa como o time
+      // emperrado, quando o ponto é só que a decisão dele destrava o item.
+      const tempo = travadosVencidos
+        ? ' — ' + (b.travados.length === 1 ? 'com o prazo estourado' : `${travadosVencidos} deles com o prazo estourado`)
+        : '';
       frases.push(`<b>${plural(b.travados.length, 'item está travado', 'itens estão travados')}</b>${tempo}. ${b.travados.length === 1 ? 'É o ponto que depende' : 'São os pontos que dependem'} de decisão.`);
     }
     return frases.join(' ');
@@ -277,41 +282,12 @@
     return `<li${alerta && n ? ' class="kpi-alerta"' : ''}><b>${n}</b><span>${esc(rotulo)}</span></li>`;
   }
 
-  // Manchete: a punchline do mês. Foca no que os KPIs NÃO dizem — o produto que
-  // puxou as entregas e a ação que depende do leitor (decisão). Volume e "fora do
-  // prazo" ficam nos tiles logo abaixo; repeti-los aqui seria eco.
-  // Mês fechado não fala de ação: situação é sempre do agora, não do passado.
-  function manchete(mesChave, fechado, nEntregas, topNome, nTravados) {
-    const mes = mesPorExtenso(mesChave).toLowerCase().replace(/ de \d{4}$/, '');
-    const frases = [];
-    if (nEntregas > 0) {
-      frases.push(topNome
-        ? `Em ${mes}, <b>${esc(topNome)}</b> na frente das entregas.`
-        : `Em ${mes}, ${plural(nEntregas, 'entrega concluída', 'entregas concluídas')}.`);
-    } else {
-      frases.push(`Em ${mes}, nenhuma entrega registrada ainda.`);
-    }
-    if (!fechado && nTravados) {
-      frases.push(`<b>${nTravados}</b> ${nTravados === 1 ? 'item depende' : 'itens dependem'} da sua decisão.`);
-    }
-    return frases.join(' ');
-  }
-
-  // Recorte: deixa explícito que o report é de UM responsável, não o total da
-  // unidade — senão "Ybera US" na capa se lê como se fosse tudo.
-  function recorte(escopo, unidade) {
-    if (escopo) return `Recorte: entregas sob responsabilidade de ${esc(escopo)}${unidade ? ' em ' + esc(unidade) : ''} — não o total da unidade.`;
-    return `Recorte: todas as entregas${unidade ? ' de ' + esc(unidade) : ''}.`;
-  }
-
-  function capa(escolhido, meta, tiles, frase, notaRecorte) {
+  function capa(escolhido, meta, tiles) {
     return `<header class="doc-capa">
       <div class="doc-limite">
         <h1 class="doc-titulo"><span>Relatório de</span><b>${esc(mesPorExtenso(escolhido))}</b></h1>
-        ${frase ? `<p class="doc-manchete">${frase}</p>` : ''}
         ${meta ? `<p class="doc-meta">${esc(meta)}</p>` : ''}
         ${tiles ? `<ul class="doc-kpis">${tiles}</ul>` : ''}
-        ${notaRecorte ? `<p class="doc-recorte">${notaRecorte}</p>` : ''}
       </div>
     </header>`;
   }
@@ -511,10 +487,10 @@
     // qual responde o quê. `alerta` pinta o rótulo do cartão que pede atenção,
     // sem ícone nem número: só o mesmo acento que "Já passou do prazo" já usa.
     const cartoesResumo = (fechado ? [
-      { rotulo: 'Volume', texto: mesAlvo ? paragrafoVolume(mesAlvo, escopo) : 'Nada foi concluído neste mês.' },
+      { rotulo: 'Volume', texto: mesAlvo ? paragrafoVolume(mesAlvo) : 'Nada foi concluído neste mês.' },
       { rotulo: 'Onde caiu o esforço', texto: mesAlvo ? paragrafoProdutos(mesAlvo) : '' },
     ] : [
-      { rotulo: 'Volume', texto: mesAlvo ? paragrafoVolume(mesAlvo, escopo) : 'Nada foi concluído neste mês até agora.' },
+      { rotulo: 'Volume', texto: mesAlvo ? paragrafoVolume(mesAlvo) : 'Nada foi concluído neste mês até agora.' },
       { rotulo: 'Onde caiu o esforço', texto: mesAlvo ? paragrafoProdutos(mesAlvo) : '' },
       { rotulo: 'Em curso', texto: paragrafoEmCurso(bVivo, b.prazos.atrasados.length) },
       // Triagem de risco sobre bVivo (sem o travado): o travado atrasado já é
@@ -527,12 +503,6 @@
     if (escopo) meta.push('P.O responsável: ' + escopo);
     if (o.unidade) meta.push(o.unidade);
 
-    // Manchete e recorte da capa: o produto em destaque é o de maior volume do
-    // mês (comProduto já vem ordenado por volume em porProduto).
-    const topNome = comProduto.length ? comProduto[0].produto.titulo : '';
-    const frase = manchete(escolhido, fechado, entregas.length, topNome, b.travados.length);
-    const notaRecorte = recorte(escopo, o.unidade);
-
     const tiles = tile(entregas.length, entregas.length === 1 ? 'entrega' : 'entregas')
       + tile(comProduto.length, comProduto.length === 1 ? 'produto' : 'produtos')
       // "Fora do prazo" é pergunta de prazo, não de fluxo: um item travado com
@@ -543,7 +513,7 @@
     const secoes = [];
     secoes.push({
       id: 'resumo', titulo: 'Resumo', rotulo: 'Resumo',
-      intro: 'O que o mês registrou, lido dos itens do Azure DevOps. Nenhuma afirmação aqui vai além do que os dados mostram.',
+      intro: 'O que o mês registrou. Nenhuma afirmação aqui vai além do que os dados mostram.',
       // Um cartão por parágrafo, lado a lado: cada um responde uma pergunta
       // diferente (volume, onde caiu, o que flui, o que trava). No mês corrente são
       // até 4 — o grid fecha 2×2 e nenhum card vira paredão. Num bloco só, viravam
@@ -606,7 +576,7 @@
       .map((x) => `<a href="#${x.id}">${esc(x.rotulo)}</a>`).join('')}${seletorMes}</div></nav>`;
 
     const html = `<div class="report-doc">
-      ${capa(escolhido, meta.join(' · '), tiles, frase, notaRecorte)}
+      ${capa(escolhido, meta.join(' · '), tiles)}
       ${nav}
       ${secoes.map((x) => secaoHtml(x)).join('')}
     </div>`;

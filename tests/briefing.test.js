@@ -46,11 +46,15 @@ test('htmlReport monta as seções do briefing', () => {
 
 test('htmlReport escreve a prosa com volume, comparação e situação', () => {
   const { html } = B.htmlReport({ items: base(), agora: AGORA, org: 'https://x/y', escopo: 'Urlan Dipre' });
-  assert.ok(html.includes('no nome de <b>Urlan Dipre</b>'));
+  // Sem "no nome de X": o P.O. é quem o report inteiro é sobre, repetir seria eco.
+  assert.ok(!html.includes('no nome de'));
   assert.ok(/Em agosto de 2026, <b>2 itens<\/b>/.test(html));       // 2 fechados em agosto
   assert.ok(html.includes('<b>1 a mais</b> que em julho de 2026'));  // 1 fechado em julho
   assert.ok(html.includes('em execução agora'));
-  assert.ok(html.includes('sem movimento há 31 dias'));
+  assert.ok(html.includes('item está travado'));
+  // "Sem movimento há N dias" soa como o time emperrado — não é o que a
+  // decisão do P.O. resolve, então saiu da prosa.
+  assert.ok(!html.includes('sem movimento'));
   // O único atrasado do recorte está travado: ele conta em "Depende de decisão",
   // não em "Próximos passos" — e a prosa não pode contá-lo duas vezes.
   assert.ok(!html.includes('já passou do prazo'));
@@ -226,29 +230,17 @@ test('htmlReport usa o.decisoes (link) no pedido de decisão', () => {
   assert.ok(decisao.includes('Pedido assado no link.'));
 });
 
-// Etapa #4 (refinada): a manchete lidera com o produto top e a ação (decisão);
-// contagem e "fora do prazo" ficam só nos KPIs, sem eco.
-test('htmlReport monta a manchete e a nota de recorte na capa', () => {
+// Manchete e nota de recorte saíram da capa a pedido: a capa fica só com
+// título, "P.O responsável" e os KPIs — sem prosa duplicando o que os
+// números já dizem.
+test('htmlReport não tem manchete nem nota de recorte na capa', () => {
   const { html } = B.htmlReport({ items: base(), agora: AGORA, escopo: 'Urlan Dipre', unidade: 'Ybera US' });
   const capa = html.slice(0, html.indexOf('doc-nav'));
-  assert.ok(capa.includes('Em agosto, <b>Nova PDP USA</b> na frente das entregas.'), 'manchete lidera com o produto top');
-  assert.ok(capa.includes('depende da sua decisão'), 'manchete cita a ação de decisão');
-  assert.ok(!capa.includes('entregas</b>'), 'não repete a contagem em negrito (papel dos KPIs)');
-  assert.ok(capa.includes('Recorte: entregas sob responsabilidade de Urlan Dipre em Ybera US — não o total da unidade.'), 'nota de recorte de um responsável');
-});
-
-// Etapa #7: sem responsável ativo, o recorte é o total da unidade.
-test('htmlReport: recorte sem responsável vira "todas as entregas"', () => {
-  const { html } = B.htmlReport({ items: base(), agora: AGORA, unidade: 'Ybera US' });
-  assert.ok(html.includes('Recorte: todas as entregas de Ybera US.'));
-});
-
-// Mês fechado (passado) não fala de ação: situação é sempre do mês corrente.
-test('htmlReport: manchete de mês fechado não cita decisão nem prazo', () => {
-  const { html } = B.htmlReport({ items: base(), agora: AGORA, mes: '2026-07' });
-  const capa = html.slice(0, html.indexOf('doc-nav'));
-  assert.ok(capa.includes('Em julho'));
-  assert.ok(!capa.includes('depende da sua decisão'), 'mês passado não pede ação na manchete');
+  assert.ok(!capa.includes('doc-manchete'));
+  assert.ok(!capa.includes('doc-recorte'));
+  assert.ok(!capa.includes('na frente das entregas'));
+  assert.ok(!capa.includes('Recorte:'));
+  assert.ok(capa.includes('P.O responsável: Urlan Dipre'), 'meta com o responsável continua na capa');
 });
 
 // Etapa #6: triagem de risco derivada — nomeia as frentes com item atrasado.
@@ -510,15 +502,19 @@ test('htmlReport não diz "nada registrado" quando há prazos vivos', () => {
   assert.ok(html.includes('Planejado e vencido'));
 });
 
-test('htmlReport conta Bug como bug na prosa, com "e" final', () => {
+// Vocabulário de negócio, não de ferramenta: o stakeholder não sabe o que é
+// PBI, feature ou bug — a contagem por trás continua pelo tipo real do item.
+test('htmlReport conta por tipo real na prosa, em vocabulário de negócio', () => {
   const itens = [
-    it(1, 'Product Backlog Item', 'Done', 'PBI um', null, null, 2),
-    it(2, 'Bug', 'Done', 'Bug um', null, null, 3),
-    it(3, 'Bug', 'Done', 'Bug dois', null, null, 4),
+    it(1, 'Product Backlog Item', 'Done', 'Item um', null, null, 2),
+    it(2, 'Bug', 'Done', 'Item dois', null, null, 3),
+    it(3, 'Bug', 'Done', 'Item três', null, null, 4),
   ];
   const { html } = B.htmlReport({ items: itens, agora: AGORA });
-  assert.ok(html.includes('1 PBI e 2 bugs'), 'contagem por tipo real');
-  assert.ok(!html.includes('3 PBIs'));
+  const resumo = html.slice(html.indexOf('id="resumo"'), html.indexOf('id="entregas"'));
+  assert.ok(resumo.includes('1 melhoria e 2 correções'), 'contagem por tipo real, em vocabulário de negócio');
+  assert.ok(!resumo.includes('3 melhorias'));
+  assert.ok(!resumo.includes('PBI') && !resumo.includes('Bug'), 'sem jargão de DevOps na prosa do resumo');
 });
 
 test('htmlReport não diz "todo o esforço" quando há item sem produto', () => {
