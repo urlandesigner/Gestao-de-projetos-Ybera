@@ -549,7 +549,7 @@
       if (b.travados.length) {
         secoes.push({
           id: 'decisao', titulo: 'Depende de decisão', rotulo: 'Decisão',
-          intro: 'Itens marcados como bloqueados ou em espera no DevOps. O quadro mostra o que está parado — de quem depende cada destrave, o P.O. detalha na reunião.',
+          intro: 'Itens marcados como bloqueados ou em espera. O quadro mostra o que está parado e de quem depende cada destrave.',
           corpo: corpoDecisao(b.travados, agora, o.decisoes || null),
         });
       }

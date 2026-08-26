@@ -593,5 +593,9 @@ test('htmlReport não põe selo de tipo nem legenda nas linhas de Entregas', () 
 test('htmlReport não afirma o motivo do bloqueio', () => {
   const { html } = B.htmlReport({ items: base(), agora: AGORA });
   assert.ok(!html.includes('espera uma decisão para voltar a andar'));
-  assert.ok(html.includes('o P.O. detalha na reunião'));
+  // Sem "DevOps" nem "o P.O. detalha na reunião": vocabulário de negócio,
+  // sem prometer um evento que pode nem existir.
+  assert.ok(!html.includes('DevOps'));
+  assert.ok(!html.includes('detalha na reunião'));
+  assert.ok(html.includes('de quem depende cada destrave'));
 });
