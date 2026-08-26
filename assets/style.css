@@ -991,7 +991,7 @@ body.pagina-report main > section {
   white-space: nowrap;
   transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
-.doc-nav a:hover { background: #fff; color: var(--doc-tinta); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
+.doc-nav a:hover { background: #1e1e20; color: #fff; }
 
 /* Seções numeradas */
 /* --nav-alt vem do JS (mede a pílula de verdade): ela quebra em 2 linhas no
