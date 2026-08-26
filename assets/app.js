@@ -551,7 +551,7 @@ function renderFuturo() {
       const linhas = f.itens.map((it) => {
         const fl = it.fields || {};
         const link = C.deepLinks(state.config.org, it.projeto, '').workItem(it.id);
-        return `<li><a href="${link}" target="_blank" rel="noopener">
+        return `<li><a class="item-linha" href="${link}" target="_blank" rel="noopener">
           <span class="badge-tipo tipo-epic">Épico</span>
           <span class="titulo">${escapeHtml(fl['System.Title'] || ('item #' + it.id))}</span>
           <span class="quando">${janela(fl['Microsoft.VSTS.Scheduling.StartDate'], fl['Microsoft.VSTS.Scheduling.TargetDate'])}</span>
