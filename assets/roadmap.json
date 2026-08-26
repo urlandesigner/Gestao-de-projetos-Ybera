@@ -1,0 +1,19 @@
+{
+  "atualizadoEm": "2026-08-26",
+  "itens": [
+    { "titulo": "Nova PDP USA", "inicio": "2026-07-01", "fim": "2026-08-31", "status": "concluido" },
+    { "titulo": "Ajustes Loja USA Compliance Google", "inicio": "2026-07-01", "fim": "2026-09-30" },
+    { "titulo": "Tradução", "inicio": "2026-08-01", "fim": "2026-09-30" },
+    { "titulo": "Nova Homepage USA", "inicio": "2026-08-15", "fim": "2026-09-30" },
+    { "titulo": "Novo Design System Shopify", "inicio": "2026-09-01", "fim": "2026-09-30" },
+    { "titulo": "App de Reviews", "inicio": "2026-09-01", "fim": "2026-09-30" },
+    { "titulo": "Novo Tema da Loja USA/Global", "inicio": "2026-10-01", "fim": "2026-12-31" },
+    { "titulo": "App Subscription", "inicio": "2026-10-01", "fim": "2026-10-31" },
+    { "titulo": "Loja Interna USA - Shopify", "inicio": "2026-11-01", "fim": "2027-01-31" },
+    { "titulo": "App Rewards Loyalty (Yotpo)", "inicio": "2026-11-01", "fim": "2026-11-30" },
+    { "titulo": "Loja da Influencer - USA", "inicio": "2027-01-01", "fim": "2027-04-30" },
+    { "titulo": "App Shopify Quiz Ybera AI - USA", "inicio": "2027-01-01", "fim": "2027-02-28" },
+    { "titulo": "App Shopify - Ybera Reviews - USA", "inicio": "2027-03-01", "fim": "2027-04-30" },
+    { "titulo": "Ybera Europa - Crossborder USA", "inicio": "2027-03-01", "fim": "2027-06-30" }
+  ]
+}

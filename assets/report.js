@@ -70,6 +70,7 @@ const st = {
   leitura: false,
   escopo: '',
   agora: 0,
+  roadmap: [], // vem de assets/roadmap.json (PO) ou do link (leitura) — nunca do DevOps
 };
 
 function respAtivo() { return st.resp === null ? (st.usuario || '') : st.resp; }
@@ -85,6 +86,38 @@ function mensagemDeErro(e) {
   if (e instanceof A.AuthError) return 'PAT recusado — renove o token na Central.';
   if (e instanceof A.NetworkError) return 'Falha de rede — confira a conexão.';
   return e.message;
+}
+
+/* ---------- Roadmap: única peça que não vem do DevOps ---------- */
+// Vive em assets/roadmap.json, escrito à parte — o Notion não pode ser
+// chamado do navegador (sem CORS liberado), e este report não guarda token
+// de Notion nenhum. O mesmo saneamento serve os dois caminhos que alimentam
+// st.roadmap: o arquivo (carregarRoadmap, abaixo) e o link (em lerDoLink).
+// O arquivo é meu, mas tratar os dois como dado que pode vir torto é grátis
+// e evita NaN se algum dia eu editar a mão e errar uma data.
+function saneRoadmapItens(lista) {
+  const dataValida = (s) => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s)
+    && !Number.isNaN(Date.parse(s + 'T00:00:00Z'));
+  return (Array.isArray(lista) ? lista : [])
+    .filter((x) => x && dataValida(x.inicio) && dataValida(x.fim)
+      && Date.parse(x.inicio + 'T00:00:00Z') <= Date.parse(x.fim + 'T00:00:00Z'))
+    .map((x) => ({
+      titulo: String(x.titulo || '').slice(0, 200) || 'Sem título',
+      inicio: x.inicio,
+      fim: x.fim,
+      status: x.status === 'concluido' ? 'concluido' : null,
+    }));
+}
+
+// Independente do DevOps: busca uma vez, no boot, e não repete a cada render
+// nem a cada troca de mês — o roadmap não muda com o seletor de mês.
+async function carregarRoadmap() {
+  try {
+    const resp = await fetch('assets/roadmap.json', { cache: 'no-store' });
+    if (!resp.ok) return; // arquivo ainda não existe: seção some, sem quebrar o resto
+    const dado = await resp.json();
+    st.roadmap = saneRoadmapItens(dado.itens);
+  } catch (e) { /* rede falhou ou JSON inválido: mesma degradação — sem roadmap, sem erro */ }
 }
 
 function renderBadge() {
@@ -278,6 +311,9 @@ function render() {
     // inteiro não viaja). Ao vivo (PO), ficam undefined e o briefing calcula.
     produtos: st.leitura ? st.produtos : undefined,
     decisoes: st.leitura ? st.decisoes : undefined,
+    // Roadmap não bifurca por modo: nos dois casos já chega pronto em
+    // st.roadmap (do arquivo estático ou do link), nunca recalculado aqui.
+    roadmap: st.roadmap,
     agora: st.leitura ? st.agora : Date.now(),
     escopo: st.leitura ? st.escopo : respAtivo(),
     unidade: UNIDADE,
@@ -464,6 +500,7 @@ async function gravarLink() {
       ancestrais: cadeiaDeProdutos(mostrados, st.items.concat(st.pais)),
       produtos: produtosDoLink(mostrados), // objetivo + rumo, prontos
       decisoes: decisoesDoLink(mostrados), // pedido de decisão por item travado
+      roadmap: st.roadmap, // já veio saneado de assets/roadmap.json
     };
     const carga = '#r=' + await comprimir(JSON.stringify(pacote));
     if (minha !== geracaoLink) return; // outra gravação começou depois: ela manda
@@ -555,6 +592,7 @@ async function lerDoLink() {
     st.pais = sanear(pacote.ancestrais);
     st.produtos = saneProdutos(pacote.produtos);
     st.decisoes = saneMapaTexto(pacote.decisoes);
+    st.roadmap = saneRoadmapItens(pacote.roadmap);
     st.escopo = pacote.escopo || '';
     st.agora = pacote.em || Date.now();
     st.mes = pacote.mes || null;
@@ -579,6 +617,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     temporizadorRedimensiona = setTimeout(medirAlturaNav, 150);
   });
   if (!(st.config && st.pat) && await lerDoLink()) return;
+  // Não bloqueia o primeiro render nem espera o DevOps: o arquivo é local e
+  // pequeno, chega rápido, e quando chega o render() de novo é barato.
+  carregarRoadmap().then(render);
   $('atualizar').addEventListener('click', carregar);
   $('copiar').addEventListener('click', copiarLink);
   $('resp-global').addEventListener('change', async () => {

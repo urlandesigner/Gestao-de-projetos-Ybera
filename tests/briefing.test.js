@@ -599,3 +599,70 @@ test('htmlReport não afirma o motivo do bloqueio', () => {
   assert.ok(!html.includes('detalha na reunião'));
   assert.ok(html.includes('de quem depende cada destrave'));
 });
+
+/* ---- Roadmap: única seção cujo dado não vem do DevOps ---- */
+
+test('htmlReport não tem seção de roadmap sem dado', () => {
+  const semRoadmap = B.htmlReport({ items: base(), agora: AGORA });
+  assert.ok(!semRoadmap.html.includes('id="roadmap"'));
+  const vazio = B.htmlReport({ items: base(), agora: AGORA, roadmap: [] });
+  assert.ok(!vazio.html.includes('id="roadmap"'));
+  assert.ok(!vazio.html.includes('>Roadmap<'), 'sem item, some da nav também');
+});
+
+test('htmlReport monta o roadmap ordenado por início, com escala e barras em %', () => {
+  // Escala: jan/26 (dia 1) a abr/26 (dia 1) — 90 dias de vão (jan+fev+mar 2026).
+  const itens = [
+    { titulo: 'B depois', inicio: '2026-02-01', fim: '2026-03-31' },
+    { titulo: 'A antes', inicio: '2026-01-15', fim: '2026-02-14' },
+  ];
+  // AGORA (20 de agosto) fica bem depois do vão de jan-mar: sem marca de hoje.
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, roadmap: itens });
+  const sec = html.slice(html.indexOf('id="roadmap"'), html.length);
+  assert.ok(sec.includes('>Roadmap<'), 'seção e nav têm o rótulo');
+  assert.ok(html.includes('<a href="#roadmap">Roadmap</a>'));
+  // Ordenado por início: "A antes" (15/jan) some antes de "B depois" (01/fev)
+  assert.ok(sec.indexOf('A antes') < sec.indexOf('B depois'), 'ordenado por início, não pela ordem de entrada');
+  // Escala em meses inteiros, com o mês mais cedo em 0%
+  assert.ok(sec.includes('style="left:0.00%">jan/26<'));
+  assert.ok(sec.includes('>fev/26<') && sec.includes('>mar/26<'));
+  assert.ok(!sec.includes('>abr/26<'), 'abril é só a borda de fechamento, não vira rótulo');
+  // Barra de "A antes": início 14 dias após jan/1 (15,56%), 30 dias de largura (33,33%)
+  assert.ok(sec.includes('left:15.56%;width:33.33%'));
+  // Barra de "B depois": início 31 dias após jan/1 (34,44%), 58 dias de largura (64,44%)
+  assert.ok(sec.includes('left:34.44%;width:64.44%'));
+  assert.ok(!sec.includes('roadmap-hoje'), 'agora (agosto) fica fora do vão jan-mar');
+});
+
+test('htmlReport marca a linha de hoje quando cai dentro do vão do roadmap', () => {
+  const itens = [{ titulo: 'X', inicio: '2026-01-01', fim: '2026-01-31' }];
+  // Vão do roadmap: jan/26 inteiro (31 dias). 16 de jan = 15 dias após o início.
+  const meioDeJaneiro = Date.parse('2026-01-16T00:00:00Z');
+  const { html } = B.htmlReport({ items: base(), agora: meioDeJaneiro, roadmap: itens });
+  assert.ok(html.includes('roadmap-hoje" style="--x:48.39%"')); // 15/31
+});
+
+test('htmlReport sinaliza item concluído no roadmap, sem afirmar nada dos que não têm status', () => {
+  const itens = [
+    { titulo: 'Terminou', inicio: '2026-01-01', fim: '2026-01-31', status: 'concluido' },
+    { titulo: 'Em aberto', inicio: '2026-02-01', fim: '2026-02-28' },
+  ];
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, roadmap: itens });
+  assert.equal((html.match(/class="roadmap-feito"/g) || []).length, 1, 'só o item concluído leva o selo');
+  assert.equal((html.match(/roadmap-barra-feita/g) || []).length, 1, 'só a barra do item concluído muda de cor');
+  assert.ok(html.includes('Terminou <span class="roadmap-feito">concluído</span>'));
+  assert.ok(!html.includes('Em aberto <span class="roadmap-feito">'));
+});
+
+test('htmlReport escapa título forjado no roadmap', () => {
+  const itens = [{ titulo: '"><img src=x onerror=alert(1)>', inicio: '2026-01-01', fim: '2026-01-31' }];
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, roadmap: itens });
+  assert.ok(!html.includes('<img'));
+});
+
+test('htmlReport mantém o roadmap em mês fechado (passado) — ele não é do mês', () => {
+  const itens = [{ titulo: 'Sempre visível', inicio: '2026-01-01', fim: '2026-01-31' }];
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, mes: '2026-07', roadmap: itens });
+  assert.ok(html.includes('id="roadmap"'));
+  assert.ok(html.includes('Sempre visível'));
+});

@@ -1175,6 +1175,86 @@ body.pagina-report main > section {
 .comparativo .comp-atual { background: #f3f4f8; }
 .comparativo .comp-atual .comp-mes { font-weight: 800; color: var(--doc-tinta); }
 
+/* Roadmap: única seção cujo dado não vem do DevOps (vem de assets/roadmap.json,
+   lido à parte — ver report.js). Título à esquerda, trilha à direita, escala de
+   meses no topo da trilha — as duas colunas compartilham a mesma largura de
+   trilha em toda linha, senão a marca de "hoje" desalinha das barras. Rola
+   dentro de si (nunca a página) quando o período não cabe na largura. */
+.roadmap-wrap { overflow-x: auto; }
+.roadmap-grade {
+  display: grid;
+  grid-template-columns: minmax(150px, 15rem) 1fr;
+  column-gap: 1rem;
+  row-gap: 0.6rem;
+  min-width: 620px;
+  padding-top: 0.15rem;
+  /* Sem isto, .roadmap-hoje (position:absolute) escapa pro ancestral
+     posicionado mais próximo — que pode ser a página inteira — em vez de
+     ficar contido na área do grid. */
+  position: relative;
+}
+.roadmap-escala { grid-column: 2; position: relative; height: 1.15rem; }
+.roadmap-escala span {
+  position: absolute;
+  top: 0;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--doc-mudo);
+  white-space: nowrap;
+}
+.roadmap-item { display: contents; }
+/* Título e trilha esticam (align-self padrão do grid) pra ocupar a MESMA
+   altura de linha — a que o conteúdo mais alto pedir (um título de duas
+   linhas, por exemplo). Sem isso o divisor de cada um fica numa altura
+   diferente e a linha sai quebrada em vez de reta. */
+.roadmap-titulo {
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--doc-linha);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+.roadmap-feito {
+  margin-left: 0.35rem;
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #15794a;
+}
+.roadmap-trilha {
+  grid-column: 2;
+  position: relative;
+  min-height: 1.3rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--doc-linha);
+}
+.roadmap-barra {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 0.8rem;
+  min-width: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #7c5cff, #34d399);
+}
+.roadmap-barra-feita { background: #b9c0cc; }
+/* Abrange da escala até a última linha (grid-row 1/-1): left/right:0 trava a
+   largura na coluna da trilha, pra --x (setado por linha) valer o mesmo % que
+   as barras. Sem isso um item de grid absoluto com span de linhas não tem
+   largura previsível entre navegadores. */
+.roadmap-hoje { position: absolute; grid-column: 2; grid-row: 1 / -1; inset: 0; pointer-events: none; }
+.roadmap-hoje::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--x, 0%);
+  border-left: 1px dashed var(--erro);
+}
+
 /* Impressão do documento: sem tinta desperdiçada na capa */
 @media print {
   .doc-nav { display: none !important; }
@@ -1197,11 +1277,13 @@ body.pagina-report main > section {
   .doc-bloco, .resumo-cartao, .doc-lista .grupo-produto { border: 1px solid #e5e5e5; }
   /* Barras do comparativo são só background — sem isto o papel sai em branco */
   .comparativo .comp-barra, .comparativo .comp-barra span,
-  .cab-barra, .cab-barra > span {
+  .cab-barra, .cab-barra > span,
+  .roadmap-barra, .roadmap-hoje::after {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
   .comparativo .comp-barra, .cab-barra { border: 1px solid #e5e5e5; }
+  .roadmap-titulo, .roadmap-trilha { break-inside: avoid; }
 }
 
 @media (max-width: 720px) {

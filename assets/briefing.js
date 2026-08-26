@@ -409,6 +409,56 @@
       + '</div>';
   }
 
+  // Roadmap: a única seção cujo dado não vem do DevOps — vem de um arquivo
+  // estático (assets/roadmap.json), porque o Notion não pode ser chamado do
+  // navegador (sem CORS) e o report não guarda token de Notion nenhum. Datas
+  // em dia UTC (meia-noite) pra escala e barra baterem sem fuso torto.
+  const MES_ABREV = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+  const diaUTC = (iso) => Date.parse(iso + 'T00:00:00Z');
+
+  function corpoRoadmap(itens, agora) {
+    if (!itens.length) return '';
+    const ordenados = [...itens].sort((a, b) => diaUTC(a.inicio) - diaUTC(b.inicio));
+    const inicios = itens.map((it) => diaUTC(it.inicio));
+    const fins = itens.map((it) => diaUTC(it.fim));
+    // Escala em meses inteiros: do 1º dia do mês mais cedo ao último dia do
+    // mês mais tarde — bordas redondas, sem cortar barra no meio de um mês.
+    const dMin = new Date(Math.min(...inicios));
+    const dMax = new Date(Math.max(...fins));
+    const escalaIni = Date.UTC(dMin.getUTCFullYear(), dMin.getUTCMonth(), 1);
+    const escalaFim = Date.UTC(dMax.getUTCFullYear(), dMax.getUTCMonth() + 1, 1);
+    const vao = Math.max(1, escalaFim - escalaIni);
+    const pct = (t) => Math.min(100, Math.max(0, ((t - escalaIni) / vao) * 100));
+
+    const meses = [];
+    for (let t = escalaIni; t < escalaFim; t = Date.UTC(new Date(t).getUTCFullYear(), new Date(t).getUTCMonth() + 1, 1)) {
+      const d = new Date(t);
+      meses.push(`<span style="left:${pct(t).toFixed(2)}%">${MES_ABREV[d.getUTCMonth()]}/${String(d.getUTCFullYear()).slice(2)}</span>`);
+    }
+
+    const linhas = ordenados.map((it) => {
+      const esquerda = pct(diaUTC(it.inicio));
+      const largura = Math.max(0.6, pct(diaUTC(it.fim)) - esquerda);
+      const feito = it.status === 'concluido';
+      return `<div class="roadmap-item">
+        <span class="roadmap-titulo">${esc(it.titulo)}${feito ? ' <span class="roadmap-feito">concluído</span>' : ''}</span>
+        <span class="roadmap-trilha"><span class="roadmap-barra${feito ? ' roadmap-barra-feita' : ''}" style="left:${esquerda.toFixed(2)}%;width:${largura.toFixed(2)}%"></span></span>
+      </div>`;
+    }).join('');
+
+    const hojeT = agora;
+    const hoje = hojeT >= escalaIni && hojeT <= escalaFim
+      ? `<div class="roadmap-hoje" style="--x:${pct(hojeT).toFixed(2)}%"></div>` : '';
+
+    return `<div class="roadmap-wrap">
+      <div class="roadmap-grade">
+        <div class="roadmap-escala">${meses.join('')}</div>
+        ${linhas}
+        ${hoje}
+      </div>
+    </div>`;
+  }
+
   // ---- Entrada ----
   // opcoes: { items, agora, escopo, unidade, todos, mes }
   // `unidade` é o nome do escopo como o stakeholder o conhece ("Ybera US"). Quem
@@ -562,6 +612,18 @@
           corpo: corpoProximos(bVivo, mapa),
         });
       }
+    }
+
+    // Roadmap não é do mês escolhido — é o plano à frente, independente do
+    // seletor. Por isso fica fora do if/else de fechado: aparece do mesmo
+    // jeito em qualquer mês, sempre que houver iniciativa pra mostrar.
+    const roadmapItens = o.roadmap || [];
+    if (roadmapItens.length) {
+      secoes.push({
+        id: 'roadmap', titulo: 'Roadmap', rotulo: 'Roadmap',
+        intro: 'O planejamento à frente, por trimestre — o horizonte mais longo do documento.',
+        corpo: corpoRoadmap(roadmapItens, agora),
+      });
     }
 
     // O mês é eixo do documento, não controle de ferramenta: mora na própria
