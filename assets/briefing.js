@@ -646,10 +646,13 @@
     // O mês é eixo do documento, não controle de ferramenta: mora na própria
     // navegação, na ponta direita — como no report do time. Serve o PO e o
     // stakeholder pela mesma peça. Um mês só não é escolha: não desenha.
+    // doc-mes-borda é a mesma técnica de borda em gradiente da nav (padding +
+    // fundo em gradiente, sem "border" de verdade), só que na versão do
+    // seletor de mês — o select por dentro é só o preenchimento cinza.
     const seletorMes = listaMeses.length > 1
-      ? `<select id="mes-global" class="doc-mes" aria-label="Mês do report" title="Mês do report">${listaMeses
+      ? `<div class="doc-mes-borda"><select id="mes-global" class="doc-mes" aria-label="Mês do report" title="Mês do report">${listaMeses
         .map((m) => `<option value="${esc(m)}"${m === escolhido ? ' selected' : ''}>${esc(mesPorExtenso(m))}</option>`)
-        .join('')}</select>`
+        .join('')}</select></div>`
       : '';
     // doc-nav-borda é só a borda em gradiente (técnica: padding de 2px +
     // fundo em gradiente, sem "border" de verdade) — doc-nav-int é o vidro
