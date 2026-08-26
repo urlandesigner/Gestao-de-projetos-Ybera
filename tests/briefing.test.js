@@ -528,6 +528,54 @@ test('htmlReport não diz "todo o esforço" quando há item sem produto', () => 
   assert.ok(html.includes('1 item sem produto associado'));
 });
 
+// "Onde caiu o esforço" era frase corrida ("A (5), B (2)") — virou lista:
+// nome à esquerda, contagem à direita, uma linha por produto.
+test('htmlReport lista os produtos de "Onde caiu o esforço" em vez de frase', () => {
+  const itens = [
+    it(1, 'Epic', 'In Progress', 'Nova PDP USA', null, 5),
+    it(10, 'Product Backlog Item', 'Done', 'Item A1', 1, null, 2),
+    it(11, 'Product Backlog Item', 'Done', 'Item A2', 1, null, 3),
+    it(2, 'Epic', 'In Progress', 'Checkout One-Click', null, 8),
+    it(20, 'Product Backlog Item', 'Done', 'Item B1', 2, null, 1),
+  ];
+  const { html } = B.htmlReport({ items: itens, agora: AGORA });
+  const resumo = html.slice(html.indexOf('id="resumo"'), html.indexOf('id="entregas"'));
+  assert.ok(resumo.includes('<ul class="produtos-resumo">'), 'vira lista, não frase corrida');
+  assert.ok(resumo.includes('<li><span>Nova PDP USA</span><b>2</b></li>'));
+  assert.ok(resumo.includes('<li><span>Checkout One-Click</span><b>1</b></li>'));
+  assert.ok(!resumo.includes('Nova PDP USA</b> ('), 'não sobra o formato antigo em frase');
+});
+
+test('htmlReport com 1 produto só mantém frase — nada pra listar', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA });
+  const resumo = html.slice(html.indexOf('id="resumo"'), html.indexOf('id="entregas"'));
+  assert.ok(!resumo.includes('produtos-resumo'), 'com 1 produto não vira lista');
+  assert.ok(resumo.includes('Todo o esforço caiu em <b>Nova PDP USA</b>.'));
+});
+
+test('htmlReport com mais de 3 produtos lista os 3 primeiros e soma o resto', () => {
+  const itens = [];
+  for (let p = 1; p <= 5; p += 1) {
+    itens.push(it(p, 'Epic', 'In Progress', 'Produto ' + p, null, 20));
+    itens.push(it(100 + p, 'Product Backlog Item', 'Done', 'Entrega ' + p, p, null, p));
+  }
+  const { html } = B.htmlReport({ items: itens, agora: AGORA });
+  const resumo = html.slice(html.indexOf('id="resumo"'), html.indexOf('id="entregas"'));
+  assert.equal((resumo.match(/<li><span>/g) || []).length, 3, 'só os 3 primeiros viram linha própria');
+  assert.ok(resumo.includes('<li class="produtos-resumo-mais">e outros 2</li>'));
+});
+
+test('htmlReport escapa título de produto forjado na lista de "Onde caiu o esforço"', () => {
+  const itens = [
+    it(1, 'Epic', 'In Progress', '"><img src=x onerror=alert(1)>', null, 5),
+    it(10, 'Product Backlog Item', 'Done', 'A', 1, null, 2),
+    it(2, 'Epic', 'In Progress', 'Produto normal', null, 8),
+    it(20, 'Product Backlog Item', 'Done', 'B', 2, null, 1),
+  ];
+  const { html } = B.htmlReport({ items: itens, agora: AGORA });
+  assert.ok(!html.includes('<img'));
+});
+
 test('htmlReport com muitos produtos lista todos em Entregas', () => {
   const itens = [];
   for (let p = 1; p <= 5; p += 1) {

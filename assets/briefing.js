@@ -174,29 +174,36 @@
     return frases.join(' ');
   }
 
-  function paragrafoProdutos(m) {
+  // "Onde caiu o esforço" lista os produtos em vez de escrever numa frase
+  // corrida ("A (5), B (2)") — cada produto vira uma linha, nome à esquerda
+  // e contagem à direita, como as pílulas do resto do documento. Com um
+  // produto só não há o que listar: fica frase, como antes.
+  function corpoProdutos(m) {
     const prods = (m.resumo || {}).produtos || [];
     const fech = (m.resumo || {}).epicosFechados || [];
-    const frases = [];
     // Itens sem produto contam no total mas não em produto nenhum: "todo o
     // esforço caiu em X" seria mentira quando eles existem.
     const soltos = (m.total || 0) - prods.reduce((soma, p) => soma + p.n, 0);
     const aviso = soltos > 0 ? ` — além de ${plural(soltos, 'item sem produto associado', 'itens sem produto associado')}` : '';
+    let corpo = '';
     if (prods.length === 1) {
-      frases.push(soltos > 0
+      corpo = `<p>${soltos > 0
         ? `O esforço com produto caiu todo em <b>${esc(prods[0].titulo)}</b>${aviso}.`
-        : `Todo o esforço caiu em <b>${esc(prods[0].titulo)}</b>.`);
+        : `Todo o esforço caiu em <b>${esc(prods[0].titulo)}</b>.`}</p>`;
     } else if (prods.length > 1) {
-      const topo = prods.slice(0, 3).map((p) => `<b>${esc(p.titulo)}</b> (${p.n})`);
+      const topo = prods.slice(0, 3);
       const resto = prods.length - topo.length;
-      frases.push(`O esforço se distribuiu em ${plural(prods.length, 'produto', 'produtos')}: ${topo.join(', ')}${resto > 0 ? `, e outros ${resto}` : ''}${aviso}.`);
+      const linhas = topo.map((p) => `<li><span>${esc(p.titulo)}</span><b>${p.n}</b></li>`).join('');
+      const mais = resto > 0 ? `<li class="produtos-resumo-mais">e outros ${resto}</li>` : '';
+      corpo = `<p>O esforço se distribuiu em ${plural(prods.length, 'produto', 'produtos')}${aviso}:</p>
+        <ul class="produtos-resumo">${linhas}${mais}</ul>`;
     }
     if (fech.length === 1) {
-      frases.push(`<b>${esc(fech[0].titulo)}</b> fechou por completo.`);
+      corpo += `<p><b>${esc(fech[0].titulo)}</b> fechou por completo.</p>`;
     } else if (fech.length > 1) {
-      frases.push(`${plural(fech.length, 'épico fechou', 'épicos fecharam')} por completo: ${fech.map((e) => `<b>${esc(e.titulo)}</b>`).join(', ')}.`);
+      corpo += `<p>${plural(fech.length, 'épico fechou', 'épicos fecharam')} por completo: ${fech.map((e) => `<b>${esc(e.titulo)}</b>`).join(', ')}.</p>`;
     }
-    return frases.join(' ');
+    return corpo;
   }
 
   // Triagem de risco derivada: agrupa os itens atrasados por produto, do mais
@@ -538,16 +545,16 @@
     // sem ícone nem número: só o mesmo acento que "Já passou do prazo" já usa.
     const cartoesResumo = (fechado ? [
       { rotulo: 'Volume', texto: mesAlvo ? paragrafoVolume(mesAlvo) : 'Nada foi concluído neste mês.' },
-      { rotulo: 'Onde caiu o esforço', texto: mesAlvo ? paragrafoProdutos(mesAlvo) : '' },
+      { rotulo: 'Onde caiu o esforço', html: mesAlvo ? corpoProdutos(mesAlvo) : '' },
     ] : [
       { rotulo: 'Volume', texto: mesAlvo ? paragrafoVolume(mesAlvo) : 'Nada foi concluído neste mês até agora.' },
-      { rotulo: 'Onde caiu o esforço', texto: mesAlvo ? paragrafoProdutos(mesAlvo) : '' },
+      { rotulo: 'Onde caiu o esforço', html: mesAlvo ? corpoProdutos(mesAlvo) : '' },
       { rotulo: 'Em curso', texto: paragrafoEmCurso(bVivo, b.prazos.atrasados.length) },
       // Triagem de risco sobre bVivo (sem o travado): o travado atrasado já é
       // contado à parte na mesma frase e vai em Decisão. Somar os dois aqui faria
       // o card dizer "2 já passaram do prazo" e listar frentes com 3.
       { rotulo: 'Atenção', alerta: true, texto: paragrafoAtencao(bVivo, travadosVencidos, frentesEmRisco(bVivo.prazos.atrasados, mapa)) },
-    ]).filter((c) => c.texto);
+    ]).filter((c) => c.texto || c.html);
 
     const meta = [];
     if (escopo) meta.push('P.O responsável: ' + escopo);
@@ -569,7 +576,7 @@
       // até 4 — o grid fecha 2×2 e nenhum card vira paredão. Num bloco só, viravam
       // massa de texto. O auto-fit acomoda também os 2 do mês fechado.
       corpo: `<div class="resumo-cartoes">${cartoesResumo
-        .map((c) => `<article class="resumo-cartao${c.alerta ? ' resumo-cartao-alerta' : ''}"><p class="cartao-rotulo">${esc(c.rotulo)}</p><p>${c.texto}</p></article>`).join('')}</div>`,
+        .map((c) => `<article class="resumo-cartao${c.alerta ? ' resumo-cartao-alerta' : ''}"><p class="cartao-rotulo">${esc(c.rotulo)}</p>${c.html || `<p>${c.texto}</p>`}</article>`).join('')}</div>`,
     });
     if (entregas.length) {
       secoes.push({
