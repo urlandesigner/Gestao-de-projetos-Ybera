@@ -437,11 +437,20 @@
     const vao = Math.max(1, escalaFim - escalaIni);
     const pct = (t) => Math.min(100, Math.max(0, ((t - escalaIni) / vao) * 100));
 
-    const meses = [];
-    for (let t = escalaIni; t < escalaFim; t = Date.UTC(new Date(t).getUTCFullYear(), new Date(t).getUTCMonth() + 1, 1)) {
-      const d = new Date(t);
-      meses.push(`<span style="left:${pct(t).toFixed(2)}%">${MES_ABREV[d.getUTCMonth()]}/${String(d.getUTCFullYear()).slice(2)}</span>`);
+    // Limites de cada mês (início de jan, início de fev, ...), fechando com a
+    // borda direita da escala — vira rótulo (menos o último, que só fecha) e
+    // divisor vertical (esse sim, todos, pra marcar onde cada mês começa E
+    // termina, e não perder a leitura em barras que atravessam vários meses).
+    const limites = [];
+    for (let t = escalaIni; t <= escalaFim; t = Date.UTC(new Date(t).getUTCFullYear(), new Date(t).getUTCMonth() + 1, 1)) {
+      limites.push(t);
     }
+    const meses = limites.slice(0, -1).map((t) => {
+      const d = new Date(t);
+      return `<span style="left:${pct(t).toFixed(2)}%">${MES_ABREV[d.getUTCMonth()]}/${String(d.getUTCFullYear()).slice(2)}</span>`;
+    });
+    const divisoresMes = limites
+      .map((t) => `<div class="roadmap-mes-linha" style="--x:${pct(t).toFixed(2)}%"></div>`).join('');
 
     const linhas = ordenados.map((it) => {
       const esquerda = pct(diaUTC(it.inicio));
@@ -461,6 +470,7 @@
       <div class="roadmap-grade">
         <div class="roadmap-escala">${meses.join('')}</div>
         ${linhas}
+        ${divisoresMes}
         ${hoje}
       </div>
     </div>`;

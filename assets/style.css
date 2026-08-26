@@ -1264,15 +1264,19 @@ body.pagina-report main > section {
    largura na coluna da trilha, pra --x (setado por linha) valer o mesmo % que
    as barras. Sem isso um item de grid absoluto com span de linhas não tem
    largura previsível entre navegadores. */
-.roadmap-hoje { position: absolute; grid-column: 2; grid-row: 1 / -1; inset: 0; pointer-events: none; }
-.roadmap-hoje::after {
+.roadmap-hoje, .roadmap-mes-linha { position: absolute; grid-column: 2; grid-row: 1 / -1; inset: 0; pointer-events: none; }
+.roadmap-hoje::after, .roadmap-mes-linha::after {
   content: '';
   position: absolute;
   top: 0;
   bottom: 0;
   left: var(--x, 0%);
-  border-left: 1px dashed var(--erro);
 }
+/* Um divisor por limite de mês (início e fim) — discreto, atrás da linha de
+   hoje na ordem do DOM, então "hoje" sempre pinta por cima e continua se
+   destacando dos demais. */
+.roadmap-mes-linha::after { border-left: 1px solid var(--doc-linha); }
+.roadmap-hoje::after { border-left: 1px dashed var(--erro); }
 
 /* Impressão do documento: sem tinta desperdiçada na capa */
 @media print {

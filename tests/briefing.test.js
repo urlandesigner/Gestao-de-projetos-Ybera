@@ -680,6 +680,13 @@ test('htmlReport monta o roadmap ordenado por início, com escala e barras em %'
   // Barra de "B depois": início 31 dias após jan/1 (34,44%), 58 dias de largura (64,44%)
   assert.ok(sec.includes('left:34.44%;width:64.44%'));
   assert.ok(!sec.includes('roadmap-hoje'), 'agora (agosto) fica fora do vão jan-mar');
+  // Divisor por limite de mês: início de cada mês E o fechamento (abril) —
+  // 3 meses no vão viram 4 divisores (0%, 34.44%, 65.56%, 100%).
+  assert.equal((sec.match(/roadmap-mes-linha/g) || []).length, 4);
+  assert.ok(sec.includes('roadmap-mes-linha" style="--x:0.00%"'));
+  assert.ok(sec.includes('roadmap-mes-linha" style="--x:34.44%"'));
+  assert.ok(sec.includes('roadmap-mes-linha" style="--x:65.56%"'));
+  assert.ok(sec.includes('roadmap-mes-linha" style="--x:100.00%"'), 'inclui o fechamento do último mês, não só os começos');
 });
 
 test('htmlReport marca a linha de hoje quando cai dentro do vão do roadmap', () => {
