@@ -163,7 +163,7 @@
     // o nome aqui seria eco (ele mora só na capa, uma vez).
     const frases = [`Em ${mesPorExtenso(m.mes).toLowerCase()}, <b>${plural(m.total, 'item', 'itens')}</b> ${m.total === 1 ? 'foi concluído' : 'foram concluídos'} — ${enumerar(niveis)}.`];
     if (r.delta === null || r.delta === undefined) {
-      frases.push('É o mês mais antigo com registro disponível.');
+      // Sem mês anterior pra comparar: a frase fica só no volume, sem eco.
     } else if (r.delta > 0) {
       frases.push(`São <b>${r.delta} a mais</b> que em ${mesPorExtenso(r.mesAnterior).toLowerCase()}.`);
     } else if (r.delta < 0) {
