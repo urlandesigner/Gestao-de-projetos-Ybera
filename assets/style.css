@@ -984,16 +984,30 @@ body.pagina-report main > section {
   margin: -1.35rem auto 0;
   padding: 0 1rem;
 }
+/* Borda em vidro: não é `border`, é padding de 2px sobre um fundo em
+   gradiente — mesma técnica da referência (report-floating-nav-border). Os
+   dois gradientes apontam pra diagonais quase opostas, então o brilho muda
+   de intensidade ao redor da borda em vez de ficar uniforme. A sombra mora
+   aqui, não no vidro por dentro — é o conjunto (borda + vidro) que flutua. */
+.doc-nav-borda {
+  max-width: 100%;
+  padding: 2px;
+  border-radius: 99px;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0) 69%, rgba(255, 255, 255, 0.5)),
+    linear-gradient(157deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 40%);
+}
 .doc-nav-int {
   display: flex;
-  gap: 0.1rem;
+  align-items: center;
+  gap: 0.25rem;
   max-width: 100%;
-  padding: 0.28rem;
+  padding: 0.375rem 0.5rem 0.375rem 0.375rem;
   overflow-x: auto;
   background: rgba(221, 221, 223, 0.8);
   border-radius: 99px;
   backdrop-filter: blur(8px) saturate(1.8);
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
   scrollbar-width: none;
 }
 .doc-nav-int::-webkit-scrollbar { display: none; }
@@ -1328,6 +1342,7 @@ body.pagina-report main > section {
 @media (max-width: 720px) {
   /* A pílula estourava 2x a largura da tela e rolava com scrollbar invisível:
      o seletor de mês ficava fora da tela sem nenhuma pista de que existia. */
+  .doc-nav-borda { border-radius: 22px; }
   .doc-nav-int {
     flex-wrap: wrap;
     justify-content: center;
@@ -1411,7 +1426,10 @@ body.pagina-report .caixa-link input { background: var(--doc-fundo); }
    e com sombra própria (diferente dos links, que ficam transparentes até
    hover) — é um controle, não mais um item de menu igual aos outros. */
 .doc-nav .doc-mes {
-  margin-left: 0.3rem;
+  /* .doc-nav-int já dá 0.25rem de gap pra todo mundo; +0.25rem aqui soma
+     0.5rem (8px) só antes do seletor — igual ao respiro entre grupos na
+     referência (o link-a-link fica só com os 4px do gap). */
+  margin-left: 0.25rem;
   padding: 0.4rem 2.15rem 0.4rem 2.15rem;
   font-size: 0.875rem;
   font-weight: 600;

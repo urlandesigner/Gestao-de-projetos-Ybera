@@ -651,8 +651,11 @@
         .map((m) => `<option value="${esc(m)}"${m === escolhido ? ' selected' : ''}>${esc(mesPorExtenso(m))}</option>`)
         .join('')}</select>`
       : '';
-    const nav = `<nav class="doc-nav" aria-label="Seções do report"><div class="doc-nav-int">${secoes
-      .map((x) => `<a href="#${x.id}">${esc(x.rotulo)}</a>`).join('')}${seletorMes}</div></nav>`;
+    // doc-nav-borda é só a borda em gradiente (técnica: padding de 2px +
+    // fundo em gradiente, sem "border" de verdade) — doc-nav-int é o vidro
+    // (fundo + blur) por dentro dela. Duas camadas, como na referência.
+    const nav = `<nav class="doc-nav" aria-label="Seções do report"><div class="doc-nav-borda"><div class="doc-nav-int">${secoes
+      .map((x) => `<a href="#${x.id}">${esc(x.rotulo)}</a>`).join('')}${seletorMes}</div></div></nav>`;
 
     const html = `<div class="report-doc">
       ${capa(escolhido, meta.join(' · '), tiles)}
