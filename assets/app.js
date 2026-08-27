@@ -384,7 +384,10 @@ function renderPanorama() {
     tile('Meus itens', meus == null ? '—' : meus, false),
   ].join('');
 
-  const sprints = visiveis.map((pr) => {
+  // Só a Squad Ecommerce roda em sprint de verdade; os outros times
+  // configurados caem num "sprint" fantasma (a iteração anual do DevOps),
+  // que não representa nada em curso — some daqui.
+  const sprints = visiveis.filter((pr) => pr.teamName === 'Squad Ecommerce').map((pr) => {
     const e = state.cache.byCard[cardKey(pr)] || {};
     if (!e.sprint) return '';
     const prog = e.progress || { done: 0, total: 0 };
