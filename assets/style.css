@@ -69,8 +69,11 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
   mask: var(--icone) no-repeat center / contain;
 }
 
-/* Filtro global no topo: é escopo, não ação — fica à esquerda das ações */
-.filtro-topo { margin: 0; }
+/* Filtro global no topo: é escopo, não ação — fica à esquerda das ações.
+   Seletor composto (não só .filtro-topo) pra vencer o margin-bottom de
+   .filtros mais abaixo no arquivo — mesma especificidade, então quem vier
+   depois no CSS ganha; sem isso o filtro ficava desalinhado no topo. */
+.filtros.filtro-topo { margin: 0; }
 .filtro-topo select { font-weight: 600; }
 
 /* ---------- Corpo: sidebar + conteúdo (como na referência) ---------- */
@@ -92,6 +95,15 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
   border-radius: 20px;
   padding: 0.8rem 0.7rem 1rem;
 }
+/* Logo + recolher, no topo do próprio painel — a marca mora na sidebar */
+.lateral-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.3rem 0.4rem 0.5rem;
+}
+body.lateral-recolhida .lateral-topo { justify-content: center; }
 .paginas { display: flex; flex-direction: column; gap: 0.3rem; }
 .paginas a {
   display: flex;
@@ -173,7 +185,8 @@ main > section {
 body.lateral-recolhida .corpo { grid-template-columns: 62px minmax(0, 1fr); }
 body.lateral-recolhida .lateral { padding: 0.8rem 0.45rem 1rem; }
 body.lateral-recolhida .rotulo-nav,
-body.lateral-recolhida .conta-nav { display: none; }
+body.lateral-recolhida .conta-nav,
+body.lateral-recolhida .nome-app { display: none; }
 body.lateral-recolhida .paginas a { justify-content: center; padding: 0.7rem 0; gap: 0; }
 h2 { font-size: 1.25rem; margin: 0 0 1rem; }
 /* Troca de página: esconde todas e mostra só a ativa. Antes era par a par
@@ -868,9 +881,11 @@ details summary { cursor: pointer; color: var(--mudo); font-size: 0.88rem; }
   .quadro { grid-auto-columns: 84vw; scroll-snap-type: x mandatory; }
   .quadro-etapas { grid-template-columns: repeat(3, 84vw); } /* etapas seguem o deck no celular */
   .coluna { scroll-snap-align: start; }
-  /* Sidebar vira barra horizontal acima do conteúdo; recolher não se aplica */
+  /* Sidebar vira barra horizontal acima do conteúdo; recolher não se aplica,
+     e o logo não cabe junto da tira de pílulas — some, como o "recolher". */
   .corpo { display: block; }
   .lateral { position: static; flex-direction: row; align-items: center; gap: 0.6rem; margin-bottom: 0.9rem; padding: 0.5rem 0.6rem; }
+  .lateral-topo { display: none; }
   .paginas { flex-direction: row; gap: 0.35rem; }
   .paginas a { padding: 0.5rem 0.85rem; }
   #carimbo { display: none; } /* no topo só cabe a bolinha + estado */
