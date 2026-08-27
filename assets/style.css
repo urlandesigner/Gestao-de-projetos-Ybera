@@ -34,11 +34,15 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
 .erro { color: var(--erro); }
 
 /* ---------- Barra superior ---------- */
-.app > header.topo {
+/* Fica na coluna do conteúdo, não mais espalhada pela largura toda: sem
+   padding horizontal próprio, pra alinhar exatamente com as folhas brancas
+   do main logo abaixo — quem dá a margem lateral é o padding do .corpo. */
+.coluna-principal > header.topo {
   display: flex;
   align-items: center;
   gap: 0.9rem;
-  padding: 0.85rem clamp(0.8rem, 1vw, 1.1rem);
+  padding: 0;
+  margin-bottom: 1.1rem;
 }
 .nome-app { font-size: 1rem; margin: 0; font-weight: 700; }
 .acoes { margin-left: auto; display: flex; align-items: center; gap: 0.55rem; }
@@ -77,17 +81,21 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
 .filtro-topo select { font-weight: 600; }
 
 /* ---------- Corpo: sidebar + conteúdo (como na referência) ---------- */
+/* Sidebar vai até o topo — o header antes ficava por cima das duas colunas
+   e empurrava a lateral pra baixo; agora ela é a própria primeira linha do
+   grid, no mesmo nível do header da coluna de conteúdo. */
 .corpo {
   display: grid;
   grid-template-columns: 232px minmax(0, 1fr);
   gap: 1.1rem;
   align-items: start;
-  padding: 0.2rem clamp(0.8rem, 1vw, 1.1rem) 1.6rem;
+  padding: 0.9rem clamp(0.8rem, 1vw, 1.1rem) 1.6rem;
 }
+.coluna-principal { display: flex; flex-direction: column; min-width: 0; }
 /* Sidebar: painel cinza próprio — a nav ativa (branca) salta dele */
 .lateral {
   position: sticky;
-  top: 1rem;
+  top: 0.9rem;
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
@@ -868,7 +876,7 @@ details summary { cursor: pointer; color: var(--mudo); font-size: 0.88rem; }
 
 /* ---------- Celular ---------- */
 @media (max-width: 640px) {
-  .app > header.topo { flex-wrap: wrap; } /* o seletor global cabe na 2ª linha */
+  .coluna-principal > header.topo { flex-wrap: wrap; } /* o seletor global cabe na 2ª linha */
   /* Título do produto ganha a linha inteira; situação desce pra própria linha */
   .cab-produto .cab-topo { flex-wrap: wrap; }
   .cab-produto .cab-detalhe { margin-left: 0; flex-basis: 100%; white-space: normal; }
