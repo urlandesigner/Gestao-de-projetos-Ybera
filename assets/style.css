@@ -217,8 +217,11 @@ body[data-pagina='report'] #secao-report,
 body[data-pagina='meus-itens'] #secao-meus-itens,
 body[data-pagina='projetos'] #secao-projetos { display: block; }
 /* Lista curta não deve deixar página cinza sobrando embaixo — a folha
-   branca vai até o fim da tela mesmo com poucos itens. */
-#secao-meus-itens { min-height: 100%; }
+   branca vai até o fim da tela mesmo com poucos itens. O resto da cadeia
+   (quadro esticando, colunas acompanhando) é comportamento do componente
+   — ver .quadro-etapas / .coluna acima. */
+#secao-meus-itens { min-height: 100%; display: flex; flex-direction: column; }
+#meus-itens { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 
 /* ---------- Barra de filtros ---------- */
 .filtros {
@@ -307,14 +310,22 @@ body[data-pagina='projetos'] #secao-projetos { display: block; }
   overflow-x: auto;
   padding-bottom: 0.4rem;
 }
-/* Meus itens: três colunas fixas por etapa — sempre cabem, sem scroll lateral */
-.quadro-etapas { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+/* Meus itens: três colunas fixas por etapa — sempre cabem, sem scroll lateral.
+   flex:1 é o que deixa o quadro aceitar altura de um wrapper flex-column que
+   queira esticá-lo (hoje só #secao-meus-itens faz isso) — sem um wrapper
+   assim, o flex:1 não tem efeito e o quadro segue do tamanho do conteúdo. */
+.quadro-etapas { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); flex: 1; min-height: 0; }
 .coluna-vazia { margin: 0.2rem 0.2rem 0.3rem; font-size: 0.82rem; }
+/* flex-column: quando o grid estica a coluna (align-items:stretch, padrão),
+   é isso que deixa a <ul> crescer junto — senão o fundo cinza ficava mais
+   alto mas a lista continuava presa no tamanho do próprio conteúdo. */
 .coluna {
   background: var(--superficie-2);
   border-radius: 18px;
   padding: 1rem 0.9rem;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 .coluna > header {
   display: flex;
@@ -340,7 +351,8 @@ body[data-pagina='projetos'] #secao-projetos { display: block; }
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
-  max-height: 430px;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
 }
 .item {
