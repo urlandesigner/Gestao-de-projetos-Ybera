@@ -628,9 +628,28 @@ function htmlPendencia(reg) {
 function renderGrid() {
   const grid = $('grid');
   grid.innerHTML = '';
-  for (const p of state.config.projects.filter((x) => !x.hidden)) grid.appendChild(buildCard(p));
+  const resp = respAtivo();
+  const visiveis = state.config.projects.filter((x) => !x.hidden);
+  const comItens = visiveis.filter((p) => !resp || cardTemResp(p, resp));
+  if (resp && !comItens.length) {
+    grid.innerHTML = '<p class="mudo">Nenhum projeto com itens no nome de ' + escapeHtml(resp) + '.</p>';
+  } else {
+    for (const p of comItens) grid.appendChild(buildCard(p));
+  }
   renderFiltroGlobal();
   renderNavContas();
+}
+
+// Só esconde um card quando já sabemos que o PO não tem nada ali — sem
+// dado carregado ainda (ex.: primeira busca), o card fica pra não sumir
+// e voltar sozinho assim que a resposta chegar.
+function cardTemResp(p, resp) {
+  const entry = state.cache.byCard[cardKey(p)];
+  if (!entry || !entry.items) return true;
+  return entry.items.some((it) => {
+    const at = (it.fields || {})['System.AssignedTo'];
+    return at && at.displayName === resp;
+  });
 }
 
 // Seletor de responsável dos cartões — opções vêm dos itens em cache de todos os times
@@ -676,6 +695,9 @@ function renderCard(p) {
   renderFiltroGlobal(); // itens novos podem trazer responsáveis novos pro seletor
   renderPanorama(); // os números do panorama saem destes mesmos itens
   renderPendencias();
+  // O card deste time pode entrar/sumir do grid agora que os itens chegaram
+  // (o filtro de PO precisa saber se ele tem algo no nome de quem tá selecionado).
+  if (document.body.dataset.pagina === 'projetos') renderGrid();
 }
 
 // Células por nível (Épicos/Features/PBIs) — usadas no cartão de projeto e no
