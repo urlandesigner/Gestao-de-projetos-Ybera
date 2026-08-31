@@ -245,12 +245,21 @@ async function refreshCard(p) {
       const sids = await A.sprintItemIds(ctx(), p.projectName, p.teamName, sprint.id);
       const sitems = sids.length ? await A.getFields(ctx(), sids, FIELDS_COUNTS) : [];
       entry.progress = C.sprintProgress(sitems);
+      // PBIs em andamento agora: o card do Panorama mostra uma prévia sem
+      // abrir o board — só o suficiente pra reconhecer o que está rodando.
+      entry.pbisEmAndamento = sitems
+        .filter((it) => {
+          const f = it.fields || {};
+          return C.typeSlug(f['System.WorkItemType']) === 'pbi' && C.stateBucket(f['System.State']) === 'andamento';
+        })
+        .map((it) => ({ id: it.id, titulo: (it.fields || {})['System.Title'] || ('item #' + it.id) }));
     }
   } catch (e) {
     entry.items = entry.items || anterior.items || null;
     entry.counts = anterior.counts || null; // legado: cache antigo pré-filtro só tinha counts
     entry.sprint = entry.sprint || anterior.sprint || null;
     entry.progress = entry.progress || anterior.progress || null;
+    entry.pbisEmAndamento = entry.pbisEmAndamento || anterior.pbisEmAndamento || null;
     entry.error = mensagemDeErro(e);
     if (e instanceof A.AuthError) state.auth = 'vencido';
   }
@@ -387,15 +396,26 @@ function renderPanorama() {
   // Só a Squad Ecommerce roda em sprint de verdade; os outros times
   // configurados caem num "sprint" fantasma (a iteração anual do DevOps),
   // que não representa nada em curso — some daqui.
+  const CAP_PBIS_SPRINT = 4;
   const sprints = visiveis.filter((pr) => pr.teamName === 'Squad Ecommerce').map((pr) => {
     const e = state.cache.byCard[cardKey(pr)] || {};
     if (!e.sprint) return '';
     const prog = e.progress || { done: 0, total: 0 };
     const pct = prog.total ? Math.round((prog.done / prog.total) * 100) : 0;
-    return `<a class="sprint-link" href="${rotaBoard(pr, true)}" title="Ver a sprint no board">
-      <span class="sprint-linha"><span class="sprint-nome"><b>${escapeHtml(e.sprint.name)}</b> <span class="mudo">${escapeHtml(pr.teamName)}</span></span><span class="sprint-prog">${prog.done}/${prog.total} <span class="seta">→</span></span></span>
-      <span class="barra"><span class="barra-cheia" style="width:${pct}%"></span></span>
-    </a>`;
+    // Prévia sem detalhe: só o título, pra reconhecer o que está rodando
+    // sem precisar abrir o board.
+    const pbis = e.pbisEmAndamento || [];
+    const link = C.deepLinks(state.config.org, pr.projectName, '');
+    const listaPbis = pbis.length ? `<ul class="sprint-pbis">${pbis.slice(0, CAP_PBIS_SPRINT).map((it) =>
+      `<li><a href="${link.workItem(it.id)}" target="_blank" rel="noopener" title="${escapeHtml(it.titulo)}">${escapeHtml(it.titulo)}</a></li>`
+    ).join('')}${pbis.length > CAP_PBIS_SPRINT ? `<li class="sprint-pbis-mais">+${pbis.length - CAP_PBIS_SPRINT} mais</li>` : ''}</ul>` : '';
+    return `<div class="sprint-card">
+      <a class="sprint-card-link" href="${rotaBoard(pr, true)}" title="Ver a sprint no board">
+        <span class="sprint-linha"><span class="sprint-nome"><b>${escapeHtml(e.sprint.name)}</b> <span class="mudo">${escapeHtml(pr.teamName)}</span></span><span class="sprint-prog">${prog.done}/${prog.total} <span class="seta">→</span></span></span>
+        <span class="barra"><span class="barra-cheia" style="width:${pct}%"></span></span>
+      </a>
+      ${listaPbis}
+    </div>`;
   }).filter(Boolean).join('');
 
   const todaAtencao = C.itensAtencao(todos, agora, 9999);

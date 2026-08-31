@@ -504,6 +504,36 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
 .sprint-link .seta { color: var(--mudo); }
 .barra { display: block; height: 5px; border-radius: 999px; background: #e4e4e7; margin-top: 0.5rem; overflow: hidden; }
 .barra-cheia { display: block; height: 100%; border-radius: 999px; background: var(--positivo); }
+/* Variante do card de sprint com prévia dos PBIs — mesma folha visual do
+   .sprint-link, mas o link vira só a parte de cima (nome/progresso/barra)
+   pra caber uma lista de links próprios embaixo, com seu próprio rodapé. */
+.sprint-card {
+  background: var(--superficie);
+  border-radius: 12px;
+  padding: 0.6rem 0.75rem 0.65rem;
+  box-shadow: var(--sombra-cartao);
+}
+.sprint-card-link { display: block; text-decoration: none; color: var(--tinta); }
+.sprint-pbis {
+  list-style: none;
+  margin: 0.55rem 0 0;
+  padding: 0.5rem 0 0;
+  border-top: 1px solid #e6e6e9;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.sprint-pbis li a {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--mudo);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sprint-pbis li a:hover { color: var(--tinta); text-decoration: underline; }
+.sprint-pbis-mais { font-size: 0.75rem; color: var(--mudo); }
 /* Rodapé: atalhos do DevOps rebaixados a links de texto */
 .atalhos {
   display: flex;
