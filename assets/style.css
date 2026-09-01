@@ -514,25 +514,14 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
   box-shadow: var(--sombra-cartao);
 }
 .sprint-card-link { display: block; text-decoration: none; color: var(--tinta); }
-.sprint-pbis {
-  list-style: none;
-  margin: 0.55rem 0 0;
-  padding: 0.5rem 0 0;
-  border-top: 1px solid #e6e6e9;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-.sprint-pbis li a {
-  display: block;
-  font-size: 0.78rem;
-  color: var(--mudo);
-  text-decoration: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.sprint-pbis li a:hover { color: var(--tinta); text-decoration: underline; }
+/* Prévia dos itens abertos: mesma linha-cartão do Futuro/Report
+   (.lista-linhas .item-linha) — só duas coisas mudam por estar dentro de um
+   card que já é --superficie (branco): a folga acima (linha divisória depois
+   da barra de progresso) e o fundo da linha, senão ela desaparece dentro do
+   próprio card (branco sobre branco). */
+.sprint-card .lista-linhas { margin-top: 0.55rem; padding-top: 0.5rem; border-top: 1px solid #e6e6e9; }
+.sprint-card .lista-linhas .item-linha { background: var(--superficie-2); box-shadow: none; }
+.sprint-card .lista-linhas .item-linha:hover { background: #ececea; }
 .sprint-pbis-mais { font-size: 0.75rem; color: var(--mudo); }
 /* Rodapé: atalhos do DevOps rebaixados a links de texto */
 .atalhos {

@@ -255,8 +255,15 @@ async function refreshCard(p) {
           return f['System.WorkItemType'] !== 'Task' && C.stateBucket(f['System.State']) !== 'feito';
         })
         .map((it) => {
-          const at = (it.fields || {})['System.AssignedTo'];
-          return { id: it.id, titulo: (it.fields || {})['System.Title'] || ('item #' + it.id), resp: at && at.displayName ? at.displayName : null };
+          const f = it.fields || {};
+          const at = f['System.AssignedTo'];
+          return {
+            id: it.id,
+            titulo: f['System.Title'] || ('item #' + it.id),
+            resp: at && at.displayName ? at.displayName : null,
+            tipo: C.typeSlug(f['System.WorkItemType']),
+            estado: f['System.State'] || '',
+          };
         });
     }
   } catch (e) {
@@ -414,8 +421,13 @@ function renderPanorama() {
     const respSprint = respAtivo();
     const pbis = (e.itensSprintAbertos || []).filter((it) => !respSprint || it.resp === respSprint);
     const link = C.deepLinks(state.config.org, pr.projectName, '');
-    const listaPbis = pbis.length ? `<ul class="sprint-pbis">${pbis.slice(0, CAP_PBIS_SPRINT).map((it) =>
-      `<li><a href="${link.workItem(it.id)}" target="_blank" rel="noopener" title="${escapeHtml(it.titulo)}">${escapeHtml(it.titulo)}</a></li>`
+    const listaPbis = pbis.length ? `<ul class="lista-linhas">${pbis.slice(0, CAP_PBIS_SPRINT).map((it) =>
+      `<li><a class="item-linha" href="${link.workItem(it.id)}" target="_blank" rel="noopener" title="${escapeHtml(it.titulo)}">
+        <span class="badge-tipo tipo-${it.tipo}">${ROTULO_TIPO_CURTO[it.tipo]}</span>
+        <span class="titulo">${escapeHtml(it.titulo)}</span>
+        <span class="quando">${escapeHtml(it.estado)}</span>
+        <span class="id">#${it.id}</span>
+      </a></li>`
     ).join('')}${pbis.length > CAP_PBIS_SPRINT ? `<li class="sprint-pbis-mais">+${pbis.length - CAP_PBIS_SPRINT} mais</li>` : ''}</ul>` : '';
     return `<div class="sprint-card">
       <a class="sprint-card-link" href="${rotaBoard(pr, true)}" title="Ver a sprint no board">
