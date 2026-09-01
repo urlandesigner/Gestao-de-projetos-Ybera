@@ -253,7 +253,8 @@ async function refreshCard(p) {
           return C.typeSlug(f['System.WorkItemType']) === 'pbi' && C.stateBucket(f['System.State']) === 'andamento';
         })
         .map((it) => {
-          return { id: it.id, titulo: (it.fields || {})['System.Title'] || ('item #' + it.id) };
+          const at = (it.fields || {})['System.AssignedTo'];
+          return { id: it.id, titulo: (it.fields || {})['System.Title'] || ('item #' + it.id), resp: at && at.displayName ? at.displayName : null };
         });
     }
   } catch (e) {
@@ -405,10 +406,11 @@ function renderPanorama() {
     const prog = e.progress || { done: 0, total: 0 };
     const pct = prog.total ? Math.round((prog.done / prog.total) * 100) : 0;
     // Prévia sem detalhe: só o título, pra reconhecer o que está rodando sem
-    // precisar abrir o board. Sprint inteira, igual a barra de progresso —
-    // filtrar por responsável esvaziava demais (o PO raramente tem PBI no
-    // próprio nome; quem executa é o time).
-    const pbis = e.pbisEmAndamento || [];
+    // precisar abrir o board. Filtra por quem está selecionado no dropdown
+    // de responsável do topo — a barra de progresso continua sendo da
+    // sprint inteira, de propósito (é indicador de time, não de pessoa).
+    const respSprint = respAtivo();
+    const pbis = (e.pbisEmAndamento || []).filter((it) => !respSprint || it.resp === respSprint);
     const link = C.deepLinks(state.config.org, pr.projectName, '');
     const listaPbis = pbis.length ? `<ul class="sprint-pbis">${pbis.slice(0, CAP_PBIS_SPRINT).map((it) =>
       `<li><a href="${link.workItem(it.id)}" target="_blank" rel="noopener" title="${escapeHtml(it.titulo)}">${escapeHtml(it.titulo)}</a></li>`
