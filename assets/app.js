@@ -898,7 +898,7 @@ async function carregarBoard(p, force) {
   boardState.columns = null;
   boardState.sprint = null;
   boardState.erro = null;
-  boardState.filtro = { tipos: null, resp: '', busca: '' };
+  boardState.filtro = { tipos: null, busca: '' };
   $('board-busca').value = '';
   boardState.carregando = true;
   renderBoard(p);
@@ -937,10 +937,9 @@ function renderBoard(p) {
   const todos = boardState.items || [];
   filtros.hidden = !todos.length;
   renderChipsTipo($('board-tipos'), todos, boardState.filtro, () => renderBoard(p));
-  renderRespSelect(todos);
   let items = todos;
   if (boardState.soSprint && boardState.sprint) items = items.filter((it) => C.inSprint(it, boardState.sprint.path));
-  items = C.filterItems(items, boardState.filtro);
+  items = C.filterItems(items, Object.assign({}, boardState.filtro, { resp: respAtivo() }));
   const porColuna = new Map();
   for (const it of items) {
     const f = it.fields || {};
@@ -958,7 +957,7 @@ function renderBoard(p) {
     nomes = C.orderColumnsFallback([...porColuna.keys()], statesByColumn);
   }
   if (!nomes.length) {
-    const temFiltro = boardState.filtro.busca || boardState.filtro.resp || boardState.filtro.tipos;
+    const temFiltro = boardState.filtro.busca || respAtivo() || boardState.filtro.tipos;
     st.textContent = temFiltro ? 'nada com esses filtros' : (boardState.soSprint ? 'nada na sprint corrente' : 'board vazio');
     st.hidden = false;
     cols.innerHTML = '';
@@ -990,18 +989,6 @@ function renderBoard(p) {
       }).join('')}</ul>
     </section>`;
   }).join('');
-}
-
-// Seletor de responsável do board — opções vêm dos próprios itens
-function renderRespSelect(items) {
-  const sel = $('board-resp');
-  const atual = boardState.filtro.resp;
-  const nomes = [...new Set((items || [])
-    .map((it) => (it.fields || {})['System.AssignedTo'])
-    .filter((r) => r && r.displayName)
-    .map((r) => r.displayName))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
-  sel.innerHTML = '<option value="">todos os responsáveis</option>' +
-    nomes.map((n) => `<option value="${escapeHtml(n)}"${n === atual ? ' selected' : ''}>${escapeHtml(n)}</option>`).join('');
 }
 
 /* ---------- Configurações ---------- */
@@ -1149,16 +1136,13 @@ document.addEventListener('DOMContentLoaded', () => {
     boardState.filtro.busca = $('board-busca').value;
     if (boardState.p) renderBoard(boardState.p);
   });
-  $('board-resp').addEventListener('change', () => {
-    boardState.filtro.resp = $('board-resp').value;
-    if (boardState.p) renderBoard(boardState.p);
-  });
   $('resp-global').addEventListener('change', () => {
     state.resp = $('resp-global').value; // '' = todos, escolha explícita
     salvarFiltrosMI();
     renderAll();
     renderProdutos();
     renderFuturo();
+    if (boardState.p) renderBoard(boardState.p);
   });
   // Sidebar colapsável — preferência persiste entre visitas
   if ((loadJSON(LS.ui) || {}).lateralRecolhida) document.body.classList.add('lateral-recolhida');
