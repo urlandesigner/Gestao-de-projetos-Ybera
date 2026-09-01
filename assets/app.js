@@ -554,12 +554,13 @@ function htmlProduto(reg, p) {
 
 /* ---------- Futuro ---------- */
 // Vocabulário do Radar de propósito (a página lá se chama Futuro, com as faixas
-// Agora / A seguir / Depois): é o modelo mental que o Urlan já tem.
+// Agora / A seguir / Depois): é o modelo mental que o Urlan já tem. A faixa
+// sai do que já está em movimento (C.futuroPorAtividade), não de StartDate —
+// nem todo épico tem essa data preenchida.
 const FAIXAS_FUTURO = {
-  agora: { rotulo: 'Agora', confianca: 'Janela atual' },
-  seguir: { rotulo: 'A seguir', confianca: 'Planejado' },
-  depois: { rotulo: 'Depois', confianca: 'Roadmap' },
-  semData: { rotulo: 'Sem data de início', confianca: 'não entra em faixa' },
+  agora: { rotulo: 'Agora', legenda: 'Em andamento ou já entregando' },
+  seguir: { rotulo: 'A seguir', legenda: 'Backlog pronto, ninguém começou' },
+  depois: { rotulo: 'Depois', legenda: 'Ainda não foi detalhado' },
 };
 
 function renderFuturo() {
@@ -571,29 +572,28 @@ function renderFuturo() {
     box.innerHTML = erroHtml + (baseState.erro ? '' : '<p class="mudo">carregando projetos…</p>');
     return;
   }
-  const faixas = C.futuroPorFaixa(baseState.porTime.flatMap(({ items }) => items).filter(noNome), Date.now());
-  // As três faixas aparecem sempre, mesmo vazias: "nada começa no próximo
-  // trimestre" é informação. "Sem data" só aparece quando existe.
-  const blocos = faixas
-    .filter((f) => f.faixa !== 'semData' || f.itens.length)
-    .map((f) => {
-      const def = FAIXAS_FUTURO[f.faixa];
-      const ate = f.ate ? `até ${dataCurta(f.ate)}` : def.confianca;
-      const linhas = f.itens.map((it) => {
-        const fl = it.fields || {};
-        const link = C.deepLinks(state.config.org, it.projeto, '').workItem(it.id);
-        return `<li><a class="item-linha" href="${link}" target="_blank" rel="noopener">
-          <span class="badge-tipo tipo-epic">Épico</span>
-          <span class="titulo">${escapeHtml(fl['System.Title'] || ('item #' + it.id))}</span>
-          <span class="quando">${janela(fl['Microsoft.VSTS.Scheduling.StartDate'], fl['Microsoft.VSTS.Scheduling.TargetDate'])}</span>
-          <span class="id">#${it.id}</span>
-        </a></li>`;
-      }).join('');
-      return `<section class="bloco">
-        <h3>${def.rotulo}<span class="faixa-ate">${ate}</span><span class="conta">${f.itens.length}</span></h3>
-        ${f.itens.length ? `<ul class="lista-linhas">${linhas}</ul>` : '<p class="mudo faixa-vazia">Nada começa nesta faixa.</p>'}
-      </section>`;
+  // A árvore inteira (sem filtro) vai pro classificador — a atividade de um
+  // PBI conta pro épico mesmo quando o PBI está no nome de outra pessoa. O
+  // filtro por responsável entra só depois, na lista de épicos de cada faixa.
+  const todos = baseState.porTime.flatMap(({ items }) => items);
+  const faixas = C.futuroPorAtividade(todos).map((f) => ({ ...f, itens: f.itens.filter(noNome) }));
+  const blocos = faixas.map((f) => {
+    const def = FAIXAS_FUTURO[f.faixa];
+    const linhas = f.itens.map((it) => {
+      const fl = it.fields || {};
+      const link = C.deepLinks(state.config.org, it.projeto, '').workItem(it.id);
+      return `<li><a class="item-linha" href="${link}" target="_blank" rel="noopener">
+        <span class="badge-tipo tipo-epic">Épico</span>
+        <span class="titulo">${escapeHtml(fl['System.Title'] || ('item #' + it.id))}</span>
+        <span class="quando">${janela(fl['Microsoft.VSTS.Scheduling.StartDate'], fl['Microsoft.VSTS.Scheduling.TargetDate'])}</span>
+        <span class="id">#${it.id}</span>
+      </a></li>`;
     }).join('');
+    return `<section class="bloco">
+      <h3>${def.rotulo}<span class="faixa-ate">${def.legenda}</span><span class="conta">${f.itens.length}</span></h3>
+      ${f.itens.length ? `<ul class="lista-linhas">${linhas}</ul>` : '<p class="mudo faixa-vazia">Nenhum épico aqui agora.</p>'}
+    </section>`;
+  }).join('');
   box.innerHTML = erroHtml + `<div class="blocos">${blocos}</div>`;
 }
 

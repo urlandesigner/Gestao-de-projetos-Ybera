@@ -412,56 +412,66 @@ test('reportPorMes ignora concluído sem data nenhuma e devolve vazio sem entreg
 });
 
 /* ---- Futuro ---- */
-const ini = (id, tipo, estado, inicio, fim2) => ({ id, fields: {
-  'System.WorkItemType': tipo, 'System.State': estado,
-  'Microsoft.VSTS.Scheduling.StartDate': inicio || undefined,
-  'Microsoft.VSTS.Scheduling.TargetDate': fim2 || undefined,
+const ep = (id, estado, alvo, titulo) => ({ id, fields: {
+  'System.WorkItemType': 'Epic', 'System.State': estado,
+  'Microsoft.VSTS.Scheduling.TargetDate': alvo || undefined,
+  'System.Title': titulo || ('Épico ' + id),
+} });
+const filho = (id, tipo, estado, pai) => ({ id, fields: {
+  'System.WorkItemType': tipo, 'System.State': estado, 'System.Parent': pai,
 } });
 
-test('fimDoTrimestre acha o fim do trimestre e atravessa o ano', () => {
-  const ago = Date.parse('2026-08-20T12:00:00Z'); // Q3
-  assert.equal(new Date(C.fimDoTrimestre(ago, 0)).toISOString().slice(0, 10), '2026-09-30');
-  assert.equal(new Date(C.fimDoTrimestre(ago, 1)).toISOString().slice(0, 10), '2026-12-31');
-  const nov = Date.parse('2026-11-15T12:00:00Z'); // Q4 → o próximo já é outro ano
-  assert.equal(new Date(C.fimDoTrimestre(nov, 0)).toISOString().slice(0, 10), '2026-12-31');
-  assert.equal(new Date(C.fimDoTrimestre(nov, 1)).toISOString().slice(0, 10), '2027-03-31');
-  const jan = Date.parse('2026-01-05T12:00:00Z'); // Q1
-  assert.equal(new Date(C.fimDoTrimestre(jan, 0)).toISOString().slice(0, 10), '2026-03-31');
-});
-
-test('futuroPorFaixa distribui épicos pelas faixas, com as bordas do trimestre', () => {
-  const faixas = C.futuroPorFaixa([
-    ini(1, 'Epic', 'New', '2026-08-01T00:00:00Z'),
-    ini(2, 'Epic', 'New', '2026-09-30T00:00:00Z'), // último dia do trimestre: Agora
-    ini(3, 'Epic', 'New', '2026-10-01T00:00:00Z'), // A seguir
-    ini(4, 'Epic', 'New', '2026-12-31T00:00:00Z'), // borda: ainda A seguir
-    ini(5, 'Epic', 'New', '2027-01-01T00:00:00Z'), // Depois
-    ini(6, 'Epic', 'New', null),                   // sem data
-  ], AGORA);
+test('futuroPorAtividade: sem filho refinado é Depois, com filho todo é A seguir, com filho ativo é Agora', () => {
+  const faixas = C.futuroPorAtividade([
+    ep(1, 'New'), // sem nenhum filho: só ideia
+    ep(2, 'New'), filho(21, 'Product Backlog Item', 'New', 2), // filho em fila, nada rodando
+    ep(3, 'New'), filho(31, 'Product Backlog Item', 'In Progress', 3), // filho rodando
+  ]);
   const porFaixa = Object.fromEntries(faixas.map((f) => [f.faixa, f.itens.map((i) => i.id)]));
-  assert.deepEqual(porFaixa.agora, [1, 2]);
-  assert.deepEqual(porFaixa.seguir, [3, 4]);
-  assert.deepEqual(porFaixa.depois, [5]);
-  assert.deepEqual(porFaixa.semData, [6]);
+  assert.deepEqual(porFaixa.depois, [1]);
+  assert.deepEqual(porFaixa.seguir, [2]);
+  assert.deepEqual(porFaixa.agora, [3]);
 });
 
-test('futuroPorFaixa só olha épico em aberto', () => {
-  const faixas = C.futuroPorFaixa([
-    ini(1, 'Epic', 'Done', '2026-08-01T00:00:00Z'),    // concluído: é história
-    ini(2, 'Feature', 'New', '2026-08-01T00:00:00Z'),  // não é projeto
-    ini(3, 'Epic', 'In Progress', '2026-08-01T00:00:00Z'),
-  ], AGORA);
+test('futuroPorAtividade: filho bloqueado ou já entregue também conta como Agora', () => {
+  const faixas = C.futuroPorAtividade([
+    ep(1, 'New'), filho(11, 'Product Backlog Item', 'Blocked', 1),
+    ep(2, 'New'), filho(21, 'Product Backlog Item', 'New', 2), filho(22, 'Product Backlog Item', 'Done', 2),
+  ]);
+  const agora = faixas.find((f) => f.faixa === 'agora').itens.map((i) => i.id);
+  assert.deepEqual(agora.sort(), [1, 2]);
+});
+
+test('futuroPorAtividade olha a árvore em qualquer profundidade e resiste a ciclo de link', () => {
+  const faixas = C.futuroPorAtividade([
+    // caminho normal: neto ativo conta pro épico
+    ep(1, 'New'), filho(11, 'Feature', 'New', 1), filho(111, 'Product Backlog Item', 'In Progress', 11),
+    // ciclo de verdade: 2 → 3 → 4 → 2 (Parent aponta em círculo, o próprio épico faz parte do laço)
+    { id: 2, fields: Object.assign({}, ep(2, 'New').fields, { 'System.Parent': 4 }) },
+    filho(3, 'Feature', 'In Progress', 2),
+    filho(4, 'Product Backlog Item', 'New', 3),
+  ]);
+  const porFaixa = Object.fromEntries(faixas.map((f) => [f.faixa, f.itens.map((i) => i.id)]));
+  assert.deepEqual(porFaixa.agora.sort(), [1, 2]); // termina sem travar e sem perder o 2
+});
+
+test('futuroPorAtividade só olha épico em aberto, e ignora quem não é épico como raiz', () => {
+  const faixas = C.futuroPorAtividade([
+    ep(1, 'Done'), filho(11, 'Product Backlog Item', 'In Progress', 1), // épico concluído: é história
+    filho(2, 'Feature', 'New', null), // não é épico, não vira faixa
+    ep(3, 'In Progress'),
+  ]);
   assert.deepEqual(faixas.find((f) => f.faixa === 'agora').itens.map((i) => i.id), [3]);
   assert.equal(faixas.reduce((n, f) => n + f.itens.length, 0), 1);
 });
 
-test('futuroPorFaixa ordena por início e desempata pelo alvo', () => {
-  const faixas = C.futuroPorFaixa([
-    ini(1, 'Epic', 'New', '2026-08-01T00:00:00Z', '2026-12-01T00:00:00Z'),
-    ini(2, 'Epic', 'New', '2026-08-01T00:00:00Z', '2026-09-01T00:00:00Z'), // mesmo início, fecha antes
-    ini(3, 'Epic', 'New', '2026-07-01T00:00:00Z'),
-  ], AGORA);
-  assert.deepEqual(faixas[0].itens.map((i) => i.id), [3, 2, 1]);
+test('futuroPorAtividade ordena por data-alvo e desempata por título', () => {
+  const faixas = C.futuroPorAtividade([
+    ep(1, 'New', '2026-12-01T00:00:00Z', 'Zulu'),
+    ep(2, 'New', null, 'Alfa'), // sem data-alvo: vai por último
+    ep(3, 'New', '2026-09-01T00:00:00Z', 'Bravo'),
+  ]);
+  assert.deepEqual(faixas.find((f) => f.faixa === 'depois').itens.map((i) => i.id), [3, 1, 2]);
 });
 
 /* ---- Report: resumo em prosa ---- */
