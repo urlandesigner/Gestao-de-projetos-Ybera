@@ -245,12 +245,14 @@ async function refreshCard(p) {
       const sids = await A.sprintItemIds(ctx(), p.projectName, p.teamName, sprint.id);
       const sitems = sids.length ? await A.getFields(ctx(), sids, FIELDS_COUNTS) : [];
       entry.progress = C.sprintProgress(sitems);
-      // PBIs em andamento agora: o card do Panorama mostra uma prévia sem
-      // abrir o board — só o suficiente pra reconhecer o que está rodando.
-      entry.pbisEmAndamento = sitems
+      // Prévia do card do Panorama: tudo que ainda falta fazer na sprint,
+      // pra pessoa filtrada — qualquer tipo, qualquer estado não concluído.
+      // Task fica de fora (mesmo corte que sprintProgress já usa: é
+      // sub-item de outro item, não uma entrega em si).
+      entry.itensSprintAbertos = sitems
         .filter((it) => {
           const f = it.fields || {};
-          return C.typeSlug(f['System.WorkItemType']) === 'pbi' && C.stateBucket(f['System.State']) === 'andamento';
+          return f['System.WorkItemType'] !== 'Task' && C.stateBucket(f['System.State']) !== 'feito';
         })
         .map((it) => {
           const at = (it.fields || {})['System.AssignedTo'];
@@ -262,7 +264,7 @@ async function refreshCard(p) {
     entry.counts = anterior.counts || null; // legado: cache antigo pré-filtro só tinha counts
     entry.sprint = entry.sprint || anterior.sprint || null;
     entry.progress = entry.progress || anterior.progress || null;
-    entry.pbisEmAndamento = entry.pbisEmAndamento || anterior.pbisEmAndamento || null;
+    entry.itensSprintAbertos = entry.itensSprintAbertos || anterior.itensSprintAbertos || null;
     entry.error = mensagemDeErro(e);
     if (e instanceof A.AuthError) state.auth = 'vencido';
   }
@@ -405,12 +407,12 @@ function renderPanorama() {
     if (!e.sprint) return '';
     const prog = e.progress || { done: 0, total: 0 };
     const pct = prog.total ? Math.round((prog.done / prog.total) * 100) : 0;
-    // Prévia sem detalhe: só o título, pra reconhecer o que está rodando sem
+    // Prévia sem detalhe: só o título, pra reconhecer o que falta fazer sem
     // precisar abrir o board. Filtra por quem está selecionado no dropdown
     // de responsável do topo — a barra de progresso continua sendo da
     // sprint inteira, de propósito (é indicador de time, não de pessoa).
     const respSprint = respAtivo();
-    const pbis = (e.pbisEmAndamento || []).filter((it) => !respSprint || it.resp === respSprint);
+    const pbis = (e.itensSprintAbertos || []).filter((it) => !respSprint || it.resp === respSprint);
     const link = C.deepLinks(state.config.org, pr.projectName, '');
     const listaPbis = pbis.length ? `<ul class="sprint-pbis">${pbis.slice(0, CAP_PBIS_SPRINT).map((it) =>
       `<li><a href="${link.workItem(it.id)}" target="_blank" rel="noopener" title="${escapeHtml(it.titulo)}">${escapeHtml(it.titulo)}</a></li>`
