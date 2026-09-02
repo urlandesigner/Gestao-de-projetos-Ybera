@@ -1,0 +1,27 @@
+/* =========================================================================
+   YBERA DESIGN SYSTEM · ÍCONES
+   Depende de: tokens/
+   ========================================================================= */
+.yb-icon{
+  width:var(--yb-icon-size, 20px);
+  height:var(--yb-icon-size, 20px);
+  flex:none;
+  display:inline-block;
+  vertical-align:middle;
+  color:currentColor;  /* herda a cor do texto — ícone não tem token de cor */
+}
+.yb-icon--sm{--yb-icon-size:var(--yb-icon-sm)}
+.yb-icon--md{--yb-icon-size:var(--yb-icon-md)}
+.yb-icon--lg{--yb-icon-size:var(--yb-icon-lg)}
+.yb-icon--xl{--yb-icon-size:var(--yb-icon-xl)}
+
+/* ícone acompanhando texto num botão: alinha pelo baseline óptico */
+.yb-btn .yb-icon{margin-block:-2px}
+
+/* Modo de alto contraste do Windows. O navegador troca toda cor por uma
+   paleta do sistema, mas `currentColor` num SVG inline nem sempre acompanha —
+   o ícone some dentro do botão. `forced-color-adjust:auto` devolve o controle
+   ao sistema, e o ícone reaparece na cor do texto ao lado. */
+@media (forced-colors: active){
+  .yb-icon{forced-color-adjust:auto}
+}

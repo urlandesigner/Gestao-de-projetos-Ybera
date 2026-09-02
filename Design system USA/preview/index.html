@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preview — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<style>
+/* =========================================================================
+   Por que <iframe> e nao um container estreito:
+
+   @media consulta a VIEWPORT, nao a caixa. Encolher uma div nao dispara
+   nenhuma regra de mobile — a coisa fica estreita e continua com o CSS de
+   desktop. Foi exatamente o que aconteceu com o demo da gaveta de carrinho,
+   que apareceu com 222px e o layout de desktop espremido, mentindo sobre o
+   componente. O <iframe> tem viewport propria: em 320px de iframe as media
+   queries de 320px disparam de verdade.
+   ========================================================================= */
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); -webkit-font-smoothing:antialiased;
+  min-height:100vh; display:flex; flex-direction:column;
+}
+.topo{
+  display:flex; align-items:center; gap:var(--yb-space-6); flex-wrap:wrap;
+  padding:var(--yb-space-4) var(--yb-space-8);
+  border-bottom:1px solid var(--yb-border-subtle); background:var(--yb-surface);
+  position:sticky; top:0; z-index:10;
+}
+.voltar{
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted);
+  text-decoration:none; white-space:nowrap;
+}
+.voltar:hover{color:var(--yb-text-primary)}
+.grupo-ctrl{display:flex; align-items:center; gap:var(--yb-space-2); flex-wrap:wrap}
+.rot{
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; color:var(--yb-text-muted);
+  font-weight:var(--yb-font-weight-semibold); margin-inline-end:var(--yb-space-1);
+}
+.btn{
+  min-height:var(--yb-target-min); padding:0 var(--yb-space-4);
+  display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-control);
+  background:var(--yb-surface); color:var(--yb-text-secondary);
+  font-family:inherit; font-size:var(--yb-type-body-sm-size); cursor:pointer;
+  font-variant-numeric:tabular-nums;
+  transition:border-color var(--yb-transition-control);
+}
+.btn:hover{border-color:var(--yb-border-strong); color:var(--yb-text-primary)}
+.btn:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.btn[aria-pressed="true"]{
+  background:var(--yb-action-secondary-bg); color:var(--yb-action-secondary-text);
+  border-color:var(--yb-action-secondary-bg);
+}
+.btn small{font-size:var(--yb-type-overline-size); opacity:.7}
+
+.palco{
+  flex:1; display:flex; justify-content:center; align-items:flex-start;
+  padding:var(--yb-space-8); background:var(--yb-bg-muted);
+  overflow:auto;
+}
+.aparelho{
+  display:flex; flex-direction:column; gap:var(--yb-space-3);
+  align-items:center; max-width:100%;
+}
+.medida{
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+  font-variant-numeric:tabular-nums;
+}
+/* A moldura vai no wrapper, nao no iframe. Com `border:1px` no proprio
+   iframe, 375 viravam 373 la dentro — dois pixels de mentira num aparelho
+   cujo unico trabalho e medir. */
+.moldura{
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-card);
+  box-shadow:var(--yb-elevation-raised); background:var(--yb-bg-page);
+  overflow:hidden; max-width:100%;
+}
+iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
+.nota{
+  margin:0; padding:var(--yb-space-4) var(--yb-space-8);
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+  border-top:1px solid var(--yb-border-subtle); background:var(--yb-surface);
+}
+.nota code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  background:var(--yb-bg-muted); padding:0 4px; border-radius:var(--yb-radius-sm);
+}
+@media (max-width:768px){
+  .topo{padding:var(--yb-space-3) var(--yb-page-gutter); gap:var(--yb-space-3)}
+  .palco{padding:var(--yb-space-3)}
+  .nota{padding:var(--yb-space-3) var(--yb-page-gutter)}
+}
+</style>
+</head>
+<body>
+
+<div class="topo">
+  <a class="voltar" href="../">← Ybera Design System</a>
+
+  <div class="grupo-ctrl" role="group" aria-label="Página">
+    <span class="rot">Página</span>
+    <button class="btn" type="button" data-src="../components/index.html" aria-pressed="true">Components</button>
+    <button class="btn" type="button" data-src="../patterns/index.html" aria-pressed="false">Patterns</button>
+    <button class="btn" type="button" data-src="../_captura/nova-loja/index.html" aria-pressed="false">Home</button>
+    <button class="btn" type="button" data-src="../_captura/nova-loja/pdp.html" aria-pressed="false">PDP</button>
+  </div>
+
+  <div class="grupo-ctrl" role="group" aria-label="Largura">
+    <span class="rot">Largura</span>
+    <button class="btn" type="button" data-w="320" data-h="568" aria-pressed="false">320 <small>iPhone SE</small></button>
+    <button class="btn" type="button" data-w="375" data-h="812" aria-pressed="true">375 <small>iPhone 13 mini</small></button>
+    <button class="btn" type="button" data-w="414" data-h="896" aria-pressed="false">414 <small>iPhone 11</small></button>
+    <button class="btn" type="button" data-w="768" data-h="1024" aria-pressed="false">768 <small>iPad</small></button>
+    <button class="btn" type="button" data-w="1280" data-h="900" aria-pressed="false">1280 <small>desktop</small></button>
+  </div>
+</div>
+
+<div class="palco">
+  <div class="aparelho">
+    <span class="medida" id="medida">375 × 812</span>
+    <div class="moldura">
+      <iframe id="quadro" title="Pré-visualização" src="../components/index.html" width="375" height="812"></iframe>
+    </div>
+  </div>
+</div>
+
+<p class="nota">
+  Cada largura é uma <code>&lt;iframe&gt;</code> com viewport própria, então as
+  <code>@media</code> disparam de verdade — encolher uma caixa não dispararia
+  nenhuma. O que você vê aqui é o que o aparelho vê.
+</p>
+
+<script>
+(function () {
+  'use strict';
+  var quadro = document.getElementById('quadro');
+  var medida = document.getElementById('medida');
+
+  function marcar(botao) {
+    var irmaos = botao.parentElement.querySelectorAll('.btn');
+    Array.prototype.forEach.call(irmaos, function (b) {
+      b.setAttribute('aria-pressed', String(b === botao));
+    });
+  }
+
+  function estado() {
+    var w = document.querySelector('[data-w][aria-pressed="true"]');
+    var p = document.querySelector('[data-src][aria-pressed="true"]');
+    return { w: w, p: p };
+  }
+
+  function aplicar() {
+    var e = estado();
+    if (!e.w || !e.p) return;
+    quadro.width = e.w.dataset.w;
+    quadro.height = e.w.dataset.h;
+    if (quadro.getAttribute('src') !== e.p.dataset.src) quadro.src = e.p.dataset.src;
+    medida.textContent = e.w.dataset.w + ' × ' + e.w.dataset.h;
+    // guarda a escolha; voltar para a página não deve reabrir no padrão
+    try {
+      localStorage.setItem('yb-preview', JSON.stringify({
+        w: e.w.dataset.w, src: e.p.dataset.src,
+      }));
+    } catch (err) { /* janela anônima, ou storage bloqueado */ }
+  }
+
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest('.btn');
+    if (!b) return;
+    marcar(b);
+    aplicar();
+  });
+
+  // restaura a última escolha
+  try {
+    var salvo = JSON.parse(localStorage.getItem('yb-preview') || 'null');
+    if (salvo) {
+      var bw = document.querySelector('[data-w="' + salvo.w + '"]');
+      var bp = document.querySelector('[data-src="' + salvo.src + '"]');
+      if (bw) marcar(bw);
+      if (bp) marcar(bp);
+    }
+  } catch (err) { /* sem storage: segue no padrão */ }
+  aplicar();
+})();
+</script>
+</body>
+</html>

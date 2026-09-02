@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="tokens/00-primitives.css">
+<link rel="stylesheet" href="tokens/01-semantic.css">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--yb-bg-page);color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base);-webkit-font-smoothing:antialiased;
+  display:flex;align-items:center;justify-content:center;min-height:100vh;
+  padding:var(--yb-space-8)}
+main{max-width:760px;width:100%}
+h1{font-size:var(--yb-type-display-2-size);line-height:var(--yb-type-display-2-line);
+  letter-spacing:var(--yb-type-display-2-track);font-weight:var(--yb-type-display-2-weight);
+  margin:0 0 var(--yb-space-3)}
+.sub{color:var(--yb-text-secondary);font-size:var(--yb-type-body-lg-size);
+  margin:0 0 var(--yb-space-10);max-width:56ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:var(--yb-space-4)}
+.grupo{margin-bottom:var(--yb-space-10)}
+.grupo h2{font-size:var(--yb-type-overline-size);letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase;font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-muted);margin:0 0 var(--yb-space-4)}
+a.tile{display:flex;flex-direction:column;gap:var(--yb-space-2);text-decoration:none;
+  border:1px solid var(--yb-border);border-radius:var(--yb-radius-card);
+  padding:var(--yb-space-5);background:var(--yb-surface);
+  transition:border-color var(--yb-transition-control)}
+a.tile:hover{border-color:var(--yb-text-primary)}
+a.tile:focus-visible{outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset)}
+a.tile b{font-size:var(--yb-type-h4-size);font-weight:var(--yb-font-weight-semibold);
+  letter-spacing:var(--yb-type-h4-track);color:var(--yb-text-primary)}
+a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
+.ver{margin-top:var(--yb-space-10);font-size:var(--yb-type-caption-size);
+  color:var(--yb-text-muted)}
+</style>
+</head>
+<body>
+<main>
+  <h1>Ybera Design System</h1>
+  <p class="sub">Fundação, componentes e padrões. Independente de plataforma:
+  a loja US roda Shopify e a BR roda Wake.</p>
+  <section class="grupo">
+    <h2>Design system</h2>
+    <div class="grid">
+      <a class="tile" href="docs/"><b>Tokens</b><span>293 tokens em três camadas, com contraste medido</span></a>
+      <a class="tile" href="components/"><b>Components</b><span>25 componentes com variantes, estados e comportamento</span></a>
+      <a class="tile" href="patterns/"><b>Patterns</b><span>8 composições de e-commerce</span></a>
+      <a class="tile" href="icons/"><b>Icons</b><span>36 símbolos SVG · 7,2 KB contra 380 KB de Font Awesome</span></a>
+      <a class="tile" href="preview/"><b>Preview</b><span>componentes e páginas em 320, 375, 414 e 768 — viewport de verdade</span></a>
+    </div>
+  </section>
+
+  <section class="grupo">
+    <h2>Como o sistema decide</h2>
+    <div class="grid">
+      <a class="tile" href="PRINCIPIOS.md"><b>Princípios</b><span>cinco regras em ordem — o que ganha quando duas se chocam</span></a>
+      <a class="tile" href="decision-log/"><b>Decisões</b><span>nove DDR: por que o sistema é assim, com a evidência</span></a>
+      <a class="tile" href="INVENTARIO.md"><b>Inventário</b><span>33 peças com maturidade conferida a cada build</span></a>
+      <a class="tile" href="CONTRIBUINDO.md"><b>Contribuindo</b><span>o laço local e o que o CI reprova</span></a>
+    </div>
+  </section>
+
+  <section class="grupo">
+    <h2>Páginas de exemplo</h2>
+    <div class="grid">
+      <a class="tile" href="_captura/nova-loja/"><b>Home nova</b><span>construída com os componentes do sistema, conteúdo real</span></a>
+      <a class="tile" href="_captura/nova-loja/pdp.html"><b>PDP nova</b><span>galeria, bloco de compra e acordeão do sistema</span></a>
+      <a class="tile" href="_captura/home/"><b>Home hoje</b><span>a ybera.us em produção, para comparar</span></a>
+      <a class="tile" href="_captura/pdp-fashion-gold/"><b>PDP hoje</b><span>Deep Care Kit Fashion Gold em produção</span></a>
+    </div>
+  </section>
+
+  <p class="ver">v0.10 · sempre em <code>localhost:8080</code></p>
+</main>
+</body>
+</html>

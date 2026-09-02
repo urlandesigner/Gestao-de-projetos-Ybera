@@ -1,0 +1,308 @@
+/* =========================================================================
+   YBERA DESIGN SYSTEM · OVERLAY DE ENSAIO
+
+   Veste o markup REAL do tema Shopify com o design system, sem reescrever uma
+   linha de HTML. Serve para responder "como a loja ficaria" antes de mexer em
+   produção — e para descobrir onde o sistema não encaixa.
+
+   Carrega depois de tokens/ e bridge.css. Os seletores abaixo saíram do HTML
+   capturado (`.card-product`, `.checkout-button`, `.product_price`…), não de
+   suposição.
+
+   SOBRE O !important
+   O tema mistura Tailwind, CSS do Ecomposer e estilo inline. Num overlay de
+   ensaio, competir por especificidade contra três origens é ruído: o objetivo
+   é ver o resultado, não ganhar a briga com elegância. Na adoção de verdade
+   isso vira mudança no tema, sem !important nenhum.
+   ========================================================================= */
+
+/* ---------------------------------------------------------------- tipografia
+   Fase 2 do plano. É o que mais muda a cara da loja. */
+body, button, input, select, textarea,
+.card-product, .product_page, [class*="ecom-"] {
+  font-family: var(--yb-font-family-base) !important;
+}
+
+h1, .product-detail__title, .product_page h1 {
+  font-size: var(--yb-type-h1-size) !important;
+  line-height: var(--yb-type-h1-line) !important;
+  letter-spacing: var(--yb-type-h1-track) !important;
+  font-weight: var(--yb-type-h1-weight) !important;
+  color: var(--yb-text-primary) !important;
+  text-wrap: balance;
+}
+h2 {
+  font-size: var(--yb-type-h2-size) !important;
+  line-height: var(--yb-type-h2-line) !important;
+  letter-spacing: var(--yb-type-h2-track) !important;
+  font-weight: var(--yb-type-h2-weight) !important;
+}
+h3 {
+  font-size: var(--yb-type-h3-size) !important;
+  line-height: var(--yb-type-h3-line) !important;
+  letter-spacing: var(--yb-type-h3-track) !important;
+  font-weight: var(--yb-type-h3-weight) !important;
+}
+
+/* ---------------------------------------------------------------------- cor
+   O piso de texto do sistema. O tema usa zinc-500 (4.83:1 no branco, 4.40:1
+   sobre cinza — reprova) em texto secundário. */
+body { color: var(--yb-text-primary); }
+.text-zinc-500, .text-gray-500, [class*="text-zinc-5"], [class*="text-gray-5"] {
+  color: var(--yb-text-muted) !important;
+}
+
+/* ------------------------------------------------------------------- botões
+   Um magenta só. O tema tinha três. */
+.checkout-button,
+.product-detail__buy-button,
+button[name="add"],
+.shopify-payment-button__button--unbranded {
+  background: var(--yb-action-bg) !important;
+  color: var(--yb-action-text) !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--yb-radius-control) !important;
+  font-family: var(--yb-font-family-base) !important;
+  font-size: var(--yb-type-body-size) !important;
+  font-weight: var(--yb-font-weight-semibold) !important;
+  letter-spacing: 0 !important;
+  min-height: var(--yb-target-min) !important;
+  padding: var(--yb-space-4) var(--yb-space-6) !important;
+  text-transform: none !important;
+  transition: background var(--yb-transition-control) !important;
+}
+.checkout-button:hover,
+.product-detail__buy-button:hover,
+button[name="add"]:hover {
+  background: var(--yb-action-bg-hover) !important;
+}
+
+.newsletter-form__button, .field__button {
+  background: var(--yb-action-secondary-bg) !important;
+  color: var(--yb-action-secondary-text) !important;
+  border-radius: var(--yb-radius-control) !important;
+  min-height: var(--yb-target-min) !important;
+  font-weight: var(--yb-font-weight-semibold) !important;
+}
+
+/* stepper: o controle mais errado por dedo grande em loja mobile */
+.minus-btn, .plus-btn {
+  min-width: var(--yb-target-min) !important;
+  min-height: var(--yb-target-min) !important;
+  border-radius: var(--yb-radius-control) !important;
+  color: var(--yb-text-primary) !important;
+  background: transparent !important;
+  transition: background var(--yb-transition-control) !important;
+}
+.minus-btn:hover, .plus-btn:hover { background: var(--yb-bg-muted) !important; }
+.quantity-input {
+  height: var(--yb-target-min) !important;
+  font-variant-numeric: tabular-nums;
+  color: var(--yb-text-primary) !important;
+}
+
+/* -------------------------------------------------------------------- preço
+   Tabular sempre: em grid, dígito precisa alinhar em coluna. */
+.card-product__price, .product_price, .price, [class*="price"]:not([class*="compare"]) {
+  font-variant-numeric: tabular-nums !important;
+  letter-spacing: var(--yb-tracking-tight) !important;
+  color: var(--yb-text-primary) !important;
+}
+.card-product__price, .product_price {
+  font-size: var(--yb-type-h4-size) !important;
+  font-weight: var(--yb-type-price-weight) !important;
+}
+.card-product__compare_price {
+  color: var(--yb-text-muted) !important;
+  text-decoration: line-through !important;
+  font-variant-numeric: tabular-nums !important;
+  font-weight: var(--yb-font-weight-regular) !important;
+}
+
+/* --------------------------------------------------------------------- card
+   O truncamento em 2 linhas nasceu de defeito observado: títulos reais vão de
+   2 a 5 linhas e desalinham preço e rating na mesma fileira. */
+.card-product { gap: var(--yb-space-3) !important; }
+.card-product__image, .card-product img {
+  border-radius: var(--yb-radius-media) !important;
+}
+.card-product a[class*="title"], .card-product h3, .card-product h4,
+.card-product .product-title {
+  font-size: var(--yb-type-body-sm-size) !important;
+  line-height: var(--yb-type-body-sm-line) !important;
+  font-weight: var(--yb-font-weight-medium) !important;
+  color: var(--yb-text-primary) !important;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--yb-card-title-lines);
+  line-clamp: var(--yb-card-title-lines);
+  overflow: hidden;
+}
+
+/* ----------------------------------------------------------------- formulário */
+.field__input, .search-input, input[type="text"], input[type="email"],
+input[type="search"], select, textarea {
+  font-family: var(--yb-font-family-base) !important;
+  font-size: var(--yb-type-body-size) !important;
+  color: var(--yb-text-primary) !important;
+  background: var(--yb-surface) !important;
+  border: 1px solid var(--yb-border) !important;
+  border-radius: var(--yb-radius-control) !important;
+  min-height: var(--yb-target-min) !important;
+  padding: var(--yb-space-3) var(--yb-space-4) !important;
+}
+
+/* ----------------------------------------------------------------- acordeão */
+.accordion-button {
+  font-family: var(--yb-font-family-base) !important;
+  font-size: var(--yb-type-body-size) !important;
+  font-weight: var(--yb-font-weight-medium) !important;
+  min-height: var(--yb-target-min) !important;
+  color: var(--yb-text-primary) !important;
+}
+
+/* -------------------------------------------------------------------- forma
+   O tema pratica 12 raios distintos. O sistema tem 5. */
+[class*="rounded"]:not([class*="rounded-full"]):not(.card-product__image) {
+  border-radius: var(--yb-radius-card) !important;
+}
+.trust_badges, .gift-lvl-badge, [class*="badge"]:not([class*="jdgm"]) {
+  border-radius: var(--yb-radius-badge) !important;
+}
+
+/* -------------------------------------------------------------------- foco
+   Obrigatório e visível. O tema perde o foco em vários controles. */
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible, summary:focus-visible {
+  outline: var(--yb-focus-width) solid var(--yb-focus-color) !important;
+  outline-offset: var(--yb-focus-offset) !important;
+}
+
+/* =========================================================================
+   MAPA TAILWIND -> TOKENS YBERA
+
+   A parte que faltava, e que responde por 94% da tela. O tema nao usa classe
+   semantica: a faixa preta e `bg-black text-white py-4 text-sm`, o header e
+   `flex justify-center rounded-full w-9 h-9`. So `.text-sm` aparece 156 vezes.
+
+   Mapear componente sem mapear as utilitarias alcanca 5,8% da pagina.
+   ========================================================================= */
+
+/* ---- escala tipografica ----
+   A do Tailwind ja bate quase toda com a do sistema. As duas que divergem sao
+   justamente os tamanhos fora da escala que o auditor achou na loja:
+   12px (35 ocorrencias) e 30px (11). */
+.text-xs   { font-size: var(--yb-font-size-xs) !important;   /* 12 -> 13 */
+             line-height: var(--yb-line-height-base) !important; }
+.text-sm   { font-size: var(--yb-font-size-sm) !important;
+             line-height: var(--yb-line-height-base) !important; }
+.text-base { font-size: var(--yb-font-size-md) !important;
+             line-height: var(--yb-line-height-relaxed) !important; }
+.text-lg   { font-size: var(--yb-font-size-lg) !important;
+             line-height: var(--yb-line-height-relaxed) !important; }
+.text-xl   { font-size: var(--yb-font-size-xl) !important;
+             line-height: var(--yb-line-height-base) !important;
+             letter-spacing: var(--yb-tracking-tight) !important; }
+.text-2xl  { font-size: var(--yb-font-size-2xl) !important;
+             line-height: var(--yb-line-height-base) !important;
+             letter-spacing: var(--yb-tracking-tight) !important; }
+.text-3xl  { font-size: var(--yb-font-size-3xl) !important;   /* 30 -> 32 */
+             line-height: var(--yb-line-height-snug) !important;
+             letter-spacing: var(--yb-tracking-tighter) !important; }
+.text-4xl  { font-size: var(--yb-font-size-4xl) !important;
+             line-height: var(--yb-line-height-snug) !important;
+             letter-spacing: var(--yb-tracking-tighter) !important; }
+.text-5xl  { font-size: var(--yb-font-size-5xl) !important;
+             line-height: var(--yb-line-height-tight) !important;
+             letter-spacing: var(--yb-tracking-tightest) !important; }
+.text-6xl, .text-7xl {
+             font-size: var(--yb-font-size-6xl) !important;
+             line-height: var(--yb-line-height-tight) !important;
+             letter-spacing: var(--yb-tracking-tightest) !important; }
+
+/* O tracking apertado no tamanho grande e o principal vetor de distincao do
+   sistema — a familia e neutra de proposito, entao o gesto vive aqui. */
+
+/* ---- pesos ---- */
+.font-light   { font-weight: var(--yb-font-weight-regular) !important; }
+.font-normal  { font-weight: var(--yb-font-weight-regular) !important; }
+.font-medium  { font-weight: var(--yb-font-weight-medium) !important; }
+.font-semibold{ font-weight: var(--yb-font-weight-semibold) !important; }
+.font-bold    { font-weight: var(--yb-font-weight-bold) !important; }
+.font-extrabold, .font-black { font-weight: var(--yb-font-weight-extrabold) !important; }
+
+/* ---- rotulos em caixa alta ----
+   Regra 4 do guia de voz: versal e rotulo, e rotulo pede tracking. */
+.uppercase {
+  letter-spacing: var(--yb-tracking-wider) !important;
+  font-weight: var(--yb-font-weight-semibold) !important;
+}
+
+/* ---- cor: os neutros do Tailwind viram a rampa do sistema ----
+   O tema mistura zinc, gray e cinzas avulsos. */
+.text-black                        { color: var(--yb-text-primary) !important; }
+.text-white                        { color: var(--yb-text-inverse) !important; }
+.text-zinc-900,.text-gray-900,.text-neutral-900 { color: var(--yb-text-primary) !important; }
+.text-zinc-700,.text-gray-700,.text-neutral-700 { color: var(--yb-text-secondary) !important; }
+.text-zinc-600,.text-gray-600,.text-neutral-600 { color: var(--yb-text-secondary) !important; }
+/* zinc-500 mede 4,40:1 sobre cinza claro e reprova: sobe para o piso */
+.text-zinc-500,.text-gray-500,.text-neutral-500 { color: var(--yb-text-muted) !important; }
+.text-zinc-400,.text-gray-400,.text-neutral-400 { color: var(--yb-text-muted) !important; }
+
+.bg-black                          { background-color: var(--yb-bg-inverse) !important; }
+.bg-white                          { background-color: var(--yb-surface) !important; }
+.bg-zinc-50,.bg-gray-50,.bg-neutral-50    { background-color: var(--yb-bg-subtle) !important; }
+.bg-zinc-100,.bg-gray-100,.bg-neutral-100 { background-color: var(--yb-bg-muted) !important; }
+.bg-zinc-200,.bg-gray-200,.bg-neutral-200 { background-color: var(--yb-bg-muted) !important; }
+
+.border-zinc-200,.border-gray-200  { border-color: var(--yb-border-subtle) !important; }
+.border-zinc-300,.border-gray-300  { border-color: var(--yb-border) !important; }
+
+/* ---- forma: 12 raios na loja, 5 no sistema ---- */
+.rounded-sm   { border-radius: var(--yb-radius-sm) !important; }
+.rounded      { border-radius: var(--yb-radius-sm) !important; }
+.rounded-md   { border-radius: var(--yb-radius-md) !important; }
+.rounded-lg   { border-radius: var(--yb-radius-md) !important; }
+.rounded-xl   { border-radius: var(--yb-radius-lg) !important; }
+.rounded-2xl  { border-radius: var(--yb-radius-xl) !important; }
+.rounded-3xl  { border-radius: var(--yb-radius-xl) !important; }
+.rounded-full { border-radius: var(--yb-radius-full) !important; }
+
+/* ---- a faixa de anuncio: bg-black text-white py-4 text-sm ---- */
+.topbar {
+  background: var(--yb-bg-inverse) !important;
+  color: var(--yb-text-inverse) !important;
+  padding-block: var(--yb-space-3) !important;
+  font-size: var(--yb-type-caption-size) !important;
+  letter-spacing: var(--yb-tracking-wide) !important;
+}
+.topbar strong { font-weight: var(--yb-font-weight-medium) !important; }
+
+/* ---- header e navegacao ---- */
+header, .header, [class*="header"] { background: var(--yb-bg-page); }
+header a, nav a {
+  color: var(--yb-text-secondary) !important;
+  font-size: var(--yb-type-body-sm-size) !important;
+  letter-spacing: 0 !important;
+}
+header a:hover, nav a:hover { color: var(--yb-text-primary) !important; }
+/* icone do header: alvo de toque de verdade */
+header button, header .w-9, header .h-9 {
+  min-width: var(--yb-target-min) !important;
+  min-height: var(--yb-target-min) !important;
+  border-radius: var(--yb-radius-control) !important;
+}
+
+/* ---- footer ----
+   O footer da loja e BRANCO. A versao escura existe no padrao `yb-footer`, mas
+   impor ela aqui seria redesenhar, nao aplicar o sistema — e um ensaio que
+   mistura as duas coisas nao responde mais a pergunta que faz. Aqui so
+   traduzimos cor e tipo para os tokens; o layout fica como esta. */
+footer a { color: var(--yb-text-secondary) !important; }
+footer a:hover { color: var(--yb-text-primary) !important; }
+footer h2, footer h3, footer h4 {
+  letter-spacing: var(--yb-tracking-tight) !important;
+  color: var(--yb-text-primary) !important;
+}
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }

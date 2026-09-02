@@ -1,0 +1,14 @@
+{
+  "name": "ybera-design-system",
+  "version": "0.10.0",
+  "private": true,
+  "description": "Design system da Ybera — tokens, componentes e padrões, independente de plataforma",
+  "type": "module",
+  "scripts": {
+    "test": "node test/validate.mjs",
+    "build": "./build.sh",
+    "start": "./serve.sh",
+    "check": "./build.sh && node test/validate.mjs"
+  },
+  "engines": { "node": ">=18" }
+}

@@ -1,0 +1,14 @@
+/* =========================================================================
+   YBERA DESIGN SYSTEM — ponto de entrada único.
+
+   Uso:
+     <link rel="stylesheet" href="tokens/ybera.css">
+     <html data-market="us">
+
+   Plataforma-agnóstico por decisão de projeto: a loja US roda Shopify e a
+   BR roda Wake. CSS custom properties é o único denominador comum entre as
+   duas — por isso os tokens não dependem de build, framework ou tema.
+   ========================================================================= */
+
+@import url("00-primitives.css");
+@import url("01-semantic.css");

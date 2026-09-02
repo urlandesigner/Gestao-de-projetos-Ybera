@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Components — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="ybera-components.css">
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--yb-bg-page);color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base);font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line);-webkit-font-smoothing:antialiased}
+code{font-family:var(--yb-font-family-mono);font-size:.8125rem}
+
+.doc{display:grid;grid-template-columns:236px 1fr;min-height:100vh}
+.doc > *{min-width:0}
+@media (max-width:900px){.doc{grid-template-columns:1fr}}
+
+.nav{border-right:1px solid var(--yb-border-subtle);padding:var(--yb-space-8) var(--yb-space-6);
+  position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--yb-bg-subtle)}
+@media (max-width:900px){.nav{position:static;height:auto;border-right:none;
+  border-bottom:1px solid var(--yb-border-subtle)}}
+.nav-brand{font-size:var(--yb-type-h4-size);font-weight:var(--yb-font-weight-extrabold);
+  letter-spacing:var(--yb-tracking-tighter);margin:0 0 var(--yb-space-1)}
+.nav-ver{font-size:var(--yb-type-overline-size);letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase;color:var(--yb-text-muted);
+  font-weight:var(--yb-font-weight-semibold);margin:0 0 var(--yb-space-6)}
+.nav ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+@media (max-width:900px){.nav ul{flex-direction:row;flex-wrap:wrap;gap:var(--yb-space-2)}}
+.nav a{display:block;padding:var(--yb-space-2) var(--yb-space-3);
+  color:var(--yb-text-secondary);text-decoration:none;
+  font-size:var(--yb-type-body-sm-size);border-radius:var(--yb-radius-sm)}
+.nav a:hover{background:var(--yb-bg-muted);color:var(--yb-text-primary)}
+.nav a:focus-visible{outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset)}
+.nav-back{margin-top:var(--yb-space-6);padding-top:var(--yb-space-4);
+  border-top:1px solid var(--yb-border-subtle)}
+
+.main{padding:var(--yb-space-16) var(--yb-space-10);max-width:940px}
+/* Centrada, e mais larga quando o par mobile esta ligado. O limite de leitura
+   continua onde importa — .lede, .when e .note tem max-width em ch —, mas o
+   palco nao e texto: com 1000px travados, o quadro de 375 ao lado deixava so
+   ~525 para a coluna "fluido", e o bloco de compra aparecia espremido num
+   desktop que ninguem tem. */
+/* width:100% junto do auto: sozinha, a margem automatica faz do .main uma
+   caixa que encolhe para o conteudo — e ai o `1fr` do par deixa de significar
+   "o resto da tela" e passa a significar "o que o conteudo pedir". Na pagina
+   de componentes isso travava a coluna fluida em 1178 em vez de 1560. */
+.main{width:100%; margin-inline:auto}
+@media (min-width:1600px){
+  body[data-mobile="on"] .main{max-width:1560px}
+}
+@media (max-width:900px){.main{padding:var(--yb-space-10) var(--yb-page-gutter)}}
+.hero h1{font-size:var(--yb-type-display-2-size);line-height:var(--yb-type-display-2-line);
+  letter-spacing:var(--yb-type-display-2-track);font-weight:var(--yb-type-display-2-weight);
+  margin:0 0 var(--yb-space-4)}
+.hero > p{font-size:var(--yb-type-body-lg-size);line-height:var(--yb-type-body-lg-line);
+  color:var(--yb-text-secondary);max-width:62ch;margin:0 0 var(--yb-space-6)}
+
+/* controle da decisão pendente */
+.ctl{display:flex;align-items:center;gap:var(--yb-space-4);flex-wrap:wrap;
+  padding:var(--yb-space-4) var(--yb-space-5);background:var(--yb-bg-subtle);
+  border:1px solid var(--yb-border);border-radius:var(--yb-radius-card);
+  margin-bottom:var(--yb-space-16);position:sticky;top:var(--yb-space-4);
+  z-index:var(--yb-z-sticky);backdrop-filter:blur(6px)}
+.ctl-lab{font-size:var(--yb-type-overline-size);letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase;color:var(--yb-text-muted);font-weight:var(--yb-font-weight-semibold)}
+.seg{display:flex;background:var(--yb-bg-muted);border-radius:var(--yb-radius-sm);padding:3px;gap:3px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{padding:var(--yb-space-2) var(--yb-space-4);border-radius:3px;cursor:pointer;
+  font-size:var(--yb-type-body-sm-size);font-weight:var(--yb-font-weight-medium);
+  color:var(--yb-text-muted);display:flex;align-items:center;gap:var(--yb-space-2)}
+.seg input:checked + label{background:var(--yb-surface);color:var(--yb-text-primary);
+  box-shadow:var(--yb-elevation-card)}
+.seg input:focus-visible + label{outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset)}
+.dot{width:11px;height:11px;border-radius:var(--yb-radius-full);display:block}
+body[data-cta="graphite"]{--yb-action-bg:var(--yb-gray-950);
+  --yb-action-bg-hover:var(--yb-gray-800);--yb-action-bg-active:var(--yb-gray-900)}
+
+section{margin-bottom:var(--yb-space-20);scroll-margin-top:var(--yb-space-20)}
+section > h2{font-size:var(--yb-type-h2-size);line-height:var(--yb-type-h2-line);
+  letter-spacing:var(--yb-type-h2-track);font-weight:var(--yb-type-h2-weight);
+  margin:0 0 var(--yb-space-2)}
+.when{color:var(--yb-text-secondary);max-width:64ch;margin:0 0 var(--yb-space-6)}
+h3.row-label{font-size:var(--yb-type-overline-size);letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase;color:var(--yb-text-muted);font-weight:var(--yb-font-weight-semibold);
+  margin:var(--yb-space-8) 0 var(--yb-space-3)}
+.demo{display:flex;gap:var(--yb-space-4);flex-wrap:wrap;align-items:center;
+  padding:var(--yb-space-6);border:1px solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-card);background:var(--yb-surface)}
+.demo--stack{flex-direction:column;align-items:stretch}
+.demo--grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+.demo--dark{background:var(--yb-bg-inverse)}
+/* Faixa que rola por dentro (review, vídeo, logo bar) precisa de contexto de
+   BLOCO. Como item de
+   um flex com wrap, a linha se dimensiona pelo conteúdo do trilho — 1376px com
+   quatro reviews — e o overflow-x nunca chega a rolar: quem rola é a página
+   inteira. Em produção esses trilhos vivem dentro de .yb-block, que é bloco;
+   aqui o palco reproduz a mesma condição. */
+.demo--rail{display:block}
+.note{margin-top:var(--yb-space-4);padding:var(--yb-space-4) var(--yb-space-5);
+  background:var(--yb-info-surface);border-left:3px solid var(--yb-info-solid);
+  border-radius:0 var(--yb-radius-sm) var(--yb-radius-sm) 0;max-width:74ch}
+.note b{display:block;font-size:var(--yb-type-overline-size);
+  letter-spacing:var(--yb-tracking-wider);text-transform:uppercase;
+  color:var(--yb-info-text);margin-bottom:var(--yb-space-2);
+  font-weight:var(--yb-font-weight-semibold)}
+.note p{margin:0;font-size:var(--yb-type-body-sm-size);color:var(--yb-text-secondary)}
+/* .doc-credit e nao `footer`: seletor de elemento solto numa pagina que
+   exibe componentes vaza para dentro do demo. O `max-width:70ch` daqui
+   estava esmagando o footer do sistema a 599px. */
+.doc-credit{border-top:1px solid var(--yb-border-subtle);padding-top:var(--yb-space-6);
+  font-size:var(--yb-type-caption-size);color:var(--yb-text-muted);max-width:70ch}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ---------------------------------------------------------------------------
+   Par desktop + mobile.
+
+   O mobile e <iframe>, nao uma caixa estreita: @media consulta a VIEWPORT.
+   Encolher uma div deixaria o demo fino com o CSS de desktop — foi assim que
+   a gaveta do carrinho apareceu com 222px fingindo estar quebrada.
+   --------------------------------------------------------------------------- */
+.par{display:grid; gap:var(--yb-space-5); align-items:start}
+/* Lado a lado so acima de 1600 (breakpoint da moldura da doc, nao do sistema):
+   em 1440 a coluna de desktop caia para 469px, que nao e desktop nenhum. Abaixo
+   disso o par empilha e cada um fica com a largura que merece. */
+@media (min-width:1600px){
+  /* `auto` e nao 375: a moldura mede 377 (375 de viewport + 1px de borda de
+     cada lado). Numa trilha de 375 sobravam 2px, e o overflow-x abaixo virava
+     barra de rolagem permanente sob cada quadro — que e o "corte" que aparece. */
+  body[data-mobile="on"] .par{grid-template-columns:minmax(0,1fr) auto}
+  body[data-mobile="on"] .par__mob{overflow-x:visible}
+}
+.par__rot{
+  display:block; margin-bottom:var(--yb-space-2);
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; color:var(--yb-text-muted);
+  font-weight:var(--yb-font-weight-semibold);
+}
+/* overflow-x no lugar de max-width: numa doc ESTREITA, encolher o quadro
+   entregaria um "375" que nao mede 375. Melhor rolar do que mentir. Quando ha
+   espaco (lado a lado), a regra abaixo devolve overflow-x:visible e nenhuma
+   barra aparece. */
+.par__mob{min-width:0; overflow-x:auto}
+body:not([data-mobile="on"]) .par__mob{display:none}
+.par__mob iframe{display:block; width:375px; border:0; background:var(--yb-bg-page)}
+/* content-box para a borda ficar FORA dos 375 — com border-box ela comia dois
+   pixels e o viewport de dentro virava 373. */
+.par__mob .quadro{
+  box-sizing:content-box; width:375px; flex:none;
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-card);
+  overflow:hidden;
+}
+.mob-toggle{
+  display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  min-height:var(--yb-target-min); padding:0 var(--yb-space-4);
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-control);
+  background:var(--yb-surface); color:var(--yb-text-secondary);
+  font-family:inherit; font-size:var(--yb-type-body-sm-size); cursor:pointer;
+}
+.mob-toggle:hover{border-color:var(--yb-border-strong); color:var(--yb-text-primary)}
+.mob-toggle:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.mob-toggle[aria-pressed="true"]{
+  background:var(--yb-action-secondary-bg); color:var(--yb-action-secondary-text);
+  border-color:var(--yb-action-secondary-bg);
+}
+</style>
+</head>
+<body data-cta="magenta">
+<div class="doc">
+
+<nav class="nav">
+  <p class="nav-brand">Ybera</p>
+  <p class="nav-ver">Components · v0.10</p>
+  <ul>
+    <li><a href="#accordion">Accordion</a></li>
+    <li><a href="#alert">Alert</a></li>
+    <li><a href="#badge">Badge</a></li>
+    <li><a href="#quote">Brand quote</a></li>
+    <li><a href="#crumb">Breadcrumb</a></li>
+    <li><a href="#button">Button</a></li>
+    <li><a href="#seals">Certification seals</a></li>
+    <li><a href="#check">Checkbox &amp; radio</a></li>
+    <li><a href="#collection">Collection card</a></li>
+    <li><a href="#field">Form field</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#logo">Logo</a></li>
+    <li><a href="#logobar">Logo bar</a></li>
+    <li><a href="#dialog">Modal &amp; drawer</a></li>
+    <li><a href="#pagination">Pagination</a></li>
+    <li><a href="#post">Post</a></li>
+    <li><a href="#price">Price</a></li>
+    <li><a href="#card">Product card</a></li>
+    <li><a href="#stepper">Quantity stepper</a></li>
+    <li><a href="#rating">Rating</a></li>
+    <li><a href="#review">Review</a></li>
+    <li><a href="#skeleton">Skeleton</a></li>
+    <li><a href="#toast">Toast</a></li>
+    <li><a href="#variant">Variant picker</a></li>
+    <li><a href="#video">Vertical video carousel</a></li>
+  </ul>
+  <div class="nav-back"><ul>
+    <li><a href="../docs/index.html">← Tokens</a></li>
+  </ul></div>
+</nav>
+
+<main class="main">
+  <div class="hero">
+    <h1>Componentes</h1>
+    <button class="mob-toggle" id="mob-toggle" type="button" aria-pressed="true">Mobile: ligado</button>
+    <p>Vinte e cinco componentes construídos sobre a fundação. Cor vem sempre da camada
+    semântica — <b>zero</b> hex e <b>zero</b> primitivo de cor em toda a biblioteca.
+    Todo prefixo é <code>yb-</code> porque estes componentes vão conviver com o tema
+    Shopify, o Ecomposer, o Tailwind e o Judge.me na mesma página.</p>
+  </div>
+
+  <div class="ctl">
+    <span class="ctl-lab">Decisão em aberto · cor de ação</span>
+    <div class="seg">
+      <input type="radio" name="cta" id="c-m" checked>
+      <label for="c-m"><i class="dot" style="background:#CA235F"></i>Magenta</label>
+      <input type="radio" name="cta" id="c-g">
+      <label for="c-g"><i class="dot" style="background:#1E1E1F"></i>Grafite</label>
+    </div>
+  </div>
+
+  <section id="accordion">
+    <h2>Accordion</h2>
+    <p class="when">Informação secundária da PDP: ingredientes, modo de uso, frete.</p>
+    <div class="demo demo--stack">
+      <div class="yb-accordion">
+        <details open><summary>How to use</summary><div class="yb-accordion__body"><p>Wash with a clarifying shampoo and towel-dry. Apply from mid-length to ends, avoiding the scalp. Leave for 20 minutes, then blow-dry and flat-iron in thin sections.</p></div></details>
+        <details><summary>Ingredients</summary><div class="yb-accordion__body"><p>Aqua, Cetearyl Alcohol, Hydrolyzed Keratin, Behentrimonium Chloride, Glycerin, Argania Spinosa Kernel Oil, Panthenol.</p></div></details>
+        <details><summary>Shipping &amp; returns</summary><div class="yb-accordion__body"><p>Free standard shipping over $50. Returns within 30 days, unopened.</p></div></details>
+      </div>
+    </div>
+    <div class="note">
+      <b>É <code>&lt;details&gt;</code> nativo</b>
+      <p>Sem JavaScript. Teclado, leitor de tela e busca do navegador funcionam de
+      graça — inclusive Ctrl+F encontrando texto dentro de seção fechada nos
+      navegadores que suportam.</p>
+    </div>
+  </section>
+  <section id="alert">
+    <h2>Alert</h2>
+    <p class="when">Uma mensagem, um alerta. Empilhar três é garantir que nenhum seja lido.</p>
+    <div class="demo demo--stack">
+      <div class="yb-alert yb-alert--success" role="status"><div><b class="yb-alert__title">Order confirmed</b><p>We sent the tracking number to you@example.com.</p></div></div>
+      <div class="yb-alert yb-alert--warning" role="status"><div><b class="yb-alert__title">Only 3 left</b><p>This size is running low.</p></div></div>
+      <div class="yb-alert yb-alert--danger" role="alert"><div><b class="yb-alert__title">Payment declined</b><p>Your bank rejected the charge. Try another card or contact your bank.</p></div></div>
+      <div class="yb-alert yb-alert--info" role="status"><div><b class="yb-alert__title">Free shipping</b><p>Add $12.10 more to qualify for free standard shipping.</p></div></div>
+    </div>
+    <div class="note">
+      <b>role="alert" só no que interrompe</b>
+      <p>O de erro usa <code>role="alert"</code> e interrompe o leitor de tela na hora.
+      Os outros usam <code>role="status"</code> e esperam a pausa. Usar
+      <code>alert</code> em tudo transforma o leitor de tela em ruído.</p>
+    </div>
+  </section>
+  <section id="badge">
+    <h2>Badge</h2>
+    <p class="when">Rotula sem competir. Nunca carrega ação — badge não é botão.</p>
+    <div class="demo">
+      <span class="yb-badge yb-badge--sale">Save 16%</span>
+      <span class="yb-badge yb-badge--soft">Best seller</span>
+      <span class="yb-badge yb-badge--success">In stock</span>
+      <span class="yb-badge yb-badge--warning">Low stock</span>
+      <span class="yb-badge yb-badge--danger">Sold out</span>
+    </div>
+    <h3 class="row-label">On dark surface</h3>
+    <div class="demo demo--dark">
+      <span class="yb-badge yb-badge--accent">New line</span>
+      <span class="yb-badge yb-badge--sale">Limited</span>
+    </div>
+    <div class="note">
+      <b>O dourado só vive aqui</b>
+      <p>O <code>--accent</code> usa o dourado da marca sobre grafite (6.96:1).
+      Sobre branco ele mede 2.39:1 e reprova — por isso não existe badge dourado
+      em fundo claro.</p>
+    </div>
+  </section>
+  <section id="quote">
+    <h2>Brand quote</h2>
+    <p class="when">A fala de quem assina a marca. Uma por página — repetida, vira slogan.</p>
+    <div class="demo demo--stack">
+      <div class="yb-quote">
+        <div class="yb-quote__body">
+          <blockquote class="yb-quote__text">&ldquo;I believe every woman deserves to transform her hair, her confidence and her future with the power of beauty in her own hands.&rdquo;</blockquote>
+          <cite class="yb-quote__author">Sauana Alves — Co-founder, Ybera Paris</cite>
+          <div class="yb-quote__action">
+            <a class="yb-btn yb-btn--primary" href="#quote">Our story</a>
+          </div>
+        </div>
+        <div class="yb-quote__media">
+          <img src="../_captura/nova-loja/img/02sauana-2896ea7c.webp" alt="Sauana Alves, co-fundadora da Ybera Paris, de blazer branco" loading="lazy">
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>As aspas ficam no texto, não em <code>::before</code></b>
+      <p>Assim quem copia a frase leva a pontuação junto, e o leitor de tela lê a
+      citação inteira — conteúdo gerado por CSS nem todo software anuncia. A frase
+      usa display-2 porque aqui ela é o conteúdo, não apoio de outra coisa.</p>
+    </div>
+    <div class="note">
+      <b>A ação é secundária ao que foi dito</b>
+      <p><code>.yb-quote__action</code> vem depois de um filete, separada da
+      assinatura. Colada no <code>cite</code>, a citação passa a parecer anúncio —
+      e a frase perde a autoridade que justificava o espaço que ela ocupa.</p>
+    </div>
+  </section>
+  <section id="crumb">
+    <h2>Breadcrumb</h2>
+    <p class="when">Onde a pessoa está. A página atual não é link.</p>
+    <div class="demo">
+      <nav class="yb-crumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Treatments</a></li>
+          <li><a href="#">Sealants</a></li>
+          <li><span aria-current="page">Fashion Gold</span></li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+  <section id="button">
+    <h2>Button</h2>
+    <p class="when">Uma ação primária por tela. Se há duas, uma delas não é primária.</p>
+    <h3 class="row-label">Variants</h3>
+    <div class="demo">
+      <button class="yb-btn yb-btn--primary">Add to cart</button>
+      <button class="yb-btn yb-btn--secondary">Continue shopping</button>
+      <button class="yb-btn yb-btn--ghost">Size guide</button>
+      <button class="yb-btn yb-btn--danger">Remove item</button>
+    </div>
+    <h3 class="row-label">Sizes</h3>
+    <div class="demo">
+      <button class="yb-btn yb-btn--primary yb-btn--sm">Small</button>
+      <button class="yb-btn yb-btn--primary">Medium</button>
+      <button class="yb-btn yb-btn--primary yb-btn--lg">Large</button>
+    </div>
+    <h3 class="row-label">States</h3>
+    <div class="demo">
+      <button class="yb-btn yb-btn--primary">Normal</button>
+      <button class="yb-btn yb-btn--primary yb-btn--loading">Adding</button>
+      <button class="yb-btn yb-btn--primary" disabled>Sold out</button>
+      <button class="yb-btn yb-btn--ghost" disabled>Unavailable</button>
+    </div>
+    <h3 class="row-label">Full width</h3>
+    <div class="demo demo--stack">
+      <button class="yb-btn yb-btn--primary yb-btn--block">Add to cart — $168.90</button>
+    </div>
+    <div class="note">
+      <b>Por que o carregando mantém a largura</b>
+      <p>No estado <code>--loading</code> o rótulo fica transparente em vez de sumir.
+      Se o texto saísse, o botão encolheria e o layout saltaria embaixo do dedo —
+      exatamente no momento em que a pessoa acabou de tocar para comprar.
+      O <code>--sm</code> é o único que fica abaixo dos 44px: use só onde não há toque.</p>
+    </div>
+  </section>
+  <section id="seals">
+    <h2>Certification seals</h2>
+    <p class="when">Faixa de garantia entre a prova social e o rodapé. Diz o que o produto não tem — não é peça de venda.</p>
+    <div class="demo demo--stack">
+      <div class="yb-seals" role="group" aria-label="Product guarantees">
+        <div class="yb-seal">
+          <span class="yb-seal__mark"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cruelty-free"/></svg></span>
+          <span class="yb-seal__label">Cruelty free</span>
+        </div>
+        <div class="yb-seal">
+          <span class="yb-seal__mark"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-vegan"/></svg></span>
+          <span class="yb-seal__label">Vegan</span>
+        </div>
+        <div class="yb-seal">
+          <span class="yb-seal__mark"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-paraben-free"/></svg></span>
+          <span class="yb-seal__label">Paraben free</span>
+        </div>
+        <div class="yb-seal">
+          <span class="yb-seal__mark"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-sulfate-free"/></svg></span>
+          <span class="yb-seal__label">Sulfate free</span>
+        </div>
+        <div class="yb-seal">
+          <span class="yb-seal__mark"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-formaldehyde-free"/></svg></span>
+          <span class="yb-seal__label">Formaldehyde free</span>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Neutra de propósito</b>
+      <p>Se a faixa usasse a cor de ação, cinco selos disputariam a mesma atenção
+      que o botão de compra. Garantia sossega; ela não precisa gritar.</p>
+    </div>
+    <div class="note">
+      <b>O ícone não é a informação</b>
+      <p>Cada marca é <code>aria-hidden</code> e quem carrega o sentido é o rótulo
+      ao lado — um leitor de tela ouve "Cruelty free", não "imagem". Abaixo de 768
+      a fileira de cinco vira grade de três: em uma linha só, o texto começava a
+      quebrar em duas.</p>
+    </div>
+  </section>
+  <section id="check">
+    <h2>Checkbox &amp; radio</h2>
+    <p class="when">Controles nativos. Teclado e leitor de tela funcionam sem código.</p>
+    <div class="demo demo--stack">
+      <label class="yb-check"><input type="checkbox" checked><span>Email me when this is back in stock</span></label>
+      <label class="yb-check"><input type="checkbox"><span>Add gift wrapping (+$4.90)</span></label>
+      <label class="yb-check"><input type="radio" name="ship" checked><span>Standard shipping — free, arrives Sep 3–5</span></label>
+      <label class="yb-check"><input type="radio" name="ship"><span>Express shipping — $12.90, arrives Sep 1</span></label>
+    </div>
+  </section>
+  <section id="collection">
+    <h2>Collection card</h2>
+    <p class="when">Porta de entrada para uma coleção. O cartão inteiro é o link — o rótulo sozinho seria um alvo pequeno dentro de uma imagem grande.</p>
+    <h3 class="row-label">Label centered</h3>
+    <div class="demo demo--stack">
+      <ul class="yb-collections">
+        <li><a class="yb-collection yb-collection--center" href="#collection">
+          <img src="../_captura/nova-loja/img/02_hair-problem-f838107d.webp" alt="" loading="lazy">
+          <span class="yb-collection__label">Damaged Hair</span>
+        </a></li>
+        <li><a class="yb-collection yb-collection--center" href="#collection">
+          <img src="../_captura/nova-loja/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy">
+          <span class="yb-collection__label">Frizz Control &amp; Dry Hair</span>
+        </a></li>
+        <li><a class="yb-collection yb-collection--center" href="#collection">
+          <img src="../_captura/nova-loja/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy">
+          <span class="yb-collection__label">Hair Loss / Thinning</span>
+        </a></li>
+        <li><a class="yb-collection yb-collection--center" href="#collection">
+          <img src="../_captura/nova-loja/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy">
+          <span class="yb-collection__label">Curly Hair</span>
+        </a></li>
+      </ul>
+    </div>
+    <h3 class="row-label">Label at the bottom</h3>
+    <div class="demo demo--stack">
+      <ul class="yb-collections">
+        <li><a class="yb-collection yb-collection--bottom" href="#collection">
+          <img src="../_captura/nova-loja/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy">
+          <span class="yb-collection__label">Fashion Gold</span>
+        </a></li>
+        <li><a class="yb-collection yb-collection--bottom" href="#collection">
+          <img src="../_captura/nova-loja/img/Prancheta_2-188b6fea.webp" alt="" loading="lazy">
+          <span class="yb-collection__label">Cronograma</span>
+        </a></li>
+        <li><a class="yb-collection yb-collection--bottom" href="#collection">
+          <img src="../_captura/nova-loja/img/Prancheta_3-d098ed99.webp" alt="" loading="lazy">
+          <span class="yb-collection__label">Vello</span>
+        </a></li>
+        <li><a class="yb-collection yb-collection--bottom" href="#collection">
+          <img src="../_captura/nova-loja/img/Prancheta_4-26cbd0ec.webp" alt="" loading="lazy">
+          <span class="yb-collection__label">Mirra</span>
+        </a></li>
+      </ul>
+    </div>
+    <div class="note">
+      <b>Duas posições de rótulo, um componente</b>
+      <p>O que muda entre a grade de problema de cabelo e a de linha de produto é
+      onde o rótulo pousa — <code>--center</code> ou <code>--bottom</code>. Anatomia
+      igual não vira componente novo: vira modificador.</p>
+    </div>
+    <div class="note">
+      <b>Por que o <code>alt</code> é vazio aqui</b>
+      <p>O nome do link já está no rótulo visível. Em produção o <code>alt</code>
+      repete esse mesmo texto e o leitor de tela anuncia "Damaged Hair Damaged
+      Hair". Imagem que só ilustra o rótulo ao lado é decorativa, e decoração se
+      declara com <code>alt=""</code>.</p>
+    </div>
+    <div class="note">
+      <b>O recuo cede antes da palavra</b>
+      <p>Em 320px o cartão mede 134, e o recuo fixo de 64 deixava 70px de caixa:
+      "Frizz Control &amp; Dry Hair" quebrava em quatro linhas. Abaixo de 480 o recuo
+      e o corpo do rótulo encolhem — o texto continua legível, a pill não estoura.</p>
+    </div>
+  </section>
+  <section id="field">
+    <h2>Form field</h2>
+    <p class="when">Erro sempre em texto, nunca só em cor.</p>
+    <div class="demo demo--stack">
+      <div class="yb-field">
+        <label class="yb-field__label" for="f1">Email<span class="req">*</span></label>
+        <input class="yb-input" id="f1" type="email" placeholder="you@example.com">
+        <span class="yb-field__hint">Usamos só para o rastreio do pedido.</span>
+      </div>
+      <div class="yb-field">
+        <label class="yb-field__label" for="f2">ZIP code<span class="req">*</span></label>
+        <input class="yb-input" id="f2" value="0000" aria-invalid="true" aria-describedby="f2e">
+        <span class="yb-field__error" id="f2e">Enter a 5-digit ZIP code, like 33101.</span>
+      </div>
+      <div class="yb-field">
+        <label class="yb-field__label" for="f3">Hair type</label>
+        <select class="yb-select" id="f3">
+          <option>Straight</option><option>Wavy</option><option>Curly</option><option>Coily</option>
+        </select>
+      </div>
+      <div class="yb-field">
+        <label class="yb-field__label" for="f4">Country</label>
+        <input class="yb-input" id="f4" value="United States" disabled>
+      </div>
+    </div>
+    <div class="note">
+      <b>A mensagem diz como consertar</b>
+      <p>"Enter a 5-digit ZIP code, like 33101" em vez de "Invalid input". O erro
+      liga ao campo por <code>aria-describedby</code>, então o leitor de tela anuncia
+      a correção junto com o campo — e a borda vermelha nunca é o único sinal.</p>
+    </div>
+  </section>
+  <section id="gallery">
+    <h2>Gallery</h2>
+    <p class="when">As miniaturas são radios nativos: seta do teclado navega, leitor de tela anuncia.</p>
+    <div class="demo demo--stack">
+      <div class="yb-gallery" data-yb-gallery style="max-width:380px">
+        <div class="yb-gallery__stage">
+          <div class="yb-gallery__slide" data-active="true" style="background:var(--yb-gray-100)"></div>
+          <div class="yb-gallery__slide" style="background:var(--yb-gray-200)"></div>
+          <div class="yb-gallery__slide" style="background:var(--yb-magenta-50)"></div>
+          <div class="yb-gallery__slide" style="background:var(--yb-gold-100)"></div>
+          <div class="yb-gallery__slide" style="background:var(--yb-gray-300)"></div>
+          <span class="yb-gallery__count">1 / 5</span>
+        </div>
+        <div class="yb-gallery__thumbs">
+          <input type="radio" name="gal" id="g1" checked><label for="g1" title="Image 1"></label>
+          <input type="radio" name="gal" id="g2"><label for="g2" title="Image 2"></label>
+          <input type="radio" name="gal" id="g3"><label for="g3" title="Image 3"></label>
+          <input type="radio" name="gal" id="g4"><label for="g4" title="Image 4"></label>
+          <input type="radio" name="gal" id="g5"><label for="g5" title="Image 5"></label>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Sem JS ela ainda troca</b>
+      <p>O <code>:checked</code> do radio já muda o slide via CSS. O JS só
+      sincroniza o contador e o estado <code>data-active</code>. Se o script falhar,
+      a galeria continua navegável — inclusive por teclado.</p>
+    </div>
+  </section>
+  <section id="logo">
+    <h2>Logo</h2>
+    <p class="when">O arquivo oficial do header da loja. Vira componente porque aparece em header, footer, e-mail e recibo — e em cada lugar alguém escolhia uma altura diferente.</p>
+    <h3 class="row-label">Sizes</h3>
+    <div class="demo">
+      <span class="yb-logo yb-logo--sm"><img src="brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span>
+      <span class="yb-logo yb-logo--md"><img src="brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span>
+      <span class="yb-logo yb-logo--lg"><img src="brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span>
+    </div>
+    <h3 class="row-label">On dark surface</h3>
+    <div class="demo demo--dark">
+      <span class="yb-logo yb-logo--md yb-logo--inverse"><img src="brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span>
+    </div>
+    <div class="note">
+      <b>O alt estava dizendo o nome errado</b>
+      <p>Em produção o logo do header tem <code>alt="Fashion Gold"</code> — que é
+      nome de uma linha de produto, não da marca. Um leitor de tela anuncia a loja
+      errada logo no primeiro elemento da página. Aqui o padrão é <code>Ybera</code>.</p>
+    </div>
+    <div class="note">
+      <b>Por que a versão clara é um filtro</b>
+      <p>O arquivo é monocromático preto, então <code>invert(1)</code> devolve
+      branco puro. Isso não valeria para um logo colorido — se a marca ganhar uma
+      versão em cor, o certo passa a ser um segundo arquivo, não um filtro.</p>
+    </div>
+  </section>
+  <section id="logobar">
+    <h2>Logo bar</h2>
+    <p class="when">As sublinhas da marca em faixa escura, entre o conteúdo e o rodapé. Só entra arte monocromática.</p>
+    <div class="demo demo--rail">
+      <div class="yb-logobar" role="group" aria-label="Ybera product lines">
+        <div class="yb-track yb-track--row yb-logobar__track">
+          <img src="../_captura/nova-loja/img/06-4469d0ca.png" alt="Fashion Gold" loading="lazy">
+          <img src="../_captura/nova-loja/img/05-cb480667.png" alt="Cronograma Capilar" loading="lazy">
+          <img src="../_captura/nova-loja/img/08-fee0d272.png" alt="Terra Coco" loading="lazy">
+          <img src="../_captura/nova-loja/img/09-152e7fa7.png" alt="Ybera Paris" loading="lazy">
+          <img src="../_captura/nova-loja/img/01-685f018e.png" alt="Fashion Summer" loading="lazy">
+          <img src="../_captura/nova-loja/img/04-a3443f9d.png" alt="Fashion Creme de Cetim" loading="lazy">
+          <img src="../_captura/nova-loja/img/10_94d094d5-65d1-4154-8d9b-125c04f30b63-22def8ab.png" alt="Fashion 100Timetros" loading="lazy">
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>O branco vem de filtro, não do arquivo</b>
+      <p><code>brightness(0) invert(1)</code> achata qualquer arte em branco puro, e
+      é isso que mantém a faixa uniforme quando cada linha entrega um arquivo com
+      peso e cor diferentes. Vale enquanto a arte for monocromática: linha com cor
+      obrigatória pede um segundo arquivo, não um filtro.</p>
+    </div>
+    <div class="note">
+      <b>Sete logos que não cabem viram rolagem, não fila quebrada</b>
+      <p>O trilho é <code>overflow-x:auto</code> com a barra escondida. Empilhar as
+      sublinhas em duas fileiras daria a elas o peso de uma seção — e aqui elas são
+      assinatura, não conteúdo.</p>
+    </div>
+  </section>
+  <section id="dialog">
+    <h2>Modal &amp; drawer</h2>
+    <p class="when">Interrompe para pedir uma decisão. Se não há decisão a tomar, use toast.</p>
+    <div class="demo">
+      <button class="yb-btn yb-btn--ghost" data-yb-open="dlg-remove">Remover item</button>
+      <button class="yb-btn yb-btn--primary" data-yb-open="dlg-cart">Abrir carrinho</button>
+    </div>
+    <div class="note">
+      <b>É <code>&lt;dialog&gt;</code> nativo</b>
+      <p>Foco preso, <kbd>Esc</kbd> e backdrop vêm do navegador. O JS só abre,
+      fecha no clique fora e <b>devolve o foco a quem abriu</b> — sem isso o leitor
+      de tela volta ao topo da página depois de fechar. A gaveta é o mesmo elemento,
+      ancorado na lateral.</p>
+    </div>
+    <div class="note">
+      <b>Por que o carrinho não está aqui</b>
+      <p>Esta página é a camada de componente e carrega só a folha de componentes.
+      O carrinho é <b>padrão</b>: <code>.yb-cart</code> vive em
+      <code>patterns/</code>. Demonstrá-lo aqui rendia um HTML sem estilo nenhum —
+      e foi exatamente o que aconteceu até agora.</p>
+    </div>
+
+    <dialog id="dlg-remove" class="yb-dialog" aria-labelledby="dlg-remove-t">
+      <div class="yb-dialog__head">
+        <h3 class="yb-dialog__title" id="dlg-remove-t">Remove from cart?</h3>
+        <button class="yb-dialog__close" data-yb-close aria-label="Close">×</button>
+      </div>
+      <div class="yb-dialog__body">
+        <p>Kit Sealant Fashion Gold — 500g / 17.6 fl oz will be removed from your cart.</p>
+      </div>
+      <div class="yb-dialog__foot">
+        <button class="yb-btn yb-btn--ghost" data-yb-close>Keep it</button>
+        <button class="yb-btn yb-btn--danger" data-yb-close
+          onclick="Ybera.toast({title:'Removed from cart',text:'Kit Sealant Fashion Gold',variant:'danger'})">Remove</button>
+      </div>
+    </dialog>
+
+    <dialog id="dlg-cart" class="yb-dialog yb-dialog--drawer" aria-labelledby="dlg-cart-t">
+      <div class="yb-dialog__head">
+        <h3 class="yb-dialog__title" id="dlg-cart-t">Your cart (1)</h3>
+        <button class="yb-dialog__close" data-yb-close aria-label="Close">
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg>
+        </button>
+      </div>
+      <div class="yb-dialog__body">
+        <p>A gaveta é o mesmo <code>&lt;dialog&gt;</code>, ancorado na lateral e com
+        a altura da tela. O conteúdo é de quem usa — o carrinho de verdade está
+        montado em <a href="../patterns/index.html#cart-drawer">Patterns</a>.</p>
+      </div>
+      <div class="yb-dialog__foot">
+        <button class="yb-btn yb-btn--primary yb-btn--block" data-yb-close>Checkout</button>
+      </div>
+    </dialog>
+  </section>
+  <section id="pagination">
+    <h2>Pagination</h2>
+    <p class="when">A página atual não é link. Primeira e última sempre visíveis.</p>
+    <div class="demo demo--stack">
+      <nav class="yb-pagination" aria-label="Pagination">
+        <ol>
+          <li><a href="#pagination" aria-label="Previous page">←</a></li>
+          <li><a href="#pagination">1</a></li>
+          <li><span class="yb-pagination__gap">…</span></li>
+          <li><a href="#pagination">2</a></li>
+          <li><span aria-current="page">3</span></li>
+          <li><a href="#pagination">4</a></li>
+          <li><span class="yb-pagination__gap">…</span></li>
+          <li><a href="#pagination">12</a></li>
+          <li><a href="#pagination" aria-label="Next page">→</a></li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+  <section id="post">
+    <h2>Post</h2>
+    <p class="when">Artigo do blog na home. Um destaque e dois secundários — do quarto em diante vira índice, e índice ninguém lê.</p>
+    <div class="demo demo--stack">
+      <div class="yb-posts">
+        <article class="yb-post yb-post--featured">
+          <div class="yb-post__media"><img src="../_captura/nova-loja/img/Is_Keratin_Good_For_Hair-b3d5999d.webp" alt="Cabelo preto longo e liso depois de um tratamento de queratina" loading="lazy"></div>
+          <div class="yb-post__body">
+            <h3 class="yb-post__title">Is keratin good for hair? Pros, cons and myths</h3>
+            <p class="yb-post__excerpt">What makes the Ybera formula safe for color-treated hair, when a sealant is the wrong call, and the three myths that keep coming back to the salon chair.</p>
+            <a class="yb-post__link" href="#post">Continue reading <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-external"/></svg></a>
+          </div>
+        </article>
+        <div class="yb-posts__list">
+          <article class="yb-post">
+            <div class="yb-post__media"><img src="../_captura/nova-loja/img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp" alt="Cabelo loiro ondulado três meses depois da progressiva" loading="lazy"></div>
+            <div class="yb-post__body">
+              <h3 class="yb-post__title">How long does a keratin treatment last?</h3>
+              <p class="yb-post__excerpt">Twelve to sixteen weeks, and what shortens it: chlorine, sulfate shampoo and washing on day two.</p>
+              <a class="yb-post__link" href="#post">Continue reading <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-external"/></svg></a>
+            </div>
+          </article>
+          <article class="yb-post">
+            <div class="yb-post__media"><img src="../_captura/nova-loja/img/Does_Keratin_Treatment_Damage_Hair-9540a201.webp" alt="Cabelo castanho embaraçado e arrepiado antes do tratamento" loading="lazy"></div>
+            <div class="yb-post__body">
+              <h3 class="yb-post__title">Does keratin treatment damage hair?</h3>
+              <p class="yb-post__excerpt">The honest answer depends on the flat iron temperature and on what was in the bottle before it.</p>
+              <a class="yb-post__link" href="#post">Continue reading <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-external"/></svg></a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Uma anatomia, um modificador</b>
+      <p>Destaque e secundário têm o mesmo conteúdo: imagem, título, resumo e a
+      chamada. O que muda é a disposição — por isso <code>--featured</code> é
+      modificador, e não um segundo componente com regra própria para manter.</p>
+    </div>
+    <div class="note">
+      <b>Abaixo de 560 só o secundário encolhe</b>
+      <p>A regra da miniatura é <code>.yb-post:not(.yb-post--featured)</code>: sem o
+      <code>:not()</code>, o destaque virava a menor imagem da seção — 96x66 — com o
+      maior título em cima. Modificador e bloco empatam em especificidade, e a media
+      query vem depois na folha; quem chega por último ganha.</p>
+    </div>
+  </section>
+  <section id="price">
+    <h2>Price</h2>
+    <p class="when">Sempre tabular. Em grid, dígitos precisam alinhar em coluna.</p>
+    <div class="demo">
+      <span class="yb-price"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s><span class="yb-badge yb-badge--sale">Save $31</span></span>
+    </div>
+    <div class="demo">
+      <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
+      <span class="yb-price yb-price--sm"><b class="yb-price__now">$75.80</b></span>
+      <span class="yb-price yb-price--sm"><b class="yb-price__now">$169.70</b></span>
+    </div>
+  </section>
+  <section id="card">
+    <h2>Product card</h2>
+    <p class="when">A unidade do grid. O título trunca em duas linhas por decisão de sistema.</p>
+    <div class="demo demo--grid">
+      <article class="yb-card">
+        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--sale">−16%</span></div></div>
+        <h3 class="yb-card__title"><a href="#">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</a></h3>
+        <span class="yb-rating" role="img" aria-label="4,8 de 5, 412 avaliações"><span class="yb-rating__stars" aria-hidden="true">★★★★★</span><span class="yb-rating__count">412</span></span>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+      </article>
+      <article class="yb-card">
+        <div class="yb-card__media"></div>
+        <h3 class="yb-card__title"><a href="#">Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask 1kg / 33oz + Coconut Elixir 60ml / 2oz</a></h3>
+        <span class="yb-rating" role="img" aria-label="4,3 de 5, 87 avaliações"><span class="yb-rating__stars" aria-hidden="true">★★★★☆</span><span class="yb-rating__count">87</span></span>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$169.70</b></span>
+      </article>
+      <article class="yb-card">
+        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div></div>
+        <h3 class="yb-card__title"><a href="#">KIT VELLO Shampoo 500ml (16.9 fl.oz) + VELLO Hair Mask 500g (17.6 fl.oz)</a></h3>
+        <span class="yb-rating" role="img" aria-label="4,9 de 5, 203 avaliações"><span class="yb-rating__stars" aria-hidden="true">★★★★★</span><span class="yb-rating__count">203</span></span>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
+      </article>
+    </div>
+    <div class="note">
+      <b>De onde veio o truncamento</b>
+      <p>As telas-prova mostraram títulos reais ocupando 2, 5, 4 e 4 linhas — preço
+      e rating desalinhavam na mesma fileira. O token
+      <code>--yb-card-title-lines: 2</code> nasceu desse defeito observado, e é o
+      primeiro token de camada 2 do sistema. O título do meio aqui tem 88 caracteres.</p>
+    </div>
+  </section>
+  <section id="stepper">
+    <h2>Quantity stepper</h2>
+    <p class="when">Botões de 44px, e funcionam — clique. Limites em 1 e 10: o botão desabilita sozinho na ponta.</p>
+    <div class="demo">
+      <div class="yb-stepper" data-yb-stepper>
+        <button type="button" data-yb-step="down" aria-label="Diminuir quantidade">−</button>
+        <input type="number" value="1" min="1" max="10" aria-label="Quantidade">
+        <button type="button" data-yb-step="up" aria-label="Aumentar quantidade">+</button>
+      </div>
+      <div class="yb-stepper" data-yb-stepper>
+        <button type="button" data-yb-step="down" aria-label="Diminuir quantidade">−</button>
+        <input type="number" value="9" min="1" max="10" aria-label="Quantidade">
+        <button type="button" data-yb-step="up" aria-label="Aumentar quantidade">+</button>
+      </div>
+    </div>
+  </section>
+  <section id="rating">
+    <h2>Rating</h2>
+    <p class="when">Prova social ao lado do preço. Sempre com a contagem: 5 estrelas de 3 avaliações não é prova de nada.</p>
+    <div class="demo">
+      <span class="yb-rating" role="img" aria-label="4,8 de 5 estrelas, 412 avaliações">
+        <span class="yb-rating__stars" aria-hidden="true">★★★★★</span>
+        <span class="yb-rating__count">4.8 · 412 reviews</span>
+      </span>
+      <span class="yb-rating" role="img" aria-label="4,1 de 5 estrelas, 56 avaliações">
+        <span class="yb-rating__stars" aria-hidden="true">★★★★☆</span>
+        <span class="yb-rating__count">4.1 · 56 reviews</span>
+      </span>
+    </div>
+    <div class="note">
+      <b>As estrelas não são texto para o leitor de tela</b>
+      <p>Elas são <code>aria-hidden</code> e o valor real vive no <code>aria-label</code>.
+      Sem isso, um leitor de tela anuncia "estrela estrela estrela estrela estrela".
+      A cor delas é <code>gold-700</code>, não o dourado de marca — sobre branco o
+      de marca reprovaria.</p>
+    </div>
+  </section>
+  <section id="review">
+    <h2>Review</h2>
+    <p class="when">Prova social com nota, texto, quem escreveu e o que comprou. Sem o produto ao lado, o elogio não prova nada.</p>
+    <div class="demo demo--rail">
+      <div class="yb-track yb-reviews">
+        <article class="yb-review">
+          <div class="yb-review__media"><img src="../_captura/nova-loja/img/YBERA_PARIS_-_vello_-_Soro_Vital_alfa-lactobaby_-ca2b7e86.webp" alt="Frasco branco do sérum Vello Alfa-Lactobaby" loading="lazy"></div>
+          <div class="yb-review__body">
+            <span class="yb-rating" role="img" aria-label="5 de 5 estrelas">
+              <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
+            <p class="yb-review__title">Three months in and the shedding stopped</p>
+            <p class="yb-review__text">I was losing hair after my second baby. Three months of the serum every other night and the shower drain is finally clean. New growth at the temples too.</p>
+            <span class="yb-review__author">Rosana B.</span>
+            <span class="yb-review__product">VELLO Hair Fertilization Therapy ALFA-LACTOBABY — 90ml / 3 fl.oz</span>
+          </div>
+        </article>
+        <article class="yb-review">
+          <div class="yb-review__media"><img src="../_captura/nova-loja/img/kit_tratamento_terra_coco_elixir_160x160-26270456.webp" alt="Kit Terra Coco: shampoo, máscara e elixir de coco" loading="lazy"></div>
+          <div class="yb-review__body">
+            <span class="yb-rating" role="img" aria-label="5 de 5 estrelas">
+              <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
+            <p class="yb-review__title">The elixir is what sold me</p>
+            <p class="yb-review__text">Two drops on damp ends and the frizz is gone for the day. The mask alone would have been worth it, but the elixir is the part I keep repurchasing.</p>
+            <span class="yb-review__author">Marggi B.</span>
+            <span class="yb-review__product">Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask 1kg / 33oz + Coconut Elixir 60ml / 2oz</span>
+          </div>
+        </article>
+        <article class="yb-review">
+          <div class="yb-review__media"><img src="../_captura/nova-loja/img/153_160x160-e958dc19.avif" alt="Os quatro tubos do sistema Cronograma Capilar" loading="lazy"></div>
+          <div class="yb-review__body">
+            <span class="yb-rating" role="img" aria-label="4 de 5 estrelas">
+              <span class="yb-rating__stars" aria-hidden="true">★★★★☆</span></span>
+            <p class="yb-review__title">Finally a schedule I can actually follow</p>
+            <p class="yb-review__text">Four tubes, four weeks, and the label tells you which one to use. My hair went from straw to soft in about a month. Wish the tubes were bigger.</p>
+            <span class="yb-review__author">Daniela P.</span>
+            <span class="yb-review__product">CRONOGRAMA Hair Care System — 4 x 250g / 8.8 oz</span>
+          </div>
+        </article>
+        <article class="yb-review">
+          <div class="yb-review__media"><img src="../_captura/nova-loja/img/Prancheta_1-790aea3e.webp" alt="Frasco do tratamento de queratina Fashion Gold" loading="lazy"></div>
+          <div class="yb-review__body">
+            <span class="yb-rating" role="img" aria-label="5 de 5 estrelas">
+              <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
+            <p class="yb-review__title">Salon result, no formaldehyde smell</p>
+            <p class="yb-review__text">My stylist used it on color-treated hair and the tone did not shift. Blow-dry time went from forty minutes to twelve.</p>
+            <span class="yb-review__author">Nataniela R.</span>
+            <span class="yb-review__product">FASHION GOLD Brazilian Keratin Treatment — 500g / 17.6 fl.oz</span>
+          </div>
+        </article>
+      </div>
+    </div>
+    <div class="note">
+      <b>O trilho mostra que anda</b>
+      <p>Em 320px o cartão mede 248 e o respiro cai para 16: sobram 24px do próximo
+      review à vista, e é essa fatia que ensina que dá para arrastar. Com 280 e
+      respiro de 32, o segundo cartão nascia fora da tela e o carrossel virava um
+      cartão solto.</p>
+    </div>
+    <div class="note">
+      <b>Quem desenha isso hoje é o Judge.me</b>
+      <p>Diferente do Tolstoy, ele renderiza no DOM normal — sem shadow DOM —, e por
+      isso o design system alcança. As variáveis dele já estão traduzidas em
+      <code>bridge/ybera-bridge.css</code>: o app continua sendo o app, e a página
+      para de ter duas tipografias.</p>
+    </div>
+  </section>
+  <section id="skeleton">
+    <h2>Skeleton</h2>
+    <p class="when">Só para carregamento real. Skeleton eterno é pior que spinner: promete conteúdo que não chega.</p>
+    <div class="demo demo--grid">
+      <div class="yb-skeleton-card">
+        <span class="yb-skeleton yb-skeleton--media"></span>
+        <span class="yb-skeleton yb-skeleton--line"></span>
+        <span class="yb-skeleton yb-skeleton--line-short"></span>
+        <span class="yb-skeleton yb-skeleton--title"></span>
+      </div>
+      <div class="yb-skeleton-card">
+        <span class="yb-skeleton yb-skeleton--media"></span>
+        <span class="yb-skeleton yb-skeleton--line"></span>
+        <span class="yb-skeleton yb-skeleton--line-short"></span>
+        <span class="yb-skeleton yb-skeleton--title"></span>
+      </div>
+      <div class="yb-skeleton-card">
+        <span class="yb-skeleton yb-skeleton--media"></span>
+        <span class="yb-skeleton yb-skeleton--line"></span>
+        <span class="yb-skeleton yb-skeleton--line-short"></span>
+        <span class="yb-skeleton yb-skeleton--title"></span>
+      </div>
+    </div>
+    <div class="note">
+      <b>O skeleton imita o layout, não o conteúdo</b>
+      <p>Duas linhas de texto e um preço, na mesma ordem e altura do card real —
+      por isso não há salto quando o conteúdo chega. O brilho respeita
+      <code>prefers-reduced-motion</code>.</p>
+    </div>
+  </section>
+  <section id="toast">
+    <h2>Toast</h2>
+    <p class="when">Confirma o que já aconteceu. Não pede nada e não bloqueia nada.</p>
+    <div class="demo">
+      <button class="yb-btn yb-btn--primary"
+        onclick="Ybera.toast({title:'Added to cart',text:'Kit Sealant Fashion Gold — 500 g',variant:'success'})">Adicionar ao carrinho</button>
+      <button class="yb-btn yb-btn--ghost"
+        onclick="Ybera.toast({title:'Saved for later',text:'Find it in your wishlist'})">Salvar</button>
+      <button class="yb-btn yb-btn--ghost"
+        onclick="Ybera.toast({title:'Payment declined',text:'Your bank rejected the charge. Try another card.',variant:'danger',duration:0})">Erro (não some)</button>
+    </div>
+    <div class="note">
+      <b>Some sozinho — menos quando você está lendo</b>
+      <p>Cinco segundos por padrão, mas o relógio para no <code>mouseenter</code> e
+      no <code>focusin</code>. O de erro usa <code>duration:0</code> e
+      <code>role="alert"</code>: erro não desaparece antes de ser lido, e interrompe
+      o leitor de tela. Os outros usam <code>role="status"</code> e esperam a pausa.</p>
+    </div>
+  </section>
+  <section id="variant">
+    <h2>Variant picker</h2>
+    <p class="when">Tamanho, volume, fragrância. Esgotado aparece riscado, não some — sumir esconde que o produto existe.</p>
+    <div class="demo">
+      <div class="yb-swatches">
+        <input type="radio" name="sz" id="z1" checked><label for="z1">500g / 17.6 fl.oz</label>
+        <input type="radio" name="sz" id="z2"><label for="z2">300g / 10.5 fl.oz</label>
+        <input type="radio" name="sz" id="z3"><label for="z3">1kg / 33 oz</label>
+        <input type="radio" name="sz" id="z4" disabled><label for="z4">250g</label>
+      </div>
+    </div>
+  </section>
+
+  <section id="video">
+    <h2>Vertical video carousel</h2>
+    <p class="when">Conteúdo de creator em 9:16, como o TikTok serve. O cartão entra como pôster; o vídeo só nasce no primeiro clique.</p>
+    <div class="demo demo--rail">
+      <div class="yb-track yb-videos">
+        <button class="yb-video" type="button" aria-label="Fashion Gold on curly hair, first result">
+          <img src="../_captura/nova-loja/img/tt-1.jpg" alt="" loading="lazy">
+          <span class="yb-iconbtn yb-iconbtn--onmedia yb-video__play"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-play"/></svg></span>
+        </button>
+        <button class="yb-video" type="button" aria-label="Cronograma routine explained in Times Square">
+          <img src="../_captura/nova-loja/img/tt-2.jpg" alt="" loading="lazy">
+          <span class="yb-video__caption">Cronograma, week one</span>
+        </button>
+        <button class="yb-video" type="button" aria-label="I cut my hair and regretted it">
+          <img src="../_captura/nova-loja/img/tt-3.jpg" alt="" loading="lazy">
+          <span class="yb-video__caption">Growing it back with Vello</span>
+        </button>
+        <button class="yb-video" type="button" aria-label="Satin bonnet routine after a keratin treatment">
+          <img src="../_captura/nova-loja/img/tt-4.jpg" alt="" loading="lazy">
+          <span class="yb-iconbtn yb-iconbtn--onmedia yb-video__play"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-play"/></svg></span>
+        </button>
+        <button class="yb-video" type="button" aria-label="Which Cronograma tube for which hair damage">
+          <img src="../_captura/nova-loja/img/tt-5.jpg" alt="" loading="lazy">
+          <span class="yb-iconbtn yb-iconbtn--onmedia yb-video__play"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-play"/></svg></span>
+        </button>
+        <button class="yb-video" type="button" aria-label="Red hair kept vivid after the treatment">
+          <img src="../_captura/nova-loja/img/tt-6.jpg" alt="" loading="lazy">
+          <span class="yb-video__caption">Color-safe, six weeks in</span>
+        </button>
+      </div>
+    </div>
+    <div class="note">
+      <b>Sem <code>data-video</code> não existe play</b>
+      <p>O design system não hospeda mídia, então nenhum cartão aqui aponta para um
+      arquivo — e o play some sozinho, por regra da folha. Em produção o atributo
+      traz a URL do CDN e o botão aparece no mesmo lugar. Um botão que promete vídeo
+      e não entrega é pior do que não ter botão.</p>
+    </div>
+    <div class="note">
+      <b>Pôster primeiro, vídeo depois</b>
+      <p>Quarenta e cinco vídeos em autoplay é o que faz uma home pesar. O
+      <code>&lt;video&gt;</code> só entra no DOM no clique, com o pôster já pintado —
+      então não há salto de layout quando ele chega, e quem passa direto não paga
+      nada.</p>
+    </div>
+    <div class="note">
+      <b>A legenda é opcional, o rótulo não</b>
+      <p><code>.yb-video__caption</code> aparece só onde o pôster não tem texto
+      próprio queimado — duas camadas de legenda no mesmo canto não se leem. O
+      <code>aria-label</code> do botão, esse existe em todos: sem ele o leitor de
+      tela anuncia seis botões idênticos e sem nome.</p>
+    </div>
+  </section>
+
+  <footer class="doc-credit">
+    Ybera Design System v0.10 · componentes. Comportamento em JavaScript vanilla, sem
+    dependência — e nada nele é obrigatório para a página funcionar: sem o script, o
+    formulário envia e o link navega.
+  </footer>
+</main>
+</div>
+<script>
+(function(){
+  var b=document.body;
+  document.getElementById('c-m').addEventListener('change',function(){b.dataset.cta='magenta'});
+  document.getElementById('c-g').addEventListener('change',function(){b.dataset.cta='graphite'});
+})();
+</script>
+<script src="ybera-components.js"></script>
+
+<script>
+/* Cada secao ganha um iframe de 375 com ela mesma, servido por solo.html.
+   loading="lazy": so paga quem chega perto. A altura vem por postMessage,
+   porque conteudo de iframe nao dimensiona o elemento sozinho. */
+(function () {
+  'use strict';
+  var LADO = 'yb-doc-mobile';
+
+  document.querySelectorAll('section[id]').forEach(function (sec) {
+    var pecas = [].filter.call(sec.children, function (n) {
+      return n.matches('.demo, .stage, .split, .row-label, pre');
+    });
+    if (!pecas.length) return;
+
+    var par = document.createElement('div');
+    par.className = 'par';
+    sec.insertBefore(par, pecas[0]);
+
+    var desk = document.createElement('div');
+    desk.className = 'par__desk'; desk.style.minWidth = '0';
+    var rot = document.createElement('span');
+    rot.className = 'par__rot'; rot.textContent = 'fluido';
+    desk.appendChild(rot);
+    pecas.forEach(function (p) { desk.appendChild(p); });
+    par.appendChild(desk);
+
+    var mob = document.createElement('div');
+    mob.className = 'par__mob';
+    mob.innerHTML = '<span class="par__rot">375 px</span>' +
+      '<div class="quadro"><iframe loading="lazy" title="' + sec.id +
+      ' em 375px" src="solo.html?c=' + encodeURIComponent(sec.id) +
+      '" width="375" height="320"></iframe></div>';
+    par.appendChild(mob);
+  });
+
+  addEventListener('message', function (e) {
+    if (!e.data || e.data.yb !== 'altura') return;
+    var f = document.querySelector('iframe[src="solo.html?c=' + encodeURIComponent(e.data.c) + '"]');
+    if (f && e.data.h > 0) f.height = e.data.h;
+  });
+
+  var bt = document.getElementById('mob-toggle');
+  function pinta(on) {
+    document.body.dataset.mobile = on ? 'on' : 'off';
+    bt.setAttribute('aria-pressed', String(on));
+    bt.textContent = on ? 'Mobile: ligado' : 'Mobile: desligado';
+    try { localStorage.setItem(LADO, on ? '1' : '0'); } catch (err) {}
+  }
+  var salvo = '1';
+  try { salvo = localStorage.getItem(LADO) === null ? '1' : localStorage.getItem(LADO); } catch (err) {}
+  pinta(salvo === '1');
+  bt.addEventListener('click', function () { pinta(bt.getAttribute('aria-pressed') !== 'true'); });
+})();
+</script>
+</body>
+</html>

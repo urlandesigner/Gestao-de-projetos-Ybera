@@ -1,0 +1,755 @@
+/* =========================================================================
+   YBERA DESIGN SYSTEM · PATTERNS
+
+   Depende de: tokens/ + components/ybera-components.css
+
+   Padrão é o nível acima do componente: uma composição recorrente com
+   comportamento e conteúdo esperados. O componente responde "como um botão
+   se parece"; o padrão responde "o que vai no cabeçalho de uma loja".
+   ========================================================================= */
+
+/* =========================================================================
+   HEADER
+   Anúncio + navegação + ações. Sticky, porque o carrinho precisa estar
+   sempre a um toque.
+   ========================================================================= */
+/* position:relative porque o painel do submenu se ancora no header inteiro,
+   nao no item — e assim que ele consegue ir de ponta a ponta da tela. */
+.yb-header{position:relative; background:var(--yb-bg-page);
+  border-bottom:1px solid var(--yb-border-subtle)}
+.yb-header__announce{
+  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  text-align:center; padding:var(--yb-space-3) var(--yb-page-gutter);
+  font-size:var(--yb-type-caption-size); letter-spacing:var(--yb-tracking-wide);
+}
+.yb-header__announce b{color:var(--yb-accent-on-dark); font-weight:var(--yb-font-weight-semibold)}
+.yb-header__bar{
+  display:flex; align-items:center; gap:var(--yb-space-6);
+  padding:var(--yb-space-4) var(--yb-space-8);
+}
+/* o logo e o componente .yb-logo; aqui so o alvo de clique do header */
+.yb-header__logo{
+  display:inline-flex; align-items:center; text-decoration:none;
+  min-height:var(--yb-target-min); flex:none;
+}
+.yb-header__logo:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+/* -------------------------------------------------------------------------
+   NAVEGACAO PRINCIPAL
+
+   Um DOM so para as duas apresentacoes: barra com painel largo acima de 900,
+   gaveta com acordeao abaixo. A loja hoje escreve o menu inteiro duas vezes
+   (`menu-desktop` e `menu-mobile`) — 25 links repetidos, que um leitor de
+   tela percorre duas vezes.
+
+   O gatilho de submenu e checkbox + label, e nao o <span> que a loja usa:
+   <span> nao recebe foco, entao hoje o menu Shop e inalcancavel por teclado.
+   Aqui abre no hover (paridade), no clique e no foco.
+   ------------------------------------------------------------------------- */
+.yb-header__nav{min-width:0}
+.yb-nav{
+  display:flex; align-items:center; gap:var(--yb-space-5);
+  list-style:none; margin:0; padding:0;
+}
+.yb-nav__item{position:static}
+.yb-nav__toggle{position:absolute; opacity:0; pointer-events:none; width:1px; height:1px}
+.yb-nav__link{
+  display:inline-flex; align-items:center; gap:var(--yb-space-1);
+  min-height:var(--yb-target-min); cursor:pointer;
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+  text-decoration:none; white-space:nowrap;
+}
+
+@media (hover:hover){
+  .yb-nav__link:hover{color:var(--yb-text-primary)}
+}
+.yb-nav__link:focus-visible,
+.yb-nav__toggle:focus-visible + .yb-nav__link{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-nav__link .yb-icon{transition:transform var(--yb-transition-control)}
+
+/* --- painel largo (>= 900) ------------------------------------------- */
+.yb-nav__panel{
+  position:absolute; inset-inline:0; top:100%; z-index:var(--yb-z-dropdown);
+  background:var(--yb-surface-raised);
+  border-block-start:1px solid var(--yb-border-subtle);
+  box-shadow:var(--yb-elevation-dropdown);
+  opacity:0; visibility:hidden;
+  transition:opacity var(--yb-transition-surface), visibility var(--yb-transition-surface);
+}
+
+/* Clique e teclado FORA do `hover:hover`. Estavam dentro, e o resultado era
+   que num iPad em paisagem — 1024px de largura, `hover:none` — tocar em "Shop"
+   marcava o checkbox e nada aparecia: a unica outra regra que mostra o painel
+   mora em `max-width:900px`. O menu inteiro era inalcancavel nessa faixa. */
+.yb-nav__item:focus-within > .yb-nav__panel,
+.yb-nav__toggle:checked ~ .yb-nav__panel{opacity:1; visibility:visible}
+
+@media (hover:hover){
+  .yb-nav__item:hover > .yb-nav__panel{opacity:1; visibility:visible}
+}
+.yb-nav__groups{
+  display:flex; flex-wrap:wrap; gap:var(--yb-space-10);
+  max-width:var(--yb-container-max); margin-inline:auto;
+  padding:var(--yb-space-8) var(--yb-page-gutter);
+}
+.yb-nav__group{min-width:0}
+.yb-nav__grouptitle{
+  /* display:block tira a isencao de alvo inline do WCAG 2.5.8, e o titulo
+     media 17px. Os 24 vem do min-height, sem mexer no ritmo da coluna. */
+  display:flex; align-items:center; min-height:var(--yb-space-6);
+  margin-bottom:var(--yb-space-2);
+  font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-primary); text-decoration:none;
+}
+
+@media (hover:hover){
+  .yb-nav__grouptitle:hover{color:var(--yb-text-link)}
+}
+.yb-nav__sublist{list-style:none; margin:0; padding:0}
+.yb-nav__sublist a{
+  /* A loja renderiza estes links a 11,2px. O piso do sistema e 13 — abaixo
+     disso nao e densidade, e ilegibilidade. */
+  display:flex; align-items:center; min-height:var(--yb-space-6);
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+  text-decoration:none;
+}
+/* Na gaveta isto vira dedo, nao ponteiro: 24px e 13px foram dimensionados
+   para o painel de hover do desktop. Empilhados, os 21 destinos do Shop
+   ficavam colados um no outro, sem 1px de separacao. */
+@media (max-width:900px){
+  .yb-nav__sublist a{
+    min-height:var(--yb-target-min);
+    font-size:var(--yb-type-body-sm-size);
+    color:var(--yb-text-primary);
+  }
+  .yb-nav__grouptitle{min-height:var(--yb-target-min)}
+}
+
+@media (hover:hover){
+  .yb-nav__sublist a:hover{color:var(--yb-text-primary)}
+}
+.yb-nav__sublist a:focus-visible,.yb-nav__grouptitle:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+
+/* --- gaveta e acordeao (< 900) --------------------------------------- */
+/* .yb-header__icon vem depois nesta folha e tambem declara display; sem
+   somar a classe aqui, o hamburguer aparecia no desktop. */
+.yb-header__icon.yb-header__burger{display:none}
+.yb-nav__close{display:none}
+.yb-header__scrim{display:none}
+/* Acima de 900 nao ha gaveta — logo nao pode sobrar um controle que o
+   teclado alcanca e que nao abre nada. Mesma regra do acordeao do footer. */
+.yb-header__drawer{display:none}
+
+@media (max-width:900px){
+  .yb-header__drawer{display:block; position:absolute; opacity:0;
+    pointer-events:none; width:1px; height:1px}
+  .yb-header__icon.yb-header__burger{display:inline-flex; order:-1}
+  .yb-header__drawer:focus-visible + .yb-header__bar .yb-header__burger{
+    outline:var(--yb-focus-width) solid var(--yb-focus-color);
+    outline-offset:var(--yb-focus-offset);
+  }
+  .yb-header__nav{
+    position:fixed; inset-block:0; inset-inline-start:0; z-index:var(--yb-z-modal);
+    width:min(22rem, 86vw); background:var(--yb-surface-raised);
+    box-shadow:var(--yb-elevation-drawer); overflow-y:auto;
+    padding:var(--yb-space-6) var(--yb-page-gutter);
+    /* Em RTL `inset-inline-start` resolve para `right:0`, e um translateX
+       negativo traria a gaveta para dentro da tela em vez de tira-la. O sinal
+       tem de acompanhar a direcao — daí a custom property. */
+    transform:translateX(calc(-100% * var(--yb-dir, 1)));
+    /* visibility junto do transform, e nao so o transform: fora da tela os
+       31 links continuavam no tab order — o teclado entrava num menu que
+       ninguem ve. */
+    visibility:hidden;
+    transition:transform var(--yb-transition-surface),
+               visibility var(--yb-transition-surface);
+  }
+  .yb-header__drawer:checked ~ .yb-header__bar .yb-header__nav{
+    transform:none; visibility:visible;
+  }
+  .yb-nav__close{
+    display:flex; align-items:center; justify-content:center;
+    width:var(--yb-target-min); height:var(--yb-target-min);
+    margin-inline-start:auto; margin-block-end:var(--yb-space-2);
+    cursor:pointer; color:var(--yb-text-primary);
+    border-radius:var(--yb-radius-control);
+  }
+  @media (hover:hover){ .yb-nav__close:hover{background:var(--yb-bg-muted)} }
+  /* Era o unico controle do sistema sem anel de foco — e o unico jeito de
+     sair da gaveta pelo teclado, fora o Escape. */
+  .yb-nav__close:focus-visible{
+    outline:var(--yb-focus-width) solid var(--yb-focus-color);
+    outline-offset:var(--yb-focus-offset);
+  }
+  .yb-header__scrim{
+    display:block; position:fixed; inset:0; z-index:var(--yb-z-overlay);
+    background:var(--yb-surface-overlay);
+    opacity:0; pointer-events:none;
+    transition:opacity var(--yb-transition-surface);
+  }
+  .yb-header__drawer:checked ~ .yb-header__scrim{opacity:1; pointer-events:auto}
+
+  .yb-nav{flex-direction:column; align-items:stretch; gap:0}
+  .yb-nav__link{
+    justify-content:space-between; min-height:var(--yb-target-min);
+    border-bottom:1px solid var(--yb-border-subtle);
+    font-size:var(--yb-type-body-size); color:var(--yb-text-primary);
+  }
+  .yb-nav__toggle:checked + .yb-nav__link .yb-icon{transform:rotate(180deg)}
+  /* Sem hover no toque: aqui so o :checked abre. */
+  .yb-nav__panel{
+    position:static; opacity:1; visibility:visible; box-shadow:none;
+    border-block-start:0; max-height:0; overflow:hidden;
+    transition:max-height var(--yb-transition-surface);
+  }
+  .yb-nav__item:hover > .yb-nav__panel{max-height:0}
+  .yb-nav__toggle:checked ~ .yb-nav__panel{max-height:80rem}
+  .yb-nav__groups{
+    flex-direction:column; gap:var(--yb-space-5);
+    padding:var(--yb-space-4) var(--yb-space-4) var(--yb-space-5);
+  }
+}
+.yb-header__actions{display:flex; align-items:center; gap:var(--yb-space-2);
+  /* logico: com margin-left as acoes ficavam presas a direita tambem em RTL */
+  margin-inline-start:auto}
+/* compoe .yb-iconbtn; aqui so o respiro lateral, que e proprio do header */
+.yb-header__icon{ padding:0 var(--yb-space-3); }
+
+@media (hover:hover){
+  .yb-header__icon:hover{background:var(--yb-bg-muted)}
+}
+.yb-header__icon:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-header__count{
+  background:var(--yb-action-bg); color:var(--yb-action-text);
+  font-size:var(--yb-type-overline-size); font-weight:var(--yb-font-weight-semibold);
+  min-width:20px; height:20px; padding:0 6px;
+  border-radius:var(--yb-radius-full);
+  display:inline-flex; align-items:center; justify-content:center;
+  font-variant-numeric:tabular-nums;
+}
+
+/* Aperto do mobile. Fica no FIM da secao de proposito: `.yb-header__icon` e
+   `.yb-header__actions` declaram display e gap acima, com a mesma
+   especificidade — colocado antes, este bloco perdia em silencio.
+
+   Em 320px a barra pedia 351px e a pagina ganhava scroll lateral. O corte saiu
+   do respiro, nao do alvo: os icones seguem com 44px de min-width. A loja hoje
+   cabe nos mesmos 320 entregando icone de 18x17 — alvo que ninguem acerta. */
+@media (max-width:768px){
+  .yb-header__bar{padding:var(--yb-space-3) var(--yb-page-gutter); gap:var(--yb-space-2)}
+  .yb-header__icon{padding:0}
+  .yb-header__actions{gap:0}
+}
+/* O logo e o unico que pode ceder. O token vai NO .yb-logo, nao no <a> que o
+   embrulha: `.yb-logo--md` declara --yb-logo-height no proprio elemento, e
+   valor no elemento vence valor herdado — posto no pai, isto nao fazia nada.
+   Sem ele a barra cabe em 320 com 9px de folga; com ele, 35. A folga e o que
+   sustenta um contador de carrinho de tres digitos. */
+@media (max-width:480px){
+  .yb-header__logo .yb-logo{--yb-logo-height:22px}
+}
+
+/* =========================================================================
+   FREE SHIPPING PROGRESS
+   Aparece no carrinho e no header. É o padrão de e-commerce que mais move
+   ticket médio — e o que mais é feito errado, com a barra sem rótulo.
+   ========================================================================= */
+.yb-freeship{display:flex; flex-direction:column; gap:var(--yb-space-2)}
+.yb-freeship__text{font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
+.yb-freeship__text b{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
+.yb-freeship__track{
+  height:6px; background:var(--yb-bg-muted);
+  border-radius:var(--yb-radius-full); overflow:hidden;
+}
+.yb-freeship__fill{
+  height:100%; background:var(--yb-action-bg);
+  border-radius:var(--yb-radius-full);
+  transition:width var(--yb-transition-surface);
+}
+.yb-freeship--done .yb-freeship__fill{background:var(--yb-success-solid)}
+.yb-freeship--done .yb-freeship__text{color:var(--yb-success-text);
+  font-weight:var(--yb-font-weight-medium)}
+
+/* =========================================================================
+   CART DRAWER
+   ========================================================================= */
+/* Unico filho da gaveta: e ele que cresce e rola. Quem declara isso e o
+   padrao, nao o componente — a gaveta nao precisa saber que existe carrinho. */
+.yb-dialog--drawer > .yb-cart{flex:1 1 auto; min-height:0}
+.yb-cart{
+  display:flex; flex-direction:column; height:100%;
+  background:var(--yb-surface); box-shadow:var(--yb-elevation-drawer);
+  max-width:420px; width:100%;
+}
+.yb-cart__head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:var(--yb-space-5) var(--yb-space-6);
+  border-bottom:1px solid var(--yb-border-subtle);
+}
+.yb-cart__head h2{
+  margin:0; font-size:var(--yb-type-h4-size);
+  font-weight:var(--yb-type-h4-weight); letter-spacing:var(--yb-type-h4-track);
+}
+.yb-cart__close{
+  width:var(--yb-target-min); height:var(--yb-target-min);
+  border:none; background:transparent; cursor:pointer;
+  color:var(--yb-text-muted); font-size:var(--yb-type-h4-size);
+  border-radius:var(--yb-radius-control); line-height:1;
+}
+
+@media (hover:hover){
+  .yb-cart__close:hover{background:var(--yb-bg-muted); color:var(--yb-text-primary)}
+}
+.yb-cart__close:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-cart__ship{padding:var(--yb-space-4) var(--yb-space-6);
+  border-bottom:1px solid var(--yb-border-subtle); background:var(--yb-bg-subtle)}
+.yb-cart__items{
+  flex:1; overflow-y:auto; padding:var(--yb-space-4) var(--yb-space-6);
+  display:flex; flex-direction:column; gap:var(--yb-space-5);
+}
+.yb-cart__item{display:grid; grid-template-columns:72px 1fr; gap:var(--yb-space-4)}
+/* O stepper e flex:none em 142px — e o piso da linha do carrinho. Em telas
+   estreitas quem cede e a miniatura, nao o controle: 16px vindos da imagem
+   sao 16px que o alvo de toque nao precisa devolver. */
+@media (max-width:480px){
+  .yb-cart__item{grid-template-columns:56px 1fr; gap:var(--yb-space-3)}
+}
+.yb-cart__item .yb-card__media{aspect-ratio:1/1}
+.yb-cart__item-body{display:flex; flex-direction:column; gap:var(--yb-space-2); min-width:0}
+.yb-cart__item-title{
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-medium);
+  margin:0; display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
+}
+.yb-cart__item-variant{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+.yb-cart__item-foot{display:flex; align-items:center; justify-content:space-between;
+  gap:var(--yb-space-3); flex-wrap:wrap}
+.yb-cart__remove{
+  background:none; border:none; cursor:pointer;
+  /* Unica acao destrutiva do carrinho, e media 24px de altura — o piso da
+     WCAG, nao os 44 que o sistema promete. `align-self:start` evita que a
+     largura acompanhe a coluna e vire uma faixa clicavel inteira. */
+  display:inline-flex; align-items:center; align-self:start;
+  min-height:var(--yb-target-min); padding-inline-end:var(--yb-space-2);
+  font-family:inherit; font-size:var(--yb-type-caption-size);
+  color:var(--yb-text-muted); text-decoration:underline;
+}
+
+@media (hover:hover){
+  .yb-cart__remove:hover{color:var(--yb-danger-text)}
+}
+.yb-cart__remove:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-cart__foot{
+  padding:var(--yb-space-5) var(--yb-space-6);
+  border-top:1px solid var(--yb-border-subtle);
+  display:flex; flex-direction:column; gap:var(--yb-space-4);
+  background:var(--yb-surface);
+}
+/* Breakpoint de ALTURA, nao de largura: numa tela de 568 o pe reservava 254px
+   (45%) e sobravam 166 para a lista — o cliente com dois itens via um, cortado.
+   Aqui o pe aperta o respiro e a linha de frete sai, porque a nota logo abaixo
+   ja diz "Taxes calculated at checkout". O que decide compra — Subtotal, Total
+   e o botao — fica. */
+@media (max-height:700px){
+  .yb-cart__foot{ padding:var(--yb-space-3) var(--yb-space-5); gap:var(--yb-space-2) }
+  .yb-cart__foot .yb-cart__line:not(.yb-cart__line--total){ display:none }
+}
+.yb-cart__line{display:flex; justify-content:space-between; align-items:baseline;
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
+.yb-cart__line--total{
+  font-size:var(--yb-type-body-size); color:var(--yb-text-primary);
+  font-weight:var(--yb-font-weight-semibold);
+  padding-top:var(--yb-space-3); border-top:1px solid var(--yb-border-subtle);
+}
+.yb-cart__line span:last-child{font-variant-numeric:tabular-nums}
+.yb-cart__note{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+  text-align:center; margin:0}
+
+/* =========================================================================
+   CABEÇALHO DE COLEÇÃO + GRID
+   ========================================================================= */
+.yb-collection__head{
+  display:flex; align-items:flex-end; justify-content:space-between;
+  gap:var(--yb-space-6); flex-wrap:wrap; margin-bottom:var(--yb-space-6);
+  padding-bottom:var(--yb-space-5); border-bottom:1px solid var(--yb-border-subtle);
+}
+.yb-collection__title{display:flex; flex-direction:column; gap:var(--yb-space-2); min-width:0}
+.yb-collection__title h1, .yb-collection__title h2{
+  margin:0; font-size:var(--yb-type-h1-size); line-height:var(--yb-type-h1-line);
+  letter-spacing:var(--yb-type-h1-track); font-weight:var(--yb-type-h1-weight);
+}
+.yb-collection__count{font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted);
+  font-variant-numeric:tabular-nums}
+.yb-collection__tools{display:flex; gap:var(--yb-space-3); align-items:center; flex-wrap:wrap}
+.yb-collection__filters{
+  display:flex; gap:var(--yb-space-2); flex-wrap:wrap; margin-bottom:var(--yb-space-6);
+}
+.yb-chip{
+  /* barra de filtro do mobile: 36px e alvo de ponteiro, nao de dedo */
+  display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-pill);
+  padding:var(--yb-space-2) var(--yb-space-4); background:var(--yb-surface);
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+  cursor:pointer; font-family:inherit;
+  /* alvo-compacto: chip de filtro vive em fileira que rola. Em 44px, sete
+     filtros empurram o primeiro produto para fora da primeira tela — e é no
+     celular que o alvo mais importa. O gap da fileira dá a folga. */
+  min-height:var(--yb-control-height-compact);
+}
+
+@media (hover:hover){
+  .yb-chip:hover{border-color:var(--yb-border-strong); color:var(--yb-text-primary)}
+}
+.yb-chip[aria-pressed="true"]{
+  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  border-color:var(--yb-bg-inverse);
+}
+.yb-chip:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+/* o × era `opacity:.7` sobre --yb-text-secondary: 7.67:1 caía para ~4.3:1,
+   e nada media a queda. Texto apagado tem token próprio, que é medido. */
+.yb-chip__x{font-size:var(--yb-type-body-size); line-height:1; color:var(--yb-text-muted)}
+.yb-chip[aria-pressed="true"] .yb-chip__x{color:var(--yb-text-muted-inverse)}
+.yb-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:var(--yb-grid-gap)}
+@media (max-width:1024px){.yb-grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:768px){.yb-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* =========================================================================
+   BLOCO DE COMPRA (PDP)
+   ========================================================================= */
+.yb-buybox{display:flex; flex-direction:column; gap:var(--yb-space-5); min-width:0}
+.yb-buybox__flags{display:flex; gap:var(--yb-space-2); flex-wrap:wrap}
+.yb-buybox__title{
+  margin:0; font-size:var(--yb-type-h1-size); line-height:var(--yb-type-h1-line);
+  letter-spacing:var(--yb-type-h1-track); font-weight:var(--yb-type-h1-weight);
+  text-wrap:balance;
+}
+@media (max-width:860px){.yb-buybox__title{font-size:var(--yb-type-h2-size)}}
+.yb-buybox__desc{
+  margin:0; font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); color:var(--yb-text-secondary); max-width:56ch;
+}
+.yb-buybox__group{display:flex; flex-direction:column; gap:var(--yb-space-3)}
+.yb-buybox__label{
+  margin:0; font-size:var(--yb-type-overline-size);
+  letter-spacing:var(--yb-tracking-wider); text-transform:uppercase;
+  font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-muted);
+}
+/* wrap: com o stepper em flex:none, sem isto o botao e que seria espremido.
+   Quebrar a linha e melhor que entregar um "Add to cart" de 60px. */
+.yb-buybox__actions{display:flex; flex-wrap:wrap; gap:var(--yb-space-3); align-items:stretch}
+.yb-buybox__actions .yb-btn{min-width:12rem; flex:1}
+.yb-buybox__ship{
+  display:flex; align-items:center; justify-content:center; gap:var(--yb-space-2);
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-success-text);
+  font-weight:var(--yb-font-weight-medium); margin:0;
+}
+.yb-buybox__trust{
+  display:flex; gap:var(--yb-space-5); flex-wrap:wrap;
+  padding-top:var(--yb-space-4); border-top:1px solid var(--yb-border-subtle);
+}
+.yb-buybox__trust span{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+
+/* =========================================================================
+   EMPTY STATE
+   Nunca é só "nada aqui". Sempre diz por que está vazio e o que fazer.
+   ========================================================================= */
+.yb-empty{
+  display:flex; flex-direction:column; align-items:center; text-align:center;
+  gap:var(--yb-space-4); padding:var(--yb-space-16) var(--yb-space-6);
+}
+.yb-empty__mark{
+  width:56px; height:56px; border-radius:var(--yb-radius-full);
+  background:var(--yb-bg-muted); display:flex; align-items:center;
+  justify-content:center; font-size:var(--yb-type-h3-size); color:var(--yb-text-muted);
+}
+.yb-empty h3{
+  margin:0; font-size:var(--yb-type-h4-size);
+  font-weight:var(--yb-type-h4-weight); letter-spacing:var(--yb-type-h4-track);
+}
+.yb-empty p{margin:0; color:var(--yb-text-secondary); max-width:44ch;
+  font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-relaxed)}
+
+/* =========================================================================
+   FOOTER
+   Reproduz o footer que a loja ja pratica — fundo cinza claro, tres zonas,
+   barra legal embaixo — sem nenhum valor cru. Cada numero abaixo veio de
+   medir a producao e cair no degrau de escala mais proximo.
+
+   Duas divergencias deliberadas, ambas por regra do sistema:
+
+   1 · Texto. A producao usa #71717A sobre #F0F0F0 — 4.24:1, REPROVA em AA.
+       Aqui e --yb-text-muted sobre --yb-bg-muted: 4.73:1, passa. E a mesma
+       familia de cinza, dois degraus mais escuro. Ninguem nota; o leitor
+       de contraste nota.
+
+   2 · Magenta. A producao usa #DB2955, um dos tres magentas divergentes da
+       loja. O sistema tem um so: --yb-action-bg (#CA235F).
+
+   Os menus sao acordeao no mobile e lista aberta no desktop, com um DOM so:
+   o checkbox governa o estado abaixo de 768 e a media query o ignora acima.
+   A loja hoje duplica o menu inteiro no HTML para fazer isso — quem usa
+   leitor de tela ouve tudo duas vezes.
+   ========================================================================= */
+.yb-footer{
+  background:var(--yb-bg-muted); color:var(--yb-text-muted);
+  padding:var(--yb-space-12) var(--yb-page-gutter);
+  font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-base);
+}
+.yb-footer__inner{max-width:var(--yb-container-max); margin-inline:auto}
+
+/* --- as tres zonas ---------------------------------------------------- */
+.yb-footer__top{
+  display:flex; flex-wrap:wrap; justify-content:space-between;
+  gap:var(--yb-space-8); align-items:flex-start;
+}
+@media (max-width:768px){
+  .yb-footer__top{flex-direction:column; align-items:center; text-align:center}
+}
+
+/* --- zona 1 · marca --------------------------------------------------- */
+.yb-footer__brand{
+  display:flex; flex-direction:column; gap:var(--yb-space-6);
+  min-width:0; flex:0 0 auto;
+}
+@media (max-width:768px){.yb-footer__brand{align-items:center}}
+/* O footer da loja e claro e o logo e monocromatico preto: aqui ele NAO
+   inverte. Se algum dia o footer voltar a ser escuro, e --inverse que
+   resolve, nao um filter escondido no padrao. */
+.yb-footer__logo{margin:0; display:block}
+.yb-footer__links{
+  display:flex; flex-direction:column; gap:var(--yb-space-2);
+  list-style:none; margin:0; padding:0;
+}
+.yb-footer__social{display:flex; gap:0; align-items:center}
+.yb-footer__social a{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:var(--yb-target-min); min-height:var(--yb-target-min);
+  /* Negativa so na vertical. No eixo horizontal ela encolhia a caixa sem
+     encolher o conteudo, e a linha estourava 12px para fora. */
+  margin-block:calc(var(--yb-space-3) * -1);
+  color:var(--yb-text-muted); border-radius:var(--yb-radius-control);
+  transition:color var(--yb-transition-control);
+}
+
+@media (hover:hover){
+  .yb-footer__social a:hover{color:var(--yb-text-link)}
+}
+
+/* --- zona 2 · menus --------------------------------------------------- */
+.yb-footer__menus{
+  display:flex; flex-wrap:wrap; justify-content:space-evenly;
+  gap:var(--yb-space-8); flex:1 1 auto; min-width:0;
+}
+@media (max-width:768px){
+  .yb-footer__menus{flex-direction:column; gap:0; width:100%; max-width:20rem}
+}
+/* flex:0 0 auto e nao o min-width:0 de antes: com permissao de encolher, as
+   colunas caiam para 26px num container estreito e os textos se sobrepunham.
+   Aqui cada coluna guarda a largura do conteudo e quebra para a linha de
+   baixo quando nao cabe. */
+.yb-footer__col{flex:0 0 auto; min-width:0}
+/* No desktop nao ha acordeao — e nao havendo, nao pode sobrar um controle
+   focavel que o teclado alcanca e que nao faz nada. Ele so existe no mobile. */
+.yb-footer__toggle{display:none}
+/* O padrao e o desktop: titulo como rotulo, lista aberta, sem acordeao.
+   O acordeao existe so abaixo de 768 — e um comportamento do mobile, nao
+   um estado que o desktop precise desfazer. Assim nao aparece breakpoint
+   de 769 na folha, e o mesmo HTML serve os dois. */
+.yb-footer__coltitle{
+  display:flex; align-items:center; justify-content:flex-start;
+  gap:var(--yb-space-2); margin:0 0 var(--yb-space-2);
+  font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-muted); cursor:default;
+}
+.yb-footer__coltitle .yb-icon{display:none}
+.yb-footer__toggle:focus-visible + .yb-footer__coltitle{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-footer__collist > ul{list-style:none; margin:0; padding:0}
+.yb-footer__collist li{padding-block:var(--yb-space-1)}
+/* Os irmaos desta lista (.yb-footer__bottom a, .yb-footer__links a) ja tinham
+   os 24px; estes ficaram para tras com 17. No mobile viram 44, que e o alvo
+   de dedo — e ali eles sao a navegacao inteira do rodape. */
+/* display:flex e nao inline-flex: com inline o alvo tinha a largura do texto,
+   e "Kit" virava um alvo de 17px. Ocupando a linha, o rotulo curto ganha o
+   mesmo alvo do longo. */
+.yb-footer__collist a{display:flex; align-items:center; min-height:var(--yb-space-6)}
+@media (max-width:768px){
+  .yb-footer__collist a{min-height:var(--yb-target-min)}
+  /* os irmaos ficaram para tras com 24px em toda largura */
+  .yb-footer__bottom a,.yb-footer__links a,.yb-chip{min-height:var(--yb-target-min)}
+}
+
+@media (max-width:768px){
+  .yb-footer__toggle{display:block; position:absolute; opacity:0; pointer-events:none}
+  .yb-footer__coltitle{
+    justify-content:space-between; cursor:pointer;
+    margin-bottom:var(--yb-space-1); min-height:var(--yb-target-min);
+    border-bottom:1px solid var(--yb-border-subtle);
+  }
+  .yb-footer__coltitle .yb-icon{
+    display:inline-flex; transition:transform var(--yb-transition-control);
+  }
+  .yb-footer__toggle:checked + .yb-footer__coltitle .yb-icon{transform:rotate(180deg)}
+  /* max-height, e nao o truque de grid-template-rows 0fr->1fr: os dois
+     funcionam, mas a loja ja anima max-height no acordeao que tem hoje, e
+     nao ha ganho em divergir. O teto e folgado de proposito — o que ele
+     limita e a animacao, nao a lista. */
+  .yb-footer__collist{
+    max-height:0; overflow:hidden;
+    transition:max-height var(--yb-transition-surface);
+  }
+  .yb-footer__toggle:checked ~ .yb-footer__collist{max-height:30rem}
+  .yb-footer__collist li{text-align:start; padding-inline-start:var(--yb-space-3)}
+}
+
+/* --- zona 3 · contato ------------------------------------------------- */
+.yb-footer__contact{
+  display:flex; flex-direction:column; gap:var(--yb-space-5);
+  flex:0 1 28rem; min-width:0;
+}
+.yb-footer__newslabel{
+  display:block; margin-bottom:var(--yb-space-1);
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+}
+.yb-footer__news{display:flex; align-items:stretch; gap:var(--yb-space-2)}
+.yb-footer__newsfield{position:relative; flex:1 1 auto; min-width:0}
+.yb-footer__newsfield .yb-icon{
+  position:absolute; inset-block:0; inset-inline-start:var(--yb-space-4);
+  margin-block:auto; color:var(--yb-text-muted); pointer-events:none;
+}
+.yb-footer__news .yb-input{padding-inline-start:var(--yb-space-12)}
+.yb-footer__newsbtn{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:var(--yb-target-min); min-height:var(--yb-target-min);
+  border:none; cursor:pointer; padding:0 var(--yb-space-3);
+  background:var(--yb-action-bg); color:var(--yb-action-text);
+  border-radius:var(--yb-radius-control);
+  transition:background-color var(--yb-transition-control);
+}
+
+@media (hover:hover){
+  .yb-footer__newsbtn:hover{background:var(--yb-action-bg-hover)}
+}
+.yb-footer__newsbtn:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-footer__info{margin:0}
+.yb-footer__info strong{
+  display:block; color:var(--yb-text-secondary);
+  font-weight:var(--yb-font-weight-semibold);
+}
+
+/* --- barra legal ------------------------------------------------------ */
+.yb-footer__bottom{
+  display:flex; flex-wrap:wrap; align-items:center; gap:var(--yb-space-5);
+  margin-top:var(--yb-space-8); padding-top:var(--yb-space-12);
+  border-top:1px solid var(--yb-border-strong);
+}
+@media (max-width:768px){
+  .yb-footer__bottom{justify-content:center; text-align:center;
+    padding-top:var(--yb-space-8)}
+}
+
+/* --- links do footer, em qualquer zona -------------------------------- */
+.yb-footer a{color:inherit; text-decoration:none}
+/* Link em container flex perde o display:inline e com ele a isencao de alvo
+   do WCAG 2.5.8. Na barra legal isso deixa alvo de 19px — o padding devolve
+   os 24 sem mexer no ritmo da linha. */
+.yb-footer__bottom a,.yb-footer__links a{
+  display:inline-flex; align-items:center; min-height:var(--yb-space-6);
+}
+
+@media (hover:hover){
+  .yb-footer a:hover{color:var(--yb-text-link)}
+}
+.yb-footer a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+
+@media (prefers-reduced-motion:reduce){
+  .yb-footer__collist,.yb-footer__coltitle .yb-icon{transition:none}
+}
+
+@media (prefers-reduced-motion:reduce){.yb-freeship__fill{transition:none}}
+
+/* =========================================================================
+   PAGE LAYOUT
+   Container, ritmo vertical e cabeçalho de seção.
+
+   Sobem para o sistema pela regra dos dois usos: home e PDP usam os três, e
+   qualquer página nova vai precisar. Enquanto viviam na folha do gerador, cada
+   página que nascesse iria redefini-los — que é como um design system começa
+   a divergir de si mesmo.
+   ========================================================================= */
+.yb-page{
+  max-width:var(--yb-container-max);
+  margin-inline:auto;
+  padding-inline:var(--yb-page-gutter);
+}
+
+.yb-block{ padding-block:var(--yb-space-16); }
+.yb-block--tight{ padding-block:var(--yb-space-6); }
+/* O ritmo vertical foi desenhado para a tela larga. Numa de 568px, 64px de
+   respiro entre blocos e um oitavo da tela gasto em nada — a PDP levava duas
+   telas de rolagem ate o botao de comprar. O ritmo encolhe; a hierarquia
+   entre --tight e o padrao continua. */
+@media (max-width:768px){
+  .yb-block{ padding-block:var(--yb-space-10); }
+  .yb-block--tight{ padding-block:var(--yb-space-3); }
+}
+.yb-block--flush{ padding-inline:0; }      /* sangra até a borda da tela */
+
+.yb-section-head{
+  display:flex; align-items:flex-end; justify-content:space-between;
+  gap:var(--yb-space-6); flex-wrap:wrap;
+  margin-bottom:var(--yb-space-8);
+}
+.yb-section-head--center{ justify-content:center; text-align:center; }
+.yb-section-head h2{
+  margin:0;
+  font-size:var(--yb-type-h2-size);
+  line-height:var(--yb-type-h2-line);
+  letter-spacing:var(--yb-type-h2-track);
+  font-weight:var(--yb-type-h2-weight);
+}
+.yb-section-head a{
+  display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  min-height:var(--yb-target-min);
+  font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-medium);
+  color:var(--yb-text-link); text-decoration:none;
+}
+
+@media (hover:hover){
+  .yb-section-head a:hover{ color:var(--yb-text-link-hover); }
+}
+.yb-section-head a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}

@@ -1,0 +1,1059 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base);
+  font-size:var(--yb-type-body-size); line-height:var(--yb-type-body-line);
+  -webkit-font-smoothing:antialiased;
+}
+code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+
+/* layout */
+.doc{display:grid; grid-template-columns:236px 1fr; min-height:100vh}
+/* itens de grid têm min-width:auto por padrão — sem isto, um <pre> largo
+   empurra a coluna inteira e cria scroll horizontal no mobile */
+.doc > *{min-width:0}
+.main,.nav,.layer,.ty,.sp,.sw{min-width:0}
+pre{max-width:100%}
+code{overflow-wrap:anywhere}
+@media (max-width:900px){.doc{grid-template-columns:1fr}}
+
+.nav{
+  border-right:1px solid var(--yb-border-subtle); padding:var(--yb-space-8) var(--yb-space-6);
+  position:sticky; top:0; height:100vh; overflow-y:auto; background:var(--yb-bg-subtle);
+}
+@media (max-width:900px){.nav{position:static; height:auto; border-right:none;
+  border-bottom:1px solid var(--yb-border-subtle)}}
+.nav-brand{
+  font-size:var(--yb-type-h4-size); font-weight:var(--yb-font-weight-extrabold);
+  letter-spacing:var(--yb-tracking-tighter); margin:0 0 var(--yb-space-1);
+}
+.nav-ver{
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; color:var(--yb-text-muted); font-weight:var(--yb-font-weight-semibold);
+  margin:0 0 var(--yb-space-8);
+}
+.nav ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px}
+@media (max-width:900px){.nav ul{flex-direction:row; flex-wrap:wrap; gap:var(--yb-space-2)}}
+.nav a{
+  display:block; padding:var(--yb-space-2) var(--yb-space-3);
+  color:var(--yb-text-secondary); text-decoration:none;
+  font-size:var(--yb-type-body-sm-size); border-radius:var(--yb-radius-sm);
+  transition:background var(--yb-transition-control), color var(--yb-transition-control);
+}
+.nav a:hover{background:var(--yb-bg-muted); color:var(--yb-text-primary)}
+.nav a:focus-visible{outline:var(--yb-focus-width) solid var(--yb-focus-color); outline-offset:var(--yb-focus-offset)}
+
+.main{padding:var(--yb-space-16) var(--yb-space-10); max-width:900px}
+@media (max-width:900px){.main{padding:var(--yb-space-10) var(--yb-page-gutter)}}
+
+.hero h1{
+  font-size:var(--yb-type-display-2-size); line-height:var(--yb-type-display-2-line);
+  letter-spacing:var(--yb-type-display-2-track); font-weight:var(--yb-type-display-2-weight);
+  margin:0 0 var(--yb-space-4); text-wrap:balance;
+}
+.hero p{
+  font-size:var(--yb-type-body-lg-size); line-height:var(--yb-type-body-lg-line);
+  color:var(--yb-text-secondary); max-width:62ch; margin:0 0 var(--yb-space-6);
+}
+.facts{display:flex; flex-wrap:wrap; gap:var(--yb-space-2); margin-bottom:var(--yb-space-16)}
+.fact{
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-badge);
+  padding:var(--yb-space-2) var(--yb-space-3); font-size:var(--yb-type-caption-size);
+  color:var(--yb-text-secondary); background:var(--yb-surface);
+}
+.fact b{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
+
+section{margin-bottom:var(--yb-space-20); scroll-margin-top:var(--yb-space-6)}
+section > h2{
+  font-size:var(--yb-type-h2-size); line-height:var(--yb-type-h2-line);
+  letter-spacing:var(--yb-type-h2-track); font-weight:var(--yb-type-h2-weight);
+  margin:0 0 var(--yb-space-3); padding-bottom:var(--yb-space-3);
+  border-bottom:1px solid var(--yb-border-subtle);
+}
+section > p{color:var(--yb-text-secondary); max-width:64ch; margin:0 0 var(--yb-space-8)}
+h3.sub{
+  font-size:var(--yb-type-h4-size); font-weight:var(--yb-type-h4-weight);
+  letter-spacing:var(--yb-type-h4-track); margin:var(--yb-space-10) 0 var(--yb-space-4);
+}
+
+/* regra dura */
+.rule{
+  border-left:3px solid var(--yb-danger-solid); background:var(--yb-danger-surface);
+  padding:var(--yb-space-4) var(--yb-space-5); border-radius:0 var(--yb-radius-sm) var(--yb-radius-sm) 0;
+  margin:var(--yb-space-6) 0; max-width:70ch;
+}
+.rule b{
+  display:block; font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; color:var(--yb-danger-text); margin-bottom:var(--yb-space-2);
+  font-weight:var(--yb-font-weight-semibold);
+}
+.rule p{margin:0; font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
+
+/* swatches */
+.ramp{display:flex; flex-direction:column; gap:var(--yb-space-1); margin-bottom:var(--yb-space-8)}
+.sw{display:grid; grid-template-columns:76px 1fr; gap:var(--yb-space-4); align-items:center}
+.sw.is-key .sw-meta code{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
+.sw-chip{
+  height:44px; border-radius:var(--yb-radius-sm);
+  border:1px solid rgba(30,30,31,.08);
+}
+.sw-meta{display:flex; align-items:center; gap:var(--yb-space-3); flex-wrap:wrap}
+.sw-meta code{color:var(--yb-text-secondary)}
+.sw-hex{font-family:var(--yb-font-family-mono); font-size:.75rem; color:var(--yb-text-muted)}
+.sw-cr{
+  font-family:var(--yb-font-family-mono); font-size:.6875rem; color:var(--yb-text-muted);
+  font-variant-numeric:tabular-nums;
+}
+.sw-cr[data-tag="AAA"],.sw-cr[data-tag="AA"]{color:var(--yb-success-text)}
+/* era --yb-text-disabled (gray-400, 2.14:1): é rótulo informativo, não
+   componente inativo — não tem isenção nenhuma. Vai para o piso. */
+.sw-cr[data-tag="—"]{color:var(--yb-text-muted)}
+.sw-note{
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wide);
+  text-transform:uppercase; font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-magenta-600); border:1px solid var(--yb-magenta-300);
+  background:var(--yb-magenta-50); padding:2px var(--yb-space-2); border-radius:var(--yb-radius-badge);
+}
+
+/* tipografia */
+.ty{
+  display:grid; grid-template-columns:230px 1fr; gap:var(--yb-space-6);
+  padding:var(--yb-space-5) 0; border-bottom:1px solid var(--yb-border-subtle); align-items:baseline;
+}
+@media (max-width:760px){.ty{grid-template-columns:1fr; gap:var(--yb-space-2)}}
+.ty-label{display:flex; flex-direction:column; gap:var(--yb-space-1)}
+.ty-label code{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-medium)}
+.ty-label span{font-family:var(--yb-font-family-mono); font-size:.6875rem; color:var(--yb-text-muted)}
+.ty-label em{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted); font-style:normal}
+.ty-sample{color:var(--yb-text-primary); overflow-wrap:anywhere}
+.ty--display-1{font-size:var(--yb-type-display-1-size);line-height:var(--yb-type-display-1-line);letter-spacing:var(--yb-type-display-1-track);font-weight:var(--yb-type-display-1-weight)}
+.ty--display-2{font-size:var(--yb-type-display-2-size);line-height:var(--yb-type-display-2-line);letter-spacing:var(--yb-type-display-2-track);font-weight:var(--yb-type-display-2-weight)}
+.ty--h1{font-size:var(--yb-type-h1-size);line-height:var(--yb-type-h1-line);letter-spacing:var(--yb-type-h1-track);font-weight:var(--yb-type-h1-weight)}
+.ty--h2{font-size:var(--yb-type-h2-size);line-height:var(--yb-type-h2-line);letter-spacing:var(--yb-type-h2-track);font-weight:var(--yb-type-h2-weight)}
+.ty--h3{font-size:var(--yb-type-h3-size);line-height:var(--yb-type-h3-line);letter-spacing:var(--yb-type-h3-track);font-weight:var(--yb-type-h3-weight)}
+.ty--h4{font-size:var(--yb-type-h4-size);line-height:var(--yb-type-h4-line);letter-spacing:var(--yb-type-h4-track);font-weight:var(--yb-type-h4-weight)}
+.ty--body-lg{font-size:var(--yb-type-body-lg-size);line-height:var(--yb-type-body-lg-line);font-weight:var(--yb-type-body-lg-weight)}
+.ty--body{font-size:var(--yb-type-body-size);line-height:var(--yb-type-body-line);font-weight:var(--yb-type-body-weight)}
+.ty--body-sm{font-size:var(--yb-type-body-sm-size);line-height:var(--yb-type-body-sm-line);font-weight:var(--yb-type-body-sm-weight)}
+.ty--caption{font-size:var(--yb-type-caption-size);line-height:var(--yb-type-caption-line);font-weight:var(--yb-type-caption-weight)}
+.ty--overline{font-size:var(--yb-type-overline-size);line-height:var(--yb-type-overline-line);letter-spacing:var(--yb-type-overline-track);font-weight:var(--yb-type-overline-weight);text-transform:uppercase}
+
+/* espaço / raio / elevação / estado */
+.sp{display:grid; grid-template-columns:150px 1fr 60px; gap:var(--yb-space-4); align-items:center; padding:var(--yb-space-2) 0}
+@media (max-width:520px){.sp{grid-template-columns:110px 1fr 48px; gap:var(--yb-space-2)}}
+.sp code{color:var(--yb-text-secondary)}
+/* a barra representa o valor do token, mas nunca pode empurrar o layout:
+   em 320px a coluna disponível é menor que --yb-space-24 (96px) */
+.sp-bar{height:16px; background:var(--yb-magenta-600); border-radius:2px; max-width:100%}
+.sp span{font-family:var(--yb-font-family-mono); font-size:.75rem; color:var(--yb-text-muted); text-align:right}
+
+.grid4{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:var(--yb-space-5)}
+.rd,.el{display:flex; flex-direction:column; gap:var(--yb-space-2)}
+.rd-box{height:72px; background:var(--yb-gray-950)}
+.el-box{height:72px; background:var(--yb-surface); border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card)}
+.rd code,.el code{color:var(--yb-text-secondary)}
+.rd span,.el span{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+
+/* Media & control: caixa de proporcao, barra de medida, degrau de altura */
+.ar,.ct{display:flex; flex-direction:column; gap:var(--yb-space-2)}
+.ar-box{background:var(--yb-bg-muted); border:1px solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-media)}
+.ar code,.ct code{color:var(--yb-text-secondary)}
+.ar span,.ct span{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+.ct-box{background:var(--yb-gray-950); border-radius:var(--yb-radius-control);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--yb-white); font-size:var(--yb-type-caption-size)}
+.ms{border-inline-start:2px solid var(--yb-accent-border); padding-inline-start:var(--yb-space-4);
+  margin-bottom:var(--yb-space-5)}
+.ms p{margin:0 0 var(--yb-space-1); color:var(--yb-text-secondary);
+  font-size:var(--yb-type-body-sm-size)}
+.ms code{color:var(--yb-text-secondary)}
+.st{display:flex; flex-direction:column; gap:var(--yb-space-2); margin-bottom:var(--yb-space-4)}
+.st-banner{padding:var(--yb-space-3) var(--yb-space-4); border-radius:var(--yb-radius-sm);
+  border-left:3px solid; font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-medium)}
+.st code{color:var(--yb-text-secondary)}
+.st span{font-family:var(--yb-font-family-mono); font-size:.6875rem; color:var(--yb-text-muted)}
+
+/* layers */
+.layers{display:flex; flex-direction:column; gap:var(--yb-space-3)}
+.layer{
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-card);
+  padding:var(--yb-space-4) var(--yb-space-5); background:var(--yb-surface);
+}
+.layer h3{margin:0 0 var(--yb-space-2); font-size:var(--yb-type-body-size); font-weight:var(--yb-font-weight-semibold)}
+.layer p{margin:0 0 var(--yb-space-2); font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
+.layer pre{
+  margin:0; padding:var(--yb-space-3); background:var(--yb-bg-muted);
+  border-radius:var(--yb-radius-sm); overflow-x:auto;
+  font-family:var(--yb-font-family-mono); font-size:.75rem; color:var(--yb-text-primary);
+}
+.layer--0{border-left:3px solid var(--yb-gray-400)}
+.layer--1{border-left:3px solid var(--yb-magenta-600)}
+.layer--2{border-left:3px solid var(--yb-gray-300)}
+.layer--m{border-left:3px solid var(--yb-gold-600)}
+
+/* .doc-credit e nao `footer`: seletor de elemento solto numa pagina que
+   exibe componentes vaza para dentro do demo. O `max-width:70ch` daqui
+   estava esmagando o footer do sistema a 599px. */
+.doc-credit{
+  border-top:1px solid var(--yb-border-subtle); padding-top:var(--yb-space-6);
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted); max-width:70ch;
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <nav class="nav">
+    <p class="nav-brand">Ybera</p>
+    <p class="nav-ver">Tokens · v0.10</p>
+    <ul>
+      <li><a href="#foundations">Foundations</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#color">Color</a></li>
+      <li><a href="#typography">Typography</a></li>
+      <li><a href="#space">Space</a></li>
+      <li><a href="#shape">Shape</a></li>
+      <li><a href="#media">Media &amp; control</a></li>
+      <li><a href="#elevation">Elevation</a></li>
+      <li><a href="#state">State</a></li>
+      <li><a href="#usage">How to use</a></li>
+    </ul>
+  </nav>
+
+  <main class="main">
+    <div class="hero">
+      <h1>Ybera Design System</h1>
+      <p>A fundação da marca em tokens. Independente de plataforma por decisão de
+      projeto: a loja US roda Shopify e a BR roda Wake, então CSS custom properties
+      é o único denominador comum entre as duas.</p>
+      <div class="facts">
+        <span class="fact"><b>33</b> degraus de cor validados</span>
+        <span class="fact"><b>11</b> papéis tipográficos</span>
+        <span class="fact"><b>1</b> família — Schibsted Grotesk</span>
+        <span class="fact">contraste <b>medido</b>, não estimado</span>
+      </div>
+    </div>
+
+    <section id="foundations">
+      <h2>Foundations</h2>
+      <p>Quatro decisões governam todo o resto. Elas foram tomadas contra o estado
+      real da loja, não em abstrato.</p>
+      <div class="layers">
+        <div class="layer layer--1">
+          <h3>A primária é grafite, não magenta</h3>
+          <p><code>#1E1E1F</code> carrega a identidade. O magenta é cor de <b>ação</b> —
+          existe onde há uma decisão a tomar. Confundir os dois é o que produziu
+          três magentas divergentes na loja atual.</p>
+        </div>
+        <div class="layer layer--1">
+          <h3>Uma família tipográfica</h3>
+          <p>A hierarquia vem de escala, peso e tracking — nunca de trocar de fonte.
+          A loja hoje carrega seis famílias simultâneas.</p>
+        </div>
+        <div class="layer layer--1">
+          <h3>Contraste é medido antes de entrar</h3>
+          <p>Cada degrau de cor foi validado em WCAG 2.1. Nenhum valor entra no
+          sistema por gosto.</p>
+        </div>
+        <div class="layer layer--1">
+          <h3>Mesma marca, mercados diferentes</h3>
+          <p>US e BR compartilham identidade integral. A camada de mercado só varia
+          o que é genuinamente local: idioma, moeda, meios de pagamento.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="architecture">
+      <h2>Architecture</h2>
+      <p>Três camadas mais uma de mercado. A regra é simples: componente só enxerga
+      a camada 1.</p>
+      <div class="layers">
+        <div class="layer layer--0">
+          <h3>Camada 0 · Primitivos</h3>
+          <p>Vocabulário bruto. Nenhum componente consome isto direto.</p>
+          <pre>--yb-gray-950: #1E1E1F;
+--yb-magenta-600: #CA235F;</pre>
+        </div>
+        <div class="layer layer--1">
+          <h3>Camada 1 · Semânticos</h3>
+          <p>A intenção. A única camada que componentes consomem e que alguém
+          precisa ler para entender o sistema.</p>
+          <pre>--yb-text-primary: var(--yb-gray-950);
+--yb-action-bg: var(--yb-magenta-600);</pre>
+        </div>
+        <div class="layer layer--2">
+          <h3>Camada 2 · Componente</h3>
+          <p>Só onde há desvio local. Cada desvio fica visível e auditável.</p>
+          <pre>--yb-btn-pad-block: var(--yb-space-4);</pre>
+        </div>
+        <div class="layer layer--m">
+          <h3>Camada de mercado</h3>
+          <p>Aqui não se troca identidade.</p>
+          <pre>[data-market="br"] { --yb-currency-symbol: "R$"; }</pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="color">
+      <h2>Color</h2>
+      <p>Três rampas de onze degraus e uma família de estado com duas, cada uma gerada por script e validada em
+      contraste. O número ao lado de cada degrau é a razão medida contra branco.</p>
+
+      <h3 class="sub">Neutro — derivado da primária</h3>
+      <div class="ramp">
+      <div class="sw ">
+        <div class="sw-chip" style="background:#FAFAFA;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-50</code>
+          <span class="sw-hex">#FAFAFA</span>
+          <span class="sw-cr" data-tag="—">1.04:1 · —</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#F5F5F5;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-100</code>
+          <span class="sw-hex">#F5F5F5</span>
+          <span class="sw-cr" data-tag="—">1.09:1 · —</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#EAEAEA;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-200</code>
+          <span class="sw-hex">#EAEAEA</span>
+          <span class="sw-cr" data-tag="—">1.20:1 · —</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#DADADB;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-300</code>
+          <span class="sw-hex">#DADADB</span>
+          <span class="sw-cr" data-tag="—">1.40:1 · —</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#B1B1B4;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-400</code>
+          <span class="sw-hex">#B1B1B4</span>
+          <span class="sw-cr" data-tag="—">2.14:1 · —</span>
+          
+        </div>
+      </div>
+      <div class="sw is-key">
+        <div class="sw-chip" style="background:#8A8A8E;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-500</code>
+          <span class="sw-hex">#8A8A8E</span>
+          <span class="sw-cr" data-tag="UI">3.44:1 · UI</span>
+          <span class="sw-note">ícone e borda — nunca texto</span>
+        </div>
+      </div>
+      <div class="sw is-key">
+        <div class="sw-chip" style="background:#6D6D71;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-600</code>
+          <span class="sw-hex">#6D6D71</span>
+          <span class="sw-cr" data-tag="AA">5.15:1 · AA</span>
+          <span class="sw-note">piso de texto</span>
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#535356;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-700</code>
+          <span class="sw-hex">#535356</span>
+          <span class="sw-cr" data-tag="AAA">7.67:1 · AAA</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#3A3A3C;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-800</code>
+          <span class="sw-hex">#3A3A3C</span>
+          <span class="sw-cr" data-tag="AAA">11.35:1 · AAA</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#272728;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-900</code>
+          <span class="sw-hex">#272728</span>
+          <span class="sw-cr" data-tag="AAA">14.92:1 · AAA</span>
+          
+        </div>
+      </div>
+      <div class="sw is-key">
+        <div class="sw-chip" style="background:#1E1E1F;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-950</code>
+          <span class="sw-hex">#1E1E1F</span>
+          <span class="sw-cr" data-tag="AAA">16.66:1 · AAA</span>
+          <span class="sw-note">PRIMÁRIA</span>
+        </div>
+      </div>
+      </div>
+      <div class="rule">
+        <b>Regra dura · piso de texto</b>
+        <p>O <code>gray-500</code> mede 3.44:1 e reprova em AA. Ele existe para ícone
+        e borda. Texto nunca desce abaixo do <code>gray-600</code>. A loja hoje usa
+        <code>zinc-500</code> (4.83:1) em 266 elementos — passa raspando, e é por isso
+        que tanto texto secundário parece apagado.</p>
+      </div>
+
+      <h3 class="sub">Magenta — ação</h3>
+      <div class="ramp">
+      <div class="sw ">
+        <div class="sw-chip" style="background:#FCF9FA;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-50</code>
+          <span class="sw-hex">#FCF9FA</span>
+          <span class="sw-cr" data-tag="—">1.05:1 · —</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#F9F2F4;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-100</code>
+          <span class="sw-hex">#F9F2F4</span>
+          <span class="sw-cr" data-tag="—">1.10:1 · —</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#F3E1E8;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-200</code>
+          <span class="sw-hex">#F3E1E8</span>
+          <span class="sw-cr" data-tag="—">1.25:1 · —</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#EBCAD6;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-300</code>
+          <span class="sw-hex">#EBCAD6</span>
+          <span class="sw-cr" data-tag="—">1.51:1 · —</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#DC89A7;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-400</code>
+          <span class="sw-hex">#DC89A7</span>
+          <span class="sw-cr" data-tag="—">2.57:1 · —</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#D64277;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-500</code>
+          <span class="sw-hex">#D64277</span>
+          <span class="sw-cr" data-tag="UI">4.28:1 · UI</span>
+          
+        </div>
+      </div>
+      <div class="sw is-key">
+        <div class="sw-chip" style="background:#CA235F;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-600</code>
+          <span class="sw-hex">#CA235F</span>
+          <span class="sw-cr" data-tag="AA">5.36:1 · AA</span>
+          <span class="sw-note">AÇÃO canônica</span>
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#8A1E45;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-700</code>
+          <span class="sw-hex">#8A1E45</span>
+          <span class="sw-cr" data-tag="AAA">8.93:1 · AAA</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#5D1932;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-800</code>
+          <span class="sw-hex">#5D1932</span>
+          <span class="sw-cr" data-tag="AAA">12.72:1 · AAA</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#3D1222;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-900</code>
+          <span class="sw-hex">#3D1222</span>
+          <span class="sw-cr" data-tag="AAA">16.05:1 · AAA</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#2E0F1A;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-950</code>
+          <span class="sw-hex">#2E0F1A</span>
+          <span class="sw-cr" data-tag="AAA">17.51:1 · AAA</span>
+          
+        </div>
+      </div>
+      </div>
+
+      <h3 class="sub">Dourado — acento</h3>
+      <div class="ramp">
+      <div class="sw ">
+        <div class="sw-chip" style="background:#FCFBF8;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-50</code>
+          <span class="sw-hex">#FCFBF8</span>
+          <span class="sw-cr" data-tag="—">1.03:1 · —</span>
+          
+        </div>
+      </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#F9F7F1;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-100</code>
+          <span class="sw-hex">#F9F7F1</span>
+          <span class="sw-cr" data-tag="—">1.07:1 · —</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#F3EDE1;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-200</code>
+          <span class="sw-hex">#F3EDE1</span>
+          <span class="sw-cr" data-tag="—">1.17:1 · —</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#ECE0CA;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-300</code>
+          <span class="sw-hex">#ECE0CA</span>
+          <span class="sw-cr" data-tag="—">1.31:1 · —</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#DDC088;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-400</code>
+          <span class="sw-hex">#DDC088</span>
+          <span class="sw-cr" data-tag="—">1.75:1 · —</span>
+          
+        </div>
+      </div>
+      <div class="sw is-key">
+        <div class="sw-chip" style="background:#D29F3E;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-500</code>
+          <span class="sw-hex">#D29F3E</span>
+          <span class="sw-cr" data-tag="—">2.39:1 · —</span>
+          <span class="sw-note">MARCA — só sobre escuro</span>
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#AE8330;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-600</code>
+          <span class="sw-hex">#AE8330</span>
+          <span class="sw-cr" data-tag="UI">3.45:1 · UI</span>
+          
+        </div>
+      </div>
+      <div class="sw is-key">
+        <div class="sw-chip" style="background:#806228;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-700</code>
+          <span class="sw-hex">#806228</span>
+          <span class="sw-cr" data-tag="AA">5.68:1 · AA</span>
+          <span class="sw-note">texto sobre claro</span>
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#57441F;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-800</code>
+          <span class="sw-hex">#57441F</span>
+          <span class="sw-cr" data-tag="AAA">9.33:1 · AAA</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#392D16;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-900</code>
+          <span class="sw-hex">#392D16</span>
+          <span class="sw-cr" data-tag="AAA">13.45:1 · AAA</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#2C2312;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-950</code>
+          <span class="sw-hex">#2C2312</span>
+          <span class="sw-cr" data-tag="AAA">15.48:1 · AAA</span>
+          
+        </div>
+      </div>
+      <div class="rule">
+        <b>Regra dura · dourado nunca é texto sobre claro</b>
+        <p>O dourado de marca <code>gold-500</code> mede 2.39:1 sobre branco — reprova
+        até para texto grande. Sobre grafite mede 6.96:1 e passa com folga. Para texto
+        sobre fundo claro existe <code>--yb-accent-text</code> (gold-700, 5.68:1).</p>
+      </div>
+          <h3 class="sub">Estado — sucesso, atenção, erro, informação</h3>
+      <p>Duas etapas por família, não onze: estado não precisa
+      de rampa. O <code>600</code> é a única cor de texto e a única de traço; o
+      <code>50</code> é a única superfície. Todos medem <b>≥5.4:1</b> sobre
+      branco — folga de AA nos dois sentidos, porque estado costuma aparecer em
+      texto pequeno. Quem consome são os aliases
+      <code>--yb-success-text</code>, <code>--yb-success-surface</code> e
+      <code>--yb-success-solid</code>, vistos em <a href="#state">State</a>.</p>
+      <div class="ramp">
+      <div class="sw ">
+        <div class="sw-chip" style="background:#EAF6EC;"></div>
+        <div class="sw-meta">
+          <code>--yb-success-50</code>
+          <span class="sw-hex">#EAF6EC</span>
+          <span class="sw-cr" data-tag="—">1.11:1 · —</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#1F7A34;"></div>
+        <div class="sw-meta">
+          <code>--yb-success-600</code>
+          <span class="sw-hex">#1F7A34</span>
+          <span class="sw-cr" data-tag="AA">5.40:1 · AA</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#FBF3E3;"></div>
+        <div class="sw-meta">
+          <code>--yb-warning-50</code>
+          <span class="sw-hex">#FBF3E3</span>
+          <span class="sw-cr" data-tag="—">1.10:1 · —</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#8A5A00;"></div>
+        <div class="sw-meta">
+          <code>--yb-warning-600</code>
+          <span class="sw-hex">#8A5A00</span>
+          <span class="sw-cr" data-tag="AA">5.93:1 · AA</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#FBEAE9;"></div>
+        <div class="sw-meta">
+          <code>--yb-danger-50</code>
+          <span class="sw-hex">#FBEAE9</span>
+          <span class="sw-cr" data-tag="—">1.16:1 · —</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#B3261E;"></div>
+        <div class="sw-meta">
+          <code>--yb-danger-600</code>
+          <span class="sw-hex">#B3261E</span>
+          <span class="sw-cr" data-tag="AA">6.54:1 · AA</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#E9F1FA;"></div>
+        <div class="sw-meta">
+          <code>--yb-info-50</code>
+          <span class="sw-hex">#E9F1FA</span>
+          <span class="sw-cr" data-tag="—">1.14:1 · —</span>
+          
+        </div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#1B5FA8;"></div>
+        <div class="sw-meta">
+          <code>--yb-info-600</code>
+          <span class="sw-hex">#1B5FA8</span>
+          <span class="sw-cr" data-tag="AA">6.46:1 · AA</span>
+          
+        </div>
+      </div>
+
+      </div>
+    </section>
+
+    <section id="typography">
+      <h2>Typography</h2>
+      <p>Schibsted Grotesk, família única. O tracking aperta conforme o tamanho cresce —
+      esse é o principal vetor de distinção do sistema, já que a família é neutra.</p>
+      <div class="ty">
+        <div class="ty-label"><code>--yb-type-display-1-*</code><span>64px / 800 / -0.035em</span><em>Hero de campanha. Um por página.</em></div>
+        <div class="ty-sample ty--display-1">Keratin care you can trust</div>
+      </div>
+      <div class="ty">
+        <div class="ty-label"><code>--yb-type-display-2-*</code><span>48px / 700 / -0.035em</span><em>Abertura de seção editorial.</em></div>
+        <div class="ty-sample ty--display-2">Keratin care you can trust</div>
+      </div>
+      <div class="ty">
+        <div class="ty-label"><code>--yb-type-h1-*</code><span>40px / 700 / -0.025em</span><em>Título de página. Um por página.</em></div>
+        <div class="ty-sample ty--h1">Keratin care you can trust</div>
+      </div>
+      <div class="ty">
+        <div class="ty-label"><code>--yb-type-h2-*</code><span>32px / 700 / -0.025em</span><em>Seção.</em></div>
+        <div class="ty-sample ty--h2">Keratin care you can trust</div>
+      </div>
+      <div class="ty">
+        <div class="ty-label"><code>--yb-type-h3-*</code><span>24px / 600 / -0.015em</span><em>Subseção. Nome de produto em PDP.</em></div>
+        <div class="ty-sample ty--h3">Keratin care you can trust</div>
+      </div>
+      <div class="ty">
+        <div class="ty-label"><code>--yb-type-h4-*</code><span>20px / 600 / -0.015em</span><em>Bloco. Título de card grande.</em></div>
+        <div class="ty-sample ty--h4">Keratin care you can trust</div>
+      </div>
+      <div class="ty">
+        <div class="ty-label"><code>--yb-type-body-lg-*</code><span>18px / 400</span><em>Introdução, texto de destaque.</em></div>
+        <div class="ty-sample ty--body-lg">Keratin care you can trust</div>
+      </div>
+      <div class="ty">
+        <div class="ty-label"><code>--yb-type-body-*</code><span>16px / 400</span><em>Padrão de leitura.</em></div>
+        <div class="ty-sample ty--body">Keratin care you can trust</div>
+      </div>
+      <div class="ty">
+        <div class="ty-label"><code>--yb-type-body-sm-*</code><span>14px / 400</span><em>Título de card em grid, meta.</em></div>
+        <div class="ty-sample ty--body-sm">Keratin care you can trust</div>
+      </div>
+      <div class="ty">
+        <div class="ty-label"><code>--yb-type-caption-*</code><span>13px / 400</span><em>Apoio, nota de frete.</em></div>
+        <div class="ty-sample ty--caption">Keratin care you can trust</div>
+      </div>
+      <div class="ty">
+        <div class="ty-label"><code>--yb-type-overline-*</code><span>11px / 600 / 0.12em / CAIXA ALTA</span><em>Eyebrow, rótulo de categoria.</em></div>
+        <div class="ty-sample ty--overline">Keratin care you can trust</div>
+      </div>
+    </section>
+
+    <section id="space">
+      <h2>Space</h2>
+      <p>Base 4px, quatorze degraus. Layout usa <code>gap</code>, não margens soltas.</p>
+      <div class="sp">
+        <code>--yb-space-1</code>
+        <div class="sp-bar" style="width:var(--yb-space-1)"></div>
+        <span>4px</span>
+      </div>
+      <div class="sp">
+        <code>--yb-space-2</code>
+        <div class="sp-bar" style="width:var(--yb-space-2)"></div>
+        <span>8px</span>
+      </div>
+      <div class="sp">
+        <code>--yb-space-3</code>
+        <div class="sp-bar" style="width:var(--yb-space-3)"></div>
+        <span>12px</span>
+      </div>
+      <div class="sp">
+        <code>--yb-space-4</code>
+        <div class="sp-bar" style="width:var(--yb-space-4)"></div>
+        <span>16px</span>
+      </div>
+      <div class="sp">
+        <code>--yb-space-5</code>
+        <div class="sp-bar" style="width:var(--yb-space-5)"></div>
+        <span>20px</span>
+      </div>
+      <div class="sp">
+        <code>--yb-space-6</code>
+        <div class="sp-bar" style="width:var(--yb-space-6)"></div>
+        <span>24px</span>
+      </div>
+      <div class="sp">
+        <code>--yb-space-8</code>
+        <div class="sp-bar" style="width:var(--yb-space-8)"></div>
+        <span>32px</span>
+      </div>
+      <div class="sp">
+        <code>--yb-space-10</code>
+        <div class="sp-bar" style="width:var(--yb-space-10)"></div>
+        <span>40px</span>
+      </div>
+      <div class="sp">
+        <code>--yb-space-12</code>
+        <div class="sp-bar" style="width:var(--yb-space-12)"></div>
+        <span>48px</span>
+      </div>
+      <div class="sp">
+        <code>--yb-space-16</code>
+        <div class="sp-bar" style="width:var(--yb-space-16)"></div>
+        <span>64px</span>
+      </div>
+      <div class="sp">
+        <code>--yb-space-20</code>
+        <div class="sp-bar" style="width:var(--yb-space-20)"></div>
+        <span>80px</span>
+      </div>
+      <div class="sp">
+        <code>--yb-space-24</code>
+        <div class="sp-bar" style="width:var(--yb-space-24)"></div>
+        <span>96px</span>
+      </div>
+    </section>
+
+    <section id="shape">
+      <h2>Shape</h2>
+      <p>Cinco raios. A loja hoje pratica doze valores diferentes.</p>
+      <div class="grid4">
+      <div class="rd">
+        <div class="rd-box" style="border-radius:var(--yb-radius-none)"></div>
+        <code>--yb-radius-none</code><span>0</span>
+      </div>
+      <div class="rd">
+        <div class="rd-box" style="border-radius:var(--yb-radius-sm)"></div>
+        <code>--yb-radius-sm</code><span>4px</span>
+      </div>
+      <div class="rd">
+        <div class="rd-box" style="border-radius:var(--yb-radius-md)"></div>
+        <code>--yb-radius-md</code><span>8px · padrão</span>
+      </div>
+      <div class="rd">
+        <div class="rd-box" style="border-radius:var(--yb-radius-lg)"></div>
+        <code>--yb-radius-lg</code><span>12px</span>
+      </div>
+      <div class="rd">
+        <div class="rd-box" style="border-radius:var(--yb-radius-xl)"></div>
+        <code>--yb-radius-xl</code><span>16px</span>
+      </div>
+      <div class="rd">
+        <div class="rd-box" style="border-radius:var(--yb-radius-full)"></div>
+        <code>--yb-radius-full</code><span>9999px</span>
+      </div>
+      </div>
+    </section>
+
+    <section id="media">
+      <h2>Media &amp; control</h2>
+      <p>Quatro famílias que faltavam. Cada uma existe porque a falta dela
+      produzia um defeito, não porque a lista parecia incompleta.</p>
+
+      <h3>Proporção de mídia</h3>
+      <p class="note">Reservar a caixa antes da imagem chegar é o que impede o
+      salto de layout. Sem isto, o card cresce quando a foto carrega e empurra o
+      preço para baixo do dedo que já estava indo nele.</p>
+      <div class="grid4">
+        <div class="ar">
+          <div class="ar-box" style="aspect-ratio:var(--yb-aspect-product)"></div>
+          <code>--yb-aspect-product</code><span>1:1 · o catálogo é fotografado assim</span>
+        </div>
+        <div class="ar">
+          <div class="ar-box" style="aspect-ratio:var(--yb-aspect-hero)"></div>
+          <code>--yb-aspect-hero</code><span>16:9 · banner</span>
+        </div>
+        <div class="ar">
+          <div class="ar-box" style="aspect-ratio:var(--yb-aspect-reel)"></div>
+          <code>--yb-aspect-reel</code><span>9:16 · vídeo vertical</span>
+        </div>
+        <div class="ar">
+          <div class="ar-box" style="aspect-ratio:var(--yb-aspect-portrait)"></div>
+          <code>--yb-aspect-portrait</code><span>4:5 · retrato</span>
+        </div>
+      </div>
+
+      <h3>Altura de controle</h3>
+      <p class="note">O degrau de 36px <b>não é alvo de toque válido sozinho</b>:
+      só vale em controle que vive em fileira ou lista, onde o espaçamento entre
+      alvos dá a folga que o tamanho não dá. Controle solto usa 44px.</p>
+      <div class="grid4">
+        <div class="ct">
+          <div class="ct-box" style="height:var(--yb-control-height-compact)">36</div>
+          <code>--yb-control-height-compact</code><span>chip, checkbox, botão de fileira</span>
+        </div>
+        <div class="ct">
+          <div class="ct-box" style="height:var(--yb-control-height)">44</div>
+          <code>--yb-control-height</code><span>padrão · = alvo de toque mínimo</span>
+        </div>
+        <div class="ct">
+          <div class="ct-box" style="height:var(--yb-control-height-hero)">52</div>
+          <code>--yb-control-height-hero</code><span>comprar, finalizar</span>
+        </div>
+        <div class="ct">
+          <div class="ct-box" style="height:var(--yb-target-min)">44</div>
+          <code>--yb-target-min</code><span>WCAG 2.5.5 · o piso</span>
+        </div>
+      </div>
+
+      <h3>Medida de leitura</h3>
+      <p class="note">Linha longa demais faz o olho perder o começo da próxima.</p>
+      <div class="ms" style="max-width:var(--yb-measure-lede)">
+        <p>Uma linha nesta largura tem cerca de 45 caracteres. É a medida de
+        entrada de texto, o parágrafo que abre uma seção.</p>
+        <code>--yb-measure-lede</code>
+      </div>
+      <div class="ms" style="max-width:var(--yb-measure-prose)">
+        <p>Esta tem cerca de 65 caracteres, que é a medida de leitura corrida —
+        a descrição de um produto, o corpo de um artigo, a resposta de um FAQ.
+        Acima disso o olho perde o começo da linha seguinte.</p>
+        <code>--yb-measure-prose</code>
+      </div>
+
+      <h3>Largura de borda e opacidade</h3>
+      <p class="note">Opacidade tem <b>uma regra dura</b>: nunca sobre texto.
+      Aplicada a palavra, ela derruba o contraste sem que nada no CSS registre a
+      queda — 5.15:1 a 65% vira 2.9:1, e nenhuma medição do sistema vê. Para
+      texto apagado existe <code>--yb-text-muted</code>, que é medido.</p>
+      <div class="grid4">
+        <div class="ct">
+          <div class="ct-box" style="height:44px; background:var(--yb-surface);
+            border:var(--yb-border-hairline) solid var(--yb-border); color:var(--yb-text-secondary)">1px</div>
+          <code>--yb-border-hairline</code><span>linha divisória</span>
+        </div>
+        <div class="ct">
+          <div class="ct-box" style="height:44px; background:var(--yb-surface);
+            border:var(--yb-border-emphasis) solid var(--yb-text-primary); color:var(--yb-text-secondary)">2px</div>
+          <code>--yb-border-emphasis</code><span>selecionado, foco</span>
+        </div>
+        <div class="ct">
+          <div class="ct-box" style="height:44px; opacity:var(--yb-opacity-control-disabled)">.45</div>
+          <code>--yb-opacity-control-disabled</code><span>só superfície e ícone</span>
+        </div>
+        <div class="ct">
+          <div class="ct-box" style="height:44px; background:var(--yb-surface-overlay)">.55</div>
+          <code>--yb-opacity-media-overlay</code><span>o véu atrás do modal</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="elevation">
+      <h2>Elevation</h2>
+      <p>Sombra em grafite, nunca preto puro. Nomeada por papel, não por intensidade.</p>
+      <div class="grid4">
+      <div class="el">
+        <div class="el-box" style="box-shadow:var(--yb-elevation-card)"></div>
+        <code>--yb-elevation-card</code><span>Card em repouso</span>
+      </div>
+      <div class="el">
+        <div class="el-box" style="box-shadow:var(--yb-elevation-raised)"></div>
+        <code>--yb-elevation-raised</code><span>Card em hover</span>
+      </div>
+      <div class="el">
+        <div class="el-box" style="box-shadow:var(--yb-elevation-dropdown)"></div>
+        <code>--yb-elevation-dropdown</code><span>Menu, popover</span>
+      </div>
+      <div class="el">
+        <div class="el-box" style="box-shadow:var(--yb-elevation-drawer)"></div>
+        <code>--yb-elevation-drawer</code><span>Gaveta, cart</span>
+      </div>
+      <div class="el">
+        <div class="el-box" style="box-shadow:var(--yb-elevation-modal)"></div>
+        <code>--yb-elevation-modal</code><span>Modal, overlay</span>
+      </div>
+      </div>
+
+      <h3>Sobre mídia</h3>
+      <p>Outra família. Estes dois não elevam uma caixa acima da página — eles
+      separam algo de um fundo que ninguém controla, porque a foto por baixo
+      pode ser clara ou escura no mesmo componente. O carrossel de vídeo
+      escrevia os dois valores à mão, e um deles era preto puro.</p>
+      <div class="grid4">
+      <div class="el">
+        <div class="el-box" style="background:var(--yb-surface-on-media)"></div>
+        <code>--yb-surface-on-media</code><span>Botão de play sobre o frame</span>
+      </div>
+      <div class="el">
+        <div class="el-box" style="background:var(--yb-bg-inverse); color:var(--yb-text-inverse); display:flex; align-items:center; justify-content:center; font-size:var(--yb-type-caption-size); text-shadow:var(--yb-elevation-text-media)">legenda</div>
+        <code>--yb-elevation-text-media</code><span>Legenda sobre vídeo ou foto</span>
+      </div>
+      </div>
+    </section>
+
+    <section id="state">
+      <h2>State</h2>
+      <p>Quatro estados, todos acima de 5.4:1 sobre branco.</p>
+      <div class="st">
+        <div class="st-banner" style="background:var(--yb-success-surface); color:var(--yb-success-text); border-color:var(--yb-success-600)">Pedido confirmado</div>
+        <code>--yb-success-text</code><span>#1F7A34 · 5.40:1</span>
+      </div>
+      <div class="st">
+        <div class="st-banner" style="background:var(--yb-warning-surface); color:var(--yb-warning-text); border-color:var(--yb-warning-600)">Estoque baixo</div>
+        <code>--yb-warning-text</code><span>#8A5A00 · 5.93:1</span>
+      </div>
+      <div class="st">
+        <div class="st-banner" style="background:var(--yb-danger-surface); color:var(--yb-danger-text); border-color:var(--yb-danger-600)">Pagamento recusado</div>
+        <code>--yb-danger-text</code><span>#B3261E · 6.54:1</span>
+      </div>
+      <div class="st">
+        <div class="st-banner" style="background:var(--yb-info-surface); color:var(--yb-info-text); border-color:var(--yb-info-600)">Envio em 2 dias</div>
+        <code>--yb-info-text</code><span>#1B5FA8 · 6.46:1</span>
+      </div>
+    </section>
+
+    <section id="usage">
+      <h2>How to use</h2>
+      <p>Um link, e os tokens ficam disponíveis em qualquer plataforma.</p>
+      <div class="layer">
+        <pre>&lt;link rel="stylesheet" href="tokens/ybera.css"&gt;
+&lt;html data-market="us"&gt;
+
+.meu-botao {
+  background: var(--yb-action-bg);
+  color: var(--yb-action-text);
+  border-radius: var(--yb-radius-control);
+  padding: var(--yb-space-4) var(--yb-space-6);
+  font-size: var(--yb-type-body-size);
+  transition: background var(--yb-transition-control);
+}</pre>
+      </div>
+      <div class="rule">
+        <b>A regra que sustenta o sistema</b>
+        <p>Componente nunca consome a camada 0. Se você escreveu
+        <code>var(--yb-magenta-600)</code> num componente, ou falta um token semântico
+        ou o componente está errado. Nos dois casos, a correção é na camada 1.</p>
+      </div>
+    </section>
+
+    <footer class="doc-credit">
+      Ybera Design System v0.10 · fundação. Esta página documenta as duas camadas de
+      token; os componentes que as consomem estão em
+      <a href="../components/">componentes</a> e <a href="../patterns/">padrões</a>.
+      Toda cor aqui foi medida em WCAG 2.1, e <code>test/validate.mjs</code> confere
+      se o número anotado bate com o real.
+    </footer>
+  </main>
+</div>
+</body>
+</html>

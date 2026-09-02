@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patterns — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../components/ybera-components.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="ybera-patterns.css">
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--yb-bg-page);color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base);font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line);-webkit-font-smoothing:antialiased}
+code{font-family:var(--yb-font-family-mono);font-size:.8125rem}
+.doc{display:grid;grid-template-columns:236px 1fr;min-height:100vh}
+.doc > *{min-width:0}
+@media (max-width:900px){.doc{grid-template-columns:1fr}}
+.nav{border-right:1px solid var(--yb-border-subtle);padding:var(--yb-space-8) var(--yb-space-6);
+  position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--yb-bg-subtle)}
+@media (max-width:900px){.nav{position:static;height:auto;border-right:none;
+  border-bottom:1px solid var(--yb-border-subtle)}}
+.nav-brand{font-size:var(--yb-type-h4-size);font-weight:var(--yb-font-weight-extrabold);
+  letter-spacing:var(--yb-tracking-tighter);margin:0 0 var(--yb-space-1)}
+.nav-ver{font-size:var(--yb-type-overline-size);letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase;color:var(--yb-text-muted);
+  font-weight:var(--yb-font-weight-semibold);margin:0 0 var(--yb-space-6)}
+.nav ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+@media (max-width:900px){.nav ul{flex-direction:row;flex-wrap:wrap;gap:var(--yb-space-2)}}
+.nav a{display:block;padding:var(--yb-space-2) var(--yb-space-3);
+  color:var(--yb-text-secondary);text-decoration:none;
+  font-size:var(--yb-type-body-sm-size);border-radius:var(--yb-radius-sm)}
+.nav a:hover{background:var(--yb-bg-muted);color:var(--yb-text-primary)}
+.nav a:focus-visible{outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset)}
+.main{padding:var(--yb-space-16) var(--yb-space-10);max-width:1000px}
+/* Centrada, e mais larga quando o par mobile esta ligado. O limite de leitura
+   continua onde importa — .lede, .when e .note tem max-width em ch —, mas o
+   palco nao e texto: com 1000px travados, o quadro de 375 ao lado deixava so
+   ~525 para a coluna "fluido", e o bloco de compra aparecia espremido num
+   desktop que ninguem tem. */
+/* width:100% junto do auto: sozinha, a margem automatica faz do .main uma
+   caixa que encolhe para o conteudo — e ai o `1fr` do par deixa de significar
+   "o resto da tela" e passa a significar "o que o conteudo pedir". Na pagina
+   de componentes isso travava a coluna fluida em 1178 em vez de 1560. */
+.main{width:100%; margin-inline:auto}
+@media (min-width:1600px){
+  body[data-mobile="on"] .main{max-width:1560px}
+}
+@media (max-width:900px){.main{padding:var(--yb-space-10) var(--yb-page-gutter)}}
+.hero h1{font-size:var(--yb-type-display-2-size);line-height:var(--yb-type-display-2-line);
+  letter-spacing:var(--yb-type-display-2-track);font-weight:var(--yb-type-display-2-weight);
+  margin:0 0 var(--yb-space-4)}
+.hero > p{font-size:var(--yb-type-body-lg-size);line-height:var(--yb-type-body-lg-line);
+  color:var(--yb-text-secondary);max-width:62ch;margin:0 0 var(--yb-space-16)}
+section{margin-bottom:var(--yb-space-20);scroll-margin-top:var(--yb-space-6)}
+section > h2{font-size:var(--yb-type-h2-size);line-height:var(--yb-type-h2-line);
+  letter-spacing:var(--yb-type-h2-track);font-weight:var(--yb-type-h2-weight);
+  margin:0 0 var(--yb-space-2)}
+.when{color:var(--yb-text-secondary);max-width:64ch;margin:0 0 var(--yb-space-6)}
+h3.row-label{font-size:var(--yb-type-overline-size);letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase;color:var(--yb-text-muted);font-weight:var(--yb-font-weight-semibold);
+  margin:var(--yb-space-8) 0 var(--yb-space-3)}
+.stage{border:1px solid var(--yb-border);border-radius:var(--yb-radius-card);
+  overflow:hidden;background:var(--yb-surface)}
+.stage--pad{padding:var(--yb-space-8)}
+/* O painel do mega menu e absoluto e passa da altura do palco; com o
+   overflow:hidden do .stage ele aparecia cortado na documentacao. */
+.stage--overflow{overflow:visible}
+@media (max-width:760px){.stage--pad{padding:var(--yb-page-gutter)}}
+.stage--dim{background:var(--yb-bg-muted);padding:var(--yb-space-8);
+  display:flex;justify-content:flex-end}
+/* Em 320px o respiro do palco espremia a gaveta a 222px — largura que
+   telefone nenhum tem, e que fazia o demo mentir sobre o componente.
+   A gaveta de verdade e min(420px,100vw). */
+@media (max-width:480px){.stage--dim{padding:var(--yb-space-2)}}
+.note{margin-top:var(--yb-space-4);padding:var(--yb-space-4) var(--yb-space-5);
+  background:var(--yb-info-surface);border-left:3px solid var(--yb-info-solid);
+  border-radius:0 var(--yb-radius-sm) var(--yb-radius-sm) 0;max-width:74ch}
+.note b{display:block;font-size:var(--yb-type-overline-size);
+  letter-spacing:var(--yb-tracking-wider);text-transform:uppercase;
+  color:var(--yb-info-text);margin-bottom:var(--yb-space-2);
+  font-weight:var(--yb-font-weight-semibold)}
+.note p{margin:0;font-size:var(--yb-type-body-sm-size);color:var(--yb-text-secondary)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:var(--yb-space-6)}
+@media (max-width:860px){.split{grid-template-columns:1fr}}
+/* .doc-credit e nao `footer`: seletor de elemento solto numa pagina que
+   exibe componentes vaza para dentro do demo. O `max-width:70ch` daqui
+   estava esmagando o footer do sistema a 599px. */
+.doc-credit{border-top:1px solid var(--yb-border-subtle);padding-top:var(--yb-space-6);
+  font-size:var(--yb-type-caption-size);color:var(--yb-text-muted);max-width:70ch}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ---------------------------------------------------------------------------
+   Par desktop + mobile.
+
+   O mobile e <iframe>, nao uma caixa estreita: @media consulta a VIEWPORT.
+   Encolher uma div deixaria o demo fino com o CSS de desktop — foi assim que
+   a gaveta do carrinho apareceu com 222px fingindo estar quebrada.
+   --------------------------------------------------------------------------- */
+.par{display:grid; gap:var(--yb-space-5); align-items:start}
+/* Lado a lado so acima de 1600 (breakpoint da moldura da doc, nao do sistema):
+   em 1440 a coluna de desktop caia para 469px, que nao e desktop nenhum. Abaixo
+   disso o par empilha e cada um fica com a largura que merece. */
+@media (min-width:1600px){
+  /* `auto` e nao 375: a moldura mede 377 (375 de viewport + 1px de borda de
+     cada lado). Numa trilha de 375 sobravam 2px, e o overflow-x abaixo virava
+     barra de rolagem permanente sob cada quadro — que e o "corte" que aparece. */
+  body[data-mobile="on"] .par{grid-template-columns:minmax(0,1fr) auto}
+  body[data-mobile="on"] .par__mob{overflow-x:visible}
+}
+.par__rot{
+  display:block; margin-bottom:var(--yb-space-2);
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; color:var(--yb-text-muted);
+  font-weight:var(--yb-font-weight-semibold);
+}
+/* overflow-x no lugar de max-width: numa doc ESTREITA, encolher o quadro
+   entregaria um "375" que nao mede 375. Melhor rolar do que mentir. Quando ha
+   espaco (lado a lado), a regra abaixo devolve overflow-x:visible e nenhuma
+   barra aparece. */
+.par__mob{min-width:0; overflow-x:auto}
+body:not([data-mobile="on"]) .par__mob{display:none}
+.par__mob iframe{display:block; width:375px; border:0; background:var(--yb-bg-page)}
+/* content-box para a borda ficar FORA dos 375 — com border-box ela comia dois
+   pixels e o viewport de dentro virava 373. */
+.par__mob .quadro{
+  box-sizing:content-box; width:375px; flex:none;
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-card);
+  overflow:hidden;
+}
+.mob-toggle{
+  display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  min-height:var(--yb-target-min); padding:0 var(--yb-space-4);
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-control);
+  background:var(--yb-surface); color:var(--yb-text-secondary);
+  font-family:inherit; font-size:var(--yb-type-body-sm-size); cursor:pointer;
+}
+.mob-toggle:hover{border-color:var(--yb-border-strong); color:var(--yb-text-primary)}
+.mob-toggle:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.mob-toggle[aria-pressed="true"]{
+  background:var(--yb-action-secondary-bg); color:var(--yb-action-secondary-text);
+  border-color:var(--yb-action-secondary-bg);
+}
+</style>
+</head>
+<body>
+<div class="doc">
+<nav class="nav">
+  <p class="nav-brand">Ybera</p>
+  <p class="nav-ver">Patterns · v0.10</p>
+  <ul>
+    <li><a href="#buybox">Buy box</a></li>
+    <li><a href="#cart-drawer">Cart drawer</a></li>
+    <li><a href="#collection">Collection</a></li>
+    <li><a href="#empty-state">Empty states</a></li>
+    <li><a href="#footer">Footer</a></li>
+    <li><a href="#shipping-progress">Free shipping progress</a></li>
+    <li><a href="#header">Header</a></li>
+    <li><a href="#page-layout">Page layout</a></li>
+  </ul>
+</nav>
+
+<main class="main">
+  <div class="hero">
+    <h1>Padrões</h1>
+    <button class="mob-toggle" id="mob-toggle" type="button" aria-pressed="true">Mobile: ligado</button>
+    <p>O nível acima do componente. O componente responde "como um botão se parece";
+    o padrão responde "o que vai no cabeçalho de uma loja, e em que ordem". Sete
+    composições recorrentes, montadas só com os componentes existentes.</p>
+  </div>
+
+  <section id="buybox">
+    <h2>Buy box</h2>
+    <p class="when">Sete níveis de informação acima da dobra. A ordem é fixa: identidade, prova, preço, escolha, ação, garantia.</p>
+    <div class="note"><b>Nota de heading</b><p>Nesta galeria o nome do produto é <code>&lt;h2&gt;</code> porque a página já tem um <code>&lt;h1&gt;</code>. Numa PDP real ele é o <code>&lt;h1&gt;</code> — o CSS não depende do nível.</p></div>
+    <div class="stage stage--pad">
+      <nav class="yb-crumb" aria-label="Breadcrumb" style="margin-bottom:var(--yb-space-6)">
+        <ol><li><a href="#">Home</a></li><li><a href="#">Treatments</a></li><li><span aria-current="page">Fashion Gold</span></li></ol>
+      </nav>
+      <div class="split">
+        <div class="yb-card__media"></div>
+        <div class="yb-buybox">
+          <div class="yb-buybox__flags">
+            <span class="yb-badge yb-badge--sale">Save 16%</span>
+            <span class="yb-badge yb-badge--soft">Best seller</span>
+          </div>
+          <h2 class="yb-buybox__title">Kit Sealant Fashion Gold</h2>
+          <span class="yb-rating" role="img" aria-label="4.8 of 5, 412 reviews">
+            <span class="yb-rating__stars" aria-hidden="true">★★★★★</span>
+            <span class="yb-rating__count">4.8 · 412 reviews</span>
+          </span>
+          <span class="yb-price"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+          <p class="yb-buybox__desc">Professional keratin sealant for frizz-free,
+          mirror-smooth hair. Formulated without formaldehyde and safe for
+          color-treated hair.</p>
+          <div class="yb-buybox__group">
+            <p class="yb-buybox__label">Size</p>
+            <div class="yb-swatches">
+              <input type="radio" name="bs" id="b1" checked><label for="b1">500g</label>
+              <input type="radio" name="bs" id="b2"><label for="b2">300g</label>
+              <input type="radio" name="bs" id="b3" disabled><label for="b3">1kg</label>
+            </div>
+          </div>
+          <div class="yb-buybox__actions">
+            <div class="yb-stepper">
+              <button type="button" aria-label="Decrease" disabled>−</button>
+              <input type="number" value="1" aria-label="Quantity">
+              <button type="button" aria-label="Increase">+</button>
+            </div>
+            <button class="yb-btn yb-btn--primary">Add to cart — $168.90</button>
+          </div>
+          <p class="yb-buybox__ship">✓ Free shipping · arrives Sep 3 – Sep 5</p>
+          <div class="yb-buybox__trust">
+            <span>Formaldehyde-free</span><span>Color-safe</span>
+            <span>30-day returns</span><span>Made in Paris</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="cart-drawer">
+    <h2>Cart drawer</h2>
+    <p class="when">Abre sobre a página, não substitui. Interromper a navegação para mostrar o carrinho custa compras.</p>
+    <div class="stage stage--dim">
+      <div class="yb-cart">
+        <div class="yb-cart__head">
+          <h2>Your cart (2)</h2>
+          <button class="yb-iconbtn yb-cart__close" aria-label="Close cart">×</button>
+        </div>
+        <div class="yb-cart__ship">
+          <div class="yb-freeship">
+            <span class="yb-freeship__text">Add <b>$12.10</b> more for free shipping</span>
+            <div class="yb-freeship__track" role="progressbar" aria-valuenow="76" aria-valuemin="0" aria-valuemax="100" aria-label="Progress to free shipping">
+              <div class="yb-freeship__fill" style="width:76%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="yb-cart__items">
+          <div class="yb-cart__item">
+            <div class="yb-card__media"></div>
+            <div class="yb-cart__item-body">
+              <p class="yb-cart__item-title">Kit Sealant Fashion Gold</p>
+              <span class="yb-cart__item-variant">500g / 17.6 fl.oz</span>
+              <div class="yb-cart__item-foot">
+                <div class="yb-stepper">
+                  <button type="button" aria-label="Decrease quantity" disabled>−</button>
+                  <input type="number" value="1" aria-label="Quantity">
+                  <button type="button" aria-label="Increase quantity">+</button>
+                </div>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b></span>
+              </div>
+              <button class="yb-cart__remove">Remove</button>
+            </div>
+          </div>
+          <div class="yb-cart__item">
+            <div class="yb-card__media"></div>
+            <div class="yb-cart__item-body">
+              <p class="yb-cart__item-title">Vello Alpha-Lactobaby® System — Shampoo 250ml + Mask 200g</p>
+              <span class="yb-cart__item-variant">Default</span>
+              <div class="yb-cart__item-foot">
+                <div class="yb-stepper">
+                  <button type="button" aria-label="Decrease quantity">−</button>
+                  <input type="number" value="1" aria-label="Quantity">
+                  <button type="button" aria-label="Increase quantity">+</button>
+                </div>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$75.80</b></span>
+              </div>
+              <button class="yb-cart__remove">Remove</button>
+            </div>
+          </div>
+        </div>
+        <div class="yb-cart__foot">
+          <div class="yb-cart__line"><span>Subtotal</span><span>$244.70</span></div>
+          <div class="yb-cart__line"><span>Shipping</span><span>Calculated at checkout</span></div>
+          <div class="yb-cart__line yb-cart__line--total"><span>Total</span><span>$244.70</span></div>
+          <button class="yb-btn yb-btn--primary yb-btn--block">Checkout</button>
+          <p class="yb-cart__note">Taxes calculated at checkout · 30-day returns</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="collection">
+    <h2>Collection</h2>
+    <p class="when">Título, contagem, filtros ativos e grid. A contagem é obrigatória: diz se vale filtrar mais.</p>
+    <div class="stage stage--pad">
+      <div class="yb-collection__head">
+        <div class="yb-collection__title">
+          <h2>Treatments</h2>
+          <span class="yb-collection__count">24 products</span>
+        </div>
+        <div class="yb-collection__tools">
+          <button class="yb-btn yb-btn--ghost yb-btn--sm">Filters</button>
+          <select class="yb-select" aria-label="Sort by" style="width:auto;min-height:36px;padding:var(--yb-space-2) var(--yb-space-4)">
+            <option>Best selling</option><option>Price: low to high</option>
+            <option>Price: high to low</option><option>Newest</option>
+          </select>
+        </div>
+      </div>
+      <div class="yb-collection__filters">
+        <button class="yb-chip" aria-pressed="true">Keratin <span class="yb-chip__x">×</span></button>
+        <button class="yb-chip" aria-pressed="true">Under $150 <span class="yb-chip__x">×</span></button>
+        <button class="yb-chip">Color-safe</button>
+        <button class="yb-chip">Kits</button>
+      </div>
+      <div class="yb-grid">
+        <article class="yb-card">
+          <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--sale">−16%</span></div></div>
+          <h3 class="yb-card__title"><a href="#">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</a></h3>
+          <span class="yb-rating" role="img" aria-label="4.8 of 5, 412 reviews"><span class="yb-rating__stars" aria-hidden="true">★★★★★</span><span class="yb-rating__count">412</span></span>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+        </article>
+        <article class="yb-card">
+          <div class="yb-card__media"></div>
+          <h3 class="yb-card__title"><a href="#">Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask 1kg / 33oz + Coconut Elixir 60ml / 2oz</a></h3>
+          <span class="yb-rating" role="img" aria-label="4.3 of 5, 87 reviews"><span class="yb-rating__stars" aria-hidden="true">★★★★☆</span><span class="yb-rating__count">87</span></span>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$169.70</b></span>
+        </article>
+        <article class="yb-card">
+          <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div></div>
+          <h3 class="yb-card__title"><a href="#">KIT VELLO Shampoo 500ml + VELLO Hair Mask 500g</a></h3>
+          <span class="yb-rating" role="img" aria-label="4.9 of 5, 203 reviews"><span class="yb-rating__stars" aria-hidden="true">★★★★★</span><span class="yb-rating__count">203</span></span>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
+        </article>
+        <article class="yb-card">
+          <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--danger">Sold out</span></div></div>
+          <h3 class="yb-card__title"><a href="#">KIT Hair Sorbet — Vanilla, Chocolate and Strawberry Ice Cream Therapy</a></h3>
+          <span class="yb-rating" role="img" aria-label="4.1 of 5, 56 reviews"><span class="yb-rating__stars" aria-hidden="true">★★★★☆</span><span class="yb-rating__count">56</span></span>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$119.90</b><s class="yb-price__was">$139.90</s></span>
+        </article>
+      </div>
+    </div>
+  </section>
+  <section id="empty-state">
+    <h2>Empty states</h2>
+    <p class="when">Nunca só "nada aqui". Sempre por que está vazio e o que fazer em seguida.</p>
+    <div class="split">
+      <div class="stage">
+        <div class="yb-empty">
+          <div class="yb-empty__mark">◦</div>
+          <h3>Your cart is empty</h3>
+          <p>Take the 60-second hair quiz and we'll recommend the treatment for your hair type.</p>
+          <button class="yb-btn yb-btn--primary">Take the quiz</button>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="yb-empty">
+          <div class="yb-empty__mark">◦</div>
+          <h3>No results for "keratine"</h3>
+          <p>Did you mean <b>keratin</b>? You can also browse all treatments.</p>
+          <button class="yb-btn yb-btn--ghost">Browse treatments</button>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>O vazio de busca sugere a correção</b>
+      <p>"No results for 'keratine'" repete o que a pessoa digitou e oferece a
+      grafia certa. Um vazio que só diz "nenhum resultado" transfere o problema
+      de volta para quem já não achou.</p>
+    </div>
+  </section>
+  <section id="footer">
+    <h2>Footer</h2>
+    <p class="when">Reproduz o footer que a loja ja pratica, sem um valor cru. Duas
+    divergencias deliberadas: o texto sobe de 4.24:1 (reprova AA) para 4.73:1, e os
+    tres magentas da loja viram um so. Os menus sao acordeao ate 768 e lista aberta
+    acima — com um DOM so, contra os dois que a loja duplica hoje.</p>
+    <div class="stage">
+      <footer class="yb-footer">
+        <div class="yb-footer__inner">
+          <div class="yb-footer__top">
+
+            <div class="yb-footer__brand">
+              <a class="yb-footer__logo" href="#footer"><span class="yb-logo yb-logo--lg"><img src="../brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span></a>
+              <ul class="yb-footer__links">
+                <li><a href="#footer">Shop</a></li>
+                <li><a href="#footer">Contact Us</a></li>
+                <li><a href="#footer">About Us</a></li>
+              </ul>
+              <div class="yb-footer__social">
+                <a href="#footer"><svg class="yb-icon" role="img" aria-label="Ybera on Instagram"><use href="../icons/ybera-icons.svg#yb-instagram"/></svg></a>
+                <a href="#footer"><svg class="yb-icon" role="img" aria-label="Ybera on TikTok"><use href="../icons/ybera-icons.svg#yb-tiktok"/></svg></a>
+              </div>
+            </div>
+
+            <div class="yb-footer__menus">
+          <div class="yb-footer__col">
+            <input class="yb-footer__toggle" type="checkbox" id="fc0">
+            <label class="yb-footer__coltitle" for="fc0">All Products
+              <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
+            </label>
+            <div class="yb-footer__collist"><ul><li><a href="#">Best Sellers</a></li><li><a href="#">Kit</a></li></ul></div>
+          </div>
+          <div class="yb-footer__col">
+            <input class="yb-footer__toggle" type="checkbox" id="fc1">
+            <label class="yb-footer__coltitle" for="fc1">Collection
+              <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
+            </label>
+            <div class="yb-footer__collist"><ul><li><a href="#">Progressiva</a></li><li><a href="#">Cronograma</a></li><li><a href="#">Ybera Paris</a></li><li><a href="#">100Timetros</a></li><li><a href="#">Capulana</a></li><li><a href="#">Terra Coco</a></li><li><a href="#">Hair Mist</a></li></ul></div>
+          </div>
+          <div class="yb-footer__col">
+            <input class="yb-footer__toggle" type="checkbox" id="fc2">
+            <label class="yb-footer__coltitle" for="fc2">Hair Problems
+              <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
+            </label>
+            <div class="yb-footer__collist"><ul><li><a href="#">Damaged Hair</a></li><li><a href="#">Frizz &amp; Dryness</a></li><li><a href="#">Thinning / Hair Loss</a></li><li><a href="#">Undefined Curls</a></li><li><a href="#">Hair Smoothing</a></li><li><a href="#">Hair Straightening</a></li></ul></div>
+          </div>
+            </div>
+
+            <div class="yb-footer__contact">
+              <div>
+                <label class="yb-footer__newslabel" for="news-demo">Subscribe to receive exclusive offers</label>
+                <form class="yb-footer__news" onsubmit="return false">
+                  <span class="yb-footer__newsfield">
+                    <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-mail"/></svg>
+                    <input class="yb-input" id="news-demo" type="email" placeholder="Your best email" autocomplete="email">
+                  </span>
+                  <button class="yb-footer__newsbtn" type="submit" aria-label="Subscribe">
+                    <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg>
+                  </button>
+                </form>
+              </div>
+              <p class="yb-footer__info"><strong>For more information, please send us an Email to:</strong> info.usa@ybera.com</p>
+              <p class="yb-footer__info"><strong>Customer Service:</strong> OPEN: Monday - Friday 8am - 4pm (EST)</p>
+              <p class="yb-footer__info"><strong>Customer Service:</strong> CLOSED: Weekends and Holidays</p>
+            </div>
+
+          </div>
+          <div class="yb-footer__bottom"><span>© 2026</span><a href="#">Terms &amp; Conditions</a><a href="#">Privacy Policy</a><a href="#">Refund Policy</a><a href="#">Terms of Service</a><a href="#">Shipping Policy</a><a href="#">SMS Terms &amp; Conditions</a></div>
+        </div>
+      </footer>
+    </div>
+  </section>
+  <section id="shipping-progress">
+    <h2>Free shipping progress</h2>
+    <p class="when">Move ticket médio como nenhum outro padrão. E é o mais feito errado: barra sem número não diz nada.</p>
+    <div class="split">
+      <div class="stage stage--pad">
+        <div class="yb-freeship">
+          <span class="yb-freeship__text">Add <b>$12.10</b> more for free shipping</span>
+          <div class="yb-freeship__track" role="progressbar" aria-valuenow="76" aria-valuemin="0" aria-valuemax="100" aria-label="Progress to free shipping">
+            <div class="yb-freeship__fill" style="width:76%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="stage stage--pad">
+        <div class="yb-freeship yb-freeship--done">
+          <span class="yb-freeship__text">✓ You qualify for free shipping</span>
+          <div class="yb-freeship__track" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Free shipping unlocked">
+            <div class="yb-freeship__fill" style="width:100%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>O número antes da barra</b>
+      <p>"Add $12.10 more" diz exatamente quanto falta. Uma barra sozinha obriga a
+      pessoa a estimar, e estimativa não gera compra. A barra tem
+      <code>role="progressbar"</code> com valor real — para quem usa leitor de tela,
+      ela é a única fonte da informação.</p>
+    </div>
+  </section>
+  <section id="header">
+    <h2>Header</h2>
+    <p class="when">Anúncio, navegação e ações. O menu é o mesmo da loja — seis itens
+    de topo, dois com painel. Um DOM só serve a barra do desktop e a gaveta do mobile;
+    a loja hoje escreve os 25 links duas vezes. O gatilho é <code>label</code> e não
+    <code>span</code>: em produção o menu Shop não abre pelo teclado.</p>
+    <div class="stage stage--overflow">
+      <header class="yb-header">
+        <div class="yb-header__announce">Free shipping on orders over <b>$50</b> · Elevate your hair, elevate your confidence</div>
+        <input class="yb-header__drawer" type="checkbox" id="dnav-open" aria-label="Menu">
+        <div class="yb-header__bar">
+          <label class="yb-iconbtn yb-header__icon yb-header__burger" for="dnav-open" aria-hidden="true"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-menu"/></svg></label>
+          <a class="yb-header__logo" href="#header"><span class="yb-logo yb-logo--md"><img src="../brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span></a>
+          <nav class="yb-header__nav" aria-label="Main">
+            <label class="yb-iconbtn yb-nav__close" for="dnav-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></label>
+            <ul class="yb-nav">
+            <li class="yb-nav__item"><a class="yb-nav__link" href="#header">Home</a></li>
+            <li class="yb-nav__item">
+              <input class="yb-nav__toggle" type="checkbox" id="dnav1">
+              <label class="yb-nav__link" for="dnav1">Shop <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+              <div class="yb-nav__panel"><div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#header">All Products</a><ul class="yb-nav__sublist"><li><a href="#header">Best Sellers</a></li><li><a href="#header">Kit</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#header">Collection</a><ul class="yb-nav__sublist"><li><a href="#header">Ybera Paris</a></li><li><a href="#header">Fashion Gold</a></li><li><a href="#header">Cronograma</a></li><li><a href="#header">100Timetros</a></li><li><a href="#header">Capulana</a></li><li><a href="#header">Terra Coco</a></li><li><a href="#header">Hair Mist</a></li><li><a href="#header">Vello</a></li><li><a href="#header">Mirra</a></li><li><a href="#header">Detox</a></li><li><a href="#header">Life´s Flower</a></li><li><a href="#header">Essência Brasileira</a></li><li><a href="#header">Universal</a></li><li><a href="#header">Genoma</a></li><li><a href="#header">Quarta Camada</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#header">Hair Problem</a><ul class="yb-nav__sublist"><li><a href="#header">Damaged Hair</a></li><li><a href="#header">Frizz &amp; Dryness</a></li><li><a href="#header">Thinning / Hair Loss</a></li><li><a href="#header">Undefined Curls</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#header">🔥Sales</a></div></div></div>
+            </li>
+            <li class="yb-nav__item"><a class="yb-nav__link" href="#header">🔥Sales</a></li>
+            <li class="yb-nav__item"><a class="yb-nav__link" href="#header">AI Hair Analysis</a></li>
+            <li class="yb-nav__item">
+              <input class="yb-nav__toggle" type="checkbox" id="dnav4">
+              <label class="yb-nav__link" for="dnav4">About Us <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+              <div class="yb-nav__panel"><div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#header">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#header">Behind The Shine</a></div></div></div>
+            </li>
+            <li class="yb-nav__item"><a class="yb-nav__link" href="#header">Contact Us</a></li>
+            </ul>
+          </nav>
+          <div class="yb-header__actions">
+            <button class="yb-iconbtn yb-header__icon" aria-label="Search"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></button>
+            <button class="yb-iconbtn yb-header__icon" aria-label="Account"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg></button>
+            <button class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-header__count">2</span></button>
+          </div>
+        </div>
+        <label class="yb-header__scrim" for="dnav-open" aria-hidden="true"></label>
+      </header>
+    </div>
+  </section>
+
+  <section id="page-layout">
+    <h2>Page layout</h2>
+    <p class="when">O esqueleto de qualquer página: largura máxima, ritmo entre blocos e cabeçalho de seção. Toda página nova começa por estes três.</p>
+    <div class="stage">
+      <div class="yb-page">
+        <div class="yb-block">
+          <div class="yb-section-head">
+            <h2>Best Sellers</h2>
+            <a href="#page-layout">View all treatments <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg></a>
+          </div>
+          <div class="yb-grid">
+            <article class="yb-card">
+              <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div></div>
+              <h3 class="yb-card__title"><a href="#page-layout">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</a></h3>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+            </article>
+            <article class="yb-card">
+              <div class="yb-card__media"></div>
+              <h3 class="yb-card__title"><a href="#page-layout">KIT VELLO Shampoo 500ml + VELLO Hair Mask 500g</a></h3>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
+            </article>
+            <article class="yb-card">
+              <div class="yb-card__media"></div>
+              <h3 class="yb-card__title"><a href="#page-layout">Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask 1kg / 33oz</a></h3>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$169.70</b></span>
+            </article>
+            <article class="yb-card">
+              <div class="yb-card__media"></div>
+              <h3 class="yb-card__title"><a href="#page-layout">MIRRA Repair Therapy Shampoo + Mask + Vital Serum</a></h3>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$119.90</b></span>
+            </article>
+          </div>
+        </div>
+        <div class="yb-block yb-block--tight">
+          <div class="yb-section-head yb-section-head--center">
+            <h2>Explore Our Collections</h2>
+          </div>
+          <p class="yb-buybox__desc">Fashion Gold, Cronograma, Terra Coco, Vello and Mirra — one system per hair goal, not one product per shelf.</p>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Três peças, e não uma folha de página</b>
+      <p><code>.yb-page</code> centra e dá a goteira; <code>.yb-block</code> é o
+      ritmo vertical entre seções; <code>.yb-section-head</code> é o par título mais
+      atalho. Separadas porque uma seção que sangra até a borda da tela usa
+      <code>--flush</code> e continua dentro do mesmo ritmo — o carrossel de vídeo é
+      o caso.</p>
+    </div>
+    <div class="note">
+      <b>O ritmo encolhe no telefone</b>
+      <p>64px de respiro entre blocos é um oitavo de uma tela de 568px — a PDP
+      levava duas rolagens até o botão de comprar. Abaixo de 768 o respiro cai, e a
+      hierarquia entre <code>--tight</code> e o padrão continua de pé.</p>
+    </div>
+    <div class="note">
+      <b>Por que isto virou sistema</b>
+      <p>Regra dos dois usos: home e PDP já pediam os três. Enquanto viviam na folha
+      de cada gerador, toda página nova ia redefinir container e respiro do seu
+      jeito — que é como um design system começa a divergir de si mesmo.</p>
+    </div>
+  </section>
+
+  <footer class="doc-credit">
+    Ybera Design System v0.10 · padrões. Auditado: 0 hex hardcoded, 0 primitivos de
+    cor, 0 referências quebradas. Montado inteiramente com os componentes do sistema —
+    nenhum padrão inventou estilo próprio de botão, card ou preço.
+  </footer>
+</main>
+</div>
+<script src="../components/ybera-components.js"></script>
+
+<script>
+/* Cada secao ganha um iframe de 375 com ela mesma, servido por solo.html.
+   loading="lazy": so paga quem chega perto. A altura vem por postMessage,
+   porque conteudo de iframe nao dimensiona o elemento sozinho. */
+(function () {
+  'use strict';
+  var LADO = 'yb-doc-mobile';
+
+  document.querySelectorAll('section[id]').forEach(function (sec) {
+    var pecas = [].filter.call(sec.children, function (n) {
+      return n.matches('.demo, .stage, .split, .row-label, pre');
+    });
+    if (!pecas.length) return;
+
+    var par = document.createElement('div');
+    par.className = 'par';
+    sec.insertBefore(par, pecas[0]);
+
+    var desk = document.createElement('div');
+    desk.className = 'par__desk'; desk.style.minWidth = '0';
+    var rot = document.createElement('span');
+    rot.className = 'par__rot'; rot.textContent = 'fluido';
+    desk.appendChild(rot);
+    pecas.forEach(function (p) { desk.appendChild(p); });
+    par.appendChild(desk);
+
+    var mob = document.createElement('div');
+    mob.className = 'par__mob';
+    mob.innerHTML = '<span class="par__rot">375 px</span>' +
+      '<div class="quadro"><iframe loading="lazy" title="' + sec.id +
+      ' em 375px" src="solo.html?c=' + encodeURIComponent(sec.id) +
+      '" width="375" height="320"></iframe></div>';
+    par.appendChild(mob);
+  });
+
+  addEventListener('message', function (e) {
+    if (!e.data || e.data.yb !== 'altura') return;
+    var f = document.querySelector('iframe[src="solo.html?c=' + encodeURIComponent(e.data.c) + '"]');
+    if (f && e.data.h > 0) f.height = e.data.h;
+  });
+
+  var bt = document.getElementById('mob-toggle');
+  function pinta(on) {
+    document.body.dataset.mobile = on ? 'on' : 'off';
+    bt.setAttribute('aria-pressed', String(on));
+    bt.textContent = on ? 'Mobile: ligado' : 'Mobile: desligado';
+    try { localStorage.setItem(LADO, on ? '1' : '0'); } catch (err) {}
+  }
+  var salvo = '1';
+  try { salvo = localStorage.getItem(LADO) === null ? '1' : localStorage.getItem(LADO); } catch (err) {}
+  pinta(salvo === '1');
+  bt.addEventListener('click', function () { pinta(bt.getAttribute('aria-pressed') !== 'true'); });
+})();
+</script>
+</body>
+</html>

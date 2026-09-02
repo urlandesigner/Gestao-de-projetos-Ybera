@@ -1,0 +1,2093 @@
+/* =========================================================================
+   YBERA DESIGN SYSTEM · BUNDLE PARA O TEMA SHOPIFY
+   Gerado a partir de tokens/. Não edite este arquivo — edite a fonte e
+   regenere com ./build.sh
+   ========================================================================= */
+
+/* =========================================================================
+   YBERA DESIGN SYSTEM · COMPONENTS
+
+   Depende de: tokens/00-primitives.css + tokens/01-semantic.css
+
+   PREFIXO `yb-` em tudo. Não é preciosismo: estes componentes vão conviver
+   com o tema Shopify, o Ecomposer, o Tailwind e o Judge.me na mesma página.
+   Sem prefixo, `.btn` ou `.card` colide com alguma delas — e a colisão é
+   silenciosa.
+
+   REGRA: cor vem sempre da camada 1. Espaço, peso e tracking podem vir do
+   primitivo (ver a fronteira documentada em 01-semantic.css).
+   ========================================================================= */
+
+/* =========================================================================
+   BASE
+   O sistema nao pode depender de um reset que a pagina talvez tenha.
+
+   Todo componente foi dimensionado assumindo `border-box`: o botao soma
+   min-height 44 + padding 32 + borda 2. Em `content-box` isso vira 78px de
+   altura em vez de 44 — foi o que aconteceu na home, onde nao havia reset, e
+   ficou escondido nas galerias, que traziam o proprio.
+   ========================================================================= */
+[class*="yb-"],
+[class*="yb-"]::before,
+[class*="yb-"]::after{
+  box-sizing: border-box;
+}
+
+/* =========================================================================
+   MOVIMENTO — corte global
+   -------------------------------------------------------------------------
+   Antes, cada componente respeitava `prefers-reduced-motion` por conta
+   propria: o toast tinha bloco, o freeship tinha, o skeleton tinha — e o
+   dialogo, a galeria e o hover do card nao tinham. Quem adiciona um
+   componente novo tem de lembrar, e nao lembra.
+
+   Aqui o corte e do sistema inteiro, uma vez. Nao e `animation:none`: matar a
+   animacao no meio deixa elemento com `opacity:0` preso, porque muita coisa
+   depende do estado final do keyframe. `1ms` roda ate o fim e dispara
+   `animationend` — que e como o toast se remove do DOM.
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce){
+  [class*="yb-"],
+  [class*="yb-"]::before,
+  [class*="yb-"]::after{
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =========================================================================
+   UTILITÁRIOS DE ACESSIBILIDADE
+   -------------------------------------------------------------------------
+   Os dois faltavam, e sao os dois mais basicos que existem.
+
+   `yb-sr-only` — texto so para leitor de tela. Sem ele, o padrao para dar
+   nome a um botao de icone era `aria-label`, que nao e traduzivel pelo
+   tradutor da pagina e nao aparece na busca do navegador. Nao use `display:
+   none` nem `visibility:hidden` para isto: os dois removem o elemento da
+   arvore de acessibilidade, que e exatamente o contrario do que se quer.
+
+   `yb-skip-link` — WCAG 2.4.1. O header da Ybera tem 30+ elementos focaveis
+   antes do primeiro produto; sem o atalho, quem navega por teclado passa por
+   todos eles em cada pagina.
+   ========================================================================= */
+.yb-sr-only{
+  position:absolute !important;
+  width:1px; height:1px;
+  padding:0; margin:-1px;
+  overflow:hidden;
+  clip-path:inset(50%);
+  white-space:nowrap;
+  border:0;
+}
+
+/* Some enquanto nao tem foco, aparece quando o teclado chega nele.
+   `:focus`, nao `:focus-visible`: o link so recebe foco por teclado, e
+   `:focus-visible` em navegador antigo pode nao casar — o custo de errar
+   aqui e o atalho nunca aparecer. */
+.yb-skip-link{
+  position:absolute; inset-inline-start:var(--yb-space-4);
+  inset-block-start:calc(-1 * var(--yb-space-20));
+  z-index:var(--yb-z-tooltip);
+  display:inline-flex; align-items:center;
+  min-height:var(--yb-target-min);
+  padding:var(--yb-space-3) var(--yb-space-5);
+  background:var(--yb-action-bg); color:var(--yb-action-text);
+  font-family:inherit; font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-semibold);
+  text-decoration:none;
+  border-radius:var(--yb-radius-control);
+  box-shadow:var(--yb-elevation-modal);
+  transition:inset-block-start var(--yb-transition-control);
+}
+.yb-skip-link:focus{ inset-block-start:var(--yb-space-4); }
+.yb-skip-link:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+
+/* =========================================================================
+   ALVO COMPACTO — a exceção à regra dos 44px, agora declarada
+   -------------------------------------------------------------------------
+   A regra do sistema é 44px (WCAG 2.5.5, nível AAA). Três controles nunca a
+   cumpriram: `.yb-btn--sm`, `.yb-check` e `.yb-chip`, todos em 36. Dois
+   traziam justificativa em comentário; o terceiro, nenhuma. E nada conferia.
+
+   Corrigir os três para 44 pioraria o produto: uma fileira de sete chips de
+   filtro em 44px empurra o primeiro produto para fora da tela no celular, e
+   é justamente na tela pequena que o alvo importa.
+
+   Então a regra passa a ter dois degraus, e o degrau de baixo é DECLARADO:
+
+     44px  padrão. Todo controle que aparece sozinho no fluxo.
+     36px  compacto. Só em controle que vive em fileira ou lista, onde o
+           espaçamento entre alvos já dá a folga que o tamanho não dá.
+           Passa WCAG 2.5.8 (AA, 24×24) com margem; falha 2.5.5 (AAA).
+
+   Todo uso do degrau de baixo carrega o marcador `alvo-compacto:` com a
+   razão. `test/validate.mjs` reprova altura abaixo de 44 em seletor
+   interativo que não traga o marcador — foi assim que o chip apareceu.
+   ========================================================================= */
+
+/* =========================================================================
+   ALTO CONTRASTE DO WINDOWS (forced-colors)
+   -------------------------------------------------------------------------
+   Nesse modo o sistema descarta as cores do autor e impoe as dele. Duas
+   coisas quebram em silencio:
+
+   1. Botao solido. `background` vira `ButtonFace` e a borda transparente
+      vira transparente de verdade — o botao perde o contorno e vira texto
+      solto no meio da pagina.
+   2. Foco por `outline` colorido. A cor vai embora; sem `Highlight`, o anel
+      fica da mesma cor do resto e some.
+
+   `SystemColor` so e aceito dentro deste bloco, e por isso estes valores nao
+   sao token: nao existe equivalente do lado de fora.
+   ========================================================================= */
+@media (forced-colors: active){
+  .yb-btn,
+  .yb-input, .yb-select, .yb-textarea,
+  .yb-card, .yb-dialog, .yb-toast, .yb-alert, .yb-badge{
+    border:var(--yb-border-width-hair) solid;
+  }
+  .yb-btn:focus-visible,
+  .yb-input:focus-visible, .yb-select:focus-visible, .yb-textarea:focus-visible,
+  a:focus-visible{
+    outline:var(--yb-focus-width) solid Highlight;
+    outline-offset:var(--yb-focus-offset);
+  }
+  /* estado marcado nao pode depender so de cor de fundo */
+  .yb-swatches input:checked + label,
+  .yb-gallery__thumbs input:checked + label{
+    outline:var(--yb-border-width-thick) solid Highlight;
+    outline-offset:var(--yb-focus-offset);
+  }
+  /* o esqueleto e um retangulo cinza que anima; sem cor ele vira nada */
+  .yb-skeleton{ background:GrayText; }
+
+  /* `.yb-btn[disabled]{border-color:transparent}` tem especificidade (0,2,0) e
+     vencia a borda de (0,1,0) acima: um "Sold out" desabilitado virava texto
+     solto, sem contorno — o defeito que este bloco existe para consertar. */
+  .yb-btn[disabled]{ border-color:GrayText; color:GrayText; }
+
+  /* estado que so existia como cor de fundo desaparece por inteiro aqui */
+  .yb-chip[aria-pressed="true"],
+  .yb-pagination [aria-current="page"]{
+    outline:var(--yb-border-width-thick) solid Highlight;
+    outline-offset:calc(var(--yb-focus-offset) * -1);
+  }
+
+  /* borda desenhada so por sombra: a sombra some, e o fundo vira Canvas dos
+     dois lados — a gaveta, o carrinho e o painel do menu perdiam o limite. */
+  .yb-header__nav, .yb-cart, .yb-nav__panel, .yb-video__play{
+    border:var(--yb-border-width-hair) solid;
+  }
+}
+
+/* =========================================================================
+   BUTTON
+   Anatomia: [ícone] rótulo [ícone]
+
+   Altura mínima 44px — WCAG 2.5.5. A frase antiga aqui dizia "em todos os
+   tamanhos", e era falsa: `--sm` sempre mediu 36. Ver ALVO COMPACTO abaixo.
+   ========================================================================= */
+.yb-btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:var(--yb-space-2); position:relative;
+  font-family:inherit; font-size:var(--yb-type-body-size);
+  font-weight:var(--yb-font-weight-semibold); line-height:1;
+  text-decoration:none; text-align:center; white-space:nowrap;
+  border:1px solid transparent; border-radius:var(--yb-radius-control);
+  padding:var(--yb-space-4) var(--yb-space-6);
+  min-height:var(--yb-target-min); cursor:pointer;
+  transition:background var(--yb-transition-control),
+             border-color var(--yb-transition-control),
+             color var(--yb-transition-control);
+}
+.yb-btn:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-btn[disabled],.yb-btn[aria-disabled="true"]{
+  cursor:not-allowed;
+  background:var(--yb-action-bg-disabled);
+  /* WCAG 1.4.3 isenta componente inativo, mas "Sold out" a 2.86:1 é ilegível
+     de verdade. O fundo já comunica o estado; o texto não precisa sumir junto. */
+  color:var(--yb-text-muted);
+  border-color:transparent;
+}
+
+.yb-btn--primary{background:var(--yb-action-bg); color:var(--yb-action-text)}
+
+@media (hover:hover){
+  .yb-btn--primary:hover:not([disabled]){background:var(--yb-action-bg-hover)}
+}
+.yb-btn--primary:active:not([disabled]){background:var(--yb-action-bg-active)}
+
+.yb-btn--secondary{background:var(--yb-action-secondary-bg); color:var(--yb-action-secondary-text)}
+
+@media (hover:hover){
+  .yb-btn--secondary:hover:not([disabled]){background:var(--yb-action-secondary-bg-hover)}
+}
+
+.yb-btn--ghost{
+  background:transparent; color:var(--yb-action-ghost-text);
+  border-color:var(--yb-action-ghost-border);
+}
+
+@media (hover:hover){
+  .yb-btn--ghost:hover:not([disabled]){background:var(--yb-action-ghost-bg-hover)}
+}
+
+.yb-btn--danger{background:var(--yb-danger-solid); color:var(--yb-text-inverse)}
+
+@media (hover:hover){
+  .yb-btn--danger:hover:not([disabled]){background:var(--yb-danger-text)}
+}
+
+/* :active existia em UMA variante em 1893 linhas de CSS. No toque nao ha
+   hover — o pressionado e a unica confirmacao de que o dedo acertou. */
+.yb-btn--secondary:active:not([disabled]){background:var(--yb-action-secondary-bg-hover)}
+.yb-btn--ghost:active:not([disabled]){background:var(--yb-action-ghost-bg-hover)}
+.yb-btn--danger:active:not([disabled]){background:var(--yb-danger-text)}
+.yb-btn:active:not([disabled]){transform:translateY(1px)}
+@media (prefers-reduced-motion:reduce){ .yb-btn:active:not([disabled]){transform:none} }
+
+/* =========================================================================
+   CARREGANDO — estado do sistema, nao de um componente
+   `aria-busy` ja e o que o leitor de tela le; aqui ele passa a ter forma.
+   Antes so o botao tinha estado de carga, e nenhum outro componente sabia
+   dizer "estou buscando" — o card, a galeria e o carrinho ficavam parados
+   sem explicacao enquanto a variante ou o preco chegavam.
+   ========================================================================= */
+[aria-busy="true"]{ position:relative; cursor:progress; }
+[aria-busy="true"] > *{ opacity:.45; transition:opacity var(--yb-transition-surface); }
+[aria-busy="true"]::after{
+  content:""; position:absolute; inset-block-start:50%; inset-inline-start:50%;
+  width:24px; height:24px; margin:-12px 0 0 -12px;
+  border:2px solid var(--yb-border); border-top-color:var(--yb-text-primary);
+  border-radius:var(--yb-radius-full);
+  animation:yb-spin var(--yb-duration-slower) linear infinite;
+}
+@media (forced-colors: active){
+  [aria-busy="true"]::after{ border-color:GrayText; border-top-color:Highlight; }
+}
+
+/* esgotado: estado de comercio, nao de interface — o card continua navegavel,
+   mas diz o que aconteceu antes de a pessoa tentar comprar */
+.yb-card--sold-out .yb-card__media{ opacity:.55; }
+.yb-card--sold-out .yb-card__media::after{
+  content:attr(data-esgotado); position:absolute;
+  inset-inline:0; inset-block-end:0; padding:var(--yb-space-2);
+  text-align:center; background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase;
+}
+
+.yb-btn--sm{
+  font-size:var(--yb-type-body-sm-size);
+  padding:var(--yb-space-2) var(--yb-space-4);
+  /* alvo-compacto: botão de fileira — "aplicar", "limpar", ação de célula.
+     Nunca use --sm para a ação principal de uma tela. */
+  min-height:var(--yb-control-height-compact);
+}
+.yb-btn--lg{font-size:var(--yb-type-body-lg-size); padding:var(--yb-space-5) var(--yb-space-8)}
+.yb-btn--block{width:100%}
+
+/* carregando: o rótulo some mas a largura fica, evitando salto de layout */
+.yb-btn--loading{color:transparent !important; pointer-events:none}
+.yb-btn--loading::after{
+  content:""; position:absolute; width:16px; height:16px;
+  border:2px solid currentColor; border-top-color:transparent;
+  border-radius:var(--yb-radius-full);
+  animation:yb-spin var(--yb-duration-slower) linear infinite;
+}
+.yb-btn--primary.yb-btn--loading::after,
+.yb-btn--secondary.yb-btn--loading::after{border-color:var(--yb-text-inverse); border-top-color:transparent}
+.yb-btn--ghost.yb-btn--loading::after{border-color:var(--yb-text-primary); border-top-color:transparent}
+@keyframes yb-spin{to{transform:rotate(360deg)}}
+
+/* =========================================================================
+   BADGE
+   ========================================================================= */
+.yb-badge{
+  display:inline-flex; align-items:center; gap:var(--yb-space-1);
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; font-weight:var(--yb-font-weight-semibold);
+  padding:var(--yb-space-1) var(--yb-space-2);
+  border-radius:var(--yb-radius-badge); white-space:nowrap;
+}
+.yb-badge--sale{background:var(--yb-action-bg); color:var(--yb-action-text)}
+.yb-badge--soft{background:var(--yb-bg-muted); color:var(--yb-text-secondary)}
+.yb-badge--accent{background:var(--yb-bg-inverse); color:var(--yb-accent-on-dark)}
+.yb-badge--success{background:var(--yb-success-surface); color:var(--yb-success-text)}
+.yb-badge--warning{background:var(--yb-warning-surface); color:var(--yb-warning-text)}
+.yb-badge--danger{background:var(--yb-danger-surface); color:var(--yb-danger-text)}
+
+/* =========================================================================
+   RATING
+   O texto acessível vive no aria-label; as estrelas são decorativas.
+   ========================================================================= */
+.yb-rating{display:inline-flex; align-items:center; gap:var(--yb-space-2)}
+.yb-rating__stars{
+  color:var(--yb-accent-text);   /* gold-700 — o gold-500 reprovaria sobre branco */
+  font-size:var(--yb-type-body-sm-size); letter-spacing:.08em;
+}
+.yb-rating__count{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+
+/* =========================================================================
+   PRICE
+   Sempre tabular: em grid, dígitos precisam alinhar em coluna.
+   ========================================================================= */
+.yb-price{display:flex; align-items:baseline; gap:var(--yb-space-3); flex-wrap:wrap}
+.yb-price__now{
+  font-size:var(--yb-type-price-size); line-height:var(--yb-type-price-line);
+  letter-spacing:var(--yb-type-price-track); font-weight:var(--yb-type-price-weight);
+  font-variant-numeric:tabular-nums; color:var(--yb-text-primary);
+}
+.yb-price__was{
+  font-size:var(--yb-type-body-size); color:var(--yb-text-muted);
+  text-decoration:line-through; font-variant-numeric:tabular-nums;
+}
+.yb-price--sm .yb-price__now{font-size:var(--yb-type-h4-size)}
+
+/* =========================================================================
+   TRACK — trilho de rolagem horizontal
+   Promovido pela regra de dois, com folga: `.yb-reviews`, `.yb-videos`,
+   `.yb-logobar__track` e o `.banner__track` da home reescreviam a mesma
+   anatomia — rolagem no eixo x, scroll-snap, barra escondida. Quatro copias
+   de quatro larguras de cartao diferentes.
+
+   O que muda entre os usos e SO a largura do item, entao ela e o parametro:
+   `--yb-track-item`. O resto e igual em todos.
+   ========================================================================= */
+.yb-track{
+  display:grid; grid-auto-flow:column;
+  grid-auto-columns:var(--yb-track-item, minmax(260px, 1fr));
+  gap:var(--yb-track-gap, var(--yb-space-4));
+  overflow-x:auto; scroll-snap-type:x proximity;
+  padding-block:var(--yb-space-2);
+  scrollbar-width:none;
+  overscroll-behavior-x:contain;   /* nao arrasta a pagina junto no toque */
+}
+.yb-track::-webkit-scrollbar{ display:none; }
+.yb-track > *{ scroll-snap-align:start; }
+/* variante em fila, para conteudo que nao e cartao (a faixa de logos) */
+.yb-track--row{
+  display:flex; align-items:center; grid-auto-flow:unset;
+  scroll-snap-type:none;
+}
+
+/* =========================================================================
+   ICONBTN — controle de 44px que é só ícone
+   Sexta reescrita da mesma coisa: `.yb-header__icon`, `.yb-cart__close`,
+   `.yb-nav__close`, `.yb-video__play`, `.yb-footer__toggle` e a seta do
+   banner. Todas diziam 44x44, fundo transparente, raio de controle e anel
+   de foco — cada uma com sua propria combinacao.
+   ========================================================================= */
+.yb-iconbtn{
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:var(--yb-space-2); position:relative;
+  min-width:var(--yb-target-min); min-height:var(--yb-target-min);
+  padding:0; border:none; background:transparent; cursor:pointer;
+  color:var(--yb-text-primary); font-family:inherit;
+  font-size:var(--yb-type-body-sm-size);
+  border-radius:var(--yb-radius-control);
+}
+.yb-iconbtn:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-iconbtn[disabled]{ color:var(--yb-text-disabled); cursor:not-allowed; }
+/* sobre imagem ou video, onde nao ha superficie por tras */
+.yb-iconbtn--onmedia{
+  background:var(--yb-surface-on-media); color:var(--yb-text-primary);
+  border-radius:var(--yb-radius-full);
+}
+@media (hover:hover){
+  .yb-iconbtn:hover:not([disabled]){ background:var(--yb-bg-muted); }
+  .yb-iconbtn--onmedia:hover:not([disabled]){ background:var(--yb-surface-on-media); }
+}
+@media (forced-colors: active){
+  .yb-iconbtn{ border:var(--yb-border-width-hair) solid; }
+}
+
+/* =========================================================================
+   PRODUCT CARD
+   O clamp de título existe porque títulos reais vão de 2 a 5 linhas e
+   desalinham preço e rating na fileira. Ver --yb-card-title-lines.
+   ========================================================================= */
+.yb-card{display:flex; flex-direction:column; gap:var(--yb-space-3); min-width:0;
+  position:relative}
+/* A midia media 161x161 (26.000px2) e nao era alvo de nada: o unico link era o
+   titulo, 3.900px2 de texto. O ::after estica o link do titulo por cima do card
+   inteiro — um alvo so na arvore de acessibilidade, o card todo no dedo. */
+.yb-card__title a::after{content:""; position:absolute; inset:0; border-radius:inherit}
+/* As duas linhas foram medidas contra o card de ~270px do desktop. No grid de
+   duas colunas do celular o card tem 134px, e duas linhas mostram 38px de um
+   titulo de 113px — sobra "FASHION GOLD - Brazilian Ke". Tres linhas devolvem
+   a informacao sem desalinhar preco e rating, porque a fileira toda cresce
+   junto. */
+@media (max-width:768px){
+  .yb-card{ --yb-card-title-lines:3; }
+}
+.yb-card__media{
+  position:relative; aspect-ratio:1/1; overflow:hidden;
+  background:var(--yb-surface-sunken); border:1px solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-media);
+}
+.yb-card__media img{width:100%; height:100%; object-fit:cover; display:block}
+.yb-card__flags{
+  position:absolute; inset-block-start:var(--yb-space-2); inset-inline-start:var(--yb-space-2);
+  display:flex; gap:var(--yb-space-1); flex-wrap:wrap;
+}
+.yb-card__title{
+  font-size:var(--yb-type-body-sm-size); line-height:var(--yb-type-body-sm-line);
+  font-weight:var(--yb-font-weight-medium); margin:0;
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:var(--yb-card-title-lines); line-clamp:var(--yb-card-title-lines);
+  overflow:hidden;
+}
+.yb-card__title a{color:var(--yb-text-primary); text-decoration:none}
+
+@media (hover:hover){
+  .yb-card__title a:hover{text-decoration:underline}
+}
+.yb-card__title a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+
+/* Marca do produto. Opcional: a home nao mostra, a PDP mostra nos
+   relacionados. Fica entre o titulo e o preco, em tom de apoio — e informacao
+   de origem, nao argumento de venda. */
+.yb-card__vendor{
+  font-size:var(--yb-type-body-sm-size);
+  color:var(--yb-text-muted);
+  line-height:var(--yb-line-height-base);
+}
+
+/* =========================================================================
+   VARIANT PICKER
+   Radios nativos escondidos: teclado e leitor de tela seguem funcionando.
+   ========================================================================= */
+.yb-swatches{display:flex; gap:var(--yb-space-2); flex-wrap:wrap}
+.yb-swatches input{position:absolute; opacity:0; pointer-events:none}
+.yb-swatches label{
+  min-width:var(--yb-target-min);   /* "S" nao pode virar alvo de 30px */
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-control);
+  padding:var(--yb-space-3) var(--yb-space-4); cursor:pointer;
+  font-size:var(--yb-type-body-sm-size); min-height:var(--yb-target-min);
+  background:var(--yb-surface); color:var(--yb-text-primary);
+  transition:border-color var(--yb-transition-control), background var(--yb-transition-control);
+}
+
+@media (hover:hover){
+  .yb-swatches label:hover{border-color:var(--yb-border-strong)}
+}
+.yb-swatches input:checked + label{
+  border-color:var(--yb-text-primary); background:var(--yb-bg-muted);
+  font-weight:var(--yb-font-weight-medium);
+}
+.yb-swatches input:focus-visible + label{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-swatches input:disabled + label{
+  /* o riscado e o fundo já dizem "esgotado"; o texto continua legível */
+  color:var(--yb-text-muted); cursor:not-allowed;
+  background:var(--yb-bg-subtle); text-decoration:line-through;
+}
+
+/* =========================================================================
+   QUANTITY STEPPER
+   ========================================================================= */
+.yb-stepper{
+  display:inline-flex; align-items:center;
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-control);
+  overflow:hidden; background:var(--yb-surface);
+  /* flex:none porque o tamanho dele nao e negociavel: 44 + 48 + 44. Como item
+     de um flex container ele encolhia — no bloco de compra em 320px sobrava
+     24px para os tres controles, e os botoes viravam alvos de 23px. */
+  flex:none;
+}
+.yb-stepper button{
+  width:var(--yb-target-min); height:var(--yb-target-min);
+  border:none; background:transparent; cursor:pointer;
+  color:var(--yb-text-primary); font-size:var(--yb-type-body-lg-size);
+  font-family:inherit; line-height:1;
+  transition:background var(--yb-transition-control);
+}
+
+@media (hover:hover){
+  .yb-stepper button:hover:not([disabled]){background:var(--yb-bg-muted)}
+}
+.yb-stepper button[disabled]{color:var(--yb-text-disabled); cursor:not-allowed}
+.yb-stepper button:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color); outline-offset:-2px;
+}
+.yb-stepper input{
+  width:48px; height:var(--yb-target-min);   /* o alvo é o input, não só a caixa */
+  border:none; text-align:center; font-family:inherit;
+  font-size:var(--yb-type-body-size); font-variant-numeric:tabular-nums;
+  color:var(--yb-text-primary); background:transparent;
+  -moz-appearance:textfield;
+}
+.yb-stepper input::-webkit-outer-spin-button,
+.yb-stepper input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0}
+.yb-stepper input:focus-visible{outline:var(--yb-focus-width) solid var(--yb-focus-color); outline-offset:-2px}
+
+/* =========================================================================
+   FORM FIELD
+   O erro é anunciado por texto, não só por cor — daltônicos existem.
+   ========================================================================= */
+.yb-field{display:flex; flex-direction:column; gap:var(--yb-space-2)}
+.yb-field__label{
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-medium);
+  color:var(--yb-text-primary);
+}
+.yb-field__label .req{color:var(--yb-danger-text); margin-inline-start:2px}
+.yb-input,.yb-select,.yb-textarea{
+  width:100%; font-family:inherit; font-size:var(--yb-type-body-size);
+  color:var(--yb-text-primary); background:var(--yb-surface);
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-control);
+  padding:var(--yb-space-3) var(--yb-space-4); min-height:var(--yb-target-min);
+  transition:border-color var(--yb-transition-control);
+}
+.yb-textarea{min-height:96px; resize:vertical; line-height:var(--yb-line-height-relaxed)}
+.yb-input::placeholder,.yb-textarea::placeholder{color:var(--yb-text-muted)}
+
+@media (hover:hover){
+  .yb-input:hover,.yb-select:hover,.yb-textarea:hover{border-color:var(--yb-border-strong)}
+}
+.yb-input:focus-visible,.yb-select:focus-visible,.yb-textarea:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset); border-color:var(--yb-text-primary);
+}
+.yb-input[disabled],.yb-select[disabled],.yb-textarea[disabled]{
+  background:var(--yb-bg-subtle); color:var(--yb-text-disabled); cursor:not-allowed;
+}
+/* Cor sozinha reprova em WCAG 1.4.1 e some inteira em alto contraste. A borda
+   dobra de espessura — forma, nao so cor — e o campo ganha o icone de alerta
+   como fundo, que sobrevive ao forced-colors. */
+.yb-input[aria-invalid="true"],.yb-select[aria-invalid="true"],.yb-textarea[aria-invalid="true"]{
+  border-color:var(--yb-danger-solid);
+  border-width:var(--yb-border-width-thick);
+  padding-inline-end:var(--yb-space-10);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B3261E' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4.2 2.8 20h18.4Z'/%3E%3Cpath d='M12 10v4'/%3E%3Cpath d='M12 17.2v.1' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right var(--yb-space-3) center;
+  background-size:20px 20px;
+}
+[dir="rtl"] .yb-input[aria-invalid="true"]{background-position:left var(--yb-space-3) center}
+.yb-field__hint{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+.yb-field__error{
+  font-size:var(--yb-type-caption-size); color:var(--yb-danger-text);
+  font-weight:var(--yb-font-weight-medium);
+  display:flex; align-items:center; gap:var(--yb-space-1);
+}
+
+/* =========================================================================
+   CHECKBOX / RADIO
+   ========================================================================= */
+.yb-check{display:flex; align-items:flex-start; gap:var(--yb-space-3); cursor:pointer;
+  /* alvo-compacto: o label é o alvo, e caixas de seleção vivem empilhadas —
+     o gap da lista dá a folga. Com uma linha de texto media 22px, abaixo do
+     mínimo 24×24 da WCAG 2.5.8; 36 passa com margem. */
+  padding-block:var(--yb-space-2); min-height:var(--yb-control-height-compact)}
+.yb-check input{
+  width:20px; height:20px; margin:0; flex:none; margin-top:1px;
+  accent-color:var(--yb-action-bg); cursor:pointer;
+}
+.yb-check input:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-check span{font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+  line-height:var(--yb-line-height-relaxed)}
+
+/* =========================================================================
+   ALERT
+   ========================================================================= */
+.yb-alert{
+  display:flex; gap:var(--yb-space-3); padding:var(--yb-space-4) var(--yb-space-5);
+  border-radius:var(--yb-radius-card); border-inline-start:3px solid;
+  font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-relaxed);
+}
+.yb-alert__title{
+  display:block; font-weight:var(--yb-font-weight-semibold);
+  margin-bottom:var(--yb-space-1);
+}
+.yb-alert--success{background:var(--yb-success-surface); border-color:var(--yb-success-solid); color:var(--yb-success-text)}
+.yb-alert--warning{background:var(--yb-warning-surface); border-color:var(--yb-warning-solid); color:var(--yb-warning-text)}
+.yb-alert--danger {background:var(--yb-danger-surface);  border-color:var(--yb-danger-solid);  color:var(--yb-danger-text)}
+.yb-alert--info   {background:var(--yb-info-surface);    border-color:var(--yb-info-solid);    color:var(--yb-info-text)}
+.yb-alert p{margin:0; color:var(--yb-text-secondary)}
+
+/* =========================================================================
+   ACORDEÃO — <details> nativo: teclado e leitor de tela de graça.
+   ========================================================================= */
+.yb-accordion{border-top:1px solid var(--yb-border-subtle)}
+.yb-accordion details{border-bottom:1px solid var(--yb-border-subtle)}
+.yb-accordion summary{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:var(--yb-space-4) 0; cursor:pointer; list-style:none;
+  font-size:var(--yb-type-body-size); font-weight:var(--yb-font-weight-medium);
+  min-height:var(--yb-target-min); color:var(--yb-text-primary);
+}
+.yb-accordion summary::-webkit-details-marker{display:none}
+.yb-accordion summary::after{
+  content:"+"; color:var(--yb-text-muted); font-size:var(--yb-type-h4-size);
+  font-weight:var(--yb-font-weight-regular); line-height:1;
+}
+.yb-accordion details[open] summary::after{content:"–"}
+.yb-accordion summary:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-accordion__body{padding-bottom:var(--yb-space-4)}
+.yb-accordion__body p{
+  margin:0; font-size:var(--yb-type-body-sm-size);
+  line-height:var(--yb-line-height-relaxed);
+  color:var(--yb-text-secondary); max-width:64ch;
+}
+
+/* =========================================================================
+   BREADCRUMB
+   ========================================================================= */
+.yb-crumb{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+.yb-crumb ol{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:var(--yb-space-2)}
+/* --yb-text-disabled mede 2.14:1 e existe so para controle inativo. A barra
+   do breadcrumb e pontuacao com significado, nao estado — sobe para o piso. */
+.yb-crumb li:not(:last-child)::after{content:"/"; margin-inline-start:var(--yb-space-2); color:var(--yb-text-muted)}
+.yb-crumb a{color:var(--yb-text-muted); text-decoration:none}
+
+@media (hover:hover){
+  .yb-crumb a:hover{color:var(--yb-text-primary)}
+}
+.yb-crumb a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-crumb [aria-current="page"]{color:var(--yb-text-secondary)}
+
+/* Este bloco morreu com o corte global: `transition-duration:1ms !important`
+   ja cobre estes seletores. O `animation:none` que estava aqui era pior que
+   redundante — reseta `animation-name`, que o corte global nao toca, e assim
+   vencia. Com ele, o `animationend` do toast nunca disparava. */
+
+/* =========================================================================
+   DIALOG / MODAL
+   Usa <dialog> nativo. Foco preso, Esc e backdrop vêm do navegador — não
+   reimplementar nada disso à mão é o motivo de escolher o elemento nativo.
+   ========================================================================= */
+.yb-dialog{
+  border:none; padding:0; max-width:min(520px, calc(100vw - 2rem));
+  width:100%; background:var(--yb-surface); color:var(--yb-text-primary);
+  border-radius:var(--yb-radius-card); box-shadow:var(--yb-elevation-modal);
+}
+.yb-dialog::backdrop{background:var(--yb-surface-overlay)}
+.yb-dialog__head{
+  display:flex; align-items:flex-start; justify-content:space-between;
+  gap:var(--yb-space-4); padding:var(--yb-space-5) var(--yb-space-6);
+  border-bottom:1px solid var(--yb-border-subtle);
+}
+.yb-dialog__title{
+  margin:0; font-size:var(--yb-type-h4-size);
+  font-weight:var(--yb-type-h4-weight); letter-spacing:var(--yb-type-h4-track);
+}
+.yb-dialog__close{
+  width:var(--yb-target-min); height:var(--yb-target-min); flex:none;
+  border:none; background:transparent; cursor:pointer; color:var(--yb-text-muted);
+  border-radius:var(--yb-radius-control); display:flex;
+  align-items:center; justify-content:center; margin:calc(var(--yb-space-2) * -1);
+}
+
+@media (hover:hover){
+  .yb-dialog__close:hover{background:var(--yb-bg-muted); color:var(--yb-text-primary)}
+}
+.yb-dialog__close:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-dialog__body{padding:var(--yb-space-6)}
+.yb-dialog__body p{margin:0; color:var(--yb-text-secondary);
+  font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-relaxed)}
+.yb-dialog__foot{
+  display:flex; gap:var(--yb-space-3); justify-content:flex-end; flex-wrap:wrap;
+  padding:var(--yb-space-5) var(--yb-space-6);
+  border-top:1px solid var(--yb-border-subtle); background:var(--yb-bg-subtle);
+  border-radius:0 0 var(--yb-radius-card) var(--yb-radius-card);
+}
+@media (max-width:520px){
+  .yb-dialog__foot{flex-direction:column-reverse}
+  .yb-dialog__foot .yb-btn{width:100%}
+}
+
+/* gaveta: mesmo <dialog>, ancorado na lateral */
+.yb-dialog--drawer{
+  max-width:420px; height:100dvh; max-height:100dvh;
+  margin:0 0 0 auto; border-radius:0;
+}
+/* O `display` SO no [open]. Regra de autor vence a folha do navegador por
+   origem, nao por especificidade: um `display:flex` solto aqui derruba o
+   `dialog:not([open]){display:none}` da UA e a gaveta aparece fechada,
+   grudada na lateral da pagina. Aconteceu.
+
+   Coluna flex, e nao `> * { height:100dvh }`: aquela versao dava a altura
+   inteira a CADA filho — com cabeca, corpo e pe a gaveta virava tres telas
+   empilhadas. Aqui so o corpo cresce, e e ele que rola. */
+.yb-dialog--drawer[open]{display:flex; flex-direction:column}
+.yb-dialog--drawer > *{flex:0 0 auto}
+.yb-dialog--drawer > .yb-dialog__body{flex:1 1 auto; min-height:0; overflow-y:auto}
+.yb-dialog--drawer > .yb-dialog__foot{border-radius:0}
+
+/* =========================================================================
+   TOAST
+   Região viva. O container existe sempre; as mensagens entram nele.
+   ========================================================================= */
+.yb-toasts{
+  position:fixed; inset-block-end:var(--yb-space-5);
+  inset-inline-end:var(--yb-space-5); z-index:var(--yb-z-toast);
+  display:flex; flex-direction:column; gap:var(--yb-space-3);
+  max-width:min(380px, calc(100vw - 2rem)); pointer-events:none;
+}
+@media (max-width:520px){
+  .yb-toasts{inset-inline:var(--yb-space-4); max-width:none}
+}
+.yb-toast{
+  pointer-events:auto; display:flex; gap:var(--yb-space-3);
+  align-items:flex-start; padding:var(--yb-space-4) var(--yb-space-5);
+  background:var(--yb-surface); color:var(--yb-text-primary);
+  border:1px solid var(--yb-border); border-inline-start:3px solid var(--yb-action-bg);
+  border-radius:var(--yb-radius-card); box-shadow:var(--yb-elevation-dropdown);
+  animation:yb-toast-in var(--yb-duration-slow) var(--yb-ease-enter);
+}
+/* A tarja de 3px era a UNICA diferenca entre sucesso e erro — cor sozinha,
+   e as duas viram a mesma cor de sistema em alto contraste. O glifo antes do
+   titulo carrega a mesma informacao em forma. */
+.yb-toast--success{border-inline-start-color:var(--yb-success-solid)}
+.yb-toast--danger{border-inline-start-color:var(--yb-danger-solid)}
+.yb-toast--success .yb-toast__title::before,
+.yb-toast--danger .yb-toast__title::before{
+  margin-inline-end:var(--yb-space-2); font-weight:var(--yb-font-weight-bold);
+}
+.yb-toast--success .yb-toast__title::before{content:"\2713"; color:var(--yb-success-text)}
+.yb-toast--danger .yb-toast__title::before{content:"\26A0"; color:var(--yb-danger-text)}
+.yb-toast--leaving{animation:yb-toast-out var(--yb-duration-base) var(--yb-ease-exit) forwards}
+.yb-toast__body{flex:1; min-width:0}
+.yb-toast__title{
+  display:block; font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-semibold); margin-bottom:2px;
+}
+.yb-toast__text{margin:0; font-size:var(--yb-type-caption-size);
+  color:var(--yb-text-secondary)}
+.yb-toast__close{
+  border:none; background:transparent; cursor:pointer; flex:none;
+  color:var(--yb-text-muted); padding:0;
+  border-radius:var(--yb-radius-sm); line-height:1;
+  /* Era o unico controle do sistema sem piso: media 15.8x21.3, um terco do
+     --yb-target-min que o proprio sistema declara. A margem negativa devolve
+     os 44 de alvo sem inflar a altura do toast. */
+  display:inline-flex; align-items:center; justify-content:center;
+  width:var(--yb-target-min); height:var(--yb-target-min);
+  margin:calc(var(--yb-space-3) * -1) calc(var(--yb-space-2) * -1);
+}
+
+@media (hover:hover){
+  .yb-toast__close:hover{color:var(--yb-text-primary)}
+}
+.yb-toast__close:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+@keyframes yb-toast-in{from{opacity:0; transform:translateY(8px)}to{opacity:1; transform:none}}
+@keyframes yb-toast-out{to{opacity:0; transform:translateY(8px)}}
+
+/* =========================================================================
+   PRODUCT GALLERY
+   Miniaturas são radios: teclado e leitor de tela funcionam sem JS.
+   ========================================================================= */
+.yb-gallery{display:flex; flex-direction:column; gap:var(--yb-space-3); min-width:0}
+.yb-gallery__stage{
+  position:relative; aspect-ratio:1/1; overflow:hidden;
+  background:var(--yb-surface-sunken); border:1px solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-media);
+}
+.yb-gallery__slide{
+  position:absolute; inset:0; display:flex; align-items:center;
+  justify-content:center; opacity:0; visibility:hidden;
+  transition:opacity var(--yb-transition-surface);
+}
+.yb-gallery__slide[data-active="true"]{opacity:1; visibility:visible}
+.yb-gallery__slide img{width:100%; height:100%; object-fit:cover}
+.yb-gallery__count{
+  position:absolute; inset-block-end:var(--yb-space-3);
+  inset-inline-end:var(--yb-space-3);
+  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wide);
+  padding:var(--yb-space-1) var(--yb-space-2); border-radius:var(--yb-radius-badge);
+  font-variant-numeric:tabular-nums;
+}
+.yb-gallery__thumbs{display:grid; grid-template-columns:repeat(5,1fr); gap:var(--yb-space-2)}
+.yb-gallery__thumbs input{position:absolute; opacity:0; pointer-events:none}
+.yb-gallery__thumbs label{
+  display:block; aspect-ratio:1/1; cursor:pointer; overflow:hidden;
+  background:var(--yb-surface-sunken); border:1px solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-sm);
+  transition:border-color var(--yb-transition-control);
+}
+
+@media (hover:hover){
+  .yb-gallery__thumbs label:hover{border-color:var(--yb-border-strong)}
+}
+.yb-gallery__thumbs input:checked + label{
+  border-color:var(--yb-text-primary); border-width:2px;
+}
+.yb-gallery__thumbs input:focus-visible + label{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+/* A imagem da miniatura pertence ao componente. Sem isto, quem usa e obrigado
+   a escrever style="width:100%;height:100%;object-fit:cover" em cada thumb —
+   e um componente que exige estilo inline nao esta terminado. */
+.yb-gallery__thumbs label img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+
+/* =========================================================================
+   PAGINATION
+   ========================================================================= */
+.yb-pagination ol{
+  list-style:none; margin:0; padding:0; display:flex;
+  gap:var(--yb-space-2); align-items:center; flex-wrap:wrap;
+  justify-content:center;
+}
+.yb-pagination a, .yb-pagination span{
+  display:flex; align-items:center; justify-content:center;
+  min-width:var(--yb-target-min); min-height:var(--yb-target-min);
+  padding:0 var(--yb-space-3); border-radius:var(--yb-radius-control);
+  font-size:var(--yb-type-body-sm-size); text-decoration:none;
+  color:var(--yb-text-secondary); font-variant-numeric:tabular-nums;
+  transition:background var(--yb-transition-control);
+}
+
+@media (hover:hover){
+  .yb-pagination a:hover{background:var(--yb-bg-muted); color:var(--yb-text-primary)}
+}
+.yb-pagination a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-pagination [aria-current="page"]{
+  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  font-weight:var(--yb-font-weight-semibold);
+}
+/* o "…" e informacao estatica sobre paginas omitidas, nao controle inativo */
+.yb-pagination__gap{color:var(--yb-text-muted); min-width:auto; padding:0}
+.yb-pagination__off{color:var(--yb-text-disabled); cursor:not-allowed}
+
+/* =========================================================================
+   SKELETON
+   Só para carregamento REAL. Skeleton eterno é pior que spinner: promete
+   conteúdo que não chega.
+   ========================================================================= */
+.yb-skeleton{
+  display:block; background:var(--yb-bg-muted);
+  border-radius:var(--yb-radius-sm); position:relative; overflow:hidden;
+}
+.yb-skeleton::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(to inline-end, transparent, var(--yb-bg-subtle), transparent);
+  transform:translateX(-100%);
+  animation:yb-shimmer 1.4s infinite;
+}
+@keyframes yb-shimmer{to{transform:translateX(100%)}}
+.yb-skeleton--text{height:1em; margin-block:.25em}
+.yb-skeleton--title{height:1.4em; width:70%}
+.yb-skeleton--line{height:1em}
+.yb-skeleton--line-short{height:1em; width:45%}
+.yb-skeleton--media{aspect-ratio:1/1; border-radius:var(--yb-radius-media)}
+.yb-skeleton--btn{height:var(--yb-target-min); border-radius:var(--yb-radius-control)}
+.yb-skeleton-card{display:flex; flex-direction:column; gap:var(--yb-space-3)}
+
+/* Idem: o corte global cobre os quatro. `animation:none` aqui desligava o
+   `yb-toast-out`, e o toast so saia do DOM pelo setTimeout de reserva do JS. */
+
+/* =========================================================================
+   LOGO
+   Arquivo oficial do header da loja (Union_3), 360x139, monocromatico preto
+   com fundo transparente.
+
+   Por que e componente e nao uma <img> solta: o logo aparece em header,
+   footer, e-mail e recibo, e em cada lugar alguem escolhia uma altura
+   diferente. Aqui a altura vem de token e o alt vem certo por padrao — em
+   producao ele diz "Fashion Gold", que e nome de linha, nao da marca: um
+   leitor de tela anuncia a loja errada.
+   ========================================================================= */
+.yb-logo{
+  display:inline-flex; align-items:center;
+  height:var(--yb-logo-height, 32px);
+  flex:none;
+}
+.yb-logo img{
+  height:100%; width:auto; display:block;
+  /* a proporcao do arquivo e 2,59:1 — deixar a largura livre evita distorcer */
+}
+.yb-logo:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+  border-radius:var(--yb-radius-sm);
+}
+
+.yb-logo--sm{ --yb-logo-height:22px; }
+.yb-logo--md{ --yb-logo-height:32px; }
+.yb-logo--lg{ --yb-logo-height:44px; }
+
+/* Sobre fundo escuro. Funciona porque o logo e monocromatico preto: inverter
+   devolve branco puro. Nao vale para logo colorido — se a marca ganhar uma
+   versao em cor, o certo passa a ser um segundo arquivo, nao um filtro. */
+.yb-logo--inverse img{ filter:invert(1); }
+
+/* (removido: .yb-logo nunca declarou transition — regra morta desde que foi escrita) */
+
+/* =========================================================================
+   COLLECTION CARD
+   Imagem com um rótulo em pill sobreposto, levando a uma coleção.
+
+   Nasceu da regra da governança, nao de preferencia: a home usa esta mesma
+   anatomia duas vezes — em "What's Standing Between You and Great Hair?" e em
+   "Explore Our Collections". Uma ocorrencia seria excecao de pagina; duas e
+   padrao, e padrao sobe para o sistema.
+
+   As duas diferem so na posicao do rotulo, e por isso ela e modificador em vez
+   de componente novo.
+   ========================================================================= */
+.yb-collection{
+  position:relative; display:block; overflow:hidden;
+  aspect-ratio:3/4; border-radius:var(--yb-radius-media);
+  background:var(--yb-surface-sunken);
+  text-decoration:none;
+}
+.yb-collection img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  transition:transform var(--yb-transition-surface);
+}
+
+@media (hover:hover){
+  .yb-collection:hover img{ transform:scale(1.03); }
+}
+.yb-collection:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+
+.yb-collection__label{
+  position:absolute; inset-inline:var(--yb-space-4);
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  min-height:var(--yb-target-min);
+  padding:var(--yb-space-2) var(--yb-space-4);
+  border-radius:var(--yb-radius-full);
+  background:var(--yb-action-bg); color:var(--yb-action-text);
+  font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-medium);
+  line-height:var(--yb-line-height-base);
+}
+
+/* rótulo no meio da imagem — usado em "What's Standing Between You…" */
+.yb-collection--center .yb-collection__label{ top:50%; transform:translateY(-50%); }
+/* rótulo no rodapé — usado em "Explore Our Collections" */
+.yb-collection--bottom .yb-collection__label{ inset-block-end:var(--yb-space-4); }
+/* Em 320 o cartao tem 134px e o recuo fixo de 64px (inset 16x2 + padding 16x2)
+   deixava 70px de caixa a 14px — oito caracteres por linha, e "Frizz Control &
+   Dry Hair" quebrando em quatro. O recuo cede antes da palavra. */
+@media (max-width:480px){
+  .yb-collection__label{
+    inset-inline:var(--yb-space-2);
+    padding:var(--yb-space-2);
+    font-size:var(--yb-type-caption-size);
+    border-radius:var(--yb-radius-md);
+  }
+  .yb-collection--bottom .yb-collection__label{ inset-block-end:var(--yb-space-2); }
+}
+
+/* a grade que as duas seções compartilham */
+.yb-collections{
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:var(--yb-grid-gap); list-style:none; margin:0; padding:0;
+}
+@media (max-width:768px){ .yb-collections{ grid-template-columns:repeat(2,1fr); } }
+
+@media (prefers-reduced-motion:reduce){
+  .yb-collection img{ transition:none; }
+  .yb-collection:hover img{ transform:none; }
+}
+
+/* =========================================================================
+   REVIEW
+   Prova social: foto do produto, nota, texto, quem escreveu e o que comprou.
+
+   Vira componente pela mesma regra do card de coleção: a home usa review em
+   dois lugares — o carrossel do topo e "Hear Directly from our Ambassadors".
+
+   Hoje quem desenha isso é o Judge.me. Diferente do Tolstoy, ele renderiza no
+   DOM normal, sem shadow DOM — por isso o design system alcança. O bridge já
+   traduz as oito variáveis dele em bridge/ybera-bridge.css.
+   ========================================================================= */
+.yb-review{
+  display:grid; grid-template-columns:88px 1fr; gap:var(--yb-space-4);
+  align-items:start; min-width:0;
+}
+.yb-review__media{
+  aspect-ratio:1/1; overflow:hidden; border-radius:var(--yb-radius-media);
+  background:var(--yb-surface-sunken); border:1px solid var(--yb-border-subtle);
+}
+.yb-review__media img{ width:100%; height:100%; object-fit:cover; display:block; }
+.yb-review__body{ display:flex; flex-direction:column; gap:var(--yb-space-2); min-width:0; }
+
+.yb-review__title{
+  margin:0; font-size:var(--yb-type-body-size);
+  font-weight:var(--yb-font-weight-semibold); line-height:var(--yb-line-height-base);
+  color:var(--yb-text-primary);
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
+}
+.yb-review__text{
+  margin:0; font-size:var(--yb-type-body-sm-size);
+  line-height:var(--yb-line-height-relaxed); color:var(--yb-text-secondary);
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:3; line-clamp:3; overflow:hidden;
+}
+.yb-review__author{
+  font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-primary);
+}
+.yb-review__product{
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:1; line-clamp:1; overflow:hidden;
+}
+.yb-review__product a{ color:inherit; }
+.yb-review__product a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+
+/* trilho horizontal, como o carrossel de produção */
+.yb-reviews{
+  /* herda .yb-track; aqui so o que e proprio do review */
+  --yb-track-item:minmax(320px, 1fr);
+  --yb-track-gap:var(--yb-space-8);
+}
+.yb-reviews::-webkit-scrollbar{ display:none; }
+.yb-reviews > *{ scroll-snap-align:start; }
+/* O gap encolhe junto. Antes so o card caia para 280 e o gap seguia em 32:
+   em 320px o scrollport tem 288, 280+32=312, e o segundo review nascia fora
+   da tela. Um trilho de 6 reviews que nao mostra que anda e um card estatico. */
+/* Largura em px, nao em %: `minmax(0, 86%)` deixou o cartao colapsar para
+   35px — o minimo 0 vence quando o trilho e um grid com overflow. Com 248 e
+   gap de 16, em 320px sobram 24px do proximo review a vista: a fatia que
+   ensina que o trilho anda. */
+@media (max-width:520px){
+  .yb-reviews{ grid-auto-columns:minmax(248px, 1fr); gap:var(--yb-space-4); }
+}
+
+/* =========================================================================
+   CERTIFICATION SEALS
+   Cruelty free, vegan, sem parabeno, sem sulfato, sem formaldeído.
+
+   Faixa de garantia, não de venda: tom neutro de propósito. Se ela usasse a
+   cor de ação, competiria com o botão de compra pela mesma atenção.
+   ========================================================================= */
+.yb-seals{
+  display:grid; grid-auto-flow:column; grid-auto-columns:1fr;
+  gap:var(--yb-space-6); justify-items:center;
+  /* padding-inline tambem: so o padding-block deixava "Paraben Free" a 5px da
+     borda em 320, enquanto o resto da pagina respeita a goteira. */
+  padding:var(--yb-space-10) var(--yb-page-gutter);
+  background:var(--yb-bg-subtle);
+}
+@media (max-width:768px){
+  .yb-seals{ grid-auto-flow:row; grid-template-columns:repeat(3,1fr);
+    gap:var(--yb-space-6) var(--yb-space-4); }
+}
+.yb-seal{
+  display:flex; flex-direction:column; align-items:center;
+  gap:var(--yb-space-3); text-align:center; min-width:0;
+}
+.yb-seal__mark{
+  width:64px; height:64px; border-radius:var(--yb-radius-full);
+  background:var(--yb-bg-muted); color:var(--yb-text-secondary);
+  display:flex; align-items:center; justify-content:center; flex:none;
+}
+.yb-seal__mark .yb-icon{ --yb-icon-size:var(--yb-icon-xl); }  /* 32 = metade do disco de 64 */
+.yb-seal__label{
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+  line-height:var(--yb-line-height-base);
+}
+
+/* =========================================================================
+   LOGO BAR
+   As sublinhas da marca, em fundo escuro — é onde o logo monocromático
+   inverte bem (ver .yb-logo--inverse).
+   ========================================================================= */
+.yb-logobar{
+  background:var(--yb-bg-inverse);
+  padding-block:var(--yb-space-6);
+  overflow:hidden;
+}
+.yb-logobar__track{
+  --yb-track-gap:var(--yb-space-12);
+  padding-inline:var(--yb-space-8);
+}
+.yb-logobar__track::-webkit-scrollbar{ display:none; }
+.yb-logobar img{
+  height:44px; width:auto; flex:none; display:block;
+  filter:brightness(0) invert(1);
+  opacity:var(--yb-logobar-opacity);
+}
+
+/* =========================================================================
+   POST
+   Cartao de artigo do blog. Duas formas da mesma anatomia:
+   --destaque  imagem grande em cima, texto embaixo
+   (padrao)    imagem a esquerda, texto a direita
+
+   Uma so anatomia com modificador, e nao dois componentes, porque o que muda
+   e a disposicao — o conteudo e identico: imagem, titulo, resumo e a chamada.
+   ========================================================================= */
+.yb-post{
+  display:grid; grid-template-columns:132px 1fr;
+  gap:var(--yb-space-5); align-items:start; min-width:0;
+}
+.yb-post__media{
+  aspect-ratio:1/1; overflow:hidden; border-radius:var(--yb-radius-card);
+  background:var(--yb-surface-sunken);
+}
+.yb-post__media img{ width:100%; height:100%; object-fit:cover; display:block; }
+.yb-post__body{ display:flex; flex-direction:column; gap:var(--yb-space-3); min-width:0; }
+.yb-post__title{
+  margin:0; font-size:var(--yb-type-h4-size); line-height:var(--yb-line-height-base);
+  letter-spacing:var(--yb-type-h4-track); font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-primary); text-wrap:balance;
+}
+.yb-post__excerpt{
+  margin:0; font-size:var(--yb-type-body-sm-size);
+  line-height:var(--yb-line-height-relaxed); color:var(--yb-text-secondary);
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
+}
+.yb-post__link{
+  display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  align-self:flex-start; min-height:var(--yb-target-min);
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-link); text-decoration:underline;
+  text-underline-offset:3px;
+}
+
+@media (hover:hover){
+  .yb-post__link:hover{ color:var(--yb-text-link-hover); }
+}
+.yb-post__link:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+
+/* destaque: imagem larga em cima */
+.yb-post--featured{ grid-template-columns:1fr; gap:var(--yb-space-5); }
+.yb-post--featured .yb-post__media{ aspect-ratio:16/11; }
+.yb-post--featured .yb-post__title{ font-size:var(--yb-type-h3-size); }
+.yb-post--featured .yb-post__excerpt{ -webkit-line-clamp:3; line-clamp:3; }
+
+/* :not(--featured) porque `.yb-post` e `.yb-post--featured` empatam em
+   especificidade (0,1,0) e a media query vem depois na folha — o modificador
+   perdia em silencio. Abaixo de 560 o destaque virava miniatura de 96x66,
+   MENOR que as irmas de 96x96, com titulo de 24px em cima. */
+@media (max-width:560px){
+  .yb-post:not(.yb-post--featured){ grid-template-columns:96px 1fr; gap:var(--yb-space-4); }
+}
+
+/* um destaque à esquerda, os secundários empilhados à direita */
+.yb-posts{
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:var(--yb-space-10); align-items:start;
+}
+.yb-posts__list{ display:flex; flex-direction:column; gap:var(--yb-space-8); }
+@media (max-width:860px){
+  .yb-posts{ grid-template-columns:1fr; gap:var(--yb-space-8); }
+}
+
+/* =========================================================================
+   BRAND QUOTE
+   Fala de quem assina a marca, com retrato e uma ação.
+
+   A citação usa display-2, não corpo grande: aqui a frase É o conteúdo, não
+   apoio de outra coisa. E as aspas ficam no texto, não em ::before — assim
+   quem copia leva a pontuação junto, e o leitor de tela lê a frase inteira.
+   ========================================================================= */
+.yb-quote{
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:var(--yb-space-16); align-items:center;
+}
+@media (max-width:860px){
+  .yb-quote{ grid-template-columns:1fr; gap:var(--yb-space-8); }
+}
+.yb-quote__body{ min-width:0; }
+.yb-quote__text{
+  margin:0 0 var(--yb-space-6);
+  font-size:var(--yb-type-display-2-size);
+  line-height:var(--yb-type-display-2-line);
+  letter-spacing:var(--yb-type-display-2-track);
+  font-weight:var(--yb-type-display-2-weight);
+  color:var(--yb-text-primary);
+  text-wrap:balance;
+}
+@media (max-width:860px){
+  .yb-quote__text{ font-size:var(--yb-type-h2-size); }
+}
+.yb-quote__author{
+  display:block; font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-primary);
+  font-style:normal;
+}
+.yb-quote__action{
+  margin-top:var(--yb-space-6); padding-top:var(--yb-space-6);
+  border-top:1px solid var(--yb-border-subtle);
+}
+.yb-quote__media{
+  aspect-ratio:4/5; overflow:hidden; border-radius:var(--yb-radius-media);
+  background:var(--yb-surface-sunken);
+}
+.yb-quote__media img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+/* =========================================================================
+   VERTICAL VIDEO CAROUSEL
+   Conteúdo de creator em formato 9:16, como o TikTok serve.
+
+   Substitui o widget Reputon, que hoje desenha essa seção com layout próprio
+   — e é a única seção de app que dava para trazer para o sistema, porque ela
+   renderiza no DOM normal.
+
+   O vídeo começa como pôster: 45 vídeos autoplay é o que faz a home pesar.
+   Só carrega quando alguém pede.
+   ========================================================================= */
+.yb-videos{
+  --yb-track-item:minmax(210px, 240px);
+}
+.yb-videos::-webkit-scrollbar{ display:none; }
+.yb-videos > *{ scroll-snap-align:start; }
+@media (max-width:520px){ .yb-videos{ grid-auto-columns:minmax(170px, 60vw); } }
+
+/* O cartao NAO e o botao. Era `<button class="yb-video">` com o `<video
+   controls>` injetado dentro — conteudo interativo dentro de botao e HTML
+   invalido, e na pratica os controles do video ficavam inalcancaveis pelo
+   teclado: o botao e uma parada de foco so, e o Tab nunca entra nele. */
+.yb-video{
+  position:relative; display:block; overflow:hidden;
+  aspect-ratio:9/16; border-radius:var(--yb-radius-card);
+  background:var(--yb-bg-inverse); width:100%;
+}
+.yb-video img, .yb-video video{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+
+/* botão de play: alvo real de 56px, não um ícone decorativo de 20 */
+/* compoe .yb-iconbtn --onmedia; aqui so o tamanho maior e a posicao */
+.yb-video__play{
+  position:absolute; inset:0; margin:auto;
+  width:56px; height:56px;
+  transition:transform var(--yb-transition-control);
+}
+/* o clique cobre o cartao inteiro sem que o botao engula o video depois */
+.yb-video__play::after{content:""; position:absolute; inset:-100%}
+.yb-video__erro{
+  position:absolute; inset-inline:0; inset-block-end:0;
+  padding:var(--yb-space-2) var(--yb-space-3);
+  background:var(--yb-danger-surface); color:var(--yb-danger-text);
+  font-size:var(--yb-type-caption-size); text-align:center;
+}
+
+@media (hover:hover){
+  .yb-video:hover .yb-video__play{ transform:scale(1.06); }
+}
+.yb-video__play .yb-icon{ --yb-icon-size:var(--yb-icon-lg); margin-inline-start:3px; }
+.yb-video[data-playing="true"] .yb-video__play{ display:none; }
+/* Sem `data-video` nao ha o que tocar: o play some e o cartao deixa de se
+   oferecer como clicavel. Um botao que promete video e nao entrega e pior do
+   que nao ter botao. */
+.yb-video:not([data-video]) .yb-video__play{ display:none; }
+.yb-video:not([data-video]) .yb-video__play{ cursor:default; }
+
+/* legenda opcional sobre o vídeo */
+.yb-video__caption{
+  position:absolute; inset-inline:var(--yb-space-3);
+  inset-block-end:var(--yb-space-3);
+  color:var(--yb-text-inverse); font-size:var(--yb-type-caption-size);
+  line-height:var(--yb-line-height-base); text-align:start;
+  text-shadow:var(--yb-elevation-text-media);
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .yb-video__play{ transition:none; }
+  .yb-video:hover .yb-video__play{ transform:none; }
+}
+
+/* =========================================================================
+   YBERA DESIGN SYSTEM · PATTERNS
+
+   Depende de: tokens/ + components/ybera-components.css
+
+   Padrão é o nível acima do componente: uma composição recorrente com
+   comportamento e conteúdo esperados. O componente responde "como um botão
+   se parece"; o padrão responde "o que vai no cabeçalho de uma loja".
+   ========================================================================= */
+
+/* =========================================================================
+   HEADER
+   Anúncio + navegação + ações. Sticky, porque o carrinho precisa estar
+   sempre a um toque.
+   ========================================================================= */
+/* position:relative porque o painel do submenu se ancora no header inteiro,
+   nao no item — e assim que ele consegue ir de ponta a ponta da tela. */
+.yb-header{position:relative; background:var(--yb-bg-page);
+  border-bottom:1px solid var(--yb-border-subtle)}
+.yb-header__announce{
+  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  text-align:center; padding:var(--yb-space-3) var(--yb-page-gutter);
+  font-size:var(--yb-type-caption-size); letter-spacing:var(--yb-tracking-wide);
+}
+.yb-header__announce b{color:var(--yb-accent-on-dark); font-weight:var(--yb-font-weight-semibold)}
+.yb-header__bar{
+  display:flex; align-items:center; gap:var(--yb-space-6);
+  padding:var(--yb-space-4) var(--yb-space-8);
+}
+/* o logo e o componente .yb-logo; aqui so o alvo de clique do header */
+.yb-header__logo{
+  display:inline-flex; align-items:center; text-decoration:none;
+  min-height:var(--yb-target-min); flex:none;
+}
+.yb-header__logo:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+/* -------------------------------------------------------------------------
+   NAVEGACAO PRINCIPAL
+
+   Um DOM so para as duas apresentacoes: barra com painel largo acima de 900,
+   gaveta com acordeao abaixo. A loja hoje escreve o menu inteiro duas vezes
+   (`menu-desktop` e `menu-mobile`) — 25 links repetidos, que um leitor de
+   tela percorre duas vezes.
+
+   O gatilho de submenu e checkbox + label, e nao o <span> que a loja usa:
+   <span> nao recebe foco, entao hoje o menu Shop e inalcancavel por teclado.
+   Aqui abre no hover (paridade), no clique e no foco.
+   ------------------------------------------------------------------------- */
+.yb-header__nav{min-width:0}
+.yb-nav{
+  display:flex; align-items:center; gap:var(--yb-space-5);
+  list-style:none; margin:0; padding:0;
+}
+.yb-nav__item{position:static}
+.yb-nav__toggle{position:absolute; opacity:0; pointer-events:none; width:1px; height:1px}
+.yb-nav__link{
+  display:inline-flex; align-items:center; gap:var(--yb-space-1);
+  min-height:var(--yb-target-min); cursor:pointer;
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+  text-decoration:none; white-space:nowrap;
+}
+
+@media (hover:hover){
+  .yb-nav__link:hover{color:var(--yb-text-primary)}
+}
+.yb-nav__link:focus-visible,
+.yb-nav__toggle:focus-visible + .yb-nav__link{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-nav__link .yb-icon{transition:transform var(--yb-transition-control)}
+
+/* --- painel largo (>= 900) ------------------------------------------- */
+.yb-nav__panel{
+  position:absolute; inset-inline:0; top:100%; z-index:var(--yb-z-dropdown);
+  background:var(--yb-surface-raised);
+  border-block-start:1px solid var(--yb-border-subtle);
+  box-shadow:var(--yb-elevation-dropdown);
+  opacity:0; visibility:hidden;
+  transition:opacity var(--yb-transition-surface), visibility var(--yb-transition-surface);
+}
+
+/* Clique e teclado FORA do `hover:hover`. Estavam dentro, e o resultado era
+   que num iPad em paisagem — 1024px de largura, `hover:none` — tocar em "Shop"
+   marcava o checkbox e nada aparecia: a unica outra regra que mostra o painel
+   mora em `max-width:900px`. O menu inteiro era inalcancavel nessa faixa. */
+.yb-nav__item:focus-within > .yb-nav__panel,
+.yb-nav__toggle:checked ~ .yb-nav__panel{opacity:1; visibility:visible}
+
+@media (hover:hover){
+  .yb-nav__item:hover > .yb-nav__panel{opacity:1; visibility:visible}
+}
+.yb-nav__groups{
+  display:flex; flex-wrap:wrap; gap:var(--yb-space-10);
+  max-width:var(--yb-container-max); margin-inline:auto;
+  padding:var(--yb-space-8) var(--yb-page-gutter);
+}
+.yb-nav__group{min-width:0}
+.yb-nav__grouptitle{
+  /* display:block tira a isencao de alvo inline do WCAG 2.5.8, e o titulo
+     media 17px. Os 24 vem do min-height, sem mexer no ritmo da coluna. */
+  display:flex; align-items:center; min-height:var(--yb-space-6);
+  margin-bottom:var(--yb-space-2);
+  font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-primary); text-decoration:none;
+}
+
+@media (hover:hover){
+  .yb-nav__grouptitle:hover{color:var(--yb-text-link)}
+}
+.yb-nav__sublist{list-style:none; margin:0; padding:0}
+.yb-nav__sublist a{
+  /* A loja renderiza estes links a 11,2px. O piso do sistema e 13 — abaixo
+     disso nao e densidade, e ilegibilidade. */
+  display:flex; align-items:center; min-height:var(--yb-space-6);
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+  text-decoration:none;
+}
+/* Na gaveta isto vira dedo, nao ponteiro: 24px e 13px foram dimensionados
+   para o painel de hover do desktop. Empilhados, os 21 destinos do Shop
+   ficavam colados um no outro, sem 1px de separacao. */
+@media (max-width:900px){
+  .yb-nav__sublist a{
+    min-height:var(--yb-target-min);
+    font-size:var(--yb-type-body-sm-size);
+    color:var(--yb-text-primary);
+  }
+  .yb-nav__grouptitle{min-height:var(--yb-target-min)}
+}
+
+@media (hover:hover){
+  .yb-nav__sublist a:hover{color:var(--yb-text-primary)}
+}
+.yb-nav__sublist a:focus-visible,.yb-nav__grouptitle:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+
+/* --- gaveta e acordeao (< 900) --------------------------------------- */
+/* .yb-header__icon vem depois nesta folha e tambem declara display; sem
+   somar a classe aqui, o hamburguer aparecia no desktop. */
+.yb-header__icon.yb-header__burger{display:none}
+.yb-nav__close{display:none}
+.yb-header__scrim{display:none}
+/* Acima de 900 nao ha gaveta — logo nao pode sobrar um controle que o
+   teclado alcanca e que nao abre nada. Mesma regra do acordeao do footer. */
+.yb-header__drawer{display:none}
+
+@media (max-width:900px){
+  .yb-header__drawer{display:block; position:absolute; opacity:0;
+    pointer-events:none; width:1px; height:1px}
+  .yb-header__icon.yb-header__burger{display:inline-flex; order:-1}
+  .yb-header__drawer:focus-visible + .yb-header__bar .yb-header__burger{
+    outline:var(--yb-focus-width) solid var(--yb-focus-color);
+    outline-offset:var(--yb-focus-offset);
+  }
+  .yb-header__nav{
+    position:fixed; inset-block:0; inset-inline-start:0; z-index:var(--yb-z-modal);
+    width:min(22rem, 86vw); background:var(--yb-surface-raised);
+    box-shadow:var(--yb-elevation-drawer); overflow-y:auto;
+    padding:var(--yb-space-6) var(--yb-page-gutter);
+    /* Em RTL `inset-inline-start` resolve para `right:0`, e um translateX
+       negativo traria a gaveta para dentro da tela em vez de tira-la. O sinal
+       tem de acompanhar a direcao — daí a custom property. */
+    transform:translateX(calc(-100% * var(--yb-dir, 1)));
+    /* visibility junto do transform, e nao so o transform: fora da tela os
+       31 links continuavam no tab order — o teclado entrava num menu que
+       ninguem ve. */
+    visibility:hidden;
+    transition:transform var(--yb-transition-surface),
+               visibility var(--yb-transition-surface);
+  }
+  .yb-header__drawer:checked ~ .yb-header__bar .yb-header__nav{
+    transform:none; visibility:visible;
+  }
+  .yb-nav__close{
+    display:flex; align-items:center; justify-content:center;
+    width:var(--yb-target-min); height:var(--yb-target-min);
+    margin-inline-start:auto; margin-block-end:var(--yb-space-2);
+    cursor:pointer; color:var(--yb-text-primary);
+    border-radius:var(--yb-radius-control);
+  }
+  @media (hover:hover){ .yb-nav__close:hover{background:var(--yb-bg-muted)} }
+  /* Era o unico controle do sistema sem anel de foco — e o unico jeito de
+     sair da gaveta pelo teclado, fora o Escape. */
+  .yb-nav__close:focus-visible{
+    outline:var(--yb-focus-width) solid var(--yb-focus-color);
+    outline-offset:var(--yb-focus-offset);
+  }
+  .yb-header__scrim{
+    display:block; position:fixed; inset:0; z-index:var(--yb-z-overlay);
+    background:var(--yb-surface-overlay);
+    opacity:0; pointer-events:none;
+    transition:opacity var(--yb-transition-surface);
+  }
+  .yb-header__drawer:checked ~ .yb-header__scrim{opacity:1; pointer-events:auto}
+
+  .yb-nav{flex-direction:column; align-items:stretch; gap:0}
+  .yb-nav__link{
+    justify-content:space-between; min-height:var(--yb-target-min);
+    border-bottom:1px solid var(--yb-border-subtle);
+    font-size:var(--yb-type-body-size); color:var(--yb-text-primary);
+  }
+  .yb-nav__toggle:checked + .yb-nav__link .yb-icon{transform:rotate(180deg)}
+  /* Sem hover no toque: aqui so o :checked abre. */
+  .yb-nav__panel{
+    position:static; opacity:1; visibility:visible; box-shadow:none;
+    border-block-start:0; max-height:0; overflow:hidden;
+    transition:max-height var(--yb-transition-surface);
+  }
+  .yb-nav__item:hover > .yb-nav__panel{max-height:0}
+  .yb-nav__toggle:checked ~ .yb-nav__panel{max-height:80rem}
+  .yb-nav__groups{
+    flex-direction:column; gap:var(--yb-space-5);
+    padding:var(--yb-space-4) var(--yb-space-4) var(--yb-space-5);
+  }
+}
+.yb-header__actions{display:flex; align-items:center; gap:var(--yb-space-2);
+  /* logico: com margin-left as acoes ficavam presas a direita tambem em RTL */
+  margin-inline-start:auto}
+/* compoe .yb-iconbtn; aqui so o respiro lateral, que e proprio do header */
+.yb-header__icon{ padding:0 var(--yb-space-3); }
+
+@media (hover:hover){
+  .yb-header__icon:hover{background:var(--yb-bg-muted)}
+}
+.yb-header__icon:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-header__count{
+  background:var(--yb-action-bg); color:var(--yb-action-text);
+  font-size:var(--yb-type-overline-size); font-weight:var(--yb-font-weight-semibold);
+  min-width:20px; height:20px; padding:0 6px;
+  border-radius:var(--yb-radius-full);
+  display:inline-flex; align-items:center; justify-content:center;
+  font-variant-numeric:tabular-nums;
+}
+
+/* Aperto do mobile. Fica no FIM da secao de proposito: `.yb-header__icon` e
+   `.yb-header__actions` declaram display e gap acima, com a mesma
+   especificidade — colocado antes, este bloco perdia em silencio.
+
+   Em 320px a barra pedia 351px e a pagina ganhava scroll lateral. O corte saiu
+   do respiro, nao do alvo: os icones seguem com 44px de min-width. A loja hoje
+   cabe nos mesmos 320 entregando icone de 18x17 — alvo que ninguem acerta. */
+@media (max-width:768px){
+  .yb-header__bar{padding:var(--yb-space-3) var(--yb-page-gutter); gap:var(--yb-space-2)}
+  .yb-header__icon{padding:0}
+  .yb-header__actions{gap:0}
+}
+/* O logo e o unico que pode ceder. O token vai NO .yb-logo, nao no <a> que o
+   embrulha: `.yb-logo--md` declara --yb-logo-height no proprio elemento, e
+   valor no elemento vence valor herdado — posto no pai, isto nao fazia nada.
+   Sem ele a barra cabe em 320 com 9px de folga; com ele, 35. A folga e o que
+   sustenta um contador de carrinho de tres digitos. */
+@media (max-width:480px){
+  .yb-header__logo .yb-logo{--yb-logo-height:22px}
+}
+
+/* =========================================================================
+   FREE SHIPPING PROGRESS
+   Aparece no carrinho e no header. É o padrão de e-commerce que mais move
+   ticket médio — e o que mais é feito errado, com a barra sem rótulo.
+   ========================================================================= */
+.yb-freeship{display:flex; flex-direction:column; gap:var(--yb-space-2)}
+.yb-freeship__text{font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
+.yb-freeship__text b{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
+.yb-freeship__track{
+  height:6px; background:var(--yb-bg-muted);
+  border-radius:var(--yb-radius-full); overflow:hidden;
+}
+.yb-freeship__fill{
+  height:100%; background:var(--yb-action-bg);
+  border-radius:var(--yb-radius-full);
+  transition:width var(--yb-transition-surface);
+}
+.yb-freeship--done .yb-freeship__fill{background:var(--yb-success-solid)}
+.yb-freeship--done .yb-freeship__text{color:var(--yb-success-text);
+  font-weight:var(--yb-font-weight-medium)}
+
+/* =========================================================================
+   CART DRAWER
+   ========================================================================= */
+/* Unico filho da gaveta: e ele que cresce e rola. Quem declara isso e o
+   padrao, nao o componente — a gaveta nao precisa saber que existe carrinho. */
+.yb-dialog--drawer > .yb-cart{flex:1 1 auto; min-height:0}
+.yb-cart{
+  display:flex; flex-direction:column; height:100%;
+  background:var(--yb-surface); box-shadow:var(--yb-elevation-drawer);
+  max-width:420px; width:100%;
+}
+.yb-cart__head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:var(--yb-space-5) var(--yb-space-6);
+  border-bottom:1px solid var(--yb-border-subtle);
+}
+.yb-cart__head h2{
+  margin:0; font-size:var(--yb-type-h4-size);
+  font-weight:var(--yb-type-h4-weight); letter-spacing:var(--yb-type-h4-track);
+}
+.yb-cart__close{
+  width:var(--yb-target-min); height:var(--yb-target-min);
+  border:none; background:transparent; cursor:pointer;
+  color:var(--yb-text-muted); font-size:var(--yb-type-h4-size);
+  border-radius:var(--yb-radius-control); line-height:1;
+}
+
+@media (hover:hover){
+  .yb-cart__close:hover{background:var(--yb-bg-muted); color:var(--yb-text-primary)}
+}
+.yb-cart__close:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-cart__ship{padding:var(--yb-space-4) var(--yb-space-6);
+  border-bottom:1px solid var(--yb-border-subtle); background:var(--yb-bg-subtle)}
+.yb-cart__items{
+  flex:1; overflow-y:auto; padding:var(--yb-space-4) var(--yb-space-6);
+  display:flex; flex-direction:column; gap:var(--yb-space-5);
+}
+.yb-cart__item{display:grid; grid-template-columns:72px 1fr; gap:var(--yb-space-4)}
+/* O stepper e flex:none em 142px — e o piso da linha do carrinho. Em telas
+   estreitas quem cede e a miniatura, nao o controle: 16px vindos da imagem
+   sao 16px que o alvo de toque nao precisa devolver. */
+@media (max-width:480px){
+  .yb-cart__item{grid-template-columns:56px 1fr; gap:var(--yb-space-3)}
+}
+.yb-cart__item .yb-card__media{aspect-ratio:1/1}
+.yb-cart__item-body{display:flex; flex-direction:column; gap:var(--yb-space-2); min-width:0}
+.yb-cart__item-title{
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-medium);
+  margin:0; display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
+}
+.yb-cart__item-variant{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+.yb-cart__item-foot{display:flex; align-items:center; justify-content:space-between;
+  gap:var(--yb-space-3); flex-wrap:wrap}
+.yb-cart__remove{
+  background:none; border:none; cursor:pointer;
+  /* Unica acao destrutiva do carrinho, e media 24px de altura — o piso da
+     WCAG, nao os 44 que o sistema promete. `align-self:start` evita que a
+     largura acompanhe a coluna e vire uma faixa clicavel inteira. */
+  display:inline-flex; align-items:center; align-self:start;
+  min-height:var(--yb-target-min); padding-inline-end:var(--yb-space-2);
+  font-family:inherit; font-size:var(--yb-type-caption-size);
+  color:var(--yb-text-muted); text-decoration:underline;
+}
+
+@media (hover:hover){
+  .yb-cart__remove:hover{color:var(--yb-danger-text)}
+}
+.yb-cart__remove:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-cart__foot{
+  padding:var(--yb-space-5) var(--yb-space-6);
+  border-top:1px solid var(--yb-border-subtle);
+  display:flex; flex-direction:column; gap:var(--yb-space-4);
+  background:var(--yb-surface);
+}
+/* Breakpoint de ALTURA, nao de largura: numa tela de 568 o pe reservava 254px
+   (45%) e sobravam 166 para a lista — o cliente com dois itens via um, cortado.
+   Aqui o pe aperta o respiro e a linha de frete sai, porque a nota logo abaixo
+   ja diz "Taxes calculated at checkout". O que decide compra — Subtotal, Total
+   e o botao — fica. */
+@media (max-height:700px){
+  .yb-cart__foot{ padding:var(--yb-space-3) var(--yb-space-5); gap:var(--yb-space-2) }
+  .yb-cart__foot .yb-cart__line:not(.yb-cart__line--total){ display:none }
+}
+.yb-cart__line{display:flex; justify-content:space-between; align-items:baseline;
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
+.yb-cart__line--total{
+  font-size:var(--yb-type-body-size); color:var(--yb-text-primary);
+  font-weight:var(--yb-font-weight-semibold);
+  padding-top:var(--yb-space-3); border-top:1px solid var(--yb-border-subtle);
+}
+.yb-cart__line span:last-child{font-variant-numeric:tabular-nums}
+.yb-cart__note{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+  text-align:center; margin:0}
+
+/* =========================================================================
+   CABEÇALHO DE COLEÇÃO + GRID
+   ========================================================================= */
+.yb-collection__head{
+  display:flex; align-items:flex-end; justify-content:space-between;
+  gap:var(--yb-space-6); flex-wrap:wrap; margin-bottom:var(--yb-space-6);
+  padding-bottom:var(--yb-space-5); border-bottom:1px solid var(--yb-border-subtle);
+}
+.yb-collection__title{display:flex; flex-direction:column; gap:var(--yb-space-2); min-width:0}
+.yb-collection__title h1, .yb-collection__title h2{
+  margin:0; font-size:var(--yb-type-h1-size); line-height:var(--yb-type-h1-line);
+  letter-spacing:var(--yb-type-h1-track); font-weight:var(--yb-type-h1-weight);
+}
+.yb-collection__count{font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted);
+  font-variant-numeric:tabular-nums}
+.yb-collection__tools{display:flex; gap:var(--yb-space-3); align-items:center; flex-wrap:wrap}
+.yb-collection__filters{
+  display:flex; gap:var(--yb-space-2); flex-wrap:wrap; margin-bottom:var(--yb-space-6);
+}
+.yb-chip{
+  /* barra de filtro do mobile: 36px e alvo de ponteiro, nao de dedo */
+  display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-pill);
+  padding:var(--yb-space-2) var(--yb-space-4); background:var(--yb-surface);
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+  cursor:pointer; font-family:inherit;
+  /* alvo-compacto: chip de filtro vive em fileira que rola. Em 44px, sete
+     filtros empurram o primeiro produto para fora da primeira tela — e é no
+     celular que o alvo mais importa. O gap da fileira dá a folga. */
+  min-height:var(--yb-control-height-compact);
+}
+
+@media (hover:hover){
+  .yb-chip:hover{border-color:var(--yb-border-strong); color:var(--yb-text-primary)}
+}
+.yb-chip[aria-pressed="true"]{
+  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  border-color:var(--yb-bg-inverse);
+}
+.yb-chip:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+/* o × era `opacity:.7` sobre --yb-text-secondary: 7.67:1 caía para ~4.3:1,
+   e nada media a queda. Texto apagado tem token próprio, que é medido. */
+.yb-chip__x{font-size:var(--yb-type-body-size); line-height:1; color:var(--yb-text-muted)}
+.yb-chip[aria-pressed="true"] .yb-chip__x{color:var(--yb-text-muted-inverse)}
+.yb-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:var(--yb-grid-gap)}
+@media (max-width:1024px){.yb-grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:768px){.yb-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* =========================================================================
+   BLOCO DE COMPRA (PDP)
+   ========================================================================= */
+.yb-buybox{display:flex; flex-direction:column; gap:var(--yb-space-5); min-width:0}
+.yb-buybox__flags{display:flex; gap:var(--yb-space-2); flex-wrap:wrap}
+.yb-buybox__title{
+  margin:0; font-size:var(--yb-type-h1-size); line-height:var(--yb-type-h1-line);
+  letter-spacing:var(--yb-type-h1-track); font-weight:var(--yb-type-h1-weight);
+  text-wrap:balance;
+}
+@media (max-width:860px){.yb-buybox__title{font-size:var(--yb-type-h2-size)}}
+.yb-buybox__desc{
+  margin:0; font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); color:var(--yb-text-secondary); max-width:56ch;
+}
+.yb-buybox__group{display:flex; flex-direction:column; gap:var(--yb-space-3)}
+.yb-buybox__label{
+  margin:0; font-size:var(--yb-type-overline-size);
+  letter-spacing:var(--yb-tracking-wider); text-transform:uppercase;
+  font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-muted);
+}
+/* wrap: com o stepper em flex:none, sem isto o botao e que seria espremido.
+   Quebrar a linha e melhor que entregar um "Add to cart" de 60px. */
+.yb-buybox__actions{display:flex; flex-wrap:wrap; gap:var(--yb-space-3); align-items:stretch}
+.yb-buybox__actions .yb-btn{min-width:12rem; flex:1}
+.yb-buybox__ship{
+  display:flex; align-items:center; justify-content:center; gap:var(--yb-space-2);
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-success-text);
+  font-weight:var(--yb-font-weight-medium); margin:0;
+}
+.yb-buybox__trust{
+  display:flex; gap:var(--yb-space-5); flex-wrap:wrap;
+  padding-top:var(--yb-space-4); border-top:1px solid var(--yb-border-subtle);
+}
+.yb-buybox__trust span{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+
+/* =========================================================================
+   EMPTY STATE
+   Nunca é só "nada aqui". Sempre diz por que está vazio e o que fazer.
+   ========================================================================= */
+.yb-empty{
+  display:flex; flex-direction:column; align-items:center; text-align:center;
+  gap:var(--yb-space-4); padding:var(--yb-space-16) var(--yb-space-6);
+}
+.yb-empty__mark{
+  width:56px; height:56px; border-radius:var(--yb-radius-full);
+  background:var(--yb-bg-muted); display:flex; align-items:center;
+  justify-content:center; font-size:var(--yb-type-h3-size); color:var(--yb-text-muted);
+}
+.yb-empty h3{
+  margin:0; font-size:var(--yb-type-h4-size);
+  font-weight:var(--yb-type-h4-weight); letter-spacing:var(--yb-type-h4-track);
+}
+.yb-empty p{margin:0; color:var(--yb-text-secondary); max-width:44ch;
+  font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-relaxed)}
+
+/* =========================================================================
+   FOOTER
+   Reproduz o footer que a loja ja pratica — fundo cinza claro, tres zonas,
+   barra legal embaixo — sem nenhum valor cru. Cada numero abaixo veio de
+   medir a producao e cair no degrau de escala mais proximo.
+
+   Duas divergencias deliberadas, ambas por regra do sistema:
+
+   1 · Texto. A producao usa #71717A sobre #F0F0F0 — 4.24:1, REPROVA em AA.
+       Aqui e --yb-text-muted sobre --yb-bg-muted: 4.73:1, passa. E a mesma
+       familia de cinza, dois degraus mais escuro. Ninguem nota; o leitor
+       de contraste nota.
+
+   2 · Magenta. A producao usa #DB2955, um dos tres magentas divergentes da
+       loja. O sistema tem um so: --yb-action-bg (#CA235F).
+
+   Os menus sao acordeao no mobile e lista aberta no desktop, com um DOM so:
+   o checkbox governa o estado abaixo de 768 e a media query o ignora acima.
+   A loja hoje duplica o menu inteiro no HTML para fazer isso — quem usa
+   leitor de tela ouve tudo duas vezes.
+   ========================================================================= */
+.yb-footer{
+  background:var(--yb-bg-muted); color:var(--yb-text-muted);
+  padding:var(--yb-space-12) var(--yb-page-gutter);
+  font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-base);
+}
+.yb-footer__inner{max-width:var(--yb-container-max); margin-inline:auto}
+
+/* --- as tres zonas ---------------------------------------------------- */
+.yb-footer__top{
+  display:flex; flex-wrap:wrap; justify-content:space-between;
+  gap:var(--yb-space-8); align-items:flex-start;
+}
+@media (max-width:768px){
+  .yb-footer__top{flex-direction:column; align-items:center; text-align:center}
+}
+
+/* --- zona 1 · marca --------------------------------------------------- */
+.yb-footer__brand{
+  display:flex; flex-direction:column; gap:var(--yb-space-6);
+  min-width:0; flex:0 0 auto;
+}
+@media (max-width:768px){.yb-footer__brand{align-items:center}}
+/* O footer da loja e claro e o logo e monocromatico preto: aqui ele NAO
+   inverte. Se algum dia o footer voltar a ser escuro, e --inverse que
+   resolve, nao um filter escondido no padrao. */
+.yb-footer__logo{margin:0; display:block}
+.yb-footer__links{
+  display:flex; flex-direction:column; gap:var(--yb-space-2);
+  list-style:none; margin:0; padding:0;
+}
+.yb-footer__social{display:flex; gap:0; align-items:center}
+.yb-footer__social a{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:var(--yb-target-min); min-height:var(--yb-target-min);
+  /* Negativa so na vertical. No eixo horizontal ela encolhia a caixa sem
+     encolher o conteudo, e a linha estourava 12px para fora. */
+  margin-block:calc(var(--yb-space-3) * -1);
+  color:var(--yb-text-muted); border-radius:var(--yb-radius-control);
+  transition:color var(--yb-transition-control);
+}
+
+@media (hover:hover){
+  .yb-footer__social a:hover{color:var(--yb-text-link)}
+}
+
+/* --- zona 2 · menus --------------------------------------------------- */
+.yb-footer__menus{
+  display:flex; flex-wrap:wrap; justify-content:space-evenly;
+  gap:var(--yb-space-8); flex:1 1 auto; min-width:0;
+}
+@media (max-width:768px){
+  .yb-footer__menus{flex-direction:column; gap:0; width:100%; max-width:20rem}
+}
+/* flex:0 0 auto e nao o min-width:0 de antes: com permissao de encolher, as
+   colunas caiam para 26px num container estreito e os textos se sobrepunham.
+   Aqui cada coluna guarda a largura do conteudo e quebra para a linha de
+   baixo quando nao cabe. */
+.yb-footer__col{flex:0 0 auto; min-width:0}
+/* No desktop nao ha acordeao — e nao havendo, nao pode sobrar um controle
+   focavel que o teclado alcanca e que nao faz nada. Ele so existe no mobile. */
+.yb-footer__toggle{display:none}
+/* O padrao e o desktop: titulo como rotulo, lista aberta, sem acordeao.
+   O acordeao existe so abaixo de 768 — e um comportamento do mobile, nao
+   um estado que o desktop precise desfazer. Assim nao aparece breakpoint
+   de 769 na folha, e o mesmo HTML serve os dois. */
+.yb-footer__coltitle{
+  display:flex; align-items:center; justify-content:flex-start;
+  gap:var(--yb-space-2); margin:0 0 var(--yb-space-2);
+  font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-muted); cursor:default;
+}
+.yb-footer__coltitle .yb-icon{display:none}
+.yb-footer__toggle:focus-visible + .yb-footer__coltitle{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-footer__collist > ul{list-style:none; margin:0; padding:0}
+.yb-footer__collist li{padding-block:var(--yb-space-1)}
+/* Os irmaos desta lista (.yb-footer__bottom a, .yb-footer__links a) ja tinham
+   os 24px; estes ficaram para tras com 17. No mobile viram 44, que e o alvo
+   de dedo — e ali eles sao a navegacao inteira do rodape. */
+/* display:flex e nao inline-flex: com inline o alvo tinha a largura do texto,
+   e "Kit" virava um alvo de 17px. Ocupando a linha, o rotulo curto ganha o
+   mesmo alvo do longo. */
+.yb-footer__collist a{display:flex; align-items:center; min-height:var(--yb-space-6)}
+@media (max-width:768px){
+  .yb-footer__collist a{min-height:var(--yb-target-min)}
+  /* os irmaos ficaram para tras com 24px em toda largura */
+  .yb-footer__bottom a,.yb-footer__links a,.yb-chip{min-height:var(--yb-target-min)}
+}
+
+@media (max-width:768px){
+  .yb-footer__toggle{display:block; position:absolute; opacity:0; pointer-events:none}
+  .yb-footer__coltitle{
+    justify-content:space-between; cursor:pointer;
+    margin-bottom:var(--yb-space-1); min-height:var(--yb-target-min);
+    border-bottom:1px solid var(--yb-border-subtle);
+  }
+  .yb-footer__coltitle .yb-icon{
+    display:inline-flex; transition:transform var(--yb-transition-control);
+  }
+  .yb-footer__toggle:checked + .yb-footer__coltitle .yb-icon{transform:rotate(180deg)}
+  /* max-height, e nao o truque de grid-template-rows 0fr->1fr: os dois
+     funcionam, mas a loja ja anima max-height no acordeao que tem hoje, e
+     nao ha ganho em divergir. O teto e folgado de proposito — o que ele
+     limita e a animacao, nao a lista. */
+  .yb-footer__collist{
+    max-height:0; overflow:hidden;
+    transition:max-height var(--yb-transition-surface);
+  }
+  .yb-footer__toggle:checked ~ .yb-footer__collist{max-height:30rem}
+  .yb-footer__collist li{text-align:start; padding-inline-start:var(--yb-space-3)}
+}
+
+/* --- zona 3 · contato ------------------------------------------------- */
+.yb-footer__contact{
+  display:flex; flex-direction:column; gap:var(--yb-space-5);
+  flex:0 1 28rem; min-width:0;
+}
+.yb-footer__newslabel{
+  display:block; margin-bottom:var(--yb-space-1);
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+}
+.yb-footer__news{display:flex; align-items:stretch; gap:var(--yb-space-2)}
+.yb-footer__newsfield{position:relative; flex:1 1 auto; min-width:0}
+.yb-footer__newsfield .yb-icon{
+  position:absolute; inset-block:0; inset-inline-start:var(--yb-space-4);
+  margin-block:auto; color:var(--yb-text-muted); pointer-events:none;
+}
+.yb-footer__news .yb-input{padding-inline-start:var(--yb-space-12)}
+.yb-footer__newsbtn{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:var(--yb-target-min); min-height:var(--yb-target-min);
+  border:none; cursor:pointer; padding:0 var(--yb-space-3);
+  background:var(--yb-action-bg); color:var(--yb-action-text);
+  border-radius:var(--yb-radius-control);
+  transition:background-color var(--yb-transition-control);
+}
+
+@media (hover:hover){
+  .yb-footer__newsbtn:hover{background:var(--yb-action-bg-hover)}
+}
+.yb-footer__newsbtn:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-footer__info{margin:0}
+.yb-footer__info strong{
+  display:block; color:var(--yb-text-secondary);
+  font-weight:var(--yb-font-weight-semibold);
+}
+
+/* --- barra legal ------------------------------------------------------ */
+.yb-footer__bottom{
+  display:flex; flex-wrap:wrap; align-items:center; gap:var(--yb-space-5);
+  margin-top:var(--yb-space-8); padding-top:var(--yb-space-12);
+  border-top:1px solid var(--yb-border-strong);
+}
+@media (max-width:768px){
+  .yb-footer__bottom{justify-content:center; text-align:center;
+    padding-top:var(--yb-space-8)}
+}
+
+/* --- links do footer, em qualquer zona -------------------------------- */
+.yb-footer a{color:inherit; text-decoration:none}
+/* Link em container flex perde o display:inline e com ele a isencao de alvo
+   do WCAG 2.5.8. Na barra legal isso deixa alvo de 19px — o padding devolve
+   os 24 sem mexer no ritmo da linha. */
+.yb-footer__bottom a,.yb-footer__links a{
+  display:inline-flex; align-items:center; min-height:var(--yb-space-6);
+}
+
+@media (hover:hover){
+  .yb-footer a:hover{color:var(--yb-text-link)}
+}
+.yb-footer a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+
+@media (prefers-reduced-motion:reduce){
+  .yb-footer__collist,.yb-footer__coltitle .yb-icon{transition:none}
+}
+
+@media (prefers-reduced-motion:reduce){.yb-freeship__fill{transition:none}}
+
+/* =========================================================================
+   PAGE LAYOUT
+   Container, ritmo vertical e cabeçalho de seção.
+
+   Sobem para o sistema pela regra dos dois usos: home e PDP usam os três, e
+   qualquer página nova vai precisar. Enquanto viviam na folha do gerador, cada
+   página que nascesse iria redefini-los — que é como um design system começa
+   a divergir de si mesmo.
+   ========================================================================= */
+.yb-page{
+  max-width:var(--yb-container-max);
+  margin-inline:auto;
+  padding-inline:var(--yb-page-gutter);
+}
+
+.yb-block{ padding-block:var(--yb-space-16); }
+.yb-block--tight{ padding-block:var(--yb-space-6); }
+/* O ritmo vertical foi desenhado para a tela larga. Numa de 568px, 64px de
+   respiro entre blocos e um oitavo da tela gasto em nada — a PDP levava duas
+   telas de rolagem ate o botao de comprar. O ritmo encolhe; a hierarquia
+   entre --tight e o padrao continua. */
+@media (max-width:768px){
+  .yb-block{ padding-block:var(--yb-space-10); }
+  .yb-block--tight{ padding-block:var(--yb-space-3); }
+}
+.yb-block--flush{ padding-inline:0; }      /* sangra até a borda da tela */
+
+.yb-section-head{
+  display:flex; align-items:flex-end; justify-content:space-between;
+  gap:var(--yb-space-6); flex-wrap:wrap;
+  margin-bottom:var(--yb-space-8);
+}
+.yb-section-head--center{ justify-content:center; text-align:center; }
+.yb-section-head h2{
+  margin:0;
+  font-size:var(--yb-type-h2-size);
+  line-height:var(--yb-type-h2-line);
+  letter-spacing:var(--yb-type-h2-track);
+  font-weight:var(--yb-type-h2-weight);
+}
+.yb-section-head a{
+  display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  min-height:var(--yb-target-min);
+  font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-medium);
+  color:var(--yb-text-link); text-decoration:none;
+}
+
+@media (hover:hover){
+  .yb-section-head a:hover{ color:var(--yb-text-link-hover); }
+}
+.yb-section-head a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}

@@ -1,0 +1,2636 @@
+{
+  "$description": "Ybera Design System — tokens em W3C Design Tokens Community Group format. DERIVADO de tokens/00-primitives.css e tokens/01-semantic.css: o CSS é a fonte. Não edite este arquivo — rode ./build.sh. dimension sai como string (a escala usa em/ch, que o formato objeto não admite). Token cujo nome é prefixo de outro vira <grupo>.default; o nome original está sempre em $extensions[\"com.ybera.cssVariable\"].",
+  "$extensions": {
+    "com.ybera.version": "0.10.0",
+    "com.ybera.source": [
+      "tokens/00-primitives.css",
+      "tokens/01-semantic.css"
+    ]
+  },
+  "gray": {
+    "50": {
+      "$value": "#FAFAFA",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gray-50",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "100": {
+      "$value": "#F5F5F5",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gray-100",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "200": {
+      "$value": "#EAEAEA",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gray-200",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "300": {
+      "$value": "#DADADB",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gray-300",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "400": {
+      "$value": "#B1B1B4",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gray-400",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "500": {
+      "$value": "#8A8A8E",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gray-500",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "600": {
+      "$value": "#6D6D71",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gray-600",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "700": {
+      "$value": "#535356",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gray-700",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "800": {
+      "$value": "#3A3A3C",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gray-800",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "900": {
+      "$value": "#272728",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gray-900",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "950": {
+      "$value": "#1E1E1F",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gray-950",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    }
+  },
+  "magenta": {
+    "50": {
+      "$value": "#FCF9FA",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-magenta-50",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "100": {
+      "$value": "#F9F2F4",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-magenta-100",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "200": {
+      "$value": "#F3E1E8",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-magenta-200",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "300": {
+      "$value": "#EBCAD6",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-magenta-300",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "400": {
+      "$value": "#DC89A7",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-magenta-400",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "500": {
+      "$value": "#D64277",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-magenta-500",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "600": {
+      "$value": "#CA235F",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-magenta-600",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "700": {
+      "$value": "#8A1E45",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-magenta-700",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "800": {
+      "$value": "#5D1932",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-magenta-800",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "900": {
+      "$value": "#3D1222",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-magenta-900",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "950": {
+      "$value": "#2E0F1A",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-magenta-950",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    }
+  },
+  "gold": {
+    "50": {
+      "$value": "#FCFBF8",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gold-50",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "100": {
+      "$value": "#F9F7F1",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gold-100",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "200": {
+      "$value": "#F3EDE1",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gold-200",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "300": {
+      "$value": "#ECE0CA",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gold-300",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "400": {
+      "$value": "#DDC088",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gold-400",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "500": {
+      "$value": "#D29F3E",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gold-500",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "600": {
+      "$value": "#AE8330",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gold-600",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "700": {
+      "$value": "#806228",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gold-700",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "800": {
+      "$value": "#57441F",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gold-800",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "900": {
+      "$value": "#392D16",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gold-900",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "950": {
+      "$value": "#2C2312",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-gold-950",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    }
+  },
+  "success": {
+    "50": {
+      "$value": "#EAF6EC",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-success-50",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "600": {
+      "$value": "#1F7A34",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-success-600",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "text": {
+      "$value": "{success.600}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-success-text",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "surface": {
+      "$value": "{success.50}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-success-surface",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "solid": {
+      "$value": "{success.600}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-success-solid",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    }
+  },
+  "warning": {
+    "50": {
+      "$value": "#FBF3E3",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-warning-50",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "600": {
+      "$value": "#8A5A00",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-warning-600",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "text": {
+      "$value": "{warning.600}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-warning-text",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "surface": {
+      "$value": "{warning.50}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-warning-surface",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "solid": {
+      "$value": "{warning.600}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-warning-solid",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    }
+  },
+  "danger": {
+    "50": {
+      "$value": "#FBEAE9",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-danger-50",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "600": {
+      "$value": "#B3261E",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-danger-600",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "text": {
+      "$value": "{danger.600}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-danger-text",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "surface": {
+      "$value": "{danger.50}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-danger-surface",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "solid": {
+      "$value": "{danger.600}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-danger-solid",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    }
+  },
+  "info": {
+    "50": {
+      "$value": "#E9F1FA",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-info-50",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "600": {
+      "$value": "#1B5FA8",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-info-600",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "text": {
+      "$value": "{info.600}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-info-text",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "surface": {
+      "$value": "{info.50}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-info-surface",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "solid": {
+      "$value": "{info.600}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-info-solid",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    }
+  },
+  "white": {
+    "$value": "#FFFFFF",
+    "$extensions": {
+      "com.ybera.cssVariable": "--yb-white",
+      "com.ybera.layer": "primitive"
+    },
+    "$type": "color"
+  },
+  "black": {
+    "$value": "#000000",
+    "$extensions": {
+      "com.ybera.cssVariable": "--yb-black",
+      "com.ybera.layer": "primitive"
+    },
+    "$type": "color"
+  },
+  "font": {
+    "sans": {
+      "$value": [
+        "Schibsted Grotesk",
+        "ui-sans-serif",
+        "system-ui",
+        "-apple-system",
+        "Segoe UI",
+        "Roboto",
+        "Helvetica",
+        "Arial",
+        "sans-serif"
+      ],
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-font-sans",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "fontFamily"
+    },
+    "mono": {
+      "$value": [
+        "ui-monospace",
+        "SFMono-Regular",
+        "Menlo",
+        "Consolas",
+        "monospace"
+      ],
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-font-mono",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "fontFamily"
+    },
+    "size": {
+      "2xs": {
+        "$value": "0.6875rem",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-font-size-2xs",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "dimension"
+      },
+      "xs": {
+        "$value": "0.8125rem",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-font-size-xs",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "dimension"
+      },
+      "sm": {
+        "$value": "0.875rem",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-font-size-sm",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "dimension"
+      },
+      "md": {
+        "$value": "1rem",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-font-size-md",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "dimension"
+      },
+      "lg": {
+        "$value": "1.125rem",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-font-size-lg",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "dimension"
+      },
+      "xl": {
+        "$value": "1.25rem",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-font-size-xl",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "dimension"
+      },
+      "2xl": {
+        "$value": "1.5rem",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-font-size-2xl",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "dimension"
+      },
+      "3xl": {
+        "$value": "2rem",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-font-size-3xl",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "dimension"
+      },
+      "4xl": {
+        "$value": "clamp(2rem, 1.60rem + 2.00vw, 2.5rem)",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-font-size-4xl",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "dimension"
+      },
+      "5xl": {
+        "$value": "clamp(2.25rem, 1.60rem + 3.20vw, 3rem)",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-font-size-5xl",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "dimension"
+      },
+      "6xl": {
+        "$value": "clamp(2.75rem, 1.80rem + 4.80vw, 4rem)",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-font-size-6xl",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "dimension"
+      }
+    },
+    "weight": {
+      "regular": {
+        "$value": 400,
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-font-weight-regular",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "fontWeight"
+      },
+      "medium": {
+        "$value": 500,
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-font-weight-medium",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "fontWeight"
+      },
+      "semibold": {
+        "$value": 600,
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-font-weight-semibold",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "fontWeight"
+      },
+      "bold": {
+        "$value": 700,
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-font-weight-bold",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "fontWeight"
+      },
+      "extrabold": {
+        "$value": 800,
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-font-weight-extrabold",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "fontWeight"
+      }
+    },
+    "family": {
+      "base": {
+        "$value": "{font.sans}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-font-family-base",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "fontFamily"
+      },
+      "mono": {
+        "$value": "{font.mono}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-font-family-mono",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "fontFamily"
+      }
+    }
+  },
+  "line": {
+    "height": {
+      "tight": {
+        "$value": 1.05,
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-line-height-tight",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "number"
+      },
+      "snug": {
+        "$value": 1.15,
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-line-height-snug",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "number"
+      },
+      "base": {
+        "$value": 1.35,
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-line-height-base",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "number"
+      },
+      "relaxed": {
+        "$value": 1.55,
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-line-height-relaxed",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "number"
+      },
+      "loose": {
+        "$value": 1.7,
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-line-height-loose",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "number"
+      }
+    }
+  },
+  "tracking": {
+    "tightest": {
+      "$value": "-0.035em",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-tracking-tightest",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "tighter": {
+      "$value": "-0.025em",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-tracking-tighter",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "tight": {
+      "$value": "-0.015em",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-tracking-tight",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "normal": {
+      "$value": 0,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-tracking-normal",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "number"
+    },
+    "wide": {
+      "$value": "0.04em",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-tracking-wide",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "wider": {
+      "$value": "0.12em",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-tracking-wider",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    }
+  },
+  "space": {
+    "0": {
+      "$value": 0,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-space-0",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "number"
+    },
+    "1": {
+      "$value": "0.25rem",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-space-1",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "2": {
+      "$value": "0.5rem",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-space-2",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "3": {
+      "$value": "0.75rem",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-space-3",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "4": {
+      "$value": "1rem",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-space-4",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "5": {
+      "$value": "1.25rem",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-space-5",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "6": {
+      "$value": "1.5rem",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-space-6",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "8": {
+      "$value": "2rem",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-space-8",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "10": {
+      "$value": "2.5rem",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-space-10",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "12": {
+      "$value": "3rem",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-space-12",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "16": {
+      "$value": "4rem",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-space-16",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "20": {
+      "$value": "5rem",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-space-20",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "24": {
+      "$value": "6rem",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-space-24",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "32": {
+      "$value": "8rem",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-space-32",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "inline": {
+      "xs": {
+        "$value": "{space.1}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-space-inline-xs",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "sm": {
+        "$value": "{space.2}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-space-inline-sm",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "md": {
+        "$value": "{space.3}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-space-inline-md",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "lg": {
+        "$value": "{space.4}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-space-inline-lg",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      }
+    },
+    "stack": {
+      "xs": {
+        "$value": "{space.2}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-space-stack-xs",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "sm": {
+        "$value": "{space.3}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-space-stack-sm",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "md": {
+        "$value": "{space.4}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-space-stack-md",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "lg": {
+        "$value": "{space.6}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-space-stack-lg",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      }
+    },
+    "block": {
+      "sm": {
+        "$value": "{space.8}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-space-block-sm",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "md": {
+        "$value": "{space.12}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-space-block-md",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "lg": {
+        "$value": "{space.20}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-space-block-lg",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      }
+    }
+  },
+  "radius": {
+    "none": {
+      "$value": 0,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-radius-none",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "number"
+    },
+    "sm": {
+      "$value": "4px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-radius-sm",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "md": {
+      "$value": "8px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-radius-md",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "lg": {
+      "$value": "12px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-radius-lg",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "xl": {
+      "$value": "16px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-radius-xl",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "full": {
+      "$value": "9999px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-radius-full",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "control": {
+      "$value": "{radius.md}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-radius-control",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "dimension"
+    },
+    "card": {
+      "$value": "{radius.md}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-radius-card",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "dimension"
+    },
+    "badge": {
+      "$value": "{radius.sm}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-radius-badge",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "dimension"
+    },
+    "pill": {
+      "$value": "{radius.full}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-radius-pill",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "dimension"
+    },
+    "media": {
+      "$value": "{radius.md}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-radius-media",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "dimension"
+    }
+  },
+  "shadow": {
+    "none": {
+      "$value": [],
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-shadow-none",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "shadow"
+    },
+    "xs": {
+      "$value": [
+        {
+          "offsetX": "0",
+          "offsetY": "1px",
+          "blur": "2px",
+          "spread": "0",
+          "color": "rgba(30,30,31,.06)"
+        }
+      ],
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-shadow-xs",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "shadow"
+    },
+    "sm": {
+      "$value": [
+        {
+          "offsetX": "0",
+          "offsetY": "2px",
+          "blur": "4px",
+          "spread": "0",
+          "color": "rgba(30,30,31,.07)"
+        },
+        {
+          "offsetX": "0",
+          "offsetY": "1px",
+          "blur": "2px",
+          "spread": "0",
+          "color": "rgba(30,30,31,.05)"
+        }
+      ],
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-shadow-sm",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "shadow"
+    },
+    "md": {
+      "$value": [
+        {
+          "offsetX": "0",
+          "offsetY": "4px",
+          "blur": "12px",
+          "spread": "0",
+          "color": "rgba(30,30,31,.08)"
+        },
+        {
+          "offsetX": "0",
+          "offsetY": "2px",
+          "blur": "4px",
+          "spread": "0",
+          "color": "rgba(30,30,31,.05)"
+        }
+      ],
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-shadow-md",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "shadow"
+    },
+    "lg": {
+      "$value": [
+        {
+          "offsetX": "0",
+          "offsetY": "12px",
+          "blur": "28px",
+          "spread": "0",
+          "color": "rgba(30,30,31,.11)"
+        },
+        {
+          "offsetX": "0",
+          "offsetY": "4px",
+          "blur": "8px",
+          "spread": "0",
+          "color": "rgba(30,30,31,.06)"
+        }
+      ],
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-shadow-lg",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "shadow"
+    },
+    "xl": {
+      "$value": [
+        {
+          "offsetX": "0",
+          "offsetY": "24px",
+          "blur": "56px",
+          "spread": "0",
+          "color": "rgba(30,30,31,.14)"
+        }
+      ],
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-shadow-xl",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "shadow"
+    },
+    "text": {
+      "$value": [
+        {
+          "offsetX": "0",
+          "offsetY": "1px",
+          "blur": "3px",
+          "spread": "0",
+          "color": "rgba(30,30,31,.6)"
+        }
+      ],
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-shadow-text",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "shadow"
+    }
+  },
+  "border": {
+    "width": {
+      "0": {
+        "$value": 0,
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-border-width-0",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "number"
+      },
+      "hair": {
+        "$value": "1px",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-border-width-hair",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "dimension"
+      },
+      "thick": {
+        "$value": "2px",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-border-width-thick",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "dimension"
+      }
+    },
+    "subtle": {
+      "$value": "{gray.200}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-border-subtle",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "default": {
+      "$value": "{gray.300}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-border",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "strong": {
+      "$value": "{gray.400}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-border-strong",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "inverse": {
+      "$value": "{gray.800}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-border-inverse",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "hairline": {
+      "$value": "{border.width.hair}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-border-hairline",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "dimension"
+    },
+    "emphasis": {
+      "$value": "{border.width.thick}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-border-emphasis",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "dimension"
+    }
+  },
+  "opacity": {
+    "0": {
+      "$value": 0,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-opacity-0",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "number"
+    },
+    "disabled": {
+      "$value": 0.45,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-opacity-disabled",
+        "com.ybera.layer": "primitive",
+        "com.ybera.cssValue": ".45"
+      },
+      "$type": "number"
+    },
+    "muted": {
+      "$value": 0.65,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-opacity-muted",
+        "com.ybera.layer": "primitive",
+        "com.ybera.cssValue": ".65"
+      },
+      "$type": "number"
+    },
+    "scrim": {
+      "$value": 0.55,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-opacity-scrim",
+        "com.ybera.layer": "primitive",
+        "com.ybera.cssValue": ".55"
+      },
+      "$type": "number"
+    },
+    "full": {
+      "$value": 1,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-opacity-full",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "number"
+    },
+    "control": {
+      "disabled": {
+        "$value": "{opacity.disabled}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-opacity-control-disabled",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "number"
+      }
+    },
+    "media": {
+      "overlay": {
+        "$value": "{opacity.scrim}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-opacity-media-overlay",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "number"
+      }
+    }
+  },
+  "blur": {
+    "sm": {
+      "$value": "4px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-blur-sm",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "md": {
+      "$value": "12px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-blur-md",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "lg": {
+      "$value": "24px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-blur-lg",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    }
+  },
+  "aspect": {
+    "square": {
+      "$value": 1,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-aspect-square",
+        "com.ybera.layer": "primitive",
+        "com.ybera.cssValue": "1 / 1"
+      },
+      "$type": "number"
+    },
+    "portrait": {
+      "$value": 0.8,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-aspect-portrait",
+        "com.ybera.layer": "primitive",
+        "com.ybera.cssValue": "4 / 5"
+      },
+      "$type": "number"
+    },
+    "landscape": {
+      "$value": 1.7777777777777777,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-aspect-landscape",
+        "com.ybera.layer": "primitive",
+        "com.ybera.cssValue": "16 / 9"
+      },
+      "$type": "number"
+    },
+    "vertical": {
+      "$value": 0.5625,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-aspect-vertical",
+        "com.ybera.layer": "primitive",
+        "com.ybera.cssValue": "9 / 16"
+      },
+      "$type": "number"
+    },
+    "product": {
+      "$value": "{aspect.square}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-aspect-product",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "number"
+    },
+    "hero": {
+      "$value": "{aspect.landscape}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-aspect-hero",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "number"
+    },
+    "reel": {
+      "$value": "{aspect.vertical}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-aspect-reel",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "number"
+    }
+  },
+  "measure": {
+    "narrow": {
+      "$value": "45ch",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-measure-narrow",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "base": {
+      "$value": "65ch",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-measure-base",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "wide": {
+      "$value": "80ch",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-measure-wide",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "prose": {
+      "$value": "{measure.base}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-measure-prose",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "dimension"
+    },
+    "lede": {
+      "$value": "{measure.narrow}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-measure-lede",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "dimension"
+    }
+  },
+  "control": {
+    "height": {
+      "sm": {
+        "$value": "36px",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-control-height-sm",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "dimension"
+      },
+      "md": {
+        "$value": "44px",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-control-height-md",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "dimension"
+      },
+      "lg": {
+        "$value": "52px",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-control-height-lg",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "dimension"
+      },
+      "default": {
+        "$value": "{control.height.md}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-control-height",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "compact": {
+        "$value": "{control.height.sm}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-control-height-compact",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "hero": {
+        "$value": "{control.height.lg}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-control-height-hero",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      }
+    }
+  },
+  "icon": {
+    "sm": {
+      "$value": "16px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-icon-sm",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "md": {
+      "$value": "20px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-icon-md",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "lg": {
+      "$value": "24px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-icon-lg",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "xl": {
+      "$value": "32px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-icon-xl",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "size": {
+      "$value": "{icon.md}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-icon-size",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "dimension"
+    }
+  },
+  "duration": {
+    "instant": {
+      "$value": "0ms",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-duration-instant",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "duration"
+    },
+    "fast": {
+      "$value": "120ms",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-duration-fast",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "duration"
+    },
+    "base": {
+      "$value": "180ms",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-duration-base",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "duration"
+    },
+    "slow": {
+      "$value": "280ms",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-duration-slow",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "duration"
+    },
+    "slower": {
+      "$value": "420ms",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-duration-slower",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "duration"
+    }
+  },
+  "ease": {
+    "standard": {
+      "$value": [
+        0.2,
+        0,
+        0,
+        1
+      ],
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-ease-standard",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "cubicBezier"
+    },
+    "enter": {
+      "$value": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-ease-enter",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "cubicBezier"
+    },
+    "exit": {
+      "$value": [
+        0.3,
+        0,
+        1,
+        1
+      ],
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-ease-exit",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "cubicBezier"
+    }
+  },
+  "container": {
+    "max": {
+      "$value": "1200px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-container-max",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    }
+  },
+  "breakpoint": {
+    "sm": {
+      "$value": "480px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-breakpoint-sm",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "md": {
+      "$value": "768px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-breakpoint-md",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "lg": {
+      "$value": "1024px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-breakpoint-lg",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "xl": {
+      "$value": "1280px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-breakpoint-xl",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    }
+  },
+  "z": {
+    "base": {
+      "$value": 0,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-z-base",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "number"
+    },
+    "dropdown": {
+      "$value": 1000,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-z-dropdown",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "number"
+    },
+    "sticky": {
+      "$value": 1100,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-z-sticky",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "number"
+    },
+    "overlay": {
+      "$value": 1200,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-z-overlay",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "number"
+    },
+    "modal": {
+      "$value": 1300,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-z-modal",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "number"
+    },
+    "toast": {
+      "$value": 1400,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-z-toast",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "number"
+    },
+    "tooltip": {
+      "$value": 1500,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-z-tooltip",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "number"
+    }
+  },
+  "bg": {
+    "page": {
+      "$value": "{white}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-bg-page",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "subtle": {
+      "$value": "{gray.50}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-bg-subtle",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "muted": {
+      "$value": "{gray.100}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-bg-muted",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "inverse": {
+      "$value": "{gray.950}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-bg-inverse",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    }
+  },
+  "surface": {
+    "default": {
+      "$value": "{white}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-surface",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "raised": {
+      "$value": "{white}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-surface-raised",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "sunken": {
+      "$value": "{gray.50}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-surface-sunken",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "overlay": {
+      "$value": "rgba(30, 30, 31, .55)",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-surface-overlay",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "on": {
+      "media": {
+        "$value": "rgba(255, 255, 255, .92)",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-surface-on-media",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      }
+    }
+  },
+  "text": {
+    "primary": {
+      "$value": "{gray.950}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-text-primary",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "secondary": {
+      "default": {
+        "$value": "{gray.700}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-text-secondary",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      },
+      "inverse": {
+        "$value": "{gray.300}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-text-secondary-inverse",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      }
+    },
+    "muted": {
+      "default": {
+        "$value": "{gray.600}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-text-muted",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      },
+      "inverse": {
+        "$value": "{gray.400}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-text-muted-inverse",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      }
+    },
+    "disabled": {
+      "$value": "{gray.400}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-text-disabled",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "inverse": {
+      "$value": "{white}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-text-inverse",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "on": {
+      "action": {
+        "$value": "{white}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-text-on-action",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      }
+    },
+    "link": {
+      "default": {
+        "$value": "{magenta.600}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-text-link",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      },
+      "hover": {
+        "$value": "{magenta.700}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-text-link-hover",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      }
+    }
+  },
+  "action": {
+    "bg": {
+      "default": {
+        "$value": "{magenta.600}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-action-bg",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      },
+      "hover": {
+        "$value": "{magenta.700}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-action-bg-hover",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      },
+      "active": {
+        "$value": "{magenta.800}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-action-bg-active",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      },
+      "disabled": {
+        "$value": "{gray.200}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-action-bg-disabled",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      }
+    },
+    "text": {
+      "default": {
+        "$value": "{text.on.action}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-action-text",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      },
+      "disabled": {
+        "$value": "{text.muted.default}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-action-text-disabled",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      }
+    },
+    "secondary": {
+      "bg": {
+        "default": {
+          "$value": "{gray.950}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-action-secondary-bg",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "color"
+        },
+        "hover": {
+          "$value": "{gray.800}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-action-secondary-bg-hover",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "color"
+        }
+      },
+      "text": {
+        "$value": "{white}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-action-secondary-text",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      }
+    },
+    "ghost": {
+      "border": {
+        "$value": "{gray.300}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-action-ghost-border",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      },
+      "text": {
+        "$value": "{gray.950}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-action-ghost-text",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      },
+      "bg": {
+        "hover": {
+          "$value": "{gray.100}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-action-ghost-bg-hover",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "color"
+        }
+      }
+    }
+  },
+  "accent": {
+    "default": {
+      "$value": "{accent.on.dark}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-accent",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "on": {
+      "dark": {
+        "$value": "{gold.500}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-accent-on-dark",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      }
+    },
+    "text": {
+      "$value": "{gold.700}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-accent-text",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "surface": {
+      "$value": "{gold.100}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-accent-surface",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "border": {
+      "$value": "{gold.300}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-accent-border",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    }
+  },
+  "focus": {
+    "color": {
+      "$value": "{magenta.600}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-focus-color",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "width": {
+      "$value": "2px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-focus-width",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "dimension"
+    },
+    "offset": {
+      "$value": "2px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-focus-offset",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "dimension"
+    }
+  },
+  "elevation": {
+    "flat": {
+      "$value": "{shadow.none}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-elevation-flat",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "shadow"
+    },
+    "card": {
+      "$value": "{shadow.xs}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-elevation-card",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "shadow"
+    },
+    "raised": {
+      "$value": "{shadow.sm}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-elevation-raised",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "shadow"
+    },
+    "dropdown": {
+      "$value": "{shadow.md}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-elevation-dropdown",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "shadow"
+    },
+    "drawer": {
+      "$value": "{shadow.lg}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-elevation-drawer",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "shadow"
+    },
+    "modal": {
+      "$value": "{shadow.xl}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-elevation-modal",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "shadow"
+    },
+    "text": {
+      "media": {
+        "$value": "{shadow.text}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-elevation-text-media",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "shadow"
+      }
+    }
+  },
+  "transition": {
+    "control": {
+      "$value": "var(--yb-duration-fast) var(--yb-ease-standard)",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-transition-control",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "duration"
+    },
+    "surface": {
+      "$value": "var(--yb-duration-base) var(--yb-ease-standard)",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-transition-surface",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "duration"
+    },
+    "overlay": {
+      "$value": "var(--yb-duration-slow) var(--yb-ease-enter)",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-transition-overlay",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "duration"
+    }
+  },
+  "type": {
+    "display": {
+      "1": {
+        "size": {
+          "$value": "{font.size.6xl}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-type-display-1-size",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "dimension"
+        },
+        "line": {
+          "$value": "{line.height.tight}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-type-display-1-line",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "number"
+        },
+        "track": {
+          "$value": "{tracking.tightest}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-type-display-1-track",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "dimension"
+        },
+        "weight": {
+          "$value": "{font.weight.extrabold}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-type-display-1-weight",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "fontWeight"
+        }
+      },
+      "2": {
+        "size": {
+          "$value": "{font.size.5xl}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-type-display-2-size",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "dimension"
+        },
+        "line": {
+          "$value": "{line.height.tight}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-type-display-2-line",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "number"
+        },
+        "track": {
+          "$value": "{tracking.tightest}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-type-display-2-track",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "dimension"
+        },
+        "weight": {
+          "$value": "{font.weight.bold}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-type-display-2-weight",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "fontWeight"
+        }
+      }
+    },
+    "h1": {
+      "size": {
+        "$value": "{font.size.4xl}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-h1-size",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "line": {
+        "$value": "{line.height.snug}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-h1-line",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "number"
+      },
+      "track": {
+        "$value": "{tracking.tighter}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-h1-track",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "weight": {
+        "$value": "{font.weight.bold}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-h1-weight",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "fontWeight"
+      }
+    },
+    "h2": {
+      "size": {
+        "$value": "{font.size.3xl}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-h2-size",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "line": {
+        "$value": "{line.height.snug}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-h2-line",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "number"
+      },
+      "track": {
+        "$value": "{tracking.tighter}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-h2-track",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "weight": {
+        "$value": "{font.weight.bold}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-h2-weight",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "fontWeight"
+      }
+    },
+    "h3": {
+      "size": {
+        "$value": "{font.size.2xl}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-h3-size",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "line": {
+        "$value": "{line.height.base}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-h3-line",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "number"
+      },
+      "track": {
+        "$value": "{tracking.tight}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-h3-track",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "weight": {
+        "$value": "{font.weight.semibold}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-h3-weight",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "fontWeight"
+      }
+    },
+    "h4": {
+      "size": {
+        "$value": "{font.size.xl}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-h4-size",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "line": {
+        "$value": "{line.height.base}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-h4-line",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "number"
+      },
+      "track": {
+        "$value": "{tracking.tight}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-h4-track",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "weight": {
+        "$value": "{font.weight.semibold}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-h4-weight",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "fontWeight"
+      }
+    },
+    "body": {
+      "lg": {
+        "size": {
+          "$value": "{font.size.lg}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-type-body-lg-size",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "dimension"
+        },
+        "line": {
+          "$value": "{line.height.relaxed}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-type-body-lg-line",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "number"
+        },
+        "track": {
+          "$value": "{tracking.normal}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-type-body-lg-track",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "number"
+        },
+        "weight": {
+          "$value": "{font.weight.regular}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-type-body-lg-weight",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "fontWeight"
+        }
+      },
+      "size": {
+        "$value": "{font.size.md}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-body-size",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "line": {
+        "$value": "{line.height.relaxed}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-body-line",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "number"
+      },
+      "track": {
+        "$value": "{tracking.normal}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-body-track",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "number"
+      },
+      "weight": {
+        "$value": "{font.weight.regular}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-body-weight",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "fontWeight"
+      },
+      "sm": {
+        "size": {
+          "$value": "{font.size.sm}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-type-body-sm-size",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "dimension"
+        },
+        "line": {
+          "$value": "{line.height.base}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-type-body-sm-line",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "number"
+        },
+        "track": {
+          "$value": "{tracking.normal}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-type-body-sm-track",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "number"
+        },
+        "weight": {
+          "$value": "{font.weight.regular}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-type-body-sm-weight",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "fontWeight"
+        }
+      }
+    },
+    "caption": {
+      "size": {
+        "$value": "{font.size.xs}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-caption-size",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "line": {
+        "$value": "{line.height.base}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-caption-line",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "number"
+      },
+      "track": {
+        "$value": "{tracking.normal}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-caption-track",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "number"
+      },
+      "weight": {
+        "$value": "{font.weight.regular}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-caption-weight",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "fontWeight"
+      }
+    },
+    "overline": {
+      "size": {
+        "$value": "{font.size.2xs}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-overline-size",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "line": {
+        "$value": "{line.height.base}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-overline-line",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "number"
+      },
+      "track": {
+        "$value": "{tracking.wider}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-overline-track",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "weight": {
+        "$value": "{font.weight.semibold}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-overline-weight",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "fontWeight"
+      }
+    },
+    "price": {
+      "size": {
+        "$value": "{font.size.2xl}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-price-size",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "line": {
+        "$value": "{line.height.snug}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-price-line",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "number"
+      },
+      "track": {
+        "$value": "{tracking.tight}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-price-track",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "dimension"
+      },
+      "weight": {
+        "$value": "{font.weight.bold}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-type-price-weight",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "fontWeight"
+      }
+    }
+  },
+  "page": {
+    "gutter": {
+      "$value": "{space.4}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-page-gutter",
+        "com.ybera.layer": "semantic",
+        "com.ybera.contexts": [
+          {
+            "condicao": "@media (min-width: 768px)",
+            "valor": "var(--yb-space-8)"
+          }
+        ]
+      },
+      "$type": "dimension"
+    }
+  },
+  "grid": {
+    "gap": {
+      "$value": "{space.5}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-grid-gap",
+        "com.ybera.layer": "semantic",
+        "com.ybera.contexts": [
+          {
+            "condicao": "@media (min-width: 768px)",
+            "valor": "var(--yb-space-6)"
+          }
+        ]
+      },
+      "$type": "dimension"
+    }
+  },
+  "target": {
+    "min": {
+      "$value": "44px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-target-min",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "dimension"
+    }
+  },
+  "dir": {
+    "$value": 1,
+    "$extensions": {
+      "com.ybera.cssVariable": "--yb-dir",
+      "com.ybera.layer": "semantic"
+    },
+    "$type": "number"
+  },
+  "card": {
+    "title": {
+      "lines": {
+        "$value": 2,
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-card-title-lines",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "number"
+      }
+    }
+  },
+  "logobar": {
+    "opacity": {
+      "$value": 0.85,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-logobar-opacity",
+        "com.ybera.layer": "semantic",
+        "com.ybera.cssValue": ".85"
+      },
+      "$type": "number"
+    }
+  }
+}

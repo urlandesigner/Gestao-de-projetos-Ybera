@@ -1,0 +1,163 @@
+<!-- =========================================================================
+     YBERA DESIGN SYSTEM · ÍCONES
+     36 ícones · grade 24×24 · traço 1.5 · currentColor · sem preenchimento
+
+     Substitui os 380 KB de Font Awesome Pro que a loja baixa hoje sem usar
+     um único ícone. Este sprite inteiro pesa uma fração disso e herda a cor
+     do texto — nenhum ícone precisa de token de cor próprio.
+
+     Uso:
+       <svg class="yb-icon" aria-hidden="true"><use href="ybera-icons.svg#yb-cart"/></svg>
+
+     Ícone com significado próprio leva rótulo:
+       <svg class="yb-icon" role="img" aria-label="Carrinho"><use href="...#yb-cart"/></svg>
+     ========================================================================= -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <defs>
+    <style>
+      symbol { fill: none; stroke: currentColor; stroke-width: 1.5;
+               stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <!-- navegação e busca -->
+  <symbol id="yb-search" viewBox="0 0 24 24">
+    <circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4.5 4.5"/>
+  </symbol>
+  <symbol id="yb-menu" viewBox="0 0 24 24">
+    <path d="M4 7h16M4 12h16M4 17h16"/>
+  </symbol>
+  <symbol id="yb-close" viewBox="0 0 24 24">
+    <path d="M6 6l12 12M18 6L6 18"/>
+  </symbol>
+  <symbol id="yb-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="yb-chevron-up" viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></symbol>
+  <symbol id="yb-chevron-left" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
+  <symbol id="yb-chevron-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="yb-external" viewBox="0 0 24 24">
+    <path d="M14 4h6v6M20 4l-9 9"/>
+    <path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>
+  </symbol>
+
+  <!-- loja -->
+  <symbol id="yb-cart" viewBox="0 0 24 24">
+    <path d="M6 8h12l-1.2 12.1a1 1 0 0 1-1 .9H8.2a1 1 0 0 1-1-.9Z"/>
+    <path d="M9 8V6.5a3 3 0 0 1 6 0V8"/>
+  </symbol>
+  <symbol id="yb-user" viewBox="0 0 24 24">
+    <circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/>
+  </symbol>
+  <symbol id="yb-heart" viewBox="0 0 24 24">
+    <path d="M12 20.5 5 13.6a4.4 4.4 0 0 1 6.2-6.2l.8.8.8-.8a4.4 4.4 0 0 1 6.2 6.2Z"/>
+  </symbol>
+  <symbol id="yb-star" viewBox="0 0 24 24">
+    <path d="m12 3.5 2.6 5.4 5.9.8-4.3 4.1 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.1 5.9-.8Z"/>
+  </symbol>
+  <symbol id="yb-star-filled" viewBox="0 0 24 24">
+    <path d="m12 3.5 2.6 5.4 5.9.8-4.3 4.1 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.1 5.9-.8Z"
+          fill="currentColor"/>
+  </symbol>
+  <symbol id="yb-truck" viewBox="0 0 24 24">
+    <path d="M3 7.5h11v9H3zM14 11h3.4l2.6 3.2v2.3h-6z"/>
+    <circle cx="7" cy="18" r="1.8"/><circle cx="17.2" cy="18" r="1.8"/>
+  </symbol>
+  <symbol id="yb-shield-check" viewBox="0 0 24 24">
+    <path d="M12 3 4.5 6v5.4c0 4.5 3.1 8.3 7.5 9.6 4.4-1.3 7.5-5.1 7.5-9.6V6Z"/>
+    <path d="m9 12 2.2 2.2L15.5 10"/>
+  </symbol>
+  <symbol id="yb-refresh" viewBox="0 0 24 24">
+    <path d="M20 11.5a8 8 0 1 0-2.4 5.9"/><path d="M20 5v6.5h-6.5"/>
+  </symbol>
+  <symbol id="yb-lock" viewBox="0 0 24 24">
+    <rect x="4.5" y="10.5" width="15" height="9.5" rx="1.5"/>
+    <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>
+  </symbol>
+
+  <!-- controles -->
+  <symbol id="yb-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="yb-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="yb-check" viewBox="0 0 24 24"><path d="m4.5 12.5 5 5 10-11"/></symbol>
+  <symbol id="yb-filter" viewBox="0 0 24 24">
+    <path d="M3.5 5h17l-6.7 7.8V19l-3.6 1.8v-8Z"/>
+  </symbol>
+  <symbol id="yb-sort" viewBox="0 0 24 24">
+    <path d="M7 4.5v15M7 19.5 4 16.5M7 19.5l3-3"/>
+    <path d="M17 19.5v-15M17 4.5l-3 3M17 4.5l3 3"/>
+  </symbol>
+  <symbol id="yb-trash" viewBox="0 0 24 24">
+    <path d="M4 6.5h16M9.5 6.5v-2a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v2"/>
+    <path d="M6.5 6.5 7.4 20a1 1 0 0 0 1 .9h7.2a1 1 0 0 0 1-.9l.9-13.5"/>
+  </symbol>
+  <symbol id="yb-eye" viewBox="0 0 24 24">
+    <path d="M2.5 12S6 6 12 6s9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/>
+    <circle cx="12" cy="12" r="3"/>
+  </symbol>
+
+
+  <!-- certificacao. O tema traz esses cinco em estilo preenchido e tamanhos
+       variados; aqui vao redesenhados na mesma grade 24x24, traco 1.5, para
+       nao destoarem dos outros. O sufixo "-free" e sempre a mesma barra
+       diagonal, entao a negacao se le igual em todos. -->
+  <symbol id="yb-cruelty-free" viewBox="0 0 24 24">
+    <path d="M9.2 10.4C8.4 8.6 8.1 6.6 8.4 4.8c.1-.6.8-.9 1.3-.5 1.4 1.1 2.4 2.7 2.9 4.5"/>
+    <path d="M14.8 10.4c.8-1.8 1.1-3.8.8-5.6-.1-.6-.8-.9-1.3-.5-1.4 1.1-2.4 2.7-2.9 4.5"/>
+    <path d="M12 20.5a5.2 5.2 0 0 0 5.2-5.2c0-2.9-2.3-5.2-5.2-5.2s-5.2 2.3-5.2 5.2A5.2 5.2 0 0 0 12 20.5Z"/>
+    <path d="M10.3 14.6v.1M13.7 14.6v.1" stroke-width="2"/>
+  </symbol>
+  <symbol id="yb-vegan" viewBox="0 0 24 24">
+    <path d="M12 20.5c0-6.6 3.4-11.6 8.5-13.4.4 7.6-3.2 12.8-8.5 13.4Z"/>
+    <path d="M12 20.5c0-4.2-2.2-7.4-5.6-8.6"/>
+    <path d="M20.5 7.1c-5-1.3-9.6.4-11 3.5"/>
+  </symbol>
+  <symbol id="yb-paraben-free" viewBox="0 0 24 24">
+    <path d="M10 3.5h4v3l2.6 11.2a2 2 0 0 1-1.9 2.4H9.3a2 2 0 0 1-1.9-2.4L10 6.5Z"/>
+    <path d="M8.6 12.5h6.8"/>
+    <path d="M4 20 20 4" stroke-width="1.8"/>
+  </symbol>
+  <symbol id="yb-sulfate-free" viewBox="0 0 24 24">
+    <path d="M12 3.8s5.2 5.8 5.2 9.4a5.2 5.2 0 0 1-10.4 0C6.8 9.6 12 3.8 12 3.8Z"/>
+    <path d="M4 20 20 4" stroke-width="1.8"/>
+  </symbol>
+  <symbol id="yb-formaldehyde-free" viewBox="0 0 24 24">
+    <path d="M10.5 3.5h3v4.2l3.4 8.6a2.4 2.4 0 0 1-2.2 3.2H9.3a2.4 2.4 0 0 1-2.2-3.2l3.4-8.6Z"/>
+    <path d="M8.4 14.2h7.2"/>
+    <path d="M4 20 20 4" stroke-width="1.8"/>
+  </symbol>
+
+  <symbol id="yb-play" viewBox="0 0 24 24">
+    <path d="M7.5 4.9v14.2a.7.7 0 0 0 1.06.6l11.4-7.1a.7.7 0 0 0 0-1.2L8.56 4.3a.7.7 0 0 0-1.06.6Z"
+          fill="currentColor" stroke="none"/>
+  </symbol>
+
+  <!-- estado -->
+  <symbol id="yb-info" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8.5"/><path d="M12 11.5V16.5"/>
+    <path d="M12 7.8v.1" stroke-width="2"/>
+  </symbol>
+  <symbol id="yb-alert" viewBox="0 0 24 24">
+    <path d="M12 4.2 2.8 20h18.4Z"/><path d="M12 10v4"/>
+    <path d="M12 17.2v.1" stroke-width="2"/>
+  </symbol>
+
+  <!-- =========================================================================
+       MARCA E CONTATO — usados pelo footer.
+       Instagram e TikTok sao marcas de terceiro: o desenho e o oficial,
+       redesenhado na grade de 24 para nao destoar do resto do sprite.
+       ========================================================================= -->
+  <symbol id="yb-mail" viewBox="0 0 24 24">
+    <rect x="2.8" y="5" width="18.4" height="14" rx="2.4"/>
+    <path d="m3.4 7.2 7.5 5.2a2 2 0 0 0 2.2 0l7.5-5.2"/>
+  </symbol>
+  <symbol id="yb-arrow-right" viewBox="0 0 24 24">
+    <path d="M4.5 12h15"/><path d="m13.2 5.7 6.3 6.3-6.3 6.3"/>
+  </symbol>
+  <symbol id="yb-instagram" viewBox="0 0 24 24">
+    <rect x="3" y="3" width="18" height="18" rx="5"/>
+    <circle cx="12" cy="12" r="4.2"/>
+    <path d="M17.2 6.9v.01" stroke-width="2"/>
+  </symbol>
+  <symbol id="yb-tiktok" viewBox="0 0 24 24">
+    <path d="M14.6 3.2v10.9a3.9 3.9 0 1 1-3.9-3.9c.24 0 .47.02.7.06"/>
+    <path d="M14.6 3.2a5.3 5.3 0 0 0 5.3 5.3"/>
+  </symbol>
+</svg>

@@ -1,0 +1,48 @@
+{
+  "$descricao": "Livro-razão de adoção do design system na ybera.us. O PLANO.md manda medir antes de cada fase e uma semana depois — 'o número que não foi medido antes não prova nada depois' — e este arquivo é onde a medida fica. Cada linha de `medicoes` é uma execução de test/adocao.js colada no console de uma página real. Nada aqui é estimado: linha sem execução não entra.",
+  "$como": "Cole test/adocao.js no console da página, copie o objeto devolvido e acrescente uma entrada em `medicoes` com data, página, fase e o que ele mediu. Não edite entradas antigas: uma medição errada se corrige com uma medição nova, senão a série perde o sentido.",
+
+  "metas": {
+    "adocao": { "alvo": 80, "unidade": "%", "quando": "fim da fase 5", "campo": "adocao" },
+    "tamanhosDeFonte": { "alvo": 11, "comparador": "<=", "campo": "deriva.tamanhosDeFonte" },
+    "raios": { "alvo": 5, "comparador": "<=", "campo": "deriva.raios" },
+    "coresForaDaPaleta": { "alvo": 0, "comparador": "==", "campo": "foraDaPaleta" },
+    "falhasA11y": { "alvo": 0, "comparador": "==", "fonte": "test/a11y.js" },
+    "pesoDeIcone": { "alvo": -380, "unidade": "KB", "quando": "fim da fase 2", "fonte": "rede, aba de fontes" }
+  },
+
+  "fase": {
+    "atual": 0,
+    "nome": "antes da ponte",
+    "proxima": "1 · ponte — sobe dist/ybera-tokens.css e dist/ybera-bridge.css como asset",
+    "nota": "Nenhuma fase do PLANO.md subiu ainda. A linha de base abaixo é o estado da loja sem o sistema."
+  },
+
+  "medicoes": [
+    {
+      "data": "2026-08-31",
+      "pagina": "https://ybera.us/ — home",
+      "fase": 0,
+      "momento": "linha de base",
+      "adocao": "48%",
+      "deriva": {
+        "magentas": 3,
+        "tamanhosDeFonte": 20,
+        "raios": 12
+      },
+      "observado": [
+        "Três magentas divergentes: #CA235F (botão), #DB2855 (Judge.me), #DD2955 (avulso).",
+        "Vinte tamanhos de fonte, incluindo 11.2px e 14.4px.",
+        "Font Awesome Pro: 380 KB baixados, nenhum glifo renderizado.",
+        "Cinza: mistura de Tailwind zinc + gray + avulsos.",
+        "Preço em promoção a 2.81:1. Texto de review a 4.40:1. Estrela do Judge.me em #FFDB00."
+      ],
+      "fonte": "test/adocao.js no console"
+    }
+  ],
+
+  "$pendente": [
+    "Medir a PDP em produção — a linha de base só cobre a home, e a fase 4 do plano é a PDP.",
+    "Medir as cinco páginas de maior tráfego antes de retirar a ponte (fase 6): se `ondeMigrar` ainda listar classe de tema, a ponte fica."
+  ]
+}

@@ -1,0 +1,44 @@
+# Este arquivo tem de viver na RAIZ do repositório. O GitHub só lê
+# `.github/workflows/` do topo — enquanto ele esteve em
+# `Design system USA/.github/workflows/`, o CI nunca rodou uma única vez, e
+# nenhuma execução se parece com nenhuma falha.
+name: design system
+
+on:
+  push:
+    paths: ['Design system USA/**']
+  pull_request:
+    paths: ['Design system USA/**']
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 'Design system USA'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+
+      # regenera antes de validar: assim um dist/ defasado falha aqui,
+      # e não vira surpresa no tema Shopify
+      - name: build
+        run: ./build.sh
+
+      # `build.sh` regenera dist/ E INVENTARIO.md. Rodar o validador logo depois
+      # sempre passa — ele compara o derivado com a fonte que acabou de gerá-lo.
+      # Quem pega o derivado defasado e o git, comparando com o que foi commitado.
+      # Por isso a lista abaixo tem de citar TODO artefato derivado: enquanto ela
+      # dizia so `dist/`, um INVENTARIO.md velho entrava sem ninguem ver.
+      - name: artefatos derivados em dia com a fonte
+        run: |
+          DERIVADOS="dist/ INVENTARIO.md"
+          if [ -n "$(git status --porcelain -- $DERIVADOS)" ]; then
+            echo "::error::artefato derivado defasado — rode ./build.sh e commite"
+            git --no-pager diff --stat -- $DERIVADOS
+            exit 1
+          fi
+
+      - name: validar
+        run: node test/validate.mjs

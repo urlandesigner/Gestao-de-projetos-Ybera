@@ -1,0 +1,405 @@
+/* =========================================================================
+   YBERA DESIGN SYSTEM · CAMADA 1 — SEMÂNTICOS
+
+   ATÉ ONDE VAI A REGRA (revisado após as telas-prova):
+
+     COR  — regra dura. Componente NUNCA usa var(--yb-gray-*) e afins.
+            Cor carrega significado de marca; sem esta camada, trocar a
+            identidade vira caça a hex espalhado.
+
+     ESPAÇO, PESO, TRACKING — uso direto do primitivo é permitido.
+            As telas-prova mostraram 75 usos diretos: a escala de 4px já é
+            a intenção, e um alias semântico por caso só cria indireção
+            sem informação. Os aliases abaixo continuam disponíveis para
+            padrões recorrentes, mas não são obrigatórios.
+   -------------------------------------------------------------------------
+   A intenção, não o valor. Esta é a ÚNICA camada que um componente consome
+   e a única que alguém precisa ler para entender o sistema.
+
+   Trocar a identidade da marca = trocar as referências aqui. Uma linha.
+   ========================================================================= */
+
+:root {
+  /* =====================================================================
+     ESQUEMA DE COR — a única propriedade real desta camada, e ela precisa
+     estar aqui.
+
+     O sistema é claro por decisão: as três rampas foram medidas contra
+     branco e nenhuma paleta escura foi produzida. Sem esta linha, um
+     aparelho em modo escuro faz o navegador escurecer por conta própria o
+     que ele controla — `<input>`, `<select>`, `<textarea>`, a barra de
+     rolagem e o `::backdrop` do `<dialog>`. O resultado é um campo de
+     formulário grafite dentro de um card branco, com texto claro que
+     ninguém mediu, no meio de uma página que continua clara.
+
+     Declarar `light` não impede um tema escuro futuro: quando houver
+     paleta escura medida, ela vira `light dark` mais um bloco de
+     `@media (prefers-color-scheme: dark)` redefinindo os semânticos abaixo.
+     ===================================================================== */
+  color-scheme: light;
+
+  /* =====================================================================
+     SUPERFÍCIE E FUNDO
+     ===================================================================== */
+  --yb-bg-page:        var(--yb-white);
+  --yb-bg-subtle:      var(--yb-gray-50);
+  --yb-bg-muted:       var(--yb-gray-100);
+  --yb-bg-inverse:     var(--yb-gray-950);
+
+  --yb-surface:        var(--yb-white);
+  --yb-surface-raised: var(--yb-white);
+  --yb-surface-sunken: var(--yb-gray-50);
+  --yb-surface-overlay: rgba(30, 30, 31, .55);
+  /* Superfície que flutua SOBRE mídia — o botão de play do carrossel de vídeo.
+     Precisa de alfa: sólida ela vira um disco branco cego sobre a foto; sem
+     nenhuma ela some no quadro claro. O componente escrevia o rgba à mão. */
+  --yb-surface-on-media: rgba(255, 255, 255, .92);
+
+  /* =====================================================================
+     BORDA
+     ===================================================================== */
+  --yb-border-subtle: var(--yb-gray-200);
+  --yb-border:        var(--yb-gray-300);
+  --yb-border-strong: var(--yb-gray-400);
+  /* @reservado — mesma razao do texto inverso: superficie escura precisa de
+     linha divisoria, e sem token ela vira var(--yb-gray-800) no componente. */
+  --yb-border-inverse: var(--yb-gray-800);
+
+  /* =====================================================================
+     TEXTO
+     Regra dura: o piso de texto é gray-600. O gray-500 mede 3.44:1 e
+     REPROVA em AA — ele existe para ícone e borda, nunca para palavra.
+     ===================================================================== */
+  --yb-text-primary:   var(--yb-gray-950);  /* 16.66:1 */
+  --yb-text-secondary: var(--yb-gray-700);  /*  7.67:1 */
+  --yb-text-muted:     var(--yb-gray-600);  /*  5.15:1 — piso */
+  --yb-text-disabled:  var(--yb-gray-400);  /*  2.14:1 — só estado desabilitado */
+  --yb-text-inverse:   var(--yb-white);
+  /* descobertos pelas telas-prova: a seção escura precisava de texto
+     secundário e não havia token — o CSS caía na camada 0 para resolver */
+  /* @reservado — a rampa clara sobre escuro vem em par. Enviar so o `muted`
+     e o que fez o CSS cair na camada 0 da primeira vez; ver o comentario
+     acima. Um degrau sem consumidor hoje e mais barato que a proxima secao
+     escura reabrindo o mesmo buraco. */
+  --yb-text-secondary-inverse: var(--yb-gray-300);
+  --yb-text-muted-inverse:     var(--yb-gray-400);
+  --yb-text-on-action: var(--yb-white);     /*  5.36:1 sobre a ação */
+  --yb-text-link:      var(--yb-magenta-600);
+  --yb-text-link-hover: var(--yb-magenta-700);
+
+  /* =====================================================================
+     AÇÃO — magenta é FUNÇÃO, não identidade.
+     Existe onde há uma decisão a tomar: comprar, enviar, confirmar.
+     ===================================================================== */
+  --yb-action-bg:         var(--yb-magenta-600);
+  --yb-action-bg-hover:   var(--yb-magenta-700);
+  --yb-action-bg-active:  var(--yb-magenta-800);
+  --yb-action-bg-disabled: var(--yb-gray-200);
+  --yb-action-text:        var(--yb-text-on-action);
+  /* @deprecated desde 0.10 — use --yb-text-muted. Remocao em 1.0.
+     Este token era uma ARMADILHA: gray-500 sobre --yb-action-bg-disabled
+     (gray-200) mede 2.86:1. O proprio .yb-btn[disabled] o recusou e usa
+     --yb-text-muted (4.28:1), com a razao escrita no CSS. Um token que o
+     sistema nao usa porque e ilegivel nao pode continuar oferecido. */
+  --yb-action-text-disabled: var(--yb-text-muted);
+
+  /* ação secundária: a primária grafite carrega o peso institucional */
+  --yb-action-secondary-bg:       var(--yb-gray-950);
+  --yb-action-secondary-bg-hover: var(--yb-gray-800);
+  --yb-action-secondary-text:     var(--yb-white);
+
+  /* ação terciária / fantasma */
+  --yb-action-ghost-border: var(--yb-gray-300);
+  --yb-action-ghost-text:   var(--yb-gray-950);
+  --yb-action-ghost-bg-hover: var(--yb-gray-100);
+
+  /* =====================================================================
+     ACENTO — dourado.
+     REGRA DURA: gold-500 mede 2.39:1 sobre branco e não pode ser texto
+     nem ícone informativo sobre fundo claro. Sobre grafite mede 6.96:1.
+     Para texto sobre claro existe --yb-accent-text (gold-700, 5.68:1).
+     ===================================================================== */
+  /* @deprecated desde 0.10 — use --yb-accent-on-dark. Remocao em 1.0.
+     Dois nomes para um valor so, e o generico e o que engana: "accent" nao
+     avisa que reprova sobre claro. Quem le --yb-accent-on-dark ja sabe. */
+  --yb-accent:           var(--yb-accent-on-dark);
+  --yb-accent-on-dark:   var(--yb-gold-500);  /* só sobre superfície escura */
+  --yb-accent-text:      var(--yb-gold-700);  /* texto sobre claro */
+  /* @reservado — superficie e borda de acento andam juntas; a doc ja usa a
+     borda. Ver a nota de --yb-text-secondary-inverse. */
+  --yb-accent-surface:   var(--yb-gold-100);
+  --yb-accent-border:    var(--yb-gold-300);
+
+  /* =====================================================================
+     ESTADO
+     ===================================================================== */
+  --yb-success-text:    var(--yb-success-600);
+  --yb-success-surface: var(--yb-success-50);
+  --yb-success-solid:   var(--yb-success-600);
+
+  --yb-warning-text:    var(--yb-warning-600);
+  --yb-warning-surface: var(--yb-warning-50);
+  --yb-warning-solid:   var(--yb-warning-600);
+
+  --yb-danger-text:     var(--yb-danger-600);
+  --yb-danger-surface:  var(--yb-danger-50);
+  --yb-danger-solid:    var(--yb-danger-600);
+
+  --yb-info-text:       var(--yb-info-600);
+  --yb-info-surface:    var(--yb-info-50);
+  --yb-info-solid:      var(--yb-info-600);
+
+  /* =====================================================================
+     FOCO — obrigatório e visível. Nunca `outline: none` sem substituto.
+     ===================================================================== */
+  --yb-focus-color:  var(--yb-magenta-600);
+  --yb-focus-width:  2px;
+  --yb-focus-offset: 2px;
+
+  /* =====================================================================
+     FAMÍLIA
+     ===================================================================== */
+  --yb-font-family-base: var(--yb-font-sans);
+  --yb-font-family-mono: var(--yb-font-mono);
+
+  /* =====================================================================
+     ELEVAÇÃO SEMÂNTICA — por papel, não por intensidade
+     ===================================================================== */
+  /* @deprecated desde 0.10 — nao declare sombra. Remocao em 1.0.
+     "Sem sombra" e a ausencia da propriedade, nao um valor a aplicar. */
+  --yb-elevation-flat:     var(--yb-shadow-none);
+  --yb-elevation-card:     var(--yb-shadow-xs);
+  --yb-elevation-raised:   var(--yb-shadow-sm);
+  --yb-elevation-dropdown: var(--yb-shadow-md);
+  --yb-elevation-drawer:   var(--yb-shadow-lg);
+  --yb-elevation-modal:    var(--yb-shadow-xl);
+  /* não é elevação de caixa: é o que separa a legenda do vídeo do frame */
+  --yb-elevation-text-media: var(--yb-shadow-text);
+
+  /* =====================================================================
+     TRANSIÇÃO SEMÂNTICA
+     ===================================================================== */
+  --yb-transition-control: var(--yb-duration-fast) var(--yb-ease-standard);
+  --yb-transition-surface: var(--yb-duration-base) var(--yb-ease-standard);
+  /* @deprecated desde 0.10 — sem consumidor. Remocao em 1.0.
+     O <dialog> do sistema nao anima: ele aparece. Manter um token de
+     transicao de overlay promete um comportamento que nao existe. */
+  --yb-transition-overlay: var(--yb-duration-slow) var(--yb-ease-enter);
+
+  /* =====================================================================
+     PAPÉIS TIPOGRÁFICOS
+     Família única: a hierarquia vem de escala, peso e tracking.
+     Quanto maior o tamanho, mais negativo o tracking.
+     ===================================================================== */
+  --yb-type-display-1-size:   var(--yb-font-size-6xl);
+  --yb-type-display-1-line:   var(--yb-line-height-tight);
+  --yb-type-display-1-track:  var(--yb-tracking-tightest);
+  --yb-type-display-1-weight: var(--yb-font-weight-extrabold);
+
+  --yb-type-display-2-size:   var(--yb-font-size-5xl);
+  --yb-type-display-2-line:   var(--yb-line-height-tight);
+  --yb-type-display-2-track:  var(--yb-tracking-tightest);
+  --yb-type-display-2-weight: var(--yb-font-weight-bold);
+
+  --yb-type-h1-size:   var(--yb-font-size-4xl);
+  --yb-type-h1-line:   var(--yb-line-height-snug);
+  --yb-type-h1-track:  var(--yb-tracking-tighter);
+  --yb-type-h1-weight: var(--yb-font-weight-bold);
+
+  --yb-type-h2-size:   var(--yb-font-size-3xl);
+  --yb-type-h2-line:   var(--yb-line-height-snug);
+  --yb-type-h2-track:  var(--yb-tracking-tighter);
+  --yb-type-h2-weight: var(--yb-font-weight-bold);
+
+  --yb-type-h3-size:   var(--yb-font-size-2xl);
+  --yb-type-h3-line:   var(--yb-line-height-base);
+  --yb-type-h3-track:  var(--yb-tracking-tight);
+  --yb-type-h3-weight: var(--yb-font-weight-semibold);
+
+  --yb-type-h4-size:   var(--yb-font-size-xl);
+  --yb-type-h4-line:   var(--yb-line-height-base);
+  --yb-type-h4-track:  var(--yb-tracking-tight);
+  --yb-type-h4-weight: var(--yb-font-weight-semibold);
+
+  --yb-type-body-lg-size:   var(--yb-font-size-lg);
+  --yb-type-body-lg-line:   var(--yb-line-height-relaxed);
+  /* @reservado — todo papel tipografico expoe size/line/track/weight. Os
+     quatro `track` abaixo valem 0, e por isso nenhum CSS os escreve: zero e
+     o default. Existem porque quem consome o contrato por programa (Figma
+     Variables, Style Dictionary, o JSON de dist/) itera as quatro
+     propriedades do papel — e um papel com tres quebra a iteracao. */
+  --yb-type-body-lg-track:  var(--yb-tracking-normal);
+  --yb-type-body-lg-weight: var(--yb-font-weight-regular);
+
+  --yb-type-body-size:   var(--yb-font-size-md);
+  --yb-type-body-line:   var(--yb-line-height-relaxed);
+  --yb-type-body-track:  var(--yb-tracking-normal);
+  --yb-type-body-weight: var(--yb-font-weight-regular);
+
+  --yb-type-body-sm-size:   var(--yb-font-size-sm);
+  --yb-type-body-sm-line:   var(--yb-line-height-base);
+  --yb-type-body-sm-track:  var(--yb-tracking-normal);
+  --yb-type-body-sm-weight: var(--yb-font-weight-regular);
+
+  --yb-type-caption-size:   var(--yb-font-size-xs);
+  --yb-type-caption-line:   var(--yb-line-height-base);
+  --yb-type-caption-track:  var(--yb-tracking-normal);
+  --yb-type-caption-weight: var(--yb-font-weight-regular);
+
+  --yb-type-overline-size:   var(--yb-font-size-2xs);
+  --yb-type-overline-line:   var(--yb-line-height-base);
+  --yb-type-overline-track:  var(--yb-tracking-wider);
+  --yb-type-overline-weight: var(--yb-font-weight-semibold);
+
+  /* preço: sempre tabular, sempre alinhado */
+  --yb-type-price-size:   var(--yb-font-size-2xl);
+  --yb-type-price-line:   var(--yb-line-height-snug);
+  --yb-type-price-track:  var(--yb-tracking-tight);
+  --yb-type-price-weight: var(--yb-font-weight-bold);
+
+  /* =====================================================================
+     ESPAÇO SEMÂNTICO
+
+     @deprecated desde 0.10 — use a escala de --yb-space-* direto.
+     Remocao em 1.0. Ver decision-log/DDR-004.
+
+     O cabecalho deste arquivo ja registrava que uso direto do primitivo e
+     permitido para espaco, e que "um alias semantico por caso so cria
+     indirecao sem informacao". Dez versoes depois, os onze aliases abaixo
+     tem ZERO consumidores em todo o repositorio — nem componente, nem
+     padrao, nem as telas-prova. Um vocabulario que ninguem fala nao e
+     vocabulario: e ruido no autocompletar de quem chega.
+
+     Nenhum deles muda de valor. Quem por acaso os use continua funcionando
+     ate 1.0.
+     ===================================================================== */
+  --yb-space-inline-xs: var(--yb-space-1);
+  --yb-space-inline-sm: var(--yb-space-2);
+  --yb-space-inline-md: var(--yb-space-3);
+  --yb-space-inline-lg: var(--yb-space-4);
+
+  --yb-space-stack-xs: var(--yb-space-2);
+  --yb-space-stack-sm: var(--yb-space-3);
+  --yb-space-stack-md: var(--yb-space-4);
+  --yb-space-stack-lg: var(--yb-space-6);
+
+  --yb-space-block-sm: var(--yb-space-8);
+  --yb-space-block-md: var(--yb-space-12);
+  --yb-space-block-lg: var(--yb-space-20);
+
+  /* =====================================================================
+     GOTEIRA E GRADE — estes NAO sao depreciados. Sao os dois unicos casos em
+     que o espaco muda com a largura da janela (ver o @media no fim do
+     arquivo), e por isso precisam de nome: o valor nao e um so.
+     ===================================================================== */
+  --yb-page-gutter: var(--yb-space-4);
+  --yb-grid-gap:    var(--yb-space-5);
+
+  /* =====================================================================
+     FORMA
+     ===================================================================== */
+  --yb-radius-control: var(--yb-radius-md);
+  --yb-radius-card:    var(--yb-radius-md);
+  --yb-radius-badge:   var(--yb-radius-sm);
+  --yb-radius-pill:    var(--yb-radius-full);
+  --yb-radius-media:   var(--yb-radius-md);
+
+  /* linha divisória: a espessura também é decisão de sistema, não de autor */
+  --yb-border-hairline: var(--yb-border-width-hair);
+  --yb-border-emphasis: var(--yb-border-width-thick);
+
+  /* =====================================================================
+     OPACIDADE POR PAPEL
+     REGRA DURA: nenhuma delas se aplica a TEXTO. Opacidade sobre palavra
+     derruba o contraste sem que nada no CSS registre a queda — para texto
+     apagado existe --yb-text-muted, que é medido.
+     ===================================================================== */
+  --yb-opacity-control-disabled: var(--yb-opacity-disabled);
+  /* @deprecated desde 0.10 — use --yb-surface-overlay (o veu ja medido) ou
+     --yb-surface-on-media. Remocao em 1.0. Opacidade solta sobre midia nao
+     diz sobre O QUE ela cai, e por isso nunca da para medir o resultado. */
+  --yb-opacity-media-overlay:    var(--yb-opacity-scrim);
+
+  /* =====================================================================
+     MÍDIA — reservar a caixa antes da imagem chegar. Sem isto, o card do
+     grid cresce quando a foto carrega e empurra o preço para baixo do
+     dedo que já estava indo nele.
+     ===================================================================== */
+  --yb-aspect-product: var(--yb-aspect-square);     /* catálogo é 1:1 */
+  --yb-aspect-hero:    var(--yb-aspect-landscape);
+  --yb-aspect-reel:    var(--yb-aspect-vertical);
+
+  /* =====================================================================
+     MEDIDA DE LEITURA
+     ===================================================================== */
+  --yb-measure-prose: var(--yb-measure-base);
+  --yb-measure-lede:  var(--yb-measure-narrow);
+
+  /* =====================================================================
+     ÍCONE
+     ===================================================================== */
+  --yb-icon-size: var(--yb-icon-md);
+
+  /* =====================================================================
+     ALTURA DE CONTROLE
+     ===================================================================== */
+  --yb-control-height:         var(--yb-control-height-md);
+  --yb-control-height-compact: var(--yb-control-height-sm);
+  --yb-control-height-hero:    var(--yb-control-height-lg);
+
+  /* =====================================================================
+     ALVO DE TOQUE — mínimo WCAG 2.5.5 / iOS HIG
+     ===================================================================== */
+  --yb-target-min: 44px;
+
+  /* Sinal da direcao de leitura. `transform` nao tem versao logica: um
+     translateX negativo tira a gaveta da tela em LTR e a traz para dentro em
+     RTL. Quem inverte o documento inverte este token junto. */
+  --yb-dir: 1;
+
+  /* =====================================================================
+     CAMADA 2 · COMPONENTE — só onde há desvio local, sempre justificado.
+     ===================================================================== */
+  /* Título de card no grid: as telas-prova mostraram títulos reais de
+     2 a 5 linhas (o maior tem 88 caracteres), desalinhando preço e rating
+     na mesma fileira. Truncar em 2 é o que mantém o grid legível. */
+  --yb-card-title-lines: 2;
+
+  /* Barra de logos: as marcas sobem invertidas para branco puro sobre o
+     grafite e ficam mais quentes que o texto ao lado, puxando o olho para o
+     rodape em vez do conteudo. 85% as devolve ao mesmo peso optico.
+     Nao entra na escala de opacidade porque nao e um papel do sistema — e
+     um desvio de UM componente, que e exatamente o que a camada 2 aceita.
+     Nao ha texto envolvido: o alvo e <img>. */
+  --yb-logobar-opacity: .85;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --yb-page-gutter: var(--yb-space-8);
+    --yb-grid-gap:    var(--yb-space-6);
+  }
+}
+
+/* ===========================================================================
+   CAMADA DE MERCADO
+   Mesma marca, mercados diferentes: aqui NÃO se troca identidade.
+
+   ESTÁ VAZIA, E ISSO É O RESULTADO CERTO DA DECISÃO DE MARCA.
+   US e BR compartilham identidade integral, então não há nada de visual que
+   mude entre os dois — se houvesse, seria aqui.
+
+   O que havia aqui antes eram `--yb-locale` e `--yb-currency-symbol`, e os dois
+   eram ilusão: nenhum arquivo do repositório os lia, e não tinham como ler.
+   CSS não interpola string em texto de HTML — `content:` só alcança pseudo-
+   elemento, e preço vem do Shopify já formatado. Moeda e locale são decisão de
+   DADO, resolvida em quem monta a página; declará-los como token dava a
+   impressão de que trocar `data-market` mudaria a moeda, e não mudava nada.
+
+   O seletor fica declarado, sem propriedades, porque o gancho `data-market`
+   segue em uso no `<html>` e é onde uma diferença real de mercado entraria.
+   =========================================================================== */
+[data-market="us"] { /* sem diferença visual — ver nota acima */ }
+[dir="rtl"] { --yb-dir: -1; }
+
+[data-market="br"] { /* sem diferença visual — ver nota acima */ }

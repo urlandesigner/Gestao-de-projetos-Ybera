@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>solo</title>
+<!--
+  Renderiza UMA seção da documentação ao lado, sozinha, para caber num
+  <iframe> estreito.
+
+  A marcação não é copiada: esta página busca o index.html da mesma pasta e
+  recorta a <section> pedida. Uma fonte só — editar o demo lá muda aqui.
+
+  Ela vive na MESMA pasta que o index.html de propósito: assim `../tokens/…`,
+  `ybera-components.css` e `../icons/ybera-icons.svg#…` resolvem igual, sem
+  reescrever caminho nenhum.
+-->
+<style>
+  html,body{margin:0;padding:0}
+  body{background:#fff}
+  #solo{padding:12px}
+  /* o palco da doc tem moldura própria; aqui ela só duplicaria a do iframe */
+  #solo .stage{border:0;border-radius:0}
+  #solo .demo{margin:0 0 12px}
+  #solo .row-label{margin:16px 0 8px}
+  #solo .note{display:none}
+</style>
+</head>
+<body>
+<div id="solo"></div>
+<script>
+(function () {
+  'use strict';
+  var alvo = new URLSearchParams(location.search).get('c');
+  var caixa = document.getElementById('solo');
+
+  /* Mede a CAIXA, nao o documento. `documentElement.scrollHeight` conta
+     elemento `position:fixed` dimensionado pela viewport — a gaveta do header
+     tem inset-block:0, entao ela crescia junto com o iframe, que crescia junto
+     com ela: o quadro do header foi de 157px reais para 1969. */
+  function avisarAltura() {
+    var r = caixa.getBoundingClientRect();
+    var pad = parseFloat(getComputedStyle(caixa).paddingBottom) || 0;
+    var h = Math.max(120, Math.ceil(r.height + pad));
+    try { parent.postMessage({ yb: 'altura', c: alvo, h: h }, '*'); } catch (e) {}
+  }
+
+  fetch('index.html').then(function (r) { return r.text(); }).then(function (html) {
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+
+    // as mesmas folhas da página de origem, na mesma ordem
+    Array.prototype.forEach.call(doc.querySelectorAll('link[rel="stylesheet"]'), function (l) {
+      document.head.insertBefore(l.cloneNode(true), document.head.querySelector('style'));
+    });
+    // e o <style> da doc, que é onde .demo, .stage e .row-label são definidos
+    Array.prototype.forEach.call(doc.querySelectorAll('style'), function (s) {
+      document.head.insertBefore(s.cloneNode(true), document.head.querySelector('style'));
+    });
+
+    var sec = doc.getElementById(alvo);
+    if (!sec) { caixa.textContent = 'seção "' + alvo + '" não existe'; return; }
+
+    // fica o que é peça renderizada; sai o que é prosa
+    Array.prototype.forEach.call(sec.children, function (n) {
+      if (n.matches('h2, p.when, .note')) return;
+      caixa.appendChild(n.cloneNode(true));
+    });
+
+    // o JS de comportamento, se a página de origem carregar
+    var js = doc.querySelector('script[src]');
+    if (js) {
+      var s = document.createElement('script');
+      s.src = js.getAttribute('src');
+      s.onload = avisarAltura;
+      document.body.appendChild(s);
+    }
+
+    /* A altura muda tres vezes: quando a marcacao entra, quando as folhas
+       clonadas aplicam, e quando fonte e imagem chegam. Observar o
+       documentElement nao pegava as duas ultimas — 11 dos 18 quadros ficavam
+       na altura padrao. Observa-se a caixa que cresce, e ainda se remede em
+       tempos fixos para o que nenhum observer anuncia. */
+    var caixaObs = new ResizeObserver(avisarAltura);
+    caixaObs.observe(caixa);
+    avisarAltura();
+    [60, 200, 600, 1500].forEach(function (t) { setTimeout(avisarAltura, t); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(avisarAltura);
+    if (document.readyState === 'complete') avisarAltura();
+    else addEventListener('load', avisarAltura);
+    Array.prototype.forEach.call(document.images, function (im) {
+      if (!im.complete) im.addEventListener('load', avisarAltura, { once: true });
+    });
+  });
+})();
+</script>
+</body>
+</html>

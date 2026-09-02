@@ -1,0 +1,262 @@
+/* =========================================================================
+   YBERA DESIGN SYSTEM · CAMADA 0 — PRIMITIVOS
+   -------------------------------------------------------------------------
+   Vocabulário bruto. NENHUM componente deve consumir estes tokens direto.
+   Componentes consomem a camada 1 (01-semantic.css).
+
+   Rampas de cor geradas por script e validadas em contraste WCAG 2.1.
+   Os comentários de contraste são medidos, não estimados.
+   ========================================================================= */
+
+:root {
+  /* ---------------------------------------------------------------------
+     COR · NEUTRO — derivado da primária #1E1E1F (matiz 240°, sat 1.6%)
+     Substitui a mistura atual de Tailwind zinc + gray + cinzas avulsos.
+     --------------------------------------------------------------------- */
+  --yb-gray-50: #FAFAFA;          /*  1.04:1 vs branco · --   */
+  --yb-gray-100: #F5F5F5;         /*  1.09:1 vs branco · --   */
+  --yb-gray-200: #EAEAEA;         /*  1.20:1 vs branco · --   */
+  --yb-gray-300: #DADADB;         /*  1.40:1 vs branco · --   */
+  --yb-gray-400: #B1B1B4;         /*  2.14:1 vs branco · --  · piso para texto: NÃO usar */
+  --yb-gray-500: #8A8A8E;         /*  3.44:1 vs branco · UI  · só ícone/borda, nunca texto */
+  --yb-gray-600: #6D6D71;         /*  5.15:1 vs branco · AA  · PISO DE TEXTO */
+  --yb-gray-700: #535356;         /*  7.67:1 vs branco · AAA  */
+  --yb-gray-800: #3A3A3C;         /* 11.35:1 vs branco · AAA  */
+  --yb-gray-900: #272728;         /* 14.92:1 vs branco · AAA  */
+  --yb-gray-950: #1E1E1F;         /* 16.66:1 vs branco · AAA · PRIMÁRIA DA MARCA */
+
+  /* ---------------------------------------------------------------------
+     COR · MAGENTA — cor de AÇÃO, não de identidade.
+     Consolida os três magentas divergentes da loja
+     (#CA235F botão, #DB2855 Judge.me, #DD2955 avulso) em um só.
+     --------------------------------------------------------------------- */
+  --yb-magenta-50: #FCF9FA;       /*  1.05:1 vs branco · --   */
+  --yb-magenta-100: #F9F2F4;      /*  1.10:1 vs branco · --   */
+  --yb-magenta-200: #F3E1E8;      /*  1.25:1 vs branco · --   */
+  --yb-magenta-300: #EBCAD6;      /*  1.51:1 vs branco · --   */
+  --yb-magenta-400: #DC89A7;      /*  2.57:1 vs branco · --   */
+  --yb-magenta-500: #D64277;      /*  4.28:1 vs branco · UI  · só UI/large */
+  --yb-magenta-600: #CA235F;      /*  5.36:1 vs branco · AA  · AÇÃO CANÔNICA */
+  --yb-magenta-700: #8A1E45;      /*  8.93:1 vs branco · AAA · hover */
+  --yb-magenta-800: #5D1932;      /* 12.72:1 vs branco · AAA · active */
+  --yb-magenta-900: #3D1222;      /* 16.05:1 vs branco · AAA  */
+  --yb-magenta-950: #2E0F1A;      /* 17.51:1 vs branco · AAA  */
+
+  /* ---------------------------------------------------------------------
+     COR · DOURADO — acento. O 500 é a cor de marca e REPROVA como texto
+     sobre claro (2.39:1). Para texto sobre claro, use o 700.
+     --------------------------------------------------------------------- */
+  --yb-gold-50: #FCFBF8;          /*  1.03:1 vs branco · --   */
+  --yb-gold-100: #F9F7F1;         /*  1.07:1 vs branco · --   */
+  --yb-gold-200: #F3EDE1;         /*  1.17:1 vs branco · --   */
+  --yb-gold-300: #ECE0CA;         /*  1.31:1 vs branco · --   */
+  --yb-gold-400: #DDC088;         /*  1.75:1 vs branco · --   */
+  --yb-gold-500: #D29F3E;         /*  2.39:1 vs branco · --  · MARCA · só sobre escuro */
+  --yb-gold-600: #AE8330;         /*  3.45:1 vs branco · UI  · só UI/large */
+  --yb-gold-700: #806228;         /*  5.68:1 vs branco · AA  · texto sobre claro */
+  --yb-gold-800: #57441F;         /*  9.33:1 vs branco · AAA  */
+  --yb-gold-900: #392D16;         /* 13.45:1 vs branco · AAA  */
+  --yb-gold-950: #2C2312;         /* 15.48:1 vs branco · AAA  */
+
+  /* ---------------------------------------------------------------------
+     COR · ESTADO — todos ≥5.4:1 sobre branco (AA folgado nos dois sentidos)
+     --------------------------------------------------------------------- */
+  --yb-success-600: #1F7A34;      /*  5.40:1 vs branco · AA */
+  --yb-warning-600: #8A5A00;      /*  5.93:1 vs branco · AA */
+  --yb-danger-600: #B3261E;       /*  6.54:1 vs branco · AA */
+  --yb-info-600: #1B5FA8;         /*  6.46:1 vs branco · AA */
+  --yb-success-50: #EAF6EC;        /* superfície */
+  --yb-warning-50: #FBF3E3;        /* superfície */
+  --yb-danger-50:  #FBEAE9;        /* superfície */
+  --yb-info-50:    #E9F1FA;        /* superfície */
+
+  --yb-white: #FFFFFF;
+  --yb-black: #000000;
+
+  /* ---------------------------------------------------------------------
+     TIPOGRAFIA — família única (decisão: Grotesca única).
+     A distinção vem de escala, peso e tracking, não de troca de fonte.
+     --------------------------------------------------------------------- */
+  --yb-font-sans: "Schibsted Grotesk", ui-sans-serif, system-ui,
+                  -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --yb-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* escala — 11 degraus. A loja hoje tem 20 tamanhos, incluindo 11.2px e 14.4px */
+  --yb-font-size-2xs: 0.6875rem;   /* 11px */
+  --yb-font-size-xs:  0.8125rem;   /* 13px */
+  --yb-font-size-sm:  0.875rem;    /* 14px */
+  --yb-font-size-md:  1rem;        /* 16px — base */
+  --yb-font-size-lg:  1.125rem;    /* 18px */
+  --yb-font-size-xl:  1.25rem;     /* 20px */
+  --yb-font-size-2xl: 1.5rem;      /* 24px */
+  --yb-font-size-3xl: 2rem;        /* 32px */
+  /* Os três maiores são fluidos. Em 320px o 5xl fixo em 48px media 309px de
+     largura numa caixa de 288 — a palavra não cabia. Abaixo de 4xl a escala é
+     fixa: texto de leitura não deve mudar de tamanho com a janela. */
+  --yb-font-size-4xl: clamp(2rem, 1.60rem + 2.00vw, 2.5rem);   /* 32 → 40px */
+  --yb-font-size-5xl: clamp(2.25rem, 1.60rem + 3.20vw, 3rem);  /* 36 → 48px */
+  --yb-font-size-6xl: clamp(2.75rem, 1.80rem + 4.80vw, 4rem);  /* 44 → 64px */
+
+  --yb-font-weight-regular:  400;
+  --yb-font-weight-medium:   500;
+  --yb-font-weight-semibold: 600;
+  --yb-font-weight-bold:     700;
+  --yb-font-weight-extrabold:800;
+
+  --yb-line-height-tight:   1.05;
+  --yb-line-height-snug:    1.15;
+  --yb-line-height-base:    1.35;
+  --yb-line-height-relaxed: 1.55;
+  --yb-line-height-loose:   1.7;
+
+  /* tracking aperta conforme o tamanho cresce — vetor de distinção nº 1 */
+  --yb-tracking-tightest: -0.035em;
+  --yb-tracking-tighter:  -0.025em;
+  --yb-tracking-tight:    -0.015em;
+  --yb-tracking-normal:   0;
+  --yb-tracking-wide:     0.04em;
+  --yb-tracking-wider:    0.12em;   /* overline em caixa alta */
+
+  /* ---------------------------------------------------------------------
+     ESPAÇO — base 4px
+     --------------------------------------------------------------------- */
+  --yb-space-0:  0;
+  --yb-space-1:  0.25rem;   /*   4px */
+  --yb-space-2:  0.5rem;    /*   8px */
+  --yb-space-3:  0.75rem;   /*  12px */
+  --yb-space-4:  1rem;      /*  16px */
+  --yb-space-5:  1.25rem;   /*  20px */
+  --yb-space-6:  1.5rem;    /*  24px */
+  --yb-space-8:  2rem;      /*  32px */
+  --yb-space-10: 2.5rem;    /*  40px */
+  --yb-space-12: 3rem;      /*  48px */
+  --yb-space-16: 4rem;      /*  64px */
+  --yb-space-20: 5rem;      /*  80px */
+  --yb-space-24: 6rem;      /*  96px */
+  --yb-space-32: 8rem;      /* 128px */
+
+  /* ---------------------------------------------------------------------
+     RAIO — 5 valores. A loja hoje tem 12 (9999/22/20/16/12/10/8/6/4/2/50%/100)
+     --------------------------------------------------------------------- */
+  --yb-radius-none: 0;
+  --yb-radius-sm:   4px;
+  --yb-radius-md:   8px;     /* padrão da direção escolhida */
+  --yb-radius-lg:   12px;
+  --yb-radius-xl:   16px;
+  --yb-radius-full: 9999px;
+
+  /* ---------------------------------------------------------------------
+     ELEVAÇÃO — sombra em grafite, nunca preto puro
+     --------------------------------------------------------------------- */
+  --yb-shadow-none: none;
+  --yb-shadow-xs: 0 1px 2px rgba(30,30,31,.06);
+  --yb-shadow-sm: 0 2px 4px rgba(30,30,31,.07), 0 1px 2px rgba(30,30,31,.05);
+  --yb-shadow-md: 0 4px 12px rgba(30,30,31,.08), 0 2px 4px rgba(30,30,31,.05);
+  --yb-shadow-lg: 0 12px 28px rgba(30,30,31,.11), 0 4px 8px rgba(30,30,31,.06);
+  --yb-shadow-xl: 0 24px 56px rgba(30,30,31,.14);
+  /* Sombra de TEXTO sobre mídia — outra família: não eleva uma caixa, destaca
+     uma palavra de um fundo que ninguém controla. A legenda do vídeo escrevia
+     `rgba(0,0,0,.6)` à mão, e preto puro contradiz a regra desta seção. */
+  --yb-shadow-text: 0 1px 3px rgba(30,30,31,.6);
+
+  /* ---------------------------------------------------------------------
+     LARGURA DE BORDA — três valores. A loja hoje pratica 0.5, 1, 1.5, 2 e 3px
+     em lugares diferentes para dizer a mesma coisa: "há uma linha aqui".
+     --------------------------------------------------------------------- */
+  --yb-border-width-0:    0;
+  --yb-border-width-hair: 1px;
+  --yb-border-width-thick: 2px;
+
+  /* ---------------------------------------------------------------------
+     OPACIDADE — degraus nomeados pelo papel, não pelo número. Opacidade solta
+     é o jeito mais fácil de reprovar contraste sem perceber: 60% de um texto
+     que passava em 5.15:1 cai para 2.9:1 e ninguém mede.
+     --------------------------------------------------------------------- */
+  --yb-opacity-0:        0;
+  --yb-opacity-disabled: .45;   /* só em superfície/ícone, nunca em texto */
+  --yb-opacity-muted:    .65;
+  --yb-opacity-scrim:    .55;   /* o véu atrás de modal e gaveta */
+  --yb-opacity-full:     1;
+
+  /* ---------------------------------------------------------------------
+     DESFOQUE — vidro atrás de barra fixa. Sempre com cor de fundo sólida por
+     baixo: `backdrop-filter` não é suportado em todo lugar, e sem a cor a
+     barra fica transparente onde ele falha.
+     --------------------------------------------------------------------- */
+  --yb-blur-sm: 4px;
+  --yb-blur-md: 12px;
+  --yb-blur-lg: 24px;
+
+  /* ---------------------------------------------------------------------
+     PROPORÇÃO DE MÍDIA — reservar a caixa antes da imagem chegar é o que
+     impede o salto de layout (CLS). O catálogo Ybera é fotografado em 1:1;
+     banner e vídeo vertical têm proporção própria.
+     --------------------------------------------------------------------- */
+  --yb-aspect-square:    1 / 1;
+  --yb-aspect-portrait:  4 / 5;
+  --yb-aspect-landscape: 16 / 9;
+  --yb-aspect-vertical:  9 / 16;   /* TikTok/Reels — o carrossel de vídeo */
+
+  /* ---------------------------------------------------------------------
+     MEDIDA DE LEITURA — largura em caracteres. Linha longa demais faz o olho
+     perder o começo da próxima; curta demais quebra o ritmo.
+     --------------------------------------------------------------------- */
+  --yb-measure-narrow: 45ch;
+  --yb-measure-base:   65ch;
+  --yb-measure-wide:   80ch;
+
+  /* ---------------------------------------------------------------------
+     ALTURA DE CONTROLE — o `sm` é 36px e NÃO é alvo de toque válido sozinho:
+     só vale dentro de uma área clicável maior (célula de tabela, item de
+     lista). Controle solto usa `md` ou maior. Ver --yb-target-min.
+     --------------------------------------------------------------------- */
+  --yb-control-height-sm: 36px;
+  --yb-control-height-md: 44px;   /* = --yb-target-min */
+  --yb-control-height-lg: 52px;
+
+  /* ---------------------------------------------------------------------
+     TAMANHO DE ÍCONE — viviam soltos em icons/ybera-icons.css, fora de
+     qualquer escala. Grade de desenho é 24×24; os degraus são recortes dela.
+     --------------------------------------------------------------------- */
+  --yb-icon-sm: 16px;
+  --yb-icon-md: 20px;
+  --yb-icon-lg: 24px;
+  --yb-icon-xl: 32px;
+
+  /* ---------------------------------------------------------------------
+     MOVIMENTO
+     --------------------------------------------------------------------- */
+  --yb-duration-instant: 0ms;
+  --yb-duration-fast:    120ms;
+  --yb-duration-base:    180ms;
+  --yb-duration-slow:    280ms;
+  --yb-duration-slower:  420ms;
+
+  --yb-ease-standard: cubic-bezier(.2, 0, 0, 1);
+  --yb-ease-enter:    cubic-bezier(0, 0, 0, 1);
+  --yb-ease-exit:     cubic-bezier(.3, 0, 1, 1);
+
+  /* ---------------------------------------------------------------------
+     LAYOUT
+     --------------------------------------------------------------------- */
+  --yb-container-max: 1200px;   /* mantém a largura que a loja já pratica */
+
+  /* Breakpoints de PÁGINA. Referência de projeto, não de runtime: `@media` não
+     lê custom property, então estes valores existem para serem escritos à mão
+     e conferidos — inclusive por test/validate.mjs, que reprova quem divergir.
+     Pontos de quebra de COMPONENTE (520, 560, 860, 900) são outra coisa: nascem
+     da largura em que aquele conteúdo específico quebra, não da tela. Ficam
+     fora desta escala de propósito. */
+  --yb-breakpoint-sm: 480px;
+  --yb-breakpoint-md: 768px;
+  --yb-breakpoint-lg: 1024px;
+  --yb-breakpoint-xl: 1280px;
+
+  --yb-z-base:     0;
+  --yb-z-dropdown: 1000;
+  --yb-z-sticky:   1100;
+  --yb-z-overlay:  1200;
+  --yb-z-modal:    1300;
+  --yb-z-toast:    1400;
+  --yb-z-tooltip:  1500;
+}

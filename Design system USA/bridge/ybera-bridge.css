@@ -1,0 +1,120 @@
+/* =========================================================================
+   YBERA DESIGN SYSTEM · PONTE PARA O TEMA SHOPIFY
+
+   Este arquivo NÃO faz parte do design system. É o adaptador que liga os
+   tokens Ybera às variáveis que o tema, o Ecomposer e o Judge.me já expõem
+   na ybera.us — sem tocar em nenhum template Liquid.
+
+   Carregue DEPOIS de tokens/ybera.css:
+
+     {{ 'ybera-tokens.css'  | asset_url | stylesheet_tag }}
+     {{ 'ybera-bridge.css'  | asset_url | stylesheet_tag }}
+
+   Para reverter: remova a linha do bridge. Nada mais muda.
+
+   Os nomes de variável abaixo foram capturados da loja em produção
+   (2026-08-31), inclusive o typo `colunm` que o Ecomposer publica.
+
+   EXCEÇÃO DELIBERADA À REGRA DE CAMADAS
+   Um componente nunca consome cor da camada 0. Este arquivo consome — e pode.
+   Ele não é componente: é tradutor entre dois vocabulários, e o alvo de cada
+   linha é uma variável de FORA do sistema. Um auditor que rode aqui vai acusar
+   quatro "violações"; são estas, e são intencionais.
+
+   Os hex que aparecem abaixo estão todos em comentário, registrando o valor
+   que a loja tinha antes. Nenhum é código.
+   ========================================================================= */
+
+:root {
+
+  /* -----------------------------------------------------------------------
+     ECOMPOSER — os slots de design system que existem e estão vazios.
+     Hoje os quatro estão em #ffffff, o que os torna inúteis.
+     ----------------------------------------------------------------------- */
+  --ecom-global-colors-primary:   var(--yb-gray-950);   /* era #ffffff */
+  --ecom-global-colors-secondary: var(--yb-gray-700);   /* era #ffffff */
+  --ecom-global-colors-accent:    var(--yb-magenta-600);/* era #ffffff */
+  --ecom-global-colors-text:      var(--yb-text-primary);/* era #ffffff */
+
+  --ecom-global-container-width: var(--yb-container-max);
+  --ecom-global-elements-space:  var(--yb-space-5);
+  --ecom-global-colunm-gap:      var(--yb-space-5);  /* sic: o typo é do Ecomposer */
+
+  /* Escala tipográfica do Ecomposer -> escala Ybera.
+     A dele hoje é a default do builder (72/60/48/36/30/24/18), herdada,
+     não decidida. h7 é o "corpo" na nomenclatura deles. */
+  --ecom-global-typography-h1-font-size:      var(--yb-font-size-6xl);
+  --ecom-global-typography-h1-line-height:    1.05;
+  --ecom-global-typography-h1-letter-spacing: var(--yb-tracking-tightest);
+  --ecom-global-typography-h1-font-weight:    var(--yb-font-weight-extrabold);
+
+  --ecom-global-typography-h2-font-size:      var(--yb-font-size-5xl);
+  --ecom-global-typography-h2-line-height:    1.05;
+  --ecom-global-typography-h2-letter-spacing: var(--yb-tracking-tightest);
+  --ecom-global-typography-h2-font-weight:    var(--yb-font-weight-bold);
+
+  --ecom-global-typography-h3-font-size:      var(--yb-font-size-4xl);
+  --ecom-global-typography-h3-line-height:    1.15;
+  --ecom-global-typography-h3-letter-spacing: var(--yb-tracking-tighter);
+  --ecom-global-typography-h3-font-weight:    var(--yb-font-weight-bold);
+
+  --ecom-global-typography-h4-font-size:      var(--yb-font-size-3xl);
+  --ecom-global-typography-h4-line-height:    1.15;
+  --ecom-global-typography-h4-letter-spacing: var(--yb-tracking-tighter);
+  --ecom-global-typography-h4-font-weight:    var(--yb-font-weight-bold);
+
+  --ecom-global-typography-h5-font-size:      var(--yb-font-size-2xl);
+  --ecom-global-typography-h5-line-height:    1.35;
+  --ecom-global-typography-h5-font-weight:    var(--yb-font-weight-semibold);
+
+  --ecom-global-typography-h6-font-size:      var(--yb-font-size-xl);
+  --ecom-global-typography-h6-line-height:    1.35;
+  --ecom-global-typography-h6-font-weight:    var(--yb-font-weight-semibold);
+
+  --ecom-global-typography-h7-font-size:      var(--yb-font-size-md);
+  --ecom-global-typography-h7-line-height:    var(--yb-line-height-relaxed);
+  --ecom-global-typography-h7-font-weight:    var(--yb-font-weight-regular);
+
+  /* -----------------------------------------------------------------------
+     TEMA — botões e texto.
+     Aqui morrem dois dos três magentas divergentes.
+     ----------------------------------------------------------------------- */
+  --background-button:       var(--yb-action-bg);        /* era #CA235F */
+  --background-button-hover: var(--yb-action-bg-hover);  /* era #B21F54 */
+  --border-button:           var(--yb-action-bg);
+  --text-color-button:       var(--yb-action-text);
+  --text-color:              var(--yb-text-primary);     /* era #0d0c0d */
+  --text-color-hover:        var(--yb-text-secondary);   /* era #515152 */
+
+  /* -----------------------------------------------------------------------
+     JUDGE.ME — o app de reviews trazia o terceiro magenta (#DB2855).
+     A estrela usa o dourado de TEXTO (gold-700), não o de marca: sobre
+     branco o gold-500 mede 2.39:1, e o amarelo atual (#FFDB00) mede pior.
+     ----------------------------------------------------------------------- */
+  --jdgm-primary-color:          var(--yb-action-bg);      /* era #DB2855 */
+  --jdgm-paginate-color:         var(--yb-action-bg);
+  --jdgm-reviewer-name-color:    var(--yb-text-primary);
+  --jdgm-secondary-color:        var(--yb-magenta-50);
+  --jdgm-star-color:             var(--yb-accent-text);    /* era #FFDB00 */
+  --jdgm-write-review-bg-color:  var(--yb-action-bg);
+  --jdgm-write-review-text-color: var(--yb-action-text);
+  --jdgm-border-radius:          var(--yb-radius-card);
+}
+
+/* ===========================================================================
+   CORREÇÕES PONTUAIS DE CONTRASTE
+   Medidas na loja em produção. Cada uma reprovava em WCAG AA.
+   =========================================================================== */
+
+/* Preço em verde sobre branco media 2.81:1 — um preço que não se lê.
+   O verde do sistema (#1F7A34) mede 5.40:1. */
+.price--sale, .price__sale, [class*="price"] .money--sale {
+  color: var(--yb-success-text);
+}
+
+/* zinc-500 sobre cinza-claro media 4.40:1 em texto de review.
+   Sobre branco puro ele passava raspando (4.83) — sobre superfície
+   cinza, não. O piso do sistema é gray-600. */
+.jdgm-rev__author, .jdgm-rev__body, .jdgm-rev__timestamp {
+  color: var(--yb-text-secondary);
+}
