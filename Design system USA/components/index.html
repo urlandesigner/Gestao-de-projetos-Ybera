@@ -197,7 +197,9 @@ body:not([data-mobile="on"]) .par__mob{display:none}
     <li><a href="#gallery">Gallery</a></li>
     <li><a href="#logo">Logo</a></li>
     <li><a href="#logobar">Logo bar</a></li>
+    <li><a href="#mediabanner">Media banner</a></li>
     <li><a href="#dialog">Modal &amp; drawer</a></li>
+    <li><a href="#notice">Notice</a></li>
     <li><a href="#pagination">Pagination</a></li>
     <li><a href="#post">Post</a></li>
     <li><a href="#price">Price</a></li>
@@ -601,6 +603,29 @@ body:not([data-mobile="on"]) .par__mob{display:none}
       assinatura, não conteúdo.</p>
     </div>
   </section>
+  <section id="mediabanner">
+    <h2>Media banner</h2>
+    <p class="when">Imagem larga com título por cima e o link cobrindo tudo. Duas seções
+    da home usam esta mesma anatomia — o mesmo critério que já admitiu o cartão de coleção.</p>
+    <div class="demo demo--rail">
+      <a class="yb-mediabanner" href="#mediabanner">
+        <img src="../_captura/nova-loja/img/02_hair-problem-f838107d.webp" alt="">
+        <div class="yb-mediabanner__body">
+          <span class="yb-mediabanner__eyebrow">New line</span>
+          <h3 class="yb-mediabanner__title">Keratin care that survives humidity</h3>
+          <p class="yb-mediabanner__text">Formulated without formaldehyde, safe for color-treated hair.</p>
+          <span class="yb-btn yb-btn--primary">Shop the line</span>
+        </div>
+      </a>
+    </div>
+    <div class="note">
+      <b>O véu não é enfeite</b>
+      <p>Contraste sobre foto não se mede — a foto muda. O gradiente
+      <code>--yb-scrim-strong</code> garante o piso de leitura embaixo, onde o texto fica,
+      sem escurecer a imagem inteira.</p>
+    </div>
+  </section>
+
   <section id="dialog">
     <h2>Modal &amp; drawer</h2>
     <p class="when">Interrompe para pedir uma decisão. Se não há decisão a tomar, use toast.</p>
@@ -655,6 +680,26 @@ body:not([data-mobile="on"]) .par__mob{display:none}
       </div>
     </dialog>
   </section>
+  <section id="notice">
+    <h2>Notice</h2>
+    <p class="when">Faixa de aviso. A loja empilha duas no topo de toda página — uma
+    contextual e a de frete. Modelada como parte do header, a segunda não tinha onde morar.</p>
+    <div class="demo demo--rail">
+      <div class="yb-notice">Free shipping on orders over <b>$50</b></div>
+    </div>
+    <div class="demo demo--rail">
+      <div class="yb-notice yb-notice--action">Influencer? <b>Join the club</b> and earn on every sale</div>
+    </div>
+    <div class="demo demo--rail">
+      <div class="yb-notice yb-notice--soft">Orders placed after Dec 20 ship in <b>January</b></div>
+    </div>
+    <div class="note">
+      <b>Por que não é parte do header</b>
+      <p>Era <code>.yb-header__announce</code>. Enquanto for parte do header, só cabe
+      uma — e a loja usa duas. Solta, o header usa uma e a página usa outra.</p>
+    </div>
+  </section>
+
   <section id="pagination">
     <h2>Pagination</h2>
     <p class="when">A página atual não é link. Primeira e última sempre visíveis.</p>

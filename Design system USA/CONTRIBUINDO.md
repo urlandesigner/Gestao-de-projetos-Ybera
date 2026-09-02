@@ -8,7 +8,7 @@ como decidir está em [PRINCIPIOS.md](PRINCIPIOS.md). Aqui é a mecânica.
 
 ```bash
 ./serve.sh            # http://localhost:8080 — porta fixa, sem cache
-npm run check         # build + 80 checagens, o mesmo que roda no CI
+npm run check         # build + 81 checagens, o mesmo que roda no CI
 ```
 
 `serve.sh` manda `Cache-Control: no-store`: editar um token e recarregar mostra

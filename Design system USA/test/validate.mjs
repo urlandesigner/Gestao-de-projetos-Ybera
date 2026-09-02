@@ -522,6 +522,27 @@ secao('Direção de leitura');
     : ok('eixo inline usa propriedade lógica', 'espelha em RTL');
 }
 
+secao('Rede de layout');
+{
+  // Verde nos 80 nao prova que a tela continua igual — prova que as regras
+  // foram obedecidas. Tres quebras desta sessao passaram por aqui verdes.
+  // A base de geometria e o que cobre esse buraco; sem ela versionada, o
+  // buraco volta em silencio.
+  const base = 'test/baseline.json';
+  if (!existsSync(join(raiz, base))) {
+    falha('sem base de layout', 'rode test/layout.js e `npm run layout:aceitar`');
+  } else {
+    const b = JSON.parse(ler(base));
+    const larguras = [...new Set(b.map(r => r.largura))].sort((x, y) => x - y);
+    const pecas = b.reduce((n, r) => n + r.pecas, 0);
+    const estreita = larguras.includes(320);
+    b.length >= 2 && estreita
+      ? ok('base de layout gravada', `${b.length} retratos · ${larguras.join('/')}px · ${pecas} peças`)
+      : falha('base de layout incompleta',
+          !estreita ? 'falta a largura de 320px, onde tudo quebra primeiro' : 'menos de duas páginas');
+  }
+}
+
 secao('Dialog');
 {
   // `display` no proprio <dialog> sem [open] derruba o `dialog:not([open]){

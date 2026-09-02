@@ -1792,6 +1792,24 @@
       }
     }
   },
+  "scrim": {
+    "strong": {
+      "$value": "rgba(30, 30, 31, .72)",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-scrim-strong",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "none": {
+      "$value": "rgba(30, 30, 31, 0)",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-scrim-none",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    }
+  },
   "text": {
     "primary": {
       "$value": "{gray.950}",

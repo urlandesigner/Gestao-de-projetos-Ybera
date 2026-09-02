@@ -384,22 +384,27 @@
   text-align:center; margin:0}
 
 /* =========================================================================
-   CABEÇALHO DE COLEÇÃO + GRID
+   CATÁLOGO — cabeçalho de listagem + grade
+   Chamava-se `collection`, o mesmo nome do CARTÃO de coleção, que é
+   componente. A marcação natural (`<div class="yb-collection"><div
+   class="yb-collection__head">`) herdava `aspect-ratio:3/4; overflow:hidden`
+   do cartão e recortava o cabeçalho da página numa caixa 3:4. Não dava
+   problema só porque ninguém tinha escrito o pai — armadilha, não bug.
    ========================================================================= */
-.yb-collection__head{
+.yb-catalog__head{
   display:flex; align-items:flex-end; justify-content:space-between;
   gap:var(--yb-space-6); flex-wrap:wrap; margin-bottom:var(--yb-space-6);
   padding-bottom:var(--yb-space-5); border-bottom:1px solid var(--yb-border-subtle);
 }
-.yb-collection__title{display:flex; flex-direction:column; gap:var(--yb-space-2); min-width:0}
-.yb-collection__title h1, .yb-collection__title h2{
+.yb-catalog__title{display:flex; flex-direction:column; gap:var(--yb-space-2); min-width:0}
+.yb-catalog__title h1, .yb-catalog__title h2{
   margin:0; font-size:var(--yb-type-h1-size); line-height:var(--yb-type-h1-line);
   letter-spacing:var(--yb-type-h1-track); font-weight:var(--yb-type-h1-weight);
 }
-.yb-collection__count{font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted);
+.yb-catalog__count{font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted);
   font-variant-numeric:tabular-nums}
-.yb-collection__tools{display:flex; gap:var(--yb-space-3); align-items:center; flex-wrap:wrap}
-.yb-collection__filters{
+.yb-catalog__tools{display:flex; gap:var(--yb-space-3); align-items:center; flex-wrap:wrap}
+.yb-catalog__filters{
   display:flex; gap:var(--yb-space-2); flex-wrap:wrap; margin-bottom:var(--yb-space-6);
 }
 .yb-chip{

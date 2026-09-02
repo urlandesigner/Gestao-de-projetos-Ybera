@@ -3,7 +3,7 @@
 <!-- GERADO por tools/inventario.mjs. Não edite à mão: rode ./build.sh.
      A fonte é o CSS. Se uma linha aqui está errada, o errado é o código. -->
 
-36 peças no bundle — 27 estáveis, 9 em beta, 0 em alfa.
+38 peças no bundle — 24 estáveis, 14 em beta, 0 em alfa.
 
 ## Como ler a maturidade
 
@@ -29,7 +29,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | BRAND QUOTE | `.yb-quote` | Componente | Estável | — | — | 14 | sim | n/a | — | sim |
 | BREADCRUMB | `.yb-crumb` | Componente | Estável | — | 3 | 8 | sim | sim | — | sim |
 | BUTTON | `.yb-btn` | Componente | Estável | 4 | 4 | 26 | sim | sim | — | sim |
-| CARREGANDO | `.yb-btn` | Componente | Estável | 8 | — | 16 | sim | n/a | — | sim |
+| CARREGANDO | `.yb-btn` | Componente | Beta | 8 | 1 | 18 | sim | — | — | sim |
 | CERTIFICATION SEALS | `.yb-seal` | Componente | Estável | — | — | 12 | sim | n/a | — | sim |
 | CHECKBOX / RADIO | `.yb-check` | Componente | Beta | — | 1 | 10 | sim | sim | — | — |
 | COLLECTION CARD | `.yb-collection` | Componente | Estável | 2 | 2 | 18 | sim | sim | — | sim |
@@ -38,6 +38,8 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | ICONBTN | `.yb-iconbtn` | Componente | Estável | 1 | 3 | 13 | sim | sim | — | sim |
 | LOGO | `.yb-logo` | Componente | Estável | 4 | 1 | 5 | sim | sim | — | sim |
 | LOGO BAR | `.yb-logobar` | Componente | Estável | — | — | 5 | sim | n/a | — | sim |
+| MEDIABANNER | `.yb-mediabanner` | Componente | Beta | 1 | 1 | 24 | sim | sim | — | — |
+| NOTICE | `.yb-notice` | Componente | Beta | 2 | — | 15 | sim | — | — | — |
 | PAGINATION | `.yb-pagination` | Componente | Beta | — | 3 | 17 | sim | sim | — | — |
 | POST | `.yb-post` | Componente | Estável | 1 | 2 | 23 | sim | sim | — | sim |
 | PRICE | `.yb-price` | Componente | Estável | 1 | — | 9 | sim | n/a | — | sim |
@@ -48,12 +50,12 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | REVIEW | `.yb-review` | Componente | Estável | — | 1 | 18 | sim | sim | — | sim |
 | SKELETON | `.yb-skeleton` | Componente | Beta | 6 | — | 7 | sim | n/a | — | — |
 | TOAST | `.yb-toast` | Componente | Beta | 3 | 2 | 30 | sim | sim | sim | — |
-| TRACK | `.yb-track` | Componente | Estável | 1 | — | 4 | sim | n/a | — | sim |
+| TRACK | `.yb-track` | Componente | Beta | 1 | 1 | 6 | sim | — | — | sim |
 | VARIANT PICKER | `.yb-swatches` | Componente | Beta | — | 4 | 18 | sim | sim | — | — |
 | VERTICAL VIDEO CAROUSEL | `.yb-video` | Componente | Beta | — | 1 | 12 | sim | — | sim | sim |
 | BLOCO DE COMPRA (PDP) | `.yb-buybox` | Padrão | Estável | — | — | 21 | sim | n/a | — | sim |
-| CABEÇALHO DE COLEÇÃO + GRID | `.yb-collection` | Padrão | Estável | — | 2 | 27 | sim | sim | — | sim |
 | CART DRAWER | `.yb-cart` | Padrão | Estável | 1 | 2 | 27 | sim | sim | — | sim |
+| CATÁLOGO | `.yb-catalog` | Padrão | Beta | — | 2 | 27 | sim | sim | — | — |
 | EMPTY STATE | `.yb-empty` | Padrão | Beta | — | — | 13 | sim | n/a | — | — |
 | FOOTER | `.yb-footer` | Padrão | Estável | — | 3 | 30 | sim | sim | — | sim |
 | FREE SHIPPING PROGRESS | `.yb-freeship` | Padrão | Estável | 1 | — | 12 | sim | n/a | — | sim |

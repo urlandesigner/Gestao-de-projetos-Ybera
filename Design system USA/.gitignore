@@ -2,3 +2,6 @@
 ._*
 __pycache__/
 node_modules/
+
+# retrato de trabalho; a base versionada e test/baseline.json
+test/atual.json

@@ -5,7 +5,7 @@ projeto**: a loja US roda Shopify e a BR roda Wake Commerce — CSS custom prope
 é o único denominador comum entre as duas.
 
 Versão **0.10** — fundação de 293 tokens, 25 componentes e 8 padrões com
-comportamento, 36 ícones, governança, decisões registradas e 80 checagens
+comportamento, 36 ícones, governança, decisões registradas e 81 checagens
 automatizadas.
 
 | Onde olhar | O quê |
@@ -68,7 +68,7 @@ icons/
 bridge/
   ybera-bridge.css       ponte tokens Ybera -> Ecomposer / tema / Judge.me
 test/
-  validate.mjs           80 checagens, roda em CI
+  validate.mjs           81 checagens, roda em CI
   a11y.js                auditoria no DOM (colar no console)
   adocao.js              mede adoção na loja (colar no console)
 tools/
@@ -128,7 +128,7 @@ histórico em [CHANGELOG.md](CHANGELOG.md).
 npm run check
 ```
 
-80 checagens sem dependência: integridade entre camadas, disciplina de cor
+81 checagens sem dependência: integridade entre camadas, disciplina de cor
 (inclusive `rgba()` e cor nomeada, não só `#hex`), monotonia das rampas,
 contraste anotado versus medido, regras duras, foco visível,
 `prefers-reduced-motion`, `dist/` e `INVENTARIO.md` em dia, versão única em

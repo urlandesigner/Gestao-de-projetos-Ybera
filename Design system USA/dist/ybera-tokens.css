@@ -319,6 +319,12 @@
   --yb-surface-raised: var(--yb-white);
   --yb-surface-sunken: var(--yb-gray-50);
   --yb-surface-overlay: rgba(30, 30, 31, .55);
+  /* Veu sobre foto que ninguem controla. Sem ele, texto branco sobre imagem
+     clara e aposta — e contraste sobre imagem nao da para medir. O par
+     `strong`/`none` existe porque gradiente precisa dos dois lados, e
+     `transparent` em alguns motores desbota para cinza no meio do caminho. */
+  --yb-scrim-strong: rgba(30, 30, 31, .72);
+  --yb-scrim-none:   rgba(30, 30, 31, 0);
   /* Superfície que flutua SOBRE mídia — o botão de play do carrossel de vídeo.
      Precisa de alfa: sólida ela vira um disco branco cego sobre a foto; sem
      nenhuma ela some no quadro claro. O componente escrevia o rgba à mão. */

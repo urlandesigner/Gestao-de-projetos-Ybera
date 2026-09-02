@@ -25,6 +25,7 @@
     while (e) { const h = hex(getComputedStyle(e).backgroundColor); if (h) return h; e = e.parentElement; }
     return '#FFFFFF';
   };
+
   // Um <a> que embrulha imagem tira o nome do alt dela — e um <a> que embrulha
   // <svg role="img" aria-label> tira do aria-label. Sem estas duas linhas o
   // auditor acusa de "sem nome" todo logo e todo icone social do site, que e
@@ -88,6 +89,10 @@
     if (r < min) {
       const registro = { razao: +r.toFixed(2), exigido: min, fg, bg,
         tamanho: s.fontSize, texto: e.textContent.trim().slice(0, 40) };
+      // Sem excecao para "texto sobre foto": cheguei a escrever uma e ela
+      // silenciava um defeito real — o banner tinha fundo de reserva claro
+      // sob texto branco. Quem poe texto sobre imagem poe fundo que sustenta
+      // o texto sozinho, e ai o numero medido vale.
       if (inativo(e)) avisos.push({ tipo: 'contraste-inativo',
         nota: 'isento por WCAG 1.4.3, mas continua ilegível', ...registro });
       else falhas.push({ tipo: 'contraste', ...registro });

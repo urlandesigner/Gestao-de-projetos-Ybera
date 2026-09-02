@@ -270,6 +270,27 @@
 
 /* esgotado: estado de comercio, nao de interface — o card continua navegavel,
    mas diz o que aconteceu antes de a pessoa tentar comprar */
+/* acao sobre a foto: a loja poe "add to cart" em cima da imagem no grid e no
+   upsell do carrinho. Parte do cartao, nao componente novo. */
+.yb-card__action{
+  position:absolute; inset-inline:var(--yb-space-3);
+  inset-block-end:var(--yb-space-3);
+  opacity:0; transform:translateY(var(--yb-space-2));
+  transition:opacity var(--yb-transition-control), transform var(--yb-transition-control);
+}
+/* no toque nao ha hover: la ela fica sempre visivel, senao e inalcancavel */
+@media (hover:none){ .yb-card__action{opacity:1; transform:none} }
+@media (hover:hover){
+  .yb-card:hover .yb-card__action,
+  .yb-card:focus-within .yb-card__action{opacity:1; transform:none}
+}
+/* segunda foto que troca no hover — a loja ja manda as duas no HTML */
+.yb-card__media img + img{
+  position:absolute; inset:0; opacity:0;
+  transition:opacity var(--yb-transition-surface);
+}
+@media (hover:hover){ .yb-card:hover .yb-card__media img + img{opacity:1} }
+
 .yb-card--sold-out .yb-card__media{ opacity:.55; }
 .yb-card--sold-out .yb-card__media::after{
   content:attr(data-esgotado); position:absolute;
@@ -368,6 +389,13 @@
 .yb-track::-webkit-scrollbar{ display:none; }
 .yb-track > *{ scroll-snap-align:start; }
 /* variante em fila, para conteudo que nao e cartao (a faixa de logos) */
+/* setas: a loja tem 5 pares por pagina e o sistema tinha zero. Nao sao raiz
+   nova — pertencem ao trilho, e o botao em si e .yb-iconbtn. */
+.yb-track__nav{display:flex; gap:var(--yb-space-2); justify-content:flex-end; margin-block-start:var(--yb-space-3)}
+.yb-track__nav .yb-iconbtn{border:1px solid var(--yb-border)}
+.yb-track__nav .yb-iconbtn[disabled]{opacity:.4}
+@media (max-width:768px){ .yb-track__nav{display:none} }   /* no toque, arrasta */
+
 .yb-track--row{
   display:flex; align-items:center; grid-auto-flow:unset;
   scroll-snap-type:none;
@@ -405,6 +433,84 @@
 }
 @media (forced-colors: active){
   .yb-iconbtn{ border:var(--yb-border-width-hair) solid; }
+}
+
+/* =========================================================================
+   NOTICE — aviso de faixa, no topo ou onde couber
+   A loja empilha DOIS no topo de toda pagina: um contextual, colorido, que o
+   JS revela, e o de frete, preto. O sistema modelava isso como parte do
+   header (`yb-header__announce`), entao o segundo nao tinha onde morar.
+   Aqui e peca solta: o header usa uma, a pagina pode usar outra.
+   ========================================================================= */
+.yb-notice{
+  display:flex; align-items:center; justify-content:center; gap:var(--yb-space-3);
+  padding:var(--yb-space-3) var(--yb-page-gutter);
+  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  font-size:var(--yb-type-caption-size); letter-spacing:var(--yb-tracking-wide);
+  text-align:center;
+}
+.yb-notice b{color:var(--yb-accent-on-dark); font-weight:var(--yb-font-weight-semibold)}
+.yb-notice a{color:inherit; text-decoration:underline}
+.yb-notice--action{background:var(--yb-action-bg); color:var(--yb-action-text)}
+.yb-notice--action b{color:var(--yb-action-text)}
+.yb-notice--soft{
+  background:var(--yb-bg-muted); color:var(--yb-text-secondary);
+  border-block-end:1px solid var(--yb-border-subtle);
+}
+.yb-notice--soft b{color:var(--yb-text-primary)}
+.yb-notice__close{margin-inline-start:auto; color:inherit}
+@media (forced-colors: active){ .yb-notice{ border-block-end:var(--yb-border-width-hair) solid; } }
+
+/* =========================================================================
+   MEDIABANNER — imagem larga com texto por cima
+   Duas secoes da home usam a mesma anatomia: imagem de 420px, titulo e
+   subtitulo sobrepostos, um link cobrindo tudo. Mesmo criterio que ja
+   admitiu o cartao de colecao.
+   ========================================================================= */
+.yb-mediabanner{
+  position:relative; display:block; overflow:hidden; isolation:isolate;
+  min-height:clamp(16rem, 34vw, 26rem);
+  border-radius:var(--yb-radius-media); text-decoration:none;
+  /* Escuro, nao `surface-sunken`. O texto e branco: se a foto nao carregar,
+     um fundo claro deixa o titulo invisivel. O fundo de reserva tem de
+     sustentar o texto sozinho — e e ele que o medidor de contraste le. */
+  background:var(--yb-bg-inverse);
+}
+.yb-mediabanner img{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; z-index:-1;
+}
+/* veu: o texto tem de passar em contraste sobre foto que ninguem controla */
+.yb-mediabanner::before{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:linear-gradient(to top, var(--yb-scrim-strong), var(--yb-scrim-none) 62%);
+}
+.yb-mediabanner__body{
+  position:relative; display:flex; flex-direction:column; gap:var(--yb-space-3);
+  align-items:flex-start; justify-content:flex-end; height:100%;
+  padding:var(--yb-space-8) var(--yb-space-8) var(--yb-space-10);
+  color:var(--yb-text-inverse); max-width:44ch;
+}
+.yb-mediabanner--center .yb-mediabanner__body{
+  align-items:center; text-align:center; justify-content:center; max-width:none;
+}
+.yb-mediabanner__eyebrow{
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; color:var(--yb-accent-on-dark);
+  font-weight:var(--yb-font-weight-semibold);
+}
+.yb-mediabanner__title{
+  margin:0; font-size:var(--yb-type-h2-size); line-height:var(--yb-type-h2-line);
+  letter-spacing:var(--yb-type-h2-track); font-weight:var(--yb-type-h2-weight);
+  text-wrap:balance;
+}
+.yb-mediabanner__text{margin:0; font-size:var(--yb-type-body-size); color:var(--yb-text-secondary-inverse)}
+.yb-mediabanner:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+@media (max-width:520px){
+  .yb-mediabanner__body{padding:var(--yb-space-5) var(--yb-page-gutter) var(--yb-space-6)}
 }
 
 /* =========================================================================

@@ -8,7 +8,11 @@
     "test": "node test/validate.mjs",
     "build": "./build.sh",
     "start": "./serve.sh",
-    "check": "./build.sh && node test/validate.mjs"
+    "check": "./build.sh && node test/validate.mjs",
+    "layout": "node tools/baseline.mjs",
+    "layout:aceitar": "node tools/baseline.mjs --aceitar"
   },
-  "engines": { "node": ">=18" }
+  "engines": {
+    "node": ">=18"
+  }
 }
