@@ -13,24 +13,65 @@
    Anúncio + navegação + ações. Sticky, porque o carrinho precisa estar
    sempre a um toque.
    ========================================================================= */
-/* position:relative porque o painel do submenu se ancora no header inteiro,
-   nao no item — e assim que ele consegue ir de ponta a ponta da tela. */
-.yb-header{position:relative; background:var(--yb-bg-page);
-  border-bottom:1px solid var(--yb-border-subtle)}
+/* A BARRA gruda, nao o header inteiro. Se o `sticky` fosse no `.yb-header`,
+   a faixa preta viria junto e comeria 44px de tela em todo scroll — num
+   telefone de 568px isso e 8% da altura gasta repetindo o mesmo aviso. Como
+   a faixa fica em fluxo normal acima da barra, ela sai de cena sozinha e a
+   barra assume o topo quando chega la. */
+/* display:contents porque `sticky` so gruda dentro do pai. Com o header como
+   caixa, a barra grudava ate o fim do proprio header — ou seja, 40px — e
+   sumia junto. Aqui o wrapper deixa de gerar caixa: a faixa e a barra passam
+   a ser irmas no fluxo da pagina, e a barra pode grudar ate o rodape.
+
+   O DOM nao muda, entao os seletores de irmao da gaveta e o `closest` do JS
+   continuam valendo. O <header> segue na arvore de acessibilidade como
+   landmark — o bug que removia semantica com display:contents foi corrigido
+   nos tres motores. O fundo saiu daqui porque a faixa e a barra ja tem o
+   seu; wrapper sem caixa nao pinta nada. */
+.yb-header{display:contents}
 .yb-header__announce{
   background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
   text-align:center; padding:var(--yb-space-3) var(--yb-page-gutter);
   font-size:var(--yb-type-caption-size); letter-spacing:var(--yb-tracking-wide);
 }
 .yb-header__announce b{color:var(--yb-accent-on-dark); font-weight:var(--yb-font-weight-semibold)}
+/* Grid de tres colunas, nao flex com sobra: um flex simples centraliza o
+   nav dentro do espaco que sobra entre logo e acoes, e os dois quase nunca
+   pesam igual (ex.: 176px de icones contra 83px de logo) — a diferenca
+   empurra o nav pra fora do centro de verdade da barra. `1fr auto 1fr`
+   centraliza pela barra inteira, nao pelo que sobrou de cada lado. Mesma
+   receita da gaveta do celular, que tem o mesmo problema com hamburguer e
+   acoes de pesos diferentes. */
 .yb-header__bar{
-  display:flex; align-items:center; gap:var(--yb-space-6);
+  display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
+  gap:var(--yb-space-6);
   padding:var(--yb-space-4) var(--yb-space-8);
+  position:sticky; inset-block-start:0; z-index:var(--yb-z-sticky);
+  min-height:var(--yb-header-h);   /* o token e a barra dizem o mesmo numero */
+  /* fundo e borda mudam de dono junto com o sticky: transparente, o conteudo
+     da pagina passaria por baixo e apareceria atraves da barra. */
+  background:var(--yb-bg-page);
+  border-block-end:1px solid var(--yb-border-subtle);
 }
+/* O FUNDO vai de ponta a ponta; o CONTEUDO fica na coluna da pagina.
+   Sem isto o logo comeca em 32px e o breadcrumb logo abaixo em 152 — 120px
+   de desencontro numa tela de 1440, que e o que faz o breadcrumb parecer
+   deslocado. Nao e o padding dele: e a barra que estava noutra coluna.
+
+   O calc reproduz o que .yb-page faz — a mesma margem central, mais a mesma
+   goteira — sem precisar de um <div> a mais na marcacao. */
+.yb-header__bar{
+  padding-inline:calc(
+    max(0px, 100% - var(--yb-container-max)) / 2 + var(--yb-page-gutter)
+  );
+}
+/* O painel do mega menu se ancora na BARRA agora — `sticky` ja e posicionado,
+   entao ele e o bloco que contem. Ancorado no `.yb-header` como antes, o
+   painel ficaria la em cima enquanto a barra desce com o scroll. */
 /* o logo e o componente .yb-logo; aqui so o alvo de clique do header */
 .yb-header__logo{
   display:inline-flex; align-items:center; text-decoration:none;
-  min-height:var(--yb-target-min); flex:none;
+  min-height:var(--yb-target-min); flex:none; justify-self:start;
 }
 .yb-header__logo:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
@@ -48,17 +89,30 @@
    <span> nao recebe foco, entao hoje o menu Shop e inalcancavel por teclado.
    Aqui abre no hover (paridade), no clique e no foco.
    ------------------------------------------------------------------------- */
-.yb-header__nav{min-width:0}
+/* O menu ocupa o espaco que sobra entre o logo e as acoes e centraliza os
+   links dentro dele. Antes o menu era do tamanho do proprio conteudo e as
+   acoes iam pra direita com margin-inline-start:auto — numa tela de 1440 isso
+   deixava 358px de vazio entre "Contact Us" e a lupa: o menu grudado no logo,
+   os icones grudados na borda, e um buraco no meio sem funcao. */
+.yb-header__nav{min-width:0; display:flex; justify-content:center}
 .yb-nav{
   display:flex; align-items:center; gap:var(--yb-space-5);
   list-style:none; margin:0; padding:0;
 }
 .yb-nav__item{position:static}
 .yb-nav__toggle{position:absolute; opacity:0; pointer-events:none; width:1px; height:1px}
+/* 500 e nao 400: em 400 a navegacao principal tinha exatamente o peso da
+   faixa promocional e dos sub-itens do painel — o conteudo mais secundario do
+   cabecalho. Entre um logo pesado e icones de traco 1.5 ela recuava.
+   A COR nao sobe junto. `--yb-text-secondary` fica por dois motivos: o hover
+   ja e `-> --yb-text-primary`, entao escurecer o repouso deixaria o hover sem
+   para onde ir; e "Sales" e magenta de proposito — subir peso e cor faria o
+   menu inteiro competir com o unico item que devia se destacar. */
 .yb-nav__link{
   display:inline-flex; align-items:center; gap:var(--yb-space-1);
   min-height:var(--yb-target-min); cursor:pointer;
-  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-medium);
+  color:var(--yb-text-secondary);
   text-decoration:none; white-space:nowrap;
 }
 
@@ -96,6 +150,13 @@
   display:flex; flex-wrap:wrap; gap:var(--yb-space-10);
   max-width:var(--yb-container-max); margin-inline:auto;
   padding:var(--yb-space-8) var(--yb-page-gutter);
+  /* Unico contexto de contêiner do sistema, e ele se paga: a vitrine da
+     direita precisa saber a largura QUE SOBROU, nao a da tela. Na loja
+     este bloco mede 1200 e na doc mede 918 — a mesma tela de 1440 — e uma
+     media query, que so enxerga os 1440, espremia as duas pecas em 131px
+     dentro da doc enquanto na loja elas tinham 288. Quem responde pelo
+     espaco e a caixa, entao e a caixa que se mede. */
+  container-type:inline-size; container-name:yb-nav;
 }
 .yb-nav__group{min-width:0}
 .yb-nav__grouptitle{
@@ -110,6 +171,19 @@
 
 @media (hover:hover){
   .yb-nav__grouptitle:hover{color:var(--yb-text-link)}
+}
+/* "Sales" se destaca por COR, nao por emoji. A loja escreve "🔥Sales": o
+   emoji pesa mais que qualquer link vizinho, muda de desenho por sistema
+   operacional e o leitor de tela anuncia "fire Sales". O magenta e o mesmo
+   do .yb-badge--sale — quem viu o selo de desconto no cartao reconhece o
+   link. Peso igual aos irmaos: a cor sozinha ja separa.
+   `.yb-nav .yb-nav__link--sale` (0,2,0) porque a gaveta mobile repinta
+   `.yb-nav__link` com text-primary mais abaixo e venceria por ordem. */
+.yb-nav .yb-nav__link--sale,
+.yb-nav__grouptitle--sale{color:var(--yb-text-link)}
+@media (hover:hover){
+  .yb-nav .yb-nav__link--sale:hover,
+  .yb-nav__grouptitle--sale:hover{color:var(--yb-text-link-hover)}
 }
 .yb-nav__sublist{list-style:none; margin:0; padding:0}
 .yb-nav__sublist a{
@@ -139,6 +213,121 @@
   outline-offset:var(--yb-focus-offset);
 }
 
+/* --- vitrine do painel -------------------------------------------------
+   A metade direita do painel era espaco morto: em 1440 as quatro listas
+   ocupam 486px dos 1136 uteis e paravam ali, com 402px de branco ate a
+   borda. A vitrine encosta na borda com `margin-inline-start:auto`, e
+   assim a folga vira respiro ENTRE lista e vitrine — nao rabo de nada no
+   fim da linha.
+
+   Sao duas pecas porque o menu atende dois compradores. Quem ja sabe o
+   que quer recebe produto, preco e CTA. Quem abre "Shop" pela primeira
+   vez encontra quinze nomes proprios — Capulana, Mirra, Genoma, Quarta
+   Camada — que nao dizem nada a quem chega dos Estados Unidos; para esse
+   a segunda peca e a analise de cabelo, unica coisa no menu que traduz
+   catalogo em rotina.
+
+   A vitrine CRESCE (`flex:1 1 18rem`) em vez de so encostar a direita:
+   assim ela come a sobra inteira e as duas pecas ganham largura no lugar
+   de deixar branco. O teto de 18rem em cada peca segura o tamanho antes
+   que um card de menu vire banner. E a base baixa e o que impede a
+   quebra de linha — o flex decide quebrar olhando a base, nao o tamanho
+   final, e a vitrine numa segunda linha dobraria a altura do menu. */
+.yb-nav__rail{
+  flex:1 1 18rem; min-width:0;
+  display:flex; justify-content:flex-end; gap:var(--yb-space-6);
+}
+.yb-nav__rail > *{flex:1 1 0; min-width:0; max-width:18rem}
+
+/* Um unico <a>, como `.yb-search__item` — midia e botao separados dariam
+   dois links pro mesmo produto, ruido extra pra teclado e leitor de tela.
+   A midia cresce com `flex:1`: o painel ja estica toda coluna pra altura
+   da mais alta, entao o que sobrar de altura vira imagem, nao vao. */
+.yb-nav__promo{
+  display:flex; flex-direction:column; gap:var(--yb-space-3);
+  text-decoration:none; color:inherit;
+  border-radius:var(--yb-radius-sm);
+}
+.yb-nav__promo:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-nav__promo-media{
+  position:relative; flex:1; min-height:8rem; overflow:hidden;
+  background:var(--yb-bg-muted); border-radius:var(--yb-radius-media);
+}
+.yb-nav__promo-media img{width:100%; height:100%; object-fit:cover; display:block}
+.yb-nav__promo-info{display:flex; flex-direction:column; gap:var(--yb-space-2)}
+.yb-nav__promo-name{
+  margin:0; font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-medium); color:var(--yb-text-primary);
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
+}
+
+@media (hover:hover){
+  .yb-nav__promo:hover .yb-nav__promo-name{color:var(--yb-text-link)}
+}
+
+/* A segunda peca da vitrine: superficie afundada em vez de foto, para nao
+   competir com o produto ao lado. A lista vai para o fim com `auto` na
+   margem — em vez de esticar tipografia para preencher altura, a folga
+   inteira se acumula num lugar so, entre o texto e os passos. */
+.yb-nav__pitch{
+  display:flex; flex-direction:column; gap:var(--yb-space-3);
+  padding:var(--yb-space-5);
+  background:var(--yb-surface-sunken);
+  border:1px solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-media);
+  text-decoration:none; color:inherit;
+}
+.yb-nav__pitch:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+
+@media (hover:hover){
+  .yb-nav__pitch:hover{border-color:var(--yb-accent-border)}
+}
+.yb-nav__pitch-eyebrow{
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-accent-text);
+}
+.yb-nav__pitch-title{
+  margin:0; font-size:var(--yb-type-h4-size); line-height:var(--yb-type-h4-line);
+  font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-primary);
+}
+.yb-nav__pitch-text{
+  margin:0; font-size:var(--yb-type-body-sm-size);
+  line-height:var(--yb-type-body-sm-line); color:var(--yb-text-secondary);
+}
+.yb-nav__pitch-steps{
+  list-style:none; margin:0; padding:0; margin-block-start:auto;
+  display:flex; flex-direction:column; gap:var(--yb-space-2);
+}
+.yb-nav__pitch-steps li{
+  display:flex; align-items:center; gap:var(--yb-space-2);
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-secondary);
+}
+.yb-nav__pitch-steps .yb-icon{color:var(--yb-accent-text); flex:none}
+
+/* Contêiner abaixo de 1024 nao comporta as duas pecas sem espremer as duas
+   — medido: 131px para o produto, contra os 288 de um painel inteiro. Some
+   a segunda, que e a dispensavel: a primeira carrega preco. Some de verdade
+   (`display:none`), para nao deixar um link que o teclado alcanca e o olho
+   nao ve. O numero e o mesmo `--yb-breakpoint-lg` da escala; muda o que ele
+   mede, que aqui e a caixa e nao a tela. Na gaveta (< 900) a vitrine empilha
+   e a peca volta — a regra de reaparecer mora la embaixo, no bloco da gaveta.
+
+   Este bloco tem de vir DEPOIS de `.yb-nav__pitch`: as duas regras tem a
+   mesma especificidade e a de cima declara `display:flex`. Colocado antes,
+   como estava, perdia em silencio — o mesmo tropeco ja anotado no
+   `.yb-header__icon`. */
+@container yb-nav (max-width:1024px){
+  .yb-nav__pitch{display:none}
+}
+
 /* --- gaveta e acordeao (< 900) --------------------------------------- */
 /* .yb-header__icon vem depois nesta folha e tambem declara display; sem
    somar a classe aqui, o hamburguer aparecia no desktop. */
@@ -148,6 +337,11 @@
 /* Acima de 900 nao ha gaveta — logo nao pode sobrar um controle que o
    teclado alcanca e que nao abre nada. Mesma regra do acordeao do footer. */
 .yb-header__drawer{display:none}
+/* Conta so muda de casa abaixo de 900: no desktop e icone na barra (paridade
+   com busca e sacola, mesma distancia de clique); na gaveta vira item de
+   texto como Home ou Sales — um icone sozinho a esquerda dos 25 links da
+   gaveta nao lia como parte do mesmo menu. */
+.yb-nav__item--account{display:none}
 
 @media (max-width:900px){
   .yb-header__drawer{display:block; position:absolute; opacity:0;
@@ -157,7 +351,21 @@
     outline:var(--yb-focus-width) solid var(--yb-focus-color);
     outline-offset:var(--yb-focus-offset);
   }
+  /* O grid ja e de tres colunas por padrao (ver .yb-header__bar la em cima).
+     Aqui embaixo `.yb-header__nav` vira `position:fixed` e sai do fluxo,
+     entao quem ocupa as tres colunas passa a ser hamburguer, logo e acoes —
+     e o logo precisa ir para o MEIO nessa formacao, nao mais para a
+     esquerda. */
+  .yb-header__burger{ justify-self:start; }
+  .yb-header__logo{ justify-self:center; }
+  /* Conta muda de casa: some da barra, aparece como item de texto no topo da
+     gaveta — ver nota em .yb-nav__item--account acima. */
+  .yb-header__account{ display:none; }
+  .yb-nav__item--account{ display:list-item; }
   .yb-header__nav{
+    /* de volta a bloco: na gaveta o botao de fechar e a lista empilham, e o
+       display:flex do desktop os poria lado a lado */
+    display:block;
     position:fixed; inset-block:0; inset-inline-start:0; z-index:var(--yb-z-modal);
     width:min(22rem, 86vw); background:var(--yb-surface-raised);
     box-shadow:var(--yb-elevation-drawer); overflow-y:auto;
@@ -197,12 +405,17 @@
     transition:opacity var(--yb-transition-surface);
   }
   .yb-header__drawer:checked ~ .yb-header__scrim{opacity:1; pointer-events:auto}
+  /* `.yb-header__bar` e `position:sticky` com z-index proprio (1100): isso
+     cria um contexto de empilhamento, e a gaveta la dentro fica presa nesse
+     andar mesmo declarando z-index de modal (1300) — o veu (1200), que e
+     IRMAO da barra, pintava por cima da gaveta inteira. So sobe quando a
+     gaveta esta aberta; fechada, a barra continua no andar normal de sticky. */
+  .yb-header__drawer:checked ~ .yb-header__bar{ z-index:var(--yb-z-modal); }
 
   .yb-nav{flex-direction:column; align-items:stretch; gap:0}
   .yb-nav__link{
     justify-content:space-between; min-height:var(--yb-target-min);
-    border-bottom:1px solid var(--yb-border-subtle);
-    font-size:var(--yb-type-body-size); color:var(--yb-text-primary);
+    font-size:var(--yb-type-body-lg-size); color:var(--yb-text-primary);
   }
   .yb-nav__toggle:checked + .yb-nav__link .yb-icon{transform:rotate(180deg)}
   /* Sem hover no toque: aqui so o :checked abre. */
@@ -212,17 +425,44 @@
     transition:max-height var(--yb-transition-surface);
   }
   .yb-nav__item:hover > .yb-nav__panel{max-height:0}
-  .yb-nav__toggle:checked ~ .yb-nav__panel{max-height:80rem}
+  /* Teto so existe porque `height:auto` nao transiciona — e teto que o
+     conteudo alcanca corta em silencio. Com a vitrine, o Shop empilhado
+     mede 1357px contra os 1280 de 80rem: o preco e o "Shop now" do promo
+     ficavam abaixo da linha de corte, invisiveis e sem scroll que os
+     alcancasse. 110rem da folga para as duas pecas e ainda sobra. */
+  .yb-nav__toggle:checked ~ .yb-nav__panel{max-height:110rem}
   .yb-nav__groups{
     flex-direction:column; gap:var(--yb-space-5);
     padding:var(--yb-space-4) var(--yb-space-4) var(--yb-space-5);
   }
+  /* A pilha em coluna ja resolve o espaco sobrando sozinha — o card vertical
+     do desktop viraria uma torre na gaveta. Aqui vira uma linha compacta:
+     miniatura fixa, sem selo (nao cabe em 72px sem quebrar). */
+  .yb-nav__rail{flex-direction:column; gap:var(--yb-space-5)}
+  /* o teto de 18rem e do painel largo, onde as pecas dividem uma faixa;
+     na gaveta cada uma ocupa a largura toda */
+  .yb-nav__rail > *{max-width:none}
+  .yb-nav__promo{flex-direction:row; align-items:flex-start; flex:auto}
+  .yb-nav__promo-media{flex:none; inline-size:4.5rem; min-height:0; aspect-ratio:1}
+  .yb-nav__promo-media .yb-card__flags{display:none}
+  .yb-nav__promo-info{flex:1; min-width:0}
+  /* Na gaveta a analise volta (o contêiner aqui e estreito, e a regra de
+     cima a esconderia) — mas so com a promessa e o botao: os tres passos
+     sao o que convence no painel largo e o que faz rolar no telefone, onde
+     acima dela ja vieram 21 links. */
+  .yb-nav__pitch{display:flex; padding:var(--yb-space-4)}
+  .yb-nav__pitch-text,
+  .yb-nav__pitch-steps{display:none}
 }
-.yb-header__actions{display:flex; align-items:center; gap:var(--yb-space-2);
-  /* logico: com margin-left as acoes ficavam presas a direita tambem em RTL */
-  margin-inline-start:auto}
-/* compoe .yb-iconbtn; aqui so o respiro lateral, que e proprio do header */
-.yb-header__icon{ padding:0 var(--yb-space-3); }
+/* Sem margin-inline-start:auto: quem empurra as acoes pra ponta agora e o
+   flex:1 do menu, que ja respeita a direcao de leitura sozinho. */
+.yb-header__actions{display:flex; align-items:center; gap:0; justify-self:end}
+/* Sem gap e sem respiro lateral: os tres icones ja tem 44px de alvo cada, e o
+   alvo E o respiro. O gap de 8px mais 12px de padding de cada lado somavam
+   32px entre um glifo e o outro — os tres liam como tres grupos, nao como um
+   trio de acoes da mesma barra. Encostados, o alvo continua intacto (44px) e a
+   distancia entre glifos cai para os 24px que o proprio alvo ja garante. */
+.yb-header__icon{ padding:0; }
 
 @media (hover:hover){
   .yb-header__icon:hover{background:var(--yb-bg-muted)}
@@ -231,13 +471,32 @@
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
 }
+/* O contador fica SOBRE a sacola, no canto superior direito — nao ao lado.
+   Ao lado ele empurrava a largura do botao para 66px e virava um quarto
+   elemento na fileira; a leitura era "sacola, e tambem um 2", em vez de "duas
+   coisas na sacola".
+   Menor (18px) porque em cima do icone ele nao precisa competir: o proprio
+   deslocamento ja diz que pertence aquele botao. A borda da cor do cabecalho
+   e o que o separa do traco da sacola quando os dois se cruzam. */
+.yb-header__icon:has(.yb-header__count){position:relative}
 .yb-header__count{
+  /* Ancorado no canto do GLIFO, nao no do botao. O glifo tem 20px centrados
+     num alvo de 44, entao o canto dele fica a 12px da borda — em `top:2 right:2`
+     o selo caia sobre a alca da sacola e a apagava. Deslocado para fora, ele
+     encosta na quina e o desenho continua inteiro. */
+  position:absolute; inset-block-start:1px; inset-inline-end:-4px;
   background:var(--yb-action-bg); color:var(--yb-action-text);
-  font-size:var(--yb-type-overline-size); font-weight:var(--yb-font-weight-semibold);
-  min-width:20px; height:20px; padding:0 6px;
+  font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-bold);
+  /* Circulo, nao pilula. Com `box-sizing:border-box` a borda de 2px entra na
+     conta: o digito (8px) mais 10px de respiro mais 4px de borda davam 22 de
+     largura contra 18 de altura. A largura minima passa a ser a MESMA medida
+     da altura, e o respiro cai para 3px de cada lado — um digito nao encosta,
+     e dois ("12") ainda cabem virando pilula, que ai e o certo. */
+  min-inline-size:22px; block-size:22px; padding:0 3px;
+  border:2px solid var(--yb-surface);
   border-radius:var(--yb-radius-full);
   display:inline-flex; align-items:center; justify-content:center;
-  font-variant-numeric:tabular-nums;
+  font-variant-numeric:tabular-nums; line-height:1;
 }
 
 /* Aperto do mobile. Fica no FIM da secao de proposito: `.yb-header__icon` e
@@ -248,7 +507,9 @@
    do respiro, nao do alvo: os icones seguem com 44px de min-width. A loja hoje
    cabe nos mesmos 320 entregando icone de 18x17 — alvo que ninguem acerta. */
 @media (max-width:768px){
-  .yb-header__bar{padding:var(--yb-space-3) var(--yb-page-gutter); gap:var(--yb-space-2)}
+  /* respiro menor aqui, entao a altura acompanha */
+  .yb-header__bar{--yb-header-h:calc(var(--yb-target-min) + var(--yb-space-3) * 2 + 1px);
+    padding:var(--yb-space-3) var(--yb-page-gutter); gap:var(--yb-space-2)}
   .yb-header__icon{padding:0}
   .yb-header__actions{gap:0}
 }
@@ -269,16 +530,13 @@
 .yb-freeship{display:flex; flex-direction:column; gap:var(--yb-space-2)}
 .yb-freeship__text{font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
 .yb-freeship__text b{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
-.yb-freeship__track{
-  height:6px; background:var(--yb-bg-muted);
-  border-radius:var(--yb-radius-full); overflow:hidden;
-}
-.yb-freeship__fill{
-  height:100%; background:var(--yb-action-bg);
-  border-radius:var(--yb-radius-full);
-  transition:width var(--yb-transition-surface);
-}
-.yb-freeship--done .yb-freeship__fill{background:var(--yb-success-solid)}
+/* A barra e o componente `yb-progress`, nao uma copia. Ela morava aqui como
+   `.yb-freeship__track` ate a mesma barra aparecer uma segunda vez — e pela
+   regra do 2 o padrao passou a consumir o componente em vez de manter a
+   propria versao. Sobrou aqui o que e do padrao: a frase e o tom de
+   conquistado. A pista era 6px e agora e 8, a medida da escala; um terceiro
+   valor so para preservar 2px derrubaria a razao de existir da escala. */
+.yb-freeship--done .yb-progress__fill{background:var(--yb-success-solid)}
 .yb-freeship--done .yb-freeship__text{color:var(--yb-success-text);
   font-weight:var(--yb-font-weight-medium)}
 
@@ -291,97 +549,347 @@
 .yb-cart{
   display:flex; flex-direction:column; height:100%;
   background:var(--yb-surface); box-shadow:var(--yb-elevation-drawer);
-  max-width:420px; width:100%;
+  width:100%; max-width:100%;
 }
+/* Largura cheia no telefone, 420 no tablet, 440 no desktop. A gaveta e o
+   unico lugar da loja onde a largura cresce com a tela em vez de a coluna:
+   mais espaco aqui e mais item visivel sem rolar, nao linha mais longa. */
+@media (min-width:768px){  .yb-cart{ max-width:420px } }
+@media (min-width:1024px){ .yb-cart{ max-width:440px } }
 .yb-cart__head{
   display:flex; align-items:center; justify-content:space-between;
-  padding:var(--yb-space-5) var(--yb-space-6);
-  border-bottom:1px solid var(--yb-border-subtle);
+  padding:var(--yb-space-2) var(--yb-space-3);
 }
+/* A divisoria so aparece quando NAO ha lista embaixo. Com itens, a barra de
+   frete ja separa o cabecalho do resto, e duas linhas seguidas viram sujeira. */
+.yb-cart--vazio .yb-cart__head,
+.yb-cart--carregando .yb-cart__head{ border-bottom:1px solid var(--yb-border-subtle); }
 .yb-cart__head h2{
   margin:0; font-size:var(--yb-type-h4-size);
   font-weight:var(--yb-type-h4-weight); letter-spacing:var(--yb-type-h4-track);
 }
-.yb-cart__close{
+/* Duas acoes no canto: compartilhar e fechar. Compartilhar so existe com
+   itens — sacola vazia nao se manda para ninguem. Fechar fica por ULTIMO,
+   encostado na borda: e o destino do polegar que ja mira aquele canto, e
+   trocar a ordem faz a pessoa compartilhar quando queria sair. */
+.yb-cart__head-acoes{display:flex; align-items:center; gap:var(--yb-space-1)}
+.yb-cart__close,
+.yb-cart__share{
+  display:inline-flex; align-items:center; justify-content:center;
   width:var(--yb-target-min); height:var(--yb-target-min);
   border:none; background:transparent; cursor:pointer;
   color:var(--yb-text-muted); font-size:var(--yb-type-h4-size);
-  border-radius:var(--yb-radius-control); line-height:1;
+  border-radius:var(--yb-radius-pill); line-height:1;
 }
 
 @media (hover:hover){
-  .yb-cart__close:hover{background:var(--yb-bg-muted); color:var(--yb-text-primary)}
+  .yb-cart__close:hover,
+  .yb-cart__share:hover{background:var(--yb-bg-muted); color:var(--yb-text-primary)}
 }
-.yb-cart__close:focus-visible{
+.yb-cart__close:focus-visible,
+.yb-cart__share:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
 }
-.yb-cart__ship{padding:var(--yb-space-4) var(--yb-space-6);
+.yb-cart__ship{padding:var(--yb-space-2) var(--yb-space-3);
   border-bottom:1px solid var(--yb-border-subtle); background:var(--yb-bg-subtle)}
+/* Alcancado, a faixa inteira fica verde e a barra de progresso sai: barra
+   cheia e ruido, porque nao ha mais o que preencher. A cor sozinha ja diz
+   "conquistado", e o icone de caminhao diz do que se trata. */
+.yb-cart__ship--ok{
+  background:var(--yb-success-surface);
+  border-block-end-color:var(--yb-success-surface);
+  text-align:center;
+}
+/* o corpo do frete e uma coluna; sem centrar os itens dela, `text-align` no
+   pai nao move um filho que e flex */
+.yb-cart__ship--ok .yb-freeship{align-items:center}
+.yb-cart__ship--ok .yb-freeship__text{
+  display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  color:var(--yb-success-text); font-weight:var(--yb-font-weight-semibold);
+}
+.yb-cart__ship--ok .yb-progress{display:none}
+
+/* barra de frete so existe com item e fora do carregando */
+.yb-cart--vazio .yb-cart__ship,
+.yb-cart--carregando .yb-cart__ship{ display:none; }
 .yb-cart__items{
-  flex:1; overflow-y:auto; padding:var(--yb-space-4) var(--yb-space-6);
-  display:flex; flex-direction:column; gap:var(--yb-space-5);
+  flex:1; overflow-y:auto; padding:var(--yb-space-2) var(--yb-space-3);
+  display:flex; flex-direction:column; gap:var(--yb-space-2);
 }
-.yb-cart__item{display:grid; grid-template-columns:72px 1fr; gap:var(--yb-space-4)}
-/* O stepper e flex:none em 142px — e o piso da linha do carrinho. Em telas
-   estreitas quem cede e a miniatura, nao o controle: 16px vindos da imagem
-   sao 16px que o alvo de toque nao precisa devolver. */
-@media (max-width:480px){
-  .yb-cart__item{grid-template-columns:56px 1fr; gap:var(--yb-space-3)}
+/* --- linha do carrinho ---------------------------------------------------
+   Tres colunas: miniatura, corpo, acoes. As acoes saem do fluxo do texto e
+   ganham coluna propria — antes o "Remove" era um link ABAIXO do preco e a
+   linha media 190px; com a lixeira e o seletor na direita, mede 100. Num
+   carrinho de tres itens isso e a diferenca entre ver o rodape e ter de rolar
+   para descobrir que ele existe. */
+/* DUAS colunas, nao tres. A terceira coluna so para lixeira e quantidade
+   custava ~110px de um total de 420, e o titulo quebrava em duas linhas com
+   metade da gaveta vazia ao lado. Agora cada controle mora na linha a que
+   pertence: a lixeira ao lado do nome do que ela apaga, a quantidade ao lado
+   do preco que ela multiplica. */
+.yb-cart__item{
+  display:grid; grid-template-columns:56px 1fr;
+  gap:var(--yb-space-3); align-items:start;
+  padding-block:var(--yb-space-2);
 }
-.yb-cart__item .yb-card__media{aspect-ratio:1/1}
-.yb-cart__item-body{display:flex; flex-direction:column; gap:var(--yb-space-2); min-width:0}
+.yb-cart__item .yb-card__media{aspect-ratio:1/1; border-radius:var(--yb-radius-sm)}
+.yb-cart__item-body{display:flex; flex-direction:column; gap:var(--yb-space-1); min-width:0}
+.yb-cart__item-topo{display:flex; align-items:flex-start; gap:var(--yb-space-2)}
+.yb-cart__item-topo .yb-cart__item-title{flex:1; min-width:0}
 .yb-cart__item-title{
-  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-medium);
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
   margin:0; display:-webkit-box; -webkit-box-orient:vertical;
   -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
 }
 .yb-cart__item-variant{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
-.yb-cart__item-foot{display:flex; align-items:center; justify-content:space-between;
-  gap:var(--yb-space-3); flex-wrap:wrap}
+/* preco na MESMA linha: riscado, atual e o quanto se economiza. Empilhados,
+   cada item comia mais 20px e o desconto perdia a comparacao de relance. */
+.yb-cart__item-foot{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:var(--yb-space-2); flex-wrap:wrap; margin-block-start:var(--yb-space-1);
+}
+.yb-cart__item-precos{
+  display:flex; align-items:baseline; gap:var(--yb-space-2);
+  flex-wrap:wrap; min-width:0;
+}
+/* na gaveta o preco nao manda: quem le esta conferindo o que escolheu, nao
+   decidindo a compra. Em h4 ele ficava maior que o titulo do produto. */
+.yb-cart__item-foot .yb-price__now{
+  font-size:var(--yb-type-body-size);
+  /* tabular-nums da ao ponto a largura de um digito. Isso serve pra coluna
+     que alinha (o rodape), nao pra um preco solto no meio da linha, onde o
+     buraco em volta do ponto e a unica coisa que se ve. */
+  font-variant-numeric:proportional-nums;
+}
+.yb-cart__item-foot .yb-price__was{font-size:var(--yb-type-caption-size)}
+/* A lixeira e icone, nao a palavra: "Remove" escrito ao lado do titulo
+   competiria com ele por atencao na linha em que o nome do produto e a unica
+   coisa que importa. O nome vive no aria-label, entao o leitor de tela
+   continua ouvindo o que o olho deduz do desenho.
+   As margens negativas devolvem o alvo de 44px sem que ele empurre o texto:
+   a caixa cresce para fora da linha, nao para dentro dela. A do lado direito
+   e calculada, nao chutada — puxa exatamente a folga entre o alvo e o glifo,
+   para a borda do icone cair na mesma prumada da borda do stepper logo
+   abaixo. Com -8px fixos, o icone ficava 14px para dentro da coluna. */
 .yb-cart__remove{
-  background:none; border:none; cursor:pointer;
-  /* Unica acao destrutiva do carrinho, e media 24px de altura — o piso da
-     WCAG, nao os 44 que o sistema promete. `align-self:start` evita que a
-     largura acompanhe a coluna e vire uma faixa clicavel inteira. */
-  display:inline-flex; align-items:center; align-self:start;
-  min-height:var(--yb-target-min); padding-inline-end:var(--yb-space-2);
-  font-family:inherit; font-size:var(--yb-type-caption-size);
-  color:var(--yb-text-muted); text-decoration:underline;
+  display:inline-flex; align-items:center; justify-content:center;
+  flex:none;
+  inline-size:var(--yb-target-min); block-size:var(--yb-target-min);
+  margin-block:calc(var(--yb-space-2) * -1);
+  margin-inline-end:calc((var(--yb-target-min) - var(--yb-icon-sm)) / -2);
+  background:none; border:0; cursor:pointer;
+  color:var(--yb-text-muted); border-radius:var(--yb-radius-control);
 }
 
 @media (hover:hover){
-  .yb-cart__remove:hover{color:var(--yb-danger-text)}
+  .yb-cart__remove:hover{color:var(--yb-danger-text); background:var(--yb-bg-muted)}
 }
 .yb-cart__remove:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
 }
+/* A quantidade e o `.yb-stepper--sm`, nao um <select> proprio da gaveta. Um
+   controle de quantidade que muda de forma entre a PDP e o carrinho obriga a
+   pessoa a reaprender no meio da compra, e obriga o sistema a manter dois. O
+   que muda e o TAMANHO: 44+48+44 nao cabe ao lado da foto, do titulo e do
+   preco em 420px. Remover saiu de dentro do controle e voltou para a lixeira,
+   que ja estava ali em cima. */
+.yb-cart__item .yb-stepper--sm input{inline-size:2rem}
+@media (max-width:480px){
+  .yb-cart__item{grid-template-columns:48px 1fr auto; gap:var(--yb-space-2)}
+}
+/* --- brinde por meta ----------------------------------------------------
+   Irma da barra de frete gratis, com uma diferenca que muda o desenho: frete
+   tem UMA meta, brinde tem varias. Uma barra unica de 0 ao ultimo degrau
+   esconde o degrau do meio — a pessoa passa dos $80 e nada acontece na barra.
+   Um trilho por degrau mostra onde ela esta e quantos faltam.
+
+   A recompensa aparece como foto, nao como texto: "Ybera Repair Mask 50ml" e
+   um nome; a foto e o motivo de gastar mais $50. */
+.yb-cart__brinde-card{
+  margin:var(--yb-space-2) var(--yb-space-3);
+  display:flex; align-items:center; gap:var(--yb-space-3);
+  padding:var(--yb-space-3); border:1px solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-card); background:var(--yb-bg-subtle);
+}
+.yb-cart__brinde-corpo{display:flex; flex-direction:column; gap:var(--yb-space-3); flex:1; min-width:0}
+.yb-cart__brinde-texto{
+  margin:0; font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+}
+.yb-cart__brinde-texto b{color:var(--yb-success-text); font-weight:var(--yb-font-weight-semibold)}
+/* Os trilhos sao `.yb-progress`, um por degrau. O `role="progressbar"` fica
+   no PAI, com um valor so: dois medidores lado a lado fazem o leitor de tela
+   anunciar dois progressos concorrentes para uma coisa que tem um progresso. */
+.yb-cart__brinde-trilhos{display:flex; align-items:center; gap:var(--yb-space-1)}
+.yb-cart__brinde-trilhos .yb-progress{flex:1}
+.yb-cart__brinde-premio{
+  inline-size:56px; block-size:56px; flex:none; overflow:hidden;
+  border-radius:var(--yb-radius-media); background:var(--yb-surface-sunken);
+}
+.yb-cart__brinde-premio img{inline-size:100%; block-size:100%; object-fit:cover; display:block}
+/* Tudo conquistado: nao ha mais o que somar, entao nao ha barra a mostrar. */
+.yb-cart__brinde-card--completo .yb-cart__brinde-trilhos{display:none}
+.yb-cart__brinde-card--completo .yb-cart__brinde-texto{color:var(--yb-success-text)}
+
+/* --- seguro de entrega --------------------------------------------------
+   Fica DESLIGADO por padrao. Servico opcional pre-marcado e cobranca que a
+   pessoa nao pediu, e nos EUA isso tem nome: dark pattern. O preco vai na
+   frase, nao so no total — quem liga tem de saber quanto custa antes. */
+.yb-cart__protecao{
+  display:flex; align-items:center; gap:var(--yb-space-3);
+  padding:var(--yb-space-2) var(--yb-space-3);
+}
+.yb-cart__protecao-corpo{display:flex; flex-direction:column; gap:var(--yb-space-1); flex:1; min-width:0}
+.yb-cart__protecao-corpo b{
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
+}
+.yb-cart__protecao-corpo p{
+  margin:0; font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+}
+
+/* --- cupom --------------------------------------------------------------
+   Nao e componente novo: e `.yb-field--row` com um `.yb-btn--sm` do lado, que
+   e exatamente o caso que aquele modificador foi escrito para atender. O que
+   nasce aqui e so a POSICAO — depois da lista, antes do pe — e o estado
+   aplicado.
+
+   Fica FORA do `.yb-cart__foot` de proposito: o pe e a area que nao rola, e
+   um campo de digitacao ali abre o teclado do celular por cima do proprio
+   campo. Rolando junto com a lista, o navegador leva o campo para cima do
+   teclado sozinho. */
+.yb-cart__cupom{
+  padding:var(--yb-space-2) var(--yb-space-3);
+  display:flex; flex-direction:column; gap:var(--yb-space-2);
+}
+/* Aplicado: o codigo vira etiqueta e o campo sai. Deixar o input com o texto
+   dentro nao diz se o desconto pegou — foi o mesmo defeito do nome no modo
+   comentario. */
+.yb-cart__cupom-ok{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:var(--yb-space-3); padding:var(--yb-space-3);
+  border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card);
+  background:var(--yb-bg-subtle);
+}
+.yb-cart__cupom-ok > div{display:flex; align-items:center; gap:var(--yb-space-2)}
+.yb-cart__cupom-codigo{
+  padding:var(--yb-space-1) var(--yb-space-2); border-radius:var(--yb-radius-badge);
+  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-bold);
+  letter-spacing:var(--yb-tracking-wide);
+}
+
 .yb-cart__foot{
-  padding:var(--yb-space-5) var(--yb-space-6);
+  padding:var(--yb-space-3) var(--yb-space-4) var(--yb-space-8);
   border-top:1px solid var(--yb-border-subtle);
-  display:flex; flex-direction:column; gap:var(--yb-space-4);
+  display:flex; flex-direction:column; gap:var(--yb-space-3);
   background:var(--yb-surface);
 }
 /* Breakpoint de ALTURA, nao de largura: numa tela de 568 o pe reservava 254px
    (45%) e sobravam 166 para a lista — o cliente com dois itens via um, cortado.
-   Aqui o pe aperta o respiro e a linha de frete sai, porque a nota logo abaixo
-   ja diz "Taxes calculated at checkout". O que decide compra — Subtotal, Total
-   e o botao — fica. */
+   Aqui o pe so aperta o respiro; nao ha mais linha para esconder. */
 @media (max-height:700px){
-  .yb-cart__foot{ padding:var(--yb-space-3) var(--yb-space-5); gap:var(--yb-space-2) }
-  .yb-cart__foot .yb-cart__line:not(.yb-cart__line--total){ display:none }
+  .yb-cart__foot{ padding:var(--yb-space-3) var(--yb-space-5) var(--yb-space-5) }
 }
-.yb-cart__line{display:flex; justify-content:space-between; align-items:baseline;
-  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
-.yb-cart__line--total{
-  font-size:var(--yb-type-body-size); color:var(--yb-text-primary);
-  font-weight:var(--yb-font-weight-semibold);
-  padding-top:var(--yb-space-3); border-top:1px solid var(--yb-border-subtle);
+/* O pe e uma linha so: total a esquerda, botao a direita, os dois dividindo a
+   largura. Subtotal e Shipping sairam — "Calculated at checkout" repetia o que
+   a nota do cupom ja diz, e Subtotal igual ao Total tres linhas acima do botao
+   e ruido no lugar mais caro da tela. */
+/* Faixa do parceiro: quem indicou e quanto a indicacao poupou. Mora colada
+   no topo do pe, encostada no botao, porque e ali que o argumento vale — ao
+   lado do total, no instante da decisao. Fundo invertido chapado, e nao o
+   degrade de tres pretos da referencia: nao ha token que descreva aquele
+   degrade, e cor escrita a mao no padrao e cor que a camada 1 nao troca. */
+.yb-cart__parceiro{
+  display:flex; align-items:center; justify-content:center;
+  gap:var(--yb-space-2); padding:var(--yb-space-2) var(--yb-space-3);
+  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-medium);
 }
-.yb-cart__line span:last-child{font-variant-numeric:tabular-nums}
+.yb-cart__parceiro p{margin:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.yb-cart__parceiro b{font-weight:var(--yb-font-weight-semibold)}
+/* Iniciais, nao foto: a foto do parceiro vem de fora e chega em qualquer
+   tamanho e recorte. Duas letras cabem sempre e nunca carregam errado.
+   Disco CLARO com letra escura, e nao branco translucido como na referencia:
+   letra clara sobre veu claro em cima de fundo escuro fica com contraste de
+   sobra em nenhum dos dois lados, e nao ha token para aquele veu. */
+.yb-cart__parceiro-inicial{
+  display:inline-flex; align-items:center; justify-content:center; flex:none;
+  inline-size:1.25rem; block-size:1.25rem; border-radius:var(--yb-radius-pill);
+  background:var(--yb-text-inverse); color:var(--yb-bg-inverse);
+  font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-bold);
+}
+/* A faixa fica DENTRO do pe, antes do respiro dele: com a faixa fora, a linha
+   do topo do pe passava por cima dela e apareciam duas divisorias. */
+.yb-cart__foot:has(.yb-cart__parceiro){padding-block-start:0}
+.yb-cart__parceiro{margin:0 calc(var(--yb-space-4) * -1) var(--yb-space-3)}
+
+.yb-cart__resumo{display:flex; align-items:center; gap:var(--yb-space-3)}
+.yb-cart__totais{display:flex; flex-direction:column; min-width:0; flex:1}
+.yb-cart__tabela{
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted);
+  white-space:nowrap;
+}
+.yb-cart__total-linha{display:flex; align-items:center; gap:var(--yb-space-2)}
+.yb-cart__total{
+  font-size:var(--yb-type-h4-size); font-weight:var(--yb-font-weight-bold);
+  color:var(--yb-text-primary); font-variant-numeric:proportional-nums;
+  white-space:nowrap;
+}
+.yb-cart__checkout{flex:1}
 .yb-cart__note{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
   text-align:center; margin:0}
+
+/* --- estados da linha ---------------------------------------------------
+   Tres, e cada um tira algo da linha em vez de acrescentar aviso solto: o
+   brinde nao tem quantidade a escolher, o esgotado nao tem o que somar, e o
+   limite atingido nao tem para onde subir. Aviso sem sumir com o controle
+   ensina a pessoa a tentar de novo. */
+.yb-cart__item--brinde{
+  grid-template-columns:1fr; justify-items:center; text-align:center;
+  padding:var(--yb-space-3); border-radius:var(--yb-radius-card);
+  background:var(--yb-bg-subtle);
+}
+.yb-cart__item--brinde .yb-card__media{inline-size:72px}
+.yb-cart__item--esgotado{
+  padding:var(--yb-space-2); border-radius:var(--yb-radius-card);
+  background:var(--yb-danger-surface);
+}
+/* O aviso herda a cor do estado: `--esgotado` bloqueia a compra e fala em
+   vermelho; `--limite` so avisa que chegou ao teto e fala em ambar. */
+.yb-cart__aviso{
+  display:flex; align-items:center; gap:var(--yb-space-1);
+  font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-medium);
+  color:var(--yb-warning-text); margin:0;
+}
+.yb-cart__item--esgotado .yb-cart__aviso{color:var(--yb-danger-text)}
+.yb-cart__brinde{
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-success-text);
+}
+
+/* --- economia no rodape -------------------------------------------------
+   So aparece quando ha o que economizar. Um "voce economizou $0" e pior que
+   nenhum: ensina a pessoa a nao ler a linha. */
+/* A economia e um chip ao lado do total, com o preco de tabela riscado logo
+   acima: e comparacao contra tabela, nao desconto saindo do subtotal. Escrita
+   como "-$53.80" numa linha propria, fazia o Total parecer errado. */
+.yb-cart__economia{
+  display:inline-flex; align-items:center; gap:var(--yb-space-1);
+  padding:var(--yb-space-1) var(--yb-space-2); border-radius:var(--yb-radius-badge);
+  background:var(--yb-success-surface); color:var(--yb-success-text);
+  font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-semibold);
+}
+
+/* --- vazio e carregando -------------------------------------------------
+   O vazio usa o componente .yb-empty; o carregando usa .yb-skeleton. Nenhum
+   dos dois nasce aqui — a gaveta so os posiciona. */
+.yb-cart__estado{
+  flex:1; display:flex; align-items:center; justify-content:center;
+  padding:var(--yb-space-8) var(--yb-space-4);
+}
+.yb-cart--carregando .yb-cart__foot .yb-btn{pointer-events:none}
 
 /* =========================================================================
    CATÁLOGO — cabeçalho de listagem + grade
@@ -437,13 +945,102 @@
 .yb-chip[aria-pressed="true"] .yb-chip__x{color:var(--yb-text-muted-inverse)}
 .yb-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:var(--yb-grid-gap)}
 @media (max-width:1024px){.yb-grid{grid-template-columns:repeat(3,1fr)}}
-@media (max-width:768px){.yb-grid{grid-template-columns:repeat(2,1fr)}}
+/* So o .yb-grid encolhe o respiro aqui, nao --yb-grid-gap: o token e
+   compartilhado com .yb-collections, que ninguem pediu para apertar. Agora
+   que o card tem contorno proprio, o respiro entre eles pode ser menor sem
+   os dois se confundirem. */
+@media (max-width:768px){.yb-grid{grid-template-columns:repeat(2,1fr); gap:var(--yb-space-4)}}
+/* Em duas colunas o cartao de oferta ocupa as duas. Numa celula de 171px ele
+   nao cabe: o relogio vaza pela borda, o titulo clampa em "Fashion Gold…" e
+   sobra um vao branco ao lado, porque ele e mais alto que o cartao vizinho.
+   No desktop e uma celula so — ali a coluna tem 266px e tudo entra. */
+@media (max-width:768px){.yb-grid > .yb-offercard{grid-column:span 2}}
 
 /* =========================================================================
    BLOCO DE COMPRA (PDP)
    ========================================================================= */
-.yb-buybox{display:flex; flex-direction:column; gap:var(--yb-space-5); min-width:0}
-.yb-buybox__flags{display:flex; gap:var(--yb-space-2); flex-wrap:wrap}
+/* RITMO DA COLUNA DE COMPRA.
+   Eram treze filhos e UMA distancia: 20px entre todos, do titulo ao ultimo
+   bloco. Distancia igual entre tudo nao e neutralidade, e ausencia de
+   agrupamento — a nota ficava tao longe do nome do produto quanto o botao de
+   comprar ficava da linha de garantias. Sem agrupamento o olho nao tem onde
+   descansar, e a coluna le como uma lista de treze coisas em vez de sete
+   decisoes encadeadas.
+
+   O `gap` passa a ser a distancia MAIS CURTA — o que anda junto — e cada bloco
+   novo declara o proprio afastamento. So da para somar: margin de filho
+   ADICIONA ao gap, nunca subtrai. Por isso a base caiu para 12 em vez de subir.
+
+   A escada: 12 dentro do par · 24 entre ideias do mesmo bloco · 32 entre
+   perguntas diferentes (que tamanho? quanto? posso confiar?) · 36 antes do
+   detalhe que so quem quer abre. */
+.yb-buybox{display:flex; flex-direction:column; gap:var(--yb-space-3); min-width:0}
+/* a nota e atributo do nome — fica colada nele, nos 12 da base */
+.yb-buybox > .yb-buybox__precoLinha{margin-block-start:var(--yb-space-3)}
+/* preco e resumo sao a MESMA frase: "custa isto, e isto e o que e" */
+.yb-buybox > .yb-buybox__desc{margin-block-start:var(--yb-space-1)}
+.yb-buybox > .yb-buybox__benef{margin-block-start:var(--yb-space-3)}
+.yb-buybox > .yb-buybox__group,
+.yb-buybox > .yb-buybox__compra,
+.yb-buybox > .yb-buybox__trust{margin-block-start:var(--yb-space-5)}
+.yb-buybox > .yb-accordion{margin-block-start:var(--yb-space-6)}
+/* A fileira de selos continua existindo — o buy box da doc a usa para
+   "Save 16%" e "Best seller". O que saiu dela foi o favoritar, que nao e selo
+   e sozinho deixava a fileira ocupando 44px de vazio acima do nome. */
+.yb-buybox__flags{display:flex; align-items:center; gap:var(--yb-space-2); flex-wrap:wrap}
+/* Titulo e favoritar na mesma linha, o coracao encostado na direita. Mesma
+   anatomia da linha do carrinho: o controle acompanha o nome do que ele age.
+   `align-items:flex-start` porque o titulo tem duas linhas e o coracao tem de
+   ficar na altura da PRIMEIRA, nao no meio do bloco. */
+.yb-buybox__topo{
+  display:flex; align-items:flex-start; justify-content:space-between;
+  gap:var(--yb-space-4);
+}
+.yb-buybox__topo .yb-buybox__title{flex:1; min-inline-size:0}
+/* Compartilhar e favoritar andam juntos, e por isso moram num embrulho: soltos
+   no `__topo` eles herdariam o `gap` de 16px que separa o TITULO deles — folga
+   certa entre texto e controle, larga demais entre dois alvos irmaos. */
+.yb-buybox__acoes{display:flex; align-items:center; flex:none}
+/* Preco e selos na MESMA linha, com os selos empurrados para a direita. Eles
+   qualificam o numero — disponibilidade, brinde, desconto — e qualificar de
+   longe nao funciona. `align-items:baseline` nao serve: o preco e 24px e o
+   selo 12px, e alinhar as bases jogaria o selo para baixo do preco. */
+/* Alinhados a ESQUERDA, colados no preco. Com `space-between` o selo era
+   jogado para a borda direita da coluna e ficava sozinho no meio do vazio,
+   longe do numero que ele qualifica — parecia elemento de outra secao. */
+.yb-buybox__precoLinha{
+  display:flex; align-items:center; justify-content:flex-start;
+  gap:var(--yb-space-4); flex-wrap:wrap;
+}
+.yb-buybox__selos{display:flex; align-items:center; gap:var(--yb-space-2); flex-wrap:wrap}
+/* O selo de estoque a esquerda, favoritar encostado na direita — a linha tem
+   544px e o selo ocupa 80. `margin-inline-start:auto` e nao `space-between`
+   porque a linha pode ganhar um segundo selo um dia, e ai os dois primeiros
+   ficariam separados por um vao. As margens negativas devolvem o alvo de 44px
+   sem empurrar a linha para baixo: a caixa cresce para fora, nao para dentro. */
+.yb-buybox__fav{
+  flex:none;
+  /* So a margem da DIREITA: ela puxa a folga entre o alvo de 44px e o glifo
+     para o icone cair na prumada da coluna. A negativa de topo saiu junto com
+     a fileira antiga — aqui o alvo cresce ao lado do titulo, nao acima dele. */
+  margin-inline-end:calc((var(--yb-target-min) - var(--yb-icon-size, 1.25rem)) / -2);
+}
+/* A nota e um link, mas nao se veste como um: sublinhado e cor de link ali
+   competiriam com o preco logo abaixo. O que diz que ela leva a algum lugar e
+   o cursor, o foco e a contagem entre parenteses — "(128 reviews)" ja e a
+   promessa do destino. Sem `text-decoration:none` explicito o <a> herdaria o
+   sublinhado do navegador e riscaria as estrelas. */
+.yb-buybox__rating{
+  display:inline-flex; align-self:flex-start;
+  text-decoration:none; color:inherit; border-radius:var(--yb-radius-badge);
+}
+@media (hover:hover){
+  .yb-buybox__rating:hover .yb-rating__count{color:var(--yb-text-primary)}
+}
+.yb-buybox__rating:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
 .yb-buybox__title{
   margin:0; font-size:var(--yb-type-h1-size); line-height:var(--yb-type-h1-line);
   letter-spacing:var(--yb-type-h1-track); font-weight:var(--yb-type-h1-weight);
@@ -462,18 +1059,132 @@
 }
 /* wrap: com o stepper em flex:none, sem isto o botao e que seria espremido.
    Quebrar a linha e melhor que entregar um "Add to cart" de 60px. */
+/* A zona de compra: quantidade + botao, ou botao inerte + aviso de volta.
+   Existe por causa da barra fixa, que precisa de UMA ancora estavel — com a
+   ancora num dos dois botoes, ela subia enquanto o outro ainda estava na
+   tela. Repete a coluna e o `gap` do `.yb-buybox` porque, como filho unico,
+   ela passou a ser quem separa o botao do campo de aviso. */
+.yb-buybox__compra{
+  display:flex; flex-direction:column; gap:var(--yb-space-5);
+}
 .yb-buybox__actions{display:flex; flex-wrap:wrap; gap:var(--yb-space-3); align-items:stretch}
 .yb-buybox__actions .yb-btn{min-width:12rem; flex:1}
-.yb-buybox__ship{
-  display:flex; align-items:center; justify-content:center; gap:var(--yb-space-2);
-  font-size:var(--yb-type-body-sm-size); color:var(--yb-success-text);
-  font-weight:var(--yb-font-weight-medium); margin:0;
+/* Beneficios do produto. Nao e a fileira de confianca logo abaixo: aquela
+   diz o que a loja garante, esta diz o que o produto faz. */
+/* O que vem na caixa. Lista, e nao paragrafo: sao tres itens iguais em peso e
+   a pessoa esta CONTANDO, nao lendo.
+
+   Sem moldura propria: ela mora dentro do corpo do acordeao, que ja tem a
+   dele. Quando o bloco vivia solto acima do botao, tinha borda — duas bordas
+   concentricas aqui seriam o mesmo defeito do input embrulhado.
+
+   Escala e peso sao os do CORPO DO ACORDEAO, nao os do bloco de compra. Ela
+   nasceu la em cima, onde competia com o preco, e desceu com o peso de la:
+   tres nomes em bold no tamanho de corpo, dentro de uma secao cujo texto e
+   `body-sm` em tom secundario. Parecia titulo de tres subsecoes.
+
+   E o vao entre itens dobrou. Com 8px, o rotulo da camada de um item ficava
+   mais perto do NOME do proximo do que do nome a que pertence — tres itens de
+   duas linhas viravam seis linhas soltas. */
+.yb-buybox__kit{
+  list-style:none; margin:0; padding:0;
+  display:flex; flex-direction:column; gap:var(--yb-space-4);
+  font-size:var(--yb-type-body-sm-size);
 }
+.yb-buybox__kit li{
+  display:flex; align-items:baseline; justify-content:space-between;
+  gap:var(--yb-space-3);
+}
+/* As duas linhas do item sao um PAR: line-height apertado nas duas e 4px
+   entre elas. Coladas pelo line-height normal, nome e camada viravam um bloco
+   so; com o vao dos itens (16px) elas ficam claramente mais perto uma da
+   outra do que do proximo item, que e o que faz tres itens lerem como tres. */
+.yb-buybox__kit-nome{
+  display:flex; flex-direction:column; gap:var(--yb-space-1);
+  min-inline-size:0;
+}
+.yb-buybox__kit-nome b{
+  font-weight:var(--yb-font-weight-semibold);
+  line-height:var(--yb-line-height-tight);
+}
+/* A camada do fio em que a mascara age vem impressa na propria lata. Fica
+   abaixo do nome e em tom de apoio: e o que DIFERENCIA as tres, mas nao e o
+   que a pessoa procura primeiro. */
+.yb-buybox__kit-nome small{
+  color:var(--yb-text-muted); font-size:var(--yb-type-caption-size);
+  text-transform:uppercase; letter-spacing:var(--yb-tracking-wide);
+  line-height:var(--yb-line-height-tight);
+}
+.yb-buybox__kit-peso{
+  color:var(--yb-text-secondary);
+  font-variant-numeric:proportional-nums; flex:none;
+}
+.yb-buybox__benef{
+  display:flex; flex-wrap:wrap; gap:var(--yb-space-2);
+  list-style:none; margin:0; padding:0;
+}
+/* O bloco de compra nao redefine mais o seletor de variante: a apresentacao
+   em cartao virou `.yb-swatches--cards`, no componente, onde qualquer pagina
+   alcanca. Padrao dizendo como um componente se desenha era o buraco. */
 .yb-buybox__trust{
   display:flex; gap:var(--yb-space-5); flex-wrap:wrap;
   padding-top:var(--yb-space-4); border-top:1px solid var(--yb-border-subtle);
 }
 .yb-buybox__trust span{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+
+/* -------------------------------------------------------------------------
+   BARRA DE COMPRA FIXA (celular)
+   No celular o "Add to cart" de verdade fica a duas telas do topo — foto,
+   titulo, preco, descricao, beneficios. A barra repete preco e acao no rodape
+   da tela ENQUANTO o botao real esta fora de vista; o JS (`data-yb-buybar`)
+   liga e desliga o `hidden`. Acima de 860 nao existe: la o bloco de compra
+   cabe na primeira tela e a galeria e que rola.
+   ------------------------------------------------------------------------- */
+.yb-buybar{
+  position:fixed; inset-inline:0; inset-block-end:0; z-index:var(--yb-z-sticky);
+  display:none; align-items:center; gap:var(--yb-space-4);
+  padding:var(--yb-space-3) var(--yb-page-gutter);
+  padding-block-end:calc(var(--yb-space-3) + env(safe-area-inset-bottom, 0px));
+  background:var(--yb-bg-page);
+  border-block-start:1px solid var(--yb-border-subtle);
+  box-shadow:var(--yb-elevation-drawer);
+}
+/* O NOME antes do preco. A barra so aparece depois que a caixa de compra sai
+   por cima, e ate agora ela mostrava "$89.90 · Add to cart" sem dizer de que
+   produto — quem chegou por link de anuncio, rolou e viu duas fotos de
+   produto pelo caminho nao tem como saber o que esta comprando.
+   O preco fica embaixo, no tamanho que tinha: e ele que a pessoa confere. */
+.yb-buybar__info{display:flex; flex-direction:column; min-inline-size:0; flex:1}
+.yb-buybar__name{
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-primary);
+  /* Uma linha e reticencia: em 320px o titulo tem 40 caracteres e quebraria
+     em tres, empurrando a barra para 110px de altura em cima do conteudo. */
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.yb-buybar__price{font-size:var(--yb-type-h4-size); font-weight:var(--yb-font-weight-semibold)}
+/* O botao volta ao tamanho natural: com `flex:1` ele engolia a largura e o
+   nome nascia com reticencia ja no terceiro caractere. */
+.yb-buybar .yb-btn{flex:none}
+/* :not([hidden]) e nao so a classe: `.yb-buybar{display:flex}` venceria o
+   [hidden] do navegador por especificidade e a barra nunca sumiria. */
+.yb-buybar:not([hidden]){display:flex}
+/* a barra cobre os ultimos 74px da pagina: o rodape ganha o mesmo respiro
+   para o ultimo link nao nascer por baixo dela */
+body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-space-10) + 74px)}
+/* Ela era so de celular, ate ficar claro que o problema nao e de largura e
+   sim de distancia: em qualquer tela, depois que a caixa de compra sai por
+   cima, nao ha mais como comprar sem voltar. O que muda no desktop e a
+   FORMA, nao a regra — o conteudo se prende a largura do container (o fundo
+   continua sangrando) e o botao volta ao tamanho natural, senao ele viraria
+   um retangulo magenta de 1.300px atravessando o rodape. */
+@media (min-width:1024px){
+  .yb-buybar{
+    justify-content:flex-end;
+    padding-inline:max(var(--yb-page-gutter), calc((100% - var(--yb-container-max)) / 2));
+  }
+  .yb-buybar .yb-btn{flex:none; min-inline-size:15rem}
+}
 
 /* =========================================================================
    EMPTY STATE
@@ -701,7 +1412,212 @@
   .yb-footer__collist,.yb-footer__coltitle .yb-icon{transition:none}
 }
 
-@media (prefers-reduced-motion:reduce){.yb-freeship__fill{transition:none}}
+
+
+/* --- v2: rodape escuro ---------------------------------------------------
+   Nao e tema escuro: e superficie escura dentro de pagina clara, com os
+   tokens `*-inverse` que a camada 1 ja tinha medidos (DDR-007).
+
+   O que NAO deu para reaproveitar foi o magenta. Como TEXTO sobre gray-950
+   ele mede 3.11:1 e reprova o 4.5 de AA — o hover dos links vai para branco,
+   que alem de passar (16.66:1) e o sinal certo de "este e o item ativo".
+   Como FUNDO de botao ele continua: 3.11:1 contra o rodape cumpre o 3:1 de
+   fronteira de componente, e o branco sobre ele da 5.36:1. */
+.yb-footer--dark{
+  background:var(--yb-bg-inverse); color:var(--yb-text-secondary-inverse);
+}
+
+@media (hover:hover){
+  .yb-footer--dark a:hover{color:var(--yb-text-inverse)}
+}
+.yb-footer--dark .yb-footer__coltitle,
+.yb-footer--dark .yb-footer__newstitle{color:var(--yb-text-inverse)}
+.yb-footer--dark .yb-footer__newslabel,
+.yb-footer--dark .yb-footer__info,
+.yb-footer--dark .yb-footer__bottom{color:var(--yb-text-muted-inverse)}
+.yb-footer--dark .yb-footer__bottom{border-block-start-color:var(--yb-border-inverse)}
+/* A marca e monocromatica preta: sobre o rodape escuro ela sumiria. */
+.yb-footer--dark .yb-footer__logo img{filter:invert(1)}
+/* O campo e um controle: a borda dele precisa dos 3:1, e `--yb-border-inverse`
+   (1.47:1) so serve para dividir bloco. Mesmo par medido do chip do quiz. */
+.yb-footer--dark .yb-footer__news .yb-input{
+  background:var(--yb-surface-inverse-raised);
+  border-color:var(--yb-border-inverse-strong);
+  color:var(--yb-text-inverse);
+}
+.yb-footer--dark .yb-footer__news .yb-input::placeholder{color:var(--yb-text-muted-inverse)}
+.yb-footer--dark .yb-footer__newsfield .yb-icon{color:var(--yb-text-muted-inverse)}
+
+/* A assinatura de e-mail lidera o rodape, e nao fica espremida numa terceira
+   coluna: e a unica coisa ali que a loja QUER que aconteca. Separada por uma
+   linha, ela deixa de competir com os menus. */
+.yb-footer__news-zona{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:var(--yb-space-8); flex-wrap:wrap;
+  padding-block-end:var(--yb-space-8); margin-block-end:var(--yb-space-8);
+  border-block-end:1px solid var(--yb-border-inverse);
+}
+.yb-footer__news-zona .yb-footer__news{flex:1 1 22rem; max-inline-size:30rem}
+.yb-footer__newstitle{
+  margin:0 0 var(--yb-space-1); font-size:var(--yb-type-h4-size);
+  font-weight:var(--yb-font-weight-bold);
+}
+
+/* =========================================================================
+   HERO — o trilho de banners do topo
+
+   So existe para dar ancora as setas e por elas SOBRE a arte. No trilho de
+   reviews as setas ficam embaixo e centradas, que e o certo la: aquela secao
+   e centralizada e ha conteudo depois. Aqui embaixo nao ha nada — o hero
+   encosta na proxima secao — e um par de setas flutuando entre duas faixas
+   nao diz a qual das duas pertence.
+   ========================================================================= */
+.yb-hero{position:relative}
+.yb-hero .yb-track__nav{
+  position:absolute; inset-block-start:50%; inset-inline:var(--yb-page-gutter);
+  transform:translateY(-50%);
+  margin:0; justify-content:space-between; pointer-events:none;
+}
+/* O trilho recebe o clique; so os botoes o devolvem. Sem isto a faixa
+   invisivel entre as duas setas cobriria o meio do banner e engoliria o
+   clique no CTA. */
+.yb-hero .yb-track__nav .yb-iconbtn{
+  pointer-events:auto;
+  background:var(--yb-surface-on-media); border-color:transparent;
+  box-shadow:var(--yb-elevation-raised);
+}
+
+/* =========================================================================
+   MANIFESTO — a faixa de autoridade
+
+   Uma frase de marca sobre fundo escuro, centrada, sem foto e sem botao. E o
+   unico bloco da home que nao pede nada: nao vende produto, nao abre quiz,
+   nao leva a lugar nenhum. Existe para dizer de onde a marca vem, no ponto da
+   rolagem em que a pessoa ja viu o que ha para comprar.
+
+   Por isso NAO tem CTA. A tentacao de pendurar um "Shop all" aqui e grande e
+   estraga o unico momento em que a pagina fala sem cobrar — e o visitante
+   aprende que toda faixa escura e mais uma venda.
+
+   Sangra ate a borda: o fundo escuro precisa da largura inteira para virar
+   pausa. Contido num container de 1200 ele viraria um cartao preto no meio da
+   pagina branca, que e outra coisa.
+   ========================================================================= */
+.yb-manifesto{
+  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  padding:var(--yb-space-16) var(--yb-page-gutter);
+  text-align:center;
+}
+.yb-manifesto__inner{
+  /* ch e nao px: a medida de leitura acompanha o tamanho da fonte, e e ela
+     que decide onde a frase quebra. */
+  max-inline-size:56ch; margin-inline:auto;
+  display:flex; flex-direction:column; align-items:center;
+}
+.yb-manifesto__title{
+  margin:0; font-size:var(--yb-type-h3-size); line-height:var(--yb-type-h3-line);
+  letter-spacing:var(--yb-type-h3-track); font-weight:var(--yb-font-weight-bold);
+  text-wrap:balance;
+}
+.yb-manifesto__text{
+  margin:var(--yb-space-4) 0 0; max-inline-size:48ch;
+  color:var(--yb-text-secondary-inverse);
+  font-size:var(--yb-type-body-size); line-height:var(--yb-line-height-relaxed);
+  text-wrap:pretty;
+}
+/* O filete e o unico desenho da faixa, e ele separa a FRASE da ASSINATURA —
+   sao duas vozes: a primeira e a promessa, a segunda e quem assina. Curto de
+   proposito: uma regra de borda a borda cortaria a faixa em duas secoes. */
+.yb-manifesto__rule{
+  inline-size:4rem; block-size:1px; border:0; margin:var(--yb-space-10) 0 var(--yb-space-6);
+  background:var(--yb-border-inverse-strong);
+}
+.yb-manifesto__brand{
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-bold);
+  letter-spacing:var(--yb-tracking-wide);
+}
+.yb-manifesto__sub{
+  margin:var(--yb-space-2) 0 0; color:var(--yb-text-muted-inverse);
+  font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-semibold);
+  letter-spacing:var(--yb-tracking-wider);
+}
+@media (max-width:768px){
+  .yb-manifesto{ padding-block:var(--yb-space-12); }
+  .yb-manifesto__rule{ margin-block:var(--yb-space-8) var(--yb-space-5); }
+}
+
+/* =========================================================================
+   SPLIT — foto de um lado, painel do outro
+
+   Nao e o media banner com outro nome. No banner o texto vive SOBRE a foto, e
+   por isso ele carrega veu, medicao de contraste contra pixel que ninguem
+   controla e um limite de quanto texto cabe. Aqui o texto tem superficie
+   propria: o fundo e conhecido, o contraste e fixo, e cabe formulario — que
+   sobre foto nunca coube.
+
+   A foto sangra ate a borda da tela de um lado so. Centrada num container de
+   1200 ela viraria um cartao, e um cartao nao para a rolagem.
+   ========================================================================= */
+.yb-split{
+  display:grid; grid-template-columns:1fr 1fr;
+  min-block-size:clamp(20rem, 38vw, 30rem);
+  isolation:isolate;
+}
+.yb-split__media{position:relative; overflow:hidden; background:var(--yb-surface-sunken)}
+.yb-split__media img{
+  position:absolute; inset:0; inline-size:100%; block-size:100%;
+  object-fit:cover; display:block;
+}
+/* O painel e o unico lugar do bloco que decide cor, e ele decide UMA: o fundo.
+   Todo o resto vem dos tokens `*-inverse`, que existem desde a primeira secao
+   escura do sistema. */
+.yb-split__panel{
+  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  display:flex; flex-direction:column; align-items:flex-start;
+  gap:var(--yb-space-5);
+  padding:var(--yb-space-10) var(--yb-space-8);
+  justify-content:center;
+}
+/* Respira com o container em vez de colar na borda da tela: sem isto, numa
+   tela de 1920 o texto comecava a 960px do nada, longe de qualquer prumada. */
+@media (min-width:1024px){
+  .yb-split__panel{
+    padding-inline:var(--yb-space-10)
+      max(var(--yb-space-8), calc((100% - var(--yb-container-max) / 2) ));
+  }
+}
+.yb-split__title{
+  margin:0; font-size:var(--yb-type-h2-size); line-height:var(--yb-type-h2-line);
+  letter-spacing:var(--yb-type-h2-track); font-weight:var(--yb-type-h2-weight);
+  text-wrap:balance;
+}
+.yb-split__sub{
+  margin:0; color:var(--yb-text-secondary-inverse);
+  font-size:var(--yb-type-body-size); line-height:var(--yb-line-height-relaxed);
+}
+.yb-split__nota{
+  margin:0; color:var(--yb-text-muted-inverse);
+  font-size:var(--yb-type-body-sm-size); align-self:center;
+}
+.yb-split__panel > .yb-btn{inline-size:100%}
+.yb-split__panel > .yb-swatches{inline-size:100%}
+
+/* Abaixo de 860 a foto SAI. Lado a lado num celular ela ficaria com 187px e
+   deixaria de mostrar o cabelo — que e a unica coisa que ela tinha para dizer.
+   Empilhada, resolve o recorte mas cobra 224px de rolagem antes da pergunta,
+   e quem chega no celular ja rolou meia home ate aqui: a foto vira pedagio.
+   Fica so o painel, que e onde a acao mora.
+
+   `display:none` no CONTENEDOR, e o <img> nasce `loading="lazy"`: imagem que
+   nao renderiza e lazy nao chega a ser baixada — testado no Chrome com um
+   caso isolado, porque na home a mesma foto tambem serve a um cartao de
+   colecao e a requisicao dela aparece de qualquer jeito. O celular deixa de
+   pagar os bytes de uma foto que ele nunca veria. */
+@media (max-width:860px){
+  .yb-split{grid-template-columns:1fr}
+  .yb-split__media{display:none}
+  .yb-split__panel{padding:var(--yb-space-10) var(--yb-page-gutter)}
+}
 
 /* =========================================================================
    PAGE LAYOUT
@@ -719,7 +1635,15 @@
 }
 
 .yb-block{ padding-block:var(--yb-space-16); }
-.yb-block--tight{ padding-block:var(--yb-space-6); }
+/* Assimetrico, e para BAIXO. O breadcrumb pertence ao conteudo que ele
+   apresenta, nao ao header: menos espaco embaixo que em cima. Mas MENOS nao
+   e ZERO — a 8px da moldura da imagem os dois tracos duros leem como colisao,
+   nao como proximidade. 24/12 guarda a hierarquia e devolve a imagem o
+   direito de ser um objeto separado. Simetrico em 32 dava 64px de caixa para
+   uma linha de 16 e empurrava o produto tela abaixo — o topo subiu de 20
+   para 24 (a barra do header termina num traco solido; 20 lia como colado
+   nele), o fundo continua em 12, junto da imagem. */
+.yb-block--tight{ padding-block:var(--yb-space-6) var(--yb-space-3); }
 /* O ritmo vertical foi desenhado para a tela larga. Numa de 568px, 64px de
    respiro entre blocos e um oitavo da tela gasto em nada — a PDP levava duas
    telas de rolagem ate o botao de comprar. O ritmo encolhe; a hierarquia
@@ -728,12 +1652,61 @@
   .yb-block{ padding-block:var(--yb-space-10); }
   .yb-block--tight{ padding-block:var(--yb-space-3); }
 }
-.yb-block--flush{ padding-inline:0; }      /* sangra até a borda da tela */
+/* Bloco sangrado. Ele nao mora dentro do .yb-page — e irmao dele. Nao existe
+   jeito honesto de escapar do contentor por dentro: `50% - 50vw` erra pela
+   largura da barra de rolagem e a pagina passa a rolar de lado. Quem precisa
+   da tela inteira nasce fora da caixa.
+
+   O recuo volta em dois filhos nomeados, e so neles: o cabecalho alinha com o
+   resto da home e a pista comeca no gutter em vez de encostar no bezel — mas a
+   pista continua correndo ate a borda, que e o ponto.
+
+   Nomeados e nao `> *`: o outro morador desta classe e o widget do Tolstoy,
+   que e sangrado de proposito e nao pode ganhar recuo por tabela. */
+.yb-block--flush{ padding-inline:0; }
+.yb-block--flush > .yb-section-head{ padding-inline:var(--yb-page-gutter); }
+.yb-block--flush > .yb-track{
+  padding-inline:var(--yb-page-gutter);
+  scroll-padding-inline-start:var(--yb-page-gutter);
+}
+/* Mesma logica do `.yb-track` acima: a SECAO sangra, a grade em si mantem o
+   gutter — senao o primeiro e o ultimo cartao colam na moldura do aparelho. */
+.yb-block--flush > .yb-collections{ padding-inline:var(--yb-page-gutter); }
 
 .yb-section-head{
   display:flex; align-items:flex-end; justify-content:space-between;
   gap:var(--yb-space-6); flex-wrap:wrap;
   margin-bottom:var(--yb-space-8);
+}
+/* Titulo e atalho sempre empilham em telas estreitas — nem "Best Sellers"
+   cabe ao lado do proprio link em 375px. Empilhado, os 24px de gap pensados
+   para lado a lado leem como parede entre titulo e CTA, e o `.yb-link` ainda
+   centraliza o texto dentro do alvo de 44px — mesma dupla causa ja corrigida
+   no post (ver .yb-post__body .yb-link). Mesma solucao: respiro real menor,
+   alvo que cresce so para baixo. Precisa vir DEPOIS do bloco base: as duas
+   regras tem a mesma especificidade, e a de cima declara `gap` (que seta
+   row-gap e column-gap juntos) — colocada antes, esta perdia em silencio. */
+@media (max-width:768px){
+  .yb-section-head{ row-gap:var(--yb-space-3); }
+  .yb-section-head .yb-link{ align-items:flex-start; }
+}
+/* Eyebrow: a categoria ACIMA do titulo, nao dentro dele. "Expert Advice" nao
+   e o nome da secao — e o assunto de que ela trata, e por isso vem antes, em
+   caixa alta e no tom da marca. Some do fluxo de leitura de quem so passa o
+   olho e fica para quem parou.
+   Ele mora numa coluna propria porque o `.yb-section-head` e um flex de duas
+   pontas: solto ali dentro, o eyebrow virava um terceiro item disputando a
+   linha com o titulo e o atalho. */
+.yb-section-head__col{ display:flex; flex-direction:column; gap:var(--yb-space-2); min-width:0 }
+/* Com eyebrow o cabecalho tem tres linhas de um lado e uma do outro, e o
+   `flex-end` da receita base descia o atalho para a base do titulo — longe da
+   primeira linha, que e por onde o olho entra. Com a coluna presente, o
+   atalho sobe e encosta no eyebrow. */
+.yb-section-head:has(.yb-section-head__col){ align-items:flex-start; }
+.yb-section-head__eyebrow{
+  font-size:var(--yb-type-overline-size); line-height:var(--yb-type-overline-line);
+  letter-spacing:var(--yb-type-overline-track); text-transform:uppercase;
+  font-weight:var(--yb-font-weight-bold); color:var(--yb-text-link);
 }
 .yb-section-head--center{ justify-content:center; text-align:center; }
 .yb-section-head h2{
@@ -743,18 +1716,6 @@
   letter-spacing:var(--yb-type-h2-track);
   font-weight:var(--yb-type-h2-weight);
 }
-.yb-section-head a{
-  display:inline-flex; align-items:center; gap:var(--yb-space-2);
-  min-height:var(--yb-target-min);
-  font-size:var(--yb-type-body-sm-size);
-  font-weight:var(--yb-font-weight-medium);
-  color:var(--yb-text-link); text-decoration:none;
-}
-
-@media (hover:hover){
-  .yb-section-head a:hover{ color:var(--yb-text-link-hover); }
-}
-.yb-section-head a:focus-visible{
-  outline:var(--yb-focus-width) solid var(--yb-focus-color);
-  outline-offset:var(--yb-focus-offset);
-}
+/* O atalho ao lado do titulo e o componente LINK (`.yb-link`, em
+   components.css) — nao redeclare a receita aqui. Marcacao:
+   <a class="yb-link" href="...">Texto {chevron}</a>. */

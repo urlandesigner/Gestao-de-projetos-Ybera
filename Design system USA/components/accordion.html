@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Accordion — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="ybera-components.css">
+<link rel="stylesheet" href="doc.css">
+<style>
+/* Sem seletor de tipo: ver o cabecalho de doc.css. */
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+</style>
+</head>
+<body class="ficha">
+<div class="doc">
+
+<nav class="nav">
+  <p class="nav-brand">Ybera</p>
+  <p class="nav-ver">Components · v0.12.1</p>
+  <ul>
+    <li><a href="accordion.html" aria-current="page">Accordion</a></li>
+    <li><a href="alert.html">Alert</a></li>
+    <li><a href="badge.html">Badge</a></li>
+    <li><a href="quote.html">Brand quote</a></li>
+    <li><a href="crumb.html">Breadcrumb</a></li>
+    <li><a href="button.html">Button</a></li>
+    <li><a href="seals.html">Certification seals</a></li>
+    <li><a href="check.html">Checkbox &amp; radio</a></li>
+    <li><a href="collection.html">Collection card</a></li>
+    <li><a href="empty.html">Empty state</a></li>
+    <li><a href="field.html">Form field</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="link.html">Link</a></li>
+    <li><a href="logo.html">Logo</a></li>
+    <li><a href="logobar.html">Logo bar</a></li>
+    <li><a href="mediabanner.html">Media banner</a></li>
+    <li><a href="dialog.html">Modal &amp; drawer</a></li>
+    <li><a href="notice.html">Notice</a></li>
+    <li><a href="offercard.html">Offer card</a></li>
+    <li><a href="pagination.html">Pagination</a></li>
+    <li><a href="partner.html">Partner</a></li>
+    <li><a href="post.html">Post</a></li>
+    <li><a href="price.html">Price</a></li>
+    <li><a href="card.html">Product card</a></li>
+    <li><a href="progress.html">Progress bar</a></li>
+    <li><a href="stepper.html">Quantity stepper</a></li>
+    <li><a href="rating.html">Rating</a></li>
+    <li><a href="review.html">Review</a></li>
+    <li><a href="search.html">Search overlay</a></li>
+    <li><a href="skeleton.html">Skeleton</a></li>
+    <li><a href="switch.html">Switch</a></li>
+    <li><a href="toast.html">Toast</a></li>
+    <li><a href="variant.html">Variant picker</a></li>
+    <li><a href="video.html">Vertical video carousel</a></li>
+  </ul>
+  <div class="nav-back">
+    <a href="index.html">← Galeria</a>
+    <a href="../index.html">← Design system</a>
+  </div>
+</nav>
+
+<main class="main">
+  <a class="ficha-volta" href="index.html#accordion">← Components</a>
+  <h1 class="ficha-titulo">Accordion</h1>
+  <p class="ficha-quando">Informação secundária da PDP: ingredientes, modo de uso, frete.</p>
+  <ul class="ficha-fatos">
+    <li>Classe base <b><code>.yb-accordion</code></b></li>
+    <li>Modificadores <b>0</b></li>
+    <li>Elementos <b>1</b></li>
+    <li>Estados <b>2</b></li>
+    <li>Tokens <b>15</b></li>
+    <li>Comportamento <b>só CSS</b></li>
+  </ul>
+
+  <section class="bloco" id="demos">
+    <h2 class="bloco-titulo">Como se parece</h2>
+    <div class="demo demo--stack">
+      <div class="yb-accordion">
+        <details open><summary>How to use</summary><div class="yb-accordion__body"><p>Wash with a clarifying shampoo and towel-dry. Apply from mid-length to ends, avoiding the scalp. Leave for 20 minutes, then blow-dry and flat-iron in thin sections.</p></div></details>
+        <details><summary>Ingredients</summary><div class="yb-accordion__body"><p>Aqua, Cetearyl Alcohol, Hydrolyzed Keratin, Behentrimonium Chloride, Glycerin, Argania Spinosa Kernel Oil, Panthenol.</p></div></details>
+        <details><summary>Shipping &amp; returns</summary><div class="yb-accordion__body"><p>Free standard shipping over $50. Returns within 30 days, unopened.</p></div></details>
+      </div>
+    </div>
+    <div class="note">
+      <b>É <code>&lt;details&gt;</code> nativo</b>
+      <p>Sem JavaScript. Teclado, leitor de tela e busca do navegador funcionam de
+      graça — inclusive Ctrl+F encontrando texto dentro de seção fechada nos
+      navegadores que suportam.</p>
+    </div>
+  </section>
+
+  <section class="bloco" id="anatomia">
+    <h2 class="bloco-titulo">Anatomia e API</h2>
+    <p class="bloco-lede">Lido da folha a cada build. Se faltar alguma coisa aqui,
+    falta na folha.</p>
+    <p class="rotulo">Modificadores</p>
+    <p class="api-vazia">Este componente não tem variantes — o que muda nele vem do conteúdo.</p>
+    <p class="rotulo">Elementos</p>
+    <p class="lista-api"><code>.yb-accordion__body</code></p>
+    <p class="rotulo">Estados que a folha trata</p>
+    <p class="bloco-lede"><code>:focus-visible</code> · <code>[open]</code></p>
+  </section>
+
+  <section class="bloco" id="marcacao">
+    <h2 class="bloco-titulo">Marcação</h2>
+    <p class="bloco-lede">Extraída da primeira demonstração acima — é o mesmo HTML
+    que renderizou ali, não um exemplo escrito à parte.</p>
+    <div class="snippet">
+      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <pre><code>&lt;div class="yb-accordion"&gt;
+  &lt;details open&gt;&lt;summary&gt;How to use&lt;/summary&gt;&lt;div class="yb-accordion__body"&gt;&lt;p&gt;Wash with a clarifying shampoo and towel-dry. Apply from mid-length to ends, avoiding the scalp. Leave for 20 minutes, then blow-dry and flat-iron in thin sections.&lt;/p&gt;&lt;/div&gt;&lt;/details&gt;
+  &lt;details&gt;&lt;summary&gt;Ingredients&lt;/summary&gt;&lt;div class="yb-accordion__body"&gt;&lt;p&gt;Aqua, Cetearyl Alcohol, Hydrolyzed Keratin, Behentrimonium Chloride, Glycerin, Argania Spinosa Kernel Oil, Panthenol.&lt;/p&gt;&lt;/div&gt;&lt;/details&gt;
+  &lt;details&gt;&lt;summary&gt;Shipping &amp;amp; returns&lt;/summary&gt;&lt;div class="yb-accordion__body"&gt;&lt;p&gt;Free standard shipping over $50. Returns within 30 days, unopened.&lt;/p&gt;&lt;/div&gt;&lt;/details&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+  </section>
+
+  <section class="bloco" id="acessibilidade">
+    <h2 class="bloco-titulo">Acessibilidade</h2>
+    <ul class="bloco-lede"><li>É <code>&lt;details&gt;</code> e <code>&lt;summary&gt;</code> nativos. Abrir com Enter ou Espaço, anunciar “expandido/recolhido” e achar o conteúdo com a busca do navegador vêm de graça — nada disso está escrito no nosso JS porque nada disso precisa estar.</li><li>O <code>summary</code> declara <code>:focus-visible</code> na própria seção da folha e respeita o alvo mínimo de 44px.</li><li>Não force <code>role="button"</code> no summary: ele já tem papel próprio, e sobrescrever tira o “expandido” do anúncio.</li></ul>
+  </section>
+
+  <section class="bloco" id="faca">
+    <h2 class="bloco-titulo">Faça / não faça</h2>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><div class="yb-accordion" style="inline-size:100%"><details><summary>Shipping &amp; returns</summary><div class="yb-accordion__body"><p>Free standard shipping over $50.</p></div></details></div></div>
+        <p class="fn-legenda">O elemento nativo. O navegador entrega teclado, anúncio de estado e busca dentro da página.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><div class="yb-accordion" style="inline-size:100%"><div class="yb-accordion__body"><p><b>Shipping &amp; returns</b> ▾</p></div></div></div>
+        <p class="fn-legenda">Div com clique reimplementa o que o navegador já faz — e esquece metade: Enter, Espaço, busca na página e o anúncio do estado.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="doc-credit">Ficha gerada por <code>tools/fichas.mjs</code> a partir de
+  <code>components/ybera-components.css</code> e <code>components/index.html</code>.
+  Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>
+</main>
+
+</div>
+<script src="ybera-components.js"></script>
+<script>
+/* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
+   acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-yb-copiar]');
+  if (!b) return;
+  var codigo = b.parentElement.querySelector('code');
+  if (!codigo || !navigator.clipboard) return;
+  navigator.clipboard.writeText(codigo.textContent).then(function () {
+    var antes = b.textContent;
+    b.textContent = 'Copiado';
+    setTimeout(function () { b.textContent = antes; }, 1600);
+  });
+});
+</script>
+</body>
+</html>

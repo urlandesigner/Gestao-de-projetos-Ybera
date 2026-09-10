@@ -1,7 +1,7 @@
 {
   "$description": "Ybera Design System — tokens em W3C Design Tokens Community Group format. DERIVADO de tokens/00-primitives.css e tokens/01-semantic.css: o CSS é a fonte. Não edite este arquivo — rode ./build.sh. dimension sai como string (a escala usa em/ch, que o formato objeto não admite). Token cujo nome é prefixo de outro vira <grupo>.default; o nome original está sempre em $extensions[\"com.ybera.cssVariable\"].",
   "$extensions": {
-    "com.ybera.version": "0.10.0",
+    "com.ybera.version": "0.12.1",
     "com.ybera.source": [
       "tokens/00-primitives.css",
       "tokens/01-semantic.css"
@@ -1216,12 +1216,22 @@
       "$type": "color"
     },
     "inverse": {
-      "$value": "{gray.800}",
-      "$extensions": {
-        "com.ybera.cssVariable": "--yb-border-inverse",
-        "com.ybera.layer": "semantic"
+      "default": {
+        "$value": "{gray.800}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-border-inverse",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
       },
-      "$type": "color"
+      "strong": {
+        "$value": "{gray.600}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-border-inverse-strong",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      }
     },
     "hairline": {
       "$value": "{border.width.hair}",
@@ -1485,6 +1495,14 @@
         },
         "$type": "dimension"
       }
+    },
+    "h": {
+      "$value": "calc(var(--yb-space-4) * 2 + 1rem + 2px)",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-control-h",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "dimension"
     }
   },
   "icon": {
@@ -1765,6 +1783,16 @@
       },
       "$type": "color"
     },
+    "inverse": {
+      "raised": {
+        "$value": "{gray.800}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-surface-inverse-raised",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      }
+    },
     "sunken": {
       "$value": "{gray.50}",
       "$extensions": {
@@ -1797,6 +1825,14 @@
       "$value": "rgba(30, 30, 31, .72)",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-scrim-strong",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "soft": {
+      "$value": "rgba(30, 30, 31, .18)",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-scrim-soft",
         "com.ybera.layer": "semantic"
       },
       "$type": "color"
@@ -1956,7 +1992,7 @@
     "secondary": {
       "bg": {
         "default": {
-          "$value": "{gray.950}",
+          "$value": "{magenta.100}",
           "$extensions": {
             "com.ybera.cssVariable": "--yb-action-secondary-bg",
             "com.ybera.layer": "semantic"
@@ -1964,21 +2000,57 @@
           "$type": "color"
         },
         "hover": {
-          "$value": "{gray.800}",
+          "$value": "{magenta.200}",
           "$extensions": {
             "com.ybera.cssVariable": "--yb-action-secondary-bg-hover",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "color"
+        },
+        "active": {
+          "$value": "{magenta.300}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-action-secondary-bg-active",
             "com.ybera.layer": "semantic"
           },
           "$type": "color"
         }
       },
       "text": {
-        "$value": "{white}",
-        "$extensions": {
-          "com.ybera.cssVariable": "--yb-action-secondary-text",
-          "com.ybera.layer": "semantic"
+        "default": {
+          "$value": "{magenta.600}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-action-secondary-text",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "color"
         },
-        "$type": "color"
+        "hover": {
+          "$value": "{magenta.700}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-action-secondary-text-hover",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "color"
+        }
+      },
+      "border": {
+        "default": {
+          "$value": "transparent",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-action-secondary-border",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "dimension"
+        },
+        "hover": {
+          "$value": "transparent",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-action-secondary-border-hover",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "dimension"
+        }
       }
     },
     "ghost": {
@@ -2027,6 +2099,14 @@
           "com.ybera.layer": "semantic"
         },
         "$type": "color"
+      },
+      "media": {
+        "$value": "{gold.300}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-accent-on-media",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
       }
     },
     "text": {
@@ -2049,6 +2129,32 @@
       "$value": "{gold.300}",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-accent-border",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "star": {
+      "default": {
+        "$value": "{gold.500}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-accent-star",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      },
+      "edge": {
+        "$value": "{gold.700}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-accent-star-edge",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      }
+    },
+    "love": {
+      "$value": "{action.bg.default}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-accent-love",
         "com.ybera.layer": "semantic"
       },
       "$type": "color"
@@ -2615,6 +2721,16 @@
       "$value": "44px",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-target-min",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "dimension"
+    }
+  },
+  "header": {
+    "h": {
+      "$value": "calc(var(--yb-target-min) + var(--yb-space-4) * 2 + 1px)",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-header-h",
         "com.ybera.layer": "semantic"
       },
       "$type": "dimension"

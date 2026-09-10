@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modal &amp; drawer — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="ybera-components.css">
+<link rel="stylesheet" href="doc.css">
+<style>
+/* Sem seletor de tipo: ver o cabecalho de doc.css. */
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+</style>
+</head>
+<body class="ficha">
+<div class="doc">
+
+<nav class="nav">
+  <p class="nav-brand">Ybera</p>
+  <p class="nav-ver">Components · v0.12.1</p>
+  <ul>
+    <li><a href="accordion.html">Accordion</a></li>
+    <li><a href="alert.html">Alert</a></li>
+    <li><a href="badge.html">Badge</a></li>
+    <li><a href="quote.html">Brand quote</a></li>
+    <li><a href="crumb.html">Breadcrumb</a></li>
+    <li><a href="button.html">Button</a></li>
+    <li><a href="seals.html">Certification seals</a></li>
+    <li><a href="check.html">Checkbox &amp; radio</a></li>
+    <li><a href="collection.html">Collection card</a></li>
+    <li><a href="empty.html">Empty state</a></li>
+    <li><a href="field.html">Form field</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="link.html">Link</a></li>
+    <li><a href="logo.html">Logo</a></li>
+    <li><a href="logobar.html">Logo bar</a></li>
+    <li><a href="mediabanner.html">Media banner</a></li>
+    <li><a href="dialog.html" aria-current="page">Modal &amp; drawer</a></li>
+    <li><a href="notice.html">Notice</a></li>
+    <li><a href="offercard.html">Offer card</a></li>
+    <li><a href="pagination.html">Pagination</a></li>
+    <li><a href="partner.html">Partner</a></li>
+    <li><a href="post.html">Post</a></li>
+    <li><a href="price.html">Price</a></li>
+    <li><a href="card.html">Product card</a></li>
+    <li><a href="progress.html">Progress bar</a></li>
+    <li><a href="stepper.html">Quantity stepper</a></li>
+    <li><a href="rating.html">Rating</a></li>
+    <li><a href="review.html">Review</a></li>
+    <li><a href="search.html">Search overlay</a></li>
+    <li><a href="skeleton.html">Skeleton</a></li>
+    <li><a href="switch.html">Switch</a></li>
+    <li><a href="toast.html">Toast</a></li>
+    <li><a href="variant.html">Variant picker</a></li>
+    <li><a href="video.html">Vertical video carousel</a></li>
+  </ul>
+  <div class="nav-back">
+    <a href="index.html">← Galeria</a>
+    <a href="../index.html">← Design system</a>
+  </div>
+</nav>
+
+<main class="main">
+  <a class="ficha-volta" href="index.html#dialog">← Components</a>
+  <h1 class="ficha-titulo">Modal &amp; drawer</h1>
+  <p class="ficha-quando">Interrompe para pedir uma decisão. Se não há decisão a tomar, use toast.</p>
+  <ul class="ficha-fatos">
+    <li>Classe base <b><code>.yb-dialog</code></b></li>
+    <li>Modificadores <b>1</b></li>
+    <li>Elementos <b>5</b></li>
+    <li>Estados <b>3</b></li>
+    <li>Tokens <b>26</b></li>
+    <li>Comportamento <b>JS</b></li>
+  </ul>
+
+  <section class="bloco" id="demos">
+    <h2 class="bloco-titulo">Como se parece</h2>
+    <div class="demo">
+      <button class="yb-btn yb-btn--ghost" data-yb-open="dlg-remove">Remover item</button>
+      <button class="yb-btn yb-btn--primary" data-yb-open="dlg-cart">Abrir carrinho</button>
+    </div>
+    <div class="note">
+      <b>É <code>&lt;dialog&gt;</code> nativo</b>
+      <p>Foco preso, <kbd>Esc</kbd> e backdrop vêm do navegador. O JS só abre,
+      fecha no clique fora e <b>devolve o foco a quem abriu</b> — sem isso o leitor
+      de tela volta ao topo da página depois de fechar. A gaveta é o mesmo elemento,
+      ancorado na lateral.</p>
+    </div>
+    <div class="note">
+      <b>Por que o carrinho não está aqui</b>
+      <p>Esta página é a camada de componente e carrega só a folha de componentes.
+      O carrinho é <b>padrão</b>: <code>.yb-cart</code> vive em
+      <code>patterns/</code>. Demonstrá-lo aqui rendia um HTML sem estilo nenhum —
+      e foi exatamente o que aconteceu até agora.</p>
+    </div>
+
+    <dialog id="dlg-remove" class="yb-dialog" aria-labelledby="dlg-remove-t">
+      <div class="yb-dialog__head">
+        <h3 class="yb-dialog__title" id="dlg-remove-t">Remove from cart?</h3>
+        <button class="yb-dialog__close" data-yb-close aria-label="Close">×</button>
+      </div>
+      <div class="yb-dialog__body">
+        <p>Kit Sealant Fashion Gold — 500g / 17.6 fl oz will be removed from your cart.</p>
+      </div>
+      <div class="yb-dialog__foot">
+        <button class="yb-btn yb-btn--ghost" data-yb-close>Keep it</button>
+        <button class="yb-btn yb-btn--danger" data-yb-close
+          onclick="Ybera.toast({title:'Removed from cart',text:'Kit Sealant Fashion Gold',variant:'danger'})">Remove</button>
+      </div>
+    </dialog>
+
+    <dialog id="dlg-cart" class="yb-dialog yb-dialog--drawer" aria-labelledby="dlg-cart-t">
+      <div class="yb-dialog__head">
+        <h3 class="yb-dialog__title" id="dlg-cart-t">Your cart (1)</h3>
+        <button class="yb-dialog__close" data-yb-close aria-label="Close">
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg>
+        </button>
+      </div>
+      <div class="yb-dialog__body">
+        <p>A gaveta é o mesmo <code>&lt;dialog&gt;</code>, ancorado na lateral e com
+        a altura da tela. O conteúdo é de quem usa — o carrinho de verdade está
+        montado em <a href="../patterns/index.html#cart-drawer">Patterns</a>.</p>
+      </div>
+      <div class="yb-dialog__foot">
+        <button class="yb-btn yb-btn--primary yb-btn--block" data-yb-close>Checkout</button>
+      </div>
+    </dialog>
+  </section>
+
+  <section class="bloco" id="anatomia">
+    <h2 class="bloco-titulo">Anatomia e API</h2>
+    <p class="bloco-lede">Lido da folha a cada build. Se faltar alguma coisa aqui,
+    falta na folha.</p>
+    <p class="rotulo">Modificadores</p>
+    <p class="lista-api"><code>.yb-dialog--drawer</code></p>
+    <p class="rotulo">Elementos</p>
+    <p class="lista-api"><code>.yb-dialog__body</code> <code>.yb-dialog__close</code> <code>.yb-dialog__foot</code> <code>.yb-dialog__head</code> <code>.yb-dialog__title</code></p>
+    <p class="rotulo">Estados que a folha trata</p>
+    <p class="bloco-lede"><code>:focus-visible</code> · <code>:hover</code> · <code>[open]</code></p>
+  </section>
+
+  <section class="bloco" id="marcacao">
+    <h2 class="bloco-titulo">Marcação</h2>
+    <p class="bloco-lede">Extraída da primeira demonstração acima — é o mesmo HTML
+    que renderizou ali, não um exemplo escrito à parte.</p>
+    <div class="snippet">
+      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <pre><code>&lt;button class="yb-btn yb-btn--ghost" data-yb-open="dlg-remove"&gt;Remover item&lt;/button&gt;
+&lt;button class="yb-btn yb-btn--primary" data-yb-open="dlg-cart"&gt;Abrir carrinho&lt;/button&gt;</code></pre>
+    </div>
+  </section>
+
+  <section class="bloco" id="acessibilidade">
+    <h2 class="bloco-titulo">Acessibilidade</h2>
+    <ul class="bloco-lede"><li>É <code>&lt;dialog&gt;</code> nativo aberto com <code>showModal()</code>: o foco fica preso dentro, Esc fecha e o resto da página vira inerte — três coisas que a versão em <code>&lt;div&gt;</code> quase nunca acerta.</li><li>Ao fechar, o foco volta para o botão que abriu. Sem isso a pessoa que navega por teclado é devolvida ao topo do documento.</li><li>O título é ligado por <code>aria-labelledby</code>, para o leitor de tela anunciar o que abriu.</li></ul>
+  </section>
+
+  <section class="bloco" id="faca">
+    <h2 class="bloco-titulo">Faça / não faça</h2>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><button class="yb-btn yb-btn--secondary" type="button">Abre &lt;dialog&gt; com showModal()</button></div>
+        <p class="fn-legenda">Dialog nativo, com título ligado e foco devolvido a quem abriu.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><button class="yb-btn yb-btn--secondary" type="button">Abre &lt;div class="modal"&gt;</button></div>
+        <p class="fn-legenda">Div com overlay: o foco continua correndo pela página atrás, Esc não fecha e o leitor de tela lê o conteúdo escondido.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="doc-credit">Ficha gerada por <code>tools/fichas.mjs</code> a partir de
+  <code>components/ybera-components.css</code> e <code>components/index.html</code>.
+  Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>
+</main>
+
+</div>
+<script src="ybera-components.js"></script>
+<script>
+/* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
+   acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-yb-copiar]');
+  if (!b) return;
+  var codigo = b.parentElement.querySelector('code');
+  if (!codigo || !navigator.clipboard) return;
+  navigator.clipboard.writeText(codigo.textContent).then(function () {
+    var antes = b.textContent;
+    b.textContent = 'Copiado';
+    setTimeout(function () { b.textContent = antes; }, 1600);
+  });
+});
+</script>
+</body>
+</html>

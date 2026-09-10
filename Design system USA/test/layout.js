@@ -17,10 +17,35 @@
    O que ele NAO pega: cor bonita, alinhamento otico, hierarquia. Isso continua
    sendo trabalho de olho humano — e esta escrito para ninguem confundir.
 
-   Uso:
-     1. abra a pagina, cole isto no console
-     2. copy(JSON.stringify(retrato, null, 2))  →  salve em test/atual.json
-     3. node tools/baseline.mjs                 →  diz o que mudou
+   Uso (com ./serve.sh no ar):
+     1. no console da pagina, uma vez por largura — ESPERE a fonte e meio
+        segundo antes de disparar:
+          await document.fonts.ready;
+          await new Promise(r => setTimeout(r, 700));
+          const src = await fetch('/test/layout.js').then(r => r.text());
+          (window.__r = window.__r || []).push(eval(src));
+
+        Nenhuma das duas esperas e supersticao, e as duas nasceram de alarme
+        falso observado:
+
+        - `document.fonts.ready`: com a fonte de reserva o titulo do cartao
+          quebra numa linha diferente da fonte real, e o cartao inteiro muda 19px
+          de altura. O retrato acusava deriva em cinco pecas quando o unico
+          culpado era o instante em que foi tirado.
+        - os 700ms: a gaveta fechada e `visibility:hidden`, e `visibility`
+          TRANSICIONA. O retrato tirado logo depois de mudar a largura pega a
+          gaveta no meio do caminho, ainda visivel, e sai com cinco pecas a mais.
+
+        Uma rede que da alarme falso e uma rede que se aprende a ignorar. O
+        campo `fontes` de cada retrato registra o estado no momento da foto —
+        se vier `loading`, o retrato nao vale.
+
+        A tentacao aqui e filtrar quem esta fora da tela pela posicao. Nao
+        funciona: os cartoes de carrossel rolados para o lado tem a mesma
+        assinatura da gaveta off-canvas, e o filtro apaga a cobertura deles.
+     2. no fim, uma vez so:
+          await fetch('/__retrato', {method:'POST', body: JSON.stringify(window.__r)});
+     3. node tools/baseline.mjs   →  diz o que mudou
    ========================================================================= */
 (() => {
   const LARGURA = document.documentElement.clientWidth;
@@ -70,6 +95,10 @@
   const retrato = {
     pagina: location.pathname,
     largura: LARGURA,
+    // 'loaded' ou 'loading'. Retrato com fonte pendente mede a fonte de
+    // reserva, que quebra linha em outro lugar — e a deriva e do relogio,
+    // nao do CSS.
+    fontes: document.fonts ? document.fonts.status : 'sem-api',
     // scrollWidth do documento: a checagem que pegou o header de 351px numa
     // tela de 320. Vale sozinha.
     documento: document.documentElement.scrollWidth,

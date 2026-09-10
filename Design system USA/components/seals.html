@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Certification seals — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="ybera-components.css">
+<link rel="stylesheet" href="doc.css">
+<style>
+/* Sem seletor de tipo: ver o cabecalho de doc.css. */
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+</style>
+</head>
+<body class="ficha">
+<div class="doc">
+
+<nav class="nav">
+  <p class="nav-brand">Ybera</p>
+  <p class="nav-ver">Components · v0.12.1</p>
+  <ul>
+    <li><a href="accordion.html">Accordion</a></li>
+    <li><a href="alert.html">Alert</a></li>
+    <li><a href="badge.html">Badge</a></li>
+    <li><a href="quote.html">Brand quote</a></li>
+    <li><a href="crumb.html">Breadcrumb</a></li>
+    <li><a href="button.html">Button</a></li>
+    <li><a href="seals.html" aria-current="page">Certification seals</a></li>
+    <li><a href="check.html">Checkbox &amp; radio</a></li>
+    <li><a href="collection.html">Collection card</a></li>
+    <li><a href="empty.html">Empty state</a></li>
+    <li><a href="field.html">Form field</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="link.html">Link</a></li>
+    <li><a href="logo.html">Logo</a></li>
+    <li><a href="logobar.html">Logo bar</a></li>
+    <li><a href="mediabanner.html">Media banner</a></li>
+    <li><a href="dialog.html">Modal &amp; drawer</a></li>
+    <li><a href="notice.html">Notice</a></li>
+    <li><a href="offercard.html">Offer card</a></li>
+    <li><a href="pagination.html">Pagination</a></li>
+    <li><a href="partner.html">Partner</a></li>
+    <li><a href="post.html">Post</a></li>
+    <li><a href="price.html">Price</a></li>
+    <li><a href="card.html">Product card</a></li>
+    <li><a href="progress.html">Progress bar</a></li>
+    <li><a href="stepper.html">Quantity stepper</a></li>
+    <li><a href="rating.html">Rating</a></li>
+    <li><a href="review.html">Review</a></li>
+    <li><a href="search.html">Search overlay</a></li>
+    <li><a href="skeleton.html">Skeleton</a></li>
+    <li><a href="switch.html">Switch</a></li>
+    <li><a href="toast.html">Toast</a></li>
+    <li><a href="variant.html">Variant picker</a></li>
+    <li><a href="video.html">Vertical video carousel</a></li>
+  </ul>
+  <div class="nav-back">
+    <a href="index.html">← Galeria</a>
+    <a href="../index.html">← Design system</a>
+  </div>
+</nav>
+
+<main class="main">
+  <a class="ficha-volta" href="index.html#seals">← Components</a>
+  <h1 class="ficha-titulo">Certification seals</h1>
+  <p class="ficha-quando">Faixa de garantia entre a prova social e o rodapé. Diz o que o produto não tem — não é peça de venda.</p>
+  <ul class="ficha-fatos">
+    <li>Classe base <b><code>.yb-seal</code></b></li>
+    <li>Modificadores <b>0</b></li>
+    <li>Elementos <b>2</b></li>
+    <li>Estados <b>0</b></li>
+    <li>Tokens <b>7</b></li>
+    <li>Comportamento <b>só CSS</b></li>
+  </ul>
+
+  <section class="bloco" id="demos">
+    <h2 class="bloco-titulo">Como se parece</h2>
+    <div class="demo demo--stack">
+      <div class="yb-seals" role="group" aria-label="Product guarantees">
+        <div class="yb-seal">
+          <span class="yb-seal__mark"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cruelty-free"/></svg></span>
+          <span class="yb-seal__label">Cruelty free</span>
+        </div>
+        <div class="yb-seal">
+          <span class="yb-seal__mark"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-vegan"/></svg></span>
+          <span class="yb-seal__label">Vegan</span>
+        </div>
+        <div class="yb-seal">
+          <span class="yb-seal__mark"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-paraben-free"/></svg></span>
+          <span class="yb-seal__label">Paraben free</span>
+        </div>
+        <div class="yb-seal">
+          <span class="yb-seal__mark"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-sulfate-free"/></svg></span>
+          <span class="yb-seal__label">Sulfate free</span>
+        </div>
+        <div class="yb-seal">
+          <span class="yb-seal__mark"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-formaldehyde-free"/></svg></span>
+          <span class="yb-seal__label">Formaldehyde free</span>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Neutra de propósito</b>
+      <p>Se a faixa usasse a cor de ação, cinco selos disputariam a mesma atenção
+      que o botão de compra. Garantia sossega; ela não precisa gritar.</p>
+    </div>
+    <div class="note">
+      <b>O ícone não é a informação</b>
+      <p>Cada marca é <code>aria-hidden</code> e quem carrega o sentido é o rótulo
+      ao lado — um leitor de tela ouve "Cruelty free", não "imagem". Abaixo de 768
+      a fileira de cinco vira grade de três: em uma linha só, o texto começava a
+      quebrar em duas.</p>
+    </div>
+  </section>
+
+  <section class="bloco" id="anatomia">
+    <h2 class="bloco-titulo">Anatomia e API</h2>
+    <p class="bloco-lede">Lido da folha a cada build. Se faltar alguma coisa aqui,
+    falta na folha.</p>
+    <p class="rotulo">Modificadores</p>
+    <p class="api-vazia">Este componente não tem variantes — o que muda nele vem do conteúdo.</p>
+    <p class="rotulo">Elementos</p>
+    <p class="lista-api"><code>.yb-seal__label</code> <code>.yb-seal__mark</code></p>
+    <p class="rotulo">Estados que a folha trata</p>
+    <p class="api-vazia">Nenhum: o componente não muda de aparência por interação.</p>
+  </section>
+
+  <section class="bloco" id="marcacao">
+    <h2 class="bloco-titulo">Marcação</h2>
+    <p class="bloco-lede">Extraída da primeira demonstração acima — é o mesmo HTML
+    que renderizou ali, não um exemplo escrito à parte.</p>
+    <div class="snippet">
+      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <pre><code>&lt;div class="yb-seals" role="group" aria-label="Product guarantees"&gt;
+  &lt;div class="yb-seal"&gt;
+    &lt;span class="yb-seal__mark"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-cruelty-free"/&gt;&lt;/svg&gt;&lt;/span&gt;
+    &lt;span class="yb-seal__label"&gt;Cruelty free&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="yb-seal"&gt;
+    &lt;span class="yb-seal__mark"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-vegan"/&gt;&lt;/svg&gt;&lt;/span&gt;
+    &lt;span class="yb-seal__label"&gt;Vegan&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="yb-seal"&gt;
+    &lt;span class="yb-seal__mark"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-paraben-free"/&gt;&lt;/svg&gt;&lt;/span&gt;
+    &lt;span class="yb-seal__label"&gt;Paraben free&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="yb-seal"&gt;
+    &lt;span class="yb-seal__mark"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-sulfate-free"/&gt;&lt;/svg&gt;&lt;/span&gt;
+    &lt;span class="yb-seal__label"&gt;Sulfate free&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="yb-seal"&gt;
+    &lt;span class="yb-seal__mark"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-formaldehyde-free"/&gt;&lt;/svg&gt;&lt;/span&gt;
+    &lt;span class="yb-seal__label"&gt;Formaldehyde free&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+  </section>
+
+  <section class="bloco" id="acessibilidade">
+    <h2 class="bloco-titulo">Acessibilidade</h2>
+    <ul class="bloco-lede"><li>A faixa é um <code>role="group"</code> com <code>aria-label</code>: sem o rótulo, o leitor de tela lê cinco palavras soltas sem dizer do que elas são uma lista.</li><li>O ícone é <code>aria-hidden="true"</code>. Quem informa é o texto — “Cruelty free” dito uma vez, não duas.</li><li>Tom neutro de propósito: se usasse a cor de ação, competiria com o botão de compra pela mesma atenção.</li></ul>
+  </section>
+
+  <section class="bloco" id="faca">
+    <h2 class="bloco-titulo">Faça / não faça</h2>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><div class="yb-seals" role="group" aria-label="Certifications"><span class="yb-seal"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cruelty-free"/></svg><span>Cruelty free</span></span><span class="yb-seal"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-vegan"/></svg><span>Vegan</span></span></div></div>
+        <p class="fn-legenda">Ícone escondido do leitor, texto visível fazendo o trabalho.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><div class="yb-seals"><span class="yb-seal"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cruelty-free"/></svg></span><span class="yb-seal"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-vegan"/></svg></span></div></div>
+        <p class="fn-legenda">Só o ícone obriga a decorar um símbolo — e some inteiro para quem usa leitor de tela.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="doc-credit">Ficha gerada por <code>tools/fichas.mjs</code> a partir de
+  <code>components/ybera-components.css</code> e <code>components/index.html</code>.
+  Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>
+</main>
+
+</div>
+<script src="ybera-components.js"></script>
+<script>
+/* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
+   acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-yb-copiar]');
+  if (!b) return;
+  var codigo = b.parentElement.querySelector('code');
+  if (!codigo || !navigator.clipboard) return;
+  navigator.clipboard.writeText(codigo.textContent).then(function () {
+    var antes = b.textContent;
+    b.textContent = 'Copiado';
+    setTimeout(function () { b.textContent = antes; }, 1600);
+  });
+});
+</script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 <!-- =========================================================================
      YBERA DESIGN SYSTEM · ÍCONES
-     36 ícones · grade 24×24 · traço 1.5 · currentColor · sem preenchimento
+     grade 24×24 · traço 1.5 · currentColor · traço puro, com duas exceções
 
      Substitui os 380 KB de Font Awesome Pro que a loja baixa hoje sem usar
      um único ícone. Este sprite inteiro pesa uma fração disso e herda a cor
@@ -11,6 +11,15 @@
 
      Ícone com significado próprio leva rótulo:
        <svg class="yb-icon" role="img" aria-label="Carrinho"><use href="...#yb-cart"/></svg>
+
+     As duas exceções — yb-star-filled e yb-heart-filled — sao a mesma
+     silhueta do traçado ao lado, com `fill="currentColor"` escrito no
+     PRÓPRIO <path>. Nao ha outro jeito: `<use>` para arquivo externo nao
+     deixa o CSS de quem consome vencer o `symbol{fill:none}` acima, entao so
+     o que o path traz de fabrica sobrevive a viagem. Cada uma existe porque
+     um estado (favoritado, marcado) precisa de FORMA mudando, nao so cor —
+     cor sozinha reprova a WCAG 1.4.1 e falha primeiro pra quem nao distingue
+     as duas cores em jogo.
      ========================================================================= -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
   <defs>
@@ -40,15 +49,28 @@
   </symbol>
 
   <!-- loja -->
+  <!-- Sacola de lados RETOS, e nao o balde afunilado que ela era. O que fazia
+       este icone virar lixeira a 16px nao era a alca — era o corpo conico,
+       que e a mesma silhueta do yb-trash. Com os lados retos e a alca subindo
+       1,9 da grade acima da boca, os dois deixam de se confundir no tamanho em
+       que aparecem juntos: o botao de compra e a linha do carrinho. -->
   <symbol id="yb-cart" viewBox="0 0 24 24">
-    <path d="M6 8h12l-1.2 12.1a1 1 0 0 1-1 .9H8.2a1 1 0 0 1-1-.9Z"/>
-    <path d="M9 8V6.5a3 3 0 0 1 6 0V8"/>
+    <path d="M5 7.5h14v11.9a1.6 1.6 0 0 1-1.6 1.6H6.6A1.6 1.6 0 0 1 5 19.4Z"/>
+    <path d="M8.3 7.5V5.6a3.7 3.7 0 0 1 7.4 0v1.9"/>
   </symbol>
   <symbol id="yb-user" viewBox="0 0 24 24">
     <circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/>
   </symbol>
   <symbol id="yb-heart" viewBox="0 0 24 24">
     <path d="M12 20.5 5 13.6a4.4 4.4 0 0 1 6.2-6.2l.8.8.8-.8a4.4 4.4 0 0 1 6.2 6.2Z"/>
+  </symbol>
+  <!-- mesma silhueta do yb-heart, so pintada. `fill` no proprio <path> —
+       igual yb-star-filled — porque um `<use>` para arquivo externo nao deixa
+       o CSS de quem consome vencer o `symbol{fill:none}` acima; so o que o
+       PROPRIO path traz de fabrica sobrevive a viagem. -->
+  <symbol id="yb-heart-filled" viewBox="0 0 24 24">
+    <path d="M12 20.5 5 13.6a4.4 4.4 0 0 1 6.2-6.2l.8.8.8-.8a4.4 4.4 0 0 1 6.2 6.2Z"
+          fill="currentColor"/>
   </symbol>
   <symbol id="yb-star" viewBox="0 0 24 24">
     <path d="m12 3.5 2.6 5.4 5.9.8-4.3 4.1 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.1 5.9-.8Z"/>
@@ -67,6 +89,9 @@
   </symbol>
   <symbol id="yb-refresh" viewBox="0 0 24 24">
     <path d="M20 11.5a8 8 0 1 0-2.4 5.9"/><path d="M20 5v6.5h-6.5"/>
+  </symbol>
+  <symbol id="yb-clock" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/>
   </symbol>
   <symbol id="yb-lock" viewBox="0 0 24 24">
     <rect x="4.5" y="10.5" width="15" height="9.5" rx="1.5"/>
@@ -91,6 +116,13 @@
   <symbol id="yb-eye" viewBox="0 0 24 24">
     <path d="M2.5 12S6 6 12 6s9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/>
     <circle cx="12" cy="12" r="3"/>
+  </symbol>
+  <!-- seta SAINDO da bandeja, nao o no de tres circulos: o no e a convencao
+       do Android, a bandeja e a do iOS e da web. Quem compra pelo celular na
+       loja e majoritariamente iOS. -->
+  <symbol id="yb-share" viewBox="0 0 24 24">
+    <path d="M12 3.5v9.5M12 3.5 8.75 6.75M12 3.5l3.25 3.25"/>
+    <path d="M5.5 12.5V18a1.5 1.5 0 0 0 1.5 1.5h10a1.5 1.5 0 0 0 1.5-1.5v-5.5"/>
   </symbol>
 
 

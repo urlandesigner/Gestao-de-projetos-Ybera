@@ -8,7 +8,7 @@ como decidir está em [PRINCIPIOS.md](PRINCIPIOS.md). Aqui é a mecânica.
 
 ```bash
 ./serve.sh            # http://localhost:8080 — porta fixa, sem cache
-npm run check         # build + 81 checagens, o mesmo que roda no CI
+npm run check         # build + 93 checagens, o mesmo que roda no CI
 ```
 
 `serve.sh` manda `Cache-Control: no-store`: editar um token e recarregar mostra
@@ -22,7 +22,7 @@ falha aqui e não vira surpresa no tema Shopify.
 
 Três perguntas, nesta ordem. A primeira que der "sim" encerra o assunto.
 
-1. **Já existe?** `INVENTARIO.md` lista as 33 peças que embarcam, com classe
+1. **Já existe?** `INVENTARIO.md` lista as 48 peças que embarcam, com classe
    base e maturidade. A doc em `/components/` e `/patterns/` mostra cada uma.
 2. **Dá para compor com o que existe?** Se dá, é **padrão**, e vai para
    `patterns/` — não para `components/`.

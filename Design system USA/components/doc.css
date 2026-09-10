@@ -1,0 +1,267 @@
+/* ===========================================================================
+   MOLDURA DAS FICHAS
+
+   As fichas sao GERADAS (tools/fichas.mjs). Esta folha e a moldura delas:
+   navegacao, palco de demonstracao, tabelas de API e os blocos de faca /
+   nao faca.
+
+   Por que ela nao serve tambem a components/index.html: aquela pagina carrega
+   a maquinaria do par desktop+mobile (iframe de 375, toggle, breakpoint de
+   1600) que nenhuma ficha usa, e o `<style>` dela e escrito e comentado a mao
+   ha meses. Unificar as duas trocaria uma duplicacao visivel por uma folha
+   com metade das regras servindo a uma pagina so.
+
+   REGRA: nenhum seletor de TIPO solto aqui. Esta folha convive com os
+   componentes do sistema renderizados dentro do palco — um `section{}` ou um
+   `ul{}` aqui vaza para dentro do demo e o demo passa a mentir.
+   =========================================================================== */
+
+.ficha *{box-sizing:border-box}
+
+/* ------------------------------------------------------------ esqueleto */
+.doc{display:grid; grid-template-columns:236px 1fr; min-height:100vh}
+.doc > *{min-width:0}
+@media (max-width:900px){.doc{grid-template-columns:1fr}}
+
+.nav{
+  border-right:1px solid var(--yb-border-subtle);
+  padding:var(--yb-space-8) var(--yb-space-6);
+  position:sticky; top:0; height:100vh; overflow-y:auto;
+  background:var(--yb-bg-subtle);
+}
+@media (max-width:900px){
+  .nav{position:static; height:auto; border-right:none;
+    border-bottom:1px solid var(--yb-border-subtle)}
+}
+.nav-brand{
+  font-size:var(--yb-type-h4-size); font-weight:var(--yb-font-weight-extrabold);
+  letter-spacing:var(--yb-tracking-tighter); margin:0 0 var(--yb-space-1);
+}
+.nav-ver{
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; color:var(--yb-text-muted);
+  font-weight:var(--yb-font-weight-semibold); margin:0 0 var(--yb-space-6);
+}
+.nav ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px}
+@media (max-width:900px){.nav ul{flex-direction:row; flex-wrap:wrap; gap:var(--yb-space-2)}}
+.nav a{
+  display:block; padding:var(--yb-space-2) var(--yb-space-3);
+  color:var(--yb-text-secondary); text-decoration:none;
+  font-size:var(--yb-type-body-sm-size); border-radius:var(--yb-radius-sm);
+}
+.nav a:hover{background:var(--yb-bg-muted); color:var(--yb-text-primary)}
+.nav a[aria-current="page"]{
+  background:var(--yb-bg-muted); color:var(--yb-text-primary);
+  font-weight:var(--yb-font-weight-semibold);
+}
+.nav a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.nav-back{margin-top:var(--yb-space-6); padding-top:var(--yb-space-4);
+  border-top:1px solid var(--yb-border-subtle)}
+
+.main{
+  padding:var(--yb-space-16) var(--yb-space-10);
+  max-width:940px; width:100%; margin-inline:auto;
+}
+@media (max-width:900px){.main{padding:var(--yb-space-10) var(--yb-page-gutter)}}
+
+/* -------------------------------------------------------------- cabecalho */
+.ficha-volta{
+  display:inline-block; margin-bottom:var(--yb-space-4);
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+}
+.ficha-titulo{
+  font-size:var(--yb-type-display-2-size); line-height:var(--yb-type-display-2-line);
+  letter-spacing:var(--yb-type-display-2-track); font-weight:var(--yb-type-display-2-weight);
+  margin:0 0 var(--yb-space-3);
+}
+.ficha-quando{
+  color:var(--yb-text-secondary); max-width:64ch;
+  font-size:var(--yb-type-body-lg-size); line-height:var(--yb-type-body-lg-line);
+  margin:0 0 var(--yb-space-5);
+}
+/* A fila de fatos e a mesma coisa que o INVENTARIO.md diz em tabela: classe
+   base, camada, maturidade. Aqui ela abre a ficha porque e o que decide se a
+   pessoa deve usar a peca — nao o que ela e. */
+.ficha-fatos{
+  display:flex; flex-wrap:wrap; gap:var(--yb-space-2);
+  margin:0 0 var(--yb-space-10); padding:0; list-style:none;
+}
+.ficha-fatos li{
+  display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  padding:var(--yb-space-2) var(--yb-space-3);
+  border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-pill);
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-secondary);
+}
+.ficha-fatos b{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
+.ficha-fatos code{color:var(--yb-text-primary)}
+
+/* ---------------------------------------------------------------- blocos */
+.bloco{margin-bottom:var(--yb-space-16); scroll-margin-top:var(--yb-space-10)}
+.bloco-titulo{
+  font-size:var(--yb-type-h3-size); line-height:var(--yb-type-h3-line);
+  font-weight:var(--yb-font-weight-bold);
+  margin:0 0 var(--yb-space-2);
+  padding-bottom:var(--yb-space-3);
+  border-bottom:1px solid var(--yb-border-subtle);
+}
+.bloco-lede{color:var(--yb-text-secondary); max-width:70ch; margin:var(--yb-space-4) 0}
+/* `.row-label` e o nome que a marcacao copiada da galeria usa; `.rotulo` e o
+   que os blocos gerados usam. Dois nomes para a mesma coisa e feio, e resolver
+   renomeando a galeria mexeria em 34 secoes escritas a mao — o alias custa uma
+   linha e nao pode divergir. */
+.rotulo,
+.row-label{
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; color:var(--yb-text-muted);
+  font-weight:var(--yb-font-weight-semibold);
+  margin:var(--yb-space-8) 0 var(--yb-space-3);
+}
+
+/* Palco para peca que se posiciona sozinha (o Partner flutua sobre o banner).
+   `overflow:hidden` porque sem ele a bolha escapa 8px da viewport em 390 e a
+   pagina inteira ganha rolagem lateral — a doc violando a regra que o proprio
+   sistema tem sobre conteudo largo. */
+.stage{
+  position:relative; overflow:hidden;
+  padding:var(--yb-space-6);
+  border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card);
+  background:var(--yb-surface);
+}
+.stage--dim{background:var(--yb-bg-muted)}
+
+/* ----------------------------------------------------------------- palco */
+.demo{
+  display:flex; gap:var(--yb-space-4); flex-wrap:wrap; align-items:center;
+  padding:var(--yb-space-6);
+  border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card);
+  background:var(--yb-surface);
+}
+.demo--stack{flex-direction:column; align-items:stretch}
+.demo--grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+.demo--oferta{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); align-items:start}
+.demo--dark{background:var(--yb-bg-inverse)}
+.demo--rail{display:block}
+
+.note{
+  margin-top:var(--yb-space-4); padding:var(--yb-space-4) var(--yb-space-5);
+  background:var(--yb-info-surface); border-left:3px solid var(--yb-info-solid);
+  border-radius:0 var(--yb-radius-sm) var(--yb-radius-sm) 0; max-width:74ch;
+}
+/* `>` e nao descendente: o titulo da nota e FILHO DIRETO. Sem isso, todo
+   <b> dentro do paragrafo virava outro titulo — bloco, maiusculas e azul no
+   meio da frase. A ficha do Button mostrava "16,66:1" e "MATIZ" como se
+   fossem cabecalhos. */
+.note > b{
+  display:block; font-size:var(--yb-type-overline-size);
+  letter-spacing:var(--yb-tracking-wider); text-transform:uppercase;
+  color:var(--yb-info-text); margin-bottom:var(--yb-space-2);
+  font-weight:var(--yb-font-weight-semibold);
+}
+.note p{margin:0; font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
+
+/* ------------------------------------------------------------------- API */
+.api{
+  inline-size:100%; border-collapse:collapse;
+  font-size:var(--yb-type-body-sm-size);
+}
+.api caption{
+  text-align:start; color:var(--yb-text-muted);
+  font-size:var(--yb-type-caption-size); padding-bottom:var(--yb-space-2);
+}
+.api th{
+  text-align:start; font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-muted); font-size:var(--yb-type-caption-size);
+  text-transform:uppercase; letter-spacing:var(--yb-tracking-wide);
+  padding:var(--yb-space-2) var(--yb-space-3);
+  border-bottom:1px solid var(--yb-border);
+}
+.api td{
+  padding:var(--yb-space-3);
+  border-bottom:1px solid var(--yb-border-subtle);
+  color:var(--yb-text-secondary); vertical-align:top;
+}
+.api td:first-child{color:var(--yb-text-primary); white-space:nowrap}
+.lista-api{display:flex; flex-wrap:wrap; gap:var(--yb-space-2); margin:0}
+.lista-api code{
+  padding:var(--yb-space-1) var(--yb-space-2);
+  background:var(--yb-surface-sunken); border-radius:var(--yb-radius-sm);
+  color:var(--yb-text-primary);
+}
+.api-vazia{color:var(--yb-text-muted); font-size:var(--yb-type-body-sm-size); margin:0}
+/* A tabela e larga por natureza (classe + descricao). Rolar dentro do proprio
+   quadro em vez de empurrar a pagina inteira de lado. */
+.rolagem{overflow-x:auto}
+
+/* --------------------------------------------------------------- snippet */
+.snippet{position:relative}
+.snippet pre{
+  margin:0; padding:var(--yb-space-5); padding-inline-end:var(--yb-space-16);
+  background:var(--yb-surface-sunken); border:1px solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-card);
+  overflow-x:auto; font-family:var(--yb-font-family-mono);
+  font-size:.8125rem; line-height:var(--yb-line-height-relaxed);
+  color:var(--yb-text-primary);
+}
+.snippet-copiar{
+  position:absolute; inset-block-start:var(--yb-space-3);
+  inset-inline-end:var(--yb-space-3);
+  min-height:var(--yb-target-min); padding:0 var(--yb-space-4);
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-control);
+  background:var(--yb-surface); color:var(--yb-text-secondary);
+  font-family:inherit; font-size:var(--yb-type-body-sm-size); cursor:pointer;
+}
+.snippet-copiar:hover{border-color:var(--yb-border-strong); color:var(--yb-text-primary)}
+.snippet-copiar:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+
+/* ------------------------------------------------------- faca / nao faca
+   Cor NAO e o unico sinal: cada lado tem o rotulo escrito e um simbolo. Um
+   par verde/vermelho sem palavra e ilegivel para 8% dos homens. */
+.fn{display:grid; gap:var(--yb-space-5); grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.fn-caso{
+  border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card);
+  overflow:hidden; display:flex; flex-direction:column;
+}
+.fn-cabeca{
+  display:flex; align-items:center; gap:var(--yb-space-2);
+  padding:var(--yb-space-3) var(--yb-space-4);
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; font-weight:var(--yb-font-weight-semibold);
+}
+.fn-caso--sim .fn-cabeca{background:var(--yb-success-surface); color:var(--yb-success-text)}
+.fn-caso--nao .fn-cabeca{background:var(--yb-danger-surface); color:var(--yb-danger-text)}
+.fn-palco{
+  padding:var(--yb-space-6); background:var(--yb-surface);
+  display:flex; flex-wrap:wrap; gap:var(--yb-space-3); align-items:center;
+  flex:1;
+}
+.fn-palco--dark{background:var(--yb-bg-inverse)}
+.fn-legenda{
+  margin:0; padding:var(--yb-space-4);
+  border-top:1px solid var(--yb-border-subtle);
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+}
+
+/* ------------------------------------------------------------- pendencia
+   Bloco que ainda nao foi escrito aparece DECLARADO como pendente, e nao
+   ausente. Secao que some da ficha e uma pergunta que ninguem sabe que
+   ficou sem resposta. */
+.pendente{
+  padding:var(--yb-space-4) var(--yb-space-5);
+  border:1px dashed var(--yb-border); border-radius:var(--yb-radius-card);
+  color:var(--yb-text-muted); font-size:var(--yb-type-body-sm-size);
+  max-width:74ch;
+}
+
+.doc-credit{
+  border-top:1px solid var(--yb-border-subtle); padding-top:var(--yb-space-6);
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted); max-width:70ch;
+}
+@media (prefers-reduced-motion:reduce){
+  .ficha *{transition:none !important}
+}

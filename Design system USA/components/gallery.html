@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gallery — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="ybera-components.css">
+<link rel="stylesheet" href="doc.css">
+<style>
+/* Sem seletor de tipo: ver o cabecalho de doc.css. */
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+</style>
+</head>
+<body class="ficha">
+<div class="doc">
+
+<nav class="nav">
+  <p class="nav-brand">Ybera</p>
+  <p class="nav-ver">Components · v0.12.1</p>
+  <ul>
+    <li><a href="accordion.html">Accordion</a></li>
+    <li><a href="alert.html">Alert</a></li>
+    <li><a href="badge.html">Badge</a></li>
+    <li><a href="quote.html">Brand quote</a></li>
+    <li><a href="crumb.html">Breadcrumb</a></li>
+    <li><a href="button.html">Button</a></li>
+    <li><a href="seals.html">Certification seals</a></li>
+    <li><a href="check.html">Checkbox &amp; radio</a></li>
+    <li><a href="collection.html">Collection card</a></li>
+    <li><a href="empty.html">Empty state</a></li>
+    <li><a href="field.html">Form field</a></li>
+    <li><a href="gallery.html" aria-current="page">Gallery</a></li>
+    <li><a href="link.html">Link</a></li>
+    <li><a href="logo.html">Logo</a></li>
+    <li><a href="logobar.html">Logo bar</a></li>
+    <li><a href="mediabanner.html">Media banner</a></li>
+    <li><a href="dialog.html">Modal &amp; drawer</a></li>
+    <li><a href="notice.html">Notice</a></li>
+    <li><a href="offercard.html">Offer card</a></li>
+    <li><a href="pagination.html">Pagination</a></li>
+    <li><a href="partner.html">Partner</a></li>
+    <li><a href="post.html">Post</a></li>
+    <li><a href="price.html">Price</a></li>
+    <li><a href="card.html">Product card</a></li>
+    <li><a href="progress.html">Progress bar</a></li>
+    <li><a href="stepper.html">Quantity stepper</a></li>
+    <li><a href="rating.html">Rating</a></li>
+    <li><a href="review.html">Review</a></li>
+    <li><a href="search.html">Search overlay</a></li>
+    <li><a href="skeleton.html">Skeleton</a></li>
+    <li><a href="switch.html">Switch</a></li>
+    <li><a href="toast.html">Toast</a></li>
+    <li><a href="variant.html">Variant picker</a></li>
+    <li><a href="video.html">Vertical video carousel</a></li>
+  </ul>
+  <div class="nav-back">
+    <a href="index.html">← Galeria</a>
+    <a href="../index.html">← Design system</a>
+  </div>
+</nav>
+
+<main class="main">
+  <a class="ficha-volta" href="index.html#gallery">← Components</a>
+  <h1 class="ficha-titulo">Gallery</h1>
+  <p class="ficha-quando">As miniaturas são radios nativos: seta do teclado navega, leitor de tela anuncia.</p>
+  <ul class="ficha-fatos">
+    <li>Classe base <b><code>.yb-gallery</code></b></li>
+    <li>Modificadores <b>0</b></li>
+    <li>Elementos <b>4</b></li>
+    <li>Estados <b>3</b></li>
+    <li>Tokens <b>20</b></li>
+    <li>Comportamento <b>JS</b></li>
+  </ul>
+
+  <section class="bloco" id="demos">
+    <h2 class="bloco-titulo">Como se parece</h2>
+    <div class="demo demo--stack">
+      <div class="yb-gallery" data-yb-gallery style="max-width:380px">
+        <div class="yb-gallery__stage">
+          <div class="yb-gallery__slide" data-active="true" style="background:var(--yb-gray-100)"></div>
+          <div class="yb-gallery__slide" style="background:var(--yb-gray-200)"></div>
+          <div class="yb-gallery__slide" style="background:var(--yb-magenta-50)"></div>
+          <div class="yb-gallery__slide" style="background:var(--yb-gold-100)"></div>
+          <div class="yb-gallery__slide" style="background:var(--yb-gray-300)"></div>
+          <span class="yb-gallery__count">1 / 5</span>
+        </div>
+        <div class="yb-gallery__thumbs">
+          <input type="radio" name="gal" id="g1" checked><label for="g1" title="Image 1"></label>
+          <input type="radio" name="gal" id="g2"><label for="g2" title="Image 2"></label>
+          <input type="radio" name="gal" id="g3"><label for="g3" title="Image 3"></label>
+          <input type="radio" name="gal" id="g4"><label for="g4" title="Image 4"></label>
+          <input type="radio" name="gal" id="g5"><label for="g5" title="Image 5"></label>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Sem JS ela ainda troca</b>
+      <p>O <code>:checked</code> do radio já muda o slide via CSS. O JS só
+      sincroniza o contador e o estado <code>data-active</code>. Se o script falhar,
+      a galeria continua navegável — inclusive por teclado.</p>
+    </div>
+  </section>
+
+  <section class="bloco" id="anatomia">
+    <h2 class="bloco-titulo">Anatomia e API</h2>
+    <p class="bloco-lede">Lido da folha a cada build. Se faltar alguma coisa aqui,
+    falta na folha.</p>
+    <p class="rotulo">Modificadores</p>
+    <p class="api-vazia">Este componente não tem variantes — o que muda nele vem do conteúdo.</p>
+    <p class="rotulo">Elementos</p>
+    <p class="lista-api"><code>.yb-gallery__count</code> <code>.yb-gallery__slide</code> <code>.yb-gallery__stage</code> <code>.yb-gallery__thumbs</code></p>
+    <p class="rotulo">Estados que a folha trata</p>
+    <p class="bloco-lede"><code>:checked</code> · <code>:focus-visible</code> · <code>:hover</code></p>
+  </section>
+
+  <section class="bloco" id="marcacao">
+    <h2 class="bloco-titulo">Marcação</h2>
+    <p class="bloco-lede">Extraída da primeira demonstração acima — é o mesmo HTML
+    que renderizou ali, não um exemplo escrito à parte.</p>
+    <div class="snippet">
+      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <pre><code>&lt;div class="yb-gallery" data-yb-gallery style="max-width:380px"&gt;
+  &lt;div class="yb-gallery__stage"&gt;
+    &lt;div class="yb-gallery__slide" data-active="true" style="background:var(--yb-gray-100)"&gt;&lt;/div&gt;
+    &lt;div class="yb-gallery__slide" style="background:var(--yb-gray-200)"&gt;&lt;/div&gt;
+    &lt;div class="yb-gallery__slide" style="background:var(--yb-magenta-50)"&gt;&lt;/div&gt;
+    &lt;div class="yb-gallery__slide" style="background:var(--yb-gold-100)"&gt;&lt;/div&gt;
+    &lt;div class="yb-gallery__slide" style="background:var(--yb-gray-300)"&gt;&lt;/div&gt;
+    &lt;span class="yb-gallery__count"&gt;1 / 5&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="yb-gallery__thumbs"&gt;
+    &lt;input type="radio" name="gal" id="g1" checked&gt;&lt;label for="g1" title="Image 1"&gt;&lt;/label&gt;
+    &lt;input type="radio" name="gal" id="g2"&gt;&lt;label for="g2" title="Image 2"&gt;&lt;/label&gt;
+    &lt;input type="radio" name="gal" id="g3"&gt;&lt;label for="g3" title="Image 3"&gt;&lt;/label&gt;
+    &lt;input type="radio" name="gal" id="g4"&gt;&lt;label for="g4" title="Image 4"&gt;&lt;/label&gt;
+    &lt;input type="radio" name="gal" id="g5"&gt;&lt;label for="g5" title="Image 5"&gt;&lt;/label&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+  </section>
+
+  <section class="bloco" id="acessibilidade">
+    <h2 class="bloco-titulo">Acessibilidade</h2>
+    <ul class="bloco-lede"><li>As miniaturas são um grupo de <code>radio</code> nativo. As setas do teclado navegam entre elas de graça — não há <code>keydown</code> escrito para isso.</li><li>A foto grande troca por CSS com <code>:checked</code>. Sem JavaScript a galeria continua funcionando; o script só mantém o contador em dia.</li><li>Cada miniatura tem <code>title</code> e a foto grande tem <code>alt</code> com o nome do produto e o número da imagem — “image 3 de 5” diz onde a pessoa está.</li></ul>
+  </section>
+
+  <section class="bloco" id="faca">
+    <h2 class="bloco-titulo">Faça / não faça</h2>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><p class="yb-field__label" style="margin:0">Miniaturas como <code>input type="radio"</code> + <code>label</code></p></div>
+        <p class="fn-legenda">Radios nativos: Tab entra no grupo, setas percorrem, e o CSS troca o slide.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><p class="yb-field__label" style="margin:0">Miniaturas como <code>&lt;div onclick&gt;</code></p></div>
+        <p class="fn-legenda">Div com <code>onclick</code> não recebe Tab, não anda com as setas e não diz qual imagem está ativa.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="doc-credit">Ficha gerada por <code>tools/fichas.mjs</code> a partir de
+  <code>components/ybera-components.css</code> e <code>components/index.html</code>.
+  Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>
+</main>
+
+</div>
+<script src="ybera-components.js"></script>
+<script>
+/* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
+   acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-yb-copiar]');
+  if (!b) return;
+  var codigo = b.parentElement.querySelector('code');
+  if (!codigo || !navigator.clipboard) return;
+  navigator.clipboard.writeText(codigo.textContent).then(function () {
+    var antes = b.textContent;
+    b.textContent = 'Copiado';
+    setTimeout(function () { b.textContent = antes; }, 1600);
+  });
+});
+</script>
+</body>
+</html>

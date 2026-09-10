@@ -34,50 +34,61 @@ a.tile{display:flex;flex-direction:column;gap:var(--yb-space-2);text-decoration:
 a.tile:hover{border-color:var(--yb-text-primary)}
 a.tile:focus-visible{outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset)}
-a.tile b{font-size:var(--yb-type-h4-size);font-weight:var(--yb-font-weight-semibold);
+/* `>` e nao descendente: o titulo e filho direto do cartao. Sem isso qualquer
+   <b> dentro do texto vira um segundo titulo — foi o que aconteceu no cartao
+   da PDP com variante. */
+a.tile > b{font-size:var(--yb-type-h4-size);font-weight:var(--yb-font-weight-semibold);
   letter-spacing:var(--yb-type-h4-track);color:var(--yb-text-primary)}
 a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
 .ver{margin-top:var(--yb-space-10);font-size:var(--yb-type-caption-size);
   color:var(--yb-text-muted)}
+.voltar{display:inline-block;margin-bottom:var(--yb-space-6);
+  font-size:var(--yb-type-body-sm-size);color:var(--yb-text-secondary)}
 </style>
 </head>
 <body>
 <main>
+  <!-- Volta para o catalogo. So faz sentido publicado, onde `../` e o indice de
+       protótipos; local ele cai na pasta acima e nao machuca ninguem. Sem ele,
+       quem chega pelo catalogo entra e nao tem como voltar. -->
+  <a class="voltar" href="../">← Protótipos</a>
   <h1>Ybera Design System</h1>
   <p class="sub">Fundação, componentes e padrões. Independente de plataforma:
   a loja US roda Shopify e a BR roda Wake.</p>
   <section class="grupo">
+    <h2>Páginas de exemplo</h2>
+    <div class="grid">
+      <a class="tile" href="_captura/nova-loja/"><b>Home v1</b><span>construída com os componentes do sistema, conteúdo real</span></a>
+      <a class="tile" href="_captura/nova-loja/index-v2.html"><b>Home v2</b><span>a mesma loja na gramática de e-commerce dos EUA — mesma peças, outra ordem</span></a>
+      <a class="tile" href="_captura/nova-loja/pdp.html"><b>PDP nova</b><span>galeria, bloco de compra e acordeão do sistema</span></a>
+      <a class="tile" href="_captura/nova-loja/pdp-esgotado.html"><b>PDP esgotada</b><span>o mesmo bloco de compra sem estoque — 41 dos 116 produtos da loja estão assim hoje</span></a>
+      <a class="tile" href="_captura/nova-loja/pdp-variante.html"><b>PDP com variante</b><span>seletor de tamanho movendo preço, estoque e foto — tamanhos e preços forjados, nenhum produto da loja tem opção</span></a>
+      <a class="tile" href="_captura/nova-loja/404.html"><b>404</b><span>produto que saiu do catálogo — o único caminho que terminava numa tela que não era nossa</span></a>
+      <a class="tile" href="_captura/home/"><b>Home hoje</b><span>a ybera.us em produção, para comparar</span></a>
+      <a class="tile" href="_captura/pdp-fashion-gold/"><b>PDP hoje</b><span>Deep Care Kit Fashion Gold em produção</span></a>
+    </div>
+  </section>
+  <section class="grupo">
     <h2>Design system</h2>
     <div class="grid">
-      <a class="tile" href="docs/"><b>Tokens</b><span>293 tokens em três camadas, com contraste medido</span></a>
-      <a class="tile" href="components/"><b>Components</b><span>25 componentes com variantes, estados e comportamento</span></a>
-      <a class="tile" href="patterns/"><b>Patterns</b><span>8 composições de e-commerce</span></a>
-      <a class="tile" href="icons/"><b>Icons</b><span>36 símbolos SVG · 7,2 KB contra 380 KB de Font Awesome</span></a>
+      <a class="tile" href="docs/"><b>Tokens</b><span>309 tokens em três camadas, com contraste medido</span></a>
+      <a class="tile" href="components/"><b>Components</b><span>37 componentes com variantes, estados e comportamento</span></a>
+      <a class="tile" href="patterns/"><b>Patterns</b><span>11 composições de e-commerce</span></a>
+      <a class="tile" href="icons/"><b>Icons</b><span>39 símbolos SVG · 9,1 KB contra 380 KB de Font Awesome</span></a>
       <a class="tile" href="preview/"><b>Preview</b><span>componentes e páginas em 320, 375, 414 e 768 — viewport de verdade</span></a>
     </div>
   </section>
-
   <section class="grupo">
     <h2>Como o sistema decide</h2>
     <div class="grid">
       <a class="tile" href="PRINCIPIOS.md"><b>Princípios</b><span>cinco regras em ordem — o que ganha quando duas se chocam</span></a>
       <a class="tile" href="decision-log/"><b>Decisões</b><span>nove DDR: por que o sistema é assim, com a evidência</span></a>
-      <a class="tile" href="INVENTARIO.md"><b>Inventário</b><span>33 peças com maturidade conferida a cada build</span></a>
+      <a class="tile" href="INVENTARIO.md"><b>Inventário</b><span>48 peças com maturidade conferida a cada build</span></a>
       <a class="tile" href="CONTRIBUINDO.md"><b>Contribuindo</b><span>o laço local e o que o CI reprova</span></a>
     </div>
   </section>
 
-  <section class="grupo">
-    <h2>Páginas de exemplo</h2>
-    <div class="grid">
-      <a class="tile" href="_captura/nova-loja/"><b>Home nova</b><span>construída com os componentes do sistema, conteúdo real</span></a>
-      <a class="tile" href="_captura/nova-loja/pdp.html"><b>PDP nova</b><span>galeria, bloco de compra e acordeão do sistema</span></a>
-      <a class="tile" href="_captura/home/"><b>Home hoje</b><span>a ybera.us em produção, para comparar</span></a>
-      <a class="tile" href="_captura/pdp-fashion-gold/"><b>PDP hoje</b><span>Deep Care Kit Fashion Gold em produção</span></a>
-    </div>
-  </section>
-
-  <p class="ver">v0.10 · sempre em <code>localhost:8080</code></p>
+  <p class="ver">v0.12.1 · sempre em <code>localhost:8080</code></p>
 </main>
 </body>
 </html>

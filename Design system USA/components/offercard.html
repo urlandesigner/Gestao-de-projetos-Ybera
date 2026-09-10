@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Offer card — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="ybera-components.css">
+<link rel="stylesheet" href="doc.css">
+<style>
+/* Sem seletor de tipo: ver o cabecalho de doc.css. */
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+</style>
+</head>
+<body class="ficha">
+<div class="doc">
+
+<nav class="nav">
+  <p class="nav-brand">Ybera</p>
+  <p class="nav-ver">Components · v0.12.1</p>
+  <ul>
+    <li><a href="accordion.html">Accordion</a></li>
+    <li><a href="alert.html">Alert</a></li>
+    <li><a href="badge.html">Badge</a></li>
+    <li><a href="quote.html">Brand quote</a></li>
+    <li><a href="crumb.html">Breadcrumb</a></li>
+    <li><a href="button.html">Button</a></li>
+    <li><a href="seals.html">Certification seals</a></li>
+    <li><a href="check.html">Checkbox &amp; radio</a></li>
+    <li><a href="collection.html">Collection card</a></li>
+    <li><a href="empty.html">Empty state</a></li>
+    <li><a href="field.html">Form field</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="link.html">Link</a></li>
+    <li><a href="logo.html">Logo</a></li>
+    <li><a href="logobar.html">Logo bar</a></li>
+    <li><a href="mediabanner.html">Media banner</a></li>
+    <li><a href="dialog.html">Modal &amp; drawer</a></li>
+    <li><a href="notice.html">Notice</a></li>
+    <li><a href="offercard.html" aria-current="page">Offer card</a></li>
+    <li><a href="pagination.html">Pagination</a></li>
+    <li><a href="partner.html">Partner</a></li>
+    <li><a href="post.html">Post</a></li>
+    <li><a href="price.html">Price</a></li>
+    <li><a href="card.html">Product card</a></li>
+    <li><a href="progress.html">Progress bar</a></li>
+    <li><a href="stepper.html">Quantity stepper</a></li>
+    <li><a href="rating.html">Rating</a></li>
+    <li><a href="review.html">Review</a></li>
+    <li><a href="search.html">Search overlay</a></li>
+    <li><a href="skeleton.html">Skeleton</a></li>
+    <li><a href="switch.html">Switch</a></li>
+    <li><a href="toast.html">Toast</a></li>
+    <li><a href="variant.html">Variant picker</a></li>
+    <li><a href="video.html">Vertical video carousel</a></li>
+  </ul>
+  <div class="nav-back">
+    <a href="index.html">← Galeria</a>
+    <a href="../index.html">← Design system</a>
+  </div>
+</nav>
+
+<main class="main">
+  <a class="ficha-volta" href="index.html#offercard">← Components</a>
+  <h1 class="ficha-titulo">Offer card</h1>
+  <p class="ficha-quando">A oferta do dia, um produto só. A foto é o fundo, o texto vive
+    por cima dela e o relógio diz até quando. Não é o cartão de catálogo com outra
+    roupa: ali cabem doze na grade, aqui cabe <b>um</b>.</p>
+  <ul class="ficha-fatos">
+    <li>Classe base <b><code>.yb-offercard</code></b></li>
+    <li>Modificadores <b>0</b></li>
+    <li>Elementos <b>10</b></li>
+    <li>Estados <b>2</b></li>
+    <li>Tokens <b>28</b></li>
+    <li>Comportamento <b>JS</b></li>
+  </ul>
+
+  <section class="bloco" id="demos">
+    <h2 class="bloco-titulo">Como se parece</h2>
+    <div class="demo demo--oferta">
+      <article class="yb-offercard">
+        <img src="../_captura/nova-loja/img/Prancheta_1-790aea3e.webp" alt="">
+        <span class="yb-badge yb-badge--sale yb-offercard__off">24% off</span>
+        <div class="yb-offercard__body">
+          <span class="yb-badge yb-badge--accent">Today's offer</span>
+          <h3 class="yb-offercard__title"><a href="#offercard">Fashion Gold keratin treatment 1kg</a></h3>
+          <div class="yb-offercard__linha">
+            <span class="yb-offercard__price">$67.90</span>
+            <p class="yb-offercard__timer" data-yb-demo-prazo="5"><time>ends today</time></p>
+          </div>
+          <p class="yb-offercard__fim" hidden>Offer ended</p>
+          <a class="yb-btn yb-btn--primary" href="#offercard">Buy now
+            <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></a>
+        </div>
+      </article>
+
+      <article class="yb-offercard">
+        <img src="../_captura/nova-loja/img/Prancheta_2-188b6fea.webp" alt="">
+        <span class="yb-badge yb-badge--sale yb-offercard__off">18% off</span>
+        <div class="yb-offercard__body">
+          <span class="yb-badge yb-badge--accent">Today's offer</span>
+          <h3 class="yb-offercard__title"><a href="#offercard">Cronograma hair care system</a></h3>
+          <div class="yb-offercard__linha">
+            <span class="yb-offercard__price">$37.90</span>
+            <p class="yb-offercard__timer" data-yb-countdown="2020-01-01T00:00:00Z"><time>ended Jan 1, 2020</time></p>
+          </div>
+          <p class="yb-offercard__fim" hidden>Offer ended</p>
+          <a class="yb-btn yb-btn--primary" href="#offercard">Buy now
+            <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></a>
+        </div>
+      </article>
+    </div>
+    <div class="note">
+      <b>Mais de um dia vira dias</b>
+      <p>O relógio troca de unidade sozinho: com mais de 24h pela frente conta
+      dias/horas/minutos, e passa para horas/min/seg nas últimas 24h, quando o segundo
+      começa a significar alguma coisa. "672 hrs" não é prazo, é número.</p>
+    </div>
+    <div class="note">
+      <b>A foto tem de sangrar</b>
+      <p>Foto fotográfica ocupando o cartão inteiro, como a da referência — não
+      recorte de produto em fundo transparente. Com recorte, o que aparece em volta
+      do frasco é o fundo de reserva do cartão, e o cartão inteiro fica escuro. Foto
+      recortada é o material do <a href="#card">cartão de catálogo</a>, que reserva
+      um lugar próprio para ela.</p>
+    </div>
+    <div class="note">
+      <b>Prazo vencido não vira 00:00:00</b>
+      <p>O segundo cartão tem prazo em 2020, de propósito: é o estado encerrado. Um
+      relógio parado em zero não é contagem, é relógio quebrado prometendo urgência
+      que já passou — o relógio sai e o cartão diz o que aconteceu.</p>
+    </div>
+    <div class="note">
+      <b>Sem JS, o prazo continua escrito</b>
+      <p>O <code>&lt;time&gt;</code> por extenso é o que está no HTML; o script troca
+      pelos quadradinhos e passa a contar. Uma oferta com prazo tem de dizer o prazo
+      mesmo quando o script não roda.</p>
+    </div>
+    <div class="note">
+      <b>Dois destinos, nenhum link cobrindo tudo</b>
+      <p>O título leva à PDP e o botão compra. Por isso não há link esticado sobre o
+      cartão inteiro, como no cartão de coleção: o clique no meio da foto não teria
+      como escolher entre os dois.</p>
+    </div>
+    <div class="note">
+      <b>O CTA é magenta, não branco</b>
+      <p>Na referência ele é branco sobre a foto. Aqui segue a ação canônica do
+      sistema — o mesmo magenta de todo "Add to cart". Botão de compra que muda de
+      cor conforme o fundo ensina o cliente a procurar duas coisas diferentes.</p>
+    </div>
+  </section>
+
+  <section class="bloco" id="anatomia">
+    <h2 class="bloco-titulo">Anatomia e API</h2>
+    <p class="bloco-lede">Lido da folha a cada build. Se faltar alguma coisa aqui,
+    falta na folha.</p>
+    <p class="rotulo">Modificadores</p>
+    <p class="api-vazia">Este componente não tem variantes — o que muda nele vem do conteúdo.</p>
+    <p class="rotulo">Elementos</p>
+    <p class="lista-api"><code>.yb-offercard__body</code> <code>.yb-offercard__chip</code> <code>.yb-offercard__fim</code> <code>.yb-offercard__linha</code> <code>.yb-offercard__off</code> <code>.yb-offercard__price</code> <code>.yb-offercard__sep</code> <code>.yb-offercard__timer</code> <code>.yb-offercard__title</code> <code>.yb-offercard__was</code></p>
+    <p class="rotulo">Estados que a folha trata</p>
+    <p class="bloco-lede"><code>:focus-visible</code> · <code>:hover</code></p>
+  </section>
+
+  <section class="bloco" id="marcacao">
+    <h2 class="bloco-titulo">Marcação</h2>
+    <p class="bloco-lede">Extraída da primeira demonstração acima — é o mesmo HTML
+    que renderizou ali, não um exemplo escrito à parte.</p>
+    <div class="snippet">
+      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <pre><code>&lt;article class="yb-offercard"&gt;
+  &lt;img src="../_captura/nova-loja/img/Prancheta_1-790aea3e.webp" alt=""&gt;
+  &lt;span class="yb-badge yb-badge--sale yb-offercard__off"&gt;24% off&lt;/span&gt;
+  &lt;div class="yb-offercard__body"&gt;
+    &lt;span class="yb-badge yb-badge--accent"&gt;Today's offer&lt;/span&gt;
+    &lt;h3 class="yb-offercard__title"&gt;&lt;a href="#offercard"&gt;Fashion Gold keratin treatment 1kg&lt;/a&gt;&lt;/h3&gt;
+    &lt;div class="yb-offercard__linha"&gt;
+      &lt;span class="yb-offercard__price"&gt;$67.90&lt;/span&gt;
+      &lt;p class="yb-offercard__timer" data-yb-demo-prazo="5"&gt;&lt;time&gt;ends today&lt;/time&gt;&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;p class="yb-offercard__fim" hidden&gt;Offer ended&lt;/p&gt;
+    &lt;a class="yb-btn yb-btn--primary" href="#offercard"&gt;Buy now
+      &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/article&gt;
+&lt;article class="yb-offercard"&gt;
+  &lt;img src="../_captura/nova-loja/img/Prancheta_2-188b6fea.webp" alt=""&gt;
+  &lt;span class="yb-badge yb-badge--sale yb-offercard__off"&gt;18% off&lt;/span&gt;
+  &lt;div class="yb-offercard__body"&gt;
+    &lt;span class="yb-badge yb-badge--accent"&gt;Today's offer&lt;/span&gt;
+    &lt;h3 class="yb-offercard__title"&gt;&lt;a href="#offercard"&gt;Cronograma hair care system&lt;/a&gt;&lt;/h3&gt;
+    &lt;div class="yb-offercard__linha"&gt;
+      &lt;span class="yb-offercard__price"&gt;$37.90&lt;/span&gt;
+      &lt;p class="yb-offercard__timer" data-yb-countdown="2020-01-01T00:00:00Z"&gt;&lt;time&gt;ended Jan 1, 2020&lt;/time&gt;&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;p class="yb-offercard__fim" hidden&gt;Offer ended&lt;/p&gt;
+    &lt;a class="yb-btn yb-btn--primary" href="#offercard"&gt;Buy now
+      &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/article&gt;</code></pre>
+    </div>
+  </section>
+
+  <section class="bloco" id="acessibilidade">
+    <h2 class="bloco-titulo">Acessibilidade</h2>
+    <ul class="bloco-lede"><li>O desconto está escrito, não só colorido: “Save 16%” é a informação, o fundo é reforço.</li><li>Contagem regressiva precisa de <code>aria-live="polite"</code> — ou de nenhuma live region. Atualizar o segundo sem dizer nada engana; atualizar com <code>assertive</code> interrompe a leitura a cada segundo.</li><li>A arte é <code>alt=""</code> quando o preço e o nome já estão em texto ao lado.</li></ul>
+  </section>
+
+  <section class="bloco" id="faca">
+    <h2 class="bloco-titulo">Faça / não faça</h2>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><span class="yb-badge yb-badge--sale">Save 16%</span><span class="yb-price"><b class="yb-price__now">$74.90</b><s class="yb-price__was">$89.90</s></span></div>
+        <p class="fn-legenda">O número em texto, a cor como reforço.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><span class="yb-price"><b class="yb-price__now">$74.90</b></span></div>
+        <p class="fn-legenda">Só a cor do preço para dizer que há desconto: quem não distingue a diferença vê dois números sem relação.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="doc-credit">Ficha gerada por <code>tools/fichas.mjs</code> a partir de
+  <code>components/ybera-components.css</code> e <code>components/index.html</code>.
+  Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>
+</main>
+
+</div>
+<script src="ybera-components.js"></script>
+<script>
+/* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
+   acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-yb-copiar]');
+  if (!b) return;
+  var codigo = b.parentElement.querySelector('code');
+  if (!codigo || !navigator.clipboard) return;
+  navigator.clipboard.writeText(codigo.textContent).then(function () {
+    var antes = b.textContent;
+    b.textContent = 'Copiado';
+    setTimeout(function () { b.textContent = antes; }, 1600);
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,510 @@
+{
+  "accordion": {
+    "a11y": [
+      "É <code>&lt;details&gt;</code> e <code>&lt;summary&gt;</code> nativos. Abrir com Enter ou Espaço, anunciar “expandido/recolhido” e achar o conteúdo com a busca do navegador vêm de graça — nada disso está escrito no nosso JS porque nada disso precisa estar.",
+      "O <code>summary</code> declara <code>:focus-visible</code> na própria seção da folha e respeita o alvo mínimo de 44px.",
+      "Não force <code>role=\"button\"</code> no summary: ele já tem papel próprio, e sobrescrever tira o “expandido” do anúncio."
+    ],
+    "faca": {
+      "legenda": "O elemento nativo. O navegador entrega teclado, anúncio de estado e busca dentro da página.",
+      "html": "<div class=\"yb-accordion\" style=\"inline-size:100%\"><details><summary>Shipping &amp; returns</summary><div class=\"yb-accordion__body\"><p>Free standard shipping over $50.</p></div></details></div>"
+    },
+    "naoFaca": {
+      "legenda": "Div com clique reimplementa o que o navegador já faz — e esquece metade: Enter, Espaço, busca na página e o anúncio do estado.",
+      "html": "<div class=\"yb-accordion\" style=\"inline-size:100%\"><div class=\"yb-accordion__body\"><p><b>Shipping &amp; returns</b> ▾</p></div></div>"
+    }
+  },
+  "alert": {
+    "a11y": [
+      "<code>role=\"alert\"</code> interrompe o leitor de tela na hora e é só para o que precisa interromper — erro que impede a compra. Todo o resto usa <code>role=\"status\"</code>, que espera a pausa.",
+      "A cor não é o único sinal: cada alerta carrega título escrito. Um retângulo vermelho sem palavra não existe para quem não distingue vermelho de verde.",
+      "Não é focável e não deve ser: alerta que rouba o foco tira a pessoa de onde ela estava digitando."
+    ],
+    "faca": {
+      "legenda": "Um alerta, com o papel certo para o que ele é.",
+      "html": "<div class=\"yb-alert yb-alert--danger\" role=\"alert\" style=\"inline-size:100%\"><div><b class=\"yb-alert__title\">Payment declined</b><p>Your bank rejected the charge. Try another card.</p></div></div>"
+    },
+    "naoFaca": {
+      "legenda": "Três empilhados é garantir que nenhum seja lido — e três <code>role=\"alert\"</code> transformam o leitor de tela em ruído.",
+      "html": "<div style=\"inline-size:100%;display:flex;flex-direction:column;gap:8px\"><div class=\"yb-alert yb-alert--info\" role=\"alert\"><div><b class=\"yb-alert__title\">Free shipping</b><p>Add $12 more.</p></div></div><div class=\"yb-alert yb-alert--warning\" role=\"alert\"><div><b class=\"yb-alert__title\">Only 3 left</b><p>Running low.</p></div></div><div class=\"yb-alert yb-alert--danger\" role=\"alert\"><div><b class=\"yb-alert__title\">Payment declined</b><p>Try another card.</p></div></div></div>"
+    }
+  },
+  "badge": {
+    "a11y": [
+      "Badge não é botão: não recebe <code>href</code>, <code>onclick</code> nem foco. Se o rótulo precisa levar a algum lugar, o componente certo é outro.",
+      "O texto é quem informa. Não existe badge que comunique só por cor — “Sold out” diz o que a cor sozinha não diria a quem não a distingue.",
+      "O dourado (<code>--accent</code>) vive só sobre superfície escura: mede 6.96:1 lá e 2.39:1 sobre branco, que reprova."
+    ],
+    "faca": {
+      "legenda": "Rótulo curto, sem ação, com a palavra fazendo o trabalho.",
+      "html": "<span class=\"yb-badge yb-badge--success\">In stock</span><span class=\"yb-badge yb-badge--danger\">Sold out</span>"
+    },
+    "naoFaca": {
+      "legenda": "Badge com link vira um alvo de 20px que parece rótulo. Quem navega por teclado encontra um foco onde não esperava clique.",
+      "html": "<a class=\"yb-badge yb-badge--sale\" href=\"#faca\">Save 16% →</a>"
+    }
+  },
+  "quote": {
+    "a11y": [
+      "A citação é conteúdo, não decoração: vai em <code>&lt;blockquote&gt;</code> com a autoria em <code>&lt;cite&gt;</code>, para o leitor de tela anunciar onde ela começa e termina.",
+      "A foto que acompanha é ilustrativa — <code>alt=\"\"</code>. Descrevê-la faz o leitor de tela ler duas vezes o mesmo assunto."
+    ],
+    "faca": {
+      "legenda": "Foto com <code>alt=\"\"</code>: ela ilustra a frase, não acrescenta informação.",
+      "html": "<figure class=\"yb-quote\" style=\"inline-size:100%;margin:0\"><blockquote class=\"yb-quote__text\">Hair is memory. Every service leaves a mark.</blockquote><figcaption class=\"yb-quote__author\">Ybera Paris</figcaption></figure>"
+    },
+    "naoFaca": {
+      "legenda": "Alt repetindo a frase faz o leitor de tela ler a citação duas vezes seguidas.",
+      "html": "<p class=\"yb-quote__text\" style=\"margin:0\">alt=\"Hair is memory. Every service leaves a mark.\"</p>"
+    }
+  },
+  "crumb": {
+    "a11y": [
+      "A trilha é um <code>&lt;nav aria-label=\"Breadcrumb\"&gt;</code> com <code>&lt;ol&gt;</code> dentro: a ordem é informação, e a lista ordenada é o que a transmite.",
+      "O último item não é link — é <code>aria-current=\"page\"</code>. Link para a página em que já se está é um destino que não leva a lugar nenhum.",
+      "Declara <code>:focus-visible</code> e respeita o alvo mínimo em cada link."
+    ],
+    "faca": {
+      "legenda": "Último item sem link, marcado como página atual.",
+      "html": "<nav class=\"yb-crumb\" aria-label=\"Breadcrumb\"><ol><li><a href=\"#faca\">Home</a></li><li><a href=\"#faca\">Fashion Gold</a></li><li><span aria-current=\"page\">Deep care kit</span></li></ol></nav>"
+    },
+    "naoFaca": {
+      "legenda": "Último item como link leva a pessoa para onde ela já está — e o leitor de tela não tem como dizer onde ela está.",
+      "html": "<nav class=\"yb-crumb\" aria-label=\"Breadcrumb\"><ol><li><a href=\"#faca\">Home</a></li><li><a href=\"#faca\">Fashion Gold</a></li><li><a href=\"#faca\">Deep care kit</a></li></ol></nav>"
+    }
+  },
+  "button": {
+    "a11y": [
+      "Uma ação primária por tela. Se há duas, uma delas não é primária — e a pessoa que navega por teclado percorre as duas sem saber qual é a saída.",
+      "O rótulo descreve a ação: “Add to cart”, não “Click here”. Fora de contexto, o rótulo precisa continuar dizendo o que faz.",
+      "Em <code>--loading</code> o botão recebe <code>aria-busy=\"true\"</code> e mantém a largura, para a página não pular. Ele não recebe <code>disabled</code>: desabilitado pinta o fundo de cinza, e spinner branco sobre cinza é spinner invisível.",
+      "Botão com <code>disabled</code> some do teclado. Quando o motivo importa (esgotado, campo faltando), o motivo tem de estar escrito ao lado."
+    ],
+    "faca": {
+      "legenda": "Um primário, com o rótulo dizendo o que acontece.",
+      "html": "<button class=\"yb-btn yb-btn--primary\" type=\"button\">Add to cart</button><button class=\"yb-btn yb-btn--secondary\" type=\"button\">Size guide</button>"
+    },
+    "naoFaca": {
+      "legenda": "Dois primários lado a lado não são duas opções — são nenhuma escolha clara. E “Click here” não diz nada fora de contexto.",
+      "html": "<button class=\"yb-btn yb-btn--primary\" type=\"button\">Click here</button><button class=\"yb-btn yb-btn--primary\" type=\"button\">Continue</button>"
+    }
+  },
+  "seals": {
+    "a11y": [
+      "A faixa é um <code>role=\"group\"</code> com <code>aria-label</code>: sem o rótulo, o leitor de tela lê cinco palavras soltas sem dizer do que elas são uma lista.",
+      "O ícone é <code>aria-hidden=\"true\"</code>. Quem informa é o texto — “Cruelty free” dito uma vez, não duas.",
+      "Tom neutro de propósito: se usasse a cor de ação, competiria com o botão de compra pela mesma atenção."
+    ],
+    "faca": {
+      "legenda": "Ícone escondido do leitor, texto visível fazendo o trabalho.",
+      "html": "<div class=\"yb-seals\" role=\"group\" aria-label=\"Certifications\"><span class=\"yb-seal\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-cruelty-free\"/></svg><span>Cruelty free</span></span><span class=\"yb-seal\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-vegan\"/></svg><span>Vegan</span></span></div>"
+    },
+    "naoFaca": {
+      "legenda": "Só o ícone obriga a decorar um símbolo — e some inteiro para quem usa leitor de tela.",
+      "html": "<div class=\"yb-seals\"><span class=\"yb-seal\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-cruelty-free\"/></svg></span><span class=\"yb-seal\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-vegan\"/></svg></span></div>"
+    }
+  },
+  "check": {
+    "a11y": [
+      "O <code>&lt;label&gt;</code> envolve o input: o alvo de clique é a frase inteira, não o quadrado de 20px.",
+      "O input nativo continua lá, apenas repintado. Espaço marca, Tab alcança, o leitor de tela anuncia “marcado” — nada disso é reimplementado.",
+      "Declara <code>:focus-visible</code> no controle, e o anel aparece em volta do quadrado, não do parágrafo inteiro."
+    ],
+    "faca": {
+      "legenda": "Label envolvendo o input: clicar na palavra marca.",
+      "html": "<label class=\"yb-check\"><input type=\"checkbox\" checked><span>Save my details for next time</span></label>"
+    },
+    "naoFaca": {
+      "legenda": "Input e texto soltos: só o quadrado é clicável, e nada liga um ao outro para o leitor de tela.",
+      "html": "<span style=\"display:inline-flex;gap:8px;align-items:center\"><input type=\"checkbox\"><span>Save my details for next time</span></span>"
+    }
+  },
+  "collection": {
+    "a11y": [
+      "O cartão inteiro é <em>um</em> link. Foto e nome dentro do mesmo <code>&lt;a&gt;</code> significam uma parada de teclado, não duas para o mesmo destino.",
+      "A foto é fundo: <code>alt=\"\"</code>. O nome da coleção é o texto do link, e é ele que o leitor de tela anuncia.",
+      "Declara <code>:focus-visible</code> no cartão inteiro — o anel contorna a área que responde ao clique."
+    ],
+    "faca": {
+      "legenda": "Um link por cartão, com o nome como texto do link.",
+      "html": "<a class=\"yb-collection yb-collection--center\" href=\"#faca\" style=\"inline-size:180px\"><img src=\"../_captura/nova-loja/img/Prancheta_1-790aea3e.webp\" alt=\"\"><span class=\"yb-collection__label\">Fashion Gold</span></a>"
+    },
+    "naoFaca": {
+      "legenda": "Foto em um link e nome em outro dobram as paradas de teclado para o mesmo destino.",
+      "html": "<span style=\"display:flex;flex-direction:column;gap:8px;inline-size:180px\"><a href=\"#faca\"><img src=\"../_captura/nova-loja/img/Prancheta_1-790aea3e.webp\" alt=\"Fashion Gold\" style=\"inline-size:100%;border-radius:8px\"></a><a class=\"yb-link\" href=\"#faca\">Fashion Gold</a></span>"
+    }
+  },
+  "empty": {
+    "a11y": [
+      "O ícone é <code>aria-hidden=\"true\"</code>: ele ilustra a ausência, não a explica.",
+      "O título entra no nível de heading do contexto em que o bloco mora — dentro de uma seção com <code>h2</code>, ele é <code>h3</code>. Vazio não é motivo para quebrar a hierarquia da página.",
+      "A ação é obrigatória. Ausência sem próximo passo é beco: a pessoa chegou onde não há nada e a página não diz para onde ir."
+    ],
+    "faca": {
+      "legenda": "Diz o que aconteceu e oferece a saída.",
+      "html": "<div class=\"yb-empty yb-empty--inline\" style=\"inline-size:100%\"><span class=\"yb-empty__icone\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-search\"/></svg></span><p class=\"yb-empty__title\">No results for “keratine”</p><p class=\"yb-empty__text\">Check the spelling, or browse the treatments.</p><div class=\"yb-empty__acoes\"><a class=\"yb-btn yb-btn--primary\" href=\"#faca\">Browse treatments</a></div></div>"
+    },
+    "naoFaca": {
+      "legenda": "Um beco. Diz que não há nada e deixa a pessoa sem nada para fazer.",
+      "html": "<div class=\"yb-empty yb-empty--inline\" style=\"inline-size:100%\"><p class=\"yb-empty__title\">Nothing found</p></div>"
+    }
+  },
+  "field": {
+    "a11y": [
+      "Todo campo tem <code>&lt;label&gt;</code> associado por <code>for</code>. Placeholder não é rótulo: some quando a pessoa começa a digitar, exatamente quando ela mais precisa lembrar o que o campo pede.",
+      "O erro é anunciado por texto, não só por cor: <code>aria-invalid=\"true\"</code> no controle e <code>aria-describedby</code> apontando para a mensagem.",
+      "A caixa desenha borda e anel de foco; o controle lá dentro fica transparente. Duas bordas concêntricas é o defeito clássico de quem embrulha um input que já tinha a sua."
+    ],
+    "faca": {
+      "legenda": "Rótulo persistente, erro escrito e ligado ao campo.",
+      "html": "<div class=\"yb-field\" style=\"inline-size:280px\"><div class=\"yb-field__box\"><input class=\"yb-input\" id=\"fx-ok\" type=\"email\" placeholder=\" \" aria-invalid=\"true\" aria-describedby=\"fx-err\"><label class=\"yb-field__label\" for=\"fx-ok\">Email</label></div><p class=\"yb-field__error\" id=\"fx-err\">Enter an address with an @.</p></div>"
+    },
+    "naoFaca": {
+      "legenda": "Placeholder como rótulo: o nome do campo desaparece assim que a pessoa digita, e a borda vermelha sozinha não diz o que está errado.",
+      "html": "<div class=\"yb-field\" style=\"inline-size:280px\"><div class=\"yb-field__box\"><input class=\"yb-input\" type=\"email\" placeholder=\"Email\" aria-invalid=\"true\"></div></div>"
+    }
+  },
+  "gallery": {
+    "a11y": [
+      "As miniaturas são um grupo de <code>radio</code> nativo. As setas do teclado navegam entre elas de graça — não há <code>keydown</code> escrito para isso.",
+      "A foto grande troca por CSS com <code>:checked</code>. Sem JavaScript a galeria continua funcionando; o script só mantém o contador em dia.",
+      "Cada miniatura tem <code>title</code> e a foto grande tem <code>alt</code> com o nome do produto e o número da imagem — “image 3 de 5” diz onde a pessoa está."
+    ],
+    "faca": {
+      "legenda": "Radios nativos: Tab entra no grupo, setas percorrem, e o CSS troca o slide.",
+      "html": "<p class=\"yb-field__label\" style=\"margin:0\">Miniaturas como <code>input type=\"radio\"</code> + <code>label</code></p>"
+    },
+    "naoFaca": {
+      "legenda": "Div com <code>onclick</code> não recebe Tab, não anda com as setas e não diz qual imagem está ativa.",
+      "html": "<p class=\"yb-field__label\" style=\"margin:0\">Miniaturas como <code>&lt;div onclick&gt;</code></p>"
+    }
+  },
+  "link": {
+    "a11y": [
+      "O sublinhado é o sinal, não a cor. Link identificado só por cor desaparece para quem não a distingue — e o texto do sistema é escuro sobre claro, onde a diferença de matiz é sutil.",
+      "O texto do link diz o destino. “Leia mais” repetido cinco vezes na mesma página dá ao leitor de tela cinco links idênticos que vão para lugares diferentes.",
+      "Ícone dentro do link é <code>aria-hidden=\"true\"</code>: a seta não é parte do nome do destino."
+    ],
+    "faca": {
+      "legenda": "O texto nomeia o destino; a seta é decorativa.",
+      "html": "<a class=\"yb-link\" href=\"#faca\">Ver todos os tratamentos <svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-arrow-right\"/></svg></a>"
+    },
+    "naoFaca": {
+      "legenda": "“Leia mais” só funciona para quem tem o parágrafo anterior à vista. Fora de contexto — que é como o leitor de tela lista os links — não diz nada.",
+      "html": "<a class=\"yb-link\" href=\"#faca\">Leia mais</a>"
+    }
+  },
+  "logo": {
+    "a11y": [
+      "No cabeçalho o logo é link para a home e precisa de nome acessível: <code>aria-label</code> ou texto escondido. Uma imagem sem alt dentro de um link vira “link, ybera-logo.svg”.",
+      "Declara <code>:focus-visible</code> e respeita o alvo mínimo — é o primeiro elemento que o teclado alcança na página."
+    ],
+    "faca": {
+      "legenda": "Link com nome acessível, não só a imagem.",
+      "html": "<a class=\"yb-logo yb-logo--md\" href=\"#faca\" aria-label=\"Ybera, home\"><img src=\"brand/ybera-logo.webp\" alt=\"\" width=\"360\" height=\"139\"></a>"
+    },
+    "naoFaca": {
+      "legenda": "Sem nome, o leitor de tela lê o nome do arquivo — e o primeiro link da página vira ruído.",
+      "html": "<a class=\"yb-logo yb-logo--md\" href=\"#faca\"><img src=\"brand/ybera-logo.webp\" alt=\"\" width=\"360\" height=\"139\"></a>"
+    }
+  },
+  "logobar": {
+    "a11y": [
+      "A faixa é <code>role=\"group\"</code> com <code>aria-label</code> dizendo o que aquela fileira de marcas significa — “as seen in”, “our retailers”. Sem isso são logotipos soltos sem contexto.",
+      "Cada logo tem <code>alt</code> com o nome da publicação. Aqui a imagem <em>é</em> a informação, ao contrário da foto ilustrativa."
+    ],
+    "faca": {
+      "legenda": "Grupo rotulado, cada logo com o nome no alt.",
+      "html": "<div class=\"yb-logobar\" role=\"group\" aria-label=\"As seen in\"><span class=\"yb-field__label\" style=\"margin:0\">alt=\"Vogue\" · alt=\"Allure\"</span></div>"
+    },
+    "naoFaca": {
+      "legenda": "Sem rótulo do grupo e com <code>alt=\"\"</code>, a fileira inteira é invisível para quem não a vê.",
+      "html": "<div class=\"yb-logobar\"><span class=\"yb-field__label\" style=\"margin:0\">alt=\"\" · alt=\"\"</span></div>"
+    }
+  },
+  "mediabanner": {
+    "a11y": [
+      "O texto do banner é HTML, não pixel. Texto dentro da imagem não é lido, não é traduzido, não é buscado e não escala com o zoom de fonte.",
+      "A imagem de fundo é decorativa (<code>alt=\"\"</code>): o que ela mostra já está escrito no título ao lado.",
+      "O contraste do texto é medido contra a região da foto onde ele cai — não contra a média da imagem."
+    ],
+    "faca": {
+      "legenda": "Título e ação em HTML sobre a foto.",
+      "html": "<div class=\"yb-mediabanner\" style=\"inline-size:100%;min-block-size:120px\"><div class=\"yb-mediabanner__body\"><p class=\"yb-mediabanner__title\" style=\"margin:0\">Keratin that survives humidity</p></div></div>"
+    },
+    "naoFaca": {
+      "legenda": "Texto embutido no arquivo da imagem: não é lido, não é traduzido e vira borrão no zoom.",
+      "html": "<span class=\"yb-field__label\" style=\"margin:0\">banner-com-texto-dentro.jpg</span>"
+    }
+  },
+  "dialog": {
+    "a11y": [
+      "É <code>&lt;dialog&gt;</code> nativo aberto com <code>showModal()</code>: o foco fica preso dentro, Esc fecha e o resto da página vira inerte — três coisas que a versão em <code>&lt;div&gt;</code> quase nunca acerta.",
+      "Ao fechar, o foco volta para o botão que abriu. Sem isso a pessoa que navega por teclado é devolvida ao topo do documento.",
+      "O título é ligado por <code>aria-labelledby</code>, para o leitor de tela anunciar o que abriu."
+    ],
+    "faca": {
+      "legenda": "Dialog nativo, com título ligado e foco devolvido a quem abriu.",
+      "html": "<button class=\"yb-btn yb-btn--secondary\" type=\"button\">Abre &lt;dialog&gt; com showModal()</button>"
+    },
+    "naoFaca": {
+      "legenda": "Div com overlay: o foco continua correndo pela página atrás, Esc não fecha e o leitor de tela lê o conteúdo escondido.",
+      "html": "<button class=\"yb-btn yb-btn--secondary\" type=\"button\">Abre &lt;div class=\"modal\"&gt;</button>"
+    }
+  },
+  "notice": {
+    "a11y": [
+      "É informação persistente da página, não mensagem que chegou agora: não usa <code>role=\"alert\"</code> nem <code>status</code>. Anunciar como novidade algo que sempre esteve ali é falso alarme.",
+      "A cor não carrega o significado sozinha — o texto diz o que a faixa informa."
+    ],
+    "faca": {
+      "legenda": "Faixa informativa, sem papel de mensagem viva.",
+      "html": "<div class=\"yb-notice\" style=\"inline-size:100%\">Free standard shipping on orders over $50</div>"
+    },
+    "naoFaca": {
+      "legenda": "Com <code>role=\"alert\"</code>, o leitor de tela interrompe a leitura a cada carregamento para anunciar algo que nunca muda.",
+      "html": "<div class=\"yb-notice\" role=\"alert\" style=\"inline-size:100%\">Free standard shipping on orders over $50</div>"
+    }
+  },
+  "offercard": {
+    "a11y": [
+      "O desconto está escrito, não só colorido: “Save 16%” é a informação, o fundo é reforço.",
+      "Contagem regressiva precisa de <code>aria-live=\"polite\"</code> — ou de nenhuma live region. Atualizar o segundo sem dizer nada engana; atualizar com <code>assertive</code> interrompe a leitura a cada segundo.",
+      "A arte é <code>alt=\"\"</code> quando o preço e o nome já estão em texto ao lado."
+    ],
+    "faca": {
+      "legenda": "O número em texto, a cor como reforço.",
+      "html": "<span class=\"yb-badge yb-badge--sale\">Save 16%</span><span class=\"yb-price\"><b class=\"yb-price__now\">$74.90</b><s class=\"yb-price__was\">$89.90</s></span>"
+    },
+    "naoFaca": {
+      "legenda": "Só a cor do preço para dizer que há desconto: quem não distingue a diferença vê dois números sem relação.",
+      "html": "<span class=\"yb-price\"><b class=\"yb-price__now\">$74.90</b></span>"
+    }
+  },
+  "pagination": {
+    "a11y": [
+      "É <code>&lt;nav aria-label=\"Pagination\"&gt;</code>: a página tem mais de uma navegação, e sem rótulo o leitor de tela lista duas “navigation” idênticas.",
+      "A página atual usa <code>aria-current=\"page\"</code> e não é link.",
+      "Cada número respeita o alvo mínimo de 44px — é o controle mais fácil de errar o dedo numa lista longa."
+    ],
+    "faca": {
+      "legenda": "Nav rotulada, página atual marcada e sem link.",
+      "html": "<nav class=\"yb-pagination\" aria-label=\"Pagination\"><a href=\"#faca\">1</a><span aria-current=\"page\">2</span><a href=\"#faca\">3</a></nav>"
+    },
+    "naoFaca": {
+      "legenda": "Todos como link e nenhum marcado: nada diz em que página a pessoa está.",
+      "html": "<nav class=\"yb-pagination\"><a href=\"#faca\">1</a><a href=\"#faca\">2</a><a href=\"#faca\">3</a></nav>"
+    }
+  },
+  "partner": {
+    "a11y": [
+      "O botão que recolhe a bolha declara <code>aria-expanded</code> e <code>aria-controls</code>: o estado é anunciado, não só desenhado.",
+      "A animação de recolher respeita <code>prefers-reduced-motion</code>. Movimento em elemento que aparece sobre o conteúdo é o que mais incomoda quem tem sensibilidade vestibular.",
+      "A foto da influenciadora é <code>alt=\"\"</code> quando o nome dela está escrito na bolha ao lado."
+    ],
+    "faca": {
+      "legenda": "Estado do recolhimento anunciado pelo próprio botão.",
+      "html": "<button class=\"yb-btn yb-btn--secondary\" type=\"button\" aria-expanded=\"true\">Bolha aberta <code>aria-expanded=\"true\"</code></button>"
+    },
+    "naoFaca": {
+      "legenda": "Só a classe CSS guardando o estado: o leitor de tela lê o mesmo botão nas duas situações.",
+      "html": "<button class=\"yb-btn yb-btn--secondary\" type=\"button\">Bolha aberta <code>class=\"aberta\"</code></button>"
+    }
+  },
+  "post": {
+    "a11y": [
+      "O cartão inteiro é um link só — foto, título e data dentro do mesmo <code>&lt;a&gt;</code>, uma parada de teclado.",
+      "A foto do post é <code>alt=\"\"</code>: o título logo abaixo já diz do que se trata.",
+      "A data em <code>&lt;time datetime&gt;</code>, para “12 Sep” ser uma data e não uma string."
+    ],
+    "faca": {
+      "legenda": "Um link, com o título como nome do destino.",
+      "html": "<a class=\"yb-post\" href=\"#faca\" style=\"inline-size:220px\"><span class=\"yb-post__body\"><span class=\"yb-post__title\">How keratin survives humidity</span></span></a>"
+    },
+    "naoFaca": {
+      "legenda": "Foto, título e “leia mais” como três links: três paradas de teclado para o mesmo artigo.",
+      "html": "<span style=\"display:flex;flex-direction:column;gap:6px;inline-size:220px\"><a class=\"yb-link\" href=\"#faca\">[foto]</a><a class=\"yb-link\" href=\"#faca\">How keratin survives humidity</a><a class=\"yb-link\" href=\"#faca\">Leia mais</a></span>"
+    }
+  },
+  "price": {
+    "a11y": [
+      "O preço antigo vai em <code>&lt;s&gt;</code>, não em <code>text-decoration</code> aplicada a um span. O elemento diz “isto não vale mais”; o estilo só desenha.",
+      "Preço isolado usa <code>proportional-nums</code>: com <code>tabular-nums</code> o ponto ganha largura de dígito e “$149.90” lê como “$149 . 90”.",
+      "Quando há desconto, o quanto se economiza está escrito ao lado — dois números riscados não são uma conta que todo mundo faz de cabeça."
+    ],
+    "faca": {
+      "legenda": "Preço antigo em <code>&lt;s&gt;</code> e o desconto escrito.",
+      "html": "<span class=\"yb-price\"><b class=\"yb-price__now\">$74.90</b><s class=\"yb-price__was\">$89.90</s></span><span class=\"yb-badge yb-badge--sale\">Save 16%</span>"
+    },
+    "naoFaca": {
+      "legenda": "Risco só no CSS: para o leitor de tela os dois preços têm o mesmo peso, e o de cima parece o que se paga.",
+      "html": "<span class=\"yb-price\"><b class=\"yb-price__now\">$74.90</b><span style=\"text-decoration:line-through\">$89.90</span></span>"
+    }
+  },
+  "card": {
+    "a11y": [
+      "O nome do produto é o link. O “Add to cart” é um botão separado, com <code>aria-label</code> dizendo de qual produto — numa vitrine de oito cartões, oito botões “Add to cart” idênticos não dizem nada na lista de controles.",
+      "A foto é <code>alt=\"\"</code>: o nome do produto está escrito logo abaixo e o leitor de tela leria duas vezes.",
+      "A nota usa <code>role=\"img\"</code> com <code>aria-label</code> — “4.8 de 5, 128 avaliações”. As cinco estrelas desenhadas são <code>aria-hidden</code>."
+    ],
+    "faca": {
+      "legenda": "Botão de compra nomeando o produto.",
+      "html": "<button class=\"yb-btn yb-btn--primary yb-btn--sm\" type=\"button\" aria-label=\"Add to cart: Deep care kit\">Add to cart</button>"
+    },
+    "naoFaca": {
+      "legenda": "Oito botões idênticos na mesma página: a lista de controles do leitor de tela vira oito linhas iguais.",
+      "html": "<button class=\"yb-btn yb-btn--primary yb-btn--sm\" type=\"button\">Add to cart</button><button class=\"yb-btn yb-btn--primary yb-btn--sm\" type=\"button\">Add to cart</button>"
+    }
+  },
+  "progress": {
+    "a11y": [
+      "Com valor conhecido: <code>role=\"progressbar\"</code> com <code>aria-valuenow</code>, <code>valuemin</code> e <code>valuemax</code>, mais <code>aria-label</code> dizendo progresso de quê.",
+      "Sem valor conhecido, a variante indeterminada não declara <code>aria-valuenow</code> — número inventado é pior que número ausente.",
+      "Sob <code>prefers-reduced-motion</code> a faixa indeterminada para de andar e some: uma barra parada em 40% mentiria sobre o progresso."
+    ],
+    "faca": {
+      "legenda": "Valor anunciado junto com o que ele mede.",
+      "html": "<div class=\"yb-progress\" role=\"progressbar\" aria-label=\"Progress to free shipping\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-valuenow=\"76\" style=\"inline-size:220px\"><span class=\"yb-progress__fill\" style=\"inline-size:76%\"></span></div>"
+    },
+    "naoFaca": {
+      "legenda": "Barra sem papel nem valor: quem não a vê não sabe que existe progresso.",
+      "html": "<div class=\"yb-progress\" style=\"inline-size:220px\"><span class=\"yb-progress__fill\" style=\"inline-size:76%\"></span></div>"
+    }
+  },
+  "stepper": {
+    "a11y": [
+      "É um <code>&lt;input type=\"number\"&gt;</code> de verdade entre dois botões: dá para digitar 12 em vez de clicar doze vezes, e o valor digitado obedece aos mesmos limites.",
+      "Cada botão tem <code>aria-label</code> próprio (“Decrease quantity”), porque “−” e “+” sozinhos não são nomes.",
+      "No mínimo e no máximo o botão correspondente recebe <code>disabled</code> — o limite é mostrado, não apenas imposto em silêncio.",
+      "Os botões declaram <code>type=\"button\"</code>: sem isso, dentro de um formulário, cada “+” enviaria o carrinho."
+    ],
+    "faca": {
+      "legenda": "Input real, botões nomeados, limite visível.",
+      "html": "<div class=\"yb-stepper\" data-yb-stepper><button type=\"button\" data-yb-step=\"down\" aria-label=\"Decrease quantity\" disabled><svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-minus\"/></svg></button><input type=\"number\" value=\"1\" min=\"1\" max=\"9\" aria-label=\"Quantity\"><button type=\"button\" data-yb-step=\"up\" aria-label=\"Increase quantity\"><svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-plus\"/></svg></button></div>"
+    },
+    "naoFaca": {
+      "legenda": "Spans com clique: não dá para digitar, não dá para chegar por Tab, e “−” não é nome de controle.",
+      "html": "<span style=\"display:inline-flex;gap:12px;align-items:center;border:1px solid var(--yb-border);border-radius:8px;padding:8px 12px\"><span>−</span><span>1</span><span>+</span></span>"
+    }
+  },
+  "rating": {
+    "a11y": [
+      "A nota é <code>role=\"img\"</code> com <code>aria-label</code> escrito por extenso: “4.8 de 5, 128 avaliações”. As estrelas desenhadas são <code>aria-hidden</code> — cinco caracteres “★” lidos em sequência não são uma nota.",
+      "A nota é link para as avaliações. Nota que não leva a lugar nenhum é beco: quem se interessou pelo número quer o texto por trás dele."
+    ],
+    "faca": {
+      "legenda": "A nota dita por extenso, as estrelas escondidas do leitor.",
+      "html": "<span class=\"yb-rating\" role=\"img\" aria-label=\"4.8 of 5, 128 reviews\"><span class=\"yb-rating__stars\" aria-hidden=\"true\">★★★★★</span><span class=\"yb-rating__score\">4.8</span><span class=\"yb-rating__count\">(128)</span></span>"
+    },
+    "naoFaca": {
+      "legenda": "Sem <code>role</code> e sem rótulo, o leitor de tela lê “estrela estrela estrela estrela estrela 4.8 128”.",
+      "html": "<span class=\"yb-rating\"><span class=\"yb-rating__stars\">★★★★★</span><span class=\"yb-rating__score\">4.8</span></span>"
+    }
+  },
+  "review": {
+    "a11y": [
+      "Cada avaliação é um <code>&lt;article&gt;</code>: o leitor de tela consegue pular de uma para a próxima sem ler tudo.",
+      "A nota individual repete o padrão do Rating — <code>role=\"img\"</code> com o texto por extenso.",
+      "A foto da avaliação é <code>alt=\"\"</code>. Quando ela mostra resultado (antes e depois), aí sim precisa de descrição.",
+      "O selo de compra verificada é texto, não só um ícone verde."
+    ],
+    "faca": {
+      "legenda": "Article com a nota dita por extenso.",
+      "html": "<article class=\"yb-review\" style=\"inline-size:260px\"><div class=\"yb-review__body\"><span class=\"yb-rating\" role=\"img\" aria-label=\"5 of 5 stars\"><span class=\"yb-rating__stars\" aria-hidden=\"true\">★★★★★</span></span><p class=\"yb-review__text\">It survived a Miami summer.</p><span class=\"yb-review__author\">Marggi B.</span></div></article>"
+    },
+    "naoFaca": {
+      "legenda": "Div sem papel e estrelas sem rótulo: nem dá para pular a avaliação, nem dá para saber a nota.",
+      "html": "<div style=\"inline-size:260px\"><span class=\"yb-rating__stars\">★★★★★</span><p class=\"yb-review__text\">It survived a Miami summer.</p></div>"
+    }
+  },
+  "search": {
+    "a11y": [
+      "O overlay é <code>&lt;dialog&gt;</code> com <code>role=\"search\"</code> dentro: o foco entra no campo, Esc fecha e o resto da página fica inerte.",
+      "O resultado vazio é anunciado — a região dos resultados é live, senão a pessoa digita e nada é dito.",
+      "O indicador de foco do campo é o cursor, e o <code>outline</code> é desligado com selo <code>anel:</code> na folha. Um anel de 1100px de largura em volta da barra inteira não indica nada."
+    ],
+    "faca": {
+      "legenda": "Campo dentro de <code>role=\"search\"</code>, com rótulo.",
+      "html": "<span class=\"yb-field__box\" style=\"inline-size:280px\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-search\"/></svg><input class=\"yb-input\" id=\"sx\" type=\"search\" placeholder=\" \" aria-label=\"Search the store\"></span>"
+    },
+    "naoFaca": {
+      "legenda": "Input solto sem rótulo e sem papel: na lista de controles ele aparece como “edit”, sem dizer para quê.",
+      "html": "<input class=\"yb-input\" type=\"text\" placeholder=\"Buscar\" style=\"inline-size:280px;border:1px solid var(--yb-border);border-radius:8px;padding:12px\">"
+    }
+  },
+  "skeleton": {
+    "a11y": [
+      "A área que carrega declara <code>aria-busy=\"true\"</code>. O esqueleto é sinal visual; sem o atributo, quem usa leitor de tela ouve silêncio e conclui que a página acabou.",
+      "Os blocos são <code>aria-hidden=\"true\"</code>: retângulos cinzas não têm nada a dizer.",
+      "Sob <code>prefers-reduced-motion</code> o brilho para. Ele é a única animação da página que roda em loop indefinido."
+    ],
+    "faca": {
+      "legenda": "Região marcada como ocupada, blocos escondidos do leitor.",
+      "html": "<div aria-busy=\"true\" style=\"inline-size:220px\"><span class=\"yb-skeleton\" aria-hidden=\"true\" style=\"block-size:14px;display:block;margin-bottom:8px\"></span><span class=\"yb-skeleton\" aria-hidden=\"true\" style=\"block-size:14px;display:block;inline-size:60%\"></span></div>"
+    },
+    "naoFaca": {
+      "legenda": "Sem <code>aria-busy</code>, o carregamento é invisível para quem não vê a animação.",
+      "html": "<div style=\"inline-size:220px\"><span class=\"yb-skeleton\" style=\"block-size:14px;display:block;margin-bottom:8px\"></span><span class=\"yb-skeleton\" style=\"block-size:14px;display:block;inline-size:60%\"></span></div>"
+    }
+  },
+  "switch": {
+    "a11y": [
+      "É <code>&lt;button role=\"switch\"&gt;</code> com <code>aria-checked</code>. Não é checkbox: switch aplica na hora, checkbox espera um “salvar”. O papel diz qual dos dois é.",
+      "O alvo real tem 56×44 via <code>::after</code>, maior que o desenho de 44×24 — o gesto no celular acerta a área, não o pixel.",
+      "O rótulo fica fora do controle, associado por <code>aria-label</code> ou <code>aria-labelledby</code>."
+    ],
+    "faca": {
+      "legenda": "Papel e estado no próprio controle.",
+      "html": "<button class=\"yb-switch\" type=\"button\" role=\"switch\" aria-checked=\"true\" aria-label=\"Route package protection\"><span class=\"yb-switch__knob\"></span></button>"
+    },
+    "naoFaca": {
+      "legenda": "Div com classe “on”: sem papel, sem estado, sem teclado.",
+      "html": "<span class=\"yb-switch\" aria-hidden=\"true\"><span class=\"yb-switch__knob\"></span></span>"
+    }
+  },
+  "toast": {
+    "a11y": [
+      "Erro usa <code>role=\"alert\"</code> e interrompe o leitor de tela; sucesso e informação usam <code>role=\"status\"</code> e esperam a pausa.",
+      "O toast não rouba o foco. Quem estava digitando continua digitando — e por isso ele nunca carrega a única saída de um fluxo.",
+      "O tempo em tela não é o único jeito de ler: o que o toast diz precisa estar disponível em outro lugar depois que ele some."
+    ],
+    "faca": {
+      "legenda": "Confirmação curta; a informação também existe fora dela (o contador da sacola).",
+      "html": "<div class=\"yb-toast yb-toast--success\" role=\"status\" style=\"position:static\"><div class=\"yb-toast__body\"><b class=\"yb-toast__title\">Added to cart</b><p class=\"yb-toast__text\">Deep care kit</p></div></div>"
+    },
+    "naoFaca": {
+      "legenda": "A única cópia de uma informação que a pessoa precisa guardar, num elemento que some em quatro segundos.",
+      "html": "<div class=\"yb-toast yb-toast--info\" role=\"status\" style=\"position:static\"><div class=\"yb-toast__body\"><b class=\"yb-toast__title\">Seu código: A7F2-91KD</b><p class=\"yb-toast__text\">Use no checkout</p></div></div>"
+    }
+  },
+  "variant": {
+    "a11y": [
+      "É um grupo de <code>radio</code> com <code>role=\"radiogroup\"</code> e <code>aria-labelledby</code> apontando para o rótulo “Size:”. As setas do teclado percorrem as opções sem JavaScript.",
+      "A opção esgotada continua selecionável: <code>data-yb-esgotado</code>, não <code>disabled</code>. Desabilitada, ela era visível e inalcançável — e chegar nela é o único caminho para o aviso de volta ao estoque.",
+      "O rótulo ecoa a escolha (“Size: <b>500g</b>”) e nasce correto no HTML: sem JavaScript a página não muda, mas também não mente."
+    ],
+    "faca": {
+      "legenda": "Esgotado alcançável, com o estado escrito no cartão.",
+      "html": "<div class=\"yb-swatches\" role=\"radiogroup\" aria-label=\"Size\"><input type=\"radio\" name=\"fx-v\" id=\"fx-v1\" checked><label for=\"fx-v1\">250g</label><input type=\"radio\" name=\"fx-v\" id=\"fx-v2\" data-yb-esgotado><label for=\"fx-v2\">1kg — Sold out</label></div>"
+    },
+    "naoFaca": {
+      "legenda": "Com <code>disabled</code>, o tamanho esgotado aparece e não pode ser alcançado — nem pelo mouse, nem pelo Tab.",
+      "html": "<div class=\"yb-swatches\" role=\"radiogroup\" aria-label=\"Size\"><input type=\"radio\" name=\"fx-w\" id=\"fx-w1\" checked><label for=\"fx-w1\">250g</label><input type=\"radio\" name=\"fx-w\" id=\"fx-w2\" disabled><label for=\"fx-w2\">1kg</label></div>"
+    }
+  },
+  "video": {
+    "a11y": [
+      "O cartão nasce como pôster com botão de play nomeado — <code>aria-label</code> com o assunto do vídeo, não “play”.",
+      "O vídeo só é criado no primeiro clique: nada toca sozinho, nada baixa antes de alguém pedir.",
+      "Conteúdo falado precisa de legenda. Sem faixa de legenda, o vídeo é decoração para quem não ouve."
+    ],
+    "faca": {
+      "legenda": "Play nomeado pelo assunto, vídeo criado só no clique.",
+      "html": "<button class=\"yb-btn yb-btn--secondary\" type=\"button\" aria-label=\"Play: how to apply the mask\"><svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-play\"/></svg> Play</button>"
+    },
+    "naoFaca": {
+      "legenda": "“Play” sozinho, num trilho de seis vídeos, dá seis controles idênticos na lista do leitor de tela.",
+      "html": "<button class=\"yb-btn yb-btn--secondary\" type=\"button\" aria-label=\"Play\"><svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-play\"/></svg> Play</button>"
+    }
+  }
+}

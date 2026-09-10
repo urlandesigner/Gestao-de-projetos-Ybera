@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quantity stepper — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="ybera-components.css">
+<link rel="stylesheet" href="doc.css">
+<style>
+/* Sem seletor de tipo: ver o cabecalho de doc.css. */
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+</style>
+</head>
+<body class="ficha">
+<div class="doc">
+
+<nav class="nav">
+  <p class="nav-brand">Ybera</p>
+  <p class="nav-ver">Components · v0.12.1</p>
+  <ul>
+    <li><a href="accordion.html">Accordion</a></li>
+    <li><a href="alert.html">Alert</a></li>
+    <li><a href="badge.html">Badge</a></li>
+    <li><a href="quote.html">Brand quote</a></li>
+    <li><a href="crumb.html">Breadcrumb</a></li>
+    <li><a href="button.html">Button</a></li>
+    <li><a href="seals.html">Certification seals</a></li>
+    <li><a href="check.html">Checkbox &amp; radio</a></li>
+    <li><a href="collection.html">Collection card</a></li>
+    <li><a href="empty.html">Empty state</a></li>
+    <li><a href="field.html">Form field</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="link.html">Link</a></li>
+    <li><a href="logo.html">Logo</a></li>
+    <li><a href="logobar.html">Logo bar</a></li>
+    <li><a href="mediabanner.html">Media banner</a></li>
+    <li><a href="dialog.html">Modal &amp; drawer</a></li>
+    <li><a href="notice.html">Notice</a></li>
+    <li><a href="offercard.html">Offer card</a></li>
+    <li><a href="pagination.html">Pagination</a></li>
+    <li><a href="partner.html">Partner</a></li>
+    <li><a href="post.html">Post</a></li>
+    <li><a href="price.html">Price</a></li>
+    <li><a href="card.html">Product card</a></li>
+    <li><a href="progress.html">Progress bar</a></li>
+    <li><a href="stepper.html" aria-current="page">Quantity stepper</a></li>
+    <li><a href="rating.html">Rating</a></li>
+    <li><a href="review.html">Review</a></li>
+    <li><a href="search.html">Search overlay</a></li>
+    <li><a href="skeleton.html">Skeleton</a></li>
+    <li><a href="switch.html">Switch</a></li>
+    <li><a href="toast.html">Toast</a></li>
+    <li><a href="variant.html">Variant picker</a></li>
+    <li><a href="video.html">Vertical video carousel</a></li>
+  </ul>
+  <div class="nav-back">
+    <a href="index.html">← Galeria</a>
+    <a href="../index.html">← Design system</a>
+  </div>
+</nav>
+
+<main class="main">
+  <a class="ficha-volta" href="index.html#stepper">← Components</a>
+  <h1 class="ficha-titulo">Quantity stepper</h1>
+  <p class="ficha-quando">Botões de 44px, e funcionam — clique. Limites em 1 e 10: o botão desabilita sozinho na ponta.</p>
+  <ul class="ficha-fatos">
+    <li>Classe base <b><code>.yb-stepper</code></b></li>
+    <li>Modificadores <b>1</b></li>
+    <li>Elementos <b>0</b></li>
+    <li>Estados <b>3</b></li>
+    <li>Tokens <b>14</b></li>
+    <li>Comportamento <b>JS</b></li>
+  </ul>
+
+  <section class="bloco" id="demos">
+    <h2 class="bloco-titulo">Como se parece</h2>
+    <div class="demo">
+      <div class="yb-stepper" data-yb-stepper>
+        <button type="button" data-yb-step="down" aria-label="Diminuir quantidade">−</button>
+        <input type="number" value="1" min="1" max="10" aria-label="Quantidade">
+        <button type="button" data-yb-step="up" aria-label="Aumentar quantidade">+</button>
+      </div>
+      <div class="yb-stepper" data-yb-stepper>
+        <button type="button" data-yb-step="down" aria-label="Diminuir quantidade">−</button>
+        <input type="number" value="9" min="1" max="10" aria-label="Quantidade">
+        <button type="button" data-yb-step="up" aria-label="Aumentar quantidade">+</button>
+      </div>
+      <div class="yb-stepper yb-stepper--sm" data-yb-stepper>
+        <button type="button" data-yb-step="down" aria-label="Diminuir quantidade">−</button>
+        <input type="number" value="1" min="1" max="10" aria-label="Quantidade">
+        <button type="button" data-yb-step="up" aria-label="Aumentar quantidade">+</button>
+      </div>
+    </div>
+    <div class="note">
+      <b><code>--sm</code> é exceção, não escolha de gosto</b>
+      <p>36px em vez de 44. Existe por causa da gaveta: lá o controle divide 420px
+      com foto, título, preço e lixeira, e em 44+48+44 o preço ia para outra linha.
+      O mínimo de alvo do WCAG 2.5.8 (AA) é 24px, então 36 ainda sobra folga &mdash;
+      o que se perde é o conforto de 44, que é AAA. Na PDP use o grande: ali o
+      controle antecede a compra.</p>
+    </div>
+  </section>
+
+  <section class="bloco" id="anatomia">
+    <h2 class="bloco-titulo">Anatomia e API</h2>
+    <p class="bloco-lede">Lido da folha a cada build. Se faltar alguma coisa aqui,
+    falta na folha.</p>
+    <p class="rotulo">Modificadores</p>
+    <p class="lista-api"><code>.yb-stepper--sm</code></p>
+    <p class="rotulo">Elementos</p>
+    <p class="api-vazia">Peça de um elemento só: não há partes internas com classe própria.</p>
+    <p class="rotulo">Estados que a folha trata</p>
+    <p class="bloco-lede"><code>:focus-visible</code> · <code>:hover</code> · <code>[disabled]</code></p>
+  </section>
+
+  <section class="bloco" id="marcacao">
+    <h2 class="bloco-titulo">Marcação</h2>
+    <p class="bloco-lede">Extraída da primeira demonstração acima — é o mesmo HTML
+    que renderizou ali, não um exemplo escrito à parte.</p>
+    <div class="snippet">
+      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <pre><code>&lt;div class="yb-stepper" data-yb-stepper&gt;
+  &lt;button type="button" data-yb-step="down" aria-label="Diminuir quantidade"&gt;−&lt;/button&gt;
+  &lt;input type="number" value="1" min="1" max="10" aria-label="Quantidade"&gt;
+  &lt;button type="button" data-yb-step="up" aria-label="Aumentar quantidade"&gt;+&lt;/button&gt;
+&lt;/div&gt;
+&lt;div class="yb-stepper" data-yb-stepper&gt;
+  &lt;button type="button" data-yb-step="down" aria-label="Diminuir quantidade"&gt;−&lt;/button&gt;
+  &lt;input type="number" value="9" min="1" max="10" aria-label="Quantidade"&gt;
+  &lt;button type="button" data-yb-step="up" aria-label="Aumentar quantidade"&gt;+&lt;/button&gt;
+&lt;/div&gt;
+&lt;div class="yb-stepper yb-stepper--sm" data-yb-stepper&gt;
+  &lt;button type="button" data-yb-step="down" aria-label="Diminuir quantidade"&gt;−&lt;/button&gt;
+  &lt;input type="number" value="1" min="1" max="10" aria-label="Quantidade"&gt;
+  &lt;button type="button" data-yb-step="up" aria-label="Aumentar quantidade"&gt;+&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+  </section>
+
+  <section class="bloco" id="acessibilidade">
+    <h2 class="bloco-titulo">Acessibilidade</h2>
+    <ul class="bloco-lede"><li>É um <code>&lt;input type="number"&gt;</code> de verdade entre dois botões: dá para digitar 12 em vez de clicar doze vezes, e o valor digitado obedece aos mesmos limites.</li><li>Cada botão tem <code>aria-label</code> próprio (“Decrease quantity”), porque “−” e “+” sozinhos não são nomes.</li><li>No mínimo e no máximo o botão correspondente recebe <code>disabled</code> — o limite é mostrado, não apenas imposto em silêncio.</li><li>Os botões declaram <code>type="button"</code>: sem isso, dentro de um formulário, cada “+” enviaria o carrinho.</li></ul>
+  </section>
+
+  <section class="bloco" id="faca">
+    <h2 class="bloco-titulo">Faça / não faça</h2>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><div class="yb-stepper" data-yb-stepper><button type="button" data-yb-step="down" aria-label="Decrease quantity" disabled><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-minus"/></svg></button><input type="number" value="1" min="1" max="9" aria-label="Quantity"><button type="button" data-yb-step="up" aria-label="Increase quantity"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-plus"/></svg></button></div></div>
+        <p class="fn-legenda">Input real, botões nomeados, limite visível.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><span style="display:inline-flex;gap:12px;align-items:center;border:1px solid var(--yb-border);border-radius:8px;padding:8px 12px"><span>−</span><span>1</span><span>+</span></span></div>
+        <p class="fn-legenda">Spans com clique: não dá para digitar, não dá para chegar por Tab, e “−” não é nome de controle.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="doc-credit">Ficha gerada por <code>tools/fichas.mjs</code> a partir de
+  <code>components/ybera-components.css</code> e <code>components/index.html</code>.
+  Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>
+</main>
+
+</div>
+<script src="ybera-components.js"></script>
+<script>
+/* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
+   acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-yb-copiar]');
+  if (!b) return;
+  var codigo = b.parentElement.querySelector('code');
+  if (!codigo || !navigator.clipboard) return;
+  navigator.clipboard.writeText(codigo.textContent).then(function () {
+    var antes = b.textContent;
+    b.textContent = 'Copiado';
+    setTimeout(function () { b.textContent = antes; }, 1600);
+  });
+});
+</script>
+</body>
+</html>

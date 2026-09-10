@@ -30,7 +30,7 @@ operacional.
 
 ## Quando se aplica
 
-Sempre, em qualquer página que carregue `tokens/ybera.css`. É a única
+Sempre, em qualquer página que carregue `dist/ybera-tokens.css`. É a única
 propriedade real que a camada 1 declara — todo o resto do arquivo é
 mapeamento — e ela precisa estar ali, no `:root`, para alcançar os controles
 nativos.

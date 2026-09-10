@@ -9,9 +9,32 @@
    arredondamento de subpixel varia. Abaixo disso e ruido; acima e alguem
    mexendo em layout sem perceber.
 
-   Fluxo:
-     node tools/baseline.mjs            → compara atual contra a base
-     node tools/baseline.mjs --aceitar  → promove o atual a nova base
+   LIMITACAO CONHECIDA — os retratos sao das telas-prova, e as telas-prova sao
+   montadas com dados AO VIVO da loja (dados.py busca o catalogo). Trocar o
+   titulo de um produto na loja muda a quebra de linha do cartao, e a rede
+   acusa deriva de layout que nao existe: aconteceu em 02/09/2026, quando
+   "FASHION GOLD - Brazilian Keratin Treatment, Smoothing and Straightening
+   System" virou "Deep Care Hair Kit | FREE 1L Shampoo" e os cartoes encolheram
+   19px em 768.
+
+   Enquanto nao houver fixture de dados, a leitura correta e: deriva SO em
+   cartao de produto provavelmente e o catalogo — confira o titulo antes de
+   caçar bug no CSS. Deriva em qualquer outra peca e sua.
+
+   Fluxo (com ./serve.sh no ar):
+     1. no console da pagina, uma vez por largura, esperando a fonte e ~700ms
+        depois de mudar a largura (ver a nota em test/layout.js — sem isso a
+        gaveta em transicao e a fonte de reserva entram no retrato):
+          await document.fonts.ready;
+          await new Promise(r => setTimeout(r, 700));
+          const src = await fetch('/test/layout.js').then(r => r.text());
+          (window.__r = window.__r || []).push(eval(src));
+     2. no fim, uma vez so:
+          await fetch('/__retrato', {method:'POST', body: JSON.stringify(window.__r)});
+        o servidor grava test/atual.json. Antes era copiar 60 KB de JSON do
+        console na mao — e por isso a rede quase nunca era recapturada.
+     3. node tools/baseline.mjs            → compara atual contra a base
+        node tools/baseline.mjs --aceitar  → promove o atual a nova base
    ========================================================================= */
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -22,17 +45,31 @@ const BASE = join(raiz, 'test/baseline.json');
 const ATUAL = join(raiz, 'test/atual.json');
 const TOLERANCIA = 2;
 
+const idDeSimples = (r) => `${r.pagina}@${r.largura}`;
 const verde = (t) => `\x1b[32m${t}\x1b[0m`;
 const vermelho = (t) => `\x1b[31m${t}\x1b[0m`;
 const cinza = (t) => `\x1b[90m${t}\x1b[0m`;
 
 if (!existsSync(ATUAL)) {
   console.error(vermelho('test/atual.json não existe.'));
-  console.error(cinza('Cole test/layout.js no console da página e salve o retorno ali.'));
+  console.error(cinza('Capture no navegador e faça POST em /__retrato — ver o cabeçalho deste arquivo.'));
   process.exit(2);
 }
 const atual = JSON.parse(readFileSync(ATUAL, 'utf8'));
 const lista = Array.isArray(atual) ? atual : [atual];
+
+// Retrato tirado com a fonte ainda carregando mede a fonte de RESERVA, que
+// quebra linha em outro lugar: um cartao de produto muda 19px de altura e a
+// comparacao acusa deriva que nao existe. Melhor recusar o retrato do que
+// gravar uma base errada — e --aceitar precisa recusar junto, senao a base
+// passa a ser a medida da fonte errada.
+const semFonte = lista.filter((r) => r.fontes && r.fontes !== 'loaded');
+if (semFonte.length) {
+  console.error(vermelho('retrato tirado antes da fonte carregar:'));
+  for (const r of semFonte) console.error(cinza(`  ${idDeSimples(r)} — fontes: ${r.fontes}`));
+  console.error(cinza('Refaça com `await document.fonts.ready` antes de capturar.'));
+  process.exit(2);
+}
 
 if (process.argv.includes('--aceitar')) {
   writeFileSync(BASE, JSON.stringify(lista, null, 2) + '\n');

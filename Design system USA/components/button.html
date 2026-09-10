@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Button — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="ybera-components.css">
+<link rel="stylesheet" href="doc.css">
+<style>
+/* Sem seletor de tipo: ver o cabecalho de doc.css. */
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+</style>
+</head>
+<body class="ficha">
+<div class="doc">
+
+<nav class="nav">
+  <p class="nav-brand">Ybera</p>
+  <p class="nav-ver">Components · v0.12.1</p>
+  <ul>
+    <li><a href="accordion.html">Accordion</a></li>
+    <li><a href="alert.html">Alert</a></li>
+    <li><a href="badge.html">Badge</a></li>
+    <li><a href="quote.html">Brand quote</a></li>
+    <li><a href="crumb.html">Breadcrumb</a></li>
+    <li><a href="button.html" aria-current="page">Button</a></li>
+    <li><a href="seals.html">Certification seals</a></li>
+    <li><a href="check.html">Checkbox &amp; radio</a></li>
+    <li><a href="collection.html">Collection card</a></li>
+    <li><a href="empty.html">Empty state</a></li>
+    <li><a href="field.html">Form field</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="link.html">Link</a></li>
+    <li><a href="logo.html">Logo</a></li>
+    <li><a href="logobar.html">Logo bar</a></li>
+    <li><a href="mediabanner.html">Media banner</a></li>
+    <li><a href="dialog.html">Modal &amp; drawer</a></li>
+    <li><a href="notice.html">Notice</a></li>
+    <li><a href="offercard.html">Offer card</a></li>
+    <li><a href="pagination.html">Pagination</a></li>
+    <li><a href="partner.html">Partner</a></li>
+    <li><a href="post.html">Post</a></li>
+    <li><a href="price.html">Price</a></li>
+    <li><a href="card.html">Product card</a></li>
+    <li><a href="progress.html">Progress bar</a></li>
+    <li><a href="stepper.html">Quantity stepper</a></li>
+    <li><a href="rating.html">Rating</a></li>
+    <li><a href="review.html">Review</a></li>
+    <li><a href="search.html">Search overlay</a></li>
+    <li><a href="skeleton.html">Skeleton</a></li>
+    <li><a href="switch.html">Switch</a></li>
+    <li><a href="toast.html">Toast</a></li>
+    <li><a href="variant.html">Variant picker</a></li>
+    <li><a href="video.html">Vertical video carousel</a></li>
+  </ul>
+  <div class="nav-back">
+    <a href="index.html">← Galeria</a>
+    <a href="../index.html">← Design system</a>
+  </div>
+</nav>
+
+<main class="main">
+  <a class="ficha-volta" href="index.html#button">← Components</a>
+  <h1 class="ficha-titulo">Button</h1>
+  <p class="ficha-quando">Uma ação primária por tela. Se há duas, uma delas não é primária.</p>
+  <ul class="ficha-fatos">
+    <li>Classe base <b><code>.yb-btn</code></b></li>
+    <li>Modificadores <b>9</b></li>
+    <li>Elementos <b>0</b></li>
+    <li>Estados <b>5</b></li>
+    <li>Tokens <b>42</b></li>
+    <li>Comportamento <b>JS</b></li>
+  </ul>
+
+  <section class="bloco" id="demos">
+    <h2 class="bloco-titulo">Como se parece</h2>
+    <h3 class="row-label">Variants</h3>
+    <div class="demo">
+      <button class="yb-btn yb-btn--primary">Add to cart</button>
+      <button class="yb-btn yb-btn--secondary">Continue shopping</button>
+      <button class="yb-btn yb-btn--ghost">Size guide</button>
+      <button class="yb-btn yb-btn--danger">Remove item</button>
+    </div>
+    <div class="note">
+      <b>Por que a secundária é magenta tingido e não grafite</b>
+      <p>Era um bloco de grafite sólido: <b>16,66:1</b> contra o primário de
+      <b>5,36:1</b> — pesava 3,1× mais e virava o elemento mais forte da tela,
+      mais que o título do produto. Cinza claro foi tentado e descartado: a
+      1,09:1 o bloco some no branco, e onde não some é confundido com
+      desabilitado, que também é cinza. Tingir com a própria cor de ação separa
+      por <b>matiz</b>, não por peso — e matiz não se confunde. O texto mede
+      8,09:1, mais legível que o branco do primário.</p>
+    </div>
+    <div class="note">
+      <b>Limite conhecido: só funciona sobre fundo claro</b>
+      <p>O tingido some sobre a faixa escura do header ou sobre foto. Ali a
+      secundária teria de ser contorno claro — variante que <b>ainda não
+      existe</b>, porque nenhuma tela pede. Se alguma pedir, ela entra aqui
+      antes de ser usada.</p>
+    </div>
+
+    <h3 class="row-label">Sobre painel escuro</h3>
+    <div class="demo demo--dark">
+      <button class="yb-btn yb-btn--on-dark" type="button">Start quiz</button>
+      <button class="yb-btn yb-btn--on-dark" type="button" disabled>Start quiz</button>
+    </div>
+    <div class="note">
+      <b>Dentro de um bloco escuro a ação inverte</b>
+      <p>O magenta continua sendo a ação da <b>página</b> — mas sobre grafite ele
+      briga com o próprio fundo, enquanto o branco cheio não tem como perder.
+      Medido: grafite sobre branco 16.66:1, e o botão contra o painel também
+      16.66:1, então ele não precisa de borda para existir.</p>
+      <p>O branco não tem para onde clarear: o hover <b>afunda</b>, nos dois
+      degraus de superfície clara que o sistema já tem. E o anel de foco vira
+      branco &mdash; o magenta padrão sumiria contra o próprio botão.</p>
+      <p>Não use sobre foto: ali o fundo não é conhecido e o token é outro.</p>
+    </div>
+
+    <h3 class="row-label">Sizes</h3>
+    <div class="demo">
+      <button class="yb-btn yb-btn--primary yb-btn--sm">Small</button>
+      <button class="yb-btn yb-btn--primary">Medium</button>
+      <button class="yb-btn yb-btn--primary yb-btn--lg">Large</button>
+    </div>
+    <h3 class="row-label">States</h3>
+    <div class="demo">
+      <button class="yb-btn yb-btn--primary">Normal</button>
+      <button class="yb-btn yb-btn--primary yb-btn--loading">Adding</button>
+      <button class="yb-btn yb-btn--primary" disabled>Sold out</button>
+      <button class="yb-btn yb-btn--ghost" disabled>Unavailable</button>
+    </div>
+    <h3 class="row-label">O ciclo completo — clique, espera, resposta</h3>
+    <div class="demo">
+      <button class="yb-btn yb-btn--primary" type="button" data-yb-comprar
+              data-toast-titulo="Added to cart" data-toast-texto="Deep care kit">Add to cart</button>
+      <button class="yb-btn yb-btn--secondary" type="button" data-yb-comprar data-yb-falhar
+              data-toast-erro="Could not add to cart"
+              data-toast-erro-texto="Check your connection and try again.">Add to cart (falha)</button>
+    </div>
+    <div class="note">
+      <b>O erro se prova aqui, não no protótipo</b>
+      <p>A PDP sempre consegue adicionar — protótipo que falha por sorteio ensina
+      errado. Mas o caminho do erro precisa existir em algum lugar revisável, e
+      esse lugar é a documentação de estado: o segundo botão declara
+      <code>data-yb-falhar</code> e mostra o toast <code>--danger</code>, que
+      interrompe o leitor de tela com <code>role="alert"</code> em vez de esperar
+      a pausa.</p>
+    </div>
+    <h3 class="row-label">Full width</h3>
+    <div class="demo demo--stack">
+      <button class="yb-btn yb-btn--primary yb-btn--block">Add to cart — $168.90</button>
+    </div>
+    <div class="note">
+      <b>Por que o carregando mantém a largura</b>
+      <p>No estado <code>--loading</code> o rótulo fica transparente em vez de sumir.
+      Se o texto saísse, o botão encolheria e o layout saltaria embaixo do dedo —
+      exatamente no momento em que a pessoa acabou de tocar para comprar.
+      O <code>--sm</code> é o único que fica abaixo dos 44px: use só onde não há toque.</p>
+    </div>
+
+    <h3 class="row-label">Icon button</h3>
+    <div class="demo">
+      <button class="yb-iconbtn" type="button" aria-label="Open cart">
+        <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg>
+      </button>
+      <span style="background:var(--yb-bg-inverse); border-radius:var(--yb-radius-control); padding:var(--yb-space-2); display:inline-flex">
+        <button class="yb-iconbtn yb-iconbtn--onmedia" type="button" aria-label="Play video">
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-play"/></svg>
+        </button>
+      </span>
+      <button class="yb-iconbtn yb-iconbtn--fav" type="button" data-yb-fav
+              aria-pressed="false" aria-label="Add to favorites"
+              data-label-off="Add to favorites" data-label-on="Remove from favorites"
+              data-icon-off="yb-heart" data-icon-on="yb-heart-filled">
+        <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg>
+      </button>
+      <button class="yb-iconbtn yb-iconbtn--fav" type="button" data-yb-fav
+              aria-pressed="true" aria-label="Remove from favorites"
+              data-label-off="Add to favorites" data-label-on="Remove from favorites"
+              data-icon-off="yb-heart" data-icon-on="yb-heart-filled">
+        <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart-filled"/></svg>
+      </button>
+    </div>
+    <div class="note">
+      <b>Favoritar não é componente novo — é este botão com um estado a mais</b>
+      <p>Mesmo <code>.yb-iconbtn</code>, mesmo alvo de 44px. O que muda é
+      <code>aria-pressed</code>: a cor vira <code>--yb-accent-love</code> e o
+      ícone troca de <code>#yb-heart</code> (traço) para
+      <code>#yb-heart-filled</code> (a única exceção ao sprite "sem
+      preenchimento" em todo o sistema — ver a nota em
+      <code>icons/ybera-icons.svg</code>). Cor sozinha não bastava: reprova a
+      WCAG 1.4.1, e falha primeiro para quem não distingue magenta de cinza.
+      A troca é o JS (<code>data-icon-off</code>/<code>data-icon-on</code>
+      apontam os dois símbolos); sem ele o botão continua clicável, só não
+      guarda nada. Clique nos dois últimos corações para testar — o rótulo
+      do leitor de tela troca de "Add to" para "Remove from" junto com a
+      forma.</p>
+    </div>
+  </section>
+
+  <section class="bloco" id="anatomia">
+    <h2 class="bloco-titulo">Anatomia e API</h2>
+    <p class="bloco-lede">Lido da folha a cada build. Se faltar alguma coisa aqui,
+    falta na folha.</p>
+    <p class="rotulo">Modificadores</p>
+    <p class="lista-api"><code>.yb-btn--block</code> <code>.yb-btn--danger</code> <code>.yb-btn--ghost</code> <code>.yb-btn--lg</code> <code>.yb-btn--loading</code> <code>.yb-btn--on-dark</code> <code>.yb-btn--primary</code> <code>.yb-btn--secondary</code> <code>.yb-btn--sm</code></p>
+    <p class="rotulo">Elementos</p>
+    <p class="api-vazia">Peça de um elemento só: não há partes internas com classe própria.</p>
+    <p class="rotulo">Estados que a folha trata</p>
+    <p class="bloco-lede"><code>:active</code> · <code>:focus-visible</code> · <code>:hover</code> · <code>[aria-disabled]</code> · <code>[disabled]</code></p>
+  </section>
+
+  <section class="bloco" id="marcacao">
+    <h2 class="bloco-titulo">Marcação</h2>
+    <p class="bloco-lede">Extraída da primeira demonstração acima — é o mesmo HTML
+    que renderizou ali, não um exemplo escrito à parte.</p>
+    <div class="snippet">
+      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <pre><code>&lt;button class="yb-btn yb-btn--primary"&gt;Add to cart&lt;/button&gt;
+&lt;button class="yb-btn yb-btn--secondary"&gt;Continue shopping&lt;/button&gt;
+&lt;button class="yb-btn yb-btn--ghost"&gt;Size guide&lt;/button&gt;
+&lt;button class="yb-btn yb-btn--danger"&gt;Remove item&lt;/button&gt;</code></pre>
+    </div>
+  </section>
+
+  <section class="bloco" id="acessibilidade">
+    <h2 class="bloco-titulo">Acessibilidade</h2>
+    <ul class="bloco-lede"><li>Uma ação primária por tela. Se há duas, uma delas não é primária — e a pessoa que navega por teclado percorre as duas sem saber qual é a saída.</li><li>O rótulo descreve a ação: “Add to cart”, não “Click here”. Fora de contexto, o rótulo precisa continuar dizendo o que faz.</li><li>Em <code>--loading</code> o botão recebe <code>aria-busy="true"</code> e mantém a largura, para a página não pular. Ele não recebe <code>disabled</code>: desabilitado pinta o fundo de cinza, e spinner branco sobre cinza é spinner invisível.</li><li>Botão com <code>disabled</code> some do teclado. Quando o motivo importa (esgotado, campo faltando), o motivo tem de estar escrito ao lado.</li></ul>
+  </section>
+
+  <section class="bloco" id="faca">
+    <h2 class="bloco-titulo">Faça / não faça</h2>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><button class="yb-btn yb-btn--primary" type="button">Add to cart</button><button class="yb-btn yb-btn--secondary" type="button">Size guide</button></div>
+        <p class="fn-legenda">Um primário, com o rótulo dizendo o que acontece.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><button class="yb-btn yb-btn--primary" type="button">Click here</button><button class="yb-btn yb-btn--primary" type="button">Continue</button></div>
+        <p class="fn-legenda">Dois primários lado a lado não são duas opções — são nenhuma escolha clara. E “Click here” não diz nada fora de contexto.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="doc-credit">Ficha gerada por <code>tools/fichas.mjs</code> a partir de
+  <code>components/ybera-components.css</code> e <code>components/index.html</code>.
+  Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>
+</main>
+
+</div>
+<script src="ybera-components.js"></script>
+<script>
+/* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
+   acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-yb-copiar]');
+  if (!b) return;
+  var codigo = b.parentElement.querySelector('code');
+  if (!codigo || !navigator.clipboard) return;
+  navigator.clipboard.writeText(codigo.textContent).then(function () {
+    var antes = b.textContent;
+    b.textContent = 'Copiado';
+    setTimeout(function () { b.textContent = antes; }, 1600);
+  });
+});
+</script>
+</body>
+</html>

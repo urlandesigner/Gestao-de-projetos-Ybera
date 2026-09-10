@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Review — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="ybera-components.css">
+<link rel="stylesheet" href="doc.css">
+<style>
+/* Sem seletor de tipo: ver o cabecalho de doc.css. */
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+</style>
+</head>
+<body class="ficha">
+<div class="doc">
+
+<nav class="nav">
+  <p class="nav-brand">Ybera</p>
+  <p class="nav-ver">Components · v0.12.1</p>
+  <ul>
+    <li><a href="accordion.html">Accordion</a></li>
+    <li><a href="alert.html">Alert</a></li>
+    <li><a href="badge.html">Badge</a></li>
+    <li><a href="quote.html">Brand quote</a></li>
+    <li><a href="crumb.html">Breadcrumb</a></li>
+    <li><a href="button.html">Button</a></li>
+    <li><a href="seals.html">Certification seals</a></li>
+    <li><a href="check.html">Checkbox &amp; radio</a></li>
+    <li><a href="collection.html">Collection card</a></li>
+    <li><a href="empty.html">Empty state</a></li>
+    <li><a href="field.html">Form field</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="link.html">Link</a></li>
+    <li><a href="logo.html">Logo</a></li>
+    <li><a href="logobar.html">Logo bar</a></li>
+    <li><a href="mediabanner.html">Media banner</a></li>
+    <li><a href="dialog.html">Modal &amp; drawer</a></li>
+    <li><a href="notice.html">Notice</a></li>
+    <li><a href="offercard.html">Offer card</a></li>
+    <li><a href="pagination.html">Pagination</a></li>
+    <li><a href="partner.html">Partner</a></li>
+    <li><a href="post.html">Post</a></li>
+    <li><a href="price.html">Price</a></li>
+    <li><a href="card.html">Product card</a></li>
+    <li><a href="progress.html">Progress bar</a></li>
+    <li><a href="stepper.html">Quantity stepper</a></li>
+    <li><a href="rating.html">Rating</a></li>
+    <li><a href="review.html" aria-current="page">Review</a></li>
+    <li><a href="search.html">Search overlay</a></li>
+    <li><a href="skeleton.html">Skeleton</a></li>
+    <li><a href="switch.html">Switch</a></li>
+    <li><a href="toast.html">Toast</a></li>
+    <li><a href="variant.html">Variant picker</a></li>
+    <li><a href="video.html">Vertical video carousel</a></li>
+  </ul>
+  <div class="nav-back">
+    <a href="index.html">← Galeria</a>
+    <a href="../index.html">← Design system</a>
+  </div>
+</nav>
+
+<main class="main">
+  <a class="ficha-volta" href="index.html#review">← Components</a>
+  <h1 class="ficha-titulo">Review</h1>
+  <p class="ficha-quando">Prova social com nota, texto, quem escreveu e o que comprou. Sem o produto ao lado, o elogio não prova nada.</p>
+  <ul class="ficha-fatos">
+    <li>Classe base <b><code>.yb-review</code></b></li>
+    <li>Modificadores <b>0</b></li>
+    <li>Elementos <b>7</b></li>
+    <li>Estados <b>1</b></li>
+    <li>Tokens <b>19</b></li>
+    <li>Comportamento <b>JS</b></li>
+  </ul>
+
+  <section class="bloco" id="demos">
+    <h2 class="bloco-titulo">Como se parece</h2>
+    <div class="demo demo--rail">
+      <div class="yb-track yb-reviews" id="demo-reviews">
+        <article class="yb-review">
+          <div class="yb-review__media"><img src="../_captura/nova-loja/img/YBERA_PARIS_-_vello_-_Soro_Vital_alfa-lactobaby_-ca2b7e86.webp" alt="Frasco branco do sérum Vello Alfa-Lactobaby" loading="lazy"></div>
+          <div class="yb-review__body">
+            <span class="yb-rating" role="img" aria-label="5 de 5 estrelas">
+              <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
+            <p class="yb-review__title">Three months in and the shedding stopped</p>
+            <p class="yb-review__text">I was losing hair after my second baby. Three months of the serum every other night and the shower drain is finally clean. New growth at the temples too.</p>
+            <span class="yb-review__author">Rosana B.</span>
+            <span class="yb-review__verified"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-shield-check"/></svg> Verified purchase</span>
+            <span class="yb-review__product">VELLO Hair Fertilization Therapy ALFA-LACTOBABY — 90ml / 3 fl.oz</span>
+          </div>
+        </article>
+        <article class="yb-review">
+          <div class="yb-review__media"><img src="../_captura/nova-loja/img/kit_tratamento_terra_coco_elixir_160x160-26270456.webp" alt="Kit Terra Coco: shampoo, máscara e elixir de coco" loading="lazy"></div>
+          <div class="yb-review__body">
+            <span class="yb-rating" role="img" aria-label="5 de 5 estrelas">
+              <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
+            <p class="yb-review__title">The elixir is what sold me</p>
+            <p class="yb-review__text">Two drops on damp ends and the frizz is gone for the day. The mask alone would have been worth it, but the elixir is the part I keep repurchasing.</p>
+            <span class="yb-review__author">Marggi B.</span>
+            <span class="yb-review__product">Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask 1kg / 33oz + Coconut Elixir 60ml / 2oz</span>
+          </div>
+        </article>
+        <article class="yb-review">
+          <div class="yb-review__media"><img src="../_captura/nova-loja/img/153_160x160-e958dc19.avif" alt="Os quatro tubos do sistema Cronograma Capilar" loading="lazy"></div>
+          <div class="yb-review__body">
+            <span class="yb-rating" role="img" aria-label="4 de 5 estrelas">
+              <span class="yb-rating__stars" aria-hidden="true">★★★★☆</span></span>
+            <p class="yb-review__title">Finally a schedule I can actually follow</p>
+            <p class="yb-review__text">Four tubes, four weeks, and the label tells you which one to use. My hair went from straw to soft in about a month. Wish the tubes were bigger.</p>
+            <span class="yb-review__author">Daniela P.</span>
+            <span class="yb-review__product">CRONOGRAMA Hair Care System — 4 x 250g / 8.8 oz</span>
+          </div>
+        </article>
+        <article class="yb-review">
+          <div class="yb-review__media"><img src="../_captura/nova-loja/img/Prancheta_1-790aea3e.webp" alt="Frasco do tratamento de queratina Fashion Gold" loading="lazy"></div>
+          <div class="yb-review__body">
+            <span class="yb-rating" role="img" aria-label="5 de 5 estrelas">
+              <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
+            <p class="yb-review__title">Salon result, no formaldehyde smell</p>
+            <p class="yb-review__text">My stylist used it on color-treated hair and the tone did not shift. Blow-dry time went from forty minutes to twelve.</p>
+            <span class="yb-review__author">Nataniela R.</span>
+            <span class="yb-review__product">FASHION GOLD Brazilian Keratin Treatment — 500g / 17.6 fl.oz</span>
+          </div>
+        </article>
+      </div>
+      <div class="yb-track__nav" data-yb-track-nav="demo-reviews" hidden>
+        <button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous reviews"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-left"/></svg></button>
+        <button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next reviews"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg></button>
+      </div>
+    </div>
+    <div class="note">
+      <b>As setas nascem escondidas</b>
+      <p><code>.yb-track__nav</code> existia no CSS e ninguém a emitia. Vem com
+      <code>hidden</code> no HTML e é o JS (<code>data-yb-track-nav</code>) que a revela:
+      sem script, botão que não faz nada é pior que nenhum botão — o trilho rola
+      nativo de qualquer jeito. Um cartão por clique, desligadas nas pontas,
+      somem quando não há sobra para rolar. Abaixo de 768 não aparecem: no toque,
+      arrasta.</p>
+    </div>
+    <div class="note">
+      <b>O trilho mostra que anda</b>
+      <p>Em 320px o cartão mede 248 e o respiro cai para 16: sobram 24px do próximo
+      review à vista, e é essa fatia que ensina que dá para arrastar. Com 280 e
+      respiro de 32, o segundo cartão nascia fora da tela e o carrossel virava um
+      cartão solto.</p>
+    </div>
+    <div class="note">
+      <b>Acima de 1280 a fatia é bug, não pista</b>
+      <p><code>minmax(320px, 1fr)</code> garante o mínimo do cartão, não um número
+      inteiro deles. A partir de 1280px a página já bateu no
+      <code>--yb-container-max</code> de 1200px — o trilho tem sempre os mesmos
+      1136px de sobra, então trava em três colunas de
+      <code>calc((100% - var(--yb-space-8) * 2) / 3)</code>, que fecham exatamente
+      nesse espaço. A quarta review nasce fora, não pela metade — e nesses
+      tamanhos a seta ao lado já avisa que dá para navegar, o cartão cortado não
+      precisa fazer esse trabalho de novo.</p>
+    </div>
+    <div class="note">
+      <b>Quem desenha isso hoje é o Judge.me</b>
+      <p>Ele renderiza no DOM normal — sem shadow DOM —, e as variáveis dele já
+      estão traduzidas em <code>bridge/ybera-bridge.css</code>: o app continua
+      sendo o app, e a página para de ter duas tipografias.</p>
+    </div>
+      <div class="note">
+      <b>O selo verificado existe e a loja não mostra</b>
+      <p>O ramo está no gerador e não renderiza: as avaliações capturadas não
+      trazem o campo, e o Judge.me só expõe a compra verificada pela API com
+      token. Mesma regra do <code>Save X%</code> — o lugar fica pronto, e ninguém
+      escreve “Verified” sem ter o que verificar.</p>
+    </div>
+  </section>
+
+  <section class="bloco" id="anatomia">
+    <h2 class="bloco-titulo">Anatomia e API</h2>
+    <p class="bloco-lede">Lido da folha a cada build. Se faltar alguma coisa aqui,
+    falta na folha.</p>
+    <p class="rotulo">Modificadores</p>
+    <p class="api-vazia">Este componente não tem variantes — o que muda nele vem do conteúdo.</p>
+    <p class="rotulo">Elementos</p>
+    <p class="lista-api"><code>.yb-review__author</code> <code>.yb-review__body</code> <code>.yb-review__media</code> <code>.yb-review__product</code> <code>.yb-review__text</code> <code>.yb-review__title</code> <code>.yb-review__verified</code></p>
+    <p class="rotulo">Estados que a folha trata</p>
+    <p class="bloco-lede"><code>:focus-visible</code></p>
+  </section>
+
+  <section class="bloco" id="marcacao">
+    <h2 class="bloco-titulo">Marcação</h2>
+    <p class="bloco-lede">Extraída da primeira demonstração acima — é o mesmo HTML
+    que renderizou ali, não um exemplo escrito à parte.</p>
+    <div class="snippet">
+      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <pre><code>&lt;div class="yb-track yb-reviews" id="demo-reviews"&gt;
+  &lt;article class="yb-review"&gt;
+    &lt;div class="yb-review__media"&gt;&lt;img src="../_captura/nova-loja/img/YBERA_PARIS_-_vello_-_Soro_Vital_alfa-lactobaby_-ca2b7e86.webp" alt="Frasco branco do sérum Vello Alfa-Lactobaby" loading="lazy"&gt;&lt;/div&gt;
+    &lt;div class="yb-review__body"&gt;
+      &lt;span class="yb-rating" role="img" aria-label="5 de 5 estrelas"&gt;
+        &lt;span class="yb-rating__stars" aria-hidden="true"&gt;★★★★★&lt;/span&gt;&lt;/span&gt;
+      &lt;p class="yb-review__title"&gt;Three months in and the shedding stopped&lt;/p&gt;
+      &lt;p class="yb-review__text"&gt;I was losing hair after my second baby. Three months of the serum every other night and the shower drain is finally clean. New growth at the temples too.&lt;/p&gt;
+      &lt;span class="yb-review__author"&gt;Rosana B.&lt;/span&gt;
+      &lt;span class="yb-review__verified"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-shield-check"/&gt;&lt;/svg&gt; Verified purchase&lt;/span&gt;
+      &lt;span class="yb-review__product"&gt;VELLO Hair Fertilization Therapy ALFA-LACTOBABY — 90ml / 3 fl.oz&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/article&gt;
+  &lt;article class="yb-review"&gt;
+    &lt;div class="yb-review__media"&gt;&lt;img src="../_captura/nova-loja/img/kit_tratamento_terra_coco_elixir_160x160-26270456.webp" alt="Kit Terra Coco: shampoo, máscara e elixir de coco" loading="lazy"&gt;&lt;/div&gt;
+    &lt;div class="yb-review__body"&gt;
+      &lt;span class="yb-rating" role="img" aria-label="5 de 5 estrelas"&gt;
+        &lt;span class="yb-rating__stars" aria-hidden="true"&gt;★★★★★&lt;/span&gt;&lt;/span&gt;
+      &lt;p class="yb-review__title"&gt;The elixir is what sold me&lt;/p&gt;
+      &lt;p class="yb-review__text"&gt;Two drops on damp ends and the frizz is gone for the day. The mask alone would have been worth it, but the elixir is the part I keep repurchasing.&lt;/p&gt;
+      &lt;span class="yb-review__author"&gt;Marggi B.&lt;/span&gt;
+      &lt;span class="yb-review__product"&gt;Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask 1kg / 33oz + Coconut Elixir 60ml / 2oz&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/article&gt;
+  &lt;article class="yb-review"&gt;
+    &lt;div class="yb-review__media"&gt;&lt;img src="../_captura/nova-loja/img/153_160x160-e958dc19.avif" alt="Os quatro tubos do sistema Cronograma Capilar" loading="lazy"&gt;&lt;/div&gt;
+    &lt;div class="yb-review__body"&gt;
+      &lt;span class="yb-rating" role="img" aria-label="4 de 5 estrelas"&gt;
+        &lt;span class="yb-rating__stars" aria-hidden="true"&gt;★★★★☆&lt;/span&gt;&lt;/span&gt;
+      &lt;p class="yb-review__title"&gt;Finally a schedule I can actually follow&lt;/p&gt;
+      &lt;p class="yb-review__text"&gt;Four tubes, four weeks, and the label tells you which one to use. My hair went from straw to soft in about a month. Wish the tubes were bigger.&lt;/p&gt;
+      &lt;span class="yb-review__author"&gt;Daniela P.&lt;/span&gt;
+      &lt;span class="yb-review__product"&gt;CRONOGRAMA Hair Care System — 4 x 250g / 8.8 oz&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/article&gt;
+  &lt;article class="yb-review"&gt;
+    &lt;div class="yb-review__media"&gt;&lt;img src="../_captura/nova-loja/img/Prancheta_1-790aea3e.webp" alt="Frasco do tratamento de queratina Fashion Gold" loading="lazy"&gt;&lt;/div&gt;
+    &lt;div class="yb-review__body"&gt;
+      &lt;span class="yb-rating" role="img" aria-label="5 de 5 estrelas"&gt;
+        &lt;span class="yb-rating__stars" aria-hidden="true"&gt;★★★★★&lt;/span&gt;&lt;/span&gt;
+      &lt;p class="yb-review__title"&gt;Salon result, no formaldehyde smell&lt;/p&gt;
+      &lt;p class="yb-review__text"&gt;My stylist used it on color-treated hair and the tone did not shift. Blow-dry time went from forty minutes to twelve.&lt;/p&gt;
+      &lt;span class="yb-review__author"&gt;Nataniela R.&lt;/span&gt;
+      &lt;span class="yb-review__product"&gt;FASHION GOLD Brazilian Keratin Treatment — 500g / 17.6 fl.oz&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/article&gt;
+&lt;/div&gt;
+&lt;div class="yb-track__nav" data-yb-track-nav="demo-reviews" hidden&gt;
+  &lt;button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous reviews"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-left"/&gt;&lt;/svg&gt;&lt;/button&gt;
+  &lt;button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next reviews"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+  </section>
+
+  <section class="bloco" id="acessibilidade">
+    <h2 class="bloco-titulo">Acessibilidade</h2>
+    <ul class="bloco-lede"><li>Cada avaliação é um <code>&lt;article&gt;</code>: o leitor de tela consegue pular de uma para a próxima sem ler tudo.</li><li>A nota individual repete o padrão do Rating — <code>role="img"</code> com o texto por extenso.</li><li>A foto da avaliação é <code>alt=""</code>. Quando ela mostra resultado (antes e depois), aí sim precisa de descrição.</li><li>O selo de compra verificada é texto, não só um ícone verde.</li></ul>
+  </section>
+
+  <section class="bloco" id="faca">
+    <h2 class="bloco-titulo">Faça / não faça</h2>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><article class="yb-review" style="inline-size:260px"><div class="yb-review__body"><span class="yb-rating" role="img" aria-label="5 of 5 stars"><span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span><p class="yb-review__text">It survived a Miami summer.</p><span class="yb-review__author">Marggi B.</span></div></article></div>
+        <p class="fn-legenda">Article com a nota dita por extenso.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><div style="inline-size:260px"><span class="yb-rating__stars">★★★★★</span><p class="yb-review__text">It survived a Miami summer.</p></div></div>
+        <p class="fn-legenda">Div sem papel e estrelas sem rótulo: nem dá para pular a avaliação, nem dá para saber a nota.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="doc-credit">Ficha gerada por <code>tools/fichas.mjs</code> a partir de
+  <code>components/ybera-components.css</code> e <code>components/index.html</code>.
+  Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>
+</main>
+
+</div>
+<script src="ybera-components.js"></script>
+<script>
+/* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
+   acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-yb-copiar]');
+  if (!b) return;
+  var codigo = b.parentElement.querySelector('code');
+  if (!codigo || !navigator.clipboard) return;
+  navigator.clipboard.writeText(codigo.textContent).then(function () {
+    var antes = b.textContent;
+    b.textContent = 'Copiado';
+    setTimeout(function () { b.textContent = antes; }, 1600);
+  });
+});
+</script>
+</body>
+</html>

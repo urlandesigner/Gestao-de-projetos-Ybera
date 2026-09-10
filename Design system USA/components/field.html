@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Form field — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="ybera-components.css">
+<link rel="stylesheet" href="doc.css">
+<style>
+/* Sem seletor de tipo: ver o cabecalho de doc.css. */
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+</style>
+</head>
+<body class="ficha">
+<div class="doc">
+
+<nav class="nav">
+  <p class="nav-brand">Ybera</p>
+  <p class="nav-ver">Components · v0.12.1</p>
+  <ul>
+    <li><a href="accordion.html">Accordion</a></li>
+    <li><a href="alert.html">Alert</a></li>
+    <li><a href="badge.html">Badge</a></li>
+    <li><a href="quote.html">Brand quote</a></li>
+    <li><a href="crumb.html">Breadcrumb</a></li>
+    <li><a href="button.html">Button</a></li>
+    <li><a href="seals.html">Certification seals</a></li>
+    <li><a href="check.html">Checkbox &amp; radio</a></li>
+    <li><a href="collection.html">Collection card</a></li>
+    <li><a href="empty.html">Empty state</a></li>
+    <li><a href="field.html" aria-current="page">Form field</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="link.html">Link</a></li>
+    <li><a href="logo.html">Logo</a></li>
+    <li><a href="logobar.html">Logo bar</a></li>
+    <li><a href="mediabanner.html">Media banner</a></li>
+    <li><a href="dialog.html">Modal &amp; drawer</a></li>
+    <li><a href="notice.html">Notice</a></li>
+    <li><a href="offercard.html">Offer card</a></li>
+    <li><a href="pagination.html">Pagination</a></li>
+    <li><a href="partner.html">Partner</a></li>
+    <li><a href="post.html">Post</a></li>
+    <li><a href="price.html">Price</a></li>
+    <li><a href="card.html">Product card</a></li>
+    <li><a href="progress.html">Progress bar</a></li>
+    <li><a href="stepper.html">Quantity stepper</a></li>
+    <li><a href="rating.html">Rating</a></li>
+    <li><a href="review.html">Review</a></li>
+    <li><a href="search.html">Search overlay</a></li>
+    <li><a href="skeleton.html">Skeleton</a></li>
+    <li><a href="switch.html">Switch</a></li>
+    <li><a href="toast.html">Toast</a></li>
+    <li><a href="variant.html">Variant picker</a></li>
+    <li><a href="video.html">Vertical video carousel</a></li>
+  </ul>
+  <div class="nav-back">
+    <a href="index.html">← Galeria</a>
+    <a href="../index.html">← Design system</a>
+  </div>
+</nav>
+
+<main class="main">
+  <a class="ficha-volta" href="index.html#field">← Components</a>
+  <h1 class="ficha-titulo">Form field</h1>
+  <p class="ficha-quando">Rótulo dentro da caixa, sem uma linha de JS. Erro sempre em texto, nunca só em cor.</p>
+  <ul class="ficha-fatos">
+    <li>Classe base <b><code>.yb-field</code></b></li>
+    <li>Modificadores <b>1</b></li>
+    <li>Elementos <b>4</b></li>
+    <li>Estados <b>4</b></li>
+    <li>Tokens <b>27</b></li>
+    <li>Comportamento <b>só CSS</b></li>
+  </ul>
+
+  <section class="bloco" id="demos">
+    <h2 class="bloco-titulo">Como se parece</h2>
+    <div class="demo demo--stack">
+      <div class="yb-field">
+        <div class="yb-field__box">
+          <input class="yb-input" id="f1" type="email" placeholder=" " autocomplete="email">
+          <label class="yb-field__label" for="f1">Email<span class="req">*</span></label>
+        </div>
+        <span class="yb-field__hint">Only for order tracking.</span>
+      </div>
+      <div class="yb-field">
+        <div class="yb-field__box">
+          <input class="yb-input" id="f2" value="0000" placeholder=" " aria-invalid="true" aria-describedby="f2e">
+          <label class="yb-field__label" for="f2">ZIP code<span class="req">*</span></label>
+        </div>
+        <span class="yb-field__error" id="f2e">Enter a 5-digit ZIP code, like 33101.</span>
+      </div>
+      <div class="yb-field">
+        <div class="yb-field__box">
+          <select class="yb-select" id="f3">
+            <option>Straight</option><option>Wavy</option><option>Curly</option><option>Coily</option>
+          </select>
+          <label class="yb-field__label" for="f3">Hair type</label>
+        </div>
+      </div>
+      <div class="yb-field">
+        <div class="yb-field__box">
+          <input class="yb-input" id="f4" value="United States" placeholder=" " disabled>
+          <label class="yb-field__label" for="f4">Country</label>
+        </div>
+      </div>
+      <div class="yb-field">
+        <div class="yb-field__box">
+          <textarea class="yb-textarea" id="f6" placeholder=" "></textarea>
+          <label class="yb-field__label" for="f6">Gift note</label>
+        </div>
+        <span class="yb-field__hint">Printed on the packing slip, up to 200 characters.</span>
+      </div>
+      <form class="yb-field yb-field--row">
+        <div class="yb-field__box">
+          <svg class="yb-icon yb-icon--md" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>
+          <input class="yb-input" id="f5" placeholder=" " inputmode="numeric" maxlength="5" autocomplete="postal-code">
+          <label class="yb-field__label" for="f5">ZIP code</label>
+        </div>
+        <button class="yb-btn yb-btn--secondary" type="submit">Calculate</button>
+        <span class="yb-field__hint">Free shipping over $59.</span>
+      </form>
+    </div>
+    <div class="note">
+      <b>O rótulo sobe sozinho, sem JS</b>
+      <p>O input leva <code>placeholder=" "</code> — um espaço. Não é descuido: é o que
+      dá a <code>:placeholder-shown</code> algo em que casar, e é assim que o CSS
+      distingue vazio de preenchido. O <code>&lt;label for&gt;</code> vem <em>depois</em>
+      do campo no HTML, senão o combinador <code>~</code> não o alcança — continua
+      sendo rótulo de verdade, clicável e anunciado pelo leitor de tela.</p>
+    </div>
+    <div class="note">
+      <b>Borda que engrossa sem empurrar nada</b>
+      <p>O erro e o foco usam <code>box-shadow</code> por dentro, não
+      <code>border-width</code>. Dobrar a borda é mudança de layout: a caixa reflui
+      1px e o rótulo flutuante, ancorado nela, treme junto. Como pintura, os mesmos
+      2px aparecem sem mover um pixel do texto.</p>
+    </div>
+    <div class="note">
+      <b>A mensagem diz como consertar</b>
+      <p>"Enter a 5-digit ZIP code, like 33101" em vez de "Invalid input". O erro
+      liga ao campo por <code>aria-describedby</code>, então o leitor de tela anuncia
+      a correção junto com o campo — e a borda vermelha nunca é o único sinal.</p>
+    </div>
+  </section>
+
+  <section class="bloco" id="anatomia">
+    <h2 class="bloco-titulo">Anatomia e API</h2>
+    <p class="bloco-lede">Lido da folha a cada build. Se faltar alguma coisa aqui,
+    falta na folha.</p>
+    <p class="rotulo">Modificadores</p>
+    <p class="lista-api"><code>.yb-field--row</code></p>
+    <p class="rotulo">Elementos</p>
+    <p class="lista-api"><code>.yb-field__box</code> <code>.yb-field__error</code> <code>.yb-field__hint</code> <code>.yb-field__label</code></p>
+    <p class="rotulo">Estados que a folha trata</p>
+    <p class="bloco-lede"><code>:focus-visible</code> · <code>:hover</code> · <code>[aria-invalid]</code> · <code>[disabled]</code></p>
+  </section>
+
+  <section class="bloco" id="marcacao">
+    <h2 class="bloco-titulo">Marcação</h2>
+    <p class="bloco-lede">Extraída da primeira demonstração acima — é o mesmo HTML
+    que renderizou ali, não um exemplo escrito à parte.</p>
+    <div class="snippet">
+      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <pre><code>&lt;div class="yb-field"&gt;
+  &lt;div class="yb-field__box"&gt;
+    &lt;input class="yb-input" id="f1" type="email" placeholder=" " autocomplete="email"&gt;
+    &lt;label class="yb-field__label" for="f1"&gt;Email&lt;span class="req"&gt;*&lt;/span&gt;&lt;/label&gt;
+  &lt;/div&gt;
+  &lt;span class="yb-field__hint"&gt;Only for order tracking.&lt;/span&gt;
+&lt;/div&gt;
+&lt;div class="yb-field"&gt;
+  &lt;div class="yb-field__box"&gt;
+    &lt;input class="yb-input" id="f2" value="0000" placeholder=" " aria-invalid="true" aria-describedby="f2e"&gt;
+    &lt;label class="yb-field__label" for="f2"&gt;ZIP code&lt;span class="req"&gt;*&lt;/span&gt;&lt;/label&gt;
+  &lt;/div&gt;
+  &lt;span class="yb-field__error" id="f2e"&gt;Enter a 5-digit ZIP code, like 33101.&lt;/span&gt;
+&lt;/div&gt;
+&lt;div class="yb-field"&gt;
+  &lt;div class="yb-field__box"&gt;
+    &lt;select class="yb-select" id="f3"&gt;
+      &lt;option&gt;Straight&lt;/option&gt;&lt;option&gt;Wavy&lt;/option&gt;&lt;option&gt;Curly&lt;/option&gt;&lt;option&gt;Coily&lt;/option&gt;
+    &lt;/select&gt;
+    &lt;label class="yb-field__label" for="f3"&gt;Hair type&lt;/label&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="yb-field"&gt;
+  &lt;div class="yb-field__box"&gt;
+    &lt;input class="yb-input" id="f4" value="United States" placeholder=" " disabled&gt;
+    &lt;label class="yb-field__label" for="f4"&gt;Country&lt;/label&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="yb-field"&gt;
+  &lt;div class="yb-field__box"&gt;
+    &lt;textarea class="yb-textarea" id="f6" placeholder=" "&gt;&lt;/textarea&gt;
+    &lt;label class="yb-field__label" for="f6"&gt;Gift note&lt;/label&gt;
+  &lt;/div&gt;
+  &lt;span class="yb-field__hint"&gt;Printed on the packing slip, up to 200 characters.&lt;/span&gt;
+&lt;/div&gt;
+&lt;form class="yb-field yb-field--row"&gt;
+  &lt;div class="yb-field__box"&gt;
+    &lt;svg class="yb-icon yb-icon--md" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-truck"/&gt;&lt;/svg&gt;
+    &lt;input class="yb-input" id="f5" placeholder=" " inputmode="numeric" maxlength="5" autocomplete="postal-code"&gt;
+    &lt;label class="yb-field__label" for="f5"&gt;ZIP code&lt;/label&gt;
+  &lt;/div&gt;
+  &lt;button class="yb-btn yb-btn--secondary" type="submit"&gt;Calculate&lt;/button&gt;
+  &lt;span class="yb-field__hint"&gt;Free shipping over $59.&lt;/span&gt;
+&lt;/form&gt;</code></pre>
+    </div>
+  </section>
+
+  <section class="bloco" id="acessibilidade">
+    <h2 class="bloco-titulo">Acessibilidade</h2>
+    <ul class="bloco-lede"><li>Todo campo tem <code>&lt;label&gt;</code> associado por <code>for</code>. Placeholder não é rótulo: some quando a pessoa começa a digitar, exatamente quando ela mais precisa lembrar o que o campo pede.</li><li>O erro é anunciado por texto, não só por cor: <code>aria-invalid="true"</code> no controle e <code>aria-describedby</code> apontando para a mensagem.</li><li>A caixa desenha borda e anel de foco; o controle lá dentro fica transparente. Duas bordas concêntricas é o defeito clássico de quem embrulha um input que já tinha a sua.</li></ul>
+  </section>
+
+  <section class="bloco" id="faca">
+    <h2 class="bloco-titulo">Faça / não faça</h2>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><div class="yb-field" style="inline-size:280px"><div class="yb-field__box"><input class="yb-input" id="fx-ok" type="email" placeholder=" " aria-invalid="true" aria-describedby="fx-err"><label class="yb-field__label" for="fx-ok">Email</label></div><p class="yb-field__error" id="fx-err">Enter an address with an @.</p></div></div>
+        <p class="fn-legenda">Rótulo persistente, erro escrito e ligado ao campo.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><div class="yb-field" style="inline-size:280px"><div class="yb-field__box"><input class="yb-input" type="email" placeholder="Email" aria-invalid="true"></div></div></div>
+        <p class="fn-legenda">Placeholder como rótulo: o nome do campo desaparece assim que a pessoa digita, e a borda vermelha sozinha não diz o que está errado.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="doc-credit">Ficha gerada por <code>tools/fichas.mjs</code> a partir de
+  <code>components/ybera-components.css</code> e <code>components/index.html</code>.
+  Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>
+</main>
+
+</div>
+<script src="ybera-components.js"></script>
+<script>
+/* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
+   acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-yb-copiar]');
+  if (!b) return;
+  var codigo = b.parentElement.querySelector('code');
+  if (!codigo || !navigator.clipboard) return;
+  navigator.clipboard.writeText(codigo.textContent).then(function () {
+    var antes = b.textContent;
+    b.textContent = 'Copiado';
+    setTimeout(function () { b.textContent = antes; }, 1600);
+  });
+});
+</script>
+</body>
+</html>

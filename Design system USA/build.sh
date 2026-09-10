@@ -23,6 +23,7 @@ node tools/tokens-to-json.mjs > /dev/null || exit 1
 # que mais apodrece num design system: a tabela continua dizendo "documentado"
 # depois que a doc parou de mostrar o componente.
 node tools/inventario.mjs > /dev/null || exit 1
+node tools/fichas.mjs || exit 1
 
 # ---------------------------------------------------------------------------
 # TELAS-PROVA

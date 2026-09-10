@@ -12,6 +12,11 @@
      <dialog id="cart-drawer" class="yb-dialog yb-dialog--drawer">
      <div class="yb-stepper" data-yb-stepper>
      <div class="yb-gallery" data-yb-gallery>
+     <button data-yb-fav aria-pressed="false" data-label-off="…" data-label-on="…">
+     <button class="yb-switch" role="switch" aria-checked="false" data-yb-switch>
+     <aside class="yb-partner" data-yb-partner>  +  <button class="yb-partner__avatar">
+     <div class="yb-track__nav" data-yb-track-nav="<id do trilho>" hidden>
+     <div class="yb-buybar" data-yb-buybar hidden>  +  <button data-yb-buybar-anchor>
 
    API pública: window.Ybera.toast({...})
    ========================================================================= */
@@ -199,6 +204,438 @@
   }
 
   /* ---------------------------------------------------------------------
+     FAVORITAR — mesmo `.yb-iconbtn`, so aria-pressed e rotulo trocando de
+     lado. Ligado por atributo (`data-yb-fav`), como o resto do arquivo: o
+     rotulo que o leitor de tela anuncia mora no HTML (`data-label-*`), nao
+     numa string presa dentro do JS onde ninguem revisa tradução.
+
+     Sem este arquivo o botao continua existindo e clicavel — so nao guarda
+     nada, igual ao "Add to cart" desta mesma pagina, que tambem depende de
+     script para fazer algo alem de existir.
+     --------------------------------------------------------------------- */
+  // `<use>` para arquivo externo nao obedece a `fill` desta folha — quem
+  // resolve isso e o CSS de dentro do proprio sprite (ver icons.svg). O que
+  // sobra para o JS fazer e trocar QUAL simbolo o `<use>` aponta.
+  function pintarIconeFav(b, ligado) {
+    var uso = b.querySelector('.yb-icon use');
+    if (!uso) return;
+    var href = uso.getAttribute('href') || '';
+    var arquivo = href.split('#')[0];
+    var alvo = b.getAttribute(ligado ? 'data-icon-on' : 'data-icon-off');
+    if (alvo) uso.setAttribute('href', arquivo + '#' + alvo);
+  }
+
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-yb-fav]');
+    if (!b) return;
+    var ligado = b.getAttribute('aria-pressed') === 'true';
+    b.setAttribute('aria-pressed', String(!ligado));
+    var rotulo = b.getAttribute(!ligado ? 'data-label-on' : 'data-label-off');
+    if (rotulo) b.setAttribute('aria-label', rotulo);
+    pintarIconeFav(b, !ligado);
+  });
+
+  /* ---------------------------------------------------------------------
+     PARTNER — recolhe o balao na rolagem
+       <aside class="yb-partner" data-yb-partner>
+         <button class="yb-partner__avatar" aria-expanded="true" aria-controls="...">
+         <div class="yb-partner__bubble" id="...">
+
+     Duas maneiras de recolher, e as duas importam: a rolagem (o recado ja foi
+     lido, some da frente da arte) e o clique no avatar (reabre quando a pessoa
+     quer relembrar de quem e o desconto). Depois do primeiro clique a rolagem
+     para de mandar — quem abriu na mao nao quer ver fechar sozinho de novo.
+
+     `passive:true` no scroll: este ouvinte nunca chama preventDefault, e sem a
+     marca o navegador espera por ele antes de rolar.
+
+     Sem este arquivo o balao fica aberto. E o estado certo para ficar preso:
+     o recado aparece, so nao recolhe.
+     --------------------------------------------------------------------- */
+  (function () {
+    var alvo = document.querySelector('[data-yb-partner]');
+    if (!alvo) return;
+    var botao = alvo.querySelector('.yb-partner__avatar');
+    var LIMITE = 96;
+    var naMao = false;
+
+    function pintar(recolhido) {
+      if (recolhido) alvo.setAttribute('data-recolhido', '');
+      else alvo.removeAttribute('data-recolhido');
+      if (botao) botao.setAttribute('aria-expanded', String(!recolhido));
+    }
+
+    if (botao) botao.addEventListener('click', function () {
+      naMao = true;
+      pintar(!alvo.hasAttribute('data-recolhido') );
+    });
+
+    window.addEventListener('scroll', function () {
+      if (naMao) return;
+      pintar(window.scrollY > LIMITE);
+    }, { passive: true });
+  })();
+
+  /* ---------------------------------------------------------------------
+     SWITCH
+       <button class="yb-switch" role="switch" aria-checked="false" data-yb-switch>
+     <aside class="yb-partner" data-yb-partner>  +  <button class="yb-partner__avatar">
+
+     So vira o estado. O que o estado FAZ — somar o seguro ao total, gravar a
+     escolha — e de quem monta a pagina; aqui o switch nao sabe o que liga.
+     Sem este arquivo o botao continua clicavel e nao muda de lado, que e o
+     mesmo contrato do favorito e do "Add to cart" ao lado.
+     --------------------------------------------------------------------- */
+  document.addEventListener('click', function (e) {
+    var s = e.target.closest('[data-yb-switch]');
+    if (!s || s.disabled) return;
+    s.setAttribute('aria-checked', String(s.getAttribute('aria-checked') !== 'true'));
+  });
+
+  /* ---------------------------------------------------------------------
+     TRILHO — setas do .yb-track
+       <div class="yb-track" id="reviews-track">…</div>
+       <div class="yb-track__nav" data-yb-track-nav="reviews-track" hidden>
+         <button class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous">
+         <button class="yb-iconbtn" data-yb-track-step="next" aria-label="Next">
+
+     O trilho rola sozinho (overflow nativo, arrasto no toque); as setas sao
+     conveniencia de mouse. Nascem `hidden` e e ESTE arquivo que as revela —
+     sem script, um botao que nao faz nada e pior que nenhum botao. Andam um
+     cartao por clique (largura do primeiro filho + gap) e se desligam nas
+     pontas, para o leitor de tela e o olho saberem que acabou.
+     --------------------------------------------------------------------- */
+  function trilhoDe(nav) {
+    return document.getElementById(nav.getAttribute('data-yb-track-nav') || '');
+  }
+
+  function atualizarSetas(nav) {
+    var t = trilhoDe(nav);
+    if (!t) return;
+    var fim = t.scrollWidth - t.clientWidth - 1;
+    var prev = nav.querySelector('[data-yb-track-step="prev"]');
+    var next = nav.querySelector('[data-yb-track-step="next"]');
+    if (prev) prev.disabled = t.scrollLeft <= 0;
+    if (next) next.disabled = t.scrollLeft >= fim;
+    // sem sobra para rolar, as setas nao tem trabalho: somem em vez de
+    // ficarem as duas apagadas
+    nav.hidden = fim <= 0;
+  }
+
+  function ligarTrilhos() {
+    var navs = document.querySelectorAll('[data-yb-track-nav]');
+    for (var i = 0; i < navs.length; i++) {
+      (function (nav) {
+        var t = trilhoDe(nav);
+        if (!t) return;
+        nav.hidden = false;
+        atualizarSetas(nav);
+        t.addEventListener('scroll', function () { atualizarSetas(nav); }, { passive: true });
+        window.addEventListener('resize', function () { atualizarSetas(nav); });
+      })(navs[i]);
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ligarTrilhos);
+  else ligarTrilhos();
+
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-yb-track-step]');
+    if (!b) return;
+    var nav = b.closest('[data-yb-track-nav]');
+    var t = nav && trilhoDe(nav);
+    if (!t || !t.firstElementChild) return;
+    var passo = t.firstElementChild.getBoundingClientRect().width +
+      (parseFloat(getComputedStyle(t).columnGap) || 0);
+    var sentido = b.getAttribute('data-yb-track-step') === 'prev' ? -1 : 1;
+    var suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    t.scrollBy({ left: passo * sentido, behavior: suave ? 'smooth' : 'auto' });
+  });
+
+  /* ---------------------------------------------------------------------
+     BARRA DE COMPRA — aparece quando o botao real sai de vista
+       <button class="yb-btn yb-btn--primary" data-yb-buybar-anchor>
+       <div class="yb-buybar" data-yb-buybar hidden>…</div>
+
+     Enquanto o "Add to cart" de verdade esta na tela (ou ainda abaixo dela,
+     antes de a pessoa chegar nele), a barra fica escondida: duas acoes iguais
+     visiveis ao mesmo tempo confundem. Ela so entra quando o botao ja passou
+     para cima. Sem IntersectionObserver (ou sem script) a barra nao aparece,
+     e o botao real continua la.
+     --------------------------------------------------------------------- */
+  (function () {
+    var barra = document.querySelector('[data-yb-buybar]');
+    var ancora = document.querySelector('[data-yb-buybar-anchor]');
+    if (!barra || !ancora || !('IntersectionObserver' in window)) return;
+    new IntersectionObserver(function (entradas) {
+      // A regra e uma so: a barra existe enquanto o botao real NAO esta a
+      // vista. Ela ja exigiu tambem que a ancora tivesse passado para cima
+      // (`boundingClientRect.bottom < 0`) — e essa segunda condicao abria um
+      // buraco medido de 1.170px no celular: o CTA nasce em y=1125 numa tela
+      // de 812, entao do topo ate rolar uma tela e meia nao havia botao de
+      // compra em lugar nenhum. Nem o da pagina, nem o da barra.
+      barra.hidden = entradas[0].isIntersecting;
+    }, { threshold: 0 }).observe(ancora);
+  })();
+
+  /* ---------------------------------------------------------------------
+     VARIANTE — a escolha muda a PAGINA, nao so o rotulo
+
+       <div data-yb-variante>
+         <input type="radio" data-preco="$59.90" data-foto="1" [data-yb-esgotado]>
+       <b data-yb-variante-eco>          o eco "Size: 500g"
+       [data-yb-preco]                   preco do bloco de compra E da barra
+       [data-yb-selo]                    In stock / Sold out
+       [data-yb-comprar]                 o botao, com data-rotulo
+       [data-yb-avisar]                  o campo de aviso de volta
+       [data-yb-barra-comprar] / [data-yb-barra-avisar]
+
+     Antes daqui, o script so mantinha o eco em dia: trocar de tamanho
+     mudava a palavra ao lado de "Size:" e mais nada. O preco do topo ficava
+     parado enquanto o cartao selecionado dizia outro numero, o botao seguia
+     oferecendo o valor do primeiro, e a foto continuava sendo a do tamanho
+     que a pessoa acabara de abandonar. Tres mentiras por clique.
+
+     Duas regras que o resto do arquivo tambem segue:
+     - o HTML ja nasce certo (o servidor renderiza o estado da variante que
+       esta `checked`), entao sem JS a pagina nao mente — so nao muda;
+     - o estado de cada variante vem do ATRIBUTO, nao de uma tabela paralela
+       aqui dentro. Duas listas do mesmo fato divergem no primeiro dia.
+     --------------------------------------------------------------------- */
+  function trocarVariante(entrada) {
+    var grupo = entrada.closest('[data-yb-variante]');
+    if (!grupo) return;
+    var rotulo = grupo.parentElement.querySelector('[data-yb-variante-eco]');
+    var nome = document.querySelector('label[for="' + entrada.id + '"] .yb-swatches__name');
+    if (rotulo && nome) rotulo.textContent = nome.textContent.trim();
+
+    var preco = entrada.getAttribute('data-preco');
+    // Presenca, nao valor: `data-yb-esgotado` no radio e o mesmo gancho que a
+    // folha usa para riscar o cartao. Um fato, um atributo.
+    var tem = !entrada.hasAttribute('data-yb-esgotado');
+
+    if (preco) {
+      [].forEach.call(document.querySelectorAll('[data-yb-preco]'), function (el) {
+        el.textContent = preco;
+      });
+    }
+
+    var selo = document.querySelector('[data-yb-selo]');
+    if (selo) {
+      selo.textContent = tem ? 'In stock' : 'Sold out';
+      selo.classList.toggle('yb-badge--success', tem);
+      selo.classList.toggle('yb-badge--danger', !tem);
+    }
+
+    // `[data-rotulo]` desempata: os DOIS botoes de comprar carregam
+    // `data-yb-comprar` (a acao e a mesma), mas so o da pagina tem rotulo com
+    // preco dentro. O da barra fixa diz so "Add to cart" — o preco dele mora
+    // no `[data-yb-preco]` ao lado, que o laco acima ja atualizou.
+    var botao = document.querySelector('[data-yb-comprar][data-rotulo]');
+    if (botao) {
+      botao.disabled = !tem;
+      // Os dois rotulos vem do HTML: string de interface escrita aqui dentro
+      // e string que ninguem encontra no dia de traduzir a loja.
+      botao.textContent = tem
+        ? (botao.getAttribute('data-rotulo') || '') + (preco || '')
+        : (botao.getAttribute('data-rotulo-esgotado') || '');
+    }
+
+    // Quantidade some quando nao ha o que contar; o aviso de volta ocupa o
+    // lugar da acao.
+    var passo = document.querySelector('[data-yb-stepper]');
+    if (passo) passo.hidden = !tem;
+    var avisar = document.querySelector('[data-yb-avisar]');
+    if (avisar) avisar.hidden = tem;
+    var bComprar = document.querySelector('[data-yb-barra-comprar]');
+    if (bComprar) bComprar.hidden = !tem;
+    var bAvisar = document.querySelector('[data-yb-barra-avisar]');
+    if (bAvisar) bAvisar.hidden = tem;
+
+    // A galeria acompanha: escolher 1kg e continuar vendo o pote de 250g e a
+    // mentira mais silenciosa das tres. Reaproveita o radio das miniaturas,
+    // que ja e o mecanismo de troca de slide — nada de segundo caminho.
+    var foto = entrada.getAttribute('data-foto');
+    if (foto !== null) {
+      var mini = document.getElementById('g' + foto);
+      if (mini && !mini.checked) {
+        mini.checked = true;
+        mini.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+
+    // O endereco passa a dizer qual variante esta aberta. Sem isto, link
+    // compartilhado sempre abria no primeiro tamanho — e quem mandou o link
+    // achava que tinha mandado o outro. `replaceState` e nao `pushState`:
+    // trocar de tamanho nao e navegar, e o botao Voltar nao deve desfazer
+    // escolha de combo.
+    if (window.history && history.replaceState) {
+      var u = new URL(window.location.href);
+      u.searchParams.set('variant', entrada.id.replace(/^tam/, ''));
+      history.replaceState(null, '', u);
+    }
+  }
+
+  document.addEventListener('change', function (e) {
+    if (e.target.matches && e.target.matches('[data-yb-variante] input')) trocarVariante(e.target);
+  });
+
+  // Abertura com ?variant=N: o link precisa abrir no tamanho que ele promete.
+  (function () {
+    var n = new URLSearchParams(window.location.search).get('variant');
+    if (n === null) return;
+    var entrada = document.getElementById('tam' + n);
+    if (!entrada || !entrada.matches('[data-yb-variante] input')) return;
+    entrada.checked = true;
+    trocarVariante(entrada);
+  })();
+
+  /* ---------------------------------------------------------------------
+     COMPRAR — a acao tem duracao, e duracao precisa de forma
+
+       <button data-yb-comprar
+               data-toast-titulo="Added to cart" data-toast-texto="Deep care kit">
+       <div data-yb-compra>            a zona, para achar a quantidade
+       <button ... data-yb-falhar>     so na doc: prova o caminho do erro
+
+     Era um `onclick` inline que abria o toast de sucesso no mesmo quadro do
+     clique. Isso descreve uma loja onde adicionar ao carrinho e instantaneo e
+     nunca falha — nenhuma das duas coisas e verdade, e a interface que promete
+     as duas nao tem onde por a resposta no dia em que uma delas quebrar.
+
+     Aqui o botao passa por `.yb-btn--loading`, que a folha ja desenhava e
+     ninguem acionava. Ele NAO recebe `disabled` nem `aria-disabled`: os dois
+     pintam o fundo de cinza, e cinza com spinner branco por cima e um spinner
+     invisivel. O clique repetido morre no `pointer-events:none` da propria
+     classe, e o teclado morre na guarda de `aria-busy` logo abaixo.
+
+     A ESPERA e simulada, e isso e o ponto de um prototipo: a tela precisa
+     provar que existe um estado entre o clique e a resposta. O que ela nao faz
+     e simular FALHA sozinha — protótipo que falha por sorteio ensina errado.
+     O caminho do erro se prova onde estado se prova, na doc, por um botao que
+     declara `data-yb-falhar`.
+     --------------------------------------------------------------------- */
+  var ESPERA_COMPRA = 700;   // ms
+
+  document.addEventListener('click', function (e) {
+    if (!(e.target instanceof Element)) return;
+    var b = e.target.closest('[data-yb-comprar]');
+    if (!b || b.disabled || b.getAttribute('aria-busy') === 'true') return;
+
+    var zona = b.closest('[data-yb-compra]');
+    var campo = zona && zona.querySelector('[data-yb-stepper] input');
+    var qtd = campo ? Math.max(1, +campo.value || 1) : 1;
+    var nome = b.getAttribute('data-toast-texto') || '';
+    var falha = b.hasAttribute('data-yb-falhar');
+
+    b.classList.add('yb-btn--loading');
+    b.setAttribute('aria-busy', 'true');
+
+    window.setTimeout(function () {
+      b.classList.remove('yb-btn--loading');
+      b.removeAttribute('aria-busy');
+      if (!window.Ybera || !Ybera.toast) return;
+      if (falha) {
+        Ybera.toast({
+          title: b.getAttribute('data-toast-erro') || '',
+          text: b.getAttribute('data-toast-erro-texto') || '',
+          variant: 'danger'
+        });
+        return;
+      }
+      Ybera.toast({
+        title: b.getAttribute('data-toast-titulo') || '',
+        // A quantidade estava sumindo: somar tres e receber "Added to cart"
+        // sem numero deixa a pessoa sem saber se somou tres ou um.
+        text: (qtd > 1 ? qtd + ' × ' : '') + nome,
+        variant: 'success'
+      });
+    }, ESPERA_COMPRA);
+  });
+
+  /* ---------------------------------------------------------------------
+     COMPARTILHAR — a folha nativa quando existe, copiar quando nao
+
+       <button data-yb-share data-copiado="Link copied" data-erro="…">
+
+     No celular `navigator.share` abre a folha do sistema, que e onde a pessoa
+     ja sabe mandar para o WhatsApp. No desktop ela quase nunca existe: ali o
+     plano B copia o endereco e o toast confirma — sem confirmacao, copiar e
+     indistinguivel de nao ter acontecido nada.
+
+     Cancelar a folha nativa dispara AbortError; nao e erro, e desistencia, e
+     nao vira toast.
+     --------------------------------------------------------------------- */
+  document.addEventListener('click', function (e) {
+    if (!(e.target instanceof Element)) return;
+    var b = e.target.closest('[data-yb-share]');
+    if (!b) return;
+    var aviso = function (chave, variante) {
+      if (window.Ybera && Ybera.toast) Ybera.toast({ title: b.getAttribute(chave) || '', variant: variante });
+    };
+    if (navigator.share) {
+      navigator.share({ title: document.title, url: location.href }).catch(function () {});
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(location.href)
+        .then(function () { aviso('data-copiado', 'success'); })
+        .catch(function () { aviso('data-erro', 'danger'); });
+      return;
+    }
+    aviso('data-erro', 'danger');
+  });
+
+  /* ---------------------------------------------------------------------
+     FILTRO DE AVALIACOES
+
+       <div data-yb-review-filtro>   grupo de radio com value="all|5|4|3|2|1"
+       <article class="yb-review" data-nota="5">
+       <div data-yb-review-vazio hidden>  + [data-yb-review-vazio-titulo]
+       <button data-yb-review-limpar>
+
+     Esconde o que nao bate e mostra o estado vazio quando nada sobra. O estado
+     vazio nao e enfeite defensivo: com as avaliacoes que a loja tem hoje,
+     quatro dos cinco filtros levam exatamente a ele.
+
+     O titulo do vazio ecoa a nota escolhida em vez de dizer "nada encontrado":
+     "No 3-star reviews yet" diz o que aconteceu; "nada encontrado" faz a
+     pessoa desconfiar do filtro.
+     --------------------------------------------------------------------- */
+  function filtrarAvaliacoes(valor) {
+    var trilho = document.getElementById('reviews-track');
+    var vazio = document.querySelector('[data-yb-review-vazio]');
+    if (!trilho) return;
+    var visiveis = 0;
+    [].forEach.call(trilho.querySelectorAll('[data-nota]'), function (c) {
+      var bate = valor === 'all' || c.getAttribute('data-nota') === valor;
+      c.hidden = !bate;
+      if (bate) visiveis++;
+    });
+    if (!vazio) return;
+    vazio.hidden = visiveis > 0;
+    // So escreve o titulo quando ele VAI aparecer: escrever sempre deixava
+    // "No 5-star reviews yet" guardado atras de um bloco escondido, pronto
+    // para piscar errado no proximo filtro que zerasse.
+    if (visiveis > 0) return;
+    var t = vazio.querySelector('[data-yb-review-vazio-titulo]');
+    if (t && valor !== 'all') t.textContent = 'No ' + valor + '-star reviews yet';
+  }
+
+  document.addEventListener('change', function (e) {
+    var alvo = e.target;
+    if (!alvo.matches || !alvo.matches('[data-yb-review-filtro] input')) return;
+    filtrarAvaliacoes(alvo.value);
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!(e.target instanceof Element)) return;
+    if (!e.target.closest('[data-yb-review-limpar]')) return;
+    var todos = document.querySelector('[data-yb-review-filtro] input[value="all"]');
+    if (todos) { todos.checked = true; }
+    filtrarAvaliacoes('all');
+  });
+
+  /* ---------------------------------------------------------------------
      GALERIA
      Os radios já trocam a imagem via CSS quando há :checked. Aqui só
      sincronizamos o slide e o contador, e as setas do teclado vem de graca do grupo de radio nativo — nao ha keydown aqui.
@@ -222,11 +659,82 @@
   });
 
   /* ---------------------------------------------------------------------
+     SEARCH OVERLAY
+
+     A folha inteira já funciona sem isto: é um <dialog> com um <form
+     role="search"> dentro, então Esc fecha, Tab não escapa e Enter envia a
+     busca para o servidor. O que este trecho acrescenta é a troca de painel
+     enquanto se digita — e nada mais, de propósito. Filtrar de verdade é
+     trabalho do servidor; aqui só decidimos QUAL dos três painéis mostrar.
+
+       [data-yb-search]           o <form>
+       [data-yb-search-zero]      antes de digitar: recentes, populares, mais vendidos
+       [data-yb-search-results]   com termo e com resultado
+       [data-yb-search-empty]     com termo e sem resultado
+       [data-yb-search-echo]      onde o termo aparece escrito no estado vazio
+       [data-termo]               em cada resultado, o texto contra o qual casar
+     --------------------------------------------------------------------- */
+  function pinta(form) {
+    var termo = (form.querySelector('.yb-search__input').value || '').trim().toLowerCase();
+    var raiz = form.closest('.yb-search') || document;
+    var zero = raiz.querySelector('[data-yb-search-zero]');
+    var achados = raiz.querySelector('[data-yb-search-results]');
+    var vazio = raiz.querySelector('[data-yb-search-empty]');
+    var limpar = form.querySelector('.yb-search__clear');
+
+    if (limpar) limpar.hidden = !termo;
+
+    var visiveis = 0;
+    if (achados) {
+      achados.querySelectorAll('[data-termo]').forEach(function (it) {
+        var casa = !!termo && it.getAttribute('data-termo').toLowerCase().indexOf(termo) > -1;
+        it.hidden = !casa;
+        if (casa) visiveis++;
+      });
+      // um título de grupo sem nenhum resultado embaixo anuncia uma seção
+      // que não existe — some junto com os seus.
+      achados.querySelectorAll('[data-yb-search-group]').forEach(function (g) {
+        g.hidden = !g.querySelector('[data-termo]:not([hidden])');
+      });
+    }
+
+    if (zero) zero.hidden = !!termo;
+    if (achados) achados.hidden = !termo || !visiveis;
+    if (vazio) vazio.hidden = !termo || !!visiveis;
+
+    if (vazio && termo) {
+      vazio.querySelectorAll('[data-yb-search-echo]').forEach(function (e) {
+        e.textContent = termo;
+      });
+    }
+  }
+
+  document.addEventListener('input', function (e) {
+    if (!(e.target instanceof Element)) return;
+    var f = e.target.closest('[data-yb-search]');
+    if (f) pinta(f);
+  });
+
+  // `reset` dispara ANTES do campo esvaziar — sem o adiamento, pinta() ainda
+  // lê o texto antigo e o painel de resultados fica na tela com o campo vazio.
+  document.addEventListener('reset', function (e) {
+    if (!(e.target instanceof Element)) return;
+    var f = e.target.closest('[data-yb-search]');
+    if (!f) return;
+    setTimeout(function () {
+      pinta(f);
+      var campo = f.querySelector('.yb-search__input');
+      if (campo) campo.focus();
+    }, 0);
+  });
+
+  /* ---------------------------------------------------------------------
      INICIALIZAÇÃO
      --------------------------------------------------------------------- */
   function init(raiz) {
     (raiz || document).querySelectorAll('[data-yb-gallery]').forEach(sincronizarGaleria);
     (raiz || document).querySelectorAll('[data-yb-stepper]').forEach(sincronizarStepper);
+    (raiz || document).querySelectorAll('[data-yb-search]').forEach(pinta);
   }
 
   if (document.readyState === 'loading') {
@@ -429,6 +937,108 @@
   });
 
   function iniciar() { Array.prototype.forEach.call(toggles(), sincronizar); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar);
+  else iniciar();
+})();
+
+/* =========================================================================
+   RELÓGIO DA OFERTA — [data-yb-countdown]
+
+   O prazo vem no atributo, em ISO 8601:
+     <p class="yb-offercard__timer" data-yb-countdown="2026-09-10T23:59:00Z">
+       <time datetime="2026-09-10T23:59:00Z">until Sep 10, 11:59 PM</time>
+     </p>
+
+   Sem JS o <time> por extenso continua na tela: uma oferta com prazo tem de
+   dizer o prazo de qualquer jeito. O script troca o texto pelos quadradinhos
+   e passa a contar.
+
+   Vencido, o relógio SOME e o cartão diz que acabou — 00:00:00 parado não é
+   contagem, é relógio quebrado prometendo urgência que já passou.
+   ========================================================================= */
+(function () {
+  'use strict';
+
+  function doisDigitos(n) { return (n < 10 ? '0' : '') + n; }
+
+  /* Nada de montar marcacao por string: os quadradinhos sao criados como nos
+     e cada segundo so troca o textContent do numero. E a regra da casa (o
+     validador recusa marcacao por string em JS que toca conteudo de produto)
+     e sai mais barato — nao reconstroi tres elementos por segundo. */
+  function quadro(rotulo) {
+    var chip = document.createElement('span');
+    chip.className = 'yb-offercard__chip';
+    var num = document.createElement('b');
+    var uni = document.createElement('small');
+    uni.textContent = rotulo;
+    chip.appendChild(num);
+    chip.appendChild(uni);
+    return { chip: chip, num: num };
+  }
+
+  function separador() {
+    var s = document.createElement('span');
+    s.className = 'yb-offercard__sep';
+    s.textContent = ':';
+    return s;
+  }
+
+  /* Com mais de um dia pela frente o relogio troca de unidade: "672 hrs" nao
+     e prazo, e numero. Vira dias/horas/minutos, e volta para horas/min/seg
+     nas ultimas 24h, quando o segundo passa a significar alguma coisa. */
+  function montar(el, longo) {
+    var a = quadro(longo ? 'dias' : 'hrs');
+    var b = quadro(longo ? 'hrs' : 'min');
+    var c = quadro(longo ? 'min' : 's');
+    el.textContent = '';
+    el.appendChild(a.chip); el.appendChild(separador());
+    el.appendChild(b.chip); el.appendChild(separador());
+    el.appendChild(c.chip);
+    return [a.num, b.num, c.num];
+  }
+
+  function encerrar(el) {
+    var cartao = el.closest('.yb-offercard');
+    if (!cartao) return;
+    cartao.setAttribute('data-encerrada', '');
+    var fim = cartao.querySelector('.yb-offercard__fim');
+    if (fim) fim.hidden = false;
+  }
+
+  function ligar(el) {
+    var prazo = Date.parse(el.getAttribute('data-yb-countdown'));
+    // data ilegivel: fica o <time> por extenso, que e melhor que um relogio
+    // contando para tras a partir de NaN
+    if (isNaN(prazo)) return;
+    if (prazo - Date.now() <= 0) { encerrar(el); return; }
+
+    var longo = prazo - Date.now() > 864e5;      // mais de 24h
+    var campos = montar(el, longo);
+    function tique() {
+      var resta = prazo - Date.now();
+      if (resta <= 0) { clearInterval(id); encerrar(el); return; }
+      // cruzou as ultimas 24h enquanto a pagina estava aberta: remonta
+      if (longo && resta <= 864e5) { longo = false; campos = montar(el, longo); }
+      var t = Math.floor(resta / 1000);
+      if (longo) {
+        campos[0].textContent = doisDigitos(Math.floor(t / 86400));
+        campos[1].textContent = doisDigitos(Math.floor((t % 86400) / 3600));
+        campos[2].textContent = doisDigitos(Math.floor((t % 3600) / 60));
+      } else {
+        campos[0].textContent = doisDigitos(Math.floor(t / 3600));
+        campos[1].textContent = doisDigitos(Math.floor((t % 3600) / 60));
+        campos[2].textContent = doisDigitos(t % 60);
+      }
+      if (!el.isConnected) clearInterval(id);
+    }
+    tique();
+    var id = setInterval(tique, 1000);
+  }
+
+  function iniciar() {
+    Array.prototype.forEach.call(
+      document.querySelectorAll('[data-yb-countdown]'), ligar);
+  }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar);
   else iniciar();
 })();

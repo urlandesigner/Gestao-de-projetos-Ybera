@@ -84,10 +84,27 @@
     textos++;
     const px = parseFloat(s.fontSize);
     const grande = px >= 24 || (px >= 18.66 && +s.fontWeight >= 700);
-    const min = grande ? 3 : 4.5;
-    const r = cr(fg, bg);
+
+    /* Glifo escondido do leitor de tela E com contorno: nao e texto, e um
+       desenho feito com uma fonte — as estrelas de avaliacao. O valor esta
+       no aria-label do pai; ninguem LE estes caracteres. A regra que vale e
+       a 1.4.11 (grafico, 3:1) e ela mede a SILHUETA, entao a cor medida e a
+       do contorno, nao a do miolo.
+
+       Isto vale enquanto as duas condicoes forem verdade juntas. Se alguem
+       tirar o aria-hidden, o glifo volta a ser texto e o limite volta a
+       4.5. Se tirar o contorno, sobra so o miolo e e ele que e medido. A
+       excecao nao tem como sobreviver a remocao do que a justifica — foi o
+       defeito da excecao que escrevi para o banner, que continuava valendo
+       depois que a mitigacao sumiu. */
+    const contorno = hex(s.webkitTextStrokeColor);
+    const traco = parseFloat(s.webkitTextStrokeWidth) || 0;
+    const desenho = e.getAttribute('aria-hidden') === 'true' && traco > 0 && contorno;
+
+    const min = desenho ? 3 : (grande ? 3 : 4.5);
+    const r = cr(desenho ? contorno : fg, bg);
     if (r < min) {
-      const registro = { razao: +r.toFixed(2), exigido: min, fg, bg,
+      const registro = { razao: +r.toFixed(2), exigido: min, fg: desenho ? contorno : fg, bg,
         tamanho: s.fontSize, texto: e.textContent.trim().slice(0, 40) };
       // Sem excecao para "texto sobre foto": cheguei a escrever uma e ela
       // silenciava um defeito real — o banner tinha fundo de reserva claro

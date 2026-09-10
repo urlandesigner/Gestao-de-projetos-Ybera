@@ -3,7 +3,7 @@
 - **Estado:** aceita
 - **Desde:** 0.1 · 2026-08-31
 - **Substitui:** —
-- **Toca:** `tokens/00-primitives.css`, `tokens/01-semantic.css`, `tokens/ybera.css`, `tools/tokens-to-json.mjs`, `build.sh`, `dist/ybera-tokens.json`
+- **Toca:** `tokens/00-primitives.css`, `tokens/01-semantic.css`, `dist/ybera-tokens.css`, `tools/tokens-to-json.mjs`, `build.sh`, `dist/ybera-tokens.json`
 
 ## Decisão
 

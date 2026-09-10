@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decisões — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--yb-bg-page);color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base);-webkit-font-smoothing:antialiased;
+  display:flex;align-items:center;justify-content:center;min-height:100vh;
+  padding:var(--yb-space-8)}
+main{max-width:760px;width:100%}
+h1{font-size:var(--yb-type-display-2-size);line-height:var(--yb-type-display-2-line);
+  letter-spacing:var(--yb-type-display-2-track);font-weight:var(--yb-type-display-2-weight);
+  margin:0 0 var(--yb-space-3)}
+.sub{color:var(--yb-text-secondary);font-size:var(--yb-type-body-lg-size);
+  margin:0 0 var(--yb-space-10);max-width:56ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:var(--yb-space-4)}
+.grupo{margin-bottom:var(--yb-space-10)}
+.grupo h2{font-size:var(--yb-type-overline-size);letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase;font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-muted);margin:0 0 var(--yb-space-4)}
+a.tile{display:flex;flex-direction:column;gap:var(--yb-space-2);text-decoration:none;
+  border:1px solid var(--yb-border);border-radius:var(--yb-radius-card);
+  padding:var(--yb-space-5);background:var(--yb-surface);
+  transition:border-color var(--yb-transition-control)}
+a.tile:hover{border-color:var(--yb-text-primary)}
+a.tile:focus-visible{outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset)}
+a.tile b{font-size:var(--yb-type-h4-size);font-weight:var(--yb-font-weight-semibold);
+  letter-spacing:var(--yb-type-h4-track);color:var(--yb-text-primary)}
+a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
+.ver{margin-top:var(--yb-space-10);font-size:var(--yb-type-caption-size);
+  color:var(--yb-text-muted)}
+</style>
+<style>
+  body{display:block; padding:var(--yb-space-12) var(--yb-space-8)}
+  main{max-width:900px; margin-inline:auto}
+  .voltar{display:inline-block; margin-bottom:var(--yb-space-6);
+    font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted); text-decoration:none}
+  .voltar:hover{color:var(--yb-text-primary)}
+  table{width:100%; border-collapse:collapse; margin-top:var(--yb-space-8)}
+  th,td{text-align:start; padding:var(--yb-space-3) var(--yb-space-4);
+    border-bottom:1px solid var(--yb-border-subtle); vertical-align:top}
+  th{font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+    text-transform:uppercase; color:var(--yb-text-muted)}
+  td{font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
+  td a{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
+  code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+</style>
+</head>
+<body>
+<main>
+  <a class="voltar" href="../">← Ybera Design System</a>
+  <h1>Decisões</h1>
+  <p class="sub">Cada registro guarda uma decisão que <b>já está no código</b>: o que
+  vale, por que vale, onde não vale, e qual número a sustenta. Não propõe nada —
+  dá endereço citável a uma razão que estava espalhada em comentário de CSS.</p>
+  <table>
+    <thead><tr><th>Registro</th><th>Decisão</th><th>Estado</th><th>Desde</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><a href="DDR-001-primaria-e-grafite.md">DDR-001</a></td>
+        <td>A primária é o grafite <code>#1E1E1F</code>; o magenta é cor de função</td>
+        <td>aceita</td>
+        <td>0.1</td>
+      </tr>
+      <tr>
+        <td><a href="DDR-002-uma-familia-tipografica.md">DDR-002</a></td>
+        <td>Uma família tipográfica: hierarquia por escala, peso e tracking</td>
+        <td>aceita</td>
+        <td>0.1</td>
+      </tr>
+      <tr>
+        <td><a href="DDR-003-css-custom-properties-como-formato-canonico.md">DDR-003</a></td>
+        <td>CSS custom property é o formato canônico; o JSON DTCG é derivado</td>
+        <td>aceita</td>
+        <td>0.1</td>
+      </tr>
+      <tr>
+        <td><a href="DDR-004-espaco-sem-camada-semantica.md">DDR-004</a></td>
+        <td>Espaço não ganha camada semântica</td>
+        <td>aceita</td>
+        <td>0.10</td>
+      </tr>
+      <tr>
+        <td><a href="DDR-005-cor-tem-regra-dura-de-camada.md">DDR-005</a></td>
+        <td>Cor tem regra dura de camada; a ponte é a única exceção</td>
+        <td>aceita</td>
+        <td>0.2</td>
+      </tr>
+      <tr>
+        <td><a href="DDR-006-piso-de-texto-e-gray-600.md">DDR-006</a></td>
+        <td>Piso de texto é <code>gray-600</code>; dourado não é texto sobre claro; opacidade não toca texto</td>
+        <td>aceita</td>
+        <td>0.1</td>
+      </tr>
+      <tr>
+        <td><a href="DDR-007-o-sistema-e-claro-por-decisao.md">DDR-007</a></td>
+        <td>O sistema é claro por decisão: <code>color-scheme: light</code></td>
+        <td>aceita</td>
+        <td>0.1</td>
+      </tr>
+      <tr>
+        <td><a href="DDR-008-comportamento-liga-por-atributo-de-dado.md">DDR-008</a></td>
+        <td>Comportamento liga por <code>data-yb-*</code>, é opcional e prefere o elemento nativo</td>
+        <td>aceita</td>
+        <td>0.6</td>
+      </tr>
+      <tr>
+        <td><a href="DDR-009-prefixo-yb-em-tudo.md">DDR-009</a></td>
+        <td>Prefixo <code>yb-</code> em tudo, nomenclatura em inglês</td>
+        <td>aceita</td>
+        <td>0.2</td>
+      </tr>
+    </tbody>
+  </table>
+</main>
+</body>
+</html>

@@ -317,6 +317,13 @@
 
   --yb-surface:        var(--yb-white);
   --yb-surface-raised: var(--yb-white);
+  /* Superficie levantada DENTRO de um painel escuro — a pilula de contagem e
+     o chip nao escolhido do bloco de quiz. Mede 1.47:1 contra o painel, e
+     isso e de proposito: ela levanta a peca sem virar segunda cor. Vale para
+     rotulo (o texto branco em cima mede 11.35:1) e NAO vale como unica
+     fronteira de controle — a WCAG 1.4.11 quer 3:1 ali, e por isso o chip
+     ganha `--yb-border-inverse-strong` por cima deste fundo. */
+  --yb-surface-inverse-raised: var(--yb-gray-800);
   --yb-surface-sunken: var(--yb-gray-50);
   --yb-surface-overlay: rgba(30, 30, 31, .55);
   /* Veu sobre foto que ninguem controla. Sem ele, texto branco sobre imagem
@@ -324,6 +331,11 @@
      `strong`/`none` existe porque gradiente precisa dos dois lados, e
      `transparent` em alguns motores desbota para cinza no meio do caminho. */
   --yb-scrim-strong: rgba(30, 30, 31, .72);
+  /* Tinta base sobre foto. Nao existe para dar contraste — existe para tirar o
+     branco puro e unificar imagens que ninguem controla, sem esconder o
+     produto. Quem carrega o contraste e a faixa forte atras do texto; as duas
+     compoem .77, e e esse numero que foi medido. */
+  --yb-scrim-soft:   rgba(30, 30, 31, .18);
   --yb-scrim-none:   rgba(30, 30, 31, 0);
   /* Superfície que flutua SOBRE mídia — o botão de play do carrossel de vídeo.
      Precisa de alfa: sólida ela vira um disco branco cego sobre a foto; sem
@@ -339,6 +351,12 @@
   /* @reservado — mesma razao do texto inverso: superficie escura precisa de
      linha divisoria, e sem token ela vira var(--yb-gray-800) no componente. */
   --yb-border-inverse: var(--yb-gray-800);
+  /* Linha de CONTROLE sobre escuro, que e outra coisa de divisoria. A
+     `--yb-border-inverse` mede 1.47:1 contra o painel: serve para separar
+     blocos, nao para dizer "isto e clicavel". Medi a rampa inteira contra
+     gray-950 e gray-600 e o degrau MAIS ESCURO que ainda passa o 3:1 da
+     WCAG 1.4.11 — 3.23:1. Um degrau abaixo (gray-700) da 2.17:1 e reprova. */
+  --yb-border-inverse-strong: var(--yb-gray-600);   /* 3.23:1 vs gray-950 */
 
   /* =====================================================================
      TEXTO
@@ -378,10 +396,52 @@
      sistema nao usa porque e ilegivel nao pode continuar oferecido. */
   --yb-action-text-disabled: var(--yb-text-muted);
 
-  /* ação secundária: a primária grafite carrega o peso institucional */
-  --yb-action-secondary-bg:       var(--yb-gray-950);
-  --yb-action-secondary-bg-hover: var(--yb-gray-800);
-  --yb-action-secondary-text:     var(--yb-white);
+  /* AÇÃO SECUNDÁRIA — magenta tingido, não grafite sólido.
+     Era `gray-950`: um bloco de 16.66:1 ao lado de um primário de 5.36:1.
+     A secundária pesava 3,1x mais que a primária e virava o elemento mais
+     forte da tela — mais que o título do produto. Duas primárias, portanto.
+
+     Cinza claro foi tentado e descartado: a 1,09:1 o bloco some no branco, e
+     onde não some é confundido com desabilitado, que também é cinza.
+
+     Tingir com a própria cor de ação resolve as duas coisas de uma vez.
+     Desabilitado é cinza, secundária é magenta: a diferença é de MATIZ, não
+     de peso, e matiz não se confunde. O contorno dá a aresta que o tingido
+     sozinho não tem sobre fundo branco.
+
+     Limite conhecido: o tingido depende de fundo claro. Sobre a faixa
+     escura do header ou sobre foto ele não se sustenta — ali a secundária
+     teria de ser contorno claro, e essa variante ainda não existe porque
+     nenhuma tela pede. Ver a nota em components/. */
+  --yb-action-secondary-bg:        var(--yb-magenta-100);
+  --yb-action-secondary-bg-hover:  var(--yb-magenta-200);
+  --yb-action-secondary-bg-active: var(--yb-magenta-300);
+  /* O MESMO magenta do fundo do botao primario. Nao e capricho de paleta: o
+     secundario e o desabilitado tem fundos de clareza quase igual (1.10:1 e
+     1.20:1 contra a pagina), e sem borda quem separa "clicavel" de "apagado"
+     passa a ser so o texto. Magenta saturado contra cinza faz esse trabalho;
+     o magenta-700 de antes e escuro o bastante para ser lido como grafite. */
+  --yb-action-secondary-text:      var(--yb-magenta-600);   /* 4.86:1 sobre o fundo */
+  /* No hover o fundo escurece um degrau e o texto tem de escurecer junto:
+     magenta-600 sobre magenta-200 cai para 4.28:1 e reprova AA. O 700 sobe
+     para 7.12:1 no hover e 5.93:1 no pressionado. */
+  --yb-action-secondary-text-hover: var(--yb-magenta-700);  /* 7.12:1 no hover */
+  /* A borda era magenta-200: 1.25:1 contra a pagina branca. Fronteira de
+     controle pede 3:1 (WCAG 1.4.11), e o efeito de reprovar era pior do que a
+     conta sugere — o fundo do secundario (magenta-100, 1.10:1) e o do
+     DESABILITADO (gray-200, 1.20:1) tem praticamente a mesma clareza. Sem
+     borda que se veja, os dois so se distinguiam pelo matiz, e o secundario
+     era lido como botao apagado.
+     magenta-500 e o degrau mais CLARO da rampa que ainda passa (4.28:1);
+     magenta-400 da 2.57 e reprova. */
+  /* Sem borda, por decisao de desenho. A consequencia esta medida e assumida:
+     a fronteira do botao passa a ser o proprio preenchimento, que mede 1.10:1
+     contra a pagina — abaixo do 3:1 que a WCAG 1.4.11 pede para fronteira de
+     componente. Quem identifica o controle passa a ser o rotulo em magenta
+     saturado. `transparent` e nao `border:0` para a caixa nao encolher 2px em
+     relacao ao primario, que tem borda. */
+  --yb-action-secondary-border:        transparent;
+  --yb-action-secondary-border-hover:  transparent;
 
   /* ação terciária / fantasma */
   --yb-action-ghost-border: var(--yb-gray-300);
@@ -399,11 +459,39 @@
      avisa que reprova sobre claro. Quem le --yb-accent-on-dark ja sabe. */
   --yb-accent:           var(--yb-accent-on-dark);
   --yb-accent-on-dark:   var(--yb-gold-500);  /* só sobre superfície escura */
+  /* Acento sobre FOTO, que e outro problema: a superficie escura do
+     --yb-accent-on-dark e conhecida, a foto nao. Sobre o veu do media banner
+     (.77 sobre pixel branco puro) o gold-500 da 3.28:1 e reprova como texto;
+     o gold-300 da 6.02:1 e continua lendo como dourado. Escurecer o veu ate o
+     gold-500 passar exigiria .86 — a essa altura nao ha mais foto embaixo. */
+  --yb-accent-on-media:  var(--yb-gold-300);
   --yb-accent-text:      var(--yb-gold-700);  /* texto sobre claro */
   /* @reservado — superficie e borda de acento andam juntas; a doc ja usa a
      borda. Ver a nota de --yb-text-secondary-inverse. */
   --yb-accent-surface:   var(--yb-gold-100);
   --yb-accent-border:    var(--yb-gold-300);
+
+  /* Estrelas de avaliacao. O preenchimento e o dourado de MARCA — vivo, e o
+     que a loja pratica hoje — mas ele mede 2.39:1 sobre branco, abaixo do 3:1
+     que a WCAG 1.4.11 pede de grafico que carrega informacao. A saida nao e
+     escolher entre vivo e legivel: a FORMA ganha o contraste que a cor nao
+     tem. O contorno e o gold-700 (5.68:1) e e ele que define a silhueta da
+     estrela; o miolo continua o gold-500.
+
+     Por que nao o #FFBB00 que a loja usa hoje: mede 1.70:1 sobre branco, mais
+     baixo ainda, e e um valor solto de Tailwind que nao pertence a paleta. O
+     gold-500 e mais vivo que o que estava aqui e ja e cor do sistema. */
+  --yb-accent-star:      var(--yb-gold-500);
+  --yb-accent-star-edge: var(--yb-gold-700);
+
+  /* Favoritar. O magenta ja e a cor de ACAO do sistema (--yb-action-bg) —
+     reaproveitado aqui de proposito, e nao redefinido como valor proprio,
+     porque "favoritado" e uma leitura a mais do mesmo vermelho-rosa que a
+     marca ja usa para "isto e Ybera". O nome separado existe para o dia em
+     que os dois precisarem divergir (accent-love vira estado, action-bg
+     continua sendo estimulo a clicar) sem procurar hex em CSS de componente.
+     5.36:1 sobre branco — passa o 3:1 de grafico com informacao (1.4.11). */
+  --yb-accent-love: var(--yb-action-bg);
 
   /* =====================================================================
      ESTADO
@@ -622,10 +710,24 @@
   --yb-control-height-compact: var(--yb-control-height-sm);
   --yb-control-height-hero:    var(--yb-control-height-lg);
 
+  /* Altura REAL de um controle "mid" — a que o botão padrão tem em pé, não o
+     piso de 44 que ele declara. Ela emerge do padding: 16 em cima, 16 embaixo,
+     uma linha de 1rem e o fio da borda. O campo de formulário precisa bater
+     com ela quando os dois dividem a mesma linha (o "calculate shipping" da
+     PDP, o cupom da sacola), e ninguém acerta isso por tentativa: está escrito
+     uma vez aqui e os dois leem daqui. */
+  --yb-control-h: calc(var(--yb-space-4) * 2 + 1rem + 2px);   /* 50px */
+
   /* =====================================================================
      ALVO DE TOQUE — mínimo WCAG 2.5.5 / iOS HIG
      ===================================================================== */
   --yb-target-min: 44px;
+
+  /* Altura da barra fixa do header. Quem gruda abaixo dela precisa saber
+     onde ela termina, e ninguem consegue medir isso em CSS. A conta e a
+     mesma que produz a barra — alvo + respiro + fio —, e a barra usa este
+     token como piso, entao os dois nao tem como divergir. */
+  --yb-header-h: calc(var(--yb-target-min) + var(--yb-space-4) * 2 + 1px);
 
   /* Sinal da direcao de leitura. `transform` nao tem versao logica: um
      translateX negativo tira a gaveta da tela em LTR e a traz para dentro em

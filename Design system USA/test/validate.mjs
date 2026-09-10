@@ -9,7 +9,7 @@
    Não precisa de dependência nem de navegador. O que exige DOM renderizado
    (contraste real, alvo de toque, rótulo) está em test/a11y.js.
    ========================================================================= */
-import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -270,10 +270,35 @@ for (const nome of ['componentes', 'padroes']) {
   const foco = (s.match(/:focus-visible/g) || []).length;
   foco > 0 ? ok(`${nome}: foco visível`, `${foco} regras`)
            : falha(`${nome}: nenhuma regra :focus-visible`);
-  // outline:none sem substituto é a forma mais comum de matar o foco
-  const mata = semComentario(s).match(/outline\s*:\s*none/g) || [];
-  mata.length ? falha(`${nome}: outline:none encontrado`, `${mata.length} ocorrência(s)`)
-              : ok(`${nome}: nenhum outline:none`);
+  // Matar o outline e a forma mais comum de matar o foco — e `outline:0` mata
+  // igual a `outline:none`, entao os dois contam. Suprimir e legitimo quando o
+  // anel e desenhado por OUTRO elemento (o input dentro da caixa de campo, o
+  // campo dentro da barra de busca). Nesses casos a linha carrega um selo de
+  // comentario comecando com "anel:" e a checagem aceita. Sem selo, e falha: a
+  // alternativa era confiar que quem escreveu lembrou de por o anel em algum
+  // lugar, e foi exatamente isso que deixou `outline:0` passar sem ninguem ver.
+  const mata = [];
+  let dentroDeComentario = false;
+  for (const linha of s.split('\n')) {
+    const selo = /\/\*\s*anel:/.test(linha);
+    let codigo = '';
+    let resto = linha;
+    while (resto) {
+      if (dentroDeComentario) {
+        const fim = resto.indexOf('*/');
+        if (fim < 0) { resto = ''; break; }
+        dentroDeComentario = false; resto = resto.slice(fim + 2);
+      } else {
+        const ini = resto.indexOf('/*');
+        if (ini < 0) { codigo += resto; break; }
+        codigo += resto.slice(0, ini);
+        dentroDeComentario = true; resto = resto.slice(ini + 2);
+      }
+    }
+    if (/outline\s*:\s*(none|0)\b/.test(codigo) && !selo) mata.push(linha.trim());
+  }
+  mata.length ? falha(`${nome}: outline suprimido sem selo`, `${mata.length} ocorrência(s)`)
+              : ok(`${nome}: nenhum foco morto`);
   s.includes('prefers-reduced-motion')
     ? ok(`${nome}: respeita prefers-reduced-motion`)
     : aviso(`${nome}: sem prefers-reduced-motion`);
@@ -681,6 +706,21 @@ secao('Telas-prova');
     erradas.length
       ? falha('carimbo de versão das telas-prova errado', `${erradas.join(', ')} — esperado ${esperado}`)
       : ok('carimbo de versão confere com o conteúdo', esperado);
+
+    // Imagem citada que nao existe no disco. O montar-ds.py copia so as imagens
+    // que os dados pedem e poda o resto, entao um `src` escrito a mao no script
+    // sobrevive ao arquivo que ele aponta: a pagina continua abrindo, o alt e
+    // vazio porque a imagem e decorativa, e o buraco nao aparece em teste
+    // nenhum. Aconteceu com um banner da PDP.
+    const semArquivo = [];
+    for (const f of paginas) {
+      const h = ler(join('_captura/nova-loja', f));
+      for (const m of h.matchAll(/(?:src|href)="(img\/[^"]+)"/g))
+        if (!existsSync(join(raiz, '_captura/nova-loja', m[1]))) semArquivo.push(`${f} → ${m[1]}`);
+    }
+    semArquivo.length
+      ? falha('imagem citada que não existe', [...new Set(semArquivo)].join(', '))
+      : ok('toda imagem das telas-prova existe no disco', `${paginas.length} páginas`);
   }
 }
 
@@ -753,6 +793,37 @@ secao('Inventário');
   }
 }
 
+secao('Fichas de componente');
+// Uma pagina por peca, gerada de components/index.html + a folha. Tres coisas
+// podem apodrecer aqui, e as tres apodrecem em silencio: a ficha ficar para
+// tras do CSS, uma secao nova nao ganhar ficha, e um bloco escrito a mao
+// nunca ser escrito.
+{
+  const { execFileSync } = await import('node:child_process');
+  try {
+    const saida = execFileSync(process.execPath, [join(raiz, 'tools/fichas.mjs'), '--check'],
+      { cwd: raiz, encoding: 'utf8' }).trim();
+    ok('fichas em dia com o CSS e com a doc', saida);
+  } catch (e) {
+    falha('fichas defasadas', 'rode ./build.sh e commite');
+  }
+
+  const idsDoc = [...ler('components/index.html').matchAll(/\n  <section id="([^"]+)">/g)].map(m => m[1]);
+  const semFicha = idsDoc.filter(id => !existsSync(join(raiz, `components/${id}.html`)));
+  semFicha.length
+    ? falha('seção da doc sem ficha', semFicha.join(', '))
+    : ok('toda seção da doc tem ficha', `${idsDoc.length} componentes`);
+
+  // Bloco pendente aparece DECLARADO na ficha, e nao ausente — mas declarado
+  // ele ainda e uma pergunta sem resposta, e o placar precisa dize-lo.
+  const pendentes = idsDoc.filter(id =>
+    existsSync(join(raiz, `components/${id}.html`)) &&
+    ler(`components/${id}.html`).includes('class="pendente"'));
+  pendentes.length
+    ? aviso(`${pendentes.length} ficha(s) com bloco por escrever`, pendentes.join(', '))
+    : ok('toda ficha tem acessibilidade e faça / não faça', `${idsDoc.length} componentes`);
+}
+
 secao('Versão');
 {
   // Havia SEIS numeros de versao convivendo — package.json 0.7.0, README 0.7,
@@ -772,7 +843,12 @@ secao('Versão');
       const achado = m[1];
       // só interessa o que se apresenta COMO versão do sistema
       const redor = ler(f).slice(Math.max(0, m.index - 60), m.index + 20);
-      if (!/vers|Vers|v\d|nav-ver|class="ver"/.test(redor)) continue;
+      // `vers` solto casava dentro de "inverse". Bastava uma nota com razao de
+      // contraste perto de `--yb-border-inverse` — "mede 1.47:1" — para a
+      // checagem de VERSAO reprovar dizendo que 1.47 diverge de 0.12.1.
+      // Ancorar na palavra inteira mantem o que ela quer pegar (`Versao`,
+      // `v0.12.1`, `nav-ver`) e para de morder texto tecnico.
+      if (!/[Vv]ers[ãa]o|[Vv]ersion|v\d|nav-ver|class="ver"/.test(redor)) continue;
       if (achado !== versao && achado !== curta) divergentes.push(`${f}: ${achado}`);
     }
   }
@@ -826,6 +902,8 @@ secao('Páginas');
   // inteiro sem quem fechasse no Escape.
   {
     const MARCADORES = ['data-yb-open', 'data-yb-stepper', 'data-yb-gallery',
+                        'data-yb-switch', 'data-yb-partner', 'data-yb-variante',
+                        'data-yb-comprar',
                         'yb-nav__toggle', 'yb-header__drawer'];
     const semJs = paginas.filter(p => {
       const h = ler(p);
@@ -848,7 +926,11 @@ secao('Páginas');
       const h = ler(p);
       const folha = [...h.matchAll(/<style>([\s\S]*?)<\/style>/g)].map(m => m[1]).join('\n');
       if (!folha) continue;
-      const demos = [...h.matchAll(/<div class="stage[^"]*">([\s\S]*?)<\/section>/g)].map(m => m[1]).join('');
+      // Sem tirar comentario, a checagem le marcacao que nao renderiza: uma
+      // nota explicando POR QUE o demo usa <div> em vez de <section> continha
+      // a palavra "<section>" e acusava o vazamento que ela mesma evitava.
+      const demos = [...h.matchAll(/<div class="stage[^"]*">([\s\S]*?)<\/section>/g)]
+        .map(m => m[1].replace(/<!--[\s\S]*?-->/g, '')).join('');
       for (const tipo of TIPOS) {
         const solto = new RegExp(`(^|[},])\\s*${tipo}\\s*[,{]`, 'm').test(folha);
         if (solto && new RegExp(`<${tipo}[\\s>]`).test(demos))
@@ -931,6 +1013,170 @@ secao('Páginas');
     orfas.length
       ? falha('classe usada sem a folha que a define', orfas.join(' · '))
       : ok('toda classe yb- tem folha que a define', `${paginas.length} páginas`);
+  }
+
+  // As TELAS-PROVA ficavam de fora de tudo isto. Ate aqui elas so passavam por
+  // tres checagens — copia de CSS identica, carimbo de versao e imagem no
+  // disco — e nenhuma olhava o que esta escrito no HTML. Uma cor crua na home
+  // nao acusava nada, e a home e justamente a peca que se mostra para provar
+  // que o sistema se sustenta. As duas checagens abaixo fecham isso.
+  const PROVA = existsSync(join(raiz, '_captura/nova-loja'))
+    ? readdirSync(join(raiz, '_captura/nova-loja'))
+        .filter(f => f.endsWith('.html'))
+        .map(f => join('_captura/nova-loja', f))
+    : [];
+
+  {
+    // Mesmo criterio da camada de CSS (secao 2), aplicado ao <style> da pagina
+    // e ao atributo style=. `transparent` e `currentColor` seguem livres.
+    const FUNCOES = /\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color-mix)\s*\(/gi;
+    const NOMEADAS = new RegExp(
+      '(?<![\\w-])(?:white|black|red|blue|green|yellow|orange|purple|pink|brown' +
+      '|gray|grey|silver|gold|navy|teal|olive|maroon|lime|aqua|fuchsia|cyan' +
+      '|magenta|beige|ivory|khaki|salmon|tan|violet|indigo|crimson)(?![\\w-])', 'gi');
+    // A largura de preenchimento de barra e DADO, nao estilo: sai do subtotal e
+    // muda a cada carrinho. Nao ha onde declara-la a nao ser aqui.
+    const INLINE_OK = /^(?:inline-size|width):\s*\d+(?:\.\d+)?%$/;
+
+    const problemas = [];
+    for (const p of PROVA) {
+      const h = ler(p);
+      const estilos = [...h.matchAll(/<style>([\s\S]*?)<\/style>/g)].map(m => m[1]).join('\n');
+      const atributos = [...h.matchAll(/\sstyle="([^"]*)"/g)].map(m => m[1]);
+
+      const alvo = semComentario(estilos) + ' ; ' + atributos.join(' ; ');
+      const valores = [...alvo.matchAll(/(^|[;{])\s*[\w-]+\s*:([^;{}]*)/g)].map(m => m[2]).join(' ; ');
+      const cores = [...new Set([
+        ...(valores.match(/#[0-9a-fA-F]{3,8}\b/g) || []),
+        ...(valores.match(FUNCOES) || []).map(f => f.replace(/\s*\($/, '()')),
+        ...(valores.match(NOMEADAS) || []),
+      ])];
+      if (cores.length) problemas.push(`${p}: cor crua ${cores.join(', ')}`);
+
+      const foraDaLista = atributos.filter(v => !INLINE_OK.test(v.trim().replace(/;$/, '')));
+      if (foraDaLista.length)
+        problemas.push(`${p}: style= fora da lista — ${foraDaLista.slice(0, 3).join(' · ')}`);
+    }
+    problemas.length
+      ? falha('tela-prova escreve estilo cru no HTML',
+          problemas.join(' · ') + ' — a tela existe para provar que o sistema basta')
+      : ok('telas-prova sem estilo cru no HTML', `${PROVA.length} páginas`);
+  }
+
+  {
+    // Mesma checagem de orfas acima, agora nas telas-prova. Aqui as folhas sao
+    // as copias locais de yb/, entao o caminho relativo resolve igual.
+    const orfasProva = [];
+    for (const p of PROVA) {
+      const h = ler(p);
+      const dir = dirname(p);
+      let definido = [...h.matchAll(/<style>([\s\S]*?)<\/style>/g)].map(m => m[1]).join('\n');
+      for (const m of h.matchAll(/<link[^>]+href="([^"?]+\.css)[^"]*"/g)) {
+        const folha = join(dir, m[1]).replace(/^\.\//, '');
+        if (existsSync(join(raiz, folha))) definido += '\n' + ler(folha);
+      }
+      const usadas = new Set([...h.matchAll(/class="([^"]*)"/g)]
+        .flatMap(m => m[1].split(/\s+/))
+        .filter(c => /^yb-[a-z0-9_-]+$/.test(c)));
+      const semDono = [...usadas].filter(c => !definido.includes('.' + c));
+      if (semDono.length) orfasProva.push(`${p}: ${semDono.slice(0, 6).join(', ')}`);
+    }
+    orfasProva.length
+      ? falha('tela-prova usa classe sem a folha que a define', orfasProva.join(' · '))
+      : ok('telas-prova: toda classe yb- tem folha', `${PROVA.length} páginas`);
+  }
+
+  {
+    // A PDP tem um ramo que so aparece quando o produto esta sem estoque, e
+    // esse ramo depende do CATALOGO, nao do gerador: se o handle escolhido
+    // voltar ao estoque, a pagina volta a mostrar o fluxo de compra e o ramo
+    // some da vista sem ninguem perceber. Foi assim que ele passou meses sem
+    // prova. A checagem existe para que o dia da volta seja barulhento —
+    // trocar ESGOTADO por outro handle da lista e a correcao, e leva uma linha.
+    const alvo = '_captura/nova-loja/pdp-esgotado.html';
+    if (!existsSync(join(raiz, alvo))) {
+      aviso('tela-prova de esgotado ausente', 'o ramo sem estoque da PDP fica sem evidência');
+    } else {
+      const h = ler(alvo);
+      const faltando = [];
+      if (!/<button[^>]*class="yb-btn[^"]*"[^>]*disabled/.test(h)) faltando.push('botão de compra inerte');
+      // A zona de compra carrega os DOIS estados desde que a variante passou a
+      // trocar um pelo outro no clique. Entao a prova nao e mais "o stepper
+      // nao existe", e "o stepper nasce escondido e o aviso nasce visivel".
+      const zona = h.split('yb-accordion')[0];
+      if (!/data-yb-stepper hidden/.test(zona)) faltando.push('a quantidade nasce escondida');
+      if (!/data-yb-avisar\s+onsubmit/.test(zona)) faltando.push('o aviso de volta nasce visível');
+      if (!h.includes('Sold out')) faltando.push('o selo diz Sold out');
+      if (!/id="avisar"/.test(h)) faltando.push('o aviso de volta ao estoque');
+      faltando.length
+        ? falha('a tela-prova de esgotado não prova o esgotado',
+            faltando.join(', ') + ' — o produto voltou ao estoque? troque ESGOTADO em montar-ds.py')
+        : ok('a PDP sem estoque não oferece compra', 'botão inerte, sem quantidade, com aviso de volta');
+    }
+  }
+
+  {
+    // Nenhum produto da loja tem opcao de tamanho — o seletor so renderiza com
+    // dado forjado, e dado forjado precisa de cerca. Duas coisas sao checadas:
+    // que a tela que o declara realmente exercita o ramo, e que o dado NAO
+    // aparece em nenhuma outra pagina. Tres cartoes de tamanho inventados ja
+    // moraram no gerador e foram lidos como preco de verdade.
+    const alvo = '_captura/nova-loja/pdp-variante.html';
+    if (!existsSync(join(raiz, alvo))) {
+      aviso('tela-prova de variante ausente', 'o seletor de tamanho fica sem evidência');
+    } else {
+      const h = ler(alvo);
+      const entradas = [...h.matchAll(/<input type="radio" name="tam"[\s\S]*?>/g)].map(m => m[0]);
+      const faltando = [];
+      if (entradas.length < 2) faltando.push('mais de uma opção');
+      if (!entradas.every(e => /data-preco="\$/.test(e) && /data-foto="\d/.test(e)))
+        faltando.push('preço e foto em cada opção');
+      if (!entradas.some(e => /data-yb-esgotado/.test(e)))
+        faltando.push('uma opção sem estoque, que é o estado que a tela existe para provar');
+      // Esgotado selecionavel: `disabled` no radio torna impossivel chegar ao
+      // aviso de volta daquele tamanho.
+      if (entradas.some(e => /\sdisabled/.test(e))) faltando.push('a opção sem estoque continua selecionável');
+      if (!h.includes('data-yb-preco')) faltando.push('o preço marcado para trocar');
+      faltando.length
+        ? falha('a tela-prova de variante não prova a variante', faltando.join(', '))
+        : ok('a variante está ligada ao preço, ao estoque e à foto', `${entradas.length} opções`);
+
+      const vazou = ['_captura/nova-loja/pdp.html', '_captura/nova-loja/pdp-esgotado.html']
+        .filter(p => existsSync(join(raiz, p)))
+        .filter(p => /data-preco="\$/.test(ler(p)));
+      vazou.length
+        ? falha('dado forjado de variante vazou', vazou.join(', ') + ' — só pdp-variante.html declara VARIANTE_FORJADA')
+        : ok('o dado forjado não sai da tela que o declara', 'pdp.html lê só o catálogo');
+    }
+  }
+
+  {
+    // JSON-LD e a unica coisa da pagina que fala com o Google em vez de falar
+    // com uma pessoa. Duas exigencias: que ele exista e faca parse (JSON quebrado
+    // e ignorado em silencio — o pior tipo de defeito), e que ele NAO declare
+    // nota. A 4.8 (128) e espera, nao dado; dentro do JSON-LD ela viraria
+    // estrela amarela no resultado de busca, e placeholder que sai da pagina
+    // deixa de ser placeholder.
+    const comLd = PROVA.filter(p => /pdp/.test(p));
+    const problemas = [];
+    for (const p of comLd) {
+      const m = ler(p).match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+      if (!m) { problemas.push(`${p}: sem dados estruturados`); continue; }
+      let d;
+      try { d = JSON.parse(m[1].replace(/\\u003c/g, '<')); }
+      catch (err) { problemas.push(`${p}: JSON inválido — ${err.message}`); continue; }
+      const texto = JSON.stringify(d);
+      if (texto.includes('aggregateRating') || texto.includes('reviewCount'))
+        problemas.push(`${p}: declara nota agregada, que hoje é placeholder`);
+      const tipos = (d['@graph'] || []).map(n => n['@type']);
+      for (const t of ['Product', 'BreadcrumbList'])
+        if (!tipos.includes(t)) problemas.push(`${p}: falta ${t}`);
+    }
+    comLd.length === 0
+      ? aviso('nenhuma PDP nas telas-prova', 'os dados estruturados ficam sem checagem')
+      : problemas.length
+        ? falha('dados estruturados da PDP', problemas.join(' · '))
+        : ok('a PDP fala com o buscador sem inventar nota', `${comLd.length} páginas com Product e BreadcrumbList`);
   }
 
   // A lição da folha de ícone — "todo símbolo do sprite está documentado" —
@@ -1061,6 +1307,26 @@ secao('Páginas');
   ancorasMortas.length
     ? falha('âncora sem destino', ancorasMortas.join(', '))
     : ok('âncoras internas resolvem', `${paginas.length} páginas`);
+
+  // Gatilho que nao abre nada. `data-yb-open` nao e link: nenhum navegador
+  // avisa, nenhuma checagem de ancora alcanca, e o botao simplesmente nao faz
+  // nada quando clicado. Foi assim que o icone de busca do header ficou meses
+  // sem destino — parecia ligado porque tinha o atributo.
+  // As telas-prova entram JUNTO com a doc. Elas ficavam de fora, e foi
+  // exatamente la que um `data-yb-open="busca"` apontou para o vazio — o
+  // overlay se chama "site-search". A checagem existia e nao olhava para a
+  // pagina onde o defeito nasceu.
+  const comGatilho = [...paginas, ...(typeof PROVA !== 'undefined' ? PROVA : [])];
+  const gatilhosMortos = [];
+  for (const p of comGatilho) {
+    const h = ler(p);
+    const ids = new Set([...h.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]));
+    for (const m of h.matchAll(/data-yb-open="([^"]+)"/g))
+      if (!ids.has(m[1])) gatilhosMortos.push(`${p} → #${m[1]}`);
+  }
+  gatilhosMortos.length
+    ? falha('data-yb-open sem destino na página', gatilhosMortos.join(', '))
+    : ok('todo gatilho de overlay abre algo', `${comGatilho.length} páginas`);
 }
 
 /* ===========================================================================
@@ -1072,6 +1338,67 @@ secao('Páginas');
    pagina duas secoes abaixo. Numero em documentacao envelhece calado.
    =========================================================================== */
 secao('Autodescrição');
+
+// Mesmo defeito da contagem de checagens, num numero que a prosa repete mais
+// vezes: quantas pecas o sistema tem. "34 componentes" sobreviveu a entrada do
+// switch, "37 icones" a entrada do share, e a pagina de icones dizia 36 quando
+// ja eram 39 — tres numeros errados que nenhuma checagem viu, porque quem os
+// escreve e a mao e quem os sabe e o codigo.
+//
+// A fonte de cada um ja existe e ja e derivada: o INVENTARIO conta o CSS, o
+// sprite conta a si mesmo, o JSON conta os tokens. Aqui so se confere se a
+// prosa acompanha.
+{
+  const inv = existsSync(join(raiz, 'INVENTARIO.md')) ? ler('INVENTARIO.md') : '';
+  const camada = r => (inv.match(new RegExp(`^\\|[^|]+\\|[^|]+\\| ${r} `, 'gm')) || []).length;
+  const tokens = existsSync(join(raiz, 'dist/ybera-tokens.json'))
+    ? (ler('dist/ybera-tokens.json').match(/"\$value"/g) || []).length : 0;
+  const icones = existsSync(join(raiz, 'icons/ybera-icons.svg'))
+    ? (ler('icons/ybera-icons.svg').match(/<symbol id=/g) || []).length : 0;
+
+  // "peças" e o total da matriz — componente + padrao. A capa e o README
+  // diziam 42 quando ja eram 48, e a checagem nao via: ela so conhecia as
+  // palavras "componentes" e "padrões". O mesmo vale para "composições", que e
+  // como a capa chama os padroes — dizia 8 com 11 na folha.
+  const total = camada('Componente') + camada('Padrão');
+  const VERDADE = {
+    'componentes': camada('Componente'),
+    'padrões':     camada('Padrão'),
+    'composições': camada('Padrão'),
+    'ícones':      icones,
+    'símbolos':    icones,   // a capa chama o mesmo numero de "símbolos SVG"
+    'tokens':      tokens,
+    'peças':       total,
+  };
+  // O peso do sprite envelhece pelo mesmo motivo e mais rapido: cada icone novo
+  // muda o numero, e a prosa que o cita e o argumento de venda do sistema
+  // ("7,2 KB contra 380 KB de Font Awesome"). Errado, ele vira o contrario.
+  const pesoSprite = existsSync(join(raiz, 'icons/ybera-icons.svg'))
+    ? (statSync(join(raiz, 'icons/ybera-icons.svg')).size / 1024).toFixed(1).replace('.', ',')
+    : null;
+  const ONDE = ['README.md', 'GOVERNANCA.md', 'CONTRIBUINDO.md', 'index.html',
+                'docs/index.html', 'components/index.html', 'patterns/index.html',
+                'icons/index.html', 'preview/index.html'];
+
+  const erradas = [];
+  for (const f of ONDE) {
+    if (!existsSync(join(raiz, f))) continue;
+    for (const m of ler(f).matchAll(/(\d+)\s+(componentes|padrões|composições|ícones|símbolos|tokens|peças)\b/g)) {
+      const certo = VERDADE[m[2]];
+      if (certo && Number(m[1]) !== certo) erradas.push(`${f}: diz ${m[1]} ${m[2]}, são ${certo}`);
+    }
+    if (pesoSprite)
+      for (const m of ler(f).matchAll(/(\d+,\d) KB/g))
+        if (/sprite|ícones|símbolos|Font Awesome/.test(ler(f).slice(Math.max(0, m.index - 120), m.index + 60))
+            && m[1] !== pesoSprite)
+          erradas.push(`${f}: diz ${m[1]} KB de sprite, são ${pesoSprite} KB`);
+  }
+  erradas.length
+    ? falha('a doc promete um número de peças que o código desmente', erradas.join(' · '))
+    : ok('a prosa conta as peças certas',
+        `${VERDADE['componentes']} componentes · ${VERDADE['padrões']} padrões · ${VERDADE['ícones']} ícones · ${VERDADE['tokens']} tokens`);
+}
+
 {
   const ARQS = ['README.md', 'GOVERNANCA.md', 'CONTRIBUINDO.md', 'index.html'];
   // +1 porque esta checagem tambem conta, e ela ainda nao foi registrada

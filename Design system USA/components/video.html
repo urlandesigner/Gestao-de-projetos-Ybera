@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vertical video carousel — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="ybera-components.css">
+<link rel="stylesheet" href="doc.css">
+<style>
+/* Sem seletor de tipo: ver o cabecalho de doc.css. */
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+</style>
+</head>
+<body class="ficha">
+<div class="doc">
+
+<nav class="nav">
+  <p class="nav-brand">Ybera</p>
+  <p class="nav-ver">Components · v0.12.1</p>
+  <ul>
+    <li><a href="accordion.html">Accordion</a></li>
+    <li><a href="alert.html">Alert</a></li>
+    <li><a href="badge.html">Badge</a></li>
+    <li><a href="quote.html">Brand quote</a></li>
+    <li><a href="crumb.html">Breadcrumb</a></li>
+    <li><a href="button.html">Button</a></li>
+    <li><a href="seals.html">Certification seals</a></li>
+    <li><a href="check.html">Checkbox &amp; radio</a></li>
+    <li><a href="collection.html">Collection card</a></li>
+    <li><a href="empty.html">Empty state</a></li>
+    <li><a href="field.html">Form field</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="link.html">Link</a></li>
+    <li><a href="logo.html">Logo</a></li>
+    <li><a href="logobar.html">Logo bar</a></li>
+    <li><a href="mediabanner.html">Media banner</a></li>
+    <li><a href="dialog.html">Modal &amp; drawer</a></li>
+    <li><a href="notice.html">Notice</a></li>
+    <li><a href="offercard.html">Offer card</a></li>
+    <li><a href="pagination.html">Pagination</a></li>
+    <li><a href="partner.html">Partner</a></li>
+    <li><a href="post.html">Post</a></li>
+    <li><a href="price.html">Price</a></li>
+    <li><a href="card.html">Product card</a></li>
+    <li><a href="progress.html">Progress bar</a></li>
+    <li><a href="stepper.html">Quantity stepper</a></li>
+    <li><a href="rating.html">Rating</a></li>
+    <li><a href="review.html">Review</a></li>
+    <li><a href="search.html">Search overlay</a></li>
+    <li><a href="skeleton.html">Skeleton</a></li>
+    <li><a href="switch.html">Switch</a></li>
+    <li><a href="toast.html">Toast</a></li>
+    <li><a href="variant.html">Variant picker</a></li>
+    <li><a href="video.html" aria-current="page">Vertical video carousel</a></li>
+  </ul>
+  <div class="nav-back">
+    <a href="index.html">← Galeria</a>
+    <a href="../index.html">← Design system</a>
+  </div>
+</nav>
+
+<main class="main">
+  <a class="ficha-volta" href="index.html#video">← Components</a>
+  <h1 class="ficha-titulo">Vertical video carousel</h1>
+  <p class="ficha-quando">Conteúdo de creator em 9:16, como o TikTok serve. O cartão entra como pôster; o vídeo só nasce no primeiro clique.</p>
+  <ul class="ficha-fatos">
+    <li>Classe base <b><code>.yb-video</code></b></li>
+    <li>Modificadores <b>0</b></li>
+    <li>Elementos <b>3</b></li>
+    <li>Estados <b>1</b></li>
+    <li>Tokens <b>13</b></li>
+    <li>Comportamento <b>JS</b></li>
+  </ul>
+
+  <section class="bloco" id="demos">
+    <h2 class="bloco-titulo">Como se parece</h2>
+    <div class="demo demo--rail">
+      <div class="yb-track yb-videos">
+        <button class="yb-video" type="button" aria-label="Fashion Gold on curly hair, first result">
+          <img src="../_captura/nova-loja/img/tt-1.jpg" alt="" loading="lazy">
+          <span class="yb-iconbtn yb-iconbtn--onmedia yb-video__play"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-play"/></svg></span>
+        </button>
+        <button class="yb-video" type="button" aria-label="Cronograma routine explained in Times Square">
+          <img src="../_captura/nova-loja/img/tt-2.jpg" alt="" loading="lazy">
+          <span class="yb-video__caption">Cronograma, week one</span>
+        </button>
+        <button class="yb-video" type="button" aria-label="I cut my hair and regretted it">
+          <img src="../_captura/nova-loja/img/tt-3.jpg" alt="" loading="lazy">
+          <span class="yb-video__caption">Growing it back with Vello</span>
+        </button>
+        <button class="yb-video" type="button" aria-label="Satin bonnet routine after a keratin treatment">
+          <img src="../_captura/nova-loja/img/tt-4.jpg" alt="" loading="lazy">
+          <span class="yb-iconbtn yb-iconbtn--onmedia yb-video__play"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-play"/></svg></span>
+        </button>
+        <button class="yb-video" type="button" aria-label="Which Cronograma tube for which hair damage">
+          <img src="../_captura/nova-loja/img/tt-5.jpg" alt="" loading="lazy">
+          <span class="yb-iconbtn yb-iconbtn--onmedia yb-video__play"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-play"/></svg></span>
+        </button>
+        <button class="yb-video" type="button" aria-label="Red hair kept vivid after the treatment">
+          <img src="../_captura/nova-loja/img/tt-6.jpg" alt="" loading="lazy">
+          <span class="yb-video__caption">Color-safe, six weeks in</span>
+        </button>
+      </div>
+    </div>
+    <div class="note">
+      <b>Sem <code>data-video</code> não existe play</b>
+      <p>O design system não hospeda mídia, então nenhum cartão aqui aponta para um
+      arquivo — e o play some sozinho, por regra da folha. Em produção o atributo
+      traz a URL do CDN e o botão aparece no mesmo lugar. Um botão que promete vídeo
+      e não entrega é pior do que não ter botão.</p>
+    </div>
+    <div class="note">
+      <b>Pôster primeiro, vídeo depois</b>
+      <p>Quarenta e cinco vídeos em autoplay é o que faz uma home pesar. O
+      <code>&lt;video&gt;</code> só entra no DOM no clique, com o pôster já pintado —
+      então não há salto de layout quando ele chega, e quem passa direto não paga
+      nada.</p>
+    </div>
+    <div class="note">
+      <b>A legenda é opcional, o rótulo não</b>
+      <p><code>.yb-video__caption</code> aparece só onde o pôster não tem texto
+      próprio queimado — duas camadas de legenda no mesmo canto não se leem. O
+      <code>aria-label</code> do botão, esse existe em todos: sem ele o leitor de
+      tela anuncia seis botões idênticos e sem nome.</p>
+    </div>
+  </section>
+
+  <section class="bloco" id="anatomia">
+    <h2 class="bloco-titulo">Anatomia e API</h2>
+    <p class="bloco-lede">Lido da folha a cada build. Se faltar alguma coisa aqui,
+    falta na folha.</p>
+    <p class="rotulo">Modificadores</p>
+    <p class="api-vazia">Este componente não tem variantes — o que muda nele vem do conteúdo.</p>
+    <p class="rotulo">Elementos</p>
+    <p class="lista-api"><code>.yb-video__caption</code> <code>.yb-video__erro</code> <code>.yb-video__play</code></p>
+    <p class="rotulo">Estados que a folha trata</p>
+    <p class="bloco-lede"><code>:hover</code></p>
+  </section>
+
+  <section class="bloco" id="marcacao">
+    <h2 class="bloco-titulo">Marcação</h2>
+    <p class="bloco-lede">Extraída da primeira demonstração acima — é o mesmo HTML
+    que renderizou ali, não um exemplo escrito à parte.</p>
+    <div class="snippet">
+      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <pre><code>&lt;div class="yb-track yb-videos"&gt;
+  &lt;button class="yb-video" type="button" aria-label="Fashion Gold on curly hair, first result"&gt;
+    &lt;img src="../_captura/nova-loja/img/tt-1.jpg" alt="" loading="lazy"&gt;
+    &lt;span class="yb-iconbtn yb-iconbtn--onmedia yb-video__play"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-play"/&gt;&lt;/svg&gt;&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class="yb-video" type="button" aria-label="Cronograma routine explained in Times Square"&gt;
+    &lt;img src="../_captura/nova-loja/img/tt-2.jpg" alt="" loading="lazy"&gt;
+    &lt;span class="yb-video__caption"&gt;Cronograma, week one&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class="yb-video" type="button" aria-label="I cut my hair and regretted it"&gt;
+    &lt;img src="../_captura/nova-loja/img/tt-3.jpg" alt="" loading="lazy"&gt;
+    &lt;span class="yb-video__caption"&gt;Growing it back with Vello&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class="yb-video" type="button" aria-label="Satin bonnet routine after a keratin treatment"&gt;
+    &lt;img src="../_captura/nova-loja/img/tt-4.jpg" alt="" loading="lazy"&gt;
+    &lt;span class="yb-iconbtn yb-iconbtn--onmedia yb-video__play"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-play"/&gt;&lt;/svg&gt;&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class="yb-video" type="button" aria-label="Which Cronograma tube for which hair damage"&gt;
+    &lt;img src="../_captura/nova-loja/img/tt-5.jpg" alt="" loading="lazy"&gt;
+    &lt;span class="yb-iconbtn yb-iconbtn--onmedia yb-video__play"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-play"/&gt;&lt;/svg&gt;&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class="yb-video" type="button" aria-label="Red hair kept vivid after the treatment"&gt;
+    &lt;img src="../_captura/nova-loja/img/tt-6.jpg" alt="" loading="lazy"&gt;
+    &lt;span class="yb-video__caption"&gt;Color-safe, six weeks in&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+  </section>
+
+  <section class="bloco" id="acessibilidade">
+    <h2 class="bloco-titulo">Acessibilidade</h2>
+    <ul class="bloco-lede"><li>O cartão nasce como pôster com botão de play nomeado — <code>aria-label</code> com o assunto do vídeo, não “play”.</li><li>O vídeo só é criado no primeiro clique: nada toca sozinho, nada baixa antes de alguém pedir.</li><li>Conteúdo falado precisa de legenda. Sem faixa de legenda, o vídeo é decoração para quem não ouve.</li></ul>
+  </section>
+
+  <section class="bloco" id="faca">
+    <h2 class="bloco-titulo">Faça / não faça</h2>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><button class="yb-btn yb-btn--secondary" type="button" aria-label="Play: how to apply the mask"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-play"/></svg> Play</button></div>
+        <p class="fn-legenda">Play nomeado pelo assunto, vídeo criado só no clique.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><button class="yb-btn yb-btn--secondary" type="button" aria-label="Play"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-play"/></svg> Play</button></div>
+        <p class="fn-legenda">“Play” sozinho, num trilho de seis vídeos, dá seis controles idênticos na lista do leitor de tela.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="doc-credit">Ficha gerada por <code>tools/fichas.mjs</code> a partir de
+  <code>components/ybera-components.css</code> e <code>components/index.html</code>.
+  Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>
+</main>
+
+</div>
+<script src="ybera-components.js"></script>
+<script>
+/* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
+   acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-yb-copiar]');
+  if (!b) return;
+  var codigo = b.parentElement.querySelector('code');
+  if (!codigo || !navigator.clipboard) return;
+  navigator.clipboard.writeText(codigo.textContent).then(function () {
+    var antes = b.textContent;
+    b.textContent = 'Copiado';
+    setTimeout(function () { b.textContent = antes; }, 1600);
+  });
+});
+</script>
+</body>
+</html>

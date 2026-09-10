@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Variant picker — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="ybera-components.css">
+<link rel="stylesheet" href="doc.css">
+<style>
+/* Sem seletor de tipo: ver o cabecalho de doc.css. */
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+</style>
+</head>
+<body class="ficha">
+<div class="doc">
+
+<nav class="nav">
+  <p class="nav-brand">Ybera</p>
+  <p class="nav-ver">Components · v0.12.1</p>
+  <ul>
+    <li><a href="accordion.html">Accordion</a></li>
+    <li><a href="alert.html">Alert</a></li>
+    <li><a href="badge.html">Badge</a></li>
+    <li><a href="quote.html">Brand quote</a></li>
+    <li><a href="crumb.html">Breadcrumb</a></li>
+    <li><a href="button.html">Button</a></li>
+    <li><a href="seals.html">Certification seals</a></li>
+    <li><a href="check.html">Checkbox &amp; radio</a></li>
+    <li><a href="collection.html">Collection card</a></li>
+    <li><a href="empty.html">Empty state</a></li>
+    <li><a href="field.html">Form field</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="link.html">Link</a></li>
+    <li><a href="logo.html">Logo</a></li>
+    <li><a href="logobar.html">Logo bar</a></li>
+    <li><a href="mediabanner.html">Media banner</a></li>
+    <li><a href="dialog.html">Modal &amp; drawer</a></li>
+    <li><a href="notice.html">Notice</a></li>
+    <li><a href="offercard.html">Offer card</a></li>
+    <li><a href="pagination.html">Pagination</a></li>
+    <li><a href="partner.html">Partner</a></li>
+    <li><a href="post.html">Post</a></li>
+    <li><a href="price.html">Price</a></li>
+    <li><a href="card.html">Product card</a></li>
+    <li><a href="progress.html">Progress bar</a></li>
+    <li><a href="stepper.html">Quantity stepper</a></li>
+    <li><a href="rating.html">Rating</a></li>
+    <li><a href="review.html">Review</a></li>
+    <li><a href="search.html">Search overlay</a></li>
+    <li><a href="skeleton.html">Skeleton</a></li>
+    <li><a href="switch.html">Switch</a></li>
+    <li><a href="toast.html">Toast</a></li>
+    <li><a href="variant.html" aria-current="page">Variant picker</a></li>
+    <li><a href="video.html">Vertical video carousel</a></li>
+  </ul>
+  <div class="nav-back">
+    <a href="index.html">← Galeria</a>
+    <a href="../index.html">← Design system</a>
+  </div>
+</nav>
+
+<main class="main">
+  <a class="ficha-volta" href="index.html#variant">← Components</a>
+  <h1 class="ficha-titulo">Variant picker</h1>
+  <p class="ficha-quando">Tamanho, volume, fragrância. Esgotado aparece riscado, não some — sumir esconde que o produto existe.</p>
+  <ul class="ficha-fatos">
+    <li>Classe base <b><code>.yb-swatches</code></b></li>
+    <li>Modificadores <b>2</b></li>
+    <li>Elementos <b>3</b></li>
+    <li>Estados <b>5</b></li>
+    <li>Tokens <b>33</b></li>
+    <li>Comportamento <b>JS</b></li>
+  </ul>
+
+  <section class="bloco" id="demos">
+    <h2 class="bloco-titulo">Como se parece</h2>
+    <div class="demo">
+      <div class="yb-swatches">
+        <input type="radio" name="sz" id="z1" checked><label for="z1">500g / 17.6 fl.oz</label>
+        <input type="radio" name="sz" id="z2"><label for="z2">300g / 10.5 fl.oz</label>
+        <input type="radio" name="sz" id="z3"><label for="z3">1kg / 33 oz</label>
+        <input type="radio" name="sz" id="z4" disabled><label for="z4">250g</label>
+      </div>
+    </div>
+    <h3 class="row-label">Sobre painel escuro</h3>
+    <div class="demo demo--dark">
+      <div class="yb-swatches yb-swatches--on-dark">
+        <input type="radio" name="dk" id="dk1" checked><label for="dk1">Slightly Damaged</label>
+        <input type="radio" name="dk" id="dk2"><label for="dk2">Healthy</label>
+        <input type="radio" name="dk" id="dk3"><label for="dk3">Very Damaged</label>
+        <input type="radio" name="dk" id="dk4" disabled><label for="dk4">Chemically Treated</label>
+      </div>
+    </div>
+    <div class="note">
+      <b>A borda do chip escuro é medida, não escolhida</b>
+      <p>O sistema já tinha <code>--yb-border-inverse</code>, mas ela mede
+      <b>1.47:1</b> contra o painel: serve para dividir bloco, não para dizer que
+      uma coisa é clicável &mdash; a WCAG 1.4.11 quer 3:1 na fronteira de um
+      controle. Medi a rampa inteira contra o grafite e
+      <code>--yb-border-inverse-strong</code> (<b>3.23:1</b>) é o degrau mais
+      escuro que ainda passa; um abaixo dá 2.17:1 e reprova.</p>
+      <p>O escolhido <b>inverte para fundo claro</b> em vez de só trocar a borda:
+      sobre escuro a diferença entre duas bordas cinzas não se lê de relance, e
+      qual está escolhida é a informação mais importante da fileira.</p>
+      <p>Estrutura, alvo de 44px, <code>:checked</code>, foco e o radio por baixo
+      são os mesmos do picker claro. Só a cor muda.</p>
+    </div>
+
+    <h3 class="row-label">Em cartão — quando a escolha muda o frasco</h3>
+    <div class="demo demo--rail">
+      <p class="yb-field__label" id="rot-doc">Size: <b data-yb-variante-eco>750g</b></p>
+      <div class="yb-swatches yb-swatches--cards" role="radiogroup" aria-labelledby="rot-doc" data-yb-variante>
+        <input type="radio" name="szc" id="c1" checked>
+        <label for="c1">
+          <img src="../_captura/nova-loja/img/KitCuidadosProfundos-YberaFashionGold_ab-9c59c4.webp" alt="" loading="lazy">
+          <span class="yb-swatches__name">750g</span>
+          <span class="yb-swatches__price">$89.90</span>
+          <span class="yb-swatches__stock">In stock</span>
+        </label>
+        <input type="radio" name="szc" id="c2">
+        <label for="c2">
+          <img src="../_captura/nova-loja/img/90_mascara_nutricao_250g_cuidados_profun-704696.webp" alt="" loading="lazy">
+          <span class="yb-swatches__name">250g</span>
+          <span class="yb-swatches__price">$34.90</span>
+          <span class="yb-swatches__stock">In stock</span>
+        </label>
+        <input type="radio" name="szc" id="c3" data-yb-esgotado>
+        <label for="c3">
+          <img src="../_captura/nova-loja/img/90_mascara_reconstrucao_250g_cuidados_pr-2fb01d.webp" alt="" loading="lazy">
+          <span class="yb-swatches__name">1kg</span>
+          <span class="yb-swatches__price">$119.90</span>
+          <span class="yb-swatches__stock">Sold out</span>
+        </label>
+      </div>
+    </div>
+    <div class="note">
+      <b>Duas divergências deliberadas da loja</b>
+      <p>Ela aplica <code>opacity:.6</code> no cartão esgotado inteiro, o que derruba o
+      texto abaixo do piso de contraste — aqui só a <b>foto</b> desbota, e quem diz
+      "esgotado" é a palavra. E ela pinta “Sold out” com o magenta, que neste
+      sistema é cor de <b>ação</b>; estado negativo usa cor de estado.</p>
+    </div>
+    <div class="note">
+      <b>O esgotado continua clicável — <code>data-yb-esgotado</code>, não <code>disabled</code></b>
+      <p>Era <code>disabled</code>: o tamanho sem estoque aparecia e não podia ser
+      alcançado. Só que chegar nele é o único caminho para o aviso de volta ao
+      estoque — desabilitar tirava do cliente a única coisa que ele ainda podia
+      pedir. <code>disabled</code> segue valendo para o outro caso, o de opção que a
+      página de fato impede; os dois se parecem porque os dois estão fora de
+      alcance por motivo diferente.</p>
+    </div>
+    <div class="note">
+      <b>O rótulo ecoa a escolha sem depender de JavaScript</b>
+      <p>“Size: <b>750g</b>” já nasce correto no HTML, com o valor de quem está
+      <code>checked</code>. O script só mantém o eco em dia quando a pessoa troca —
+      a página nunca mente, nem sem ele.</p>
+    </div>
+  </section>
+
+  <section class="bloco" id="anatomia">
+    <h2 class="bloco-titulo">Anatomia e API</h2>
+    <p class="bloco-lede">Lido da folha a cada build. Se faltar alguma coisa aqui,
+    falta na folha.</p>
+    <p class="rotulo">Modificadores</p>
+    <p class="lista-api"><code>.yb-swatches--cards</code> <code>.yb-swatches--on-dark</code></p>
+    <p class="rotulo">Elementos</p>
+    <p class="lista-api"><code>.yb-swatches__name</code> <code>.yb-swatches__price</code> <code>.yb-swatches__stock</code></p>
+    <p class="rotulo">Estados que a folha trata</p>
+    <p class="bloco-lede"><code>:checked</code> · <code>:disabled</code> · <code>:focus-visible</code> · <code>:hover</code> · <code>[data-yb-esgotado]</code></p>
+  </section>
+
+  <section class="bloco" id="marcacao">
+    <h2 class="bloco-titulo">Marcação</h2>
+    <p class="bloco-lede">Extraída da primeira demonstração acima — é o mesmo HTML
+    que renderizou ali, não um exemplo escrito à parte.</p>
+    <div class="snippet">
+      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <pre><code>&lt;div class="yb-swatches"&gt;
+  &lt;input type="radio" name="sz" id="z1" checked&gt;&lt;label for="z1"&gt;500g / 17.6 fl.oz&lt;/label&gt;
+  &lt;input type="radio" name="sz" id="z2"&gt;&lt;label for="z2"&gt;300g / 10.5 fl.oz&lt;/label&gt;
+  &lt;input type="radio" name="sz" id="z3"&gt;&lt;label for="z3"&gt;1kg / 33 oz&lt;/label&gt;
+  &lt;input type="radio" name="sz" id="z4" disabled&gt;&lt;label for="z4"&gt;250g&lt;/label&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+  </section>
+
+  <section class="bloco" id="acessibilidade">
+    <h2 class="bloco-titulo">Acessibilidade</h2>
+    <ul class="bloco-lede"><li>É um grupo de <code>radio</code> com <code>role="radiogroup"</code> e <code>aria-labelledby</code> apontando para o rótulo “Size:”. As setas do teclado percorrem as opções sem JavaScript.</li><li>A opção esgotada continua selecionável: <code>data-yb-esgotado</code>, não <code>disabled</code>. Desabilitada, ela era visível e inalcançável — e chegar nela é o único caminho para o aviso de volta ao estoque.</li><li>O rótulo ecoa a escolha (“Size: <b>500g</b>”) e nasce correto no HTML: sem JavaScript a página não muda, mas também não mente.</li></ul>
+  </section>
+
+  <section class="bloco" id="faca">
+    <h2 class="bloco-titulo">Faça / não faça</h2>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><div class="yb-swatches" role="radiogroup" aria-label="Size"><input type="radio" name="fx-v" id="fx-v1" checked><label for="fx-v1">250g</label><input type="radio" name="fx-v" id="fx-v2" data-yb-esgotado><label for="fx-v2">1kg — Sold out</label></div></div>
+        <p class="fn-legenda">Esgotado alcançável, com o estado escrito no cartão.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><div class="yb-swatches" role="radiogroup" aria-label="Size"><input type="radio" name="fx-w" id="fx-w1" checked><label for="fx-w1">250g</label><input type="radio" name="fx-w" id="fx-w2" disabled><label for="fx-w2">1kg</label></div></div>
+        <p class="fn-legenda">Com <code>disabled</code>, o tamanho esgotado aparece e não pode ser alcançado — nem pelo mouse, nem pelo Tab.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="doc-credit">Ficha gerada por <code>tools/fichas.mjs</code> a partir de
+  <code>components/ybera-components.css</code> e <code>components/index.html</code>.
+  Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>
+</main>
+
+</div>
+<script src="ybera-components.js"></script>
+<script>
+/* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
+   acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-yb-copiar]');
+  if (!b) return;
+  var codigo = b.parentElement.querySelector('code');
+  if (!codigo || !navigator.clipboard) return;
+  navigator.clipboard.writeText(codigo.textContent).then(function () {
+    var antes = b.textContent;
+    b.textContent = 'Copiado';
+    setTimeout(function () { b.textContent = antes; }, 1600);
+  });
+});
+</script>
+</body>
+</html>

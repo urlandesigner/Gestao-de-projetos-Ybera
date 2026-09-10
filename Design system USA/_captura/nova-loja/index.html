@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ybera Paris USA | Keratin care that survives humidity</title>
-<link rel="stylesheet" href="yb/fonte.css?v=9315e857">
-<link rel="stylesheet" href="yb/00-primitives.css?v=9315e857">
-<link rel="stylesheet" href="yb/01-semantic.css?v=9315e857">
-<link rel="stylesheet" href="yb/components.css?v=9315e857">
-<link rel="stylesheet" href="yb/patterns.css?v=9315e857">
-<link rel="stylesheet" href="yb/icons.css?v=9315e857">
+<link rel="stylesheet" href="yb/fonte.css?v=27e54a18">
+<link rel="stylesheet" href="yb/00-primitives.css?v=27e54a18">
+<link rel="stylesheet" href="yb/01-semantic.css?v=27e54a18">
+<link rel="stylesheet" href="yb/components.css?v=27e54a18">
+<link rel="stylesheet" href="yb/patterns.css?v=27e54a18">
+<link rel="stylesheet" href="yb/icons.css?v=27e54a18">
 <style>
   /* Só layout de página: largura, respiro entre blocos e o grid do hero.
      Nenhum componente é redefinido aqui — se um botão precisasse de ajuste,
@@ -23,9 +23,21 @@
     scroll-behavior:smooth; }
   .banner__track::-webkit-scrollbar { display:none; }
   .banner__slide { flex:0 0 100%; scroll-snap-align:start; }
-  .banner__slide a { display:block; height:75vh; }
+  /* Era `height:75vh` — altura presa a VIEWPORT, sem relacao nenhuma com a
+     imagem de verdade. As quatro criacoes de desktop medem 1200x375 ou
+     1600x501 (16:5 nos dois casos); numa tela de 1440x900, 75vh vira 675px
+     de altura contra uma imagem de 375-501px de proporcao MUITO mais baixa —
+     o `cover` compensava ampliando e cortando os dois lados, entao metade da
+     arte (o "PISCOU, PERDEU", o preco) saia da tela em qualquer desktop
+     normal. `aspect-ratio` usa a proporcao real da peca: nada de cortar o
+     que o design pediu para caber. */
+  .banner__slide a { display:block; aspect-ratio:16/5; }
   .banner__slide img { width:100%; height:100%; object-fit:cover; display:block; }
-  @media (max-width:767px) { .banner__slide a { height:70vh; } }
+  @media (max-width:767px) {
+    /* Mobile e outra peca, nao a mesma cortada: as quatro versoes verticais
+       medem entre 400x600 e 750x1095 — 2:3, retrato. */
+    .banner__slide a { aspect-ratio:2/3; }
+  }
   .banner__arrow { position:absolute; top:50%; transform:translateY(-50%);
     width:var(--yb-target-min); height:var(--yb-target-min);
     display:flex; align-items:center; justify-content:center;
@@ -40,11 +52,47 @@
      respeita o container de 1200px. Por isso a section vive FORA de .page,
      em vez de compensar largura com margem negativa. */
   .tolstoy { overflow:hidden; }
+  /* O widget renderiza as proprias setas com o tema dele — botao plano, foco
+     azul generico, cor de texto crua. E DOM normal, nao shadow DOM: a folha
+     da pagina alcanca. Reveste o controle deles com a mesma receita do
+     .yb-iconbtn do trilho de reviews (44px, borda, fundo neutro no hover,
+     foco do sistema) sem tocar no script do Tolstoy. */
+  .tolstoy nav[aria-label="Carousel navigation"] {
+    gap:var(--yb-space-2);
+  }
+  .tolstoy nav[aria-label="Carousel navigation"] button {
+    width:var(--yb-target-min); height:var(--yb-target-min);
+    border-radius:var(--yb-radius-control);
+    border:var(--yb-border-width-hair) solid var(--yb-border);
+    color:var(--yb-text-primary); opacity:1;
+    transition:background var(--yb-transition-control);
+  }
+  .tolstoy nav[aria-label="Carousel navigation"] button:hover {
+    background:var(--yb-bg-muted); opacity:1;
+  }
+  .tolstoy nav[aria-label="Carousel navigation"] button:focus {
+    box-shadow:none;
+  }
+  .tolstoy nav[aria-label="Carousel navigation"] button:focus-visible {
+    outline:var(--yb-focus-width) solid var(--yb-focus-color);
+    outline-offset:var(--yb-focus-offset);
+  }
+  .tolstoy nav[aria-label="Carousel navigation"] svg {
+    width:var(--yb-icon-size, 20px); height:var(--yb-icon-size, 20px);
+    stroke-width:1.5;
+  }
+  /* Mesma regra do .yb-track__nav: abaixo de 768 a seta some, no toque
+     arrasta. O widget nao sabe dessa convencao por ser de fora — sem isto,
+     esta era a unica secao da pagina com seta visivel no mobile, inconsistencia
+     que ninguem decidiu. */
+  @media (max-width:768px) {
+    .tolstoy nav[aria-label="Carousel navigation"] { display:none; }
+  }
 </style>
 </head>
 <body>
 <header class="yb-header">
-  <div class="yb-header__announce">Free shipping on orders over <b>$50</b> · Elevate your hair, elevate your confidence</div>
+  <div class="yb-header__announce">Free shipping on orders over <b>$50</b></div>
   <input class="yb-header__drawer" type="checkbox" id="nav-open" aria-label="Menu">
   <div class="yb-header__bar">
     <label class="yb-iconbtn yb-header__icon yb-header__burger" for="nav-open" aria-hidden="true"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-menu"/></svg></label>
@@ -54,31 +102,66 @@
     <nav class="yb-header__nav" aria-label="Main">
       <label class="yb-iconbtn yb-nav__close" for="nav-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-close"/></svg></label>
       <ul class="yb-nav">
+        <li class="yb-nav__item yb-nav__item--account"><a class="yb-nav__link" href="/account">Account</a></li>
         <li class="yb-nav__item"><a class="yb-nav__link" href="/">Home</a></li>
         <li class="yb-nav__item">
           <input class="yb-nav__toggle" type="checkbox" id="nav1">
           <label class="yb-nav__link" for="nav1">Shop
             <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-down"/></svg></label>
           <div class="yb-nav__panel">
-            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/collections">All Products</a><ul class="yb-nav__sublist"><li><a href="/collections/best-sellers">Best Sellers</a></li><li><a href="/collections/collections">Kit</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/collections">Collection</a><ul class="yb-nav__sublist"><li><a href="/collections/ybera-paris">Ybera Paris</a></li><li><a href="/collections/fashion-gold">Fashion Gold</a></li><li><a href="/collections/cronograma-hair-care-system">Cronograma</a></li><li><a href="/collections/100timetros">100Timetros</a></li><li><a href="/collections/capulana">Capulana</a></li><li><a href="/collections/terra-coco">Terra Coco</a></li><li><a href="/collections/hair-mist">Hair Mist</a></li><li><a href="/collections/vello-1">Vello</a></li><li><a href="/collections/mirra">Mirra</a></li><li><a href="/collections/detox">Detox</a></li><li><a href="/collections/life-s-flower">Life´s Flower</a></li><li><a href="/collections/essencia-brasileira">Essência Brasileira</a></li><li><a href="/collections/universal">Universal</a></li><li><a href="/collections/genoma">Genoma</a></li><li><a href="/collections/quarta-camada">Quarta Camada</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/collections/hair-loss-thinning-hair">Hair Problem</a><ul class="yb-nav__sublist"><li><a href="/collections/dullness">Damaged Hair</a></li><li><a href="/collections/dryness-frizz">Frizz &amp; Dryness</a></li><li><a href="/collections/hair-loss-thinning-hair">Thinning / Hair Loss</a></li><li><a href="/collections/frizz-lack-of-volume">Undefined Curls</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/collections/sales">🔥Sales</a></div></div>
+            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/collections">All Products</a><ul class="yb-nav__sublist"><li><a href="/collections/best-sellers">Best Sellers</a></li><li><a href="/collections/collections">Kit</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/collections">Collection</a><ul class="yb-nav__sublist"><li><a href="/collections/ybera-paris">Ybera Paris</a></li><li><a href="/collections/fashion-gold">Fashion Gold</a></li><li><a href="/collections/cronograma-hair-care-system">Cronograma</a></li><li><a href="/collections/100timetros">100Timetros</a></li><li><a href="/collections/capulana">Capulana</a></li><li><a href="/collections/terra-coco">Terra Coco</a></li><li><a href="/collections/hair-mist">Hair Mist</a></li><li><a href="/collections/vello-1">Vello</a></li><li><a href="/collections/mirra">Mirra</a></li><li><a href="/collections/detox">Detox</a></li><li><a href="/collections/life-s-flower">Life´s Flower</a></li><li><a href="/collections/essencia-brasileira">Essência Brasileira</a></li><li><a href="/collections/universal">Universal</a></li><li><a href="/collections/genoma">Genoma</a></li><li><a href="/collections/quarta-camada">Quarta Camada</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/collections/hair-loss-thinning-hair">Hair Problem</a><ul class="yb-nav__sublist"><li><a href="/collections/dullness">Damaged Hair</a></li><li><a href="/collections/dryness-frizz">Frizz &amp; Dryness</a></li><li><a href="/collections/hair-loss-thinning-hair">Thinning / Hair Loss</a></li><li><a href="/collections/frizz-lack-of-volume">Undefined Curls</a></li></ul></div><div class="yb-nav__rail">
+            <a class="yb-nav__promo" href="pdp.html">
+              <div class="yb-nav__promo-media">
+                <div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div>
+                <img src="img/134-a8b3a0.webp" alt="Mirracura mask 500g (17.6fl.oz)" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Mirracura mask 500g (17.6fl.oz)</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$54.90</b></span>
+                <!-- "View product", nao "Shop now": o cartao e de UM produto e leva a
+                     PDP. "Shop now" e rotulo de colecao — promete uma vitrine e
+                     entrega uma ficha. -->
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+            <a class="yb-nav__pitch" href="/pages/ai-hair-routine-quiz">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <!-- `--secondary`, e nao o magenta da loja. Um mega-menu e superficie de
+                   PASSAGEM: a pessoa abriu para escolher para onde ir, e ao lado destes
+                   dois cartoes ha 24 links de navegacao. O acento que a loja reserva
+                   para "Add to cart" e "Checkout", gasto aqui, briga com a propria
+                   navegacao que o menu existe para oferecer.
+                   E "Start analysis", o mesmo nome do item do menu: eram tres nomes
+                   para um destino so — "AI Hair Analysis" no menu, "Start free
+                   analysis" aqui e "Start quiz" na home. -->
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div></div>
           </div>
         </li>
-        <li class="yb-nav__item"><a class="yb-nav__link" href="/collections/sales">🔥Sales</a></li>
+        <li class="yb-nav__item"><a class="yb-nav__link yb-nav__link--sale" href="/collections/sales">Sales</a></li>
         <li class="yb-nav__item"><a class="yb-nav__link" href="/pages/ai-hair-routine-quiz">AI Hair Analysis</a></li>
         <li class="yb-nav__item">
           <input class="yb-nav__toggle" type="checkbox" id="nav4">
           <label class="yb-nav__link" for="nav4">About Us
             <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-down"/></svg></label>
           <div class="yb-nav__panel">
-            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/pages/our-story">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/blogs/haircare">Behind The Shine</a></div></div>
+            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/pages/our-story">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/blogs/haircare">Blog</a></div></div>
           </div>
         </li>
-        <li class="yb-nav__item"><a class="yb-nav__link" href="/pages/contactus">Contact Us</a></li>
       </ul>
     </nav>
     <div class="yb-header__actions">
-      <button class="yb-iconbtn yb-header__icon" aria-label="Search"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-search"/></svg></button>
-      <button class="yb-iconbtn yb-header__icon" aria-label="Account"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-user"/></svg></button>
+      <button class="yb-iconbtn yb-header__icon" aria-label="Search" data-yb-open="site-search"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-search"/></svg></button>
+      <button class="yb-iconbtn yb-header__icon yb-header__account" aria-label="Account"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-user"/></svg></button>
       <button class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items" data-yb-open="cart">
         <svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-cart"/></svg><span class="yb-header__count">2</span></button>
     </div>
@@ -88,6 +171,17 @@
 
 <main>
   <section class="banner" aria-roledescription="carousel" aria-label="Promotions">
+<aside class="yb-partner" data-yb-partner aria-label="Partner greeting">
+  <div class="yb-partner__dock">
+    <button class="yb-partner__avatar" type="button" aria-expanded="true" aria-controls="partner-msg">
+      <img src="img/02sauana-2896ea7c.webp" alt="">
+      <span class="yb-sr-only">Message from @yberapartner</span>
+    </button>
+    <div class="yb-partner__bubble" id="partner-msg">
+      <p>Hey, it&rsquo;s <b>@yberapartner</b>! Enjoy my exclusive <b>partner discount</b>.</p>
+    </div>
+  </div>
+</aside>
   <ul class="banner__track" id="banner-track">
         <li class="banner__slide">
           <a href="/collections/vello-1" aria-label="20% off sitewide for the next 24 hours">
@@ -135,40 +229,51 @@
     <section class="yb-block">
       <div class="yb-section-head">
         <h2>Best Sellers</h2>
-        <a href="#">View all treatments <svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-right"/></svg></a>
+        <a class="yb-link" href="/collections/best-sellers">Shop all best sellers <svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-right"/></svg></a>
       </div>
       <div class="yb-grid">
-      <article class="yb-card">
-        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div><img src="img/FG_Banner_01-61a3d2.webp" alt="FASHION GOLD  – Brazilian Keratin Treatment, Smoothing and Straightening System" loading="lazy"></div>
-        <h3 class="yb-card__title"><a href="pdp.html">FASHION GOLD  – Brazilian Keratin Treatment, Smoothing and Straightening System</a></h3>
-        <span class="yb-rating" role="img" aria-label="4.8 of 5">
-          <span class="yb-rating__stars" aria-hidden="true">★★★★★</span>
-          <span class="yb-rating__count">412</span></span>
-        <span class="yb-price yb-price--sm"><b class="yb-price__now">$34.90</b></span>
+      <article class="yb-offercard">
+        <img src="img/Off1_Set_10-30-10-9c0915.webp" alt="Fashion Gold keratin 150g">
+        <span class="yb-badge yb-badge--sale yb-offercard__off">20% off</span>
+        <div class="yb-offercard__body">
+          <h3 class="yb-offercard__title"><a href="pdp.html">Fashion Gold keratin 150g</a></h3>
+          <div class="yb-offercard__linha">
+            <span class="yb-offercard__price">$39.90</span>
+            <s class="yb-offercard__was">$74.70</s>
+            <p class="yb-offercard__timer" data-yb-countdown="2026-09-09T12:00:00-04:00">
+              <time datetime="2026-09-09T12:00:00-04:00">today, 12 PM</time></p>
+          </div>
+          <p class="yb-offercard__fim" hidden>Offer ended</p>
+          <a class="yb-btn yb-btn--primary" href="pdp.html">Buy now
+            <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-arrow-right"/></svg></a>
+        </div>
       </article>
       <article class="yb-card">
-        <div class="yb-card__media"><img src="img/337920-1-d7243f.webp" alt="Double Care – CRONOGRAMA Hair Care System| New Packaging" loading="lazy"></div>
-        <h3 class="yb-card__title"><a href="pdp.html">Double Care – CRONOGRAMA Hair Care System| New Packaging</a></h3>
-        <span class="yb-rating" role="img" aria-label="4.8 of 5">
+        <div class="yb-card__media"><img src="img/135-cc8636.webp" alt="Mirracura shampoo 500ml (16,9fl.oz)" loading="lazy"><img src="img/Artboard_17-b798bf.webp" alt="" loading="lazy"><button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" data-yb-open="cart" aria-label="Add to cart: Mirracura shampoo 500ml (16,9fl.oz)">Add to cart</button></div>
+        <h3 class="yb-card__title"><a href="pdp.html">Mirracura shampoo 500ml (16,9fl.oz)</a></h3>
+        <span class="yb-rating" role="img" aria-label="5.0 of 5, 6 reviews">
           <span class="yb-rating__stars" aria-hidden="true">★★★★★</span>
-          <span class="yb-rating__count">87</span></span>
-        <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+          <span class="yb-rating__score">5.0</span>
+          <span class="yb-rating__count">(6)</span></span>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$49.90</b></span>
       </article>
       <article class="yb-card">
-        <div class="yb-card__media"><img src="img/38_1-e547b0.webp" alt="Curl Perfect Hair Care Kit – Anti-Frizz, Hydration & Strength | Ybera Fashion Go" loading="lazy"></div>
-        <h3 class="yb-card__title"><a href="pdp.html">Curl Perfect Hair Care Kit – Anti-Frizz, Hydration & Strength | Ybera Fashion Gold*</a></h3>
-        <span class="yb-rating" role="img" aria-label="4.8 of 5">
+        <div class="yb-card__media"><img src="img/129_89669e07-8a37-4f8d-b896-8ee5c599c068-fcd170.webp" alt="Vello hair mask alfa-lactobaby®500ml / 17,6fl.oz" loading="lazy"><img src="img/Artboard_13-97a5dd.webp" alt="" loading="lazy"><button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" data-yb-open="cart" aria-label="Add to cart: Vello hair mask alfa-lactobaby®500ml / 17,6fl.oz">Add to cart</button></div>
+        <h3 class="yb-card__title"><a href="pdp.html">Vello hair mask alfa-lactobaby®500ml / 17,6fl.oz</a></h3>
+        <span class="yb-rating" role="img" aria-label="5.0 of 5, 6 reviews">
           <span class="yb-rating__stars" aria-hidden="true">★★★★★</span>
-          <span class="yb-rating__count">203</span></span>
-        <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+          <span class="yb-rating__score">5.0</span>
+          <span class="yb-rating__count">(6)</span></span>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$69.90</b></span>
       </article>
       <article class="yb-card">
-        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div><img src="img/KitCuidadosProfundos-YberaFashionGold_ab-6ccd93.webp" alt="Deep Care Kit – Ybera Fashion Gold" loading="lazy"></div>
-        <h3 class="yb-card__title"><a href="pdp.html">Deep Care Kit – Ybera Fashion Gold</a></h3>
-        <span class="yb-rating" role="img" aria-label="4.8 of 5">
+        <div class="yb-card__media"><img src="img/CORTEX_1_71252932-3753-4029-b20a-b366441-d9d519.webp" alt="Cronograma - step 2 Cortex" loading="lazy"><img src="img/CORTEX2_93b970ff-67b0-4bcf-94e3-1cd732a5-810503.webp" alt="" loading="lazy"><button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" data-yb-open="cart" aria-label="Add to cart: Cronograma - step 2 Cortex">Add to cart</button></div>
+        <h3 class="yb-card__title"><a href="pdp.html">Cronograma - step 2 Cortex</a></h3>
+        <span class="yb-rating" role="img" aria-label="5.0 of 5, 6 reviews">
           <span class="yb-rating__stars" aria-hidden="true">★★★★★</span>
-          <span class="yb-rating__count">56</span></span>
-        <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+          <span class="yb-rating__score">5.0</span>
+          <span class="yb-rating__count">(6)</span></span>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$37.90</b></span>
       </article>
       </div>
     </section>
@@ -178,25 +283,48 @@
         <h2>What&rsquo;s Standing Between You and Great Hair?</h2>
       </div>
       <ul class="yb-collections">
-        <li><a class="yb-collection yb-collection--center" href="/collections/dullness">
-          <img src="img/02_hair-problem-f838107d.webp" alt="Damaged Hair" loading="lazy">
+        <li><a class="yb-collection yb-collection--bottom" href="/collections/dullness">
+          <img src="img/02_hair-problem-f838107d.webp" alt="" loading="lazy">
           <span class="yb-collection__label">Damaged Hair</span>
         </a></li>
-        <li><a class="yb-collection yb-collection--center" href="/collections/dryness-frizz">
-          <img src="img/01_hair-problem-2cb5a59f.jpg" alt="Frizz Control &amp; Dry Hair" loading="lazy">
-          <span class="yb-collection__label">Frizz Control &amp; Dry Hair</span>
+        <li><a class="yb-collection yb-collection--bottom" href="/collections/dryness-frizz">
+          <img src="img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy">
+          <span class="yb-collection__label">Frizz &amp; Dryness</span>
         </a></li>
-        <li><a class="yb-collection yb-collection--center" href="/collections/hair-loss-thinning-hair">
-          <img src="img/04_hair-problem-e1fbbb33.webp" alt="Hair Loss / Thinning" loading="lazy">
-          <span class="yb-collection__label">Hair Loss / Thinning</span>
+        <li><a class="yb-collection yb-collection--bottom" href="/collections/hair-loss-thinning-hair">
+          <img src="img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy">
+          <span class="yb-collection__label">Thinning / Hair Loss</span>
         </a></li>
-        <li><a class="yb-collection yb-collection--center" href="/collections/frizz-lack-of-volume">
-          <img src="img/03_hair-problem-b7e78041.jpg" alt="Curly Hair" loading="lazy">
-          <span class="yb-collection__label">Curly Hair</span>
+        <li><a class="yb-collection yb-collection--bottom" href="/collections/frizz-lack-of-volume">
+          <img src="img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy">
+          <span class="yb-collection__label">Undefined Curls</span>
         </a></li>
       </ul>
     </section>
   </div>
+
+  <section class="yb-split">
+    <div class="yb-split__media">
+      <img src="img/02_hair-problem-f838107d.webp" alt="" loading="lazy">
+    </div>
+    <div class="yb-split__panel">
+      <span class="yb-badge yb-badge--on-dark">10k+ routines created</span>
+      <h2 class="yb-split__title">What does your hair need?</h2>
+      <p class="yb-split__sub">We&rsquo;ll tell you what works, takes 60 seconds</p>
+      <div class="yb-swatches yb-swatches--on-dark" role="radiogroup" aria-label="Hair condition">
+          <input type="radio" name="quiz-cabelo" id="quiz-0" checked>
+          <label for="quiz-0">Slightly Damaged</label>
+          <input type="radio" name="quiz-cabelo" id="quiz-1">
+          <label for="quiz-1">Healthy</label>
+          <input type="radio" name="quiz-cabelo" id="quiz-2">
+          <label for="quiz-2">Very Damaged</label>
+          <input type="radio" name="quiz-cabelo" id="quiz-3">
+          <label for="quiz-3">Chemically Treated</label>
+      </div>
+      <button class="yb-btn yb-btn--on-dark" type="button">Start analysis</button>
+      <p class="yb-split__nota">4 quick questions</p>
+    </div>
+  </section>
 
   <section class="yb-block yb-block--flush tolstoy">
       <div class="shopify-block shopify-app-block tolstoy-builder-block">
@@ -206,56 +334,149 @@
     </div>
   </section>
 
-  <div class="yb-page">
-    <section class="yb-block">
-      <div class="yb-section-head yb-section-head--center">
-        <h2>Explore Our Collections</h2>
+    <section class="yb-block yb-block--flush">
+      <div class="yb-section-head">
+        <div class="yb-section-head__col">
+          <span class="yb-section-head__eyebrow">Tailored Formulas</span>
+          <h2>Shop by Collection</h2>
+        </div>
       </div>
       <ul class="yb-collections">
-        <li><a class="yb-collection yb-collection--bottom" href="/collections/fashion-gold">
-          <img src="img/Prancheta_1-790aea3e.webp" alt="Fashion Gold" loading="lazy">
-          <span class="yb-collection__label">Fashion Gold</span>
+        <li><a class="yb-collection yb-collection--card" href="/collections/fashion-gold">
+          <img src="img/Prancheta_1-790aea3e.webp" alt="" loading="lazy">
+          <span class="yb-collection__foot">
+            <span class="yb-collection__name">Fashion Gold</span>
+            <span class="yb-collection__cta">Shop Collection
+              <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-arrow-right"/></svg></span>
+          </span>
         </a></li>
-        <li><a class="yb-collection yb-collection--bottom" href="/collections/mirra">
-          <img src="img/Prancheta_4-26cbd0ec.webp" alt="Mirra" loading="lazy">
-          <span class="yb-collection__label">Mirra</span>
+        <li><a class="yb-collection yb-collection--card" href="/collections/mirra">
+          <img src="img/Prancheta_4-26cbd0ec.webp" alt="" loading="lazy">
+          <span class="yb-collection__foot">
+            <span class="yb-collection__name">Mirra</span>
+            <span class="yb-collection__cta">Shop Collection
+              <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-arrow-right"/></svg></span>
+          </span>
         </a></li>
-        <li><a class="yb-collection yb-collection--bottom" href="/collections/vello-1">
-          <img src="img/Prancheta_3-d098ed99.webp" alt="Vello" loading="lazy">
-          <span class="yb-collection__label">Vello</span>
+        <li><a class="yb-collection yb-collection--card" href="/collections/vello-1">
+          <img src="img/Prancheta_3-d098ed99.webp" alt="" loading="lazy">
+          <span class="yb-collection__foot">
+            <span class="yb-collection__name">Vello</span>
+            <span class="yb-collection__cta">Shop Collection
+              <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-arrow-right"/></svg></span>
+          </span>
         </a></li>
-        <li><a class="yb-collection yb-collection--bottom" href="/collections/cronograma-hair-care-system">
-          <img src="img/Prancheta_2-188b6fea.webp" alt="Cronograma" loading="lazy">
-          <span class="yb-collection__label">Cronograma</span>
+        <li><a class="yb-collection yb-collection--card" href="/collections/cronograma-hair-care-system">
+          <img src="img/Prancheta_2-188b6fea.webp" alt="" loading="lazy">
+          <span class="yb-collection__foot">
+            <span class="yb-collection__name">Cronograma</span>
+            <span class="yb-collection__cta">Shop Collection
+              <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-arrow-right"/></svg></span>
+          </span>
         </a></li>
       </ul>
     </section>
 
-    <section class="yb-block">
-      <div class="yb-track yb-reviews">
-        <article class="yb-review">
+  <div class="yb-page">
+    <section class="yb-block" id="reviews">
+      <div class="yb-section-head yb-section-head--center">
+        <h2>What Our Customers Say</h2>
+      </div>
+
+      <div class="yb-reviews__topo">
+        <div class="yb-reviews__nota">
+          <b class="yb-reviews__media">5.0</b>
+          <span class="yb-rating" role="img" aria-label="5.0 of 5">
+            <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
+          <span class="yb-reviews__total">6 reviews</span>
+        </div>
+        <ul class="yb-reviews__dist">
+          <li class="yb-reviews__linha">
+            <span class="yb-reviews__estrela">5 <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-star-filled"/></svg></span>
+            <span class="yb-progress yb-progress--sm" role="img"
+                  aria-label="6 of 6 reviews gave 5 stars">
+              <span class="yb-progress__fill" style="inline-size:100%"></span>
+            </span>
+            <span class="yb-reviews__qtd">6</span>
+          </li>
+          <li class="yb-reviews__linha">
+            <span class="yb-reviews__estrela">4 <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-star-filled"/></svg></span>
+            <span class="yb-progress yb-progress--sm" role="img"
+                  aria-label="0 of 6 reviews gave 4 stars">
+              <span class="yb-progress__fill" style="inline-size:0%"></span>
+            </span>
+            <span class="yb-reviews__qtd">0</span>
+          </li>
+          <li class="yb-reviews__linha">
+            <span class="yb-reviews__estrela">3 <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-star-filled"/></svg></span>
+            <span class="yb-progress yb-progress--sm" role="img"
+                  aria-label="0 of 6 reviews gave 3 stars">
+              <span class="yb-progress__fill" style="inline-size:0%"></span>
+            </span>
+            <span class="yb-reviews__qtd">0</span>
+          </li>
+          <li class="yb-reviews__linha">
+            <span class="yb-reviews__estrela">2 <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-star-filled"/></svg></span>
+            <span class="yb-progress yb-progress--sm" role="img"
+                  aria-label="0 of 6 reviews gave 2 stars">
+              <span class="yb-progress__fill" style="inline-size:0%"></span>
+            </span>
+            <span class="yb-reviews__qtd">0</span>
+          </li>
+          <li class="yb-reviews__linha">
+            <span class="yb-reviews__estrela">1 <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-star-filled"/></svg></span>
+            <span class="yb-progress yb-progress--sm" role="img"
+                  aria-label="0 of 6 reviews gave 1 stars">
+              <span class="yb-progress__fill" style="inline-size:0%"></span>
+            </span>
+            <span class="yb-reviews__qtd">0</span>
+          </li>
+        </ul>
+        <div class="yb-reviews__acoes">
+          <div class="yb-swatches" role="radiogroup" aria-label="Filter by rating"
+               data-yb-review-filtro>
+            <input type="radio" name="notafiltro" id="nfall" value="all" checked>
+            <label for="nfall">All</label>
+            <input type="radio" name="notafiltro" id="nf5" value="5">
+            <label for="nf5">5 ★</label>
+            <input type="radio" name="notafiltro" id="nf4" value="4">
+            <label for="nf4">4 ★</label>
+            <input type="radio" name="notafiltro" id="nf3" value="3">
+            <label for="nf3">3 ★</label>
+            <input type="radio" name="notafiltro" id="nf2" value="2">
+            <label for="nf2">2 ★</label>
+            <input type="radio" name="notafiltro" id="nf1" value="1">
+            <label for="nf1">1 ★</label>
+          </div>
+          <button class="yb-btn yb-btn--secondary" type="button" data-yb-open="escrever">
+            Write a review</button>
+        </div>
+      </div>
+
+      <div class="yb-track yb-reviews" id="reviews-track">
+        <article class="yb-review" data-nota="5">
           <div class="yb-review__media"><img src="img/YBERA_PARIS_-_vello_-_Soro_Vital_alfa-lactobaby_-ca2b7e86.webp" alt="" loading="lazy"></div>
           <div class="yb-review__body">
             <span class="yb-rating" role="img" aria-label="5 of 5 stars">
               <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
-            <p class="yb-review__title">Maravilhoso meu marido usa a um ano ele é</p>
+            
             <p class="yb-review__text">Maravilhoso meu marido usa a um ano ele é perfeito ele cumpre oque promete🥰🥰🥰❤️</p>
             <span class="yb-review__author">Rosana Beserra</span>
-            <span class="yb-review__product">VELLO Hair Fertilization Therapy ALFA-LACTOBABY® | Hair Growth 90ml / 3fl.oz - YBERA PARIS</span>
+            <span class="yb-review__product"><a href="pdp.html">Vello hair fertilization therapy alfa-lactobaby® | Hair growth 90ml / 3fl.oz</a></span>
           </div>
         </article>
-        <article class="yb-review">
+        <article class="yb-review" data-nota="5">
           <div class="yb-review__media"><img src="img/kit_tratamento_terra_coco_elixir_160x160-26270456.webp" alt="" loading="lazy"></div>
           <div class="yb-review__body">
             <span class="yb-rating" role="img" aria-label="5 of 5 stars">
               <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
-            <p class="yb-review__title">Responsabilidad y buena atencion</p>
+            
             <p class="yb-review__text">Responsabilidad y buena atencion ✨❤️</p>
             <span class="yb-review__author">Marggi Barajas</span>
-            <span class="yb-review__product">Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask 1kg / 33oz + Coconut Elixir 60ml / 2oz</span>
+            <span class="yb-review__product"><a href="pdp.html">Kit Terra Coco isotonic shampoo + coconut-based mask 1kg / 33oz + coconut elixir 60ml / 2oz</a></span>
           </div>
         </article>
-        <article class="yb-review">
+        <article class="yb-review" data-nota="5">
           <div class="yb-review__media"><img src="img/5d162628-e9e7-4c2c-b99c-d51062cb59c1_160x160-56e53556.avif" alt="" loading="lazy"></div>
           <div class="yb-review__body">
             <span class="yb-rating" role="img" aria-label="5 of 5 stars">
@@ -263,10 +484,10 @@
             
             <p class="yb-review__text">I loved it, I am wearing it on my 1-year-old daughter's hair and this day is more beautiful.</p>
             <span class="yb-review__author">Nataniela</span>
-            <span class="yb-review__product">Girls’ Hair Care Kit – Anti-Frizz, Detangling &amp; Shine | Ybera Fashion Kids</span>
+            <span class="yb-review__product"><a href="pdp.html">Girls’ hair care kit – anti-frizz, detangling &amp; shine | Ybera fashion kids</a></span>
           </div>
         </article>
-        <article class="yb-review">
+        <article class="yb-review" data-nota="5">
           <div class="yb-review__media"><img src="img/Off1_August_29-30-11_1_160x160-c3627d60.avif" alt="" loading="lazy"></div>
           <div class="yb-review__body">
             <span class="yb-rating" role="img" aria-label="5 of 5 stars">
@@ -274,10 +495,10 @@
             
             <p class="yb-review__text">I love I've been using it for a long time.</p>
             <span class="yb-review__author">Nataniela</span>
-            <span class="yb-review__product">Double Care – Buy 1 CRONOGRAMA Hair Care System, Get 1 FREE | New Packaging</span>
+            <span class="yb-review__product"><a href="pdp.html">Double care – buy 1 Cronograma hair care system, get 1 free</a></span>
           </div>
         </article>
-        <article class="yb-review">
+        <article class="yb-review" data-nota="5">
           <div class="yb-review__media"><img src="img/153_160x160-e958dc19.avif" alt="" loading="lazy"></div>
           <div class="yb-review__body">
             <span class="yb-rating" role="img" aria-label="5 of 5 stars">
@@ -285,10 +506,10 @@
             
             <p class="yb-review__text">Little bit expensive but I hope it works.</p>
             <span class="yb-review__author">PCH</span>
-            <span class="yb-review__product">Kit CRONOGRAMA Hair Care System - Fashion Gold</span>
+            <span class="yb-review__product"><a href="pdp.html">Kit Cronograma hair care system - Fashion Gold</a></span>
           </div>
         </article>
-        <article class="yb-review">
+        <article class="yb-review" data-nota="5">
           <div class="yb-review__media"><img src="img/HairMist-FLORALFUSION_d9d86917-8f6b-46c0-98ec-3b-4f903974.avif" alt="" loading="lazy"></div>
           <div class="yb-review__body">
             <span class="yb-rating" role="img" aria-label="5 of 5 stars">
@@ -296,15 +517,62 @@
             
             <p class="yb-review__text">Amazing product, smells very good!</p>
             <span class="yb-review__author">PCH</span>
-            <span class="yb-review__product">Floral Fusion Hair Mist - 50ml/ 1,69fl.oz_</span>
+            <span class="yb-review__product"><a href="pdp.html">Floral fusion Hair Mist - 50ml/ 1,69fl.oz</a></span>
           </div>
         </article>
       </div>
+      <div class="yb-empty yb-empty--inline" data-yb-review-vazio hidden>
+        <span class="yb-empty__icone"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-star"/></svg></span>
+        <p class="yb-empty__title" data-yb-review-vazio-titulo>No reviews with this rating</p>
+        <p class="yb-empty__text">Every review here so far is a five. Nothing is filtered out
+        on purpose.</p>
+        <div class="yb-empty__acoes">
+          <button class="yb-btn yb-btn--secondary" type="button" data-yb-review-limpar>
+            Show all reviews</button>
+        </div>
+      </div>
+      <div class="yb-track__nav" data-yb-track-nav="reviews-track" hidden>
+        <button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous reviews"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-left"/></svg></button>
+        <button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next reviews"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-right"/></svg></button>
+      </div>
+
+      <dialog id="escrever" class="yb-dialog" aria-labelledby="escrever-t">
+        <div class="yb-dialog__head">
+          <h3 class="yb-dialog__title" id="escrever-t">Write a review</h3>
+          <button class="yb-dialog__close" data-yb-close aria-label="Close"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-close"/></svg></button>
+        </div>
+        <form class="yb-dialog__body"
+              onsubmit="Ybera.toast({title:'Thanks — your review is in review',text:'We publish it once it is checked.',variant:'success'}); this.closest('dialog').close(); return false">
+          <div class="yb-field">
+            <label class="yb-field__label" for="rv-nota">Your rating</label>
+            <select class="yb-select" id="rv-nota" required>
+              <option value="5">5 — loved it</option>
+              <option value="4">4 — good</option>
+              <option value="3">3 — it is fine</option>
+              <option value="2">2 — not for me</option>
+              <option value="1">1 — disappointed</option>
+            </select>
+          </div>
+          <div class="yb-field">
+            <label class="yb-field__label" for="rv-texto">Your review</label>
+            <textarea class="yb-textarea" id="rv-texto" rows="4"
+                      placeholder="What changed in your hair, and how long it took." required></textarea>
+          </div>
+          <div class="yb-field">
+            <label class="yb-field__label" for="rv-email">Email</label>
+            <input class="yb-input" id="rv-email" type="email" autocomplete="email" required>
+            <p class="yb-field__hint">Only to confirm the purchase. It is never published.</p>
+          </div>
+          <div class="yb-dialog__foot">
+            <button class="yb-btn yb-btn--ghost" type="button" data-yb-close>Cancel</button>
+            <button class="yb-btn yb-btn--primary" type="submit">Submit review</button>
+          </div>
+        </form>
+      </dialog>
     </section>
   </div>
 
-  <div class="yb-page">
-    <section class="yb-block">
+  <section class="yb-block yb-block--flush">
       <div class="yb-section-head yb-section-head--center">
         <h2>Hear Directly from our Ambassadors</h2>
       </div>
@@ -343,7 +611,6 @@
         </div>
       </div>
     </section>
-  </div>
 
   <section class="yb-seals" aria-label="Product guarantees">
       <div class="yb-seal">
@@ -368,6 +635,16 @@
       </div>
   </section>
 
+  <section class="yb-manifesto">
+    <div class="yb-manifesto__inner">
+      <h2 class="yb-manifesto__title">Born in the salon. Made for every home.</h2>
+      <p class="yb-manifesto__text">Driven by Brazilian heritage and professional expertise, we create transformative hair care that bridges the gap between expert stylist results and daily self-care.</p>
+      <hr class="yb-manifesto__rule">
+      <span class="yb-manifesto__brand">YBERA</span>
+      <p class="yb-manifesto__sub">Professional Paris</p>
+    </div>
+  </section>
+
   <section class="yb-logobar" aria-label="Ybera product lines">
     <div class="yb-track yb-track--row yb-logobar__track">
       <img src="img/01-685f018e.png" alt="" loading="lazy">
@@ -382,36 +659,35 @@
 
   <div class="yb-page">
     <section class="yb-block">
-      <div class="yb-section-head yb-section-head--center">
-        <h2>The Gold Standard: Behind the Shine</h2>
+      <div class="yb-section-head">
+        <div class="yb-section-head__col">
+          <span class="yb-section-head__eyebrow">Expert Advice</span>
+          <h2>Professional Secrets</h2>
+        </div>
+        <a class="yb-link" href="/blogs/haircare">See all <svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-right"/></svg></a>
       </div>
-      <div class="yb-posts">
-        <article class="yb-post yb-post--featured">
+      <div class="yb-posts yb-posts--trio">
+        <article class="yb-post yb-post--stacked">
           <div class="yb-post__media"><img src="img/Is_Keratin_Good_For_Hair-b3d5999d.webp" alt="" loading="lazy"></div>
           <div class="yb-post__body">
-            <h3 class="yb-post__title">Is Keratin Good For Hair? Pros, Cons, And Myths</h3>
-            <p class="yb-post__excerpt">Is keratin good for hair? Learn what makes Ybera’s approach safe, effective, and different. Fi...</p>
-            <a class="yb-post__link" href="/blogs/haircare/is-keratin-good-for-hair">Continue reading <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-external"/></svg></a>
+            <h3 class="yb-post__title"><a href="/blogs/haircare/is-keratin-good-for-hair">Is Keratin Good For Hair? Pros, Cons, And Myths</a></h3>
+            <span class="yb-link yb-link--reinforce" aria-hidden="true">Read more <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-arrow-right"/></svg></span>
           </div>
         </article>
-        <div class="yb-posts__list">
-        <article class="yb-post">
+        <article class="yb-post yb-post--stacked">
           <div class="yb-post__media"><img src="img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp" alt="" loading="lazy"></div>
           <div class="yb-post__body">
-            <h3 class="yb-post__title">How Long Does A Keratin Treatment Last? Timeline</h3>
-            <p class="yb-post__excerpt">How long does keratin treatment last? Get expert insight from Ybera on treatment timelines, ha...</p>
-            <a class="yb-post__link" href="/blogs/haircare/how-long-does-keratin-treatment-last">Continue reading <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-external"/></svg></a>
+            <h3 class="yb-post__title"><a href="/blogs/haircare/how-long-does-keratin-treatment-last">How Long Does A Keratin Treatment Last? Timeline</a></h3>
+            <span class="yb-link yb-link--reinforce" aria-hidden="true">Read more <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-arrow-right"/></svg></span>
           </div>
         </article>
-        <article class="yb-post">
+        <article class="yb-post yb-post--stacked">
           <div class="yb-post__media"><img src="img/Does_Keratin_Treatment_Damage_Hair-9540a201.webp" alt="" loading="lazy"></div>
           <div class="yb-post__body">
-            <h3 class="yb-post__title">Does Keratin Treatment Damage Hair? The Truth</h3>
-            <p class="yb-post__excerpt">Does keratin treatment damage hair? Ybera answers the real concerns and explains how professio...</p>
-            <a class="yb-post__link" href="/blogs/haircare/does-keratin-treatment-damage-hair">Continue reading <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-external"/></svg></a>
+            <h3 class="yb-post__title"><a href="/blogs/haircare/does-keratin-treatment-damage-hair">Does Keratin Treatment Damage Hair? The Truth</a></h3>
+            <span class="yb-link yb-link--reinforce" aria-hidden="true">Read more <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-arrow-right"/></svg></span>
           </div>
         </article>
-        </div>
       </div>
     </section>
 
@@ -421,7 +697,11 @@
           <blockquote class="yb-quote__text">&ldquo;I believe every woman deserves to transform her hair, her confidence, and her future with the power of beauty in her hands.&rdquo;</blockquote>
           <cite class="yb-quote__author">Sauana Alves, Co-Founder of Ybera Paris</cite>
           <div class="yb-quote__action">
-            <a class="yb-btn yb-btn--primary" href="/pages/our-story">Our Story</a>
+            <!-- `--secondary`: "Our Story" nao compra nada. O magenta que a loja
+                 reserva para "Add to cart" e "Checkout", gasto num link
+                 institucional, ensina que a cor nao quer dizer nada. Mesma
+                 correcao feita nos cartoes do mega-menu. -->
+            <a class="yb-btn yb-btn--secondary" href="/pages/our-story">Our Story</a>
           </div>
         </div>
         <div class="yb-quote__media">
@@ -443,6 +723,7 @@
         <a class="yb-footer__logo" href="index.html"><span class="yb-logo yb-logo--lg"><img src="brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span></a>
         <ul class="yb-footer__links">
           <li><a href="/collections">Shop</a></li>
+          <li><a href="/blogs/haircare">Blog</a></li>
           <li><a href="/pages/contactus">Contact Us</a></li>
           <li><a href="/pages/our-story">About Us</a></li>
         </ul>
@@ -505,58 +786,249 @@
 <dialog id="cart" class="yb-dialog yb-dialog--drawer" aria-labelledby="cart-t">
   <div class="yb-cart">
     <div class="yb-cart__head"><h2 id="cart-t">Your cart (2)</h2>
-      <button class="yb-iconbtn yb-cart__close" data-yb-close aria-label="Close cart"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-close"/></svg></button></div>
+      <div class="yb-cart__head-acoes">
+        <button class="yb-cart__share" aria-label="Share cart"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-share"/></svg></button>
+        <button class="yb-cart__close" data-yb-close aria-label="Close cart"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-close"/></svg></button>
+      </div></div>
     <div class="yb-cart__ship">
       <div class="yb-freeship">
-        <span class="yb-freeship__text">Add <b>$75.20</b> more for free shipping</span>
-        <div class="yb-freeship__track" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" aria-label="Progress to free shipping">
-          <div class="yb-freeship__fill" style="width:62%"></div></div>
+        <span class="yb-freeship__text">Add <b>$110.20</b> more for free shipping</span>
+        <div class="yb-progress" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" aria-label="Progress to free shipping">
+          <span class="yb-progress__fill" style="inline-size:45%"></span></div>
       </div>
+    </div>
+    <div class="yb-cart__brinde-card">
+      <div class="yb-cart__brinde-corpo">
+        <p class="yb-cart__brinde-texto">Add <b>$160.20</b> and receive your first gift</p>
+        <div class="yb-cart__brinde-trilhos" role="progressbar"
+             aria-valuenow="89" aria-valuemin="0" aria-valuemax="400"
+             aria-valuetext="$89.80 of $400.00 toward the best gift"><span class="yb-progress yb-progress--sm"><span class="yb-progress__fill yb-progress__fill--success" style="inline-size:36%"></span></span><span class="yb-progress yb-progress--sm"><span class="yb-progress__fill yb-progress__fill--success" style="inline-size:0%"></span></span></div>
+      </div>
+      <div class="yb-cart__brinde-premio"><img src="img/134-a8b3a0.webp" alt="" loading="lazy"></div>
     </div>
     <div class="yb-cart__items">
       <div class="yb-cart__item">
-        <div class="yb-card__media"><img src="img/FG_Banner_01-61a3d2.webp" alt="" loading="lazy"></div>
+        <div class="yb-card__media"><img src="img/Off1_Set_10-30-10-9c0915.webp" alt="" loading="lazy"></div>
         <div class="yb-cart__item-body">
-          <p class="yb-cart__item-title">FASHION GOLD  – Brazilian Keratin Treatment, Smoothing and Straightening System</p>
+          <div class="yb-cart__item-topo">
+            <p class="yb-cart__item-title">Fashion Gold keratin 150g</p>
+            <button class="yb-cart__remove" aria-label="Remove Fashion Gold keratin 150g"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-trash"/></svg></button>
+          </div>
           <span class="yb-cart__item-variant">Default</span>
           <div class="yb-cart__item-foot">
-            <div class="yb-stepper" data-yb-stepper>
-              <button type="button" aria-label="Decrease quantity" disabled>&minus;</button>
-              <input type="number" value="1" min="1" aria-label="Quantity">
-              <button type="button" aria-label="Increase quantity">+</button>
+            <span class="yb-cart__item-precos"><span class="yb-price yb-price--sm"><b class="yb-price__now">$39.90</b></span></span>
+            <div class="yb-stepper yb-stepper--sm" data-yb-stepper>
+              <button type="button" data-yb-step="down" aria-label="Decrease quantity of Fashion Gold keratin 150g">&minus;</button>
+              <input type="number" value="1" min="1" max="10" aria-label="Quantity of Fashion Gold keratin 150g">
+              <button type="button" data-yb-step="up" aria-label="Increase quantity of Fashion Gold keratin 150g">+</button>
             </div>
-            <span class="yb-price yb-price--sm"><b class="yb-price__now">$34.90</b></span>
           </div>
-          <button class="yb-cart__remove">Remove</button>
         </div>
       </div>
       <div class="yb-cart__item">
-        <div class="yb-card__media"><img src="img/337920-1-d7243f.webp" alt="" loading="lazy"></div>
+        <div class="yb-card__media"><img src="img/135-cc8636.webp" alt="" loading="lazy"></div>
         <div class="yb-cart__item-body">
-          <p class="yb-cart__item-title">Double Care – CRONOGRAMA Hair Care System| New Packaging</p>
+          <div class="yb-cart__item-topo">
+            <p class="yb-cart__item-title">Mirracura shampoo 500ml (16,9fl.oz)</p>
+            <button class="yb-cart__remove" aria-label="Remove Mirracura shampoo 500ml (16,9fl.oz)"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-trash"/></svg></button>
+          </div>
           <span class="yb-cart__item-variant">Default</span>
           <div class="yb-cart__item-foot">
-            <div class="yb-stepper" data-yb-stepper>
-              <button type="button" aria-label="Decrease quantity" disabled>&minus;</button>
-              <input type="number" value="1" min="1" aria-label="Quantity">
-              <button type="button" aria-label="Increase quantity">+</button>
+            <span class="yb-cart__item-precos"><span class="yb-price yb-price--sm"><b class="yb-price__now">$49.90</b></span></span>
+            <div class="yb-stepper yb-stepper--sm" data-yb-stepper>
+              <button type="button" data-yb-step="down" aria-label="Decrease quantity of Mirracura shampoo 500ml (16,9f">&minus;</button>
+              <input type="number" value="1" min="1" max="10" aria-label="Quantity of Mirracura shampoo 500ml (16,9f">
+              <button type="button" data-yb-step="up" aria-label="Increase quantity of Mirracura shampoo 500ml (16,9f">+</button>
             </div>
-            <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
           </div>
-          <button class="yb-cart__remove">Remove</button>
         </div>
       </div>
     </div>
+    <div class="yb-cart__protecao">
+      <div class="yb-cart__protecao-corpo">
+        <b>Route Package Protection</b>
+        <p>Guard against loss, theft, or damage for only $4.98</p>
+      </div>
+      <button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="false" aria-label="Route Package Protection">
+        <span class="yb-switch__knob"></span>
+      </button>
+    </div>
+    <div class="yb-cart__cupom">
+      <form class="yb-field yb-field--row">
+        <div class="yb-field__box">
+          <input class="yb-input" id="cupom" type="text" placeholder=" " autocomplete="off">
+          <label class="yb-field__label" for="cupom">Promo code</label>
+        </div>
+        <button class="yb-btn yb-btn--ghost yb-btn--sm" type="submit">Apply</button>
+      </form>
+      <p class="yb-cart__note">Taxes, shipping and discounts calculated at checkout</p>
+    </div>
     <div class="yb-cart__foot">
-      <div class="yb-cart__line"><span>Subtotal</span><span>$124.80</span></div>
-      <div class="yb-cart__line"><span>Shipping</span><span>Calculated at checkout</span></div>
-      <div class="yb-cart__line yb-cart__line--total"><span>Total</span><span>$124.80</span></div>
-      <button class="yb-btn yb-btn--primary yb-btn--block">Checkout</button>
-      <p class="yb-cart__note">Taxes calculated at checkout &middot; 30-day returns</p>
+      <div class="yb-cart__parceiro">
+        <span class="yb-cart__parceiro-inicial" aria-hidden="true">YP</span>
+        <p><b>@yberapartner</b> saved you $13.47</p>
+      </div>
+      <div class="yb-cart__resumo">
+        <div class="yb-cart__totais">
+          <div class="yb-cart__total-linha"><b class="yb-cart__total">$89.80</b></div>
+        </div>
+        <button class="yb-btn yb-btn--primary yb-cart__checkout">Checkout (2)</button>
+      </div>
     </div>
   </div>
 </dialog>
-<script src="yb/components.js?v=9315e857"></script>
+<dialog id="site-search" class="yb-search" aria-label="Search products">
+  <div class="yb-search__bar">
+    <form class="yb-search__form" role="search" action="/search" method="get" data-yb-search>
+      <svg class="yb-icon yb-search__icon" aria-hidden="true"><use href="yb/icons.svg#yb-search"/></svg>
+      <input class="yb-search__input" type="search" name="q" autocomplete="off" autofocus
+             placeholder="Search products, concerns, ingredients" aria-label="Search products">
+      <button class="yb-iconbtn yb-search__clear" type="reset" aria-label="Clear search" hidden><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-close"/></svg></button>
+      <button class="yb-search__close" type="button" data-yb-close>Close</button>
+    </form>
+  </div>
+  <div class="yb-search__body">
+    <div class="yb-search__panel" data-yb-search-zero>
+      <div class="yb-search__col">
+        <div class="yb-search__group yb-search__group--secondary">
+          <h2 class="yb-search__title">Popular</h2>
+          <ul class="yb-search__list">
+            <li><a class="yb-search__link" href="/search?q=hair+botox"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-search"/></svg>hair botox</a></li>
+            <li><a class="yb-search__link" href="/search?q=progressive"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-search"/></svg>progressive brush</a></li>
+            <li><a class="yb-search__link" href="/search?q=myrrh"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-search"/></svg>myrrh oil</a></li>
+          </ul>
+        </div>
+        <div class="yb-search__group yb-search__group--secondary">
+          <h2 class="yb-search__title">Collections</h2>
+          <ul class="yb-search__chips">
+            <li><a class="yb-search__chip" href="/collections/smoothing">Smoothing</a></li>
+            <li><a class="yb-search__chip" href="/collections/home-care">Home care</a></li>
+            <li><a class="yb-search__chip" href="/collections/kits">Kits</a></li>
+            <li><a class="yb-search__chip" href="/collections/hair-oils">Hair oils</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="yb-search__col">
+        <div class="yb-search__group">
+          <h2 class="yb-search__title">Best sellers</h2>
+            <a class="yb-search__item" href="pdp.html">
+              <span class="yb-search__thumb"><img src="img/Off1_Set_10-30-10-9c0915.webp" alt="" loading="lazy" width="56" height="56"></span>
+              <span>
+                <span class="yb-search__name">Fashion Gold keratin 150g</span>
+                <span class="yb-search__meta">Fashion Gold</span>
+              </span>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$39.90</b></span>
+            </a>
+            <a class="yb-search__item" href="pdp.html">
+              <span class="yb-search__thumb"><img src="img/135-cc8636.webp" alt="" loading="lazy" width="56" height="56"></span>
+              <span>
+                <span class="yb-search__name">Mirracura shampoo 500ml (16,9fl.oz)</span>
+                <span class="yb-search__meta">Ybera USA</span>
+              </span>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$49.90</b></span>
+            </a>
+            <a class="yb-search__item" href="pdp.html">
+              <span class="yb-search__thumb"><img src="img/134-a8b3a0.webp" alt="" loading="lazy" width="56" height="56"></span>
+              <span>
+                <span class="yb-search__name">Mirracura mask 500g (17.6fl.oz)</span>
+                <span class="yb-search__meta">Ybera USA</span>
+              </span>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$54.90</b></span>
+            </a>
+            <a class="yb-search__item" href="pdp.html">
+              <span class="yb-search__thumb"><img src="img/129_89669e07-8a37-4f8d-b896-8ee5c599c068-fcd170.webp" alt="" loading="lazy" width="56" height="56"></span>
+              <span>
+                <span class="yb-search__name">Vello hair mask alfa-lactobaby®500ml / 17,6fl.oz</span>
+                <span class="yb-search__meta">Ybera USA</span>
+              </span>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$69.90</b></span>
+            </a>
+        </div>
+      </div>
+    </div>
+    <div class="yb-search__panel" data-yb-search-results hidden>
+      <div class="yb-search__col">
+        <div class="yb-search__group" data-yb-search-group>
+          <h2 class="yb-search__title">Products</h2>
+            <a class="yb-search__item" href="pdp.html" data-termo="fashion gold keratin 150g">
+              <span class="yb-search__thumb"><img src="img/Off1_Set_10-30-10-9c0915.webp" alt="" loading="lazy" width="56" height="56"></span>
+              <span>
+                <span class="yb-search__name">Fashion Gold keratin 150g</span>
+                <span class="yb-search__meta">Fashion Gold</span>
+              </span>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$39.90</b></span>
+            </a>
+            <a class="yb-search__item" href="pdp.html" data-termo="mirracura shampoo 500ml  16 9fl oz ">
+              <span class="yb-search__thumb"><img src="img/135-cc8636.webp" alt="" loading="lazy" width="56" height="56"></span>
+              <span>
+                <span class="yb-search__name">Mirracura shampoo 500ml (16,9fl.oz)</span>
+                <span class="yb-search__meta">Ybera USA</span>
+              </span>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$49.90</b></span>
+            </a>
+            <a class="yb-search__item" href="pdp.html" data-termo="mirracura mask 500g  17 6fl oz ">
+              <span class="yb-search__thumb"><img src="img/134-a8b3a0.webp" alt="" loading="lazy" width="56" height="56"></span>
+              <span>
+                <span class="yb-search__name">Mirracura mask 500g (17.6fl.oz)</span>
+                <span class="yb-search__meta">Ybera USA</span>
+              </span>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$54.90</b></span>
+            </a>
+            <a class="yb-search__item" href="pdp.html" data-termo="vello hair mask alfa lactobaby 500ml   17 6fl oz">
+              <span class="yb-search__thumb"><img src="img/129_89669e07-8a37-4f8d-b896-8ee5c599c068-fcd170.webp" alt="" loading="lazy" width="56" height="56"></span>
+              <span>
+                <span class="yb-search__name">Vello hair mask alfa-lactobaby®500ml / 17,6fl.oz</span>
+                <span class="yb-search__meta">Ybera USA</span>
+              </span>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$69.90</b></span>
+            </a>
+            <a class="yb-search__item" href="pdp.html" data-termo="vello shampoo alfa lactobaby  500ml   16 9fl oz">
+              <span class="yb-search__thumb"><img src="img/129_403106f5-2126-4132-b39b-41548324c2c8-d67088.webp" alt="" loading="lazy" width="56" height="56"></span>
+              <span>
+                <span class="yb-search__name">Vello shampoo alfa-lactobaby® 500ml / 16.9fl.oz</span>
+                <span class="yb-search__meta">Ybera USA</span>
+              </span>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$63.90</b></span>
+            </a>
+            <a class="yb-search__item" href="pdp.html" data-termo="cronograma   step 2 cortex">
+              <span class="yb-search__thumb"><img src="img/CORTEX_1_71252932-3753-4029-b20a-b366441-d9d519.webp" alt="" loading="lazy" width="56" height="56"></span>
+              <span>
+                <span class="yb-search__name">Cronograma - step 2 Cortex</span>
+                <span class="yb-search__meta">Ybera USA</span>
+              </span>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$37.90</b></span>
+            </a>
+            <a class="yb-search__item" href="pdp.html" data-termo="deep care hair kit">
+              <span class="yb-search__thumb"><img src="img/Off2Sep02-30-9-61135e.webp" alt="" loading="lazy" width="56" height="56"></span>
+              <span>
+                <span class="yb-search__name">Deep care hair kit</span>
+                <span class="yb-search__meta">Ybera USA</span>
+              </span>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$157.80</b></span>
+            </a>
+            <a class="yb-search__item" href="pdp.html" data-termo="cronograma   step 1 medula">
+              <span class="yb-search__thumb"><img src="img/MEDULA_1-117722.webp" alt="" loading="lazy" width="56" height="56"></span>
+              <span>
+                <span class="yb-search__name">Cronograma - step 1 Medula</span>
+                <span class="yb-search__meta">Ybera USA</span>
+              </span>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$37.90</b></span>
+            </a>
+        </div>
+      </div>
+    </div>
+    <div class="yb-search__empty" data-yb-search-empty hidden>
+      <p>Nothing found for <strong data-yb-search-echo></strong>.</p>
+      <p>Try a shorter word, or the product line instead of the full name.</p>
+      <ul class="yb-search__chips">
+        <li><a class="yb-search__chip" href="/collections/best-sellers">Best sellers</a></li>
+        <li><a class="yb-search__chip" href="/collections/new">New arrivals</a></li>
+        <li><a class="yb-search__chip" href="/pages/contact">Talk to a specialist</a></li>
+      </ul>
+    </div>
+  </div>
+</dialog>
+<script src="yb/components.js?v=27e54a18"></script>
 <script>
 // Setas do banner. Carrossel nao e componente do sistema — este JS vive na
 // pagina, nao em components.js, para nao dar a entender que existe.
