@@ -72,6 +72,9 @@ const T = {
     doneEmptyT:"Histórico em levantamento",
     doneEmptyD:"Nenhum item tem data de conclusão registrada ainda no Azure DevOps — então não há de onde puxar entrega fechada. O que já está no ar está sendo levantado à mão e entra na próxima atualização. Enquanto isso, esta coluna vazia diz respeito à base, não ao trabalho.",
     all:"Todos", filterLabel:"Filtrar por produto:",
+    filterOwner:"Filtrar por responsável:",
+    detEmptyFiltro:"Nenhum projeto com esses filtros.",
+    detEmptyFiltroD:"Os filtros de produto e de responsável, combinados, não deixaram nenhum projeto. Solte um dos dois para voltar a ver a lista.",
     window:"Janela", elapsed:"Janela decorrida", over:"Janela vencida",
     live:"No ar desde", resultLabel:"Resultado:",
     noProsa:"Sem redação", noProsaTitle:"Item com fato no Azure DevOps mas sem texto editorial em prosa.js ainda.",
@@ -154,6 +157,9 @@ const T = {
     doneEmptyT:"History being compiled",
     doneEmptyD:"No item has a close date recorded yet in Azure DevOps — so there is no closed delivery to pull. What is already live is being compiled by hand and lands in the next update. Until then, this empty column is about the database, not about the work.",
     all:"All", filterLabel:"Filter by product:",
+    filterOwner:"Filter by owner:",
+    detEmptyFiltro:"No project matches these filters.",
+    detEmptyFiltroD:"The product and owner filters, combined, left no project standing. Release one of them to see the list again.",
     window:"Window", elapsed:"Window elapsed", over:"Window overdue",
     live:"Live since", resultLabel:"Result:",
     noProsa:"No copy", noProsaTitle:"Item with facts from Azure DevOps but no editorial text in prosa.js yet.",
@@ -300,6 +306,19 @@ const DATA = fundir(
 
 let lang = localStorage.getItem("radar-lang") === "en" ? "en" : "pt";
 let activeTracks = new Set();
+/* Responsável: mesmo escopo do filtro de produto — estreita as listas de
+   projeto (board, produtos, tabela), e não os tiles, o medidor de trimestre
+   ou o horizonte, que continuam falando da frente inteira. Não é persistido
+   em localStorage de propósito: os chips só existem em quatro páginas, e um
+   filtro guardado entre visitas faria o Panorama contar 17 de 31 sem ter
+   controle nenhum na tela para o leitor perceber por quê.
+
+   Chaveado por nome NORMALIZADO (chaveDono, abaixo) porque a mesma pessoa
+   aparece com duas grafias dependendo da origem: "Urlan Dipre" quando vem
+   do System.AssignedTo do Azure DevOps, "Urlan Dipré" quando o item não tem
+   dono lá e cai no `meta.owner` de prosa.js. Sem normalizar, uma pessoa
+   ganharia dois chips, cada um filtrando metade do trabalho dela. */
+let activeOwners = new Set();
 /* Tabela: filtro de status e ordenação. Só a página tabela tem os
    contêineres — nas outras, estes estados ficam inertes. */
 let activeStatus = new Set();
@@ -327,6 +346,18 @@ const L = v => (v == null ? "" : (typeof v === "object" ? (v[lang] ?? v.pt ?? ""
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const D = iso => { const [y,m,d] = iso.split("-").map(Number); return new Date(y, m-1, d); };
 const TODAY = D(TODAY_ISO);
+
+/* Dono de um item, do jeito que a TELA já o mostra hoje (card, linha da
+   tabela e coluna Dono todas usam `i.owner || m.owner`). O filtro precisa
+   olhar exatamente esse valor, e não o `i.owner` cru: filtrar por um nome
+   diferente do que está impresso ao lado do projeto seria a página
+   discordando de si mesma. */
+const donoDe = i => i.owner || DATA.meta.owner;
+/* Chave de comparação de nome: sem acento, minúsculo, espaço colapsado —
+   ver o comentário de activeOwners para o porquê ("Dipre" vs "Dipré"). */
+const chaveDono = nome => String(nome ?? "")
+  .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  .toLowerCase().replace(/\s+/g, " ").trim();
 
 function fmtDate(iso, withYear){
   if(!iso) return "";
@@ -627,7 +658,36 @@ function render(){
     render();
   }));
 
-  const visible = items.filter(i => activeTracks.size === 0 || activeTracks.has(i.track));
+  /* Responsável: pelo mesmo motivo dos chips de produto acima, só entra quem
+     tem projeto — um chip que filtra para nada é beco sem saída. A lista sai
+     dos próprios itens (Map por chave normalizada, guardando a primeira
+     grafia vista para exibir), então uma pessoa nova no Azure DevOps ganha
+     chip sozinha na rodada seguinte, sem ninguém cadastrar nada. Ordem
+     alfabética para a posição do chip não pular de rodada em rodada. */
+  const oEl = $("ofilters");
+  const donos = [...new Map(items.map(i => [chaveDono(donoDe(i)), donoDe(i)])).entries()]
+    .sort((a, b) => a[1].localeCompare(b[1], "pt"));
+  oEl.innerHTML = `<span class="flabel">${esc(t.filterOwner)}</span>` +
+    `<button type="button" class="chip" data-owner="__all" aria-pressed="${activeOwners.size === 0}">${esc(t.all)}</button>` +
+    donos.map(([k, nome]) =>
+      `<button type="button" class="chip" data-owner="${esc(k)}" aria-pressed="${activeOwners.has(k)}">${esc(nome)}</button>`
+    ).join("");
+  oEl.querySelectorAll(".chip").forEach(btn => btn.addEventListener("click", () => {
+    const k = btn.dataset.owner;
+    if(k === "__all") activeOwners.clear();
+    else activeOwners.has(k) ? activeOwners.delete(k) : activeOwners.add(k);
+    render();
+  }));
+
+  /* Os dois filtros combinam por E: produto E responsável. Uma função só,
+     usada pelo board, pela página Produtos e pela tabela, para as três telas
+     não poderem discordar sobre o que está visível. */
+  const passaFiltro = i =>
+    (activeTracks.size === 0 || activeTracks.has(i.track)) &&
+    (activeOwners.size === 0 || activeOwners.has(chaveDono(donoDe(i))));
+  const algumFiltro = activeTracks.size > 0 || activeOwners.size > 0;
+
+  const visible = items.filter(passaFiltro);
   const cols = [{k:"done", title:t.colDone}, {k:"doing", title:t.colDoing}, {k:"next", title:t.colNext}];
   $("boardTitle").textContent = t.boardTitle;
   $("board").innerHTML = cols.map(c => {
@@ -691,8 +751,12 @@ function render(){
      ordem estável em vez de exceção. */
   const byStartThenStatus = (a, b) =>
     ordDet[a.status] - ordDet[b.status] || (a.start || "").localeCompare(b.start || "");
-  $("detList").innerHTML = DATA.tracks.map(tr => {
-    const list = items.filter(i => i.track === tr.id).sort(byStartThenStatus);
+  /* Os mesmos filtros do board valem aqui (passaFiltro). Antes esta página
+     não tinha contêiner de chips nenhum, então ignorava o filtro de produto
+     por omissão; agora que ela tem os dois, ignorar seria a página mostrando
+     31 projetos com "Urlan Dipre" marcado na tela. */
+  const detProdutos = DATA.tracks.map(tr => {
+    const list = items.filter(i => i.track === tr.id && passaFiltro(i)).sort(byStartThenStatus);
     if(!list.length) return "";
     const nDoing = list.filter(i => i.status === "doing").length;
     const meta = [`${list.length} ${list.length === 1 ? t.projectOne : t.projectMany}`];
@@ -714,7 +778,7 @@ function render(){
        grupo, DATA.tracks.map acima nunca itera esses itens e eles somem da
        página sem deixar rastro — com o config.json de areas vazio hoje, seria
        os 14 de uma vez. Só aparece quando existe pelo menos um caso. */
-    const semProduto = items.filter(i => i.track === null).sort(byStartThenStatus);
+    const semProduto = items.filter(i => i.track === null && passaFiltro(i)).sort(byStartThenStatus);
     if(!semProduto.length) return "";
     return `<div class="prod" data-track="__sem-produto">
       <div class="prod-head">
@@ -735,6 +799,19 @@ function render(){
     return `<p class="fine prod-vazios"><b>${esc(t.prodVazios)}</b> ` +
       `${vazios.map(tr => esc(L(tr.name))).join(" · ")}. ${esc(t.prodVaziosD)}</p>`;
   })();
+
+  /* Filtro que não deixa nenhum projeto de pé precisa dizer isso. Antes desta
+     página ter chips, `detProdutos` nunca podia sair vazio (algum produto
+     sempre tem trabalho) e a página inteira em branco era impossível; com
+     produto E responsável combinando, é uma combinação de dois cliques.
+     Página em branco sem explicação é a pior resposta possível: o leitor não
+     sabe se filtrou demais ou se o Radar quebrou. Só o estado vazio dos
+     filtros aparece — a linha de "produto sem projeto registrado", que fala
+     da base e não do recorte, sai de cena junto. */
+  const detVazioPorFiltro = algumFiltro && !items.some(passaFiltro);
+  $("detList").innerHTML = detVazioPorFiltro
+    ? emptyBox(t.detEmptyFiltro, t.detEmptyFiltroD, t)
+    : detProdutos;
 
   /* --- alternador: as duas telas mostram os mesmos projetos, uma agrupada
          por produto e outra em tabela para comparar. --- */
@@ -764,8 +841,10 @@ function render(){
   const tIdx = {};
   DATA.tracks.forEach((tr, k) => { tIdx[tr.id] = String(k).padStart(2, "0"); });
   const ordSt = {doing:0, next:1, done:2};
+  /* Produto e responsável vêm de passaFiltro (a mesma função do board e da
+     página Produtos); o de status é próprio desta tela. */
   const rows = items.filter(i =>
-    (activeTracks.size === 0 || activeTracks.has(i.track)) &&
+    passaFiltro(i) &&
     (activeStatus.size === 0 || activeStatus.has(i.status)));
   /* Cada coluna vira uma chave comparável. Produto ordena pela ordem dos
      produtos na base (não alfabética) e desempata por status e início. */
