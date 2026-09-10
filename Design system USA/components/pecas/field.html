@@ -1,0 +1,69 @@
+<h2>Form field</h2>
+    <p class="when">Rótulo dentro da caixa, sem uma linha de JS. Erro sempre em texto, nunca só em cor.</p>
+    <div class="demo demo--stack">
+      <div class="yb-field">
+        <div class="yb-field__box">
+          <input class="yb-input" id="f1" type="email" placeholder=" " autocomplete="email">
+          <label class="yb-field__label" for="f1">Email<span class="req">*</span></label>
+        </div>
+        <span class="yb-field__hint">Only for order tracking.</span>
+      </div>
+      <div class="yb-field">
+        <div class="yb-field__box">
+          <input class="yb-input" id="f2" value="0000" placeholder=" " aria-invalid="true" aria-describedby="f2e">
+          <label class="yb-field__label" for="f2">ZIP code<span class="req">*</span></label>
+        </div>
+        <span class="yb-field__error" id="f2e">Enter a 5-digit ZIP code, like 33101.</span>
+      </div>
+      <div class="yb-field">
+        <div class="yb-field__box">
+          <select class="yb-select" id="f3">
+            <option>Straight</option><option>Wavy</option><option>Curly</option><option>Coily</option>
+          </select>
+          <label class="yb-field__label" for="f3">Hair type</label>
+        </div>
+      </div>
+      <div class="yb-field">
+        <div class="yb-field__box">
+          <input class="yb-input" id="f4" value="United States" placeholder=" " disabled>
+          <label class="yb-field__label" for="f4">Country</label>
+        </div>
+      </div>
+      <div class="yb-field">
+        <div class="yb-field__box">
+          <textarea class="yb-textarea" id="f6" placeholder=" "></textarea>
+          <label class="yb-field__label" for="f6">Gift note</label>
+        </div>
+        <span class="yb-field__hint">Printed on the packing slip, up to 200 characters.</span>
+      </div>
+      <form class="yb-field yb-field--row">
+        <div class="yb-field__box">
+          <svg class="yb-icon yb-icon--md" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>
+          <input class="yb-input" id="f5" placeholder=" " inputmode="numeric" maxlength="5" autocomplete="postal-code">
+          <label class="yb-field__label" for="f5">ZIP code</label>
+        </div>
+        <button class="yb-btn yb-btn--secondary" type="submit">Calculate</button>
+        <span class="yb-field__hint">Free shipping over $59.</span>
+      </form>
+    </div>
+    <div class="note">
+      <b>O rótulo sobe sozinho, sem JS</b>
+      <p>O input leva <code>placeholder=" "</code> — um espaço. Não é descuido: é o que
+      dá a <code>:placeholder-shown</code> algo em que casar, e é assim que o CSS
+      distingue vazio de preenchido. O <code>&lt;label for&gt;</code> vem <em>depois</em>
+      do campo no HTML, senão o combinador <code>~</code> não o alcança — continua
+      sendo rótulo de verdade, clicável e anunciado pelo leitor de tela.</p>
+    </div>
+    <div class="note">
+      <b>Borda que engrossa sem empurrar nada</b>
+      <p>O erro e o foco usam <code>box-shadow</code> por dentro, não
+      <code>border-width</code>. Dobrar a borda é mudança de layout: a caixa reflui
+      1px e o rótulo flutuante, ancorado nela, treme junto. Como pintura, os mesmos
+      2px aparecem sem mover um pixel do texto.</p>
+    </div>
+    <div class="note">
+      <b>A mensagem diz como consertar</b>
+      <p>"Enter a 5-digit ZIP code, like 33101" em vez de "Invalid input". O erro
+      liga ao campo por <code>aria-describedby</code>, então o leitor de tela anuncia
+      a correção junto com o campo — e a borda vermelha nunca é o único sinal.</p>
+    </div>

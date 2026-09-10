@@ -14,17 +14,29 @@
          node tools/inventario.mjs --check → sai 1 se o arquivo estiver defasado
    =========================================================================== */
 
-import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const raiz = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ler = (p) => readFileSync(join(raiz, p), 'utf8');
-const talvez = (p) => (existsSync(join(raiz, p)) ? ler(p) : '');
+const talvez = (p) => {
+  const abs = join(raiz, p);
+  if (!existsSync(abs)) return '';
+  // pasta de fragmentos: le todos e concatena, que e o que a checagem quer
+  if (statSync(abs).isDirectory())
+    return readdirSync(abs).filter((f) => f.endsWith('.html'))
+      .map((f) => ler(`${p}/${f}`)).join('\n');
+  return ler(p);
+};
 
 /* --------------------------------------------------------------- fontes */
+// A doc de componente deixou de ser uma pagina so: cada peca tem o proprio
+// fragmento em components/pecas/, e a coluna "Doc" desta matriz pergunta se a
+// familia aparece em ALGUM deles. Apontar para o index.html novo daria "nao"
+// para os 34 — ele agora e um indice de nomes, sem marcacao de componente.
 const FOLHAS = [
-  { camada: 'Componente', css: 'components/ybera-components.css', doc: 'components/index.html' },
+  { camada: 'Componente', css: 'components/ybera-components.css', doc: 'components/pecas' },
   { camada: 'Padrão', css: 'patterns/ybera-patterns.css', doc: 'patterns/index.html' },
 ];
 
@@ -94,11 +106,19 @@ for (const { camada, css: caminho, doc } of FOLHAS) {
       [...semComentario.matchAll(/var\(\s*(--yb-[\w-]+)/g)].map((m) => m[1])
     );
 
+    /* O segundo ramo cobre a peca que nao aparece na propria demo: o Toast
+       nasce de um clique, entao a marcacao da secao dele e feita de BOTOES e
+       `.yb-toast` nunca esta escrito la. Antes o ramo procurava
+       `<section id="toast">`; com a doc de componente virando um arquivo por
+       peca, o que existe agora e `pecas/toast.html`. */
+    const nomeCurto = (c) => c.replace(/^yb-/, '');
     const naDoc =
       raizes.some(
         (c) =>
           new RegExp(`class="[^"]*\\b${c}\\b`).test(marcacao) ||
-          new RegExp(`<section id="${c.replace(/^yb-/, '')}s?">`).test(html)
+          new RegExp(`<section id="${nomeCurto(c)}s?">`).test(html) ||
+          existsSync(join(raiz, `${doc}/${nomeCurto(c)}.html`)) ||
+          existsSync(join(raiz, `${doc}/${nomeCurto(c)}s.html`))
       );
 
     // comportamento: o JS conhece esta família?

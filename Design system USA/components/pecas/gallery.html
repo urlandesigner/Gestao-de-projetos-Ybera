@@ -1,0 +1,27 @@
+<h2>Gallery</h2>
+    <p class="when">As miniaturas são radios nativos: seta do teclado navega, leitor de tela anuncia.</p>
+    <div class="demo demo--stack">
+      <div class="yb-gallery" data-yb-gallery style="max-width:380px">
+        <div class="yb-gallery__stage">
+          <div class="yb-gallery__slide" data-active="true" style="background:var(--yb-gray-100)"></div>
+          <div class="yb-gallery__slide" style="background:var(--yb-gray-200)"></div>
+          <div class="yb-gallery__slide" style="background:var(--yb-magenta-50)"></div>
+          <div class="yb-gallery__slide" style="background:var(--yb-gold-100)"></div>
+          <div class="yb-gallery__slide" style="background:var(--yb-gray-300)"></div>
+          <span class="yb-gallery__count">1 / 5</span>
+        </div>
+        <div class="yb-gallery__thumbs">
+          <input type="radio" name="gal" id="g1" checked><label for="g1" title="Image 1"></label>
+          <input type="radio" name="gal" id="g2"><label for="g2" title="Image 2"></label>
+          <input type="radio" name="gal" id="g3"><label for="g3" title="Image 3"></label>
+          <input type="radio" name="gal" id="g4"><label for="g4" title="Image 4"></label>
+          <input type="radio" name="gal" id="g5"><label for="g5" title="Image 5"></label>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Sem JS ela ainda troca</b>
+      <p>O <code>:checked</code> do radio já muda o slide via CSS. O JS só
+      sincroniza o contador e o estado <code>data-active</code>. Se o script falhar,
+      a galeria continua navegável — inclusive por teclado.</p>
+    </div>

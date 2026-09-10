@@ -1,0 +1,55 @@
+<h2>Partner</h2>
+    <p class="when">O recado de quem indicou. Aparece quando a pessoa chega por link patrocinado &mdash; e some do caminho assim que ela rola.</p>
+    <div class="stage stage--dim" style="position:relative; min-height:13rem">
+      <div class="yb-partner" style="inset-inline-start:var(--yb-space-5)">
+        <div class="yb-partner__dock">
+          <button class="yb-partner__avatar" type="button" aria-expanded="true" aria-controls="doc-partner-msg">
+            <img src="../_captura/nova-loja/img/02sauana-2896ea7c.webp" alt="">
+            <span class="yb-sr-only">Recado de @naymazzeto</span>
+          </button>
+          <div class="yb-partner__bubble" id="doc-partner-msg">
+            <p>Hey, it&rsquo;s <b>@naymazzeto</b>! Enjoy my exclusive <b>partner discount</b>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <h3 class="row-label">Recolhido — depois de 96px de rolagem</h3>
+    <div class="stage stage--dim" style="position:relative; min-height:8rem">
+      <div class="yb-partner" data-recolhido style="inset-inline-start:var(--yb-space-5)">
+        <div class="yb-partner__dock">
+          <button class="yb-partner__avatar" type="button" aria-expanded="false" aria-controls="doc-partner-msg2">
+            <img src="../_captura/nova-loja/img/02sauana-2896ea7c.webp" alt="">
+            <span class="yb-sr-only">Recado de @naymazzeto</span>
+          </button>
+          <div class="yb-partner__bubble" id="doc-partner-msg2">
+            <p>Hey, it&rsquo;s <b>@naymazzeto</b>! Enjoy my exclusive <b>partner discount</b>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Encolhe, não some</b>
+      <p>O balão é um recado: serve uma vez, e depois de lido vira tarja cobrindo a arte
+      do banner. Mas o desconto vale a sessão inteira &mdash; sem nenhum rastro na tela,
+      ele reaparece no carrinho sem que ninguém entenda de onde veio. Por isso a peça
+      não sai: passados 96px de rolagem o balão recolhe e fica só o avatar, com um ponto
+      de aviso, clicável para reabrir.</p>
+      <p>Depois do primeiro clique a rolagem para de mandar. Quem abriu na mão não quer
+      ver fechar sozinho de novo.</p>
+      <p>É a ponta de cima do mesmo fio que termina em
+      <a href="../patterns/#cart-drawer">.yb-cart__parceiro</a>, no pé da gaveta: um
+      apresenta, o outro cobra a promessa no instante do total.</p>
+      <p>O balão é <code>position:absolute</code> ao lado do avatar, e a transição é só
+      opacidade e deslocamento &mdash; animar largura de caixa com texto dentro reflui a
+      cada quadro. O anel claro no avatar existe porque o que está atrás é foto de
+      campanha, que muda toda semana: sem ele o avatar some em metade das artes.</p>
+      <p><b>Ancorado no banner, não na janela.</b> Foi <code>position:fixed</code> com um
+      offset somado à mão e passou por cima do logo: medido, o bloco de cabeçalho termina
+      em 117px no desktop e 109 no celular &mdash; a faixa de anúncio entra na conta e não
+      tem token. Somar altura de coisa que muda com quebra de linha é chute com cara de
+      cálculo. Ancorado no próprio banner o ponto de partida é exato em qualquer largura,
+      e a peça sai da tela junto com a arte que ela cobre. O pai precisa de
+      <code>position:relative</code>.</p>
+      <p>Sem JavaScript o balão fica aberto. É o estado certo para ficar preso: o recado
+      aparece, só não recolhe.</p>
+    </div>

@@ -1,0 +1,155 @@
+<h2>Search overlay</h2>
+    <p class="when">Busca é troca de contexto da página inteira — folha do topo, não caixinha no header.</p>
+    <div class="demo">
+      <button class="yb-btn yb-btn--secondary" type="button" data-yb-open="site-search">
+        <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>
+        Open search
+      </button>
+
+      <dialog id="site-search" class="yb-search" aria-label="Search products">
+        <div class="yb-search__bar">
+          <form class="yb-search__form" role="search" action="#" data-yb-search>
+            <svg class="yb-icon yb-search__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>
+            <input class="yb-search__input" type="search" name="q" autocomplete="off" autofocus
+                   placeholder="Search products, concerns, ingredients" aria-label="Search products">
+            <button class="yb-iconbtn yb-search__clear" type="reset" aria-label="Clear search" hidden>
+              <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg>
+            </button>
+            <button class="yb-search__close" type="button" data-yb-close>Close</button>
+          </form>
+        </div>
+
+        <div class="yb-search__body">
+          <div class="yb-search__panel" data-yb-search-zero>
+            <div class="yb-search__col">
+              <div class="yb-search__group">
+                <h3 class="yb-search__title">Recent</h3>
+                <ul class="yb-search__chips">
+                  <li><button class="yb-search__chip" type="button"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-clock"/></svg>keratin</button></li>
+                  <li><button class="yb-search__chip" type="button"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-clock"/></svg>fashion gold</button></li>
+                  <li><button class="yb-search__chip" type="button"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-clock"/></svg>frizz</button></li>
+                </ul>
+              </div>
+              <div class="yb-search__group yb-search__group--secondary">
+                <h3 class="yb-search__title">Popular</h3>
+                <ul class="yb-search__list">
+                  <li><a class="yb-search__link" href="#"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>hair botox</a></li>
+                  <li><a class="yb-search__link" href="#"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>progressive brush</a></li>
+                  <li><a class="yb-search__link" href="#"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>myrrh oil</a></li>
+                </ul>
+              </div>
+              <div class="yb-search__group yb-search__group--secondary">
+                <h3 class="yb-search__title">Categories</h3>
+                <ul class="yb-search__chips">
+                  <li><a class="yb-search__chip" href="#">Smoothing</a></li>
+                  <li><a class="yb-search__chip" href="#">Home care</a></li>
+                  <li><a class="yb-search__chip" href="#">Kits</a></li>
+                  <li><a class="yb-search__chip" href="#">Hair oils</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="yb-search__col">
+              <div class="yb-search__group">
+                <h3 class="yb-search__title">Best sellers</h3>
+                <a class="yb-search__item" href="#">
+                  <span class="yb-search__thumb"></span>
+                  <span>
+                    <span class="yb-search__name">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</span>
+                    <span class="yb-search__meta">Smoothing · 412 reviews</span>
+                  </span>
+                  <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b></span>
+                </a>
+                <a class="yb-search__item" href="#">
+                  <span class="yb-search__thumb"></span>
+                  <span>
+                    <span class="yb-search__name">Myrrh Hair Repair Oil — 15ml / 0.5 fl.oz</span>
+                    <span class="yb-search__meta">Hair oils · 203 reviews</span>
+                  </span>
+                  <span class="yb-price yb-price--sm"><b class="yb-price__now">$29.90</b></span>
+                </a>
+                <a class="yb-search__item" href="#">
+                  <span class="yb-search__thumb"></span>
+                  <span>
+                    <span class="yb-search__name">KIT VELLO Shampoo 500ml + Hair Mask 500g</span>
+                    <span class="yb-search__meta">Home care · 87 reviews</span>
+                  </span>
+                  <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="yb-search__panel" data-yb-search-results hidden>
+            <div class="yb-search__col">
+              <div class="yb-search__group" data-yb-search-group>
+                <h3 class="yb-search__title">Suggestions</h3>
+                <ul class="yb-search__list">
+                  <li data-termo="keratin"><a class="yb-search__link" href="#"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>keratin treatment</a></li>
+                  <li data-termo="keratin"><a class="yb-search__link" href="#"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>keratin for curly hair</a></li>
+                  <li data-termo="oil myrrh"><a class="yb-search__link" href="#"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>myrrh repair oil</a></li>
+                  <li data-termo="kit vello shampoo"><a class="yb-search__link" href="#"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>vello shampoo</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="yb-search__col">
+              <div class="yb-search__group" data-yb-search-group>
+                <h3 class="yb-search__title">Products</h3>
+                <a class="yb-search__item" href="#" data-termo="keratin kit sealant fashion gold">
+                  <span class="yb-search__thumb"></span>
+                  <span>
+                    <span class="yb-search__name">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</span>
+                    <span class="yb-search__meta">Smoothing · in stock</span>
+                  </span>
+                  <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b></span>
+                </a>
+                <a class="yb-search__item" href="#" data-termo="oil myrrh repair">
+                  <span class="yb-search__thumb"></span>
+                  <span>
+                    <span class="yb-search__name">Myrrh Hair Repair Oil — 15ml / 0.5 fl.oz</span>
+                    <span class="yb-search__meta">Hair oils · in stock</span>
+                  </span>
+                  <span class="yb-price yb-price--sm"><b class="yb-price__now">$29.90</b></span>
+                </a>
+                <a class="yb-search__item" href="#" data-termo="kit vello shampoo mask">
+                  <span class="yb-search__thumb"></span>
+                  <span>
+                    <span class="yb-search__name">KIT VELLO Shampoo 500ml + Hair Mask 500g</span>
+                    <span class="yb-search__meta">Home care · in stock</span>
+                  </span>
+                  <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="yb-search__empty" data-yb-search-empty hidden>
+            <p>Nothing found for <strong data-yb-search-echo></strong>.</p>
+            <p>Try a shorter word, or the product line instead of the full name.</p>
+            <ul class="yb-search__chips">
+              <li><a class="yb-search__chip" href="#">Best sellers</a></li>
+              <li><a class="yb-search__chip" href="#">New arrivals</a></li>
+              <li><a class="yb-search__chip" href="#">Talk to a specialist</a></li>
+            </ul>
+          </div>
+        </div>
+      </dialog>
+    </div>
+    <div class="note">
+      <b>A barra não muda de forma enquanto se digita</b>
+      <p>Só o conteúdo abaixo troca — zero, resultados, vazio. Campo que se mexe
+      enquanto a pessoa digita nele é campo que perde o cursor. Digite
+      <code>keratin</code>, <code>oil</code> e <code>xyz</code> para ver os três estados.</p>
+    </div>
+    <div class="note">
+      <b>Recentes só existe quando há recentes</b>
+      <p>O bloco não é renderizado com a lista vazia. Um "Recent" com nada embaixo
+      anuncia uma função que aquele cliente não tem, e ocupa o lugar do que ele
+      poderia usar. Em ≤860px populares e categorias também saem: numa tela de mão
+      o que importa é o campo e os produtos.</p>
+    </div>
+    <div class="note">
+      <b>Vazio não é beco sem saída</b>
+      <p>A tela sem resultado diz o termo que falhou, sugere como reformular e
+      oferece três saídas. Sair de uma busca frustrada não pode exigir o botão
+      voltar do navegador.</p>
+    </div>

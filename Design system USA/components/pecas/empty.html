@@ -1,0 +1,36 @@
+<h2>Empty state</h2>
+    <p class="when">Busca sem resultado, filtro que não acha nada, carrinho vazio, produto que saiu do catálogo. Sempre com o próximo passo.</p>
+    <div class="demo demo--stack">
+      <div class="yb-empty">
+        <span class="yb-empty__icone"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></span>
+        <p class="yb-empty__title">No results for “keratine”</p>
+        <p class="yb-empty__text">Check the spelling, or browse the treatments — the shelf is smaller than the search box suggests.</p>
+        <div class="yb-empty__acoes">
+          <a class="yb-btn yb-btn--primary" href="#empty">Browse treatments</a>
+          <a class="yb-btn yb-btn--secondary" href="#empty">Talk to us</a>
+        </div>
+      </div>
+      <div class="yb-empty yb-empty--inline">
+        <span class="yb-empty__icone"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-star"/></svg></span>
+        <p class="yb-empty__title">No 3-star reviews yet</p>
+        <p class="yb-empty__text">Every review this product has so far is a five.</p>
+        <div class="yb-empty__acoes">
+          <button class="yb-btn yb-btn--secondary" type="button">Show all reviews</button>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>A saída não é enfeite — é o motivo do componente existir</b>
+      <p>Ausência sem próximo passo é beco: a pessoa chegou onde não há nada e a
+      página não diz para onde ir. Por isso <code>__acoes</code> aparece nos dois
+      exemplos. O ícone fica no tom silencioso do texto de apoio, porque quem
+      precisa ser lido aqui é a saída, não o buraco.</p>
+    </div>
+    <div class="note">
+      <b>Por que não reaproveitamos o <code>.yb-search__empty</code></b>
+      <p>Ele existe desde a busca e continua lá, com o eco do termo digitado
+      dentro. É estado vazio de um componente específico; este é o genérico, que
+      o 404 de produto e o filtro de avaliações usam. Migrar a busca para cá é
+      possível, mas mexeria num fluxo que já funciona — ficou de fora de
+      propósito.</p>
+    </div>

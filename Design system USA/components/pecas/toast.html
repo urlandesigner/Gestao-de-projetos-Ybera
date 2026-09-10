@@ -1,0 +1,17 @@
+<h2>Toast</h2>
+    <p class="when">Confirma o que já aconteceu. Não pede nada e não bloqueia nada.</p>
+    <div class="demo">
+      <button class="yb-btn yb-btn--primary"
+        onclick="Ybera.toast({title:'Added to cart',text:'Kit Sealant Fashion Gold — 500 g',variant:'success'})">Adicionar ao carrinho</button>
+      <button class="yb-btn yb-btn--ghost"
+        onclick="Ybera.toast({title:'Saved for later',text:'Find it in your wishlist'})">Salvar</button>
+      <button class="yb-btn yb-btn--ghost"
+        onclick="Ybera.toast({title:'Payment declined',text:'Your bank rejected the charge. Try another card.',variant:'danger',duration:0})">Erro (não some)</button>
+    </div>
+    <div class="note">
+      <b>Some sozinho — menos quando você está lendo</b>
+      <p>Cinco segundos por padrão, mas o relógio para no <code>mouseenter</code> e
+      no <code>focusin</code>. O de erro usa <code>duration:0</code> e
+      <code>role="alert"</code>: erro não desaparece antes de ser lido, e interrompe
+      o leitor de tela. Os outros usam <code>role="status"</code> e esperam a pausa.</p>
+    </div>

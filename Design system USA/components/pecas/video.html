@@ -1,0 +1,51 @@
+<h2>Vertical video carousel</h2>
+    <p class="when">Conteúdo de creator em 9:16, como o TikTok serve. O cartão entra como pôster; o vídeo só nasce no primeiro clique.</p>
+    <div class="demo demo--rail">
+      <div class="yb-track yb-videos">
+        <button class="yb-video" type="button" aria-label="Fashion Gold on curly hair, first result">
+          <img src="../_captura/nova-loja/img/tt-1.jpg" alt="" loading="lazy">
+          <span class="yb-iconbtn yb-iconbtn--onmedia yb-video__play"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-play"/></svg></span>
+        </button>
+        <button class="yb-video" type="button" aria-label="Cronograma routine explained in Times Square">
+          <img src="../_captura/nova-loja/img/tt-2.jpg" alt="" loading="lazy">
+          <span class="yb-video__caption">Cronograma, week one</span>
+        </button>
+        <button class="yb-video" type="button" aria-label="I cut my hair and regretted it">
+          <img src="../_captura/nova-loja/img/tt-3.jpg" alt="" loading="lazy">
+          <span class="yb-video__caption">Growing it back with Vello</span>
+        </button>
+        <button class="yb-video" type="button" aria-label="Satin bonnet routine after a keratin treatment">
+          <img src="../_captura/nova-loja/img/tt-4.jpg" alt="" loading="lazy">
+          <span class="yb-iconbtn yb-iconbtn--onmedia yb-video__play"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-play"/></svg></span>
+        </button>
+        <button class="yb-video" type="button" aria-label="Which Cronograma tube for which hair damage">
+          <img src="../_captura/nova-loja/img/tt-5.jpg" alt="" loading="lazy">
+          <span class="yb-iconbtn yb-iconbtn--onmedia yb-video__play"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-play"/></svg></span>
+        </button>
+        <button class="yb-video" type="button" aria-label="Red hair kept vivid after the treatment">
+          <img src="../_captura/nova-loja/img/tt-6.jpg" alt="" loading="lazy">
+          <span class="yb-video__caption">Color-safe, six weeks in</span>
+        </button>
+      </div>
+    </div>
+    <div class="note">
+      <b>Sem <code>data-video</code> não existe play</b>
+      <p>O design system não hospeda mídia, então nenhum cartão aqui aponta para um
+      arquivo — e o play some sozinho, por regra da folha. Em produção o atributo
+      traz a URL do CDN e o botão aparece no mesmo lugar. Um botão que promete vídeo
+      e não entrega é pior do que não ter botão.</p>
+    </div>
+    <div class="note">
+      <b>Pôster primeiro, vídeo depois</b>
+      <p>Quarenta e cinco vídeos em autoplay é o que faz uma home pesar. O
+      <code>&lt;video&gt;</code> só entra no DOM no clique, com o pôster já pintado —
+      então não há salto de layout quando ele chega, e quem passa direto não paga
+      nada.</p>
+    </div>
+    <div class="note">
+      <b>A legenda é opcional, o rótulo não</b>
+      <p><code>.yb-video__caption</code> aparece só onde o pôster não tem texto
+      próprio queimado — duas camadas de legenda no mesmo canto não se leem. O
+      <code>aria-label</code> do botão, esse existe em todos: sem ele o leitor de
+      tela anuncia seis botões idênticos e sem nome.</p>
+    </div>

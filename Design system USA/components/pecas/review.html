@@ -1,0 +1,95 @@
+<h2>Review</h2>
+    <p class="when">Prova social com nota, texto, quem escreveu e o que comprou. Sem o produto ao lado, o elogio não prova nada.</p>
+    <div class="demo demo--rail">
+      <div class="yb-track yb-reviews" id="demo-reviews">
+        <article class="yb-review">
+          <div class="yb-review__media"><img src="../_captura/nova-loja/img/YBERA_PARIS_-_vello_-_Soro_Vital_alfa-lactobaby_-ca2b7e86.webp" alt="Frasco branco do sérum Vello Alfa-Lactobaby" loading="lazy"></div>
+          <div class="yb-review__body">
+            <span class="yb-rating" role="img" aria-label="5 de 5 estrelas">
+              <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
+            <p class="yb-review__title">Three months in and the shedding stopped</p>
+            <p class="yb-review__text">I was losing hair after my second baby. Three months of the serum every other night and the shower drain is finally clean. New growth at the temples too.</p>
+            <span class="yb-review__author">Rosana B.</span>
+            <span class="yb-review__verified"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-shield-check"/></svg> Verified purchase</span>
+            <span class="yb-review__product">VELLO Hair Fertilization Therapy ALFA-LACTOBABY — 90ml / 3 fl.oz</span>
+          </div>
+        </article>
+        <article class="yb-review">
+          <div class="yb-review__media"><img src="../_captura/nova-loja/img/kit_tratamento_terra_coco_elixir_160x160-26270456.webp" alt="Kit Terra Coco: shampoo, máscara e elixir de coco" loading="lazy"></div>
+          <div class="yb-review__body">
+            <span class="yb-rating" role="img" aria-label="5 de 5 estrelas">
+              <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
+            <p class="yb-review__title">The elixir is what sold me</p>
+            <p class="yb-review__text">Two drops on damp ends and the frizz is gone for the day. The mask alone would have been worth it, but the elixir is the part I keep repurchasing.</p>
+            <span class="yb-review__author">Marggi B.</span>
+            <span class="yb-review__product">Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask 1kg / 33oz + Coconut Elixir 60ml / 2oz</span>
+          </div>
+        </article>
+        <article class="yb-review">
+          <div class="yb-review__media"><img src="../_captura/nova-loja/img/153_160x160-e958dc19.avif" alt="Os quatro tubos do sistema Cronograma Capilar" loading="lazy"></div>
+          <div class="yb-review__body">
+            <span class="yb-rating" role="img" aria-label="4 de 5 estrelas">
+              <span class="yb-rating__stars" aria-hidden="true">★★★★☆</span></span>
+            <p class="yb-review__title">Finally a schedule I can actually follow</p>
+            <p class="yb-review__text">Four tubes, four weeks, and the label tells you which one to use. My hair went from straw to soft in about a month. Wish the tubes were bigger.</p>
+            <span class="yb-review__author">Daniela P.</span>
+            <span class="yb-review__product">CRONOGRAMA Hair Care System — 4 x 250g / 8.8 oz</span>
+          </div>
+        </article>
+        <article class="yb-review">
+          <div class="yb-review__media"><img src="../_captura/nova-loja/img/Prancheta_1-790aea3e.webp" alt="Frasco do tratamento de queratina Fashion Gold" loading="lazy"></div>
+          <div class="yb-review__body">
+            <span class="yb-rating" role="img" aria-label="5 de 5 estrelas">
+              <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
+            <p class="yb-review__title">Salon result, no formaldehyde smell</p>
+            <p class="yb-review__text">My stylist used it on color-treated hair and the tone did not shift. Blow-dry time went from forty minutes to twelve.</p>
+            <span class="yb-review__author">Nataniela R.</span>
+            <span class="yb-review__product">FASHION GOLD Brazilian Keratin Treatment — 500g / 17.6 fl.oz</span>
+          </div>
+        </article>
+      </div>
+      <div class="yb-track__nav" data-yb-track-nav="demo-reviews" hidden>
+        <button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous reviews"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-left"/></svg></button>
+        <button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next reviews"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg></button>
+      </div>
+    </div>
+    <div class="note">
+      <b>As setas nascem escondidas</b>
+      <p><code>.yb-track__nav</code> existia no CSS e ninguém a emitia. Vem com
+      <code>hidden</code> no HTML e é o JS (<code>data-yb-track-nav</code>) que a revela:
+      sem script, botão que não faz nada é pior que nenhum botão — o trilho rola
+      nativo de qualquer jeito. Um cartão por clique, desligadas nas pontas,
+      somem quando não há sobra para rolar. Abaixo de 768 não aparecem: no toque,
+      arrasta.</p>
+    </div>
+    <div class="note">
+      <b>O trilho mostra que anda</b>
+      <p>Em 320px o cartão mede 248 e o respiro cai para 16: sobram 24px do próximo
+      review à vista, e é essa fatia que ensina que dá para arrastar. Com 280 e
+      respiro de 32, o segundo cartão nascia fora da tela e o carrossel virava um
+      cartão solto.</p>
+    </div>
+    <div class="note">
+      <b>Acima de 1280 a fatia é bug, não pista</b>
+      <p><code>minmax(320px, 1fr)</code> garante o mínimo do cartão, não um número
+      inteiro deles. A partir de 1280px a página já bateu no
+      <code>--yb-container-max</code> de 1200px — o trilho tem sempre os mesmos
+      1136px de sobra, então trava em três colunas de
+      <code>calc((100% - var(--yb-space-8) * 2) / 3)</code>, que fecham exatamente
+      nesse espaço. A quarta review nasce fora, não pela metade — e nesses
+      tamanhos a seta ao lado já avisa que dá para navegar, o cartão cortado não
+      precisa fazer esse trabalho de novo.</p>
+    </div>
+    <div class="note">
+      <b>Quem desenha isso hoje é o Judge.me</b>
+      <p>Ele renderiza no DOM normal — sem shadow DOM —, e as variáveis dele já
+      estão traduzidas em <code>bridge/ybera-bridge.css</code>: o app continua
+      sendo o app, e a página para de ter duas tipografias.</p>
+    </div>
+      <div class="note">
+      <b>O selo verificado existe e a loja não mostra</b>
+      <p>O ramo está no gerador e não renderiza: as avaliações capturadas não
+      trazem o campo, e o Judge.me só expõe a compra verificada pela API com
+      token. Mesma regra do <code>Save X%</code> — o lugar fica pronto, e ninguém
+      escreve “Verified” sem ter o que verificar.</p>
+    </div>

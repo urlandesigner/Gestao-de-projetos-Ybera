@@ -1,0 +1,83 @@
+<h2>Variant picker</h2>
+    <p class="when">Tamanho, volume, fragrância. Esgotado aparece riscado, não some — sumir esconde que o produto existe.</p>
+    <div class="demo">
+      <div class="yb-swatches">
+        <input type="radio" name="sz" id="z1" checked><label for="z1">500g / 17.6 fl.oz</label>
+        <input type="radio" name="sz" id="z2"><label for="z2">300g / 10.5 fl.oz</label>
+        <input type="radio" name="sz" id="z3"><label for="z3">1kg / 33 oz</label>
+        <input type="radio" name="sz" id="z4" disabled><label for="z4">250g</label>
+      </div>
+    </div>
+    <h3 class="row-label">Sobre painel escuro</h3>
+    <div class="demo demo--dark">
+      <div class="yb-swatches yb-swatches--on-dark">
+        <input type="radio" name="dk" id="dk1" checked><label for="dk1">Slightly Damaged</label>
+        <input type="radio" name="dk" id="dk2"><label for="dk2">Healthy</label>
+        <input type="radio" name="dk" id="dk3"><label for="dk3">Very Damaged</label>
+        <input type="radio" name="dk" id="dk4" disabled><label for="dk4">Chemically Treated</label>
+      </div>
+    </div>
+    <div class="note">
+      <b>A borda do chip escuro é medida, não escolhida</b>
+      <p>O sistema já tinha <code>--yb-border-inverse</code>, mas ela mede
+      <b>1.47:1</b> contra o painel: serve para dividir bloco, não para dizer que
+      uma coisa é clicável &mdash; a WCAG 1.4.11 quer 3:1 na fronteira de um
+      controle. Medi a rampa inteira contra o grafite e
+      <code>--yb-border-inverse-strong</code> (<b>3.23:1</b>) é o degrau mais
+      escuro que ainda passa; um abaixo dá 2.17:1 e reprova.</p>
+      <p>O escolhido <b>inverte para fundo claro</b> em vez de só trocar a borda:
+      sobre escuro a diferença entre duas bordas cinzas não se lê de relance, e
+      qual está escolhida é a informação mais importante da fileira.</p>
+      <p>Estrutura, alvo de 44px, <code>:checked</code>, foco e o radio por baixo
+      são os mesmos do picker claro. Só a cor muda.</p>
+    </div>
+
+    <h3 class="row-label">Em cartão — quando a escolha muda o frasco</h3>
+    <div class="demo demo--rail">
+      <p class="yb-field__label" id="rot-doc">Size: <b data-yb-variante-eco>750g</b></p>
+      <div class="yb-swatches yb-swatches--cards" role="radiogroup" aria-labelledby="rot-doc" data-yb-variante>
+        <input type="radio" name="szc" id="c1" checked>
+        <label for="c1">
+          <img src="../_captura/nova-loja/img/KitCuidadosProfundos-YberaFashionGold_ab-9c59c4.webp" alt="" loading="lazy">
+          <span class="yb-swatches__name">750g</span>
+          <span class="yb-swatches__price">$89.90</span>
+          <span class="yb-swatches__stock">In stock</span>
+        </label>
+        <input type="radio" name="szc" id="c2">
+        <label for="c2">
+          <img src="../_captura/nova-loja/img/90_mascara_nutricao_250g_cuidados_profun-704696.webp" alt="" loading="lazy">
+          <span class="yb-swatches__name">250g</span>
+          <span class="yb-swatches__price">$34.90</span>
+          <span class="yb-swatches__stock">In stock</span>
+        </label>
+        <input type="radio" name="szc" id="c3" data-yb-esgotado>
+        <label for="c3">
+          <img src="../_captura/nova-loja/img/90_mascara_reconstrucao_250g_cuidados_pr-2fb01d.webp" alt="" loading="lazy">
+          <span class="yb-swatches__name">1kg</span>
+          <span class="yb-swatches__price">$119.90</span>
+          <span class="yb-swatches__stock">Sold out</span>
+        </label>
+      </div>
+    </div>
+    <div class="note">
+      <b>Duas divergências deliberadas da loja</b>
+      <p>Ela aplica <code>opacity:.6</code> no cartão esgotado inteiro, o que derruba o
+      texto abaixo do piso de contraste — aqui só a <b>foto</b> desbota, e quem diz
+      "esgotado" é a palavra. E ela pinta “Sold out” com o magenta, que neste
+      sistema é cor de <b>ação</b>; estado negativo usa cor de estado.</p>
+    </div>
+    <div class="note">
+      <b>O esgotado continua clicável — <code>data-yb-esgotado</code>, não <code>disabled</code></b>
+      <p>Era <code>disabled</code>: o tamanho sem estoque aparecia e não podia ser
+      alcançado. Só que chegar nele é o único caminho para o aviso de volta ao
+      estoque — desabilitar tirava do cliente a única coisa que ele ainda podia
+      pedir. <code>disabled</code> segue valendo para o outro caso, o de opção que a
+      página de fato impede; os dois se parecem porque os dois estão fora de
+      alcance por motivo diferente.</p>
+    </div>
+    <div class="note">
+      <b>O rótulo ecoa a escolha sem depender de JavaScript</b>
+      <p>“Size: <b>750g</b>” já nasce correto no HTML, com o valor de quem está
+      <code>checked</code>. O script só mantém o eco em dia quando a pessoa troca —
+      a página nunca mente, nem sem ele.</p>
+    </div>

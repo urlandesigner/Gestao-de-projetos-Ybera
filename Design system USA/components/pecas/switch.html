@@ -1,0 +1,28 @@
+<h2>Switch</h2>
+    <p class="when">Liga e desliga na hora. Se o efeito só acontece depois de um botão de salvar, o certo é a caixa de seleção.</p>
+    <div class="demo">
+      <button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="false" aria-label="Seguro de entrega">
+        <span class="yb-switch__knob"></span>
+      </button>
+      <button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="true" aria-label="Seguro de entrega, ligado">
+        <span class="yb-switch__knob"></span>
+      </button>
+      <button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="false" aria-label="Indisponível" disabled>
+        <span class="yb-switch__knob"></span>
+      </button>
+    </div>
+    <div class="note">
+      <b>Não é a caixa de seleção com outra roupa</b>
+      <p>A caixa guarda uma intenção até alguém enviar o formulário; o switch
+      <b>aplica na hora</b> &mdash; o seguro de entrega entra no total no mesmo
+      instante. Trocar um pelo outro faz a pessoa procurar um botão de salvar que
+      não existe.</p>
+      <p><code>&lt;button role="switch" aria-checked&gt;</code> e não
+      <code>&lt;input type="checkbox"&gt;</code>: com o input o leitor de tela
+      anuncia "caixa de seleção, marcada", que promete exatamente o formulário
+      que não há.</p>
+      <p>O desenho tem 32&times;20, que é como um switch se lê. O <b>alvo</b> tem
+      56&times;44, estendido por um pseudo-elemento &mdash; o mínimo da WCAG 2.5.8
+      é 24&times;24, e crescer o desenho até lá daria um interruptor do tamanho de
+      um botão.</p>
+    </div>

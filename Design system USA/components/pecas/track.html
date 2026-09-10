@@ -1,0 +1,61 @@
+<h2>Track</h2>
+    <p class="when">Trilho de rolagem horizontal. É o que carrega as fileiras que não cabem na tela — avaliações, vídeos, logos, banners do hero — sem quebrar em duas linhas nem empurrar a página de lado.</p>
+    <h3 class="row-label">Base — cartões que rolam</h3>
+    <div class="demo demo--rail">
+      <div class="yb-track" id="doc-trilho">
+        <a class="yb-collection yb-collection--center" href="#track">
+          <img src="../_captura/nova-loja/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy">
+          <span class="yb-collection__label">Fashion Gold</span></a>
+        <a class="yb-collection yb-collection--center" href="#track">
+          <img src="../_captura/nova-loja/img/02_hair-problem-f838107d.webp" alt="" loading="lazy">
+          <span class="yb-collection__label">Damaged Hair</span></a>
+        <a class="yb-collection yb-collection--center" href="#track">
+          <img src="../_captura/nova-loja/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy">
+          <span class="yb-collection__label">Undefined Curls</span></a>
+        <a class="yb-collection yb-collection--center" href="#track">
+          <img src="../_captura/nova-loja/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy">
+          <span class="yb-collection__label">Thinning</span></a>
+        <a class="yb-collection yb-collection--center" href="#track">
+          <img src="../_captura/nova-loja/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy">
+          <span class="yb-collection__label">Frizz</span></a>
+      </div>
+      <div class="yb-track__nav" data-yb-track-nav="doc-trilho" hidden>
+        <button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Anteriores">
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-left"/></svg>
+        </button>
+        <button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Próximos">
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="note">
+      <b>A fatia do próximo cartão é a única coisa que diz que o trilho anda</b>
+      <p>A barra de rolagem está escondida (<code>scrollbar-width:none</code>) porque
+      no toque ela não existe e no desktop ela some sozinha. O que sobra para
+      ensinar o gesto é ver um pedaço do que vem depois. Por isso a medida do item
+      é <code>minmax</code> e não uma divisão exata da largura: um trilho em que
+      cabem exatamente quatro cartões parece uma fileira parada.</p>
+    </div>
+    <div class="note">
+      <b>As setas somem abaixo de 768</b>
+      <p>No toque a pessoa arrasta, e um par de botões repetindo o gesto só ocupa
+      espaço. Elas nascem <code>hidden</code> e o JS só as mostra quando há o que
+      rolar — trilho que cabe inteiro não ganha seta desabilitada.</p>
+    </div>
+    <h3 class="row-label"><code>--row</code> — fila, para o que não é cartão</h3>
+    <div class="demo demo--rail">
+      <div class="yb-track yb-track--row">
+        <span class="yb-badge yb-badge--soft">Fashion Gold</span>
+        <span class="yb-badge yb-badge--soft">Mirra</span>
+        <span class="yb-badge yb-badge--soft">Vello</span>
+        <span class="yb-badge yb-badge--soft">Cronograma</span>
+        <span class="yb-badge yb-badge--soft">Pro-Geno</span>
+      </div>
+    </div>
+    <div class="note">
+      <b><code>justify-content: safe center</code>, não <code>center</code></b>
+      <p>Centralizar um trilho que ainda rola é uma cilada conhecida: quando o
+      conteúdo excede a largura, o navegador empurra o início para fora da área
+      rolável e o primeiro item fica preso, sem como chegar nele nem arrastando.
+      <code>safe</code> volta ao alinhamento normal só quando precisa.</p>
+    </div>

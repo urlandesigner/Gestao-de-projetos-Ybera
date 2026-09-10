@@ -1,0 +1,24 @@
+<h2>Logo</h2>
+    <p class="when">O arquivo oficial do header da loja. Vira componente porque aparece em header, footer, e-mail e recibo — e em cada lugar alguém escolhia uma altura diferente.</p>
+    <h3 class="row-label">Sizes</h3>
+    <div class="demo">
+      <span class="yb-logo yb-logo--sm"><img src="brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span>
+      <span class="yb-logo yb-logo--md"><img src="brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span>
+      <span class="yb-logo yb-logo--lg"><img src="brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span>
+    </div>
+    <h3 class="row-label">On dark surface</h3>
+    <div class="demo demo--dark">
+      <span class="yb-logo yb-logo--md yb-logo--inverse"><img src="brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span>
+    </div>
+    <div class="note">
+      <b>O alt estava dizendo o nome errado</b>
+      <p>Em produção o logo do header tem <code>alt="Fashion Gold"</code> — que é
+      nome de uma linha de produto, não da marca. Um leitor de tela anuncia a loja
+      errada logo no primeiro elemento da página. Aqui o padrão é <code>Ybera</code>.</p>
+    </div>
+    <div class="note">
+      <b>Por que a versão clara é um filtro</b>
+      <p>O arquivo é monocromático preto, então <code>invert(1)</code> devolve
+      branco puro. Isso não valeria para um logo colorido — se a marca ganhar uma
+      versão em cor, o certo passa a ser um segundo arquivo, não um filtro.</p>
+    </div>

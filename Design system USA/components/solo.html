@@ -8,15 +8,28 @@
   Renderiza UMA seção da documentação ao lado, sozinha, para caber num
   <iframe> estreito.
 
-  A marcação não é copiada: esta página busca o index.html da mesma pasta e
-  recorta a <section> pedida. Uma fonte só — editar o demo lá muda aqui.
+  A marcação não é copiada: esta página busca o fragmento da peça em
+  `pecas/<id>.html`. Uma fonte só — editar a peça lá muda aqui.
 
-  Ela vive na MESMA pasta que o index.html de propósito: assim `../tokens/…`,
+  Antes ela buscava o index.html inteiro e recortava a <section> pedida, e
+  clonava dali as folhas de estilo. Com a galeria virando índice gerado, o
+  fragmento passou a ser a fonte e as folhas são declaradas aqui, como em
+  qualquer página — menos indireção e uma dependência a menos.
+
+  Ela vive na MESMA pasta que as folhas de propósito: assim `../tokens/…`,
   `ybera-components.css` e `../icons/ybera-icons.svg#…` resolvem igual, sem
   reescrever caminho nenhum.
 -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="ybera-components.css">
+<link rel="stylesheet" href="doc.css">
 <style>
   html,body{margin:0;padding:0}
+  body{font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+    line-height:var(--yb-type-body-line); color:var(--yb-text-primary)}
   body{background:#fff}
   #solo{padding:12px}
   /* o palco da doc tem moldura própria; aqui ela só duplicaria a do iframe */
@@ -45,35 +58,25 @@
     try { parent.postMessage({ yb: 'altura', c: alvo, h: h }, '*'); } catch (e) {}
   }
 
-  fetch('index.html').then(function (r) { return r.text(); }).then(function (html) {
-    var doc = new DOMParser().parseFromString(html, 'text/html');
+  if (!alvo || !/^[a-z0-9-]+$/.test(alvo)) { caixa.textContent = 'sem peça'; return; }
 
-    // as mesmas folhas da página de origem, na mesma ordem
-    Array.prototype.forEach.call(doc.querySelectorAll('link[rel="stylesheet"]'), function (l) {
-      document.head.insertBefore(l.cloneNode(true), document.head.querySelector('style'));
-    });
-    // e o <style> da doc, que é onde .demo, .stage e .row-label são definidos
-    Array.prototype.forEach.call(doc.querySelectorAll('style'), function (s) {
-      document.head.insertBefore(s.cloneNode(true), document.head.querySelector('style'));
-    });
-
-    var sec = doc.getElementById(alvo);
-    if (!sec) { caixa.textContent = 'seção "' + alvo + '" não existe'; return; }
+  fetch('pecas/' + alvo + '.html').then(function (r) {
+    if (!r.ok) throw new Error(r.status);
+    return r.text();
+  }).then(function (html) {
+    var doc = new DOMParser().parseFromString('<div>' + html + '</div>', 'text/html');
+    var frag = doc.body.firstElementChild;
 
     // fica o que é peça renderizada; sai o que é prosa
-    Array.prototype.forEach.call(sec.children, function (n) {
+    Array.prototype.forEach.call(frag.children, function (n) {
       if (n.matches('h2, p.when, .note')) return;
       caixa.appendChild(n.cloneNode(true));
     });
 
-    // o JS de comportamento, se a página de origem carregar
-    var js = doc.querySelector('script[src]');
-    if (js) {
-      var s = document.createElement('script');
-      s.src = js.getAttribute('src');
-      s.onload = avisarAltura;
-      document.body.appendChild(s);
-    }
+    var s = document.createElement('script');
+    s.src = 'ybera-components.js';
+    s.onload = avisarAltura;
+    document.body.appendChild(s);
 
     /* A altura muda tres vezes: quando a marcacao entra, quando as folhas
        clonadas aplicam, e quando fonte e imagem chegam. Observar o
@@ -90,7 +93,7 @@
     Array.prototype.forEach.call(document.images, function (im) {
       if (!im.complete) im.addEventListener('load', avisarAltura, { once: true });
     });
-  });
+  }).catch(function () { caixa.textContent = 'peça "' + alvo + '" não existe'; });
 })();
 </script>
 </body>

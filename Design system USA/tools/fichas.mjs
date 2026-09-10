@@ -18,7 +18,7 @@
          node tools/fichas.mjs --check  → sai 1 se alguma ficha estiver defasada
    =========================================================================== */
 
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -26,31 +26,41 @@ const raiz = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ler = (p) => readFileSync(join(raiz, p), 'utf8');
 
 const folha = ler('components/ybera-components.css');
-const html = ler('components/index.html');
 const js = ler('components/ybera-components.js');
 const escrito = existsSync(join(raiz, 'components/fichas.json'))
   ? JSON.parse(ler('components/fichas.json')) : {};
 
 const versao = (ler('package.json').match(/"version":\s*"([^"]+)"/) || [, '0.0.0'])[1];
 
-/* --------------------------------------------------------- 1. as secoes
-   A doc e a fonte do que cada componente MOSTRA. Cada <section id> vira uma
-   ficha, com as mesmas demos — nao versoes novas: duas marcacoes para o mesmo
-   componente divergem, e ai a doc contradiz a doc. */
-const secoes = [];
-for (const m of html.matchAll(/\n  <section id="([^"]+)">([\s\S]*?)\n  <\/section>/g)) {
-  const [, id, corpo] = m;
-  const titulo = (corpo.match(/<h2>([\s\S]*?)<\/h2>/) || [, id])[1].trim();
-  const quando = (corpo.match(/<p class="when">([\s\S]*?)<\/p>/) || [, ''])[1].trim();
-  // O palco comeca depois do preambulo da secao: o `.when`, que vira a linha
-  // de abertura da ficha, e o link "Ficha completa" — que dentro da propria
-  // ficha apontaria para ela mesma.
-  let corte = corpo.indexOf('</p>', corpo.indexOf('class="when"'));
-  const linkFicha = corpo.indexOf('class="ficha-link"');
-  if (linkFicha !== -1) corte = corpo.indexOf('</p>', corpo.indexOf('</a>', linkFicha));
-  const palco = corte === -1 ? corpo : corpo.slice(corte + 4);
-  secoes.push({ id, titulo, quando, palco: palco.trim() });
-}
+/* --------------------------------------------------------- 1. as pecas
+   Uma peca, um arquivo: components/pecas/<id>.html. O fragmento tem o <h2>, a
+   linha de "quando usar" e o palco (demos, rotulos de fileira e notas) — e mais
+   nada: sem <head>, sem navegacao, sem moldura.
+
+   Ele era uma <section> dentro de um index.html de 48.000px que mostrava os 34
+   componentes num scroll so. Aquela pagina era ao mesmo tempo a galeria E a
+   fonte de tres coisas: das fichas, do solo.html (que buscava o index e
+   recortava a secao pedida) e da coluna "Doc" do inventario. Editar a galeria
+   mexia nos tres sem que a galeria soubesse.
+
+   Agora a fonte e o fragmento, e a galeria e mais um derivado dele — o
+   index.html desta pasta passou a ser gerado aqui embaixo, so com nome, uma
+   linha e o link. Quem quer ver o componente abre a peca dele.
+   ------------------------------------------------------------------------ */
+const DIR_PECAS = 'components/pecas';
+const secoes = readdirSync(join(raiz, DIR_PECAS))
+  .filter((f) => f.endsWith('.html'))
+  .map((f) => {
+    const id = f.replace(/\.html$/, '');
+    const corpo = ler(`${DIR_PECAS}/${f}`);
+    const titulo = (corpo.match(/<h2>([\s\S]*?)<\/h2>/) || [, id])[1].trim();
+    const quando = (corpo.match(/<p class="when">([\s\S]*?)<\/p>/) || [, ''])[1].trim();
+    const corte = corpo.indexOf('</p>', corpo.indexOf('class="when"'));
+    const palco = corte === -1 ? corpo : corpo.slice(corte + 4);
+    return { id, titulo, quando, palco: palco.trim() };
+  })
+  // a ordem e a do NOME, nao a do arquivo: e assim que o sumario sempre foi
+  .sort((a, b) => a.titulo.localeCompare(b.titulo, 'pt'));
 
 /* ------------------------------------------------- 2. a familia de classes
    Mesma leitura do tools/inventario.mjs. Se as duas divergirem, a matriz e a
@@ -252,6 +262,18 @@ ${nav}
     ${f.palco}
   </section>
 
+  <section class="bloco" id="mobile">
+    <h2 class="bloco-titulo">Em 375px</h2>
+    <p class="bloco-lede">Viewport de verdade, num <code>&lt;iframe&gt;</code> —
+    e não um quadro estreito. <code>@media</code> consulta a viewport: encolher
+    uma <code>div</code> entregaria a peça fina com o CSS de desktop, que foi como
+    a gaveta do carrinho já apareceu com 222px fingindo estar quebrada.</p>
+    <div class="quadro-mob">
+      <iframe src="solo.html?c=${f.id}" title="${f.titulo} em 375px"
+              width="375" height="420" loading="lazy"></iframe>
+    </div>
+  </section>
+
   <section class="bloco" id="anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
     <p class="bloco-lede">Lido da folha a cada build. Se faltar alguma coisa aqui,
@@ -289,13 +311,23 @@ ${nav}
   </section>
 
   <p class="doc-credit">Ficha gerada por <code>tools/fichas.mjs</code> a partir de
-  <code>components/ybera-components.css</code> e <code>components/index.html</code>.
+  <code>components/ybera-components.css</code> e <code>components/pecas/${f.id}.html</code>.
   Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>
 </main>
 
 </div>
 <script src="ybera-components.js"></script>
 <script>
+/* O quadro de 375 se dimensiona pelo que tem dentro. Conteudo de iframe nao
+   dimensiona o elemento sozinho, entao o solo.html mede a propria caixa e
+   avisa por postMessage — sem isso a ficha do Badge teria a mesma altura da
+   ficha do carrinho, e as duas erradas. */
+addEventListener('message', function (e) {
+  if (!e.data || e.data.yb !== 'altura') return;
+  var f = document.querySelector('.quadro-mob iframe');
+  if (f && e.data.h > 0) f.height = e.data.h;
+});
+
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
@@ -318,6 +350,77 @@ document.addEventListener('click', function (e) {
   if (atual !== pagina) {
     if (process.argv.includes('--check')) defasadas.push(destino);
     else { writeFileSync(join(raiz, destino), pagina); escritas++; }
+  }
+}
+
+/* ---------------------------------------------------- 6. a galeria (index)
+   Nome, uma linha e o link. Nada de demo: o index era a pagina que mostrava
+   tudo, e mostrar tudo de uma vez e o que fazia dela 48.000px de scroll em que
+   nenhum componente tinha lugar proprio. Aqui ele volta a ser o que o nome diz
+   — um indice. */
+{
+  const cartoes = fichas.map((f) => `      <a class="peca" href="${f.id}.html">
+        <b>${f.titulo}</b>
+        <span>${f.quando}</span>
+      </a>`).join('\n');
+  const pagina = `<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Components — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="ybera-components.css">
+<link rel="stylesheet" href="doc.css">
+<style>
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+</style>
+</head>
+<body class="ficha">
+<div class="doc">
+
+<nav class="nav">
+  <p class="nav-brand">Ybera</p>
+  <p class="nav-ver">Components · v${versao}</p>
+  <ul>
+${navHtml.replace(/\{ATUAL-[^}]+\}/g, '')}
+  </ul>
+  <div class="nav-back">
+    <a href="../index.html">← Design system</a>
+  </div>
+</nav>
+
+<main class="main">
+  <a class="ficha-volta" href="../index.html">← Design system</a>
+  <h1 class="ficha-titulo">Components</h1>
+  <p class="ficha-quando">${fichas.length} páginas, uma por peça, com
+  as demonstrações, a API lida da folha, a marcação para copiar, o que a
+  acessibilidade exige e o que não fazer.</p>
+
+  <div class="grade">
+${cartoes}
+  </div>
+
+  <p class="doc-credit">Índice gerado por <code>tools/fichas.mjs</code> a partir de
+  <code>components/pecas/</code>. Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>
+</main>
+
+</div>
+</body>
+</html>
+`;
+  const atual = existsSync(join(raiz, 'components/index.html')) ? ler('components/index.html') : '';
+  if (atual !== pagina) {
+    if (process.argv.includes('--check')) defasadas.push('components/index.html');
+    else { writeFileSync(join(raiz, 'components/index.html'), pagina); escritas++; }
   }
 }
 

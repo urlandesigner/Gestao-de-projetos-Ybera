@@ -1,0 +1,23 @@
+<h2>Link</h2>
+    <p class="when">Texto de ação com ícone atrás, do tamanho de alvo de toque (44px). Fica ao lado de um título de seção ou reforça visualmente um link que já existe em outro lugar do mesmo cartão.</p>
+    <div class="demo">
+      <a class="yb-link" href="#link">Shop all best sellers <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg></a>
+      <span class="yb-link yb-link--reinforce" aria-hidden="true">Continue reading <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+    </div>
+    <div class="note">
+      <b>Uma receita, escrita duas vezes</b>
+      <p><code>.yb-section-head a</code> e <code>.yb-post__link</code> eram o
+      mesmo <code>inline-flex</code>, o mesmo <code>gap</code>, o mesmo alvo de
+      44px, a mesma cor de link — em dois arquivos diferentes, com peso de
+      fonte e sublinhado que ninguém tinha decidido de propósito. Aqui viraram
+      um componente só.</p>
+    </div>
+    <div class="note">
+      <b>Base vs. <code>--reinforce</code></b>
+      <p>A base é link de verdade: some o sublinhado até o hover, discrição de
+      quem navega. <code>--reinforce</code> é para quando o elemento NÃO é o
+      link — é um <code>&lt;span&gt;</code> ecoando visualmente um link que já
+      existe em outro lugar do cartão (o título, esticado por cima). Por isso
+      fica sempre sublinhado: sem isso não pareceria clicável, e ele parece
+      sem ser.</p>
+    </div>

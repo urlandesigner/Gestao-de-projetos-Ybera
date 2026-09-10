@@ -1,0 +1,124 @@
+<h2>Button</h2>
+    <p class="when">Uma ação primária por tela. Se há duas, uma delas não é primária.</p>
+    <h3 class="row-label">Variants</h3>
+    <div class="demo">
+      <button class="yb-btn yb-btn--primary">Add to cart</button>
+      <button class="yb-btn yb-btn--secondary">Continue shopping</button>
+      <button class="yb-btn yb-btn--ghost">Size guide</button>
+      <button class="yb-btn yb-btn--danger">Remove item</button>
+    </div>
+    <div class="note">
+      <b>Por que a secundária é magenta tingido e não grafite</b>
+      <p>Era um bloco de grafite sólido: <b>16,66:1</b> contra o primário de
+      <b>5,36:1</b> — pesava 3,1× mais e virava o elemento mais forte da tela,
+      mais que o título do produto. Cinza claro foi tentado e descartado: a
+      1,09:1 o bloco some no branco, e onde não some é confundido com
+      desabilitado, que também é cinza. Tingir com a própria cor de ação separa
+      por <b>matiz</b>, não por peso — e matiz não se confunde. O texto mede
+      8,09:1, mais legível que o branco do primário.</p>
+    </div>
+    <div class="note">
+      <b>Limite conhecido: só funciona sobre fundo claro</b>
+      <p>O tingido some sobre a faixa escura do header ou sobre foto. Ali a
+      secundária teria de ser contorno claro — variante que <b>ainda não
+      existe</b>, porque nenhuma tela pede. Se alguma pedir, ela entra aqui
+      antes de ser usada.</p>
+    </div>
+
+    <h3 class="row-label">Sobre painel escuro</h3>
+    <div class="demo demo--dark">
+      <button class="yb-btn yb-btn--on-dark" type="button">Start quiz</button>
+      <button class="yb-btn yb-btn--on-dark" type="button" disabled>Start quiz</button>
+    </div>
+    <div class="note">
+      <b>Dentro de um bloco escuro a ação inverte</b>
+      <p>O magenta continua sendo a ação da <b>página</b> — mas sobre grafite ele
+      briga com o próprio fundo, enquanto o branco cheio não tem como perder.
+      Medido: grafite sobre branco 16.66:1, e o botão contra o painel também
+      16.66:1, então ele não precisa de borda para existir.</p>
+      <p>O branco não tem para onde clarear: o hover <b>afunda</b>, nos dois
+      degraus de superfície clara que o sistema já tem. E o anel de foco vira
+      branco &mdash; o magenta padrão sumiria contra o próprio botão.</p>
+      <p>Não use sobre foto: ali o fundo não é conhecido e o token é outro.</p>
+    </div>
+
+    <h3 class="row-label">Sizes</h3>
+    <div class="demo">
+      <button class="yb-btn yb-btn--primary yb-btn--sm">Small</button>
+      <button class="yb-btn yb-btn--primary">Medium</button>
+      <button class="yb-btn yb-btn--primary yb-btn--lg">Large</button>
+    </div>
+    <h3 class="row-label">States</h3>
+    <div class="demo">
+      <button class="yb-btn yb-btn--primary">Normal</button>
+      <button class="yb-btn yb-btn--primary yb-btn--loading">Adding</button>
+      <button class="yb-btn yb-btn--primary" disabled>Sold out</button>
+      <button class="yb-btn yb-btn--ghost" disabled>Unavailable</button>
+    </div>
+    <h3 class="row-label">O ciclo completo — clique, espera, resposta</h3>
+    <div class="demo">
+      <button class="yb-btn yb-btn--primary" type="button" data-yb-comprar
+              data-toast-titulo="Added to cart" data-toast-texto="Deep care kit">Add to cart</button>
+      <button class="yb-btn yb-btn--secondary" type="button" data-yb-comprar data-yb-falhar
+              data-toast-erro="Could not add to cart"
+              data-toast-erro-texto="Check your connection and try again.">Add to cart (falha)</button>
+    </div>
+    <div class="note">
+      <b>O erro se prova aqui, não no protótipo</b>
+      <p>A PDP sempre consegue adicionar — protótipo que falha por sorteio ensina
+      errado. Mas o caminho do erro precisa existir em algum lugar revisável, e
+      esse lugar é a documentação de estado: o segundo botão declara
+      <code>data-yb-falhar</code> e mostra o toast <code>--danger</code>, que
+      interrompe o leitor de tela com <code>role="alert"</code> em vez de esperar
+      a pausa.</p>
+    </div>
+    <h3 class="row-label">Full width</h3>
+    <div class="demo demo--stack">
+      <button class="yb-btn yb-btn--primary yb-btn--block">Add to cart — $168.90</button>
+    </div>
+    <div class="note">
+      <b>Por que o carregando mantém a largura</b>
+      <p>No estado <code>--loading</code> o rótulo fica transparente em vez de sumir.
+      Se o texto saísse, o botão encolheria e o layout saltaria embaixo do dedo —
+      exatamente no momento em que a pessoa acabou de tocar para comprar.
+      O <code>--sm</code> é o único que fica abaixo dos 44px: use só onde não há toque.</p>
+    </div>
+
+    <h3 class="row-label">Icon button</h3>
+    <div class="demo">
+      <button class="yb-iconbtn" type="button" aria-label="Open cart">
+        <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg>
+      </button>
+      <span style="background:var(--yb-bg-inverse); border-radius:var(--yb-radius-control); padding:var(--yb-space-2); display:inline-flex">
+        <button class="yb-iconbtn yb-iconbtn--onmedia" type="button" aria-label="Play video">
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-play"/></svg>
+        </button>
+      </span>
+      <button class="yb-iconbtn yb-iconbtn--fav" type="button" data-yb-fav
+              aria-pressed="false" aria-label="Add to favorites"
+              data-label-off="Add to favorites" data-label-on="Remove from favorites"
+              data-icon-off="yb-heart" data-icon-on="yb-heart-filled">
+        <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg>
+      </button>
+      <button class="yb-iconbtn yb-iconbtn--fav" type="button" data-yb-fav
+              aria-pressed="true" aria-label="Remove from favorites"
+              data-label-off="Add to favorites" data-label-on="Remove from favorites"
+              data-icon-off="yb-heart" data-icon-on="yb-heart-filled">
+        <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart-filled"/></svg>
+      </button>
+    </div>
+    <div class="note">
+      <b>Favoritar não é componente novo — é este botão com um estado a mais</b>
+      <p>Mesmo <code>.yb-iconbtn</code>, mesmo alvo de 44px. O que muda é
+      <code>aria-pressed</code>: a cor vira <code>--yb-accent-love</code> e o
+      ícone troca de <code>#yb-heart</code> (traço) para
+      <code>#yb-heart-filled</code> (a única exceção ao sprite "sem
+      preenchimento" em todo o sistema — ver a nota em
+      <code>icons/ybera-icons.svg</code>). Cor sozinha não bastava: reprova a
+      WCAG 1.4.1, e falha primeiro para quem não distingue magenta de cinza.
+      A troca é o JS (<code>data-icon-off</code>/<code>data-icon-on</code>
+      apontam os dois símbolos); sem ele o botão continua clicável, só não
+      guarda nada. Clique nos dois últimos corações para testar — o rótulo
+      do leitor de tela troca de "Add to" para "Remove from" junto com a
+      forma.</p>
+    </div>

@@ -1,0 +1,58 @@
+<h2>Product card</h2>
+    <p class="when">A unidade do grid. O título trunca em duas linhas por decisão de sistema.</p>
+    <div class="demo demo--grid">
+      <article class="yb-card">
+        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--sale">−16%</span><span class="yb-badge yb-badge--accent">Free Cronograma</span></div><button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" aria-label="Add to cart: Kit Sealant Fashion Gold">Add to cart</button></div>
+        <h3 class="yb-card__title"><a href="#">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</a></h3>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+      </article>
+      <article class="yb-card">
+        <div class="yb-card__media"></div>
+        <h3 class="yb-card__title"><a href="#">Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask 1kg / 33oz + Coconut Elixir 60ml / 2oz</a></h3>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$169.70</b></span>
+      </article>
+      <article class="yb-card">
+        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div></div>
+        <h3 class="yb-card__title"><a href="#">KIT VELLO Shampoo 500ml (16.9 fl.oz) + VELLO Hair Mask 500g (17.6 fl.oz)</a></h3>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
+      </article>
+    </div>
+    <div class="note">
+      <b>Selo que repete o título da seção não é selo</b>
+      <p>"Best seller" dentro de uma grade chamada Best Sellers não informa nada — e
+      quando só dois dos quatro cartões o têm, os outros dois parecem "não ser".
+      O selo vale onde o contexto não diz a mesma coisa: relacionados, busca,
+      coleção. O brinde que vem do título ("| FREE CRONOGRAMA") é informação de
+      venda e vira <code>--accent</code>; nunca fica no título para o clamp engolir.</p>
+    </div>
+    <div class="note">
+      <b>De onde veio o truncamento</b>
+      <p>As telas-prova mostraram títulos reais ocupando 2, 5, 4 e 4 linhas — o preço
+      desalinhava na mesma fileira. O token
+      <code>--yb-card-title-lines: 2</code> nasceu desse defeito observado, e é o
+      primeiro token de camada 2 do sistema. O título do meio aqui tem 88 caracteres.</p>
+      <p>O clamp só limita; não reserva. Um título de uma linha ao lado de três de
+      duas subia o preço 19px na fileira. O <code>min-height</code> do título
+      reserva as mesmas linhas do clamp, pela mesma variável — fileira alinhada
+      tanto para o título longo quanto para o curto.</p>
+    </div>
+    <div class="note">
+      <b>Sem rating: era nota inventada</b>
+      <p>O card mostrava "4.8 of 5" fixo em todo produto — só a contagem de
+      avaliações variava, a nota nunca veio do dado. Review de verdade (texto,
+      nota real, quem comprou) mora só na PDP, na seção de review — não num
+      resumo que ninguém sustenta espremido num cartão de grid. No grid de
+      duas colunas do celular, tirar essa linha também devolve altura.</p>
+    </div>
+    <div class="note">
+      <b>Ação sobre a foto e segunda imagem</b>
+      <p><code>.yb-card__action</code> aparece no hover e no foco; no toque fica
+      sempre visível, senão é inalcançável. Leva <code>z-index:1</code> porque o link
+      do título estica um <code>::after</code> por cima do cartão inteiro — sem isso o
+      botão aparece mas o clique cai na PDP. Cada botão diz o produto no
+      <code>aria-label</code>: quatro "Add to cart" iguais não dizem nada a quem ouve.
+      Uma segunda <code>&lt;img&gt;</code> logo após a primeira troca no hover; a loja
+      já manda as duas. O selo <code>--accent</code> é para oferta que veio do título
+      ("| FREE CRONOGRAMA"): é informação de venda, e era o que o corte de duas
+      linhas engolia.</p>
+    </div>

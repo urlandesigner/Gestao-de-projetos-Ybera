@@ -5,7 +5,7 @@ projeto**: a loja US roda Shopify e a BR roda Wake Commerce — CSS custom prope
 é o único denominador comum entre as duas.
 
 Versão **0.12.1** — fundação de 309 tokens, 37 componentes e 11 padrões com
-comportamento, 39 ícones, governança, decisões registradas e 93 checagens
+comportamento, 39 ícones, governança, decisões registradas e 94 checagens
 automatizadas.
 
 | Onde olhar | O quê |
@@ -57,10 +57,12 @@ tokens/
 components/
   ybera-components.css   37 componentes, prefixo yb-
   ybera-components.js    comportamento — 7 KB, sem dependência
-  index.html             galeria com variantes, estados e notas
-  <componente>.html      34 fichas: API, marcação, acessibilidade, faça/não faça
+  pecas/<id>.html        a fonte: demos, quando usar e notas de cada peça
+  <componente>.html      34 fichas geradas: demos, 375px, API, marcação, a11y, faça/não faça
+  index.html             índice gerado — nome, uma linha e o link
   fichas.json            o que a máquina não sabe — escrito à mão
   doc.css                a moldura das fichas
+  solo.html              uma peça sozinha, para o quadro de 375px
 patterns/
   ybera-patterns.css     11 padrões — header, carrinho, coleção, footer…
   index.html             galeria de composições
@@ -71,7 +73,7 @@ icons/
 bridge/
   ybera-bridge.css       ponte tokens Ybera -> Ecomposer / tema / Judge.me
 test/
-  validate.mjs           93 checagens, roda em CI
+  validate.mjs           94 checagens, roda em CI
   a11y.js                auditoria no DOM (colar no console)
   adocao.js              mede adoção na loja (colar no console)
 tools/
@@ -132,7 +134,7 @@ histórico em [CHANGELOG.md](CHANGELOG.md).
 npm run check
 ```
 
-93 checagens sem dependência: integridade entre camadas, disciplina de cor
+94 checagens sem dependência: integridade entre camadas, disciplina de cor
 (inclusive `rgba()` e cor nomeada, não só `#hex`), monotonia das rampas,
 contraste anotado versus medido, regras duras, foco visível,
 `prefers-reduced-motion`, `dist/` e `INVENTARIO.md` em dia, versão única em

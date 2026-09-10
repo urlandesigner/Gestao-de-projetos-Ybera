@@ -1,0 +1,49 @@
+<h2>Progress bar</h2>
+    <p class="when">Espera com fim conhecido. Sem número para anunciar, use a variante indeterminada.</p>
+    <div class="demo demo--stack">
+      <div>
+        <p class="yb-field__label">Free shipping — $12.10 to go</p>
+        <div class="yb-progress" role="progressbar" aria-label="Progress to free shipping"
+             aria-valuemin="0" aria-valuemax="100" aria-valuenow="76">
+          <span class="yb-progress__fill" style="inline-size:76%"></span>
+        </div>
+      </div>
+      <div>
+        <p class="yb-field__label">Order placed → Delivered</p>
+        <div class="yb-progress yb-progress--sm" role="progressbar" aria-label="Order progress"
+             aria-valuemin="0" aria-valuemax="100" aria-valuenow="35">
+          <span class="yb-progress__fill" style="inline-size:35%"></span>
+        </div>
+      </div>
+      <div>
+        <p class="yb-field__label">Profile complete</p>
+        <div class="yb-progress yb-progress--lg" role="progressbar" aria-label="Profile complete"
+             aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
+          <span class="yb-progress__fill yb-progress__fill--success" style="inline-size:100%"></span>
+        </div>
+      </div>
+      <div>
+        <p class="yb-field__label">Only 4 kits left at this price</p>
+        <div class="yb-progress" role="progressbar" aria-label="Stock left"
+             aria-valuemin="0" aria-valuemax="100" aria-valuenow="12">
+          <span class="yb-progress__fill yb-progress__fill--warning" style="inline-size:12%"></span>
+        </div>
+      </div>
+      <div>
+        <p class="yb-field__label">Loading reviews</p>
+        <div class="yb-progress yb-progress--indeterminate" role="progressbar" aria-label="Loading reviews">
+          <span class="yb-progress__fill"></span>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Indeterminada não tem <code>aria-valuenow</code></b>
+      <p>Declarar um número que ninguém sabe é pior do que não declarar: o leitor
+      de tela anuncia "12 por cento" de uma espera que pode ter acabado. Sem o
+      atributo, ele anuncia "ocupado" — que é a verdade.</p>
+    </div>
+    <div class="note">
+      <b>Sem movimento, a faixa some</b>
+      <p>Em <code>prefers-reduced-motion</code> uma faixa parada em 40% mentiria
+      sobre o progresso. Ela vira a pista inteira esmaecida: presença sem promessa.</p>
+    </div>

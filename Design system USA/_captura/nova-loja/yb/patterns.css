@@ -358,6 +358,17 @@
      esquerda. */
   .yb-header__burger{ justify-self:start; }
   .yb-header__logo{ justify-self:center; }
+  /* A vitrine do painel sai. No desktop ela ocupa a coluna que sobra ao lado
+     dos grupos de links — espaco que ja existia e estava vazio. Na gaveta nao
+     ha coluna: ela vira 288px empilhados DEPOIS de 24 links, dentro de uma
+     gaveta que ja rola 1.828px. Quem abriu o menu no celular esta procurando
+     para onde ir, e recebia um cartao de produto e uma chamada de quiz no
+     caminho.
+
+     Some com CSS e nao com marcacao porque a arvore do menu e UMA so — a loja
+     escreve o menu duas vezes no HTML, 25 links repetidos, e o sistema existe
+     em parte para nao fazer isso. */
+  .yb-nav__rail{ display:none; }
   /* Conta muda de casa: some da barra, aparece como item de texto no topo da
      gaveta — ver nota em .yb-nav__item--account acima. */
   .yb-header__account{ display:none; }

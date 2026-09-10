@@ -794,7 +794,7 @@ secao('Inventário');
 }
 
 secao('Fichas de componente');
-// Uma pagina por peca, gerada de components/index.html + a folha. Tres coisas
+// Uma pagina por peca, gerada de components/pecas/ + a folha. Tres coisas
 // podem apodrecer aqui, e as tres apodrecem em silencio: a ficha ficar para
 // tras do CSS, uma secao nova nao ganhar ficha, e um bloco escrito a mao
 // nunca ser escrito.
@@ -808,7 +808,8 @@ secao('Fichas de componente');
     falha('fichas defasadas', 'rode ./build.sh e commite');
   }
 
-  const idsDoc = [...ler('components/index.html').matchAll(/\n  <section id="([^"]+)">/g)].map(m => m[1]);
+  const idsDoc = readdirSync(join(raiz, 'components/pecas'))
+    .filter(f => f.endsWith('.html')).map(f => f.replace(/\.html$/, ''));
   const semFicha = idsDoc.filter(id => !existsSync(join(raiz, `components/${id}.html`)));
   semFicha.length
     ? falha('seção da doc sem ficha', semFicha.join(', '))
@@ -822,6 +823,19 @@ secao('Fichas de componente');
   pendentes.length
     ? aviso(`${pendentes.length} ficha(s) com bloco por escrever`, pendentes.join(', '))
     : ok('toda ficha tem acessibilidade e faça / não faça', `${idsDoc.length} componentes`);
+
+  // O quadro de 375px morava na galeria antiga, com um toggle global. Ele
+  // desceu para a ficha — o lugar onde a pessoa ja esta olhando A PECA. A
+  // checagem generica de solo.html pula pagina que nao o cita, entao sem esta
+  // aqui os 34 quadros podiam sumir juntos sem nada acusar.
+  const semQuadro = idsDoc.filter(id =>
+    existsSync(join(raiz, `components/${id}.html`)) &&
+    !ler(`components/${id}.html`).includes(`solo.html?c=${id}`));
+  const temSolo = existsSync(join(raiz, 'components/solo.html'));
+  (semQuadro.length || !temSolo)
+    ? falha('ficha sem o quadro de 375px',
+        (!temSolo ? 'falta components/solo.html' : semQuadro.join(', ')))
+    : ok('toda ficha mostra a peça em 375px', `${idsDoc.length} quadros`);
 }
 
 secao('Versão');
@@ -951,14 +965,23 @@ secao('Páginas');
       const h = ler(p);
       const nav = h.match(/<nav[\s\S]*?<\/nav>/);
       if (!nav) continue;
-      const sumario = [...nav[0].matchAll(/<li><a href="#([\w-]+)">([^<]+)<\/a><\/li>/g)]
-        .map(m => ({ id: m[1], nome: m[2].trim() }));
+      // Duas formas de sumario: ancora (`#badge`, uma pagina so) e arquivo
+      // (`badge.html`, uma pagina por peca). A doc de componente virou a
+      // segunda, e a checagem so conhecia a primeira — o sumario ficava vazio
+      // e o bloco inteiro passava sem testar nada.
+      const sumario = [...nav[0].matchAll(/<li><a href="(?:#([\w-]+)|([\w-]+)\.html)"[^>]*>([^<]+)<\/a><\/li>/g)]
+        .map(m => ({ id: m[1] || m[2], arquivo: !m[1], nome: m[3].trim() }));
       if (sumario.length < 2) continue;
 
-      for (const { id, nome } of sumario) {
-        const sec = h.match(new RegExp(`<section id="${id}">\\s*<h2>([^<]+)</h2>`));
-        if (sec && sec[1].trim() !== nome)
-          problemas.push(`${p}#${id}: sumário diz "${nome}", título diz "${sec[1].trim()}"`);
+      for (const { id, arquivo, nome } of sumario) {
+        // o titulo mora na secao (ancora) ou no fragmento da peca (arquivo)
+        const fonte = arquivo ? `components/pecas/${id}.html` : null;
+        const alvo = arquivo
+          ? (existsSync(join(raiz, fonte)) ? ler(fonte).match(/<h2>([^<]+)<\/h2>/) : null)
+          : h.match(new RegExp(`<section id="${id}">\\s*<h2>([^<]+)</h2>`));
+        if (arquivo && !alvo) { problemas.push(`${p}: sumário lista "${nome}" e não há ${fonte}`); continue; }
+        if (alvo && alvo[1].trim() !== nome)
+          problemas.push(`${p}#${id}: sumário diz "${nome}", título diz "${alvo[1].trim()}"`);
       }
 
       // Catalogo se ordena; sequencia de leitura, nao. A pagina de tokens vai
@@ -973,6 +996,18 @@ secao('Páginas');
       const fora = nomes.findIndex((n, i) => n !== ordenado[i]);
       if (fora >= 0) problemas.push(`${p}: fora de ordem a partir de "${nomes[fora]}"`);
 
+      // Na forma de arquivo nao ha secao para comparar: o que tem de bater e a
+      // lista de fragmentos, e a ordem ja foi conferida acima.
+      if (sumario.every(x => x.arquivo)) {
+        const fragmentos = existsSync(join(raiz, 'components/pecas'))
+          ? readdirSync(join(raiz, 'components/pecas')).filter(f => f.endsWith('.html'))
+              .map(f => f.replace(/\.html$/, '')).sort()
+          : [];
+        const listados = sumario.map(x => x.id).sort();
+        if (fragmentos.join() !== listados.join())
+          problemas.push(`${p}: sumário e components/pecas/ não têm as mesmas peças`);
+        continue;
+      }
       const ids = [...h.matchAll(/<section id="([\w-]+)">/g)].map(m => m[1]);
       if (ids.join() !== sumario.map(x => x.id).join())
         problemas.push(`${p}: seções em ordem diferente do sumário`);
@@ -1185,17 +1220,28 @@ secao('Páginas');
   // documentação: collection, review, seals, logobar, post, quote e video.
   // Componente que ninguém encontra é componente que alguém reescreve.
   {
+    // A doc de componente virou um arquivo por peca. `pagina` aceita as duas
+    // formas: pasta de fragmentos (le todos) ou pagina unica, que e como os
+    // padroes continuam.
     const PARES = [
-      { css: 'componentes', pagina: 'components/index.html' },
+      { css: 'componentes', pagina: 'components/pecas' },
       { css: 'padroes', pagina: 'patterns/index.html' },
     ];
+    const lerDoc = (p) => {
+      const abs = join(raiz, p);
+      if (!existsSync(abs)) return null;
+      if (!statSync(abs).isDirectory()) return { html: ler(p), arquivos: [] };
+      const arquivos = readdirSync(abs).filter(f => f.endsWith('.html'));
+      return { html: arquivos.map(f => ler(`${p}/${f}`)).join('\n'), arquivos };
+    };
     // não são componente: base, utilitário e blocos de regra global
     const NAO_E_COMPONENTE = /^(YBERA|BASE|MOVIMENTO|UTILIT|ALVO COMPACTO|ALTO CONTRASTE|NAVEGACAO)/i;
     const ausentes = [];
     for (const { css: chave, pagina } of PARES) {
-      if (!existsSync(join(raiz, pagina))) continue;
+      const doc = lerDoc(pagina);
+      if (!doc) continue;
       const folha = css[chave] || '';
-      const html = ler(pagina);
+      const html = doc.html;
       // cada bloco de cabeçalho `/* === NOME ... === */` abre uma seção
       const blocos = [...folha.matchAll(/\/\*\s*=+\s*\n\s{3}([^\n]+)\n([\s\S]*?)=+\s*\*\//g)];
       // A família de cada seção é o prefixo que ELA declara. Sem isto, a seção
@@ -1225,9 +1271,15 @@ secao('Páginas');
         // O toast não tem marcação estática: ele nasce e morre no JS. Vale
         // também a seção da doc que leva o nome do componente — é onde a
         // pessoa procura, e é o que o sumário lista.
+        // O toast não tem marcação estática: nasce e morre no JS. Vale também o
+        // arquivo da doc que leva o nome do componente — na galeria antiga era
+        // `<section id="toast">`, hoje é `pecas/toast.html`.
+        const nomeCurto = c => c.replace(/^yb-/, '');
         const mostrada = raizes.some(c =>
           new RegExp(`class="[^"]*\\b${c}\\b`).test(marcacao)
-          || new RegExp(`<section id="${c.replace(/^yb-/, '')}s?">`).test(html));
+          || new RegExp(`<section id="${nomeCurto(c)}s?">`).test(html)
+          || doc.arquivos.includes(`${nomeCurto(c)}.html`)
+          || doc.arquivos.includes(`${nomeCurto(c)}s.html`));
         if (!mostrada) ausentes.push(`${nome} (.${raizes[0]})`);
       }
     }

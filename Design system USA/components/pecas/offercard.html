@@ -1,0 +1,75 @@
+<h2>Offer card</h2>
+    <p class="when">A oferta do dia, um produto só. A foto é o fundo, o texto vive
+    por cima dela e o relógio diz até quando. Não é o cartão de catálogo com outra
+    roupa: ali cabem doze na grade, aqui cabe <b>um</b>.</p>
+    <div class="demo demo--oferta">
+      <article class="yb-offercard">
+        <img src="../_captura/nova-loja/img/Prancheta_1-790aea3e.webp" alt="">
+        <span class="yb-badge yb-badge--sale yb-offercard__off">24% off</span>
+        <div class="yb-offercard__body">
+          <span class="yb-badge yb-badge--accent">Today's offer</span>
+          <h3 class="yb-offercard__title"><a href="#offercard">Fashion Gold keratin treatment 1kg</a></h3>
+          <div class="yb-offercard__linha">
+            <span class="yb-offercard__price">$67.90</span>
+            <p class="yb-offercard__timer" data-yb-demo-prazo="5"><time>ends today</time></p>
+          </div>
+          <p class="yb-offercard__fim" hidden>Offer ended</p>
+          <a class="yb-btn yb-btn--primary" href="#offercard">Buy now
+            <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></a>
+        </div>
+      </article>
+
+      <article class="yb-offercard">
+        <img src="../_captura/nova-loja/img/Prancheta_2-188b6fea.webp" alt="">
+        <span class="yb-badge yb-badge--sale yb-offercard__off">18% off</span>
+        <div class="yb-offercard__body">
+          <span class="yb-badge yb-badge--accent">Today's offer</span>
+          <h3 class="yb-offercard__title"><a href="#offercard">Cronograma hair care system</a></h3>
+          <div class="yb-offercard__linha">
+            <span class="yb-offercard__price">$37.90</span>
+            <p class="yb-offercard__timer" data-yb-countdown="2020-01-01T00:00:00Z"><time>ended Jan 1, 2020</time></p>
+          </div>
+          <p class="yb-offercard__fim" hidden>Offer ended</p>
+          <a class="yb-btn yb-btn--primary" href="#offercard">Buy now
+            <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></a>
+        </div>
+      </article>
+    </div>
+    <div class="note">
+      <b>Mais de um dia vira dias</b>
+      <p>O relógio troca de unidade sozinho: com mais de 24h pela frente conta
+      dias/horas/minutos, e passa para horas/min/seg nas últimas 24h, quando o segundo
+      começa a significar alguma coisa. "672 hrs" não é prazo, é número.</p>
+    </div>
+    <div class="note">
+      <b>A foto tem de sangrar</b>
+      <p>Foto fotográfica ocupando o cartão inteiro, como a da referência — não
+      recorte de produto em fundo transparente. Com recorte, o que aparece em volta
+      do frasco é o fundo de reserva do cartão, e o cartão inteiro fica escuro. Foto
+      recortada é o material do <a href="#card">cartão de catálogo</a>, que reserva
+      um lugar próprio para ela.</p>
+    </div>
+    <div class="note">
+      <b>Prazo vencido não vira 00:00:00</b>
+      <p>O segundo cartão tem prazo em 2020, de propósito: é o estado encerrado. Um
+      relógio parado em zero não é contagem, é relógio quebrado prometendo urgência
+      que já passou — o relógio sai e o cartão diz o que aconteceu.</p>
+    </div>
+    <div class="note">
+      <b>Sem JS, o prazo continua escrito</b>
+      <p>O <code>&lt;time&gt;</code> por extenso é o que está no HTML; o script troca
+      pelos quadradinhos e passa a contar. Uma oferta com prazo tem de dizer o prazo
+      mesmo quando o script não roda.</p>
+    </div>
+    <div class="note">
+      <b>Dois destinos, nenhum link cobrindo tudo</b>
+      <p>O título leva à PDP e o botão compra. Por isso não há link esticado sobre o
+      cartão inteiro, como no cartão de coleção: o clique no meio da foto não teria
+      como escolher entre os dois.</p>
+    </div>
+    <div class="note">
+      <b>O CTA é magenta, não branco</b>
+      <p>Na referência ele é branco sobre a foto. Aqui segue a ação canônica do
+      sistema — o mesmo magenta de todo "Add to cart". Botão de compra que muda de
+      cor conforme o fundo ensina o cliente a procurar duas coisas diferentes.</p>
+    </div>

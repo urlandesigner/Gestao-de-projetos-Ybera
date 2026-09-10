@@ -1,0 +1,100 @@
+<h2>Post</h2>
+    <p class="when">Artigo do blog na home. Dois arranjos, e a escolha entre eles é editorial — não estética.</p>
+    <h3 class="row-label">v1 · destaque + dois secundários</h3>
+    <div class="demo demo--stack">
+      <div class="yb-posts">
+        <article class="yb-post yb-post--featured">
+          <div class="yb-post__media"><img src="../_captura/nova-loja/img/Is_Keratin_Good_For_Hair-b3d5999d.webp" alt="Cabelo preto longo e liso depois de um tratamento de queratina" loading="lazy"></div>
+          <div class="yb-post__body">
+            <h3 class="yb-post__title"><a href="#post">Is keratin good for hair? Pros, cons and myths</a></h3>
+            <p class="yb-post__excerpt">What makes the Ybera formula safe for color-treated hair, when a sealant is the wrong call, and the three myths that keep coming back to the salon chair.</p>
+            <span class="yb-link yb-link--reinforce" aria-hidden="true">Continue reading <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+          </div>
+        </article>
+        <div class="yb-posts__list">
+          <article class="yb-post">
+            <div class="yb-post__media"><img src="../_captura/nova-loja/img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp" alt="Cabelo loiro ondulado três meses depois da progressiva" loading="lazy"></div>
+            <div class="yb-post__body">
+              <h3 class="yb-post__title"><a href="#post">How long does a keratin treatment last?</a></h3>
+              <p class="yb-post__excerpt">Twelve to sixteen weeks, and what shortens it: chlorine, sulfate shampoo and washing on day two.</p>
+              <span class="yb-link yb-link--reinforce" aria-hidden="true">Continue reading <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+            </div>
+          </article>
+          <article class="yb-post">
+            <div class="yb-post__media"><img src="../_captura/nova-loja/img/Does_Keratin_Treatment_Damage_Hair-9540a201.webp" alt="Cabelo castanho embaraçado e arrepiado antes do tratamento" loading="lazy"></div>
+            <div class="yb-post__body">
+              <h3 class="yb-post__title"><a href="#post">Does keratin treatment damage hair?</a></h3>
+              <p class="yb-post__excerpt">The honest answer depends on the flat iron temperature and on what was in the bottle before it.</p>
+              <span class="yb-link yb-link--reinforce" aria-hidden="true">Continue reading <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+    <h3 class="row-label">v2 · trio de mesmo peso</h3>
+    <div class="demo demo--stack">
+      <div class="yb-posts yb-posts--trio">
+        <article class="yb-post yb-post--stacked">
+          <div class="yb-post__media"><img src="../_captura/nova-loja/img/Is_Keratin_Good_For_Hair-b3d5999d.webp" alt="Cabelo preto longo e liso depois de um tratamento de queratina" loading="lazy"></div>
+          <div class="yb-post__body">
+            <h3 class="yb-post__title"><a href="#post">Is keratin good for hair? Pros, cons and myths</a></h3>
+            <span class="yb-link yb-link--reinforce" aria-hidden="true">Read more <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+          </div>
+        </article>
+        <article class="yb-post yb-post--stacked">
+          <div class="yb-post__media"><img src="../_captura/nova-loja/img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp" alt="Cabelo loiro ondulado três meses depois da progressiva" loading="lazy"></div>
+          <div class="yb-post__body">
+            <h3 class="yb-post__title"><a href="#post">How long does a keratin treatment last? Timeline</a></h3>
+            <span class="yb-link yb-link--reinforce" aria-hidden="true">Read more <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+          </div>
+        </article>
+        <article class="yb-post yb-post--stacked">
+          <div class="yb-post__media"><img src="../_captura/nova-loja/img/Does_Keratin_Treatment_Damage_Hair-9540a201.webp" alt="Cabelo castanho embaraçado e arrepiado antes do tratamento" loading="lazy"></div>
+          <div class="yb-post__body">
+            <h3 class="yb-post__title"><a href="#post">Does keratin treatment damage hair? The truth</a></h3>
+            <span class="yb-link yb-link--reinforce" aria-hidden="true">Read more <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+          </div>
+        </article>
+      </div>
+    </div>
+    <div class="note">
+      <b>A escolha entre v1 e v2 é editorial</b>
+      <p>O destaque diz <b>"leia ESTE primeiro"</b>; o trio diz <b>"os três valem
+      igual"</b>. Use v1 quando há um artigo que a loja quer empurrar, e v2 quando os
+      três respondem perguntas diferentes &mdash; que é o caso das dúvidas sobre
+      queratina, onde quem chega já sabe qual é a dela.</p>
+      <p>As duas continuam no gerador. <code>BLOG_ARRANJO</code> decide qual a home
+      monta; trocar a constante troca a seção inteira. Sem ela, a versão não escolhida
+      viraria função sem chamador e apodreceria no primeiro refactor.</p>
+      <p><code>--stacked</code> não é o <code>--featured</code> com outro nome: aquele
+      é <b>um</b> artigo que manda na seção, e por isso sobe o título para h3. Este é
+      um entre iguais &mdash; mantém o tamanho do post comum, senão três h3 lado a lado
+      competem entre si e a seção perde o ponto de entrada.</p>
+      <p>O trio não tem resumo, e isso é decisão de conteúdo: com três cartões, três
+      resumos de três linhas viram um parágrafo só, e o olho pula todos.</p>
+      <p>O cabeçalho com eyebrow que a v2 usa na home é do <b>padrão</b>, não daqui:
+      <code>.yb-section-head</code> mora em <code>patterns/</code>, e esta página não
+      carrega aquela folha. Ele está documentado em <a href="../patterns/#page-layout">Page
+      layout</a>.</p>
+    </div>
+    <div class="note">
+      <b>O título é o link, e é o único</b>
+      <p>Esticado sobre o artigo inteiro pelo <code>::after</code>, como no cartão de
+      produto: título e foto, onde a pessoa de fato clica, levam ao artigo. "Continue
+      reading" é <code>&lt;span aria-hidden&gt;</code>, reforço visual — como link, eram
+      três "Continue reading" idênticos para quem ouve (WCAG 2.4.4). A seta substitui o
+      ícone de "sai do site": o artigo é da própria loja.</p>
+    </div>
+    <div class="note">
+      <b>Uma anatomia, um modificador</b>
+      <p>Destaque e secundário têm o mesmo conteúdo: imagem, título, resumo e a
+      chamada. O que muda é a disposição — por isso <code>--featured</code> é
+      modificador, e não um segundo componente com regra própria para manter.</p>
+    </div>
+    <div class="note">
+      <b>Abaixo de 560 só o secundário encolhe</b>
+      <p>A regra da miniatura é <code>.yb-post:not(.yb-post--featured)</code>: sem o
+      <code>:not()</code>, o destaque virava a menor imagem da seção — 96x66 — com o
+      maior título em cima. Modificador e bloco empatam em especificidade, e a media
+      query vem depois na folha; quem chega por último ganha.</p>
+    </div>

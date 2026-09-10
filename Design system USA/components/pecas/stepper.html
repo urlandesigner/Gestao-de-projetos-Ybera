@@ -1,0 +1,27 @@
+<h2>Quantity stepper</h2>
+    <p class="when">Botões de 44px, e funcionam — clique. Limites em 1 e 10: o botão desabilita sozinho na ponta.</p>
+    <div class="demo">
+      <div class="yb-stepper" data-yb-stepper>
+        <button type="button" data-yb-step="down" aria-label="Diminuir quantidade">−</button>
+        <input type="number" value="1" min="1" max="10" aria-label="Quantidade">
+        <button type="button" data-yb-step="up" aria-label="Aumentar quantidade">+</button>
+      </div>
+      <div class="yb-stepper" data-yb-stepper>
+        <button type="button" data-yb-step="down" aria-label="Diminuir quantidade">−</button>
+        <input type="number" value="9" min="1" max="10" aria-label="Quantidade">
+        <button type="button" data-yb-step="up" aria-label="Aumentar quantidade">+</button>
+      </div>
+      <div class="yb-stepper yb-stepper--sm" data-yb-stepper>
+        <button type="button" data-yb-step="down" aria-label="Diminuir quantidade">−</button>
+        <input type="number" value="1" min="1" max="10" aria-label="Quantidade">
+        <button type="button" data-yb-step="up" aria-label="Aumentar quantidade">+</button>
+      </div>
+    </div>
+    <div class="note">
+      <b><code>--sm</code> é exceção, não escolha de gosto</b>
+      <p>36px em vez de 44. Existe por causa da gaveta: lá o controle divide 420px
+      com foto, título, preço e lixeira, e em 44+48+44 o preço ia para outra linha.
+      O mínimo de alvo do WCAG 2.5.8 (AA) é 24px, então 36 ainda sobra folga &mdash;
+      o que se perde é o conforto de 44, que é AAA. Na PDP use o grande: ali o
+      controle antecede a compra.</p>
+    </div>

@@ -1,0 +1,14 @@
+<h2>Alert</h2>
+    <p class="when">Uma mensagem, um alerta. Empilhar três é garantir que nenhum seja lido.</p>
+    <div class="demo demo--stack">
+      <div class="yb-alert yb-alert--success" role="status"><div><b class="yb-alert__title">Order confirmed</b><p>We sent the tracking number to you@example.com.</p></div></div>
+      <div class="yb-alert yb-alert--warning" role="status"><div><b class="yb-alert__title">Only 3 left</b><p>This size is running low.</p></div></div>
+      <div class="yb-alert yb-alert--danger" role="alert"><div><b class="yb-alert__title">Payment declined</b><p>Your bank rejected the charge. Try another card or contact your bank.</p></div></div>
+      <div class="yb-alert yb-alert--info" role="status"><div><b class="yb-alert__title">Free shipping</b><p>Add $12.10 more to qualify for free standard shipping.</p></div></div>
+    </div>
+    <div class="note">
+      <b>role="alert" só no que interrompe</b>
+      <p>O de erro usa <code>role="alert"</code> e interrompe o leitor de tela na hora.
+      Os outros usam <code>role="status"</code> e esperam a pausa. Usar
+      <code>alert</code> em tudo transforma o leitor de tela em ruído.</p>
+    </div>

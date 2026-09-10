@@ -1,0 +1,52 @@
+<h2>Modal &amp; drawer</h2>
+    <p class="when">Interrompe para pedir uma decisão. Se não há decisão a tomar, use toast.</p>
+    <div class="demo">
+      <button class="yb-btn yb-btn--ghost" data-yb-open="dlg-remove">Remover item</button>
+      <button class="yb-btn yb-btn--primary" data-yb-open="dlg-cart">Abrir carrinho</button>
+    </div>
+    <div class="note">
+      <b>É <code>&lt;dialog&gt;</code> nativo</b>
+      <p>Foco preso, <kbd>Esc</kbd> e backdrop vêm do navegador. O JS só abre,
+      fecha no clique fora e <b>devolve o foco a quem abriu</b> — sem isso o leitor
+      de tela volta ao topo da página depois de fechar. A gaveta é o mesmo elemento,
+      ancorado na lateral.</p>
+    </div>
+    <div class="note">
+      <b>Por que o carrinho não está aqui</b>
+      <p>Esta página é a camada de componente e carrega só a folha de componentes.
+      O carrinho é <b>padrão</b>: <code>.yb-cart</code> vive em
+      <code>patterns/</code>. Demonstrá-lo aqui rendia um HTML sem estilo nenhum —
+      e foi exatamente o que aconteceu até agora.</p>
+    </div>
+
+    <dialog id="dlg-remove" class="yb-dialog" aria-labelledby="dlg-remove-t">
+      <div class="yb-dialog__head">
+        <h3 class="yb-dialog__title" id="dlg-remove-t">Remove from cart?</h3>
+        <button class="yb-dialog__close" data-yb-close aria-label="Close">×</button>
+      </div>
+      <div class="yb-dialog__body">
+        <p>Kit Sealant Fashion Gold — 500g / 17.6 fl oz will be removed from your cart.</p>
+      </div>
+      <div class="yb-dialog__foot">
+        <button class="yb-btn yb-btn--ghost" data-yb-close>Keep it</button>
+        <button class="yb-btn yb-btn--danger" data-yb-close
+          onclick="Ybera.toast({title:'Removed from cart',text:'Kit Sealant Fashion Gold',variant:'danger'})">Remove</button>
+      </div>
+    </dialog>
+
+    <dialog id="dlg-cart" class="yb-dialog yb-dialog--drawer" aria-labelledby="dlg-cart-t">
+      <div class="yb-dialog__head">
+        <h3 class="yb-dialog__title" id="dlg-cart-t">Your cart (1)</h3>
+        <button class="yb-dialog__close" data-yb-close aria-label="Close">
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg>
+        </button>
+      </div>
+      <div class="yb-dialog__body">
+        <p>A gaveta é o mesmo <code>&lt;dialog&gt;</code>, ancorado na lateral e com
+        a altura da tela. O conteúdo é de quem usa — o carrinho de verdade está
+        montado em <a href="../patterns/index.html#cart-drawer">Patterns</a>.</p>
+      </div>
+      <div class="yb-dialog__foot">
+        <button class="yb-btn yb-btn--primary yb-btn--block" data-yb-close>Checkout</button>
+      </div>
+    </dialog>

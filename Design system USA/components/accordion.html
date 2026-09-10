@@ -39,6 +39,7 @@
     <li><a href="empty.html">Empty state</a></li>
     <li><a href="field.html">Form field</a></li>
     <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="iconbtn.html">Icon button</a></li>
     <li><a href="link.html">Link</a></li>
     <li><a href="logo.html">Logo</a></li>
     <li><a href="logobar.html">Logo bar</a></li>
@@ -59,6 +60,7 @@
     <li><a href="skeleton.html">Skeleton</a></li>
     <li><a href="switch.html">Switch</a></li>
     <li><a href="toast.html">Toast</a></li>
+    <li><a href="track.html">Track</a></li>
     <li><a href="variant.html">Variant picker</a></li>
     <li><a href="video.html">Vertical video carousel</a></li>
   </ul>
@@ -95,6 +97,18 @@
       <p>Sem JavaScript. Teclado, leitor de tela e busca do navegador funcionam de
       graça — inclusive Ctrl+F encontrando texto dentro de seção fechada nos
       navegadores que suportam.</p>
+    </div>
+  </section>
+
+  <section class="bloco" id="mobile">
+    <h2 class="bloco-titulo">Em 375px</h2>
+    <p class="bloco-lede">Viewport de verdade, num <code>&lt;iframe&gt;</code> —
+    e não um quadro estreito. <code>@media</code> consulta a viewport: encolher
+    uma <code>div</code> entregaria a peça fina com o CSS de desktop, que foi como
+    a gaveta do carrinho já apareceu com 222px fingindo estar quebrada.</p>
+    <div class="quadro-mob">
+      <iframe src="solo.html?c=accordion" title="Accordion em 375px"
+              width="375" height="420" loading="lazy"></iframe>
     </div>
   </section>
 
@@ -146,13 +160,23 @@
   </section>
 
   <p class="doc-credit">Ficha gerada por <code>tools/fichas.mjs</code> a partir de
-  <code>components/ybera-components.css</code> e <code>components/index.html</code>.
+  <code>components/ybera-components.css</code> e <code>components/pecas/accordion.html</code>.
   Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>
 </main>
 
 </div>
 <script src="ybera-components.js"></script>
 <script>
+/* O quadro de 375 se dimensiona pelo que tem dentro. Conteudo de iframe nao
+   dimensiona o elemento sozinho, entao o solo.html mede a propria caixa e
+   avisa por postMessage — sem isso a ficha do Badge teria a mesma altura da
+   ficha do carrinho, e as duas erradas. */
+addEventListener('message', function (e) {
+  if (!e.data || e.data.yb !== 'altura') return;
+  var f = document.querySelector('.quadro-mob iframe');
+  if (f && e.data.h > 0) f.height = e.data.h;
+});
+
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
