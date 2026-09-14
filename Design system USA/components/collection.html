@@ -76,10 +76,10 @@
   <p class="ficha-quando">Porta de entrada para uma coleção. O cartão inteiro é o link — o rótulo sozinho seria um alvo pequeno dentro de uma imagem grande.</p>
   <ul class="ficha-fatos">
     <li>Classe base <b><code>.yb-collection</code></b></li>
-    <li>Modificadores <b>4</b></li>
-    <li>Elementos <b>4</b></li>
+    <li>Modificadores <b>5</b></li>
+    <li>Elementos <b>5</b></li>
     <li>Estados <b>2</b></li>
-    <li>Tokens <b>32</b></li>
+    <li>Tokens <b>42</b></li>
     <li>Comportamento <b>só CSS</b></li>
   </ul>
 
@@ -151,6 +151,46 @@
           <span class="yb-collection__label">Fashion Gold</span>
         </a></li>
       </ul>
+    </div>
+    <h3 class="row-label">Mosaic com blur — <code>.yb-collection--blur</code></h3>
+    <div class="demo demo--stack">
+      <ul class="yb-collections yb-collections--mosaic">
+        <li><a class="yb-collection yb-collection--overlay yb-collection--blur" href="#collection">
+          <img src="../_captura/nova-loja/img/02sauana-2896ea7c.webp" alt="" loading="lazy">
+          <span class="yb-collection__blur" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="yb-collection__label">Ybera Paris</span>
+        </a></li>
+        <li><a class="yb-collection yb-collection--overlay yb-collection--blur" href="#collection">
+          <img src="../_captura/nova-loja/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy">
+          <span class="yb-collection__blur" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="yb-collection__label">Capulana</span>
+        </a></li>
+        <li><a class="yb-collection yb-collection--overlay yb-collection--blur" href="#collection">
+          <img src="../_captura/nova-loja/img/02_hair-problem-f838107d.webp" alt="" loading="lazy">
+          <span class="yb-collection__blur" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="yb-collection__label">Cronograma</span>
+        </a></li>
+        <li><a class="yb-collection yb-collection--overlay yb-collection--blur" href="#collection">
+          <img src="../_captura/nova-loja/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy">
+          <span class="yb-collection__blur" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="yb-collection__label">Genoma</span>
+        </a></li>
+        <li><a class="yb-collection yb-collection--overlay yb-collection--blur" href="#collection">
+          <img src="../_captura/nova-loja/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy">
+          <span class="yb-collection__blur" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="yb-collection__label">Fashion Gold</span>
+        </a></li>
+      </ul>
+    </div>
+    <div class="note">
+      <b>Ladrilho pequeno, queda curta</b>
+      <p>O ladrilho tem 107px de altura no mosaico, e a queda inteira do véu
+      cabe em 88 deles. Não há como ser suave nessa distância: o pico fica em
+      <b>12,6</b> milésimos de alfa por pixel, acima do teto de 5,5. O que a
+      curva resolve aqui é a QUINA — a receita de duas rampas media
+      <b>18,5</b>, e era ela que desenhava a linha atravessando a foto.
+      Inclinação alta e suave lê como sombra; inclinação que muda de golpe lê
+      como emenda.</p>
     </div>
     <h3 class="row-label">v2 · cartão com rodapé</h3>
     <div class="demo demo--rail">
@@ -268,9 +308,9 @@
     <p class="bloco-lede">Lido da folha a cada build. Se faltar alguma coisa aqui,
     falta na folha.</p>
     <p class="rotulo">Modificadores</p>
-    <p class="lista-api"><code>.yb-collection--bottom</code> <code>.yb-collection--card</code> <code>.yb-collection--center</code> <code>.yb-collection--overlay</code></p>
+    <p class="lista-api"><code>.yb-collection--blur</code> <code>.yb-collection--bottom</code> <code>.yb-collection--card</code> <code>.yb-collection--center</code> <code>.yb-collection--overlay</code></p>
     <p class="rotulo">Elementos</p>
-    <p class="lista-api"><code>.yb-collection__cta</code> <code>.yb-collection__foot</code> <code>.yb-collection__label</code> <code>.yb-collection__name</code></p>
+    <p class="lista-api"><code>.yb-collection__blur</code> <code>.yb-collection__cta</code> <code>.yb-collection__foot</code> <code>.yb-collection__label</code> <code>.yb-collection__name</code></p>
     <p class="rotulo">Estados que a folha trata</p>
     <p class="bloco-lede"><code>:focus-visible</code> · <code>:hover</code></p>
   </section>

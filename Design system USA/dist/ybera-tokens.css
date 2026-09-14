@@ -337,6 +337,69 @@
      compoem .77, e e esse numero que foi medido. */
   --yb-scrim-soft:   rgba(30, 30, 31, .18);
   --yb-scrim-none:   rgba(30, 30, 31, 0);
+  /* A CURVA DA QUEDA — quatro degraus do mesmo cinza.
+
+     `strong` e `soft` empilhados dão o platô .77 e são a receita antiga; o que
+     eles não dão é o CAMINHO até lá. Duas rampas lineares somadas fazem uma
+     curva de quatro trechos cujo último encosta no platô num canto: a
+     inclinação cai de golpe para zero. Medido no banco de prova, o pico batia
+     7,2 milésimos de alfa por pixel exatamente nessa junta — era ela que se
+     via como emenda atravessando a foto do hero.
+
+     Estes quatro degraus são a smoothstep (3x²−2x³) amostrada nos quartos:
+     .120, .385, .650 e o platô .77. Montados em UM gradiente pelo componente,
+     a inclinação nasce baixa, cresce no meio e volta a baixa ao encostar no
+     platô. Nenhum canto em ponta. Medido: pico de 3,9 milésimos por pixel numa
+     queda de 17rem — 0,50 nível de luminância por pixel sobre foto média,
+     abaixo do teto de 0,7 que o cartão de oferta documenta.
+
+     São DEGRAUS e não um gradiente pronto porque o gradiente pronto não
+     funciona: `var()` dentro de um token declarado no `:root` é substituído no
+     `:root`, e ali `--yb-veil-fall` não existe — a curva nascia com o padrão
+     e ocupava a caixa inteira. Onde a queda cai é geometria, e geometria só o
+     componente sabe. A camada 1 entrega a tinta; a posição é do componente.
+
+     E é UMA camada só, não duas. Pintar queda e platô como dois planos de
+     fundo dá defeito nas duas formas de encaixar: 1px de sobra soma os dois
+     véus (.95 contra .77 dos vizinhos, risco escuro) e encaixe exato deixa o
+     arredondamento de subpixel abrir uma linha clara de 1px. Junta que não
+     existe é a única que não erra — por isso o último degrau é o platô, e cor
+     de última parada se estende sozinha até o fim da caixa. */
+  --yb-scrim-curve-1: rgba(30, 30, 31, .12);
+  --yb-scrim-curve-2: rgba(30, 30, 31, .385);
+  --yb-scrim-curve-3: rgba(30, 30, 31, .65);
+  --yb-scrim-full:    rgba(30, 30, 31, .77);
+  /* A MESMA curva, mais leve, para a variante com blur.
+
+     .77 é o número do véu padrão. Medindo, ele é mais conservador do que
+     precisa: o pior caso possível é foto branca chapada atrás do texto, e para
+     essa foto o mínimo de 4,5:1 é .61. .65 cobre o pior caso com folga — 5,2:1
+     sobre branco puro, e medido nas três fotos reais do hero dá 5,4:1, 7,0:1 e
+     7,8:1.
+
+     O QUE O BLUR FAZ, e não é o que parecia. A primeira medição prometia muito
+     mais: com .45 e blur a primeira foto dava 4,95:1 contra 4,25:1 sem. Medindo
+     as outras duas, .45 reprovava — 2,96:1 e 4,29:1 — porque a segunda foto tem
+     fundo estourado bem atrás do texto (luminância 249 depois de borrada), e
+     borrar quase-branco continua quase-branco: não há vizinhança escura para o
+     borrão puxar.
+
+     Refeita a conta em .65, o blur contribui quase nada para contraste: 7,75:1
+     com e 6,98:1 sem na primeira foto, e EMPATE nas outras duas. O blur ajuda
+     contra brilho ESPECULAR — pontinho claro isolado, que ele dissolve na
+     média — e não ajuda nada contra área clara grande, que é o caso comum.
+     Então o blur aqui é decisão de aparência, não mecanismo de legibilidade,
+     e é assim que ele deve ser vendido.
+
+     Por que .65 fica preso à variante com blur em vez de virar o padrão: sobre
+     foto NÍTIDA e cheia de detalhe, .65 passa no medidor e ainda assim deixa o
+     texto em cima de ruído visual. Baixar o véu do sistema inteiro com base
+     nestas três fotos seria generalizar de uma amostra. Fica escopado, e a
+     checagem `o véu leve só existe onde há blur` segura o escopo. */
+  --yb-scrim-lite-curve-1: rgba(30, 30, 31, .101);
+  --yb-scrim-lite-curve-2: rgba(30, 30, 31, .325);
+  --yb-scrim-lite-curve-3: rgba(30, 30, 31, .549);
+  --yb-scrim-lite:         rgba(30, 30, 31, .65);
   /* Superfície que flutua SOBRE mídia — o botão de play do carrossel de vídeo.
      Precisa de alfa: sólida ela vira um disco branco cego sobre a foto; sem
      nenhuma ela some no quadro claro. O componente escrevia o rgba à mão. */

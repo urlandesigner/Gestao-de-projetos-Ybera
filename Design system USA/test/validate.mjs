@@ -245,7 +245,11 @@ secao('Breakpoints');
   const escala = Object.fromEntries(
     [...css.primitivos.matchAll(/--yb-breakpoint-(\w+):\s*(\d+)px/g)].map(m => [m[2], m[1]]));
   // pontos de quebra de COMPONENTE, declarados: nascem do conteudo, nao da tela
-  const DE_COMPONENTE = new Set(['520', '560', '860', '900']);
+  // 360: onde o titulo do banner de midia deixa de quebrar em quatro linhas.
+  // Abaixo dali a faixa de texto come 216 dos 256px do banner e sobram 40 de
+  // folga para o veu; acima, a folga menor passa a ser 69px. E medida de
+  // conteudo, nao de aparelho — por isso nao entra na escala.
+  const DE_COMPONENTE = new Set(['360', '520', '560', '860', '900']);
   const DE_PARIDADE = new Set(['767']);   // espelha o <source media> do <picture>
   const usados = new Set();
   for (const nome of ['componentes', 'padroes']) {
@@ -1379,6 +1383,125 @@ secao('Páginas');
   gatilhosMortos.length
     ? falha('data-yb-open sem destino na página', gatilhosMortos.join(', '))
     : ok('todo gatilho de overlay abre algo', `${comGatilho.length} páginas`);
+}
+
+secao('Véu sobre foto');
+// O veu do banner e o unico lugar do sistema onde uma cor tem de virar outra
+// AO LONGO de uma distancia, e a emenda entre a queda e o plato ja deu defeito
+// nas duas formas possiveis de encaixar duas camadas de fundo:
+//
+//   sobrepostas em 1px  -> os dois veus somam .95 contra .77 dos vizinhos, e
+//                          desenham um risco ESCURO atravessando a foto;
+//   encaixadas exatas   -> o arredondamento de subpixel abre uma linha CLARA
+//                          de 1px no mesmo lugar.
+//
+// Nao ha terceiro jeito de encaixar. A saida foi nao encaixar: uma camada so,
+// em que a ultima parada da curva e o plato e a cor da ultima parada se
+// estende sozinha ate o fim da caixa. Esta checagem existe para que a proxima
+// pessoa que mexer no veu nao redescubra os dois riscos de 1px.
+//
+// Conta gradientes no TOPO do valor, nao virgulas — a curva tem nove paradas
+// separadas por virgula dentro de UM gradiente.
+{
+  const s = semComentario(css.componentes || '');
+  const erradas = [];
+  for (const m of s.matchAll(/\.yb-mediabanner[^{}]*::before\s*\{([^{}]*)\}/g)) {
+    const decl = [...m[1].matchAll(/(^|;)\s*background\s*:([^;]*)/g)].map(d => d[2]).pop();
+    if (!decl) continue;
+    const camadas = (decl.match(/\b(?:linear|radial|conic)-gradient\s*\(/g) || []).length;
+    if (camadas > 1) erradas.push(`${m[0].slice(0, 40).trim()}… tem ${camadas} camadas`);
+  }
+  erradas.length
+    ? falha('o véu do banner voltou a ser mais de uma camada', erradas.join(' · ')
+        + ' — junta entre camadas de véu deixa risco de 1px, escuro ou claro')
+    : ok('o véu sobre foto é uma camada só', 'sem junta para errar');
+}
+
+// A curva vem da camada 1 e a POSICAO dela vem do componente, por
+// `--yb-veil-fall`. Nao e enfeite de organizacao: gradiente pronto guardado em
+// token nao funciona aqui, porque `var()` dentro de um token declarado no
+// `:root` e substituido no `:root` — onde `--yb-veil-fall` nao existe. A curva
+// nascia com o padrao, ocupava a caixa inteira e deixava alfa .43 atras da
+// primeira linha de texto, reprovando contraste sem nada acusar.
+//
+// Todo degrau da curva tem de ser posicionado pela variavel; parada em
+// porcentagem quer dizer que alguem voltou a amarrar a curva na caixa.
+{
+  const s = semComentario(css.componentes || '');
+  const erradas = [];
+  for (const m of s.matchAll(/var\(--yb-scrim-curve-\d\)\s*([^,)]+)/g))
+    if (!m[1].includes('--yb-veil-fall')) erradas.push(m[0].trim());
+  const declaram = [...s.matchAll(/--yb-veil-fall\s*:/g)].length;
+  erradas.length
+    ? falha('degrau da curva do véu posicionado sem --yb-veil-fall', erradas.join(' · '))
+    : declaram === 0
+      ? falha('a curva do véu não tem quem declare --yb-veil-fall', 'sem a variável a queda ocupa a caixa inteira')
+      : ok('a curva do véu é posicionada pela geometria do componente', `${declaram} variantes declaram a queda`);
+}
+
+secao('Véu leve e blur');
+// O veu leve (.65) e a variante com blur sao um par de ESCOPO, nao de
+// dependencia: medido, .65 passa contraste com ou sem o blur (7,75:1 com e
+// 6,98:1 sem na foto com brilho especular; empate nas outras duas do hero).
+// Ele fica preso a variante porque .65 sobre foto nitida e cheia de detalhe
+// passa no medidor e ainda deixa o texto sobre ruido — e porque baixar o veu
+// do sistema inteiro com base em tres fotos seria generalizar de uma amostra.
+//
+// Sem esta checagem o escopo vaza calado: um `--yb-scrim-lite` solto num
+// seletor generico aclara TODO banner do site sem nada acusar.
+//
+// A segunda checagem guarda o outro lado: `--blur` no HTML sem as tres folhas
+// nao quebra nada visivel — o blur so fica mais fraco, que e exatamente o tipo
+// de defeito que ninguem percebe.
+{
+  const s = semComentario(css.componentes || '');
+  const fora = [];
+  for (const m of s.matchAll(/([^{}]*)\{([^{}]*)\}/g)) {
+    if (!/--yb-scrim-lite/.test(m[2])) continue;
+    // qualquer familia serve, desde que o seletor esteja preso a variante
+    // --blur dela: o que nao pode e o veu leve valer para a peca inteira.
+    if (!/\.yb-[\w-]+--blur\b/.test(m[1])) fora.push(m[1].trim().slice(0, 60));
+  }
+  fora.length
+    ? falha('véu leve fora da variante que tem blur', fora.join(' · ')
+        + ' — o véu leve é escopado à variante; solto, ele aclara a peça inteira')
+    : ok('o véu leve só existe onde há blur', 'escopo medido nas três fotos do hero');
+}
+
+{
+  // Nenhuma pagina pode declarar --blur sem as tres folhas. Uma folha a menos
+  // nao quebra nada visivel de imediato: o blur fica mais fraco e o contraste
+  // cai, que e exatamente o tipo de defeito que passa despercebido.
+  const alvos = [
+    ...(existsSync(join(raiz, '_captura/nova-loja'))
+      ? readdirSync(join(raiz, '_captura/nova-loja')).filter(f => f.endsWith('.html'))
+          .map(f => join('_captura/nova-loja', f))
+      : []),
+    ...readdirSync(join(raiz, 'components')).filter(f => f.endsWith('.html'))
+      .map(f => join('components', f)),
+    ...['patterns/index.html', 'index.html'].filter(f => existsSync(join(raiz, f))),
+  ];
+  const erradas = [];
+  for (const f of alvos) {
+    const h = ler(f);
+    // so TAG de verdade: a ficha cita a classe em prosa, na lista de API e no
+    // trecho copiavel, e nenhum dos tres e um uso. O trecho copiavel escapa os
+    // sinais de menor e maior, entao `<a` nao casa la — que e o que se quer.
+    const usos = (h.match(/<(?:a|div|article|li)[^>]*class="[^"]*yb-[\w-]+--blur\b[^"]*"/g) || []).length;
+    if (!usos) continue;
+    // div ou span: dentro de <a> com rotulo em <span> o irmao span le melhor,
+    // e a caixa e decoracao — a tag nao importa, as tres folhas importam.
+    const caixas = [...h.matchAll(/<(div|span) class="yb-[\w-]+__blur"[^>]*>([\s\S]*?)<\/\1>/g)];
+    // (a caixa escapada do trecho copiavel tambem nao casa, pelo mesmo motivo)
+    if (caixas.length !== usos)
+      erradas.push(`${f}: ${usos} com --blur, ${caixas.length} caixa(s) de blur`);
+    for (const c of caixas)
+      if ((c[2].match(/<i>\s*<\/i>/g) || []).length !== 3)
+        erradas.push(`${f}: caixa de blur sem as três folhas`);
+  }
+  erradas.length
+    ? falha('--blur sem as três folhas de blur', [...new Set(erradas)].join(' · '))
+    : ok('toda variante com blur traz as três folhas', `${alvos.length} páginas`);
 }
 
 /* ===========================================================================

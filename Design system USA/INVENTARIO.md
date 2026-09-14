@@ -32,7 +32,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | CARREGANDO | `.yb-btn` | Componente | Estável | 10 | 4 | 21 | sim | sim | sim | sim |
 | CERTIFICATION SEALS | `.yb-seal` | Componente | Estável | — | — | 13 | sim | n/a | — | sim |
 | CHECKBOX / RADIO | `.yb-check` | Componente | Beta | — | 1 | 10 | sim | sim | — | — |
-| COLLECTION CARD | `.yb-collection` | Componente | Estável | 5 | 2 | 33 | sim | sim | — | sim |
+| COLLECTION CARD | `.yb-collection` | Componente | Estável | 6 | 2 | 40 | sim | sim | — | sim |
 | DIALOG / MODAL | `.yb-dialog` | Componente | Estável | 1 | 2 | 25 | sim | sim | sim | sim |
 | EMPTY STATE | `.yb-empty` | Componente | Estável | 1 | — | 11 | sim | n/a | — | sim |
 | FORM FIELD | `.yb-field` | Componente | Estável | 1 | 4 | 29 | sim | sim | — | sim |
@@ -40,9 +40,9 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | LINK | `.yb-link` | Componente | Estável | 1 | 2 | 10 | sim | sim | — | sim |
 | LOGO | `.yb-logo` | Componente | Estável | 4 | 1 | 5 | sim | sim | — | sim |
 | LOGO BAR | `.yb-logobar` | Componente | Estável | — | — | 5 | sim | n/a | — | sim |
-| MEDIABANNER | `.yb-mediabanner` | Componente | Estável | 2 | 1 | 26 | sim | sim | — | sim |
+| MEDIABANNER | `.yb-mediabanner` | Componente | Estável | 3 | 1 | 36 | sim | sim | — | sim |
 | NOTICE | `.yb-notice` | Componente | Beta | 2 | — | 15 | sim | — | — | — |
-| OFFER CARD | `.yb-offercard` | Componente | Estável | — | 2 | 28 | sim | sim | sim | sim |
+| OFFER CARD | `.yb-offercard` | Componente | Estável | 1 | 2 | 36 | sim | sim | sim | sim |
 | PAGINATION | `.yb-pagination` | Componente | Beta | — | 3 | 17 | sim | sim | — | — |
 | PARTNER | `.yb-partner` | Componente | Estável | — | 1 | 24 | sim | sim | sim | sim |
 | POST | `.yb-post` | Componente | Estável | 4 | 2 | 21 | sim | sim | — | sim |

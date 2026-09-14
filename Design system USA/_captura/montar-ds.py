@@ -168,7 +168,16 @@ CSS_PDP = """  /* Sem padding-top: quem separa do breadcrumb e o breadcrumb. Com
   .yb-buybox > .pdp__prova { margin-block-start: var(--yb-space-8); }
 
   .pdp__duo { display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-3); }
-  .pdp__duo .yb-mediabanner { min-height:clamp(18rem, 26vw, 24rem); }
+  .pdp__duo .yb-mediabanner {
+    min-height:clamp(18rem, 26vw, 24rem);
+    /* Metade da largura, entao metade da folga: 80px em 1024 contra 161px do
+       banner inteiro. A queda do sistema (34vw) daria 140px ali e chegaria
+       cortada. Quem aperta o layout devolve a medida. */
+    --yb-veil-fall:clamp(2rem, 26vw - 13rem, 11rem);
+  }
+  @media (min-width:360px){
+    .pdp__duo .yb-mediabanner { --yb-veil-fall:clamp(3.5rem, 26vw - 13rem, 11rem); }
+  }
   .pdp__prova { display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-3);
     list-style:none; margin:0; padding:0; }
   @media (max-width:520px) { .pdp__duo { grid-template-columns:1fr; } }
@@ -535,9 +544,10 @@ def cartao_oferta(p, destino):
     import datetime
     arte = recortar_arte(destino, OFERTA['img']) or p['img']
     prazo = f"{datetime.date.today().year}{OFERTA['prazo']}"
-    return f"""      <article class="yb-offercard">
+    return f"""      <article class="yb-offercard yb-offercard--blur">
         <img src="img/{arte}" alt="{p['titulo'][:80]}">
         <span class="yb-badge yb-badge--sale yb-offercard__off">{OFERTA['desconto']}</span>
+        <div class="yb-offercard__blur" aria-hidden="true"><i></i><i></i><i></i></div>
         <div class="yb-offercard__body">
           <h3 class="yb-offercard__title"><a href="pdp.html">{p['titulo']}</a></h3>
           <div class="yb-offercard__linha">
@@ -1808,8 +1818,9 @@ def hero_v2():
         prio = 'fetchpriority="high"' if i == 0 else 'loading="lazy"'
         titulo = 'h1' if i == 0 else 'h2'
         slides += f"""
-      <a class="yb-mediabanner yb-mediabanner--bleed" href="{href}">
+      <a class="yb-mediabanner yb-mediabanner--bleed yb-mediabanner--blur" href="{href}">
         <img src="img/{h['img']}" alt="" {prio}>
+        <div class="yb-mediabanner__blur" aria-hidden="true"><i></i><i></i><i></i></div>
         <div class="yb-mediabanner__body">
           <span class="yb-mediabanner__eyebrow">{h['eyebrow']}</span>
           <{titulo} class="yb-mediabanner__title">{h['titulo']}</{titulo}>
@@ -1994,15 +2005,17 @@ def pdp_historia():
            5-star reviews") e selo repetido ("Best seller", terceiro na pagina);
            agora dizem o que a foto mostra. -->
       <div class="pdp__duo">
-        <div class="yb-mediabanner">
+        <div class="yb-mediabanner yb-mediabanner--blur">
           <img src="img/22_1-d5c4b8.webp" alt="" loading="lazy">
+          <div class="yb-mediabanner__blur" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="yb-mediabanner__body">
             <span class="yb-mediabanner__eyebrow">Step 1 · Hydration</span>
             <h2 class="yb-mediabanner__title">Water back into the fiber.</h2>
           </div>
         </div>
-        <div class="yb-mediabanner">
+        <div class="yb-mediabanner yb-mediabanner--blur">
           <img src="img/29-527a32.webp" alt="" loading="lazy">
+          <div class="yb-mediabanner__blur" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="yb-mediabanner__body">
             <span class="yb-mediabanner__eyebrow">Damp or dry</span>
             <h2 class="yb-mediabanner__title">Use it your way.</h2>
@@ -2022,8 +2035,9 @@ def pdp_historia():
              alt="Authentic Brazilian keratin — treatment for salon-quality results, formaldehyde-free formula">
       </a>
 
-      <a class="yb-mediabanner" href="/collections/cronograma-hair-care-system">
+      <a class="yb-mediabanner yb-mediabanner--blur" href="/collections/cronograma-hair-care-system">
         <img src="img/KitCuidadosProfundos-YberaFashionGold_ab-9c59c4.webp" alt="" loading="lazy">
+        <div class="yb-mediabanner__blur" aria-hidden="true"><i></i><i></i><i></i></div>
         <div class="yb-mediabanner__body">
           <span class="yb-mediabanner__eyebrow">Cronograma system</span>
           <h2 class="yb-mediabanner__title">Deep repair &amp; shine</h2>

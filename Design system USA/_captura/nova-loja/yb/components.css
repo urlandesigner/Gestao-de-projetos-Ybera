@@ -689,29 +689,75 @@
    acontece acima dele, onde nao ha letra nenhuma. O `overflow:hidden` do
    banner corta o que sobra.
 
-   A queda sao DUAS rampas empilhadas, nao uma. Rampa linear unica tem
-   inclinacao constante: o olho nao acusa o meio dela, acusa as duas PONTAS,
-   onde a inclinacao muda de golpe — e o veu volta a ler como aresta mesmo
-   sendo longo. Com uma rampa forte que acaba cedo e uma fraca de cauda
-   longa por baixo, a inclinacao muda ao longo do caminho, que e o que faz
-   uma curva. Medido no cartao de oferta, que usa a mesma receita: a
-   inclinacao maxima cai de 2,5 para 0,7 nivel de luminancia por pixel.
+   A queda e UMA curva, nao duas rampas somadas. A versao anterior empilhava
+   uma rampa forte e uma fraca, e isso de fato tira o canto de CIMA — mas o de
+   BAIXO fica: as duas acabam juntas em cima do plato e a inclinacao vai de
+   6,5 milesimos de alfa por pixel a zero de um pixel para o outro. Medido no
+   hero em 1440, o pico batia 13,5 milesimos exatamente nessa junta. Era a
+   emenda que se via atravessando a foto.
 
-   As paradas sao em rem e nao em porcentagem porque a altura do corpo varia
-   com o texto: em porcentagem, um banner de duas linhas teria a queda mais
-   curta que um de quatro. */
+   `--yb-scrim-ramp` traz a curva pronta (smoothstep, oito trechos): sai de
+   zero devagar, acelera no meio, desacelera de volta a zero ao encostar no
+   plato. Sem canto em ponta nenhuma. O componente so diz ONDE ela cai, e diz
+   isso com `background-size` — o token nao sabe quantos pixels tem a queda.
+
+   UMA CAMADA, e a curva escrita AQUI. Os quatro degraus vem da camada 1
+   (`--yb-scrim-curve-*`); as posicoes sao daqui, porque so o componente sabe
+   quanto mede a queda. Gradiente pronto em token nao serve: `var()` dentro de
+   um token do `:root` e substituido no `:root`, onde `--yb-veil-fall` nao
+   existe, e a curva nascia ocupando a caixa inteira — alfa .43 atras da
+   primeira linha de texto, reprovando contraste.
+
+   Duas camadas de fundo tambem nao servem, e as duas formas de encaixar
+   falham: 1px de sobra soma os dois veus (.95 contra .77 dos vizinhos, risco
+   escuro) e encaixe exato deixa o arredondamento de subpixel abrir uma linha
+   clara de 1px. Junta que nao existe e a unica que nao erra — por isso o
+   ultimo degrau e o plato, e cor de ultima parada se estende sozinha ate o
+   fim da caixa.
+
+   QUANTO a queda mede e um clamp e nao um numero fixo, porque `overflow:hidden`
+   corta o que passa do topo do banner — e queda cortada no meio e outra
+   aresta, agora na borda de cima da foto. O termo do meio persegue a folga
+   (a altura do banner menos a faixa de texto) e os dois extremos garantem que
+   ela nunca passe do que existe.
+
+   Folga medida no hero: 295px em 1440, 104px em 768, 58px em 320 — em 320
+   sobram 10px, em 1440 sobram 23.
+
+   No banner de CONTEUDO a folga e outra, porque a altura e outra e o texto
+   pesa mais na proporcao: 229px em 1440, 161px em 1024, 74px em 768, 69px em
+   600, 97px em 480 e 390, e 40px em 320. O piso e 2rem por causa desses 40 —
+   com 4rem o veu chegava cortado ali, alfa .223 na primeira linha de pixel.
+   Piso generoso onde ha espaco custa aresta onde nao ha.
+
+   Um banner espremido em coluna estreita tem folga menor que essa tabela, e
+   quem sabe disso e a PAGINA, nao o sistema: quem aperta o layout redeclara
+   `--yb-veil-fall`. E o que o par de destaques da PDP faz. */
+.yb-mediabanner{ --yb-veil-fall:clamp(2rem, 34vw - 13rem, 11rem); }
+/* O piso de 2rem existe por causa de UMA largura: em 320 o titulo quebra em
+   quatro linhas, a faixa come 216 dos 256px e sobram 40 de folga. De 360 para
+   cima o titulo cabe em menos linhas e a folga menor passa a ser 69px, em 600.
+   Sem esta regra o piso de 2rem valia para todo mundo e a queda ficava em 32px
+   onde havia 97 — inclinacao de 28 milesimos de alfa por pixel contra 16, por
+   nada. Piso unico serve a largura pior e castiga as outras. */
+@media (min-width:360px){
+  .yb-mediabanner{ --yb-veil-fall:clamp(3.5rem, 34vw - 13rem, 11rem); }
+}
+.yb-mediabanner--bleed{ --yb-veil-fall:clamp(3rem, 46vw - 16rem, 17rem); }
+/* Mesma razao do banner de conteudo, outra tabela: a folga do hero e 58px em
+   320 e 66px em 600, entao 3rem so em 320 e 3.5rem dali para cima. */
+@media (min-width:360px){
+  .yb-mediabanner--bleed{ --yb-veil-fall:clamp(3.5rem, 46vw - 16rem, 17rem); }
+}
 .yb-mediabanner__body::before{
   content:""; position:absolute; z-index:-1;
-  inset:-12rem 0 0;
-  background:
-    linear-gradient(to top,
-      var(--yb-scrim-strong) 0,
-      var(--yb-scrim-strong) calc(100% - 12rem),
-      var(--yb-scrim-none) calc(100% - 5rem)),
-    linear-gradient(to top,
-      var(--yb-scrim-soft) 0,
-      var(--yb-scrim-soft) calc(100% - 13rem),
-      var(--yb-scrim-none) 100%);
+  inset:calc(var(--yb-veil-fall) * -1) 0 0;
+  background:linear-gradient(to bottom,
+    var(--yb-scrim-none)    0,
+    var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
+    var(--yb-scrim-curve-2) calc(var(--yb-veil-fall) * .5),
+    var(--yb-scrim-curve-3) calc(var(--yb-veil-fall) * .75),
+    var(--yb-scrim-full)    var(--yb-veil-fall));
 }
 /* A medida de leitura passa para os filhos: a faixa precisa da largura toda,
    a linha de texto nao. Antes o limite estava no corpo, entao o veu tambem
@@ -720,24 +766,144 @@
 .yb-mediabanner--center .yb-mediabanner__body{
   align-items:center; text-align:center;
 }
+/* A faixa centrada dissolve para os DOIS lados, entao a mesma folga tem de
+   caber duas vezes — a queda vale metade da que o banner de rodape usa. Sem
+   isto o `overflow:hidden` cortava a curva no meio nas duas pontas e a foto
+   ganhava aresta em cima E embaixo: medido, alfa .39 na primeira linha de
+   pixel do banner, onde deveria ser zero. */
+.yb-mediabanner--center{ --yb-veil-fall:clamp(1.5rem, 17vw - 6rem, 6.5rem); }
 /* A faixa centrada flutua: dissolve para os dois lados, e por isso o veu
    acaba cobrindo quase a altura toda. E o certo — no centro nao existe borda
    da imagem onde a sombra possa se ancorar. */
 .yb-mediabanner--center .yb-mediabanner__body::before{
-  inset:-12rem 0;
-  background:
-    linear-gradient(to bottom,
-      var(--yb-scrim-none) 5rem,
-      var(--yb-scrim-strong) 12rem,
-      var(--yb-scrim-strong) calc(100% - 12rem),
-      var(--yb-scrim-none) calc(100% - 5rem)),
-    linear-gradient(to bottom,
-      var(--yb-scrim-none) 0,
-      var(--yb-scrim-soft) 11rem,
-      var(--yb-scrim-soft) calc(100% - 11rem),
-      var(--yb-scrim-none) 100%);
+  inset:calc(var(--yb-veil-fall) * -1) 0;
+  background:linear-gradient(to bottom,
+    var(--yb-scrim-none)    0,
+    var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
+    var(--yb-scrim-curve-2) calc(var(--yb-veil-fall) * .5),
+    var(--yb-scrim-curve-3) calc(var(--yb-veil-fall) * .75),
+    var(--yb-scrim-full)    var(--yb-veil-fall),
+    var(--yb-scrim-full)    calc(100% - var(--yb-veil-fall)),
+    var(--yb-scrim-curve-3) calc(100% - var(--yb-veil-fall) * .75),
+    var(--yb-scrim-curve-2) calc(100% - var(--yb-veil-fall) * .5),
+    var(--yb-scrim-curve-1) calc(100% - var(--yb-veil-fall) * .25),
+    var(--yb-scrim-none)    100%);
 }
 .yb-mediabanner--center .yb-mediabanner__body > *{ max-inline-size:52ch; }
+
+/* BLUR PROGRESSIVO — a foto perde o foco descendo, em vez de perder a luz.
+   Variante do MEDIABANNER, nao peca nova: mesma familia, mesmo corpo, mesmo
+   veu — o que muda e de onde vem o contraste.
+
+   O veu resolve contraste escurecendo, e escurecer .77 apaga a foto na metade
+   de baixo. Aqui a foto perde NITIDEZ em vez de luz: nitida em cima, macia
+   embaixo, e o veu desce para .65. Atras do texto sobra 35% da luz da foto em
+   vez de 23% — ganho menor do que a primeira medicao prometia, e o comentario
+   do token conta por que.
+
+   POR QUE TRES FOLHAS E NAO UMA. `backdrop-filter` nao tem meio-termo: nao
+   existe "50% borrado". Mascarar UMA folha nao borra gradualmente — dissolve a
+   camada borrada por cima da nitida, e o que se ve e fantasma duplo com uma
+   aresta no fim da mascara. Medido: a nitidez caia de 17,6 para 0,5 EM UM
+   PIXEL, que e a mesma aresta que o veu em curva acabou de perder.
+
+   Empilhadas, cada folha borra o que a de baixo ja borrou, e os raios se
+   compoem pela raiz da soma dos quadrados. Como a folha mais forte e a que
+   acaba PRIMEIRO subindo, e a de baixo dela tem metade do raio e continua
+   inteira, a troca nunca e nitido->borrado: e borrado->menos borrado. Medido,
+   o degrau maximo cai para 0,64 — vinte e sete vezes menor.
+
+   Tres folhas bastam. Medi cinco e tres com o mesmo raio e o mesmo veu: mesmo
+   contraste (6,43:1) e o degrau de tres e MENOR que o de cinco (0,65 contra
+   0,76). Duas folhas a mais so somam camada composta no elemento do LCP.
+
+   A BANDA e ancorada no rodape e limitada em rem, nao em porcentagem da
+   altura: em porcentagem ela encolhe junto com o banner e no celular vira uma
+   tira de 50px que nao le como desfoque, le como borrao. */
+/* Banda e raio sao ESCALA, e escala muda com o tamanho da peca. O banner de
+   conteudo tem no maximo 26rem de altura contra 34rem do hero, e vive dentro
+   do container de 1200 em vez de sangrar em 1920: banda e raio caem junto.
+   Mesma receita, outro tamanho — como o cartao de oferta em 1rem. */
+.yb-mediabanner--blur{
+  --yb-blur-band:clamp(6rem, 22vw, 12rem);
+  --yb-blur-radius:1.5rem;
+}
+.yb-mediabanner--bleed.yb-mediabanner--blur{
+  --yb-blur-band:clamp(8rem, 30vw, 16rem);
+  --yb-blur-radius:2rem;
+}
+/* A caixa e as folhas sao as MESMAS nas tres familias que tem veu sobre foto.
+   Cada uma diz so onde a banda comeca e quanto o raio mede, porque isso e
+   escala e escala e do componente: 2rem num hero de 1440 e 1rem num cartao de
+   266 sao o mesmo desfoque relativo. A receita — tres folhas, raios pela
+   metade, mascaras encaixadas em tercos — nao muda, e nao deve mudar em um
+   lugar so: veu que borra diferente em cada peca nao le como sistema. */
+.yb-mediabanner__blur,
+.yb-offercard__blur,
+.yb-collection__blur{
+  position:absolute; inset-inline:0; inset-block-end:0; z-index:0;
+  block-size:var(--yb-blur-band); pointer-events:none;
+  /* so o alfa da mascara conta; a cor precisa apenas ser opaca */
+  color:var(--yb-bg-inverse);
+}
+.yb-mediabanner__blur > i,
+.yb-offercard__blur > i,
+.yb-collection__blur > i{
+  position:absolute; inset:0; display:block;
+  -webkit-backdrop-filter:blur(calc(var(--yb-blur-radius) * var(--f)));
+  backdrop-filter:blur(calc(var(--yb-blur-radius) * var(--f)));
+  -webkit-mask-image:linear-gradient(to top,
+    currentColor calc(var(--de) * 100% / 3), transparent calc(var(--ate) * 100% / 3));
+  mask-image:linear-gradient(to top,
+    currentColor calc(var(--de) * 100% / 3), transparent calc(var(--ate) * 100% / 3));
+}
+.yb-mediabanner__blur > i:nth-child(1),
+.yb-offercard__blur   > i:nth-child(1),
+.yb-collection__blur  > i:nth-child(1){ --f:1;   --de:0; --ate:1; }
+.yb-mediabanner__blur > i:nth-child(2),
+.yb-offercard__blur   > i:nth-child(2),
+.yb-collection__blur  > i:nth-child(2){ --f:.5;  --de:1; --ate:2; }
+.yb-mediabanner__blur > i:nth-child(3),
+.yb-offercard__blur   > i:nth-child(3),
+.yb-collection__blur  > i:nth-child(3){ --f:.25; --de:2; --ate:3; }
+/* O veu leve (.65) acompanha a variante. Ver o comentario do token: ele NAO
+   depende do blur para passar contraste — medido, o blur soma 0,8 de razao na
+   foto com brilho especular e zero nas outras duas. Ele fica escopado aqui
+   porque .65 sobre foto nitida e cheia de detalhe passa no medidor e ainda
+   deixa o texto sobre ruido, nao porque o blur o sustente. */
+.yb-mediabanner--blur .yb-mediabanner__body::before{
+  background:linear-gradient(to bottom,
+    var(--yb-scrim-none)         0,
+    var(--yb-scrim-lite-curve-1) calc(var(--yb-veil-fall) * .25),
+    var(--yb-scrim-lite-curve-2) calc(var(--yb-veil-fall) * .5),
+    var(--yb-scrim-lite-curve-3) calc(var(--yb-veil-fall) * .75),
+    var(--yb-scrim-lite)         var(--yb-veil-fall));
+}
+/* Sem blur, o veu leve reprova contraste. Nos dois casos em que o blur nao
+   acontece — motor sem suporte e pessoa que pediu menos transparencia — o veu
+   cheio volta. Nao e degradacao: e a receita padrao do sistema. */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .yb-mediabanner__blur, .yb-offercard__blur, .yb-collection__blur{ display:none; }
+  .yb-mediabanner--blur .yb-mediabanner__body::before{
+    background:linear-gradient(to bottom,
+      var(--yb-scrim-none)    0,
+      var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
+      var(--yb-scrim-curve-2) calc(var(--yb-veil-fall) * .5),
+      var(--yb-scrim-curve-3) calc(var(--yb-veil-fall) * .75),
+      var(--yb-scrim-full)    var(--yb-veil-fall));
+  }
+}
+@media (prefers-reduced-transparency:reduce){
+  .yb-mediabanner__blur, .yb-offercard__blur, .yb-collection__blur{ display:none; }
+  .yb-mediabanner--blur .yb-mediabanner__body::before{
+    background:linear-gradient(to bottom,
+      var(--yb-scrim-none)    0,
+      var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
+      var(--yb-scrim-curve-2) calc(var(--yb-veil-fall) * .5),
+      var(--yb-scrim-curve-3) calc(var(--yb-veil-fall) * .75),
+      var(--yb-scrim-full)    var(--yb-veil-fall));
+  }
+}
 .yb-mediabanner__eyebrow{
   font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
   text-transform:uppercase; color:var(--yb-accent-on-media);
@@ -904,44 +1070,49 @@
   inline-size:100%; padding:var(--yb-space-6);
   color:var(--yb-text-inverse);
 }
-/* Plato sobre o texto, queda acima dele — mas a queda NAO e linear.
+/* Plato sobre o texto, queda acima dele — a mesma curva do banner.
 
-   Rampa linear de alpha o olho le como aresta: a derivada e constante, e o
-   sistema visual acusa a mudanca subita de inclinacao nas duas pontas (onde
-   o plato acaba e onde o veu zera). O resultado era uma faixa cinza com
-   borda visivel atravessando a foto — mesmo com a rampa longa.
+   Aqui estava a receita de duas rampas somadas, e ela tinha os dois defeitos
+   que a curva veio resolver. Medido neste cartao, em 1440:
 
-   A curva sai de DUAS rampas empilhadas, nao de uma. Cada uma e linear, mas
-   com alcances e forcas diferentes: somadas, a inclinacao muda no caminho —
-   que e o que define uma curva. Sem inventar cor nova para isso: um veu
-   forte que acaba cedo, e um veu fraco com cauda longa por baixo dele.
+     pico de 6,68 milesimos de alfa por pixel — acima do teto de 5,5;
+     alfa .036 na PRIMEIRA linha de pixel do cartao, porque o recuo fixo de
+     14rem passava da folga real (167px em 1440) e o `overflow:hidden` cortava
+     a queda no meio. Degrau na borda de cima da foto.
 
-     forte  ▓▓▓▓▓▓▓▓▓▓╲____________
-     fraco  ░░░░░░░░░░░░░░░░╲______
-     soma   ████████▓▓▓▒▒░░░░╲_____   <- sem quina em ponta nenhuma
+   A folga entre o topo do cartao e a faixa de texto foi medida em cinco
+   larguras e o menor valor e 167px, em 1440 — onde o cartao e mais estreito e
+   por isso mais baixo. 9rem deixa 23px de sobra ali, a mesma sobra do hero.
 
-   E a cauda fraca e longa que mata a aresta: o olho perde o fim do veu antes
-   de conseguir marcar onde ele acaba. No plato as duas compoem .77 — o mesmo
-   numero medido que o token `scrim-soft` documenta.
-
-   Os dois extremos sao o MESMO cinza (30,30,31), so mudando o alpha: com
-   `transparent` puro a interpolacao passaria por preto translucido e um
-   fantasma escuro apareceria no meio da queda. */
+   O teto de 5,5 continua estourado: 8,3 milesimos, porque 167px de folga para
+   uma queda de .77 nao dao mais que isso. O que a curva tira e a QUINA, que e
+   o que o olho acusa; inclinacao alta e suave le como sombra, inclinacao que
+   muda de golpe le como emenda. */
+.yb-offercard{ --yb-veil-fall:9rem; }
 .yb-offercard__body::before{
-  content:""; position:absolute; z-index:-1; inset:-14rem 0 0;
-  background:
-    linear-gradient(to top,
-      var(--yb-scrim-strong) 0,
-      var(--yb-scrim-strong) 48%,
-      var(--yb-scrim-none) 74%),
-    /* a fraca comeca a cair MUITO antes da forte: e ela que define onde o
-       veu "comeca", e o comeco e a parte que o olho pega. Caindo de 40% a
-       100%, a entrada tem 60% da altura para acontecer — inclinacao baixa
-       demais para virar aresta. */
-    linear-gradient(to top,
-      var(--yb-scrim-soft) 0,
-      var(--yb-scrim-soft) 40%,
-      var(--yb-scrim-none) 100%);
+  content:""; position:absolute; z-index:-1;
+  inset:calc(var(--yb-veil-fall) * -1) 0 0;
+  background:linear-gradient(to bottom,
+    var(--yb-scrim-none)    0,
+    var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
+    var(--yb-scrim-curve-2) calc(var(--yb-veil-fall) * .5),
+    var(--yb-scrim-curve-3) calc(var(--yb-veil-fall) * .75),
+    var(--yb-scrim-full)    var(--yb-veil-fall));
+}
+/* Com blur, igual ao banner. A banda e em PORCENTAGEM da altura do cartao e
+   nao em rem: a altura do cartao vem da coluna do grid, nao da janela, e vai
+   de 416px em 1440 a 1056px em 768, quando ele passa a ocupar a linha
+   inteira. Em rem a banda seria metade do cartao numa largura e um oitavo na
+   outra. O raio e 1rem contra 2rem do hero porque o cartao tem um quinto da
+   largura: desfoque se le em relacao ao tamanho da foto, nao em pixels. */
+.yb-offercard--blur{ --yb-blur-band:55%; --yb-blur-radius:1rem; }
+.yb-offercard--blur .yb-offercard__body::before{
+  background:linear-gradient(to bottom,
+    var(--yb-scrim-none)         0,
+    var(--yb-scrim-lite-curve-1) calc(var(--yb-veil-fall) * .25),
+    var(--yb-scrim-lite-curve-2) calc(var(--yb-veil-fall) * .5),
+    var(--yb-scrim-lite-curve-3) calc(var(--yb-veil-fall) * .75),
+    var(--yb-scrim-lite)         var(--yb-veil-fall));
 }
 /* Duas linhas, como no cartao de catalogo — e aqui o motivo e outro: cada
    linha a mais do titulo cresce o corpo, e o veu acompanha o corpo. Um nome
@@ -1994,20 +2165,30 @@
   font-size:var(--yb-type-body-lg-size);
   font-weight:var(--yb-font-weight-bold);
 }
-/* Veu em duas rampas, mesma receita do cartao de oferta: rampa linear unica
-   tem inclinacao constante e o olho acusa as pontas, virando aresta. Aqui em
-   porcentagem, porque o ladrilho tem razao fixa dada pelo mosaico. */
+/* A mesma curva do banner e do cartao de oferta. Aqui a queda e em
+   PORCENTAGEM e nao em rem — o ladrilho tem razao fixa dada pelo mosaico, e
+   nao ha faixa de texto de altura variavel para ancorar: o rotulo e uma linha
+   so, no canto de baixo. 82% e onde a receita antiga punha o fim do plato
+   (18% a partir do rodape), preservado de proposito: o que muda e o CAMINHO
+   ate la, nao onde o veu chega. */
+.yb-collection--overlay{ --yb-veil-fall:82%; }
 .yb-collection--overlay::after{
   content:""; position:absolute; inset:0; pointer-events:none;
-  background:
-    linear-gradient(to top,
-      var(--yb-scrim-strong) 0,
-      var(--yb-scrim-strong) 18%,
-      var(--yb-scrim-none) 56%),
-    linear-gradient(to top,
-      var(--yb-scrim-soft) 0,
-      var(--yb-scrim-soft) 12%,
-      var(--yb-scrim-none) 92%);
+  background:linear-gradient(to bottom,
+    var(--yb-scrim-none)    0,
+    var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
+    var(--yb-scrim-curve-2) calc(var(--yb-veil-fall) * .5),
+    var(--yb-scrim-curve-3) calc(var(--yb-veil-fall) * .75),
+    var(--yb-scrim-full)    var(--yb-veil-fall));
+}
+.yb-collection--blur{ --yb-blur-band:45%; --yb-blur-radius:.75rem; }
+.yb-collection--blur.yb-collection--overlay::after{
+  background:linear-gradient(to bottom,
+    var(--yb-scrim-none)         0,
+    var(--yb-scrim-lite-curve-1) calc(var(--yb-veil-fall) * .25),
+    var(--yb-scrim-lite-curve-2) calc(var(--yb-veil-fall) * .5),
+    var(--yb-scrim-lite-curve-3) calc(var(--yb-veil-fall) * .75),
+    var(--yb-scrim-lite)         var(--yb-veil-fall));
 }
 /* o rotulo e irmao do veu: sem isto ele fica por baixo */
 .yb-collection--overlay .yb-collection__label{ z-index:1; }
@@ -2046,7 +2227,25 @@
   aspect-ratio:auto; display:flex; flex-direction:column;
   background:var(--yb-surface); box-shadow:var(--yb-elevation-card);
 }
-.yb-collection--card img{aspect-ratio:4/3; flex:none}
+/* A caixa da foto segue o PACKSHOT, nao o contrario. Era 4/3 deitado, e as
+   fotos de colecao sao retrato 0,72 (1501x2083) cortadas rente ao produto —
+   medido, o frasco ocupa 100% da altura do quadro. Com `cover` num quadro
+   deitado, sobrava 54% da altura: 23% do frasco cortado em cima e 23%
+   embaixo. Os tubos do Cronograma chegavam decapitados na home.
+
+   Nao havia corte seguro a achar: quando o produto preenche o quadro, todo
+   recorte deitado corta produto. 5/7 (0,714) fica a menos de 1% da razao do
+   arquivo, entao `cover` recorta LARGURA — sete pixels de fundo de estudio de
+   cada lado — em vez de recortar as pontas do frasco.
+
+   Preferido a `contain`: com `contain` o quadro sobra e vira tarja, e tarja
+   precisa de uma cor de fundo que combine com um estudio que ninguem
+   controla. Medi as duas — 2 niveis de diferenca — e esta nao pede cor nova.
+
+   O cartao passa de 300 para 511px de altura em 1440. E o preco de mostrar o
+   produto inteiro, e o cartao com rodape existe justamente para quando a foto
+   precisa convencer. */
+.yb-collection--card img{aspect-ratio:5/7; flex:none}
 /* `flex-wrap` porque a largura que importa aqui e a da COLUNA, nao a da tela.
    O `@media (max-width:560px)` abaixo empilha quando a TELA e estreita — e nao
    ajuda numa tela de 1440 em que o cartao mora numa coluna de 195px, que foi

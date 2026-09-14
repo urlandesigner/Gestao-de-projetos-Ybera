@@ -5,3 +5,7 @@ node_modules/
 
 # retrato de trabalho; a base versionada e test/baseline.json
 test/atual.json
+
+# canvas de decisao publicado como Artifact; a fonte sao os .dc.html
+# e o .html montado tem 2,7 MB do editor embutido — nao versiona.
+_canvas/*.html

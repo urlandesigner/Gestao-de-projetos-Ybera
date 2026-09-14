@@ -1844,6 +1844,76 @@
         "com.ybera.layer": "semantic"
       },
       "$type": "color"
+    },
+    "curve": {
+      "1": {
+        "$value": "rgba(30, 30, 31, .12)",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-scrim-curve-1",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      },
+      "2": {
+        "$value": "rgba(30, 30, 31, .385)",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-scrim-curve-2",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      },
+      "3": {
+        "$value": "rgba(30, 30, 31, .65)",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-scrim-curve-3",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      }
+    },
+    "full": {
+      "$value": "rgba(30, 30, 31, .77)",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-scrim-full",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "lite": {
+      "curve": {
+        "1": {
+          "$value": "rgba(30, 30, 31, .101)",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-scrim-lite-curve-1",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "color"
+        },
+        "2": {
+          "$value": "rgba(30, 30, 31, .325)",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-scrim-lite-curve-2",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "color"
+        },
+        "3": {
+          "$value": "rgba(30, 30, 31, .549)",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-scrim-lite-curve-3",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "color"
+        }
+      },
+      "default": {
+        "$value": "rgba(30, 30, 31, .65)",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-scrim-lite",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      }
     }
   },
   "text": {

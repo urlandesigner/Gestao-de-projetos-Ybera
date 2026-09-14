@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Deep care kit – Ybera Fashion Gold – Ybera USA</title>
-<link rel="stylesheet" href="yb/fonte.css?v=f0a494d1">
-<link rel="stylesheet" href="yb/00-primitives.css?v=f0a494d1">
-<link rel="stylesheet" href="yb/01-semantic.css?v=f0a494d1">
-<link rel="stylesheet" href="yb/components.css?v=f0a494d1">
-<link rel="stylesheet" href="yb/patterns.css?v=f0a494d1">
-<link rel="stylesheet" href="yb/icons.css?v=f0a494d1">
+<link rel="stylesheet" href="yb/fonte.css?v=5895a83d">
+<link rel="stylesheet" href="yb/00-primitives.css?v=5895a83d">
+<link rel="stylesheet" href="yb/01-semantic.css?v=5895a83d">
+<link rel="stylesheet" href="yb/components.css?v=5895a83d">
+<link rel="stylesheet" href="yb/patterns.css?v=5895a83d">
+<link rel="stylesheet" href="yb/icons.css?v=5895a83d">
 <style>
   /* Só layout de página: largura, respiro entre blocos e o grid do hero.
      Nenhum componente é redefinido aqui — se um botão precisasse de ajuste,
@@ -43,7 +43,16 @@
   .yb-buybox > .pdp__prova { margin-block-start: var(--yb-space-8); }
 
   .pdp__duo { display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-3); }
-  .pdp__duo .yb-mediabanner { min-height:clamp(18rem, 26vw, 24rem); }
+  .pdp__duo .yb-mediabanner {
+    min-height:clamp(18rem, 26vw, 24rem);
+    /* Metade da largura, entao metade da folga: 80px em 1024 contra 161px do
+       banner inteiro. A queda do sistema (34vw) daria 140px ali e chegaria
+       cortada. Quem aperta o layout devolve a medida. */
+    --yb-veil-fall:clamp(2rem, 26vw - 13rem, 11rem);
+  }
+  @media (min-width:360px){
+    .pdp__duo .yb-mediabanner { --yb-veil-fall:clamp(3.5rem, 26vw - 13rem, 11rem); }
+  }
   .pdp__prova { display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-3);
     list-style:none; margin:0; padding:0; }
   @media (max-width:520px) { .pdp__duo { grid-template-columns:1fr; } }
@@ -84,11 +93,11 @@
             <a class="yb-nav__promo" href="pdp.html">
               <div class="yb-nav__promo-media">
                 <div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div>
-                <img src="img/Off1_Set_10-30-10-9c0915.webp" alt="Fashion Gold keratin 150g" loading="lazy">
+                <img src="img/Off2Sep02-30-10-d14b3b.webp" alt="Deep care hair kit" loading="lazy">
               </div>
               <div class="yb-nav__promo-info">
-                <p class="yb-nav__promo-name">Fashion Gold keratin 150g</p>
-                <span class="yb-price yb-price--sm"><b class="yb-price__now">$39.90</b></span>
+                <p class="yb-nav__promo-name">Deep care hair kit</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$79.00</b></span>
                 <!-- "View product", nao "Shop now": o cartao e de UM produto e leva a
                      PDP. "Shop now" e rotulo de colecao — promete uma vitrine e
                      entrega uma ficha. -->
@@ -338,15 +347,17 @@
            5-star reviews") e selo repetido ("Best seller", terceiro na pagina);
            agora dizem o que a foto mostra. -->
       <div class="pdp__duo">
-        <div class="yb-mediabanner">
+        <div class="yb-mediabanner yb-mediabanner--blur">
           <img src="img/22_1-d5c4b8.webp" alt="" loading="lazy">
+          <div class="yb-mediabanner__blur" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="yb-mediabanner__body">
             <span class="yb-mediabanner__eyebrow">Step 1 · Hydration</span>
             <h2 class="yb-mediabanner__title">Water back into the fiber.</h2>
           </div>
         </div>
-        <div class="yb-mediabanner">
+        <div class="yb-mediabanner yb-mediabanner--blur">
           <img src="img/29-527a32.webp" alt="" loading="lazy">
+          <div class="yb-mediabanner__blur" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="yb-mediabanner__body">
             <span class="yb-mediabanner__eyebrow">Damp or dry</span>
             <h2 class="yb-mediabanner__title">Use it your way.</h2>
@@ -366,8 +377,9 @@
              alt="Authentic Brazilian keratin — treatment for salon-quality results, formaldehyde-free formula">
       </a>
 
-      <a class="yb-mediabanner" href="/collections/cronograma-hair-care-system">
+      <a class="yb-mediabanner yb-mediabanner--blur" href="/collections/cronograma-hair-care-system">
         <img src="img/KitCuidadosProfundos-YberaFashionGold_ab-9c59c4.webp" alt="" loading="lazy">
+        <div class="yb-mediabanner__blur" aria-hidden="true"><i></i><i></i><i></i></div>
         <div class="yb-mediabanner__body">
           <span class="yb-mediabanner__eyebrow">Cronograma system</span>
           <h2 class="yb-mediabanner__title">Deep repair &amp; shine</h2>
@@ -602,13 +614,31 @@
     <div class="yb-section-head"><h2>Related Products</h2></div>
     <div class="yb-grid">
       <article class="yb-card">
-        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--accent">Free Cronograma Bisnaga</span></div><img src="img/Off1_Set_10-30-10-9c0915.webp" alt="Fashion Gold keratin 150g" loading="lazy"><img src="img/Off1_Set_10-30-12-ed024e.webp" alt="" loading="lazy"><button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" data-yb-open="cart" aria-label="Add to cart: Fashion Gold keratin 150g">Add to cart</button></div>
-        <h3 class="yb-card__title"><a href="pdp.html">Fashion Gold keratin 150g</a></h3>
+        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--accent">Free 1L Shampoo</span></div><img src="img/Off2Sep02-30-10-d14b3b.webp" alt="Deep care hair kit" loading="lazy"><img src="img/Off2Sep02-30-12-f1859b.webp" alt="" loading="lazy"><button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" data-yb-open="cart" aria-label="Add to cart: Deep care hair kit">Add to cart</button></div>
+        <h3 class="yb-card__title"><a href="pdp.html">Deep care hair kit</a></h3>
         <span class="yb-rating" role="img" aria-label="5.0 of 5, 6 reviews">
           <span class="yb-rating__stars" aria-hidden="true">★★★★★</span>
           <span class="yb-rating__score">5.0</span>
           <span class="yb-rating__count">(6)</span></span>
-        <span class="yb-price yb-price--sm"><b class="yb-price__now">$39.90</b></span>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$79.00</b></span>
+      </article>
+      <article class="yb-card">
+        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--accent">Free Cronograma</span></div><img src="img/Off1_Sep_02-30-10-acd9cc.webp" alt="Fashion Gold keratin 300g + Protect & Control shampoo & mask" loading="lazy"><img src="img/Off1_Sep_02-30-12-7e9faf.webp" alt="" loading="lazy"><button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" data-yb-open="cart" aria-label="Add to cart: Fashion Gold keratin 300g + Protect & Control shampoo & mask">Add to cart</button></div>
+        <h3 class="yb-card__title"><a href="pdp.html">Fashion Gold keratin 300g + Protect & Control shampoo & mask</a></h3>
+        <span class="yb-rating" role="img" aria-label="5.0 of 5, 6 reviews">
+          <span class="yb-rating__stars" aria-hidden="true">★★★★★</span>
+          <span class="yb-rating__score">5.0</span>
+          <span class="yb-rating__count">(6)</span></span>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+      </article>
+      <article class="yb-card">
+        <div class="yb-card__media"><img src="img/Off2_Set_11-13-10-7db919.webp" alt="100Timetros hair kit + dry shampoo | Special price" loading="lazy"><img src="img/Off2_Set_11-13-12-27f71f.webp" alt="" loading="lazy"><button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" data-yb-open="cart" aria-label="Add to cart: 100Timetros hair kit + dry shampoo | Special price">Add to cart</button></div>
+        <h3 class="yb-card__title"><a href="pdp.html">100Timetros hair kit + dry shampoo | Special price</a></h3>
+        <span class="yb-rating" role="img" aria-label="5.0 of 5, 6 reviews">
+          <span class="yb-rating__stars" aria-hidden="true">★★★★★</span>
+          <span class="yb-rating__score">5.0</span>
+          <span class="yb-rating__count">(6)</span></span>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$69.90</b></span>
       </article>
       <article class="yb-card">
         <div class="yb-card__media"><img src="img/135-cc8636.webp" alt="Mirracura shampoo 500ml (16,9fl.oz)" loading="lazy"><img src="img/Artboard_17-b798bf.webp" alt="" loading="lazy"><button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" data-yb-open="cart" aria-label="Add to cart: Mirracura shampoo 500ml (16,9fl.oz)">Add to cart</button></div>
@@ -618,24 +648,6 @@
           <span class="yb-rating__score">5.0</span>
           <span class="yb-rating__count">(6)</span></span>
         <span class="yb-price yb-price--sm"><b class="yb-price__now">$49.90</b></span>
-      </article>
-      <article class="yb-card">
-        <div class="yb-card__media"><img src="img/129_89669e07-8a37-4f8d-b896-8ee5c599c068-fcd170.webp" alt="Vello hair mask alfa-lactobaby®500ml / 17,6fl.oz" loading="lazy"><img src="img/Artboard_13-97a5dd.webp" alt="" loading="lazy"><button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" data-yb-open="cart" aria-label="Add to cart: Vello hair mask alfa-lactobaby®500ml / 17,6fl.oz">Add to cart</button></div>
-        <h3 class="yb-card__title"><a href="pdp.html">Vello hair mask alfa-lactobaby®500ml / 17,6fl.oz</a></h3>
-        <span class="yb-rating" role="img" aria-label="5.0 of 5, 6 reviews">
-          <span class="yb-rating__stars" aria-hidden="true">★★★★★</span>
-          <span class="yb-rating__score">5.0</span>
-          <span class="yb-rating__count">(6)</span></span>
-        <span class="yb-price yb-price--sm"><b class="yb-price__now">$69.90</b></span>
-      </article>
-      <article class="yb-card">
-        <div class="yb-card__media"><img src="img/CORTEX_1_71252932-3753-4029-b20a-b366441-d9d519.webp" alt="Cronograma - step 2 Cortex" loading="lazy"><img src="img/CORTEX2_93b970ff-67b0-4bcf-94e3-1cd732a5-810503.webp" alt="" loading="lazy"><button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" data-yb-open="cart" aria-label="Add to cart: Cronograma - step 2 Cortex">Add to cart</button></div>
-        <h3 class="yb-card__title"><a href="pdp.html">Cronograma - step 2 Cortex</a></h3>
-        <span class="yb-rating" role="img" aria-label="5.0 of 5, 6 reviews">
-          <span class="yb-rating__stars" aria-hidden="true">★★★★★</span>
-          <span class="yb-rating__score">5.0</span>
-          <span class="yb-rating__count">(6)</span></span>
-        <span class="yb-price yb-price--sm"><b class="yb-price__now">$37.90</b></span>
       </article>
     </div>
   </section>
@@ -736,53 +748,53 @@
       </div></div>
     <div class="yb-cart__ship">
       <div class="yb-freeship">
-        <span class="yb-freeship__text">Add <b>$110.20</b> more for free shipping</span>
-        <div class="yb-progress" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" aria-label="Progress to free shipping">
-          <span class="yb-progress__fill" style="inline-size:45%"></span></div>
+        <span class="yb-freeship__text">Add <b>$31.10</b> more for free shipping</span>
+        <div class="yb-progress" role="progressbar" aria-valuenow="84" aria-valuemin="0" aria-valuemax="100" aria-label="Progress to free shipping">
+          <span class="yb-progress__fill" style="inline-size:84%"></span></div>
       </div>
     </div>
     <div class="yb-cart__brinde-card">
       <div class="yb-cart__brinde-corpo">
-        <p class="yb-cart__brinde-texto">Add <b>$160.20</b> and receive your first gift</p>
+        <p class="yb-cart__brinde-texto">Add <b>$81.10</b> and receive your first gift</p>
         <div class="yb-cart__brinde-trilhos" role="progressbar"
-             aria-valuenow="89" aria-valuemin="0" aria-valuemax="400"
-             aria-valuetext="$89.80 of $400.00 toward the best gift"><span class="yb-progress yb-progress--sm"><span class="yb-progress__fill yb-progress__fill--success" style="inline-size:36%"></span></span><span class="yb-progress yb-progress--sm"><span class="yb-progress__fill yb-progress__fill--success" style="inline-size:0%"></span></span></div>
+             aria-valuenow="168" aria-valuemin="0" aria-valuemax="400"
+             aria-valuetext="$168.90 of $400.00 toward the best gift"><span class="yb-progress yb-progress--sm"><span class="yb-progress__fill yb-progress__fill--success" style="inline-size:68%"></span></span><span class="yb-progress yb-progress--sm"><span class="yb-progress__fill yb-progress__fill--success" style="inline-size:0%"></span></span></div>
       </div>
-      <div class="yb-cart__brinde-premio"><img src="img/129_89669e07-8a37-4f8d-b896-8ee5c599c068-fcd170.webp" alt="" loading="lazy"></div>
+      <div class="yb-cart__brinde-premio"><img src="img/Off2_Set_11-13-10-7db919.webp" alt="" loading="lazy"></div>
     </div>
     <div class="yb-cart__items">
       <div class="yb-cart__item">
-        <div class="yb-card__media"><img src="img/Off1_Set_10-30-10-9c0915.webp" alt="" loading="lazy"></div>
+        <div class="yb-card__media"><img src="img/Off2Sep02-30-10-d14b3b.webp" alt="" loading="lazy"></div>
         <div class="yb-cart__item-body">
           <div class="yb-cart__item-topo">
-            <p class="yb-cart__item-title">Fashion Gold keratin 150g</p>
-            <button class="yb-cart__remove" aria-label="Remove Fashion Gold keratin 150g"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-trash"/></svg></button>
+            <p class="yb-cart__item-title">Deep care hair kit</p>
+            <button class="yb-cart__remove" aria-label="Remove Deep care hair kit"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-trash"/></svg></button>
           </div>
           <span class="yb-cart__item-variant">Default</span>
           <div class="yb-cart__item-foot">
-            <span class="yb-cart__item-precos"><span class="yb-price yb-price--sm"><b class="yb-price__now">$39.90</b></span></span>
+            <span class="yb-cart__item-precos"><span class="yb-price yb-price--sm"><b class="yb-price__now">$79.00</b></span></span>
             <div class="yb-stepper yb-stepper--sm" data-yb-stepper>
-              <button type="button" data-yb-step="down" aria-label="Decrease quantity of Fashion Gold keratin 150g">&minus;</button>
-              <input type="number" value="1" min="1" max="10" aria-label="Quantity of Fashion Gold keratin 150g">
-              <button type="button" data-yb-step="up" aria-label="Increase quantity of Fashion Gold keratin 150g">+</button>
+              <button type="button" data-yb-step="down" aria-label="Decrease quantity of Deep care hair kit">&minus;</button>
+              <input type="number" value="1" min="1" max="10" aria-label="Quantity of Deep care hair kit">
+              <button type="button" data-yb-step="up" aria-label="Increase quantity of Deep care hair kit">+</button>
             </div>
           </div>
         </div>
       </div>
       <div class="yb-cart__item">
-        <div class="yb-card__media"><img src="img/135-cc8636.webp" alt="" loading="lazy"></div>
+        <div class="yb-card__media"><img src="img/Off1_Sep_02-30-10-acd9cc.webp" alt="" loading="lazy"></div>
         <div class="yb-cart__item-body">
           <div class="yb-cart__item-topo">
-            <p class="yb-cart__item-title">Mirracura shampoo 500ml (16,9fl.oz)</p>
-            <button class="yb-cart__remove" aria-label="Remove Mirracura shampoo 500ml (16,9fl.oz)"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-trash"/></svg></button>
+            <p class="yb-cart__item-title">Fashion Gold keratin 300g + Protect & Control shampoo & mask</p>
+            <button class="yb-cart__remove" aria-label="Remove Fashion Gold keratin 300g + Protect & Co"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-trash"/></svg></button>
           </div>
           <span class="yb-cart__item-variant">Default</span>
           <div class="yb-cart__item-foot">
-            <span class="yb-cart__item-precos"><span class="yb-price yb-price--sm"><b class="yb-price__now">$49.90</b></span></span>
+            <span class="yb-cart__item-precos"><span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span></span>
             <div class="yb-stepper yb-stepper--sm" data-yb-stepper>
-              <button type="button" data-yb-step="down" aria-label="Decrease quantity of Mirracura shampoo 500ml (16,9f">&minus;</button>
-              <input type="number" value="1" min="1" max="10" aria-label="Quantity of Mirracura shampoo 500ml (16,9f">
-              <button type="button" data-yb-step="up" aria-label="Increase quantity of Mirracura shampoo 500ml (16,9f">+</button>
+              <button type="button" data-yb-step="down" aria-label="Decrease quantity of Fashion Gold keratin 300g + Pr">&minus;</button>
+              <input type="number" value="1" min="1" max="10" aria-label="Quantity of Fashion Gold keratin 300g + Pr">
+              <button type="button" data-yb-step="up" aria-label="Increase quantity of Fashion Gold keratin 300g + Pr">+</button>
             </div>
           </div>
         </div>
@@ -810,11 +822,11 @@
     <div class="yb-cart__foot">
       <div class="yb-cart__parceiro">
         <span class="yb-cart__parceiro-inicial" aria-hidden="true">YP</span>
-        <p><b>@yberapartner</b> saved you $13.47</p>
+        <p><b>@yberapartner</b> saved you $25.34</p>
       </div>
       <div class="yb-cart__resumo">
         <div class="yb-cart__totais">
-          <div class="yb-cart__total-linha"><b class="yb-cart__total">$89.80</b></div>
+          <div class="yb-cart__total-linha"><b class="yb-cart__total">$168.90</b></div>
         </div>
         <button class="yb-btn yb-btn--primary yb-cart__checkout">Checkout (2)</button>
       </div>
@@ -856,12 +868,28 @@
         <div class="yb-search__group">
           <h2 class="yb-search__title">Best sellers</h2>
             <a class="yb-search__item" href="pdp.html">
-              <span class="yb-search__thumb"><img src="img/Off1_Set_10-30-10-9c0915.webp" alt="" loading="lazy" width="56" height="56"></span>
+              <span class="yb-search__thumb"><img src="img/Off2Sep02-30-10-d14b3b.webp" alt="" loading="lazy" width="56" height="56"></span>
               <span>
-                <span class="yb-search__name">Fashion Gold keratin 150g</span>
-                <span class="yb-search__meta">Fashion Gold</span>
+                <span class="yb-search__name">Deep care hair kit</span>
+                <span class="yb-search__meta">Ybera USA</span>
               </span>
-              <span class="yb-price yb-price--sm"><b class="yb-price__now">$39.90</b></span>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$79.00</b></span>
+            </a>
+            <a class="yb-search__item" href="pdp.html">
+              <span class="yb-search__thumb"><img src="img/Off1_Sep_02-30-10-acd9cc.webp" alt="" loading="lazy" width="56" height="56"></span>
+              <span>
+                <span class="yb-search__name">Fashion Gold keratin 300g + Protect & Control shampoo & mask</span>
+                <span class="yb-search__meta">Ybera USA</span>
+              </span>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+            </a>
+            <a class="yb-search__item" href="pdp.html">
+              <span class="yb-search__thumb"><img src="img/Off2_Set_11-13-10-7db919.webp" alt="" loading="lazy" width="56" height="56"></span>
+              <span>
+                <span class="yb-search__name">100Timetros hair kit + dry shampoo | Special price</span>
+                <span class="yb-search__meta">Ybera USA</span>
+              </span>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$69.90</b></span>
             </a>
             <a class="yb-search__item" href="pdp.html">
               <span class="yb-search__thumb"><img src="img/135-cc8636.webp" alt="" loading="lazy" width="56" height="56"></span>
@@ -870,22 +898,6 @@
                 <span class="yb-search__meta">Ybera USA</span>
               </span>
               <span class="yb-price yb-price--sm"><b class="yb-price__now">$49.90</b></span>
-            </a>
-            <a class="yb-search__item" href="pdp.html">
-              <span class="yb-search__thumb"><img src="img/129_89669e07-8a37-4f8d-b896-8ee5c599c068-fcd170.webp" alt="" loading="lazy" width="56" height="56"></span>
-              <span>
-                <span class="yb-search__name">Vello hair mask alfa-lactobaby®500ml / 17,6fl.oz</span>
-                <span class="yb-search__meta">Ybera USA</span>
-              </span>
-              <span class="yb-price yb-price--sm"><b class="yb-price__now">$69.90</b></span>
-            </a>
-            <a class="yb-search__item" href="pdp.html">
-              <span class="yb-search__thumb"><img src="img/CORTEX_1_71252932-3753-4029-b20a-b366441-d9d519.webp" alt="" loading="lazy" width="56" height="56"></span>
-              <span>
-                <span class="yb-search__name">Cronograma - step 2 Cortex</span>
-                <span class="yb-search__meta">Ybera USA</span>
-              </span>
-              <span class="yb-price yb-price--sm"><b class="yb-price__now">$37.90</b></span>
             </a>
         </div>
       </div>
@@ -894,13 +906,29 @@
       <div class="yb-search__col">
         <div class="yb-search__group" data-yb-search-group>
           <h2 class="yb-search__title">Products</h2>
-            <a class="yb-search__item" href="pdp.html" data-termo="fashion gold keratin 150g">
-              <span class="yb-search__thumb"><img src="img/Off1_Set_10-30-10-9c0915.webp" alt="" loading="lazy" width="56" height="56"></span>
+            <a class="yb-search__item" href="pdp.html" data-termo="deep care hair kit">
+              <span class="yb-search__thumb"><img src="img/Off2Sep02-30-10-d14b3b.webp" alt="" loading="lazy" width="56" height="56"></span>
               <span>
-                <span class="yb-search__name">Fashion Gold keratin 150g</span>
-                <span class="yb-search__meta">Fashion Gold</span>
+                <span class="yb-search__name">Deep care hair kit</span>
+                <span class="yb-search__meta">Ybera USA</span>
               </span>
-              <span class="yb-price yb-price--sm"><b class="yb-price__now">$39.90</b></span>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$79.00</b></span>
+            </a>
+            <a class="yb-search__item" href="pdp.html" data-termo="fashion gold keratin 300g   protect   control shampoo   mask">
+              <span class="yb-search__thumb"><img src="img/Off1_Sep_02-30-10-acd9cc.webp" alt="" loading="lazy" width="56" height="56"></span>
+              <span>
+                <span class="yb-search__name">Fashion Gold keratin 300g + Protect & Control shampoo & mask</span>
+                <span class="yb-search__meta">Ybera USA</span>
+              </span>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+            </a>
+            <a class="yb-search__item" href="pdp.html" data-termo="100timetros hair kit   dry shampoo   special price">
+              <span class="yb-search__thumb"><img src="img/Off2_Set_11-13-10-7db919.webp" alt="" loading="lazy" width="56" height="56"></span>
+              <span>
+                <span class="yb-search__name">100Timetros hair kit + dry shampoo | Special price</span>
+                <span class="yb-search__meta">Ybera USA</span>
+              </span>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$69.90</b></span>
             </a>
             <a class="yb-search__item" href="pdp.html" data-termo="mirracura shampoo 500ml  16 9fl oz ">
               <span class="yb-search__thumb"><img src="img/135-cc8636.webp" alt="" loading="lazy" width="56" height="56"></span>
@@ -909,22 +937,6 @@
                 <span class="yb-search__meta">Ybera USA</span>
               </span>
               <span class="yb-price yb-price--sm"><b class="yb-price__now">$49.90</b></span>
-            </a>
-            <a class="yb-search__item" href="pdp.html" data-termo="vello hair mask alfa lactobaby 500ml   17 6fl oz">
-              <span class="yb-search__thumb"><img src="img/129_89669e07-8a37-4f8d-b896-8ee5c599c068-fcd170.webp" alt="" loading="lazy" width="56" height="56"></span>
-              <span>
-                <span class="yb-search__name">Vello hair mask alfa-lactobaby®500ml / 17,6fl.oz</span>
-                <span class="yb-search__meta">Ybera USA</span>
-              </span>
-              <span class="yb-price yb-price--sm"><b class="yb-price__now">$69.90</b></span>
-            </a>
-            <a class="yb-search__item" href="pdp.html" data-termo="cronograma   step 2 cortex">
-              <span class="yb-search__thumb"><img src="img/CORTEX_1_71252932-3753-4029-b20a-b366441-d9d519.webp" alt="" loading="lazy" width="56" height="56"></span>
-              <span>
-                <span class="yb-search__name">Cronograma - step 2 Cortex</span>
-                <span class="yb-search__meta">Ybera USA</span>
-              </span>
-              <span class="yb-price yb-price--sm"><b class="yb-price__now">$37.90</b></span>
             </a>
         </div>
       </div>
@@ -940,7 +952,7 @@
     </div>
   </div>
 </dialog>
-<script src="yb/components.js?v=f0a494d1"></script>
+<script src="yb/components.js?v=5895a83d"></script>
 <script>
 // Setas do banner. Carrossel nao e componente do sistema — este JS vive na
 // pagina, nao em components.js, para nao dar a entender que existe.

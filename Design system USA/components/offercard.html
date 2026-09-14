@@ -78,17 +78,18 @@
     roupa: ali cabem doze na grade, aqui cabe <b>um</b>.</p>
   <ul class="ficha-fatos">
     <li>Classe base <b><code>.yb-offercard</code></b></li>
-    <li>Modificadores <b>0</b></li>
-    <li>Elementos <b>10</b></li>
+    <li>Modificadores <b>1</b></li>
+    <li>Elementos <b>11</b></li>
     <li>Estados <b>2</b></li>
-    <li>Tokens <b>28</b></li>
+    <li>Tokens <b>38</b></li>
     <li>Comportamento <b>JS</b></li>
   </ul>
 
   <section class="bloco" id="demos">
     <h2 class="bloco-titulo">Como se parece</h2>
     <div class="demo demo--oferta">
-      <article class="yb-offercard">
+      <article class="yb-offercard yb-offercard--blur">
+        <div class="yb-offercard__blur" aria-hidden="true"><i></i><i></i><i></i></div>
         <img src="../_captura/nova-loja/img/Prancheta_1-790aea3e.webp" alt="">
         <span class="yb-badge yb-badge--sale yb-offercard__off">24% off</span>
         <div class="yb-offercard__body">
@@ -119,6 +120,18 @@
             <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></a>
         </div>
       </article>
+    </div>
+    <div class="note">
+      <b>Aqui o blur ganha mais do que no hero</b>
+      <p>A arte de campanha vem com tipografia embutida — "BUY FASHION GOLD
+      KERATIN TREATMENT 150G", "WAS $74.80", "SAVE 47%" — e ela brigava com o
+      título e o preço do próprio cartão, dois textos disputando a mesma
+      região. O desfoque dissolve a letra da foto e deixa só a do cartão.</p>
+      <p>Números medidos neste cartão em 1440: o véu antigo chegava cortado no
+      topo (alfa .036 na primeira linha de pixel, porque o recuo de 14rem
+      passava dos 167px de folga real) e tinha pico de <b>6,68</b> milésimos de
+      alfa por pixel. Agora o topo é <b>zero</b> e o piso de contraste, sobre a
+      pior foto possível — branco chapado — é <b>5,17:1</b>.</p>
     </div>
     <div class="note">
       <b>Mais de um dia vira dias</b>
@@ -177,9 +190,9 @@
     <p class="bloco-lede">Lido da folha a cada build. Se faltar alguma coisa aqui,
     falta na folha.</p>
     <p class="rotulo">Modificadores</p>
-    <p class="api-vazia">Este componente não tem variantes — o que muda nele vem do conteúdo.</p>
+    <p class="lista-api"><code>.yb-offercard--blur</code></p>
     <p class="rotulo">Elementos</p>
-    <p class="lista-api"><code>.yb-offercard__body</code> <code>.yb-offercard__chip</code> <code>.yb-offercard__fim</code> <code>.yb-offercard__linha</code> <code>.yb-offercard__off</code> <code>.yb-offercard__price</code> <code>.yb-offercard__sep</code> <code>.yb-offercard__timer</code> <code>.yb-offercard__title</code> <code>.yb-offercard__was</code></p>
+    <p class="lista-api"><code>.yb-offercard__blur</code> <code>.yb-offercard__body</code> <code>.yb-offercard__chip</code> <code>.yb-offercard__fim</code> <code>.yb-offercard__linha</code> <code>.yb-offercard__off</code> <code>.yb-offercard__price</code> <code>.yb-offercard__sep</code> <code>.yb-offercard__timer</code> <code>.yb-offercard__title</code> <code>.yb-offercard__was</code></p>
     <p class="rotulo">Estados que a folha trata</p>
     <p class="bloco-lede"><code>:focus-visible</code> · <code>:hover</code></p>
   </section>
@@ -190,7 +203,8 @@
     que renderizou ali, não um exemplo escrito à parte.</p>
     <div class="snippet">
       <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
-      <pre><code>&lt;article class="yb-offercard"&gt;
+      <pre><code>&lt;article class="yb-offercard yb-offercard--blur"&gt;
+  &lt;div class="yb-offercard__blur" aria-hidden="true"&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;/div&gt;
   &lt;img src="../_captura/nova-loja/img/Prancheta_1-790aea3e.webp" alt=""&gt;
   &lt;span class="yb-badge yb-badge--sale yb-offercard__off"&gt;24% off&lt;/span&gt;
   &lt;div class="yb-offercard__body"&gt;

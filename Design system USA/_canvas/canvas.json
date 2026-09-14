@@ -1,0 +1,14 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",          "x": 0,    "y": 0,   "w": 1440, "h": 544, "title": "Hero — mediabanner --bleed --blur" },
+    { "file": "CartaoOferta.dc.html",  "x": 0,    "y": 700, "w": 380,  "h": 520, "title": "Cartão de oferta" },
+    { "file": "Colecao.dc.html",       "x": 500,  "y": 700, "w": 560,  "h": 500, "title": "Mosaico de coleção" }
+  ],
+  "annotations": [
+    { "id": "porque", "x": 1540, "y": 0, "w": 300,
+      "text": "Cada peça tem os mesmos cinco controles em cima:\n\nPlatô — quanto o véu escurece no fim (.65 hoje, .77 sem blur)\nQueda — em quantos px a curva desce até o platô\nBlur — liga e desliga as três folhas\nRaio — força do desfoque na base\nBanda — até onde o desfoque sobe\n\nOs três degraus do meio são frações fixas do platô (.156, .5, .844), então mexer no platô move a curva inteira junto — igual ao CSS." },
+    { "id": "aviso", "x": 1540, "y": 420, "w": 300,
+      "text": "Isto é superfície de decisão, não de produção.\n\nO que mudar aqui não volta para o design system. Quando fechar um valor, me diga qual e eu porto para ybera-components.css com as checagens." }
+  ],
+  "launch": { "view": "canvas" }
+}
