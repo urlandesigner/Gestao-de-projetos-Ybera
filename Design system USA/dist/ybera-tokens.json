@@ -2150,6 +2150,16 @@
           "$type": "color"
         }
       }
+    },
+    "on": {
+      "dark": {
+        "$value": "{magenta.400}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-action-on-dark",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      }
     }
   },
   "accent": {
@@ -2205,7 +2215,7 @@
     },
     "star": {
       "default": {
-        "$value": "{gold.500}",
+        "$value": "{gold.600}",
         "$extensions": {
           "com.ybera.cssVariable": "--yb-accent-star",
           "com.ybera.layer": "semantic"
@@ -2808,6 +2818,16 @@
             "valor": "calc(var(--yb-target-min) + var(--yb-space-3) * 2 + 1px)"
           }
         ]
+      },
+      "$type": "dimension"
+    }
+  },
+  "chrome": {
+    "h": {
+      "$value": "{header.h}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-chrome-h",
+        "com.ybera.layer": "semantic"
       },
       "$type": "dimension"
     }

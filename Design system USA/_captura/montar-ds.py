@@ -427,7 +427,24 @@ def card(p, vendor=False, flag=True):
     # nome — e era justamente a parte que o corte de duas linhas engolia.
     selos = []
     if p.get('brinde'):
-        selos.append(f'<span class="yb-badge yb-badge--accent">{p["brinde"]}</span>')
+        # `--sale` (magenta cheio, texto branco) a pedido. O que NAO muda e a
+        # regra que este selo ja provou: ele fica SOBRE A FOTO, entao precisa de
+        # fundo cheio e escuro o bastante para nao depender do que esta atras.
+        # O `--secondary`, claro, foi testado aqui e reprovou — medido sobre os
+        # packshots reais, o chip caia para 1,2:1 contra a foto e o texto para
+        # 3,78:1, abaixo de AA. Fundo claro deixa de isolar o texto, e quem
+        # passa a decidir a leitura e uma foto que ninguem controla.
+        # "Free gift", e nao o nome do brinde, a pedido. No cartao o nome nao
+        # cabia: "Free Myrrh Hair Oil 15mL" precisa de 198px e a caixa tem 146
+        # na grade de dois do celular — saia cortado no meio da palavra, sem
+        # reticencias ("FREE MYRRH HAIR OI"). Rotulo curto que se le inteiro
+        # diz mais do que nome longo que se le pela metade.
+        #
+        # O cartao passa a NAO nomear o brinde: `titulo_limpo` ja tira o
+        # "FREE ..." do titulo, entao a informacao sai do cartao. Ela continua
+        # na PDP, no selo do buy box, que e onde se decide e onde ha largura
+        # para o nome inteiro.
+        selos.append('<span class="yb-badge yb-badge--sale">Free gift</span>')
     if flag and p.get('destaque'):
         selos.append('<span class="yb-badge yb-badge--soft">Best seller</span>')
     flags = f'<div class="yb-card__flags">{"".join(selos)}</div>' if selos else ''
@@ -527,8 +544,10 @@ def oferta_precos(p):
         print(f"  aviso: a oferta nao desconta ({de} -> {por}) — o cartao sai "
               f"sem promocao; confira OFERTA em montar-ds.py")
         return None, p['preco'], None
-    pct = round((1 - _valor(por) / _valor(de)) * 100)
-    return de, por, f'{pct}% off'
+    # A porcentagem sai CRUA e nao formatada: o cartao mostra o numero em cima
+    # e "off" embaixo, em duas linhas dentro do selo estrelado, e devolver
+    # "20% off" pronto obrigaria quem monta a desmontar a string de volta.
+    return de, por, round((1 - _valor(por) / _valor(de)) * 100)
 
 
 def recortar_arte(destino, nome, manter=0.76):
@@ -605,15 +624,31 @@ def cartao_oferta(p, destino):
     arte = recortar_arte(destino, OFERTA['arte']) or p['img']
     prazo = f"{datetime.date.today().year}{OFERTA['prazo']}"
     de, por, selo = oferta_precos(p)
-    marca = (f'<span class="yb-badge yb-badge--sale yb-offercard__off">{selo}</span>'
+    # Selo estrelado no lugar da pastilha. A oferta do dia e o unico lugar da
+    # home que INTERROMPE — e a forma cheia ainda resolve o que a pastilha
+    # resolvia de raspao: o selo fica sobre a arte de campanha, e forma
+    # fechada nao depende de qual foto o catalogo mandar.
+    # O TAMANHO e do cartao, nao daqui: `.yb-offercard__off` declara 3.5rem.
+    # Escrever no HTML deixaria a medida fora do sistema — e a tela-prova
+    # existe justamente para provar que o sistema basta.
+    marca = (f'<span class="yb-offerseal yb-offerseal--sale yb-offercard__off">'
+             f'<b class="yb-offerseal__value">{selo}%</b>'
+             f'<span class="yb-offerseal__label">off</span></span>'
              if selo else '')
     riscado = f'<s class="yb-offercard__was">{de}</s>' if de else ''
     return f"""      <article class="yb-offercard yb-offercard--blur">
         <img src="img/{arte}" alt="{p['titulo'][:80]}">
         {marca}
         <div class="yb-offercard__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+        <!-- O alvo da PDP e este <a> vazio esticado sobre o cartao, e nao um
+             ::after no titulo como no cartao de catalogo: la o corpo nao e
+             posicionado, aqui ele E (o veu depende disso) e o recorte parava
+             no corpo, deixando a foto — a maior area da peca — sem alvo.
+             `aria-labelledby` aponta para o titulo, entao o link continua se
+             chamando pelo nome do produto em vez de virar "link, em branco". -->
+        <a class="yb-offercard__link" href="pdp.html" aria-labelledby="oferta-nome"></a>
         <div class="yb-offercard__body">
-          <h3 class="yb-offercard__title"><a href="pdp.html">{p['titulo']}</a></h3>
+          <h3 class="yb-offercard__title" id="oferta-nome">{p['titulo']}</h3>
           <div class="yb-offercard__linha">
             <span class="yb-offercard__price">{por}</span>
             {riscado}
@@ -621,8 +656,14 @@ def cartao_oferta(p, destino):
               <time datetime="{prazo}">{OFERTA['prazo_extenso']}</time></p>
           </div>
           <p class="yb-offercard__fim" hidden>Offer ended</p>
-          <a class="yb-btn yb-btn--primary" href="pdp.html">Buy now
-            {ico('arrow-right', 'yb-icon yb-icon--sm')}</a>
+          <!-- Mesmo controle dos outros tres cartoes: <button> que abre a
+               sacola, nao link. Era um <a> para o MESMO pdp.html do titulo —
+               dois links com o mesmo destino, e o cartao sem nenhum jeito de
+               comprar sem sair dele.
+               O rotulo passou de "Buy now" para "Add to cart" porque e o que
+               ele faz agora; "Buy now" com seta prometia ir a algum lugar. -->
+          <button class="yb-btn yb-btn--primary yb-offercard__action" type="button"
+                  data-yb-open="cart" aria-label="Add to cart: {p['titulo'][:80]}">Add to cart</button>
         </div>
       </article>"""
 
@@ -769,6 +810,7 @@ def rodape_v2():
             ("All Products", "/collections"),
         ]),
         ("Help", [
+            ("FAQ",             "faq.html"),
             ("Contact Us",      "/pages/contactus"),
             ("Shipping Policy", "/policies/shipping-policy"),
             ("Refund Policy",   "/policies/refund-policy"),
@@ -1157,6 +1199,154 @@ def faixa_parceiro():
             'aria-label="Partner greeting">\n'
             f'  <p class="yb-partnerbar__text">{recado_parceiro()}</p>\n'
             '</aside>')
+
+
+# ===================================================================== FAQ
+# Todas as respostas abaixo sao TRANSCRITAS das politicas publicadas pela
+# propria loja em 15/09/2026 — ybera.us/policies/shipping-policy e
+# /policies/refund-policy. Nenhuma foi escrita aqui: FAQ inventado e a pior
+# especie de placeholder, porque parece compromisso e vira reclamacao no
+# suporte.
+#
+# ATENCAO, duas contradicoes que estao NA POLITICA e que eu nao resolvi de um
+# lado nem do outro — resolver seria inventar:
+#   1. A politica promete devolucao em 30 dias E lista "personal care goods
+#      (such as beauty products)" entre os itens nao devolviveis. Uma loja de
+#      cosmetico cabe inteira nessa excecao. O texto aqui diz as duas coisas,
+#      que e o que a loja diz.
+#   2. Ela diz que a Ybera envia a etiqueta de devolucao E, mais abaixo, que o
+#      frete de retorno e por conta do cliente. A excecao clara e produto
+#      danificado ou errado, onde a loja assume — e so isso esta afirmado.
+# Prefixo que marca a pergunta que tambem vai para a home. Quatro, e essas
+# quatro: prazo, custo do frete, devolucao e formol. Sao as objecoes de quem
+# compra quimica capilar importada pela internet, e sao as unicas do conjunto
+# que travam a COMPRA — "como rastreio" e "por que vieram duas caixas" sao
+# duvidas de quem ja comprou, e o lugar delas e a tela cheia.
+#
+# Marca no dado, e nao duas listas: o texto da resposta e o mesmo nos dois
+# lugares e nao tem como divergir.
+HOME = '\u2605'
+
+
+def sem_marca(q):
+    return q.lstrip(HOME)
+
+
+FAQ = [
+    ('Shipping &amp; delivery', 'faq-shipping', [
+        ('When will my order ship?',
+         'Orders are processed within 1&ndash;2 business days. Nothing ships on '
+         'weekends or holidays, and high-volume periods can add a few days.'),
+        (HOME + 'How long does delivery take?',
+         'From the U.S. warehouse, Economy (USPS) takes 5&ndash;8 business days and '
+         'Priority Express 2&ndash;4, counted from the order date. Items that ship '
+         'from Brazil &mdash; marked on the product page with a Brazilian flag '
+         '&mdash; take 11&ndash;16 business days.'),
+        (HOME + 'Is shipping free?',
+         'Economy shipping is free on orders over $50 and $8.90 under that. '
+         'Priority Express is $9.90.'),
+        ('Why did my order arrive in two packages?',
+         'Because part of it shipped from the U.S. warehouse and part from Brazil. '
+         'Each shipment is charged independently, as if they were separate orders.'),
+        ('Where do you ship?',
+         'Anywhere in the United States, including Alaska, Hawaii and U.S. '
+         'territories. P.O. boxes are accepted.'),
+        ('How do I track my order?',
+         'You get a shipment confirmation email with the tracking number. Tracking '
+         'becomes available within 24 hours.'),
+    ]),
+    ('Returns &amp; refunds', 'faq-returns', [
+        (HOME + 'Can I return an order?',
+         'You have 30 days from delivery to request one. The item has to come back '
+         'unused, in its original packaging, with the receipt &mdash; and the return '
+         'has to be requested first, at info.usa@ybera.com. Packages sent back '
+         'without a request are not accepted.'),
+        ('Are hair products returnable?',
+         'The policy lists personal care goods, which includes beauty products, '
+         'among the items that cannot be returned, along with sale items and gift '
+         'cards. Write to info.usa@ybera.com before sending anything back, so your '
+         'specific item is checked.'),
+        ('My order arrived damaged or wrong.',
+         'Contact us as soon as you open it. For damaged, defective or incorrect '
+         'items the return shipping is paid by Ybera, and the item is replaced.'),
+        ('When do I get my money back?',
+         'Once the return is received and inspected we tell you whether it was '
+         'approved. Approved refunds go back to the original payment method within '
+         '10 business days, and your bank can take a few more to post it. Past 15 '
+         'business days, write to info.usa@ybera.com.'),
+    ]),
+    ('The products', 'faq-products', [
+        (HOME + 'Is the keratin formaldehyde-free?',
+         'Yes. The formulas are formaldehyde-free and safe on color-treated hair.'),
+        ('How do I use a keratin treatment at home?',
+         'Wash with a clarifying shampoo and towel-dry. Apply from mid-length to '
+         'ends, avoiding the scalp. Leave for 20 minutes, then rinse and blow-dry.'),
+        ('Not sure which line is yours?',
+         'The hair analysis asks six questions and matches your hair to one line, '
+         'instead of leaving you to choose between fifteen collections.'),
+    ]),
+]
+
+
+def faq(curto=False, cabecalho=True):
+    """A secao de perguntas, montada com pecas que ja existiam.
+
+    Nada de componente novo: as perguntas sao `.yb-accordion` e o indice e
+    `.yb-link`. O padrao `.yb-faq` e so a grade que poe os dois lado a lado.
+
+    O indice existe por um motivo pratico: a resposta que a pessoa procura
+    mora dentro de um acordeao FECHADO, e acordeao fechado nao aparece em
+    Ctrl+F nem na busca do navegador. O indice e o unico lugar onde os tres
+    assuntos aparecem de uma vez."""
+    if curto:
+        # Sem indice e sem grupos: com quatro perguntas o indice seria mais
+        # longo que a lista que ele indexa.
+        itens = "".join(f"""
+          <details><summary>{sem_marca(q)}</summary>
+            <div class="yb-accordion__body"><p>{r}</p></div></details>"""
+            for _, _, pares in FAQ for q, r in pares if q.startswith(HOME))
+        return f"""    <section class="yb-block" id="faq">
+      <div class="yb-faq yb-faq--curto">
+        <div class="yb-section-head yb-faq__cabeca"><h2>Before you buy</h2></div>
+        <div class="yb-faq__apoio">
+          <p class="yb-block__lede">The four things people ask before a first order.
+          Tracking, split shipments and refunds are answered in the full list.</p>
+          <a class="yb-btn yb-btn--secondary" href="faq.html">See all questions</a>
+        </div>
+        <div class="yb-accordion">{itens}
+        </div>
+      </div>
+    </section>"""
+
+    indice = "".join(
+        f'\n        <li><a class="yb-link" href="#{alvo}">{ico("chevron-right", "yb-icon yb-icon--sm")}{titulo}</a></li>'
+        for titulo, alvo, _ in FAQ)
+    grupos = ""
+    for titulo, alvo, pares in FAQ:
+        itens = "".join(f"""
+            <details><summary>{sem_marca(q)}</summary>
+              <div class="yb-accordion__body"><p>{r}</p></div></details>""" for q, r in pares)
+        grupos += f"""
+        <section class="yb-faq__grupo" id="{alvo}" aria-labelledby="{alvo}-t">
+          <h3 class="yb-faq__titulo" id="{alvo}-t">{titulo}</h3>
+          <div class="yb-accordion">{itens}
+          </div>
+        </section>"""
+    # Na pagina propria o titulo e o <h1> dela: repetir "Frequently asked
+    # questions" num <h2> logo abaixo daria dois titulos para a mesma coisa.
+    cabeca = f"""
+      <div class="yb-section-head">
+        <h2>Frequently asked questions</h2>
+        <a class="yb-link" href="/pages/contactus">Talk to us {ico('chevron-right')}</a>
+      </div>""" if cabecalho else ''
+    return f"""    <section class="yb-block" id="faq">{cabeca}
+      <div class="yb-faq">
+        <ul class="yb-faq__index" aria-label="FAQ topics">{indice}
+        </ul>
+        <div class="yb-faq__grupos">{grupos}
+        </div>
+      </div>
+    </section>"""
 
 
 # O quiz de diagnostico. A loja tem "AI Hair Analysis" no menu, mas a entrada
@@ -2663,6 +2853,46 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
     return CABECA.format(v=versao(), css_pagina=CSS_PDP, titulo=f"{p['titulo']} – Ybera USA") + corpo + RODAPE.replace("{v}", versao())
 
 
+def montar_faq(destino):
+    """A tela cheia de perguntas, para quem foi procurar.
+
+    A home leva quatro perguntas — as que travam a compra. Esta pagina leva as
+    treze, agrupadas e com indice. Sao a MESMA fonte: o que muda e o recorte,
+    entao nenhuma resposta pode divergir entre as duas telas.
+
+    Ela existe porque uma central de ajuda dentro da home cobra de todo mundo o
+    tempo de quem tem duvida de rastreio. E porque duvida que aparece depois da
+    compra — "por que vieram duas caixas" — precisa de um endereco proprio para
+    o atendimento poder mandar o link."""
+    prods = dados.catalogo(os.path.join(destino, 'img'), 8)
+    corpo = f"""{header(promo=prods[2])}
+{faixa_parceiro()}
+
+<main class="yb-page">
+  <nav class="yb-crumb" aria-label="Breadcrumb">
+    <ol>
+      <li><a href="index-v2.html">Home</a></li>
+      <li aria-current="page">FAQ</li>
+    </ol>
+  </nav>
+
+  <div class="yb-block">
+    <h1>Frequently asked questions</h1>
+    <p class="yb-block__lede">Shipping, returns and the products themselves. What is not
+    here, our team answers by email.</p>
+  </div>
+
+{faq(cabecalho=False)}
+</main>
+
+{rodape_v2()}
+{gaveta(prods)}
+{busca(prods)}"""
+    return (CABECA.format(v=versao(), css_pagina=CSS_HOME,
+                          titulo="Frequently asked questions – Ybera USA")
+            + corpo + RODAPE.replace("{v}", versao()))
+
+
 def montar_home_v2(destino):
     """Home v2 — a mesma loja na gramatica de e-commerce dos EUA.
 
@@ -2770,6 +3000,11 @@ def montar_home_v2(destino):
 {faixa_logos()}
 
   <div class="yb-page">
+  <!-- Quatro perguntas, e nao as treze: aqui elas existem para DESTRAVAR a
+       compra — prazo, frete, devolucao e formol. O resto mora em faq.html,
+       que e para quem foi procurar. Uma home nao e central de ajuda. -->
+{faq(curto=True)}
+
 {blog()}
 
 {citacao()}
@@ -2804,6 +3039,8 @@ if __name__ == '__main__':
     print("montando pdp com variante…")
     open(os.path.join(destino, 'pdp-variante.html'), 'w', encoding='utf-8').write(
         montar_pdp(destino, variantes=VARIANTE_FORJADA))
+    print("montando faq…")
+    open(os.path.join(destino, 'faq.html'), 'w', encoding='utf-8').write(montar_faq(destino))
     print("montando pdp em promocao…")
     open(os.path.join(destino, 'pdp-oferta.html'), 'w', encoding='utf-8').write(
         montar_pdp(destino, compare=COMPARE_FORJADO))

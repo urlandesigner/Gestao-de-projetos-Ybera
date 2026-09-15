@@ -260,6 +260,17 @@
      gold-500 passar exigiria .86 — a essa altura nao ha mais foto embaixo. */
   --yb-accent-on-media:  var(--yb-gold-300);
   --yb-accent-text:      var(--yb-gold-700);  /* texto sobre claro */
+
+  /* A COR DE ACAO SOBRE ESCURO, e ela NAO e a cor de acao.
+     Mesmo problema do dourado, ao contrario: o magenta-600 canonico foi
+     escolhido para ler sobre BRANCO (5.36:1) e sobre o grafite cai para
+     3.11:1 — reprova como texto pequeno. Nenhuma cor e escura o bastante
+     para o branco e clara o bastante para o grafite ao mesmo tempo.
+     O magenta-400 da 6.49:1 sobre --yb-bg-inverse e continua lendo como a
+     familia da marca. Varri a rampa: o 500 para em 3.89:1, tambem reprova.
+     O contexto esta no nome pelo mesmo motivo do --yb-accent-on-dark: usado
+     sobre claro, este tom reprova. */
+  --yb-action-on-dark:   var(--yb-magenta-400);  /* só sobre superfície escura */
   /* @reservado — superficie e borda de acento andam juntas; a doc ja usa a
      borda. Ver a nota de --yb-text-secondary-inverse. */
   --yb-accent-surface:   var(--yb-gold-100);
@@ -275,7 +286,14 @@
      Por que nao o #FFBB00 que a loja usa hoje: mede 1.70:1 sobre branco, mais
      baixo ainda, e e um valor solto de Tailwind que nao pertence a paleta. O
      gold-500 e mais vivo que o que estava aqui e ja e cor do sistema. */
-  --yb-accent-star:      var(--yb-gold-500);
+  /* gold-600 e nao gold-500: a estrela perdeu o contorno e passou a ter de
+     cumprir sozinha os 3:1 da WCAG 1.4.11. 500 mede 2.39:1 e reprova; 600
+     mede 3.45:1. */
+  --yb-accent-star:      var(--yb-gold-600);
+  /* @deprecated desde 0.12 — nao declare contorno na estrela. Remocao em 1.0.
+     O contorno existia porque o miolo em gold-500 nao alcancava 3:1 sozinho;
+     com o miolo em gold-600 ele deixou de ter funcao, e uma linha escura em
+     volta do glifo fazia a estrela parecer desenhada por cima. */
   --yb-accent-star-edge: var(--yb-gold-700);
 
   /* Favoritar. O magenta ja e a cor de ACAO do sistema (--yb-action-bg) —
@@ -522,6 +540,13 @@
      mesma que produz a barra — alvo + respiro + fio —, e a barra usa este
      token como piso, entao os dois nao tem como divergir. */
   --yb-header-h: calc(var(--yb-target-min) + var(--yb-space-4) * 2 + 1px);
+
+  /* Quanto do topo da tela esta OCUPADO por cromo preso. Por padrao e so o
+     cabecalho; quando a faixa do parceiro esta na tela, ela entra na conta
+     (ver .yb-partnerbar). Quem gruda embaixo do topo — o indice do FAQ — e
+     quem rola para uma ancora — os grupos do FAQ — leem este, e nao o
+     `--yb-header-h`: senao param atras da faixa. */
+  --yb-chrome-h: var(--yb-header-h);
   /* O aperto do mobile esta no fim deste arquivo: a barra encolhe o respiro
      la, e o token tem de encolher junto — ver @media (max-width:768px). */
 

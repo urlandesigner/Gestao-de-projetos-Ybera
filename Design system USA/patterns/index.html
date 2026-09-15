@@ -59,8 +59,12 @@ code{font-family:var(--yb-font-family-mono);font-size:.8125rem}
   margin:0 0 var(--yb-space-4)}
 .hero > p{font-size:var(--yb-type-body-lg-size);line-height:var(--yb-type-body-lg-line);
   color:var(--yb-text-secondary);max-width:62ch;margin:0 0 var(--yb-space-16)}
-section{margin-bottom:var(--yb-space-20);scroll-margin-top:var(--yb-space-6)}
-section > h2{font-size:var(--yb-type-h2-size);line-height:var(--yb-type-h2-line);
+/* `.main >`, e nao `section` solto: a partir do FAQ ha demo com <section>
+   dentro (cada grupo de perguntas e uma), e o seletor de tipo pintava a peca
+   demonstrada com o espacamento da documentacao — 80px entre grupos que na
+   loja tem 40. Vale tambem no solo.html, que clona estas folhas. */
+.main > section{margin-bottom:var(--yb-space-20);scroll-margin-top:var(--yb-space-6)}
+.main > section > h2{font-size:var(--yb-type-h2-size);line-height:var(--yb-type-h2-line);
   letter-spacing:var(--yb-type-h2-track);font-weight:var(--yb-type-h2-weight);
   margin:0 0 var(--yb-space-2)}
 .when{color:var(--yb-text-secondary);max-width:64ch;margin:0 0 var(--yb-space-6)}
@@ -167,6 +171,7 @@ body:not([data-mobile="on"]) .par__mob{display:none}
     <li><a href="#cart-drawer">Cart drawer</a></li>
     <li><a href="#catalog">Catalog</a></li>
     <li><a href="#empty-state">Empty states</a></li>
+    <li><a href="#faq">FAQ</a></li>
     <li><a href="#footer">Footer</a></li>
     <li><a href="#shipping-progress">Free shipping progress</a></li>
     <li><a href="#header">Header</a></li>
@@ -614,6 +619,85 @@ body:not([data-mobile="on"]) .par__mob{display:none}
       <p>"No results for 'keratine'" repete o que a pessoa digitou e oferece a
       grafia certa. Um vazio que só diz "nenhum resultado" transfere o problema
       de volta para quem já não achou.</p>
+    </div>
+  </section>
+  <section id="faq">
+    <h2>FAQ</h2>
+    <p class="when">Perguntas em acordeão com um índice ao lado. Não há componente novo:
+    as perguntas são <code>.yb-accordion</code> e o índice é <code>.yb-link</code> &mdash; o
+    padrão é só a grade que põe os dois lado a lado.</p>
+    <div class="stage">
+      <div class="yb-faq">
+        <ul class="yb-faq__index" aria-label="FAQ topics">
+          <li><a class="yb-link" href="#faq-demo-envio"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg>Shipping &amp; delivery</a></li>
+          <li><a class="yb-link" href="#faq-demo-devolucao"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg>Returns &amp; refunds</a></li>
+        </ul>
+        <div class="yb-faq__grupos">
+          <section class="yb-faq__grupo" id="faq-demo-envio">
+            <h3 class="yb-faq__titulo">Shipping &amp; delivery</h3>
+            <div class="yb-accordion">
+              <details><summary>When will my order ship?</summary>
+                <div class="yb-accordion__body"><p>Orders are processed within 1&ndash;2 business days. Nothing ships on weekends or holidays.</p></div></details>
+              <details><summary>Is shipping free?</summary>
+                <div class="yb-accordion__body"><p>Economy shipping is free on orders over $50 and $8.90 under that. Priority Express is $9.90.</p></div></details>
+            </div>
+          </section>
+          <section class="yb-faq__grupo" id="faq-demo-devolucao">
+            <h3 class="yb-faq__titulo">Returns &amp; refunds</h3>
+            <div class="yb-accordion">
+              <details><summary>Can I return an order?</summary>
+                <div class="yb-accordion__body"><p>You have 30 days from delivery to request one, and the return has to be requested first.</p></div></details>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+    <h3 class="row-label">Curto &mdash; o recorte da home</h3>
+    <div class="stage">
+      <div class="yb-faq yb-faq--curto">
+        <div class="yb-section-head yb-faq__cabeca"><h2>Before you buy</h2></div>
+        <div class="yb-faq__apoio">
+          <p class="yb-block__lede">The four things people ask before a first order.
+          Tracking, split shipments and refunds are answered in the full list.</p>
+          <a class="yb-btn yb-btn--secondary" href="#faq">See all questions</a>
+        </div>
+        <div class="yb-accordion">
+          <details><summary>How long does delivery take?</summary>
+            <div class="yb-accordion__body"><p>Economy (USPS) takes 5&ndash;8 business days and Priority Express 2&ndash;4, counted from the order date.</p></div></details>
+          <details><summary>Can I return an order?</summary>
+            <div class="yb-accordion__body"><p>You have 30 days from delivery to request one, and the return has to be requested first.</p></div></details>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Dois recortes, uma fonte</b>
+      <p>A home leva <b>quatro</b> perguntas &mdash; prazo, frete, devolução e formol, que
+      são as que travam a compra. A tela cheia leva as treze, agrupadas e com índice.
+      As duas leem a mesma lista: a pergunta que vai para a home é marcada no dado, e
+      não copiada para uma segunda lista que envelheceria sozinha.</p>
+      <p>No recorte curto a coluna da esquerda deixa de ser índice e vira apoio: título,
+      uma linha de contexto e o CTA para a tela cheia. Com quatro perguntas o índice seria
+      mais longo que a lista que indexa &mdash; e o que a home precisa ali não é navegar
+      dentro da seção, é sair dela para o FAQ inteiro. A coluna também é mais larga
+      (20rem contra 14): na do índice cabe uma palavra por linha, nesta cabe uma frase.</p>
+    </div>
+    <div class="note">
+      <b>O índice não é enfeite</b>
+      <p>A resposta que a pessoa procura mora dentro de um acordeão <b>fechado</b>, e
+      acordeão fechado não aparece no Ctrl+F do navegador. O índice é o único lugar da
+      seção onde os assuntos aparecem todos de uma vez &mdash; por isso ele existe mesmo
+      com três grupos.</p>
+      <p>Ele é <code>sticky</code> colado abaixo do cabeçalho preso, como a doca do
+      parceiro: a seção tem três telas de altura, e um índice que rola embora só serve
+      para quem ainda está no topo. Abaixo de 860px ele vira uma fileira de assuntos
+      acima das perguntas e <b>deixa de ser sticky</b> &mdash; preso no topo de uma tela
+      de 812px, comeria a primeira resposta.</p>
+      <p>Cada grupo tem <code>scroll-margin</code>: sem ela o título para embaixo do
+      cabeçalho preso quando se clica no índice, e a pessoa cai no meio das perguntas sem
+      ver de que grupo elas são.</p>
+      <p><b>O conteúdo é transcrito das políticas publicadas pela loja</b>, não escrito
+      aqui. FAQ inventado é a pior espécie de placeholder: parece compromisso e vira
+      reclamação no suporte.</p>
     </div>
   </section>
   <section id="footer">

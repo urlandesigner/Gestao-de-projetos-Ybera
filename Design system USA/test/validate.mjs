@@ -1700,6 +1700,40 @@ secao('Véu leve e blur');
 }
 
 /* ===========================================================================
+   A ESTRELA DO SELO DE OFERTA
+   Os 40 vertices do `clip-path` sao gerados por formula, nao desenhados. Um
+   numero trocado a mao entorta uma ponta so — o tipo de defeito que ninguem
+   ve num diff de 40 pares de porcentagem e que so aparece se alguem olhar o
+   selo de perto. Aqui a formula e refeita e comparada com o que esta na folha.
+   =========================================================================== */
+{
+  const css = ler('components/ybera-components.css');
+  const m = css.match(/\.yb-offerseal\{[^}]*?clip-path:\s*polygon\(([^)]*)\)/s);
+  const PONTAS = 20, DENTRO = 0.90;
+  const esperado = [];
+  for (let i = 0; i < PONTAS * 2; i++) {
+    const r = (i % 2 ? DENTRO : 1) * 50;
+    const a = (Math.PI * i) / PONTAS - Math.PI / 2;
+    esperado.push(`${(50 + r * Math.cos(a)).toFixed(2)}% ${(50 + r * Math.sin(a)).toFixed(2)}%`);
+  }
+  if (!m) {
+    falha('o selo de oferta perdeu a estrela', 'nenhum clip-path:polygon em .yb-offerseal');
+  } else {
+    const achado = m[1].split(',').map(v => v.trim().replace(/\s+/g, ' ')).filter(Boolean);
+    const tortos = [];
+    if (achado.length !== esperado.length)
+      tortos.push(`${achado.length} vértices, a fórmula dá ${esperado.length}`);
+    else
+      esperado.forEach((v, i) => { if (v !== achado[i]) tortos.push(`vértice ${i + 1}: ${achado[i]} ≠ ${v}`); });
+    tortos.length
+      ? falha('a estrela do selo foi editada à mão e saiu da fórmula',
+          tortos.slice(0, 3).join(' · ') + (tortos.length > 3 ? ` · +${tortos.length - 3}` : '')
+          + ' — regenere com 20 pontas e raio interno .90')
+      : ok('a estrela do selo confere com a fórmula', `${achado.length} vértices · 20 pontas · .90`);
+  }
+}
+
+/* ===========================================================================
    O NUMERO QUE A DOC PROMETE
 
    Esta e a ultima checagem porque ela e a unica que so pode existir aqui: o

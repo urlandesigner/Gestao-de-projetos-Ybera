@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Switch — Ybera Design System</title>
+<title>Offer seal — Ybera Design System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
@@ -48,7 +48,7 @@
     <li><a href="dialog.html">Modal &amp; drawer</a></li>
     <li><a href="notice.html">Notice</a></li>
     <li><a href="offercard.html">Offer card</a></li>
-    <li><a href="offerseal.html">Offer seal</a></li>
+    <li><a href="offerseal.html" aria-current="page">Offer seal</a></li>
     <li><a href="pagination.html">Pagination</a></li>
     <li><a href="partner.html">Partner</a></li>
     <li><a href="post.html">Post</a></li>
@@ -60,7 +60,7 @@
     <li><a href="review.html">Review</a></li>
     <li><a href="search.html">Search overlay</a></li>
     <li><a href="skeleton.html">Skeleton</a></li>
-    <li><a href="switch.html" aria-current="page">Switch</a></li>
+    <li><a href="switch.html">Switch</a></li>
     <li><a href="toast.html">Toast</a></li>
     <li><a href="track.html">Track</a></li>
     <li><a href="variant.html">Variant picker</a></li>
@@ -74,50 +74,71 @@
 
 <main class="main">
   <div class="ficha-topo">
-    <a class="ficha-volta" href="index.html#switch">← Components</a>
+    <a class="ficha-volta" href="index.html#offerseal">← Components</a>
     <nav class="ficha-passo" aria-label="Componente anterior e próximo">
-      <a href="skeleton.html" rel="prev"><span aria-hidden="true">←</span> Skeleton</a>
-      <a href="toast.html" rel="next">Toast <span aria-hidden="true">→</span></a>
+      <a href="offercard.html" rel="prev"><span aria-hidden="true">←</span> Offer card</a>
+      <a href="pagination.html" rel="next">Pagination <span aria-hidden="true">→</span></a>
     </nav>
   </div>
-  <h1 class="ficha-titulo">Switch</h1>
-  <p class="ficha-quando">Liga e desliga na hora. Se o efeito só acontece depois de um botão de salvar, o certo é a caixa de seleção.</p>
+  <h1 class="ficha-titulo">Offer seal</h1>
+  <p class="ficha-quando">Selo estrelado de brinde e desconto, sobre a foto do produto. Interrompe — não rotula. Um por peça.</p>
   <ul class="ficha-fatos">
-    <li>Classe base <b><code>.yb-switch</code></b></li>
-    <li>Modificadores <b>0</b></li>
-    <li>Elementos <b>1</b></li>
-    <li>Estados <b>3</b></li>
-    <li>Tokens <b>12</b></li>
-    <li>Comportamento <b>JS</b></li>
+    <li>Classe base <b><code>.yb-offerseal</code></b></li>
+    <li>Modificadores <b>2</b></li>
+    <li>Elementos <b>2</b></li>
+    <li>Estados <b>0</b></li>
+    <li>Tokens <b>9</b></li>
+    <li>Comportamento <b>só CSS</b></li>
   </ul>
 
   <section class="bloco" id="demos">
     <h2 class="bloco-titulo">Como se parece</h2>
     <div class="demo">
-      <button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="false" aria-label="Seguro de entrega">
-        <span class="yb-switch__knob"></span>
-      </button>
-      <button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="true" aria-label="Seguro de entrega, ligado">
-        <span class="yb-switch__knob"></span>
-      </button>
-      <button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="false" aria-label="Indisponível" disabled>
-        <span class="yb-switch__knob"></span>
-      </button>
+      <span class="yb-offerseal yb-offerseal--sale">
+        <b class="yb-offerseal__value">28%</b>
+        <span class="yb-offerseal__label">off</span>
+      </span>
+      <span class="yb-offerseal yb-offerseal--accent">
+        <b class="yb-offerseal__value">Free</b>
+        <span class="yb-offerseal__label">gift</span>
+      </span>
+    </div>
+    <h3 class="row-label">Tamanho — a caixa manda, a estrela acompanha</h3>
+    <div class="demo">
+      <span class="yb-offerseal yb-offerseal--accent" style="--yb-offerseal-size:3.5rem">
+        <b class="yb-offerseal__value">28%</b><span class="yb-offerseal__label">off</span>
+      </span>
+      <span class="yb-offerseal yb-offerseal--accent" style="--yb-offerseal-size:5rem">
+        <b class="yb-offerseal__value">28%</b><span class="yb-offerseal__label">off</span>
+      </span>
+      <span class="yb-offerseal yb-offerseal--accent" style="--yb-offerseal-size:6rem">
+        <b class="yb-offerseal__value">28%</b><span class="yb-offerseal__label">off</span>
+      </span>
     </div>
     <div class="note">
-      <b>Não é a caixa de seleção com outra roupa</b>
-      <p>A caixa guarda uma intenção até alguém enviar o formulário; o switch
-      <b>aplica na hora</b> &mdash; o seguro de entrega entra no total no mesmo
-      instante. Trocar um pelo outro faz a pessoa procurar um botão de salvar que
-      não existe.</p>
-      <p><code>&lt;button role="switch" aria-checked&gt;</code> e não
-      <code>&lt;input type="checkbox"&gt;</code>: com o input o leitor de tela
-      anuncia "caixa de seleção, marcada", que promete exatamente o formulário
-      que não há.</p>
-      <p>O desenho tem 32&times;20, que é como um switch se lê. O <b>alvo</b> tem
-      56&times;44, estendido por um pseudo-elemento &mdash; o mínimo da WCAG 2.5.8
-      é 24&times;24, e crescer o desenho até lá daria um interruptor do tamanho de
-      um botão.</p>
+      <b>Sobre foto, só o escuro se sustenta</b>
+      <p>Medido nos packshots reais do catálogo, com o selo no canto onde ele
+      moraria: <code>--accent</code> dá <b>14,0:1</b> contra a imagem,
+      <code>--sale</code> dá <b>3,3:1</b> e o branco testado no estudo dava
+      <b>1,2:1</b> — sumia. Fundo claro deixa de isolar o conteúdo e quem passa a
+      decidir a leitura é uma foto que ninguém controla. Sobre superfície lisa
+      qualquer uma das três serve.</p>
+    </div>
+    <div class="note">
+      <b>A estrela é <code>clip-path</code>, não imagem</b>
+      <p>Vinte pontas recortadas em porcentagem, então o mesmo selo serve 56px no
+      cartão e 96px na PDP sem virar outro arquivo e sem custar uma requisição.
+      Os 40 vértices são gerados por fórmula, não desenhados — há checagem que
+      recusa vértice editado à mão. Onde <code>clip-path</code> não existir, o
+      <code>border-radius</code> embaixo degrada para círculo em vez de quadrado.</p>
+    </div>
+    <div class="note">
+      <b>Não empilha com o badge que diz a mesma coisa</b>
+      <p>Se o cartão já traz <code>.yb-badge--sale</code> com “Save 28%”, o selo
+      repete a informação e rouba a foto duas vezes. Escolha um. E cuidado com a
+      arte de campanha: várias fotos do catálogo <b>já têm</b> um selo estrelado
+      desenhado dentro delas — ali o nosso compete com o da imagem, não com o
+      fundo.</p>
     </div>
   </section>
 
@@ -128,7 +149,7 @@
     uma <code>div</code> entregaria a peça fina com o CSS de desktop, que foi como
     a gaveta do carrinho já apareceu com 222px fingindo estar quebrada.</p>
     <div class="quadro-mob">
-      <iframe src="solo.html?c=switch" title="Switch em 375px"
+      <iframe src="solo.html?c=offerseal" title="Offer seal em 375px"
               width="375" height="420" loading="lazy"></iframe>
     </div>
   </section>
@@ -138,11 +159,11 @@
     <p class="bloco-lede">Lido da folha a cada build. Se faltar alguma coisa aqui,
     falta na folha.</p>
     <p class="rotulo">Modificadores</p>
-    <p class="api-vazia">Este componente não tem variantes — o que muda nele vem do conteúdo.</p>
+    <p class="lista-api"><code>.yb-offerseal--accent</code> <code>.yb-offerseal--sale</code></p>
     <p class="rotulo">Elementos</p>
-    <p class="lista-api"><code>.yb-switch__knob</code></p>
+    <p class="lista-api"><code>.yb-offerseal__label</code> <code>.yb-offerseal__value</code></p>
     <p class="rotulo">Estados que a folha trata</p>
-    <p class="bloco-lede"><code>:focus-visible</code> · <code>[aria-checked]</code> · <code>[disabled]</code></p>
+    <p class="api-vazia">Nenhum: o componente não muda de aparência por interação.</p>
   </section>
 
   <section class="bloco" id="marcacao">
@@ -151,21 +172,20 @@
     que renderizou ali, não um exemplo escrito à parte.</p>
     <div class="snippet">
       <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
-      <pre><code>&lt;button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="false" aria-label="Seguro de entrega"&gt;
-  &lt;span class="yb-switch__knob"&gt;&lt;/span&gt;
-&lt;/button&gt;
-&lt;button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="true" aria-label="Seguro de entrega, ligado"&gt;
-  &lt;span class="yb-switch__knob"&gt;&lt;/span&gt;
-&lt;/button&gt;
-&lt;button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="false" aria-label="Indisponível" disabled&gt;
-  &lt;span class="yb-switch__knob"&gt;&lt;/span&gt;
-&lt;/button&gt;</code></pre>
+      <pre><code>&lt;span class="yb-offerseal yb-offerseal--sale"&gt;
+  &lt;b class="yb-offerseal__value"&gt;28%&lt;/b&gt;
+  &lt;span class="yb-offerseal__label"&gt;off&lt;/span&gt;
+&lt;/span&gt;
+&lt;span class="yb-offerseal yb-offerseal--accent"&gt;
+  &lt;b class="yb-offerseal__value"&gt;Free&lt;/b&gt;
+  &lt;span class="yb-offerseal__label"&gt;gift&lt;/span&gt;
+&lt;/span&gt;</code></pre>
     </div>
   </section>
 
   <section class="bloco" id="acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <ul class="bloco-lede"><li>É <code>&lt;button role="switch"&gt;</code> com <code>aria-checked</code>. Não é checkbox: switch aplica na hora, checkbox espera um “salvar”. O papel diz qual dos dois é.</li><li>O alvo real tem 56×44 via <code>::after</code>, maior que o desenho de 44×24 — o gesto no celular acerta a área, não o pixel.</li><li>O rótulo fica fora do controle, associado por <code>aria-label</code> ou <code>aria-labelledby</code>.</li></ul>
+    <ul class="bloco-lede"><li>Selo não é botão nem link: não recebe <code>href</code>, <code>onclick</code> nem foco. Quem clica no cartão já chega ao produto; um alvo estrelado de 64px dentro de outro alvo só cria um foco onde ninguém espera.</li><li>O texto é quem informa. A estrela chama o olho, mas “28% off” é o que um leitor de tela anuncia — não existe selo que comunique só pela forma.</li><li>Sobre foto, use <code>--accent</code>: medido nos packshots do catálogo ele dá 14,0:1 contra a imagem, contra 3,3:1 do <code>--sale</code> e 1,2:1 de um selo claro, que desaparece.</li><li>Se o mesmo desconto já aparece em <code>.yb-badge--sale</code> na mesma peça, quem ouve a página escuta a oferta duas vezes. Escolha um dos dois.</li></ul>
   </section>
 
   <section class="bloco" id="faca">
@@ -173,19 +193,19 @@
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
         <p class="fn-cabeca">✓ Faça</p>
-        <div class="fn-palco"><button class="yb-switch" type="button" role="switch" aria-checked="true" aria-label="Route package protection"><span class="yb-switch__knob"></span></button></div>
-        <p class="fn-legenda">Papel e estado no próprio controle.</p>
+        <div class="fn-palco"><span class="yb-offerseal yb-offerseal--accent"><b class="yb-offerseal__value">Free</b><span class="yb-offerseal__label">gift</span></span></div>
+        <p class="fn-legenda">Um selo, escuro, sobre a foto — e o texto dizendo a oferta.</p>
       </div>
       <div class="fn-caso fn-caso--nao">
         <p class="fn-cabeca">✕ Não faça</p>
-        <div class="fn-palco"><span class="yb-switch" aria-hidden="true"><span class="yb-switch__knob"></span></span></div>
-        <p class="fn-legenda">Div com classe “on”: sem papel, sem estado, sem teclado.</p>
+        <div class="fn-palco"><span class="yb-offerseal yb-offerseal--sale"><b class="yb-offerseal__value">28%</b><span class="yb-offerseal__label">off</span></span><span class="yb-offerseal yb-offerseal--accent"><b class="yb-offerseal__value">Free</b><span class="yb-offerseal__label">gift</span></span></div>
+        <p class="fn-legenda">Dois selos na mesma peça viram enfeite e nenhum dos dois é lido — e o claro ainda some sobre foto clara.</p>
       </div>
     </div>
   </section>
 
   <p class="doc-credit">Ficha gerada por <code>tools/fichas.mjs</code> a partir de
-  <code>components/ybera-components.css</code> e <code>components/pecas/switch.html</code>.
+  <code>components/ybera-components.css</code> e <code>components/pecas/offerseal.html</code>.
   Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>
 </main>
 

@@ -4,14 +4,14 @@ A fundação da marca Ybera em tokens. **Independente de plataforma por decisão
 projeto**: a loja US roda Shopify e a BR roda Wake Commerce — CSS custom properties
 é o único denominador comum entre as duas.
 
-Versão **0.12.1** — fundação de 317 tokens, 37 componentes e 11 padrões com
-comportamento, 39 ícones, governança, decisões registradas e 105 checagens
+Versão **0.12.1** — fundação de 319 tokens, 38 componentes e 12 padrões com
+comportamento, 39 ícones, governança, decisões registradas e 106 checagens
 automatizadas.
 
 | Onde olhar | O quê |
 |---|---|
 | [PRINCIPIOS.md](PRINCIPIOS.md) | os cinco princípios, **em ordem** — o que ganha quando dois se chocam |
-| [INVENTARIO.md](INVENTARIO.md) | as 48 peças com maturidade conferida a cada build |
+| [INVENTARIO.md](INVENTARIO.md) | as 50 peças com maturidade conferida a cada build |
 | [decision-log/](decision-log/) | por que o sistema é assim, decisão por decisão |
 | [CONTRIBUINDO.md](CONTRIBUINDO.md) | a mecânica: laço local, o que o CI reprova |
 | [GOVERNANCA.md](GOVERNANCA.md) · [PLANO.md](PLANO.md) | como muda · como entra na loja |
@@ -55,7 +55,7 @@ tokens/
   01-semantic.css     camada 1 — a intenção, é o que componentes consomem
   ybera.css           ponto de entrada
 components/
-  ybera-components.css   37 componentes, prefixo yb-
+  ybera-components.css   38 componentes, prefixo yb-
   ybera-components.js    comportamento — 7 KB, sem dependência
   pecas/<id>.html        a fonte: demos, quando usar e notas de cada peça
   <componente>.html      34 fichas geradas: demos, 375px, API, marcação, a11y, faça/não faça
@@ -64,7 +64,7 @@ components/
   doc.css                a moldura das fichas
   solo.html              uma peça sozinha, para o quadro de 375px
 patterns/
-  ybera-patterns.css     11 padrões — header, carrinho, coleção, footer…
+  ybera-patterns.css     12 padrões — header, carrinho, coleção, footer…
   index.html             galeria de composições
 icons/
   ybera-icons.svg        sprite com 39 ícones (9,1 KB)
@@ -73,7 +73,7 @@ icons/
 bridge/
   ybera-bridge.css       ponte tokens Ybera -> Ecomposer / tema / Judge.me
 test/
-  validate.mjs           105 checagens, roda em CI
+  validate.mjs           106 checagens, roda em CI
   a11y.js                auditoria no DOM (colar no console)
   adocao.js              mede adoção na loja (colar no console)
 tools/
@@ -134,7 +134,7 @@ histórico em [CHANGELOG.md](CHANGELOG.md).
 npm run check
 ```
 
-105 checagens sem dependência: integridade entre camadas, disciplina de cor
+106 checagens sem dependência: integridade entre camadas, disciplina de cor
 (inclusive `rgba()` e cor nomeada, não só `#hex`), monotonia das rampas,
 contraste anotado versus medido, regras duras, foco visível,
 `prefers-reduced-motion`, `dist/` e `INVENTARIO.md` em dia, versão única em

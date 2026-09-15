@@ -539,5 +539,21 @@
       "legenda": "“Play” sozinho, num trilho de seis vídeos, dá seis controles idênticos na lista do leitor de tela.",
       "html": "<button class=\"yb-btn yb-btn--secondary\" type=\"button\" aria-label=\"Play\"><svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-play\"/></svg> Play</button>"
     }
+  },
+  "offerseal": {
+    "a11y": [
+      "Selo não é botão nem link: não recebe <code>href</code>, <code>onclick</code> nem foco. Quem clica no cartão já chega ao produto; um alvo estrelado de 64px dentro de outro alvo só cria um foco onde ninguém espera.",
+      "O texto é quem informa. A estrela chama o olho, mas “28% off” é o que um leitor de tela anuncia — não existe selo que comunique só pela forma.",
+      "Sobre foto, use <code>--accent</code>: medido nos packshots do catálogo ele dá 14,0:1 contra a imagem, contra 3,3:1 do <code>--sale</code> e 1,2:1 de um selo claro, que desaparece.",
+      "Se o mesmo desconto já aparece em <code>.yb-badge--sale</code> na mesma peça, quem ouve a página escuta a oferta duas vezes. Escolha um dos dois."
+    ],
+    "faca": {
+      "legenda": "Um selo, escuro, sobre a foto — e o texto dizendo a oferta.",
+      "html": "<span class=\"yb-offerseal yb-offerseal--accent\"><b class=\"yb-offerseal__value\">Free</b><span class=\"yb-offerseal__label\">gift</span></span>"
+    },
+    "naoFaca": {
+      "legenda": "Dois selos na mesma peça viram enfeite e nenhum dos dois é lido — e o claro ainda some sobre foto clara.",
+      "html": "<span class=\"yb-offerseal yb-offerseal--sale\"><b class=\"yb-offerseal__value\">28%</b><span class=\"yb-offerseal__label\">off</span></span><span class=\"yb-offerseal yb-offerseal--accent\"><b class=\"yb-offerseal__value\">Free</b><span class=\"yb-offerseal__label\">gift</span></span>"
+    }
   }
 }

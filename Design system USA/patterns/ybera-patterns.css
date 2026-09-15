@@ -1245,6 +1245,105 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
 }
 
 /* =========================================================================
+   FAQ
+   Nao ha componente novo aqui: o conteudo e `.yb-accordion` e o indice e
+   `.yb-link`, os dois ja desenhados. O padrao e so a GRADE que poe os dois
+   lado a lado e o indice que acompanha a rolagem.
+
+   Por que indice, com tres grupos so: a resposta que a pessoa procura esta
+   dentro de um acordeao FECHADO, e acordeao fechado nao se acha com Ctrl+F.
+   O indice e o unico lugar da secao onde os assuntos aparecem todos de uma
+   vez.
+   ========================================================================= */
+.yb-faq{
+  display:grid; gap:var(--yb-space-10);
+  /* O indice pede largura fixa e o conteudo fica com o resto: as perguntas
+     sao a leitura, e e ela que merece a coluna larga. */
+  grid-template-columns:minmax(0, 14rem) minmax(0, 1fr);
+  align-items:start;
+}
+/* A VERSAO CURTA, da home: a coluna da esquerda deixa de ser indice e passa a
+   ser apoio — titulo, uma linha de contexto e o CTA para a tela cheia. Com
+   quatro perguntas o indice seria mais longo que a lista que ele indexa; o
+   que a home precisa ali nao e navegar dentro da secao, e sair dela para o
+   FAQ inteiro.
+
+   Mais larga que a coluna do indice (20rem contra 14): ali cabe uma palavra
+   por linha, aqui cabe uma frase. Declarada ANTES do @media de propósito —
+   as duas regras tem a mesma especificidade, e e a ordem que decide quem
+   vence no celular, onde tudo empilha. */
+.yb-faq--curto{
+  grid-template-columns:minmax(0, 20rem) minmax(0, 1fr);
+  /* Duas linhas, e o titulo sozinho na primeira: as perguntas comecam na
+     altura do TEXTO de apoio, nao na do titulo. Alinhadas ao titulo, a
+     primeira pergunta e o <h2> disputavam a mesma linha de leitura e o titulo
+     parecia legenda da pergunta. Com o titulo acima de tudo, ele volta a ser
+     titulo da secao. */
+  grid-template-areas:"titulo ." "apoio perguntas";
+  column-gap:var(--yb-space-10);
+  row-gap:var(--yb-space-4);
+}
+/* Duas classes de propósito: `.yb-section-head` declara `margin-bottom:32px`
+   MAIS ABAIXO neste arquivo, e com a mesma especificidade ela venceria pela
+   ordem — sobravam 48px entre o titulo e a linha de apoio, que e o que fazia
+   o titulo parecer descolado da propria secao. */
+.yb-faq--curto > .yb-faq__cabeca{grid-area:titulo; margin-bottom:0}
+.yb-faq__apoio{grid-area:apoio}
+.yb-faq--curto > .yb-accordion{grid-area:perguntas}
+.yb-faq__apoio .yb-btn{margin-block-start:var(--yb-space-6)}
+/* O lede ja esta colado no titulo pelo `row-gap`; a margem dele aqui seria
+   respiro em cima de respiro. */
+.yb-faq__apoio > .yb-block__lede{margin-block-start:0}
+/* O acordeao sobe o respiro que o proprio `summary` tem por dentro. O que se
+   alinha e o TEXTO, nao a caixa: o paragrafo de apoio nao tem padding e o
+   `summary` tem 16px mais a centragem dentro do alvo de 44. Medido a 1440:
+   sem compensacao a primeira pergunta nascia 26px abaixo da linha de apoio;
+   com `--yb-space-6` ela nasce a 2px, que e menos do que a diferenca de
+   entrelinha entre os dois tamanhos de texto. */
+.yb-faq--curto > .yb-accordion{margin-block-start:calc(var(--yb-space-6) * -1)}
+
+/* `sticky` colado abaixo do cabecalho preso, como a doca do parceiro — a
+   secao tem tres telas de altura e um indice que rola embora e um indice que
+   so serve para quem ja estava no topo. */
+.yb-faq__index{
+  position:sticky; inset-block-start:calc(var(--yb-chrome-h) + var(--yb-space-4));
+  margin:0; padding:0; list-style:none;
+}
+.yb-faq__index li{border-block-start:1px solid var(--yb-border-subtle)}
+.yb-faq__index li:last-child{border-block-end:1px solid var(--yb-border-subtle)}
+/* O link ocupa a linha inteira: numa lista empilhada, alvo do tamanho do
+   texto obriga a mirar na palavra. Assim a linha toda e clicavel. */
+.yb-faq__index .yb-link{display:flex; inline-size:100%}
+/* `min-width:0` porque item de grade nasce com `min-width:auto`: sem isto uma
+   pergunta longa numa unica palavra estouraria a coluna em vez de quebrar. */
+.yb-faq__grupos{min-inline-size:0}
+.yb-faq__grupo + .yb-faq__grupo{margin-block-start:var(--yb-space-10)}
+.yb-faq__titulo{
+  margin:0 0 var(--yb-space-3);
+  font-size:var(--yb-type-h4-size); font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-secondary);
+}
+/* Alvo de rolagem: sem isto o titulo do grupo para EMBAIXO do cabecalho preso
+   quando se clica no indice, e a pessoa cai no meio das perguntas sem ver de
+   que grupo elas sao. */
+.yb-faq__grupo{scroll-margin-block-start:calc(var(--yb-chrome-h) + var(--yb-space-6))}
+@media (max-width:860px){
+  /* Empilhado, o indice vira uma fileira de assuntos acima das perguntas. Ele
+     NAO fica sticky aqui: preso no topo de uma tela de 812px ele comeria a
+     primeira resposta. */
+  .yb-faq{grid-template-columns:1fr; gap:var(--yb-space-6)}
+  .yb-faq--curto{grid-template-areas:"titulo" "apoio" "perguntas"}
+  /* Empilhado nao ha o que alinhar: a compensacao viraria aperto entre o CTA
+     e a primeira pergunta. */
+  .yb-faq--curto > .yb-accordion{margin-block-start:0}
+  .yb-faq__index{
+    position:static; display:flex; flex-wrap:wrap;
+    gap:0 var(--yb-space-5);
+  }
+  .yb-faq__index li{border-block-end:1px solid var(--yb-border-subtle)}
+}
+
+/* =========================================================================
    EMPTY STATE
    Nunca é só "nada aqui". Sempre diz por que está vazio e o que fazer.
    ========================================================================= */
@@ -1693,6 +1792,18 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
 }
 
 .yb-block{ padding-block:var(--yb-space-16); }
+/* A linha que apresenta a pagina, abaixo do <h1>. Existe pela mesma regra dos
+   tres acima: a primeira tela interna (o FAQ) pediu, e toda tela interna que
+   vier depois vai pedir — escrita solta no gerador, cada uma inventaria a
+   propria. O teto de medida e de leitura: acima de ~70 caracteres por linha o
+   olho perde a volta da linha. */
+.yb-block__lede{
+  margin:var(--yb-space-3) 0 0;
+  max-inline-size:62ch;
+  font-size:var(--yb-type-body-lg-size);
+  line-height:var(--yb-type-body-lg-line);
+  color:var(--yb-text-secondary);
+}
 /* Assimetrico, e para BAIXO. O breadcrumb pertence ao conteudo que ele
    apresenta, nao ao header: menos espaco embaixo que em cima. Mas MENOS nao
    e ZERO — a 8px da moldura da imagem os dois tracos duros leem como colisao,

@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ybera Paris USA | Keratin care that survives humidity</title>
-<link rel="stylesheet" href="yb/fonte.css?v=1a8e9487">
-<link rel="stylesheet" href="yb/00-primitives.css?v=1a8e9487">
-<link rel="stylesheet" href="yb/01-semantic.css?v=1a8e9487">
-<link rel="stylesheet" href="yb/components.css?v=1a8e9487">
-<link rel="stylesheet" href="yb/patterns.css?v=1a8e9487">
-<link rel="stylesheet" href="yb/icons.css?v=1a8e9487">
+<link rel="stylesheet" href="yb/fonte.css?v=33bb6073">
+<link rel="stylesheet" href="yb/00-primitives.css?v=33bb6073">
+<link rel="stylesheet" href="yb/01-semantic.css?v=33bb6073">
+<link rel="stylesheet" href="yb/components.css?v=33bb6073">
+<link rel="stylesheet" href="yb/patterns.css?v=33bb6073">
+<link rel="stylesheet" href="yb/icons.css?v=33bb6073">
 <style>
   /* Só layout de página: largura, respiro entre blocos e o grid do hero.
      Nenhum componente é redefinido aqui — se um botão precisasse de ajuste,
@@ -232,10 +232,17 @@
       <div class="yb-grid">
       <article class="yb-offercard yb-offercard--blur">
         <img src="img/139-fda72e.webp" alt="Myrrh hair repair oil 90ml / 3fl.oz">
-        <span class="yb-badge yb-badge--sale yb-offercard__off">20% off</span>
+        <span class="yb-offerseal yb-offerseal--sale yb-offercard__off"><b class="yb-offerseal__value">20%</b><span class="yb-offerseal__label">off</span></span>
         <div class="yb-offercard__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+        <!-- O alvo da PDP e este <a> vazio esticado sobre o cartao, e nao um
+             ::after no titulo como no cartao de catalogo: la o corpo nao e
+             posicionado, aqui ele E (o veu depende disso) e o recorte parava
+             no corpo, deixando a foto — a maior area da peca — sem alvo.
+             `aria-labelledby` aponta para o titulo, entao o link continua se
+             chamando pelo nome do produto em vez de virar "link, em branco". -->
+        <a class="yb-offercard__link" href="pdp.html" aria-labelledby="oferta-nome"></a>
         <div class="yb-offercard__body">
-          <h3 class="yb-offercard__title"><a href="pdp.html">Myrrh hair repair oil 90ml / 3fl.oz</a></h3>
+          <h3 class="yb-offercard__title" id="oferta-nome">Myrrh hair repair oil 90ml / 3fl.oz</h3>
           <div class="yb-offercard__linha">
             <span class="yb-offercard__price">$63.92</span>
             <s class="yb-offercard__was">$79.90</s>
@@ -243,12 +250,18 @@
               <time datetime="2026-09-30T23:59:59-04:00">Sep 30</time></p>
           </div>
           <p class="yb-offercard__fim" hidden>Offer ended</p>
-          <a class="yb-btn yb-btn--primary" href="pdp.html">Buy now
-            <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-arrow-right"/></svg></a>
+          <!-- Mesmo controle dos outros tres cartoes: <button> que abre a
+               sacola, nao link. Era um <a> para o MESMO pdp.html do titulo —
+               dois links com o mesmo destino, e o cartao sem nenhum jeito de
+               comprar sem sair dele.
+               O rotulo passou de "Buy now" para "Add to cart" porque e o que
+               ele faz agora; "Buy now" com seta prometia ir a algum lugar. -->
+          <button class="yb-btn yb-btn--primary yb-offercard__action" type="button"
+                  data-yb-open="cart" aria-label="Add to cart: Myrrh hair repair oil 90ml / 3fl.oz">Add to cart</button>
         </div>
       </article>
       <article class="yb-card">
-        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--accent">Free Myrrh Hair Oil 15mL</span></div><img src="img/Off1_Set_15-17-10-a12acd.webp" alt="Perfect blonde hair care kit" loading="lazy"><img src="img/Off1_Set_15-17-12_2dd7d5c7-0778-4a7d-ac1-e1c530.webp" alt="" loading="lazy"><button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" data-yb-open="cart" aria-label="Add to cart: Perfect blonde hair care kit">Add to cart</button></div>
+        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--sale">Free gift</span></div><img src="img/Off1_Set_15-17-10-a12acd.webp" alt="Perfect blonde hair care kit" loading="lazy"><img src="img/Off1_Set_15-17-12_2dd7d5c7-0778-4a7d-ac1-e1c530.webp" alt="" loading="lazy"><button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" data-yb-open="cart" aria-label="Add to cart: Perfect blonde hair care kit">Add to cart</button></div>
         <h3 class="yb-card__title"><a href="pdp.html">Perfect blonde hair care kit</a></h3>
         <span class="yb-rating" role="img" aria-label="5.0 of 5, 6 reviews">
           <span class="yb-rating__stars" aria-hidden="true">★★★★★</span>
@@ -266,7 +279,7 @@
         <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
       </article>
       <article class="yb-card">
-        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--accent">Free 1L Shampoo</span></div><img src="img/Off2Sep02-30-10-d14b3b.webp" alt="Deep care hair kit" loading="lazy"><img src="img/Off2Sep02-30-12-f1859b.webp" alt="" loading="lazy"><button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" data-yb-open="cart" aria-label="Add to cart: Deep care hair kit">Add to cart</button></div>
+        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--sale">Free gift</span></div><img src="img/Off2Sep02-30-10-d14b3b.webp" alt="Deep care hair kit" loading="lazy"><img src="img/Off2Sep02-30-12-f1859b.webp" alt="" loading="lazy"><button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" data-yb-open="cart" aria-label="Add to cart: Deep care hair kit">Add to cart</button></div>
         <h3 class="yb-card__title"><a href="pdp.html">Deep care hair kit</a></h3>
         <span class="yb-rating" role="img" aria-label="5.0 of 5, 6 reviews">
           <span class="yb-rating__stars" aria-hidden="true">★★★★★</span>
@@ -553,6 +566,30 @@
   </section>
 
   <div class="yb-page">
+  <!-- Quatro perguntas, e nao as treze: aqui elas existem para DESTRAVAR a
+       compra — prazo, frete, devolucao e formol. O resto mora em faq.html,
+       que e para quem foi procurar. Uma home nao e central de ajuda. -->
+    <section class="yb-block" id="faq">
+      <div class="yb-faq yb-faq--curto">
+        <div class="yb-section-head yb-faq__cabeca"><h2>Before you buy</h2></div>
+        <div class="yb-faq__apoio">
+          <p class="yb-block__lede">The four things people ask before a first order.
+          Tracking, split shipments and refunds are answered in the full list.</p>
+          <a class="yb-btn yb-btn--secondary" href="faq.html">See all questions</a>
+        </div>
+        <div class="yb-accordion">
+          <details><summary>How long does delivery take?</summary>
+            <div class="yb-accordion__body"><p>From the U.S. warehouse, Economy (USPS) takes 5&ndash;8 business days and Priority Express 2&ndash;4, counted from the order date. Items that ship from Brazil &mdash; marked on the product page with a Brazilian flag &mdash; take 11&ndash;16 business days.</p></div></details>
+          <details><summary>Is shipping free?</summary>
+            <div class="yb-accordion__body"><p>Economy shipping is free on orders over $50 and $8.90 under that. Priority Express is $9.90.</p></div></details>
+          <details><summary>Can I return an order?</summary>
+            <div class="yb-accordion__body"><p>You have 30 days from delivery to request one. The item has to come back unused, in its original packaging, with the receipt &mdash; and the return has to be requested first, at info.usa@ybera.com. Packages sent back without a request are not accepted.</p></div></details>
+          <details><summary>Is the keratin formaldehyde-free?</summary>
+            <div class="yb-accordion__body"><p>Yes. The formulas are formaldehyde-free and safe on color-treated hair.</p></div></details>
+        </div>
+      </div>
+    </section>
+
     <section class="yb-block">
       <div class="yb-section-head">
         <div class="yb-section-head__col">
@@ -654,7 +691,7 @@
         </div>
         <div class="yb-footer__col">
           <p class="yb-footer__coltitle">Help</p>
-          <div class="yb-footer__collist"><ul><li><a href="/pages/contactus">Contact Us</a></li><li><a href="/policies/shipping-policy">Shipping Policy</a></li><li><a href="/policies/refund-policy">Refund Policy</a></li></ul></div>
+          <div class="yb-footer__collist"><ul><li><a href="faq.html">FAQ</a></li><li><a href="/pages/contactus">Contact Us</a></li><li><a href="/policies/shipping-policy">Shipping Policy</a></li><li><a href="/policies/refund-policy">Refund Policy</a></li></ul></div>
         </div>
         <div class="yb-footer__col">
           <p class="yb-footer__coltitle">Company</p>
@@ -911,7 +948,7 @@
     </div>
   </div>
 </dialog>
-<script src="yb/components.js?v=1a8e9487"></script>
+<script src="yb/components.js?v=33bb6073"></script>
 <script>
 // Setas do banner. Carrossel nao e componente do sistema — este JS vive na
 // pagina, nao em components.js, para nao dar a entender que existe.

@@ -410,8 +410,26 @@
   border-radius:var(--yb-radius-badge); white-space:nowrap;
 }
 .yb-badge--sale{background:var(--yb-action-bg); color:var(--yb-action-text)}
+/* O par do botao secundario, e de proposito os MESMOS tokens dele — nao uma
+   copia dos valores. Quem afinar o botao secundario um dia move este selo
+   junto, que e o que "mesmo padrao de cor do secundario" quer dizer; dois
+   magentas claros que se separam sozinhos seriam pior do que um.
+   E o irmao quieto do `--sale`: mesma cor de marca, sem o fundo cheio. Onde
+   o `--sale` grita um desconto, este rotula sem disputar com o preco.
+   Medido: texto 4,86:1 sobre o proprio fundo (AA), e fundo 1,10:1 sobre
+   branco — o mesmo do `--warning`, que e como os selos claros da casa se
+   comportam: quem desenha a forma e o texto, nao a caixa. */
+.yb-badge--secondary{
+  background:var(--yb-action-secondary-bg); color:var(--yb-action-secondary-text);
+}
 .yb-badge--soft{background:var(--yb-bg-muted); color:var(--yb-text-secondary)}
-.yb-badge--accent{background:var(--yb-bg-inverse); color:var(--yb-accent-on-dark)}
+/* Grafite com MAGENTA, nao mais com dourado. O nome `--accent` vem do tempo
+   em que o texto era o ouro; hoje ele quer dizer "o selo escuro". Vale um
+   rename com deprecacao, que e decisao a parte — nao se troca nome publico de
+   classe de passagem.
+   O tom e o `--yb-action-on-dark` e nao a cor de acao crua: o magenta-600
+   canonico da 3.11:1 sobre o grafite e reprova. Ver o token. */
+.yb-badge--accent{background:var(--yb-bg-inverse); color:var(--yb-action-on-dark)}
 .yb-badge--success{background:var(--yb-success-surface); color:var(--yb-success-text)}
 .yb-badge--warning{background:var(--yb-warning-surface); color:var(--yb-warning-text)}
 .yb-badge--danger{background:var(--yb-danger-surface); color:var(--yb-danger-text)}
@@ -421,24 +439,102 @@
 .yb-badge--on-dark{background:var(--yb-surface-inverse-raised); color:var(--yb-text-inverse)}
 
 /* =========================================================================
+   OFFER SEAL — o selo estrelado de oferta
+
+   Para brinde e desconto, e so para isso. Nao e badge com outra roupa: o
+   badge rotula de lado (`In stock`, `Best seller`), este INTERROMPE. Um por
+   peca, no maximo — dois selos estrelados na mesma foto viram enfeite e
+   nenhum dos dois e lido.
+
+   POR QUE ELE EXISTE. Medido nesta casa: selo claro sobre foto de produto
+   cai para 1,2:1 contra a imagem e some. A forma cheia resolve pelo
+   contorno, que nao depende de qual foto o catalogo mandar — e foi por isso
+   que a estrela entrou, nao por enfeite.
+
+   A FORMA E CSS, NAO SVG NEM IMAGEM. `clip-path` com poligono de 20 pontas
+   (raio interno .90 do externo), recortado em porcentagem: o mesmo selo
+   serve 56px no cartao e 96px na PDP sem virar outro arquivo e sem pedir
+   uma requisicao. Os 40 vertices sao GERADOS, nao desenhados a mao:
+
+     para i em 0..39:  r = (i impar ? .90 : 1) * 50
+                       a = PI*i/20 - PI/2
+                       ponto = (50 + r*cos(a), 50 + r*sin(a))
+
+   Editar um vertice a mao entorta a estrela sem ninguem ver — ha checagem
+   para isso. Quem quiser outra quantidade de pontas gera de novo pela
+   formula e troca o bloco inteiro.
+
+   `border-radius:50%` fica debaixo do recorte de proposito: onde
+   `clip-path` nao existir, o selo degrada para circulo — que continua
+   legivel — em vez de virar quadrado.
+   ========================================================================= */
+.yb-offerseal{
+  --yb-offerseal-size:4rem;
+  inline-size:var(--yb-offerseal-size); block-size:var(--yb-offerseal-size);
+  /* `align-content:center` e o que mantem as duas linhas COLADAS. Sem ele as
+     duas faixas automaticas do grid esticam para preencher a altura fixa do
+     selo e o `place-items:center` centraliza cada texto dentro da sua faixa —
+     nascia um vao de 10,5px que nao vinha de line-height nenhum e que nao
+     adiantava caçar na tipografia. Com ele as faixas ficam do tamanho do
+     conteudo e o bloco inteiro e que se centraliza. */
+  display:grid; align-content:center; justify-items:center; text-align:center;
+  line-height:var(--yb-line-height-tight);
+  padding:calc(var(--yb-offerseal-size) / 10);
+  border-radius:50%;
+  clip-path:polygon(
+    50.00% 0.00%, 57.04% 5.55%, 65.45% 2.45%, 70.43% 9.90%, 79.39% 9.55%,
+    81.82% 18.18%, 90.45% 20.61%, 90.10% 29.57%, 97.55% 34.55%,
+    94.45% 42.96%, 100.00% 50.00%, 94.45% 57.04%, 97.55% 65.45%,
+    90.10% 70.43%, 90.45% 79.39%, 81.82% 81.82%, 79.39% 90.45%,
+    70.43% 90.10%, 65.45% 97.55%, 57.04% 94.45%, 50.00% 100.00%,
+    42.96% 94.45%, 34.55% 97.55%, 29.57% 90.10%, 20.61% 90.45%,
+    18.18% 81.82%, 9.55% 79.39%, 9.90% 70.43%, 2.45% 65.45%, 5.55% 57.04%,
+    0.00% 50.00%, 5.55% 42.96%, 2.45% 34.55%, 9.90% 29.57%, 9.55% 20.61%,
+    18.18% 18.18%, 20.61% 9.55%, 29.57% 9.90%, 34.55% 2.45%, 42.96% 5.55%);
+  font-size:var(--yb-type-caption-size);
+  font-weight:var(--yb-font-weight-bold);
+  text-transform:uppercase; letter-spacing:var(--yb-tracking-wide);
+}
+/* O recorte corta a CAIXA, nao o texto: sem esta trava a palavra longa
+   atravessa as pontas e fica decepada na borda da estrela. */
+.yb-offerseal__value{
+  display:block; max-inline-size:100%; overflow:hidden; text-overflow:ellipsis;
+  font-size:calc(var(--yb-offerseal-size) / 4.2); line-height:1;
+}
+.yb-offerseal__label{display:block; max-inline-size:100%}
+
+/* As mesmas tres roupas do badge, com os mesmos nomes: quem aprendeu o badge
+   nao reaprende aqui. `--accent` mede 14,0:1 contra as fotos do catalogo e e
+   a escolha para cima de foto; `--sale` mede 3,3:1 nas mesmas fotos — passa o
+   minimo de 3:1 de objeto grafico, mas raspando e variando com a imagem, e
+   por isso e a roupa de superficie lisa. */
+.yb-offerseal--sale{background:var(--yb-action-bg); color:var(--yb-action-text)}
+.yb-offerseal--accent{background:var(--yb-bg-inverse); color:var(--yb-accent-on-dark)}
+/* Nao ha `--gold`. Faltou token semantico para DOURADO DE FUNDO — o que
+   existe e `--yb-accent-on-dark`, que e cor de TEXTO sobre escuro — e
+   componente que consome primitivo de cor direto fura a regra de camadas
+   (o validador reprova, e reprovou). Um selo dourado sobre pagina branca
+   tambem mediria 2,39:1 de forma contra o fundo, entao nao e so burocracia. */
+
+/* =========================================================================
    RATING
    O texto acessível vive no aria-label; as estrelas são decorativas.
    ========================================================================= */
 .yb-rating{display:inline-flex; align-items:center; gap:var(--yb-space-2)}
 .yb-rating__stars{
-  /* Miolo vivo, contorno legivel. So o preenchimento (gold-500) mede 2.39:1
-     sobre branco e nao passaria no 3:1 da WCAG 1.4.11; o contorno de gold-700
-     desenha a silhueta e e ele que cumpre o requisito. `paint-order` pinta o
-     traco ANTES do miolo, senao o traco morde metade da area colorida e a
-     estrela volta a parecer escura.
+  /* SEM CONTORNO, a pedido — e o requisito que o contorno cumpria passou para
+     o preenchimento, em vez de sumir com ele.
 
-     1px e nao 0.5: o traco e centrado na borda do glifo, entao so METADE dele
-     fica visivel do lado de fora. Com 0.5px sobrava um quarto de pixel, que o
-     antialiasing dissolve num tom claro — a mitigacao existia no CSS e nao na
-     tela. Com 1px sobra meio pixel de verdade. */
+     O traco existia por acessibilidade, nao por desenho: gold-500 mede 2.39:1
+     sobre branco e reprova o minimo de 3:1 da WCAG 1.4.11 para objeto grafico,
+     e era o gold-700 do contorno (5.68:1) que carregava a silhueta. Tirar o
+     traco e manter o miolo claro deixaria a estrela sem contraste nenhum.
+
+     `--yb-accent-star` desceu um degrau na rampa, para gold-600: 3.45:1 sobre
+     branco, passa sozinho. A estrela fica um tom mais fechada e, em troca,
+     vira uma forma so — sem a linha escura que a fazia parecer desenhada a
+     caneta em cima. */
   color:var(--yb-accent-star);
-  -webkit-text-stroke:1px var(--yb-accent-star-edge);
-  paint-order:stroke fill;
   font-size:var(--yb-type-body-sm-size); letter-spacing:.08em;
 }
 /* A nota fica entre estrela e contagem — mais peso que a contagem (e a
@@ -1054,7 +1150,11 @@
    Fica em 600 e nao em 700: o preco continua sendo o mais pesado da caixa, e
    dois pesos iguais ali voltariam a empatar a leitura — de outro jeito. */
 .yb-card__title{
-  font-size:var(--yb-type-body-sm-size); line-height:var(--yb-type-body-sm-line);
+  /* 16px a pedido, e a entrelinha continua a de `body-sm` (base, nao relaxed):
+     titulo de cartao com duas linhas grampeadas quer leading fechado; o
+     relaxed do `body` e para paragrafo. O `min-height` abaixo acompanha
+     sozinho, porque e calculado em `1em`. */
+  font-size:var(--yb-type-body-size); line-height:var(--yb-type-body-sm-line);
   font-weight:var(--yb-font-weight-semibold); margin:0;
   display:-webkit-box; -webkit-box-orient:vertical;
   -webkit-line-clamp:var(--yb-card-title-lines); line-clamp:var(--yb-card-title-lines);
@@ -1124,6 +1224,29 @@
 .yb-offercard img{
   position:absolute; inset:0; width:100%; height:100%;
   object-fit:cover; z-index:-1;
+  /* `--surface` e nao `--control`: o rapido e o tempo de um botao responder ao
+     dedo, e a foto nao esta respondendo a um clique — ela esta se mexendo.
+     No tempo de controle o zoom vira um tranco. */
+  transition:transform var(--yb-transition-surface);
+}
+/* ZOOM NA FOTO NO HOVER DO CARTAO — menos quando o ponteiro esta no botao.
+
+   A exclusao e o ponto todo, e ela precisa de `:has()`: `.yb-offercard:hover`
+   continua verdadeiro com o ponteiro sobre o botao, porque o botao e filho do
+   cartao. Sem o `:not(:has(...))` o "Add to cart" mexeria a foto — e o cartao
+   tem DOIS alvos, cada um com o proprio retorno: a foto responde por quem vai
+   a PDP, o botao responde por si.
+
+   Nao dava para usar `.yb-offercard__link:hover` como gatilho, que seria mais
+   simples: o link e irmao do corpo e fica DEBAIXO dele, entao o ponteiro
+   sobre o titulo ou o preco nao o alcanca — e ali o zoom tem de acontecer.
+
+   `scale` pequeno e `overflow:hidden` no cartao: 1.04 move a borda da foto
+   uns 8px numa peca de 400, o bastante para a imagem responder sem que o
+   produto pareça saltar da caixa. Onde `:has()` nao existir, simplesmente nao
+   ha zoom — o cartao continua inteiro e clicavel. */
+@media (hover:hover){
+  .yb-offercard:hover:not(:has(.yb-offercard__action:hover)) img{transform:scale(1.04)}
 }
 /* Sem veu sobre a imagem inteira, ao contrario do mediabanner. La a foto e
    cenario e o veu unifica material que ninguem controla; aqui a foto E o
@@ -1135,6 +1258,10 @@
 .yb-offercard__off{
   position:absolute; inset-block-start:var(--yb-space-4);
   inset-inline-start:var(--yb-space-4); z-index:1;
+  /* Menor que os 4rem do padrao: aqui o selo divide a foto com o titulo e o
+     preco, e no tamanho cheio ele virava o assunto do cartao. A medida vive
+     NESTA regra e nao no HTML — quem muda o cartao muda num lugar so. */
+  --yb-offerseal-size:3.5rem;
 }
 .yb-offercard__body{
   position:relative; display:flex; flex-direction:column;
@@ -1223,15 +1350,38 @@
   display:-webkit-box; -webkit-box-orient:vertical;
   -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
 }
-/* O titulo leva para a PDP e o botao compra. Sao dois destinos diferentes, e
-   por isso nao ha link cobrindo o cartao inteiro: o clique no meio da foto
-   nao teria como escolher entre os dois. */
-.yb-offercard__title a{color:inherit; text-decoration:none}
-.yb-offercard__title a:focus-visible{
-  outline:var(--yb-focus-width) solid var(--yb-focus-color);
-  outline-offset:var(--yb-focus-offset);
+/* DOIS destinos, e por isso DOIS alvos — a mesma anatomia do cartao de
+   catalogo. O cartao inteiro leva a PDP; o botao poe na sacola e nao leva a
+   lugar nenhum. Antes os dois eram links para o mesmo `pdp.html`, o que
+   deixava a peca sem jeito de comprar e dizia o mesmo destino duas vezes para
+   quem ouve a pagina.
+
+   O link e um <a> VAZIO esticado sobre o cartao, e nao um ::after no titulo:
+   `.yb-offercard__body` e posicionado por causa do veu, e o recorte do titulo
+   parava nele — a foto continuava sem alvo. Medido antes de trocar de tatica. */
+.yb-offercard__link{
+  position:absolute; inset:0; z-index:1;
+  border-radius:inherit;
 }
-@media (hover:hover){ .yb-offercard__title a:hover{text-decoration:underline} }
+.yb-offercard__link:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:calc(var(--yb-focus-offset) * -1);
+}
+/* SEMPRE VISIVEL, ao contrario do `.yb-card__action` dos cartoes de catalogo.
+   La o botao se esconde porque a foto e o assunto e o cartao e um entre
+   quatro iguais; aqui o cartao E a oferta do dia, e esconder a acao principal
+   dela ate o ponteiro chegar tira do lugar justamente o que a peca veio
+   fazer. No toque nao ha ponteiro nenhum, e uma oferta sem botao visivel
+   seria uma foto bonita.
+
+   Sao DOIS estados de hover independentes, e e assim de proposito: o cartao
+   responde levando a PDP, o botao responde com o hover dele. Um nao aciona o
+   outro — se o cartao acendesse o botao, o retorno diria "clique aqui" sobre
+   uma area que faz outra coisa.
+
+   `z-index` acima do link, senao o clique no botao cai na PDP — mesma
+   armadilha resolvida do mesmo jeito em `.yb-card__action`. */
+.yb-offercard__action{position:relative; z-index:2}
 
 /* Preco e relogio na mesma linha, com o preco mandando: e ele que decide a
    compra. O relogio quebra para baixo quando nao couber, em vez de espremer
@@ -1347,10 +1497,30 @@
    escuro a diferenca entre duas bordas cinzas nao se le de relance, e a
    escolha e a informacao mais importante da fileira.
    ------------------------------------------------------------------------- */
+/* MAIS BAIXOS QUE O BOTAO, sem perder o alvo de 44px.
+   Os quatro chips mediam 44px de altura contra 50px do "Start analysis" — dois
+   blocos de peso quase igual empilhados, e a escolha disputava a leitura com a
+   acao. A caixa PINTADA cai para 36px; o alvo continua 44, entregue por um
+   pseudo que cresce para FORA em vez de engordar o chip. Mesma manobra do
+   favoritar no buy box: a area de toque cresce para fora, nao para dentro.
+   Abaixo de 44px sem isso seria alvo pequeno demais no celular — e o unico
+   jeito de encolher aqui sem cobrar de quem usa o dedo. */
 .yb-swatches--on-dark label{
   background:var(--yb-surface-inverse-raised);
   color:var(--yb-text-inverse);
   border-color:var(--yb-border-inverse-strong);
+  min-height:2.25rem;                      /* 36px pintados */
+  padding-block:var(--yb-space-2);
+  position:relative;
+}
+/* Altura EXPLICITA e centrada, e nao sobra calculada a partir da caixa
+   pintada: com a sobra o alvo media 41px na pagina (subpixel da borda comendo
+   os cantos), e 41 nao e 44. Assim o alvo e 44 por construcao, qualquer que
+   seja a altura pintada. Sobram 20px ate o botao, entao ele nao encosta. */
+.yb-swatches--on-dark label::after{
+  content:""; position:absolute; inset-inline:0;
+  block-size:var(--yb-target-min);
+  inset-block-start:50%; transform:translateY(-50%);
 }
 
 @media (hover:hover){
@@ -1701,7 +1871,12 @@
 /* =========================================================================
    ACORDEÃO — <details> nativo: teclado e leitor de tela de graça.
    ========================================================================= */
-.yb-accordion{border-top:1px solid var(--yb-border-subtle)}
+/* Sem fio em cima. Cada `details` fecha embaixo, entao a lista ja tem tantos
+   fios quantos itens; o de cima era um a mais, e o unico que nao separa nada —
+   acima dele esta o titulo da secao, que ja se distingue por tamanho e peso.
+   Vale para o acordeao inteiro, e nao so no FAQ: dois acordeoes com molduras
+   diferentes na mesma loja e a maneira mais barata de um sistema comecar a
+   divergir de si mesmo. */
 .yb-accordion details{border-bottom:1px solid var(--yb-border-subtle)}
 .yb-accordion summary{
   display:flex; justify-content:space-between; align-items:center;
@@ -2134,12 +2309,21 @@
   padding:var(--yb-space-2) var(--yb-page-gutter);
   background:var(--yb-bg-muted); color:var(--yb-text-primary);
   border-block-end:1px solid var(--yb-border-subtle);
-  font-size:var(--yb-type-body-sm-size);
+  /* Um degrau abaixo, a pedido, para a faixa encolher: `caption` e o mesmo
+     tamanho da faixa preta de anuncio logo acima — as duas sao aviso de uma
+     linha presas ao topo, e agora falam no mesmo corpo. A escala nao tem
+     12px; o degrau seguinte depois deste e 11px, que e tamanho de legenda de
+     tabela e nao de recado. */
+  font-size:var(--yb-type-caption-size);
   text-align:center;
 }
 /* :not([hidden]), mesma armadilha da barra de compra: `display:block` na
    classe venceria o [hidden] do navegador e a faixa nunca sumiria. */
 .yb-partnerbar:not([hidden]){display:block}
+/* 3,5rem e a faixa de duas linhas, que e o pior caso (35px numa linha no
+   desktop, 53 em duas no celular). Mesmo recurso que a barra de compra usa
+   para dar respiro ao rodape: a altura e medida, nao calculavel em CSS. */
+body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 3.5rem); }
 .yb-partnerbar__text{
   margin:0;
   /* Duas linhas, teto. No desktop o recado cabe numa (405px de texto em
@@ -4535,6 +4719,105 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
 }
 
 /* =========================================================================
+   FAQ
+   Nao ha componente novo aqui: o conteudo e `.yb-accordion` e o indice e
+   `.yb-link`, os dois ja desenhados. O padrao e so a GRADE que poe os dois
+   lado a lado e o indice que acompanha a rolagem.
+
+   Por que indice, com tres grupos so: a resposta que a pessoa procura esta
+   dentro de um acordeao FECHADO, e acordeao fechado nao se acha com Ctrl+F.
+   O indice e o unico lugar da secao onde os assuntos aparecem todos de uma
+   vez.
+   ========================================================================= */
+.yb-faq{
+  display:grid; gap:var(--yb-space-10);
+  /* O indice pede largura fixa e o conteudo fica com o resto: as perguntas
+     sao a leitura, e e ela que merece a coluna larga. */
+  grid-template-columns:minmax(0, 14rem) minmax(0, 1fr);
+  align-items:start;
+}
+/* A VERSAO CURTA, da home: a coluna da esquerda deixa de ser indice e passa a
+   ser apoio — titulo, uma linha de contexto e o CTA para a tela cheia. Com
+   quatro perguntas o indice seria mais longo que a lista que ele indexa; o
+   que a home precisa ali nao e navegar dentro da secao, e sair dela para o
+   FAQ inteiro.
+
+   Mais larga que a coluna do indice (20rem contra 14): ali cabe uma palavra
+   por linha, aqui cabe uma frase. Declarada ANTES do @media de propósito —
+   as duas regras tem a mesma especificidade, e e a ordem que decide quem
+   vence no celular, onde tudo empilha. */
+.yb-faq--curto{
+  grid-template-columns:minmax(0, 20rem) minmax(0, 1fr);
+  /* Duas linhas, e o titulo sozinho na primeira: as perguntas comecam na
+     altura do TEXTO de apoio, nao na do titulo. Alinhadas ao titulo, a
+     primeira pergunta e o <h2> disputavam a mesma linha de leitura e o titulo
+     parecia legenda da pergunta. Com o titulo acima de tudo, ele volta a ser
+     titulo da secao. */
+  grid-template-areas:"titulo ." "apoio perguntas";
+  column-gap:var(--yb-space-10);
+  row-gap:var(--yb-space-4);
+}
+/* Duas classes de propósito: `.yb-section-head` declara `margin-bottom:32px`
+   MAIS ABAIXO neste arquivo, e com a mesma especificidade ela venceria pela
+   ordem — sobravam 48px entre o titulo e a linha de apoio, que e o que fazia
+   o titulo parecer descolado da propria secao. */
+.yb-faq--curto > .yb-faq__cabeca{grid-area:titulo; margin-bottom:0}
+.yb-faq__apoio{grid-area:apoio}
+.yb-faq--curto > .yb-accordion{grid-area:perguntas}
+.yb-faq__apoio .yb-btn{margin-block-start:var(--yb-space-6)}
+/* O lede ja esta colado no titulo pelo `row-gap`; a margem dele aqui seria
+   respiro em cima de respiro. */
+.yb-faq__apoio > .yb-block__lede{margin-block-start:0}
+/* O acordeao sobe o respiro que o proprio `summary` tem por dentro. O que se
+   alinha e o TEXTO, nao a caixa: o paragrafo de apoio nao tem padding e o
+   `summary` tem 16px mais a centragem dentro do alvo de 44. Medido a 1440:
+   sem compensacao a primeira pergunta nascia 26px abaixo da linha de apoio;
+   com `--yb-space-6` ela nasce a 2px, que e menos do que a diferenca de
+   entrelinha entre os dois tamanhos de texto. */
+.yb-faq--curto > .yb-accordion{margin-block-start:calc(var(--yb-space-6) * -1)}
+
+/* `sticky` colado abaixo do cabecalho preso, como a doca do parceiro — a
+   secao tem tres telas de altura e um indice que rola embora e um indice que
+   so serve para quem ja estava no topo. */
+.yb-faq__index{
+  position:sticky; inset-block-start:calc(var(--yb-chrome-h) + var(--yb-space-4));
+  margin:0; padding:0; list-style:none;
+}
+.yb-faq__index li{border-block-start:1px solid var(--yb-border-subtle)}
+.yb-faq__index li:last-child{border-block-end:1px solid var(--yb-border-subtle)}
+/* O link ocupa a linha inteira: numa lista empilhada, alvo do tamanho do
+   texto obriga a mirar na palavra. Assim a linha toda e clicavel. */
+.yb-faq__index .yb-link{display:flex; inline-size:100%}
+/* `min-width:0` porque item de grade nasce com `min-width:auto`: sem isto uma
+   pergunta longa numa unica palavra estouraria a coluna em vez de quebrar. */
+.yb-faq__grupos{min-inline-size:0}
+.yb-faq__grupo + .yb-faq__grupo{margin-block-start:var(--yb-space-10)}
+.yb-faq__titulo{
+  margin:0 0 var(--yb-space-3);
+  font-size:var(--yb-type-h4-size); font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-secondary);
+}
+/* Alvo de rolagem: sem isto o titulo do grupo para EMBAIXO do cabecalho preso
+   quando se clica no indice, e a pessoa cai no meio das perguntas sem ver de
+   que grupo elas sao. */
+.yb-faq__grupo{scroll-margin-block-start:calc(var(--yb-chrome-h) + var(--yb-space-6))}
+@media (max-width:860px){
+  /* Empilhado, o indice vira uma fileira de assuntos acima das perguntas. Ele
+     NAO fica sticky aqui: preso no topo de uma tela de 812px ele comeria a
+     primeira resposta. */
+  .yb-faq{grid-template-columns:1fr; gap:var(--yb-space-6)}
+  .yb-faq--curto{grid-template-areas:"titulo" "apoio" "perguntas"}
+  /* Empilhado nao ha o que alinhar: a compensacao viraria aperto entre o CTA
+     e a primeira pergunta. */
+  .yb-faq--curto > .yb-accordion{margin-block-start:0}
+  .yb-faq__index{
+    position:static; display:flex; flex-wrap:wrap;
+    gap:0 var(--yb-space-5);
+  }
+  .yb-faq__index li{border-block-end:1px solid var(--yb-border-subtle)}
+}
+
+/* =========================================================================
    EMPTY STATE
    Nunca é só "nada aqui". Sempre diz por que está vazio e o que fazer.
    ========================================================================= */
@@ -4983,6 +5266,18 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
 }
 
 .yb-block{ padding-block:var(--yb-space-16); }
+/* A linha que apresenta a pagina, abaixo do <h1>. Existe pela mesma regra dos
+   tres acima: a primeira tela interna (o FAQ) pediu, e toda tela interna que
+   vier depois vai pedir — escrita solta no gerador, cada uma inventaria a
+   propria. O teto de medida e de leitura: acima de ~70 caracteres por linha o
+   olho perde a volta da linha. */
+.yb-block__lede{
+  margin:var(--yb-space-3) 0 0;
+  max-inline-size:62ch;
+  font-size:var(--yb-type-body-lg-size);
+  line-height:var(--yb-type-body-lg-line);
+  color:var(--yb-text-secondary);
+}
 /* Assimetrico, e para BAIXO. O breadcrumb pertence ao conteudo que ele
    apresenta, nao ao header: menos espaco embaixo que em cima. Mas MENOS nao
    e ZERO — a 8px da moldura da imagem os dois tracos duros leem como colisao,

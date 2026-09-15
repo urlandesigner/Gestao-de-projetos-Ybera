@@ -3,7 +3,7 @@
 <!-- GERADO por tools/inventario.mjs. Não edite à mão: rode ./build.sh.
      A fonte é o CSS. Se uma linha aqui está errada, o errado é o código. -->
 
-48 peças no bundle — 37 estáveis, 11 em beta, 0 em alfa.
+50 peças no bundle — 38 estáveis, 12 em beta, 0 em alfa.
 
 ## Como ler a maturidade
 
@@ -25,7 +25,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 |---|---|---|---|---|---|---|---|---|---|---|
 | ACORDEÃO | `.yb-accordion` | Componente | Estável | — | 1 | 15 | sim | sim | — | sim |
 | ALERT | `.yb-alert` | Componente | Beta | 4 | — | 21 | sim | n/a | — | — |
-| BADGE | `.yb-badge` | Componente | Beta | 7 | — | 20 | sim | — | sim | sim |
+| BADGE | `.yb-badge` | Componente | Beta | 8 | — | 22 | sim | — | sim | sim |
 | BRAND QUOTE | `.yb-quote` | Componente | Estável | — | — | 14 | sim | n/a | — | sim |
 | BREADCRUMB | `.yb-crumb` | Componente | Estável | — | 3 | 8 | sim | sim | — | sim |
 | BUTTON | `.yb-btn` | Componente | Estável | 4 | 4 | 30 | sim | sim | sim | sim |
@@ -42,16 +42,17 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | LOGO BAR | `.yb-logobar` | Componente | Estável | — | — | 5 | sim | n/a | — | sim |
 | MEDIABANNER | `.yb-mediabanner` | Componente | Estável | 3 | 1 | 38 | sim | sim | — | sim |
 | NOTICE | `.yb-notice` | Componente | Beta | 2 | — | 15 | sim | — | — | — |
-| OFFER CARD | `.yb-offercard` | Componente | Estável | 1 | 2 | 36 | sim | sim | sim | sim |
+| OFFER CARD | `.yb-offercard` | Componente | Estável | 1 | 2 | 37 | sim | sim | sim | sim |
+| OFFER SEAL | `.yb-offerseal` | Componente | Estável | 2 | — | 9 | sim | n/a | — | sim |
 | PAGINATION | `.yb-pagination` | Componente | Beta | — | 3 | 17 | sim | sim | — | — |
-| PARTNER | `.yb-partner` | Componente | Estável | — | 1 | 28 | sim | sim | sim | sim |
+| PARTNER | `.yb-partner` | Componente | Estável | — | 1 | 29 | sim | sim | sim | sim |
 | POST | `.yb-post` | Componente | Estável | 4 | 2 | 21 | sim | sim | — | sim |
 | PRICE | `.yb-price` | Componente | Estável | 2 | — | 10 | sim | n/a | — | sim |
-| PRODUCT CARD | `.yb-card` | Componente | Estável | — | 1 | 19 | sim | sim | — | sim |
+| PRODUCT CARD | `.yb-card` | Componente | Estável | — | 1 | 20 | sim | sim | — | sim |
 | PRODUCT GALLERY | `.yb-gallery` | Componente | Estável | — | 3 | 19 | sim | sim | sim | sim |
 | PROGRESS BAR | `.yb-progress` | Componente | Estável | 3 | — | 11 | sim | n/a | — | sim |
 | QUANTITY STEPPER | `.yb-stepper` | Componente | Estável | 1 | 3 | 14 | sim | sim | sim | sim |
-| RATING | `.yb-rating` | Componente | Estável | — | — | 8 | sim | n/a | — | sim |
+| RATING | `.yb-rating` | Componente | Estável | — | — | 7 | sim | n/a | — | sim |
 | REVIEW | `.yb-reviews` | Componente | Estável | — | 1 | 25 | sim | sim | sim | sim |
 | SEARCH OVERLAY | `.yb-search` | Componente | Estável | — | 2 | 42 | sim | sim | sim | sim |
 | SKELETON | `.yb-skeleton` | Componente | Beta | 6 | — | 7 | sim | n/a | — | — |
@@ -64,12 +65,13 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | CART DRAWER | `.yb-cart` | Padrão | Estável | 4 | 2 | 45 | sim | sim | — | sim |
 | CATÁLOGO | `.yb-catalog` | Padrão | Beta | — | 2 | 27 | sim | sim | — | — |
 | EMPTY STATE | `.yb-empty` | Padrão | Estável | — | — | 13 | sim | n/a | — | sim |
+| FAQ | `.yb-faq` | Padrão | Beta | 1 | — | 10 | sim | n/a | — | — |
 | FOOTER | `.yb-footer` | Padrão | Estável | 1 | 3 | 39 | sim | sim | — | sim |
 | FREE SHIPPING PROGRESS | `.yb-freeship` | Padrão | Estável | 1 | — | 8 | sim | n/a | — | sim |
 | HEADER | `.yb-nav` | Padrão | Estável | 1 | 3 | 61 | sim | sim | sim | sim |
 | HERO | `.yb-hero` | Padrão | Beta | — | — | 3 | sim | n/a | — | — |
 | MANIFESTO | `.yb-manifesto` | Padrão | Estável | — | — | 25 | sim | n/a | — | sim |
-| PAGE LAYOUT | `.yb-block` | Padrão | Estável | 2 | — | 17 | sim | n/a | — | sim |
+| PAGE LAYOUT | `.yb-block` | Padrão | Estável | 2 | — | 20 | sim | n/a | — | sim |
 | SPLIT | `.yb-split` | Padrão | Estável | — | — | 17 | sim | n/a | — | sim |
 
 ## O que cada coluna prova

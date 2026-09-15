@@ -48,6 +48,7 @@
     <li><a href="dialog.html">Modal &amp; drawer</a></li>
     <li><a href="notice.html">Notice</a></li>
     <li><a href="offercard.html">Offer card</a></li>
+    <li><a href="offerseal.html">Offer seal</a></li>
     <li><a href="pagination.html">Pagination</a></li>
     <li><a href="partner.html">Partner</a></li>
     <li><a href="post.html">Post</a></li>
@@ -83,10 +84,10 @@
   <p class="ficha-quando">Rotula sem competir. Nunca carrega ação — badge não é botão.</p>
   <ul class="ficha-fatos">
     <li>Classe base <b><code>.yb-badge</code></b></li>
-    <li>Modificadores <b>7</b></li>
+    <li>Modificadores <b>8</b></li>
     <li>Elementos <b>0</b></li>
     <li>Estados <b>0</b></li>
-    <li>Tokens <b>21</b></li>
+    <li>Tokens <b>23</b></li>
     <li>Comportamento <b>JS</b></li>
   </ul>
 
@@ -94,6 +95,7 @@
     <h2 class="bloco-titulo">Como se parece</h2>
     <div class="demo">
       <span class="yb-badge yb-badge--sale">Save 16%</span>
+      <span class="yb-badge yb-badge--secondary">Members only</span>
       <span class="yb-badge yb-badge--soft">Best seller</span>
       <span class="yb-badge yb-badge--success">In stock</span>
       <span class="yb-badge yb-badge--warning">Low stock</span>
@@ -104,6 +106,24 @@
       <span class="yb-badge yb-badge--accent">New line</span>
       <span class="yb-badge yb-badge--sale">Limited</span>
       <span class="yb-badge yb-badge--on-dark">10k+ routines created</span>
+    </div>
+    <div class="note">
+      <b>Nenhum selo claro serve sobre foto</b>
+      <p>O <code>--secondary</code> foi testado nos selos de brinde do cartão de
+      produto, que ficam sobre o packshot, e reprovou: medido nas fotos reais, o
+      chip cai para <b>1,2:1</b> contra a foto e o texto para 3,78:1 — abaixo de
+      AA. Fundo claro deixa de isolar o texto, e quem decide a leitura passa a
+      ser uma foto que ninguém controla. Sobre foto, use <code>--accent</code>
+      (12,6:1 nas mesmas fotos) ou <code>--sale</code>. Os claros
+      — <code>--secondary</code>, <code>--soft</code>, <code>--success</code>,
+      <code>--warning</code>, <code>--danger</code> — são para superfície lisa.</p>
+    </div>
+    <div class="note">
+      <b><code>--sale</code> e <code>--secondary</code> são o mesmo magenta em dois volumes</b>
+      <p>O <code>--sale</code> traz o fundo cheio da ação e grita; o
+      <code>--secondary</code> usa os mesmos tokens do botão secundário e rotula
+      sem disputar com o preço ao lado. Um por contexto — dois magentas na mesma
+      linha voltam a empatar a leitura.</p>
     </div>
     <div class="note">
       <b>O dourado só vive aqui</b>
@@ -130,7 +150,7 @@
     <p class="bloco-lede">Lido da folha a cada build. Se faltar alguma coisa aqui,
     falta na folha.</p>
     <p class="rotulo">Modificadores</p>
-    <p class="lista-api"><code>.yb-badge--accent</code> <code>.yb-badge--danger</code> <code>.yb-badge--on-dark</code> <code>.yb-badge--sale</code> <code>.yb-badge--soft</code> <code>.yb-badge--success</code> <code>.yb-badge--warning</code></p>
+    <p class="lista-api"><code>.yb-badge--accent</code> <code>.yb-badge--danger</code> <code>.yb-badge--on-dark</code> <code>.yb-badge--sale</code> <code>.yb-badge--secondary</code> <code>.yb-badge--soft</code> <code>.yb-badge--success</code> <code>.yb-badge--warning</code></p>
     <p class="rotulo">Elementos</p>
     <p class="api-vazia">Peça de um elemento só: não há partes internas com classe própria.</p>
     <p class="rotulo">Estados que a folha trata</p>
@@ -144,6 +164,7 @@
     <div class="snippet">
       <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
       <pre><code>&lt;span class="yb-badge yb-badge--sale"&gt;Save 16%&lt;/span&gt;
+&lt;span class="yb-badge yb-badge--secondary"&gt;Members only&lt;/span&gt;
 &lt;span class="yb-badge yb-badge--soft"&gt;Best seller&lt;/span&gt;
 &lt;span class="yb-badge yb-badge--success"&gt;In stock&lt;/span&gt;
 &lt;span class="yb-badge yb-badge--warning"&gt;Low stock&lt;/span&gt;

@@ -1,0 +1,49 @@
+<h2>Offer seal</h2>
+    <p class="when">Selo estrelado de brinde e desconto, sobre a foto do produto. Interrompe — não rotula. Um por peça.</p>
+    <div class="demo">
+      <span class="yb-offerseal yb-offerseal--sale">
+        <b class="yb-offerseal__value">28%</b>
+        <span class="yb-offerseal__label">off</span>
+      </span>
+      <span class="yb-offerseal yb-offerseal--accent">
+        <b class="yb-offerseal__value">Free</b>
+        <span class="yb-offerseal__label">gift</span>
+      </span>
+    </div>
+    <h3 class="row-label">Tamanho — a caixa manda, a estrela acompanha</h3>
+    <div class="demo">
+      <span class="yb-offerseal yb-offerseal--accent" style="--yb-offerseal-size:3.5rem">
+        <b class="yb-offerseal__value">28%</b><span class="yb-offerseal__label">off</span>
+      </span>
+      <span class="yb-offerseal yb-offerseal--accent" style="--yb-offerseal-size:5rem">
+        <b class="yb-offerseal__value">28%</b><span class="yb-offerseal__label">off</span>
+      </span>
+      <span class="yb-offerseal yb-offerseal--accent" style="--yb-offerseal-size:6rem">
+        <b class="yb-offerseal__value">28%</b><span class="yb-offerseal__label">off</span>
+      </span>
+    </div>
+    <div class="note">
+      <b>Sobre foto, só o escuro se sustenta</b>
+      <p>Medido nos packshots reais do catálogo, com o selo no canto onde ele
+      moraria: <code>--accent</code> dá <b>14,0:1</b> contra a imagem,
+      <code>--sale</code> dá <b>3,3:1</b> e o branco testado no estudo dava
+      <b>1,2:1</b> — sumia. Fundo claro deixa de isolar o conteúdo e quem passa a
+      decidir a leitura é uma foto que ninguém controla. Sobre superfície lisa
+      qualquer uma das três serve.</p>
+    </div>
+    <div class="note">
+      <b>A estrela é <code>clip-path</code>, não imagem</b>
+      <p>Vinte pontas recortadas em porcentagem, então o mesmo selo serve 56px no
+      cartão e 96px na PDP sem virar outro arquivo e sem custar uma requisição.
+      Os 40 vértices são gerados por fórmula, não desenhados — há checagem que
+      recusa vértice editado à mão. Onde <code>clip-path</code> não existir, o
+      <code>border-radius</code> embaixo degrada para círculo em vez de quadrado.</p>
+    </div>
+    <div class="note">
+      <b>Não empilha com o badge que diz a mesma coisa</b>
+      <p>Se o cartão já traz <code>.yb-badge--sale</code> com “Save 28%”, o selo
+      repete a informação e rouba a foto duas vezes. Escolha um. E cuidado com a
+      arte de campanha: várias fotos do catálogo <b>já têm</b> um selo estrelado
+      desenhado dentro delas — ali o nosso compete com o da imagem, não com o
+      fundo.</p>
+    </div>
