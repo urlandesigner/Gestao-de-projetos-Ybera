@@ -147,7 +147,7 @@
   .yb-nav__item:hover > .yb-nav__panel{opacity:1; visibility:visible}
 }
 .yb-nav__groups{
-  display:flex; flex-wrap:wrap; gap:var(--yb-space-10);
+  display:flex; flex-wrap:wrap; gap:var(--yb-space-6);
   max-width:var(--yb-container-max); margin-inline:auto;
   padding:var(--yb-space-8) var(--yb-page-gutter);
   /* Unico contexto de contêiner do sistema, e ele se paga: a vitrine da
@@ -158,7 +158,22 @@
      espaco e a caixa, entao e a caixa que se mede. */
   container-type:inline-size; container-name:yb-nav;
 }
-.yb-nav__group{min-width:0}
+/* Piso comum, para as colunas comecarem no mesmo compasso. Cada coluna media
+   exatamente o seu rotulo mais largo — 82, 113 e 120px no painel do Shop —,
+   entao os titulos nasciam em x=152, 274 e 427: intervalos de 122 e 153 numa
+   grade que o olho le como grade. Com o piso os tres viram 144 e o intervalo
+   fica constante.
+
+   `min-inline-size`, e nao `flex-basis`: na gaveta do celular este mesmo flex
+   vira coluna, e ali `flex-basis` seria ALTURA — 128px de altura em cada
+   grupo, que e defeito, nao alinhamento. O piso tambem nao e teto: um rotulo
+   mais longo do que 128 alarga a propria coluna em vez de ser cortado.
+
+   8rem, e nao mais: o rotulo mais largo do menu mede 120px, entao o piso da
+   8px de folga e nada de vao. Com 9rem e o gap de 40px os titulos ficavam a
+   184px um do outro e as colunas liam como separadas; agora sao 152 — o
+   mesmo intervalo do par mais largo de antes, so que constante. */
+.yb-nav__group{min-inline-size:8rem}
 .yb-nav__grouptitle{
   /* display:block tira a isencao de alvo inline do WCAG 2.5.8, e o titulo
      media 17px. Os 24 vem do min-height, sem mexer no ritmo da coluna. */
@@ -233,7 +248,11 @@
    que um card de menu vire banner. E a base baixa e o que impede a
    quebra de linha — o flex decide quebrar olhando a base, nao o tamanho
    final, e a vitrine numa segunda linha dobraria a altura do menu. */
+/* O gap entre as colunas encolheu para 24; a vitrine recupera a distancia que
+   tinha, porque ela nao e mais uma coluna de links — e outra zona do painel, e
+   a separacao e o que diz isso sem precisar de linha divisoria. */
 .yb-nav__rail{
+  margin-inline-start:var(--yb-space-4);
   flex:1 1 18rem; min-width:0;
   display:flex; justify-content:flex-end; gap:var(--yb-space-6);
 }

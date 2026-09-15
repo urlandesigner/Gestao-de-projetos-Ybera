@@ -66,7 +66,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | EMPTY STATE | `.yb-empty` | Padrão | Estável | — | — | 13 | sim | n/a | — | sim |
 | FOOTER | `.yb-footer` | Padrão | Estável | 1 | 3 | 39 | sim | sim | — | sim |
 | FREE SHIPPING PROGRESS | `.yb-freeship` | Padrão | Estável | 1 | — | 8 | sim | n/a | — | sim |
-| HEADER | `.yb-nav` | Padrão | Estável | 1 | 3 | 62 | sim | sim | sim | sim |
+| HEADER | `.yb-nav` | Padrão | Estável | 1 | 3 | 61 | sim | sim | sim | sim |
 | HERO | `.yb-hero` | Padrão | Beta | — | — | 3 | sim | n/a | — | — |
 | MANIFESTO | `.yb-manifesto` | Padrão | Estável | — | — | 25 | sim | n/a | — | sim |
 | PAGE LAYOUT | `.yb-block` | Padrão | Estável | 2 | — | 17 | sim | n/a | — | sim |
