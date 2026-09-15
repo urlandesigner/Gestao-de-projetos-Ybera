@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../icons/ybera-icons.css">
 <link rel="stylesheet" href="ybera-components.css">
 <link rel="stylesheet" href="doc.css">
+<script src="doc.js" defer></script>
 <style>
 /* Sem seletor de tipo: ver o cabecalho de doc.css. */
 .ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
@@ -71,7 +72,13 @@
 </nav>
 
 <main class="main">
-  <a class="ficha-volta" href="index.html#partner">← Components</a>
+  <div class="ficha-topo">
+    <a class="ficha-volta" href="index.html#partner">← Components</a>
+    <nav class="ficha-passo" aria-label="Componente anterior e próximo">
+      <a href="pagination.html" rel="prev"><span aria-hidden="true">←</span> Pagination</a>
+      <a href="post.html" rel="next">Post <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
   <h1 class="ficha-titulo">Partner</h1>
   <p class="ficha-quando">O recado de quem indicou. Aparece quando a pessoa chega por link patrocinado &mdash; e some do caminho assim que ela rola.</p>
   <ul class="ficha-fatos">

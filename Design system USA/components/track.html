@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../icons/ybera-icons.css">
 <link rel="stylesheet" href="ybera-components.css">
 <link rel="stylesheet" href="doc.css">
+<script src="doc.js" defer></script>
 <style>
 /* Sem seletor de tipo: ver o cabecalho de doc.css. */
 .ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
@@ -71,16 +72,22 @@
 </nav>
 
 <main class="main">
-  <a class="ficha-volta" href="index.html#track">← Components</a>
+  <div class="ficha-topo">
+    <a class="ficha-volta" href="index.html#track">← Components</a>
+    <nav class="ficha-passo" aria-label="Componente anterior e próximo">
+      <a href="toast.html" rel="prev"><span aria-hidden="true">←</span> Toast</a>
+      <a href="variant.html" rel="next">Variant picker <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
   <h1 class="ficha-titulo">Track</h1>
   <p class="ficha-quando">Trilho de rolagem horizontal. É o que carrega as fileiras que não cabem na tela — avaliações, vídeos, logos, banners do hero — sem quebrar em duas linhas nem empurrar a página de lado.</p>
   <ul class="ficha-fatos">
-    <li>Classe base <b><code>.yb-collection</code></b></li>
-    <li>Modificadores <b>5</b></li>
-    <li>Elementos <b>5</b></li>
-    <li>Estados <b>2</b></li>
-    <li>Tokens <b>42</b></li>
-    <li>Comportamento <b>só CSS</b></li>
+    <li>Classe base <b><code>.yb-track</code></b></li>
+    <li>Modificadores <b>2</b></li>
+    <li>Elementos <b>1</b></li>
+    <li>Estados <b>1</b></li>
+    <li>Tokens <b>6</b></li>
+    <li>Comportamento <b>JS</b></li>
   </ul>
 
   <section class="bloco" id="demos">
@@ -163,11 +170,11 @@
     <p class="bloco-lede">Lido da folha a cada build. Se faltar alguma coisa aqui,
     falta na folha.</p>
     <p class="rotulo">Modificadores</p>
-    <p class="lista-api"><code>.yb-collection--blur</code> <code>.yb-collection--bottom</code> <code>.yb-collection--card</code> <code>.yb-collection--center</code> <code>.yb-collection--overlay</code></p>
+    <p class="lista-api"><code>.yb-track--hero</code> <code>.yb-track--row</code></p>
     <p class="rotulo">Elementos</p>
-    <p class="lista-api"><code>.yb-collection__blur</code> <code>.yb-collection__cta</code> <code>.yb-collection__foot</code> <code>.yb-collection__label</code> <code>.yb-collection__name</code></p>
+    <p class="lista-api"><code>.yb-track__nav</code></p>
     <p class="rotulo">Estados que a folha trata</p>
-    <p class="bloco-lede"><code>:focus-visible</code> · <code>:hover</code></p>
+    <p class="bloco-lede"><code>[disabled]</code></p>
   </section>
 
   <section class="bloco" id="marcacao">

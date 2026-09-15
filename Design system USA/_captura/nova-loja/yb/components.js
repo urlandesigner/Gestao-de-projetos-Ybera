@@ -987,7 +987,10 @@
      e prazo, e numero. Vira dias/horas/minutos, e volta para horas/min/seg
      nas ultimas 24h, quando o segundo passa a significar alguma coisa. */
   function montar(el, longo) {
-    var a = quadro(longo ? 'dias' : 'hrs');
+    /* "days", nao "dias": a loja e em ingles. O rotulo so aparece com mais de
+       24h no relogio, e ate hoje o prazo da oferta sempre venceu antes disso —
+       por isso a palavra em portugues atravessou o projeto sem ser vista. */
+    var a = quadro(longo ? 'days' : 'hrs');
     var b = quadro(longo ? 'hrs' : 'min');
     var c = quadro(longo ? 'min' : 's');
     el.textContent = '';

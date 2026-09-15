@@ -104,8 +104,18 @@ const naFolha = new Set(
   [...folha.matchAll(/\.(yb-[a-z0-9]+)(?:__|--|[\s,:{])/g)].map((m) => m[1])
 );
 
+/* As familias que JA sao o nome de outra ficha. O Track demonstra o trilho
+   CHEIO — de cartoes de colecao, de badges, de botoes de icone — e a contagem
+   apontava para `yb-collection`, que e a peca do vizinho. Uma ficha nao pode
+   anunciar como sua a classe base de outra: isso nao e nuance de contentor e
+   item (o Review mostra `.yb-review` e o INVENTARIO registra a secao
+   `.yb-reviews` — as duas certas, respondendo perguntas diferentes), e erro.
+   O dono do proprio nome continua livre de se escolher. */
+const donoDeOutraFicha = new Set(secoes.map((x) => 'yb-' + x.id));
+
 const baseDaSecao = (id, palco) => {
-  const conta = contarFamilias(palco);
+  const conta = new Map(
+    [...contarFamilias(palco)].filter(([fam]) => fam === 'yb-' + id || !donoDeOutraFicha.has(fam)));
   // Convencao de nome, e so quando a marcacao NAO ajuda. O Toast nao aparece
   // na propria secao — ele nasce de um clique, entao a demo e feita de BOTOES
   // e qualquer contagem aponta para `yb-btn`. Ai o nome da secao resolve.
@@ -203,7 +213,9 @@ const blocoA11y = (t) =>
     : `<p class="pendente">Acessibilidade ainda não escrita para este componente.</p>`;
 
 let escritas = 0, defasadas = [];
-for (const f of fichas) {
+for (let n = 0; n < fichas.length; n++) {
+  const f = fichas[n];
+  const ant = fichas[n - 1], prox = fichas[n + 1];
   const nav = navHtml
     .replace(`{ATUAL-${f.id}}`, ' aria-current="page"')
     .replace(/\{ATUAL-[^}]+\}/g, '');
@@ -221,6 +233,7 @@ for (const f of fichas) {
 <link rel="stylesheet" href="../icons/ybera-icons.css">
 <link rel="stylesheet" href="ybera-components.css">
 <link rel="stylesheet" href="doc.css">
+<script src="doc.js" defer></script>
 <style>
 /* Sem seletor de tipo: ver o cabecalho de doc.css. */
 .ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
@@ -245,7 +258,13 @@ ${nav}
 </nav>
 
 <main class="main">
-  <a class="ficha-volta" href="index.html#${f.id}">← Components</a>
+  <div class="ficha-topo">
+    <a class="ficha-volta" href="index.html#${f.id}">← Components</a>
+    <nav class="ficha-passo" aria-label="Componente anterior e próximo">
+      ${ant ? `<a href="${ant.id}.html" rel="prev"><span aria-hidden="true">←</span> ${ant.titulo}</a>` : '<span></span>'}
+      ${prox ? `<a href="${prox.id}.html" rel="next">${prox.titulo} <span aria-hidden="true">→</span></a>` : '<span></span>'}
+    </nav>
+  </div>
   <h1 class="ficha-titulo">${f.titulo}</h1>
   <p class="ficha-quando">${f.quando}</p>
   <ul class="ficha-fatos">
@@ -377,6 +396,7 @@ document.addEventListener('click', function (e) {
 <link rel="stylesheet" href="../icons/ybera-icons.css">
 <link rel="stylesheet" href="ybera-components.css">
 <link rel="stylesheet" href="doc.css">
+<script src="doc.js" defer></script>
 <style>
 .ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
   font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);

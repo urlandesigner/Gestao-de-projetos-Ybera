@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../icons/ybera-icons.css">
 <link rel="stylesheet" href="ybera-components.css">
 <link rel="stylesheet" href="doc.css">
+<script src="doc.js" defer></script>
 <style>
 /* Sem seletor de tipo: ver o cabecalho de doc.css. */
 .ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
@@ -71,7 +72,13 @@
 </nav>
 
 <main class="main">
-  <a class="ficha-volta" href="index.html#stepper">← Components</a>
+  <div class="ficha-topo">
+    <a class="ficha-volta" href="index.html#stepper">← Components</a>
+    <nav class="ficha-passo" aria-label="Componente anterior e próximo">
+      <a href="progress.html" rel="prev"><span aria-hidden="true">←</span> Progress bar</a>
+      <a href="rating.html" rel="next">Rating <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
   <h1 class="ficha-titulo">Quantity stepper</h1>
   <p class="ficha-quando">Botões de 44px, e funcionam — clique. Limites em 1 e 10: o botão desabilita sozinho na ponta.</p>
   <ul class="ficha-fatos">

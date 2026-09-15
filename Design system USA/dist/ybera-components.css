@@ -837,6 +837,19 @@
 .yb-mediabanner--bleed.yb-mediabanner--blur{
   --yb-blur-band:clamp(8rem, 30vw, 16rem);
   --yb-blur-radius:2rem;
+  /* Onde o texto acaba: o mesmo recuo que a faixa usa, mais a medida de
+     leitura. 42rem porque o bloco de texto do hero mede 639px de largura em
+     qualquer tela — o titulo para em 44ch e os 44ch dele valem isso no corpo
+     de 40px do h1. Medi com 40rem antes e sobrava 1px depois da ultima
+     palavra, que nao e folga, e acidente. Como a parada acompanha o recuo do container, sobram exatamente
+     38px depois da ultima palavra em toda largura de desktop; abaixo de 600
+     ela passa da borda e o blur volta a ir de ponta a ponta sozinho, que e o
+     certo — ali o texto ocupa a largura toda. */
+  --yb-blur-reach:calc(max(0px, (100% - var(--yb-container-max)) / 2)
+                       + var(--yb-page-gutter) + 42rem);
+  /* Em quanto o blur se desfaz depois da ultima palavra. Anda junto com o
+     alcance: sem alcance declarado o padrao e 100% e nao ha o que desfazer. */
+  --yb-blur-falloff:12rem;
 }
 /* A caixa e as folhas sao as MESMAS nas tres familias que tem veu sobre foto.
    Cada uma diz so onde a banda comeca e quanto o raio mede, porque isso e
@@ -852,16 +865,45 @@
   /* so o alfa da mascara conta; a cor precisa apenas ser opaca */
   color:var(--yb-bg-inverse);
 }
+/* DUAS mascaras que se cruzam: a queda vertical (a de sempre) e um fim
+   HORIZONTAL, onde o texto acaba. Sem o segundo, o blur atravessa a faixa
+   inteira e apaga metade da foto para servir um texto que ocupa 44% da
+   largura — medido no hero: 51% do quadro borrado para cobrir 14%.
+
+   Por que cruzar duas mascaras NO MESMO elemento, e nao pendurar a horizontal
+   no pai: mascara faz do elemento uma raiz de backdrop, e `backdrop-filter`
+   num filho passaria a enxergar o pai vazio em vez da foto. No Chrome nao
+   acontece — medi —, mas se acontecer em outro motor o blur some CALADO e
+   sobra o veu leve sozinho, que reprova contraste em 4,25:1. Aqui o pior caso
+   e outro: sem `mask-composite`, o padrao e `add`, as duas mascaras viram
+   UNIAO e o blur cobre MAIS. Volta a ser a faixa inteira, que e de onde
+   viemos. Falha para o lado seguro.
+
+   `--yb-blur-reach` chega como FALLBACK do `var()`, nao como declaracao
+   propria: declarado aqui ele venceria a heranca e o variante nunca seria
+   ouvido — o corte nunca disparava, medido. So o hero, que sangra e sobra
+   largura a direita, declara onde o texto termina; no cartao de oferta e no
+   ladrilho o texto ocupa a caixa e o padrao de 100% nao corta nada. */
 .yb-mediabanner__blur > i,
 .yb-offercard__blur > i,
 .yb-collection__blur > i{
   position:absolute; inset:0; display:block;
   -webkit-backdrop-filter:blur(calc(var(--yb-blur-radius) * var(--f)));
   backdrop-filter:blur(calc(var(--yb-blur-radius) * var(--f)));
-  -webkit-mask-image:linear-gradient(to top,
-    currentColor calc(var(--de) * 100% / 3), transparent calc(var(--ate) * 100% / 3));
-  mask-image:linear-gradient(to top,
-    currentColor calc(var(--de) * 100% / 3), transparent calc(var(--ate) * 100% / 3));
+  -webkit-mask-image:
+    linear-gradient(to top,
+      currentColor calc(var(--de) * 100% / 3), transparent calc(var(--ate) * 100% / 3)),
+    linear-gradient(to right,
+      currentColor var(--yb-blur-reach, 100%),
+      transparent calc(var(--yb-blur-reach, 100%) + var(--yb-blur-falloff, 12rem)));
+  mask-image:
+    linear-gradient(to top,
+      currentColor calc(var(--de) * 100% / 3), transparent calc(var(--ate) * 100% / 3)),
+    linear-gradient(to right,
+      currentColor var(--yb-blur-reach, 100%),
+      transparent calc(var(--yb-blur-reach, 100%) + var(--yb-blur-falloff, 12rem)));
+  -webkit-mask-composite:source-in;
+  mask-composite:intersect;
 }
 .yb-mediabanner__blur > i:nth-child(1),
 .yb-offercard__blur   > i:nth-child(1),
@@ -1094,6 +1136,29 @@
    uma queda de .77 nao dao mais que isso. O que a curva tira e a QUINA, que e
    o que o olho acusa; inclinacao alta e suave le como sombra, inclinacao que
    muda de golpe le como emenda. */
+/* 9rem de queda, e isso foi escolhido OLHANDO, nao deduzido.
+
+   O veu cobre 94% do cartao e sobram 39px de foto limpa no topo — parece
+   muito, e foi exatamente essa a reclamacao que abriu a investigacao. Mas o
+   caminho inteiro foi medido antes de decidir, e vale ficar registrado para
+   ninguem refazer:
+
+   O PLATO nao tem folga. Varri de .65 a zero: .55 ja reprova (4,47:1 na arte
+   real, 3,74:1 sobre branco) e sem veu nenhum o texto cai para 1,28:1. Mais
+   blur nao compra folga — com raio de 3rem o .55 passa na arte real e segue
+   reprovando no branco, porque desfoque nao tem o que fazer a media quando o
+   fundo e liso.
+
+   A QUEDA tem folga, e foi testada: 4rem da 111px de foto limpa contra 39,
+   sem mexer em contraste nenhum (os mesmos 6,00:1 e 5,17:1). Ficou no ar
+   lado a lado com esta e com a versao sem veu, e a escolha foi esta — a
+   transicao longa faz o escuro virar atmosfera em vez de faixa, e a faixa
+   curta marca demais onde o texto comeca.
+
+   Entao a densidade aqui e deliberada, nao esquecimento. Quem quiser mais
+   foto visivel mexe em 4rem e reconfere nada — contraste nao muda. Quem
+   quiser resolver a CAUSA tira o texto de cima da foto: enquanto 60% do
+   cartao for texto, vai haver um veu grande aqui. */
 .yb-offercard{ --yb-veil-fall:9rem; }
 .yb-offercard__body::before{
   content:""; position:absolute; z-index:-1;
@@ -2760,8 +2825,9 @@ button.yb-link{
    BRAND QUOTE
    Fala de quem assina a marca, com retrato e uma ação.
 
-   A citação usa display-2, não corpo grande: aqui a frase É o conteúdo, não
-   apoio de outra coisa. E as aspas ficam no texto, não em ::before — assim
+   A citação usa h1, não corpo grande: aqui a frase É o conteúdo, não apoio de
+   outra coisa. Já esteve em display-2 e desceu um degrau — continua sendo o
+   maior texto da seção, que é o que a hierarquia precisava dizer. E as aspas ficam no texto, não em ::before — assim
    quem copia leva a pontuação junto, e o leitor de tela lê a frase inteira.
    ========================================================================= */
 /* `stretch`, e nao `center`: quem manda na altura e o TEXTO.
@@ -2784,12 +2850,16 @@ button.yb-link{
   .yb-quote__media{ aspect-ratio:4/5; block-size:auto; min-block-size:0; }
 }
 .yb-quote__body{ min-width:0; }
+/* Um degrau abaixo do display-2 a pedido. Medido a 1024px: a fala de 22
+   palavras ocupava 7 linhas em 48px e passa a 6 em 40px (353 -> 276px de
+   texto). Continua sendo o maior texto da secao — nada mais aqui passa de
+   h2 — e o degrau e do proprio sistema: nao ha tamanho avulso. */
 .yb-quote__text{
   margin:0 0 var(--yb-space-6);
-  font-size:var(--yb-type-display-2-size);
-  line-height:var(--yb-type-display-2-line);
-  letter-spacing:var(--yb-type-display-2-track);
-  font-weight:var(--yb-type-display-2-weight);
+  font-size:var(--yb-type-h1-size);
+  line-height:var(--yb-type-h1-line);
+  letter-spacing:var(--yb-type-h1-track);
+  font-weight:var(--yb-type-h1-weight);
   color:var(--yb-text-primary);
   text-wrap:balance;
 }

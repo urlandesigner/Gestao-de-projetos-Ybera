@@ -142,8 +142,8 @@
     <path d="M20.5 7.1c-5-1.3-9.6.4-11 3.5"/>
   </symbol>
   <symbol id="yb-paraben-free" viewBox="0 0 24 24">
-    <path d="M10 3.5h4v3l2.6 11.2a2 2 0 0 1-1.9 2.4H9.3a2 2 0 0 1-1.9-2.4L10 6.5Z"/>
-    <path d="M8.6 12.5h6.8"/>
+    <path d="M6.8 9.2h10.4v8.3a2 2 0 0 1-2 2H8.8a2 2 0 0 1-2-2Z"/>
+    <path d="M7.6 5.5h8.8a1.2 1.2 0 0 1 1.2 1.2v2.5H6.4V6.7a1.2 1.2 0 0 1 1.2-1.2Z"/>
     <path d="M4 20 20 4" stroke-width="1.8"/>
   </symbol>
   <symbol id="yb-sulfate-free" viewBox="0 0 24 24">
@@ -151,8 +151,8 @@
     <path d="M4 20 20 4" stroke-width="1.8"/>
   </symbol>
   <symbol id="yb-formaldehyde-free" viewBox="0 0 24 24">
-    <path d="M10.5 3.5h3v4.2l3.4 8.6a2.4 2.4 0 0 1-2.2 3.2H9.3a2.4 2.4 0 0 1-2.2-3.2l3.4-8.6Z"/>
-    <path d="M8.4 14.2h7.2"/>
+    <path d="M10 3.5h4v3l2.6 11.2a2 2 0 0 1-1.9 2.4H9.3a2 2 0 0 1-1.9-2.4L10 6.5Z"/>
+    <path d="M8.6 12.5h6.8"/>
     <path d="M4 20 20 4" stroke-width="1.8"/>
   </symbol>
 

@@ -1155,6 +1155,40 @@ secao('Páginas');
   }
 
   {
+    // O cartao de oferta mostra DOIS numeros, e eles ja vieram de fontes
+    // diferentes: o riscado era um literal no gerador, o cobrado vinha do
+    // catalogo vivo. Bastou a arte da campanha sair do ar para a vitrine
+    // anunciar "20% OFF" com o preco subindo — riscado 74,70, cobrado 79,90.
+    // Ninguem viu por semanas: nao ha erro de build num desconto ao contrario.
+    // Aqui os tres numeros do cartao sao conferidos entre si.
+    const cartoes = PROVA.flatMap((f) => {
+      const h = ler(f);
+      return [...h.matchAll(/<article class="yb-offercard[\s\S]*?<\/article>/g)]
+        .map((m) => [f, m[0]]);
+    });
+    const num = (t) => Number(String(t).replace(/[^0-9.]/g, ''));
+    const torto = [];
+    for (const [f, c] of cartoes) {
+      const por = c.match(/yb-offercard__price[^>]*>([^<]+)/);
+      const de = c.match(/yb-offercard__was[^>]*>([^<]+)/);
+      const selo = c.match(/yb-offercard__off[^>]*>\s*(\d+)%/);
+      if (!por || !de) continue;
+      if (num(de[1]) <= num(por[1]))
+        torto.push(`${f}: riscado ${de[1]} não é maior que ${por[1]}`);
+      else if (selo) {
+        const real = Math.round((1 - num(por[1]) / num(de[1])) * 100);
+        if (Math.abs(real - Number(selo[1])) > 1)
+          torto.push(`${f}: selo diz ${selo[1]}%, os preços dizem ${real}%`);
+      }
+    }
+    torto.length
+      ? falha('o cartão de oferta anuncia um desconto que os preços desmentem',
+          torto.join(' · ') + ' — o "de", o "por" e o selo têm que sair da mesma promoção')
+      : ok('o desconto do cartão de oferta fecha com os preços',
+          `${cartoes.length} cartão(ões) conferido(s)`);
+  }
+
+  {
     // Nenhum produto da loja tem opcao de tamanho — o seletor so renderiza com
     // dado forjado, e dado forjado precisa de cerca. Duas coisas sao checadas:
     // que a tela que o declara realmente exercita o ramo, e que o dado NAO
@@ -1502,6 +1536,75 @@ secao('Véu leve e blur');
   erradas.length
     ? falha('--blur sem as três folhas de blur', [...new Set(erradas)].join(' · '))
     : ok('toda variante com blur traz as três folhas', `${alvos.length} páginas`);
+}
+
+// A mascara do blur cruza DUAS: a queda vertical e o fim horizontal, onde o
+// texto acaba. Duas coisas dao errado nela, e as duas em silencio.
+{
+  const s = semComentario(css.componentes || '');
+  // SEMPRE dois resultados, ache ou nao ache a regra. Com um `if` que emitia
+  // uma falha e um `else` que emitia dois `ok`, o TOTAL de checagens mudava
+  // conforme o codigo estivesse sao ou doente — e como a doc promete esse
+  // total, um defeito aqui virava dois: o proprio, e a contagem batendo
+  // errado. Numero de checagens nao pode depender do resultado delas.
+  // Ancora no corpo que TEM `backdrop-filter`, nao no primeiro seletor que
+  // parece. Havia um `:nth-child` casando com o mesmo padrao e sem mascara
+  // nenhuma: a checagem se agarrava nele, lia "camada unica" e passava com a
+  // regra de verdade quebrada. Casar por forma do seletor nao basta quando a
+  // familia tem varias regras; o que identifica esta e o que ela faz.
+  const regra = [...s.matchAll(/\.yb-[\w-]+__blur\s*>\s*i[^{]*\{([^{}]*)\}/g)]
+    .find(m => /backdrop-filter\s*:/.test(m[1]));
+  const corpo = regra ? regra[1] : '';
+  const camadas = (corpo.match(/mask-image:[^;]*/g) || [])
+    .map(m => (m.match(/linear-gradient|radial-gradient/g) || []).length);
+  const cruza = camadas.some(n => n > 1);
+
+  // Sem `mask-composite` o padrao e `add`: as duas mascaras viram UNIAO e o
+  // blur volta a cobrir a faixa inteira. Nao quebra nada — e de onde viemos —
+  // mas apaga metade da foto sem ninguem notar que a regra parou de valer.
+  !regra ? falha('não achei a regra das folhas de blur', 'o seletor mudou de nome?')
+    : cruza && !/mask-composite\s*:/.test(corpo)
+      ? falha('máscara cruzada sem dizer como cruza',
+          'duas camadas e nenhum mask-composite — o padrão é união, e o corte lateral some')
+      : ok('a máscara do blur declara como cruza', cruza ? 'duas camadas, com composite' : 'camada única');
+
+  // `--yb-blur-reach` declarado AQUI vence a heranca, e o variante que sabe
+  // onde o texto acaba nunca e ouvido: o corte fica escrito e nao acontece.
+  // Foi exatamente isso na primeira versao — medido, alcance = largura do
+  // banner em todas as nove larguras. O padrao entra como fallback do var().
+  !regra ? falha('não dá para conferir o alcance do blur', 'a regra das folhas sumiu')
+    : /--yb-blur-reach\s*:/.test(corpo)
+      ? falha('--yb-blur-reach declarado na própria folha',
+          'declarado aqui ele vence a herança e o variante nunca é ouvido — use o fallback do var()')
+      : ok('o alcance do blur vem de quem conhece o texto', 'fallback no var(), valor no variante');
+}
+
+// Nenhuma ficha pode anunciar como sua a classe base de OUTRA ficha. O Track
+// demonstra o trilho cheio — de cartoes de colecao, de badges, de botoes de
+// icone — e a contagem de familias apontava para `yb-collection`, a peca do
+// vizinho: a ficha dizia "Classe base .yb-collection" e, de quebra, lia a API
+// errada (tokens e comportamento do cartao, nao do trilho).
+//
+// Nao confundir com contentor e item, que e legitimo: o Review mostra
+// `.yb-review` e o INVENTARIO registra a secao `.yb-reviews`. As duas certas,
+// perguntas diferentes. O que esta checagem proibe e a ficha A vestir a
+// classe base da ficha B.
+{
+  const arqs = readdirSync(join(raiz, 'components'))
+    .filter(f => f.endsWith('.html') && f !== 'index.html');
+  const base = new Map();
+  for (const f of arqs) {
+    const m = ler(join('components', f)).match(/Classe base <b><code>\.([\w-]+)<\/code>/);
+    if (m) base.set(f.replace(/\.html$/, ''), m[1]);
+  }
+  const nomes = new Set([...base.keys()].map(id => 'yb-' + id));
+  const erradas = [...base.entries()]
+    .filter(([id, b]) => b !== 'yb-' + id && nomes.has(b))
+    .map(([id, b]) => `${id}.html veste .${b}`);
+  erradas.length
+    ? falha('ficha anunciando a classe base de outra', erradas.join(' · ')
+        + ' — e a API da ficha sai errada junto')
+    : ok('cada ficha anuncia a própria classe base', `${base.size} fichas`);
 }
 
 /* ===========================================================================

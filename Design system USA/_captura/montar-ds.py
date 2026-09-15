@@ -464,13 +464,71 @@ def card(p, vendor=False, flag=True):
 # ATENCAO: a segunda foto do MESMO produto (Off1_Sep_02-30-12) diz "SAVE 54%".
 # As duas artes se contradizem. Aqui vale a primeira, que e a que traz o
 # "WAS" e permite conferir a conta: 1 - 89.90/172.60 = 47.9%.
+#
+# O "de" e o "por" TEM que sair da MESMA fonte. Ja nao saiam: o 'era' era um
+# literal ($74.70) copiado de uma arte de campanha que saiu do ar, enquanto o
+# "por" vinha do catalogo vivo. Quando a arte sumiu, a vitrine caiu para outro
+# produto ($79.90) e o cartao passou a anunciar "20% OFF" com o preco SUBINDO:
+# riscado 74,70, cobrado 79,90. Dois numeros digitados em lugares diferentes
+# terminam assim, sempre.
+#
+# Agora so existe UM numero digitado — a porcentagem — e os dois precos saem
+# dele mais o preco real do catalogo. O riscado E o preco real da loja; o
+# cobrado e o real menos o desconto. Nessa ordem o desconto nao tem como
+# aumentar o valor.
+#
+# O produto e escolhido por HANDLE, nao pelo nome do arquivo de imagem. O nome
+# da imagem e um hash da URL do CDN (ver dados.py): ele muda quando a loja
+# troca a foto, e foi assim que a vitrine trocou de produto sozinha.
 OFERTA = {
-    'img': 'Off1_Set_08-09-10-f2df08.webp',
-    'era': '$74.70',
-    'desconto': '20% off',
-    'prazo': '-09-09T12:00:00-04:00',   # "VALID SEPTEMBER 8-9 (12PM USA)"
-    'prazo_extenso': 'today, 12 PM',
+    'produto': 'mirra-oil-90ml',        # handle no catalogo da loja
+    # Arte de campanha, quando houver: ela vira o fundo do cartao no lugar da
+    # foto do produto. A ultima (Off1_Set_08-09-10) saiu do ar, e um nome morto
+    # aqui so produz aviso a cada build — quem quiser a proxima poe o arquivo
+    # de volta nesta linha.
+    'arte': None,
+    # ATENCAO: estes dois sao do PROTOTIPO, nao transcritos da loja. A loja nao
+    # publica compare_at_price para este produto, entao o valor cobrado no
+    # cartao (real menos 20%) nao e preco que alguem paga hoje. Havendo promocao
+    # de verdade, o lugar de corrigir e aqui — ou a loja publica o
+    # compare_at_price e o gerador passa a usar o dela sem tocar neste arquivo.
+    'desconto_pct': 20,
+    'prazo': '-09-30T23:59:59-04:00',
+    'prazo_extenso': 'Sep 30',
 }
+
+
+def _valor(preco):
+    return float(preco.replace('$', '').replace(',', ''))
+
+
+def oferta_precos(p):
+    """(de, por, selo) do cartao de oferta — ou (None, por, None) sem promocao.
+
+    Duas origens possiveis, nessa ordem:
+
+    1. A loja publica `compare_at_price`: o par vem pronto de la, e o selo e a
+       divisao dos dois. Nada aqui e escolha nossa.
+    2. Nao publica: o riscado e o preco real e o cobrado e ele menos
+       `desconto_pct`. O numero cobrado passa a ser do prototipo, e esta dito
+       na constante.
+
+    Nos dois caminhos o selo e CALCULADO, nunca digitado — nao existe como o
+    cartao anunciar uma porcentagem que os proprios numeros desmentem. E se o
+    riscado nao for maior que o cobrado, o cartao sai sem promocao: sem
+    riscado e sem selo. Um cartao sem desconto e chato; um cartao que chama de
+    desconto um aumento e mentira."""
+    if p.get('compare'):
+        de, por = p['compare'], p['preco']
+    else:
+        de = p['preco']
+        por = f"${_valor(de) * (100 - OFERTA['desconto_pct']) / 100:.2f}"
+    if _valor(de) <= _valor(por):
+        print(f"  aviso: a oferta nao desconta ({de} -> {por}) — o cartao sai "
+              f"sem promocao; confira OFERTA em montar-ds.py")
+        return None, p['preco'], None
+    pct = round((1 - _valor(por) / _valor(de)) * 100)
+    return de, por, f'{pct}% off'
 
 
 def recortar_arte(destino, nome, manter=0.76):
@@ -482,6 +540,8 @@ def recortar_arte(destino, nome, manter=0.76):
 
     Pillow e opcional: sem ele a montagem segue com a arte inteira, avisando.
     Nao vale quebrar o build de quem so quer rodar o gerador."""
+    if not nome:
+        return None
     saida = nome.replace('.webp', '-sem-arte.webp')
     caminho = os.path.join(destino, 'img', saida)
     if os.path.exists(caminho):
@@ -542,17 +602,21 @@ def um_por_linha(prods, n, excluir=()):
 def cartao_oferta(p, destino):
     """O destaque da vitrine: um produto, foto sangrando, prazo correndo."""
     import datetime
-    arte = recortar_arte(destino, OFERTA['img']) or p['img']
+    arte = recortar_arte(destino, OFERTA['arte']) or p['img']
     prazo = f"{datetime.date.today().year}{OFERTA['prazo']}"
+    de, por, selo = oferta_precos(p)
+    marca = (f'<span class="yb-badge yb-badge--sale yb-offercard__off">{selo}</span>'
+             if selo else '')
+    riscado = f'<s class="yb-offercard__was">{de}</s>' if de else ''
     return f"""      <article class="yb-offercard yb-offercard--blur">
         <img src="img/{arte}" alt="{p['titulo'][:80]}">
-        <span class="yb-badge yb-badge--sale yb-offercard__off">{OFERTA['desconto']}</span>
+        {marca}
         <div class="yb-offercard__blur" aria-hidden="true"><i></i><i></i><i></i></div>
         <div class="yb-offercard__body">
           <h3 class="yb-offercard__title"><a href="pdp.html">{p['titulo']}</a></h3>
           <div class="yb-offercard__linha">
-            <span class="yb-offercard__price">{p['preco']}</span>
-            <s class="yb-offercard__was">{OFERTA['era']}</s>
+            <span class="yb-offercard__price">{por}</span>
+            {riscado}
             <p class="yb-offercard__timer" data-yb-countdown="{prazo}">
               <time datetime="{prazo}">{OFERTA['prazo_extenso']}</time></p>
           </div>
@@ -564,10 +628,16 @@ def cartao_oferta(p, destino):
 
 
 def rodape():
-    """Footer da loja, montado so com componentes e tokens do sistema.
+    """@guardado — NAO e chamado por nenhuma pagina hoje.
 
-    O conteudo e o mesmo que esta em producao — mesmos menus, mesmos textos,
-    mesmos destinos. O que mudou e de onde vem cada cor e cada medida."""
+    E a versao longa, clara, com as tres colunas em sanfona. Fica aqui de
+    proposito: as duas versoes do rodape sao para comparar, e apagar esta
+    obrigaria a reescrever 28 links e a sanfona para ver de novo o que ja
+    estava pronto. Quem for limpar codigo morto: este nao e.
+
+    Footer da loja, montado so com componentes e tokens do sistema. O conteudo
+    e o mesmo que esta em producao — mesmos menus, mesmos textos, mesmos
+    destinos. O que mudou e de onde vem cada cor e cada medida."""
 
     MENUS = [
         ("All Products", "/collections", [
@@ -667,6 +737,11 @@ def rodape():
 
 def rodape_v2():
     """Rodape v2 — escuro, e mais curto do que o v1 por subtracao.
+
+    ONDE ELE ESTA HOJE: na home v1. Os dois rodapes foram TROCADOS entre as
+    duas homes, de proposito, para ver cada um fora da pagina que o gerou. O
+    nome da funcao continua descrevendo o RODAPE, nao a pagina que o chama —
+    `rodape_v2` e o rodape curto e escuro, esteja ele onde estiver.
 
     A v1 repete a navegacao inteira: 15 links em tres colunas sanfonadas, mais
     4 no bloco de marca, mais 6 legais — 28 destinos num rodape. Era o padrao
@@ -1235,7 +1310,7 @@ def copiar_reviews(destino):
     return n
 
 
-def carrossel_reviews():
+def carrossel_reviews(topo=True):
     itens = ""
     for r in REVIEWS:
         if not r.get('arquivo'):
@@ -1284,6 +1359,18 @@ def carrossel_reviews():
     # visiveis e clicaveis. Esconder a linha vazia seria desenhar uma loja em
     # que ninguem nunca deu tres estrelas; mostrar a linha em zero e dizer a
     # verdade, que e que ninguem deu tres estrelas ENTRE ESTAS SEIS.
+    #
+    # `topo=False` entrega so o trilho. Na home a secao e prova social a
+    # caminho de outra coisa: quem rola a home nao veio auditar a distribuicao
+    # de notas nem escrever avaliacao — veio ver se alguem gostou. O resumo, o
+    # filtro e o "Write a review" ficam na PDP, onde a nota do buybox aponta
+    # (`#reviews`) e a pessoa ja escolheu o produto sobre o qual teria o que
+    # dizer.
+    #
+    # Sem o filtro saem junto o estado vazio e o dialogo: o vazio so aparece
+    # por filtro, e o dialogo so abre pelo botao. Markup sem gatilho e peso
+    # morto que um dia alguem tenta consertar.
+    bloco_topo = bloco_vazio = bloco_dialogo = ""
     total = AVALIACAO['total']
     barras = ""
     for n in (5, 4, 3, 2, 1):
@@ -1308,12 +1395,8 @@ def carrossel_reviews():
             <input type="radio" name="notafiltro" id="nf{v}" value="{v}"{marcado}>
             <label for="nf{v}">{rot}</label>"""
 
-    return f"""    <section class="yb-block" id="reviews">
-      <div class="yb-section-head yb-section-head--center">
-        <h2>What Our Customers Say</h2>
-      </div>
-
-      <div class="yb-reviews__topo">
+    if topo:
+        bloco_topo = f"""      <div class="yb-reviews__topo">
         <div class="yb-reviews__nota">
           <b class="yb-reviews__media">{AVALIACAO['nota']}</b>
           <span class="yb-rating" role="img" aria-label="{AVALIACAO['nota']} of 5">
@@ -1330,10 +1413,8 @@ def carrossel_reviews():
             Write a review</button>
         </div>
       </div>
-
-      <div class="yb-track yb-reviews" id="reviews-track">{itens}
-      </div>
-      <div class="yb-empty yb-empty--inline" data-yb-review-vazio hidden>
+"""
+        bloco_vazio = f"""      <div class="yb-empty yb-empty--inline" data-yb-review-vazio hidden>
         <span class="yb-empty__icone">{ico('star')}</span>
         <p class="yb-empty__title" data-yb-review-vazio-titulo>No reviews with this rating</p>
         <p class="yb-empty__text">Every review here so far is a five. Nothing is filtered out
@@ -1343,12 +1424,8 @@ def carrossel_reviews():
             Show all reviews</button>
         </div>
       </div>
-      <div class="yb-track__nav" data-yb-track-nav="reviews-track" hidden>
-        <button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous reviews">{ico('chevron-left')}</button>
-        <button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next reviews">{ico('chevron-right')}</button>
-      </div>
-
-      <dialog id="escrever" class="yb-dialog" aria-labelledby="escrever-t">
+"""
+        bloco_dialogo = f"""      <dialog id="escrever" class="yb-dialog" aria-labelledby="escrever-t">
         <div class="yb-dialog__head">
           <h3 class="yb-dialog__title" id="escrever-t">Write a review</h3>
           <button class="yb-dialog__close" data-yb-close aria-label="Close">{ico('close')}</button>
@@ -1381,7 +1458,19 @@ def carrossel_reviews():
           </div>
         </form>
       </dialog>
-    </section>"""
+"""
+
+    return f"""    <section class="yb-block" id="reviews">
+      <div class="yb-section-head yb-section-head--center">
+        <h2>What Our Customers Say</h2>
+      </div>
+{bloco_topo}      <div class="yb-track yb-reviews" id="reviews-track">{itens}
+      </div>
+{bloco_vazio}      <div class="yb-track__nav" data-yb-track-nav="reviews-track" hidden>
+        <button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous reviews">{ico('chevron-left')}</button>
+        <button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next reviews">{ico('chevron-right')}</button>
+      </div>
+{bloco_dialogo}    </section>"""
 
 
 # ============================================== LISTAS DE COLEÇÃO (2 seções)
@@ -1708,7 +1797,7 @@ SELOS = [
     ('vegan', 'Vegan'),
     ('paraben-free', 'Paraben Free'),
     ('sulfate-free', 'Sulfate Free'),
-    ('formaldehyde-free', 'Formaldehyde free'),
+    ('formaldehyde-free', 'Formaldehyde Free'),
 ]
 
 LOGOS = ['01-685f018e.png', '04-a3443f9d.png', '05-cb480667.png', '06-4469d0ca.png',
@@ -1829,6 +1918,7 @@ def hero_v2():
         </div>
       </a>"""
     return f"""  <section class="yb-hero" aria-roledescription="carousel" aria-label="Highlights">
+{parceiro()}
     <div class="yb-track yb-track--hero" id="hero-track">{slides}
     </div>
     <div class="yb-track__nav" data-yb-track-nav="hero-track" hidden>
@@ -1859,7 +1949,7 @@ def montar_home(destino):
     # O primeiro item nao e um cartao de catalogo: e o cartao de oferta, do
     # mesmo tamanho dos outros. O produto em oferta e o da arte de campanha,
     # nao o primeiro da lista: e dele que existe desconto publicado.
-    em_oferta = next((x for x in prods if x['img'] == OFERTA['img']), prods[0])
+    em_oferta = next((x for x in prods if x['handle'] == OFERTA['produto']), prods[0])
     vizinhos = um_por_linha(prods, 3, excluir=[em_oferta])
     cards = "\n".join([cartao_oferta(em_oferta, destino)] +
                       [card(p, flag=False) for p in vizinhos])
@@ -1893,7 +1983,9 @@ def montar_home(destino):
                 arranjo=COLECOES_ARRANJO, eyebrow='Tailored Formulas')}
 
   <div class="yb-page">
-{carrossel_reviews()}
+  <!-- So o trilho. O resumo, o filtro por nota e o "Write a review"
+       ficam na PDP: aqui a secao e prova social de passagem. -->
+{carrossel_reviews(topo=False)}
   </div>
 
 {videos_creator()}
@@ -1914,7 +2006,7 @@ def montar_home(destino):
 
 </main>
 
-{rodape()}
+{rodape_v2()}
 {gaveta(prods)}
 {busca(prods)}"""
     return CABECA.format(v=versao(), css_pagina=CSS_HOME, titulo="Ybera Paris USA | Keratin care that survives humidity") + corpo + RODAPE.replace("{v}", versao())
@@ -1967,7 +2059,7 @@ def montar_404(destino):
   </section>
 </main>
 
-{rodape()}
+{rodape_v2()}
 {gaveta(vitrine)}
 {busca(vitrine)}"""
     return (CABECA.format(v=versao(), css_pagina=CSS_HOME, titulo="Page not found – Ybera USA")
@@ -1983,7 +2075,13 @@ def montar_404(destino):
 # tem componente nosso exato, e sao estas. As duas de fora estao no README
 # da captura, com o motivo.
 # Imagens que a captura nao entrega como asset separado. Ver _captura/pdp-extra/README.md.
-PDP_EXTRA = ['22_1-d5c4b8.webp', '29-527a32.webp', 'FG_Banner_01-61a3d2.webp']
+PDP_EXTRA = ['22_1-d5c4b8.webp', '29-527a32.webp', 'FG_Banner_01-61a3d2.webp',
+             # A foto do kit Cronograma vinha de carona no catalogo, e o nome
+             # dela e o hash da URL no CDN. Quando a loja mexeu no catalogo o
+             # produto saiu da fatia, a imagem parou de ser baixada e a PDP
+             # ficou citando arquivo que nao existe — markup fixo dependendo de
+             # busca dinamica. Aqui ela nao depende de mais nada.
+             'KitCuidadosProfundos-YberaFashionGold_ab-9c59c4.webp']
 
 
 def copiar_pdp_extra(destino):
@@ -2454,7 +2552,7 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
      botao de verdade continua la. -->
 {barra}
 
-{rodape()}
+{rodape_v2()}
 {gaveta(relacionados)}
 {busca(relacionados)}"""
     return CABECA.format(v=versao(), css_pagina=CSS_PDP, titulo=f"{p['titulo']} – Ybera USA") + corpo + RODAPE.replace("{v}", versao())
@@ -2475,8 +2573,13 @@ def montar_home_v2(destino):
        visita. E o unico bloco que muda de lugar por motivo de MERCADO, e nao
        de ritmo visual.
 
-    3. As avaliacoes sobem de 68% da pagina para logo depois dos best sellers.
-       Medido na v1: a primeira estrela aparecia em y=3435 de 5014.
+    3. As avaliacoes ficam logo depois de "Shop by Collection". Elas ja
+       estiveram logo depois dos best sellers — subiram de 68% da pagina
+       (y=3435 de 5014 na v1) para os 26% medidos ali. O usuario preferiu
+       depois das colecoes: a prova social chega depois de a pessoa ter visto
+       o que existe para comprar, e nao no meio do corredor. E a mesma posicao
+       relativa da v1, com a diferenca de que na v2 "Shop by Collection" vem
+       antes do Tolstoy.
 
     4. "Shop by Concern" sobe para logo depois dos best sellers, e nao para
        antes deles. Foi tentado antes: media o primeiro rating em y=1855 de
@@ -2494,6 +2597,11 @@ def montar_home_v2(destino):
        uma pessoa real, transcrita da loja; aparar a frase de alguem para caber
        num layout e reescrever o que ela disse. O que se ajusta e a imagem.
 
+    6. O mural do Tolstoy vem logo depois de "Shop by Concern", antes do quiz.
+       Os dois blocos que vinham antes dele ali sao navegacao por problema; o
+       mural e a primeira coisa com rosto e movimento na pagina depois do
+       hero, e ele agora emenda direto na pergunta do quiz.
+
     O resto sao as mesmas secoes, na mesma implementacao — nenhum componente
     novo, nenhum token novo. A v2 e uma remontagem, e e esse o teste de um
     design system: trocar a ordem da loja sem escrever CSS."""
@@ -2501,7 +2609,7 @@ def montar_home_v2(destino):
     for i, pr in enumerate(prods):
         pr['destaque'] = i in (0, 3)
 
-    em_oferta = next((x for x in prods if x['img'] == OFERTA['img']), prods[0])
+    em_oferta = next((x for x in prods if x['handle'] == OFERTA['produto']), prods[0])
     vizinhos = um_por_linha(prods, 3, excluir=[em_oferta])
     cards = "\n".join([cartao_oferta(em_oferta, destino)] +
                       [card(pr, flag=False) for pr in vizinhos])
@@ -2510,8 +2618,6 @@ def montar_home_v2(destino):
 
 <main>
 {hero_v2()}
-
-{selos()}
 
   <div class="yb-page">
     <section class="yb-block">
@@ -2525,18 +2631,33 @@ def montar_home_v2(destino):
     </section>
 
 {lista_colecoes('Shop by Concern', PROBLEMAS, 'bottom')}
-
-{carrossel_reviews()}
   </div>
+
+{widget_tolstoy()}
 
 {quiz()}
 
 {lista_colecoes('Shop by Collection', LINHAS, 'bottom', flush=True,
                 arranjo=COLECOES_ARRANJO, eyebrow='Tailored Formulas')}
 
-{widget_tolstoy()}
+  <div class="yb-page">
+  <!-- So o trilho. O resumo, o filtro por nota e o "Write a review"
+       ficam na PDP: aqui a secao e prova social de passagem. -->
+{carrossel_reviews(topo=False)}
+  </div>
 
 {videos_creator()}
+
+  <!-- Os selos ficam AQUI, e nao embaixo do heroi, onde estavam.
+       Medido no mobile: la a faixa custava 294px — 36% da primeira tela —
+       quebrava em 3+2 com uma fileira orfa e empurrava "Best Sellers" para
+       795px, fora da dobra; sem ela o primeiro cartao de produto aparece em
+       626. O slot mais caro da pagina estava com o unico bloco onde nada e
+       clicavel. Pior: o subtitulo do heroi ja diz "formaldehyde-free", e a
+       faixa repetia o argumento mais forte 200px abaixo, em cinza.
+       Tranquilizacao vale depois do interesse, nao antes dele — e e onde a
+       home v1 sempre colocou. As duas homes agora concordam. -->
+{selos()}
 
 {autoridade()}
 

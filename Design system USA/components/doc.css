@@ -69,8 +69,44 @@
 
 /* -------------------------------------------------------------- cabecalho */
 .ficha-volta{
-  display:inline-block; margin-bottom:var(--yb-space-4);
+  display:inline-block;
   font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+}
+/* PASSO ENTRE FICHAS. Com 36 peças, a coluna da esquerda e o índice servem
+   para ESCOLHER; para percorrer, cada um custava uma viagem de volta ao
+   índice. Aqui o vizinho vem pelo NOME, não só pela seta — "próximo" não diz
+   para onde se vai, e o nome dispensa a viagem só para descobrir.
+
+   Ausente vira `<span>` vazio, não controle apagado: nas pontas da lista não
+   há para onde ir, e o vazio preserva o `space-between` sem prometer clique
+   que não existe. */
+.ficha-topo{
+  display:flex; flex-wrap:wrap; align-items:center; gap:var(--yb-space-3);
+  justify-content:space-between; margin-bottom:var(--yb-space-5);
+}
+.ficha-passo{display:flex; align-items:center; gap:var(--yb-space-2)}
+.ficha-passo a{
+  display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  min-height:var(--yb-target-min);
+  padding:var(--yb-space-2) var(--yb-space-4);
+  border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-control);
+  color:var(--yb-text-secondary); text-decoration:none;
+  font-size:var(--yb-type-body-sm-size);
+  transition:border-color var(--yb-transition-control),
+             color var(--yb-transition-control);
+}
+@media (hover:hover){
+  .ficha-passo a:hover{border-color:var(--yb-border-strong); color:var(--yb-text-primary)}
+}
+.ficha-passo a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+/* Em coluna estreita o nome do vizinho é a primeira coisa que sobra de fora;
+   a seta sozinha continua dizendo a direção. */
+@media (max-width:560px){
+  .ficha-passo a{padding-inline:var(--yb-space-3)}
+  .ficha-passo a{max-inline-size:9rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 }
 .ficha-titulo{
   font-size:var(--yb-type-display-2-size); line-height:var(--yb-type-display-2-line);
@@ -89,10 +125,19 @@
   display:flex; flex-wrap:wrap; gap:var(--yb-space-2);
   margin:0 0 var(--yb-space-10); padding:0; list-style:none;
 }
+/* Estes fatos NAO sao clicaveis, e por isso deixaram de parecer. Eram pilula
+   com borda de 1px, e no sistema essa forma tem dono: `.yb-search__chip`, o
+   avatar do parceiro e os aneis de carregando — os tres clicaveis ou vivos.
+   Conferi a folha inteira e nao ha excecao: pilula COM borda e sempre
+   controle; as estaticas (`__label`, `__mark`, `progress`) nao tem borda.
+   Emprestar a forma de um controle para texto parado promete clique que nao
+   existe.
+   A forma certa ja existia: `.yb-badge`, que e o rotulo estatico do sistema —
+   preenchido, `--yb-radius-badge`, sem borda. */
 .ficha-fatos li{
   display:inline-flex; align-items:center; gap:var(--yb-space-2);
   padding:var(--yb-space-2) var(--yb-space-3);
-  border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-pill);
+  background:var(--yb-surface-sunken); border-radius:var(--yb-radius-badge);
   font-size:var(--yb-type-caption-size); color:var(--yb-text-secondary);
 }
 .ficha-fatos b{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}

@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../icons/ybera-icons.css">
 <link rel="stylesheet" href="ybera-components.css">
 <link rel="stylesheet" href="doc.css">
+<script src="doc.js" defer></script>
 <style>
 /* Sem seletor de tipo: ver o cabecalho de doc.css. */
 .ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
@@ -71,7 +72,13 @@
 </nav>
 
 <main class="main">
-  <a class="ficha-volta" href="index.html#badge">← Components</a>
+  <div class="ficha-topo">
+    <a class="ficha-volta" href="index.html#badge">← Components</a>
+    <nav class="ficha-passo" aria-label="Componente anterior e próximo">
+      <a href="alert.html" rel="prev"><span aria-hidden="true">←</span> Alert</a>
+      <a href="quote.html" rel="next">Brand quote <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
   <h1 class="ficha-titulo">Badge</h1>
   <p class="ficha-quando">Rotula sem competir. Nunca carrega ação — badge não é botão.</p>
   <ul class="ficha-fatos">

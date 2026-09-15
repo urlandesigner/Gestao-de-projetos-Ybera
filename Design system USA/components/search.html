@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../icons/ybera-icons.css">
 <link rel="stylesheet" href="ybera-components.css">
 <link rel="stylesheet" href="doc.css">
+<script src="doc.js" defer></script>
 <style>
 /* Sem seletor de tipo: ver o cabecalho de doc.css. */
 .ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
@@ -71,7 +72,13 @@
 </nav>
 
 <main class="main">
-  <a class="ficha-volta" href="index.html#search">← Components</a>
+  <div class="ficha-topo">
+    <a class="ficha-volta" href="index.html#search">← Components</a>
+    <nav class="ficha-passo" aria-label="Componente anterior e próximo">
+      <a href="review.html" rel="prev"><span aria-hidden="true">←</span> Review</a>
+      <a href="skeleton.html" rel="next">Skeleton <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
   <h1 class="ficha-titulo">Search overlay</h1>
   <p class="ficha-quando">Busca é troca de contexto da página inteira — folha do topo, não caixinha no header.</p>
   <ul class="ficha-fatos">

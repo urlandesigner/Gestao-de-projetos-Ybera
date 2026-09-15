@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../icons/ybera-icons.css">
 <link rel="stylesheet" href="ybera-components.css">
 <link rel="stylesheet" href="doc.css">
+<script src="doc.js" defer></script>
 <style>
 /* Sem seletor de tipo: ver o cabecalho de doc.css. */
 .ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
@@ -71,7 +72,13 @@
 </nav>
 
 <main class="main">
-  <a class="ficha-volta" href="index.html#video">← Components</a>
+  <div class="ficha-topo">
+    <a class="ficha-volta" href="index.html#video">← Components</a>
+    <nav class="ficha-passo" aria-label="Componente anterior e próximo">
+      <a href="variant.html" rel="prev"><span aria-hidden="true">←</span> Variant picker</a>
+      <span></span>
+    </nav>
+  </div>
   <h1 class="ficha-titulo">Vertical video carousel</h1>
   <p class="ficha-quando">Conteúdo de creator em 9:16, como o TikTok serve. O cartão entra como pôster; o vídeo só nasce no primeiro clique.</p>
   <ul class="ficha-fatos">

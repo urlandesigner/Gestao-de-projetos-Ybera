@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../icons/ybera-icons.css">
 <link rel="stylesheet" href="ybera-components.css">
 <link rel="stylesheet" href="doc.css">
+<script src="doc.js" defer></script>
 <style>
 /* Sem seletor de tipo: ver o cabecalho de doc.css. */
 .ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
@@ -71,7 +72,13 @@
 </nav>
 
 <main class="main">
-  <a class="ficha-volta" href="index.html#skeleton">← Components</a>
+  <div class="ficha-topo">
+    <a class="ficha-volta" href="index.html#skeleton">← Components</a>
+    <nav class="ficha-passo" aria-label="Componente anterior e próximo">
+      <a href="search.html" rel="prev"><span aria-hidden="true">←</span> Search overlay</a>
+      <a href="switch.html" rel="next">Switch <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
   <h1 class="ficha-titulo">Skeleton</h1>
   <p class="ficha-quando">Só para carregamento real. Skeleton eterno é pior que spinner: promete conteúdo que não chega.</p>
   <ul class="ficha-fatos">

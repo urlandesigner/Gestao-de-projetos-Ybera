@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../icons/ybera-icons.css">
 <link rel="stylesheet" href="ybera-components.css">
 <link rel="stylesheet" href="doc.css">
+<script src="doc.js" defer></script>
 <style>
 /* Sem seletor de tipo: ver o cabecalho de doc.css. */
 .ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
@@ -71,7 +72,13 @@
 </nav>
 
 <main class="main">
-  <a class="ficha-volta" href="index.html#collection">← Components</a>
+  <div class="ficha-topo">
+    <a class="ficha-volta" href="index.html#collection">← Components</a>
+    <nav class="ficha-passo" aria-label="Componente anterior e próximo">
+      <a href="check.html" rel="prev"><span aria-hidden="true">←</span> Checkbox &amp; radio</a>
+      <a href="empty.html" rel="next">Empty state <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
   <h1 class="ficha-titulo">Collection card</h1>
   <p class="ficha-quando">Porta de entrada para uma coleção. O cartão inteiro é o link — o rótulo sozinho seria um alvo pequeno dentro de uma imagem grande.</p>
   <ul class="ficha-fatos">
@@ -79,7 +86,7 @@
     <li>Modificadores <b>5</b></li>
     <li>Elementos <b>5</b></li>
     <li>Estados <b>2</b></li>
-    <li>Tokens <b>42</b></li>
+    <li>Tokens <b>44</b></li>
     <li>Comportamento <b>só CSS</b></li>
   </ul>
 

@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../icons/ybera-icons.css">
 <link rel="stylesheet" href="ybera-components.css">
 <link rel="stylesheet" href="doc.css">
+<script src="doc.js" defer></script>
 <style>
 /* Sem seletor de tipo: ver o cabecalho de doc.css. */
 .ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
@@ -71,7 +72,13 @@
 </nav>
 
 <main class="main">
-  <a class="ficha-volta" href="index.html#accordion">← Components</a>
+  <div class="ficha-topo">
+    <a class="ficha-volta" href="index.html#accordion">← Components</a>
+    <nav class="ficha-passo" aria-label="Componente anterior e próximo">
+      <span></span>
+      <a href="alert.html" rel="next">Alert <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
   <h1 class="ficha-titulo">Accordion</h1>
   <p class="ficha-quando">Informação secundária da PDP: ingredientes, modo de uso, frete.</p>
   <ul class="ficha-fatos">

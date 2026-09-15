@@ -40,7 +40,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | LINK | `.yb-link` | Componente | Estável | 1 | 2 | 10 | sim | sim | — | sim |
 | LOGO | `.yb-logo` | Componente | Estável | 4 | 1 | 5 | sim | sim | — | sim |
 | LOGO BAR | `.yb-logobar` | Componente | Estável | — | — | 5 | sim | n/a | — | sim |
-| MEDIABANNER | `.yb-mediabanner` | Componente | Estável | 3 | 1 | 36 | sim | sim | — | sim |
+| MEDIABANNER | `.yb-mediabanner` | Componente | Estável | 3 | 1 | 38 | sim | sim | — | sim |
 | NOTICE | `.yb-notice` | Componente | Beta | 2 | — | 15 | sim | — | — | — |
 | OFFER CARD | `.yb-offercard` | Componente | Estável | 1 | 2 | 36 | sim | sim | sim | sim |
 | PAGINATION | `.yb-pagination` | Componente | Beta | — | 3 | 17 | sim | sim | — | — |

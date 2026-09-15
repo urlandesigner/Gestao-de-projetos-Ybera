@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../icons/ybera-icons.css">
 <link rel="stylesheet" href="ybera-components.css">
 <link rel="stylesheet" href="doc.css">
+<script src="doc.js" defer></script>
 <style>
 /* Sem seletor de tipo: ver o cabecalho de doc.css. */
 .ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
@@ -71,7 +72,13 @@
 </nav>
 
 <main class="main">
-  <a class="ficha-volta" href="index.html#notice">← Components</a>
+  <div class="ficha-topo">
+    <a class="ficha-volta" href="index.html#notice">← Components</a>
+    <nav class="ficha-passo" aria-label="Componente anterior e próximo">
+      <a href="dialog.html" rel="prev"><span aria-hidden="true">←</span> Modal &amp; drawer</a>
+      <a href="offercard.html" rel="next">Offer card <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
   <h1 class="ficha-titulo">Notice</h1>
   <p class="ficha-quando">Faixa de aviso. A loja empilha duas no topo de toda página — uma
     contextual e a de frete. Modelada como parte do header, a segunda não tinha onde morar.</p>

@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../icons/ybera-icons.css">
 <link rel="stylesheet" href="ybera-components.css">
 <link rel="stylesheet" href="doc.css">
+<script src="doc.js" defer></script>
 <style>
 /* Sem seletor de tipo: ver o cabecalho de doc.css. */
 .ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
@@ -71,7 +72,13 @@
 </nav>
 
 <main class="main">
-  <a class="ficha-volta" href="index.html#card">← Components</a>
+  <div class="ficha-topo">
+    <a class="ficha-volta" href="index.html#card">← Components</a>
+    <nav class="ficha-passo" aria-label="Componente anterior e próximo">
+      <a href="price.html" rel="prev"><span aria-hidden="true">←</span> Price</a>
+      <a href="progress.html" rel="next">Progress bar <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
   <h1 class="ficha-titulo">Product card</h1>
   <p class="ficha-quando">A unidade do grid. O título trunca em duas linhas por decisão de sistema.</p>
   <ul class="ficha-fatos">

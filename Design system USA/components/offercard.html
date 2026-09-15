@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../icons/ybera-icons.css">
 <link rel="stylesheet" href="ybera-components.css">
 <link rel="stylesheet" href="doc.css">
+<script src="doc.js" defer></script>
 <style>
 /* Sem seletor de tipo: ver o cabecalho de doc.css. */
 .ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
@@ -71,7 +72,13 @@
 </nav>
 
 <main class="main">
-  <a class="ficha-volta" href="index.html#offercard">← Components</a>
+  <div class="ficha-topo">
+    <a class="ficha-volta" href="index.html#offercard">← Components</a>
+    <nav class="ficha-passo" aria-label="Componente anterior e próximo">
+      <a href="notice.html" rel="prev"><span aria-hidden="true">←</span> Notice</a>
+      <a href="pagination.html" rel="next">Pagination <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
   <h1 class="ficha-titulo">Offer card</h1>
   <p class="ficha-quando">A oferta do dia, um produto só. A foto é o fundo, o texto vive
     por cima dela e o relógio diz até quando. Não é o cartão de catálogo com outra
@@ -81,7 +88,7 @@
     <li>Modificadores <b>1</b></li>
     <li>Elementos <b>11</b></li>
     <li>Estados <b>2</b></li>
-    <li>Tokens <b>38</b></li>
+    <li>Tokens <b>40</b></li>
     <li>Comportamento <b>JS</b></li>
   </ul>
 
