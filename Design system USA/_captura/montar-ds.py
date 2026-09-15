@@ -2081,7 +2081,17 @@ PDP_EXTRA = ['22_1-d5c4b8.webp', '29-527a32.webp', 'FG_Banner_01-61a3d2.webp',
              # produto saiu da fatia, a imagem parou de ser baixada e a PDP
              # ficou citando arquivo que nao existe — markup fixo dependendo de
              # busca dinamica. Aqui ela nao depende de mais nada.
-             'KitCuidadosProfundos-YberaFashionGold_ab-9c59c4.webp']
+             'KitCuidadosProfundos-YberaFashionGold_ab-9c59c4.webp',
+             # Terceira e quarta vezes que isto acontece, agora na ficha do
+             # seletor de variante: as duas mascaras que ela mostra tambem
+             # vinham do catalogo. A da reconstrucao sumiu quando a loja mexeu
+             # na fatia e a ficha passou a citar arquivo inexistente; a da
+             # nutricao ainda esta la, e nao ha razao para esperar a vez dela.
+             # Nome de arquivo e hash de URL do CDN: qualquer troca de imagem
+             # no produto renomeia o arquivo. Markup fixo nao pode depender de
+             # busca dinamica.
+             '90_mascara_reconstrucao_250g_cuidados_pr-2fb01d.webp',
+             '90_mascara_nutricao_250g_cuidados_profun-704696.webp']
 
 
 def copiar_pdp_extra(destino):
