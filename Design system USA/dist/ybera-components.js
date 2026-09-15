@@ -304,9 +304,34 @@
      sem script, um botao que nao faz nada e pior que nenhum botao. Andam um
      cartao por clique (largura do primeiro filho + gap) e se desligam nas
      pontas, para o leitor de tela e o olho saberem que acabou.
+
+     TRILHO CIRCULAR — `data-yb-track-loop` no .yb-track
+
+       <div class="yb-track" id="hero-track" data-yb-track-loop>
+
+     Nele as setas nunca se desligam: depois do ultimo vem o primeiro. Isso
+     serve um hero, onde a pessoa esta folheando destaques e nao percorrendo
+     uma lista — parar no ultimo banner e dizer "acabou" sobre conteudo que
+     nao tem fim. Numa lista de produtos ou de avaliacoes o fim e informacao,
+     e por isso a volta e opcional e nao o padrao.
+
+     A volta MOVE o slide no DOM em vez de rebobinar a rolagem. Rebobinar do
+     ultimo ao primeiro atravessa todos os slides de tras para a frente: quem
+     clicou "proximo" ve a fita correr para o lado errado. Aqui, antes de
+     rolar, o primeiro slide vai para o fim (ou o ultimo vai para o comeco) e
+     a rolagem e corrigida na mesma linha — a vista nao muda, mas passa a
+     haver um vizinho na direcao do clique. O movimento e sempre para o lado
+     do clique, sem corte e sem rebobinada.
      --------------------------------------------------------------------- */
   function trilhoDe(nav) {
     return document.getElementById(nav.getAttribute('data-yb-track-nav') || '');
+  }
+
+  function circular(t) { return t.hasAttribute('data-yb-track-loop'); }
+
+  function passoDe(t) {
+    return t.firstElementChild.getBoundingClientRect().width +
+      (parseFloat(getComputedStyle(t).columnGap) || 0);
   }
 
   function atualizarSetas(nav) {
@@ -315,10 +340,13 @@
     var fim = t.scrollWidth - t.clientWidth - 1;
     var prev = nav.querySelector('[data-yb-track-step="prev"]');
     var next = nav.querySelector('[data-yb-track-step="next"]');
-    if (prev) prev.disabled = t.scrollLeft <= 0;
-    if (next) next.disabled = t.scrollLeft >= fim;
+    // No circular nenhuma ponta e ponta: as duas setas sempre levam a algum
+    // lugar, entao desligar qualquer uma seria mentira.
+    if (prev) prev.disabled = !circular(t) && t.scrollLeft <= 0;
+    if (next) next.disabled = !circular(t) && t.scrollLeft >= fim;
     // sem sobra para rolar, as setas nao tem trabalho: somem em vez de
-    // ficarem as duas apagadas
+    // ficarem as duas apagadas. Vale tambem no circular — com um slide so
+    // nao ha volta que fazer.
     nav.hidden = fim <= 0;
   }
 
@@ -344,10 +372,46 @@
     var nav = b.closest('[data-yb-track-nav]');
     var t = nav && trilhoDe(nav);
     if (!t || !t.firstElementChild) return;
-    var passo = t.firstElementChild.getBoundingClientRect().width +
-      (parseFloat(getComputedStyle(t).columnGap) || 0);
+    var passo = passoDe(t);
     var sentido = b.getAttribute('data-yb-track-step') === 'prev' ? -1 : 1;
     var suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* A VOLTA. Move um slide de ponta a ponta e reancora a rolagem no mesmo
+       quadro: quem olha nao ve nada acontecer, mas agora existe vizinho na
+       direcao do clique, e a rolagem seguinte anda para o lado do clique.
+
+       A reancoragem e ABSOLUTA de proposito, e isso custou um bug. O Chrome
+       tem ancoragem de rolagem: quando o primeiro filho sai da frente, ele
+       ja corrige `scrollLeft` sozinho para a vista nao pular. Uma correcao
+       relativa (`scrollLeft -= passo`) desconta de novo por cima da dele, as
+       duas se anulam e o carrossel fica atrasado um clique — anda, mas volta
+       para onde estava. Medido: `scrollLeft` caiu de 2560 para 0 onde devia
+       ficar em 1280.
+
+       Escrever a posicao final resolve nos dois mundos: onde o navegador
+       ancora, sobrescreve; onde nao ancora (a ancoragem nao e garantida
+       fora do Chrome), coloca no lugar. Nao depender do que o motor faz
+       pelas costas e o unico jeito de isto sobreviver ao Safari.
+
+       E `scrollTo`, nao `scrollBy`: depois de mexer no DOM, um deslocamento
+       relativo parte de um numero que acabou de ser mexido por terceiros. */
+    var n = t.children.length;
+    if (circular(t) && n > 1 && passo > 0) {
+      var i = Math.round(t.scrollLeft / passo);
+      if (sentido > 0 && i >= n - 1) {
+        t.appendChild(t.firstElementChild);
+        t.scrollLeft = (n - 2) * passo;
+        t.scrollTo({ left: (n - 1) * passo, behavior: suave ? 'smooth' : 'auto' });
+        return;
+      }
+      if (sentido < 0 && i <= 0) {
+        t.insertBefore(t.lastElementChild, t.firstElementChild);
+        t.scrollLeft = passo;
+        t.scrollTo({ left: 0, behavior: suave ? 'smooth' : 'auto' });
+        return;
+      }
+    }
+
     t.scrollBy({ left: passo * sentido, behavior: suave ? 'smooth' : 'auto' });
   });
 

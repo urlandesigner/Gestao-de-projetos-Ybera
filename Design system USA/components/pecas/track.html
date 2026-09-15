@@ -42,6 +42,17 @@
       espaço. Elas nascem <code>hidden</code> e o JS só as mostra quando há o que
       rolar — trilho que cabe inteiro não ganha seta desabilitada.</p>
     </div>
+    <div class="note">
+      <b><code>data-yb-track-loop</code> — depois do último vem o primeiro</b>
+      <p>Opcional, e não o padrão. Com ele as setas nunca se desligam: serve um
+      hero, onde a pessoa folheia destaques e parar no último é dizer “acabou”
+      sobre conteúdo que não tem fim. Numa lista de produtos ou de avaliações o
+      fim é informação, e a seta apagada é quem a dá.</p>
+      <p>A volta move o slide no DOM em vez de rebobinar a rolagem — o
+      movimento é sempre para o lado do clique. Como a volta vive nas setas, e
+      as setas somem no toque, <b>no celular o trilho não dá a volta</b>: ali
+      ele termina no último banner.</p>
+    </div>
     <h3 class="row-label"><code>--row</code> — fila, para o que não é cartão</h3>
     <div class="demo demo--rail">
       <div class="yb-track yb-track--row">

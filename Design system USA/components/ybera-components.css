@@ -2400,10 +2400,16 @@
    DOM normal, sem shadow DOM — por isso o design system alcança. O bridge já
    traduz as oito variáveis dele em bridge/ybera-bridge.css.
    ========================================================================= */
+/* `stretch`, e nao `start`: no trilho os cartoes ja nascem da mesma altura (o
+   mais alto manda), e com o corpo esticado o nome e o produto podem ancorar no
+   pe. Antes eles seguiam o fim do texto — um review de uma linha punha o nome
+   22px acima do vizinho de tres, e a fileira lia como desalinhada. A foto
+   continua ancorada no topo por `align-self`, senao ela esticaria junto. */
 .yb-review{
   display:grid; grid-template-columns:88px 1fr; gap:var(--yb-space-4);
-  align-items:start; min-width:0;
+  align-items:stretch; min-width:0;
 }
+.yb-review__media{ align-self:start; }
 /* Selo de compra verificada. Tom de estado positivo, nao de acao: ele informa,
    nao convida a clicar. Fica junto do autor porque e sobre QUEM escreveu. */
 .yb-review__verified{
@@ -2431,7 +2437,10 @@
   display:-webkit-box; -webkit-box-orient:vertical;
   -webkit-line-clamp:3; line-clamp:3; overflow:hidden;
 }
+/* O `auto` e o que empurra o par nome+produto para o pe do cartao. Onde nao ha
+   folga — a lista da PDP, que empilha e nao estica — ele nao faz nada. */
 .yb-review__author{
+  margin-block-start:auto;
   font-size:var(--yb-type-body-sm-size);
   font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-primary);
 }

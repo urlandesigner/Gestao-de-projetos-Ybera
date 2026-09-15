@@ -1608,6 +1608,52 @@ secao('Véu leve e blur');
 }
 
 /* ===========================================================================
+   O HERO DA A VOLTA
+   Depois do ultimo vem o primeiro, e as setas nunca se desligam. Duas coisas
+   podem morrer caladas aqui:
+
+   1. o trilho perder `data-yb-track-loop` — as setas voltam a desligar nas
+      pontas e ninguem repara ate clicar no ultimo banner;
+   2. a reancoragem virar RELATIVA. O Chrome ancora a rolagem sozinho quando o
+      primeiro filho sai da frente; um `scrollLeft -= passo` desconta por cima
+      da correcao dele, as duas se anulam e o carrossel fica atrasado um
+      clique — anda e volta para onde estava. Aconteceu, e so apareceu
+      clicando tres vezes. Posicao absoluta funciona com ancoragem e sem ela,
+      que e o que Safari exige.
+   =========================================================================== */
+{
+  const js = ler('components/ybera-components.js');
+  const telas = ['_captura/nova-loja/index-v2.html'];
+  const semLoop = telas.filter(f => existsSync(join(raiz, f)))
+    .filter(f => !/id="hero-track"[^>]*data-yb-track-loop/.test(ler(f)));
+
+  // A volta: os dois sentidos movem um filho E corrigem a rolagem.
+  const bloco = js.match(/if \(circular\(t\)[\s\S]*?\n    \}/);
+  const corpo = bloco ? bloco[0] : '';
+  const move = (corpo.match(/appendChild|insertBefore/g) || []).length;
+  const absoluta = (corpo.match(/scrollLeft\s*=\s*[^=]/g) || []).length;
+  const relativa = (corpo.match(/scrollLeft\s*[-+]=/g) || []).length;
+
+  // As setas so podem desligar fora do circular.
+  const guarda = /prev\.disabled\s*=\s*!circular\(t\)[\s\S]{0,120}next\.disabled\s*=\s*!circular\(t\)/
+    .test(js);
+
+  if (semLoop.length)
+    falha('o hero parou de dar a volta', semLoop.join(' · ') + ' — sem data-yb-track-loop');
+  else if (!guarda)
+    falha('as setas do hero voltam a desligar nas pontas',
+      'atualizarSetas precisa isentar o trilho circular nos dois sentidos');
+  else if (relativa)
+    falha('a volta reancora a rolagem por deslocamento relativo',
+      'o navegador ja ancorou; descontar de novo anula os dois e atrasa um '
+      + 'clique — escreva a posicao final');
+  else if (move !== 2 || absoluta !== 2)
+    falha('a volta do trilho move o slide sem reancorar a rolagem',
+      `esperado 2 movimentos e 2 posicoes absolutas, achei ${move} e ${absoluta}`);
+  else ok('o hero da a volta sem solavanco', 'dois sentidos, reancoragem absoluta');
+}
+
+/* ===========================================================================
    O NUMERO QUE A DOC PROMETE
 
    Esta e a ultima checagem porque ela e a unica que so pode existir aqui: o

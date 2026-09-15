@@ -1295,6 +1295,34 @@ VARIANTE_FORJADA = [
 # o Judge.me renderiza no DOM normal — o design system alcanca, e por isso aqui
 # o conteudo dele e servido pelos nossos componentes.
 REVIEWS = json.load(open(os.path.join(RAIZ, 'reviews.json'), encoding='utf-8'))
+
+# Emoji sai do texto das avaliacoes, a pedido. A regra da casa continua valendo:
+# nada do que a pessoa escreveu com PALAVRAS e encurtado ou reescrito — o texto
+# vai inteiro, so sem os pictogramas. Eles custavam caro no cartao, que mostra
+# tres linhas: "promete🥰🥰🥰❤️" gastava meia linha sem dizer nada que o texto
+# ja nao dissesse, e a fileira de emojis coloridos brigava com as estrelas
+# logo acima, que sao o unico simbolo que o cartao precisa que se leia.
+#
+# Limpo na carga, e nao na renderizacao: o mesmo REVIEWS alimenta o carrossel,
+# a PDP e o agregado. Limpar em um lugar so deixaria os outros com emoji.
+# A estrela cheia e a vazia (U+2605/2606) ficam FORA da faixa varrida: sao os
+# glifos com que o proprio componente desenha a nota, e "5★" escrito por quem
+# avaliou e nota, nao enfeite.
+_PICTOGRAMA = re.compile(
+    '[\U0001F000-\U0001FAFF\u2190-\u21FF\u2300-\u2604\u2607-\u27BF'
+    '\u2B00-\u2BFF\uFE00-\uFE0F\u200D]+')
+
+
+def sem_emoji(t):
+    """Tira pictograma e arruma o espaco que ele deixa para tras."""
+    t = _PICTOGRAMA.sub('', t or '')
+    t = re.sub(r'\s{2,}', ' ', t)
+    return re.sub(r'\s+([.,;:!?])', r'\1', t).strip()
+
+
+for _r in REVIEWS:
+    _r['texto'] = sem_emoji(_r.get('texto'))
+    _r['titulo'] = sem_emoji(_r.get('titulo'))
 AVALIACAO = _agregado()
 
 
@@ -1919,7 +1947,7 @@ def hero_v2():
       </a>"""
     return f"""  <section class="yb-hero" aria-roledescription="carousel" aria-label="Highlights">
 {parceiro()}
-    <div class="yb-track yb-track--hero" id="hero-track">{slides}
+    <div class="yb-track yb-track--hero" id="hero-track" data-yb-track-loop>{slides}
     </div>
     <div class="yb-track__nav" data-yb-track-nav="hero-track" hidden>
       <button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous highlight">{ico('chevron-left')}</button>
