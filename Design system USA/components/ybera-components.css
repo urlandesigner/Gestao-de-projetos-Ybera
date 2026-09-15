@@ -1281,30 +1281,29 @@
    uma queda de .77 nao dao mais que isso. O que a curva tira e a QUINA, que e
    o que o olho acusa; inclinacao alta e suave le como sombra, inclinacao que
    muda de golpe le como emenda. */
-/* 9rem de queda, e isso foi escolhido OLHANDO, nao deduzido.
+/* 4rem de queda, e a historia importa porque ja foi 9rem.
 
-   O veu cobre 94% do cartao e sobram 39px de foto limpa no topo — parece
-   muito, e foi exatamente essa a reclamacao que abriu a investigacao. Mas o
-   caminho inteiro foi medido antes de decidir, e vale ficar registrado para
-   ninguem refazer:
+   Os 9rem foram escolhidos OLHANDO, com o cartao mais baixo: sobravam 39px de
+   foto limpa no topo e a transicao longa fazia o escuro virar atmosfera em vez
+   de faixa. O cartao cresceu desde entao e a conta virou: com o corpo
+   comecando em 133px e uma queda de 144px, o veu passou a nascer 11px ACIMA do
+   topo — cobria 100% do cartao e nao havia mais foto limpa nenhuma. Ninguem
+   mudou o veu; a caixa mudou embaixo dele.
 
-   O PLATO nao tem folga. Varri de .65 a zero: .55 ja reprova (4,47:1 na arte
-   real, 3,74:1 sobre branco) e sem veu nenhum o texto cai para 1,28:1. Mais
-   blur nao compra folga — com raio de 3rem o .55 passa na arte real e segue
-   reprovando no branco, porque desfoque nao tem o que fazer a media quando o
-   fundo e liso.
+   O PLATO nao tem folga, e isso segue valendo. Varri de .65 a zero: .55 ja
+   reprova (4,47:1 na arte real, 3,74:1 sobre branco) e sem veu o texto cai
+   para 1,28:1. Mais blur nao compra folga — desfoque nao tem o que fazer com a
+   media quando o fundo e liso.
 
-   A QUEDA tem folga, e foi testada: 4rem da 111px de foto limpa contra 39,
-   sem mexer em contraste nenhum (os mesmos 6,00:1 e 5,17:1). Ficou no ar
-   lado a lado com esta e com a versao sem veu, e a escolha foi esta — a
-   transicao longa faz o escuro virar atmosfera em vez de faixa, e a faixa
-   curta marca demais onde o texto comeca.
+   A QUEDA tem folga, e encurtar nao custa contraste: o texto fica sempre
+   DENTRO do plato, entao o titulo mede os mesmos 6,90:1 sobre a arte real com
+   4rem ou com 9rem. O que muda e so quanto da foto aparece — 69px limpos
+   contra zero.
 
-   Entao a densidade aqui e deliberada, nao esquecimento. Quem quiser mais
-   foto visivel mexe em 4rem e reconfere nada — contraste nao muda. Quem
-   quiser resolver a CAUSA tira o texto de cima da foto: enquanto 60% do
-   cartao for texto, vai haver um veu grande aqui. */
-.yb-offercard{ --yb-veil-fall:9rem; }
+   Quem quiser resolver a CAUSA tira o texto de cima da foto: enquanto 60% do
+   cartao for texto sobre imagem, vai haver um veu grande aqui. E quem mexer na
+   altura do corpo precisa reconferir ESTA conta — foi ela que quebrou. */
+.yb-offercard{ --yb-veil-fall:4rem; }
 .yb-offercard__body::before{
   content:""; position:absolute; z-index:-1;
   inset:calc(var(--yb-veil-fall) * -1) 0 0;
