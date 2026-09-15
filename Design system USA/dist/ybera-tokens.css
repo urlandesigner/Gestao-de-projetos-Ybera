@@ -791,6 +791,8 @@
      mesma que produz a barra — alvo + respiro + fio —, e a barra usa este
      token como piso, entao os dois nao tem como divergir. */
   --yb-header-h: calc(var(--yb-target-min) + var(--yb-space-4) * 2 + 1px);
+  /* O aperto do mobile esta no fim deste arquivo: a barra encolhe o respiro
+     la, e o token tem de encolher junto — ver @media (max-width:768px). */
 
   /* Sinal da direcao de leitura. `transform` nao tem versao logica: um
      translateX negativo tira a gaveta da tela em LTR e a traz para dentro em
@@ -843,3 +845,18 @@
 [dir="rtl"] { --yb-dir: -1; }
 
 [data-market="br"] { /* sem diferença visual — ver nota acima */ }
+
+/* ===========================================================================
+   ALTURA DO CABECALHO NO MOBILE
+
+   O respiro da barra cai de `--yb-space-4` para `--yb-space-3` abaixo de
+   768px, e a altura cai junto. Este ajuste morava na propria regra do
+   `.yb-header__bar`, e um valor declarado NO elemento so alcanca ele e seus
+   filhos: quem gruda abaixo da barra sem estar dentro dela — a doca do
+   parceiro, a faixa do parceiro — continuava lendo a altura do desktop e
+   ficava 8px fora do lugar no celular. Declarado aqui, no dono do token,
+   todo mundo le o mesmo numero.
+   =========================================================================== */
+@media (max-width:768px){
+  :root{ --yb-header-h: calc(var(--yb-target-min) + var(--yb-space-3) * 2 + 1px); }
+}

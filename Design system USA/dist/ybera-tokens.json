@@ -2801,7 +2801,13 @@
       "$value": "calc(var(--yb-target-min) + var(--yb-space-4) * 2 + 1px)",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-header-h",
-        "com.ybera.layer": "semantic"
+        "com.ybera.layer": "semantic",
+        "com.ybera.contexts": [
+          {
+            "condicao": "@media (max-width:768px)",
+            "valor": "calc(var(--yb-target-min) + var(--yb-space-3) * 2 + 1px)"
+          }
+        ]
       },
       "$type": "dimension"
     }

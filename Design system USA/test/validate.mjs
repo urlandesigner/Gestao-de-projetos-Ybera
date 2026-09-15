@@ -1224,6 +1224,52 @@ secao('Páginas');
   }
 
   {
+    // Nenhum produto da loja preenche `compare_at_price` — o riscado e o selo
+    // "Save X%" so renderizam com dado forjado, e dado forjado precisa da mesma
+    // cerca da variante. Alem de existir, o selo tem que FECHAR com os dois
+    // precos: um selo que anuncia um desconto que os numeros desmentem e pior
+    // do que nenhum selo, e o cartao de oferta ja e checado assim.
+    const alvo = '_captura/nova-loja/pdp-oferta.html';
+    if (!existsSync(join(raiz, alvo))) {
+      falha('tela-prova de promoção ausente', 'o riscado e o selo "Save X%" ficam sem evidência');
+      falha('o desconto da PDP não pôde ser conferido', `${alvo} não existe`);
+    } else {
+      const h = ler(alvo);
+      const was = h.match(/yb-price__was">\$([\d.]+)/);
+      const now = h.match(/data-yb-preco>\$([\d.]+)/);
+      const selo = h.match(/yb-badge--sale">Save (\d+)%/);
+
+      const faltando = [];
+      if (!was) faltando.push('o preço anterior riscado');
+      if (!selo) faltando.push('o selo de desconto');
+      if (!now) faltando.push('o preço atual marcado para trocar');
+      faltando.length
+        ? falha('a tela-prova de promoção não prova a promoção', faltando.join(', '))
+        : ok('a PDP em promoção mostra o anterior e o selo', `${was[1]} → ${now[1]}, Save ${selo[1]}%`);
+
+      const torto = [];
+      if (was && now && selo) {
+        const antes = Number(was[1]), atual = Number(now[1]);
+        if (antes <= atual) torto.push(`riscado ${antes} não é maior que ${atual}`);
+        else {
+          const real = Math.round((1 - atual / antes) * 100);
+          if (Math.abs(real - Number(selo[1])) > 1)
+            torto.push(`selo diz ${selo[1]}%, os preços dizem ${real}%`);
+        }
+      }
+      const vazou = ['pdp', 'pdp-esgotado', 'pdp-variante', 'index', 'index-v2']
+        .map(n => `_captura/nova-loja/${n}.html`)
+        .filter(f => existsSync(join(raiz, f)))
+        .filter(f => /yb-price__was">\$/.test(ler(f)));
+      if (vazou.length) torto.push(`dado forjado vazou para ${vazou.join(', ')}`);
+
+      torto.length
+        ? falha('o desconto da PDP não fecha, ou o dado forjado vazou', torto.join(' · '))
+        : ok('o desconto da PDP fecha com os preços', 'só pdp-oferta.html declara COMPARE_FORJADO');
+    }
+  }
+
+  {
     // JSON-LD e a unica coisa da pagina que fala com o Google em vez de falar
     // com uma pessoa. Duas exigencias: que ele exista e faca parse (JSON quebrado
     // e ignorado em silencio — o pior tipo de defeito), e que ele NAO declare

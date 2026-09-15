@@ -2099,6 +2099,54 @@
   background:var(--yb-action-bg); border:1px solid var(--yb-surface);
 }
 
+/* -------------------------------------------------------------------------
+   FAIXA DO PARCEIRO
+   Segunda cara do parceiro, logo acima, e bloco proprio em vez de `__faixa`:
+   o balao vive DENTRO da arte e sai com ela; esta faixa vive presa ao
+   cabecalho e so existe depois que a arte acabou. Elemento de um bloco mora
+   dentro dele, e este mora do outro lado da pagina. Um elemento so tambem
+   nao resolveria: teria de sair de `position:absolute` no banner para
+   `fixed` na tela no meio da rolagem, e isso nao se faz sem salto.
+
+   O mesmo recado, sem a foto: a foto e o que apresenta a pessoa, e quem
+   chegou ate aqui ja passou por ela. Repeti-la em 40px de faixa faria um
+   retrato ilegivel disputando espaco com a frase.
+
+   Cinza, e nao o preto da faixa de cima: sao dois avisos diferentes e a
+   pessoa precisa distinguir sem ler. O preto anuncia a LOJA (frete gratis);
+   este cinza e o recado de UMA pessoa, e fala mais baixo. Nenhum dos dois
+   e acao — por isso nenhum usa o magenta.
+
+   `z-index` abaixo do cabecalho de proposito: o painel do mega-menu desce
+   por cima desta faixa, e nao o contrario.
+   ------------------------------------------------------------------------- */
+.yb-partnerbar{
+  position:fixed; inset-inline:0;
+  inset-block-start:var(--yb-header-h);
+  z-index:var(--yb-z-dropdown);
+  display:none;
+  padding:var(--yb-space-2) var(--yb-page-gutter);
+  background:var(--yb-bg-muted); color:var(--yb-text-primary);
+  border-block-end:1px solid var(--yb-border-subtle);
+  font-size:var(--yb-type-body-sm-size);
+  text-align:center;
+}
+/* :not([hidden]), mesma armadilha da barra de compra: `display:block` na
+   classe venceria o [hidden] do navegador e a faixa nunca sumiria. */
+.yb-partnerbar:not([hidden]){display:block}
+.yb-partnerbar__text{
+  margin:0;
+  /* Duas linhas, teto. No desktop o recado cabe numa (405px de texto em
+     1.440), e a segunda linha nunca aparece; em 390px ele pede 405px contra
+     358 de caixa, e uma linha so cortaria a frase justamente no "partner
+     discount", que e o que a faixa existe para dizer. O teto de duas linhas
+     e o que impede a faixa de crescer mais alta que o proprio cabecalho em
+     320px. Mesma mecanica do titulo do cartao. */
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
+}
+.yb-partnerbar__text b{font-weight:var(--yb-font-weight-semibold)}
+
 /* =========================================================================
    SWITCH
    Nao e a caixa de selecao com outra roupa. A caixa guarda uma intencao ate

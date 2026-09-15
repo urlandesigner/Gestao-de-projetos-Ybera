@@ -119,6 +119,14 @@
         </div>
       </div>
     </div>
+    <h3 class="row-label">Faixa — depois que a arte acaba</h3>
+    <div class="stage">
+      <!-- `position:static` só aqui na doc: na loja ela é fixa abaixo do cabeçalho,
+           e fixa dentro desta página grudaria na janela da documentação. -->
+      <div class="yb-partnerbar" style="position:static">
+        <p class="yb-partnerbar__text">Hey, it&rsquo;s <b>@naymazzeto</b>! Enjoy my exclusive <b>partner discount</b>.</p>
+      </div>
+    </div>
     <div class="note">
       <b>Encolhe, não some</b>
       <p>O balão é um recado: serve uma vez, e depois de lido vira tarja cobrindo a arte
@@ -142,8 +150,22 @@
       cálculo. Ancorado no próprio banner o ponto de partida é exato em qualquer largura,
       e a peça sai da tela junto com a arte que ela cobre. O pai precisa de
       <code>position:relative</code>.</p>
-      <p>Sem JavaScript o balão fica aberto. É o estado certo para ficar preso: o recado
-      aparece, só não recolhe.</p>
+      <p><b>A faixa é a mesma frase, sem a foto.</b> O balão sai da tela junto com a arte,
+      e depois disso o recado sumia da página inteira &mdash; quem rolou até os produtos
+      já não lembra de onde veio o desconto que vai aparecer no carrinho. A faixa devolve
+      o recado preso abaixo do cabeçalho, em cinza: o preto logo acima anuncia a
+      <b>loja</b> (frete grátis) e este cinza é o recado de <b>uma pessoa</b>, mais baixo.
+      Nenhum dos dois usa o magenta, porque nenhum dos dois é ação.</p>
+      <p>A foto fica de fora de propósito: ela é o que apresenta a pessoa, e quem chegou
+      até ali já passou por ela. Em 40px de faixa viraria um retrato ilegível disputando
+      espaço com a frase.</p>
+      <p>Quem liga e desliga é um <code>IntersectionObserver</code> ancorado na própria
+      arte, e não um número de rolagem: o banner tem alturas diferentes na v1, na v2 e no
+      celular, e limite fixo estaria errado em duas das três. Enquanto qualquer pedaço da
+      arte estiver à vista a faixa não existe &mdash; seria o mesmo recado duas vezes na
+      mesma tela.</p>
+      <p>Sem JavaScript o balão fica aberto e a faixa não aparece. É o estado certo para
+      ficar preso: o recado aparece uma vez, só não recolhe e não volta.</p>
     </div>
   </section>
 

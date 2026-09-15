@@ -1095,7 +1095,7 @@ def banner():
             </picture>
           </a>
         </li>"""
-    return f"""<section class="banner" aria-roledescription="carousel" aria-label="Promotions">
+    return f"""<section class="banner" data-yb-partnerbar-anchor aria-roledescription="carousel" aria-label="Promotions">
 {parceiro()}
   <ul class="banner__track" id="banner-track">{slides}
   </ul>
@@ -1116,6 +1116,17 @@ PARCEIRO = {
 }
 
 
+def recado_parceiro():
+    """A frase, escrita uma vez so.
+
+    Ela aparece em dois lugares — o balao sobre a arte e a faixa presa ao
+    cabecalho. Escrita duas vezes, uma delas envelheceria: o dia em que o
+    recado mudar, quem editar vai achar que corrigiu a loja inteira e vai ter
+    corrigido metade."""
+    return (f"Hey, it&rsquo;s <b>{PARCEIRO['identificador']}</b>! "
+            f"{PARCEIRO['recado']}")
+
+
 def parceiro():
     """Avatar e balao sobre o banner. Recolhe na rolagem (ver components.js)."""
     return f"""<aside class="yb-partner" data-yb-partner aria-label="Partner greeting">
@@ -1125,10 +1136,27 @@ def parceiro():
       <span class="yb-sr-only">Message from {PARCEIRO['identificador']}</span>
     </button>
     <div class="yb-partner__bubble" id="partner-msg">
-      <p>Hey, it&rsquo;s <b>{PARCEIRO['identificador']}</b>! {PARCEIRO['recado']}</p>
+      <p>{recado_parceiro()}</p>
     </div>
   </div>
 </aside>"""
+
+
+def faixa_parceiro():
+    """A mesma frase, presa abaixo do cabecalho, depois que a arte passou.
+
+    Nasce `hidden`: sem script ela nao aparece, e o balao sobre a arte
+    continua sendo o unico lugar do recado — que e o estado certo para
+    degradar, porque a faixa e reforco e nao a primeira leitura.
+
+    Quem liga e desliga e o observador em components.js, ancorado na propria
+    arte (`data-yb-partnerbar-anchor`). Nao ha numero de rolagem escrito em
+    lugar nenhum: o banner muda de altura entre v1, v2 e celular, e qualquer
+    limite fixo estaria errado em duas das tres."""
+    return ('<aside class="yb-partnerbar" data-yb-partnerbar hidden '
+            'aria-label="Partner greeting">\n'
+            f'  <p class="yb-partnerbar__text">{recado_parceiro()}</p>\n'
+            '</aside>')
 
 
 # O quiz de diagnostico. A loja tem "AI Hair Analysis" no menu, mas a entrada
@@ -1288,6 +1316,22 @@ VARIANTE_FORJADA = [
     {'titulo': '500g (17.6oz)', 'preco': '$59.90', 'disponivel': True,  'foto': 1},
     {'titulo': '1kg (35.2oz)',  'preco': '$99.90', 'disponivel': False, 'foto': 2},
 ]
+
+# Preco anterior forjado, para a tela-prova da PDP em promocao.
+#
+# A loja US nao preenche `compare_at_price` em nenhum dos 115 produtos, entao o
+# ramo do riscado e do selo "Save X%" estava escrito e NUNCA rodava — codigo
+# que ninguem consegue ver, que e como um ramo apodrece sem ninguem notar (a
+# mesma razao de existir a tela do esgotado e a da variante).
+#
+# Forjado e com cerca: so `pdp-oferta.html` declara, e o validador recusa se
+# este numero aparecer em qualquer outra tela. Tres cartoes de tamanho
+# inventados ja moraram no gerador e foram lidos como preco de verdade.
+#
+# $124.90 contra os $89.90 reais do produto da o desconto redondo de 28%. O
+# riscado precisa ser MAIOR que o cobrado: chamar de desconto um aumento e
+# mentira, e o validador do cartao de oferta ja reprova isso — aqui vale igual.
+COMPARE_FORJADO = '$124.90'
 
 
 # ==================================================== CARROSSEL DE REVIEWS
@@ -1945,7 +1989,7 @@ def hero_v2():
           <span class="yb-btn yb-btn--primary">{rot}</span>
         </div>
       </a>"""
-    return f"""  <section class="yb-hero" aria-roledescription="carousel" aria-label="Highlights">
+    return f"""  <section class="yb-hero" data-yb-partnerbar-anchor aria-roledescription="carousel" aria-label="Highlights">
 {parceiro()}
     <div class="yb-track yb-track--hero" id="hero-track" data-yb-track-loop>{slides}
     </div>
@@ -1984,6 +2028,7 @@ def montar_home(destino):
 
 
     corpo = f"""{header(promo=heroi)}
+{faixa_parceiro()}
 
 <main>
   {banner()}
@@ -2229,11 +2274,15 @@ def linha_do(titulo):
     return 'All Products', '/collections'
 
 
-def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=None):
+def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=None,
+               compare=None):
     p = dados.produto(handle, os.path.join(destino, 'img'))
     # `variantes` so e passado pela tela-prova da variante (ver VARIANTE_FORJADA).
     if variantes:
         p['variantes'] = variantes
+    # `compare` idem, pela tela-prova da promocao (ver COMPARE_FORJADO).
+    if compare:
+        p['compare'] = compare
     # Com variante, quem manda no preco e no estoque e a variante ESCOLHIDA, nao
     # o produto: era o produto que mandava, e por isso o preco do topo ficava
     # parado enquanto o cartao selecionado dizia outro numero.
@@ -2316,15 +2365,31 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
                  else '<span class="yb-badge yb-badge--danger" data-yb-selo>Sold out</span>']
     if p.get('brinde'):
         selos_pdp.append(f'<span class="yb-badge yb-badge--accent">{p["brinde"]}</span>')
+    estoque = "".join(selos_pdp)
+
+    # O selo de desconto e o UNICO que sobe para cima do nome, na fileira que o
+    # buy box ja tem para isso (`.yb-buybox__flags` — a doc do componente a usa
+    # com "Save 16%"). Os outros ficam na linha do preco.
+    #
+    # A diferenca nao e de gosto. "In stock" e o brinde qualificam a COMPRA e
+    # so fazem sentido depois de "quanto custa"; o desconto qualifica a VISITA
+    # — e o motivo de a pagina valer a pena agora, e chega antes de tudo. Numa
+    # pagina de promocao ele e a manchete, nao uma nota de rodape do preco.
+    #
+    # Contra `preco_base`, que e o numero NA TELA — com variante escolhida ele
+    # difere de `p['preco']`, e um selo calculado sobre um preco que nao esta a
+    # vista anuncia um desconto que a pagina desmente.
+    selo_oferta = ''
     if p.get('compare'):
         try:
-            atual = float(p['preco'].lstrip('$')); antes = float(p['compare'].lstrip('$'))
+            atual = float(preco_base.lstrip('$')); antes = float(p['compare'].lstrip('$'))
             if antes > atual:
-                selos_pdp.append(
-                    f'<span class="yb-badge yb-badge--sale">Save {round((1 - atual / antes) * 100)}%</span>')
+                selo_oferta = (
+                    '<div class="yb-buybox__flags">'
+                    f'<span class="yb-badge yb-badge--sale">Save {round((1 - atual / antes) * 100)}%</span>'
+                    '</div>')
         except ValueError:
             pass
-    estoque = "".join(selos_pdp)
     # Seletor de variante so quando ha escolha. Antes eram tres cartoes fixos
     # no gerador (250g/$34.90, 1kg/$119.90) para um produto que tem UMA
     # variante — protótipo lido como verdade.
@@ -2490,6 +2555,7 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
            fileira virou 44px de vazio empurrando o nome do produto para baixo.
            Ao lado do titulo ele fica junto do que favorita — a mesma anatomia
            da linha do carrinho, onde a lixeira acompanha o nome do item. -->
+{selo_oferta}
       <div class="yb-buybox__topo">
         <h1 class="yb-buybox__title">{p['titulo']}</h1>
         <span class="yb-buybox__acoes">
@@ -2517,9 +2583,10 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
           <span class="yb-rating__score">{AVALIACAO['nota']}</span>
           <span class="yb-rating__count">({p.get('reviews', AVALIACAO['total']):,} reviews)</span></span>
       </a>
-      <!-- Os selos vivem na linha do PRECO, e nao acima do titulo. La em cima
-           eles respondiam "posso comprar?" antes de "o que e isto?"; aqui
-           respondem junto de "quanto custa", que e onde a decisao acontece. -->
+      <!-- Estoque e brinde vivem na linha do PRECO, e nao acima do titulo. La
+           em cima eles respondiam "posso comprar?" antes de "o que e isto?";
+           aqui respondem junto de "quanto custa", que e onde a decisao
+           acontece. O selo de DESCONTO e a excecao e sobe: ver `selo_oferta`. -->
       <div class="yb-buybox__precoLinha">
         <span class="yb-price"><b class="yb-price__now" data-yb-preco>{preco_base}</b>{comp}</span>
         <span class="yb-buybox__selos">{estoque}</span>
@@ -2653,6 +2720,7 @@ def montar_home_v2(destino):
                       [card(pr, flag=False) for pr in vizinhos])
 
     corpo = f"""{header(promo=prods[2])}
+{faixa_parceiro()}
 
 <main>
 {hero_v2()}
@@ -2736,5 +2804,8 @@ if __name__ == '__main__':
     print("montando pdp com variante…")
     open(os.path.join(destino, 'pdp-variante.html'), 'w', encoding='utf-8').write(
         montar_pdp(destino, variantes=VARIANTE_FORJADA))
+    print("montando pdp em promocao…")
+    open(os.path.join(destino, 'pdp-oferta.html'), 'w', encoding='utf-8').write(
+        montar_pdp(destino, compare=COMPARE_FORJADO))
     n = len(os.listdir(os.path.join(destino, 'img')))
     print(f"pronto: nova-loja/  ({n} imagens reais)")

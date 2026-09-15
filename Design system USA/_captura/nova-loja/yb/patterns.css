@@ -545,9 +545,10 @@
    do respiro, nao do alvo: os icones seguem com 44px de min-width. A loja hoje
    cabe nos mesmos 320 entregando icone de 18x17 — alvo que ninguem acerta. */
 @media (max-width:768px){
-  /* respiro menor aqui, entao a altura acompanha */
-  .yb-header__bar{--yb-header-h:calc(var(--yb-target-min) + var(--yb-space-3) * 2 + 1px);
-    padding:var(--yb-space-3) var(--yb-page-gutter); gap:var(--yb-space-2)}
+  /* respiro menor aqui; a altura acompanha pelo token, que encolhe no mesmo
+     ponto de quebra em tokens/01-semantic.css — declarada aqui, no elemento,
+     ela nao alcancava quem gruda abaixo da barra sem estar dentro dela */
+  .yb-header__bar{padding:var(--yb-space-3) var(--yb-page-gutter); gap:var(--yb-space-2)}
   .yb-header__icon{padding:0}
   .yb-header__actions{gap:0}
 }

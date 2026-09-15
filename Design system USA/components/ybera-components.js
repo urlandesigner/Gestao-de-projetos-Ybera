@@ -277,6 +277,33 @@
   })();
 
   /* ---------------------------------------------------------------------
+     FAIXA DO PARCEIRO — o mesmo recado, depois que a arte passou
+       <aside class="yb-partnerbar" data-yb-partnerbar hidden>
+       <section ... data-yb-partnerbar-anchor>   a arte (banner ou hero)
+
+     O balao acima vive dentro da arte e sai com ela; depois disso o recado
+     sumia da pagina inteira. A faixa o devolve preso ao cabecalho, sem foto
+     e numa linha so.
+
+     A ancora e a ARTE, e nao um numero de rolagem: o banner tem alturas
+     diferentes na v1, na v2 e no celular, e limite fixo estaria errado em
+     duas das tres. Enquanto qualquer pedaco da arte estiver a vista, a faixa
+     nao existe — seria o mesmo recado duas vezes na mesma tela.
+
+     Sem IntersectionObserver (ou sem script) a faixa fica escondida e o
+     balao segue sendo o unico lugar do recado, que e o estado certo para
+     degradar.
+     --------------------------------------------------------------------- */
+  (function () {
+    var faixa = document.querySelector('[data-yb-partnerbar]');
+    var arte = document.querySelector('[data-yb-partnerbar-anchor]');
+    if (!faixa || !arte || !('IntersectionObserver' in window)) return;
+    new IntersectionObserver(function (entradas) {
+      faixa.hidden = entradas[0].isIntersecting;
+    }, { threshold: 0 }).observe(arte);
+  })();
+
+  /* ---------------------------------------------------------------------
      SWITCH
        <button class="yb-switch" role="switch" aria-checked="false" data-yb-switch>
      <aside class="yb-partner" data-yb-partner>  +  <button class="yb-partner__avatar">

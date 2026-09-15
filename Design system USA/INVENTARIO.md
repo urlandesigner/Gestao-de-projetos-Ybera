@@ -44,7 +44,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | NOTICE | `.yb-notice` | Componente | Beta | 2 | — | 15 | sim | — | — | — |
 | OFFER CARD | `.yb-offercard` | Componente | Estável | 1 | 2 | 36 | sim | sim | sim | sim |
 | PAGINATION | `.yb-pagination` | Componente | Beta | — | 3 | 17 | sim | sim | — | — |
-| PARTNER | `.yb-partner` | Componente | Estável | — | 1 | 24 | sim | sim | sim | sim |
+| PARTNER | `.yb-partner` | Componente | Estável | — | 1 | 28 | sim | sim | sim | sim |
 | POST | `.yb-post` | Componente | Estável | 4 | 2 | 21 | sim | sim | — | sim |
 | PRICE | `.yb-price` | Componente | Estável | 2 | — | 10 | sim | n/a | — | sim |
 | PRODUCT CARD | `.yb-card` | Componente | Estável | — | 1 | 19 | sim | sim | — | sim |

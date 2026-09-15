@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ybera Paris USA | Keratin care that survives humidity</title>
-<link rel="stylesheet" href="yb/fonte.css?v=cfaaba19">
-<link rel="stylesheet" href="yb/00-primitives.css?v=cfaaba19">
-<link rel="stylesheet" href="yb/01-semantic.css?v=cfaaba19">
-<link rel="stylesheet" href="yb/components.css?v=cfaaba19">
-<link rel="stylesheet" href="yb/patterns.css?v=cfaaba19">
-<link rel="stylesheet" href="yb/icons.css?v=cfaaba19">
+<link rel="stylesheet" href="yb/fonte.css?v=375c58ca">
+<link rel="stylesheet" href="yb/00-primitives.css?v=375c58ca">
+<link rel="stylesheet" href="yb/01-semantic.css?v=375c58ca">
+<link rel="stylesheet" href="yb/components.css?v=375c58ca">
+<link rel="stylesheet" href="yb/patterns.css?v=375c58ca">
+<link rel="stylesheet" href="yb/icons.css?v=375c58ca">
 <style>
   /* Só layout de página: largura, respiro entre blocos e o grid do hero.
      Nenhum componente é redefinido aqui — se um botão precisasse de ajuste,
@@ -168,9 +168,12 @@
   </div>
   <label class="yb-header__scrim" for="nav-open" aria-hidden="true"></label>
 </header>
+<aside class="yb-partnerbar" data-yb-partnerbar hidden aria-label="Partner greeting">
+  <p class="yb-partnerbar__text">Hey, it&rsquo;s <b>@yberapartner</b>! Enjoy my exclusive <b>partner discount</b>.</p>
+</aside>
 
 <main>
-  <section class="yb-hero" aria-roledescription="carousel" aria-label="Highlights">
+  <section class="yb-hero" data-yb-partnerbar-anchor aria-roledescription="carousel" aria-label="Highlights">
 <aside class="yb-partner" data-yb-partner aria-label="Partner greeting">
   <div class="yb-partner__dock">
     <button class="yb-partner__avatar" type="button" aria-expanded="true" aria-controls="partner-msg">
@@ -908,7 +911,7 @@
     </div>
   </div>
 </dialog>
-<script src="yb/components.js?v=cfaaba19"></script>
+<script src="yb/components.js?v=375c58ca"></script>
 <script>
 // Setas do banner. Carrossel nao e componente do sistema — este JS vive na
 // pagina, nao em components.js, para nao dar a entender que existe.
