@@ -1028,9 +1028,28 @@
 .yb-card__flags .yb-badge{
   max-width:100%; min-width:0; overflow:hidden; text-overflow:ellipsis;
 }
+/* PESO, E NAO TAMANHO. O nome disputava a leitura com o preco e perdia feio:
+   14px/500 contra 20px/700. Numa grade de produtos o preco pode ser o mais
+   forte, mas nao ao ponto de o nome do produto ler como legenda da foto.
+
+   Medi as duas saidas com um nome longo de verdade, no cartao mais apertado
+   que o sistema produz (164px, grade de dois no 375):
+
+     14px/500  40 caracteres cabem nas duas linhas   (hoje)
+     14px/600  40 caracteres                          <-- daqui
+     16px/500  33 caracteres
+     16px/600  33 caracteres
+
+   Aumentar custa 7 caracteres, 18% do nome visivel, e mais 5px de altura em
+   todo cartao. Engrossar nao custa nada disso: de 500 para 600 a mesma frase
+   alarga 1,6% — menos que a folga de uma quebra de palavra, e nao tirou um
+   unico caractere na medicao. De 14 para 16px ela alarga 14,3%, e ai tira.
+
+   Fica em 600 e nao em 700: o preco continua sendo o mais pesado da caixa, e
+   dois pesos iguais ali voltariam a empatar a leitura — de outro jeito. */
 .yb-card__title{
   font-size:var(--yb-type-body-sm-size); line-height:var(--yb-type-body-sm-line);
-  font-weight:var(--yb-font-weight-medium); margin:0;
+  font-weight:var(--yb-font-weight-semibold); margin:0;
   display:-webkit-box; -webkit-box-orient:vertical;
   -webkit-line-clamp:var(--yb-card-title-lines); line-clamp:var(--yb-card-title-lines);
   overflow:hidden;
@@ -1043,10 +1062,15 @@
   min-height:calc(var(--yb-card-title-lines) * var(--yb-type-body-sm-line) * 1em);
 }
 .yb-card__title a{color:var(--yb-text-primary); text-decoration:none}
+/* Sem sublinhado no hover. O cartao inteiro ja e o alvo (.yb-card__title
+   a::after cobre a caixa), e ele responde ao ponteiro de duas outras formas
+   que o sublinhado so repetia: a segunda foto entra no lugar da primeira e o
+   botao de acao aparece. Tres sinais para um mesmo estado e ruido — e o
+   sublinhado era o unico que mexia na tipografia, fazendo o nome tremer
+   quando o ponteiro passava pela grade.
 
-@media (hover:hover){
-  .yb-card__title a:hover{text-decoration:underline}
-}
+   O foco por teclado NAO depende disto: continua no anel de :focus-visible
+   abaixo, que e o que a navegacao sem mouse precisa. */
 .yb-card__title a:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);

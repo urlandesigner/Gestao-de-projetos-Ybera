@@ -258,15 +258,42 @@
 }
 .yb-nav__promo-media img{width:100%; height:100%; object-fit:cover; display:block}
 .yb-nav__promo-info{display:flex; flex-direction:column; gap:var(--yb-space-2)}
+/* Mesmo peso do nome no cartao de catalogo, e nao por acaso: e a mesma coisa
+   — o nome de um produto — em outro lugar da casa. Andou para 600 junto com
+   ele; ficar em 500 aqui deixava o mesmo produto mais fraco no submenu do que
+   na vitrine. Medido nos 288px do trilho: 66 caracteres nas duas linhas em
+   500 e em 600, mesma altura. Trocar o peso nao custa nada aqui tambem. */
 .yb-nav__promo-name{
   margin:0; font-size:var(--yb-type-body-sm-size);
-  font-weight:var(--yb-font-weight-medium); color:var(--yb-text-primary);
+  font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-primary);
   display:-webkit-box; -webkit-box-orient:vertical;
   -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
 }
 
+/* O CARTAO ACENDE O BOTAO, e nao sublinha o nome.
+
+   O nome sublinhava no hover e foi tirado a pedido, junto com o sublinhado do
+   cartao de catalogo — mas aquele podia perder o sublinhado de graca (ja tem
+   a segunda foto entrando e o botao de acao aparecendo) e este nao: era o
+   unico aviso de que o cartao inteiro e clicavel. Sem nada no lugar, passar o
+   ponteiro sobre a foto ou sobre o nome nao dizia mais nada.
+
+   O que entrou no lugar e o que o cartao de catalogo ja faz: o cartao inteiro
+   dispara o estado do proprio botao que esta ali dentro. Nao e efeito novo
+   nem linguagem nova — e o hover de `.yb-btn--secondary`, com os tokens dele,
+   acionado de um ancestral. O "View product" e um <span>, entao sozinho ele
+   so acenderia com o ponteiro exatamente em cima; assim acende com o cartao,
+   que e o que e clicavel de verdade.
+
+   Nao e tipografico de proposito: sublinhado e o unico estado de hover que
+   mexe no texto, e era isso que fazia o nome tremer quando o ponteiro
+   cruzava a grade. */
 @media (hover:hover){
-  .yb-nav__promo:hover .yb-nav__promo-name{color:var(--yb-text-link)}
+  .yb-nav__promo:hover .yb-btn--secondary{
+    background:var(--yb-action-secondary-bg-hover);
+    border-color:var(--yb-action-secondary-border-hover);
+    color:var(--yb-action-secondary-text-hover);
+  }
 }
 
 /* A segunda peca da vitrine: superficie afundada em vez de foto, para nao

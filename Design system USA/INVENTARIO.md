@@ -47,7 +47,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | PARTNER | `.yb-partner` | Componente | Estável | — | 1 | 24 | sim | sim | sim | sim |
 | POST | `.yb-post` | Componente | Estável | 4 | 2 | 21 | sim | sim | — | sim |
 | PRICE | `.yb-price` | Componente | Estável | 2 | — | 10 | sim | n/a | — | sim |
-| PRODUCT CARD | `.yb-card` | Componente | Estável | — | 2 | 19 | sim | sim | — | sim |
+| PRODUCT CARD | `.yb-card` | Componente | Estável | — | 1 | 19 | sim | sim | — | sim |
 | PRODUCT GALLERY | `.yb-gallery` | Componente | Estável | — | 3 | 19 | sim | sim | sim | sim |
 | PROGRESS BAR | `.yb-progress` | Componente | Estável | 3 | — | 11 | sim | n/a | — | sim |
 | QUANTITY STEPPER | `.yb-stepper` | Componente | Estável | 1 | 3 | 14 | sim | sim | sim | sim |
@@ -66,7 +66,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | EMPTY STATE | `.yb-empty` | Padrão | Estável | — | — | 13 | sim | n/a | — | sim |
 | FOOTER | `.yb-footer` | Padrão | Estável | 1 | 3 | 39 | sim | sim | — | sim |
 | FREE SHIPPING PROGRESS | `.yb-freeship` | Padrão | Estável | 1 | — | 8 | sim | n/a | — | sim |
-| HEADER | `.yb-nav` | Padrão | Estável | — | 3 | 59 | sim | sim | sim | sim |
+| HEADER | `.yb-nav` | Padrão | Estável | 1 | 3 | 62 | sim | sim | sim | sim |
 | HERO | `.yb-hero` | Padrão | Beta | — | — | 3 | sim | n/a | — | — |
 | MANIFESTO | `.yb-manifesto` | Padrão | Estável | — | — | 25 | sim | n/a | — | sim |
 | PAGE LAYOUT | `.yb-block` | Padrão | Estável | 2 | — | 17 | sim | n/a | — | sim |
