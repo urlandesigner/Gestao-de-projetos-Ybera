@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mirracura shampoo 500ml (16,9fl.oz) – Ybera USA</title>
-<link rel="stylesheet" href="yb/fonte.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/00-primitives.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/01-semantic.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/components.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/patterns.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/icons.css?v=e6c6e48f">
+<link rel="stylesheet" href="yb/fonte.css?v=29f7e957">
+<link rel="stylesheet" href="yb/00-primitives.css?v=29f7e957">
+<link rel="stylesheet" href="yb/01-semantic.css?v=29f7e957">
+<link rel="stylesheet" href="yb/components.css?v=29f7e957">
+<link rel="stylesheet" href="yb/patterns.css?v=29f7e957">
+<link rel="stylesheet" href="yb/icons.css?v=29f7e957">
 <style>
   /* Só layout de página: largura, respiro entre blocos e o grid do hero.
      Nenhum componente é redefinido aqui — se um botão precisasse de ajuste,
@@ -88,9 +88,24 @@
       <span class="yb-logo yb-logo--md"><img src="brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span>
     </a>
     <nav class="yb-header__nav" aria-label="Main">
-      <label class="yb-iconbtn yb-nav__close" for="nav-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-close"/></svg></label>
+      <!-- Cabeca da gaveta: a marca a esquerda, o X a direita. O logo aqui e
+           DECORATIVO de proposito (alt vazio, sem link): a barra atras ja tem
+           o logo como link para a home, e repeti-lo como segundo link para o
+           mesmo lugar so acrescenta uma parada de Tab e um segundo "Ybera"
+           anunciado. Quem abriu a gaveta quer ir a algum lugar, nao voltar. -->
+      <div class="yb-nav__head">
+        <span class="yb-logo yb-logo--md" aria-hidden="true">
+          <img src="brand/ybera-logo.webp" alt="" width="360" height="139"></span>
+        <label class="yb-iconbtn yb-nav__close" for="nav-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-close"/></svg></label>
+      </div>
+      <div class="yb-nav__conta">
+        <span class="yb-nav__conta-quem">
+          <svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-user"/></svg>
+          <b class="yb-nav__conta-nome">Welcome, Visitor</b>
+        </span>
+        <a class="yb-btn yb-btn--primary yb-btn--sm" href="/account/login">Log in</a>
+      </div>
       <ul class="yb-nav">
-        <li class="yb-nav__item yb-nav__item--account"><a class="yb-nav__link" href="/account">Account</a></li>
         <li class="yb-nav__item"><a class="yb-nav__link" href="/">Home</a></li>
         <li class="yb-nav__item">
           <input class="yb-nav__toggle" type="checkbox" id="nav1">
@@ -142,7 +157,7 @@
           <label class="yb-nav__link" for="nav4">About Us
             <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-down"/></svg></label>
           <div class="yb-nav__panel">
-            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/pages/our-story">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/blogs/haircare">Blog</a></div></div>
+            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/pages/our-story">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/blogs/haircare">Blog</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/pages/new-chapter-ybera">New chapter Ybera</a></div></div>
           </div>
         </li>
       </ul>
@@ -294,15 +309,15 @@
       </div>
 
       <div class="yb-accordion">
-        <details><summary>Description</summary>
+        <details name="pdp-detalhes"><summary>Description</summary>
           <div class="yb-accordion__body"><p>The MirraCura Shampoo is a hair repair shampoo designed to help improve the appearance of dry, damaged hair . Helps enhance hydration , softness , manageability , and natural-looking shine .</p></div></details>
-        <details><summary>How to use</summary>
+        <details name="pdp-detalhes"><summary>How to use</summary>
           <div class="yb-accordion__body"><p>Wash with a clarifying shampoo and towel-dry. Apply from mid-length to ends, avoiding the scalp. Leave for 20 minutes, then rinse and blow-dry.</p></div></details>
-        <details><summary>Science</summary>
+        <details name="pdp-detalhes"><summary>Science</summary>
           <div class="yb-accordion__body"><p>Each of the three masks acts on a different layer of the hair fiber. The cuticle mask seals the outer scales, the cortex mask rebuilds the protein bonds that chemical services break, and the medulla mask restores the water the fiber lost.</p></div></details>
-        <details><summary>Ingredients</summary>
+        <details name="pdp-detalhes"><summary>Ingredients</summary>
           <div class="yb-accordion__body"><p>Hydrolyzed keratin, D-panthenol, argan oil, shea butter and vegetable glycerin. Formaldehyde-free and safe for color-treated hair.</p></div></details>
-        <details><summary>Shipping &amp; returns</summary>
+        <details name="pdp-detalhes"><summary>Shipping &amp; returns</summary>
           <div class="yb-accordion__body"><p>Free standard shipping on orders over $50. Returns accepted within 30 days of delivery, unopened.</p></div></details>
       </div>
 
@@ -463,8 +478,8 @@
             <span class="yb-rating" role="img" aria-label="5 of 5 stars">
               <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
             
-            <p class="yb-review__text">Maravilhoso meu marido usa a um ano ele é perfeito ele cumpre oque promete</p>
-            <span class="yb-review__author">Rosana Beserra</span>
+            <p class="yb-review__text">Six weeks in and the baby hairs along my part are finally filling in. I use it every other night.</p>
+            <span class="yb-review__author">Danielle R.</span>
             <span class="yb-review__product"><a href="pdp.html">Vello hair fertilization therapy alfa-lactobaby® | Hair growth 90ml / 3fl.oz</a></span>
           </div>
         </article>
@@ -474,8 +489,8 @@
             <span class="yb-rating" role="img" aria-label="5 of 5 stars">
               <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
             
-            <p class="yb-review__text">Responsabilidad y buena atencion</p>
-            <span class="yb-review__author">Marggi Barajas</span>
+            <p class="yb-review__text">The coconut mask left my hair soft without that heavy feeling. The elixir is what makes the ends behave.</p>
+            <span class="yb-review__author">Priya M.</span>
             <span class="yb-review__product"><a href="pdp.html">Kit Terra Coco isotonic shampoo + coconut-based mask 1kg / 33oz + coconut elixir 60ml / 2oz</a></span>
           </div>
         </article>
@@ -485,8 +500,8 @@
             <span class="yb-rating" role="img" aria-label="5 of 5 stars">
               <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
             
-            <p class="yb-review__text">I loved it, I am wearing it on my 1-year-old daughter's hair and this day is more beautiful.</p>
-            <span class="yb-review__author">Nataniela</span>
+            <p class="yb-review__text">My daughter used to cry through every detangling. Now it takes two minutes and she asks to do it herself.</p>
+            <span class="yb-review__author">Alexis W.</span>
             <span class="yb-review__product"><a href="pdp.html">Girls’ hair care kit – anti-frizz, detangling &amp; shine | Ybera fashion kids</a></span>
           </div>
         </article>
@@ -496,8 +511,8 @@
             <span class="yb-rating" role="img" aria-label="5 of 5 stars">
               <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
             
-            <p class="yb-review__text">I love I've been using it for a long time.</p>
-            <span class="yb-review__author">Nataniela</span>
+            <p class="yb-review__text">Bought one and gave the second to my sister. Three washes in, the frizz that survived Florida is gone.</p>
+            <span class="yb-review__author">Carmen O.</span>
             <span class="yb-review__product"><a href="pdp.html">Double care – buy 1 Cronograma hair care system, get 1 free</a></span>
           </div>
         </article>
@@ -507,8 +522,8 @@
             <span class="yb-rating" role="img" aria-label="5 of 5 stars">
               <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
             
-            <p class="yb-review__text">Little bit expensive but I hope it works.</p>
-            <span class="yb-review__author">PCH</span>
+            <p class="yb-review__text">I have color-treated hair and was scared to try it. Four weeks later the shine is still there, no brass.</p>
+            <span class="yb-review__author">Jordan L.</span>
             <span class="yb-review__product"><a href="pdp.html">Kit Cronograma hair care system - Fashion Gold</a></span>
           </div>
         </article>
@@ -518,8 +533,8 @@
             <span class="yb-rating" role="img" aria-label="5 of 5 stars">
               <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
             
-            <p class="yb-review__text">Amazing product, smells very good!</p>
-            <span class="yb-review__author">PCH</span>
+            <p class="yb-review__text">It smells like a salon and the scent actually lasts until the evening. I keep one in my bag for touch-ups.</p>
+            <span class="yb-review__author">Nicole B.</span>
             <span class="yb-review__product"><a href="pdp.html">Floral fusion Hair Mist - 50ml/ 1,69fl.oz</a></span>
           </div>
         </article>
@@ -905,7 +920,7 @@
     </div>
   </div>
 </dialog>
-<script src="yb/components.js?v=e6c6e48f"></script>
+<script src="yb/components.js?v=29f7e957"></script>
 <script>
 // Setas do banner. Carrossel nao e componente do sistema — este JS vive na
 // pagina, nao em components.js, para nao dar a entender que existe.

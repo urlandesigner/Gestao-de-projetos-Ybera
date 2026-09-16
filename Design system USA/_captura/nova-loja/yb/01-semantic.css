@@ -142,6 +142,18 @@
   --yb-border-subtle: var(--yb-gray-200);
   --yb-border:        var(--yb-gray-300);
   --yb-border-strong: var(--yb-gray-400);
+  /* CONTORNO DE CONTROLE — o unico que precisa de 3:1.
+     WCAG 1.4.11 pede 3:1 para a fronteira que diz onde um controle esta, e
+     nenhum dos dois acima chega la: `--yb-border` da 1.40:1 e o `-strong` da
+     2.14:1 sobre branco. Eles servem para dividir bloco, que nao tem piso.
+     O gray-500 da 3.44:1 e e o degrau mais claro que passa — mesma escolha, e
+     pelo mesmo motivo, do `--yb-border-inverse-strong` (3.23:1) sobre escuro.
+
+     Isto so vale onde a borda E o controle: caixa de selecao e radio, cuja
+     forma inteira e a borda quando estao desmarcados. Campo de texto pode
+     seguir no `--yb-border` porque ali o rotulo, o fundo e o cursor tambem
+     dizem que ha um controle. */
+  --yb-border-control: var(--yb-gray-500);
   /* @reservado — mesma razao do texto inverso: superficie escura precisa de
      linha divisoria, e sem token ela vira var(--yb-gray-800) no componente. */
   --yb-border-inverse: var(--yb-gray-800);

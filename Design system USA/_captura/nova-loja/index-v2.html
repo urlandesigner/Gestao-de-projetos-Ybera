@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ybera Paris USA | Keratin care that survives humidity</title>
-<link rel="stylesheet" href="yb/fonte.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/00-primitives.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/01-semantic.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/components.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/patterns.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/icons.css?v=e6c6e48f">
+<link rel="stylesheet" href="yb/fonte.css?v=29f7e957">
+<link rel="stylesheet" href="yb/00-primitives.css?v=29f7e957">
+<link rel="stylesheet" href="yb/01-semantic.css?v=29f7e957">
+<link rel="stylesheet" href="yb/components.css?v=29f7e957">
+<link rel="stylesheet" href="yb/patterns.css?v=29f7e957">
+<link rel="stylesheet" href="yb/icons.css?v=29f7e957">
 <style>
   /* Só layout de página: largura, respiro entre blocos e o grid do hero.
      Nenhum componente é redefinido aqui — se um botão precisasse de ajuste,
@@ -100,9 +100,24 @@
       <span class="yb-logo yb-logo--md"><img src="brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span>
     </a>
     <nav class="yb-header__nav" aria-label="Main">
-      <label class="yb-iconbtn yb-nav__close" for="nav-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-close"/></svg></label>
+      <!-- Cabeca da gaveta: a marca a esquerda, o X a direita. O logo aqui e
+           DECORATIVO de proposito (alt vazio, sem link): a barra atras ja tem
+           o logo como link para a home, e repeti-lo como segundo link para o
+           mesmo lugar so acrescenta uma parada de Tab e um segundo "Ybera"
+           anunciado. Quem abriu a gaveta quer ir a algum lugar, nao voltar. -->
+      <div class="yb-nav__head">
+        <span class="yb-logo yb-logo--md" aria-hidden="true">
+          <img src="brand/ybera-logo.webp" alt="" width="360" height="139"></span>
+        <label class="yb-iconbtn yb-nav__close" for="nav-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-close"/></svg></label>
+      </div>
+      <div class="yb-nav__conta">
+        <span class="yb-nav__conta-quem">
+          <svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-user"/></svg>
+          <b class="yb-nav__conta-nome">Welcome, Visitor</b>
+        </span>
+        <a class="yb-btn yb-btn--primary yb-btn--sm" href="/account/login">Log in</a>
+      </div>
       <ul class="yb-nav">
-        <li class="yb-nav__item yb-nav__item--account"><a class="yb-nav__link" href="/account">Account</a></li>
         <li class="yb-nav__item"><a class="yb-nav__link" href="/">Home</a></li>
         <li class="yb-nav__item">
           <input class="yb-nav__toggle" type="checkbox" id="nav1">
@@ -154,7 +169,7 @@
           <label class="yb-nav__link" for="nav4">About Us
             <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-down"/></svg></label>
           <div class="yb-nav__panel">
-            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/pages/our-story">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/blogs/haircare">Blog</a></div></div>
+            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/pages/our-story">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/blogs/haircare">Blog</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/pages/new-chapter-ybera">New chapter Ybera</a></div></div>
           </div>
         </li>
       </ul>
@@ -403,8 +418,8 @@
             <span class="yb-rating" role="img" aria-label="5 of 5 stars">
               <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
             
-            <p class="yb-review__text">Maravilhoso meu marido usa a um ano ele é perfeito ele cumpre oque promete</p>
-            <span class="yb-review__author">Rosana Beserra</span>
+            <p class="yb-review__text">Six weeks in and the baby hairs along my part are finally filling in. I use it every other night.</p>
+            <span class="yb-review__author">Danielle R.</span>
             <span class="yb-review__product"><a href="pdp.html">Vello hair fertilization therapy alfa-lactobaby® | Hair growth 90ml / 3fl.oz</a></span>
           </div>
         </article>
@@ -414,8 +429,8 @@
             <span class="yb-rating" role="img" aria-label="5 of 5 stars">
               <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
             
-            <p class="yb-review__text">Responsabilidad y buena atencion</p>
-            <span class="yb-review__author">Marggi Barajas</span>
+            <p class="yb-review__text">The coconut mask left my hair soft without that heavy feeling. The elixir is what makes the ends behave.</p>
+            <span class="yb-review__author">Priya M.</span>
             <span class="yb-review__product"><a href="pdp.html">Kit Terra Coco isotonic shampoo + coconut-based mask 1kg / 33oz + coconut elixir 60ml / 2oz</a></span>
           </div>
         </article>
@@ -425,8 +440,8 @@
             <span class="yb-rating" role="img" aria-label="5 of 5 stars">
               <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
             
-            <p class="yb-review__text">I loved it, I am wearing it on my 1-year-old daughter's hair and this day is more beautiful.</p>
-            <span class="yb-review__author">Nataniela</span>
+            <p class="yb-review__text">My daughter used to cry through every detangling. Now it takes two minutes and she asks to do it herself.</p>
+            <span class="yb-review__author">Alexis W.</span>
             <span class="yb-review__product"><a href="pdp.html">Girls’ hair care kit – anti-frizz, detangling &amp; shine | Ybera fashion kids</a></span>
           </div>
         </article>
@@ -436,8 +451,8 @@
             <span class="yb-rating" role="img" aria-label="5 of 5 stars">
               <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
             
-            <p class="yb-review__text">I love I've been using it for a long time.</p>
-            <span class="yb-review__author">Nataniela</span>
+            <p class="yb-review__text">Bought one and gave the second to my sister. Three washes in, the frizz that survived Florida is gone.</p>
+            <span class="yb-review__author">Carmen O.</span>
             <span class="yb-review__product"><a href="pdp.html">Double care – buy 1 Cronograma hair care system, get 1 free</a></span>
           </div>
         </article>
@@ -447,8 +462,8 @@
             <span class="yb-rating" role="img" aria-label="5 of 5 stars">
               <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
             
-            <p class="yb-review__text">Little bit expensive but I hope it works.</p>
-            <span class="yb-review__author">PCH</span>
+            <p class="yb-review__text">I have color-treated hair and was scared to try it. Four weeks later the shine is still there, no brass.</p>
+            <span class="yb-review__author">Jordan L.</span>
             <span class="yb-review__product"><a href="pdp.html">Kit Cronograma hair care system - Fashion Gold</a></span>
           </div>
         </article>
@@ -458,8 +473,8 @@
             <span class="yb-rating" role="img" aria-label="5 of 5 stars">
               <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
             
-            <p class="yb-review__text">Amazing product, smells very good!</p>
-            <span class="yb-review__author">PCH</span>
+            <p class="yb-review__text">It smells like a salon and the scent actually lasts until the evening. I keep one in my bag for touch-ups.</p>
+            <span class="yb-review__author">Nicole B.</span>
             <span class="yb-review__product"><a href="pdp.html">Floral fusion Hair Mist - 50ml/ 1,69fl.oz</a></span>
           </div>
         </article>
@@ -578,13 +593,13 @@
           <a class="yb-btn yb-btn--secondary" href="faq.html">See all questions</a>
         </div>
         <div class="yb-accordion">
-          <details><summary>How long does delivery take?</summary>
+          <details name="faq-home"><summary>How long does delivery take?</summary>
             <div class="yb-accordion__body"><p>From the U.S. warehouse, Economy (USPS) takes 5&ndash;8 business days and Priority Express 2&ndash;4, counted from the order date. Items that ship from Brazil &mdash; marked on the product page with a Brazilian flag &mdash; take 11&ndash;16 business days.</p></div></details>
-          <details><summary>Is shipping free?</summary>
+          <details name="faq-home"><summary>Is shipping free?</summary>
             <div class="yb-accordion__body"><p>Economy shipping is free on orders over $50 and $8.90 under that. Priority Express is $9.90.</p></div></details>
-          <details><summary>Can I return an order?</summary>
+          <details name="faq-home"><summary>Can I return an order?</summary>
             <div class="yb-accordion__body"><p>You have 30 days from delivery to request one. The item has to come back unused, in its original packaging, with the receipt &mdash; and the return has to be requested first, at info.usa@ybera.com. Packages sent back without a request are not accepted.</p></div></details>
-          <details><summary>Is the keratin formaldehyde-free?</summary>
+          <details name="faq-home"><summary>Is the keratin formaldehyde-free?</summary>
             <div class="yb-accordion__body"><p>Yes. The formulas are formaldehyde-free and safe on color-treated hair.</p></div></details>
         </div>
       </div>
@@ -598,7 +613,9 @@
         </div>
         <a class="yb-link" href="/blogs/haircare">See all <svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-right"/></svg></a>
       </div>
-      <div class="yb-posts yb-posts--trio">
+      <!-- `yb-track` composto na marcacao, como em `.yb-reviews`: abaixo de
+           860 os tres cartoes deitam num trilho, acima voltam a ser grade. -->
+      <div class="yb-track yb-posts yb-posts--trio">
         <article class="yb-post yb-post--stacked">
           <div class="yb-post__media"><img src="img/Is_Keratin_Good_For_Hair-b3d5999d.webp" alt="" loading="lazy"></div>
           <div class="yb-post__body">
@@ -948,7 +965,7 @@
     </div>
   </div>
 </dialog>
-<script src="yb/components.js?v=e6c6e48f"></script>
+<script src="yb/components.js?v=29f7e957"></script>
 <script>
 // Setas do banner. Carrossel nao e componente do sistema — este JS vive na
 // pagina, nao em components.js, para nao dar a entender que existe.

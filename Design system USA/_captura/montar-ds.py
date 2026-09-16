@@ -295,6 +295,10 @@ MENU = [
         # nao le o blog antes nao reconhece aquilo como "aqui esta o blog".
         # "Our Story" ao lado e generico de proposito; este agora tambem e.
         {"titulo": "Blog", "href": "/blogs/haircare",   "itens": []},
+        # Terceira porta do painel. O painel do "About Us" nao tem sublista —
+        # cada grupo e um link so —, entao o titulo E o link: itens vazio nao
+        # deixa <ul> orfa no DOM (ver `menu()`).
+        {"titulo": "New chapter Ybera", "href": "/pages/new-chapter-ybera", "itens": []},
     ]},
 ]
 
@@ -394,7 +398,11 @@ CLIENTE = {'nome': 'Urlan Dipre', 'email': 'urlan.dipre@ybera.com'}
 def header(carrinho=2, promo=None, cliente=None):
     """`cliente` liga o estado logado: o icone generico vira a inicial e abre o
     menu da conta. Deslogado continua sendo um botao de icone so — e o que a
-    loja mostra hoje."""
+    loja mostra hoje.
+
+    A gaveta do celular tem a sua propria linha de conta (`.yb-nav__conta`),
+    porque la nao ha menu suspenso: a saudacao e o botao ficam a vista, no
+    topo, antes dos links."""
     if cliente:
         inicial = cliente['nome'].strip()[:1].upper()
         conta = f"""<div class="yb-usermenu">
@@ -415,9 +423,36 @@ def header(carrinho=2, promo=None, cliente=None):
           </span>
         </div>
       </div>"""
+        primeiro = cliente['nome'].strip().split()[0]
+        # Logado, a linha deixa de ser um convite e passa a ser uma porta: quem
+        # ja entrou nao precisa de "Log in", precisa de onde ficam os pedidos.
+        #
+        # E o nome vem sozinho, sem "Welcome,": o botao "Account" e mais largo
+        # que "Log in" e a pastilha da inicial e mais larga que o icone, entao
+        # a saudacao sobrava 117px para 128 de texto e cortava o nome do
+        # cliente em "Welcome, Url...". Cortar o proprio nome de quem entrou e
+        # pior do que nao saudar. Avatar + nome e o que o menu de conta do
+        # desktop ja faz.
+        conta_gaveta = f"""<div class="yb-nav__conta">
+        <span class="yb-nav__conta-quem">
+          <span class="yb-nav__conta-inicial" aria-hidden="true">{inicial}</span>
+          <b class="yb-nav__conta-nome">{primeiro}</b>
+        </span>
+        <a class="yb-btn yb-btn--primary yb-btn--sm" href="/account">Account</a>
+      </div>"""
     else:
         conta = (f'<button class="yb-iconbtn yb-header__icon yb-header__account" '
                  f'aria-label="Account">{ico("user")}</button>')
+        # A linha de conta no topo da gaveta. Substitui o antigo item de texto
+        # "Account" no meio da lista: ali ele era o 1o de 25 links iguais e
+        # ninguem o achava. Aqui e faixa propria, com o unico botao da gaveta.
+        conta_gaveta = f"""<div class="yb-nav__conta">
+        <span class="yb-nav__conta-quem">
+          {ico('user')}
+          <b class="yb-nav__conta-nome">Welcome, Visitor</b>
+        </span>
+        <a class="yb-btn yb-btn--primary yb-btn--sm" href="/account/login">Log in</a>
+      </div>"""
     return f"""<header class="yb-header">
   <div class="yb-notice">Free shipping on orders over <b>$50</b></div>
   <input class="yb-header__drawer" type="checkbox" id="nav-open" aria-label="Menu">
@@ -427,9 +462,18 @@ def header(carrinho=2, promo=None, cliente=None):
       <span class="yb-logo yb-logo--md"><img src="brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span>
     </a>
     <nav class="yb-header__nav" aria-label="Main">
-      <label class="yb-iconbtn yb-nav__close" for="nav-open" role="button" tabindex="0" aria-label="Close menu">{ico('close')}</label>
+      <!-- Cabeca da gaveta: a marca a esquerda, o X a direita. O logo aqui e
+           DECORATIVO de proposito (alt vazio, sem link): a barra atras ja tem
+           o logo como link para a home, e repeti-lo como segundo link para o
+           mesmo lugar so acrescenta uma parada de Tab e um segundo "Ybera"
+           anunciado. Quem abriu a gaveta quer ir a algum lugar, nao voltar. -->
+      <div class="yb-nav__head">
+        <span class="yb-logo yb-logo--md" aria-hidden="true">
+          <img src="brand/ybera-logo.webp" alt="" width="360" height="139"></span>
+        <label class="yb-iconbtn yb-nav__close" for="nav-open" role="button" tabindex="0" aria-label="Close menu">{ico('close')}</label>
+      </div>
+      {conta_gaveta}
       <ul class="yb-nav">
-        <li class="yb-nav__item yb-nav__item--account"><a class="yb-nav__link" href="/account">{cliente['nome'] if cliente else 'Account'}</a></li>
 {menu(promo)}
       </ul>
     </nav>
@@ -1347,8 +1391,12 @@ def faq(curto=False, cabecalho=True):
     if curto:
         # Sem indice e sem grupos: com quatro perguntas o indice seria mais
         # longo que a lista que ele indexa.
+        # `name` agrupa: o <details> nativo fecha os irmaos de mesmo nome, e
+        # um acordeao com tres respostas abertas deixa de ser acordeao. Sem JS.
+        # O nome e por CONTEINER, nao por pagina: dois acordeoes com o mesmo
+        # nome viram um grupo so, e abrir na PDP fecharia algo no FAQ.
         itens = "".join(f"""
-          <details><summary>{sem_marca(q)}</summary>
+          <details name="faq-home"><summary>{sem_marca(q)}</summary>
             <div class="yb-accordion__body"><p>{r}</p></div></details>"""
             for _, _, pares in FAQ for q, r in pares if q.startswith(HOME))
         return f"""    <section class="yb-block" id="faq">
@@ -1370,7 +1418,7 @@ def faq(curto=False, cabecalho=True):
     grupos = ""
     for titulo, alvo, pares in FAQ:
         itens = "".join(f"""
-            <details><summary>{sem_marca(q)}</summary>
+            <details name="faq-{alvo}"><summary>{sem_marca(q)}</summary>
               <div class="yb-accordion__body"><p>{r}</p></div></details>""" for q, r in pares)
         grupos += f"""
         <section class="yb-faq__grupo" id="{alvo}" aria-labelledby="{alvo}-t">
@@ -1575,6 +1623,47 @@ COMPARE_FORJADO = '$124.90'
 # o Judge.me renderiza no DOM normal — o design system alcanca, e por isso aqui
 # o conteudo dele e servido pelos nossos componentes.
 REVIEWS = json.load(open(os.path.join(RAIZ, 'reviews.json'), encoding='utf-8'))
+
+# ---------------------------------------------------------------- copia de amostra
+# As seis avaliacoes capturadas tem de 34 a 92 caracteres: duas enchem tres
+# linhas do cartao, quatro param na segunda. O cartao ja reserva as tres (ver
+# `.yb-review__text`), entao o alinhamento esta certo com qualquer texto — mas
+# a tela-prova nao MOSTRA o estado cheio, que e o que precisa ser validado.
+#
+# Entao a amostra existe, e e escrita aqui, do lado de quem a le. Nao editamos
+# `reviews.json`: aquilo e captura, e captura nao se corrige — e tambem nao
+# reescrevemos o que Rosana, Marggi, Nataniela e PCH disseram, que e o motivo
+# de os nomes destes seis serem outros. Foto, produto e nota continuam sendo os
+# reais, porque nada ali e palavra de ninguem.
+#
+# `REVIEWS_FONTE` e o interruptor, como `BLOG_ARRANJO`: sem ele a fonte nao
+# escolhida virava dado sem leitor e apodrecia no primeiro refactor.
+REVIEWS_FONTE = 'amostra'   # 'amostra' (texto escrito aqui) | 'captura' (Judge.me)
+
+# Cada texto foi medido para encher as tres linhas na largura de desktop do
+# cartao (~216px de coluna de texto, 14px/1,55). No celular, onde a coluna cai
+# para ~150px, os seis passam de tres linhas e o clamp corta os seis igual —
+# que e o alinhamento de que a tela precisa, com ou sem reticencia.
+AMOSTRA_REVIEWS = [
+    ('Danielle R.', 'Six weeks in and the baby hairs along my part are finally '
+                    'filling in. I use it every other night.'),
+    ('Priya M.',    'The coconut mask left my hair soft without that heavy feeling. '
+                    'The elixir is what makes the ends behave.'),
+    ('Alexis W.',   'My daughter used to cry through every detangling. Now it takes '
+                    'two minutes and she asks to do it herself.'),
+    ('Carmen O.',   'Bought one and gave the second to my sister. Three washes in, '
+                    'the frizz that survived Florida is gone.'),
+    ('Jordan L.',   'I have color-treated hair and was scared to try it. Four weeks '
+                    'later the shine is still there, no brass.'),
+    ('Nicole B.',   'It smells like a salon and the scent actually lasts until the '
+                    'evening. I keep one in my bag for touch-ups.'),
+]
+
+if REVIEWS_FONTE == 'amostra':
+    for _r, (_autor, _texto) in zip(REVIEWS, AMOSTRA_REVIEWS):
+        _r['autor'] = _autor
+        _r['texto'] = _texto
+        _r['titulo'] = ''      # sem titulo: seis cartoes de anatomia identica
 
 # Emoji sai do texto das avaliacoes, a pedido. A regra da casa continua valendo:
 # nada do que a pessoa escreveu com PALAVRAS e encurtado ou reescrito — o texto
@@ -2055,7 +2144,9 @@ def blog_trio():
         </div>
         <a class="yb-link" href="/blogs/haircare">See all {ico('chevron-right')}</a>
       </div>
-      <div class="yb-posts yb-posts--trio">
+      <!-- `yb-track` composto na marcacao, como em `.yb-reviews`: abaixo de
+           860 os tres cartoes deitam num trilho, acima voltam a ser grade. -->
+      <div class="yb-track yb-posts yb-posts--trio">
         {cartoes}
       </div>
     </section>"""
@@ -2594,7 +2685,7 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
         ('Shipping &amp; returns', 'Free standard shipping on orders over $50. Returns accepted within 30 days of delivery, unopened.')]]
 
     acordeao = "".join(f"""
-        <details><summary>{t}</summary>
+        <details name="pdp-detalhes"><summary>{t}</summary>
           <div class="yb-accordion__body">{c}</div></details>""" for t, c in secoes)
 
     # Related Products existe na PDP de producao (product-recommendations do
@@ -3333,9 +3424,6 @@ if __name__ == '__main__':
         montar_pdp(destino, variantes=VARIANTE_FORJADA))
     print("montando faq…")
     open(os.path.join(destino, 'faq.html'), 'w', encoding='utf-8').write(montar_faq(destino))
-    print("montando home v2 com cliente logado…")
-    open(os.path.join(destino, 'index-logado.html'), 'w', encoding='utf-8').write(
-        montar_home_v2(destino, cliente=CLIENTE))
     print("montando home v2 com cliente logado…")
     open(os.path.join(destino, 'index-logado.html'), 'w', encoding='utf-8').write(
         montar_home_v2(destino, cliente=CLIENTE))

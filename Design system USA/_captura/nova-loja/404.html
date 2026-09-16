@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Page not found – Ybera USA</title>
-<link rel="stylesheet" href="yb/fonte.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/00-primitives.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/01-semantic.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/components.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/patterns.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/icons.css?v=e6c6e48f">
+<link rel="stylesheet" href="yb/fonte.css?v=29f7e957">
+<link rel="stylesheet" href="yb/00-primitives.css?v=29f7e957">
+<link rel="stylesheet" href="yb/01-semantic.css?v=29f7e957">
+<link rel="stylesheet" href="yb/components.css?v=29f7e957">
+<link rel="stylesheet" href="yb/patterns.css?v=29f7e957">
+<link rel="stylesheet" href="yb/icons.css?v=29f7e957">
 <style>
   /* Só layout de página: largura, respiro entre blocos e o grid do hero.
      Nenhum componente é redefinido aqui — se um botão precisasse de ajuste,
@@ -100,9 +100,24 @@
       <span class="yb-logo yb-logo--md"><img src="brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span>
     </a>
     <nav class="yb-header__nav" aria-label="Main">
-      <label class="yb-iconbtn yb-nav__close" for="nav-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-close"/></svg></label>
+      <!-- Cabeca da gaveta: a marca a esquerda, o X a direita. O logo aqui e
+           DECORATIVO de proposito (alt vazio, sem link): a barra atras ja tem
+           o logo como link para a home, e repeti-lo como segundo link para o
+           mesmo lugar so acrescenta uma parada de Tab e um segundo "Ybera"
+           anunciado. Quem abriu a gaveta quer ir a algum lugar, nao voltar. -->
+      <div class="yb-nav__head">
+        <span class="yb-logo yb-logo--md" aria-hidden="true">
+          <img src="brand/ybera-logo.webp" alt="" width="360" height="139"></span>
+        <label class="yb-iconbtn yb-nav__close" for="nav-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-close"/></svg></label>
+      </div>
+      <div class="yb-nav__conta">
+        <span class="yb-nav__conta-quem">
+          <svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-user"/></svg>
+          <b class="yb-nav__conta-nome">Welcome, Visitor</b>
+        </span>
+        <a class="yb-btn yb-btn--primary yb-btn--sm" href="/account/login">Log in</a>
+      </div>
       <ul class="yb-nav">
-        <li class="yb-nav__item yb-nav__item--account"><a class="yb-nav__link" href="/account">Account</a></li>
         <li class="yb-nav__item"><a class="yb-nav__link" href="/">Home</a></li>
         <li class="yb-nav__item">
           <input class="yb-nav__toggle" type="checkbox" id="nav1">
@@ -154,7 +169,7 @@
           <label class="yb-nav__link" for="nav4">About Us
             <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-down"/></svg></label>
           <div class="yb-nav__panel">
-            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/pages/our-story">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/blogs/haircare">Blog</a></div></div>
+            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/pages/our-story">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/blogs/haircare">Blog</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/pages/new-chapter-ybera">New chapter Ybera</a></div></div>
           </div>
         </li>
       </ul>
@@ -498,7 +513,7 @@
     </div>
   </div>
 </dialog>
-<script src="yb/components.js?v=e6c6e48f"></script>
+<script src="yb/components.js?v=29f7e957"></script>
 <script>
 // Setas do banner. Carrossel nao e componente do sistema — este JS vive na
 // pagina, nao em components.js, para nao dar a entender que existe.

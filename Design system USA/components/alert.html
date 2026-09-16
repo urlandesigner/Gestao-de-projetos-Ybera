@@ -85,19 +85,37 @@
   <ul class="ficha-fatos">
     <li>Classe base <b><code>.yb-alert</code></b></li>
     <li>Modificadores <b>4</b></li>
-    <li>Elementos <b>1</b></li>
-    <li>Estados <b>0</b></li>
-    <li>Tokens <b>22</b></li>
-    <li>Comportamento <b>só CSS</b></li>
+    <li>Elementos <b>4</b></li>
+    <li>Estados <b>2</b></li>
+    <li>Tokens <b>29</b></li>
+    <li>Comportamento <b>JS</b></li>
   </ul>
 
   <section class="bloco" id="demos">
     <h2 class="bloco-titulo">Como se parece</h2>
     <div class="demo demo--stack">
-      <div class="yb-alert yb-alert--success" role="status"><div><b class="yb-alert__title">Order confirmed</b><p>We sent the tracking number to you@example.com.</p></div></div>
-      <div class="yb-alert yb-alert--warning" role="status"><div><b class="yb-alert__title">Only 3 left</b><p>This size is running low.</p></div></div>
-      <div class="yb-alert yb-alert--danger" role="alert"><div><b class="yb-alert__title">Payment declined</b><p>Your bank rejected the charge. Try another card or contact your bank.</p></div></div>
-      <div class="yb-alert yb-alert--info" role="status"><div><b class="yb-alert__title">Free shipping</b><p>Add $12.10 more to qualify for free standard shipping.</p></div></div>
+      <div class="yb-alert yb-alert--success" role="status"><svg class="yb-icon yb-alert__icone" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg><div class="yb-alert__corpo"><b class="yb-alert__title">Order confirmed</b><p>We sent the tracking number to you@example.com.</p></div><button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss order confirmed"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div>
+      <div class="yb-alert yb-alert--warning" role="status"><svg class="yb-icon yb-alert__icone" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-alert"/></svg><div class="yb-alert__corpo"><b class="yb-alert__title">Only 3 left</b><p>This size is running low.</p></div><button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss only 3 left"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div>
+      <div class="yb-alert yb-alert--danger" role="alert"><svg class="yb-icon yb-alert__icone" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg><div class="yb-alert__corpo"><b class="yb-alert__title">Payment declined</b><p>Your bank rejected the charge. Try another card or contact your bank.</p></div><button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss payment declined"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div>
+      <div class="yb-alert yb-alert--info" role="status"><svg class="yb-icon yb-alert__icone" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-info"/></svg><div class="yb-alert__corpo"><b class="yb-alert__title">Free shipping</b><p>Add $12.10 more to qualify for free standard shipping.</p></div><button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss free shipping"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div>
+    </div>
+    <div class="note">
+      <b>Um ícone por variante, e não um para todas</b>
+      <p>A barra colorida da esquerda saiu e o ícone entrou no lugar. A barra dizia
+      a severidade só pela cor, e cor sozinha não informa (WCAG 1.4.1): quem não
+      distingue âmbar de vermelho via dois retângulos iguais.</p>
+      <p>Por isso <code>--warning</code> e <code>--danger</code> têm glifos
+      diferentes — triângulo e círculo com X. São justamente os dois que se
+      confundem; dar o mesmo ícone aos dois devolveria a cor como única
+      diferença, que é de onde viemos.</p>
+    </div>
+    <div class="note">
+      <b>Fechar remove, não esconde</b>
+      <p>O botão apaga o alerta do DOM. Um nó escondido que sobra continua sendo
+      lido por quem navega por marcos — e o alerta some porque a pessoa leu e
+      resolveu, não porque deixou de importar.</p>
+      <p>O alvo tem os 44px da casa, entregues por margem negativa: o controle
+      não infla a altura do alerta, a caixa cresce para fora.</p>
     </div>
     <div class="note">
       <b>role="alert" só no que interrompe</b>
@@ -126,9 +144,9 @@
     <p class="rotulo">Modificadores</p>
     <p class="lista-api"><code>.yb-alert--danger</code> <code>.yb-alert--info</code> <code>.yb-alert--success</code> <code>.yb-alert--warning</code></p>
     <p class="rotulo">Elementos</p>
-    <p class="lista-api"><code>.yb-alert__title</code></p>
+    <p class="lista-api"><code>.yb-alert__close</code> <code>.yb-alert__corpo</code> <code>.yb-alert__icone</code> <code>.yb-alert__title</code></p>
     <p class="rotulo">Estados que a folha trata</p>
-    <p class="api-vazia">Nenhum: o componente não muda de aparência por interação.</p>
+    <p class="bloco-lede"><code>:focus-visible</code> · <code>:hover</code></p>
   </section>
 
   <section class="bloco" id="marcacao">
@@ -137,10 +155,10 @@
     que renderizou ali, não um exemplo escrito à parte.</p>
     <div class="snippet">
       <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
-      <pre><code>&lt;div class="yb-alert yb-alert--success" role="status"&gt;&lt;div&gt;&lt;b class="yb-alert__title"&gt;Order confirmed&lt;/b&gt;&lt;p&gt;We sent the tracking number to you@example.com.&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div class="yb-alert yb-alert--warning" role="status"&gt;&lt;div&gt;&lt;b class="yb-alert__title"&gt;Only 3 left&lt;/b&gt;&lt;p&gt;This size is running low.&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div class="yb-alert yb-alert--danger" role="alert"&gt;&lt;div&gt;&lt;b class="yb-alert__title"&gt;Payment declined&lt;/b&gt;&lt;p&gt;Your bank rejected the charge. Try another card or contact your bank.&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div class="yb-alert yb-alert--info" role="status"&gt;&lt;div&gt;&lt;b class="yb-alert__title"&gt;Free shipping&lt;/b&gt;&lt;p&gt;Add $12.10 more to qualify for free standard shipping.&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</code></pre>
+      <pre><code>&lt;div class="yb-alert yb-alert--success" role="status"&gt;&lt;svg class="yb-icon yb-alert__icone" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;&lt;div class="yb-alert__corpo"&gt;&lt;b class="yb-alert__title"&gt;Order confirmed&lt;/b&gt;&lt;p&gt;We sent the tracking number to you@example.com.&lt;/p&gt;&lt;/div&gt;&lt;button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss order confirmed"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;&lt;/button&gt;&lt;/div&gt;
+&lt;div class="yb-alert yb-alert--warning" role="status"&gt;&lt;svg class="yb-icon yb-alert__icone" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-alert"/&gt;&lt;/svg&gt;&lt;div class="yb-alert__corpo"&gt;&lt;b class="yb-alert__title"&gt;Only 3 left&lt;/b&gt;&lt;p&gt;This size is running low.&lt;/p&gt;&lt;/div&gt;&lt;button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss only 3 left"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;&lt;/button&gt;&lt;/div&gt;
+&lt;div class="yb-alert yb-alert--danger" role="alert"&gt;&lt;svg class="yb-icon yb-alert__icone" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-x-circle"/&gt;&lt;/svg&gt;&lt;div class="yb-alert__corpo"&gt;&lt;b class="yb-alert__title"&gt;Payment declined&lt;/b&gt;&lt;p&gt;Your bank rejected the charge. Try another card or contact your bank.&lt;/p&gt;&lt;/div&gt;&lt;button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss payment declined"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;&lt;/button&gt;&lt;/div&gt;
+&lt;div class="yb-alert yb-alert--info" role="status"&gt;&lt;svg class="yb-icon yb-alert__icone" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-info"/&gt;&lt;/svg&gt;&lt;div class="yb-alert__corpo"&gt;&lt;b class="yb-alert__title"&gt;Free shipping&lt;/b&gt;&lt;p&gt;Add $12.10 more to qualify for free standard shipping.&lt;/p&gt;&lt;/div&gt;&lt;button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss free shipping"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;&lt;/button&gt;&lt;/div&gt;</code></pre>
     </div>
   </section>
 
@@ -154,12 +172,12 @@
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
         <p class="fn-cabeca">✓ Faça</p>
-        <div class="fn-palco"><div class="yb-alert yb-alert--danger" role="alert" style="inline-size:100%"><div><b class="yb-alert__title">Payment declined</b><p>Your bank rejected the charge. Try another card.</p></div></div></div>
+        <div class="fn-palco"><div class="yb-alert yb-alert--danger" role="alert" style="inline-size:100%"><svg class="yb-icon yb-alert__icone" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg><div class="yb-alert__corpo"><b class="yb-alert__title">Payment declined</b><p>Your bank rejected the charge. Try another card.</p></div><button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss payment declined"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div></div>
         <p class="fn-legenda">Um alerta, com o papel certo para o que ele é.</p>
       </div>
       <div class="fn-caso fn-caso--nao">
         <p class="fn-cabeca">✕ Não faça</p>
-        <div class="fn-palco"><div style="inline-size:100%;display:flex;flex-direction:column;gap:8px"><div class="yb-alert yb-alert--info" role="alert"><div><b class="yb-alert__title">Free shipping</b><p>Add $12 more.</p></div></div><div class="yb-alert yb-alert--warning" role="alert"><div><b class="yb-alert__title">Only 3 left</b><p>Running low.</p></div></div><div class="yb-alert yb-alert--danger" role="alert"><div><b class="yb-alert__title">Payment declined</b><p>Try another card.</p></div></div></div></div>
+        <div class="fn-palco"><div style="inline-size:100%;display:flex;flex-direction:column;gap:8px"><div class="yb-alert yb-alert--info" role="alert"><svg class="yb-icon yb-alert__icone" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-info"/></svg><div class="yb-alert__corpo"><b class="yb-alert__title">Free shipping</b><p>Add $12 more.</p></div><button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss free shipping"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div><div class="yb-alert yb-alert--warning" role="alert"><svg class="yb-icon yb-alert__icone" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-alert"/></svg><div class="yb-alert__corpo"><b class="yb-alert__title">Only 3 left</b><p>Running low.</p></div><button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss only 3 left"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div><div class="yb-alert yb-alert--danger" role="alert"><svg class="yb-icon yb-alert__icone" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg><div class="yb-alert__corpo"><b class="yb-alert__title">Payment declined</b><p>Try another card.</p></div><button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss payment declined"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div></div></div>
         <p class="fn-legenda">Três empilhados é garantir que nenhum seja lido — e três <code>role="alert"</code> transformam o leitor de tela em ruído.</p>
       </div>
     </div>

@@ -28,8 +28,36 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 - `Ybera.init(raiz)` religa **todo** o comportamento em DOM que chega depois
   (trilho, parceiro, faixa, barra de compra, navegação, relógio), com guarda
   `data-yb-bound` — antes só galeria, stepper e busca.
+- **"New chapter Ybera"** como terceira porta do painel "About Us", ao lado de
+  "Our Story" e "Blog" (`/pages/new-chapter-ybera`). No desktop o painel passa
+  de duas para três colunas de 128px sem quebrar linha; no celular vira a
+  terceira linha do acordeão, 44px de alvo, uma linha de texto.
+- **Cabeça da gaveta** (`.yb-nav__head`): a marca à esquerda, o X à direita. O
+  logo é decorativo — a barra atrás já o tem como link para a home, e repeti-lo
+  só acrescentaria uma parada de Tab e um segundo "Ybera" anunciado.
+- **Faixa de conta na gaveta** (`.yb-nav__conta`): deslogada saúda com ícone e
+  **Log in**; logada troca o ícone pela inicial, mostra o primeiro nome e leva a
+  **Account**. Único bloco com fundo e único botão da gaveta.
 
 ### Alterado
+- **Copy de amostra nas seis avaliações das telas-prova** (`AMOSTRA_REVIEWS` no
+  gerador, ligada por `REVIEWS_FONTE`), medida para fechar três linhas na
+  largura de desktop — as capturadas tinham de 34 a 92 caracteres e quatro
+  paravam na segunda linha, então a tela nunca mostrava o cartão cheio.
+  `_captura/reviews.json` não foi tocado, e os nomes da amostra são outros:
+  foto, produto e nota continuam sendo os reais.
+- **O cartão de review reserva três linhas de texto**, em vez de aceitar até
+  três. `line-clamp` impedia de crescer, nada impedia de encolher: com dois dos
+  seis reviews em duas linhas, o vão entre o texto e o nome mudava de cartão
+  para cartão. Agora as seis caixas medem 65px e o texto termina no mesmo y, na
+  home e na PDP. Nenhuma palavra de cliente foi reescrita — a caixa é do
+  componente, o texto é de quem avaliou.
+- **O trio do blog deita no toque.** Abaixo de 860 `.yb-posts--trio` vira trilho
+  (`yb-track` composto na marcação, como `.yb-reviews`), com teto de 20rem por
+  cartão. Em 375px a seção caiu de **464px para 309**. Acima de 860 nada muda: a
+  folha só desfaz o trilho. A v1 (destaque + dois secundários) continua lista —
+  deitar um destaque 16/9 com duas miniaturas de 96px dá três slides de
+  anatomias diferentes.
 - Nome do produto no cartão: peso 500 → 600, sem sublinhado no hover.
 - Estrela de avaliação: `gold-500` → `gold-600` (3.45:1, passa 1.4.11) e sem
   contorno. `--yb-accent-star-edge` fica @deprecated.
@@ -38,6 +66,22 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 - Reviews na home mostram só o carrossel.
 
 ### Corrigido
+- `.yb-post--stacked` caía na regra de 560px escrita para o post em **fileira**:
+  no celular o trio do blog não era um trio de cartões, eram três fileirinhas de
+  miniatura 96px. O `:not()` agora exclui também o empilhado.
+- Na gaveta, a conta era o item de texto `Account` — o primeiro de 25 links de
+  mesmo peso, que ninguém achava. Virou a faixa acima; `.yb-nav__item--account`
+  foi removida.
+- `.yb-icon{color:currentColor}` mora em `icons/`, que carrega **depois** de
+  `components/` e `patterns/`: com a mesma especificidade a folha de trás ganha,
+  e pintar um ícone por classe única no próprio ícone não fazia nada. O comentário
+  agora diz isso, e a regra nova usa seletor de descendente.
+- A demo do header em `patterns/` ainda dizia **"Behind The Shine"** no painel
+  "About Us" — rótulo que o sistema já tinha trocado por "Blog". Documentação
+  mostrando um menu que o gerador não produz mais.
+- `montar-ds.py` escrevia `index-logado.html` **duas vezes** seguidas, com os
+  mesmos argumentos: bloco duplicado no `__main__`. Sobrescrevia o próprio
+  arquivo e imprimia a mesma linha de log duas vezes.
 - Varredura de entrega ao time de desenvolvimento (2026-09-16): `.yb-empty`
   definido em duas folhas com valores conflitantes (o de `patterns/` vencia e
   anulava `--inline`); bloco morto da vitrine na gaveta do menu; custom

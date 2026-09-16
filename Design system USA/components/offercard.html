@@ -89,7 +89,7 @@
     <li>Modificadores <b>1</b></li>
     <li>Elementos <b>13</b></li>
     <li>Estados <b>2</b></li>
-    <li>Tokens <b>44</b></li>
+    <li>Tokens <b>45</b></li>
     <li>Comportamento <b>JS</b></li>
   </ul>
 
@@ -100,12 +100,13 @@
         <div class="yb-offercard__blur" aria-hidden="true"><i></i><i></i><i></i></div>
         <img src="../_captura/nova-loja/img/Prancheta_1-790aea3e.webp" alt="">
         <span class="yb-badge yb-badge--sale yb-offercard__off">24% off</span>
+        <a class="yb-offercard__link" href="#demos" aria-labelledby="oferta-demo-1"></a>
         <div class="yb-offercard__body">
           <span class="yb-badge yb-badge--on-media">Today's offer</span>
-          <h3 class="yb-offercard__title"><a href="#demos">Fashion Gold keratin treatment 1kg</a></h3>
+          <h3 class="yb-offercard__title" id="oferta-demo-1">Fashion Gold keratin treatment 1kg</h3>
           <div class="yb-offercard__linha">
             <span class="yb-offercard__price">$67.90</span>
-            <p class="yb-offercard__timer" data-yb-countdown="2030-12-31T23:59:59Z"><time datetime="2030-12-31">ends Dec 31</time></p>
+            <p class="yb-offercard__timer" data-yb-countdown="2026-09-18T23:59:59Z"><time datetime="2026-09-18">ends Sep 18</time></p>
           </div>
           <p class="yb-offercard__fim" hidden>Offer ended</p>
           <a class="yb-btn yb-btn--primary" href="#demos">Buy now
@@ -116,9 +117,10 @@
       <article class="yb-offercard">
         <img src="../_captura/nova-loja/img/Prancheta_2-188b6fea.webp" alt="">
         <span class="yb-badge yb-badge--sale yb-offercard__off">18% off</span>
+        <a class="yb-offercard__link" href="#demos" aria-labelledby="oferta-demo-2"></a>
         <div class="yb-offercard__body">
           <span class="yb-badge yb-badge--on-media">Today's offer</span>
-          <h3 class="yb-offercard__title"><a href="#demos">Cronograma hair care system</a></h3>
+          <h3 class="yb-offercard__title" id="oferta-demo-2">Cronograma hair care system</h3>
           <div class="yb-offercard__linha">
             <span class="yb-offercard__price">$37.90</span>
             <p class="yb-offercard__timer" data-yb-countdown="2020-01-01T00:00:00Z"><time>ended Jan 1, 2020</time></p>
@@ -168,10 +170,14 @@
       mesmo quando o script não roda.</p>
     </div>
     <div class="note">
-      <b>Dois destinos, nenhum link cobrindo tudo</b>
-      <p>O título leva à PDP e o botão compra. Por isso não há link esticado sobre o
-      cartão inteiro, como no cartão de coleção: o clique no meio da foto não teria
-      como escolher entre os dois.</p>
+      <b>Dois destinos, dois alvos</b>
+      <p>O cartão inteiro leva à PDP; o botão põe na sacola e não leva a lugar
+      nenhum. O alvo do cartão é um <code>&lt;a&gt;</code> <b>vazio</b> esticado por
+      cima, com <code>aria-labelledby</code> apontando para o título — e não um
+      <code>::after</code> no título, porque o corpo é posicionado por causa do véu
+      e o recorte pararia nele, deixando a foto sem alvo.</p>
+      <p>O botão fica acima do link esticado no empilhamento. Sem isso o clique nele
+      cairia na PDP em vez de comprar.</p>
     </div>
     <div class="note">
       <b>O CTA é magenta, não branco</b>
@@ -215,12 +221,13 @@
   &lt;div class="yb-offercard__blur" aria-hidden="true"&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;/div&gt;
   &lt;img src="../_captura/nova-loja/img/Prancheta_1-790aea3e.webp" alt=""&gt;
   &lt;span class="yb-badge yb-badge--sale yb-offercard__off"&gt;24% off&lt;/span&gt;
+  &lt;a class="yb-offercard__link" href="#demos" aria-labelledby="oferta-demo-1"&gt;&lt;/a&gt;
   &lt;div class="yb-offercard__body"&gt;
     &lt;span class="yb-badge yb-badge--on-media"&gt;Today's offer&lt;/span&gt;
-    &lt;h3 class="yb-offercard__title"&gt;&lt;a href="#demos"&gt;Fashion Gold keratin treatment 1kg&lt;/a&gt;&lt;/h3&gt;
+    &lt;h3 class="yb-offercard__title" id="oferta-demo-1"&gt;Fashion Gold keratin treatment 1kg&lt;/h3&gt;
     &lt;div class="yb-offercard__linha"&gt;
       &lt;span class="yb-offercard__price"&gt;$67.90&lt;/span&gt;
-      &lt;p class="yb-offercard__timer" data-yb-countdown="2030-12-31T23:59:59Z"&gt;&lt;time datetime="2030-12-31"&gt;ends Dec 31&lt;/time&gt;&lt;/p&gt;
+      &lt;p class="yb-offercard__timer" data-yb-countdown="2026-09-18T23:59:59Z"&gt;&lt;time datetime="2026-09-18"&gt;ends Sep 18&lt;/time&gt;&lt;/p&gt;
     &lt;/div&gt;
     &lt;p class="yb-offercard__fim" hidden&gt;Offer ended&lt;/p&gt;
     &lt;a class="yb-btn yb-btn--primary" href="#demos"&gt;Buy now
@@ -230,9 +237,10 @@
 &lt;article class="yb-offercard"&gt;
   &lt;img src="../_captura/nova-loja/img/Prancheta_2-188b6fea.webp" alt=""&gt;
   &lt;span class="yb-badge yb-badge--sale yb-offercard__off"&gt;18% off&lt;/span&gt;
+  &lt;a class="yb-offercard__link" href="#demos" aria-labelledby="oferta-demo-2"&gt;&lt;/a&gt;
   &lt;div class="yb-offercard__body"&gt;
     &lt;span class="yb-badge yb-badge--on-media"&gt;Today's offer&lt;/span&gt;
-    &lt;h3 class="yb-offercard__title"&gt;&lt;a href="#demos"&gt;Cronograma hair care system&lt;/a&gt;&lt;/h3&gt;
+    &lt;h3 class="yb-offercard__title" id="oferta-demo-2"&gt;Cronograma hair care system&lt;/h3&gt;
     &lt;div class="yb-offercard__linha"&gt;
       &lt;span class="yb-offercard__price"&gt;$37.90&lt;/span&gt;
       &lt;p class="yb-offercard__timer" data-yb-countdown="2020-01-01T00:00:00Z"&gt;&lt;time&gt;ended Jan 1, 2020&lt;/time&gt;&lt;/p&gt;

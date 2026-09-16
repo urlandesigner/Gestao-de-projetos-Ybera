@@ -8,7 +8,12 @@
   flex:none;
   display:inline-block;
   vertical-align:middle;
-  color:currentColor;  /* herda a cor do texto — ícone não tem token de cor */
+  /* O ícone não tem token de cor: herda a do texto. A declaração fica
+     explícita porque ESTA folha carrega depois de components/ e patterns/ —
+     uma regra de classe única no próprio ícone lá atrás perde para esta, com
+     a mesma especificidade. Quem precisa pintar um ícone pinta o pai, ou usa
+     seletor de descendente (`.bloco .yb-icon`). */
+  color:currentColor;
 }
 .yb-icon--sm{--yb-icon-size:var(--yb-icon-sm)}
 .yb-icon--md{--yb-icon-size:var(--yb-icon-md)}

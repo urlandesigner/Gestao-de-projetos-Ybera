@@ -4,8 +4,8 @@ A fundação da marca Ybera em tokens. **Independente de plataforma por decisão
 projeto**: a loja US roda Shopify e a BR roda Wake Commerce — CSS custom properties
 é o único denominador comum entre as duas.
 
-Versão **0.12.1** — fundação de 320 tokens, 37 componentes e 12 padrões com
-comportamento, 39 ícones, governança, decisões registradas e 109 checagens
+Versão **0.12.1** — fundação de 321 tokens, 37 componentes e 12 padrões com
+comportamento, 40 ícones, governança, decisões registradas e 109 checagens
 automatizadas.
 
 | Onde olhar | O quê |
@@ -79,7 +79,7 @@ patterns/
   index.html             galeria de composições
   solo.html              um padrão sozinho, para o quadro de 375px
 icons/
-  ybera-icons.svg        sprite com 39 ícones (9,1 KB)
+  ybera-icons.svg        sprite com 40 ícones (9,3 KB)
   ybera-icons.css        tamanhos e alinhamento
   index.html             galeria
 bridge/

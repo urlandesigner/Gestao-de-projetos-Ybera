@@ -63,6 +63,39 @@
       arrasta.</p>
     </div>
     <div class="note">
+      <b>O texto das telas-prova é copy de amostra</b>
+      <p>As seis avaliações capturadas do Judge.me têm de 34 a 92 caracteres: duas
+      enchiam as três linhas, quatro paravam na segunda &mdash; e a tela-prova nunca
+      mostrava o cartão no estado cheio, que é o que precisa ser validado. Os seis
+      textos das telas são escritos no gerador (<code>AMOSTRA_REVIEWS</code>), medidos
+      para fechar três linhas na largura de desktop.</p>
+      <p><code>_captura/reviews.json</code> <b>não foi tocado</b>: aquilo é captura, e
+      captura não se corrige. Os nomes da amostra também são outros &mdash; o que
+      Rosana, Marggi, Nataniela e PCH escreveram continua sendo delas. Foto, produto e
+      nota seguem sendo os reais, porque nada ali é palavra de ninguém.
+      <code>REVIEWS_FONTE</code> troca entre as duas fontes, como
+      <code>BLOG_ARRANJO</code> faz com os dois arranjos do blog.</p>
+      <p>Abaixo de ~1280px a coluna de texto encolhe e os textos passam de três linhas:
+      o clamp corta os seis igual, com reticência. Continuam <b>três linhas cheias em
+      todos</b>, que é o alinhamento que a seção precisa.</p>
+    </div>
+    <div class="note">
+      <b>Três linhas sempre, não no máximo três</b>
+      <p>O <code>line-clamp</code> já impedia o cartão de crescer; faltava impedi-lo de
+      <b>encolher</b>. Com dois dos seis reviews em duas linhas, o buraco entre o texto e
+      o nome mudava de tamanho de cartão para cartão. O pé já estava alinhado &mdash;
+      <code>margin-block-start:auto</code> no autor &mdash;, mas a fileira lia torta,
+      porque o olho segue o fim do texto, não a borda de baixo do cartão. Com a reserva,
+      as seis caixas medem os mesmos <b>65px</b> e o texto termina no mesmo y.</p>
+      <p>A caixa reservada é a resposta certa aqui porque <b>o conteúdo não é nosso</b>:
+      quem escreve as avaliações são clientes, e amanhã o Judge.me entrega uma de uma
+      linha e outra de sete. Acertar o alinhamento reescrevendo texto duraria até a
+      primeira avaliação nova &mdash; e reescrever o que uma pessoa com nome e sobrenome
+      disse não é ajuste de layout.</p>
+      <p>A reserva é <code>calc</code> com os mesmos três tokens que desenham a linha, e
+      não a unidade <code>lh</code>, que ainda falta no Safari que a loja atende.</p>
+    </div>
+    <div class="note">
       <b>O trilho mostra que anda</b>
       <p>Em 320px o cartão mede 248 e o respiro cai para 16: sobram 24px do próximo
       review à vista, e é essa fatia que ensina que dá para arrastar. Com 280 e

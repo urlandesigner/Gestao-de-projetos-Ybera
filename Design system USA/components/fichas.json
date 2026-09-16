@@ -7,7 +7,7 @@
     ],
     "faca": {
       "legenda": "O elemento nativo. O navegador entrega teclado, anúncio de estado e busca dentro da página.",
-      "html": "<div class=\"yb-accordion\" style=\"inline-size:100%\"><details><summary>Shipping &amp; returns</summary><div class=\"yb-accordion__body\"><p>Free standard shipping over $50.</p></div></details></div>"
+      "html": "<div class=\"yb-accordion\" style=\"inline-size:100%\"><details name=\"fn-acordeao\"><summary>Shipping &amp; returns</summary><div class=\"yb-accordion__body\"><p>Free standard shipping over $50.</p></div></details></div>"
     },
     "naoFaca": {
       "legenda": "Div com clique reimplementa o que o navegador já faz — e esquece metade: Enter, Espaço, busca na página e o anúncio do estado.",
@@ -22,11 +22,11 @@
     ],
     "faca": {
       "legenda": "Um alerta, com o papel certo para o que ele é.",
-      "html": "<div class=\"yb-alert yb-alert--danger\" role=\"alert\" style=\"inline-size:100%\"><div><b class=\"yb-alert__title\">Payment declined</b><p>Your bank rejected the charge. Try another card.</p></div></div>"
+      "html": "<div class=\"yb-alert yb-alert--danger\" role=\"alert\" style=\"inline-size:100%\"><svg class=\"yb-icon yb-alert__icone\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-x-circle\"/></svg><div class=\"yb-alert__corpo\"><b class=\"yb-alert__title\">Payment declined</b><p>Your bank rejected the charge. Try another card.</p></div><button class=\"yb-alert__close\" type=\"button\" data-yb-dispensar aria-label=\"Dismiss payment declined\"><svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-close\"/></svg></button></div>"
     },
     "naoFaca": {
       "legenda": "Três empilhados é garantir que nenhum seja lido — e três <code>role=\"alert\"</code> transformam o leitor de tela em ruído.",
-      "html": "<div style=\"inline-size:100%;display:flex;flex-direction:column;gap:8px\"><div class=\"yb-alert yb-alert--info\" role=\"alert\"><div><b class=\"yb-alert__title\">Free shipping</b><p>Add $12 more.</p></div></div><div class=\"yb-alert yb-alert--warning\" role=\"alert\"><div><b class=\"yb-alert__title\">Only 3 left</b><p>Running low.</p></div></div><div class=\"yb-alert yb-alert--danger\" role=\"alert\"><div><b class=\"yb-alert__title\">Payment declined</b><p>Try another card.</p></div></div></div>"
+      "html": "<div style=\"inline-size:100%;display:flex;flex-direction:column;gap:8px\"><div class=\"yb-alert yb-alert--info\" role=\"alert\"><svg class=\"yb-icon yb-alert__icone\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-info\"/></svg><div class=\"yb-alert__corpo\"><b class=\"yb-alert__title\">Free shipping</b><p>Add $12 more.</p></div><button class=\"yb-alert__close\" type=\"button\" data-yb-dispensar aria-label=\"Dismiss free shipping\"><svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-close\"/></svg></button></div><div class=\"yb-alert yb-alert--warning\" role=\"alert\"><svg class=\"yb-icon yb-alert__icone\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-alert\"/></svg><div class=\"yb-alert__corpo\"><b class=\"yb-alert__title\">Only 3 left</b><p>Running low.</p></div><button class=\"yb-alert__close\" type=\"button\" data-yb-dispensar aria-label=\"Dismiss only 3 left\"><svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-close\"/></svg></button></div><div class=\"yb-alert yb-alert--danger\" role=\"alert\"><svg class=\"yb-icon yb-alert__icone\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-x-circle\"/></svg><div class=\"yb-alert__corpo\"><b class=\"yb-alert__title\">Payment declined</b><p>Try another card.</p></div><button class=\"yb-alert__close\" type=\"button\" data-yb-dispensar aria-label=\"Dismiss payment declined\"><svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-close\"/></svg></button></div></div>"
     }
   },
   "badge": {

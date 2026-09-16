@@ -237,8 +237,12 @@ body:not([data-mobile="on"]) .par__mob{display:none}
       <b>No toque ele não existe</b>
       <p>Abaixo de 900 o menu some: a gaveta já lista os mesmos destinos, e um
       painel de 224px ancorado na borda direita de uma tela de 375 nasce apertado
-      contra o carrinho. Na gaveta, o item <code>Account</code> passa a mostrar o
-      nome de quem está logado.</p>
+      contra o carrinho. Quem assume o papel lá é a faixa
+      <code>.yb-nav__conta</code>, no topo da gaveta: deslogado ela saúda e
+      oferece <b>Log in</b>; logado troca o ícone pela inicial, mostra o primeiro
+      nome e leva a <b>Account</b>. É o único bloco com fundo e o único botão da
+      gaveta — era um item de texto no meio da lista, o primeiro de 25 links de
+      mesmo peso, e ninguém o achava.</p>
     </div>
   </section>
   <section id="buybox">
@@ -686,16 +690,16 @@ body:not([data-mobile="on"]) .par__mob{display:none}
           <section class="yb-faq__grupo" id="faq-demo-envio">
             <h3 class="yb-faq__titulo">Shipping &amp; delivery</h3>
             <div class="yb-accordion">
-              <details><summary>When will my order ship?</summary>
+              <details name="faq-demo-1"><summary>When will my order ship?</summary>
                 <div class="yb-accordion__body"><p>Orders are processed within 1&ndash;2 business days. Nothing ships on weekends or holidays.</p></div></details>
-              <details><summary>Is shipping free?</summary>
+              <details name="faq-demo-1"><summary>Is shipping free?</summary>
                 <div class="yb-accordion__body"><p>Economy shipping is free on orders over $50 and $8.90 under that. Priority Express is $9.90.</p></div></details>
             </div>
           </section>
           <section class="yb-faq__grupo" id="faq-demo-devolucao">
             <h3 class="yb-faq__titulo">Returns &amp; refunds</h3>
             <div class="yb-accordion">
-              <details><summary>Can I return an order?</summary>
+              <details name="faq-demo-2"><summary>Can I return an order?</summary>
                 <div class="yb-accordion__body"><p>You have 30 days from delivery to request one, and the return has to be requested first.</p></div></details>
             </div>
           </section>
@@ -712,9 +716,9 @@ body:not([data-mobile="on"]) .par__mob{display:none}
           <a class="yb-btn yb-btn--secondary" href="#faq">See all questions</a>
         </div>
         <div class="yb-accordion">
-          <details><summary>How long does delivery take?</summary>
+          <details name="faq-demo-3"><summary>How long does delivery take?</summary>
             <div class="yb-accordion__body"><p>Economy (USPS) takes 5&ndash;8 business days and Priority Express 2&ndash;4, counted from the order date.</p></div></details>
-          <details><summary>Can I return an order?</summary>
+          <details name="faq-demo-3"><summary>Can I return an order?</summary>
             <div class="yb-accordion__body"><p>You have 30 days from delivery to request one, and the return has to be requested first.</p></div></details>
         </div>
       </div>
@@ -865,7 +869,17 @@ body:not([data-mobile="on"]) .par__mob{display:none}
           <label class="yb-iconbtn yb-header__icon yb-header__burger" for="dnav-open" aria-hidden="true"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-menu"/></svg></label>
           <a class="yb-header__logo" href="#header"><span class="yb-logo yb-logo--md"><img src="../brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span></a>
           <nav class="yb-header__nav" aria-label="Main">
-            <label class="yb-iconbtn yb-nav__close" for="dnav-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></label>
+            <div class="yb-nav__head">
+              <span class="yb-logo yb-logo--md" aria-hidden="true"><img src="../brand/ybera-logo.webp" alt="" width="360" height="139"></span>
+              <label class="yb-iconbtn yb-nav__close" for="dnav-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></label>
+            </div>
+            <div class="yb-nav__conta">
+              <span class="yb-nav__conta-quem">
+                <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg>
+                <b class="yb-nav__conta-nome">Welcome, Visitor</b>
+              </span>
+              <a class="yb-btn yb-btn--primary yb-btn--sm" href="#header">Log in</a>
+            </div>
             <ul class="yb-nav">
             <li class="yb-nav__item"><a class="yb-nav__link" href="#header">Home</a></li>
             <li class="yb-nav__item">
@@ -878,7 +892,7 @@ body:not([data-mobile="on"]) .par__mob{display:none}
             <li class="yb-nav__item">
               <input class="yb-nav__toggle" type="checkbox" id="dnav4">
               <label class="yb-nav__link" for="dnav4">About Us <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
-              <div class="yb-nav__panel"><div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#header">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#header">Behind The Shine</a></div></div></div>
+              <div class="yb-nav__panel"><div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#header">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#header">Blog</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#header">New chapter Ybera</a></div></div></div>
             </li>
             <li class="yb-nav__item"><a class="yb-nav__link" href="#header">Contact Us</a></li>
             </ul>

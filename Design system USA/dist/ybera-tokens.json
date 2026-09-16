@@ -1215,6 +1215,14 @@
       },
       "$type": "color"
     },
+    "control": {
+      "$value": "{gray.500}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-border-control",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
     "inverse": {
       "default": {
         "$value": "{gray.800}",

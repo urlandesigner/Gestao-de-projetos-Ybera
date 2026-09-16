@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Frequently asked questions – Ybera USA</title>
-<link rel="stylesheet" href="yb/fonte.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/00-primitives.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/01-semantic.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/components.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/patterns.css?v=e6c6e48f">
-<link rel="stylesheet" href="yb/icons.css?v=e6c6e48f">
+<link rel="stylesheet" href="yb/fonte.css?v=29f7e957">
+<link rel="stylesheet" href="yb/00-primitives.css?v=29f7e957">
+<link rel="stylesheet" href="yb/01-semantic.css?v=29f7e957">
+<link rel="stylesheet" href="yb/components.css?v=29f7e957">
+<link rel="stylesheet" href="yb/patterns.css?v=29f7e957">
+<link rel="stylesheet" href="yb/icons.css?v=29f7e957">
 <style>
   /* Só layout de página: largura, respiro entre blocos e o grid do hero.
      Nenhum componente é redefinido aqui — se um botão precisasse de ajuste,
@@ -100,9 +100,24 @@
       <span class="yb-logo yb-logo--md"><img src="brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span>
     </a>
     <nav class="yb-header__nav" aria-label="Main">
-      <label class="yb-iconbtn yb-nav__close" for="nav-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-close"/></svg></label>
+      <!-- Cabeca da gaveta: a marca a esquerda, o X a direita. O logo aqui e
+           DECORATIVO de proposito (alt vazio, sem link): a barra atras ja tem
+           o logo como link para a home, e repeti-lo como segundo link para o
+           mesmo lugar so acrescenta uma parada de Tab e um segundo "Ybera"
+           anunciado. Quem abriu a gaveta quer ir a algum lugar, nao voltar. -->
+      <div class="yb-nav__head">
+        <span class="yb-logo yb-logo--md" aria-hidden="true">
+          <img src="brand/ybera-logo.webp" alt="" width="360" height="139"></span>
+        <label class="yb-iconbtn yb-nav__close" for="nav-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-close"/></svg></label>
+      </div>
+      <div class="yb-nav__conta">
+        <span class="yb-nav__conta-quem">
+          <svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-user"/></svg>
+          <b class="yb-nav__conta-nome">Welcome, Visitor</b>
+        </span>
+        <a class="yb-btn yb-btn--primary yb-btn--sm" href="/account/login">Log in</a>
+      </div>
       <ul class="yb-nav">
-        <li class="yb-nav__item yb-nav__item--account"><a class="yb-nav__link" href="/account">Account</a></li>
         <li class="yb-nav__item"><a class="yb-nav__link" href="/">Home</a></li>
         <li class="yb-nav__item">
           <input class="yb-nav__toggle" type="checkbox" id="nav1">
@@ -154,7 +169,7 @@
           <label class="yb-nav__link" for="nav4">About Us
             <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-down"/></svg></label>
           <div class="yb-nav__panel">
-            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/pages/our-story">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/blogs/haircare">Blog</a></div></div>
+            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/pages/our-story">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/blogs/haircare">Blog</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="/pages/new-chapter-ybera">New chapter Ybera</a></div></div>
           </div>
         </li>
       </ul>
@@ -200,41 +215,41 @@
         <section class="yb-faq__grupo" id="faq-shipping" aria-labelledby="faq-shipping-t">
           <h3 class="yb-faq__titulo" id="faq-shipping-t">Shipping &amp; delivery</h3>
           <div class="yb-accordion">
-            <details><summary>When will my order ship?</summary>
+            <details name="faq-faq-shipping"><summary>When will my order ship?</summary>
               <div class="yb-accordion__body"><p>Orders are processed within 1&ndash;2 business days. Nothing ships on weekends or holidays, and high-volume periods can add a few days.</p></div></details>
-            <details><summary>How long does delivery take?</summary>
+            <details name="faq-faq-shipping"><summary>How long does delivery take?</summary>
               <div class="yb-accordion__body"><p>From the U.S. warehouse, Economy (USPS) takes 5&ndash;8 business days and Priority Express 2&ndash;4, counted from the order date. Items that ship from Brazil &mdash; marked on the product page with a Brazilian flag &mdash; take 11&ndash;16 business days.</p></div></details>
-            <details><summary>Is shipping free?</summary>
+            <details name="faq-faq-shipping"><summary>Is shipping free?</summary>
               <div class="yb-accordion__body"><p>Economy shipping is free on orders over $50 and $8.90 under that. Priority Express is $9.90.</p></div></details>
-            <details><summary>Why did my order arrive in two packages?</summary>
+            <details name="faq-faq-shipping"><summary>Why did my order arrive in two packages?</summary>
               <div class="yb-accordion__body"><p>Because part of it shipped from the U.S. warehouse and part from Brazil. Each shipment is charged independently, as if they were separate orders.</p></div></details>
-            <details><summary>Where do you ship?</summary>
+            <details name="faq-faq-shipping"><summary>Where do you ship?</summary>
               <div class="yb-accordion__body"><p>Anywhere in the United States, including Alaska, Hawaii and U.S. territories. P.O. boxes are accepted.</p></div></details>
-            <details><summary>How do I track my order?</summary>
+            <details name="faq-faq-shipping"><summary>How do I track my order?</summary>
               <div class="yb-accordion__body"><p>You get a shipment confirmation email with the tracking number. Tracking becomes available within 24 hours.</p></div></details>
           </div>
         </section>
         <section class="yb-faq__grupo" id="faq-returns" aria-labelledby="faq-returns-t">
           <h3 class="yb-faq__titulo" id="faq-returns-t">Returns &amp; refunds</h3>
           <div class="yb-accordion">
-            <details><summary>Can I return an order?</summary>
+            <details name="faq-faq-returns"><summary>Can I return an order?</summary>
               <div class="yb-accordion__body"><p>You have 30 days from delivery to request one. The item has to come back unused, in its original packaging, with the receipt &mdash; and the return has to be requested first, at info.usa@ybera.com. Packages sent back without a request are not accepted.</p></div></details>
-            <details><summary>Are hair products returnable?</summary>
+            <details name="faq-faq-returns"><summary>Are hair products returnable?</summary>
               <div class="yb-accordion__body"><p>The policy lists personal care goods, which includes beauty products, among the items that cannot be returned, along with sale items and gift cards. Write to info.usa@ybera.com before sending anything back, so your specific item is checked.</p></div></details>
-            <details><summary>My order arrived damaged or wrong.</summary>
+            <details name="faq-faq-returns"><summary>My order arrived damaged or wrong.</summary>
               <div class="yb-accordion__body"><p>Contact us as soon as you open it. For damaged, defective or incorrect items the return shipping is paid by Ybera, and the item is replaced.</p></div></details>
-            <details><summary>When do I get my money back?</summary>
+            <details name="faq-faq-returns"><summary>When do I get my money back?</summary>
               <div class="yb-accordion__body"><p>Once the return is received and inspected we tell you whether it was approved. Approved refunds go back to the original payment method within 10 business days, and your bank can take a few more to post it. Past 15 business days, write to info.usa@ybera.com.</p></div></details>
           </div>
         </section>
         <section class="yb-faq__grupo" id="faq-products" aria-labelledby="faq-products-t">
           <h3 class="yb-faq__titulo" id="faq-products-t">The products</h3>
           <div class="yb-accordion">
-            <details><summary>Is the keratin formaldehyde-free?</summary>
+            <details name="faq-faq-products"><summary>Is the keratin formaldehyde-free?</summary>
               <div class="yb-accordion__body"><p>Yes. The formulas are formaldehyde-free and safe on color-treated hair.</p></div></details>
-            <details><summary>How do I use a keratin treatment at home?</summary>
+            <details name="faq-faq-products"><summary>How do I use a keratin treatment at home?</summary>
               <div class="yb-accordion__body"><p>Wash with a clarifying shampoo and towel-dry. Apply from mid-length to ends, avoiding the scalp. Leave for 20 minutes, then rinse and blow-dry.</p></div></details>
-            <details><summary>Not sure which line is yours?</summary>
+            <details name="faq-faq-products"><summary>Not sure which line is yours?</summary>
               <div class="yb-accordion__body"><p>The hair analysis asks six questions and matches your hair to one line, instead of leaving you to choose between fifteen collections.</p></div></details>
           </div>
         </section>
@@ -546,7 +561,7 @@
     </div>
   </div>
 </dialog>
-<script src="yb/components.js?v=e6c6e48f"></script>
+<script src="yb/components.js?v=29f7e957"></script>
 <script>
 // Setas do banner. Carrossel nao e componente do sistema — este JS vive na
 // pagina, nao em components.js, para nao dar a entender que existe.

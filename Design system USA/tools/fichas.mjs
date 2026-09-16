@@ -55,7 +55,21 @@ const secoes = readdirSync(join(raiz, DIR_PECAS))
   .filter((f) => f.endsWith('.html'))
   .map((f) => {
     const id = f.replace(/\.html$/, '');
-    const corpo = ler(`${DIR_PECAS}/${f}`);
+    // {PRAZO+Nd} vira uma data N dias a frente, carimbada no build. Uma data
+    // fixa numa peca envelhece em silencio: o relogio do cartao de oferta
+    // chegou a mostrar "1567 days", que nao e prazo, e numero.
+    const corpo = ler(`${DIR_PECAS}/${f}`).replace(
+      /\{PRAZO\+(\d+)d(:iso|:humano)?\}/g,
+      (_, dias, forma) => {
+        const d = new Date(Date.now() + Number(dias) * 86400000);
+        if (forma === ':humano')
+          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+        if (forma === ':iso') return d.toISOString().slice(0, 10);
+        // 23:59:59 do dia, e nao a hora do build: com segundos, cada build
+        // gera um valor diferente e a checagem "fichas em dia" passa a
+        // oscilar — verde logo apos o build, vermelha um segundo depois.
+        return d.toISOString().slice(0, 10) + 'T23:59:59Z';
+      });
     const titulo = (corpo.match(/<h2>([\s\S]*?)<\/h2>/) || [, id])[1].trim();
     const quando = (corpo.match(/<p class="when">([\s\S]*?)<\/p>/) || [, ''])[1].trim();
     const corte = corpo.indexOf('</p>', corpo.indexOf('class="when"'));

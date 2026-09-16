@@ -69,7 +69,10 @@
 @media (prefers-reduced-motion: reduce){
   [class*="yb-"],
   [class*="yb-"]::before,
-  [class*="yb-"]::after{
+  [class*="yb-"]::after,
+  /* o acordeao anima em `::details-content`, que nao e nem before nem after —
+     sem esta linha ele seria o unico componente fora do corte do sistema */
+  [class*="yb-"] details::details-content{
     animation-duration: 1ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
@@ -592,6 +595,22 @@
 }
 .yb-track::-webkit-scrollbar{ display:none; }
 .yb-track > *{ scroll-snap-align:start; }
+/* GRADE OU CARROSSEL, o mesmo cartao. A escolha e da secao — no tema, o
+   lojista marca qual usar — e nao do visitante: `.yb-grid` ou `.yb-track` na
+   mesma marcacao, sem classe nova no cartao e sem script.
+
+   O ganho e de altura no celular, e e grande: medido em 375, a vitrine de
+   quatro cartoes cai de 1133px de grade para 528px de trilho. No desktop os
+   dois praticamente empatam — quatro cartoes cabem na largura de qualquer
+   jeito —, entao a decisao so importa no celular, que e onde ela foi pedida.
+
+   O CARTAO DE OFERTA precisa de regra propria. Na grade ele ocupa as duas
+   colunas do celular (`grid-column:span 2`) porque e A oferta do dia; solto no
+   trilho ele virava mais um cartao de 260px e perdia o que o faz existir.
+   `span 2` sozinho da 536px e passa da tela num aparelho de 375 — o teto de
+   85vw devolve 319px: maior que os vizinhos, e ainda deixa 24px do proximo
+   aparecendo, que e o que convida a arrastar. */
+.yb-track > .yb-offercard{ grid-column:span 2; max-inline-size:85vw; }
 /* variante em fila, para conteudo que nao e cartao (a faixa de logos) */
 /* setas: a loja tem 5 pares por pagina e o sistema tinha zero. Nao sao raiz
    nova — pertencem ao trilho, e o botao em si e .yb-iconbtn. */
@@ -1313,16 +1332,21 @@
    Quem quiser resolver a CAUSA tira o texto de cima da foto: enquanto 60% do
    cartao for texto sobre imagem, vai haver um veu grande aqui. E quem mexer na
    altura do corpo precisa reconferir ESTA conta — foi ela que quebrou. */
-.yb-offercard{ --yb-veil-fall:4rem; }
+.yb-offercard{ --yb-veil-fall:8.25rem; --yb-veil-avanco:1.5rem; }
+/* `--yb-veil-avanco`: a rampa nao para no topo do CORPO, avanca ate o TITULO.
+   Os 24px entre um e outro sao recuo — nao ha texto neles, e terminar ali
+   desperdicava 24px de rampa e somava 24px de chapado. Avancando, a mesma
+   queda fica mais longa (mais suave) e o plato fica menor. Padrao zero: quem
+   nao declara continua com o comportamento de antes. */
 .yb-offercard__body::before{
   content:""; position:absolute; z-index:-1;
   inset:calc(var(--yb-veil-fall) * -1) 0 0;
   background:linear-gradient(to bottom,
     var(--yb-scrim-none)    0,
-    var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
-    var(--yb-scrim-curve-2) calc(var(--yb-veil-fall) * .5),
-    var(--yb-scrim-curve-3) calc(var(--yb-veil-fall) * .75),
-    var(--yb-scrim-full)    var(--yb-veil-fall));
+    var(--yb-scrim-curve-1) calc((var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)) * .25),
+    var(--yb-scrim-curve-2) calc((var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)) * .5),
+    var(--yb-scrim-curve-3) calc((var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)) * .75),
+    var(--yb-scrim-full)    calc(var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)));
 }
 /* Com blur, igual ao banner. A banda e em PORCENTAGEM da altura do cartao e
    nao em rem: a altura do cartao vem da coluna do grid, nao da janela, e vai
@@ -1334,10 +1358,10 @@
 .yb-offercard--blur .yb-offercard__body::before{
   background:linear-gradient(to bottom,
     var(--yb-scrim-none)         0,
-    var(--yb-scrim-lite-curve-1) calc(var(--yb-veil-fall) * .25),
-    var(--yb-scrim-lite-curve-2) calc(var(--yb-veil-fall) * .5),
-    var(--yb-scrim-lite-curve-3) calc(var(--yb-veil-fall) * .75),
-    var(--yb-scrim-lite)         var(--yb-veil-fall));
+    var(--yb-scrim-lite-curve-1) calc((var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)) * .25),
+    var(--yb-scrim-lite-curve-2) calc((var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)) * .5),
+    var(--yb-scrim-lite-curve-3) calc((var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)) * .75),
+    var(--yb-scrim-lite)         calc(var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)));
 }
 /* Duas linhas, como no cartao de catalogo — e aqui o motivo e outro: cada
    linha a mais do titulo cresce o corpo, e o veu acompanha o corpo. Um nome
@@ -1846,13 +1870,69 @@
      o gap da lista dá a folga. Com uma linha de texto media 22px, abaixo do
      mínimo 24×24 da WCAG 2.5.8; 36 passa com margem. */
   padding-block:var(--yb-space-2); min-height:var(--yb-control-height-compact)}
+/* DESENHADOS PELO SISTEMA, e nao pelo sistema operacional.
+   Eram os controles nativos com `accent-color`: quadrado de canto vivo, tique
+   do navegador, nenhuma transicao, e a borda do desmarcado escolhida pelo
+   motor. Dentro de uma pagina que tem raio, tom de borda e tempo de transicao
+   proprios, eles liam como widget colado de fora.
+
+   O contorno usa `--yb-border-control` e nao `--yb-border`: quando a caixa
+   esta desmarcada a borda E o controle, e e ela que precisa dos 3:1 da WCAG
+   1.4.11. O `--yb-border` da 1.40:1 — serve para dividir bloco, nao para
+   dizer "clique aqui". Foi por causa deste componente que o token nasceu.
+
+   O tique e desenhado em CSS (dois lados de uma caixa girada) e nao vem do
+   sprite: `<use>` exige um elemento no HTML, e a caixa e um `<input>`, que nao
+   tem filhos. `currentColor` mantem tudo em token. */
 .yb-check input{
-  width:20px; height:20px; margin:0; flex:none; margin-top:1px;
-  accent-color:var(--yb-action-bg); cursor:pointer;
+  appearance:none; -webkit-appearance:none;
+  inline-size:1.25rem; block-size:1.25rem; margin:0; flex:none; margin-top:1px;
+  display:grid; place-content:center;
+  background:var(--yb-surface);
+  border:var(--yb-border-width-hair) solid var(--yb-border-control);
+  border-radius:var(--yb-radius-sm);
+  color:var(--yb-text-inverse);
+  cursor:pointer;
+  transition:background var(--yb-transition-control),
+             border-color var(--yb-transition-control);
+  /* se `appearance:none` nao pegar, o accent ainda pinta o nativo */
+  accent-color:var(--yb-action-bg);
 }
+.yb-check input[type="radio"]{border-radius:var(--yb-radius-pill)}
+@media (hover:hover){
+  .yb-check input:not(:checked):not(:disabled):hover{border-color:var(--yb-text-primary)}
+}
+.yb-check input:checked{
+  background:var(--yb-action-bg); border-color:var(--yb-action-bg);
+}
+/* O tique: caixa girada com dois lados. `translate` centra o L girado, que
+   nasce fora do centro optico por ser assimetrico. */
+.yb-check input[type="checkbox"]:checked::after{
+  content:""; inline-size:.3125rem; block-size:.625rem;
+  border:solid currentColor; border-width:0 2px 2px 0;
+  transform:rotate(45deg) translate(-1px, -1px);
+}
+.yb-check input[type="radio"]:checked::after{
+  content:""; inline-size:.5rem; block-size:.5rem;
+  border-radius:var(--yb-radius-pill); background:currentColor;
+}
+.yb-check input:disabled{
+  cursor:not-allowed; background:var(--yb-bg-subtle);
+  border-color:var(--yb-border-strong);
+}
+.yb-check input:disabled:checked{background:var(--yb-text-muted); border-color:var(--yb-text-muted)}
 .yb-check input:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
+}
+/* Em alto contraste o sistema descarta as cores do autor, e um controle
+   desenhado por nos vira um quadrado vazio: o fundo `--yb-action-bg` do
+   marcado some e o tique de `currentColor` vai junto. Devolver o nativo e o
+   unico caminho honesto — ali quem desenha e o sistema operacional, e ele
+   sabe desenhar marcado e desmarcado. */
+@media (forced-colors: active){
+  .yb-check input{appearance:auto; -webkit-appearance:auto}
+  .yb-check input::after{content:none}
 }
 .yb-check span{font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
   line-height:var(--yb-line-height-relaxed)}
@@ -1860,14 +1940,61 @@
 /* =========================================================================
    ALERT
    ========================================================================= */
+/* A barra colorida da esquerda saiu, e o icone entrou no lugar dela — nao e so
+   troca de enfeite. A barra dizia a severidade SO pela cor, e cor sozinha nao
+   informa (WCAG 1.4.1): quem nao distingue ambar de vermelho via dois retangulos
+   iguais. O icone diz a mesma coisa sem depender de enxergar a diferenca, e por
+   isso cada variante tem o SEU:
+
+     --success  check       deu certo
+     --warning  alert       triangulo, atencao
+     --danger   x-circle    circulo com X, deu errado
+     --info     info        circulo com i
+
+   Quatro glifos para quatro variantes, e nao tres com um repetido: warning e
+   danger sao os dois que mais se confundem, e dar o mesmo triangulo aos dois
+   devolveria a cor como unica diferenca — que e de onde viemos. O `x-circle`
+   entrou no sprite para isso.
+
+   O icone herda a `color` da variante, entao ele nao precisa de regra propria
+   de cor; `flex:none` para nao encolher quando o texto for longo, e o alinhamento
+   e no topo porque o alerta pode ter duas linhas e o icone acompanha a primeira. */
 .yb-alert{
   display:flex; gap:var(--yb-space-3); padding:var(--yb-space-4) var(--yb-space-5);
-  border-radius:var(--yb-radius-card); border-inline-start:3px solid;
+  border-radius:var(--yb-radius-card);
   font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-relaxed);
 }
+.yb-alert__icone{flex:none; margin-block-start:.1em}
+/* O corpo empurra o fechar para a ponta sem precisar de `space-between`, que
+   grudaria o icone no texto quando o alerta fosse curto. */
+.yb-alert__corpo{flex:1; min-width:0}
 .yb-alert__title{
   display:block; font-weight:var(--yb-font-weight-semibold);
   margin-bottom:var(--yb-space-1);
+}
+/* FECHAR. Mesma receita do toast: 44px de alvo com margem negativa, para o
+   controle nao inflar a altura do alerta — a caixa cresce para fora.
+   Herda a cor da variante em vez de ser cinza: um X cinza dentro de uma caixa
+   ambar le como elemento de outro lugar. */
+.yb-alert__close{
+  border:none; background:transparent; cursor:pointer; flex:none;
+  color:inherit; padding:0; border-radius:var(--yb-radius-sm); line-height:1;
+  display:inline-flex; align-items:center; justify-content:center;
+  width:var(--yb-target-min); height:var(--yb-target-min);
+  margin:calc(var(--yb-space-3) * -1) calc(var(--yb-space-3) * -1)
+         calc(var(--yb-space-3) * -1) 0;
+  transition:color var(--yb-transition-control);
+}
+/* Sem `opacity` para apagar: opacidade sobre coisa visivel torna o contraste
+   nao-medivel, e a casa proibe — o proprio validador reprova. O repouso herda
+   a cor da variante, que ja e medida contra aquela superficie; o hover escurece
+   para `--yb-text-primary`, que serve nas quatro tintas por ser o tom mais
+   escuro do sistema. Um X cinza dentro de uma caixa ambar leria como elemento
+   de outro lugar, e por isso ele nao e `--yb-text-muted` como no toast. */
+@media (hover:hover){ .yb-alert__close:hover{color:var(--yb-text-primary)} }
+.yb-alert__close:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:calc(var(--yb-focus-offset) * -1);
 }
 .yb-alert--success{background:var(--yb-success-surface); border-color:var(--yb-success-solid); color:var(--yb-success-text)}
 .yb-alert--warning{background:var(--yb-warning-surface); border-color:var(--yb-warning-solid); color:var(--yb-warning-text)}
@@ -1901,6 +2028,32 @@
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
 }
+/* ABRIR E FECHAR COM ANIMACAO, sem trocar o <details> por div e script.
+   O nativo abre seco porque altura `auto` nunca foi animavel. Duas peças novas
+   do CSS resolvem isso e as duas degradam sozinhas:
+
+   `::details-content` e a caixa que o navegador ja cria em volta do conteudo —
+   da para dar altura e transicao a ela sem embrulhar nada no HTML.
+   `interpolate-size:allow-keywords` e o que destrava animar ATE `auto`, que e a
+   unica altura que serve quando o texto tem tamanho imprevisivel.
+
+   Declarado no `.yb-accordion` e nao no `:root`: e herdado, entao cobre a
+   arvore do componente sem ligar animacao de `auto` na pagina inteira.
+
+   `transition-behavior:allow-discrete` e o que faz `content-visibility`
+   acompanhar — sem ele o conteudo some no primeiro quadro do fechamento e a
+   altura anima sobre o vazio.
+
+   Onde `::details-content` nao existe, nada disto casa e o acordeao volta a
+   abrir seco — que e exatamente o comportamento de hoje. */
+.yb-accordion{ interpolate-size:allow-keywords; }
+.yb-accordion details::details-content{
+  block-size:0; overflow:hidden;
+  transition:block-size var(--yb-transition-surface),
+             content-visibility var(--yb-transition-surface);
+  transition-behavior:allow-discrete;
+}
+.yb-accordion details[open]::details-content{ block-size:auto; }
 .yb-accordion__body{padding-bottom:var(--yb-space-4)}
 .yb-accordion__body p{
   margin:0; font-size:var(--yb-type-body-sm-size);
@@ -1926,6 +2079,31 @@
   outline-offset:var(--yb-focus-offset);
 }
 .yb-crumb [aria-current="page"]{color:var(--yb-text-secondary)}
+
+/* NO CELULAR O ULTIMO ITEM CORTA, EM VEZ DE QUEBRAR A LINHA.
+   O ultimo e o nome do produto — "Deep care hair kit | Ybera Fashion Gold"
+   tem 40 caracteres e nao cabe em 375px depois de "Home / Fashion Gold". Com
+   `wrap` ele descia para uma segunda linha e o breadcrumb, que e uma tira de
+   orientacao, virava um bloco de duas linhas em cima da foto do produto.
+
+   Cortado, a trilha continua legivel: quem le breadcrumb esta procurando ONDE
+   ESTA, e os degraus anteriores — que cabem inteiros — sao o que respondem
+   isso. O nome completo esta no <h1> logo abaixo, entao nada se perde.
+
+   `min-inline-size:0` porque item de flex nasce com `min-width:auto` e se
+   recusa a encolher abaixo do proprio conteudo: sem isto o `text-overflow`
+   fica escrito e inerte, e a tira vaza para fora da tela. Os degraus
+   anteriores ficam com `flex:none` para o corte cair sempre no ultimo. */
+/* 767,98 e nao 768: o degrau pertence ao `min-width`, e o `max` recua 0,02px
+   para as duas regras nunca valerem na mesma largura. */
+@media (max-width:767.98px){
+  .yb-crumb ol{flex-wrap:nowrap}
+  .yb-crumb li{flex:none}
+  .yb-crumb li:last-child{
+    flex:0 1 auto; min-inline-size:0;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+}
 
 /* =========================================================================
    DIALOG / MODAL
@@ -2121,6 +2299,11 @@
 /* =========================================================================
    PAGINATION
    ========================================================================= */
+/* Item de flex nasce com `min-width:auto` e se recusa a encolher abaixo do
+   proprio conteudo. Dentro de um pai flex — o palco da doc, o rodape de uma
+   listagem — a paginacao ficava com a largura do conteudo (596px numa tela de
+   375) e empurrava a pagina, em vez de rolar por dentro. */
+.yb-pagination{min-inline-size:0; max-inline-size:100%}
 .yb-pagination ol{
   list-style:none; margin:0; padding:0; display:flex;
   gap:var(--yb-space-2); align-items:center; flex-wrap:wrap;
@@ -2142,12 +2325,72 @@
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
 }
+/* A PAGINA ATUAL FALA A LINGUA DOS BOTOES, na variante SECUNDARIA.
+   Era grafite — identidade, pela DDR-001 — e era a unica marca de
+   "selecionado" da loja que nao conversava com nenhum botao do sistema.
+
+   Secundaria, e nao primaria: no primario ela vira o MESMO botao do "Add to
+   cart". Numa listagem, onde cada cartao ja carrega a propria acao, a
+   paginacao passaria a disputar o clique com o que vende. O magenta cheio
+   continua reservado a decisao; o suave diz "voce esta aqui" na mesma
+   familia, sem competir.
+
+   4,86:1 no par — passa em AA para texto normal, e este e 14px em semibold.
+   Se um dia apertar, o degrau seguinte e `--yb-action-secondary-text-hover`
+   (7,12:1) sem mexer no fundo. */
 .yb-pagination [aria-current="page"]{
-  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  background:var(--yb-action-secondary-bg); color:var(--yb-action-secondary-text);
   font-weight:var(--yb-font-weight-semibold);
 }
-/* o "…" e informacao estatica sobre paginas omitidas, nao controle inativo */
-.yb-pagination__gap{color:var(--yb-text-muted); min-width:auto; padding:0}
+/* o "…" e informacao estatica sobre paginas omitidas, nao controle inativo.
+   Dois nomes no seletor porque `.yb-pagination span` (0,1,1) vence
+   `.yb-pagination__gap` (0,1,0): escrito com um nome so, o `min-width:auto`
+   perdia e cada reticencia ocupava um alvo inteiro de 68px sem ser alvo de
+   nada — 136px dos 452 da tira, em duas marcas de pontuacao. */
+.yb-pagination .yb-pagination__gap{color:var(--yb-text-muted); min-width:auto; padding:0}
+
+/* NO CELULAR A TIRA ROLA, EM VEZ DE QUEBRAR.
+   Nove alvos de 44px mais os vaos pedem 388px; em 375 sobram 343 depois do
+   gutter, e o `wrap` mandava metade da paginacao para uma segunda linha —
+   com a pagina atual numa fileira e o "proximo" na outra, que e onde a
+   pessoa deixa de entender que aquilo e um controle so.
+
+   Rolar mantem os 44px de alvo, que e o que nao se pode negociar: encolher o
+   botao para caber resolveria o pixel e quebraria o dedo.
+
+   `safe center` centraliza enquanto cabe e vira `flex-start` quando nao cabe.
+   Sem o `safe`, um flex centrado que transborda corta o PRIMEIRO item para
+   fora da area rolavel — e o primeiro aqui e o "anterior". A linha de cima
+   e o fallback para quem nao entende `safe`. */
+@media (max-width:767.98px){
+  /* AS VIZINHAS SAEM ANTES DE QUALQUER OUTRA COISA.
+     O que nao pode sumir e: as duas setas, a primeira, a ultima e onde a
+     pessoa esta. As vizinhas da atual (o "2" e o "4" de "1 … 2 [3] 4 … 12")
+     sao conveniencia — e sao justamente o que faz a tira passar de 343px.
+     Sem elas sobram 7 alvos, 260px, e tudo cabe em 375 sem rolar nada.
+
+     As reticencias ficam: sem elas, "1 [3] 12" mente dizendo que ha tres
+     paginas. Quem monta a paginacao marca as vizinhas com esta classe; quem
+     nao marcar cai na rolagem abaixo, que e a rede de seguranca. */
+  .yb-pagination__perto{display:none}
+  /* O respiro lateral sai; os 44px de alvo ficam. Com `min-width:44` mais
+     12px de cada lado, cada numero ocupava 68 — o alvo continua com os 44
+     quando o respiro vai embora, e a tira cai de 452 para 264. */
+  .yb-pagination a, .yb-pagination span{padding-inline:0}
+  .yb-pagination ol{
+    flex-wrap:nowrap; overflow-x:auto; overscroll-behavior-inline:contain;
+    /* O teto e o que faz o `overflow` valer: sem ele a tira cresce ate o
+       proprio conteudo — dentro de um pai que se dimensiona pelo filho, como
+       o palco da doc, ela empurrava a pagina inteira em vez de rolar. */
+    max-inline-size:100%;
+    gap:var(--yb-space-1);
+    justify-content:flex-start;
+    justify-content:safe center;
+    scrollbar-width:none;
+  }
+  .yb-pagination ol::-webkit-scrollbar{display:none}
+  .yb-pagination li{flex:none}
+}
 .yb-pagination__off{color:var(--yb-text-disabled); cursor:not-allowed}
 
 /* =========================================================================
@@ -2159,12 +2402,29 @@
   display:block; background:var(--yb-bg-muted);
   border-radius:var(--yb-radius-sm); position:relative; overflow:hidden;
 }
+/* DOIS defeitos moravam aqui, e os dois eram invisiveis de propósito nenhum.
+
+   1. A direcao era `to inline-end`. Palavra logica nao vale em
+      `linear-gradient()` — o valor inteiro e descartado e o `background` do
+      pseudo virava `none`. A animacao rodava o tempo todo, arrastando um
+      elemento transparente de um lado ao outro. Medido: `background-image`
+      computado em `none`, `transform` animando normalmente.
+
+      Agora e `to right`, que e fisico. Em RTL o brilho tem de varrer ao
+      contrario, e como o gradiente e simetrico (transparente nas duas pontas)
+      basta inverter a animacao — nao ha segundo gradiente para manter.
+
+   2. O brilho era `--yb-bg-subtle` sobre `--yb-bg-muted`: cinco degraus de
+      cinza em 255, 1,045:1. Mesmo valido, ninguem veria. O branco da
+      superficie dobra a diferenca (1,09:1) e continua discreto — esqueleto
+      que pisca forte demais parece defeito, nao carregamento. */
 .yb-skeleton::after{
   content:""; position:absolute; inset:0;
-  background:linear-gradient(to inline-end, transparent, var(--yb-bg-subtle), transparent);
+  background:linear-gradient(to right, transparent, var(--yb-surface), transparent);
   transform:translateX(-100%);
   animation:yb-shimmer 1.4s infinite;
 }
+[dir="rtl"] .yb-skeleton::after{ animation-direction:reverse; }
 @keyframes yb-shimmer{to{transform:translateX(100%)}}
 .yb-skeleton--text{height:1em; margin-block:.25em}
 .yb-skeleton--title{height:1.4em; width:70%}
@@ -2697,11 +2957,27 @@ body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 
   display:-webkit-box; -webkit-box-orient:vertical;
   -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
 }
+/* Tres linhas SEMPRE, e nao no maximo tres. O `line-clamp` ja impedia o cartao
+   de crescer; o que faltava era impedi-lo de encolher. Com dois de seis
+   reviews em duas linhas, o buraco entre o texto e o nome mudava de tamanho de
+   cartao para cartao — o pe ja estava alinhado (`margin-block-start:auto` no
+   autor), a fileira e que lia torta, porque o olho segue o FIM do texto, nao a
+   borda de baixo do cartao.
+
+   A caixa reservada e a resposta certa aqui porque o conteudo nao e nosso:
+   quem escreve as avaliacoes sao clientes, e amanha o Judge.me entrega uma de
+   uma linha e outra de sete. Acertar o alinhamento reescrevendo texto duraria
+   ate a primeira avaliacao nova.
+
+   `calc` com os tokens, e nao a unidade `lh`: ela ainda nao existe no Safari
+   que a loja atende. Os tres fatores sao os mesmos que desenham a linha logo
+   acima — se o tamanho ou a entrelinha mudarem, a reserva acompanha. */
 .yb-review__text{
   margin:0; font-size:var(--yb-type-body-sm-size);
   line-height:var(--yb-line-height-relaxed); color:var(--yb-text-secondary);
   display:-webkit-box; -webkit-box-orient:vertical;
   -webkit-line-clamp:3; line-clamp:3; overflow:hidden;
+  min-block-size:calc(var(--yb-type-body-sm-size) * var(--yb-line-height-relaxed) * 3);
 }
 /* O `auto` e o que empurra o par nome+produto para o pe do cartao. Onde nao ha
    folga — a lista da PDP, que empilha e nao estica — ele nao faz nada. */
@@ -3048,8 +3324,17 @@ button.yb-link{
    especificidade (0,1,0) e a media query vem depois na folha — o modificador
    perdia em silencio. Abaixo de 560 o destaque virava miniatura de 96x66,
    MENOR que as irmas de 96x96, com titulo de 24px em cima. */
+/* `--stacked` tambem sai fora, e nao por simetria: a regra foi escrita para o
+   arranjo v1, onde o post comum e uma FILEIRA (miniatura a esquerda, texto a
+   direita) e encolher a miniatura e o certo. O `--stacked` do trio nasceu
+   depois e caiu na regra por tabela — abaixo de 560 os tres cartoes de foto em
+   cima viravam tres fileirinhas de 96px, que e outro componente. Num trilho
+   horizontal isso fica evidente: uma fileira deitada dentro de um slide de
+   268px nao e cartao nenhum. */
 @media (max-width:560px){
-  .yb-post:not(.yb-post--featured){ grid-template-columns:96px 1fr; gap:var(--yb-space-4); }
+  .yb-post:not(.yb-post--featured):not(.yb-post--stacked){
+    grid-template-columns:96px 1fr; gap:var(--yb-space-4);
+  }
 }
 
 /* um destaque à esquerda, os secundários empilhados à direita */
@@ -3085,9 +3370,49 @@ button.yb-link{
    `--featured` nesta folha; a diferenca e que aqui nao havia `:not()` para
    escrever, porque o modificador e que precisa se desfazer.
    Dois e um sobrando fica pior que um por linha: a orfa embaixo parece erro
-   de conteudo. Por isso vai direto de tres para um. */
+   de conteudo.
+
+   E abaixo de 860 os tres nao viram UMA COLUNA: viram trilho. Medido em 375px,
+   a secao caiu de 464px para 309 — e o que sai da frente nao e so altura: o
+   blog fica entre os selos e o rodape, e quem desce ate ali esta indo embora,
+   nao lendo. Deitado, a secao ocupa a altura de UM cartao e os outros dois
+   continuam alcancaveis. A previa do segundo cartao e o que diz que ha mais
+   coisa para o lado.
+
+   Os 464 do "antes" sao a lista como ela ERA de fato: tres fileiras de
+   miniatura de 96px, porque o `--stacked` caia na regra de 560 logo abaixo.
+   Empilhados de verdade, em coluna unica, os mesmos tres cartoes medem 1.101px
+   — que e a lista que ninguem chegou a ver.
+
+   A ANATOMIA DA ROLAGEM NAO E ESCRITA AQUI: vem do `.yb-track`, composto na
+   marcacao, como ja fazem `.yb-reviews`, `.yb-videos` e `.yb-logobar__track`.
+   Reescrever rolagem, encaixe e barra escondida neste bloco seria a quinta
+   copia da mesma anatomia — e o TRACK existe justamente porque havia quatro.
+   O que esta folha faz e o contrario: DESFAZ o trilho acima de 860, onde os
+   tres cabem lado a lado e nao ha o que rolar. */
 @media (max-width:860px){
-  .yb-posts--trio{ grid-template-columns:1fr; gap:var(--yb-space-8); }
+  /* `none` e nao `1fr`: com uma coluna explicita o `grid-auto-columns` do
+     trilho nao governa nada e os cartoes voltam a empilhar. */
+  .yb-posts--trio{
+    grid-template-columns:none;
+    /* 78% da largura util e o que deixa a previa do proximo cartao aparecer no
+       celular. O teto de 20rem e para a faixa de 560 a 860, onde 78% de 768
+       davam um cartao de 599px — um slide gigante por tela, que e o oposto de
+       um carrossel. Com o teto, a mesma regra da 2,2 cartoes no tablet e 1,3
+       no celular. */
+    --yb-track-item:min(78%, 20rem);
+    /* `gap` direto, e nao `--yb-track-gap`: `.yb-posts` declara `gap` em
+       valor fixo e vem DEPOIS do `.yb-track` na folha — a variavel do trilho
+       nunca seria lida aqui. */
+    gap:var(--yb-space-5);
+  }
+}
+@media (min-width:860.02px){
+  /* O `.yb-track` da marcacao continua valendo no desktop; estas tres linhas
+     sao o que sobra dele para desfazer. `grid-auto-flow:column` pode ficar:
+     com as tres colunas explicitas do trio ele coloca os cartoes nos mesmos
+     lugares. */
+  .yb-posts--trio{ padding-block:0; overflow-x:visible; scroll-snap-type:none; }
 }
 
 /* =========================================================================

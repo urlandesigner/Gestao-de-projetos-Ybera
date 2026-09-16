@@ -377,15 +377,15 @@
    somar a classe aqui, o hamburguer aparecia no desktop. */
 .yb-header__icon.yb-header__burger{display:none}
 .yb-nav__close{display:none}
+/* A cabeca (marca + X) e a linha de conta existem SO na gaveta. No desktop a
+   marca ja esta na barra e a conta e o icone a direita; aqui elas seriam duas
+   copias do mesmo no meio da navegacao. */
+.yb-nav__head{display:none}
+.yb-nav__conta{display:none}
 .yb-header__scrim{display:none}
 /* Acima de 900 nao ha gaveta — logo nao pode sobrar um controle que o
    teclado alcanca e que nao abre nada. Mesma regra do acordeao do footer. */
 .yb-header__drawer{display:none}
-/* Conta so muda de casa abaixo de 900: no desktop e icone na barra (paridade
-   com busca e sacola, mesma distancia de clique); na gaveta vira item de
-   texto como Home ou Sales — um icone sozinho a esquerda dos 25 links da
-   gaveta nao lia como parte do mesmo menu. */
-.yb-nav__item--account{display:none}
 
 @media (max-width:900px){
   .yb-header__drawer{display:block; position:absolute; opacity:0;
@@ -413,10 +413,10 @@
      escreve o menu duas vezes no HTML, 25 links repetidos, e o sistema existe
      em parte para nao fazer isso. */
   .yb-nav__rail{ display:none; }
-  /* Conta muda de casa: some da barra, aparece como item de texto no topo da
-     gaveta — ver nota em .yb-nav__item--account acima. */
+  /* Conta muda de casa: some da barra e vira a faixa `.yb-nav__conta` no topo
+     da gaveta. Era um item de texto no meio da lista — o primeiro de 25 links
+     de mesmo peso, que ninguem achava. */
   .yb-header__account{ display:none; }
-  .yb-nav__item--account{ display:list-item; }
   .yb-header__nav{
     /* de volta a bloco: na gaveta o botao de fechar e a lista empilham, e o
        display:flex do desktop os poria lado a lado */
@@ -439,10 +439,78 @@
   .yb-header__drawer:checked ~ .yb-header__bar .yb-header__nav{
     transform:none; visibility:visible;
   }
+  /* A cabeca alinha marca e X pela linha de base optica do logo, nao pelo
+     centro das caixas: o X tem 44px de alvo e o logo 32 de altura. O X mantem
+     o `margin-inline-start:auto` que ja tinha — e o que o empurra para a
+     borda mesmo com a marca do lado. */
+  .yb-nav__head{
+    display:flex; align-items:center; gap:var(--yb-space-4);
+    margin-block-end:var(--yb-space-5);
+  }
+  /* O X vinha com 44px de alvo e o toque ia ate a borda da gaveta; puxa-lo
+     para fora do gutter alinha o centro do icone com o centro dos icones da
+     barra atras, que e onde o dedo ja estava. */
+  .yb-nav__head .yb-nav__close{ margin-inline-end:calc(var(--yb-space-3) * -1); }
+  /* Faixa de conta: o unico bloco com fundo dentro da gaveta, e o unico botao.
+     E o que a distingue dos links — sem ela, "Log in" seria o 26o link de uma
+     lista de links iguais. */
+  .yb-nav__conta{
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:var(--yb-space-4);
+    padding:var(--yb-space-3) var(--yb-space-3) var(--yb-space-3) var(--yb-space-4);
+    margin-block-end:var(--yb-space-4);
+    background:var(--yb-bg-muted); border-radius:var(--yb-radius-card);
+  }
+  /* min-width:0 e o que autoriza o nome a encolher: sem ele o flex respeita a
+     largura do texto, o botao e empurrado para fora da gaveta de 352px e o
+     "Log in" fica cortado pelo overflow. */
+  /* `min-width:0` no NOME autoriza o texto a encolher; o piso de 10.5rem aqui
+     diz ate onde. Abaixo disso a frase inteira cabe na linha e quem sai e o
+     botao, que desce para a segunda linha — em 320px "Welcome, Visitor"
+     virava "Welcome, ..." para dar espaco a um botao que tinha para onde ir.
+     Reticencias no lugar de uma palavra que cabia. */
+  .yb-nav__conta-quem{
+    display:flex; align-items:center; gap:var(--yb-space-3);
+    flex:1 1 auto; min-width:10.5rem;
+  }
+  /* Gold-700 sobre o cinza da faixa: 5,1:1 medido. A cor de marca so entra
+     aqui como icone porque o texto ao lado carrega o significado — o icone
+     sozinho nunca diz "conta".
+
+     O seletor e de DESCENDENTE de proposito. `.yb-icon{color:currentColor}`
+     mora em icons/, que carrega DEPOIS desta folha: com a mesma
+     especificidade (0,1,0) a folha de tras ganha, e uma regra de classe unica
+     no proprio icone nao pinta nada. Mesma razao de `.yb-nav__pitch-steps
+     .yb-icon` logo acima. */
+  .yb-nav__conta-quem .yb-icon{ color:var(--yb-accent-text); flex:none; }
+  /* Mesma pastilha do `.yb-usermenu__inicial`, um grau menor: na barra ela
+     divide espaco com busca e sacola, aqui divide com uma frase. */
+  .yb-nav__conta-inicial{
+    display:flex; align-items:center; justify-content:center; flex:none;
+    inline-size:1.75rem; block-size:1.75rem; border-radius:var(--yb-radius-pill);
+    background:var(--yb-surface-raised); color:var(--yb-text-primary);
+    font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
+    line-height:1;
+  }
+  .yb-nav__conta-nome{
+    min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-primary);
+  }
+  /* `--primary` e nao `--secondary`: o secundario e magenta-100 sobre um cinza
+     quase igual (medido: 249,242,244 contra 245,245,245) — o botao sumia na
+     faixa e "Log in" virava texto solto.
+
+     `--sm` aqui e decisao de LARGURA, nao de alvo: em tamanho cheio o botao
+     comia 95px dos 262 da faixa e "Welcome, Visitor" era cortado em
+     "Welcome, Vis...". O `min-height` devolve os 44px de toque que o `--sm`
+     tiraria — e a ressalva que a propria folha faz sobre `--sm` e acao
+     principal deixa de valer quando o alvo volta ao minimo do sistema. */
+  .yb-nav__conta .yb-btn{ flex:none; min-height:var(--yb-target-min);
+    margin-inline-start:auto; }
   .yb-nav__close{
     display:flex; align-items:center; justify-content:center;
     width:var(--yb-target-min); height:var(--yb-target-min);
-    margin-inline-start:auto; margin-block-end:var(--yb-space-2);
+    margin-inline-start:auto;
     cursor:pointer; color:var(--yb-text-primary);
     border-radius:var(--yb-radius-control);
   }

@@ -17,6 +17,41 @@
         <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
       </article>
     </div>
+    <h3 class="row-label">Carrossel — a mesma marcação, <code>.yb-track</code> no lugar de <code>.yb-grid</code></h3>
+    <div class="demo">
+      <div class="yb-track">
+      <article class="yb-card">
+        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--sale">−16%</span><span class="yb-badge yb-badge--on-media">Free Cronograma</span></div><button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" aria-label="Add to cart: Kit Sealant Fashion Gold">Add to cart</button></div>
+        <h3 class="yb-card__title"><a href="#demos">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</a></h3>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+      </article>
+      <article class="yb-card">
+        <div class="yb-card__media"></div>
+        <h3 class="yb-card__title"><a href="#demos">Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask 1kg / 33oz + Coconut Elixir 60ml / 2oz</a></h3>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$169.70</b></span>
+      </article>
+      <article class="yb-card">
+        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div></div>
+        <h3 class="yb-card__title"><a href="#demos">KIT VELLO Shampoo 500ml (16.9 fl.oz) + VELLO Hair Mask 500g (17.6 fl.oz)</a></h3>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
+      </article>
+      </div>
+    </div>
+    <div class="note">
+      <b>Grade ou carrossel é escolha da seção, não do visitante</b>
+      <p>O mesmo cartão serve aos dois: troca-se <code>.yb-grid</code> por
+      <code>.yb-track</code> no contêiner e pronto — sem classe nova no cartão, sem
+      script e sem controle na tela. No tema, o lojista marca qual usar por seção.</p>
+      <p>O ganho é de altura no celular, e é grande: medido em 375px, uma vitrine de
+      quatro cartões cai de <b>1133px</b> de grade para <b>528px</b> de trilho. No
+      desktop os dois praticamente empatam, porque quatro cartões cabem na largura de
+      qualquer jeito — a decisão só importa no celular.</p>
+      <p>O <a href="#demos">cartão de oferta</a> tem regra própria dentro do trilho:
+      na grade ele ocupa as duas colunas do celular porque é <b>a</b> oferta do dia, e
+      solto no trilho viraria mais um cartão de 260px. <code>span 2</code> sozinho dá
+      536px e passa da tela num aparelho de 375; o teto de 85vw devolve 319px — maior
+      que os vizinhos, e ainda deixa o próximo espiando.</p>
+    </div>
     <div class="note">
       <b>Selo que repete o título da seção não é selo</b>
       <p>"Best seller" dentro de uma grade chamada Best Sellers não informa nada — e

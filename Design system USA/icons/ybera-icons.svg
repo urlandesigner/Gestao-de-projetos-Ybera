@@ -166,6 +166,10 @@
     <circle cx="12" cy="12" r="8.5"/><path d="M12 11.5V16.5"/>
     <path d="M12 7.8v.1" stroke-width="2"/>
   </symbol>
+  <symbol id="yb-x-circle" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8.5"/>
+    <path d="m9.2 9.2 5.6 5.6M14.8 9.2l-5.6 5.6"/>
+  </symbol>
   <symbol id="yb-alert" viewBox="0 0 24 24">
     <path d="M12 4.2 2.8 20h18.4Z"/><path d="M12 10v4"/>
     <path d="M12 17.2v.1" stroke-width="2"/>

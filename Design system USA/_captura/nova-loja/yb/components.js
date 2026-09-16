@@ -54,6 +54,24 @@
       e.target.tagName === 'DIALOG' && e.target.open;
   }, true);
 
+  /* ---------------------------------------------------------------------
+     DISPENSAR ALERTA
+       <div class="yb-alert" ...>
+         <button class="yb-alert__close" data-yb-dispensar aria-label="Dismiss">
+
+     Some do fluxo com `remove()`, e nao com `hidden`: o alerta some porque a
+     pessoa leu e resolveu, e um no escondido que sobra no DOM ainda e lido por
+     quem navega por marcos. Nao e `data-yb-close` — aquele fecha `<dialog>`, e
+     misturar os dois faria o botao do alerta procurar um dialogo que nao existe.
+     --------------------------------------------------------------------- */
+  document.addEventListener('click', function (e) {
+    if (!(e.target instanceof Element)) return;
+    var d = e.target.closest('[data-yb-dispensar]');
+    if (!d) return;
+    var alerta = d.closest('.yb-alert');
+    if (alerta) alerta.remove();
+  });
+
   document.addEventListener('click', function (e) {
     if (!(e.target instanceof Element)) return;
     var abre = e.target.closest('[data-yb-open]');
@@ -308,6 +326,29 @@
       faixa.hidden = entradas[0].isIntersecting;
     }, { threshold: 0 }).observe(arte);
   }
+
+  /* ---------------------------------------------------------------------
+     PAGINACAO — a pagina atual entra na vista
+       <nav class="yb-pagination"><ol>… <span aria-current="page">3</span> …
+
+     No celular a tira nao quebra mais linha: ela rola (ver components.css).
+     Rolando, ela nasce no comeco — e o comeco e o "anterior", nao onde a
+     pessoa esta. Uma paginacao que nao mostra a pagina atual e pior do que
+     uma que quebra em duas linhas.
+
+     So mexe quando a tira REALMENTE transborda: onde tudo cabe, `scrollLeft`
+     continua zero e nada acontece. Sem script a paginacao segue inteira e
+     rolavel na mao — o que se perde e o atalho, nao a funcao.
+     --------------------------------------------------------------------- */
+  (function () {
+    var tiras = document.querySelectorAll('.yb-pagination ol');
+    for (var i = 0; i < tiras.length; i++) {
+      var ol = tiras[i];
+      var atual = ol.querySelector('[aria-current="page"]');
+      if (!atual || ol.scrollWidth <= ol.clientWidth + 1) continue;
+      ol.scrollLeft = Math.max(0, atual.offsetLeft - (ol.clientWidth - atual.offsetWidth) / 2);
+    }
+  })();
 
   /* ---------------------------------------------------------------------
      SWITCH

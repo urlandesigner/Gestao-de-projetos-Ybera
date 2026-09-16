@@ -126,7 +126,7 @@
     </div>
     <h3 class="row-label">v2 · trio de mesmo peso</h3>
     <div class="demo demo--stack">
-      <div class="yb-posts yb-posts--trio">
+      <div class="yb-track yb-posts yb-posts--trio">
         <article class="yb-post yb-post--stacked">
           <div class="yb-post__media"><img src="../_captura/nova-loja/img/Is_Keratin_Good_For_Hair-b3d5999d.webp" alt="Cabelo preto longo e liso depois de um tratamento de queratina" loading="lazy"></div>
           <div class="yb-post__body">
@@ -169,6 +169,29 @@
       <code>.yb-section-head</code> mora em <code>patterns/</code>, e esta página não
       carrega aquela folha. Ele está documentado em <a href="../patterns/#page-layout">Page
       layout</a>.</p>
+    </div>
+    <div class="note">
+      <b>No toque o trio deita &mdash; a v1 não</b>
+      <p>Abaixo de 860 os três cartões viram trilho: <code>yb-track</code> composto na
+      marcação, como <code>.yb-reviews</code> e <code>.yb-videos</code> já fazem. Em
+      375px a seção caiu de <b>464px para 309</b> numa parte da página que fica entre
+      os selos e o rodapé &mdash; quem desce até ali está indo embora, não lendo.
+      Deitados, a seção ocupa a altura de um cartão, e a prévia do segundo é o que diz
+      que há mais para o lado.</p>
+      <p>No caminho apareceu outra coisa: <code>--stacked</code> caía na regra de 560
+      escrita para o post em <b>fileira</b>, então no celular o trio não era um trio de
+      cartões &mdash; eram três fileirinhas de miniatura 96px. Num trilho horizontal
+      isso fica evidente, e por isso <code>--stacked</code> saiu daquela regra. Os
+      mesmos três cartões empilhados de verdade, em coluna única, mediriam 1.101px.</p>
+      <p>A anatomia da rolagem <b>não</b> é reescrita no bloco POST: ela vem do
+      <code>.yb-track</code>. O que a folha de componentes faz é o contrário &mdash;
+      desfaz o trilho acima de 860, onde os três cabem lado a lado e não há o que rolar.</p>
+      <p>A <b>v1 continua lista</b> no celular, de propósito: ali o destaque tem foto
+      16/9 e título h3, e os dois secundários são miniaturas de 96px com texto ao lado.
+      Deitar anatomias diferentes no mesmo trilho dá três slides de alturas diferentes,
+      e um carrossel de dois &mdash; se só os secundários deitassem &mdash; não é um
+      carrossel. A hierarquia da v1 é vertical por definição: ela existe para dizer
+      "leia ESTE primeiro".</p>
     </div>
     <div class="note">
       <b>O título é o link, e é o único</b>

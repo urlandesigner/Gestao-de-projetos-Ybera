@@ -35,7 +35,23 @@ uma linha.
 
 Cor de ação — `--yb-action-bg`, `--yb-action-bg-hover`, `--yb-action-bg-active`
 e `--yb-text-link` — só onde existe uma decisão do cliente. Botão primário,
-link, paginação, "escrever review".
+link, "escrever review".
+
+**Emenda · 0.13, 2026-09-16.** A linha acima dizia "paginação" e a folha nunca
+fez isso: os números eram `--yb-text-secondary` e a página atual, grafite. O
+registro prometia uma coisa e o código entregava outra, e a pergunta reapareceu
+— que é o critério deste log para virar regra.
+
+O que vale agora: a **página atual** usa a família de ação **secundária**
+(`--yb-action-secondary-bg` + `--yb-action-secondary-text`). Ela não é decisão,
+é estado; mas era a única marca de "selecionado" do sistema que não conversava
+com nenhum botão. A secundária resolve as duas coisas — fala a língua dos
+botões e não gasta o magenta cheio, que continua sendo só de quem decide. No
+primário ela viraria o mesmo botão do "Add to cart", numa listagem em que cada
+cartão já carrega a própria ação.
+
+Os **números** da paginação continuam neutros: sete pontos quentes numa tira de
+navegação seria o defeito que esta DDR existe para evitar.
 
 Peso institucional — cabeçalho de seção escura, ação secundária, fundo inverso —
 é grafite: `--yb-action-secondary-bg` e `--yb-bg-inverse` apontam para
