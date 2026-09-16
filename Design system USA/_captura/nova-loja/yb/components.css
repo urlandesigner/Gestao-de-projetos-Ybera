@@ -290,10 +290,14 @@
    Antes so o botao tinha estado de carga, e nenhum outro componente sabia
    dizer "estou buscando" — o card, a galeria e o carrinho ficavam parados
    sem explicacao enquanto a variante ou o preco chegavam.
+
+   Escopado a elementos do sistema (`[class*="yb-"]`): a folha vai para o tema
+   inteiro, e `aria-busy` solto injetaria spinner e opacidade em widget de
+   terceiro (avaliacoes, checkout) que use o mesmo atributo.
    ========================================================================= */
-[aria-busy="true"]{ position:relative; cursor:progress; }
-[aria-busy="true"] > *{ opacity:.45; transition:opacity var(--yb-transition-surface); }
-[aria-busy="true"]::after{
+[class*="yb-"][aria-busy="true"]{ position:relative; cursor:progress; }
+[class*="yb-"][aria-busy="true"] > *{ opacity:var(--yb-opacity-control-disabled); transition:opacity var(--yb-transition-surface); }
+[class*="yb-"][aria-busy="true"]::after{
   content:""; position:absolute; inset-block-start:50%; inset-inline-start:50%;
   width:24px; height:24px; margin:-12px 0 0 -12px;
   border:2px solid var(--yb-border); border-top-color:var(--yb-text-primary);
@@ -301,7 +305,7 @@
   animation:yb-spin var(--yb-duration-slower) linear infinite;
 }
 @media (forced-colors: active){
-  [aria-busy="true"]::after{ border-color:GrayText; border-top-color:Highlight; }
+  [class*="yb-"][aria-busy="true"]::after{ border-color:GrayText; border-top-color:Highlight; }
 }
 
 /* esgotado: estado de comercio, nao de interface — o card continua navegavel,
@@ -336,7 +340,7 @@
 }
 @media (hover:hover){ .yb-card:hover .yb-card__media img + img{opacity:1} }
 
-.yb-card--sold-out .yb-card__media{ opacity:.55; }
+.yb-card--sold-out .yb-card__media{ opacity:var(--yb-opacity-media-disabled); }
 .yb-card--sold-out .yb-card__media::after{
   content:attr(data-esgotado); position:absolute;
   inset-inline:0; inset-block-end:0; padding:var(--yb-space-2);
@@ -417,12 +421,18 @@
   background:var(--yb-action-secondary-bg); color:var(--yb-action-secondary-text);
 }
 .yb-badge--soft{background:var(--yb-bg-muted); color:var(--yb-text-secondary)}
-/* Grafite com MAGENTA, nao mais com dourado. O nome `--accent` vem do tempo
-   em que o texto era o ouro; hoje ele quer dizer "o selo escuro". Vale um
-   rename com deprecacao, que e decisao a parte — nao se troca nome publico de
-   classe de passagem.
-   O tom e o `--yb-action-on-dark` e nao a cor de acao crua: o magenta-600
+/* O SELO QUE SOBREVIVE A UMA FOTO. Traz o proprio fundo grafite em vez de
+   contar com o que estiver atras, e por isso e o unico da familia que pode ir
+   sobre imagem: os claros (`--soft`, `--secondary`, `--success`, `--warning`,
+   `--danger`) medem ~1,2:1 contra um packshot e somem.
+   O texto e `--yb-action-on-dark`, nao a cor de acao crua: o magenta-600
    canonico da 3.11:1 sobre o grafite e reprova. Ver o token. */
+.yb-badge--on-media{background:var(--yb-bg-inverse); color:var(--yb-action-on-dark)}
+/* @deprecated desde 0.12 — use .yb-badge--on-media. Remocao em 1.0.
+   Chamava-se `--accent` porque o texto era o dourado da marca; quando ele
+   virou magenta o nome passou a descrever o que a classe NAO e mais — e
+   "accent" nesta casa quer dizer ouro. Fica como apelido enquanto durar a
+   convivencia de duas versoes menores, para nao quebrar quem ja usa. */
 .yb-badge--accent{background:var(--yb-bg-inverse); color:var(--yb-action-on-dark)}
 .yb-badge--success{background:var(--yb-success-surface); color:var(--yb-success-text)}
 .yb-badge--warning{background:var(--yb-warning-surface); color:var(--yb-warning-text)}
@@ -590,8 +600,8 @@
    direita ficava fora do eixo de tudo em volta. */
 .yb-track__nav{display:flex; gap:var(--yb-space-2); justify-content:center; margin-block-start:var(--yb-space-3)}
 .yb-track__nav .yb-iconbtn{border:1px solid var(--yb-border)}
-.yb-track__nav .yb-iconbtn[disabled]{opacity:.4}
-@media (max-width:768px){ .yb-track__nav{display:none} }   /* no toque, arrasta */
+.yb-track__nav .yb-iconbtn[disabled]{opacity:var(--yb-opacity-control-disabled)}
+@media (max-width:767.98px){ .yb-track__nav{display:none} }   /* no toque, arrasta */
 
 /* HERO: um slide por tela, e nao uma fileira que se arrasta.
    O trilho ja resolve rolagem, encaixe, toque e teclado; o que muda aqui sao
@@ -679,10 +689,15 @@
    A loja empilha DOIS no topo de toda pagina: um contextual, colorido, que o
    JS revela, e o de frete, preto. O sistema modelava isso como parte do
    header (`yb-header__announce`), entao o segundo nao tinha onde morar.
-   Aqui e peca solta: o header usa uma, a pagina pode usar outra.
+   Aqui e peca solta: o header usa uma, a pagina pode usar outra — e desde
+   0.13 o proprio header consome esta, em vez de repetir a receita.
    ========================================================================= */
+/* `display:block` e nao flex: o conteudo da faixa e UMA FRASE, e cada trecho
+   de texto solto vira item flex anonimo. Com `gap`, "orders over <b>$50</b>"
+   ganhava 12px de vao no meio da frase — medido. Quem precisa de ícone ou
+   botão ao lado põe o proprio espaco. */
 .yb-notice{
-  display:flex; align-items:center; justify-content:center; gap:var(--yb-space-3);
+  display:block;
   padding:var(--yb-space-3) var(--yb-page-gutter);
   background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
   font-size:var(--yb-type-caption-size); letter-spacing:var(--yb-tracking-wide);
@@ -791,11 +806,6 @@
    6,5 milesimos de alfa por pixel a zero de um pixel para o outro. Medido no
    hero em 1440, o pico batia 13,5 milesimos exatamente nessa junta. Era a
    emenda que se via atravessando a foto.
-
-   `--yb-scrim-ramp` traz a curva pronta (smoothstep, oito trechos): sai de
-   zero devagar, acelera no meio, desacelera de volta a zero ao encostar no
-   plato. Sem canto em ponta nenhuma. O componente so diz ONDE ela cai, e diz
-   isso com `background-size` — o token nao sabe quantos pixels tem a queda.
 
    UMA CAMADA, e a curva escrita AQUI. Os quatro degraus vem da camada 1
    (`--yb-scrim-curve-*`); as posicoes sao daqui, porque so o componente sabe
@@ -978,17 +988,17 @@
 .yb-offercard__blur > i,
 .yb-collection__blur > i{
   position:absolute; inset:0; display:block;
-  -webkit-backdrop-filter:blur(calc(var(--yb-blur-radius) * var(--f)));
-  backdrop-filter:blur(calc(var(--yb-blur-radius) * var(--f)));
+  -webkit-backdrop-filter:blur(calc(var(--yb-blur-radius) * var(--yb-blur-f)));
+  backdrop-filter:blur(calc(var(--yb-blur-radius) * var(--yb-blur-f)));
   -webkit-mask-image:
     linear-gradient(to top,
-      currentColor calc(var(--de) * 100% / 3), transparent calc(var(--ate) * 100% / 3)),
+      currentColor calc(var(--yb-blur-de) * 100% / 3), transparent calc(var(--yb-blur-ate) * 100% / 3)),
     linear-gradient(to right,
       currentColor var(--yb-blur-reach, 100%),
       transparent calc(var(--yb-blur-reach, 100%) + var(--yb-blur-falloff, 12rem)));
   mask-image:
     linear-gradient(to top,
-      currentColor calc(var(--de) * 100% / 3), transparent calc(var(--ate) * 100% / 3)),
+      currentColor calc(var(--yb-blur-de) * 100% / 3), transparent calc(var(--yb-blur-ate) * 100% / 3)),
     linear-gradient(to right,
       currentColor var(--yb-blur-reach, 100%),
       transparent calc(var(--yb-blur-reach, 100%) + var(--yb-blur-falloff, 12rem)));
@@ -997,13 +1007,13 @@
 }
 .yb-mediabanner__blur > i:nth-child(1),
 .yb-offercard__blur   > i:nth-child(1),
-.yb-collection__blur  > i:nth-child(1){ --f:1;   --de:0; --ate:1; }
+.yb-collection__blur  > i:nth-child(1){ --yb-blur-f:1;   --yb-blur-de:0; --yb-blur-ate:1; }
 .yb-mediabanner__blur > i:nth-child(2),
 .yb-offercard__blur   > i:nth-child(2),
-.yb-collection__blur  > i:nth-child(2){ --f:.5;  --de:1; --ate:2; }
+.yb-collection__blur  > i:nth-child(2){ --yb-blur-f:.5;  --yb-blur-de:1; --yb-blur-ate:2; }
 .yb-mediabanner__blur > i:nth-child(3),
 .yb-offercard__blur   > i:nth-child(3),
-.yb-collection__blur  > i:nth-child(3){ --f:.25; --de:2; --ate:3; }
+.yb-collection__blur  > i:nth-child(3){ --yb-blur-f:.25; --yb-blur-de:2; --yb-blur-ate:3; }
 /* O veu leve (.65) acompanha a variante. Ver o comentario do token: ele NAO
    depende do blur para passar contraste — medido, o blur soma 0,8 de razao na
    foto com brilho especular e zero nas outras duas. Ele fica escopado aqui
@@ -1074,7 +1084,7 @@
    grid apertado apaga a costura entre um produto e o outro — no desktop, com
    4 colunas e mais respiro, ninguem reclamou disso. Borda + fundo fecham o
    item numa peca so, vazio incluso, so onde o problema existe. */
-@media (max-width:768px){
+@media (max-width:767.98px){
   .yb-card{
     padding-block-end:var(--yb-space-3); border:1px solid var(--yb-border-subtle);
     border-radius:var(--yb-radius-card); background:var(--yb-surface);
@@ -1107,7 +1117,7 @@
    moldura. Precisa vir DEPOIS da regra base: mesma especificidade, e a de
    cima tambem declara border-radius — colocada antes, esta perdia em
    silencio (ja aconteceu com .yb-section-head nesta mesma folha). */
-@media (max-width:768px){
+@media (max-width:767.98px){
   .yb-card__media{ border-radius:var(--yb-radius-card) var(--yb-radius-card) 0 0; }
 }
 .yb-card__media img{width:100%; height:100%; object-fit:cover; display:block}
@@ -1423,7 +1433,9 @@
   font-size:var(--yb-type-caption-size);
   color:var(--yb-text-secondary-inverse);
 }
-.yb-offercard__sep{opacity:.6}
+/* cor, nao opacidade: opacidade sobre texto e regra dura do sistema. O mesmo
+   cinza do `small` ao lado, para o separador nao competir com os numeros. */
+.yb-offercard__sep{color:var(--yb-text-secondary-inverse)}
 /* Prazo vencido nao vira 00:00:00 parado na tela — isso e relogio quebrado,
    nao oferta. O relogio sai e o cartao diz o que aconteceu. */
 .yb-offercard__fim{
@@ -1502,7 +1514,7 @@
   background:var(--yb-surface-inverse-raised);
   color:var(--yb-text-inverse);
   border-color:var(--yb-border-inverse-strong);
-  min-height:2.25rem;                      /* 36px pintados */
+  min-height:var(--yb-control-height-compact); /* 36px pintados */
   padding-block:var(--yb-space-2);
   position:relative;
 }
@@ -1585,7 +1597,7 @@
   text-decoration:none;                      /* riscar o cartao inteiro nao le */
   background:var(--yb-surface);
 }
-.yb-swatches--cards input:is(:disabled,[data-yb-esgotado]) + label img{ opacity:.45; }
+.yb-swatches--cards input:is(:disabled,[data-yb-esgotado]) + label img{ opacity:var(--yb-opacity-control-disabled); }
 .yb-swatches--cards input:is(:disabled,[data-yb-esgotado]) + label .yb-swatches__name,
 .yb-swatches--cards input:is(:disabled,[data-yb-esgotado]) + label .yb-swatches__price{
   text-decoration:line-through; color:var(--yb-text-muted);
@@ -1803,6 +1815,8 @@
   border-color:var(--yb-danger-solid);
   box-shadow:inset 0 0 0 1px var(--yb-danger-solid);
   padding-inline-end:var(--yb-space-10);
+  /* `%23B3261E` = --yb-danger-600 (= --yb-danger-solid). Data-URI nao le
+     var(); se a rampa de perigo mudar, este hex muda junto — ha checagem. */
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B3261E' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4.2 2.8 20h18.4Z'/%3E%3Cpath d='M12 10v4'/%3E%3Cpath d='M12 17.2v.1' stroke-width='2'/%3E%3C/svg%3E");
   background-repeat:no-repeat;
   background-position:right var(--yb-space-3) center;
@@ -1912,11 +1926,6 @@
   outline-offset:var(--yb-focus-offset);
 }
 .yb-crumb [aria-current="page"]{color:var(--yb-text-secondary)}
-
-/* Este bloco morreu com o corte global: `transition-duration:1ms !important`
-   ja cobre estes seletores. O `animation:none` que estava aqui era pior que
-   redundante — reseta `animation-name`, que o corte global nao toca, e assim
-   vencia. Com ele, o `animationend` do toast nunca disparava. */
 
 /* =========================================================================
    DIALOG / MODAL
@@ -2083,11 +2092,6 @@
     padding:0; margin:-1px;
   }
 }
-/* Aqui morava `.yb-gallery__fav`, o favoritar flutuando no canto oposto ao
-   contador. Saiu para a coluna de compra: `--onmedia` e branco a 92%, e as
-   fotos de produto da loja sao recorte sobre branco — o botao era branco
-   sobre branco. Se algum dia a galeria receber foto de ambiente, o lugar
-   volta a fazer sentido e a regra volta com ele. */
 .yb-gallery__thumbs{display:grid; grid-template-columns:repeat(5,1fr); gap:var(--yb-space-2)}
 .yb-gallery__thumbs input{position:absolute; opacity:0; pointer-events:none}
 .yb-gallery__thumbs label{
@@ -2368,9 +2372,6 @@ body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 
 .yb-switch[aria-checked="true"] .yb-switch__knob{transform:translateX(.75rem)}
 [dir="rtl"] .yb-switch[aria-checked="true"] .yb-switch__knob{transform:translateX(-.75rem)}
 
-/* Idem: o corte global cobre os quatro. `animation:none` aqui desligava o
-   `yb-toast-out`, e o toast so saia do DOM pelo setTimeout de reserva do JS. */
-
 /* =========================================================================
    LOGO
    Arquivo oficial do header da loja (Union_3), 360x139, monocromatico preto
@@ -2405,8 +2406,6 @@ body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 
    devolve branco puro. Nao vale para logo colorido — se a marca ganhar uma
    versao em cor, o certo passa a ser um segundo arquivo, nao um filtro. */
 .yb-logo--inverse img{ filter:invert(1); }
-
-/* (removido: .yb-logo nunca declarou transition — regra morta desde que foi escrita) */
 
 /* =========================================================================
    COLLECTION CARD
@@ -2632,12 +2631,12 @@ body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 
 }
 /* Em duas colunas o grande atravessa as duas e volta a ter razao propria —
    empilhado numa coluna so, um ladrilho de 16/9 vira uma tira fina. */
-@media (max-width:768px){
+@media (max-width:767.98px){
   .yb-collections--mosaic{ grid-template-columns:1fr 1fr; }
   .yb-collections--mosaic > :first-child{ grid-row:auto; grid-column:span 2; }
   .yb-collections--mosaic > :first-child > .yb-collection{ aspect-ratio:16 / 9; }
 }
-@media (max-width:768px){ .yb-collections{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:767.98px){ .yb-collections{ grid-template-columns:repeat(2,1fr); } }
 
 @media (prefers-reduced-motion:reduce){
   .yb-collection img{ transition:none; }
@@ -2860,7 +2859,7 @@ body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 
   padding:var(--yb-space-10) var(--yb-page-gutter);
   background:var(--yb-bg-subtle);
 }
-@media (max-width:768px){
+@media (max-width:767.98px){
   .yb-seals{ gap:var(--yb-space-6) var(--yb-space-5); }
 }
 .yb-seal{
@@ -3063,7 +3062,7 @@ button.yb-link{
    tres respondem perguntas diferentes — que e o caso das duvidas sobre
    keratina, onde quem chega ja sabe qual e a dele. */
 .yb-posts--trio{ grid-template-columns:repeat(3, 1fr); gap:var(--yb-space-6); }
-@media (max-width:1024px) and (min-width:861px){
+@media (max-width:1023.98px) and (min-width:860.02px){
   .yb-posts--trio{ gap:var(--yb-space-5); }
 }
 /* O colapso do trio precisa ser DELE, e escrito DEPOIS.
@@ -3201,7 +3200,6 @@ button.yb-link{
    oferecer como clicavel. Um botao que promete video e nao entrega e pior do
    que nao ter botao. */
 .yb-video:not([data-video]) .yb-video__play{ display:none; }
-.yb-video:not([data-video]) .yb-video__play{ cursor:default; }
 
 /* legenda opcional sobre o vídeo */
 .yb-video__caption{
@@ -3237,8 +3235,10 @@ button.yb-link{
    folha do navegador por ORIGEM, não por especificidade — um `display:flex`
    solto derruba o `dialog:not([open]){display:none}` da UA e a busca aparece
    aberta em toda página que carregar esta folha. */
-.yb-search[open]{display:flex; flex-direction:column}
-.yb-search[open]{animation:yb-search-desce var(--yb-duration-base) var(--yb-ease-enter)}
+.yb-search[open]{
+  display:flex; flex-direction:column;
+  animation:yb-search-desce var(--yb-duration-base) var(--yb-ease-enter);
+}
 @keyframes yb-search-desce{from{transform:translateY(-1rem); opacity:0}}
 
 /* A barra não muda de forma quando se digita — só o conteúdo abaixo troca.

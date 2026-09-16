@@ -10,7 +10,7 @@
     </div>
     <h3 class="row-label">On dark surface</h3>
     <div class="demo demo--dark">
-      <span class="yb-badge yb-badge--accent">New line</span>
+      <span class="yb-badge yb-badge--on-media">New line</span>
       <span class="yb-badge yb-badge--sale">Limited</span>
       <span class="yb-badge yb-badge--on-dark">10k+ routines created</span>
     </div>
@@ -20,7 +20,7 @@
       produto, que ficam sobre o packshot, e reprovou: medido nas fotos reais, o
       chip cai para <b>1,2:1</b> contra a foto e o texto para 3,78:1 — abaixo de
       AA. Fundo claro deixa de isolar o texto, e quem decide a leitura passa a
-      ser uma foto que ninguém controla. Sobre foto, use <code>--accent</code>
+      ser uma foto que ninguém controla. Sobre foto, use <code>--on-media</code>
       (12,6:1 nas mesmas fotos) ou <code>--sale</code>. Os claros
       — <code>--secondary</code>, <code>--soft</code>, <code>--success</code>,
       <code>--warning</code>, <code>--danger</code> — são para superfície lisa.</p>
@@ -33,8 +33,14 @@
       linha voltam a empatar a leitura.</p>
     </div>
     <div class="note">
-      <b>O dourado só vive aqui</b>
-      <p>O <code>--accent</code> usa o dourado da marca sobre grafite (6.96:1).
-      Sobre branco ele mede 2.39:1 e reprova — por isso não existe badge dourado
-      em fundo claro.</p>
+      <b>O magenta sobre escuro não é o magenta de ação</b>
+      <p>O <code>--on-media</code> carrega o próprio fundo grafite e escreve em
+      <code>--yb-action-on-dark</code> — o magenta-400, que mede 6,49:1 ali. O
+      magenta canônico da ação foi escolhido para ler sobre <b>branco</b> e
+      cai para 3,11:1 sobre o grafite: reprova. Nenhuma cor é escura o bastante
+      para o branco e clara o bastante para o grafite ao mesmo tempo, e é por
+      isso que o contexto está no nome do token.</p>
+      <p>A classe já se chamou <code>--accent</code>, de quando o texto era o
+      dourado. O nome antigo continua funcionando até a 1.0, mas descreve o que
+      a classe não é mais.</p>
     </div>

@@ -87,7 +87,7 @@
     <li>Modificadores <b>1</b></li>
     <li>Elementos <b>5</b></li>
     <li>Estados <b>2</b></li>
-    <li>Tokens <b>27</b></li>
+    <li>Tokens <b>28</b></li>
     <li>Comportamento <b>só CSS</b></li>
   </ul>
 
@@ -95,18 +95,18 @@
     <h2 class="bloco-titulo">Como se parece</h2>
     <div class="demo demo--grid">
       <article class="yb-card">
-        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--sale">−16%</span><span class="yb-badge yb-badge--accent">Free Cronograma</span></div><button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" aria-label="Add to cart: Kit Sealant Fashion Gold">Add to cart</button></div>
-        <h3 class="yb-card__title"><a href="#">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</a></h3>
+        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--sale">−16%</span><span class="yb-badge yb-badge--on-media">Free Cronograma</span></div><button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" aria-label="Add to cart: Kit Sealant Fashion Gold">Add to cart</button></div>
+        <h3 class="yb-card__title"><a href="#demos">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</a></h3>
         <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
       </article>
       <article class="yb-card">
         <div class="yb-card__media"></div>
-        <h3 class="yb-card__title"><a href="#">Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask 1kg / 33oz + Coconut Elixir 60ml / 2oz</a></h3>
+        <h3 class="yb-card__title"><a href="#demos">Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask 1kg / 33oz + Coconut Elixir 60ml / 2oz</a></h3>
         <span class="yb-price yb-price--sm"><b class="yb-price__now">$169.70</b></span>
       </article>
       <article class="yb-card">
         <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div></div>
-        <h3 class="yb-card__title"><a href="#">KIT VELLO Shampoo 500ml (16.9 fl.oz) + VELLO Hair Mask 500g (17.6 fl.oz)</a></h3>
+        <h3 class="yb-card__title"><a href="#demos">KIT VELLO Shampoo 500ml (16.9 fl.oz) + VELLO Hair Mask 500g (17.6 fl.oz)</a></h3>
         <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
       </article>
     </div>
@@ -182,7 +182,7 @@
     <div class="snippet">
       <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
       <pre><code>&lt;article class="yb-card"&gt;
-  &lt;div class="yb-card__media"&gt;&lt;div class="yb-card__flags"&gt;&lt;span class="yb-badge yb-badge--sale"&gt;−16%&lt;/span&gt;&lt;span class="yb-badge yb-badge--accent"&gt;Free Cronograma&lt;/span&gt;&lt;/div&gt;&lt;button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" aria-label="Add to cart: Kit Sealant Fashion Gold"&gt;Add to cart&lt;/button&gt;</code></pre>
+  &lt;div class="yb-card__media"&gt;&lt;div class="yb-card__flags"&gt;&lt;span class="yb-badge yb-badge--sale"&gt;−16%&lt;/span&gt;&lt;span class="yb-badge yb-badge--on-media"&gt;Free Cronograma&lt;/span&gt;&lt;/div&gt;&lt;button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" aria-label="Add to cart: Kit Sealant Fashion Gold"&gt;Add to cart&lt;/button&gt;</code></pre>
     </div>
   </section>
 
@@ -236,7 +236,7 @@ document.addEventListener('click', function (e) {
     var antes = b.textContent;
     b.textContent = 'Copiado';
     setTimeout(function () { b.textContent = antes; }, 1600);
-  });
+  }).catch(function () { /* permissao negada: o codigo continua selecionavel */ });
 });
 </script>
 </body>

@@ -11,13 +11,9 @@ novo. Conteúdo, preços e imagens vêm da loja de verdade.
 Se um componente não couber no conteúdo real, isso aparece — e é essa a
 utilidade de montar em vez de vestir.
 """
-import glob, json, os, shutil, sys, re, urllib.request
+import glob, hashlib, json, os, shutil, sys, re
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import dados
-
-# Moeda e decisao de dado, nao de token: CSS nao interpola string em texto.
-# Quem monta a pagina resolve, como faria o Liquid no tema.
-MOEDA = '$'
 
 RAIZ = os.path.dirname(os.path.abspath(__file__))
 PROJETO = os.path.dirname(RAIZ)
@@ -51,7 +47,10 @@ def preparar(destino):
         nonlocal n
         nome = f"sg-{n}.woff2"; n += 1
         try: open(os.path.join(pasta, nome), 'wb').write(dados.pegar(m.group(1)))
-        except Exception: return m.group(0)
+        except Exception as e:
+            # sem aviso a copia "offline" passava a depender da rede em silencio
+            print(f'  aviso: fonte nao baixou ({e}); fonte.css fica apontando para o gstatic')
+            return m.group(0)
         return f"url(fontes/{nome})"
     css = re.sub(r'url\((https://fonts\.gstatic\.com/[^)]+)\)', troca, css)
     open(os.path.join(destino, 'yb', 'fonte.css'), 'w', encoding='utf-8').write(css)
@@ -59,7 +58,6 @@ def preparar(destino):
 
 def versao():
     """Hash do CSS do sistema. Muda quando o conteudo muda — e so entao."""
-    import hashlib
     h = hashlib.sha1()
     for f in ('tokens/00-primitives.css', 'tokens/01-semantic.css',
               'components/ybera-components.css', 'patterns/ybera-patterns.css',
@@ -382,7 +380,7 @@ def menu(promo=None):
 
 def header(carrinho=2, promo=None):
     return f"""<header class="yb-header">
-  <div class="yb-header__announce">Free shipping on orders over <b>$50</b></div>
+  <div class="yb-notice">Free shipping on orders over <b>$50</b></div>
   <input class="yb-header__drawer" type="checkbox" id="nav-open" aria-label="Menu">
   <div class="yb-header__bar">
     <label class="yb-iconbtn yb-header__icon yb-header__burger" for="nav-open" aria-hidden="true">{ico('menu')}</label>
@@ -2191,6 +2189,28 @@ def hero_v2():
 
 
 # ============================================================ HOME
+def pagina(titulo, corpo, css_pagina=None):
+    """Veste o corpo com o <head> e o rodape do documento.
+
+    As cinco telas repetiam a mesma linha, e nela `versao()` aparecia DUAS
+    vezes — dois hashes de seis arquivos por pagina, dezesseis leituras de
+    disco por build, para produzir o mesmo carimbo. Aqui e um so, e o
+    carimbo do <head> e o do <script> nao tem como divergir.
+    """
+    v = versao()
+    return (CABECA.format(v=v, css_pagina=css_pagina or CSS_HOME, titulo=titulo)
+            + corpo + RODAPE.replace("{v}", v))
+
+
+def fim_de_pagina(prods):
+    """Rodape, gaveta do carrinho e overlay de busca.
+
+    As tres andam sempre juntas porque o header as dispara em qualquer tela:
+    uma pagina que traga o header sem elas tem dois botoes que nao fazem nada.
+    """
+    return f"{rodape_v2()}\n{gaveta(prods)}\n{busca(prods)}"
+
+
 def montar_home(destino):
     prods = dados.catalogo(os.path.join(destino, 'img'), 8)
     n_banner = copiar_banners(destino) + copiar_colecoes(destino) + copiar_reviews(destino) + copiar_logos(destino) + copiar_posts(destino) + copiar_citacao(destino) + copiar_videos(destino)
@@ -2269,10 +2289,8 @@ def montar_home(destino):
 
 </main>
 
-{rodape_v2()}
-{gaveta(prods)}
-{busca(prods)}"""
-    return CABECA.format(v=versao(), css_pagina=CSS_HOME, titulo="Ybera Paris USA | Keratin care that survives humidity") + corpo + RODAPE.replace("{v}", versao())
+{fim_de_pagina(prods)}"""
+    return pagina("Ybera Paris USA | Keratin care that survives humidity", corpo)
 
 
 def montar_404(destino):
@@ -2322,11 +2340,8 @@ def montar_404(destino):
   </section>
 </main>
 
-{rodape_v2()}
-{gaveta(vitrine)}
-{busca(vitrine)}"""
-    return (CABECA.format(v=versao(), css_pagina=CSS_HOME, titulo="Page not found – Ybera USA")
-            + corpo + RODAPE.replace("{v}", versao()))
+{fim_de_pagina(vitrine)}"""
+    return pagina("Page not found – Ybera USA", corpo)
 
 
 
@@ -2554,7 +2569,7 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
     selos_pdp = ['<span class="yb-badge yb-badge--success" data-yb-selo>In stock</span>' if disp_base
                  else '<span class="yb-badge yb-badge--danger" data-yb-selo>Sold out</span>']
     if p.get('brinde'):
-        selos_pdp.append(f'<span class="yb-badge yb-badge--accent">{p["brinde"]}</span>')
+        selos_pdp.append(f'<span class="yb-badge yb-badge--on-media">{p["brinde"]}</span>')
     estoque = "".join(selos_pdp)
 
     # O selo de desconto e o UNICO que sobe para cima do nome, na fileira que o
@@ -2847,10 +2862,8 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
      botao de verdade continua la. -->
 {barra}
 
-{rodape_v2()}
-{gaveta(relacionados)}
-{busca(relacionados)}"""
-    return CABECA.format(v=versao(), css_pagina=CSS_PDP, titulo=f"{p['titulo']} – Ybera USA") + corpo + RODAPE.replace("{v}", versao())
+{fim_de_pagina(relacionados)}"""
+    return pagina(f"{p['titulo']} – Ybera USA", corpo, CSS_PDP)
 
 
 def montar_faq(destino):
@@ -2885,12 +2898,8 @@ def montar_faq(destino):
 {faq(cabecalho=False)}
 </main>
 
-{rodape_v2()}
-{gaveta(prods)}
-{busca(prods)}"""
-    return (CABECA.format(v=versao(), css_pagina=CSS_HOME,
-                          titulo="Frequently asked questions – Ybera USA")
-            + corpo + RODAPE.replace("{v}", versao()))
+{fim_de_pagina(prods)}"""
+    return pagina("Frequently asked questions – Ybera USA", corpo)
 
 
 def montar_home_v2(destino):
@@ -3012,16 +3021,18 @@ def montar_home_v2(destino):
 
 </main>
 
-{rodape_v2()}
-{gaveta(prods)}
-{busca(prods)}"""
-    return (CABECA.format(v=versao(), css_pagina=CSS_HOME,
-                          titulo="Ybera Paris USA | Keratin care that survives humidity")
-            + corpo + RODAPE.replace("{v}", versao()))
+{fim_de_pagina(prods)}"""
+    return pagina("Ybera Paris USA | Keratin care that survives humidity", corpo)
 
 
 if __name__ == '__main__':
-    destino = os.path.join(RAIZ, 'nova-loja')
+    # Gera numa pasta temporaria e troca no fim. Apagar `nova-loja/` antes de
+    # gerar deixava a pasta vazia se a rede falhasse no meio (ja aconteceu com
+    # HTTP 429), e dois processos em paralelo derrubavam um ao outro
+    # (`OSError: Directory not empty: 'img'`). Agora cada processo escreve na
+    # sua propria pasta e a versao publicada so muda quando a nova esta inteira.
+    final = os.path.join(RAIZ, 'nova-loja')
+    destino = f'{final}.tmp-{os.getpid()}'
     if os.path.exists(destino): shutil.rmtree(destino)
     os.makedirs(destino)
     print("preparando CSS, sprite e fonte…"); preparar(destino)
@@ -3044,5 +3055,9 @@ if __name__ == '__main__':
     print("montando pdp em promocao…")
     open(os.path.join(destino, 'pdp-oferta.html'), 'w', encoding='utf-8').write(
         montar_pdp(destino, compare=COMPARE_FORJADO))
-    n = len(os.listdir(os.path.join(destino, 'img')))
+    velho = f'{final}.old-{os.getpid()}'
+    if os.path.exists(final): os.rename(final, velho)
+    os.rename(destino, final)
+    shutil.rmtree(velho, ignore_errors=True)
+    n = len(os.listdir(os.path.join(final, 'img')))
     print(f"pronto: nova-loja/  ({n} imagens reais)")

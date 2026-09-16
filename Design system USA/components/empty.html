@@ -99,8 +99,8 @@
         <p class="yb-empty__title">No results for “keratine”</p>
         <p class="yb-empty__text">Check the spelling, or browse the treatments — the shelf is smaller than the search box suggests.</p>
         <div class="yb-empty__acoes">
-          <a class="yb-btn yb-btn--primary" href="#empty">Browse treatments</a>
-          <a class="yb-btn yb-btn--secondary" href="#empty">Talk to us</a>
+          <a class="yb-btn yb-btn--primary" href="#demos">Browse treatments</a>
+          <a class="yb-btn yb-btn--secondary" href="#demos">Talk to us</a>
         </div>
       </div>
       <div class="yb-empty yb-empty--inline">
@@ -164,8 +164,8 @@
   &lt;p class="yb-empty__title"&gt;No results for “keratine”&lt;/p&gt;
   &lt;p class="yb-empty__text"&gt;Check the spelling, or browse the treatments — the shelf is smaller than the search box suggests.&lt;/p&gt;
   &lt;div class="yb-empty__acoes"&gt;
-    &lt;a class="yb-btn yb-btn--primary" href="#empty"&gt;Browse treatments&lt;/a&gt;
-    &lt;a class="yb-btn yb-btn--secondary" href="#empty"&gt;Talk to us&lt;/a&gt;
+    &lt;a class="yb-btn yb-btn--primary" href="#demos"&gt;Browse treatments&lt;/a&gt;
+    &lt;a class="yb-btn yb-btn--secondary" href="#demos"&gt;Talk to us&lt;/a&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="yb-empty yb-empty--inline"&gt;
@@ -229,7 +229,7 @@ document.addEventListener('click', function (e) {
     var antes = b.textContent;
     b.textContent = 'Copiado';
     setTimeout(function () { b.textContent = antes; }, 1600);
-  });
+  }).catch(function () { /* permissao negada: o codigo continua selecionavel */ });
 });
 </script>
 </body>

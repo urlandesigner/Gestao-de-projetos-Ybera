@@ -96,9 +96,9 @@
     <div class="demo">
       <nav class="yb-crumb" aria-label="Breadcrumb">
         <ol>
-          <li><a href="#">Home</a></li>
-          <li><a href="#">Treatments</a></li>
-          <li><a href="#">Sealants</a></li>
+          <li><a href="#demos">Home</a></li>
+          <li><a href="#demos">Treatments</a></li>
+          <li><a href="#demos">Sealants</a></li>
           <li><span aria-current="page">Fashion Gold</span></li>
         </ol>
       </nav>
@@ -137,9 +137,9 @@
       <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
       <pre><code>&lt;nav class="yb-crumb" aria-label="Breadcrumb"&gt;
   &lt;ol&gt;
-    &lt;li&gt;&lt;a href="#"&gt;Home&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="#"&gt;Treatments&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="#"&gt;Sealants&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#demos"&gt;Home&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#demos"&gt;Treatments&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#demos"&gt;Sealants&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;&lt;span aria-current="page"&gt;Fashion Gold&lt;/span&gt;&lt;/li&gt;
   &lt;/ol&gt;
 &lt;/nav&gt;</code></pre>
@@ -196,7 +196,7 @@ document.addEventListener('click', function (e) {
     var antes = b.textContent;
     b.textContent = 'Copiado';
     setTimeout(function () { b.textContent = antes; }, 1600);
-  });
+  }).catch(function () { /* permissao negada: o codigo continua selecionavel */ });
 });
 </script>
 </body>

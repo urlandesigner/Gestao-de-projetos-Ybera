@@ -165,7 +165,7 @@
 
   <section class="bloco" id="acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <ul class="bloco-lede"><li>É <code>&lt;button role="switch"&gt;</code> com <code>aria-checked</code>. Não é checkbox: switch aplica na hora, checkbox espera um “salvar”. O papel diz qual dos dois é.</li><li>O alvo real tem 56×44 via <code>::after</code>, maior que o desenho de 44×24 — o gesto no celular acerta a área, não o pixel.</li><li>O rótulo fica fora do controle, associado por <code>aria-label</code> ou <code>aria-labelledby</code>.</li></ul>
+    <ul class="bloco-lede"><li>É <code>&lt;button role="switch"&gt;</code> com <code>aria-checked</code>. Não é checkbox: switch aplica na hora, checkbox espera um “salvar”. O papel diz qual dos dois é.</li><li>O alvo real tem 56×44 via <code>::after</code>, maior que o desenho de 32×20 — o gesto no celular acerta a área, não o pixel.</li><li>O rótulo fica fora do controle, associado por <code>aria-label</code> ou <code>aria-labelledby</code>.</li></ul>
   </section>
 
   <section class="bloco" id="faca">
@@ -213,7 +213,7 @@ document.addEventListener('click', function (e) {
     var antes = b.textContent;
     b.textContent = 'Copiado';
     setTimeout(function () { b.textContent = antes; }, 1600);
-  });
+  }).catch(function () { /* permissao negada: o codigo continua selecionavel */ });
 });
 </script>
 </body>

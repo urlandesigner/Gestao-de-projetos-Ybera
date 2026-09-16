@@ -4,14 +4,14 @@ A fundação da marca Ybera em tokens. **Independente de plataforma por decisão
 projeto**: a loja US roda Shopify e a BR roda Wake Commerce — CSS custom properties
 é o único denominador comum entre as duas.
 
-Versão **0.12.1** — fundação de 319 tokens, 38 componentes e 12 padrões com
-comportamento, 39 ícones, governança, decisões registradas e 106 checagens
+Versão **0.12.1** — fundação de 320 tokens, 37 componentes e 11 padrões com
+comportamento, 39 ícones, governança, decisões registradas e 108 checagens
 automatizadas.
 
 | Onde olhar | O quê |
 |---|---|
 | [PRINCIPIOS.md](PRINCIPIOS.md) | os cinco princípios, **em ordem** — o que ganha quando dois se chocam |
-| [INVENTARIO.md](INVENTARIO.md) | as 50 peças com maturidade conferida a cada build |
+| [INVENTARIO.md](INVENTARIO.md) | as 48 peças com maturidade conferida a cada build |
 | [decision-log/](decision-log/) | por que o sistema é assim, decisão por decisão |
 | [CONTRIBUINDO.md](CONTRIBUINDO.md) | a mecânica: laço local, o que o CI reprova |
 | [GOVERNANCA.md](GOVERNANCA.md) · [PLANO.md](PLANO.md) | como muda · como entra na loja |
@@ -44,8 +44,18 @@ Abre em `http://localhost:8080/` — o índice linka tokens, componentes, padrõ
 telas-prova. O servidor manda `Cache-Control: no-store`, então editar um token e
 recarregar mostra a mudança na hora, sem cache-bust manual.
 
-No Claude Code, o preview também sobe por nome: a configuração está em
-`.claude/launch.json` como `design-system`.
+No Claude Code, o preview também sobe por nome (`design-system`) quando existe
+um `.claude/launch.json` local apontando para `http://localhost:8080` — esse
+arquivo não é versionado; `./serve.sh` é o caminho que vale para todo mundo.
+
+## Requisitos
+
+- **Node ≥ 18** — validador, build e ferramentas (`npm run check`).
+- **Python 3** (só biblioteca padrão, sem `pip`) — para `./serve.sh` e para o
+  gerador das telas-prova (`_captura/montar-ds.py`, que precisa de rede).
+  Sem Python, qualquer servidor estático na porta 8080 serve:
+  `npx serve -l 8080` ou `php -S localhost:8080`.
+- Nenhuma dependência npm: `package.json` não tem `dependencies`.
 
 ## Estrutura
 
@@ -55,17 +65,19 @@ tokens/
   01-semantic.css     camada 1 — a intenção, é o que componentes consomem
   ybera.css           ponto de entrada
 components/
-  ybera-components.css   38 componentes, prefixo yb-
-  ybera-components.js    comportamento — 7 KB, sem dependência
+  ybera-components.css   37 componentes, prefixo yb-
+  ybera-components.js    comportamento — vanilla, sem dependência nem build
+  doc.js / doc.css       moldura e navegação das fichas (só documentação)
   pecas/<id>.html        a fonte: demos, quando usar e notas de cada peça
-  <componente>.html      34 fichas geradas: demos, 375px, API, marcação, a11y, faça/não faça
+  <componente>.html      37 fichas geradas: demos, 375px, API, marcação, a11y, faça/não faça
   index.html             índice gerado — nome, uma linha e o link
   fichas.json            o que a máquina não sabe — escrito à mão
   doc.css                a moldura das fichas
   solo.html              uma peça sozinha, para o quadro de 375px
 patterns/
-  ybera-patterns.css     12 padrões — header, carrinho, coleção, footer…
+  ybera-patterns.css     11 padrões — header, carrinho, coleção, footer…
   index.html             galeria de composições
+  solo.html              um padrão sozinho, para o quadro de 375px
 icons/
   ybera-icons.svg        sprite com 39 ícones (9,1 KB)
   ybera-icons.css        tamanhos e alinhamento
@@ -73,18 +85,35 @@ icons/
 bridge/
   ybera-bridge.css       ponte tokens Ybera -> Ecomposer / tema / Judge.me
 test/
-  validate.mjs           106 checagens, roda em CI
+  validate.mjs           108 checagens, roda em CI
   a11y.js                auditoria no DOM (colar no console)
   adocao.js              mede adoção na loja (colar no console)
+  layout.js              retrato de geometria das telas-prova (colar no console)
+  baseline.json          o retrato aceito; `npm run layout` compara, `layout:aceitar` grava
 tools/
   tokens-to-json.mjs     deriva dist/ybera-tokens.json (W3C DTCG)
   inventario.mjs         deriva INVENTARIO.md do CSS
-  fichas.mjs             deriva components/<componente>.html
+  fichas.mjs             deriva components/<componente>.html e components/index.html
+  baseline.mjs           compara test/atual.json com test/baseline.json
 docs/
   index.html          documentação de tokens
 preview/
   index.html          componentes e páginas em 320/375/414/768, em <iframe>
+decision-log/         DDR-001…009 — por que o sistema é assim
+brand/                logo (a única cópia-fonte; _captura/nova-loja/brand/ é gerada)
+dist/                 GERADO por ./build.sh — o que sobe para o tema
+_captura/             telas-prova (nova-loja/, gerada) e captura da loja atual — ver _captura/README.md
+_canvas/              canvas de decisão do véu sobre foto; não é produção
+build.sh              gera dist/, INVENTARIO.md, fichas e sincroniza as telas-prova
+serve.sh              servidor local na porta 8080, sem cache
+adocao.json           livro-razão da adoção medida na loja (lido pelo validador)
 ```
+
+**Fonte × gerado.** Edita-se: `tokens/`, `components/ybera-components.{css,js}`,
+`components/pecas/`, `components/fichas.json`, `patterns/ybera-patterns.css`,
+`icons/`, `bridge/`, `_captura/montar-ds.py`. Gera-se (nunca à mão): `dist/`,
+`INVENTARIO.md`, `components/<componente>.html`, `components/index.html`,
+`_captura/nova-loja/` inteira. O validador reprova derivado defasado.
 
 Para usar os componentes, some ao link dos tokens:
 
@@ -96,9 +125,11 @@ Para usar os componentes, some ao link dos tokens:
 ```
 
 O JavaScript é opcional. Sem ele a página continua funcionando — ele adiciona
-modal, toast, stepper e sincronização da galeria, e liga por atributo
-(`data-yb-open`, `data-yb-stepper`, `data-yb-gallery`), nunca por classe de
-estilo. Assim mudar o visual não quebra o comportamento.
+modal, toast, stepper, galeria, busca, trilho, variante, relógio de oferta e
+mais, sempre ligando por atributo `data-yb-*`, nunca por classe de estilo. A
+lista completa é a coluna "Comportamento" do [INVENTARIO.md](INVENTARIO.md) e o
+cabeçalho do próprio arquivo. Conteúdo que chega depois se liga com
+`Ybera.init(raiz)`.
 
 Todo componente usa prefixo `yb-`. Não é preciosismo: eles vão conviver com o
 tema Shopify, o Ecomposer, o Tailwind e o Judge.me na mesma página, e sem prefixo
@@ -134,7 +165,7 @@ histórico em [CHANGELOG.md](CHANGELOG.md).
 npm run check
 ```
 
-106 checagens sem dependência: integridade entre camadas, disciplina de cor
+108 checagens sem dependência: integridade entre camadas, disciplina de cor
 (inclusive `rgba()` e cor nomeada, não só `#hex`), monotonia das rampas,
 contraste anotado versus medido, regras duras, foco visível,
 `prefers-reduced-motion`, `dist/` e `INVENTARIO.md` em dia, versão única em

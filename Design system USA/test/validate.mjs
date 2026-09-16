@@ -72,6 +72,28 @@ const definidos = (s) => new Set(
 // para toda referência com valor padrão — e foi assim que ele deu 0 em icons.css.
 const usados = (s) => [...s.matchAll(/var\(\s*(--yb-[\w-]+)\s*[,)]/g)].map(m => m[1]);
 const semComentario = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '');
+/* O bloco de codigo que comeca numa ancora, contado por CHAVES e nao por
+   indentacao. As checagens liam `[\s\S]*?\n  \}` — dois espacos exatos —, e
+   assim reindentar o arquivo reprovava sem nada ter regredido. */
+const blocoApos = (src, ancora) => {
+  const i = src.search(ancora);
+  if (i < 0) return null;
+  const abre = src.indexOf('{', i);
+  if (abre < 0) return null;
+  let n = 0;
+  for (let k = abre; k < src.length; k++) {
+    if (src[k] === '{') n++;
+    else if (src[k] === '}' && --n === 0) return src.slice(i, k + 1);
+  }
+  return null;
+};
+/* Toda tag de abertura do HTML, para checar ATRIBUTOS sem depender da ordem
+   em que foram escritos: `data-yb-avisar onsubmit` reprovava se alguem
+   trocasse os dois de lugar. */
+const aberturas = (html, nome = '[a-z][\\w-]*') =>
+  [...html.matchAll(new RegExp(`<${nome}\\b[^>]*>`, 'gi'))].map(m => m[0]);
+const temAttr = (tag, ...attrs) =>
+  attrs.every(a => new RegExp(`(^|\\s)${a}(?=[\\s=>/])`, 'i').test(tag));
 
 const PRIM = definidos(css.primitivos);
 const SEM = definidos(css.semanticos);
@@ -106,10 +128,24 @@ for (const nome of ['componentes', 'padroes', 'icones']) {
 {
   const s = semComentario(css.ponte || '');
   const crus = [...new Set(usados(s).filter(EH_COR))];
-  ok('ponte: exceção declarada', `${crus.length} primitivos, alvo externo`);
+  // informativo, nao checagem: nao ha condicao que possa falhar aqui
+  console.log(`  ${cinza('·')} ponte: exceção declarada ${cinza(`${crus.length} primitivos, alvo externo`)}`);
 }
 
 secao('Cor crua');
+// `#` vira `%23` dentro de data-URI, e assim um hex passava por esta secao
+// inteira. O que se pede e menos que token (data-URI nao le var()): que o
+// valor exista na paleta dos primitivos, para mudar junto com ela.
+{
+  const paleta = new Set([...ler('tokens/00-primitives.css').matchAll(/#([0-9a-fA-F]{6})\b/g)].map(m => m[1].toUpperCase()));
+  const fora = [];
+  for (const nome of ['componentes', 'padroes'])
+    for (const m of semComentario(css[nome] || '').matchAll(/%23([0-9a-fA-F]{6})\b/g))
+      if (!paleta.has(m[1].toUpperCase())) fora.push(`${nome}: %23${m[1]}`);
+  fora.length
+    ? falha('hex em data-URI fora da paleta', fora.join(', '))
+    : ok('hex em data-URI pertence à paleta');
+}
 // Antes esta secao so procurava `#hex`, e por isso passava por cima de
 // `rgba(255,255,255,.92)` no botao de play e `rgba(0,0,0,.6)` na legenda do
 // video — duas cores cruas em producao, uma delas preto puro, que a propria
@@ -251,20 +287,51 @@ secao('Breakpoints');
   // conteudo, nao de aparelho — por isso nao entra na escala.
   const DE_COMPONENTE = new Set(['360', '520', '560', '860', '900']);
   const DE_PARIDADE = new Set(['767']);   // espelha o <source media> do <picture>
+  const conhecido = (px) => !!escala[px] || DE_COMPONENTE.has(px) || DE_PARIDADE.has(px);
+  // `max-width` recua 0,02px do degrau e `min-width` pode avancar 0,02 do ponto
+  // de componente — ver a nota dos breakpoints em 00-primitives.css
+  const degrauDe = (v) => {
+    if (conhecido(v)) return v;
+    const n = Number(v);
+    for (const vizinho of [n + 0.02, n - 0.02]) {
+      const chave = String(Math.round(vizinho));
+      if (Math.abs(vizinho - Math.round(vizinho)) < 1e-9 && conhecido(chave)) return chave;
+    }
+    return null;
+  };
   const usados = new Set();
-  for (const nome of ['componentes', 'padroes']) {
+  const lados = new Map();     // degrau -> Set('min'|'max')
+  for (const nome of ['componentes', 'padroes', 'semanticos']) {
     // a escala e de largura; `max-height` e outra dimensao e nao presta contas a ela
-    for (const m of (css[nome] || '').matchAll(/@media[^{]*?(\d+)px/g)) {
-      const cond = m[0];
-      if (/\b(max|min)-height\s*:/.test(cond)) continue;
-      usados.add(m[1]);
+    for (const m of (css[nome] || '').matchAll(/@media[^{]*?(?:(max|min)-width\s*:\s*)([\d.]+)px/g)) {
+      if (/\b(max|min)-height\s*:/.test(m[0])) continue;
+      usados.add(m[2]);
+      const d = degrauDe(m[2]);
+      if (d) { if (!lados.has(d)) lados.set(d, new Set()); lados.get(d).add(m[1]); }
     }
   }
-  const fora = [...usados].filter(px => !escala[px] && !DE_COMPONENTE.has(px) && !DE_PARIDADE.has(px));
+  const fora = [...usados].filter(px => !degrauDe(px));
   fora.length
     ? falha('breakpoint fora da escala', `${fora.join(', ')}px — use um --yb-breakpoint-* ` +
         'ou declare como ponto de quebra de componente')
     : ok('breakpoints conferem com a escala', `${usados.size} distintos`);
+
+  // O MESMO numero dos dois lados faz as duas regras valerem naquela largura
+  // exata. Aconteceu em 768: `(min-width:768px)` dava a goteira de desktop
+  // enquanto `(max-width:768px)` dava a barra de celular, na mesma tela.
+  const ambiguos = [];
+  for (const [degrau, l] of lados) {
+    if (!(l.has('min') && l.has('max'))) continue;
+    const temMin = new RegExp(`min-width\\s*:\\s*${degrau}px`);
+    const temMax = new RegExp(`max-width\\s*:\\s*${degrau}px`);
+    const folha = ['componentes', 'padroes', 'semanticos'].map(n => css[n] || '').join('\n');
+    if (temMin.test(folha) && temMax.test(folha)) ambiguos.push(degrau);
+  }
+  ambiguos.length
+    ? falha('degrau de breakpoint vale dos dois lados',
+        `${ambiguos.join(', ')}px — nessa largura exata as duas regras valem; ` +
+        'o degrau é do `min-width` e o `max-width` recua 0,02px')
+    : ok('nenhum degrau vale dos dois lados', `${lados.size} degraus em uso`);
 }
 
 /* ============================================ 5 · acessibilidade estrutural */
@@ -486,8 +553,8 @@ secao('Comportamento');
     // `ultimoGatilho` e reprovou num rename, sem nada ter regredido.
     // Aqui: existe um ouvinte de `close` e ele devolve foco.
     {
-      const bloco = js.match(/addEventListener\(\s*'close'[\s\S]*?\n  \}/);
-      const restaura = bloco && /\.focus\(\)/.test(bloco[0]);
+      const bloco = blocoApos(js, /addEventListener\(\s*'close'/);
+      const restaura = bloco && /\.focus\(\)/.test(bloco);
       // e o que guarda o gatilho tem de ser pilha: um modal aberto de dentro
       // de outro sobrescreve variavel unica e o de fora perde o foco.
       const pilha = /\.push\(\s*gatilho|\.push\(\s*ultimo|pilha\w*\.push/.test(js) && /\.pop\(\)/.test(js);
@@ -496,7 +563,7 @@ secao('Comportamento');
         : falha('modal não devolve o foco ao fechar',
             !restaura ? 'nenhum .focus() no ouvinte de close' : 'gatilho guardado fora de pilha');
     }
-    /focusin/.test(js)
+    /function toast\b[\s\S]*?addEventListener\(\s*'focusin'/.test(js)
       ? ok('toast pausa no foco de teclado')
       : aviso('toast não pausa no foco de teclado');
     // o play so pode aparecer onde existe video para tocar
@@ -612,14 +679,16 @@ secao('Bundles');
 for (const f of ['dist/ybera-tokens.css', 'dist/ybera-components.css', 'dist/ybera-bridge.css']) {
   if (!existsSync(join(raiz, f))) { falha(`${f} ausente`, 'rode ./build.sh'); continue; }
   const bundle = ler(f);
-  const fonte = f.includes('tokens') ? css.primitivos
-              : f.includes('bridge') ? css.ponte
-              : css.componentes;
-  // amostra o suficiente para detectar dist defasado
-  const marcador = fonte.split('\n').find(l => /^\s*--yb-[\w-]+:/.test(l))?.trim();
-  marcador && !bundle.includes(marcador)
-    ? falha(`${f} defasado`, 'rode ./build.sh')
-    : ok(`${f}`, `${(bundle.length / 1024).toFixed(1)} KB`);
+  // o bundle e a concatenacao das fontes: cada fonte tem de estar la inteira.
+  // (A versao anterior amostrava a primeira linha `--yb-*:` — o bridge nao
+  // declara nenhuma, e a checagem dele passava com qualquer conteudo.)
+  const partes = f.includes('tokens') ? ['tokens/00-primitives.css', 'tokens/01-semantic.css']
+               : f.includes('bridge') ? ['bridge/ybera-bridge.css']
+               : ['components/ybera-components.css', 'patterns/ybera-patterns.css'];
+  const faltando = partes.filter(p => !bundle.includes(ler(p).trim()));
+  faltando.length
+    ? falha(`${f} defasado`, `${faltando.join(', ')} — rode ./build.sh`)
+    : ok(`${f}`, `${(bundle.length / 1024).toFixed(1)} KB, ${partes.length} fonte(s) inteira(s)`);
 }
 
 secao('Tokens em W3C DTCG');
@@ -919,10 +988,11 @@ secao('Páginas');
   // pagina que nao carrega o JS, e componente morto. patterns/ tinha o menu
   // inteiro sem quem fechasse no Escape.
   {
-    const MARCADORES = ['data-yb-open', 'data-yb-stepper', 'data-yb-gallery',
-                        'data-yb-switch', 'data-yb-partner', 'data-yb-variante',
-                        'data-yb-comprar',
-                        'yb-nav__toggle', 'yb-header__drawer'];
+    // a lista sai do proprio JS: escrita a mao ela tinha 9 ganchos de 38
+    const ganchos = [...new Set([...semComentario(ler('components/ybera-components.js')).matchAll(/data-yb-[a-z-]+/g)].map(m => m[0]))];
+    const MARCADORES = [
+      ...ganchos.filter(m => m !== 'data-yb-bound'),   // este o JS escreve, ninguem emite
+      'yb-nav__toggle', 'yb-header__drawer'];
     const semJs = paginas.filter(p => {
       const h = ler(p);
       return MARCADORES.some(m => h.includes(m)) && !h.includes('ybera-components.js');
@@ -1138,13 +1208,17 @@ secao('Páginas');
     } else {
       const h = ler(alvo);
       const faltando = [];
-      if (!/<button[^>]*class="yb-btn[^"]*"[^>]*disabled/.test(h)) faltando.push('botão de compra inerte');
+      if (!aberturas(h, 'button').some(t => /class="[^"]*\byb-btn\b/.test(t) && temAttr(t, 'disabled')))
+        faltando.push('botão de compra inerte');
       // A zona de compra carrega os DOIS estados desde que a variante passou a
       // trocar um pelo outro no clique. Entao a prova nao e mais "o stepper
       // nao existe", e "o stepper nasce escondido e o aviso nasce visivel".
       const zona = h.split('yb-accordion')[0];
-      if (!/data-yb-stepper hidden/.test(zona)) faltando.push('a quantidade nasce escondida');
-      if (!/data-yb-avisar\s+onsubmit/.test(zona)) faltando.push('o aviso de volta nasce visível');
+      if (!aberturas(zona).some(t => temAttr(t, 'data-yb-stepper', 'hidden')))
+        faltando.push('a quantidade nasce escondida');
+      // o aviso nasce VISÍVEL: existe e não traz `hidden`
+      const oAviso = aberturas(zona).find(t => temAttr(t, 'data-yb-avisar'));
+      if (!oAviso || temAttr(oAviso, 'hidden')) faltando.push('o aviso de volta nasce visível');
       if (!h.includes('Sold out')) faltando.push('o selo diz Sold out');
       if (!/id="avisar"/.test(h)) faltando.push('o aviso de volta ao estoque');
       faltando.length
@@ -1319,7 +1393,7 @@ secao('Páginas');
       return { html: arquivos.map(f => ler(`${p}/${f}`)).join('\n'), arquivos };
     };
     // não são componente: base, utilitário e blocos de regra global
-    const NAO_E_COMPONENTE = /^(YBERA|BASE|MOVIMENTO|UTILIT|ALVO COMPACTO|ALTO CONTRASTE|NAVEGACAO)/i;
+    const NAO_E_COMPONENTE = /^(YBERA|BASE|MOVIMENTO|UTILIT|ALVO COMPACTO|ALTO CONTRASTE|NAVEGACAO|CARREGANDO)/i;
     const ausentes = [];
     for (const { css: chave, pagina } of PARES) {
       const doc = lerDoc(pagina);
@@ -1377,7 +1451,8 @@ secao('Páginas');
   // Se o solo.html sumir da pasta, os quadros ficam vazios sem nada acusar.
   {
     const problemas = [];
-    for (const p of paginas) {
+    const fichas = readdirSync(join(raiz, 'components')).filter(f => f.endsWith('.html')).map(f => `components/${f}`);
+    for (const p of [...paginas, ...fichas]) {
       const h = ler(p);
       if (!h.includes("solo.html?c=")) continue;
       const solo = join(dirname(p), 'solo.html');
@@ -1385,13 +1460,14 @@ secao('Páginas');
       // todo id de secao tem de ter quadro, e todo quadro tem de ter secao
       const secoes = [...h.matchAll(/<section id="([\w-]+)">/g)].map(m => m[1]);
       const s = ler(solo);
-      if (!s.includes("getElementById(alvo)"))
+      if (!s.includes("getElementById(alvo)") && !s.includes("fetch('pecas/"))
         problemas.push(`${solo}: não recorta mais a seção pedida`);
-      if (!secoes.length) problemas.push(`${p}: nenhuma seção para enquadrar`);
+      // a ficha enquadra a propria peca (solo.html?c=<id>), nao secoes
+      if (!secoes.length && !fichas.includes(p)) problemas.push(`${p}: nenhuma seção para enquadrar`);
     }
     problemas.length
       ? falha('preview mobile da doc quebrado', problemas.join(' · '))
-      : ok('doc mostra cada seção em 375px', 'solo.html presente nas duas');
+      : ok('doc mostra cada seção em 375px', 'solo.html presente onde há quadro');
   }
 
   // Aninhamento. Um </div> a mais fecha a <section> antes da hora e o resto da
@@ -1452,7 +1528,7 @@ secao('Páginas');
   // exatamente la que um `data-yb-open="busca"` apontou para o vazio — o
   // overlay se chama "site-search". A checagem existia e nao olhava para a
   // pagina onde o defeito nasceu.
-  const comGatilho = [...paginas, ...(typeof PROVA !== 'undefined' ? PROVA : [])];
+  const comGatilho = [...paginas, ...PROVA];
   const gatilhosMortos = [];
   for (const p of comGatilho) {
     const h = ler(p);
@@ -1654,6 +1730,50 @@ secao('Véu leve e blur');
 }
 
 /* ===========================================================================
+   A BUSCA VIVE EM DOIS ARQUIVOS
+
+   O overlay e componente, e a ficha dele e a fonte. Mas a galeria de padroes
+   precisa do bloco INTEIRO no proprio HTML: quem o abre e a lupa do header, e
+   `data-yb-open` sem destino e um botao que nao faz nada — sem erro nenhum no
+   console. Duas copias, entao, por necessidade.
+
+   Copia que ninguem confere deriva. Quando esta checagem nasceu as duas ja
+   tinham grupos diferentes (uma dizia "Categories", a outra "Collections"),
+   listas diferentes e ate `action` diferente — e a doc mostrava dois
+   componentes que se chamavam igual.
+
+   Os DESTINOS podem divergir: cada pagina ancora onde tem onde ancorar. A
+   anatomia, nao.
+   =========================================================================== */
+{
+  const overlay = (arq) => {
+    const t = ler(arq);
+    const i = t.indexOf('<dialog id="site-search"');
+    if (i < 0) return null;
+    const f = t.indexOf('</dialog>', i);
+    return f < 0 ? null : t.slice(i, f + 9);
+  };
+  const esqueleto = (b) => b
+    .replace(/\s+(?:href|action)="[^"]*"/g, '')   // destino e de cada pagina
+    .replace(/\.\.\//g, '')                        // profundidade idem
+    .replace(/\s+/g, ' ').trim();
+  const a = overlay('components/pecas/search.html');
+  const b = overlay('patterns/index.html');
+  if (!a || !b) {
+    falha('overlay de busca ausente', !a ? 'components/pecas/search.html' : 'patterns/index.html');
+  } else if (esqueleto(a) !== esqueleto(b)) {
+    // primeiro ponto em que divergem, para nao imprimir 8 KB
+    const x = esqueleto(a), y = esqueleto(b);
+    let i = 0; while (i < x.length && x[i] === y[i]) i++;
+    falha('as duas cópias da busca divergiram',
+      `a partir de "…${x.slice(Math.max(0, i - 40), i + 40)}" (ficha) ` +
+      `vs "…${y.slice(Math.max(0, i - 40), i + 40)}" (padrões)`);
+  } else {
+    ok('as duas cópias da busca dizem a mesma coisa', `${(a.length / 1024).toFixed(1)} KB`);
+  }
+}
+
+/* ===========================================================================
    O HERO DA A VOLTA
    Depois do ultimo vem o primeiro, e as setas nunca se desligam. Duas coisas
    podem morrer caladas aqui:
@@ -1671,11 +1791,11 @@ secao('Véu leve e blur');
   const js = ler('components/ybera-components.js');
   const telas = ['_captura/nova-loja/index-v2.html'];
   const semLoop = telas.filter(f => existsSync(join(raiz, f)))
-    .filter(f => !/id="hero-track"[^>]*data-yb-track-loop/.test(ler(f)));
+    .filter(f => !aberturas(ler(f)).some(t => /id="hero-track"/.test(t) && temAttr(t, 'data-yb-track-loop')));
 
   // A volta: os dois sentidos movem um filho E corrigem a rolagem.
-  const bloco = js.match(/if \(circular\(t\)[\s\S]*?\n    \}/);
-  const corpo = bloco ? bloco[0] : '';
+  const bloco = blocoApos(js, /if \(circular\(t\)/);
+  const corpo = bloco || '';
   const move = (corpo.match(/appendChild|insertBefore/g) || []).length;
   const absoluta = (corpo.match(/scrollLeft\s*=\s*[^=]/g) || []).length;
   const relativa = (corpo.match(/scrollLeft\s*[-+]=/g) || []).length;

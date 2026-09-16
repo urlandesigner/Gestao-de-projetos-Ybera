@@ -252,7 +252,15 @@
      e conferidos — inclusive por test/validate.mjs, que reprova quem divergir.
      Pontos de quebra de COMPONENTE (520, 560, 860, 900) são outra coisa: nascem
      da largura em que aquele conteúdo específico quebra, não da tela. Ficam
-     fora desta escala de propósito. */
+     fora desta escala de propósito.
+
+     O DEGRAU PERTENCE AO LADO DE CIMA. `min-width` leva o número redondo e
+     `max-width` recua 0,02px: `(max-width:767.98px)` e `(min-width:768px)`.
+     Escrito com o mesmo número dos dois lados, em exatamente 768px as duas
+     regras valem ao mesmo tempo — a goteira de desktop convivia com a barra
+     de celular. Recuar 1px inteiro em vez de 0,02 abre o problema oposto: um
+     buraco onde nenhuma das duas vale, e larguras fracionárias existem de
+     verdade (zoom do navegador, tela hidpi). test/validate.mjs confere. */
   --yb-breakpoint-sm: 480px;
   --yb-breakpoint-md: 768px;
   --yb-breakpoint-lg: 1024px;
@@ -279,8 +287,8 @@
      ESPAÇO, PESO, TRACKING — uso direto do primitivo é permitido.
             As telas-prova mostraram 75 usos diretos: a escala de 4px já é
             a intenção, e um alias semântico por caso só cria indireção
-            sem informação. Os aliases abaixo continuam disponíveis para
-            padrões recorrentes, mas não são obrigatórios.
+            sem informação. Os aliases de espaço que existiram aqui estão
+            marcados como obsoletos (DDR-004) e saem em 1.0 — use o primitivo.
    -------------------------------------------------------------------------
    A intenção, não o valor. Esta é a ÚNICA camada que um componente consome
    e a única que alguém precisa ler para entender o sistema.
@@ -759,6 +767,10 @@
      apagado existe --yb-text-muted, que é medido.
      ===================================================================== */
   --yb-opacity-control-disabled: var(--yb-opacity-disabled);
+  /* A foto do produto esgotado recua, mas nao some: ela ainda e o que
+     identifica a peca na grade. Nao vale para texto — o preco e o nome ao
+     lado ficam em opacidade cheia. */
+  --yb-opacity-media-disabled:   var(--yb-opacity-scrim);
   /* @deprecated desde 0.10 — use --yb-surface-overlay (o veu ja medido) ou
      --yb-surface-on-media. Remocao em 1.0. Opacidade solta sobre midia nao
      diz sobre O QUE ela cai, e por isso nunca da para medir o resultado. */
@@ -817,7 +829,7 @@
      `--yb-header-h`: senao param atras da faixa. */
   --yb-chrome-h: var(--yb-header-h);
   /* O aperto do mobile esta no fim deste arquivo: a barra encolhe o respiro
-     la, e o token tem de encolher junto — ver @media (max-width:768px). */
+     la, e o token tem de encolher junto — ver @media (max-width:767.98px). */
 
   /* Sinal da direcao de leitura. `transform` nao tem versao logica: um
      translateX negativo tira a gaveta da tela em LTR e a traz para dentro em
@@ -882,6 +894,6 @@
    ficava 8px fora do lugar no celular. Declarado aqui, no dono do token,
    todo mundo le o mesmo numero.
    =========================================================================== */
-@media (max-width:768px){
+@media (max-width:767.98px){
   :root{ --yb-header-h: calc(var(--yb-target-min) + var(--yb-space-3) * 2 + 1px); }
 }

@@ -5,7 +5,7 @@
   'use strict';
 
   /* A COLUNA ABRE MOSTRANDO O ITEM ABERTO.
-     A lista tem 36 nomes e a coluna mostra uns 20. Abrindo um componente do
+     A lista tem quase 40 nomes e a coluna mostra uns 20. Abrindo um componente do
      fim da lista, a coluna nascia no topo e o item aberto ficava escondido na
      rolagem: o realce existia e ninguém via. Não dá para resolver em CSS —
      não há como mandar um contêiner rolar até um filho.

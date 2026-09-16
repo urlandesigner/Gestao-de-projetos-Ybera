@@ -29,12 +29,10 @@
    nos tres motores. O fundo saiu daqui porque a faixa e a barra ja tem o
    seu; wrapper sem caixa nao pinta nada. */
 .yb-header{display:contents}
-.yb-header__announce{
-  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
-  text-align:center; padding:var(--yb-space-3) var(--yb-page-gutter);
-  font-size:var(--yb-type-caption-size); letter-spacing:var(--yb-tracking-wide);
-}
-.yb-header__announce b{color:var(--yb-accent-on-dark); font-weight:var(--yb-font-weight-semibold)}
+/* A faixa de aviso do topo e `.yb-notice`, a peca solta. `.yb-header__announce`
+   existiu aqui repetindo declaracao por declaracao a mesma receita — e as duas
+   seguiam vivas, o que e a definicao de regra dos dois. Quem manda agora e o
+   componente; o header so o posiciona. */
 /* Grid de tres colunas, nao flex com sobra: um flex simples centraliza o
    nav dentro do espaco que sobra entre logo e acoes, e os dois quase nunca
    pesam igual (ex.: 176px de icones contra 83px de logo) — a diferenca
@@ -45,7 +43,7 @@
 .yb-header__bar{
   display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
   gap:var(--yb-space-6);
-  padding:var(--yb-space-4) var(--yb-space-8);
+  padding-block:var(--yb-space-4);   /* o eixo inline vem da regra abaixo */
   position:sticky; inset-block-start:0; z-index:var(--yb-z-sticky);
   min-height:var(--yb-header-h);   /* o token e a barra dizem o mesmo numero */
   /* fundo e borda mudam de dono junto com o sticky: transparente, o conteudo
@@ -370,7 +368,7 @@
    mesma especificidade e a de cima declara `display:flex`. Colocado antes,
    como estava, perdia em silencio — o mesmo tropeco ja anotado no
    `.yb-header__icon`. */
-@container yb-nav (max-width:1024px){
+@container yb-nav (max-width:1023.98px){
   .yb-nav__pitch{display:none}
 }
 
@@ -492,24 +490,6 @@
     flex-direction:column; gap:var(--yb-space-5);
     padding:var(--yb-space-4) var(--yb-space-4) var(--yb-space-5);
   }
-  /* A pilha em coluna ja resolve o espaco sobrando sozinha — o card vertical
-     do desktop viraria uma torre na gaveta. Aqui vira uma linha compacta:
-     miniatura fixa, sem selo (nao cabe em 72px sem quebrar). */
-  .yb-nav__rail{flex-direction:column; gap:var(--yb-space-5)}
-  /* o teto de 18rem e do painel largo, onde as pecas dividem uma faixa;
-     na gaveta cada uma ocupa a largura toda */
-  .yb-nav__rail > *{max-width:none}
-  .yb-nav__promo{flex-direction:row; align-items:flex-start; flex:auto}
-  .yb-nav__promo-media{flex:none; inline-size:4.5rem; min-height:0; aspect-ratio:1}
-  .yb-nav__promo-media .yb-card__flags{display:none}
-  .yb-nav__promo-info{flex:1; min-width:0}
-  /* Na gaveta a analise volta (o contêiner aqui e estreito, e a regra de
-     cima a esconderia) — mas so com a promessa e o botao: os tres passos
-     sao o que convence no painel largo e o que faz rolar no telefone, onde
-     acima dela ja vieram 21 links. */
-  .yb-nav__pitch{display:flex; padding:var(--yb-space-4)}
-  .yb-nav__pitch-text,
-  .yb-nav__pitch-steps{display:none}
 }
 /* Sem margin-inline-start:auto: quem empurra as acoes pra ponta agora e o
    flex:1 do menu, que ja respeita a direcao de leitura sozinho. */
@@ -563,7 +543,7 @@
    Em 320px a barra pedia 351px e a pagina ganhava scroll lateral. O corte saiu
    do respiro, nao do alvo: os icones seguem com 44px de min-width. A loja hoje
    cabe nos mesmos 320 entregando icone de 18x17 — alvo que ninguem acerta. */
-@media (max-width:768px){
+@media (max-width:767.98px){
   /* respiro menor aqui; a altura acompanha pelo token, que encolhe no mesmo
      ponto de quebra em tokens/01-semantic.css — declarada aqui, no elemento,
      ela nao alcancava quem gruda abaixo da barra sem estar dentro dela */
@@ -609,11 +589,10 @@
   background:var(--yb-surface); box-shadow:var(--yb-elevation-drawer);
   width:100%; max-width:100%;
 }
-/* Largura cheia no telefone, 420 no tablet, 440 no desktop. A gaveta e o
-   unico lugar da loja onde a largura cresce com a tela em vez de a coluna:
-   mais espaco aqui e mais item visivel sem rolar, nao linha mais longa. */
+/* Largura cheia no telefone, 420 a partir do tablet — o mesmo teto de
+   `.yb-dialog--drawer`, que e onde o carrinho mora. (Houve um degrau de 440
+   em 1024; nunca valia, porque a gaveta em volta para em 420.) */
 @media (min-width:768px){  .yb-cart{ max-width:420px } }
-@media (min-width:1024px){ .yb-cart{ max-width:440px } }
 .yb-cart__head{
   display:flex; align-items:center; justify-content:space-between;
   padding:var(--yb-space-2) var(--yb-space-3);
@@ -1002,17 +981,17 @@
 .yb-chip__x{font-size:var(--yb-type-body-size); line-height:1; color:var(--yb-text-muted)}
 .yb-chip[aria-pressed="true"] .yb-chip__x{color:var(--yb-text-muted-inverse)}
 .yb-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:var(--yb-grid-gap)}
-@media (max-width:1024px){.yb-grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:1023.98px){.yb-grid{grid-template-columns:repeat(3,1fr)}}
 /* So o .yb-grid encolhe o respiro aqui, nao --yb-grid-gap: o token e
    compartilhado com .yb-collections, que ninguem pediu para apertar. Agora
    que o card tem contorno proprio, o respiro entre eles pode ser menor sem
    os dois se confundirem. */
-@media (max-width:768px){.yb-grid{grid-template-columns:repeat(2,1fr); gap:var(--yb-space-4)}}
+@media (max-width:767.98px){.yb-grid{grid-template-columns:repeat(2,1fr); gap:var(--yb-space-4)}}
 /* Em duas colunas o cartao de oferta ocupa as duas. Numa celula de 171px ele
    nao cabe: o relogio vaza pela borda, o titulo clampa em "Fashion Gold…" e
    sobra um vao branco ao lado, porque ele e mais alto que o cartao vizinho.
    No desktop e uma celula so — ali a coluna tem 266px e tudo entra. */
-@media (max-width:768px){.yb-grid > .yb-offercard{grid-column:span 2}}
+@media (max-width:767.98px){.yb-grid > .yb-offercard{grid-column:span 2}}
 
 /* =========================================================================
    BLOCO DE COMPRA (PDP)
@@ -1344,26 +1323,6 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
 }
 
 /* =========================================================================
-   EMPTY STATE
-   Nunca é só "nada aqui". Sempre diz por que está vazio e o que fazer.
-   ========================================================================= */
-.yb-empty{
-  display:flex; flex-direction:column; align-items:center; text-align:center;
-  gap:var(--yb-space-4); padding:var(--yb-space-16) var(--yb-space-6);
-}
-.yb-empty__mark{
-  width:56px; height:56px; border-radius:var(--yb-radius-full);
-  background:var(--yb-bg-muted); display:flex; align-items:center;
-  justify-content:center; font-size:var(--yb-type-h3-size); color:var(--yb-text-muted);
-}
-.yb-empty h3{
-  margin:0; font-size:var(--yb-type-h4-size);
-  font-weight:var(--yb-type-h4-weight); letter-spacing:var(--yb-type-h4-track);
-}
-.yb-empty p{margin:0; color:var(--yb-text-secondary); max-width:44ch;
-  font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-relaxed)}
-
-/* =========================================================================
    FOOTER
    Reproduz o footer que a loja ja pratica — fundo cinza claro, tres zonas,
    barra legal embaixo — sem nenhum valor cru. Cada numero abaixo veio de
@@ -1396,7 +1355,7 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
   display:flex; flex-wrap:wrap; justify-content:space-between;
   gap:var(--yb-space-8); align-items:flex-start;
 }
-@media (max-width:768px){
+@media (max-width:767.98px){
   .yb-footer__top{flex-direction:column; align-items:center; text-align:center}
 }
 
@@ -1405,7 +1364,7 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
   display:flex; flex-direction:column; gap:var(--yb-space-6);
   min-width:0; flex:0 0 auto;
 }
-@media (max-width:768px){.yb-footer__brand{align-items:center}}
+@media (max-width:767.98px){.yb-footer__brand{align-items:center}}
 /* O footer da loja e claro e o logo e monocromatico preto: aqui ele NAO
    inverte. Se algum dia o footer voltar a ser escuro, e --inverse que
    resolve, nao um filter escondido no padrao. */
@@ -1434,7 +1393,7 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
   display:flex; flex-wrap:wrap; justify-content:space-evenly;
   gap:var(--yb-space-8); flex:1 1 auto; min-width:0;
 }
-@media (max-width:768px){
+@media (max-width:767.98px){
   .yb-footer__menus{flex-direction:column; gap:0; width:100%; max-width:20rem}
 }
 /* flex:0 0 auto e nao o min-width:0 de antes: com permissao de encolher, as
@@ -1470,13 +1429,13 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
    e "Kit" virava um alvo de 17px. Ocupando a linha, o rotulo curto ganha o
    mesmo alvo do longo. */
 .yb-footer__collist a{display:flex; align-items:center; min-height:var(--yb-space-6)}
-@media (max-width:768px){
+@media (max-width:767.98px){
   .yb-footer__collist a{min-height:var(--yb-target-min)}
   /* os irmaos ficaram para tras com 24px em toda largura */
-  .yb-footer__bottom a,.yb-footer__links a,.yb-chip{min-height:var(--yb-target-min)}
+  .yb-footer__bottom a,.yb-footer__links a{min-height:var(--yb-target-min)}
 }
 
-@media (max-width:768px){
+@media (max-width:767.98px){
   .yb-footer__toggle{display:block; position:absolute; opacity:0; pointer-events:none}
   .yb-footer__coltitle{
     justify-content:space-between; cursor:pointer;
@@ -1543,7 +1502,7 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
   margin-top:var(--yb-space-8); padding-top:var(--yb-space-12);
   border-top:1px solid var(--yb-border-strong);
 }
-@media (max-width:768px){
+@media (max-width:767.98px){
   .yb-footer__bottom{justify-content:center; text-align:center;
     padding-top:var(--yb-space-8)}
 }
@@ -1698,7 +1657,7 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
   font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-semibold);
   letter-spacing:var(--yb-tracking-wider);
 }
-@media (max-width:768px){
+@media (max-width:767.98px){
   .yb-manifesto{ padding-block:var(--yb-space-12); }
   .yb-manifesto__rule{ margin-block:var(--yb-space-8) var(--yb-space-5); }
 }
@@ -1817,7 +1776,7 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
    respiro entre blocos e um oitavo da tela gasto em nada — a PDP levava duas
    telas de rolagem ate o botao de comprar. O ritmo encolhe; a hierarquia
    entre --tight e o padrao continua. */
-@media (max-width:768px){
+@media (max-width:767.98px){
   .yb-block{ padding-block:var(--yb-space-10); }
   .yb-block--tight{ padding-block:var(--yb-space-3); }
 }
@@ -1855,7 +1814,7 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
    alvo que cresce so para baixo. Precisa vir DEPOIS do bloco base: as duas
    regras tem a mesma especificidade, e a de cima declara `gap` (que seta
    row-gap e column-gap juntos) — colocada antes, esta perdia em silencio. */
-@media (max-width:768px){
+@media (max-width:767.98px){
   .yb-section-head{ row-gap:var(--yb-space-3); }
   .yb-section-head .yb-link{ align-items:flex-start; }
 }

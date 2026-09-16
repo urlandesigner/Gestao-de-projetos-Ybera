@@ -121,8 +121,11 @@ def produto(handle, pasta_img):
     try:
         js = json.loads(pegar(f"https://ybera.us/products/{handle}.js", 'application/json'))
         estoque = {v2['title']: bool(v2.get('available')) for v2 in js.get('variants', [])}
-    except Exception:
-        estoque = {}
+    except Exception as e:
+        # Engolir o erro aqui devolvia `{}` e, la na frente, `estoque.get(titulo, True)`
+        # marcava TODO produto como "In stock" — inclusive na PDP esgotada. Um 429
+        # da loja virava estoque falso em silencio. Melhor parar.
+        raise SystemExit(f"estoque de {handle} indisponivel ({e}); abortando para nao gerar 'In stock' falso")
     v = p['variants'][0]
     corpo = re.sub(r'<[^>]+>', ' ', p.get('body_html') or '')
     corpo = re.sub(r'\s+', ' ', corpo).strip()

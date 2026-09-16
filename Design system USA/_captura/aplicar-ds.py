@@ -50,7 +50,8 @@ def fonte_local(destino):
         nome = f"schibsted-{n}.woff2"; n += 1
         try:
             open(os.path.join(pasta, nome), 'wb').write(baixar(url))
-        except Exception:
+        except Exception as e:
+            print(f"  aviso: fonte nao baixou ({e}); fica a URL do gstatic")
             return m.group(0)
         return f"url(fontes/{nome})"   # irmao do fonte.css
     css = re.sub(r'url\((https://fonts\.gstatic\.com/[^)]+)\)', troca, css)

@@ -1,12 +1,17 @@
 <h2>Toast</h2>
     <p class="when">Confirma o que já aconteceu. Não pede nada e não bloqueia nada.</p>
     <div class="demo">
-      <button class="yb-btn yb-btn--primary"
-        onclick="Ybera.toast({title:'Added to cart',text:'Kit Sealant Fashion Gold — 500 g',variant:'success'})">Adicionar ao carrinho</button>
-      <button class="yb-btn yb-btn--ghost"
-        onclick="Ybera.toast({title:'Saved for later',text:'Find it in your wishlist'})">Salvar</button>
-      <button class="yb-btn yb-btn--ghost"
-        onclick="Ybera.toast({title:'Payment declined',text:'Your bank rejected the charge. Try another card.',variant:'danger',duration:0})">Erro (não some)</button>
+      <button type="button" class="yb-btn yb-btn--primary"
+        data-yb-toast data-toast-titulo="Added to cart"
+        data-toast-texto="Kit Sealant Fashion Gold — 500 g"
+        data-toast-variante="success">Adicionar ao carrinho</button>
+      <button type="button" class="yb-btn yb-btn--ghost"
+        data-yb-toast data-toast-titulo="Saved for later"
+        data-toast-texto="Find it in your wishlist">Salvar</button>
+      <button type="button" class="yb-btn yb-btn--ghost"
+        data-yb-toast data-toast-titulo="Payment declined"
+        data-toast-texto="Your bank rejected the charge. Try another card."
+        data-toast-variante="danger" data-toast-duracao="0">Erro (não some)</button>
     </div>
     <div class="note">
       <b>Some sozinho — menos quando você está lendo</b>

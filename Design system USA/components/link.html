@@ -94,7 +94,7 @@
   <section class="bloco" id="demos">
     <h2 class="bloco-titulo">Como se parece</h2>
     <div class="demo">
-      <a class="yb-link" href="#link">Shop all best sellers <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg></a>
+      <a class="yb-link" href="#demos">Shop all best sellers <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg></a>
       <span class="yb-link yb-link--reinforce" aria-hidden="true">Continue reading <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
     </div>
     <div class="note">
@@ -146,7 +146,7 @@
     que renderizou ali, não um exemplo escrito à parte.</p>
     <div class="snippet">
       <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
-      <pre><code>&lt;a class="yb-link" href="#link"&gt;Shop all best sellers &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;&lt;/a&gt;
+      <pre><code>&lt;a class="yb-link" href="#demos"&gt;Shop all best sellers &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;&lt;/a&gt;
 &lt;span class="yb-link yb-link--reinforce" aria-hidden="true"&gt;Continue reading &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;</code></pre>
     </div>
   </section>
@@ -201,7 +201,7 @@ document.addEventListener('click', function (e) {
     var antes = b.textContent;
     b.textContent = 'Copiado';
     setTimeout(function () { b.textContent = antes; }, 1600);
-  });
+  }).catch(function () { /* permissao negada: o codigo continua selecionavel */ });
 });
 </script>
 </body>

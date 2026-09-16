@@ -21,7 +21,7 @@ O que a loja pratica hoje, e que o sistema resolve:
 | Magenta | 3 valores (`#CA235F`, `#DB2855`, `#DD2955`) | 1 |
 | Tamanho de fonte | 20 valores, incluindo 11.2px e 14.4px | 11 degraus |
 | Raio | 12 valores | 5 |
-| Ícones | Font Awesome Pro, 380 KB, nenhum renderizado | sprite de 7,2 KB |
+| Ícones | Font Awesome Pro, 380 KB, nenhum renderizado | sprite de 9,1 KB |
 | Cinza | mistura de Tailwind zinc + gray + avulsos | 1 rampa de 11 |
 
 ## As seis fases, ordenadas por risco

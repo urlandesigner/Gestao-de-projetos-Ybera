@@ -104,7 +104,7 @@ Quebrar qualquer uma delas exige mudança maior e justificativa no changelog.
 
 ## Antes de publicar uma versão
 
-O checklist virou comando. Estas oito checagens rodam sozinhas:
+O checklist virou comando. As 108 checagens rodam sozinhas:
 
 ```bash
 npm run check
@@ -119,7 +119,8 @@ que as telas-prova carregam. Sai com código 1 se algo falhar, e roda em CI a
 cada push que toque esta pasta.
 
 **Artefato derivado nunca se edita à mão.** `dist/`, `dist/ybera-tokens.json`,
-`INVENTARIO.md` e `_captura/nova-loja/yb/` saem de `./build.sh`. O CI compara o
+`INVENTARIO.md`, `components/<componente>.html`, `components/index.html` e
+`_captura/nova-loja/yb/` saem de `./build.sh`. O CI compara o
 que o build gerou com o que foi commitado — porque rodar o validador logo depois
 do build sempre passa: ele confere o derivado contra a fonte que acabou de
 gerá-lo. Quem pega a defasagem é o `git`.

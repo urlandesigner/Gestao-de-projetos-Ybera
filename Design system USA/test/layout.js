@@ -4,13 +4,13 @@
    Por que geometria e nao pixel:
 
    Comparar imagens exige navegador headless, e o sistema inteiro se sustenta
-   sem uma dependencia sequer — 80 checagens que rodam com `node` e mais nada.
+   sem uma dependencia sequer — as checagens rodam com `node` e mais nada.
    Trocar isso por um pacote de 300 MB para pegar deslocamento de 2px seria
    caro pelo motivo errado.
 
    Geometria pega o que interessa: caixa que muda de tamanho, cor que troca,
    fonte que encolhe, elemento que some. Nesta sessao tres quebras passaram
-   pelos 80 testes verdes — a gaveta que aparecia fechada, o painel que virava
+   pelos testes verdes — a gaveta que aparecia fechada, o painel que virava
    tres telas de altura, o quadro que perdia 2px. Todas as tres teriam sido
    pegas aqui, porque todas mudaram numero.
 

@@ -246,7 +246,15 @@
      e conferidos — inclusive por test/validate.mjs, que reprova quem divergir.
      Pontos de quebra de COMPONENTE (520, 560, 860, 900) são outra coisa: nascem
      da largura em que aquele conteúdo específico quebra, não da tela. Ficam
-     fora desta escala de propósito. */
+     fora desta escala de propósito.
+
+     O DEGRAU PERTENCE AO LADO DE CIMA. `min-width` leva o número redondo e
+     `max-width` recua 0,02px: `(max-width:767.98px)` e `(min-width:768px)`.
+     Escrito com o mesmo número dos dois lados, em exatamente 768px as duas
+     regras valem ao mesmo tempo — a goteira de desktop convivia com a barra
+     de celular. Recuar 1px inteiro em vez de 0,02 abre o problema oposto: um
+     buraco onde nenhuma das duas vale, e larguras fracionárias existem de
+     verdade (zoom do navegador, tela hidpi). test/validate.mjs confere. */
   --yb-breakpoint-sm: 480px;
   --yb-breakpoint-md: 768px;
   --yb-breakpoint-lg: 1024px;

@@ -45,7 +45,7 @@ const BASE = join(raiz, 'test/baseline.json');
 const ATUAL = join(raiz, 'test/atual.json');
 const TOLERANCIA = 2;
 
-const idDeSimples = (r) => `${r.pagina}@${r.largura}`;
+const idDe = (r) => `${r.pagina}@${r.largura}`;
 const verde = (t) => `\x1b[32m${t}\x1b[0m`;
 const vermelho = (t) => `\x1b[31m${t}\x1b[0m`;
 const cinza = (t) => `\x1b[90m${t}\x1b[0m`;
@@ -66,7 +66,7 @@ const lista = Array.isArray(atual) ? atual : [atual];
 const semFonte = lista.filter((r) => r.fontes && r.fontes !== 'loaded');
 if (semFonte.length) {
   console.error(vermelho('retrato tirado antes da fonte carregar:'));
-  for (const r of semFonte) console.error(cinza(`  ${idDeSimples(r)} — fontes: ${r.fontes}`));
+  for (const r of semFonte) console.error(cinza(`  ${idDe(r)} — fontes: ${r.fontes}`));
   console.error(cinza('Refaça com `await document.fonts.ready` antes de capturar.'));
   process.exit(2);
 }
@@ -85,7 +85,6 @@ if (!existsSync(BASE)) {
 }
 const base = JSON.parse(readFileSync(BASE, 'utf8'));
 
-const idDe = (r) => `${r.pagina}@${r.largura}`;
 const porId = (arr) => Object.fromEntries(arr.map((r) => [idDe(r), r]));
 const B = porId(base), A = porId(lista);
 

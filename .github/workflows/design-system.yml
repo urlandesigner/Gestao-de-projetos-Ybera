@@ -33,7 +33,9 @@ jobs:
       # dizia so `dist/`, um INVENTARIO.md velho entrava sem ninguem ver.
       - name: artefatos derivados em dia com a fonte
         run: |
-          DERIVADOS="dist/ INVENTARIO.md"
+          # tudo o que ./build.sh escreve: bundle, matriz, fichas geradas e as
+          # copias/carimbo das telas-prova (GOVERNANCA.md lista os mesmos)
+          DERIVADOS="dist/ INVENTARIO.md components/index.html components/*.html _captura/nova-loja/yb/ _captura/nova-loja/*.html"
           if [ -n "$(git status --porcelain -- $DERIVADOS)" ]; then
             echo "::error::artefato derivado defasado — rode ./build.sh e commite"
             git --no-pager diff --stat -- $DERIVADOS

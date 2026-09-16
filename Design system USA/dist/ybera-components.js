@@ -1,7 +1,7 @@
 /* =========================================================================
    YBERA DESIGN SYSTEM · COMPORTAMENTO
 
-   Vanilla, sem dependência, ~4 KB. Progressive enhancement: se este arquivo
+   Vanilla, sem dependência, sem build. Progressive enhancement: se este arquivo
    não carregar, os formulários continuam enviando e os links continuam
    navegando. Nada aqui é obrigatório para a página funcionar.
 
@@ -15,10 +15,14 @@
      <button data-yb-fav aria-pressed="false" data-label-off="…" data-label-on="…">
      <button class="yb-switch" role="switch" aria-checked="false" data-yb-switch>
      <aside class="yb-partner" data-yb-partner>  +  <button class="yb-partner__avatar">
+     <button data-yb-toast data-toast-titulo="Saved for later">
      <div class="yb-track__nav" data-yb-track-nav="<id do trilho>" hidden>
      <div class="yb-buybar" data-yb-buybar hidden>  +  <button data-yb-buybar-anchor>
 
-   API pública: window.Ybera.toast({...})
+   API pública: window.Ybera.toast({...}), .openDialog(id, gatilho), .init(raiz)
+   `init(raiz)` religa tudo o que este arquivo liga, num pedaço de DOM que
+   chegou depois (seção carregada pelo tema). Idempotente: o que já está
+   ligado leva `data-yb-bound` e é pulado.
    ========================================================================= */
 (function () {
   'use strict';
@@ -139,7 +143,7 @@
       el.addEventListener('animationend', fim, { once: true });
       setTimeout(fim, 400); // rede de segurança: reduced-motion não dispara animationend
     }
-    function agendar() { if (prazo) timer = setTimeout(sair, prazo); }
+    function agendar() { clearTimeout(timer); if (prazo) timer = setTimeout(sair, prazo); }
 
     x.addEventListener('click', sair);
     // não some enquanto a pessoa está lendo
@@ -226,6 +230,7 @@
   }
 
   document.addEventListener('click', function (e) {
+    if (!(e.target instanceof Element)) return;
     var b = e.target.closest('[data-yb-fav]');
     if (!b) return;
     var ligado = b.getAttribute('aria-pressed') === 'true';
@@ -252,9 +257,9 @@
      Sem este arquivo o balao fica aberto. E o estado certo para ficar preso:
      o recado aparece, so nao recolhe.
      --------------------------------------------------------------------- */
-  (function () {
-    var alvo = document.querySelector('[data-yb-partner]');
-    if (!alvo) return;
+  function ligarPartner(alvo) {
+    if (alvo.hasAttribute('data-yb-bound')) return;
+    alvo.setAttribute('data-yb-bound', '');
     var botao = alvo.querySelector('.yb-partner__avatar');
     var LIMITE = 96;
     var naMao = false;
@@ -274,7 +279,7 @@
       if (naMao) return;
       pintar(window.scrollY > LIMITE);
     }, { passive: true });
-  })();
+  }
 
   /* ---------------------------------------------------------------------
      FAIXA DO PARCEIRO — o mesmo recado, depois que a arte passou
@@ -294,19 +299,19 @@
      balao segue sendo o unico lugar do recado, que e o estado certo para
      degradar.
      --------------------------------------------------------------------- */
-  (function () {
-    var faixa = document.querySelector('[data-yb-partnerbar]');
+  function ligarPartnerbar(faixa) {
+    if (faixa.hasAttribute('data-yb-bound')) return;
     var arte = document.querySelector('[data-yb-partnerbar-anchor]');
-    if (!faixa || !arte || !('IntersectionObserver' in window)) return;
+    if (!arte || !('IntersectionObserver' in window)) return;
+    faixa.setAttribute('data-yb-bound', '');
     new IntersectionObserver(function (entradas) {
       faixa.hidden = entradas[0].isIntersecting;
     }, { threshold: 0 }).observe(arte);
-  })();
+  }
 
   /* ---------------------------------------------------------------------
      SWITCH
        <button class="yb-switch" role="switch" aria-checked="false" data-yb-switch>
-     <aside class="yb-partner" data-yb-partner>  +  <button class="yb-partner__avatar">
 
      So vira o estado. O que o estado FAZ — somar o seguro ao total, gravar a
      escolha — e de quem monta a pagina; aqui o switch nao sabe o que liga.
@@ -314,6 +319,7 @@
      mesmo contrato do favorito e do "Add to cart" ao lado.
      --------------------------------------------------------------------- */
   document.addEventListener('click', function (e) {
+    if (!(e.target instanceof Element)) return;
     var s = e.target.closest('[data-yb-switch]');
     if (!s || s.disabled) return;
     s.setAttribute('aria-checked', String(s.getAttribute('aria-checked') !== 'true'));
@@ -377,12 +383,14 @@
     nav.hidden = fim <= 0;
   }
 
-  function ligarTrilhos() {
-    var navs = document.querySelectorAll('[data-yb-track-nav]');
+  function ligarTrilhos(raiz) {
+    var navs = (raiz || document).querySelectorAll('[data-yb-track-nav]');
     for (var i = 0; i < navs.length; i++) {
       (function (nav) {
+        if (nav.hasAttribute('data-yb-bound')) return;
         var t = trilhoDe(nav);
         if (!t) return;
+        nav.setAttribute('data-yb-bound', '');
         nav.hidden = false;
         atualizarSetas(nav);
         t.addEventListener('scroll', function () { atualizarSetas(nav); }, { passive: true });
@@ -390,10 +398,9 @@
       })(navs[i]);
     }
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ligarTrilhos);
-  else ligarTrilhos();
 
   document.addEventListener('click', function (e) {
+    if (!(e.target instanceof Element)) return;
     var b = e.target.closest('[data-yb-track-step]');
     if (!b) return;
     var nav = b.closest('[data-yb-track-nav]');
@@ -453,10 +460,11 @@
      para cima. Sem IntersectionObserver (ou sem script) a barra nao aparece,
      e o botao real continua la.
      --------------------------------------------------------------------- */
-  (function () {
-    var barra = document.querySelector('[data-yb-buybar]');
+  function ligarBuybar(barra) {
+    if (barra.hasAttribute('data-yb-bound')) return;
     var ancora = document.querySelector('[data-yb-buybar-anchor]');
-    if (!barra || !ancora || !('IntersectionObserver' in window)) return;
+    if (!ancora || !('IntersectionObserver' in window)) return;
+    barra.setAttribute('data-yb-bound', '');
     new IntersectionObserver(function (entradas) {
       // A regra e uma so: a barra existe enquanto o botao real NAO esta a
       // vista. Ela ja exigiu tambem que a ancora tivesse passado para cima
@@ -466,7 +474,7 @@
       // compra em lugar nenhum. Nem o da pagina, nem o da barra.
       barra.hidden = entradas[0].isIntersecting;
     }, { threshold: 0 }).observe(ancora);
-  })();
+  }
 
   /* ---------------------------------------------------------------------
      VARIANTE — a escolha muda a PAGINA, nao so o rotulo
@@ -533,7 +541,8 @@
 
     // Quantidade some quando nao ha o que contar; o aviso de volta ocupa o
     // lugar da acao.
-    var passo = document.querySelector('[data-yb-stepper]');
+    var zona = grupo.closest('[data-yb-compra]') || document;
+    var passo = zona.querySelector('[data-yb-stepper]');
     if (passo) passo.hidden = !tem;
     var avisar = document.querySelector('[data-yb-avisar]');
     if (avisar) avisar.hidden = tem;
@@ -624,16 +633,15 @@
     window.setTimeout(function () {
       b.classList.remove('yb-btn--loading');
       b.removeAttribute('aria-busy');
-      if (!window.Ybera || !Ybera.toast) return;
       if (falha) {
-        Ybera.toast({
+        toast({
           title: b.getAttribute('data-toast-erro') || '',
           text: b.getAttribute('data-toast-erro-texto') || '',
           variant: 'danger'
         });
         return;
       }
-      Ybera.toast({
+      toast({
         title: b.getAttribute('data-toast-titulo') || '',
         // A quantidade estava sumindo: somar tres e receber "Added to cart"
         // sem numero deixa a pessoa sem saber se somou tres ou um.
@@ -641,6 +649,34 @@
         variant: 'success'
       });
     }, ESPERA_COMPRA);
+  });
+
+  /* ---------------------------------------------------------------------
+     TOAST POR ATRIBUTO — para quem so precisa dizer uma coisa
+
+       <button data-yb-toast data-toast-titulo="Saved for later"
+               data-toast-texto="Find it in your wishlist"
+               data-toast-variante="success" data-toast-duracao="0">
+
+     O `data-yb-comprar` ao lado faz mais: espera, estado de carga e so entao
+     o toast. Quem so quer o recado — a doc, um botao de tema que ja resolveu
+     sozinho — chamava `onclick="Ybera.toast({...})"`, que e comportamento
+     escrito na marcacao e nao aparece em nenhuma busca por `data-yb-`.
+
+     `data-toast-duracao="0"` mantem o toast ate alguem fechar; sem o
+     atributo vale o padrao de 5s.
+     --------------------------------------------------------------------- */
+  document.addEventListener('click', function (e) {
+    if (!(e.target instanceof Element)) return;
+    var b = e.target.closest('[data-yb-toast]');
+    if (!b) return;
+    var prazo = b.getAttribute('data-toast-duracao');
+    toast({
+      title: b.getAttribute('data-toast-titulo') || '',
+      text: b.getAttribute('data-toast-texto') || '',
+      variant: b.getAttribute('data-toast-variante') || '',
+      duration: prazo === null ? undefined : +prazo
+    });
   });
 
   /* ---------------------------------------------------------------------
@@ -661,19 +697,25 @@
     var b = e.target.closest('[data-yb-share]');
     if (!b) return;
     var aviso = function (chave, variante) {
-      if (window.Ybera && Ybera.toast) Ybera.toast({ title: b.getAttribute(chave) || '', variant: variante });
+      toast({ title: b.getAttribute(chave) || '', variant: variante });
+    };
+    var copiar = function () {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(location.href)
+          .then(function () { aviso('data-copiado', 'success'); })
+          .catch(function () { aviso('data-erro', 'danger'); });
+        return;
+      }
+      aviso('data-erro', 'danger');
     };
     if (navigator.share) {
-      navigator.share({ title: document.title, url: location.href }).catch(function () {});
+      navigator.share({ title: document.title, url: location.href }).catch(function (err) {
+        // cancelar a folha e desistencia (AbortError); qualquer outro erro cai no copiar
+        if (!err || err.name !== 'AbortError') copiar();
+      });
       return;
     }
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(location.href)
-        .then(function () { aviso('data-copiado', 'success'); })
-        .catch(function () { aviso('data-erro', 'danger'); });
-      return;
-    }
-    aviso('data-erro', 'danger');
+    copiar();
   });
 
   /* ---------------------------------------------------------------------
@@ -743,6 +785,7 @@
   }
 
   document.addEventListener('change', function (e) {
+    if (!(e.target instanceof Element)) return;
     var g = e.target.closest('[data-yb-gallery]');
     if (g) sincronizarGaleria(g);
     var s = e.target.closest('[data-yb-stepper]');
@@ -766,7 +809,9 @@
        [data-termo]               em cada resultado, o texto contra o qual casar
      --------------------------------------------------------------------- */
   function pinta(form) {
-    var termo = (form.querySelector('.yb-search__input').value || '').trim().toLowerCase();
+    var campo = form.querySelector('.yb-search__input');
+    if (!campo) return;
+    var termo = (campo.value || '').trim().toLowerCase();
     var raiz = form.closest('.yb-search') || document;
     var zero = raiz.querySelector('[data-yb-search-zero]');
     var achados = raiz.querySelector('[data-yb-search-results]');
@@ -823,9 +868,16 @@
      INICIALIZAÇÃO
      --------------------------------------------------------------------- */
   function init(raiz) {
-    (raiz || document).querySelectorAll('[data-yb-gallery]').forEach(sincronizarGaleria);
-    (raiz || document).querySelectorAll('[data-yb-stepper]').forEach(sincronizarStepper);
-    (raiz || document).querySelectorAll('[data-yb-search]').forEach(pinta);
+    var r = raiz || document;
+    r.querySelectorAll('[data-yb-gallery]').forEach(sincronizarGaleria);
+    r.querySelectorAll('[data-yb-stepper]').forEach(sincronizarStepper);
+    r.querySelectorAll('[data-yb-search]').forEach(pinta);
+    r.querySelectorAll('[data-yb-partner]').forEach(ligarPartner);
+    r.querySelectorAll('[data-yb-partnerbar]').forEach(ligarPartnerbar);
+    r.querySelectorAll('[data-yb-buybar]').forEach(ligarBuybar);
+    ligarTrilhos(r);
+    // os blocos fora deste fechamento (navegacao, relogio) escutam este evento
+    document.dispatchEvent(new CustomEvent('yb:init', { detail: { raiz: r } }));
   }
 
   if (document.readyState === 'loading') {
@@ -948,7 +1000,7 @@
     if (ligar) {
       var irmaos = document.body.children;
       Array.prototype.forEach.call(irmaos, function (n) {
-        if (n.contains(gaveta) || n.tagName === 'SCRIPT') return;
+        if (n.contains(gaveta) || n.tagName === 'SCRIPT' || n.classList.contains('yb-toasts')) return;
         if (!n.hasAttribute('inert')) { n.setAttribute('inert', ''); inertados.push(n); }
       });
       // dentro do header, tudo menos a propria gaveta
@@ -1030,6 +1082,7 @@
   function iniciar() { Array.prototype.forEach.call(toggles(), sincronizar); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar);
   else iniciar();
+  document.addEventListener('yb:init', iniciar);
 })();
 
 /* =========================================================================
@@ -1100,6 +1153,8 @@
   }
 
   function ligar(el) {
+    if (el.hasAttribute('data-yb-bound')) return;
+    el.setAttribute('data-yb-bound', '');
     var prazo = Date.parse(el.getAttribute('data-yb-countdown'));
     // data ilegivel: fica o <time> por extenso, que e melhor que um relogio
     // contando para tras a partir de NaN
@@ -1125,8 +1180,8 @@
       }
       if (!el.isConnected) clearInterval(id);
     }
-    tique();
     var id = setInterval(tique, 1000);
+    tique();
   }
 
   function iniciar() {
@@ -1135,4 +1190,5 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar);
   else iniciar();
+  document.addEventListener('yb:init', iniciar);
 })();

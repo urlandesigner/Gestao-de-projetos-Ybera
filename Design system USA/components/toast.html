@@ -94,12 +94,17 @@
   <section class="bloco" id="demos">
     <h2 class="bloco-titulo">Como se parece</h2>
     <div class="demo">
-      <button class="yb-btn yb-btn--primary"
-        onclick="Ybera.toast({title:'Added to cart',text:'Kit Sealant Fashion Gold — 500 g',variant:'success'})">Adicionar ao carrinho</button>
-      <button class="yb-btn yb-btn--ghost"
-        onclick="Ybera.toast({title:'Saved for later',text:'Find it in your wishlist'})">Salvar</button>
-      <button class="yb-btn yb-btn--ghost"
-        onclick="Ybera.toast({title:'Payment declined',text:'Your bank rejected the charge. Try another card.',variant:'danger',duration:0})">Erro (não some)</button>
+      <button type="button" class="yb-btn yb-btn--primary"
+        data-yb-toast data-toast-titulo="Added to cart"
+        data-toast-texto="Kit Sealant Fashion Gold — 500 g"
+        data-toast-variante="success">Adicionar ao carrinho</button>
+      <button type="button" class="yb-btn yb-btn--ghost"
+        data-yb-toast data-toast-titulo="Saved for later"
+        data-toast-texto="Find it in your wishlist">Salvar</button>
+      <button type="button" class="yb-btn yb-btn--ghost"
+        data-yb-toast data-toast-titulo="Payment declined"
+        data-toast-texto="Your bank rejected the charge. Try another card."
+        data-toast-variante="danger" data-toast-duracao="0">Erro (não some)</button>
     </div>
     <div class="note">
       <b>Some sozinho — menos quando você está lendo</b>
@@ -140,12 +145,17 @@
     que renderizou ali, não um exemplo escrito à parte.</p>
     <div class="snippet">
       <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
-      <pre><code>&lt;button class="yb-btn yb-btn--primary"
-  onclick="Ybera.toast({title:'Added to cart',text:'Kit Sealant Fashion Gold — 500 g',variant:'success'})"&gt;Adicionar ao carrinho&lt;/button&gt;
-&lt;button class="yb-btn yb-btn--ghost"
-  onclick="Ybera.toast({title:'Saved for later',text:'Find it in your wishlist'})"&gt;Salvar&lt;/button&gt;
-&lt;button class="yb-btn yb-btn--ghost"
-  onclick="Ybera.toast({title:'Payment declined',text:'Your bank rejected the charge. Try another card.',variant:'danger',duration:0})"&gt;Erro (não some)&lt;/button&gt;</code></pre>
+      <pre><code>&lt;button type="button" class="yb-btn yb-btn--primary"
+  data-yb-toast data-toast-titulo="Added to cart"
+  data-toast-texto="Kit Sealant Fashion Gold — 500 g"
+  data-toast-variante="success"&gt;Adicionar ao carrinho&lt;/button&gt;
+&lt;button type="button" class="yb-btn yb-btn--ghost"
+  data-yb-toast data-toast-titulo="Saved for later"
+  data-toast-texto="Find it in your wishlist"&gt;Salvar&lt;/button&gt;
+&lt;button type="button" class="yb-btn yb-btn--ghost"
+  data-yb-toast data-toast-titulo="Payment declined"
+  data-toast-texto="Your bank rejected the charge. Try another card."
+  data-toast-variante="danger" data-toast-duracao="0"&gt;Erro (não some)&lt;/button&gt;</code></pre>
     </div>
   </section>
 
@@ -164,7 +174,7 @@
       </div>
       <div class="fn-caso fn-caso--nao">
         <p class="fn-cabeca">✕ Não faça</p>
-        <div class="fn-palco"><div class="yb-toast yb-toast--info" role="status" style="position:static"><div class="yb-toast__body"><b class="yb-toast__title">Seu código: A7F2-91KD</b><p class="yb-toast__text">Use no checkout</p></div></div></div>
+        <div class="fn-palco"><div class="yb-toast yb-toast--success" role="status" style="position:static"><div class="yb-toast__body"><b class="yb-toast__title">Seu código: A7F2-91KD</b><p class="yb-toast__text">Use no checkout</p></div></div></div>
         <p class="fn-legenda">A única cópia de uma informação que a pessoa precisa guardar, num elemento que some em quatro segundos.</p>
       </div>
     </div>
@@ -199,7 +209,7 @@ document.addEventListener('click', function (e) {
     var antes = b.textContent;
     b.textContent = 'Copiado';
     setTimeout(function () { b.textContent = antes; }, 1600);
-  });
+  }).catch(function () { /* permissao negada: o codigo continua selecionavel */ });
 });
 </script>
 </body>

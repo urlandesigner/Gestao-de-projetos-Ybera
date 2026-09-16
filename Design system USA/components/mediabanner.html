@@ -88,14 +88,14 @@
     <li>Modificadores <b>3</b></li>
     <li>Elementos <b>5</b></li>
     <li>Estados <b>1</b></li>
-    <li>Tokens <b>38</b></li>
+    <li>Tokens <b>41</b></li>
     <li>Comportamento <b>só CSS</b></li>
   </ul>
 
   <section class="bloco" id="demos">
     <h2 class="bloco-titulo">Como se parece</h2>
     <div class="demo demo--rail">
-      <a class="yb-mediabanner" href="#mediabanner">
+      <a class="yb-mediabanner" href="#demos">
         <img src="../_captura/nova-loja/img/02_hair-problem-f838107d.webp" alt="">
         <div class="yb-mediabanner__body">
           <span class="yb-mediabanner__eyebrow">New line</span>
@@ -107,7 +107,7 @@
     </div>
     <p class="row-label">Com blur progressivo — <code>.yb-mediabanner--blur</code></p>
     <div class="demo demo--rail">
-      <a class="yb-mediabanner yb-mediabanner--blur" href="#mediabanner">
+      <a class="yb-mediabanner yb-mediabanner--blur" href="#demos">
         <img src="../_captura/nova-loja/img/02_hair-problem-f838107d.webp" alt="">
         <div class="yb-mediabanner__blur" aria-hidden="true"><i></i><i></i><i></i></div>
         <div class="yb-mediabanner__body">
@@ -174,7 +174,7 @@
     que renderizou ali, não um exemplo escrito à parte.</p>
     <div class="snippet">
       <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
-      <pre><code>  &lt;a class="yb-mediabanner" href="#mediabanner"&gt;
+      <pre><code>  &lt;a class="yb-mediabanner" href="#demos"&gt;
     &lt;img src="../_captura/nova-loja/img/02_hair-problem-f838107d.webp" alt=""&gt;
     &lt;div class="yb-mediabanner__body"&gt;
       &lt;span class="yb-mediabanner__eyebrow"&gt;New line&lt;/span&gt;
@@ -186,7 +186,7 @@
 &lt;/div&gt;
 &lt;p class="row-label"&gt;Com blur progressivo — &lt;code&gt;.yb-mediabanner--blur&lt;/code&gt;&lt;/p&gt;
 &lt;div class="demo demo--rail"&gt;
-  &lt;a class="yb-mediabanner yb-mediabanner--blur" href="#mediabanner"&gt;
+  &lt;a class="yb-mediabanner yb-mediabanner--blur" href="#demos"&gt;
     &lt;img src="../_captura/nova-loja/img/02_hair-problem-f838107d.webp" alt=""&gt;
     &lt;div class="yb-mediabanner__blur" aria-hidden="true"&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;/div&gt;
     &lt;div class="yb-mediabanner__body"&gt;
@@ -249,7 +249,7 @@ document.addEventListener('click', function (e) {
     var antes = b.textContent;
     b.textContent = 'Copiado';
     setTimeout(function () { b.textContent = antes; }, 1600);
-  });
+  }).catch(function () { /* permissao negada: o codigo continua selecionavel */ });
 });
 </script>
 </body>

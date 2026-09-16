@@ -41,6 +41,11 @@ const FOLHAS = [
 ];
 
 const js = ler('components/ybera-components.js');
+// so codigo: `js.includes('yb-iconbtn')` casava um COMENTARIO e a matriz dizia
+// "Comportamento: sim" para uma peca que o JS nunca toca.
+const jsCodigo = js.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+// familias cujo gancho nao carrega o nome da classe (o modal abre por data-yb-open)
+const GANCHO_POR_FAMILIA = { 'yb-dialog': 'data-yb-open' };
 
 // as telas-prova: home e PDP montadas só com o sistema. São a evidência de que
 // o componente sobrevive a conteúdo real, e não só ao demo que o autor escolheu.
@@ -49,7 +54,7 @@ const provas = ['_captura/nova-loja/index.html', '_captura/nova-loja/pdp.html']
 const provaHtml = provas.map(talvez).join('\n');
 
 // blocos de regra global — não são componente
-const NAO_E_COMPONENTE = /^(YBERA|BASE|MOVIMENTO|UTILIT|ALVO COMPACTO|ALTO CONTRASTE|NAVEGACAO)/i;
+const NAO_E_COMPONENTE = /^(YBERA|BASE|MOVIMENTO|UTILIT|ALVO COMPACTO|ALTO CONTRASTE|NAVEGACAO|CARREGANDO)/i;
 
 /* Mesma leitura que test/validate.mjs faz. Se as duas divergirem, a checagem
    de "componente sem demonstração na doc" e esta tabela contam histórias
@@ -123,7 +128,8 @@ for (const { camada, css: caminho, doc } of FOLHAS) {
 
     // comportamento: o JS conhece esta família?
     const temJs = raizes.some(
-      (c) => js.includes(c) || js.includes(`data-yb-${c.replace(/^yb-/, '')}`)
+      (c) => jsCodigo.includes(c) || jsCodigo.includes(`data-yb-${c.replace(/^yb-/, '')}`)
+        || (GANCHO_POR_FAMILIA[c] && jsCodigo.includes(GANCHO_POR_FAMILIA[c]))
     );
 
     const naProva = raizes.some((c) => new RegExp(`class="[^"]*\\b${c}\\b`).test(provaHtml));

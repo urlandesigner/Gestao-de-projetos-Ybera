@@ -188,7 +188,8 @@ body:not([data-mobile="on"]) .par__mob{display:none}
     <button class="mob-toggle" id="mob-toggle" type="button" aria-pressed="true">Mobile: ligado</button>
     <p>O nível acima do componente. O componente responde "como um botão se parece";
     o padrão responde "o que vai no cabeçalho de uma loja, e em que ordem". Onze
-    composições recorrentes, montadas só com os componentes existentes.</p>
+    composições recorrentes, montadas só com os componentes existentes — mais o
+    estado vazio, que é componente, mostrado nos contextos em que aparece.</p>
   </div>
 
   <section id="buybox">
@@ -197,7 +198,7 @@ body:not([data-mobile="on"]) .par__mob{display:none}
     <div class="note"><b>Nota de heading</b><p>Nesta galeria o nome do produto é <code>&lt;h2&gt;</code> porque a página já tem um <code>&lt;h1&gt;</code>. Numa PDP real ele é o <code>&lt;h1&gt;</code> — o CSS não depende do nível.</p></div>
     <div class="stage stage--pad">
       <nav class="yb-crumb" aria-label="Breadcrumb" style="margin-bottom:var(--yb-space-6)">
-        <ol><li><a href="#">Home</a></li><li><a href="#">Treatments</a></li><li><span aria-current="page">Fashion Gold</span></li></ol>
+        <ol><li><a href="#buybox">Home</a></li><li><a href="#buybox">Treatments</a></li><li><span aria-current="page">Fashion Gold</span></li></ol>
       </nav>
       <div class="split">
         <div class="yb-card__media"></div>
@@ -229,7 +230,7 @@ body:not([data-mobile="on"]) .par__mob{display:none}
               <input type="number" value="1" aria-label="Quantity">
               <button type="button" aria-label="Increase">+</button>
             </div>
-            <button class="yb-btn yb-btn--primary">Add to cart — $168.90</button>
+            <button type="button" class="yb-btn yb-btn--primary">Add to cart — $168.90</button>
           </div>
           <div class="yb-buybox__trust">
             <span>Formaldehyde-free</span><span>Color-safe</span>
@@ -278,9 +279,9 @@ body:not([data-mobile="on"]) .par__mob{display:none}
         <div class="yb-cart__head">
           <h2>Your cart (2)</h2>
           <div class="yb-cart__head-acoes">
-            <button class="yb-cart__share" aria-label="Share cart">
+            <button type="button" class="yb-cart__share" aria-label="Share cart">
               <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-share"/></svg></button>
-            <button class="yb-cart__close" aria-label="Close cart">
+            <button type="button" class="yb-cart__close" aria-label="Close cart">
               <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
           </div>
         </div>
@@ -309,7 +310,7 @@ body:not([data-mobile="on"]) .par__mob{display:none}
             <div class="yb-cart__item-body">
               <div class="yb-cart__item-topo">
                 <p class="yb-cart__item-title">Kit Sealant Fashion Gold</p>
-                <button class="yb-cart__remove" aria-label="Remove Kit Sealant Fashion Gold">
+                <button type="button" class="yb-cart__remove" aria-label="Remove Kit Sealant Fashion Gold">
                   <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-trash"/></svg></button>
               </div>
               <span class="yb-cart__item-variant">500g / 17.6 fl.oz</span>
@@ -330,7 +331,7 @@ body:not([data-mobile="on"]) .par__mob{display:none}
             <div class="yb-cart__item-body">
               <div class="yb-cart__item-topo">
                 <p class="yb-cart__item-title">Vello Alpha-Lactobaby® System</p>
-                <button class="yb-cart__remove" aria-label="Remove Vello Alpha-Lactobaby® System">
+                <button type="button" class="yb-cart__remove" aria-label="Remove Vello Alpha-Lactobaby® System">
                   <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-trash"/></svg></button>
               </div>
               <span class="yb-cart__item-variant">250ml + 200g</span>
@@ -381,7 +382,7 @@ body:not([data-mobile="on"]) .par__mob{display:none}
                   save 18%</span>
               </div>
             </div>
-            <button class="yb-btn yb-btn--primary yb-cart__checkout">Checkout (2)</button>
+            <button type="button" class="yb-btn yb-btn--primary yb-cart__checkout">Checkout (2)</button>
           </div>
         </div>
       </div>
@@ -454,7 +455,7 @@ body:not([data-mobile="on"]) .par__mob{display:none}
               <p class="yb-cart__item-title">Cronograma &ndash; step 2 Cortex</p>
               <span class="yb-cart__item-variant">250g</span>
               <p class="yb-cart__aviso">Out of stock &mdash; remove to check out</p>
-              <button class="yb-cart__remove">Remove</button>
+              <button type="button" class="yb-cart__remove">Remove</button>
             </div>
           </div>
           <div class="yb-cart__item">
@@ -493,19 +494,19 @@ body:not([data-mobile="on"]) .par__mob{display:none}
     </div>
 
     <h3 class="row-label">Vazio e carregando</h3>
-    <div class="demo demo--grid">
+    <div class="split">
       <div class="stage stage--dim">
         <div class="yb-cart yb-cart--vazio">
           <div class="yb-cart__head">
             <h2>Your cart</h2>
-            <button class="yb-iconbtn yb-cart__close" aria-label="Close cart">&times;</button>
+            <button type="button" class="yb-iconbtn yb-cart__close" aria-label="Close cart">&times;</button>
           </div>
           <div class="yb-cart__estado">
             <div class="yb-empty">
-              <span class="yb-empty__mark" aria-hidden="true">
-                <svg class="yb-icon yb-icon--lg"><use href="../icons/ybera-icons.svg#yb-cart"/></svg></span>
-              <p>Your cart is empty</p>
-              <a class="yb-btn yb-btn--secondary" href="#cart-drawer">Go to home</a>
+              <span class="yb-empty__icone" aria-hidden="true">
+                <svg class="yb-icon"><use href="../icons/ybera-icons.svg#yb-cart"/></svg></span>
+              <p class="yb-empty__title">Your cart is empty</p>
+              <div class="yb-empty__acoes"><a class="yb-btn yb-btn--secondary" href="#cart-drawer">Go to home</a></div>
             </div>
           </div>
         </div>
@@ -514,7 +515,7 @@ body:not([data-mobile="on"]) .par__mob{display:none}
         <div class="yb-cart yb-cart--carregando">
           <div class="yb-cart__head">
             <h2>Your cart</h2>
-            <button class="yb-iconbtn yb-cart__close" aria-label="Close cart">&times;</button>
+            <button type="button" class="yb-iconbtn yb-cart__close" aria-label="Close cart">&times;</button>
           </div>
           <div class="yb-cart__items" aria-busy="true">
             <div class="yb-cart__item">
@@ -555,38 +556,38 @@ body:not([data-mobile="on"]) .par__mob{display:none}
           <span class="yb-catalog__count">24 products</span>
         </div>
         <div class="yb-catalog__tools">
-          <button class="yb-btn yb-btn--ghost yb-btn--sm">Filters</button>
-          <select class="yb-select" aria-label="Sort by" style="width:auto;min-height:36px;padding:var(--yb-space-2) var(--yb-space-4)">
+          <button type="button" class="yb-btn yb-btn--ghost yb-btn--sm"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-filter"/></svg>Filters</button>
+          <select class="yb-select" aria-label="Sort by" style="width:auto;min-height:var(--yb-control-height-compact);padding:var(--yb-space-2) var(--yb-space-4)">
             <option>Best selling</option><option>Price: low to high</option>
             <option>Price: high to low</option><option>Newest</option>
           </select>
         </div>
       </div>
       <div class="yb-catalog__filters">
-        <button class="yb-chip" aria-pressed="true">Keratin <span class="yb-chip__x">×</span></button>
-        <button class="yb-chip" aria-pressed="true">Under $150 <span class="yb-chip__x">×</span></button>
-        <button class="yb-chip">Color-safe</button>
-        <button class="yb-chip">Kits</button>
+        <button type="button" class="yb-chip" aria-pressed="true">Keratin <span class="yb-chip__x">×</span></button>
+        <button type="button" class="yb-chip" aria-pressed="true">Under $150 <span class="yb-chip__x">×</span></button>
+        <button type="button" class="yb-chip">Color-safe</button>
+        <button type="button" class="yb-chip">Kits</button>
       </div>
       <div class="yb-grid">
         <article class="yb-card">
           <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--sale">−16%</span></div></div>
-          <h3 class="yb-card__title"><a href="#">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</a></h3>
+          <h3 class="yb-card__title"><a href="#catalog">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</a></h3>
           <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
         </article>
         <article class="yb-card">
           <div class="yb-card__media"></div>
-          <h3 class="yb-card__title"><a href="#">Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask 1kg / 33oz + Coconut Elixir 60ml / 2oz</a></h3>
+          <h3 class="yb-card__title"><a href="#catalog">Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask 1kg / 33oz + Coconut Elixir 60ml / 2oz</a></h3>
           <span class="yb-price yb-price--sm"><b class="yb-price__now">$169.70</b></span>
         </article>
         <article class="yb-card">
           <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div></div>
-          <h3 class="yb-card__title"><a href="#">KIT VELLO Shampoo 500ml + VELLO Hair Mask 500g</a></h3>
+          <h3 class="yb-card__title"><a href="#catalog">KIT VELLO Shampoo 500ml + VELLO Hair Mask 500g</a></h3>
           <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
         </article>
         <article class="yb-card">
           <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--danger">Sold out</span></div></div>
-          <h3 class="yb-card__title"><a href="#">KIT Hair Sorbet — Vanilla, Chocolate and Strawberry Ice Cream Therapy</a></h3>
+          <h3 class="yb-card__title"><a href="#catalog">KIT Hair Sorbet — Vanilla, Chocolate and Strawberry Ice Cream Therapy</a></h3>
           <span class="yb-price yb-price--sm"><b class="yb-price__now">$119.90</b><s class="yb-price__was">$139.90</s></span>
         </article>
       </div>
@@ -599,18 +600,18 @@ body:not([data-mobile="on"]) .par__mob{display:none}
     <div class="split">
       <div class="stage">
         <div class="yb-empty">
-          <div class="yb-empty__mark">◦</div>
-          <h3>Your cart is empty</h3>
-          <p>Take the 60-second hair quiz and we'll recommend the treatment for your hair type.</p>
-          <button class="yb-btn yb-btn--primary">Take the quiz</button>
+          <span class="yb-empty__icone" aria-hidden="true"><svg class="yb-icon"><use href="../icons/ybera-icons.svg#yb-cart"/></svg></span>
+          <h3 class="yb-empty__title">Your cart is empty</h3>
+          <p class="yb-empty__text">Take the 60-second hair quiz and we'll recommend the treatment for your hair type.</p>
+          <div class="yb-empty__acoes"><button class="yb-btn yb-btn--primary" type="button">Take the quiz</button></div>
         </div>
       </div>
       <div class="stage">
         <div class="yb-empty">
-          <div class="yb-empty__mark">◦</div>
-          <h3>No results for "keratine"</h3>
-          <p>Did you mean <b>keratin</b>? You can also browse all treatments.</p>
-          <button class="yb-btn yb-btn--ghost">Browse treatments</button>
+          <span class="yb-empty__icone" aria-hidden="true"><svg class="yb-icon"><use href="../icons/ybera-icons.svg#yb-search"/></svg></span>
+          <h3 class="yb-empty__title">No results for "keratine"</h3>
+          <p class="yb-empty__text">Did you mean <b>keratin</b>? You can also browse all treatments.</p>
+          <div class="yb-empty__acoes"><button class="yb-btn yb-btn--ghost" type="button">Browse treatments</button></div>
         </div>
       </div>
     </div>
@@ -730,21 +731,21 @@ body:not([data-mobile="on"]) .par__mob{display:none}
             <label class="yb-footer__coltitle" for="fc0">All Products
               <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
             </label>
-            <div class="yb-footer__collist"><ul><li><a href="#">Best Sellers</a></li><li><a href="#">Kit</a></li></ul></div>
+            <div class="yb-footer__collist"><ul><li><a href="#footer">Best Sellers</a></li><li><a href="#footer">Kit</a></li></ul></div>
           </div>
           <div class="yb-footer__col">
             <input class="yb-footer__toggle" type="checkbox" id="fc1">
             <label class="yb-footer__coltitle" for="fc1">Collection
               <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
             </label>
-            <div class="yb-footer__collist"><ul><li><a href="#">Progressiva</a></li><li><a href="#">Cronograma</a></li><li><a href="#">Ybera Paris</a></li><li><a href="#">100Timetros</a></li><li><a href="#">Capulana</a></li><li><a href="#">Terra Coco</a></li><li><a href="#">Hair Mist</a></li></ul></div>
+            <div class="yb-footer__collist"><ul><li><a href="#footer">Progressiva</a></li><li><a href="#footer">Cronograma</a></li><li><a href="#footer">Ybera Paris</a></li><li><a href="#footer">100Timetros</a></li><li><a href="#footer">Capulana</a></li><li><a href="#footer">Terra Coco</a></li><li><a href="#footer">Hair Mist</a></li></ul></div>
           </div>
           <div class="yb-footer__col">
             <input class="yb-footer__toggle" type="checkbox" id="fc2">
             <label class="yb-footer__coltitle" for="fc2">Hair Problems
               <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
             </label>
-            <div class="yb-footer__collist"><ul><li><a href="#">Damaged Hair</a></li><li><a href="#">Frizz &amp; Dryness</a></li><li><a href="#">Thinning / Hair Loss</a></li><li><a href="#">Undefined Curls</a></li><li><a href="#">Hair Smoothing</a></li><li><a href="#">Hair Straightening</a></li></ul></div>
+            <div class="yb-footer__collist"><ul><li><a href="#footer">Damaged Hair</a></li><li><a href="#footer">Frizz &amp; Dryness</a></li><li><a href="#footer">Thinning / Hair Loss</a></li><li><a href="#footer">Undefined Curls</a></li><li><a href="#footer">Hair Smoothing</a></li><li><a href="#footer">Hair Straightening</a></li></ul></div>
           </div>
             </div>
 
@@ -767,7 +768,7 @@ body:not([data-mobile="on"]) .par__mob{display:none}
             </div>
 
           </div>
-          <div class="yb-footer__bottom"><span>© 2026</span><a href="#">Terms &amp; Conditions</a><a href="#">Privacy Policy</a><a href="#">Refund Policy</a><a href="#">Terms of Service</a><a href="#">Shipping Policy</a><a href="#">SMS Terms &amp; Conditions</a></div>
+          <div class="yb-footer__bottom"><span>© 2026</span><a href="#footer">Terms &amp; Conditions</a><a href="#footer">Privacy Policy</a><a href="#footer">Refund Policy</a><a href="#footer">Terms of Service</a><a href="#footer">Shipping Policy</a><a href="#footer">SMS Terms &amp; Conditions</a></div>
         </div>
       </footer>
     </div>
@@ -809,7 +810,7 @@ body:not([data-mobile="on"]) .par__mob{display:none}
     <code>span</code>: em produção o menu Shop não abre pelo teclado.</p>
     <div class="stage stage--overflow">
       <header class="yb-header">
-        <div class="yb-header__announce">Free shipping on orders over <b>$50</b></div>
+        <div class="yb-notice">Free shipping on orders over <b>$50</b></div>
         <input class="yb-header__drawer" type="checkbox" id="dnav-open" aria-label="Menu">
         <div class="yb-header__bar">
           <label class="yb-iconbtn yb-header__icon yb-header__burger" for="dnav-open" aria-hidden="true"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-menu"/></svg></label>
@@ -834,9 +835,9 @@ body:not([data-mobile="on"]) .par__mob{display:none}
             </ul>
           </nav>
           <div class="yb-header__actions">
-            <button class="yb-iconbtn yb-header__icon" aria-label="Search" data-yb-open="site-search"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></button>
-            <button class="yb-iconbtn yb-header__icon" aria-label="Account"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg></button>
-            <button class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-header__count">2</span></button>
+            <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Search" data-yb-open="site-search"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></button>
+            <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Account"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg></button>
+            <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-header__count">2</span></button>
           </div>
         </div>
         <label class="yb-header__scrim" for="dnav-open" aria-hidden="true"></label>
@@ -847,89 +848,131 @@ body:not([data-mobile="on"]) .par__mob{display:none}
            quem o dispara: um gatilho sem destino é um botão que não faz nada,
            e nenhum navegador avisa. -->
       <dialog id="site-search" class="yb-search" aria-label="Search products">
-        <div class="yb-search__bar">
-          <form class="yb-search__form" role="search" action="#header" data-yb-search>
-            <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>
-            <input class="yb-search__input" type="search" name="q" autocomplete="off" autofocus
-                   placeholder="Search products, concerns, ingredients" aria-label="Search products">
-            <button class="yb-iconbtn yb-search__clear" type="reset" aria-label="Clear search" hidden><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
-            <button class="yb-search__close" type="button" data-yb-close>Close</button>
-          </form>
-        </div>
-        <div class="yb-search__body">
-          <div class="yb-search__panel" data-yb-search-zero>
-            <div class="yb-search__col">
-              <div class="yb-search__group yb-search__group--secondary">
-                <h3 class="yb-search__title">Popular</h3>
-                <ul class="yb-search__list">
-                  <li><a class="yb-search__link" href="#header"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>hair botox</a></li>
-                  <li><a class="yb-search__link" href="#header"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>progressive brush</a></li>
-                  <li><a class="yb-search__link" href="#header"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>myrrh oil</a></li>
-                </ul>
-              </div>
-              <div class="yb-search__group yb-search__group--secondary">
-                <h3 class="yb-search__title">Collections</h3>
-                <ul class="yb-search__chips">
-                  <li><a class="yb-search__chip" href="#header">Smoothing</a></li>
-                  <li><a class="yb-search__chip" href="#header">Home care</a></li>
-                  <li><a class="yb-search__chip" href="#header">Kits</a></li>
-                </ul>
-              </div>
+      <div class="yb-search__bar">
+        <form class="yb-search__form" role="search" action="#header" data-yb-search>
+          <svg class="yb-icon yb-search__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>
+          <input class="yb-search__input" type="search" name="q" autocomplete="off" autofocus
+                 placeholder="Search products, concerns, ingredients" aria-label="Search products">
+          <button class="yb-iconbtn yb-search__clear" type="reset" aria-label="Clear search" hidden>
+            <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg>
+          </button>
+          <button class="yb-search__close" type="button" data-yb-close>Close</button>
+        </form>
+      </div>
+
+      <div class="yb-search__body">
+        <div class="yb-search__panel" data-yb-search-zero>
+          <div class="yb-search__col">
+            <div class="yb-search__group">
+              <h3 class="yb-search__title">Recent</h3>
+              <ul class="yb-search__chips">
+                <li><button class="yb-search__chip" type="button"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-clock"/></svg>keratin</button></li>
+                <li><button class="yb-search__chip" type="button"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-clock"/></svg>fashion gold</button></li>
+                <li><button class="yb-search__chip" type="button"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-clock"/></svg>frizz</button></li>
+              </ul>
             </div>
-            <div class="yb-search__col">
-              <div class="yb-search__group">
-                <h3 class="yb-search__title">Best sellers</h3>
-                <a class="yb-search__item" href="#header">
-                  <span class="yb-search__thumb"></span>
-                  <span>
-                    <span class="yb-search__name">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</span>
-                    <span class="yb-search__meta">Ybera USA</span>
-                  </span>
-                  <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b></span>
-                </a>
-                <a class="yb-search__item" href="#header">
-                  <span class="yb-search__thumb"></span>
-                  <span>
-                    <span class="yb-search__name">Myrrh Hair Repair Oil — 15ml / 0.5 fl.oz</span>
-                    <span class="yb-search__meta">Ybera USA</span>
-                  </span>
-                  <span class="yb-price yb-price--sm"><b class="yb-price__now">$29.90</b></span>
-                </a>
-              </div>
+            <div class="yb-search__group yb-search__group--secondary">
+              <h3 class="yb-search__title">Popular</h3>
+              <ul class="yb-search__list">
+                <li><a class="yb-search__link" href="#header"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>hair botox</a></li>
+                <li><a class="yb-search__link" href="#header"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>progressive brush</a></li>
+                <li><a class="yb-search__link" href="#header"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>myrrh oil</a></li>
+              </ul>
+            </div>
+            <div class="yb-search__group yb-search__group--secondary">
+              <h3 class="yb-search__title">Categories</h3>
+              <ul class="yb-search__chips">
+                <li><a class="yb-search__chip" href="#header">Smoothing</a></li>
+                <li><a class="yb-search__chip" href="#header">Home care</a></li>
+                <li><a class="yb-search__chip" href="#header">Kits</a></li>
+                <li><a class="yb-search__chip" href="#header">Hair oils</a></li>
+              </ul>
             </div>
           </div>
-          <div class="yb-search__panel" data-yb-search-results hidden>
-            <div class="yb-search__col">
-              <div class="yb-search__group" data-yb-search-group>
-                <h3 class="yb-search__title">Products</h3>
-                <a class="yb-search__item" href="#header" data-termo="kit sealant fashion gold keratin">
-                  <span class="yb-search__thumb"></span>
-                  <span>
-                    <span class="yb-search__name">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</span>
-                    <span class="yb-search__meta">Ybera USA</span>
-                  </span>
-                  <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b></span>
-                </a>
-                <a class="yb-search__item" href="#header" data-termo="myrrh hair repair oil">
-                  <span class="yb-search__thumb"></span>
-                  <span>
-                    <span class="yb-search__name">Myrrh Hair Repair Oil — 15ml / 0.5 fl.oz</span>
-                    <span class="yb-search__meta">Ybera USA</span>
-                  </span>
-                  <span class="yb-price yb-price--sm"><b class="yb-price__now">$29.90</b></span>
-                </a>
-              </div>
+          <div class="yb-search__col">
+            <div class="yb-search__group">
+              <h3 class="yb-search__title">Best sellers</h3>
+              <a class="yb-search__item" href="#header">
+                <span class="yb-search__thumb"></span>
+                <span>
+                  <span class="yb-search__name">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</span>
+                  <span class="yb-search__meta">Smoothing · 412 reviews</span>
+                </span>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b></span>
+              </a>
+              <a class="yb-search__item" href="#header">
+                <span class="yb-search__thumb"></span>
+                <span>
+                  <span class="yb-search__name">Myrrh Hair Repair Oil — 15ml / 0.5 fl.oz</span>
+                  <span class="yb-search__meta">Hair oils · 203 reviews</span>
+                </span>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$29.90</b></span>
+              </a>
+              <a class="yb-search__item" href="#header">
+                <span class="yb-search__thumb"></span>
+                <span>
+                  <span class="yb-search__name">KIT VELLO Shampoo 500ml + Hair Mask 500g</span>
+                  <span class="yb-search__meta">Home care · 87 reviews</span>
+                </span>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
+              </a>
             </div>
-          </div>
-          <div class="yb-search__empty" data-yb-search-empty hidden>
-            <p>Nothing found for <strong data-yb-search-echo></strong>.</p>
-            <p>Try a shorter word, or the product line instead of the full name.</p>
-            <ul class="yb-search__chips">
-              <li><a class="yb-search__chip" href="#header">Best sellers</a></li>
-              <li><a class="yb-search__chip" href="#header">New arrivals</a></li>
-            </ul>
           </div>
         </div>
+
+        <div class="yb-search__panel" data-yb-search-results hidden>
+          <div class="yb-search__col">
+            <div class="yb-search__group" data-yb-search-group>
+              <h3 class="yb-search__title">Suggestions</h3>
+              <ul class="yb-search__list">
+                <li data-termo="keratin"><a class="yb-search__link" href="#header"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>keratin treatment</a></li>
+                <li data-termo="keratin"><a class="yb-search__link" href="#header"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>keratin for curly hair</a></li>
+                <li data-termo="oil myrrh"><a class="yb-search__link" href="#header"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>myrrh repair oil</a></li>
+                <li data-termo="kit vello shampoo"><a class="yb-search__link" href="#header"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>vello shampoo</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="yb-search__col">
+            <div class="yb-search__group" data-yb-search-group>
+              <h3 class="yb-search__title">Products</h3>
+              <a class="yb-search__item" href="#header" data-termo="keratin kit sealant fashion gold">
+                <span class="yb-search__thumb"></span>
+                <span>
+                  <span class="yb-search__name">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</span>
+                  <span class="yb-search__meta">Smoothing · in stock</span>
+                </span>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b></span>
+              </a>
+              <a class="yb-search__item" href="#header" data-termo="oil myrrh repair">
+                <span class="yb-search__thumb"></span>
+                <span>
+                  <span class="yb-search__name">Myrrh Hair Repair Oil — 15ml / 0.5 fl.oz</span>
+                  <span class="yb-search__meta">Hair oils · in stock</span>
+                </span>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$29.90</b></span>
+              </a>
+              <a class="yb-search__item" href="#header" data-termo="kit vello shampoo mask">
+                <span class="yb-search__thumb"></span>
+                <span>
+                  <span class="yb-search__name">KIT VELLO Shampoo 500ml + Hair Mask 500g</span>
+                  <span class="yb-search__meta">Home care · in stock</span>
+                </span>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="yb-search__empty" data-yb-search-empty hidden>
+          <p>Nothing found for <strong data-yb-search-echo></strong>.</p>
+          <p>Try a shorter word, or the product line instead of the full name.</p>
+          <ul class="yb-search__chips">
+            <li><a class="yb-search__chip" href="#header">Best sellers</a></li>
+            <li><a class="yb-search__chip" href="#header">New arrivals</a></li>
+            <li><a class="yb-search__chip" href="#header">Talk to a specialist</a></li>
+          </ul>
+        </div>
+      </div>
       </dialog>
     </div>
   </section>

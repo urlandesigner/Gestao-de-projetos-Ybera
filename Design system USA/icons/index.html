@@ -58,6 +58,10 @@ h2.grp{font-size:var(--yb-type-overline-size);letter-spacing:var(--yb-tracking-w
   border-radius:var(--yb-radius-card);background:var(--yb-surface);text-align:center}
 .ic code{color:var(--yb-text-muted);word-break:normal;overflow-wrap:normal;
   hyphens:none;line-height:1.3}
+.ic:has(.res) .yb-icon{opacity:var(--yb-opacity-control-disabled)}
+.res{font-size:var(--yb-type-caption-size);color:var(--yb-text-muted);
+  border:1px dashed var(--yb-border);border-radius:var(--yb-radius-full);
+  padding:0 var(--yb-space-2)}
 h2{font-size:var(--yb-type-h2-size);line-height:var(--yb-type-h2-line);
   letter-spacing:var(--yb-type-h2-track);font-weight:var(--yb-type-h2-weight);
   margin:var(--yb-space-16) 0 var(--yb-space-3)}
@@ -88,9 +92,14 @@ pre .c{color:var(--yb-text-muted-inverse)}
 <div class="wrap">
   <a class="back" href="../">← Ybera Design System</a>
   <h1>Ícones</h1>
-  <p class="lede">Trinta e seis ícones em grade 24×24, traço 1.5, sempre em
+  <p class="lede">Trinta e nove ícones em grade 24×24, traço 1.5, sempre em
   <code>currentColor</code>. Herdam a cor do texto — nenhum ícone tem token de cor
   próprio, e por isso nenhum ícone pode reprovar em contraste sozinho.</p>
+  <p class="lede">Sete estão marcados <b>reservados</b>: existem no sprite e ainda
+  não aparecem em nenhuma peça. Não são sobra — são o vocabulário das telas que
+  o sistema ainda não montou (ordenação, conta com senha, aviso de segurança).
+  Ficam marcados para ninguém achar que são ícones mortos, e para quem montar
+  essas telas não desenhar um sétimo cadeado.</p>
 
   <div class="compare">
     <div class="box box--bad">
@@ -129,6 +138,7 @@ pre .c{color:var(--yb-text-muted-inverse)}
       <div class="ic">
         <svg class="yb-icon yb-icon--lg" aria-hidden="true"><use href="ybera-icons.svg#yb-chevron-up"/></svg>
         <code>chevron-up</code>
+        <span class="res">reservado</span>
       </div>
       <div class="ic">
         <svg class="yb-icon yb-icon--lg" aria-hidden="true"><use href="ybera-icons.svg#yb-chevron-left"/></svg>
@@ -141,9 +151,10 @@ pre .c{color:var(--yb-text-muted-inverse)}
       <div class="ic">
         <svg class="yb-icon yb-icon--lg" aria-hidden="true"><use href="ybera-icons.svg#yb-external"/></svg>
         <code>external</code>
+        <span class="res">reservado</span>
       </div>
     </div>
-    <h2 class="grp">Store <span>9</span></h2>
+    <h2 class="grp">Store <span>11</span></h2>
     <div class="grid">
       <div class="ic">
         <svg class="yb-icon yb-icon--lg" aria-hidden="true"><use href="ybera-icons.svg#yb-cart"/></svg>
@@ -188,9 +199,10 @@ pre .c{color:var(--yb-text-muted-inverse)}
       <div class="ic">
         <svg class="yb-icon yb-icon--lg" aria-hidden="true"><use href="ybera-icons.svg#yb-lock"/></svg>
         <code>lock</code>
+        <span class="res">reservado</span>
       </div>
     </div>
-    <h2 class="grp">Controls <span>7</span></h2>
+    <h2 class="grp">Controls <span>8</span></h2>
     <div class="grid">
       <div class="ic">
         <svg class="yb-icon yb-icon--lg" aria-hidden="true"><use href="ybera-icons.svg#yb-plus"/></svg>
@@ -211,6 +223,7 @@ pre .c{color:var(--yb-text-muted-inverse)}
       <div class="ic">
         <svg class="yb-icon yb-icon--lg" aria-hidden="true"><use href="ybera-icons.svg#yb-sort"/></svg>
         <code>sort</code>
+        <span class="res">reservado</span>
       </div>
       <div class="ic">
         <svg class="yb-icon yb-icon--lg" aria-hidden="true"><use href="ybera-icons.svg#yb-trash"/></svg>
@@ -219,6 +232,7 @@ pre .c{color:var(--yb-text-muted-inverse)}
       <div class="ic">
         <svg class="yb-icon yb-icon--lg" aria-hidden="true"><use href="ybera-icons.svg#yb-eye"/></svg>
         <code>eye</code>
+        <span class="res">reservado</span>
       </div>
       <div class="ic">
         <svg class="yb-icon yb-icon--lg" aria-hidden="true"><use href="ybera-icons.svg#yb-share"/></svg>
@@ -230,10 +244,12 @@ pre .c{color:var(--yb-text-muted-inverse)}
       <div class="ic">
         <svg class="yb-icon yb-icon--lg" aria-hidden="true"><use href="ybera-icons.svg#yb-info"/></svg>
         <code>info</code>
+        <span class="res">reservado</span>
       </div>
       <div class="ic">
         <svg class="yb-icon yb-icon--lg" aria-hidden="true"><use href="ybera-icons.svg#yb-alert"/></svg>
         <code>alert</code>
+        <span class="res">reservado</span>
       </div>
     </div>
 
@@ -305,15 +321,15 @@ pre .c{color:var(--yb-text-muted-inverse)}
 &lt;/button&gt;</pre>
 
   <div class="demo">
-    <button class="yb-btn yb-btn--primary">
+    <button type="button" class="yb-btn yb-btn--primary">
       <svg class="yb-icon" aria-hidden="true"><use href="ybera-icons.svg#yb-cart"/></svg>
       Add to cart
     </button>
-    <button class="yb-btn yb-btn--ghost">
+    <button type="button" class="yb-btn yb-btn--ghost">
       <svg class="yb-icon" aria-hidden="true"><use href="ybera-icons.svg#yb-heart"/></svg>
       Save
     </button>
-    <button class="yb-btn yb-btn--secondary">
+    <button type="button" class="yb-btn yb-btn--secondary">
       Continue
       <svg class="yb-icon" aria-hidden="true"><use href="ybera-icons.svg#yb-chevron-right"/></svg>
     </button>

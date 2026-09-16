@@ -72,7 +72,7 @@
   display:inline-block;
   font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
 }
-/* PASSO ENTRE FICHAS. Com 36 peças, a coluna da esquerda e o índice servem
+/* PASSO ENTRE FICHAS. Com dezenas de peças, a coluna da esquerda e o índice servem
    para ESCOLHER; para percorrer, cada um custava uma viagem de volta ao
    índice. Aqui o vizinho vem pelo NOME, não só pela seta — "próximo" não diz
    para onde se vai, e o nome dispensa a viagem só para descobrir.
@@ -105,8 +105,10 @@
 /* Em coluna estreita o nome do vizinho é a primeira coisa que sobra de fora;
    a seta sozinha continua dizendo a direção. */
 @media (max-width:560px){
-  .ficha-passo a{padding-inline:var(--yb-space-3)}
-  .ficha-passo a{max-inline-size:9rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .ficha-passo a{
+    padding-inline:var(--yb-space-3);
+    max-inline-size:9rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
 }
 .ficha-titulo{
   font-size:var(--yb-type-display-2-size); line-height:var(--yb-type-display-2-line);
@@ -179,7 +181,7 @@
 .bloco-lede{color:var(--yb-text-secondary); max-width:70ch; margin:var(--yb-space-4) 0}
 /* `.row-label` e o nome que a marcacao copiada da galeria usa; `.rotulo` e o
    que os blocos gerados usam. Dois nomes para a mesma coisa e feio, e resolver
-   renomeando a galeria mexeria em 34 secoes escritas a mao — o alias custa uma
+   renomeando a galeria mexeria em todas as secoes escritas a mao — o alias custa uma
    linha e nao pode divergir. */
 .rotulo,
 .row-label{

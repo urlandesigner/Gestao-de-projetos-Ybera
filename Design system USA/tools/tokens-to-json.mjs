@@ -112,12 +112,11 @@ function inferirTipo(nome, valor) {
   if (/^aspect/.test(n)) return 'number';          // razão, não medida
   if (/^-?[\d.]+(px|rem|em|ch|vw|vh|%)$/.test(valor)) return 'dimension';
   if (/^-?[\d.]+$/.test(valor)) return 'number';
-  if (valor.startsWith('clamp(') || valor.startsWith('calc(')) return 'dimension';
-  return 'dimension';
+  return 'dimension';                              // inclui clamp()/calc()
 }
 
 /* ---------------------------------------------------------------- valor */
-function valorDTCG(tipo, valor, nome) {
+function valorDTCG(tipo, valor) {
   switch (tipo) {
     case 'number': {
       // razão de proporção: "4 / 5" é número, e o formato só entende número.
@@ -233,7 +232,7 @@ for (const t of tokens) {
   const caminho = caminhoDe.get(t.nome);
   let no = arvore;
   for (const seg of caminho.slice(0, -1)) {
-    if (typeof no[seg] !== 'object' || no[seg] === null || '$value' in no[seg]) no[seg] ||= {};
+    if (typeof no[seg] !== 'object' || no[seg] === null) no[seg] = {};
     no = no[seg];
   }
   const folha = caminho[caminho.length - 1];
@@ -243,7 +242,7 @@ for (const t of tokens) {
   const tipo = alias ? null : inferirTipo(t.nome, t.valor);
   if (alias) contaAlias++;
 
-  const emitido = alias ?? valorDTCG(tipo, t.valor, t.nome);
+  const emitido = alias ?? valorDTCG(tipo, t.valor);
   const token = {
     $value: emitido,
     $extensions: {

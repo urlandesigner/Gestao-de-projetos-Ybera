@@ -1305,6 +1305,14 @@
       }
     },
     "media": {
+      "disabled": {
+        "$value": "{opacity.scrim}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-opacity-media-disabled",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "number"
+      },
       "overlay": {
         "$value": "{opacity.scrim}",
         "$extensions": {
@@ -2814,7 +2822,7 @@
         "com.ybera.layer": "semantic",
         "com.ybera.contexts": [
           {
-            "condicao": "@media (max-width:768px)",
+            "condicao": "@media (max-width:767.98px)",
             "valor": "calc(var(--yb-target-min) + var(--yb-space-3) * 2 + 1px)"
           }
         ]

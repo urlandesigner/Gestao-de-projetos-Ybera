@@ -27,6 +27,9 @@ const ler = (p) => readFileSync(join(raiz, p), 'utf8');
 
 const folha = ler('components/ybera-components.css');
 const js = ler('components/ybera-components.js');
+// so codigo, sem comentario — senao uma peca citada de passagem vira "JS"
+const jsCodigo = js.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+const GANCHO_POR_FAMILIA = { 'yb-dialog': 'data-yb-open' };   // mesma leitura do inventario.mjs
 const escrito = existsSync(join(raiz, 'components/fichas.json'))
   ? JSON.parse(ler('components/fichas.json')) : {};
 
@@ -61,18 +64,6 @@ const secoes = readdirSync(join(raiz, DIR_PECAS))
   })
   // a ordem e a do NOME, nao a do arquivo: e assim que o sumario sempre foi
   .sort((a, b) => a.titulo.localeCompare(b.titulo, 'pt'));
-
-/* ------------------------------------------------- 2. a familia de classes
-   Mesma leitura do tools/inventario.mjs. Se as duas divergirem, a matriz e a
-   ficha contam historias diferentes sobre o mesmo arquivo. */
-const familiaDe = (corpo) => {
-  const conta = new Map();
-  for (const m of corpo.matchAll(/(^|[,}])\s*\.(yb-[a-z0-9]+)(?![\w-]*\s*\()/gm))
-    conta.set(m[2], (conta.get(m[2]) || 0) + 1);
-  for (const m of corpo.matchAll(/(^|[,}])\s*\.(yb-[a-z0-9]+)(__|--)/gm))
-    conta.set(m[2], (conta.get(m[2]) || 0) + 2);
-  return [...conta.entries()].sort((a, b) => b[1] - a[1]).map((e) => e[0]);
-};
 
 // A base de uma secao da doc sai da marcacao dela, sem mapa escrito a mao —
 // mapa e mais uma coisa para desatualizar.
@@ -273,7 +264,7 @@ ${nav}
     <li>Elementos <b>${f.api.elementos.length}</b></li>
     <li>Estados <b>${f.api.estados.length}</b></li>
     <li>Tokens <b>${f.api.tokens.length}</b></li>
-    <li>Comportamento <b>${js.includes(f.base) ? 'JS' : 'só CSS'}</b></li>
+    <li>Comportamento <b>${jsCodigo.includes(f.base) || jsCodigo.includes(GANCHO_POR_FAMILIA[f.base] || '\u0000') ? 'JS' : 'só CSS'}</b></li>
   </ul>
 
   <section class="bloco" id="demos">
@@ -358,7 +349,7 @@ document.addEventListener('click', function (e) {
     var antes = b.textContent;
     b.textContent = 'Copiado';
     setTimeout(function () { b.textContent = antes; }, 1600);
-  });
+  }).catch(function () { /* permissao negada: o codigo continua selecionavel */ });
 });
 </script>
 </body>

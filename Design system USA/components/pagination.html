@@ -96,15 +96,15 @@
     <div class="demo demo--stack">
       <nav class="yb-pagination" aria-label="Pagination">
         <ol>
-          <li><a href="#pagination" aria-label="Previous page">←</a></li>
-          <li><a href="#pagination">1</a></li>
+          <li><a href="#demos" aria-label="Previous page">←</a></li>
+          <li><a href="#demos">1</a></li>
           <li><span class="yb-pagination__gap">…</span></li>
-          <li><a href="#pagination">2</a></li>
+          <li><a href="#demos">2</a></li>
           <li><span aria-current="page">3</span></li>
-          <li><a href="#pagination">4</a></li>
+          <li><a href="#demos">4</a></li>
           <li><span class="yb-pagination__gap">…</span></li>
-          <li><a href="#pagination">12</a></li>
-          <li><a href="#pagination" aria-label="Next page">→</a></li>
+          <li><a href="#demos">12</a></li>
+          <li><a href="#demos" aria-label="Next page">→</a></li>
         </ol>
       </nav>
     </div>
@@ -142,15 +142,15 @@
       <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
       <pre><code>&lt;nav class="yb-pagination" aria-label="Pagination"&gt;
   &lt;ol&gt;
-    &lt;li&gt;&lt;a href="#pagination" aria-label="Previous page"&gt;←&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="#pagination"&gt;1&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#demos" aria-label="Previous page"&gt;←&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#demos"&gt;1&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;&lt;span class="yb-pagination__gap"&gt;…&lt;/span&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="#pagination"&gt;2&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#demos"&gt;2&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;&lt;span aria-current="page"&gt;3&lt;/span&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="#pagination"&gt;4&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#demos"&gt;4&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;&lt;span class="yb-pagination__gap"&gt;…&lt;/span&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="#pagination"&gt;12&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="#pagination" aria-label="Next page"&gt;→&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#demos"&gt;12&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#demos" aria-label="Next page"&gt;→&lt;/a&gt;&lt;/li&gt;
   &lt;/ol&gt;
 &lt;/nav&gt;</code></pre>
     </div>
@@ -206,7 +206,7 @@ document.addEventListener('click', function (e) {
     var antes = b.textContent;
     b.textContent = 'Copiado';
     setTimeout(function () { b.textContent = antes; }, 1600);
-  });
+  }).catch(function () { /* permissao negada: o codigo continua selecionavel */ });
 });
 </script>
 </body>

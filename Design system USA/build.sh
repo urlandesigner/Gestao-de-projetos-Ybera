@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Gera os arquivos de dist/ prontos para upload como asset do Shopify.
-cd "$(dirname "$0")" || exit 1
+# -e: qualquer cp/cat que falhe para o build em vez de imprimir "dist/ gerado".
+set -euo pipefail
+cd "$(dirname "$0")"
 mkdir -p dist
 HEAD='/* =========================================================================
    YBERA DESIGN SYSTEM · BUNDLE PARA O TEMA SHOPIFY
@@ -51,14 +53,18 @@ if [ -d "$PROVA/yb" ]; then
   cp icons/ybera-icons.css           "$PROVA/yb/icons.css"
   cp icons/ybera-icons.svg           "$PROVA/yb/icons.svg"
   cp components/ybera-components.js  "$PROVA/yb/components.js"
+  # shasum (perl) no macOS e na maioria das distros; sha1sum (coreutils) onde nao ha
+  if command -v shasum >/dev/null 2>&1; then SHA1="shasum -a 1"; else SHA1="sha1sum"; fi
   V=$(cat tokens/00-primitives.css tokens/01-semantic.css \
           components/ybera-components.css patterns/ybera-patterns.css \
           icons/ybera-icons.css components/ybera-components.js \
-      | shasum -a 1 | cut -c1-8)
+      | $SHA1 | cut -c1-8)
   for f in "$PROVA"/*.html; do
     [ -e "$f" ] || continue
-    # so o carimbo muda; a marcacao das telas e do gerador, nao daqui
-    sed -i '' -E "s/\?v=[0-9a-f]{8}/?v=$V/g" "$f"
+    # so o carimbo muda; a marcacao das telas e do gerador, nao daqui.
+    # `-i.bak` funciona em BSD e GNU sed; `-i ''` so no BSD (no Linux virava
+    # script vazio e o carimbo ficava velho sem erro).
+    sed -E -i.bak "s/\?v=[0-9a-f]{8}/?v=$V/g" "$f" && rm -f "$f.bak"
   done
   echo "telas-prova sincronizadas · v=$V"
 fi

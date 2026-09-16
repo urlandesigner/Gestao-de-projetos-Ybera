@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ybera Design System</title>
+<title>Tokens — Ybera Design System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
@@ -28,6 +28,11 @@ code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 .main,.nav,.layer,.ty,.sp,.sw{min-width:0}
 pre{max-width:100%}
 code{overflow-wrap:anywhere}
+/* nota lateral — mesma receita de patterns/index.html */
+.note{margin-top:var(--yb-space-4);padding:var(--yb-space-4) var(--yb-space-5);
+  background:var(--yb-info-surface);border-left:3px solid var(--yb-info-solid);
+  border-radius:0 var(--yb-radius-sm) var(--yb-radius-sm) 0;max-width:74ch;
+  font-size:var(--yb-type-body-sm-size);color:var(--yb-text-secondary)}
 @media (max-width:900px){.doc{grid-template-columns:1fr}}
 
 .nav{
@@ -299,12 +304,13 @@ h3.sub{
         <div class="layer layer--2">
           <h3>Camada 2 · Componente</h3>
           <p>Só onde há desvio local. Cada desvio fica visível e auditável.</p>
-          <pre>--yb-btn-pad-block: var(--yb-space-4);</pre>
+          <pre>.yb-card{ --yb-card-title-lines: 2; }</pre>
         </div>
         <div class="layer layer--m">
           <h3>Camada de mercado</h3>
-          <p>Aqui não se troca identidade.</p>
-          <pre>[data-market="br"] { --yb-currency-symbol: "R$"; }</pre>
+          <p>Aqui não se troca identidade — e hoje não se troca nada: o seletor
+          existe vazio, de propósito (ver a nota em <code>01-semantic.css</code>).</p>
+          <pre>[data-market="br"] { }</pre>
         </div>
       </div>
     </section>
@@ -538,7 +544,6 @@ h3.sub{
           
         </div>
       </div>
-      </div>
       <div class="sw ">
         <div class="sw-chip" style="background:#F9F7F1;"></div>
         <div class="sw-meta">
@@ -628,6 +633,7 @@ h3.sub{
           <span class="sw-cr" data-tag="AAA">15.48:1 · AAA</span>
           
         </div>
+      </div>
       </div>
       <div class="rule">
         <b>Regra dura · dourado nunca é texto sobre claro</b>
@@ -772,7 +778,7 @@ h3.sub{
 
     <section id="space">
       <h2>Space</h2>
-      <p>Base 4px, quatorze degraus. Layout usa <code>gap</code>, não margens soltas.</p>
+      <p>Base 4px, quatorze degraus (de <code>--yb-space-0</code> a <code>--yb-space-32</code>, 128px); abaixo, os doze que aparecem em componente. Layout usa <code>gap</code>, não margens soltas.</p>
       <div class="sp">
         <code>--yb-space-1</code>
         <div class="sp-bar" style="width:var(--yb-space-1)"></div>
@@ -837,7 +843,7 @@ h3.sub{
 
     <section id="shape">
       <h2>Shape</h2>
-      <p>Cinco raios. A loja hoje pratica doze valores diferentes.</p>
+      <p>Seis raios. A loja hoje pratica doze valores diferentes.</p>
       <div class="grid4">
       <div class="rd">
         <div class="rd-box" style="border-radius:var(--yb-radius-none)"></div>
@@ -953,7 +959,7 @@ h3.sub{
         </div>
         <div class="ct">
           <div class="ct-box" style="height:44px; background:var(--yb-surface-overlay)">.55</div>
-          <code>--yb-opacity-media-overlay</code><span>o véu atrás do modal</span>
+          <code>--yb-surface-overlay</code><span>o véu atrás do modal</span>
         </div>
       </div>
     </section>

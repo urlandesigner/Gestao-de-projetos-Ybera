@@ -190,14 +190,10 @@
     anterior = n;
   }
 
-  /* 6 · foco visível: outline removido sem substituto */
-  for (const e of [...document.querySelectorAll(CONTROLES)].slice(0, 300)) {
-    if (!visivel(e)) continue;
-    const s = getComputedStyle(e);
-    if (s.outlineStyle === 'none' && s.boxShadow === 'none' && !e.matches(':focus-visible')) {
-      // só reporta se a folha também não define :focus-visible para ele — heurística
-    }
-  }
+  /* Foco visível NÃO é medido aqui: getComputedStyle sem o elemento focado
+     não vê a regra :focus-visible, e focar 300 controles em sequência mexe na
+     página. Quem cobre isso é o validador estático (test/validate.mjs),
+     que exige :focus-visible em toda folha do sistema. */
 
   const grupos = {};
   [...falhas, ...avisos].forEach(x => { grupos[x.tipo] = (grupos[x.tipo] || 0) + 1; });

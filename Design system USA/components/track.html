@@ -87,7 +87,7 @@
     <li>Modificadores <b>2</b></li>
     <li>Elementos <b>1</b></li>
     <li>Estados <b>1</b></li>
-    <li>Tokens <b>6</b></li>
+    <li>Tokens <b>7</b></li>
     <li>Comportamento <b>JS</b></li>
   </ul>
 
@@ -96,19 +96,19 @@
     <h3 class="row-label">Base — cartões que rolam</h3>
     <div class="demo demo--rail">
       <div class="yb-track" id="doc-trilho">
-        <a class="yb-collection yb-collection--center" href="#track">
+        <a class="yb-collection yb-collection--center" href="#demos">
           <img src="../_captura/nova-loja/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy">
           <span class="yb-collection__label">Fashion Gold</span></a>
-        <a class="yb-collection yb-collection--center" href="#track">
+        <a class="yb-collection yb-collection--center" href="#demos">
           <img src="../_captura/nova-loja/img/02_hair-problem-f838107d.webp" alt="" loading="lazy">
           <span class="yb-collection__label">Damaged Hair</span></a>
-        <a class="yb-collection yb-collection--center" href="#track">
+        <a class="yb-collection yb-collection--center" href="#demos">
           <img src="../_captura/nova-loja/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy">
           <span class="yb-collection__label">Undefined Curls</span></a>
-        <a class="yb-collection yb-collection--center" href="#track">
+        <a class="yb-collection yb-collection--center" href="#demos">
           <img src="../_captura/nova-loja/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy">
           <span class="yb-collection__label">Thinning</span></a>
-        <a class="yb-collection yb-collection--center" href="#track">
+        <a class="yb-collection yb-collection--center" href="#demos">
           <img src="../_captura/nova-loja/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy">
           <span class="yb-collection__label">Frizz</span></a>
       </div>
@@ -196,19 +196,19 @@
     <div class="snippet">
       <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
       <pre><code>&lt;div class="yb-track" id="doc-trilho"&gt;
-  &lt;a class="yb-collection yb-collection--center" href="#track"&gt;
+  &lt;a class="yb-collection yb-collection--center" href="#demos"&gt;
     &lt;img src="../_captura/nova-loja/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy"&gt;
     &lt;span class="yb-collection__label"&gt;Fashion Gold&lt;/span&gt;&lt;/a&gt;
-  &lt;a class="yb-collection yb-collection--center" href="#track"&gt;
+  &lt;a class="yb-collection yb-collection--center" href="#demos"&gt;
     &lt;img src="../_captura/nova-loja/img/02_hair-problem-f838107d.webp" alt="" loading="lazy"&gt;
     &lt;span class="yb-collection__label"&gt;Damaged Hair&lt;/span&gt;&lt;/a&gt;
-  &lt;a class="yb-collection yb-collection--center" href="#track"&gt;
+  &lt;a class="yb-collection yb-collection--center" href="#demos"&gt;
     &lt;img src="../_captura/nova-loja/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy"&gt;
     &lt;span class="yb-collection__label"&gt;Undefined Curls&lt;/span&gt;&lt;/a&gt;
-  &lt;a class="yb-collection yb-collection--center" href="#track"&gt;
+  &lt;a class="yb-collection yb-collection--center" href="#demos"&gt;
     &lt;img src="../_captura/nova-loja/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy"&gt;
     &lt;span class="yb-collection__label"&gt;Thinning&lt;/span&gt;&lt;/a&gt;
-  &lt;a class="yb-collection yb-collection--center" href="#track"&gt;
+  &lt;a class="yb-collection yb-collection--center" href="#demos"&gt;
     &lt;img src="../_captura/nova-loja/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy"&gt;
     &lt;span class="yb-collection__label"&gt;Frizz&lt;/span&gt;&lt;/a&gt;
 &lt;/div&gt;
@@ -273,7 +273,7 @@ document.addEventListener('click', function (e) {
     var antes = b.textContent;
     b.textContent = 'Copiado';
     setTimeout(function () { b.textContent = antes; }, 1600);
-  });
+  }).catch(function () { /* permissao negada: o codigo continua selecionavel */ });
 });
 </script>
 </body>

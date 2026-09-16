@@ -1,8 +1,8 @@
 <h2>Modal &amp; drawer</h2>
     <p class="when">Interrompe para pedir uma decisão. Se não há decisão a tomar, use toast.</p>
     <div class="demo">
-      <button class="yb-btn yb-btn--ghost" data-yb-open="dlg-remove">Remover item</button>
-      <button class="yb-btn yb-btn--primary" data-yb-open="dlg-cart">Abrir carrinho</button>
+      <button type="button" class="yb-btn yb-btn--ghost" data-yb-open="dlg-remove">Remover item</button>
+      <button type="button" class="yb-btn yb-btn--primary" data-yb-open="dlg-cart">Abrir carrinho</button>
     </div>
     <div class="note">
       <b>É <code>&lt;dialog&gt;</code> nativo</b>
@@ -22,22 +22,24 @@
     <dialog id="dlg-remove" class="yb-dialog" aria-labelledby="dlg-remove-t">
       <div class="yb-dialog__head">
         <h3 class="yb-dialog__title" id="dlg-remove-t">Remove from cart?</h3>
-        <button class="yb-dialog__close" data-yb-close aria-label="Close">×</button>
+        <button type="button" class="yb-dialog__close" data-yb-close aria-label="Close">×</button>
       </div>
       <div class="yb-dialog__body">
         <p>Kit Sealant Fashion Gold — 500g / 17.6 fl oz will be removed from your cart.</p>
       </div>
       <div class="yb-dialog__foot">
-        <button class="yb-btn yb-btn--ghost" data-yb-close>Keep it</button>
-        <button class="yb-btn yb-btn--danger" data-yb-close
-          onclick="Ybera.toast({title:'Removed from cart',text:'Kit Sealant Fashion Gold',variant:'danger'})">Remove</button>
+        <button type="button" class="yb-btn yb-btn--ghost" data-yb-close>Keep it</button>
+        <button type="button" class="yb-btn yb-btn--danger" data-yb-close
+          data-yb-toast data-toast-titulo="Removed from cart"
+          data-toast-texto="Kit Sealant Fashion Gold"
+          data-toast-variante="danger">Remove</button>
       </div>
     </dialog>
 
     <dialog id="dlg-cart" class="yb-dialog yb-dialog--drawer" aria-labelledby="dlg-cart-t">
       <div class="yb-dialog__head">
         <h3 class="yb-dialog__title" id="dlg-cart-t">Your cart (1)</h3>
-        <button class="yb-dialog__close" data-yb-close aria-label="Close">
+        <button type="button" class="yb-dialog__close" data-yb-close aria-label="Close">
           <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg>
         </button>
       </div>
@@ -47,6 +49,6 @@
         montado em <a href="../patterns/index.html#cart-drawer">Patterns</a>.</p>
       </div>
       <div class="yb-dialog__foot">
-        <button class="yb-btn yb-btn--primary yb-btn--block" data-yb-close>Checkout</button>
+        <button type="button" class="yb-btn yb-btn--primary yb-btn--block" data-yb-close>Checkout</button>
       </div>
     </dialog>

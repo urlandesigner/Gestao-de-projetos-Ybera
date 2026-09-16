@@ -3,6 +3,104 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
+## [Unreleased]
+
+Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
+[GOVERNANCA.md](GOVERNANCA.md), componente novo pede versão **menor** (0.13.0).
+
+### Adicionado
+- **Ficha por componente** (`components/<id>.html`, gerada de `pecas/` + `fichas.json`):
+  demos, quadro de 375px, API lida do CSS, marcação copiável, acessibilidade e
+  faça/não faça. A galeria de 118 KB virou índice.
+- **PDP esgotada, PDP com variante e PDP em promoção** como telas-prova, com os
+  estados que a loja não tinha: aviso de volta ao estoque, seletor movendo
+  preço/foto/estoque, preço anterior riscado e selo "Save N%".
+- **FAQ** e **404** montadas com o sistema.
+- **Offer seal** (`.yb-offerseal`): selo estrelado de 20 pontas em `clip-path`,
+  variantes `--sale` e `--accent`, escala pela caixa.
+- **Faixa do parceiro** (`.yb-partnerbar`) que assume o recado depois que a arte
+  rola; **cartão de destaque** (`.yb-offercard`) com dois alvos — cartão para a
+  PDP, botão para o carrinho — e zoom da foto só no hover do cartão.
+- **Hero em loop** (`data-yb-track-loop`): setas sempre ativas, o último volta
+  ao primeiro sem parar.
+- **Blur progressivo de três folhas** sobre foto (hero, cartão de oferta,
+  banners) e **véu em curva de uma camada** (`--yb-scrim-curve-*`).
+- `Ybera.init(raiz)` religa **todo** o comportamento em DOM que chega depois
+  (trilho, parceiro, faixa, barra de compra, navegação, relógio), com guarda
+  `data-yb-bound` — antes só galeria, stepper e busca.
+
+### Alterado
+- Nome do produto no cartão: peso 500 → 600, sem sublinhado no hover.
+- Estrela de avaliação: `gold-500` → `gold-600` (3.45:1, passa 1.4.11) e sem
+  contorno. `--yb-accent-star-edge` fica @deprecated.
+- Cartão de coleção não corta mais o packshot (4/3 → 5/7).
+- Selos de certificação saem de baixo do banner na home v2.
+- Reviews na home mostram só o carrossel.
+
+### Corrigido
+- Varredura de entrega ao time de desenvolvimento (2026-09-16): `.yb-empty`
+  definido em duas folhas com valores conflitantes (o de `patterns/` vencia e
+  anulava `--inline`); bloco morto da vitrine na gaveta do menu; custom
+  properties sem prefixo (`--f/--de/--ate` → `--yb-blur-*`); `[aria-busy]`
+  global escopado ao sistema; toast com dois timers; `share` que engolia erro
+  real; `inert` sobre o container de toasts; stepper errado ao trocar variante;
+  âncoras `#collection`, `#post`… mortas em 9 fichas; `</div>` perdido na rampa
+  do dourado; 42 `<button>` sem `type`; `build.sh` com `sed -i ''` só macOS e
+  sem `set -e`; três checagens tautológicas do validador (ponte, `dist/*.css`
+  por amostra, `focusin`); gerador das telas-prova apagava `nova-loja/` antes
+  de ter a nova pronta e assumia "In stock" quando a loja respondia 429.
+
+### Removido
+- `components/brand/` (cópia idêntica de `brand/`), `_captura/relacionados.json`
+  (vazio, sem leitor), `MOEDA` e `import urllib.request` sem uso no gerador,
+  lápides de regras já removidas no CSS.
+- **`.yb-header__announce`.** A faixa do topo era uma cópia declaração por
+  declaração de `.yb-notice`, e as duas seguiam vivas. Agora o header consome o
+  componente; o padrão só o posiciona. A marcação mudou de
+  `class="yb-header__announce"` para `class="yb-notice"` nas oito telas-prova e
+  no gerador.
+- **`onclick="Ybera.toast({…})"` da documentação.** Comportamento escrito na
+  marcação não aparece em nenhuma busca por `data-yb-`. Ver `data-yb-toast`.
+
+### Adicionado (nesta rodada)
+- **`data-yb-toast`** — dispara um toast direto, com `data-toast-titulo`,
+  `-texto`, `-variante` e `-duracao` (0 mantém em tela). O `data-yb-comprar` ao
+  lado continua para quem precisa de espera e estado de carga.
+- **`--yb-opacity-media-disabled`** — a foto do produto esgotado recua sem
+  sumir; era `.55` literal.
+- Duas checagens: **nenhum degrau de breakpoint vale dos dois lados** e **as duas
+  cópias do overlay de busca dizem a mesma coisa** (108 no total).
+
+### Corrigido (nesta rodada)
+- **`.yb-notice` abria 12px de vão no meio da frase.** Era `display:flex` com
+  `gap`, e cada trecho de texto solto vira item flex anônimo: "orders over
+  <b>$50</b>" saía com um buraco antes do valor — medido. Virou `display:block`.
+- **A estrela do Judge.me tinha outra cor que a do sistema.** A ponte lia
+  `--yb-accent-text` (gold-700) enquanto `.yb-rating__stars` desceu para
+  `--yb-accent-star` (gold-600): a mesma página mostrava duas estrelas
+  diferentes. A ponte passa a ler o mesmo token.
+- **O degrau 768 valia dos dois lados.** `(min-width:768px)` dava a goteira de
+  desktop enquanto `(max-width:768px)` dava a barra de celular — em exatamente
+  768px as duas regras valiam. O degrau agora pertence ao `min-width` e o
+  `max-width` recua 0,02px; mesma correção em 1024, e o `min-width:861px`
+  virou `860.02px` para fechar o vão de 1px que sobrava. Convenção escrita em
+  `00-primitives.css` e conferida pelo validador.
+- **As duas cópias do overlay de busca já tinham divergido** — grupos, listas e
+  `action` diferentes entre a ficha e a galeria de padrões. A galeria passa a
+  trazer a anatomia da ficha.
+- **Opacidade sobre texto no relógio da oferta** (`.yb-offercard__sep`, `.6`):
+  virou cor. Quatro outras opacidades literais viraram token.
+- Checagens presas à formatação: três liam blocos de JS por indentação exata e
+  duas exigiam ordem de atributos no HTML. Agora contam chaves e leem atributos
+  sem ordem.
+- Gerador: `versao()` era chamada duas vezes por página (dezesseis leituras de
+  disco por build) e as cinco telas repetiam o mesmo esqueleto — viraram
+  `pagina()` e `fim_de_pagina()`. Saída byte a byte idêntica, conferida com um
+  catálogo falso, sem tocar a rede.
+- 27 `href="#"` na galeria de padrões passaram a apontar para a própria seção.
+- Sete ícones que só existiam na galeria ficaram marcados **reservados**, e
+  `yb-filter` entrou no botão de filtros do catálogo.
+
 ## [0.12.1] — 2026-09-02
 
 ### Corrigido

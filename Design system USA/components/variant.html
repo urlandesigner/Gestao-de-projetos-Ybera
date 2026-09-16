@@ -87,7 +87,7 @@
     <li>Modificadores <b>2</b></li>
     <li>Elementos <b>3</b></li>
     <li>Estados <b>5</b></li>
-    <li>Tokens <b>33</b></li>
+    <li>Tokens <b>35</b></li>
     <li>Comportamento <b>JS</b></li>
   </ul>
 
@@ -265,7 +265,7 @@ document.addEventListener('click', function (e) {
     var antes = b.textContent;
     b.textContent = 'Copiado';
     setTimeout(function () { b.textContent = antes; }, 1600);
-  });
+  }).catch(function () { /* permissao negada: o codigo continua selecionavel */ });
 });
 </script>
 </body>
