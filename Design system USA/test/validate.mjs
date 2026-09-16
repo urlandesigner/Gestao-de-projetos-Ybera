@@ -1854,6 +1854,37 @@ secao('Véu leve e blur');
 }
 
 /* ===========================================================================
+   TELA-PROVA ORFA
+   O contrario do link quebrado, e o defeito que ninguem ve: a tela existe, o
+   gerador a produz a cada build, e nada na capa aponta para ela. Aconteceu
+   duas vezes — `pdp-oferta.html` e `index-logado.html` nasceram invisiveis.
+   Tela que ninguem encontra e tela que ninguem revisa, e no proximo redesenho
+   ela sai do ar sem ninguem notar que existia.
+
+   A home v1 e linkada como a PASTA (`_captura/nova-loja/`), nao pelo nome do
+   arquivo — por isso o link do diretorio conta como cobertura de index.html.
+   =========================================================================== */
+{
+  const dir = '_captura/nova-loja';
+  if (!existsSync(join(raiz, dir)) || !existsSync(join(raiz, 'index.html'))) {
+    aviso('não deu para conferir telas órfãs', 'capa ou pasta de telas-prova ausente');
+  } else {
+    const capa = ler('index.html');
+    const telas = readdirSync(join(raiz, dir)).filter(f => f.endsWith('.html'));
+    const orfas = telas.filter(f => {
+      if (capa.includes(`${dir}/${f}`)) return false;
+      // o link da pasta cobre o index
+      if (f === 'index.html' && capa.includes(`${dir}/"`)) return false;
+      return true;
+    });
+    orfas.length
+      ? falha('tela-prova que a capa não lista', orfas.join(', ')
+          + ' — tela que ninguém encontra é tela que ninguém revisa')
+      : ok('toda tela-prova está na capa', `${telas.length} telas`);
+  }
+}
+
+/* ===========================================================================
    O NUMERO QUE A DOC PROMETE
 
    Esta e a ultima checagem porque ela e a unica que so pode existir aqui: o

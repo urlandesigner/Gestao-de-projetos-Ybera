@@ -167,6 +167,7 @@ body:not([data-mobile="on"]) .par__mob{display:none}
   <p class="nav-brand">Ybera</p>
   <p class="nav-ver">Patterns · v0.12.1</p>
   <ul>
+    <li><a href="#account-menu">Account menu</a></li>
     <li><a href="#buybox">Buy box</a></li>
     <li><a href="#cart-drawer">Cart drawer</a></li>
     <li><a href="#catalog">Catalog</a></li>
@@ -192,6 +193,54 @@ body:not([data-mobile="on"]) .par__mob{display:none}
     estado vazio, que é componente, mostrado nos contextos em que aparece.</p>
   </div>
 
+  <section id="account-menu">
+    <h2>Account menu</h2>
+    <p class="when">O estado logado do cabeçalho: o ícone genérico vira a inicial do
+    cliente e abre o menu da conta. Deslogado, o cabeçalho segue com o botão de ícone.</p>
+    <div class="stage stage--pad">
+      <div style="display:flex; justify-content:flex-end">
+        <div class="yb-usermenu">
+          <input class="yb-usermenu__toggle" type="checkbox" id="conta-demo" checked>
+          <label class="yb-usermenu__avatar" for="conta-demo" aria-label="Account menu for Urlan Dipre">
+            <span class="yb-usermenu__inicial" aria-hidden="true">U</span></label>
+          <div class="yb-usermenu__panel">
+            <span class="yb-usermenu__quem">
+              <b class="yb-usermenu__nome">Urlan Dipre</b>
+              <span class="yb-usermenu__email">urlan.dipre@ybera.com</span>
+            </span>
+            <a href="#account-menu"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg>Account</a>
+            <a href="#account-menu"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>Orders</a>
+            <a href="#account-menu"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg>Wishlist</a>
+            <span class="yb-usermenu__sair">
+              <a href="#account-menu"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-lock"/></svg>Log out</a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Quem, antes do que fazer</b>
+      <p>O menu abre dizendo o nome e o e-mail da sessão. Sem isso ele abre com
+      quatro verbos e nenhuma confirmação de que a conta é a certa — e a dúvida
+      faz a pessoa clicar em <code>Account</code> só para conferir.</p>
+    </div>
+    <div class="note">
+      <b>Sem JS, e o que isso custa</b>
+      <p>Mesma mecânica do menu principal: <code>checkbox</code> escondido mais
+      painel irmão. Sobrevive com o JS fora do ar, que é o que o cabeçalho mais
+      precisa. Em troca, o leitor de tela anuncia &ldquo;caixa de seleção&rdquo;, não
+      &ldquo;menu&rdquo;. A casa já aceita isso no menu principal; quando entrar um
+      menu de verdade, com <code>aria-expanded</code> e setas, ele troca os dois
+      de uma vez.</p>
+    </div>
+    <div class="note">
+      <b>No toque ele não existe</b>
+      <p>Abaixo de 900 o menu some: a gaveta já lista os mesmos destinos, e um
+      painel de 224px ancorado na borda direita de uma tela de 375 nasce apertado
+      contra o carrinho. Na gaveta, o item <code>Account</code> passa a mostrar o
+      nome de quem está logado.</p>
+    </div>
+  </section>
   <section id="buybox">
     <h2>Buy box</h2>
     <p class="when">Sete níveis de informação acima da dobra. A ordem é fixa: identidade, prova, preço, escolha, ação, garantia.</p>

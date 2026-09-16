@@ -58,7 +58,12 @@ h2.grp{font-size:var(--yb-type-overline-size);letter-spacing:var(--yb-tracking-w
   border-radius:var(--yb-radius-card);background:var(--yb-surface);text-align:center}
 .ic code{color:var(--yb-text-muted);word-break:normal;overflow-wrap:normal;
   hyphens:none;line-height:1.3}
-.ic:has(.res) .yb-icon{opacity:var(--yb-opacity-control-disabled)}
+/* O icone reservado NAO e apagado. Ele ja esteve a 45% de opacidade, e o
+   resultado foi que sete dos trinta e nove sumiam da galeria: 2,81:1 contra
+   16,66:1 dos outros. Numa pagina cujo unico trabalho e MOSTRAR o
+   vocabulario, apagar parte dele e esconder o que ela existe para mostrar —
+   e opacidade sobre conteudo e regra dura do sistema. Quem diz "reservado" e
+   o selo, em texto, que qualquer pessoa le e o leitor de tela anuncia. */
 .res{font-size:var(--yb-type-caption-size);color:var(--yb-text-muted);
   border:1px dashed var(--yb-border);border-radius:var(--yb-radius-full);
   padding:0 var(--yb-space-2)}

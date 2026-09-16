@@ -8,7 +8,7 @@ como decidir está em [PRINCIPIOS.md](PRINCIPIOS.md). Aqui é a mecânica.
 
 ```bash
 ./serve.sh            # http://localhost:8080 — porta fixa, sem cache
-npm run check         # build + 108 checagens, o mesmo que roda no CI
+npm run check         # build + 109 checagens, o mesmo que roda no CI
 ```
 
 `serve.sh` manda `Cache-Control: no-store`: editar um token e recarregar mostra
@@ -22,7 +22,7 @@ falha aqui e não vira surpresa no tema Shopify.
 
 Três perguntas, nesta ordem. A primeira que der "sim" encerra o assunto.
 
-1. **Já existe?** `INVENTARIO.md` lista as 48 peças que embarcam, com classe
+1. **Já existe?** `INVENTARIO.md` lista as 49 peças que embarcam, com classe
    base e maturidade. A doc em `/components/` e `/patterns/` mostra cada uma.
 2. **Dá para compor com o que existe?** Se dá, é **padrão**, e vai para
    `patterns/` — não para `components/`.
@@ -121,3 +121,26 @@ foco visível, `prefers-reduced-motion`, `dist/` e `INVENTARIO.md` em dia, vers�
 Ele **não** alcança o que só existe no navegador. Para isso existe
 `test/a11y.js`, e ele é manual de propósito: um número de contraste computado
 sobre o DOM real vale mais que dez checagens estáticas.
+
+### Três coisas não se testam em janela escondida
+
+Com a aba em segundo plano (`document.visibilityState === 'hidden'`) o Chrome
+não entrega callback de `IntersectionObserver` nem de `ResizeObserver`, e
+`scrollTo({behavior:'smooth'})` não anima. Quem depende disso — a barra de
+compra da PDP, a faixa do parceiro e a rolagem dos trilhos — parece **quebrado**
+e não está: o observer foi registrado e nunca foi chamado.
+
+Para conferir sem depender do motor, troque o construtor por um espião e mande
+`Ybera.init()` religar:
+
+```js
+const capturas = [];
+window.IntersectionObserver = function (cb) {
+  const reg = { cb, alvos: [] }; capturas.push(reg);
+  return { observe: el => reg.alvos.push(el), disconnect(){}, unobserve(){} };
+};
+document.querySelectorAll('[data-yb-bound]').forEach(e => e.removeAttribute('data-yb-bound'));
+Ybera.init(document);
+// a âncora à vista esconde a barra; fora de vista, mostra
+capturas[0].cb([{ isIntersecting: false }]);
+```

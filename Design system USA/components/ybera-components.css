@@ -2317,6 +2317,18 @@
 /* :not([hidden]), mesma armadilha da barra de compra: `display:block` na
    classe venceria o [hidden] do navegador e a faixa nunca sumiria. */
 .yb-partnerbar:not([hidden]){display:block}
+/* SEM ARTE na pagina a faixa deixa de ser sobreposicao e vira conteudo.
+   `fixed` so funciona para ela porque, quando a arte rola, a faixa preta de
+   anuncio ja saiu junto e a barra do cabecalho esta colada no topo: ai
+   `inset-block-start:var(--yb-header-h)` cai exatamente embaixo dela. Numa
+   pagina onde a faixa nasce visivel isso e falso — a faixa preta ainda ocupa
+   os primeiros 40px, a barra termina 40px mais abaixo, e a faixa do parceiro
+   nascia ATRAS dela (medido: faixa em 77, barra terminando em 117).
+
+   `sticky` resolve os dois momentos com uma regra: no fluxo ela ocupa o
+   proprio espaco logo abaixo do cabecalho, e quando a rolagem a alcanca ela
+   gruda no mesmo lugar onde a versao ancorada apareceria. */
+.yb-partnerbar--fluxo{position:sticky}
 /* 3,5rem e a faixa de duas linhas, que e o pior caso (35px numa linha no
    desktop, 53 em duas no celular). Mesmo recurso que a barra de compra usa
    para dar respiro ao rodape: a altura e medida, nao calculavel em CSS. */

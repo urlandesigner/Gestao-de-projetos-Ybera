@@ -62,6 +62,64 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 - **`onclick="Ybera.toast({…})"` da documentação.** Comportamento escrito na
   marcação não aparece em nenhuma busca por `data-yb-`. Ver `data-yb-toast`.
 
+### Adicionado — home v3 e PDP v2
+- **Home v3** (`_captura/nova-loja/index-v3.html`): catorze seções na ordem que
+  o time pediu — faixa preta, cabeçalho, banner com o parceiro, Best Sellers,
+  Shop by Concern, Tolstoy, Shop by Collection, avaliações, TikTok, selos,
+  logos, blog, citação e rodapé. É a v2 sem o quiz, sem o bloco de autoridade
+  e sem o FAQ curto.
+- **PDP v2** (`_captura/nova-loja/pdp-v2.html`): faixa preta, recado do
+  parceiro, bloco de compra, relacionados e avaliações. Sem banner e sem
+  breadcrumb. Custa 13px a mais que a PDP padrão até o nome do produto.
+- **`.yb-partnerbar--fluxo`** — a faixa do parceiro sem arte para ancorá-la.
+  A versão `fixed` só funciona depois que a arte rola, porque aí a faixa preta
+  de anúncio já saiu e a barra do cabeçalho está colada no topo. Numa página
+  onde a faixa nasce visível isso é falso, e ela nascia **atrás** da barra
+  (medido: faixa em 77, barra terminando em 117). `sticky` resolve os dois
+  momentos com uma regra.
+- `faixa_parceiro(ancorada=False)` nasce visível: sem banner não há balão, e
+  nascer `hidden` faria o recado sumir por completo sem JavaScript.
+- `.pdp--solto` dá ao bloco de compra o respiro que o breadcrumb dava.
+- `montar_pdp(..., arranjo=)` monta as mesmas peças em duas ordens. A coluna de
+  compra e os relacionados saíram para variáveis em vez de aparecerem duas
+  vezes no arquivo.
+
+### Corrigido — o espaçamento do topo do FAQ
+- O breadcrumb do FAQ não usava `.yb-block--tight` e **encostava na barra do
+  cabeçalho** (0px), enquanto a PDP, que já usava a classe, guardava 24. Duas
+  telas com breadcrumb e dois espaçamentos diferentes.
+- O título da página estava num `.yb-block` comum, tratado como se fosse uma
+  seção: 64px de respiro acima, que o breadcrumb já tinha dado, e 64px abaixo
+  que, somados aos 64 do bloco seguinte, abriam **205px** entre a linha de
+  apresentação e o primeiro conteúdo. Nova regra `.yb-crumb + .yb-block`: 24px
+  acima, a mesma distância que o breadcrumb guarda do cabeçalho, e zero
+  abaixo, porque quem separa o título do conteúdo é o respiro do próprio
+  conteúdo, uma vez só.
+
+| Vão | Antes | Depois |
+|---|---|---|
+| Cabeçalho → breadcrumb | 0px | 24px |
+| Breadcrumb → título | 85px | 24px |
+| Apresentação → conteúdo | 205px | 64px |
+
+As PDPs não mudaram: lá o breadcrumb é seguido pelo bloco de compra, não por
+um `.yb-block`.
+
+### Corrigido — sete ícones apagados na galeria
+- Os ícones marcados **reservados** saíram com `--yb-opacity-control-disabled`
+  (45%), e isso os apagou: 2,81:1 contra os 16,66:1 dos outros trinta e dois.
+  Numa página cujo único trabalho é mostrar o vocabulário, apagar parte dele é
+  esconder o que ela existe para mostrar — e opacidade sobre conteúdo é regra
+  dura do sistema. O token também estava errado: ele é para controle
+  desabilitado, e ícone de catálogo não é controle. Quem diz "reservado" é o
+  selo, em texto, que o leitor de tela também anuncia.
+
+### Corrigido — a foto grudava atrás da faixa
+- A galeria `sticky` da PDP lia `--yb-header-h`, que mede só a barra. Quando a
+  faixa do parceiro está na tela ela soma 3,5rem, e a foto parava atrás dela —
+  justamente ao rolar, que é quando o `sticky` começa a valer. Passa a ler
+  `--yb-chrome-h`, o token que existe para isso.
+
 ### Adicionado (nesta rodada)
 - **`data-yb-toast`** — dispara um toast direto, com `data-toast-titulo`,
   `-texto`, `-variante` e `-duracao` (0 mantém em tela). O `data-yb-comprar` ao

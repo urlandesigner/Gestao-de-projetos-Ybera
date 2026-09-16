@@ -104,7 +104,7 @@ Quebrar qualquer uma delas exige mudança maior e justificativa no changelog.
 
 ## Antes de publicar uma versão
 
-O checklist virou comando. As 108 checagens rodam sozinhas:
+O checklist virou comando. As 109 checagens rodam sozinhas:
 
 ```bash
 npm run check

@@ -173,7 +173,7 @@
 </aside>
 
 <main>
-  <section class="banner" data-yb-partnerbar-anchor aria-roledescription="carousel" aria-label="Promotions">
+  <section class="yb-hero" data-yb-partnerbar-anchor aria-roledescription="carousel" aria-label="Highlights">
 <aside class="yb-partner" data-yb-partner aria-label="Partner greeting">
   <div class="yb-partner__dock">
     <button class="yb-partner__avatar" type="button" aria-expanded="true" aria-controls="partner-msg">
@@ -185,50 +185,45 @@
     </div>
   </div>
 </aside>
-  <ul class="banner__track" id="banner-track">
-        <li class="banner__slide">
-          <a href="/collections/vello-1" aria-label="20% off sitewide for the next 24 hours">
-            <picture>
-              <source media="(max-width: 767px)" srcset="img/Banner_20_24H_mb_b-61df813f.webp">
-              <source media="(min-width: 768px)" srcset="img/Banner_20_24H_b-96b194d5.webp">
-              <img src="img/Banner_20_24H_b-96b194d5.webp" alt="20% off sitewide for the next 24 hours">
-            </picture>
-          </a>
-        </li>
-        <li class="banner__slide">
-          <a href="/collections/detox" aria-label="Vello Alpha-Lactobaby system">
-            <picture>
-              <source media="(max-width: 767px)" srcset="img/1-vertical_banner_Test03_8f834d71-8bd1-46a2-9c5d-7121769c.webp">
-              <source media="(min-width: 768px)" srcset="img/Vello00012-a284ea34.webp">
-              <img src="img/Vello00012-a284ea34.webp" alt="Vello Alpha-Lactobaby system" loading="lazy">
-            </picture>
-          </a>
-        </li>
-        <li class="banner__slide">
-          <a href="/collections/cronograma-hair-care-system" aria-label="Detox line">
-            <picture>
-              <source media="(max-width: 767px)" srcset="img/DetoxMobille_109e8d67-c2fd-4329-8ed3-0fa79ebfd5a-59326a33.webp">
-              <source media="(min-width: 768px)" srcset="img/Detox_2b43ace8-6814-4b56-9660-f7ad9b63169b-91da7dd2.webp">
-              <img src="img/Detox_2b43ace8-6814-4b56-9660-f7ad9b63169b-91da7dd2.webp" alt="Detox line" loading="lazy">
-            </picture>
-          </a>
-        </li>
-        <li class="banner__slide">
-          <a href="#" aria-label="Cronograma hair care system">
-            <picture>
-              <source media="(max-width: 767px)" srcset="img/banner-topo-cronograma-m-eee06cf9.webp">
-              <source media="(min-width: 768px)" srcset="img/Banner_novo_Site4_ed4992cb-c4a5-4753-80fe-83e47b-c65598d9.webp">
-              <img src="img/Banner_novo_Site4_ed4992cb-c4a5-4753-80fe-83e47b-c65598d9.webp" alt="Cronograma hair care system" loading="lazy">
-            </picture>
-          </a>
-        </li>
-  </ul>
-  <button class="banner__arrow banner__arrow--prev" aria-label="Previous slide"><svg class="yb-icon yb-icon--lg" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-left"/></svg></button>
-  <button class="banner__arrow banner__arrow--next" aria-label="Next slide"><svg class="yb-icon yb-icon--lg" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-right"/></svg></button>
-</section>
+    <div class="yb-track yb-track--hero" id="hero-track" data-yb-track-loop>
+      <a class="yb-mediabanner yb-mediabanner--bleed yb-mediabanner--blur" href="/collections/best-sellers">
+        <img src="img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp" alt="" fetchpriority="high">
+        <div class="yb-mediabanner__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="yb-mediabanner__body">
+          <span class="yb-mediabanner__eyebrow">Salon keratin, at home</span>
+          <h1 class="yb-mediabanner__title">Straight, glossy hair that survives humidity.</h1>
+          <p class="yb-mediabanner__text">Brazilian keratin care, formaldehyde-free and safe on color-treated hair.</p>
+          <span class="yb-btn yb-btn--primary">Shop best sellers</span>
+        </div>
+      </a>
+      <a class="yb-mediabanner yb-mediabanner--bleed yb-mediabanner--blur" href="/collections/damaged-hair">
+        <img src="img/Does_Keratin_Treatment_Damage_Hair-9540a201.webp" alt="" loading="lazy">
+        <div class="yb-mediabanner__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="yb-mediabanner__body">
+          <span class="yb-mediabanner__eyebrow">Damaged hair</span>
+          <h2 class="yb-mediabanner__title">Repair the fiber, not just the surface.</h2>
+          <p class="yb-mediabanner__text">Reconstruction, nutrition and hydration — one step for each layer.</p>
+          <span class="yb-btn yb-btn--primary">Shop by concern</span>
+        </div>
+      </a>
+      <a class="yb-mediabanner yb-mediabanner--bleed yb-mediabanner--blur" href="/pages/ai-hair-routine-quiz">
+        <img src="img/Is_Keratin_Good_For_Hair-b3d5999d.webp" alt="" loading="lazy">
+        <div class="yb-mediabanner__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="yb-mediabanner__body">
+          <span class="yb-mediabanner__eyebrow">AI Hair Analysis</span>
+          <h2 class="yb-mediabanner__title">Not sure where to start?</h2>
+          <p class="yb-mediabanner__text">Answer a few questions and we match your hair to the right line.</p>
+          <span class="yb-btn yb-btn--primary">Start analysis</span>
+        </div>
+      </a>
+    </div>
+    <div class="yb-track__nav" data-yb-track-nav="hero-track" hidden>
+      <button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous highlight"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-left"/></svg></button>
+      <button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next highlight"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-right"/></svg></button>
+    </div>
+  </section>
 
   <div class="yb-page">
-
     <section class="yb-block">
       <div class="yb-section-head">
         <h2>Best Sellers</h2>
@@ -297,7 +292,7 @@
 
     <section class="yb-block">
       <div class="yb-section-head yb-section-head--center">
-        <h2>What&rsquo;s Standing Between You and Great Hair?</h2>
+        <h2>Shop by Concern</h2>
       </div>
       <ul class="yb-collections">
         <li><a class="yb-collection yb-collection--bottom" href="/collections/dullness">
@@ -319,29 +314,6 @@
       </ul>
     </section>
   </div>
-
-  <section class="yb-split">
-    <div class="yb-split__media">
-      <img src="img/02_hair-problem-f838107d.webp" alt="" loading="lazy">
-    </div>
-    <div class="yb-split__panel">
-      <span class="yb-badge yb-badge--on-dark">10k+ routines created</span>
-      <h2 class="yb-split__title">What does your hair need?</h2>
-      <p class="yb-split__sub">We&rsquo;ll tell you what works, takes 60 seconds</p>
-      <div class="yb-swatches yb-swatches--on-dark" role="radiogroup" aria-label="Hair condition">
-          <input type="radio" name="quiz-cabelo" id="quiz-0" checked>
-          <label for="quiz-0">Slightly Damaged</label>
-          <input type="radio" name="quiz-cabelo" id="quiz-1">
-          <label for="quiz-1">Healthy</label>
-          <input type="radio" name="quiz-cabelo" id="quiz-2">
-          <label for="quiz-2">Very Damaged</label>
-          <input type="radio" name="quiz-cabelo" id="quiz-3">
-          <label for="quiz-3">Chemically Treated</label>
-      </div>
-      <button class="yb-btn yb-btn--on-dark" type="button">Start analysis</button>
-      <p class="yb-split__nota">4 quick questions</p>
-    </div>
-  </section>
 
   <section class="yb-block yb-block--flush tolstoy">
       <div class="shopify-block shopify-app-block tolstoy-builder-block">
@@ -395,8 +367,8 @@
     </section>
 
   <div class="yb-page">
-  <!-- So o trilho. O resumo, o filtro por nota e o "Write a review"
-       ficam na PDP: aqui a secao e prova social de passagem. -->
+  <!-- So o trilho, como nas outras duas: o resumo, o filtro por nota e o
+       "Write a review" ficam na PDP. Aqui a secao e prova social de passagem. -->
     <section class="yb-block" id="reviews">
       <div class="yb-section-head yb-section-head--center">
         <h2>What Our Customers Say</h2>
@@ -539,16 +511,6 @@
       </div>
   </section>
 
-  <section class="yb-manifesto">
-    <div class="yb-manifesto__inner">
-      <h2 class="yb-manifesto__title">Born in the salon. Made for every home.</h2>
-      <p class="yb-manifesto__text">Driven by Brazilian heritage and professional expertise, we create transformative hair care that bridges the gap between expert stylist results and daily self-care.</p>
-      <hr class="yb-manifesto__rule">
-      <span class="yb-manifesto__brand">YBERA</span>
-      <p class="yb-manifesto__sub">Professional Paris</p>
-    </div>
-  </section>
-
   <section class="yb-logobar" aria-label="Ybera product lines">
     <div class="yb-track yb-track--row yb-logobar__track">
       <img src="img/01-685f018e.png" alt="" loading="lazy">
@@ -614,8 +576,6 @@
       </div>
     </section>
   </div>
-
-
 
 </main>
 

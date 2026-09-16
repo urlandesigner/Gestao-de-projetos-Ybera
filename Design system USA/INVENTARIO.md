@@ -3,7 +3,7 @@
 <!-- GERADO por tools/inventario.mjs. Não edite à mão: rode ./build.sh.
      A fonte é o CSS. Se uma linha aqui está errada, o errado é o código. -->
 
-48 peças no bundle — 36 estáveis, 12 em beta, 0 em alfa.
+49 peças no bundle — 36 estáveis, 13 em beta, 0 em alfa.
 
 ## Como ler a maturidade
 
@@ -44,7 +44,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | OFFER CARD | `.yb-offercard` | Componente | Estável | 1 | 2 | 37 | sim | sim | sim | sim |
 | OFFER SEAL | `.yb-offerseal` | Componente | Estável | 2 | — | 9 | sim | n/a | — | sim |
 | PAGINATION | `.yb-pagination` | Componente | Beta | — | 3 | 17 | sim | sim | — | — |
-| PARTNER | `.yb-partner` | Componente | Estável | — | 1 | 29 | sim | sim | sim | sim |
+| PARTNER | `.yb-partner` | Componente | Estável | 1 | 1 | 29 | sim | sim | sim | sim |
 | POST | `.yb-post` | Componente | Estável | 4 | 2 | 21 | sim | sim | — | sim |
 | PRICE | `.yb-price` | Componente | Estável | 2 | — | 10 | sim | n/a | — | sim |
 | PRODUCT CARD | `.yb-card` | Componente | Estável | — | 1 | 20 | sim | sim | — | sim |
@@ -63,10 +63,11 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | BLOCO DE COMPRA (PDP) | `.yb-buybox` | Padrão | Estável | — | 2 | 37 | sim | sim | — | sim |
 | CART DRAWER | `.yb-cart` | Padrão | Estável | 4 | 2 | 45 | sim | sim | — | sim |
 | CATÁLOGO | `.yb-catalog` | Padrão | Beta | — | 2 | 27 | sim | sim | — | — |
+| CONTA LOGADA | `.yb-usermenu` | Padrão | Beta | — | 3 | 28 | sim | sim | — | — |
 | FAQ | `.yb-faq` | Padrão | Beta | 1 | — | 10 | sim | n/a | — | — |
 | FOOTER | `.yb-footer` | Padrão | Estável | 1 | 3 | 39 | sim | sim | — | sim |
 | FREE SHIPPING PROGRESS | `.yb-freeship` | Padrão | Estável | 1 | — | 8 | sim | n/a | — | sim |
-| HEADER | `.yb-nav` | Padrão | Estável | 1 | 3 | 57 | sim | sim | sim | sim |
+| HEADER | `.yb-nav` | Padrão | Estável | 1 | 3 | 52 | sim | sim | sim | sim |
 | HERO | `.yb-hero` | Padrão | Beta | — | — | 3 | sim | n/a | — | — |
 | MANIFESTO | `.yb-manifesto` | Padrão | Estável | — | — | 25 | sim | n/a | — | sim |
 | PAGE LAYOUT | `.yb-block` | Padrão | Estável | 2 | — | 20 | sim | n/a | — | sim |

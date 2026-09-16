@@ -180,9 +180,17 @@ CSS_PDP = """  /* Sem padding-top: quem separa do breadcrumb e o breadcrumb. Com
     list-style:none; margin:0; padding:0; }
   @media (max-width:520px) { .pdp__duo { grid-template-columns:1fr; } }
 
+  /* Sem breadcrumb acima, o produto encostaria no cabecalho. O respiro que o
+     breadcrumb dava passa a ser do proprio bloco. */
+  .pdp--solto { padding-block-start: var(--yb-space-8); }
+
+  /* `--yb-chrome-h` e nao `--yb-header-h`: o token do cabecalho mede so a
+     barra, e quando a faixa do parceiro esta na tela ela soma 3,5rem. Lendo o
+     token errado, a foto grudava ATRAS da faixa — e a faixa e justamente o que
+     aparece quando a pessoa rola, que e quando o sticky comeca a valer. */
   .pdp > .yb-gallery {
     position:sticky;
-    inset-block-start:calc(var(--yb-header-h) + var(--yb-space-5));
+    inset-block-start:calc(var(--yb-chrome-h) + var(--yb-space-5));
     align-self:start;
   }
   /* Numa coluna so nao ha o que acompanhar, e grudar atrapalharia a rolagem. */
@@ -378,7 +386,38 @@ def menu(promo=None):
     return "\n".join(out)
 
 
-def header(carrinho=2, promo=None):
+# Cliente logado das telas-prova. Dado de prototipo, com cerca: so a tela que
+# o declara usa, e nenhum nome de cliente real entra aqui.
+CLIENTE = {'nome': 'Urlan Dipre', 'email': 'urlan.dipre@ybera.com'}
+
+
+def header(carrinho=2, promo=None, cliente=None):
+    """`cliente` liga o estado logado: o icone generico vira a inicial e abre o
+    menu da conta. Deslogado continua sendo um botao de icone so — e o que a
+    loja mostra hoje."""
+    if cliente:
+        inicial = cliente['nome'].strip()[:1].upper()
+        conta = f"""<div class="yb-usermenu">
+        <input class="yb-usermenu__toggle" type="checkbox" id="conta-open">
+        <label class="yb-usermenu__avatar" for="conta-open"
+               aria-label="Account menu for {cliente['nome']}">
+          <span class="yb-usermenu__inicial" aria-hidden="true">{inicial}</span></label>
+        <div class="yb-usermenu__panel">
+          <span class="yb-usermenu__quem">
+            <b class="yb-usermenu__nome">{cliente['nome']}</b>
+            <span class="yb-usermenu__email">{cliente['email']}</span>
+          </span>
+          <a href="/account">{ico('user','yb-icon yb-icon--sm')} Account</a>
+          <a href="/account/orders">{ico('truck','yb-icon yb-icon--sm')} Orders</a>
+          <a href="/listadedesejos">{ico('heart','yb-icon yb-icon--sm')} Wishlist</a>
+          <span class="yb-usermenu__sair">
+            <a href="/account/logout">{ico('lock','yb-icon yb-icon--sm')} Log out</a>
+          </span>
+        </div>
+      </div>"""
+    else:
+        conta = (f'<button class="yb-iconbtn yb-header__icon yb-header__account" '
+                 f'aria-label="Account">{ico("user")}</button>')
     return f"""<header class="yb-header">
   <div class="yb-notice">Free shipping on orders over <b>$50</b></div>
   <input class="yb-header__drawer" type="checkbox" id="nav-open" aria-label="Menu">
@@ -390,13 +429,13 @@ def header(carrinho=2, promo=None):
     <nav class="yb-header__nav" aria-label="Main">
       <label class="yb-iconbtn yb-nav__close" for="nav-open" role="button" tabindex="0" aria-label="Close menu">{ico('close')}</label>
       <ul class="yb-nav">
-        <li class="yb-nav__item yb-nav__item--account"><a class="yb-nav__link" href="/account">Account</a></li>
+        <li class="yb-nav__item yb-nav__item--account"><a class="yb-nav__link" href="/account">{cliente['nome'] if cliente else 'Account'}</a></li>
 {menu(promo)}
       </ul>
     </nav>
     <div class="yb-header__actions">
       <button class="yb-iconbtn yb-header__icon" aria-label="Search" data-yb-open="site-search">{ico('search')}</button>
-      <button class="yb-iconbtn yb-header__icon yb-header__account" aria-label="Account">{ico('user')}</button>
+      {conta}
       <button class="yb-iconbtn yb-header__icon" aria-label="Cart, {carrinho} items" data-yb-open="cart">
         {ico('cart')}<span class="yb-header__count">{carrinho}</span></button>
     </div>
@@ -1182,18 +1221,27 @@ def parceiro():
 </aside>"""
 
 
-def faixa_parceiro():
-    """A mesma frase, presa abaixo do cabecalho, depois que a arte passou.
+def faixa_parceiro(ancorada=True):
+    """A mesma frase, presa abaixo do cabecalho.
 
-    Nasce `hidden`: sem script ela nao aparece, e o balao sobre a arte
-    continua sendo o unico lugar do recado — que e o estado certo para
-    degradar, porque a faixa e reforco e nao a primeira leitura.
+    Com arte na pagina (`ancorada=True`, o padrao) ela nasce `hidden` e so
+    entra depois que a arte passa: sem script ela nao aparece, e o balao sobre
+    a arte continua sendo o unico lugar do recado — que e o estado certo para
+    degradar, porque ali a faixa e reforco e nao a primeira leitura. Quem liga
+    e desliga e o observador em components.js, ancorado na propria arte
+    (`data-yb-partnerbar-anchor`). Nao ha numero de rolagem escrito em lugar
+    nenhum: o banner muda de altura entre v1, v2 e celular, e qualquer limite
+    fixo estaria errado em duas das tres.
 
-    Quem liga e desliga e o observador em components.js, ancorado na propria
-    arte (`data-yb-partnerbar-anchor`). Nao ha numero de rolagem escrito em
-    lugar nenhum: o banner muda de altura entre v1, v2 e celular, e qualquer
-    limite fixo estaria errado em duas das tres."""
-    return ('<aside class="yb-partnerbar" data-yb-partnerbar hidden '
+    SEM arte (`ancorada=False`) o raciocinio se inverte. O balao e
+    `position:absolute` dentro do banner; sem banner ele nao tem onde morar, e
+    a faixa passa a ser o UNICO lugar do recado. Nascer `hidden` ali
+    significaria que o recado some por completo quando o script nao carrega —
+    e nao ha observador para liga-la, porque nao ha o que observar."""
+    oculta = ' hidden' if ancorada else ''
+    # Sem arte ela entra no fluxo em vez de sobrepor — ver .yb-partnerbar--fluxo.
+    classe = 'yb-partnerbar' if ancorada else 'yb-partnerbar yb-partnerbar--fluxo'
+    return (f'<aside class="{classe}" data-yb-partnerbar{oculta} '
             'aria-label="Partner greeting">\n'
             f'  <p class="yb-partnerbar__text">{recado_parceiro()}</p>\n'
             '</aside>')
@@ -2480,7 +2528,7 @@ def linha_do(titulo):
 
 
 def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=None,
-               compare=None):
+               compare=None, arranjo='padrao'):
     p = dados.produto(handle, os.path.join(destino, 'img'))
     # `variantes` so e passado pela tela-prova da variante (ver VARIANTE_FORJADA).
     if variantes:
@@ -2725,16 +2773,141 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
           + json.dumps(dados_ld, ensure_ascii=False).replace('<', r'\u003c')
           + '</script>')
 
-    corpo = f"""{ld}
+    # As duas PDPs montam as MESMAS pecas; o que muda e a ORDEM em que elas
+    # entram na pagina. Por isso a coluna de compra e os relacionados saem para
+    # variaveis em vez de aparecerem duas vezes no arquivo: duplicar cem linhas
+    # de galeria para trocar a ordem e garantir que as duas versoes divirjam na
+    # primeira correcao que alguem fizer em uma delas.
+    bloco_compra = f"""  <div class="pdp">
+    <div class="yb-gallery" data-yb-gallery>
+      <div class="yb-gallery__stage">{slides}
+        <span class="yb-gallery__count">1 / {len(p['imagens'])}</span>
+      </div>
+      <div class="yb-gallery__thumbs">{thumbs}
+      </div>
+    </div>
+
+    <div class="yb-buybox">
+      <!-- Sem "Best seller" (nao ha dado) e sem "4.8 · 412 reviews" (idem): o
+           Judge.me nao expoe a nota, e numero inventado no bloco de compra e o
+           pior lugar para inventar. O estoque vem do catalogo. -->
+      <!-- Favoritar mora AQUI, e nao sobre a foto. Sobre a foto ele usava
+           `--onmedia` (branco a 92%), tratamento feito para levantar o
+           controle de cima de uma imagem — mas toda foto de produto da loja e
+           recorte com fundo transparente sobre branco, entao era branco sobre
+           branco e o coracao boiava sem borda. Nao havia consistencia a
+           preservar: o cartao de produto nao tem favoritar, esta e a unica
+           ocorrencia no sistema. Na linha do estoque ele ganha a borda do
+           `.yb-iconbtn` normal e fica junto das outras decisoes da coluna. -->
+      <!-- Favoritar na linha do TITULO. Ele morava numa fileira propria acima,
+           que existia para os selos; com os selos na linha do preco, aquela
+           fileira virou 44px de vazio empurrando o nome do produto para baixo.
+           Ao lado do titulo ele fica junto do que favorita — a mesma anatomia
+           da linha do carrinho, onde a lixeira acompanha o nome do item. -->
+{selo_oferta}
+      <div class="yb-buybox__topo">
+        <h1 class="yb-buybox__title">{p['titulo']}</h1>
+        <span class="yb-buybox__acoes">
+          <button class="yb-iconbtn" type="button" data-yb-share
+                  aria-label="Share this product"
+                  data-copiado="Link copied" data-erro="Could not copy the link">
+            {ico('share')}
+          </button>
+          <button class="yb-iconbtn yb-iconbtn--fav yb-buybox__fav" type="button"
+                  data-yb-fav aria-pressed="false" aria-label="Add to favorites"
+                  data-label-off="Add to favorites" data-label-on="Remove from favorites"
+                  data-icon-off="yb-heart" data-icon-on="yb-heart-filled">
+            <svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-heart"/></svg>
+          </button>
+        </span>
+      </div>
+      <!-- Entre titulo e preco, e nao depois do preco: a nota e o que responde
+           "vale a pena?", e essa pergunta vem ANTES de "quanto custa". Antes
+           dela, a unica prova social da pagina estava em y=3435 de uma pagina
+           de 5014 — a pessoa decidia sem ver uma estrela.
+           E link, nao enfeite: nota que nao leva as avaliacoes e beco. -->
+      <a class="yb-buybox__rating" href="#reviews">
+        <span class="yb-rating" role="img" aria-label="{AVALIACAO['nota']} of 5, {p.get('reviews', AVALIACAO['total'])} reviews">
+          <span class="yb-rating__stars" aria-hidden="true">★★★★★</span>
+          <span class="yb-rating__score">{AVALIACAO['nota']}</span>
+          <span class="yb-rating__count">({p.get('reviews', AVALIACAO['total']):,} reviews)</span></span>
+      </a>
+      <!-- Estoque e brinde vivem na linha do PRECO, e nao acima do titulo. La
+           em cima eles respondiam "posso comprar?" antes de "o que e isto?";
+           aqui respondem junto de "quanto custa", que e onde a decisao
+           acontece. O selo de DESCONTO e a excecao e sobe: ver `selo_oferta`. -->
+      <div class="yb-buybox__precoLinha">
+        <span class="yb-price"><b class="yb-price__now" data-yb-preco>{preco_base}</b>{comp}</span>
+        <span class="yb-buybox__selos">{estoque}</span>
+      </div>
+      <p class="yb-buybox__desc">{resumo_curto(p['descricao'])}</p>
+
+      <!-- Beneficios. A loja mostra quatro; aqui sao DOIS, e a escolha nao e
+           de espaco, e de informacao. "Long-lasting softness" e "Complete
+           restoration" reformulavam a promessa que o paragrafo logo acima ja
+           fez — quatro rotulos de mesmo peso e mesma cor nao criam quatro
+           argumentos, criam um bloco que o olho pula inteiro.
+           Ficaram os dois que dizem coisas DIFERENTES: o que o produto faz
+           (a mecanica de tres camadas que esta impressa na propria lata) e
+           para quem ele e. Sao badges porque o componente para "rotulo curto
+           com fundo suave" ja existe. -->
+      <ul class="yb-buybox__benef">
+        <li><span class="yb-badge yb-badge--soft">{ico('refresh','yb-icon yb-icon--sm')} Multi-layer repair</span></li>
+        <li><span class="yb-badge yb-badge--soft">{ico('shield-check','yb-icon yb-icon--sm')} For damaged hair</span></li>
+      </ul>
+
+      <!-- Variante com preco e estoque, so quando o catalogo tem mais de uma.
+           O esgotado fica visivel e desabilitado: sumir esconderia que o
+           tamanho existe. -->{variantes}
+
+{compra}
+
+      <!-- O que a LOJA garante — nao o que o produto faz (isso e a lista de
+           beneficio acima). "Made in Paris" saiu: afirmacao de origem sem
+           fonte. Frete gratis e o que a faixa do topo ja promete. -->
+      <!-- Dois, e nao quatro. "30-day returns" e "Free shipping over $50"
+           saem daqui porque a secao "Shipping & returns" logo abaixo diz as
+           duas com espaco para explicar ("Returns accepted within 30 days of
+           delivery, unopened") — e frete gratis ainda era a terceira
+           aparicao na pagina, contando a faixa preta do topo.
+           Sobram as duas afirmacoes que a secao NAO repete, e duas de peso
+           igual se leem; quatro viram um bloco que o olho pula. -->
+      <div class="yb-buybox__trust">
+        <span>Formaldehyde-free</span><span>Color-safe</span>
+      </div>
+
+      <div class="yb-accordion">{acordeao}
+      </div>
+{pdp_historia()}
+    </div>
+  </div>"""
+
+    bloco_relacionados = f"""  <section class="yb-block">
+    <div class="yb-section-head"><h2>Related Products</h2></div>
+    <div class="yb-grid">
+{chr(10).join(card(r, vendor=False) for r in relacionados)}
+    </div>
+  </section>"""
+
+    if arranjo == 'v2':
+        # A ordem pedida: faixa preta, recado do parceiro, bloco de compra,
+        # relacionados, avaliacoes, rodape.
+        #
+        # Sem banner: a arte de topo saiu a pedido, e com ela saiu o balao do
+        # parceiro, que e `position:absolute` dentro dela. O recado fica na
+        # FAIXA, que e `fixed` abaixo do cabecalho e nao depende de arte
+        # nenhuma — por isso ela nasce visivel aqui (ver faixa_parceiro).
+        #
+        # Sem breadcrumb: tambem nao estava na lista. Ele era o unico caminho
+        # de volta para a colecao dentro da pagina; o cabecalho continua tendo
+        # o menu, e e la que esse caminho passa a morar.
+        corpo = f"""{ld}
 {header(promo=relacionados[0])}
+{faixa_parceiro(ancorada=False)}
 
-<main class="yb-page">
-  <nav class="yb-crumb yb-block--tight" aria-label="Breadcrumb">
-    <ol><li><a href="index.html">Home</a></li><li><a href="{linha_href}">{linha_nome}</a></li>
-    <li><span aria-current="page">{p['titulo']}</span></li></ol>
-  </nav>
-
-  <div class="pdp">
+<main>
+  <div class="yb-page">
+  <div class="pdp pdp--solto">
     <div class="yb-gallery" data-yb-gallery>
       <div class="yb-gallery__stage">{slides}
         <span class="yb-gallery__count">1 / {len(p['imagens'])}</span>
@@ -2838,6 +3011,30 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
     </div>
   </div>
 
+{bloco_relacionados}
+
+  <!-- As avaliacoes fecham a pagina, depois dos relacionados. E a ordem
+       pedida para este arranjo; a PDP padrao faz o contrario, e o motivo
+       esta escrito la. -->
+{carrossel_reviews()}
+  </div>
+</main>
+
+{barra}
+
+{fim_de_pagina(relacionados)}"""
+    else:
+        corpo = f"""{ld}
+{header(promo=relacionados[0])}
+
+<main class="yb-page">
+  <nav class="yb-crumb yb-block--tight" aria-label="Breadcrumb">
+    <ol><li><a href="index.html">Home</a></li><li><a href="{linha_href}">{linha_nome}</a></li>
+    <li><span aria-current="page">{p['titulo']}</span></li></ol>
+  </nav>
+
+{bloco_compra}
+
   <!-- As avaliacoes tambem vivem aqui, e nao so na home: e o destino da nota
        que agora abre a coluna de compra. Nota que nao leva a lugar nenhum e
        beco, e ate esta linha existir a ancora `#reviews` da PDP apontava para
@@ -2847,12 +3044,7 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
        e trocar de assunto no meio da frase. -->
 {carrossel_reviews()}
 
-  <section class="yb-block">
-    <div class="yb-section-head"><h2>Related Products</h2></div>
-    <div class="yb-grid">
-{chr(10).join(card(r, vendor=False) for r in relacionados)}
-    </div>
-  </section>
+{bloco_relacionados}
 
 </main>
 
@@ -2882,7 +3074,10 @@ def montar_faq(destino):
 {faixa_parceiro()}
 
 <main class="yb-page">
-  <nav class="yb-crumb" aria-label="Breadcrumb">
+  <!-- `--tight` e o que da o respiro do header: sem ela o breadcrumb encostava
+       na barra (medido: 0px) enquanto a PDP, que ja usava a classe, guardava
+       24. Duas telas com breadcrumb e dois espacamentos diferentes. -->
+  <nav class="yb-crumb yb-block--tight" aria-label="Breadcrumb">
     <ol>
       <li><a href="index-v2.html">Home</a></li>
       <li aria-current="page">FAQ</li>
@@ -2902,7 +3097,7 @@ def montar_faq(destino):
     return pagina("Frequently asked questions – Ybera USA", corpo)
 
 
-def montar_home_v2(destino):
+def montar_home_v2(destino, cliente=None):
     """Home v2 — a mesma loja na gramatica de e-commerce dos EUA.
 
     Nao substitui a v1: as duas sao geradas, e a v1 continua sendo `index.html`.
@@ -2958,7 +3153,7 @@ def montar_home_v2(destino):
     cards = "\n".join([cartao_oferta(em_oferta, destino)] +
                       [card(pr, flag=False) for pr in vizinhos])
 
-    corpo = f"""{header(promo=prods[2])}
+    corpo = f"""{header(promo=prods[2], cliente=cliente)}
 {faixa_parceiro()}
 
 <main>
@@ -3025,6 +3220,92 @@ def montar_home_v2(destino):
     return pagina("Ybera Paris USA | Keratin care that survives humidity", corpo)
 
 
+
+def montar_home_v3(destino):
+    """Home v3 — a lista de secoes veio do usuario, nesta ordem.
+
+    Catorze blocos, na ordem pedida: faixa preta, cabecalho, banner com o
+    recado do parceiro, Best Sellers, Shop by Concern, Tolstoy, Shop by
+    Collection, avaliacoes, TikTok, selos de certificacao, logos, blog,
+    citacao da marca e rodape.
+
+    O que ela NAO tem, comparada com a v2: o quiz, o bloco de autoridade e as
+    quatro perguntas do FAQ curto. Nao foram pedidos, e uma lista de secoes e
+    uma decisao de ritmo — acrescentar bloco que ninguem pediu e devolver a
+    home que ja existe com outro nome.
+
+    O que ela tem de igual a v2: TODAS as pecas, na mesma implementacao. Como
+    na v2, nao ha CSS novo nem componente novo; a v3 e outra remontagem, e a
+    terceira vez que o sistema prova que a ordem da loja muda sem tocar em
+    folha de estilo.
+
+    O banner do topo e `hero_v2()`, o mesmo da v2: `.yb-mediabanner` com o
+    texto em HTML e em ingles. A alternativa era `banner()`, a arte de campanha
+    da v1 — um JPEG com a promessa desenhada dentro do pixel, em portugues.
+    Ela nao e lida por busca, nao e traduzida, nao e lida em voz alta e nao
+    reflui no celular (ver a nota de HERO_V2). O recado do parceiro vem dentro
+    dos dois, entao "banner + Partner" fica satisfeito de qualquer forma.
+    """
+    prods = dados.catalogo(os.path.join(destino, 'img'), 8)
+    for i, pr in enumerate(prods):
+        pr['destaque'] = i in (0, 3)
+
+    em_oferta = next((x for x in prods if x['handle'] == OFERTA['produto']), prods[0])
+    vizinhos = um_por_linha(prods, 3, excluir=[em_oferta])
+    cards = "\n".join([cartao_oferta(em_oferta, destino)] +
+                      [card(pr, flag=False) for pr in vizinhos])
+
+    # 1 e 2 — a faixa preta e o cabecalho saem juntos de `header()`: a faixa e
+    # o primeiro filho dele, e e `.yb-notice`, a peca solta do sistema.
+    corpo = f"""{header(promo=prods[2])}
+{faixa_parceiro()}
+
+<main>
+{hero_v2()}
+
+  <div class="yb-page">
+    <section class="yb-block">
+      <div class="yb-section-head">
+        <h2>Best Sellers</h2>
+        <a class="yb-link" href="/collections/best-sellers">Shop all best sellers {ico('chevron-right')}</a>
+      </div>
+      <div class="yb-grid">
+{cards}
+      </div>
+    </section>
+
+{lista_colecoes('Shop by Concern', PROBLEMAS, 'bottom')}
+  </div>
+
+{widget_tolstoy()}
+
+{lista_colecoes('Shop by Collection', LINHAS, 'bottom', flush=True,
+                arranjo=COLECOES_ARRANJO, eyebrow='Tailored Formulas')}
+
+  <div class="yb-page">
+  <!-- So o trilho, como nas outras duas: o resumo, o filtro por nota e o
+       "Write a review" ficam na PDP. Aqui a secao e prova social de passagem. -->
+{carrossel_reviews(topo=False)}
+  </div>
+
+{videos_creator()}
+
+{selos()}
+
+{faixa_logos()}
+
+  <div class="yb-page">
+{blog()}
+
+{citacao()}
+  </div>
+
+</main>
+
+{fim_de_pagina(prods)}"""
+    return pagina("Ybera Paris USA | Keratin care that survives humidity", corpo)
+
+
 if __name__ == '__main__':
     # Gera numa pasta temporaria e troca no fim. Apagar `nova-loja/` antes de
     # gerar deixava a pasta vazia se a rede falhasse no meio (ja aconteceu com
@@ -3052,9 +3333,20 @@ if __name__ == '__main__':
         montar_pdp(destino, variantes=VARIANTE_FORJADA))
     print("montando faq…")
     open(os.path.join(destino, 'faq.html'), 'w', encoding='utf-8').write(montar_faq(destino))
+    print("montando home v2 com cliente logado…")
+    open(os.path.join(destino, 'index-logado.html'), 'w', encoding='utf-8').write(
+        montar_home_v2(destino, cliente=CLIENTE))
+    print("montando home v2 com cliente logado…")
+    open(os.path.join(destino, 'index-logado.html'), 'w', encoding='utf-8').write(
+        montar_home_v2(destino, cliente=CLIENTE))
     print("montando pdp em promocao…")
     open(os.path.join(destino, 'pdp-oferta.html'), 'w', encoding='utf-8').write(
         montar_pdp(destino, compare=COMPARE_FORJADO))
+    print("montando home v3…")
+    open(os.path.join(destino, 'index-v3.html'), 'w', encoding='utf-8').write(montar_home_v3(destino))
+    print("montando pdp v2…")
+    open(os.path.join(destino, 'pdp-v2.html'), 'w', encoding='utf-8').write(
+        montar_pdp(destino, arranjo='v2'))
     velho = f'{final}.old-{os.getpid()}'
     if os.path.exists(final): os.rename(final, velho)
     os.rename(destino, final)

@@ -2323,6 +2323,18 @@
 /* :not([hidden]), mesma armadilha da barra de compra: `display:block` na
    classe venceria o [hidden] do navegador e a faixa nunca sumiria. */
 .yb-partnerbar:not([hidden]){display:block}
+/* SEM ARTE na pagina a faixa deixa de ser sobreposicao e vira conteudo.
+   `fixed` so funciona para ela porque, quando a arte rola, a faixa preta de
+   anuncio ja saiu junto e a barra do cabecalho esta colada no topo: ai
+   `inset-block-start:var(--yb-header-h)` cai exatamente embaixo dela. Numa
+   pagina onde a faixa nasce visivel isso e falso — a faixa preta ainda ocupa
+   os primeiros 40px, a barra termina 40px mais abaixo, e a faixa do parceiro
+   nascia ATRAS dela (medido: faixa em 77, barra terminando em 117).
+
+   `sticky` resolve os dois momentos com uma regra: no fluxo ela ocupa o
+   proprio espaco logo abaixo do cabecalho, e quando a rolagem a alcanca ela
+   gruda no mesmo lugar onde a versao ancorada apareceria. */
+.yb-partnerbar--fluxo{position:sticky}
 /* 3,5rem e a faixa de duas linhas, que e o pior caso (35px numa linha no
    desktop, 53 em duas no celular). Mesmo recurso que a barra de compra usa
    para dar respiro ao rodape: a altura e medida, nao calculavel em CSS. */
@@ -3967,6 +3979,95 @@ button.yb-link{
 /* Sem margin-inline-start:auto: quem empurra as acoes pra ponta agora e o
    flex:1 do menu, que ja respeita a direcao de leitura sozinho. */
 .yb-header__actions{display:flex; align-items:center; gap:0; justify-self:end}
+
+/* =========================================================================
+   CONTA LOGADA — avatar com inicial e o menu que ele abre
+
+   Mesma mecanica do menu principal: checkbox escondido + painel irmao, zero
+   JS. Nao e escolha de estilo — e a unica que sobrevive com o JS fora do ar,
+   e o cabecalho e a parte da pagina que mais precisa continuar funcionando.
+
+   O que ela custa esta dito: o leitor de tela anuncia "caixa de selecao", nao
+   "menu". O padrao da casa ja aceita isso no menu principal; trocar aqui so
+   criaria duas mecanicas para a mesma coisa. Quando entrar um menu de verdade
+   (com `aria-expanded` e setas), ele troca os dois de uma vez.
+
+   O avatar e a INICIAL, nao uma foto: a loja nao guarda foto de cliente, e
+   circulo cinza vazio e pior do que uma letra. O `aria-label` do gatilho leva
+   o nome inteiro — a inicial sozinha nao diz de quem e a conta.
+   ========================================================================= */
+.yb-usermenu{position:relative; display:flex; align-items:center}
+.yb-usermenu__toggle{position:absolute; opacity:0; pointer-events:none; width:1px; height:1px}
+.yb-usermenu__avatar{
+  display:flex; align-items:center; justify-content:center;
+  inline-size:var(--yb-target-min); block-size:var(--yb-target-min);
+  cursor:pointer; border-radius:var(--yb-radius-pill);
+  color:var(--yb-text-primary);
+}
+/* O circulo e menor que o alvo: 32px pintados dentro dos 44 de toque, como os
+   outros icones da barra — a caixa cresce para fora, nao para dentro. */
+.yb-usermenu__inicial{
+  display:flex; align-items:center; justify-content:center;
+  inline-size:2rem; block-size:2rem; border-radius:var(--yb-radius-pill);
+  background:var(--yb-bg-muted); color:var(--yb-text-primary);
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
+  line-height:1;
+}
+@media (hover:hover){
+  .yb-usermenu__avatar:hover .yb-usermenu__inicial{background:var(--yb-bg-subtle)}
+}
+.yb-usermenu__toggle:focus-visible + .yb-usermenu__avatar{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-usermenu__panel{
+  position:absolute; inset-block-start:100%; inset-inline-end:0;
+  z-index:var(--yb-z-dropdown); min-inline-size:14rem;
+  background:var(--yb-surface-raised);
+  border:1px solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-card);
+  box-shadow:var(--yb-elevation-dropdown);
+  padding-block:var(--yb-space-2);
+  opacity:0; visibility:hidden;
+  transition:opacity var(--yb-transition-surface), visibility var(--yb-transition-surface);
+}
+.yb-usermenu__toggle:checked ~ .yb-usermenu__panel{opacity:1; visibility:visible}
+/* Quem e, antes do que fazer. Sem isto o menu abre com quatro verbos e nenhuma
+   confirmacao de que a sessao e da pessoa certa — a duvida que faz alguem
+   clicar em "Account" so para conferir. */
+.yb-usermenu__quem{
+  display:block; padding:var(--yb-space-2) var(--yb-space-4) var(--yb-space-3);
+  border-block-end:1px solid var(--yb-border-subtle);
+  margin-block-end:var(--yb-space-2);
+}
+.yb-usermenu__nome{display:block; font-weight:var(--yb-font-weight-semibold)}
+.yb-usermenu__email{
+  display:block; font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted);
+  overflow:hidden; text-overflow:ellipsis;
+}
+.yb-usermenu__panel a{
+  display:flex; align-items:center; min-block-size:var(--yb-target-min);
+  padding-inline:var(--yb-space-4); gap:var(--yb-space-3);
+  color:var(--yb-text-primary); text-decoration:none;
+  font-size:var(--yb-type-body-sm-size);
+}
+@media (hover:hover){ .yb-usermenu__panel a:hover{background:var(--yb-bg-muted)} }
+.yb-usermenu__panel a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:calc(var(--yb-focus-offset) * -1);
+}
+/* Sair fica separado e em tom de apoio: e a unica acao do menu que desfaz
+   alguma coisa, e emparelhada com as outras vira quinto item de lista. */
+.yb-usermenu__sair{
+  margin-block-start:var(--yb-space-2);
+  border-block-start:1px solid var(--yb-border-subtle);
+  padding-block-start:var(--yb-space-2);
+}
+.yb-usermenu__sair a{color:var(--yb-text-secondary)}
+/* No toque o menu nao existe: a gaveta ja lista os mesmos destinos, e um
+   painel de 224px ancorado na borda direita de uma tela de 375 nasce apertado
+   contra o carrinho. */
+@media (max-width:900px){ .yb-usermenu{display:none} }
 /* Sem gap e sem respiro lateral: os tres icones ja tem 44px de alvo cada, e o
    alvo E o respiro. O gap de 8px mais 12px de padding de cada lado somavam
    32px entre um glifo e o outro — os tres liam como tres grupos, nao como um
@@ -5245,6 +5346,21 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
    para 24 (a barra do header termina num traco solido; 20 lia como colado
    nele), o fundo continua em 12, junto da imagem. */
 .yb-block--tight{ padding-block:var(--yb-space-6) var(--yb-space-3); }
+/* CABECALHO DE PAGINA — o bloco logo depois do breadcrumb.
+   Ele nao e uma secao, e o TITULO da pagina, e estava sendo tratado como
+   secao: 64px de respiro em cima, que o breadcrumb logo acima ja tinha dado,
+   e 64px embaixo, que somados aos 64 do bloco seguinte abriam 205px entre a
+   linha de apresentacao e o primeiro conteudo. Medido no FAQ.
+
+   Em cima, 24px: a mesma distancia que o breadcrumb guarda do header, entao a
+   coluna inteira anda no mesmo compasso. Embaixo, zero: quem separa o titulo
+   do conteudo e o respiro do proprio conteudo, uma vez so.
+
+   `> :first-child` porque a margem do `<h1>` vem do navegador e, com o
+   padding do topo zerado, ela escapa do bloco e volta a empurrar. */
+.yb-crumb + .yb-block{ padding-block:var(--yb-space-6) 0; }
+.yb-crumb + .yb-block > :first-child{ margin-block-start:0; }
+
 /* O ritmo vertical foi desenhado para a tela larga. Numa de 568px, 64px de
    respiro entre blocos e um oitavo da tela gasto em nada — a PDP levava duas
    telas de rolagem ate o botao de comprar. O ritmo encolhe; a hierarquia
