@@ -2350,40 +2350,6 @@ def fim_de_pagina(prods):
     return f"{rodape_v2()}\n{gaveta(prods)}\n{busca(prods)}"
 
 
-def bloco_best_sellers(cards):
-    """Best Sellers — trilho, e nao grade.
-
-    Sao quatro pecas: o cartao de oferta e tres vizinhos. Na grade isso so
-    fecha onde cabem quatro colunas. Entre 768 e 1023 a grade cai para tres e
-    o quarto cartao desce sozinho, com duas vagas vazias do lado; abaixo de
-    768 ela cai para duas e sobra um orfao de novo. O trilho nao quebra linha:
-    o que nao cabe fica a um arrasto de distancia, e a fileira termina sempre
-    reta.
-
-    A troca e a que a folha ja previa — "grade ou carrossel, o mesmo cartao, a
-    escolha e da secao". No tema o lojista marca qual usar; aqui a secao pede
-    carrossel porque quatro nunca foi um numero que fecha em toda largura.
-
-    As setas se escondem sozinhas: `atualizarSetas` apaga o par quando nao ha
-    sobra para rolar, entao no desktop largo, onde os quatro cabem, elas nao
-    aparecem. Abaixo de 768 a folha as esconde de qualquer jeito — no toque,
-    arrasta.
-    """
-    return f'''    <section class="yb-block">
-      <div class="yb-section-head">
-        <h2>Best Sellers</h2>
-        <a class="yb-link" href="/collections/best-sellers">Shop all best sellers {ico('chevron-right')}</a>
-      </div>
-      <div class="yb-track" id="best-track">
-{cards}
-      </div>
-      <div class="yb-track__nav" data-yb-track-nav="best-track" hidden>
-        <button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous best sellers">{ico('chevron-left')}</button>
-        <button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next best sellers">{ico('chevron-right')}</button>
-      </div>
-    </section>'''
-
-
 def montar_home(destino):
     prods = dados.catalogo(os.path.join(destino, 'img'), 8)
     n_banner = copiar_banners(destino) + copiar_colecoes(destino) + copiar_reviews(destino) + copiar_logos(destino) + copiar_posts(destino) + copiar_citacao(destino) + copiar_videos(destino)
@@ -2418,7 +2384,15 @@ def montar_home(destino):
 
   <div class="yb-page">
 
-{bloco_best_sellers(cards)}
+    <section class="yb-block">
+      <div class="yb-section-head">
+        <h2>Best Sellers</h2>
+        <a class="yb-link" href="/collections/best-sellers">Shop all best sellers {ico('chevron-right')}</a>
+      </div>
+      <div class="yb-grid">
+{cards}
+      </div>
+    </section>
 
 {lista_colecoes('What&rsquo;s Standing Between You and Great Hair?', PROBLEMAS, 'bottom')}
   </div>
@@ -3277,7 +3251,15 @@ def montar_home_v2(destino, cliente=None):
 {hero_v2()}
 
   <div class="yb-page">
-{bloco_best_sellers(cards)}
+    <section class="yb-block">
+      <div class="yb-section-head">
+        <h2>Best Sellers</h2>
+        <a class="yb-link" href="/collections/best-sellers">Shop all best sellers {ico('chevron-right')}</a>
+      </div>
+      <div class="yb-grid">
+{cards}
+      </div>
+    </section>
 
 {lista_colecoes('Shop by Concern', PROBLEMAS, 'bottom')}
   </div>
@@ -3373,7 +3355,15 @@ def montar_home_v3(destino):
 {hero_v2()}
 
   <div class="yb-page">
-{bloco_best_sellers(cards)}
+    <section class="yb-block">
+      <div class="yb-section-head">
+        <h2>Best Sellers</h2>
+        <a class="yb-link" href="/collections/best-sellers">Shop all best sellers {ico('chevron-right')}</a>
+      </div>
+      <div class="yb-grid">
+{cards}
+      </div>
+    </section>
 
 {lista_colecoes('Shop by Concern', PROBLEMAS, 'bottom')}
   </div>

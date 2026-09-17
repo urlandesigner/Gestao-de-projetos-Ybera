@@ -1885,45 +1885,6 @@ secao('Véu leve e blur');
 }
 
 /* ===========================================================================
-   BEST SELLERS E TRILHO, E NAO GRADE
-
-   A secao tem quatro pecas — o cartao de oferta e tres vizinhos — e quatro so
-   fecha onde cabem quatro colunas. Entre 768 e 1023 a grade cai para tres e o
-   quarto cartao desce sozinho com duas vagas vazias do lado; abaixo de 768 ela
-   cai para duas e sobra um orfao de novo. Medido nas quatro homes antes da
-   troca: 2 linhas em 1000 e em 860, 3 linhas em 760.
-
-   A checagem existe porque a volta atras e barata e silenciosa: trocar
-   `yb-track` por `yb-grid` numa home e uma palavra, a pagina continua valida, e
-   o buraco so aparece em duas faixas de largura que ninguem abre por acaso.
-
-   Ela cobre as tres coisas que fazem o trilho ser trilho: o contentor certo, o
-   par de setas apontando para ELE (nav sem alvo e nav morto), e a ausencia de
-   grade na secao.
-   =========================================================================== */
-{
-  const homes = ['index.html', 'index-v2.html', 'index-v3.html', 'index-logado.html'];
-  const problemas = [];
-  for (const nome of homes) {
-    const caminho = `_captura/nova-loja/${nome}`;
-    if (!existsSync(join(raiz, caminho))) { problemas.push(`${nome}: nao existe`); continue; }
-    const html = ler(caminho);
-    const h = html.indexOf('<h2>Best Sellers</h2>');
-    if (h < 0) { problemas.push(`${nome}: sem secao Best Sellers`); continue; }
-    const ini = html.lastIndexOf('<section', h);
-    const fim = html.indexOf('</section>', h);
-    const sec = html.slice(ini, fim);
-    if (!/<div class="yb-track" id="best-track">/.test(sec)) problemas.push(`${nome}: a vitrine nao e .yb-track`);
-    if (!/data-yb-track-nav="best-track"/.test(sec)) problemas.push(`${nome}: setas sem alvo`);
-    if (/class="yb-grid"/.test(sec)) problemas.push(`${nome}: ainda ha grade na secao`);
-  }
-  problemas.length
-    ? falha('Best Sellers voltou a ser grade', problemas.join(' · ')
-        + ' — quatro pecas nao fecham entre 768 e 1023')
-    : ok('Best Sellers e trilho nas quatro homes', 'contentor, setas com alvo, sem grade');
-}
-
-/* ===========================================================================
    O NUMERO QUE A DOC PROMETE
 
    Esta e a ultima checagem porque ela e a unica que so pode existir aqui: o

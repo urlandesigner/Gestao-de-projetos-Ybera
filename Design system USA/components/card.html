@@ -146,13 +146,16 @@
       script e sem controle na tela. No tema, o lojista marca qual usar por seção.</p>
       <p>O ganho é de altura no celular, e é grande: medido em 375px, uma vitrine de
       quatro cartões cai de <b>1133px</b> de grade para <b>528px</b> de trilho.</p>
-      <p><b>Mas o trilho não é só economia de altura no celular.</b> Esta nota já disse
-      que "no desktop os dois empatam, porque quatro cartões cabem de qualquer jeito",
-      e isso estava errado — cabem onde há quatro colunas. A grade das homes cai para
-      três entre 768 e 1023: o quarto cartão desce sozinho com duas vagas vazias ao
-      lado. Medido no Best Sellers antes da troca: <b>2 linhas em 1000px e em 860</b>,
-      <b>3 em 760</b>. O trilho não quebra linha, então a fileira termina reta em
-      qualquer largura — é por isso que as quatro homes usam trilho ali.</p>
+      <p><b>No desktop os dois não empatam — e esta nota já disse que sim.</b> A frase
+      era "quatro cartões cabem na largura de qualquer jeito", e ela é falsa: cabem
+      onde há quatro colunas. A grade cai para três entre 768 e 1151 e o quarto cartão
+      desce sozinho, com duas vagas vazias ao lado. Medido no Best Sellers das homes:
+      <b>2 linhas em 1000px e em 860</b>, <b>3 em 760</b>. O trilho não quebra linha —
+      em troca, abaixo de 1152 ele rola em vez de mostrar os quatro de uma vez.</p>
+      <p>Nenhum dos dois é o certo: é escolha da seção, e por ora as homes ficam na
+      grade. A informação que importa na hora de escolher é a largura em que os itens
+      param de caber, e para quatro cartões de 260px com gap de 16 ela é <b>1152px de
+      viewport</b> — o trilho precisa de 1088, que é o que a página oferece ali.</p>
       <p>O <a href="#demos">cartão de oferta</a> tem regra própria dentro do trilho,
       <b>e só no celular</b>: ali ele ocupa as duas colunas porque é <b>a</b> oferta do
       dia, e solto viraria mais um cartão de 260px. <code>span 2</code> sozinho dá

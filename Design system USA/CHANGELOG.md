@@ -40,12 +40,12 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   **Account**. Único bloco com fundo e único botão da gaveta.
 
 ### Alterado
-- **Best Sellers nas quatro homes virou trilho.** São quatro peças — o cartão
-  de oferta e três vizinhos — e quatro só fecha onde cabem quatro colunas. A
-  grade caía para três entre 768 e 1023 e o quarto cartão descia sozinho, com
-  duas vagas vazias ao lado: **2 linhas em 1000px e em 860, 3 em 760**. O trilho
-  não quebra linha. As setas se escondem sozinhas onde tudo cabe, e a folha já
-  as esconde abaixo de 768 — no toque, arrasta. Checagem nova no portão.
+- **O Best Sellers das homes continua em grade.** Chegou a virar trilho e
+  voltou, por decisão de quem desenha: abaixo de 1152px a grade quebra em 3+1
+  com duas vagas vazias (**2 linhas em 1000px e em 860, 3 em 760**), mas o
+  trilho resolve isso rolando, e mostrar três cartões e meio não foi o que se
+  quis. A medida fica registrada na peça do cartão: 1152px é a largura em que
+  quatro cartões de 260 param de caber.
 - **O `span 2` do cartão de oferta no trilho passou a valer só abaixo de 768.**
   A regra foi escrita para a grade de duas colunas do celular; no trilho de
   desktop ela dava um cartão de 536px e 228px de sobra para rolar numa fileira
