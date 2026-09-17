@@ -69,6 +69,10 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   sistema. Os arquivos ficam em `_captura/home/` e `_captura/pdp-fashion-gold/`
   — são fonte de dados do gerador, não deixam de existir por sair da capa.
   O CSS de `.linhas`, que só elas usavam, saiu junto.
+- A linha de apoio da capa ficou em "Fundação, componentes e padrões." A
+  ressalva de plataforma — US em Shopify, BR em Wake — é decisão de projeto e
+  vive no README e na DDR; na capa ela respondia uma pergunta que ninguém faz
+  na porta de entrada.
 
 ### Corrigido
 - O painel do "About Us" herdava o piso de 8rem por coluna, escrito para o
