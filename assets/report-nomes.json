@@ -1,0 +1,5 @@
+{
+  "_leia": "Camada editorial do report: id do item → { nome, resumo }. nome = como o stakeholder chama a frente/funcionalidade; resumo = uma linha do que ela entrega (só épicos precisam). Só épicos e Features entram — PBI fica com o título original, agrupado embaixo. Sem entrada, o report usa o título do sistema. Rascunho: botão 'N sem nome' no report (modo PO) copia o esqueleto em JSON.",
+  "atualizadoEm": "2026-09-17",
+  "itens": {}
+}

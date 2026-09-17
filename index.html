@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026082701">
+<link rel="stylesheet" href="assets/style.css?v=2026082713">
 </head>
 <body data-pagina="panorama">
 <div class="app">
@@ -22,7 +22,6 @@
     <a id="nav-panorama" href="#panorama"><span class="rotulo-nav">Panorama</span></a>
     <a id="nav-pendencias" href="#pendencias"><span class="rotulo-nav">Pendências</span></a>
     <a id="nav-produtos" href="#produtos"><span class="rotulo-nav">Produtos</span></a>
-    <a id="nav-futuro" href="#futuro"><span class="rotulo-nav">Futuro</span></a>
     <a id="nav-report" href="report.html?po=1" title="Abre o report em página própria — é o que vai pro stakeholder. O ?po=1 traz as suas ferramentas; o link que você compartilha não tem isso."><span class="rotulo-nav">Report</span></a>
     <a id="nav-meus-itens" href="#meus-itens"><span class="rotulo-nav">Meus itens</span> <span id="conta-nav-mi" class="conta-nav"></span></a>
     <a id="nav-projetos" href="#projetos"><span class="rotulo-nav">Projetos</span> <span id="conta-nav-proj" class="conta-nav"></span></a>
@@ -56,11 +55,6 @@
   <section id="secao-produtos">
     <h2>Produtos</h2>
     <div id="produtos"></div>
-  </section>
-
-  <section id="secao-futuro">
-    <h2>Futuro</h2>
-    <div id="futuro"></div>
   </section>
 
   <section id="secao-meus-itens">
@@ -97,6 +91,23 @@
     </div>
     <p id="board-status" class="mudo" hidden></p>
     <div id="board-colunas" class="quadro quadro-board"></div>
+  </section>
+
+  <section id="epico-view" hidden>
+    <header class="board-topo">
+      <button id="epico-voltar" title="Voltar pra Produtos">←</button>
+      <div class="board-titulos">
+        <h2 id="epico-titulo"></h2>
+        <p id="epico-sub" class="mudo"></p>
+      </div>
+      <div class="board-acoes">
+        <a id="epico-devops" target="_blank" rel="noopener">Abrir no DevOps</a>
+      </div>
+    </header>
+    <p id="epico-status" class="mudo" hidden></p>
+    <div class="bloco">
+      <div id="epico-lista"></div>
+    </div>
   </section>
 </main>
 </div>
@@ -157,8 +168,8 @@
   </form>
 </dialog>
 
-<script src="assets/core.js?v=2026082701"></script>
-<script src="assets/api.js?v=2026082701"></script>
-<script src="assets/app.js?v=2026082701"></script>
+<script src="assets/core.js?v=2026082713"></script>
+<script src="assets/api.js?v=2026082713"></script>
+<script src="assets/app.js?v=2026082713"></script>
 </body>
 </html>

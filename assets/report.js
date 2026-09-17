@@ -71,6 +71,7 @@ const st = {
   escopo: '',
   agora: 0,
   roadmap: [], // vem de assets/roadmap.json (PO) ou do link (leitura) — nunca do DevOps
+  nomes: {},   // nome de negócio por item: assets/report-nomes.json (PO) ou o link (leitura)
 };
 
 function respAtivo() { return st.resp === null ? (st.usuario || '') : st.resp; }
@@ -118,6 +119,35 @@ async function carregarRoadmap() {
     const dado = await resp.json();
     st.roadmap = saneRoadmapItens(dado.itens);
   } catch (e) { /* rede falhou ou JSON inválido: mesma degradação — sem roadmap, sem erro */ }
+}
+
+/* ---------- Nome de negócio: a camada editorial ---------- */
+// assets/report-nomes.json: id do item → { nome, resumo }. É o único texto do
+// documento escrito por gente, não lido do sistema — o título de lá é jargão
+// ("[GLOBAL] BOGO via MetaFields") e não diz nada ao stakeholder. Só épicos e
+// Features ganham nome; PBI fica com o título, agrupado embaixo. O mesmo
+// saneamento serve o arquivo (PO) e o link (leitura): id numérico, texto curto.
+function saneNomes(obj) {
+  const out = {};
+  if (obj && typeof obj === 'object') {
+    for (const k of Object.keys(obj)) {
+      if (!/^\d+$/.test(k)) continue;
+      const v = obj[k] || {};
+      const nome = String(v.nome || '').trim().slice(0, 160);
+      if (!nome) continue;
+      out[k] = { nome, resumo: String(v.resumo || '').trim().slice(0, 300) };
+    }
+  }
+  return out;
+}
+
+async function carregarNomes() {
+  try {
+    const resp = await fetch('assets/report-nomes.json', { cache: 'no-store' });
+    if (!resp.ok) return; // sem arquivo: títulos originais, sem erro
+    const dado = await resp.json();
+    st.nomes = saneNomes(dado.itens);
+  } catch (e) { /* JSON inválido ou rede: mesma degradação */ }
 }
 
 function renderBadge() {
@@ -314,6 +344,7 @@ function render() {
     // Roadmap não bifurca por modo: nos dois casos já chega pronto em
     // st.roadmap (do arquivo estático ou do link), nunca recalculado aqui.
     roadmap: st.roadmap,
+    nomes: st.nomes, // idem: do arquivo (PO) ou do link (leitura), já saneado
     agora: st.leitura ? st.agora : Date.now(),
     escopo: st.leitura ? st.escopo : respAtivo(),
     unidade: UNIDADE,
@@ -330,6 +361,7 @@ function render() {
   aplicarFiltroEntregas(); // acerta o contador e esconde o "limpar"
   st.vazio = r.vazio;
   $('copiar').disabled = r.vazio;
+  renderSemNome();
 }
 
 async function buscarPais(base) {
@@ -482,6 +514,73 @@ function decisoesDoLink(mostrados) {
   return out;
 }
 
+// Nome de negócio só dos itens que o leitor vai ver (e dos produtos que os
+// agrupam) — link enxuto, título cru nunca chega ao stakeholder.
+function nomesDoLink(mostrados) {
+  const ids = new Set(mostrados.map((it) => it.id));
+  for (const p of C.mapaDeProdutos(mostrados.concat(st.pais)).values()) ids.add(p.id);
+  const out = {};
+  for (const id of ids) if (st.nomes[id]) out[id] = st.nomes[id];
+  return out;
+}
+
+/* ---------- Ferramenta do PO: o que ainda está sem nome ---------- */
+// Épicos e Features que o documento mostra e ainda não têm nome de negócio:
+// tudo em aberto no recorte, mais o que entregou no mês escolhido, mais os
+// produtos que agrupam os itens (que costumam estar em outro nome). É a lista
+// que vira rascunho de nomes — o PO copia em JSON, alguém escreve, e o
+// resultado entra em assets/report-nomes.json.
+function semNome() {
+  if (!st.items) return [];
+  const mostrados = st.items.filter(noNome);
+  const porId = new Map(st.items.concat(st.pais).map((it) => [it.id, it]));
+  const mesKey = st.mes || new Date().toISOString().slice(0, 7);
+  const candidatos = new Map();
+  const considera = (it) => {
+    if (!it || candidatos.has(it.id) || st.nomes[it.id]) return;
+    const f = it.fields || {};
+    const nivel = C.levelOf(f['System.WorkItemType']);
+    if (nivel === 'pbi') return;
+    candidatos.set(it.id, { id: it.id, tipo: nivel, titulo: f['System.Title'] || '' });
+  };
+  for (const it of mostrados) {
+    const f = it.fields || {};
+    if (!C.isTerminalState(f['System.State'])) { considera(it); continue; }
+    const quando = f['Microsoft.VSTS.Common.ClosedDate'] || f['System.ChangedDate'] || '';
+    if (String(quando).slice(0, 7) === mesKey) considera(it);
+  }
+  for (const p of C.mapaDeProdutos(mostrados.concat(st.pais)).values()) considera(porId.get(p.id));
+  return [...candidatos.values()].sort((a, b) =>
+    (a.tipo === b.tipo ? a.titulo.localeCompare(b.titulo, 'pt-BR') : a.tipo === 'epic' ? -1 : 1));
+}
+
+function renderSemNome() {
+  const btn = $('sem-nome');
+  if (!btn) return;
+  const lista = (st.leitura || !FERRAMENTAS) ? [] : semNome();
+  btn.hidden = !lista.length;
+  btn.textContent = lista.length ? `${lista.length} sem nome` : '';
+}
+
+async function copiarSemNome() {
+  const lista = semNome();
+  if (!lista.length) return;
+  const esqueleto = {};
+  for (const x of lista) esqueleto[x.id] = { nome: '', resumo: '', _titulo: x.titulo, _tipo: x.tipo };
+  const txt = JSON.stringify(esqueleto, null, 2);
+  let copiou = true;
+  try { await navigator.clipboard.writeText(txt); } catch (e) { copiou = false; }
+  const caixa = $('caixa-link');
+  caixa.hidden = false;
+  caixa.innerHTML = `
+    <p class="link-aviso">${copiou ? 'Copiado. ' : ''}${lista.length} ${lista.length === 1 ? 'item' : 'itens'} sem nome de negócio, em JSON —
+    cole pra quem vai escrever os nomes; preenchido, entra em <b>assets/report-nomes.json</b> (o <b>_titulo</b> é só referência).</p>
+    <textarea id="campo-sem-nome" readonly aria-label="Itens sem nome de negócio" rows="8">${B.esc(txt)}</textarea>`;
+  const campo = $('campo-sem-nome');
+  campo.focus();
+  campo.select();
+}
+
 let geracaoLink = 0; // troca rápida de mês: só a gravação mais nova pode escrever
 
 async function gravarLink() {
@@ -501,6 +600,7 @@ async function gravarLink() {
       produtos: produtosDoLink(mostrados), // objetivo + rumo, prontos
       decisoes: decisoesDoLink(mostrados), // pedido de decisão por item travado
       roadmap: st.roadmap, // já veio saneado de assets/roadmap.json
+      nomes: nomesDoLink(mostrados), // nome de negócio só do que o leitor vê
     };
     const carga = '#r=' + await comprimir(JSON.stringify(pacote));
     if (minha !== geracaoLink) return; // outra gravação começou depois: ela manda
@@ -593,6 +693,7 @@ async function lerDoLink() {
     st.produtos = saneProdutos(pacote.produtos);
     st.decisoes = saneMapaTexto(pacote.decisoes);
     st.roadmap = saneRoadmapItens(pacote.roadmap);
+    st.nomes = saneNomes(pacote.nomes); // forjável como o resto: texto curto, id numérico
     st.escopo = pacote.escopo || '';
     st.agora = pacote.em || Date.now();
     st.mes = pacote.mes || null;
@@ -620,7 +721,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Não bloqueia o primeiro render nem espera o DevOps: o arquivo é local e
   // pequeno, chega rápido, e quando chega o render() de novo é barato.
   carregarRoadmap().then(render);
+  // Os nomes podem chegar depois do link já gravado — regrava, senão o
+  // stakeholder abre um link com título cru.
+  carregarNomes().then(async () => { render(); if (st.items && !st.erro) await gravarLink(); });
   $('atualizar').addEventListener('click', carregar);
+  $('sem-nome').addEventListener('click', copiarSemNome);
   $('copiar').addEventListener('click', copiarLink);
   $('resp-global').addEventListener('change', async () => {
     st.resp = $('resp-global').value;

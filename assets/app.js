@@ -471,19 +471,19 @@ function renderPanorama() {
 // (só ao abrir a página), como o board dedicado — o refresh geral não paga por
 // ela. Estado em memória, não no localStorage: são centenas de itens que só
 // servem a esta tela.
-// Base completa, sob demanda: uma consulta serve Produtos, Report E Futuro. Guarda os
+// Base completa, sob demanda: uma consulta serve Produtos e Report. Guarda os
 // itens crus além dos épicos rolados — o Report precisa de todos, e buscar duas
 // vezes a mesma coisa seria desperdício.
 const baseState = { porTime: null, carregando: false, erro: null, fetchedAt: 0 };
 
 async function carregarBase(forcar) {
   if (!state.config || baseState.carregando) return;
-  if (!state.pat) { renderProdutos(); renderFuturo(); return; }
+  if (!state.pat) { renderProdutos(); renderEpico(); return; }
   if (!forcar && baseState.porTime && !C.isStale(baseState.fetchedAt, Date.now())) return;
   baseState.carregando = true;
   baseState.erro = null;
   renderProdutos();
-  renderFuturo();
+  renderEpico();
   try {
     const porTime = [];
     for (const p of state.config.projects.filter((x) => !x.hidden)) {
@@ -503,7 +503,7 @@ async function carregarBase(forcar) {
   } finally {
     baseState.carregando = false;
     renderProdutos();
-    renderFuturo();
+    renderEpico();
     renderBadge();
   }
 }
@@ -527,24 +527,29 @@ function renderProdutos() {
     box.innerHTML = erroHtml + (baseState.erro ? '' : '<p class="mudo">carregando produtos…</p>');
     return;
   }
-  const multi = baseState.porTime.length > 1;
-  const blocos = baseState.porTime.map(({ p, produtos: todosProdutos }) => {
+  // Squad Ecommerce não tem épico próprio aqui — quem carrega produto de
+  // verdade são Vertical Ecommerce e Growth. Só some do card de Produtos;
+  // Squad Ecommerce continua valendo pro Panorama (sprint).
+  const porTimeProdutos = baseState.porTime.filter(({ p }) => p.teamName !== 'Squad Ecommerce');
+  // Bloco (fundo cinza) sempre presente, mesmo com um time só: o card do
+  // épico é branco (.card.produto) e depende do bloco pra não desaparecer
+  // sobre o fundo branco da própria seção — some junto se o bloco sumir.
+  const blocos = porTimeProdutos.map(({ p, produtos: todosProdutos }) => {
     // filtra pelo dono do ÉPICO; o roll-up já foi feito com a árvore inteira,
     // senão o progresso viraria "1/1" ao esconder filhos de outras pessoas
     const produtos = todosProdutos.filter((reg) => noNome(reg.item));
     const corpo = produtos.length
       ? `<div class="grid-produtos">${produtos.map((reg) => htmlProduto(reg, p)).join('')}</div>`
       : '<p class="mudo">Nenhum épico neste time.</p>';
-    return multi
-      ? `<section class="bloco"><h3>${escapeHtml(p.teamName)}<span class="conta">${produtos.length}</span></h3>${corpo}</section>`
-      : corpo;
+    return `<section class="bloco"><h3>${escapeHtml(p.teamName)}<span class="conta">${produtos.length}</span></h3>${corpo}</section>`;
   }).join('');
-  box.innerHTML = erroHtml + (multi ? `<div class="blocos">${blocos}</div>` : blocos);
+  box.innerHTML = erroHtml + `<div class="blocos">${blocos}</div>`;
 }
 
 function htmlProduto(reg, p) {
   const f = reg.item.fields || {};
   const link = C.deepLinks(state.config.org, p.projectName, '').workItem(reg.item.id);
+  const linkEpico = `#epico/${encodeURIComponent(p.projectName)}/${encodeURIComponent(p.teamName)}/${reg.item.id}`;
   const resp = f['System.AssignedTo'] && f['System.AssignedTo'].displayName;
   const { total, feitos } = reg.filhos;
   const pct = total ? Math.round((feitos / total) * 100) : 0;
@@ -557,56 +562,11 @@ function htmlProduto(reg, p) {
     </div>
     <div class="linha"><span class="rot">Janela</span><span class="val">${janela(f['Microsoft.VSTS.Scheduling.StartDate'], f['Microsoft.VSTS.Scheduling.TargetDate'])}</span></div>
     <div class="linha"><span class="rot">Responsável</span><span class="val">${resp ? escapeHtml(resp) : 'sem responsável'}</span></div>
-    <div class="progresso">
-      <span class="sprint-linha"><span class="sprint-nome">${total ? 'Entregue' : 'Sem filhos'}</span><span class="sprint-prog">${total ? feitos + '/' + total : '—'}</span></span>
+    <a class="progresso" href="${linkEpico}" title="Ver Features e PBIs deste épico">
+      <span class="sprint-linha"><span class="sprint-nome">${total ? 'Entregue' : 'Sem filhos'}</span><span class="sprint-prog">${total ? feitos + '/' + total : '—'} <span class="seta">→</span></span></span>
       <span class="barra"><span class="barra-cheia" style="width:${pct}%"></span></span>
-    </div>
+    </a>
   </article>`;
-}
-
-/* ---------- Futuro ---------- */
-// Vocabulário do Radar de propósito (a página lá se chama Futuro, com as faixas
-// Agora / A seguir / Depois): é o modelo mental que o Urlan já tem. A faixa
-// sai do que já está em movimento (C.futuroPorAtividade), não de StartDate —
-// nem todo épico tem essa data preenchida.
-const FAIXAS_FUTURO = {
-  agora: { rotulo: 'Agora', legenda: 'Em andamento ou já entregando' },
-  seguir: { rotulo: 'A seguir', legenda: 'Backlog pronto, ninguém começou' },
-  depois: { rotulo: 'Depois', legenda: 'Ainda não foi detalhado' },
-};
-
-function renderFuturo() {
-  const box = $('futuro');
-  if (!box || !state.config) return;
-  if (!state.pat) { box.innerHTML = semDados('o futuro'); return; }
-  const erroHtml = baseState.erro ? `<p class="erro">${escapeHtml(baseState.erro)}</p>` : '';
-  if (!baseState.porTime) {
-    box.innerHTML = erroHtml + (baseState.erro ? '' : '<p class="mudo">carregando projetos…</p>');
-    return;
-  }
-  // A árvore inteira (sem filtro) vai pro classificador — a atividade de um
-  // PBI conta pro épico mesmo quando o PBI está no nome de outra pessoa. O
-  // filtro por responsável entra só depois, na lista de épicos de cada faixa.
-  const todos = baseState.porTime.flatMap(({ items }) => items);
-  const faixas = C.futuroPorAtividade(todos).map((f) => ({ ...f, itens: f.itens.filter(noNome) }));
-  const blocos = faixas.map((f) => {
-    const def = FAIXAS_FUTURO[f.faixa];
-    const linhas = f.itens.map((it) => {
-      const fl = it.fields || {};
-      const link = C.deepLinks(state.config.org, it.projeto, '').workItem(it.id);
-      return `<li><a class="item-linha" href="${link}" target="_blank" rel="noopener">
-        <span class="badge-tipo tipo-epic">Épico</span>
-        <span class="titulo">${escapeHtml(fl['System.Title'] || ('item #' + it.id))}</span>
-        <span class="quando">${janela(fl['Microsoft.VSTS.Scheduling.StartDate'], fl['Microsoft.VSTS.Scheduling.TargetDate'])}</span>
-        <span class="id">#${it.id}</span>
-      </a></li>`;
-    }).join('');
-    return `<section class="bloco">
-      <h3>${def.rotulo}<span class="faixa-ate">${def.legenda}</span><span class="conta">${f.itens.length}</span></h3>
-      ${f.itens.length ? `<ul class="lista-linhas">${linhas}</ul>` : '<p class="mudo faixa-vazia">Nenhum épico aqui agora.</p>'}
-    </section>`;
-  }).join('');
-  box.innerHTML = erroHtml + `<div class="blocos">${blocos}</div>`;
 }
 
 /* ---------- Pendências ---------- */
@@ -872,9 +832,16 @@ function renderRoute() {
     if (p) { abrirBoard(p, !!m[3]); setPagina('board'); return; }
   }
   fecharBoard();
+  const me = hash.match(/^#epico\/([^/]+)\/([^/]+)\/(\d+)$/);
+  if (me && state.config) {
+    const projectName = decodeURIComponent(me[1]);
+    const teamName = decodeURIComponent(me[2]);
+    const p = state.config.projects.find((x) => x.projectName === projectName && x.teamName === teamName);
+    if (p) { abrirEpico(p, Number(me[3])); setPagina('epico'); return; }
+  }
+  fecharEpico();
   if (hash === '#pendencias') { setPagina('pendencias'); return; }
   if (hash === '#produtos') { setPagina('produtos'); carregarBase(false); return; }
-  if (hash === '#futuro') { setPagina('futuro'); carregarBase(false); return; }
   if (hash === '#projetos') { setPagina('projetos'); return; }
   if (hash === '#meus-itens') { setPagina('meus-itens'); return; }
   setPagina('panorama'); // abertura: visão geral antes do detalhe
@@ -884,8 +851,7 @@ function setPagina(pagina) {
   document.body.dataset.pagina = pagina;
   $('nav-panorama').classList.toggle('ativa', pagina === 'panorama');
   $('nav-pendencias').classList.toggle('ativa', pagina === 'pendencias');
-  $('nav-produtos').classList.toggle('ativa', pagina === 'produtos');
-  $('nav-futuro').classList.toggle('ativa', pagina === 'futuro');
+  $('nav-produtos').classList.toggle('ativa', pagina === 'produtos' || pagina === 'epico');
   $('nav-meus-itens').classList.toggle('ativa', pagina === 'meus-itens');
   $('nav-projetos').classList.toggle('ativa', pagina === 'projetos' || pagina === 'board');
 }
@@ -900,6 +866,92 @@ function abrirBoard(p, comSprint) {
 function fecharBoard() {
   const bv = $('board-view');
   if (bv) bv.hidden = true;
+}
+
+// Tela do épico: sem consulta própria — reusa a árvore que a Produtos já
+// carregou (baseState.porTime já tem Épico + Feature + PBI do time inteiro).
+const epicoState = { p: null, id: null };
+
+function abrirEpico(p, id) {
+  epicoState.p = p;
+  epicoState.id = id;
+  $('epico-view').hidden = false;
+  carregarBase(false);
+  renderEpico();
+}
+
+function fecharEpico() {
+  const ev = $('epico-view');
+  if (ev) ev.hidden = true;
+  epicoState.p = null;
+  epicoState.id = null;
+}
+
+// Rótulo dos grupos de status na tela do épico — mesma etiqueta de "A fazer/
+// Em andamento/Atenção" que Meus Itens já usa, mais "Concluído": aqui a tela
+// mostra a árvore inteira do épico, não só o que ainda está por fazer.
+const ROTULO_STATUS_EPICO = { atencao: 'Atenção', andamento: 'Em andamento', todo: 'A fazer', feito: 'Concluído' };
+
+function renderEpico() {
+  const box = $('epico-lista');
+  if (!box || !epicoState.p) return;
+  const p = epicoState.p;
+  $('epico-devops').href = C.deepLinks(state.config.org, p.projectName, '').workItem(epicoState.id);
+  const st = $('epico-status');
+  const erroHtml = baseState.erro ? escapeHtml(baseState.erro) : '';
+  if (!baseState.porTime) {
+    st.hidden = false;
+    st.innerHTML = baseState.erro ? `<span class="erro">${erroHtml}</span>` : 'carregando…';
+    box.innerHTML = '';
+    return;
+  }
+  const entry = baseState.porTime.find((e) => e.p === p);
+  const detalhe = entry ? C.epicoDetalhe(entry.items, epicoState.id) : null;
+  if (!detalhe) {
+    st.hidden = false;
+    st.textContent = 'Épico não encontrado — pode ter sido concluído ou removido.';
+    box.innerHTML = '';
+    return;
+  }
+  st.hidden = true;
+  const f = detalhe.epico.fields || {};
+  $('epico-titulo').textContent = f['System.Title'] || ('Épico #' + epicoState.id);
+  $('epico-sub').textContent = p.projectName + ' · ' + p.teamName;
+  if (!detalhe.descendentes.length) {
+    box.innerHTML = '<p class="mudo">Nenhuma Feature ou PBI neste épico ainda.</p>';
+    return;
+  }
+  // Agrupa por status pra separar visualmente o que já anda do que ainda não
+  // começou — o épico já vem ordenado (nível, status, título) do core, então
+  // o agrupamento só precisa preservar essa ordem dentro de cada grupo.
+  const porStatus = new Map();
+  for (const it of detalhe.descendentes) {
+    const bucket = C.stateBucket((it.fields || {})['System.State']);
+    if (!porStatus.has(bucket)) porStatus.set(bucket, []);
+    porStatus.get(bucket).push(it);
+  }
+  box.innerHTML = ['atencao', 'andamento', 'todo', 'feito']
+    .filter((bucket) => porStatus.has(bucket))
+    .map((bucket) => {
+      const itens = porStatus.get(bucket);
+      return `<div class="epico-grupo">
+        <header><h4><span class="ponto" style="background:${corColunaPorBucket(bucket)}"></span>${ROTULO_STATUS_EPICO[bucket]}</h4><span class="conta">${itens.length}</span></header>
+        <ul class="lista-linhas">${itens.map((it) => htmlEpicoItem(it, p)).join('')}</ul>
+      </div>`;
+    }).join('');
+}
+
+function htmlEpicoItem(it, p) {
+  const f = it.fields || {};
+  const slug = C.typeSlug(f['System.WorkItemType']);
+  const titulo = f['System.Title'] || ('item #' + it.id);
+  const link = C.deepLinks(state.config.org, p.projectName, '').workItem(it.id);
+  return `<li><a class="item-linha" href="${link}" target="_blank" rel="noopener" title="${escapeHtml(titulo)}">
+    <span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span>
+    <span class="titulo">${escapeHtml(titulo)}</span>
+    <span class="quando">${escapeHtml(f['System.State'] || '')}</span>
+    <span class="id">#${it.id}</span>
+  </a></li>`;
 }
 
 async function carregarBoard(p, force) {
@@ -1129,11 +1181,12 @@ document.addEventListener('DOMContentLoaded', () => {
   $('wizard-concluir').addEventListener('click', wizardConclude);
   $('atualizar').addEventListener('click', () => {
     refreshAll(true);
-    // as duas páginas que leem a base têm cache próprio
-    if (['produtos', 'futuro'].includes(document.body.dataset.pagina)) carregarBase(true);
+    // Produtos lê a base direto, com cache próprio
+    if (document.body.dataset.pagina === 'produtos') carregarBase(true);
   });
   $('abrir-config').addEventListener('click', openSettings);
   $('board-voltar').addEventListener('click', () => { location.hash = '#projetos'; });
+  $('epico-voltar').addEventListener('click', () => { location.hash = '#produtos'; });
   $('board-atualizar').addEventListener('click', () => { if (boardState.p) carregarBoard(boardState.p, true); });
   $('board-filtro-sprint').addEventListener('click', () => {
     boardState.soSprint = !boardState.soSprint;
@@ -1153,7 +1206,6 @@ document.addEventListener('DOMContentLoaded', () => {
     salvarFiltrosMI();
     renderAll();
     renderProdutos();
-    renderFuturo();
     if (boardState.p) renderBoard(boardState.p);
   });
   // Sidebar colapsável — preferência persiste entre visitas

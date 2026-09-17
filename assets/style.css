@@ -159,10 +159,6 @@ body.lateral-recolhida .lateral-topo { justify-content: center; }
 #nav-produtos {
   --icone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 8v8a2 2 0 0 1-1 1.7l-7 4a2 2 0 0 1-2 0l-7-4A2 2 0 0 1 3 16V8a2 2 0 0 1 1-1.7l7-4a2 2 0 0 1 2 0l7 4A2 2 0 0 1 21 8Z'/%3E%3Cpath d='m3.3 7 8.7 5 8.7-5'/%3E%3Cpath d='M12 22V12'/%3E%3C/svg%3E");
 }
-/* Futuro: calendário — quando cada projeto começa */
-#nav-futuro {
-  --icone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='3'/%3E%3Cpath d='M8 3v4'/%3E%3Cpath d='M16 3v4'/%3E%3Cpath d='M3 11h18'/%3E%3C/svg%3E");
-}
 /* Report: documento com linhas (o que foi entregue, mês a mês) */
 #nav-report {
   --icone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3v4a1 1 0 0 0 1 1h4'/%3E%3Cpath d='M19 8v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7Z'/%3E%3Cpath d='M9 13h6'/%3E%3Cpath d='M9 17h4'/%3E%3C/svg%3E");
@@ -208,11 +204,10 @@ h2 { font-size: 1.25rem; margin: 0 0 1rem; }
 /* Troca de página: esconde todas e mostra só a ativa. Antes era par a par
    ("meus-itens esconde projetos"…), o que multiplicava regras a cada página
    nova. O board tem o próprio atributo hidden e não entra aqui. */
-#secao-panorama, #secao-pendencias, #secao-produtos, #secao-futuro, #secao-report, #secao-meus-itens, #secao-projetos { display: none; }
+#secao-panorama, #secao-pendencias, #secao-produtos, #secao-report, #secao-meus-itens, #secao-projetos { display: none; }
 body[data-pagina='panorama'] #secao-panorama,
 body[data-pagina='pendencias'] #secao-pendencias,
 body[data-pagina='produtos'] #secao-produtos,
-body[data-pagina='futuro'] #secao-futuro,
 body[data-pagina='report'] #secao-report,
 body[data-pagina='projetos'] #secao-projetos { display: block; }
 /* Precisa de display:flex (não block) pra esticar as colunas do quadro —
@@ -514,7 +509,7 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
   box-shadow: var(--sombra-cartao);
 }
 .sprint-card-link { display: block; text-decoration: none; color: var(--tinta); }
-/* Prévia dos itens abertos: mesma linha-cartão do Futuro/Report
+/* Prévia dos itens abertos: mesma linha-cartão do Report/tela do épico
    (.lista-linhas .item-linha) — só duas coisas mudam por estar dentro de um
    card que já é --superficie (branco): a folga acima (linha divisória depois
    da barra de progresso) e o fundo da linha, senão ela desaparece dentro do
@@ -540,6 +535,12 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
 /* ---------- Panorama ---------- */
 .blocos { display: flex; flex-direction: column; gap: 0.85rem; }
 .bloco { background: var(--superficie-2); border-radius: 18px; padding: 1rem 0.95rem; }
+/* Tela do épico: grupos por status empilhados no mesmo bloco — mesmo
+   cabeçalho (ponto + rótulo + contagem) das colunas de Meus itens/board,
+   só que um embaixo do outro em vez de lado a lado. */
+#epico-lista .epico-grupo + .epico-grupo { margin-top: 1.1rem; }
+#epico-lista .epico-grupo > header { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; padding: 0 0.2rem 0.5rem; }
+#epico-lista .epico-grupo h4 { margin: 0; font-size: 0.9rem; display: flex; align-items: center; gap: 0.45rem; }
 /* seletor com .blocos na frente pra vencer ".card h3" sem depender da ordem */
 .blocos .bloco > h3 {
   margin: 0 0 0.7rem;
@@ -616,29 +617,21 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* margin-top:auto encosta a barra na base — cartões vizinhos alinham */
+/* margin-top:auto encosta a barra na base — cartões vizinhos alinham.
+   Virou link pra tela do épico (Features/PBIs), por isso reseta estilo de <a>. */
 .progresso {
+  display: block;
   background: var(--superficie-2); /* cinza dentro do cartão branco */
   border-radius: 12px;
   padding: 0.55rem 0.7rem 0.65rem;
   margin-top: auto;
+  text-decoration: none;
+  color: inherit;
 }
+.progresso:hover { background: #ececea; }
+.progresso .seta { color: var(--mudo); }
 /* contador ao lado do nome do time, no cabeçalho do bloco */
 .blocos .bloco > h3 .conta { margin-left: auto; }
-
-/* ---------- Futuro ---------- */
-/* "até 30 de set." ao lado do nome da faixa: o rótulo diz quando, não só o quê */
-.faixa-ate {
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--mudo);
-  padding: 0.1rem 0.45rem;
-  background: var(--superficie);
-  border-radius: 999px;
-}
-.faixa-vazia { margin: 0 0.2rem 0.2rem; font-size: 0.82rem; }
 
 /* Página report.html: sem sidebar, uma coluna. O botão de texto conviveria
    mal com os quadrados de ícone, então tem largura própria. */
@@ -987,19 +980,9 @@ body.pagina-report main > section {
     radial-gradient(circle at 22% 88%, rgba(95, 205, 145, 0.11), transparent 48%),
     linear-gradient(90deg, #1e1e1f 0%, #1e1e1f 42%, #171718 100%);
 }
-/* Grade de linhas finas, copiada exata do report de referência (mesmo SVG
-   ladrilhado 44×44, mesma opacidade) — é o detalhe que dá ao blur da nav
-   algo pra distorcer visivelmente; sem textura nenhuma atrás, o blur vira
-   só uma tinta plana. */
-.doc-capa::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: 0.45;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cpath d='M44 0H0V1h44M0 44V0h1v44' fill='none' stroke='rgba(255,255,255,0.065)' stroke-width='1'/%3E%3Crect x='-1.5' y='-1.5' width='3' height='3' fill='rgba(255,255,255,0.14)'/%3E%3C/svg%3E") repeat;
-  pointer-events: none;
-}
+/* A grade de linhas finas ladrilhada saiu a pedido do PO (17/09/2026). O blur
+   da nav perde o que distorcer e fica mais liso — os gradientes radiais da
+   capa continuam dando alguma variação por baixo dele. */
 .doc-capa .doc-limite { position: relative; z-index: 1; }
 .doc-titulo {
   margin: 0;
@@ -1098,23 +1081,64 @@ body.pagina-report main > section {
 /* Seções numeradas */
 /* --nav-alt vem do JS (mede a pílula de verdade): ela quebra em 2 linhas no
    celular, e um valor fixo não acompanha. Sem JS, cai no palpite de 1 linha. */
-.doc-sec { padding: 2.7rem 0 0.3rem; scroll-margin-top: var(--nav-alt, 4rem); }
+/* O respiro entre seções é quase todo o padding-top; o de baixo existe pra que
+   o fim do conteúdo não encoste no título seguinte. Aumentado a pedido do PO
+   (17/09/2026): com pouco ar embaixo, a última linha de uma seção parecia
+   pertencer à próxima. */
+.doc-sec { padding: 2.7rem 0 2rem; scroll-margin-top: var(--nav-alt, 4rem); }
 .doc-sec:last-child { padding-bottom: 3rem; }
-.doc-sec-topo { margin-bottom: 1.3rem; }
+/* Título e, embaixo dele, a frase que o explica. Uma coluna só: lado a lado o
+   olho tinha que escolher por onde começar. */
+.doc-sec-topo { margin-bottom: 1.6rem; }
 .doc-sec-topo h2 {
   margin: 0;
-  font-size: clamp(1.5rem, 3.2vw, 2rem);
+  font-size: clamp(1.9rem, 4.4vw, 2.85rem);
   font-weight: 800;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.032em;
+  line-height: 1.04;
 }
-/* A frase que explica a seção vive embaixo do título, em medida de leitura */
+/* O gradiente da marca é recorte no texto, então mora no elemento que tem o
+   texto. Cor sólida primeiro: fora do @supports o texto sairia invisível. */
+.doc-sec-topo h2 span { color: #2f9e6b; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .doc-sec-topo h2 span {
+    background: linear-gradient(95deg, #2fa26e 0%, #5f9f8f 28%, #6f5ad6 62%, #9b84ea 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+/* A frase que explica a seção, logo abaixo do título e em medida de leitura */
 .doc-intro {
   max-width: 62ch;
-  margin: 0.4rem 0 0;
-  font-size: 0.86rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
   line-height: 1.6;
   color: var(--doc-mudo);
 }
+
+/* Rodapé: assinatura do time, mesma linguagem escura da capa (sem o
+   gradiente/textura — aqui é só encerramento, não abertura). Sangria total
+   como o resto do documento; o cartão escuro é que respira dentro dela. */
+.doc-rodape { padding: 0 0 clamp(1.4rem, 3vw, 2.4rem); }
+.doc-rodape-int {
+  background: #1e1e1f;
+  border-radius: 24px;
+  padding: clamp(2.2rem, 5vw, 3rem) clamp(1.4rem, 4vw, 2.4rem);
+  text-align: center;
+  color: #fff;
+}
+.doc-rodape-titulo { margin: 0; font-size: clamp(1.2rem, 2.4vw, 1.5rem); font-weight: 700; }
+.doc-rodape-sub { margin: 0.4rem 0 0; font-size: 0.85rem; color: rgba(255, 255, 255, 0.5); }
+.doc-rodape-contato {
+  margin: 1.6rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.5);
+}
+.doc-rodape-contato a { color: #fff; font-weight: 600; text-decoration: none; }
+.doc-rodape-contato a:hover { text-decoration: underline; }
+.doc-rodape-marca { margin: 2rem 0 0; font-size: 1.7rem; font-weight: 800; letter-spacing: -0.02em; }
 
 /* Cartão do documento: branco sobre o cinza da página */
 .doc-bloco, .resumo-cartao {
@@ -1171,6 +1195,60 @@ body.pagina-report main > section {
 .produtos-resumo li:last-child { border-bottom: 0; }
 .produtos-resumo li b { font-weight: 700; font-variant-numeric: tabular-nums; }
 .produtos-resumo-mais { color: var(--doc-mudo); }
+/* Por frente: um card por iniciativa, no mesmo cartão branco do Resumo (duas
+   colunas, empilha no celular). Dentro, pares rótulo/texto — o rótulo usa a
+   mesma retranca dos cartões do Resumo, pra o olho reconhecer o padrão. */
+.frentes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.7rem; }
+@media (max-width: 640px) { .frentes { grid-template-columns: 1fr; } }
+.frente {
+  background: #fff;
+  border: 1px solid var(--doc-linha);
+  border-radius: 18px;
+  padding: 1.1rem 1.2rem;
+}
+.frente-topo { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; }
+.frente-nome { margin: 0; font-size: 1rem; line-height: 1.35; }
+.frente-meta { display: flex; align-items: center; gap: 0.5rem; flex: none; }
+.frente-prazo { font-size: 0.78rem; color: var(--doc-mudo); white-space: nowrap; }
+.frente-selo {
+  flex: none;
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--doc-mudo);
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--doc-linha);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.frente-selo-alerta { color: var(--erro); border-color: currentColor; }
+.frente-resumo { margin: 0.3rem 0 0; font-size: 0.88rem; line-height: 1.55; color: var(--doc-mudo); }
+.frente .cab-rumo { margin-top: 0.7rem; }
+.frente-blocos { margin: 0.9rem 0 0; display: grid; gap: 0.6rem; }
+.frente-blocos > div { margin: 0; }
+.frente-blocos dt {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--doc-mudo);
+}
+.frente-blocos dd { margin: 0.15rem 0 0; font-size: 0.9rem; line-height: 1.55; }
+.frente-blocos dd b { font-weight: 600; }
+/* Prazo estourado na própria linha (ou no card da frente): em vez de bloco
+   separado, o item fica onde está e só a data acusa o atraso. */
+.report-doc .quando-alerta { color: var(--erro); font-weight: 600; }
+/* Caixa da ferramenta "sem nome": o JSON pra copiar */
+.caixa-link textarea {
+  width: 100%;
+  margin-top: 0.4rem;
+  font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+  border: 1px solid #e6e6e9;
+  border-radius: 8px;
+  padding: 0.5rem;
+  resize: vertical;
+}
 .doc-bloco { padding: 0.9rem 0.95rem; }
 /* Dentro do cartão branco a linha precisa de outro tom pra existir */
 .report-doc .lista-linhas .item-linha {
@@ -1391,6 +1469,13 @@ body.pagina-report main > section {
   }
   .doc-titulo span, .doc-meta, .doc-kpis span { color: #555 !important; }
   .doc-titulo b { -webkit-text-fill-color: #000; color: #000; }
+  /* No papel o gradiente sairia invisível (o texto é transparente com recorte)
+     e a tarja só gastaria tinta: título preto, marcação fora. */
+  .doc-sec-topo h2 span { -webkit-text-fill-color: #000; color: #000; background: none; }
+  /* Mesma lógica do fim: rodapé escuro também não gasta tinta no papel */
+  .doc-rodape-int { color: #000; background: #fff !important; border: 1px solid #ddd; }
+  .doc-rodape-sub, .doc-rodape-contato { color: #555 !important; }
+  .doc-rodape-contato a { color: #000; }
   /* Salmão sobre branco é ilegível no papel: alerta vira o vermelho de tela */
   .doc-kpis .kpi-alerta b { color: #b3261e; }
   .doc-filtros { display: none !important; }
@@ -1398,8 +1483,8 @@ body.pagina-report main > section {
      inteira — travar a seção criava vão em branco e estouro. */
   .doc-sec { padding-top: 1.2rem; }
   .doc-sec-topo, .doc-bloco, .resumo-cartao, .comparativo li,
-  .grupo-produto, .lista-linhas li { break-inside: avoid; }
-  .doc-bloco, .resumo-cartao, .doc-lista .grupo-produto { border: 1px solid #e5e5e5; }
+  .grupo-produto, .frente, .lista-linhas li { break-inside: avoid; }
+  .doc-bloco, .resumo-cartao, .doc-lista .grupo-produto, .frente { border: 1px solid #e5e5e5; }
   /* Barras do comparativo são só background — sem isto o papel sai em branco */
   .comparativo .comp-barra, .comparativo .comp-barra span,
   .cab-barra, .cab-barra > span,

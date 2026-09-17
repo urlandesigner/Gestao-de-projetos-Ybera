@@ -34,6 +34,22 @@
 
   function plural(n, um, muitos) { return n + ' ' + (n === 1 ? um : muitos); }
 
+  // ---- Nome de negócio ----
+  // O título do sistema é jargão ("[GLOBAL] BOGO via MetaFields"). Onde existe,
+  // o report lê o nome que o PO escreveu em assets/report-nomes.json (id →
+  // { nome, resumo }); sem entrada vale o título — item nenhum some por falta
+  // de nome. Módulo-level porque as peças (linha, cabeçalho, frente) são
+  // chamadas de vários pontos; htmlReport zera a cada documento.
+  let nomesAtivos = {};
+  function nomeDe(id, fallback) {
+    const n = nomesAtivos[id];
+    return n && n.nome ? n.nome : fallback;
+  }
+  function resumoDe(id) {
+    const n = nomesAtivos[id];
+    return n && n.resumo ? n.resumo : '';
+  }
+
   // ---- Peças ----
   // `chave` é o produto do item; os data-* alimentam o filtro do bloco de
   // entregas — quem filtra é o report.js, escondendo linha, sem redesenhar nada.
@@ -43,8 +59,11 @@
   function linha(it, direita, titulo, chave, extra) {
     const f = it.fields || {};
     const slug = C.typeSlug(f['System.WorkItemType']);
-    const nome = f['System.Title'] || ('item #' + it.id);
-    const dados = ` data-tipo="${slug}" data-produto="${esc(chave || 'sem')}" data-busca="${esc((nome + ' #' + it.id).toLowerCase())}"`;
+    const original = f['System.Title'] || ('item #' + it.id);
+    const nome = nomeDe(it.id, original);
+    // A busca acha pelos dois nomes: quem tem acesso ao sistema procura pelo título de lá.
+    const busca = (original + ' #' + it.id + (nome !== original ? ' ' + nome : '')).toLowerCase();
+    const dados = ` data-tipo="${slug}" data-produto="${esc(chave || 'sem')}" data-busca="${esc(busca)}"`;
     // Sem selo de tipo: "Feature/PBI/Bug" é jargão de DevOps e, agrupado por
     // produto, repete o que o stakeholder já lê. Cada item fica só com título,
     // data/prazo e o #id (que serve a quem tem acesso pra procurar lá dentro).
@@ -273,7 +292,7 @@
   function notaAproximados(m) {
     if (!m || !m.aproximados) return '';
     const n = m.aproximados;
-    return `<p class="mudo nota-report">${n} ${n > 1 ? 'itens sem data de conclusão' : 'item sem data de conclusão'} registrada no DevOps — ${n > 1 ? 'nesses' : 'nesse'} vale a data da última alteração, marcada com ~.</p>`;
+    return `<p class="mudo nota-report">${n} ${n > 1 ? 'itens sem data de conclusão' : 'item sem data de conclusão'} registrada — ${n > 1 ? 'nesses' : 'nesse'} vale a data da última alteração, marcada com ~.</p>`;
   }
 
   // ---- Documento ----
@@ -299,14 +318,32 @@
     </header>`;
   }
 
-  // Título e a frase que o explica, um embaixo do outro. Sem numeral gigante ao
-  // fundo e sem rótulo em inglês: eram enfeite do report do time, e aqui só
-  // competiam com o que a seção tem pra dizer.
+  // Assinatura do time no fim do documento — mesmo modelo do Relatório Mensal
+  // de Tecnologia da Ybera, com o contato de quem mantém ESTE report.
+  const EMAIL_CONTATO = 'urlan.dipre@ybera.com';
+  function rodape() {
+    return `<footer class="doc-rodape">
+      <div class="doc-limite">
+        <div class="doc-rodape-int">
+          <h2 class="doc-rodape-titulo">Time de Tecnologia Ybera</h2>
+          <p class="doc-rodape-sub">Comprometidos com transparência, inovação e colaboração</p>
+          <p class="doc-rodape-contato">Para dúvidas ou sugestões<br><a href="mailto:${esc(EMAIL_CONTATO)}">${esc(EMAIL_CONTATO)}</a></p>
+          <p class="doc-rodape-marca">Y.</p>
+        </div>
+      </div>
+    </footer>`;
+  }
+
+  // Cabeçalho de seção: título grande no gradiente da marca, com a tarja clara
+  // atrás, e a frase que o explica logo embaixo. Sem o numeral gigante ao fundo
+  // e sem rótulo em inglês — o PO pediu o padrão sem os dois (17/09/2026).
+  // O <span> dentro do h2 não é enfeite: o gradiente é recorte no texto, então
+  // precisa morar no elemento que TEM o texto, e a tarja fica atrás dele.
   function secaoHtml(s) {
     return `<section class="doc-sec" id="${s.id}">
       <div class="doc-limite">
         <div class="doc-sec-topo">
-          <h2>${esc(s.titulo)}</h2>
+          <h2><span>${esc(s.titulo)}</span></h2>
           <p class="doc-intro">${esc(s.intro)}</p>
         </div>
         ${s.corpo}
@@ -363,7 +400,7 @@
       const alvo = (r.item.fields || {})[CAMPO_ALVO];
       if (alvo) partes.push((Date.parse(alvo) < hoje.getTime() ? 'atrasado desde ' : 'prazo ') + dataCurta(alvo));
       if (r.dias != null) partes.push(`parado há ${r.dias} d`);
-      if (!partes.length) partes.push(esc((r.item.fields || {})['System.State']));
+      if (!partes.length) partes.push('parado'); // sem estado cru: é jargão em inglês
       return partes.join(' · ');
     };
     // No link o pedido vem assado (`decisoes`); ao vivo, extrai da descrição.
@@ -375,44 +412,35 @@
       travados.map((r) => linha(r.item, direita(r), '', '', pedidoDe(r))).join('')}</ul></div></div>`;
   }
 
-  // #8 Compromisso pra frente: resume por frente o que vem a seguir (itens com
-  // data futura), do prazo mais próximo pro mais distante. Reenquadra a lista de
-  // prazos (que é por urgência) como "o que cada frente entrega adiante".
-  // Derivado — sem convenção nova. Atrasado não entra: é risco, não compromisso.
-  function proximasPorFrente(prazos, mapa) {
-    const regs = [...(prazos.esteMes || []), ...(prazos.proximoMes || []), ...(prazos.depois || [])];
-    const porProd = new Map();
-    for (const r of regs) {
-      const prod = mapa.get(r.item.id) || null;
-      const chave = prod ? prod.id : 'sem';
-      if (!porProd.has(chave)) porProd.set(chave, { titulo: prod ? prod.titulo : SEM_PRODUTO, n: 0, prox: null });
-      const g = porProd.get(chave);
-      g.n += 1;
-      if (r.alvo && (!g.prox || Date.parse(r.alvo) < Date.parse(g.prox))) g.prox = r.alvo;
-    }
-    return [...porProd.values()].sort((a, b) => Date.parse(a.prox || '2999-01-01') - Date.parse(b.prox || '2999-01-01'));
-  }
-
-  function corpoProximos(b, mapa) {
-    const bloco = (titulo, regs, alerta, direita) => regs.length ? `
+  // Próximos passos em duas listas, não por faixa de prazo: "o que está sendo
+  // feito" era a pergunta que o documento não respondia — o item em andamento
+  // com data ficava misturado com o que nem começou. Atrasado não ganha bloco
+  // próprio: fica em vermelho na lista em que está (e o card Atenção já nomeia
+  // as frentes) — repetir o mesmo item em dois blocos parecia defeito. O
+  // resumo por frente saiu daqui: virou a seção "Por frente".
+  function corpoProximos(b, agora) {
+    const hoje = new Date(agora).getTime();
+    const prazoDe = (it, verbo) => {
+      const alvo = (it.fields || {})[CAMPO_ALVO];
+      if (!alvo) return verbo === 'vence' ? '' : 'sem prazo definido';
+      return Date.parse(alvo) < hoje
+        ? `<span class="quando-alerta">atrasado desde ${dataCurta(alvo)}</span>`
+        : `${verbo} ${dataCurta(alvo)}`;
+    };
+    const bloco = (titulo, itens, direita) => itens.length ? `
       <div class="grupo-produto">
-        <h3${alerta ? ' class="rotulo-alerta"' : ''}>${titulo}</h3>
-        <ul class="lista-linhas">${regs.map((r) => linha(r.item, direita(r))).join('')}</ul>
+        <h3>${titulo}</h3>
+        <ul class="lista-linhas">${itens.map((it) => linha(it, direita(it))).join('')}</ul>
       </div>` : '';
-    const semPrazo = b.execucao.filter((r) => !(r.item.fields || {})[CAMPO_ALVO]);
-    const frentes = mapa ? proximasPorFrente(b.prazos, mapa) : [];
-    const lead = frentes.length
-      ? `<p class="proximos-lead">Por frente, o que vem a seguir: ${frentes
-        .map((f) => `<b>${esc(f.titulo)}</b> (${f.n} ${f.n === 1 ? 'item' : 'itens'}${f.prox ? ', próximo em ' + dataCurta(f.prox) : ''})`)
-        .join(' · ')}.</p>`
-      : '';
+    const andamento = b.execucao.map((r) => r.item);
+    const emAndamento = new Set(andamento.map((it) => it.id));
+    const naFila = [...b.prazos.atrasados, ...b.prazos.esteMes, ...b.prazos.proximoMes, ...b.prazos.depois]
+      .filter((r) => !emAndamento.has(r.item.id))
+      .sort((x, y) => x.alvo - y.alvo)
+      .map((r) => r.item);
     return '<div class="doc-bloco">'
-      + lead
-      + bloco('Já passou do prazo', b.prazos.atrasados, true, (r) => dataCurta(r.alvo))
-      + bloco('Vence ainda este mês', b.prazos.esteMes, false, (r) => dataCurta(r.alvo))
-      + bloco('Vence no mês que vem', b.prazos.proximoMes, false, (r) => dataCurta(r.alvo))
-      + bloco('Vence mais adiante', b.prazos.depois, false, (r) => dataCurta(r.alvo))
-      + bloco('Em curso, sem prazo definido', semPrazo, false, (r) => esc((r.item.fields || {})['System.State']))
+      + bloco('Em andamento agora', andamento, (it) => prazoDe(it, 'prazo'))
+      + bloco('Na fila, com data marcada', naFila, (it) => prazoDe(it, 'vence'))
       + '</div>';
   }
 
@@ -476,8 +504,75 @@
     </div>`;
   }
 
+  // ---- Por frente ----
+  // Um card por iniciativa (o épico), respondendo numa leitura as três perguntas
+  // do stakeholder: o que entregou no mês, o que está em andamento, qual é o
+  // próximo marco — e, quando há, o que trava. Mês fechado só afirma o
+  // histórico (entregou); execução e marco são leitura de agora. Nomes vêm
+  // pelo nome de negócio; PBI sem nome fica com o título.
+  const CAP_NOMES_FRENTE = 3;
+  function listaNomes(itens) {
+    const nomes = itens.map((r) => {
+      const it = r.item || r;
+      return `<b>${esc(nomeDe(it.id, (it.fields || {})['System.Title'] || ('item #' + it.id)))}</b>`;
+    });
+    const resto = nomes.length - CAP_NOMES_FRENTE;
+    const mostrados = nomes.slice(0, CAP_NOMES_FRENTE);
+    return resto > 0 ? mostrados.join(', ') + ` e mais ${resto}` : enumerar(mostrados);
+  }
+
+  function corpoFrentes(lista, escolhido, fechado, info, agora) {
+    const mesNome = mesPorExtenso(escolhido).toLowerCase().replace(/ de \d{4}$/, '');
+    const hoje = new Date(agora).getTime();
+    const cards = lista.map((f) => {
+      const p = f.produto;
+      const resumo = resumoDe(p.id);
+      const rumo = info && info[p.id] && info[p.id].total > 0 ? barraProgresso(info[p.id].feitos, info[p.id].total) : '';
+      const fechou = f.concluida || !!f.fechouNoMes;
+      const risco = [];
+      if (f.travados.length) risco.push(plural(f.travados.length, 'travado', 'travados'));
+      if (f.atrasados.length) risco.push(plural(f.atrasados.length, 'atrasado', 'atrasados'));
+      let selo = '';
+      if (fechou) selo = '<span class="frente-selo">concluída</span>';
+      else if (risco.length) selo = `<span class="frente-selo frente-selo-alerta">${risco.join(' · ')}</span>`;
+      // O prazo da iniciativa em si — o épico saiu das listas de Próximos, então
+      // é aqui que a data dele mora. Fechada, o prazo é ruído; mês fechado, é
+      // leitura de agora e não entra.
+      let prazo = '';
+      if (!fechou && !fechado && p.alvo) {
+        prazo = Date.parse(p.alvo) < hoje
+          ? `<span class="frente-prazo quando-alerta">atrasada desde ${dataCurta(p.alvo)}</span>`
+          : `<span class="frente-prazo">prazo ${dataCurta(p.alvo)}</span>`;
+      }
+      const meta = prazo || selo ? `<div class="frente-meta">${prazo}${selo}</div>` : '';
+      const blocos = [];
+      const entregou = f.fechouNoMes
+        ? 'A frente fechou por completo' + (f.entregas.length ? ` — ${plural(f.entregas.length, 'item', 'itens')}: ${listaNomes(f.entregas)}` : '') + '.'
+        : f.entregas.length ? `${plural(f.entregas.length, 'item', 'itens')}: ${listaNomes(f.entregas)}.` : 'Nada concluído neste mês.';
+      blocos.push(['Entregou em ' + mesNome, entregou]);
+      if (!fechado) {
+        blocos.push(['Em andamento', f.andamento.length
+          ? `${plural(f.andamento.length, 'item', 'itens')}: ${listaNomes(f.andamento)}.`
+          : 'Nada em andamento agora.']);
+        if (f.proximo) {
+          blocos.push(['Próximo marco', f.proximo.item
+            ? `${dataCurta(f.proximo.alvo)} — ${listaNomes([f.proximo.item])}`
+            : `${dataCurta(f.proximo.alvo)} — prazo da frente`]);
+        }
+        if (f.fila.length) blocos.push(['Na fila', plural(f.fila.length, 'item ainda por começar', 'itens ainda por começar') + '.']);
+      }
+      return `<article class="frente${risco.length && !fechou ? ' frente-risco' : ''}">
+        <div class="frente-topo"><h3 class="frente-nome">${esc(p.titulo)}</h3>${meta}</div>
+        ${resumo ? `<p class="frente-resumo">${esc(resumo)}</p>` : ''}
+        ${rumo}
+        <dl class="frente-blocos">${blocos.map(([dt, dd]) => `<div><dt>${esc(dt)}</dt><dd>${dd}</dd></div>`).join('')}</dl>
+      </article>`;
+    });
+    return `<div class="frentes">${cards.join('')}</div>`;
+  }
+
   // ---- Entrada ----
-  // opcoes: { items, agora, escopo, unidade, todos, mes }
+  // opcoes: { items, agora, escopo, unidade, todos, mes, nomes }
   // `unidade` é o nome do escopo como o stakeholder o conhece ("Ybera US"). Quem
   // chama decide: a lista de times do DevOps é jargão interno e não diz nada pra
   // quem lê o report.
@@ -497,12 +592,17 @@
     const items = o.items || [];
     const agora = o.agora || Date.now();
     const escopo = o.escopo || '';
+    nomesAtivos = o.nomes && typeof o.nomes === 'object' ? o.nomes : {};
     const mapa = C.mapaDeProdutos(o.todos || items);
+    // O nome de negócio entra no mapa uma vez: cabeçalho de produto, chips,
+    // "Onde caiu o esforço" e triagem de risco leem daqui sem saber de nomes.
+    for (const p of mapa.values()) p.titulo = nomeDe(p.id, p.titulo);
     // Objetivo + rumo por produto. No modo PO calcula do backlog inteiro (`todos`);
     // no link de leitura vem pronto (`o.produtos`), porque o pacote não carrega o
     // backlog completo e recalcular ali subcontaria o progresso.
     const infoProd = o.produtos || C.resumoProdutos(o.todos || items);
     const meses = C.resumoMensal(C.reportPorMes(items), mapa);
+    for (const m of meses) for (const e of m.resumo.epicosFechados) e.titulo = nomeDe(e.id, e.titulo);
     const b = C.briefingDoMes(items, agora);
     // O `mes` pode vir do fragmento do link — dado que qualquer um forja. Formato
     // inválido cai no mês corrente em vez de virar "Invalid Date" (ou HTML) na capa.
@@ -526,6 +626,9 @@
     const mesesDoAno = meses.filter((m) => m.mes.slice(0, 4) === ano);
     const temPrazoVivo = b.prazos.atrasados.length + b.prazos.esteMes.length
       + b.prazos.proximoMes.length + b.prazos.depois.length > 0;
+    // Épico em aberto sozinho não conta como conteúdo: Por frente só mostra
+    // iniciativa com entrega, andamento ou trava, então um documento só de
+    // iniciativa parada não teria nada pra mostrar.
     if (!mesAlvo && !fechado && !b.execucao.length && !b.travados.length && !meses.length && !temPrazoVivo) {
       return { vazio: true, meses: listaMeses, html: '<p class="mudo">Nada registrado ainda para este escopo.</p>' };
     }
@@ -548,6 +651,18 @@
     const entregas = (mesAlvo && mesAlvo.itens) || [];
     const grupos = porProduto(entregas, mapa);
     const comProduto = grupos.filter((g) => g.produto);
+    // Por frente: no mês fechado só o histórico entra (entregou); execução,
+    // travas, marcos e fila são leitura de agora e ficariam mentindo sobre julho.
+    const listaFrentes = C.frentes({
+      mapa,
+      entregas,
+      execucao: fechado ? [] : b.execucao,
+      travados: fechado ? [] : b.travados,
+      atrasados: fechado ? [] : bVivo.prazos.atrasados,
+      comData: fechado ? [] : [...bVivo.prazos.esteMes, ...bVivo.prazos.proximoMes, ...bVivo.prazos.depois],
+      fila: fechado ? [] : b.fila,
+      agora: fechado ? null : agora,
+    });
 
     // Cada cartão carrega o rótulo junto com o texto — sem isso os quatro
     // cartões viram prosa idêntica e o leitor tem que ler os quatro pra achar
@@ -588,6 +703,15 @@
       corpo: `<div class="resumo-cartoes">${cartoesResumo
         .map((c) => `<article class="resumo-cartao${c.alerta ? ' resumo-cartao-alerta' : ''}"><p class="cartao-rotulo">${esc(c.rotulo)}</p>${c.html || `<p>${c.texto}</p>`}</article>`).join('')}</div>`,
     });
+    if (listaFrentes.length) {
+      secoes.push({
+        id: 'frentes', titulo: 'Por frente', rotulo: 'Frentes',
+        intro: fechado
+          ? 'Cada iniciativa e o que ela entregou no mês.'
+          : 'Cada iniciativa em uma leitura: o que entregou no mês, o que está em andamento e o próximo marco.',
+        corpo: corpoFrentes(listaFrentes, escolhido, fechado, infoProd, agora),
+      });
+    }
     if (entregas.length) {
       secoes.push({
         id: 'entregas', titulo: 'Entregas do mês', rotulo: 'Entregas',
@@ -608,7 +732,7 @@
       secoes.push({
         id: 'agora', titulo: 'Situação de hoje', rotulo: 'Hoje',
         intro: 'Execução, prazos e travas aparecem só no mês corrente.',
-        corpo: `<p class="mudo nota-report">O DevOps guarda o estado de agora, não o estado
+        corpo: `<p class="mudo nota-report">Execução, prazos e travas são a leitura de hoje, não o estado
         que cada item tinha em ${esc(mesPorExtenso(escolhido).toLowerCase())}. Para ver o que está em curso,
         troque para o mês corrente no seletor do topo.</p>`,
       });
@@ -625,8 +749,8 @@
       if (totalProximos) {
         secoes.push({
           id: 'proximos', titulo: 'Próximos passos', rotulo: 'Próximos',
-          intro: 'O que está em curso e quando vence, do prazo mais apertado para o mais folgado.',
-          corpo: corpoProximos(bVivo, mapa),
+          intro: 'O que está em andamento agora e o que está na fila com data marcada, do prazo mais apertado para o mais folgado.',
+          corpo: corpoProximos(bVivo, agora),
         });
       }
     }
@@ -664,6 +788,7 @@
       ${capa(escolhido, meta.join(' · '), tiles)}
       ${nav}
       ${secoes.map((x) => secaoHtml(x)).join('')}
+      ${rodape()}
     </div>`;
 
     return { vazio: false, meses: listaMeses, html };

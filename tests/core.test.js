@@ -316,11 +316,11 @@ test('pendencias: sem nada pendente devolve os três grupos vazios', () => {
 });
 
 /* ---- Produtos ---- */
-// épico/feature/pbi com pai, estado e data-alvo
-const wit = (id, tipo, estado, pai, alvo) => ({ id, fields: {
+// épico/feature/pbi com pai, estado e data de início
+const wit = (id, tipo, estado, pai, inicio) => ({ id, fields: {
   'System.WorkItemType': tipo, 'System.State': estado,
   'System.Parent': pai || undefined,
-  'Microsoft.VSTS.Scheduling.TargetDate': alvo || undefined,
+  'Microsoft.VSTS.Scheduling.StartDate': inicio || undefined,
 } });
 
 test('wiqlProdutos não tem corte de data (progresso precisa do histórico todo)', () => {
@@ -345,7 +345,7 @@ test('produtos rola o progresso por netos e ignora quem não é descendente', ()
   assert.deepEqual(porId[2], { total: 0, feitos: 0 }); // épico sem filhos
 });
 
-test('produtos ordena pelo que fecha primeiro, sem data-alvo no fim', () => {
+test('produtos ordena pelo que começa primeiro, sem data de início no fim', () => {
   const p = C.produtos([
     wit(1, 'Epic', 'New', null, null),
     wit(2, 'Epic', 'New', null, '2026-12-01T00:00:00Z'),
@@ -363,6 +363,33 @@ test('produtos sobrevive a ciclo de link sem travar', () => {
   ]);
   // 10 → 11 → 12 são descendentes; o épico não se conta
   assert.deepEqual(p[0].filhos, { total: 3, feitos: 0 });
+});
+
+test('epicoDetalhe achata Features e PBIs em qualquer profundidade, por nível e depois por estado', () => {
+  const d = C.epicoDetalhe([
+    wit(1, 'Epic', 'New'),
+    wit(10, 'Feature', 'Done', 1),        // feature concluída: por último dentro do nível
+    wit(11, 'Feature', 'Blocked', 1),     // feature travada: primeiro
+    wit(20, 'Product Backlog Item', 'In Progress', 10), // neto, em andamento
+    wit(21, 'Product Backlog Item', 'New', 11),         // neto, na fila
+  ], 1);
+  assert.equal(d.epico.id, 1);
+  assert.deepEqual(d.descendentes.map((it) => it.id), [11, 10, 20, 21]);
+});
+
+test('epicoDetalhe: épico não encontrado devolve null', () => {
+  assert.equal(C.epicoDetalhe([wit(1, 'Epic', 'New')], 999), null);
+});
+
+test('epicoDetalhe ignora item de outro épico e resiste a ciclo de link', () => {
+  const d = C.epicoDetalhe([
+    wit(1, 'Epic', 'New', 4), // ciclo de verdade: 1 → 2 → 3 → 4 → 1 (Parent aponta em círculo)
+    wit(2, 'Feature', 'New', 1),
+    wit(3, 'Product Backlog Item', 'New', 2),
+    wit(4, 'Product Backlog Item', 'New', 3),
+    wit(99, 'Feature', 'New', 5), // pai é outro épico, nem está na lista: fica de fora
+  ], 1);
+  assert.deepEqual(d.descendentes.map((it) => it.id), [2, 3, 4]); // termina sem travar, sem o 99
 });
 
 /* ---- Report mensal ---- */
@@ -409,69 +436,6 @@ test('reportPorMes cai em ChangedDate quando não há ClosedDate, e marca', () =
 test('reportPorMes ignora concluído sem data nenhuma e devolve vazio sem entregas', () => {
   assert.deepEqual(C.reportPorMes([fim(1, 'Feature', 'Done', null, null)]), []);
   assert.deepEqual(C.reportPorMes([]), []);
-});
-
-/* ---- Futuro ---- */
-const ep = (id, estado, alvo, titulo) => ({ id, fields: {
-  'System.WorkItemType': 'Epic', 'System.State': estado,
-  'Microsoft.VSTS.Scheduling.TargetDate': alvo || undefined,
-  'System.Title': titulo || ('Épico ' + id),
-} });
-const filho = (id, tipo, estado, pai) => ({ id, fields: {
-  'System.WorkItemType': tipo, 'System.State': estado, 'System.Parent': pai,
-} });
-
-test('futuroPorAtividade: sem filho refinado é Depois, com filho todo é A seguir, com filho ativo é Agora', () => {
-  const faixas = C.futuroPorAtividade([
-    ep(1, 'New'), // sem nenhum filho: só ideia
-    ep(2, 'New'), filho(21, 'Product Backlog Item', 'New', 2), // filho em fila, nada rodando
-    ep(3, 'New'), filho(31, 'Product Backlog Item', 'In Progress', 3), // filho rodando
-  ]);
-  const porFaixa = Object.fromEntries(faixas.map((f) => [f.faixa, f.itens.map((i) => i.id)]));
-  assert.deepEqual(porFaixa.depois, [1]);
-  assert.deepEqual(porFaixa.seguir, [2]);
-  assert.deepEqual(porFaixa.agora, [3]);
-});
-
-test('futuroPorAtividade: filho bloqueado ou já entregue também conta como Agora', () => {
-  const faixas = C.futuroPorAtividade([
-    ep(1, 'New'), filho(11, 'Product Backlog Item', 'Blocked', 1),
-    ep(2, 'New'), filho(21, 'Product Backlog Item', 'New', 2), filho(22, 'Product Backlog Item', 'Done', 2),
-  ]);
-  const agora = faixas.find((f) => f.faixa === 'agora').itens.map((i) => i.id);
-  assert.deepEqual(agora.sort(), [1, 2]);
-});
-
-test('futuroPorAtividade olha a árvore em qualquer profundidade e resiste a ciclo de link', () => {
-  const faixas = C.futuroPorAtividade([
-    // caminho normal: neto ativo conta pro épico
-    ep(1, 'New'), filho(11, 'Feature', 'New', 1), filho(111, 'Product Backlog Item', 'In Progress', 11),
-    // ciclo de verdade: 2 → 3 → 4 → 2 (Parent aponta em círculo, o próprio épico faz parte do laço)
-    { id: 2, fields: Object.assign({}, ep(2, 'New').fields, { 'System.Parent': 4 }) },
-    filho(3, 'Feature', 'In Progress', 2),
-    filho(4, 'Product Backlog Item', 'New', 3),
-  ]);
-  const porFaixa = Object.fromEntries(faixas.map((f) => [f.faixa, f.itens.map((i) => i.id)]));
-  assert.deepEqual(porFaixa.agora.sort(), [1, 2]); // termina sem travar e sem perder o 2
-});
-
-test('futuroPorAtividade só olha épico em aberto, e ignora quem não é épico como raiz', () => {
-  const faixas = C.futuroPorAtividade([
-    ep(1, 'Done'), filho(11, 'Product Backlog Item', 'In Progress', 1), // épico concluído: é história
-    filho(2, 'Feature', 'New', null), // não é épico, não vira faixa
-    ep(3, 'In Progress'),
-  ]);
-  assert.deepEqual(faixas.find((f) => f.faixa === 'agora').itens.map((i) => i.id), [3]);
-  assert.equal(faixas.reduce((n, f) => n + f.itens.length, 0), 1);
-});
-
-test('futuroPorAtividade ordena por data-alvo e desempata por título', () => {
-  const faixas = C.futuroPorAtividade([
-    ep(1, 'New', '2026-12-01T00:00:00Z', 'Zulu'),
-    ep(2, 'New', null, 'Alfa'), // sem data-alvo: vai por último
-    ep(3, 'New', '2026-09-01T00:00:00Z', 'Bravo'),
-  ]);
-  assert.deepEqual(faixas.find((f) => f.faixa === 'depois').itens.map((i) => i.id), [3, 1, 2]);
 });
 
 /* ---- Report: resumo em prosa ---- */
@@ -656,6 +620,119 @@ test('briefingDoMes ordena: entrega recente, prazo mais próximo, travado mais a
   ], AGORA);
   assert.deepEqual(b.feitos.map((x) => x.item.id), [1, 2]);
   assert.deepEqual(b.travados.map((x) => x.item.id), [4, 3]);
+});
+
+test('briefingDoMes devolve a fila (o que ainda não começou), separada da execução', () => {
+  const b = C.briefingDoMes([
+    bi(1, 'Product Backlog Item', 'New', 'Na fila com data', 8),
+    bi(2, 'Product Backlog Item', 'Ready', 'Na fila sem data', null),
+    bi(3, 'Product Backlog Item', 'In Progress', 'Rodando', 6),
+    bi(4, 'Product Backlog Item', 'Done', 'Feito', null, 2),
+  ], AGORA);
+  assert.deepEqual(b.fila.map((x) => x.item.id), [1, 2]); // quem tem data marcada na frente
+  assert.deepEqual(b.execucao.map((x) => x.item.id), [3]);
+});
+
+test('briefingDoMes não conta épico como execução, fila ou prazo — ele é a frente; travado continua', () => {
+  const b = C.briefingDoMes([
+    bi(1, 'Epic', 'In Progress', 'Iniciativa', 5),
+    bi(2, 'Epic', 'Blocked', 'Iniciativa travada', -3, null, 10),
+    bi(10, 'Feature', 'In Progress', 'Item', 5),
+  ], AGORA);
+  assert.deepEqual(b.execucao.map((x) => x.item.id), [10]);
+  assert.deepEqual(b.prazos.esteMes.map((x) => x.item.id), [10]);
+  assert.deepEqual(b.travados.map((x) => x.item.id), [2]);
+  assert.deepEqual(b.prazos.atrasados.map((x) => x.item.id), [2]);
+});
+
+/* ---- Por frente ---- */
+const fr = (id, tipo, estado, titulo, pai, alvoDias) => ({ id, fields: {
+  'System.WorkItemType': tipo, 'System.State': estado, 'System.Title': titulo,
+  'System.Parent': pai || undefined,
+  'Microsoft.VSTS.Scheduling.TargetDate': alvoDias == null ? undefined : new Date(AGORA + alvoDias * 86400000).toISOString(),
+} });
+
+test('frentes agrupa por produto e ordena por movimento, depois risco, depois nome', () => {
+  const dia = 86400000;
+  const itens = [
+    fr(1, 'Epic', 'In Progress', 'Zeta', null, 40),
+    fr(2, 'Epic', 'In Progress', 'Alfa', null),
+    fr(3, 'Epic', 'New', 'Beta', null),
+    fr(4, 'Epic', 'In Progress', 'Gama', null),
+    fr(5, 'Epic', 'In Progress', 'Delta', null),
+    fr(10, 'Feature', 'Done', 'Z1', 1), fr(11, 'Feature', 'In Progress', 'Z2', 1, 5),
+    fr(20, 'Feature', 'In Progress', 'A1', 2), fr(21, 'Feature', 'Blocked', 'A2', 2),
+    fr(30, 'Feature', 'New', 'B1', 3, 12),
+    fr(40, 'Feature', 'In Progress', 'G1', 4),
+    fr(50, 'Feature', 'In Progress', 'D1', 5),
+    fr(90, 'Feature', 'In Progress', 'Solto', null),
+  ];
+  const f = C.frentes({
+    mapa: C.mapaDeProdutos(itens),
+    entregas: [{ item: itens[5], quando: AGORA - dia, aproximada: false }],
+    execucao: [{ item: itens[6] }, { item: itens[7] }, { item: itens[10] }, { item: itens[11] }, { item: itens[12] }],
+    travados: [{ item: itens[8], dias: 3 }],
+    atrasados: [],
+    comData: [{ item: itens[6], alvo: AGORA + 5 * dia }, { item: itens[9], alvo: AGORA + 12 * dia }],
+    fila: [{ item: itens[9] }],
+    agora: AGORA,
+  });
+  // Zeta (2 movimentos) > Alfa (1 e uma trava) > Delta e Gama (1, sem trava,
+  // pelo nome). Beta só tem fila e fica de fora.
+  assert.deepEqual(f.map((x) => x.produto.id), [1, 2, 5, 4]);
+  assert.equal(f[0].entregas.length, 1);
+  assert.equal(f[0].andamento.length, 1);
+  assert.equal(f[0].proximo.item.id, 11); // o marco é do item, não o prazo do épico (40d)
+  assert.equal(f[1].travados.length, 1);
+  assert.equal(f[1].proximo, null);      // sem data em nada: sem marco
+  assert.ok(!f.some((x) => x.andamento.some((r) => r.item.id === 90)), 'item sem produto não vira frente');
+});
+
+// Card de frente é pra contar o que andou. Fila, trava e vazio não bastam: o
+// card não tem bloco que nomeie o travado, então viraria cartão vazio com selo
+// vermelho. O travado continua em Depende de decisão.
+test('frentes deixa de fora quem não entregou nem tem nada andando', () => {
+  const itens = [
+    fr(1, 'Epic', 'In Progress', 'Só fila', null, 30),
+    fr(10, 'Feature', 'New', 'Ainda não começou', 1, 10),
+    fr(2, 'Epic', 'New', 'Nada de nada', null, 50),
+    fr(3, 'Epic', 'In Progress', 'Só travado', null),
+    fr(30, 'Feature', 'Blocked', 'Empacou', 3),
+    fr(4, 'Epic', 'In Progress', 'Tem gente trabalhando', null),
+    fr(40, 'Feature', 'In Progress', 'Rodando', 4),
+  ];
+  const f = C.frentes({
+    mapa: C.mapaDeProdutos(itens),
+    entregas: [], atrasados: [],
+    execucao: [{ item: itens[6] }],
+    travados: [{ item: itens[4], dias: 9 }],
+    comData: [{ item: itens[1], alvo: AGORA + 10 * 86400000 }],
+    fila: [{ item: itens[1] }],
+    agora: AGORA,
+  });
+  assert.deepEqual(f.map((x) => x.produto.id), [4]);
+});
+
+test('frentes: épico entregue no mês marca a frente concluída; sem item com data, vale o prazo do épico', () => {
+  const itens = [
+    fr(1, 'Epic', 'Done', 'Fechou', null),
+    fr(2, 'Epic', 'In Progress', 'Só o prazo do épico', null, 20),
+    fr(21, 'Feature', 'In Progress', 'Sem data', 2),
+  ];
+  const f = C.frentes({
+    mapa: C.mapaDeProdutos(itens),
+    entregas: [{ item: itens[0], quando: AGORA, aproximada: false }],
+    execucao: [{ item: itens[2] }],
+    comData: [], fila: [], travados: [], atrasados: [],
+    agora: AGORA,
+  });
+  const fechou = f.find((x) => x.produto.id === 1);
+  assert.ok(fechou.fechouNoMes && fechou.concluida);
+  assert.equal(fechou.entregas.length, 0); // o épico não é linha de si mesmo
+  const soPrazo = f.find((x) => x.produto.id === 2);
+  assert.equal(soPrazo.proximo.item, null);
+  assert.equal(new Date(soPrazo.proximo.alvo).toISOString().slice(0, 10),
+    new Date(AGORA + 20 * 86400000).toISOString().slice(0, 10));
 });
 
 /* ---- Rolagem animada do menu do report ---- */

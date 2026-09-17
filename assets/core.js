@@ -445,21 +445,62 @@
 
   // Épicos com o progresso rolado dos descendentes (Features e PBIs, em
   // qualquer profundidade).
+  const CAMPO_INICIO = 'Microsoft.VSTS.Scheduling.StartDate';
   function produtos(items) {
     const roll = descendentesConcluidos(items);
     const lista = (items || [])
       .filter((it) => levelOf(((it || {}).fields || {})['System.WorkItemType']) === 'epic')
       .map((ep) => ({ item: ep, filhos: roll.get(ep.id) || { total: 0, feitos: 0 } }));
-    // O que fecha primeiro na frente; sem data-alvo vai pro fim — não há prazo
-    // a cobrar, e deixar no topo empurraria pra baixo o que tem data.
+    // O que começa primeiro na frente; sem data de início vai pro fim — ainda
+    // não tem planejamento, e deixar no topo empurraria pra baixo o que já tem.
     return lista.sort((a, b) => {
-      const da = dataValida((a.item.fields || {})[CAMPO_ALVO]);
-      const db = dataValida((b.item.fields || {})[CAMPO_ALVO]);
+      const da = dataValida((a.item.fields || {})[CAMPO_INICIO]);
+      const db = dataValida((b.item.fields || {})[CAMPO_INICIO]);
       if (da === null && db === null) return 0;
       if (da === null) return 1;
       if (db === null) return -1;
       return da - db;
     });
+  }
+
+  // Tela interna do épico: achata toda a árvore de Features/PBIs dele (mesma
+  // trilha de descendentesConcluidos), Feature antes de PBI e, dentro do
+  // nível, quem precisa de atenção primeiro, depois quem anda, depois fila,
+  // concluído por último — sem depender de data que pode faltar.
+  const RANK_BUCKET_EPICO = { atencao: 0, andamento: 1, todo: 2, feito: 3 };
+  function epicoDetalhe(items, epicoId) {
+    const porId = new Map((items || []).map((it) => [it.id, it]));
+    const epico = porId.get(epicoId);
+    if (!epico) return null;
+    const filhosDe = new Map();
+    for (const it of items || []) {
+      const pai = ((it || {}).fields || {})['System.Parent'];
+      if (pai == null) continue;
+      if (!filhosDe.has(pai)) filhosDe.set(pai, []);
+      filhosDe.get(pai).push(it);
+    }
+    const descendentes = [];
+    const pilha = [...(filhosDe.get(epicoId) || [])];
+    const vistos = new Set([epicoId]); // guarda contra ciclo de link no DevOps
+    while (pilha.length) {
+      const it = pilha.pop();
+      if (vistos.has(it.id)) continue;
+      vistos.add(it.id);
+      descendentes.push(it);
+      for (const filho of filhosDe.get(it.id) || []) pilha.push(filho);
+    }
+    descendentes.sort((a, b) => {
+      const na = ORDEM_NIVEL[levelOf((a.fields || {})['System.WorkItemType'])];
+      const nb = ORDEM_NIVEL[levelOf((b.fields || {})['System.WorkItemType'])];
+      if (na !== nb) return na - nb;
+      const ra = RANK_BUCKET_EPICO[stateBucket((a.fields || {})['System.State'])];
+      const rb = RANK_BUCKET_EPICO[stateBucket((b.fields || {})['System.State'])];
+      if (ra !== rb) return ra - rb;
+      const ta = String((a.fields || {})['System.Title'] || '');
+      const tb = String((b.fields || {})['System.Title'] || '');
+      return ta.localeCompare(tb, 'pt-BR');
+    });
+    return { epico, descendentes };
   }
 
   // ---- Report mensal (o que foi concluído) ----
@@ -499,72 +540,6 @@
         return m;
       })
       .sort((a, b) => (a.mes < b.mes ? 1 : a.mes > b.mes ? -1 : 0)); // mês mais novo primeiro
-  }
-
-  // ---- Futuro (faixas por atividade) ----
-  // Nem todo épico tem StartDate preenchida, então a faixa não pode depender
-  // dela — vira gaveta de "sem data" pra maioria. Em vez de "quando começa",
-  // a pergunta é "o que já está em movimento": olha o próprio épico e toda a
-  // árvore de Features/PBIs dele (mesma trilha de descendentesConcluidos) e
-  // usa o estado mais adiantado que achar. Sem StartDate, sem TargetDate, sem
-  // corte de trimestre — e sem gaveta de exceção, todo épico aberto cai numa
-  // das três faixas.
-  function futuroPorAtividade(items) {
-    const filhosDe = new Map();
-    for (const it of items || []) {
-      const pai = ((it || {}).fields || {})['System.Parent'];
-      if (pai == null) continue;
-      if (!filhosDe.has(pai)) filhosDe.set(pai, []);
-      filhosDe.get(pai).push(it);
-    }
-    const g = { agora: [], seguir: [], depois: [] };
-    for (const ep of items || []) {
-      const f = (ep || {}).fields || {};
-      if (levelOf(f['System.WorkItemType']) !== 'epic') continue; // faixa é de projeto
-      if (isTerminalState(f['System.State'])) continue; // concluído é história, vai pro Report
-      let ativo = false; // algo rodando, travado ou já entregue — está em movimento
-      let refinado = false; // nada rodando ainda, mas já tem fila pronta
-      // O próprio épico só decide "ativo" (ex.: alguém marcou o épico como
-      // In Progress antes de quebrar em filhos). "Refinado" tem que vir de um
-      // FILHO de verdade — senão todo épico recém-criado (estado 'New', bucket
-      // 'todo') cairia em "A seguir" mesmo sem nada quebrado, e "Depois" nunca
-      // apareceria.
-      const bEpico = stateBucket(f['System.State']);
-      if (bEpico === 'andamento' || bEpico === 'atencao' || bEpico === 'feito') ativo = true;
-      const pilha = [...(filhosDe.get(ep.id) || [])];
-      const vistos = new Set([ep.id]); // guarda contra ciclo de link no DevOps
-      while (pilha.length) {
-        const filho = pilha.pop();
-        if (vistos.has(filho.id)) continue;
-        vistos.add(filho.id);
-        const b = stateBucket((filho.fields || {})['System.State']);
-        if (b === 'andamento' || b === 'atencao' || b === 'feito') ativo = true;
-        else if (b === 'todo') refinado = true;
-        for (const neto of filhosDe.get(filho.id) || []) pilha.push(neto);
-      }
-      if (ativo) g.agora.push(ep);
-      else if (refinado) g.seguir.push(ep);
-      else g.depois.push(ep); // nenhum filho refinado ainda — só ideia
-    }
-    // sem prazo pra cobrar aqui: quem tem data-alvo vem primeiro, o resto por
-    // título (ordem estável, sem depender de campo que pode faltar).
-    const quando = (it) => {
-      const v = dataValida(((it || {}).fields || {})[CAMPO_ALVO]);
-      return v === null ? Infinity : v;
-    };
-    const ordena = (a, b) => {
-      const qa = quando(a), qb = quando(b);
-      if (qa !== qb) return qa < qb ? -1 : 1;
-      const ta = String((a.fields || {})['System.Title'] || '');
-      const tb = String((b.fields || {})['System.Title'] || '');
-      return ta.localeCompare(tb, 'pt-BR');
-    };
-    for (const k of Object.keys(g)) g[k].sort(ordena);
-    return [
-      { faixa: 'agora', itens: g.agora },
-      { faixa: 'seguir', itens: g.seguir },
-      { faixa: 'depois', itens: g.depois },
-    ];
   }
 
   // Produto de cada item: sobe a cadeia de pais e devolve o primeiro Épico.
@@ -703,6 +678,7 @@
     const feitos = [];
     const execucao = [];
     const travados = [];
+    const fila = []; // ainda não começou — é o "planejado" que o report não mostrava
     const prazos = { atrasados: [], esteMes: [], proximoMes: [], depois: [] };
     for (const it of items || []) {
       const f = (it || {}).fields || {};
@@ -719,7 +695,13 @@
       }
       const bucket = stateBucket(estado);
       if (bucket === 'atencao') travados.push({ item: it, dias: diasSemToque(f, hoje) });
+      // Épico é iniciativa, não item de execução: no report ele é a frente (e o
+      // cabeçalho de produto), com o próprio prazo no card. Contá-lo em
+      // execução/fila/prazos fazia a capa dizer "5 em execução" com 2 deles
+      // sendo as próprias iniciativas. Travado continua: iniciativa parada é notícia.
+      else if (levelOf(f['System.WorkItemType']) === 'epic') continue;
       else if (bucket === 'andamento') execucao.push({ item: it });
+      else if (bucket === 'todo') fila.push({ item: it });
       const alvo = dataValida(f[CAMPO_ALVO]);
       if (alvo === null) continue;
       if (diaUTC(alvo) < hoje) prazos.atrasados.push({ item: it, alvo });
@@ -737,15 +719,17 @@
     prazos.proximoMes.sort(porAlvo);
     prazos.depois.sort(porAlvo);
     travados.sort((a, b) => (b.dias || 0) - (a.dias || 0)); // travado há mais tempo primeiro
-    execucao.sort((a, b) => {
+    const porAlvoNuloNoFim = (a, b) => {
       const va = dataValida((a.item.fields || {})[CAMPO_ALVO]);
       const vb = dataValida((b.item.fields || {})[CAMPO_ALVO]);
       if (va === null && vb === null) return 0;
       if (va === null) return 1;
       if (vb === null) return -1;
       return va - vb;
-    });
-    return { mes: rotuloMes(agora), feitos, execucao, travados, prazos };
+    };
+    execucao.sort(porAlvoNuloNoFim);
+    fila.sort(porAlvoNuloNoFim); // quem já tem data marcada na frente
+    return { mes: rotuloMes(agora), feitos, execucao, travados, prazos, fila };
   }
 
   function diasSemToque(f, hoje) {
@@ -756,6 +740,72 @@
   function rotuloMes(t) {
     const d = new Date(t);
     return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0');
+  }
+
+  // ---- Por frente (o épico como iniciativa) ----
+  // Junta, por produto do mapa, o que o mês entregou, o que anda agora, o que
+  // trava ou atrasa, o próximo marco e o que ainda espera na fila. Item sem
+  // produto não vira frente — segue só nas listas. As listas chegam no formato
+  // que reportPorMes/briefingDoMes devolvem ({ item, ... }); aqui só se agrupa
+  // e ordena: mais movimento (entregas + andamento) na frente; empate, quem tem
+  // trava ou atraso; depois, pelo nome. O próprio épico não é linha de si
+  // mesmo — entregue no mês, marca a frente como concluída.
+  // Só volta frente com movimento: entregou algo, tem algo andando ou fechou no
+  // mês. Iniciativa só com fila, só com item travado, ou sem nada, fica de fora
+  // — o card não tem bloco que nomeie o travado, então viraria um cartão com
+  // "nada concluído" e "nada em andamento" e um selo vermelho sem explicação. O
+  // que trava continua em Depende de decisão e no cartão Atenção do Resumo, que
+  // é onde o leitor vai atrás disso. Com essa regra, todo card tem pelo menos um
+  // bloco preenchido.
+  function frentes(o) {
+    const mapa = o.mapa || new Map();
+    const porId = new Map();
+    const frenteDe = (it) => {
+      const p = mapa.get(it.id);
+      if (!p) return null;
+      if (!porId.has(p.id)) {
+        porId.set(p.id, {
+          produto: p, entregas: [], andamento: [], travados: [], atrasados: [], fila: [],
+          proximo: null, fechouNoMes: null, concluida: isTerminalState(p.estado),
+        });
+      }
+      return porId.get(p.id);
+    };
+    const junta = (lista, chave) => {
+      for (const r of lista || []) {
+        const it = r.item || r;
+        const fr = frenteDe(it);
+        if (!fr) continue;
+        if (it.id === fr.produto.id) { if (chave === 'entregas') fr.fechouNoMes = r; continue; }
+        fr[chave].push(r);
+      }
+    };
+    junta(o.entregas, 'entregas');
+    junta(o.execucao, 'andamento');
+    junta(o.travados, 'travados');
+    junta(o.atrasados, 'atrasados');
+    junta(o.fila, 'fila');
+    // Próximo marco: o prazo mais próximo ainda por vir entre os itens da
+    // frente; sem nenhum, o prazo do próprio épico, se ainda estiver à frente.
+    for (const r of o.comData || []) {
+      const it = r.item || r;
+      const fr = frenteDe(it);
+      if (!fr || it.id === fr.produto.id) continue;
+      if (!fr.proximo || r.alvo < fr.proximo.alvo) fr.proximo = { alvo: r.alvo, item: it };
+    }
+    if (o.agora) {
+      const hoje = diaUTC(o.agora);
+      for (const fr of porId.values()) {
+        if (fr.proximo || fr.concluida) continue;
+        const alvo = dataValida(fr.produto.alvo);
+        if (alvo !== null && alvo >= hoje) fr.proximo = { alvo, item: null };
+      }
+    }
+    const movimento = (f) => f.entregas.length + f.andamento.length + (f.fechouNoMes ? 1 : 0);
+    const risco = (f) => f.travados.length + f.atrasados.length;
+    return [...porId.values()].filter((f) => movimento(f) > 0).sort((a, b) =>
+      (movimento(b) - movimento(a)) || (risco(b) - risco(a))
+      || String(a.produto.titulo).localeCompare(String(b.produto.titulo), 'pt-BR'));
   }
 
   // ---- Rolagem animada ----
@@ -801,7 +851,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, reportPorMes, mapaDeProdutos, descricaoLimpa, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, futuroPorAtividade,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, mapaDeProdutos, descricaoLimpa, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };

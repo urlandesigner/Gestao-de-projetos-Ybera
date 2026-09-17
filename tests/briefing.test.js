@@ -36,12 +36,13 @@ test('htmlReport monta as seções do briefing', () => {
   assert.ok(html.includes('Agosto de 2026'));
   assert.ok(html.includes('Nova PDP USA')); // agrupou por produto
   assert.ok(!html.includes('Destaques'));   // Destaques saiu: repetia os itens de Entregas
-  // Cabeçalho de seção é só título e a frase que o explica
+  // Cabeçalho de seção: só o título e a frase que o explica, embaixo dele.
+  // Numeral gigante ao fundo e rótulo em inglês ficam fora — pedido do PO.
   assert.ok(!html.includes('doc-num'), 'numeral gigante saiu do cabeçalho');
-  assert.ok(!html.includes('Executive summary'), 'rótulo em inglês saiu das seções');
-  assert.ok(!html.includes('Monthly report'), 'e saiu da capa também');
-  assert.ok(!html.includes('doc-en'), 'nenhum rótulo em inglês sobrou no documento');
-  assert.match(html, /<h2>Resumo<\/h2>\s*<p class="doc-intro">/);
+  assert.ok(!html.includes('doc-en'), 'nenhum rótulo em inglês no documento');
+  assert.ok(!html.includes('Executive summary') && !html.includes('Monthly report'));
+  // O <span> dentro do h2 é o que leva o gradiente da marca
+  assert.match(html, /<h2><span>Resumo<\/span><\/h2>\s*<p class="doc-intro">/);
 });
 
 test('htmlReport escreve a prosa com volume, comparação e situação', () => {
@@ -263,19 +264,22 @@ test('triagem de risco agrupa por frente e ordena pelo mais afetado', () => {
   assert.ok(html.indexOf('Frente A</b> (2 itens)') < html.indexOf('Frente B</b> (1 item)'));
 });
 
-// Etapa #8: resumo forward-looking por frente no topo de "Próximos passos",
-// do prazo mais próximo pro mais distante. Atrasado (risco) não entra.
-test('htmlReport resume os próximos por frente, do prazo mais próximo pro distante', () => {
+// O resumo "Por frente, o que vem a seguir" saiu de Próximos passos: a seção
+// Por frente responde isso por iniciativa, e repetir era eco.
+test('htmlReport não repete o resumo por frente dentro de Próximos passos', () => {
   const itens = [
     it(1, 'Epic', 'In Progress', 'Frente A', null),
     it(2, 'Epic', 'In Progress', 'Frente B', null),
-    it(10, 'Product Backlog Item', 'In Progress', 'A1', 1, 25), // vence mais adiante
-    it(20, 'Product Backlog Item', 'In Progress', 'B1', 2, 3),  // vence este mês
+    it(10, 'Product Backlog Item', 'In Progress', 'A1', 1, 25),
+    it(20, 'Product Backlog Item', 'In Progress', 'B1', 2, 3),
   ];
   const { html } = B.htmlReport({ items: itens, agora: AGORA });
-  assert.ok(html.includes('Por frente, o que vem a seguir:'));
-  // Frente B (prazo mais próximo) vem antes de Frente A
-  assert.ok(html.indexOf('Frente B</b> (1 item') < html.indexOf('Frente A</b> (1 item'));
+  assert.ok(!html.includes('Por frente, o que vem a seguir:'));
+  assert.ok(html.includes('id="frentes"'));
+  const frentes = html.slice(html.indexOf('id="frentes"'), html.indexOf('id="decisao"') > 0 ? html.indexOf('id="decisao"') : html.indexOf('id="proximos"'));
+  // Frente B tem o marco mais próximo, mas a ordem é por movimento (empate: 1 e 1) e nome
+  assert.ok(frentes.indexOf('Frente A') < frentes.indexOf('Frente B'));
+  assert.ok(frentes.includes('Próximo marco'));
 });
 
 test('htmlReport joga "sem produto" pro fim, mesmo sendo o maior grupo', () => {
@@ -482,17 +486,162 @@ test('htmlReport conta o travado vencido no KPI de fora do prazo', () => {
 });
 
 // Item em curso com prazo daqui a 3 meses: contava na capa e não aparecia em
-// seção nenhuma — o diretor via "7 em execução" e achava 5.
-test('htmlReport lista prazo distante em "Vence mais adiante"', () => {
+// seção nenhuma — o diretor via "7 em execução" e achava 5. Hoje toda execução
+// está em "Em andamento agora", com o prazo na linha, seja ele qual for.
+test('htmlReport lista item em curso com prazo distante em "Em andamento agora"', () => {
   const itens = [
     ...base(),
     it(50, 'Product Backlog Item', 'In Progress', 'Entrega de novembro', null, 90),
   ];
   const { html } = B.htmlReport({ items: itens, agora: AGORA });
   const proximos = html.slice(html.indexOf('id="proximos"'));
-  assert.ok(proximos.includes('Vence mais adiante'));
+  assert.ok(proximos.includes('Em andamento agora'));
   assert.ok(proximos.includes('Entrega de novembro'));
+  assert.ok(proximos.includes('prazo 18 de nov.'));
   assert.ok(html.includes('1 mais adiante')); // e a prosa também conta
+});
+
+/* ---- Nome de negócio e "Por frente" ---- */
+const nomes = {
+  1: { nome: 'Página de produto nova (EUA)', resumo: 'A vitrine de cada produto na loja americana.' },
+  10: { nome: 'Galeria de fotos do produto' },
+};
+
+test('htmlReport troca o título pelo nome de negócio onde houver, e mantém o original onde não', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, nomes });
+  assert.ok(html.includes('Página de produto nova (EUA)'), 'épico com nome de negócio');
+  assert.ok(!html.includes('<h3 class="cab-nome">Nova PDP USA</h3>'), 'o título cru sai do cabeçalho');
+  assert.ok(html.includes('Zoom na imagem'), 'PBI sem nome continua com o título original');
+  assert.ok(html.includes('Todo o esforço caiu em <b>Página de produto nova (EUA)</b>.'), '"Onde caiu o esforço" usa o nome');
+  // A busca acha pelos dois nomes: quem tem acesso ao sistema procura pelo título de lá
+  assert.match(html, /data-busca="galeria de imagens #10 galeria de fotos do produto"/);
+});
+
+test('htmlReport monta a seção Por frente com entregas, andamento, marco e risco', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, nomes });
+  assert.ok(html.includes('<a href="#frentes">Frentes</a>'));
+  assert.ok(html.indexOf('id="resumo"') < html.indexOf('id="frentes"'), 'vem depois do Resumo');
+  assert.ok(html.indexOf('id="frentes"') < html.indexOf('id="entregas"'), 'e antes de Entregas');
+  const sec = html.slice(html.indexOf('id="frentes"'), html.indexOf('id="entregas"'));
+  assert.ok(sec.includes('<h3 class="frente-nome">Página de produto nova (EUA)</h3>'));
+  assert.ok(sec.includes('A vitrine de cada produto na loja americana.'));
+  assert.ok(sec.includes('Entregou em agosto'));
+  assert.ok(sec.includes('<b>Galeria de fotos do produto</b>'), 'entrega com nome de negócio');
+  assert.ok(sec.includes('<b>Zoom na imagem</b>'), 'PBI com o título');
+  assert.ok(sec.includes('Em andamento') && sec.includes('<b>Prova social</b>'));
+  assert.ok(sec.includes('Próximo marco') && sec.includes('24 de ago.'));
+  assert.ok(sec.includes('frente-selo-alerta">1 travado<'), 'selo de risco pelo item travado');
+  assert.ok(sec.includes('class="frente frente-risco"'));
+  assert.ok(sec.includes('cab-barra'), 'barra de rumo no card');
+  assert.ok(!sec.includes('badge-tipo') && !sec.includes('In Progress') && !sec.includes('Blocked'), 'sem jargão');
+});
+
+test('htmlReport em mês fechado mostra em Por frente só o que entregou', () => {
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, mes: '2026-07' });
+  const sec = html.slice(html.indexOf('id="frentes"'), html.indexOf('id="entregas"'));
+  assert.ok(sec.includes('Entregou em julho'));
+  assert.ok(sec.includes('<b>Item de julho</b>'));
+  assert.ok(!sec.includes('Em andamento') && !sec.includes('Próximo marco') && !sec.includes('Na fila'));
+  assert.ok(!sec.includes('frente-selo'), 'sem selo de risco em mês fechado');
+});
+
+test('htmlReport marca a frente concluída quando o próprio épico fecha no mês', () => {
+  const itens = [
+    it(1, 'Epic', 'Done', 'Tema Global', null, null, 2),
+    it(11, 'Product Backlog Item', 'Done', 'Filho ativo', 1, null, 1),
+  ];
+  const { html } = B.htmlReport({ items: itens, agora: AGORA });
+  const sec = html.slice(html.indexOf('id="frentes"'), html.indexOf('id="entregas"'));
+  assert.ok(sec.includes('<span class="frente-selo">concluída</span>'));
+  assert.ok(sec.includes('A frente fechou por completo — 1 item: <b>Filho ativo</b>.'));
+});
+
+test('htmlReport separa em Próximos o que está em andamento do que está na fila com data', () => {
+  const itens = [
+    ...base(),
+    it(50, 'Product Backlog Item', 'New', 'Planejado pra setembro', 1, 20),
+    it(51, 'Product Backlog Item', 'In Progress', 'Rodando e atrasado', 1, -2),
+  ];
+  const { html } = B.htmlReport({ items: itens, agora: AGORA });
+  const fim = html.indexOf('id="roadmap"') > 0 ? html.indexOf('id="roadmap"') : html.length;
+  const proximos = html.slice(html.indexOf('id="proximos"'), fim);
+  const iAnd = proximos.indexOf('Em andamento agora');
+  const iFila = proximos.indexOf('Na fila, com data marcada');
+  assert.ok(iAnd > 0 && iFila > iAnd);
+  const andamento = proximos.slice(iAnd, iFila);
+  assert.ok(andamento.includes('Prova social') && andamento.includes('Rodando e atrasado'));
+  assert.ok(andamento.includes('quando-alerta">atrasado desde'), 'atrasado em andamento fica vermelho na própria lista');
+  assert.ok(!andamento.includes('Planejado pra setembro'));
+  const fila = proximos.slice(iFila);
+  assert.ok(fila.includes('Planejado pra setembro') && fila.includes('vence '));
+  assert.ok(!proximos.includes('Vence mais adiante') && !proximos.includes('Já passou do prazo'));
+  assert.ok(!proximos.includes('In Progress'), 'sem estado cru');
+  // O card "Na fila" da frente conta o que ainda não começou
+  const frentes = html.slice(html.indexOf('id="frentes"'), html.indexOf('id="entregas"'));
+  assert.ok(frentes.includes('1 item ainda por começar.'));
+});
+
+// Por frente é vitrine de notícia: iniciativa parada não ganha card só pra
+// dizer "nada aqui". Com item andando, a frente aparece — e o épico continua
+// fora das listas de Próximos e do KPI de execução.
+test('htmlReport deixa fora de Por frente a iniciativa sem entrega nem andamento', () => {
+  const itens = [
+    it(5, 'Epic', 'New', 'Iniciativa parada', null, 40),
+    it(6, 'Epic', 'In Progress', 'Iniciativa viva', null, -3),
+    it(60, 'Product Backlog Item', 'In Progress', 'Item rodando', 6, 7),
+  ];
+  const { vazio, html } = B.htmlReport({ items: itens, agora: AGORA });
+  assert.equal(vazio, false);
+  const sec = html.slice(html.indexOf('id="frentes"'));
+  assert.ok(sec.includes('<h3 class="frente-nome">Iniciativa viva</h3>'));
+  assert.ok(sec.includes('quando-alerta">atrasada desde 17 de ago.'));
+  assert.ok(!html.includes('Iniciativa parada'), 'iniciativa sem movimento não vira card');
+  assert.match(html, /<b>1<\/b><span>em execução/, 'só o item conta como execução na capa');
+  const proximos = html.slice(html.indexOf('id="proximos"'));
+  assert.ok(!proximos.includes('Iniciativa viva'), 'épico não vira item de Próximos passos');
+});
+
+// Frente parada com um item travado não vira card — o card não tem bloco que
+// nomeie o travado e sairia "nada concluído / nada em andamento" com selo
+// vermelho. O travado segue visível em Depende de decisão.
+test('htmlReport não faz card de frente que só tem item travado', () => {
+  const itens = [
+    ...base(),
+    it(70, 'Epic', 'In Progress', 'Marketplace Amazon', null, 40),
+    it(71, 'Feature', 'Blocked', 'Integração do catálogo', 70, -5, null, 40),
+  ];
+  const { html } = B.htmlReport({ items: itens, agora: AGORA });
+  const sec = html.slice(html.indexOf('id="frentes"'), html.indexOf('id="entregas"'));
+  assert.ok(!sec.includes('Marketplace Amazon'), 'frente sem movimento fica fora dos cards');
+  assert.ok(!sec.includes('Nada concluído neste mês.'), 'nenhum card fica com os dois blocos vazios');
+  const decisao = html.slice(html.indexOf('id="decisao"'));
+  assert.ok(decisao.includes('Integração do catálogo'), 'o travado continua em Depende de decisão');
+});
+
+// Sem entrega, sem andamento e sem prazo de item, um documento só de iniciativa
+// em aberto não teria nem card de frente nem lista: diz que não há registro.
+test('htmlReport fica vazio quando só há iniciativa parada', () => {
+  const itens = [
+    it(5, 'Epic', 'New', 'Iniciativa parada', null, 40),
+    it(6, 'Epic', 'In Progress', 'Outra parada', null, -3),
+  ];
+  const { vazio, html } = B.htmlReport({ items: itens, agora: AGORA });
+  assert.equal(vazio, true);
+  assert.ok(html.includes('Nada registrado ainda'));
+});
+
+test('htmlReport não cita a ferramenta em nota nenhuma, nem no mês fechado', () => {
+  const itens = [it(9, 'Feature', 'Done', 'Fechou sem data', null, null, null, 4), ...base()];
+  for (const mes of [undefined, '2026-07']) {
+    const { html } = B.htmlReport({ items: itens, agora: AGORA, mes });
+    assert.ok(!html.includes('DevOps'), 'sem DevOps no mês ' + mes);
+  }
+});
+
+test('htmlReport escapa nome de negócio forjado', () => {
+  const forjado = { 1: { nome: '"><img src=x onerror=alert(1)>', resumo: '<script>x</script>' } };
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, nomes: forjado });
+  assert.ok(!html.includes('<img') && !html.includes('<script>'));
 });
 
 test('htmlReport não diz "nada registrado" quando há prazos vivos', () => {
