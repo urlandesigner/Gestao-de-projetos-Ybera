@@ -145,14 +145,21 @@
       <code>.yb-track</code> no contêiner e pronto — sem classe nova no cartão, sem
       script e sem controle na tela. No tema, o lojista marca qual usar por seção.</p>
       <p>O ganho é de altura no celular, e é grande: medido em 375px, uma vitrine de
-      quatro cartões cai de <b>1133px</b> de grade para <b>528px</b> de trilho. No
-      desktop os dois praticamente empatam, porque quatro cartões cabem na largura de
-      qualquer jeito — a decisão só importa no celular.</p>
-      <p>O <a href="#demos">cartão de oferta</a> tem regra própria dentro do trilho:
-      na grade ele ocupa as duas colunas do celular porque é <b>a</b> oferta do dia, e
-      solto no trilho viraria mais um cartão de 260px. <code>span 2</code> sozinho dá
+      quatro cartões cai de <b>1133px</b> de grade para <b>528px</b> de trilho.</p>
+      <p><b>Mas o trilho não é só economia de altura no celular.</b> Esta nota já disse
+      que "no desktop os dois empatam, porque quatro cartões cabem de qualquer jeito",
+      e isso estava errado — cabem onde há quatro colunas. A grade das homes cai para
+      três entre 768 e 1023: o quarto cartão desce sozinho com duas vagas vazias ao
+      lado. Medido no Best Sellers antes da troca: <b>2 linhas em 1000px e em 860</b>,
+      <b>3 em 760</b>. O trilho não quebra linha, então a fileira termina reta em
+      qualquer largura — é por isso que as quatro homes usam trilho ali.</p>
+      <p>O <a href="#demos">cartão de oferta</a> tem regra própria dentro do trilho,
+      <b>e só no celular</b>: ali ele ocupa as duas colunas porque é <b>a</b> oferta do
+      dia, e solto viraria mais um cartão de 260px. <code>span 2</code> sozinho dá
       536px e passa da tela num aparelho de 375; o teto de 85vw devolve 319px — maior
-      que os vizinhos, e ainda deixa o próximo espiando.</p>
+      que os vizinhos, e ainda deixa o próximo espiando. Acima de 768 a regra não vale:
+      lá o trilho tem largura para a fileira inteira, e um cartão de 536px punha 228px
+      de sobra para rolar numa fileira que cabia.</p>
     </div>
     <div class="note">
       <b>Selo que repete o título da seção não é selo</b>

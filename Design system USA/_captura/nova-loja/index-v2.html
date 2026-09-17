@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ybera Paris USA | Keratin care that survives humidity</title>
-<link rel="stylesheet" href="yb/fonte.css?v=467e2cae">
-<link rel="stylesheet" href="yb/00-primitives.css?v=467e2cae">
-<link rel="stylesheet" href="yb/01-semantic.css?v=467e2cae">
-<link rel="stylesheet" href="yb/components.css?v=467e2cae">
-<link rel="stylesheet" href="yb/patterns.css?v=467e2cae">
-<link rel="stylesheet" href="yb/icons.css?v=467e2cae">
+<link rel="stylesheet" href="yb/fonte.css?v=de9fdb3c">
+<link rel="stylesheet" href="yb/00-primitives.css?v=de9fdb3c">
+<link rel="stylesheet" href="yb/01-semantic.css?v=de9fdb3c">
+<link rel="stylesheet" href="yb/components.css?v=de9fdb3c">
+<link rel="stylesheet" href="yb/patterns.css?v=de9fdb3c">
+<link rel="stylesheet" href="yb/icons.css?v=de9fdb3c">
 <style>
   /* Só layout de página: largura, respiro entre blocos e o grid do hero.
      Nenhum componente é redefinido aqui — se um botão precisasse de ajuste,
@@ -244,7 +244,7 @@
         <h2>Best Sellers</h2>
         <a class="yb-link" href="/collections/best-sellers">Shop all best sellers <svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-right"/></svg></a>
       </div>
-      <div class="yb-grid">
+      <div class="yb-track" id="best-track">
       <article class="yb-offercard yb-offercard--blur">
         <img src="img/139-fda72e.webp" alt="Myrrh hair repair oil 90ml / 3fl.oz">
         <span class="yb-offerseal yb-offerseal--sale yb-offercard__off"><b class="yb-offerseal__value">20%</b><span class="yb-offerseal__label">off</span></span>
@@ -302,6 +302,10 @@
           <span class="yb-rating__count">(6)</span></span>
         <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
       </article>
+      </div>
+      <div class="yb-track__nav" data-yb-track-nav="best-track" hidden>
+        <button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous best sellers"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-left"/></svg></button>
+        <button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next best sellers"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-right"/></svg></button>
       </div>
     </section>
 
@@ -965,7 +969,7 @@
     </div>
   </div>
 </dialog>
-<script src="yb/components.js?v=467e2cae"></script>
+<script src="yb/components.js?v=de9fdb3c"></script>
 <script>
 // Setas do banner. Carrossel nao e componente do sistema — este JS vive na
 // pagina, nao em components.js, para nao dar a entender que existe.

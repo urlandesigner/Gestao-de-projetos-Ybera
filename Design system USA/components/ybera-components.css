@@ -604,13 +604,20 @@
    dois praticamente empatam — quatro cartoes cabem na largura de qualquer
    jeito —, entao a decisao so importa no celular, que e onde ela foi pedida.
 
-   O CARTAO DE OFERTA precisa de regra propria. Na grade ele ocupa as duas
-   colunas do celular (`grid-column:span 2`) porque e A oferta do dia; solto no
-   trilho ele virava mais um cartao de 260px e perdia o que o faz existir.
-   `span 2` sozinho da 536px e passa da tela num aparelho de 375 — o teto de
-   85vw devolve 319px: maior que os vizinhos, e ainda deixa 24px do proximo
-   aparecendo, que e o que convida a arrastar. */
-.yb-track > .yb-offercard{ grid-column:span 2; max-inline-size:85vw; }
+   O CARTAO DE OFERTA precisa de regra propria, E SO NO CELULAR. Na grade ele
+   ocupa as duas colunas do celular (`grid-column:span 2`) porque e A oferta do
+   dia; solto no trilho ele virava mais um cartao de 260px e perdia o que o faz
+   existir. `span 2` sozinho da 536px e passa da tela num aparelho de 375 — o
+   teto de 85vw devolve 319px: maior que os vizinhos, e ainda deixa 24px do
+   proximo aparecendo, que e o que convida a arrastar.
+
+   Acima de 768 a regra nao vale. Ali o trilho tem largura para a fileira
+   inteira — quatro pecas em 1136px — e um cartao de 536 punha 228px de sobra
+   para rolar numa fileira que cabia. Na grade ele sempre foi uma coluna como
+   as outras nessas larguras; o trilho segue o mesmo. */
+@media (max-width:767.98px){
+  .yb-track > .yb-offercard{ grid-column:span 2; max-inline-size:85vw; }
+}
 /* variante em fila, para conteudo que nao e cartao (a faixa de logos) */
 /* setas: a loja tem 5 pares por pagina e o sistema tinha zero. Nao sao raiz
    nova — pertencem ao trilho, e o botao em si e .yb-iconbtn. */
