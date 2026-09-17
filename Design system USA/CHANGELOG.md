@@ -40,6 +40,15 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   **Account**. Único bloco com fundo e único botão da gaveta.
 
 ### Alterado
+- **A foto do cartão de oferta é recortada em volta do produto.** O cartão é
+  2/3 e as fotos do catálogo são 1/1: com `cover` a altura manda, a foto entra
+  inteira e o chão vazio do estúdio vem junto. Na foto do óleo de mirra medi um
+  degrau de **31 pontos de luminância em y=412** de 512 — abaixo dali é fundo
+  liso, e o desfoque progressivo arrastava o frasco cortado para dentro dele.
+  `enquadrar_oferta` mede o produto na imagem (`getbbox` sobre máscara de
+  saturação/escuro) e corta com folga em cima e nos lados e **zero embaixo**.
+  Não dá para resolver na folha: a margem morta vai de 0% a 33% entre as seis
+  fotos que medi, e número fixo acertaria uma e erraria as outras.
 - **Related Products vira trilho no celular, nas cinco PDPs.** Eram quatro
   cartões em duas fileiras de dois: sem buraco, mas com o dobro da altura de
   uma fileira de trilho. Em 375px a seção caiu de **754px para 556**. Mesmo

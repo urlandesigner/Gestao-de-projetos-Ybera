@@ -667,6 +667,73 @@ def recortar_arte(destino, nome, manter=0.76):
     return saida
 
 
+def enquadrar_oferta(destino, nome, margem=0.08):
+    """Recorta a foto do produto em volta do PRODUTO, e devolve o novo nome.
+
+    O cartao de oferta e 2/3 e as fotos do catalogo sao 1/1. Com `cover` a
+    altura manda: a foto inteira entra, INCLUSIVE o chao vazio do estudio. Na
+    foto do oleo de mirra medi um degrau de 31 pontos de luminancia em y=412
+    de 512 — o produto acaba ali, e os 100px debaixo sao fundo liso. Como o
+    desfoque progressivo e mais forte justamente no pe do cartao, ele arrasta o
+    frasco cortado para dentro desse liso: le como defeito de renderizacao, e
+    foi assim que o Urlan descreveu.
+
+    Nao da para resolver com `object-position`: em `cover` a altura e o lado
+    que manda aqui, a foto entra inteira e nao ha sobra vertical para deslocar.
+    Zoom em CSS resolveria ESTA foto e quebraria outras — medi seis do catalogo
+    e a margem morta vai de 0% (arte sangrada) a 33% (touca de cetim). Numero
+    fixo na folha seria acertar uma e errar as outras.
+
+    Entao a medida sai da foto. A mascara e "pixel com saturacao OU escuro":
+    fundo de estudio e cinza dessaturado e claro, produto nao e nem um nem
+    outro. `getbbox()` faz a varredura em C — o mesmo laco em Python levava
+    meio segundo por imagem.
+
+    Onde a foto ja sangra, a caixa e a imagem inteira e nada acontece: e por
+    isso que o corte so vale a pena acima de 6% em algum lado. E sem Pillow a
+    montagem segue com a foto original, como no resto do gerador — nao vale
+    quebrar o build de quem so quer rodar."""
+    if not nome:
+        return None
+    saida = nome.replace('.webp', '-enquadrado.webp')
+    caminho = os.path.join(destino, 'img', saida)
+    if os.path.exists(caminho):
+        return saida
+    origem = os.path.join(destino, 'img', nome)
+    if not os.path.exists(origem):
+        return nome
+    try:
+        from PIL import Image, ImageChops
+    except ImportError:
+        print('  aviso: sem Pillow, a foto da oferta entra com o chao do estudio')
+        return nome
+    with Image.open(origem) as im:
+        im = im.convert('RGB')
+        w, h = im.size
+        r, g, b = im.split()
+        claro = ImageChops.lighter(ImageChops.lighter(r, g), b)
+        escuro = ImageChops.darker(ImageChops.darker(r, g), b)
+        satura = ImageChops.difference(claro, escuro).point(lambda v: 255 if v > 22 else 0)
+        sombra = claro.point(lambda v: 255 if v < 150 else 0)
+        caixa = ImageChops.lighter(satura, sombra).getbbox()
+        if not caixa:
+            return nome
+        x0, y0, x1, y1 = caixa
+        folga = int(margem * max(w, h))
+        x0, y0 = max(0, x0 - folga), max(0, y0 - folga)
+        # Folga em cima e nos lados, ZERO embaixo: o pe do cartao e do veu e
+        # do botao, e qualquer sobra de chao ali vira a faixa que se quer
+        # matar. Com 8% nos quatro lados a faixa so encolheu — de 100px para
+        # 53 — porque a margem de baixo virou a nova faixa.
+        x1, y1 = min(w, x1 + folga), min(h, y1)
+        # Foto que ja sangra nao tem o que ganhar, e recomprimir de graca so
+        # troca uma imagem boa por uma pior.
+        if (x1 - x0) > w * .94 and (y1 - y0) > h * .94:
+            return nome
+        im.crop((x0, y0, x1, y1)).save(caminho, 'WEBP', quality=88)
+    return saida
+
+
 def um_por_linha(prods, n, excluir=()):
     """Escolhe `n` produtos sem repetir a LINHA.
 
@@ -702,7 +769,7 @@ def um_por_linha(prods, n, excluir=()):
 def cartao_oferta(p, destino):
     """O destaque da vitrine: um produto, foto sangrando, prazo correndo."""
     import datetime
-    arte = recortar_arte(destino, OFERTA['arte']) or p['img']
+    arte = recortar_arte(destino, OFERTA['arte']) or enquadrar_oferta(destino, p['img'])
     prazo = f"{datetime.date.today().year}{OFERTA['prazo']}"
     de, por, selo = oferta_precos(p)
     # Selo estrelado no lugar da pastilha. A oferta do dia e o unico lugar da

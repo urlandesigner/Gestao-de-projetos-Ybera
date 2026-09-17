@@ -65,6 +65,22 @@
       um lugar próprio para ela.</p>
     </div>
     <div class="note">
+      <b>Sangrar não é o mesmo que preencher</b>
+      <p>O cartão é <b>2/3</b> e as fotos do catálogo são <b>1/1</b>. Com
+      <code>cover</code> a altura é o lado que manda: a foto entra inteira, incluindo
+      o chão vazio do estúdio. Medido na foto do óleo de mirra: degrau de <b>31 pontos
+      de luminância em y=412</b> de 512, e os 100px debaixo são fundo liso. Como o
+      desfoque progressivo é mais forte justamente no pé do cartão, ele arrasta o
+      frasco cortado para dentro desse liso — lê como defeito de renderização.</p>
+      <p><code>object-position</code> não resolve: em <code>cover</code> a foto entra
+      inteira e não há sobra vertical para deslocar. Zoom na folha resolveria uma foto
+      e quebraria outras — medidas seis do catálogo, a margem morta vai de <b>0%</b>
+      (arte sangrada) a <b>33%</b> (touca de cetim). Então a medida sai da foto: o
+      gerador recorta em volta do produto (<code>enquadrar_oferta</code>), com folga em
+      cima e nos lados e <b>zero embaixo</b>, porque o pé do cartão é do véu e do
+      botão. Onde a foto já sangra, a caixa é a imagem inteira e nada acontece.</p>
+    </div>
+    <div class="note">
       <b>Prazo vencido não vira 00:00:00</b>
       <p>O segundo cartão tem prazo em 2020, de propósito: é o estado encerrado. Um
       relógio parado em zero não é contagem, é relógio quebrado prometendo urgência
