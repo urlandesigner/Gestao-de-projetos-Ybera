@@ -152,10 +152,18 @@
       desce sozinho, com duas vagas vazias ao lado. Medido no Best Sellers das homes:
       <b>2 linhas em 1000px e em 860</b>, <b>3 em 760</b>. O trilho não quebra linha —
       em troca, abaixo de 1152 ele rola em vez de mostrar os quatro de uma vez.</p>
-      <p>Nenhum dos dois é o certo: é escolha da seção, e por ora as homes ficam na
-      grade. A informação que importa na hora de escolher é a largura em que os itens
-      param de caber, e para quatro cartões de 260px com gap de 16 ela é <b>1152px de
-      viewport</b> — o trilho precisa de 1088, que é o que a página oferece ali.</p>
+      <p>Nenhum dos dois é o certo: é escolha da seção. A informação que importa na
+      hora de escolher é a largura em que os itens param de caber, e para quatro
+      cartões de 260px com gap de 16 ela é <b>1152px de viewport</b> — o trilho precisa
+      de 1088, que é o que a página oferece ali.</p>
+      <p><b>Os dois ao mesmo tempo:</b> o Best Sellers das homes é grade no desktop e,
+      no celular, destaque em cima com os vizinhos em trilho embaixo. Quem faz isso é
+      <code>.yb-grid__rail</code>, um invólucro em volta dos cartões que sobram: abaixo
+      de 768 ele é o <code>.yb-track</code>; acima, <code>display:contents</code> o
+      apaga da caixa e os cartões voltam a ser células diretas da grade. O desktop fica
+      byte a byte o que era, e o HTML não precisa listar os cartões duas vezes. Em
+      375px a seção caiu de <b>1338px para 1140</b> — a fileira órfã de um cartão só,
+      com uma vaga vazia ao lado, deixou de existir.</p>
       <p>O <a href="#demos">cartão de oferta</a> tem regra própria dentro do trilho,
       <b>e só no celular</b>: ali ele ocupa as duas colunas porque é <b>a</b> oferta do
       dia, e solto viraria mais um cartão de 260px. <code>span 2</code> sozinho dá

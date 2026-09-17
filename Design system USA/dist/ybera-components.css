@@ -4978,6 +4978,29 @@ button.yb-link{
    sobra um vao branco ao lado, porque ele e mais alto que o cartao vizinho.
    No desktop e uma celula so — ali a coluna tem 266px e tudo entra. */
 @media (max-width:767.98px){.yb-grid > .yb-offercard{grid-column:span 2}}
+/* TRILHO DENTRO DA GRADE.
+   Com o destaque ocupando as duas colunas, sobram tres cartoes para duas
+   celulas: duas fileiras, a segunda com um cartao e uma vaga vazia do lado.
+   O invulucro transforma esses tres num trilho e a secao fecha em duas
+   fileiras — destaque em cima, carrossel embaixo.
+
+   `display:contents` acima de 768 e o que torna isso uma regra de celular e
+   nao uma segunda marcacao: o invulucro desaparece da caixa e os tres cartoes
+   voltam a ser celulas diretas da grade, entao o desktop continua sendo
+   exatamente a mesma fileira de quatro que sempre foi. A alternativa seria
+   escrever os cartoes duas vezes no HTML e esconder um dos blocos.
+
+   A ordem importa e e por isso que a regra mora aqui: `.yb-track` tambem e
+   uma classe so, e patterns.css carrega depois de components.css. Movida
+   para la, ela perderia para o `display:grid` do trilho.
+
+   O `min-inline-size:0` nao e decorativo: filho de grade nasce com minimo
+   automatico do conteudo, e um trilho de tres cartoes de 260 esticaria a
+   coluna para 812px em vez de rolar. */
+@media (min-width:768px){ .yb-grid__rail{ display:contents } }
+@media (max-width:767.98px){
+  .yb-grid__rail{ grid-column:span 2; min-inline-size:0; }
+}
 
 /* =========================================================================
    BLOCO DE COMPRA (PDP)

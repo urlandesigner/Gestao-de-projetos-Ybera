@@ -2350,6 +2350,31 @@ def fim_de_pagina(prods):
     return f"{rodape_v2()}\n{gaveta(prods)}\n{busca(prods)}"
 
 
+def vitrine_best_sellers(em_oferta, vizinhos, destino):
+    """Best Sellers: o destaque em cima, os vizinhos num trilho embaixo.
+
+    No celular a grade de duas colunas dava tres fileiras — o cartao de oferta
+    ocupando as duas de cima, depois dois cartoes, depois um sozinho com uma
+    vaga vazia ao lado. Agora sao duas: o destaque na primeira, e os tres
+    vizinhos na segunda como carrossel, do mesmo jeito que a peca do cartao
+    demonstra a opcao trilho.
+
+    O invulucro existe SO por causa do celular, e por isso ele some acima de
+    768: `display:contents` faz os tres cartoes voltarem a ser celulas diretas
+    da grade, e o desktop fica identico ao que sempre foi — quatro celulas numa
+    linha. Sem isso seria preciso ou duas marcacoes ou dois blocos de cartoes,
+    e a segunda opcao duplicaria o conteudo no HTML.
+
+    Sem setas de proposito: o trilho so existe abaixo de 768, e ali a folha
+    esconde `.yb-track__nav` de qualquer jeito — no toque, arrasta.
+    """
+    return "\n".join(
+        [cartao_oferta(em_oferta, destino),
+         '      <div class="yb-grid__rail yb-track">'] +
+        [card(pr, flag=False) for pr in vizinhos] +
+        ['      </div>'])
+
+
 def montar_home(destino):
     prods = dados.catalogo(os.path.join(destino, 'img'), 8)
     n_banner = copiar_banners(destino) + copiar_colecoes(destino) + copiar_reviews(destino) + copiar_logos(destino) + copiar_posts(destino) + copiar_citacao(destino) + copiar_videos(destino)
@@ -2372,8 +2397,7 @@ def montar_home(destino):
     # nao o primeiro da lista: e dele que existe desconto publicado.
     em_oferta = next((x for x in prods if x['handle'] == OFERTA['produto']), prods[0])
     vizinhos = um_por_linha(prods, 3, excluir=[em_oferta])
-    cards = "\n".join([cartao_oferta(em_oferta, destino)] +
-                      [card(p, flag=False) for p in vizinhos])
+    cards = vitrine_best_sellers(em_oferta, vizinhos, destino)
 
 
     corpo = f"""{header(promo=heroi)}
@@ -3241,8 +3265,7 @@ def montar_home_v2(destino, cliente=None):
 
     em_oferta = next((x for x in prods if x['handle'] == OFERTA['produto']), prods[0])
     vizinhos = um_por_linha(prods, 3, excluir=[em_oferta])
-    cards = "\n".join([cartao_oferta(em_oferta, destino)] +
-                      [card(pr, flag=False) for pr in vizinhos])
+    cards = vitrine_best_sellers(em_oferta, vizinhos, destino)
 
     corpo = f"""{header(promo=prods[2], cliente=cliente)}
 {faixa_parceiro()}
@@ -3343,8 +3366,7 @@ def montar_home_v3(destino):
 
     em_oferta = next((x for x in prods if x['handle'] == OFERTA['produto']), prods[0])
     vizinhos = um_por_linha(prods, 3, excluir=[em_oferta])
-    cards = "\n".join([cartao_oferta(em_oferta, destino)] +
-                      [card(pr, flag=False) for pr in vizinhos])
+    cards = vitrine_best_sellers(em_oferta, vizinhos, destino)
 
     # 1 e 2 — a faixa preta e o cabecalho saem juntos de `header()`: a faixa e
     # o primeiro filho dele, e e `.yb-notice`, a peca solta do sistema.

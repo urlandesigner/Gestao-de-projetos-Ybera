@@ -1885,6 +1885,45 @@ secao('Véu leve e blur');
 }
 
 /* ===========================================================================
+   O TRILHO DENTRO DA GRADE DO BEST SELLERS
+
+   A secao tem quatro pecas: o destaque e tres vizinhos. No celular a grade e de
+   duas colunas e o destaque ocupa as duas — sobram tres cartoes para duas
+   celulas, e a terceira fileira fica com um cartao e uma vaga vazia do lado.
+   `.yb-grid__rail` envolve os tres e vira trilho ali.
+
+   Duas coisas podem quebrar isto em silencio, e a checagem cobre as duas.
+
+   A primeira e a marcacao: sem o invulucro, a secao volta as tres fileiras e
+   nada acusa. A segunda e a CASCATA. `.yb-grid__rail` e `.yb-track` tem a mesma
+   especificidade, entao `display:contents` so ganha do `display:grid` do trilho
+   porque patterns.css carrega depois de components.css. Mover a regra para
+   components.css — o que parece arrumacao, ja que ela fala de trilho — faria o
+   desktop virar um trilho de tres cartoes com o destaque solto ao lado.
+   =========================================================================== */
+{
+  const homes = ['index.html', 'index-v2.html', 'index-v3.html', 'index-logado.html'];
+  const problemas = [];
+  for (const nome of homes) {
+    const caminho = `_captura/nova-loja/${nome}`;
+    if (!existsSync(join(raiz, caminho))) { problemas.push(`${nome}: nao existe`); continue; }
+    const html = ler(caminho);
+    const h = html.indexOf('<h2>Best Sellers</h2>');
+    if (h < 0) { problemas.push(`${nome}: sem secao Best Sellers`); continue; }
+    const sec = html.slice(html.lastIndexOf('<section', h), html.indexOf('</section>', h));
+    if (!/class="yb-grid__rail yb-track"/.test(sec)) problemas.push(`${nome}: sem o trilho em volta dos vizinhos`);
+  }
+  const folha = ler('patterns/ybera-patterns.css');
+  if (!/@media \(min-width:768px\)\{ \.yb-grid__rail\{ display:contents \} \}/.test(folha))
+    problemas.push('patterns: falta o display:contents acima de 768');
+  if (/\.yb-grid__rail/.test(ler('components/ybera-components.css')))
+    problemas.push('a regra do trilho migrou para components.css e perde a cascata para .yb-track');
+  problemas.length
+    ? falha('o trilho do Best Sellers no celular', problemas.join(' · '))
+    : ok('o trilho do Best Sellers vive na grade', 'invólucro nas quatro homes, display:contents em patterns');
+}
+
+/* ===========================================================================
    O NUMERO QUE A DOC PROMETE
 
    Esta e a ultima checagem porque ela e a unica que so pode existir aqui: o

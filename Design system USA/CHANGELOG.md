@@ -40,12 +40,23 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   **Account**. Único bloco com fundo e único botão da gaveta.
 
 ### Alterado
-- **O Best Sellers das homes continua em grade.** Chegou a virar trilho e
-  voltou, por decisão de quem desenha: abaixo de 1152px a grade quebra em 3+1
-  com duas vagas vazias (**2 linhas em 1000px e em 860, 3 em 760**), mas o
-  trilho resolve isso rolando, e mostrar três cartões e meio não foi o que se
-  quis. A medida fica registrada na peça do cartão: 1152px é a largura em que
-  quatro cartões de 260 param de caber.
+- **Best Sellers: grade no desktop, destaque + carrossel no celular.** Em duas
+  colunas o destaque ocupa as duas e sobravam três cartões para duas células —
+  a terceira fileira ficava com um cartão e uma vaga vazia ao lado. Agora são
+  duas fileiras: destaque em cima, vizinhos em trilho embaixo. Em 375px a seção
+  caiu de **1338px para 1140**.
+  Quem faz isso é `.yb-grid__rail`, um invólucro que acima de 768 vira
+  `display:contents` e some da caixa — os cartões voltam a ser células diretas
+  da grade e o desktop fica idêntico (medido em 1200: quatro de 266 em
+  x=32/322/612/902, como sempre foi). Sem isso seria preciso listar os cartões
+  duas vezes no HTML.
+  A regra mora em `patterns/`, e não em `components/`, por cascata:
+  `.yb-grid__rail` e `.yb-track` têm a mesma especificidade, e patterns carrega
+  depois. Checagem nova no portão cobre a marcação e esse endereço.
+- **O trilho de Best Sellers em toda largura foi testado e desfeito** — abaixo
+  de 1152 ele resolvia o 3+1 rolando, mas mostrar três cartões e meio não foi o
+  que se quis no desktop. A medida fica registrada na peça do cartão: 1152px é
+  a largura em que quatro cartões de 260 param de caber.
 - **O `span 2` do cartão de oferta no trilho passou a valer só abaixo de 768.**
   A regra foi escrita para a grade de duas colunas do celular; no trilho de
   desktop ela dava um cartão de 536px e 228px de sobra para rolar numa fileira
