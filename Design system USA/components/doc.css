@@ -146,6 +146,43 @@
 .ficha-fatos code{color:var(--yb-text-primary)}
 
 /* ------------------------------------------------------------- a galeria */
+/* A galeria em familias. O titulo do grupo e menor que o da pagina e maior
+   que o do cartao — ele existe para ser varrido de relance, nao lido. */
+.grade-grupo{margin-block-start:var(--yb-space-10)}
+.grade-grupo:first-of-type{margin-block-start:var(--yb-space-8)}
+.grade-grupo > h2{
+  display:flex; align-items:center; gap:var(--yb-space-3);
+  margin:0 0 var(--yb-space-1);
+  font-size:var(--yb-type-h4-size); font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-primary);
+}
+/* A contagem por grupo responde de relance "quanto disso existe?", que era a
+   pergunta que a lista de 37 nomes obrigava a contar no dedo. */
+.grade-conta{
+  font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-regular);
+  color:var(--yb-text-muted); background:var(--yb-surface-sunken);
+  border-radius:var(--yb-radius-badge); padding:0 var(--yb-space-2);
+}
+.grade-lede{
+  margin:0 0 var(--yb-space-4); max-inline-size:62ch;
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+}
+/* O filtro mora na COLUNA, e nao acima da galeria: ele serve as 37 fichas,
+   nao so o indice. Fica preso no topo dela porque a lista rola por baixo — um
+   campo que sai de vista na rolagem deixa de existir justamente quando a lista
+   ficou longa demais para ler. */
+.nav-filtro{
+  position:sticky; inset-block-start:0; z-index:1;
+  display:flex; flex-direction:column; gap:var(--yb-space-1);
+  margin-block-end:var(--yb-space-3); padding-block-end:var(--yb-space-2);
+  /* O mesmo fundo da coluna, e nao o da pagina: preso no topo, ele fica por
+     cima da lista que passa por baixo — com a cor errada a faixa aparece. */
+  background:var(--yb-bg-subtle);
+}
+/* Sem termo digitado nao ha contagem, e uma linha reservada para texto que
+   nao existe vira uma tarja no meio da coluna. */
+.nav-conta{margin:0; font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+.nav-conta:empty{display:none}
 .grade{
   display:grid; gap:var(--yb-space-4);
   grid-template-columns:repeat(auto-fill, minmax(15rem, 1fr));

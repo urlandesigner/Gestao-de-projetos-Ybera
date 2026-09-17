@@ -27,6 +27,15 @@
 <nav class="nav">
   <p class="nav-brand">Ybera</p>
   <p class="nav-ver">Components · v0.12.1</p>
+  <!-- Nasce escondido e o doc.js liga: campo de filtro sem script e uma caixa
+       que nao faz nada, e marcacao sem gatilho e peso morto. A lista completa
+       continua no HTML, na mesma ordem — o filtro so esconde. -->
+  <div class="nav-filtro" hidden>
+    <label class="yb-sr-only" for="filtro">Filtrar peças</label>
+    <input id="filtro" type="search" class="yb-input" placeholder="Filtrar…"
+           autocomplete="off" data-yb-filtro>
+    <p class="nav-conta" role="status" aria-live="polite"></p>
+  </div>
   <ul>
     <li><a href="accordion.html">Accordion</a></li>
     <li><a href="alert.html" aria-current="page">Alert</a></li>

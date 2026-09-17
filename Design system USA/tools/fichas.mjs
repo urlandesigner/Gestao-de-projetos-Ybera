@@ -187,6 +187,52 @@ const navHtml = fichas
   .map((f) => `    <li><a href="${f.id}.html"{ATUAL-${f.id}}>${f.titulo}</a></li>`)
   .join('\n');
 
+/* --------------------------------------------------------------- familias
+   O indice cresceu de 34 para 37 pecas e virou uma lista onde tudo pesa
+   igual: para achar o cartao de produto era preciso ler 37 nomes. As
+   familias existem so na GALERIA — a coluna da esquerda continua alfabetica
+   de proposito, porque ali a pessoa ja sabe o nome e quer o caminho curto;
+   na galeria ela ainda esta procurando.
+
+   A tabela e literal, e nao adivinhada por heuristica: agrupar por prefixo de
+   classe juntaria `.yb-card` com `.yb-cart`, e agrupar pelo texto juntaria
+   qualquer coisa que diga "produto". Peca nova entra aqui a mao — e o build
+   QUEBRA se alguem esquecer, que e o unico jeito de a lista nao mentir. */
+const FAMILIAS = [
+  { titulo: 'Ação e entrada',
+    lede: 'O que a pessoa aperta, escolhe ou preenche.',
+    ids: ['button', 'iconbtn', 'link', 'field', 'check', 'switch', 'stepper', 'variant'] },
+  { titulo: 'Navegação',
+    lede: 'Onde ela está, e como chega ao resto da loja.',
+    ids: ['crumb', 'pagination', 'search', 'track'] },
+  { titulo: 'Produto e venda',
+    lede: 'A vitrine: o que se compra, por quanto, e o que outras pessoas acharam.',
+    ids: ['card', 'offercard', 'offerseal', 'price', 'badge', 'collection', 'rating', 'review'] },
+  { titulo: 'Conteúdo e marca',
+    lede: 'O que a loja conta quando não está vendendo.',
+    ids: ['accordion', 'mediabanner', 'gallery', 'video', 'post', 'quote',
+          'logo', 'logobar', 'seals', 'partner'] },
+  { titulo: 'Aviso e estado',
+    lede: 'O que o sistema responde: espera, erro, vazio, confirmação.',
+    ids: ['alert', 'notice', 'toast', 'dialog', 'progress', 'skeleton', 'empty'] },
+];
+
+{
+  const listadas = FAMILIAS.flatMap((g) => g.ids);
+  const repetidas = listadas.filter((id, i) => listadas.indexOf(id) !== i);
+  const soltas = fichas.map((f) => f.id).filter((id) => !listadas.includes(id));
+  const fantasmas = listadas.filter((id) => !fichas.some((f) => f.id === id));
+  const erro = [
+    soltas.length && `sem família: ${soltas.join(', ')}`,
+    fantasmas.length && `família aponta para peça que não existe: ${fantasmas.join(', ')}`,
+    repetidas.length && `em duas famílias: ${repetidas.join(', ')}`,
+  ].filter(Boolean);
+  if (erro.length) {
+    console.error(`fichas.mjs: FAMILIAS desencontrada — ${erro.join(' · ')}`);
+    process.exit(1);
+  }
+}
+
 // Lista de codigo, e nao tabela: uma tabela de UMA coluna promete colunas que
 // nao existem. A descricao de cada modificador nao esta na folha de forma
 // legivel por maquina — inventa-la aqui seria escrever documentacao a mao
@@ -253,6 +299,15 @@ for (let n = 0; n < fichas.length; n++) {
 <nav class="nav">
   <p class="nav-brand">Ybera</p>
   <p class="nav-ver">Components · v${versao}</p>
+  <!-- Nasce escondido e o doc.js liga: campo de filtro sem script e uma caixa
+       que nao faz nada, e marcacao sem gatilho e peso morto. A lista completa
+       continua no HTML, na mesma ordem — o filtro so esconde. -->
+  <div class="nav-filtro" hidden>
+    <label class="yb-sr-only" for="filtro">Filtrar peças</label>
+    <input id="filtro" type="search" class="yb-input" placeholder="Filtrar…"
+           autocomplete="off" data-yb-filtro>
+    <p class="nav-conta" role="status" aria-live="polite"></p>
+  </div>
   <ul>
 ${nav}
   </ul>
@@ -383,10 +438,20 @@ document.addEventListener('click', function (e) {
    nenhum componente tinha lugar proprio. Aqui ele volta a ser o que o nome diz
    — um indice. */
 {
-  const cartoes = fichas.map((f) => `      <a class="peca" href="${f.id}.html">
-        <b>${f.titulo}</b>
-        <span>${f.quando}</span>
-      </a>`).join('\n');
+  const cartao = (f) => `        <a class="peca" href="${f.id}.html">
+          <b>${f.titulo}</b>
+          <span>${f.quando}</span>
+        </a>`;
+  const cartoes = FAMILIAS.map((g) => {
+    const dentro = g.ids.map((id) => fichas.find((f) => f.id === id));
+    return `    <section class="grade-grupo" id="g-${g.ids[0]}">
+      <h2>${g.titulo} <span class="grade-conta">${dentro.length}</span></h2>
+      <p class="grade-lede">${g.lede}</p>
+      <div class="grade">
+${dentro.map(cartao).join('\n')}
+      </div>
+    </section>`;
+  }).join('\n');
   const pagina = `<!doctype html>
 <html lang="pt-BR" data-market="us">
 <head>
@@ -415,6 +480,15 @@ document.addEventListener('click', function (e) {
 <nav class="nav">
   <p class="nav-brand">Ybera</p>
   <p class="nav-ver">Components · v${versao}</p>
+  <!-- Nasce escondido e o doc.js liga: campo de filtro sem script e uma caixa
+       que nao faz nada, e marcacao sem gatilho e peso morto. A lista completa
+       continua no HTML, na mesma ordem — o filtro so esconde. -->
+  <div class="nav-filtro" hidden>
+    <label class="yb-sr-only" for="filtro">Filtrar peças</label>
+    <input id="filtro" type="search" class="yb-input" placeholder="Filtrar…"
+           autocomplete="off" data-yb-filtro>
+    <p class="nav-conta" role="status" aria-live="polite"></p>
+  </div>
   <ul>
 ${navHtml.replace(/\{ATUAL-[^}]+\}/g, '')}
   </ul>
@@ -430,9 +504,7 @@ ${navHtml.replace(/\{ATUAL-[^}]+\}/g, '')}
   as demonstrações, a API lida da folha, a marcação para copiar, o que a
   acessibilidade exige e o que não fazer.</p>
 
-  <div class="grade">
 ${cartoes}
-  </div>
 
   <p class="doc-credit">Índice gerado por <code>tools/fichas.mjs</code> a partir de
   <code>components/pecas/</code>. Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>

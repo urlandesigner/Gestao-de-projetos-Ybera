@@ -40,6 +40,13 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   **Account**. Único bloco com fundo e único botão da gaveta.
 
 ### Alterado
+- **A galeria de componentes agrupa em cinco famílias** — ação e entrada,
+  navegação, produto e venda, conteúdo e marca, aviso e estado. O índice tinha
+  crescido para 37 peças numa lista onde tudo pesava igual. A tabela de famílias
+  é literal em `tools/fichas.mjs`, não heurística: agrupar por prefixo de classe
+  juntaria `.yb-card` com `.yb-cart`. Peça sem família, família apontando para
+  peça que não existe ou peça em duas famílias **quebram o build**. A coluna da
+  esquerda continua alfabética de propósito: ali quem chega já sabe o nome.
 - **Copy de amostra nas seis avaliações das telas-prova** (`AMOSTRA_REVIEWS` no
   gerador, ligada por `REVIEWS_FONTE`), medida para fechar três linhas na
   largura de desktop — as capturadas tinham de 34 a 92 caracteres e quatro

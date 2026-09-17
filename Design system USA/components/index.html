@@ -26,6 +26,15 @@
 <nav class="nav">
   <p class="nav-brand">Ybera</p>
   <p class="nav-ver">Components · v0.12.1</p>
+  <!-- Nasce escondido e o doc.js liga: campo de filtro sem script e uma caixa
+       que nao faz nada, e marcacao sem gatilho e peso morto. A lista completa
+       continua no HTML, na mesma ordem — o filtro so esconde. -->
+  <div class="nav-filtro" hidden>
+    <label class="yb-sr-only" for="filtro">Filtrar peças</label>
+    <input id="filtro" type="search" class="yb-input" placeholder="Filtrar…"
+           autocomplete="off" data-yb-filtro>
+    <p class="nav-conta" role="status" aria-live="polite"></p>
+  </div>
   <ul>
     <li><a href="accordion.html">Accordion</a></li>
     <li><a href="alert.html">Alert</a></li>
@@ -77,160 +86,188 @@
   as demonstrações, a API lida da folha, a marcação para copiar, o que a
   acessibilidade exige e o que não fazer.</p>
 
-  <div class="grade">
-      <a class="peca" href="accordion.html">
-        <b>Accordion</b>
-        <span>Informação secundária da PDP: ingredientes, modo de uso, frete.</span>
-      </a>
-      <a class="peca" href="alert.html">
-        <b>Alert</b>
-        <span>Uma mensagem, um alerta. Empilhar três é garantir que nenhum seja lido.</span>
-      </a>
-      <a class="peca" href="badge.html">
-        <b>Badge</b>
-        <span>Rotula sem competir. Nunca carrega ação — badge não é botão.</span>
-      </a>
-      <a class="peca" href="quote.html">
-        <b>Brand quote</b>
-        <span>A fala de quem assina a marca. Uma por página — repetida, vira slogan.</span>
-      </a>
-      <a class="peca" href="crumb.html">
-        <b>Breadcrumb</b>
-        <span>Onde a pessoa está. A página atual não é link.</span>
-      </a>
-      <a class="peca" href="button.html">
-        <b>Button</b>
-        <span>Uma ação primária por tela. Se há duas, uma delas não é primária.</span>
-      </a>
-      <a class="peca" href="seals.html">
-        <b>Certification seals</b>
-        <span>Faixa de garantia entre a prova social e o rodapé. Diz o que o produto não tem — não é peça de venda.</span>
-      </a>
-      <a class="peca" href="check.html">
-        <b>Checkbox &amp; radio</b>
-        <span>Input nativo, aparência do sistema. Teclado e leitor de tela funcionam sem código.</span>
-      </a>
-      <a class="peca" href="collection.html">
-        <b>Collection card</b>
-        <span>Porta de entrada para uma coleção. O cartão inteiro é o link — o rótulo sozinho seria um alvo pequeno dentro de uma imagem grande.</span>
-      </a>
-      <a class="peca" href="empty.html">
-        <b>Empty state</b>
-        <span>Busca sem resultado, filtro que não acha nada, carrinho vazio, produto que saiu do catálogo. Sempre com o próximo passo.</span>
-      </a>
-      <a class="peca" href="field.html">
-        <b>Form field</b>
-        <span>Rótulo dentro da caixa, sem uma linha de JS. Erro sempre em texto, nunca só em cor.</span>
-      </a>
-      <a class="peca" href="gallery.html">
-        <b>Gallery</b>
-        <span>As miniaturas são radios nativos: seta do teclado navega, leitor de tela anuncia.</span>
-      </a>
-      <a class="peca" href="iconbtn.html">
-        <b>Icon button</b>
-        <span>Controle de 44px que é só ícone. Sexta reescrita da mesma coisa — o ícone do header, o fechar da gaveta, o play do vídeo, o abrir do rodapé e a seta do banner diziam todos 44×44 com fundo transparente, cada um do seu jeito.</span>
-      </a>
-      <a class="peca" href="link.html">
-        <b>Link</b>
-        <span>Texto de ação com ícone atrás, do tamanho de alvo de toque (44px). Fica ao lado de um título de seção ou reforça visualmente um link que já existe em outro lugar do mesmo cartão.</span>
-      </a>
-      <a class="peca" href="logo.html">
-        <b>Logo</b>
-        <span>O arquivo oficial do header da loja. Vira componente porque aparece em header, footer, e-mail e recibo — e em cada lugar alguém escolhia uma altura diferente.</span>
-      </a>
-      <a class="peca" href="logobar.html">
-        <b>Logo bar</b>
-        <span>As sublinhas da marca em faixa escura, entre o conteúdo e o rodapé. Só entra arte monocromática.</span>
-      </a>
-      <a class="peca" href="mediabanner.html">
-        <b>Media banner</b>
-        <span>Imagem larga com título por cima e o link cobrindo tudo. Duas seções
-    da home usam esta mesma anatomia — o mesmo critério que já admitiu o cartão de coleção.</span>
-      </a>
-      <a class="peca" href="dialog.html">
-        <b>Modal &amp; drawer</b>
-        <span>Interrompe para pedir uma decisão. Se não há decisão a tomar, use toast.</span>
-      </a>
-      <a class="peca" href="notice.html">
-        <b>Notice</b>
-        <span>Faixa de aviso. A loja empilha duas no topo de toda página — uma
-    contextual e a de frete. Modelada como parte do header, a segunda não tinha onde morar.</span>
-      </a>
-      <a class="peca" href="offercard.html">
-        <b>Offer card</b>
-        <span>A oferta do dia, um produto só. A foto é o fundo, o texto vive
+    <section class="grade-grupo" id="g-button">
+      <h2>Ação e entrada <span class="grade-conta">8</span></h2>
+      <p class="grade-lede">O que a pessoa aperta, escolhe ou preenche.</p>
+      <div class="grade">
+        <a class="peca" href="button.html">
+          <b>Button</b>
+          <span>Uma ação primária por tela. Se há duas, uma delas não é primária.</span>
+        </a>
+        <a class="peca" href="iconbtn.html">
+          <b>Icon button</b>
+          <span>Controle de 44px que é só ícone. Sexta reescrita da mesma coisa — o ícone do header, o fechar da gaveta, o play do vídeo, o abrir do rodapé e a seta do banner diziam todos 44×44 com fundo transparente, cada um do seu jeito.</span>
+        </a>
+        <a class="peca" href="link.html">
+          <b>Link</b>
+          <span>Texto de ação com ícone atrás, do tamanho de alvo de toque (44px). Fica ao lado de um título de seção ou reforça visualmente um link que já existe em outro lugar do mesmo cartão.</span>
+        </a>
+        <a class="peca" href="field.html">
+          <b>Form field</b>
+          <span>Rótulo dentro da caixa, sem uma linha de JS. Erro sempre em texto, nunca só em cor.</span>
+        </a>
+        <a class="peca" href="check.html">
+          <b>Checkbox &amp; radio</b>
+          <span>Input nativo, aparência do sistema. Teclado e leitor de tela funcionam sem código.</span>
+        </a>
+        <a class="peca" href="switch.html">
+          <b>Switch</b>
+          <span>Liga e desliga na hora. Se o efeito só acontece depois de um botão de salvar, o certo é a caixa de seleção.</span>
+        </a>
+        <a class="peca" href="stepper.html">
+          <b>Quantity stepper</b>
+          <span>Botões de 44px, e funcionam — clique. Limites em 1 e 10: o botão desabilita sozinho na ponta.</span>
+        </a>
+        <a class="peca" href="variant.html">
+          <b>Variant picker</b>
+          <span>Tamanho, volume, fragrância. Esgotado aparece riscado, não some — sumir esconde que o produto existe.</span>
+        </a>
+      </div>
+    </section>
+    <section class="grade-grupo" id="g-crumb">
+      <h2>Navegação <span class="grade-conta">4</span></h2>
+      <p class="grade-lede">Onde ela está, e como chega ao resto da loja.</p>
+      <div class="grade">
+        <a class="peca" href="crumb.html">
+          <b>Breadcrumb</b>
+          <span>Onde a pessoa está. A página atual não é link.</span>
+        </a>
+        <a class="peca" href="pagination.html">
+          <b>Pagination</b>
+          <span>A página atual não é link. Primeira e última sempre visíveis.</span>
+        </a>
+        <a class="peca" href="search.html">
+          <b>Search overlay</b>
+          <span>Busca é troca de contexto da página inteira — folha do topo, não caixinha no header.</span>
+        </a>
+        <a class="peca" href="track.html">
+          <b>Track</b>
+          <span>Trilho de rolagem horizontal. É o que carrega as fileiras que não cabem na tela — avaliações, vídeos, logos, banners do hero — sem quebrar em duas linhas nem empurrar a página de lado.</span>
+        </a>
+      </div>
+    </section>
+    <section class="grade-grupo" id="g-card">
+      <h2>Produto e venda <span class="grade-conta">8</span></h2>
+      <p class="grade-lede">A vitrine: o que se compra, por quanto, e o que outras pessoas acharam.</p>
+      <div class="grade">
+        <a class="peca" href="card.html">
+          <b>Product card</b>
+          <span>A unidade do grid. O título trunca em duas linhas por decisão de sistema.</span>
+        </a>
+        <a class="peca" href="offercard.html">
+          <b>Offer card</b>
+          <span>A oferta do dia, um produto só. A foto é o fundo, o texto vive
     por cima dela e o relógio diz até quando. Não é o cartão de catálogo com outra
     roupa: ali cabem doze na grade, aqui cabe <b>um</b>.</span>
-      </a>
-      <a class="peca" href="offerseal.html">
-        <b>Offer seal</b>
-        <span>Selo estrelado de brinde e desconto, sobre a foto do produto. Interrompe — não rotula. Um por peça.</span>
-      </a>
-      <a class="peca" href="pagination.html">
-        <b>Pagination</b>
-        <span>A página atual não é link. Primeira e última sempre visíveis.</span>
-      </a>
-      <a class="peca" href="partner.html">
-        <b>Partner</b>
-        <span>O recado de quem indicou. Aparece quando a pessoa chega por link patrocinado &mdash; e some do caminho assim que ela rola.</span>
-      </a>
-      <a class="peca" href="post.html">
-        <b>Post</b>
-        <span>Artigo do blog na home. Dois arranjos, e a escolha entre eles é editorial — não estética.</span>
-      </a>
-      <a class="peca" href="price.html">
-        <b>Price</b>
-        <span>Sempre tabular. Em grid, dígitos precisam alinhar em coluna.</span>
-      </a>
-      <a class="peca" href="card.html">
-        <b>Product card</b>
-        <span>A unidade do grid. O título trunca em duas linhas por decisão de sistema.</span>
-      </a>
-      <a class="peca" href="progress.html">
-        <b>Progress bar</b>
-        <span>Espera com fim conhecido. Sem número para anunciar, use a variante indeterminada.</span>
-      </a>
-      <a class="peca" href="stepper.html">
-        <b>Quantity stepper</b>
-        <span>Botões de 44px, e funcionam — clique. Limites em 1 e 10: o botão desabilita sozinho na ponta.</span>
-      </a>
-      <a class="peca" href="rating.html">
-        <b>Rating</b>
-        <span>Prova social ao lado do preço. Sempre com a contagem: 5 estrelas de 3 avaliações não é prova de nada.</span>
-      </a>
-      <a class="peca" href="review.html">
-        <b>Review</b>
-        <span>Prova social com nota, texto, quem escreveu e o que comprou. Sem o produto ao lado, o elogio não prova nada.</span>
-      </a>
-      <a class="peca" href="search.html">
-        <b>Search overlay</b>
-        <span>Busca é troca de contexto da página inteira — folha do topo, não caixinha no header.</span>
-      </a>
-      <a class="peca" href="skeleton.html">
-        <b>Skeleton</b>
-        <span>Só para carregamento real. Skeleton eterno é pior que spinner: promete conteúdo que não chega.</span>
-      </a>
-      <a class="peca" href="switch.html">
-        <b>Switch</b>
-        <span>Liga e desliga na hora. Se o efeito só acontece depois de um botão de salvar, o certo é a caixa de seleção.</span>
-      </a>
-      <a class="peca" href="toast.html">
-        <b>Toast</b>
-        <span>Confirma o que já aconteceu. Não pede nada e não bloqueia nada.</span>
-      </a>
-      <a class="peca" href="track.html">
-        <b>Track</b>
-        <span>Trilho de rolagem horizontal. É o que carrega as fileiras que não cabem na tela — avaliações, vídeos, logos, banners do hero — sem quebrar em duas linhas nem empurrar a página de lado.</span>
-      </a>
-      <a class="peca" href="variant.html">
-        <b>Variant picker</b>
-        <span>Tamanho, volume, fragrância. Esgotado aparece riscado, não some — sumir esconde que o produto existe.</span>
-      </a>
-      <a class="peca" href="video.html">
-        <b>Vertical video carousel</b>
-        <span>Conteúdo de creator em 9:16, como o TikTok serve. O cartão entra como pôster; o vídeo só nasce no primeiro clique.</span>
-      </a>
-  </div>
+        </a>
+        <a class="peca" href="offerseal.html">
+          <b>Offer seal</b>
+          <span>Selo estrelado de brinde e desconto, sobre a foto do produto. Interrompe — não rotula. Um por peça.</span>
+        </a>
+        <a class="peca" href="price.html">
+          <b>Price</b>
+          <span>Sempre tabular. Em grid, dígitos precisam alinhar em coluna.</span>
+        </a>
+        <a class="peca" href="badge.html">
+          <b>Badge</b>
+          <span>Rotula sem competir. Nunca carrega ação — badge não é botão.</span>
+        </a>
+        <a class="peca" href="collection.html">
+          <b>Collection card</b>
+          <span>Porta de entrada para uma coleção. O cartão inteiro é o link — o rótulo sozinho seria um alvo pequeno dentro de uma imagem grande.</span>
+        </a>
+        <a class="peca" href="rating.html">
+          <b>Rating</b>
+          <span>Prova social ao lado do preço. Sempre com a contagem: 5 estrelas de 3 avaliações não é prova de nada.</span>
+        </a>
+        <a class="peca" href="review.html">
+          <b>Review</b>
+          <span>Prova social com nota, texto, quem escreveu e o que comprou. Sem o produto ao lado, o elogio não prova nada.</span>
+        </a>
+      </div>
+    </section>
+    <section class="grade-grupo" id="g-accordion">
+      <h2>Conteúdo e marca <span class="grade-conta">10</span></h2>
+      <p class="grade-lede">O que a loja conta quando não está vendendo.</p>
+      <div class="grade">
+        <a class="peca" href="accordion.html">
+          <b>Accordion</b>
+          <span>Informação secundária da PDP: ingredientes, modo de uso, frete.</span>
+        </a>
+        <a class="peca" href="mediabanner.html">
+          <b>Media banner</b>
+          <span>Imagem larga com título por cima e o link cobrindo tudo. Duas seções
+    da home usam esta mesma anatomia — o mesmo critério que já admitiu o cartão de coleção.</span>
+        </a>
+        <a class="peca" href="gallery.html">
+          <b>Gallery</b>
+          <span>As miniaturas são radios nativos: seta do teclado navega, leitor de tela anuncia.</span>
+        </a>
+        <a class="peca" href="video.html">
+          <b>Vertical video carousel</b>
+          <span>Conteúdo de creator em 9:16, como o TikTok serve. O cartão entra como pôster; o vídeo só nasce no primeiro clique.</span>
+        </a>
+        <a class="peca" href="post.html">
+          <b>Post</b>
+          <span>Artigo do blog na home. Dois arranjos, e a escolha entre eles é editorial — não estética.</span>
+        </a>
+        <a class="peca" href="quote.html">
+          <b>Brand quote</b>
+          <span>A fala de quem assina a marca. Uma por página — repetida, vira slogan.</span>
+        </a>
+        <a class="peca" href="logo.html">
+          <b>Logo</b>
+          <span>O arquivo oficial do header da loja. Vira componente porque aparece em header, footer, e-mail e recibo — e em cada lugar alguém escolhia uma altura diferente.</span>
+        </a>
+        <a class="peca" href="logobar.html">
+          <b>Logo bar</b>
+          <span>As sublinhas da marca em faixa escura, entre o conteúdo e o rodapé. Só entra arte monocromática.</span>
+        </a>
+        <a class="peca" href="seals.html">
+          <b>Certification seals</b>
+          <span>Faixa de garantia entre a prova social e o rodapé. Diz o que o produto não tem — não é peça de venda.</span>
+        </a>
+        <a class="peca" href="partner.html">
+          <b>Partner</b>
+          <span>O recado de quem indicou. Aparece quando a pessoa chega por link patrocinado &mdash; e some do caminho assim que ela rola.</span>
+        </a>
+      </div>
+    </section>
+    <section class="grade-grupo" id="g-alert">
+      <h2>Aviso e estado <span class="grade-conta">7</span></h2>
+      <p class="grade-lede">O que o sistema responde: espera, erro, vazio, confirmação.</p>
+      <div class="grade">
+        <a class="peca" href="alert.html">
+          <b>Alert</b>
+          <span>Uma mensagem, um alerta. Empilhar três é garantir que nenhum seja lido.</span>
+        </a>
+        <a class="peca" href="notice.html">
+          <b>Notice</b>
+          <span>Faixa de aviso. A loja empilha duas no topo de toda página — uma
+    contextual e a de frete. Modelada como parte do header, a segunda não tinha onde morar.</span>
+        </a>
+        <a class="peca" href="toast.html">
+          <b>Toast</b>
+          <span>Confirma o que já aconteceu. Não pede nada e não bloqueia nada.</span>
+        </a>
+        <a class="peca" href="dialog.html">
+          <b>Modal &amp; drawer</b>
+          <span>Interrompe para pedir uma decisão. Se não há decisão a tomar, use toast.</span>
+        </a>
+        <a class="peca" href="progress.html">
+          <b>Progress bar</b>
+          <span>Espera com fim conhecido. Sem número para anunciar, use a variante indeterminada.</span>
+        </a>
+        <a class="peca" href="skeleton.html">
+          <b>Skeleton</b>
+          <span>Só para carregamento real. Skeleton eterno é pior que spinner: promete conteúdo que não chega.</span>
+        </a>
+        <a class="peca" href="empty.html">
+          <b>Empty state</b>
+          <span>Busca sem resultado, filtro que não acha nada, carrinho vazio, produto que saiu do catálogo. Sempre com o próximo passo.</span>
+        </a>
+      </div>
+    </section>
 
   <p class="doc-credit">Índice gerado por <code>tools/fichas.mjs</code> a partir de
   <code>components/pecas/</code>. Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>
