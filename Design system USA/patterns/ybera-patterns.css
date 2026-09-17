@@ -172,6 +172,18 @@
    184px um do outro e as colunas liam como separadas; agora sao 152 — o
    mesmo intervalo do par mais largo de antes, so que constante. */
 .yb-nav__group{min-inline-size:8rem}
+/* ...mas o piso so faz sentido onde HA coluna. O painel do "About Us" nao tem
+   sublista nenhuma: cada grupo e um link solto, e o piso de 8rem transformava
+   "Blog" (30px de texto) numa coluna de 128 — tres rotulos curtos espalhados
+   por 460px de painel vazio, cada um longe do outro sem nada entre eles
+   justificando a distancia. Coluna com uma linha so nao e coluna.
+
+   `:has()` e nao uma classe na marcacao porque a condicao E o conteudo: um
+   painel passa a ter colunas no dia em que ganha uma sublista, e nesse dia a
+   regra tem de parar de valer sozinha. Onde `:has()` nao existir, a regra
+   inteira cai e o painel volta ao piso — o comportamento de antes, que e feio
+   e nao quebrado. */
+.yb-nav__groups:not(:has(.yb-nav__sublist)) .yb-nav__group{ min-inline-size:0; }
 .yb-nav__grouptitle{
   /* display:block tira a isencao de alvo inline do WCAG 2.5.8, e o titulo
      media 17px. Os 24 vem do min-height, sem mexer no ritmo da coluna. */

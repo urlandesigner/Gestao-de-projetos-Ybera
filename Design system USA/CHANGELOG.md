@@ -66,6 +66,12 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 - Reviews na home mostram só o carrossel.
 
 ### Corrigido
+- O painel do "About Us" herdava o piso de 8rem por coluna, escrito para o
+  mega-menu do Shop. Lá cada grupo encabeça uma sublista e o piso dá o compasso
+  da grade; ali não há sublista nenhuma — cada grupo é um link solto, e "Blog"
+  (30px de texto) virava uma coluna de 128. Agora um painel sem sublista deixa
+  os grupos medirem o próprio rótulo: 65, 30 e 129px, com 24 entre eles. O Shop
+  não muda.
 - `.yb-post--stacked` caía na regra de 560px escrita para o post em **fileira**:
   no celular o trio do blog não era um trio de cartões, eram três fileirinhas de
   miniatura 96px. O `:not()` agora exclui também o empilhado.

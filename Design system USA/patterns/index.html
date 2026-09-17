@@ -234,6 +234,18 @@ body:not([data-mobile="on"]) .par__mob{display:none}
       de uma vez.</p>
     </div>
     <div class="note">
+      <b>O piso de coluna só vale onde há coluna</b>
+      <p><code>.yb-nav__group</code> tem <code>min-inline-size:8rem</code> para que as
+      colunas do Shop comecem no mesmo compasso &mdash; cada uma media o próprio rótulo
+      e os títulos nasciam a 122 e 153px um do outro numa grade que o olho lê como
+      grade. Mas o painel do <b>About Us</b> não tem sublista: cada grupo é um link
+      solto, e o piso transformava "Blog", com 30px de texto, numa coluna de 128.</p>
+      <p>Um painel sem <code>.yb-nav__sublist</code> deixa os grupos medirem o próprio
+      rótulo. A condição é <code>:has()</code> e não uma classe na marcação porque a
+      condição <b>é o conteúdo</b>: no dia em que esse painel ganhar uma sublista, a
+      regra tem de parar de valer sozinha.</p>
+    </div>
+    <div class="note">
       <b>No toque ele não existe</b>
       <p>Abaixo de 900 o menu some: a gaveta já lista os mesmos destinos, e um
       painel de 224px ancorado na borda direita de uma tela de 375 nasce apertado
