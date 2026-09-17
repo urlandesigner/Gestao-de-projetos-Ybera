@@ -15,7 +15,7 @@ body{margin:0;background:var(--yb-bg-page);color:var(--yb-text-primary);
   font-family:var(--yb-font-family-base);-webkit-font-smoothing:antialiased;
   display:flex;align-items:center;justify-content:center;min-height:100vh;
   padding:var(--yb-space-8)}
-main{max-width:760px;width:100%}
+main{max-width:880px;width:100%}
 h1{font-size:var(--yb-type-display-2-size);line-height:var(--yb-type-display-2-line);
   letter-spacing:var(--yb-type-display-2-track);font-weight:var(--yb-type-display-2-weight);
   margin:0 0 var(--yb-space-3)}
@@ -44,6 +44,29 @@ a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
   color:var(--yb-text-muted)}
 .voltar{display:inline-block;margin-bottom:var(--yb-space-6);
   font-size:var(--yb-type-body-sm-size);color:var(--yb-text-secondary)}
+/* Uma linha por grupo dizendo o que ele junta. Com 24 links na capa, o titulo
+   sozinho obriga a ler os cartoes para descobrir do que a secao trata. */
+.grupo > p{margin:calc(var(--yb-space-2) * -1) 0 var(--yb-space-4);
+  font-size:var(--yb-type-body-sm-size);color:var(--yb-text-secondary);max-width:62ch}
+/* As telas sao 13 e vinham numa fileira so. Os sub-grupos separam o que e
+   variacao da MESMA tela do que e tela diferente — "PDP v2" ao lado de "404"
+   pesava igual, e nao e a mesma pergunta. */
+/* `subgrupo`, e nao `sub`: a classe `sub` ja era o subtitulo da capa, com
+   `max-width:56ch`. Reusar o nome espremeu a grade das telas em 616px onde
+   havia 880 — tres cartoes por linha viraram dois, e o defeito passa por
+   escolha de layout. */
+.subgrupo{margin-top:var(--yb-space-6)}
+/* `h2`, e nao `h3`: a secao das telas perdeu o titulo proprio a pedido, e um
+   h3 logo depois do h1 pula um nivel — o leitor de tela anuncia uma
+   hierarquia que nao existe. O tamanho continua o de rotulo de grupo; o que
+   mudou foi so o nivel semantico. O nome da secao segue no `aria-label`, para
+   quem navega por regioes. */
+.subgrupo > h2{margin:0 0 var(--yb-space-3);font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-semibold);color:var(--yb-text-secondary);
+  display:flex;align-items:center;gap:var(--yb-space-2)}
+.conta{font-size:var(--yb-type-caption-size);font-weight:var(--yb-font-weight-regular);
+  color:var(--yb-text-muted);background:var(--yb-surface-sunken);
+  border-radius:var(--yb-radius-badge);padding:0 var(--yb-space-2)}
 </style>
 </head>
 <body>
@@ -55,26 +78,40 @@ a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
   <h1>Ybera Design System</h1>
   <p class="sub">Fundação, componentes e padrões. Independente de plataforma:
   a loja US roda Shopify e a BR roda Wake.</p>
-  <section class="grupo">
-    <h2>Páginas de exemplo</h2>
-    <div class="grid">
-      <a class="tile" href="_captura/nova-loja/"><b>Home v1</b><span>construída com os componentes do sistema, conteúdo real</span></a>
-      <a class="tile" href="_captura/nova-loja/index-v2.html"><b>Home v2</b><span>a mesma loja na gramática de e-commerce dos EUA — mesma peças, outra ordem</span></a>
-      <a class="tile" href="_captura/nova-loja/index-v3.html"><b>Home v3</b><span>catorze seções na ordem que o time pediu — a v2 sem o quiz, sem o bloco de autoridade e sem o FAQ curto</span></a>
-      <a class="tile" href="_captura/nova-loja/index-logado.html"><b>Home · cliente logado</b><span>a v2 com sessão aberta — o ícone de conta vira a inicial e abre o menu da conta</span></a>
-      <a class="tile" href="_captura/nova-loja/pdp.html"><b>PDP nova</b><span>galeria, bloco de compra e acordeão do sistema</span></a>
-      <a class="tile" href="_captura/nova-loja/pdp-v2.html"><b>PDP v2</b><span>seis blocos: faixa, recado do parceiro, compra, relacionados e avaliações — sem breadcrumb e sem acordeão de navegação</span></a>
-      <a class="tile" href="_captura/nova-loja/pdp-esgotado.html"><b>PDP esgotada</b><span>o mesmo bloco de compra sem estoque — 41 dos 116 produtos da loja estão assim hoje</span></a>
-      <a class="tile" href="_captura/nova-loja/pdp-variante.html"><b>PDP com variante</b><span>seletor de tamanho movendo preço, estoque e foto — tamanhos e preços forjados, nenhum produto da loja tem opção</span></a>
-      <a class="tile" href="_captura/nova-loja/pdp-oferta.html"><b>PDP em promoção</b><span>preço anterior riscado e selo &ldquo;Save 28%&rdquo; — preço anterior forjado, a loja não preenche <code>compare_at_price</code> em nenhum produto</span></a>
-      <a class="tile" href="_captura/nova-loja/faq.html"><b>FAQ</b><span>perguntas em acordeão com índice lateral — o padrão de resposta que a loja não tinha</span></a>
-      <a class="tile" href="_captura/nova-loja/404.html"><b>404</b><span>produto que saiu do catálogo — o único caminho que terminava numa tela que não era nossa</span></a>
-      <a class="tile" href="_captura/home/"><b>Home hoje</b><span>a ybera.us em produção, para comparar</span></a>
-      <a class="tile" href="_captura/pdp-fashion-gold/"><b>PDP hoje</b><span>Deep Care Kit Fashion Gold em produção</span></a>
+  <section class="grupo" aria-label="Telas montadas com o sistema">
+    <div class="subgrupo">
+      <h2>Home <span class="conta">4</span></h2>
+      <div class="grid">
+        <a class="tile" href="_captura/nova-loja/"><b>Home v1</b><span>construída com os componentes do sistema, conteúdo real</span></a>
+        <a class="tile" href="_captura/nova-loja/index-v2.html"><b>Home v2</b><span>a mesma loja na gramática de e-commerce dos EUA — mesmas peças, outra ordem</span></a>
+        <a class="tile" href="_captura/nova-loja/index-v3.html"><b>Home v3</b><span>catorze seções na ordem que o time pediu — a v2 sem o quiz, sem o bloco de autoridade e sem o FAQ curto</span></a>
+        <a class="tile" href="_captura/nova-loja/index-logado.html"><b>Home · cliente logado</b><span>a v2 com sessão aberta — o ícone de conta vira a inicial e abre o menu da conta</span></a>
+      </div>
+    </div>
+
+    <div class="subgrupo">
+      <h2>Produto <span class="conta">5</span></h2>
+      <div class="grid">
+        <a class="tile" href="_captura/nova-loja/pdp.html"><b>PDP v1</b><span>galeria, bloco de compra e acordeão do sistema</span></a>
+        <a class="tile" href="_captura/nova-loja/pdp-v2.html"><b>PDP v2</b><span>seis blocos: faixa, recado do parceiro, compra, relacionados e avaliações — sem breadcrumb e sem acordeão de navegação</span></a>
+        <a class="tile" href="_captura/nova-loja/pdp-esgotado.html"><b>PDP esgotada</b><span>o mesmo bloco de compra sem estoque — 41 dos 116 produtos da loja estão assim hoje</span></a>
+        <a class="tile" href="_captura/nova-loja/pdp-variante.html"><b>PDP com variante</b><span>seletor de tamanho movendo preço, estoque e foto — tamanhos e preços forjados, nenhum produto da loja tem opção</span></a>
+        <a class="tile" href="_captura/nova-loja/pdp-oferta.html"><b>PDP em promoção</b><span>preço anterior riscado e selo &ldquo;Save 28%&rdquo; — preço anterior forjado, a loja não preenche <code>compare_at_price</code> em nenhum produto</span></a>
+      </div>
+    </div>
+
+    <div class="subgrupo">
+      <h2>Apoio <span class="conta">2</span></h2>
+      <div class="grid">
+        <a class="tile" href="_captura/nova-loja/faq.html"><b>FAQ</b><span>perguntas em acordeão com índice lateral — o padrão de resposta que a loja não tinha</span></a>
+        <a class="tile" href="_captura/nova-loja/404.html"><b>404</b><span>produto que saiu do catálogo — o único caminho que terminava numa tela que não era nossa</span></a>
+      </div>
     </div>
   </section>
+
   <section class="grupo">
-    <h2>Design system</h2>
+    <h2>O sistema</h2>
+    <p>O que se consome para construir: os tokens, as peças e as composições.</p>
     <div class="grid">
       <a class="tile" href="docs/"><b>Tokens</b><span>321 tokens em três camadas, com contraste medido</span></a>
       <a class="tile" href="components/"><b>Components</b><span>37 componentes com variantes, estados e comportamento</span></a>
@@ -83,8 +120,10 @@ a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
       <a class="tile" href="preview/"><b>Preview</b><span>componentes e páginas em 320, 375, 414 e 768 — viewport de verdade</span></a>
     </div>
   </section>
+
   <section class="grupo">
     <h2>Como o sistema decide</h2>
+    <p>Por que ele é assim, e o que fazer quando duas regras se chocam.</p>
     <div class="grid">
       <a class="tile" href="PRINCIPIOS.md"><b>Princípios</b><span>cinco regras em ordem — o que ganha quando duas se chocam</span></a>
       <a class="tile" href="decision-log/"><b>Decisões</b><span>nove DDR: por que o sistema é assim, com a evidência</span></a>

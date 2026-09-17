@@ -64,6 +64,11 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 - Cartão de coleção não corta mais o packshot (4/3 → 5/7).
 - Selos de certificação saem de baixo do banner na home v2.
 - Reviews na home mostram só o carrossel.
+- A capa não lista mais as capturas da ybera.us em produção ("A loja hoje").
+  Elas eram referência, não entrega, e o índice é a porta das telas do
+  sistema. Os arquivos ficam em `_captura/home/` e `_captura/pdp-fashion-gold/`
+  — são fonte de dados do gerador, não deixam de existir por sair da capa.
+  O CSS de `.linhas`, que só elas usavam, saiu junto.
 
 ### Corrigido
 - O painel do "About Us" herdava o piso de 8rem por coluna, escrito para o
