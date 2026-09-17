@@ -40,6 +40,14 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   **Account**. Único bloco com fundo e único botão da gaveta.
 
 ### Alterado
+- **O desfoque do cartão de oferta caiu de 1rem para 0,5rem.** A folha já dizia
+  "desfoque se lê em relação ao tamanho da foto, não em pixels", e o valor
+  desobedecia a própria regra: hero 32px em 1440 = **2,2%** da largura; cartão
+  16px em 343 no celular = **4,7%**, e em 266 no desktop = **6,0%**. No pé do
+  cartão, onde o desfoque vai ao máximo, ele dissolvia a base do frasco numa
+  mancha sem forma — foi isso, e não o enquadramento, que o Urlan viu como
+  defeito. Com 0,5rem são 2,3% e 3,0%. Contraste medido sem desfoque nenhum:
+  título **6,64:1**, preço 6,36, relógio 5,86 — o véu sustenta sozinho.
 - **A foto do cartão de oferta é recortada em volta do produto.** O cartão é
   2/3 e as fotos do catálogo são 1/1: com `cover` a altura manda, a foto entra
   inteira e o chão vazio do estúdio vem junto. Na foto do óleo de mirra medi um

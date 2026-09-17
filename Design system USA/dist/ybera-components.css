@@ -1365,9 +1365,23 @@
    nao em rem: a altura do cartao vem da coluna do grid, nao da janela, e vai
    de 416px em 1440 a 1056px em 768, quando ele passa a ocupar a linha
    inteira. Em rem a banda seria metade do cartao numa largura e um oitavo na
-   outra. O raio e 1rem contra 2rem do hero porque o cartao tem um quinto da
-   largura: desfoque se le em relacao ao tamanho da foto, nao em pixels. */
-.yb-offercard--blur{ --yb-blur-band:55%; --yb-blur-radius:1rem; }
+   outra.
+
+   O RAIO E .5rem, e ja foi 1rem. A regra escrita aqui era "desfoque se le em
+   relacao ao tamanho da foto, nao em pixels" — e o valor de 1rem desobedecia a
+   propria regra. O hero desfoca 32px numa foto de 1440: 2,2% da largura. O
+   cartao desfocava 16px em 343 no celular (4,7%) e em 266 no desktop (6,0%),
+   duas a tres vezes mais forte em proporcao. No pe do cartao, onde a folha
+   manda o desfoque ao maximo, isso dissolvia o produto: o Urlan viu como
+   defeito de renderizacao, e apontou duas vezes. Com .5rem sao 2,3% no celular
+   e 3,0% no desktop, e a silhueta do frasco sobrevive ate a base.
+
+   NAO custa contraste, e isso foi medido e nao suposto: so com o veu, sem
+   desfoque nenhum, o pior pixel atras do titulo da 6,64:1, o preco 6,36 e o
+   relogio 5,86. Bate com o que a nota do veu leve ja dizia — o blur somava 0,8
+   de razao numa foto com brilho especular e zero nas outras duas. Ele e
+   acabamento, nao sustentacao. */
+.yb-offercard--blur{ --yb-blur-band:55%; --yb-blur-radius:.5rem; }
 .yb-offercard--blur .yb-offercard__body::before{
   background:linear-gradient(to bottom,
     var(--yb-scrim-none)         0,
