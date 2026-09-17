@@ -2997,10 +2997,17 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
     </div>
   </div>"""
 
+    # Mesma solucao do Best Sellers: no celular os quatro viram trilho, acima de
+    # 768 o invulucro some (`display:contents`) e eles voltam a ser celulas da
+    # grade. Aqui nao ha cartao de destaque, entao e uma fileira so — a grade em
+    # duas colunas dava duas fileiras de dois, sem buraco mas com o dobro da
+    # altura.
     bloco_relacionados = f"""  <section class="yb-block">
     <div class="yb-section-head"><h2>Related Products</h2></div>
     <div class="yb-grid">
+      <div class="yb-grid__rail yb-track">
 {chr(10).join(card(r, vendor=False) for r in relacionados)}
+      </div>
     </div>
   </section>"""
 

@@ -1885,12 +1885,15 @@ secao('Véu leve e blur');
 }
 
 /* ===========================================================================
-   O TRILHO DENTRO DA GRADE DO BEST SELLERS
+   O TRILHO DENTRO DA GRADE
 
-   A secao tem quatro pecas: o destaque e tres vizinhos. No celular a grade e de
-   duas colunas e o destaque ocupa as duas — sobram tres cartoes para duas
-   celulas, e a terceira fileira fica com um cartao e uma vaga vazia do lado.
-   `.yb-grid__rail` envolve os tres e vira trilho ali.
+   Duas vitrines usam isto. No Best Sellers das homes sao quatro pecas: o
+   destaque e tres vizinhos. No celular a grade e de duas colunas e o destaque
+   ocupa as duas — sobram tres cartoes para duas celulas, e a terceira fileira
+   fica com um cartao e uma vaga vazia do lado. Em Related Products, nas cinco
+   PDPs, sao quatro cartoes iguais: nao ha buraco, mas ha duas fileiras de dois
+   onde cabe uma so de trilho. `.yb-grid__rail` envolve os cartoes e vira trilho
+   nos dois casos.
 
    Duas coisas podem quebrar isto em silencio, e a checagem cobre as duas.
 
@@ -1902,16 +1905,22 @@ secao('Véu leve e blur');
    desktop virar um trilho de tres cartoes com o destaque solto ao lado.
    =========================================================================== */
 {
-  const homes = ['index.html', 'index-v2.html', 'index-v3.html', 'index-logado.html'];
+  const vitrines = [
+    ['index.html', 'Best Sellers'], ['index-v2.html', 'Best Sellers'],
+    ['index-v3.html', 'Best Sellers'], ['index-logado.html', 'Best Sellers'],
+    ['pdp.html', 'Related Products'], ['pdp-v2.html', 'Related Products'],
+    ['pdp-variante.html', 'Related Products'], ['pdp-oferta.html', 'Related Products'],
+    ['pdp-esgotado.html', 'Related Products'],
+  ];
   const problemas = [];
-  for (const nome of homes) {
+  for (const [nome, titulo] of vitrines) {
     const caminho = `_captura/nova-loja/${nome}`;
     if (!existsSync(join(raiz, caminho))) { problemas.push(`${nome}: nao existe`); continue; }
     const html = ler(caminho);
-    const h = html.indexOf('<h2>Best Sellers</h2>');
-    if (h < 0) { problemas.push(`${nome}: sem secao Best Sellers`); continue; }
+    const h = html.indexOf(`<h2>${titulo}</h2>`);
+    if (h < 0) { problemas.push(`${nome}: sem secao ${titulo}`); continue; }
     const sec = html.slice(html.lastIndexOf('<section', h), html.indexOf('</section>', h));
-    if (!/class="yb-grid__rail yb-track"/.test(sec)) problemas.push(`${nome}: sem o trilho em volta dos vizinhos`);
+    if (!/class="yb-grid__rail yb-track"/.test(sec)) problemas.push(`${nome}: ${titulo} sem o trilho`);
   }
   const folha = ler('patterns/ybera-patterns.css');
   if (!/@media \(min-width:768px\)\{ \.yb-grid__rail\{ display:contents \} \}/.test(folha))
@@ -1919,8 +1928,8 @@ secao('Véu leve e blur');
   if (/\.yb-grid__rail/.test(ler('components/ybera-components.css')))
     problemas.push('a regra do trilho migrou para components.css e perde a cascata para .yb-track');
   problemas.length
-    ? falha('o trilho do Best Sellers no celular', problemas.join(' · '))
-    : ok('o trilho do Best Sellers vive na grade', 'invólucro nas quatro homes, display:contents em patterns');
+    ? falha('o trilho das vitrines no celular', problemas.join(' · '))
+    : ok('as vitrines viram trilho no celular', `invólucro em ${vitrines.length} telas, display:contents em patterns`);
 }
 
 /* ===========================================================================

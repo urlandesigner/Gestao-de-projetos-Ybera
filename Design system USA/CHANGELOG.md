@@ -40,6 +40,12 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   **Account**. Único bloco com fundo e único botão da gaveta.
 
 ### Alterado
+- **Related Products vira trilho no celular, nas cinco PDPs.** Eram quatro
+  cartões em duas fileiras de dois: sem buraco, mas com o dobro da altura de
+  uma fileira de trilho. Em 375px a seção caiu de **754px para 556**. Mesmo
+  `.yb-grid__rail` do Best Sellers, e mesma regra — acima de 768 ele some e os
+  quatro voltam a ser células da grade (medido em 1200: 266px em
+  x=32/322/612/902; em 900 continua 3+1, como era).
 - **Best Sellers: grade no desktop, destaque + carrossel no celular.** Em duas
   colunas o destaque ocupa as duas e sobravam três cartões para duas células —
   a terceira fileira ficava com um cartão e uma vaga vazia ao lado. Agora são
