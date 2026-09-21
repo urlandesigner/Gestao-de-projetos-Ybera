@@ -1,0 +1,36 @@
+# PÁGINAS QUE A SENHA DE CONVIDADO ABRE
+#
+# Uma por linha, caminho relativo à raiz do projeto, com curinga `*` quando o
+# conjunto for a pasta inteira. Linha vazia e linha com `#` são ignoradas.
+#
+# Quem lê este arquivo é `scripts/portao-marcar.py`, no repositório de
+# protótipos, na hora de publicar: ele injeta o portão em TODA página HTML do
+# projeto e marca com `data-convidado` só as que estão listadas aqui.
+#
+# A lista é literal e não derivada dos links da capa de validação de
+# propósito. A capa lista o que se CLICA — cinco telas e o catálogo. Esta
+# lista diz o que se ALCANÇA, e são coisas diferentes: `components/*.html` são
+# 39 páginas, e nenhuma delas aparece na capa, porque quem chega ao catálogo
+# navega por lá dentro.
+#
+# Tirar uma linha daqui fecha a página para o convidado no próximo publish.
+# Acrescentar abre. Não há estado em lugar nenhum: o que vale é o que está
+# escrito aqui no momento em que se publica.
+#
+# O que NÃO está listado continua exigindo a senha do time — inclusive as
+# outras telas-prova (home v1, v2, logada, PDP v1, FAQ, 404) e toda a
+# documentação de fundação, governança e decisões.
+
+validacao/index.html
+
+# As telas em revisão nesta rodada.
+_captura/nova-loja/index-v3.html
+_captura/nova-loja/pdp-v2.html
+_captura/nova-loja/pdp-variante.html
+_captura/nova-loja/pdp-oferta.html
+_captura/nova-loja/pdp-esgotado.html
+
+# O catálogo de componentes inteiro: o índice e as 39 fichas. A pasta `pecas/`
+# não entra porque não são páginas — são fragmentos sem <head>, carregados
+# dentro das fichas, e o marcador os ignora sozinho.
+components/*.html

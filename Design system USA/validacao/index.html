@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Ybera UI Kit · validação</title>
+<!--
+  A CAPA DA RODADA DE VALIDAÇÃO.
+
+  Não é a capa do design system — aquela é `../index.html`, lista as 96
+  páginas e continua sendo a porta do time. Esta aqui existe para UMA
+  conversa: o stakeholder abre, vê o recorte que está em revisão, e não
+  tromba com decision-log, inventário, governança nem com as telas que
+  ainda não estão prontas para ser julgadas.
+
+  O recorte é decisão do Urlan, não minha: home v3, as quatro PDPs que não
+  são a v1, e o catálogo de componentes.
+
+  Quem controla o que o convidado ALCANÇA é o portão do repositório de
+  protótipos, não esta página. A lista de páginas liberadas vive em
+  `convidado.txt`, ao lado deste arquivo, e é ela que o publicador lê —
+  aqui só existe o que se clica. Se as duas listas divergirem, o portão
+  ganha: uma tela linkada aqui e ausente de lá vira parede de senha.
+
+  A moldura é a mesma de `../index.html` de propósito. Quem chega por este
+  link vai ver as peças do sistema logo em seguida; abrir numa pele
+  diferente faria a capa parecer de outro produto.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--yb-bg-page);color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base);-webkit-font-smoothing:antialiased;
+  display:flex;align-items:center;justify-content:center;min-height:100vh;
+  padding:var(--yb-space-8)}
+main{max-width:880px;width:100%}
+h1{font-size:var(--yb-type-display-2-size);line-height:var(--yb-type-display-2-line);
+  letter-spacing:var(--yb-type-display-2-track);font-weight:var(--yb-type-display-2-weight);
+  margin:0 0 var(--yb-space-3)}
+.sub{color:var(--yb-text-secondary);font-size:var(--yb-type-body-lg-size);
+  margin:0 0 var(--yb-space-6);max-width:56ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:var(--yb-space-4)}
+.grupo{margin-bottom:var(--yb-space-10)}
+.grupo h2{font-size:var(--yb-type-overline-size);letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase;font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-muted);margin:0 0 var(--yb-space-4)}
+.grupo > p{margin:calc(var(--yb-space-2) * -1) 0 var(--yb-space-4);
+  font-size:var(--yb-type-body-sm-size);color:var(--yb-text-secondary);max-width:62ch}
+a.tile{display:flex;flex-direction:column;gap:var(--yb-space-2);text-decoration:none;
+  border:1px solid var(--yb-border);border-radius:var(--yb-radius-card);
+  padding:var(--yb-space-5);background:var(--yb-surface);
+  transition:border-color var(--yb-transition-control)}
+a.tile:hover{border-color:var(--yb-text-primary)}
+a.tile:focus-visible{outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset)}
+a.tile > b{font-size:var(--yb-type-h4-size);font-weight:var(--yb-font-weight-semibold);
+  letter-spacing:var(--yb-type-h4-track);color:var(--yb-text-primary)}
+a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
+.conta{font-size:var(--yb-type-caption-size);font-weight:var(--yb-font-weight-regular);
+  color:var(--yb-text-muted);background:var(--yb-surface-sunken);
+  border-radius:var(--yb-radius-badge);padding:0 var(--yb-space-2)}
+/* O aviso do recorte. Sem ele, "cadê a home v1?" é a primeira pergunta da
+   reunião, e ela consome o tempo que era da validação. */
+.recorte{border:1px solid var(--yb-border);border-radius:var(--yb-radius-card);
+  padding:var(--yb-space-5);margin:0 0 var(--yb-space-10);
+  background:var(--yb-surface-sunken)}
+.recorte p{margin:0;font-size:var(--yb-type-body-sm-size);
+  color:var(--yb-text-secondary);max-width:62ch}
+.recorte p + p{margin-top:var(--yb-space-3)}
+.ver{margin-top:var(--yb-space-10);font-size:var(--yb-type-caption-size);
+  color:var(--yb-text-muted)}
+</style>
+</head>
+<body>
+<main>
+  <h1>Ybera UI Kit</h1>
+  <p class="sub">Rodada de validação. O sistema aplicado em telas reais, e o
+  catálogo das peças que as montam.</p>
+
+  <div class="recorte">
+    <p><b>O que está aqui é um recorte.</b> São as telas em revisão nesta
+    rodada — não o design system inteiro. Home v1, home v2, home com cliente
+    logado, PDP v1, FAQ e 404 existem e ficaram de fora de propósito.</p>
+    <p>As telas são navegáveis: dá para rolar, abrir acordeão, arrastar
+    carrossel, mudar variante e abrir a gaveta do carrinho. Nada compra nada —
+    é protótipo, não loja.</p>
+  </div>
+
+  <section class="grupo">
+    <h2>Telas <span class="conta">5</span></h2>
+    <p>A mesma biblioteca de componentes montando uma home e quatro estados de
+    página de produto.</p>
+    <div class="grid">
+      <a class="tile" href="../_captura/nova-loja/index-v3.html"><b>Home v3</b><span>catorze seções na ordem que o time pediu</span></a>
+      <a class="tile" href="../_captura/nova-loja/pdp-v2.html"><b>PDP v2</b><span>seis blocos: faixa, recado do parceiro, compra, relacionados e avaliações</span></a>
+      <a class="tile" href="../_captura/nova-loja/pdp-variante.html"><b>PDP com variante</b><span>seletor de tamanho movendo preço, estoque e foto</span></a>
+      <a class="tile" href="../_captura/nova-loja/pdp-oferta.html"><b>PDP em promoção</b><span>preço anterior riscado e selo de desconto acima do nome</span></a>
+      <a class="tile" href="../_captura/nova-loja/pdp-esgotado.html"><b>PDP esgotada</b><span>o mesmo bloco de compra sem estoque</span></a>
+    </div>
+  </section>
+
+  <section class="grupo">
+    <h2>Componentes</h2>
+    <p>Cada peça numa ficha: o que ela faz, as variantes, os estados, e o que a
+    acessibilidade exige. É daqui que as telas acima são montadas.</p>
+    <div class="grid">
+      <a class="tile" href="../components/"><b>Catálogo de componentes</b><span>37 peças em cinco famílias, com demonstração ao vivo</span></a>
+    </div>
+  </section>
+
+  <p class="ver">Protótipo interno Ybera · não indexado</p>
+</main>
+</body>
+</html>
