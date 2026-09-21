@@ -43,7 +43,7 @@ h1{font-size:var(--yb-type-display-2-size);line-height:var(--yb-type-display-2-l
   letter-spacing:var(--yb-type-display-2-track);font-weight:var(--yb-type-display-2-weight);
   margin:0 0 var(--yb-space-3)}
 .sub{color:var(--yb-text-secondary);font-size:var(--yb-type-body-lg-size);
-  margin:0 0 var(--yb-space-6);max-width:56ch}
+  margin:0 0 var(--yb-space-10);max-width:56ch}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:var(--yb-space-4)}
 .grupo{margin-bottom:var(--yb-space-10)}
@@ -65,14 +65,6 @@ a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
 .conta{font-size:var(--yb-type-caption-size);font-weight:var(--yb-font-weight-regular);
   color:var(--yb-text-muted);background:var(--yb-surface-sunken);
   border-radius:var(--yb-radius-badge);padding:0 var(--yb-space-2)}
-/* O aviso do recorte. Sem ele, "cadê a home v1?" é a primeira pergunta da
-   reunião, e ela consome o tempo que era da validação. */
-.recorte{border:1px solid var(--yb-border);border-radius:var(--yb-radius-card);
-  padding:var(--yb-space-5);margin:0 0 var(--yb-space-10);
-  background:var(--yb-surface-sunken)}
-.recorte p{margin:0;font-size:var(--yb-type-body-sm-size);
-  color:var(--yb-text-secondary);max-width:62ch}
-.recorte p + p{margin-top:var(--yb-space-3)}
 .ver{margin-top:var(--yb-space-10);font-size:var(--yb-type-caption-size);
   color:var(--yb-text-muted)}
 </style>
@@ -80,17 +72,7 @@ a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
 <body>
 <main>
   <h1>Ybera UI Kit</h1>
-  <p class="sub">Rodada de validação. O sistema aplicado em telas reais, e o
-  catálogo das peças que as montam.</p>
-
-  <div class="recorte">
-    <p><b>O que está aqui é um recorte.</b> São as telas em revisão nesta
-    rodada — não o design system inteiro. Home v1, home v2, home com cliente
-    logado, PDP v1, FAQ e 404 existem e ficaram de fora de propósito.</p>
-    <p>As telas são navegáveis: dá para rolar, abrir acordeão, arrastar
-    carrossel, mudar variante e abrir a gaveta do carrinho. Nada compra nada —
-    é protótipo, não loja.</p>
-  </div>
+  <p class="sub">Rodada de validação.</p>
 
   <section class="grupo">
     <h2>Telas <span class="conta">5</span></h2>
