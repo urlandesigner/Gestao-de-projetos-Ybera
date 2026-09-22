@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Central de Projetos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=2026092220">
+</head>
+<body data-pagina="panorama">
+<div class="app">
+
+<div class="corpo">
+<aside class="lateral">
+  <div class="lateral-topo">
+    <h1 class="nome-app">Central de Projetos</h1>
+    <button id="alternar-lateral" title="Recolher/expandir menu" aria-label="Recolher ou expandir o menu"></button>
+  </div>
+  <nav class="paginas">
+    <a id="nav-panorama" href="#panorama"><span class="rotulo-nav">Panorama</span></a>
+    <a id="nav-pendencias" href="#pendencias"><span class="rotulo-nav">Pendências</span></a>
+    <a id="nav-produtos" href="#produtos"><span class="rotulo-nav">Produtos</span></a>
+    <a id="nav-report" href="report.html?po=1" title="Abre o report em página própria — é o que vai pro stakeholder. O ?po=1 traz as suas ferramentas; o link que você compartilha não tem isso."><span class="rotulo-nav">Report</span></a>
+    <a id="nav-meus-itens" href="#meus-itens"><span class="rotulo-nav">Meus itens</span> <span id="conta-nav-mi" class="conta-nav"></span></a>
+    <a id="nav-projetos" href="#projetos"><span class="rotulo-nav">Projetos</span> <span id="conta-nav-proj" class="conta-nav"></span></a>
+  </nav>
+</aside>
+
+<div class="coluna-principal">
+<header class="topo">
+  <div class="filtros filtro-topo" id="filtro-global" hidden>
+    <select id="resp-global" title="Filtra todas as páginas por responsável"><option value="">todos os responsáveis</option></select>
+  </div>
+  <div class="acoes">
+    <span id="badge" data-estado="sem-token">sem token</span>
+    <span id="carimbo" class="mudo"></span>
+    <button id="atualizar" title="Atualizar agora">↻</button>
+    <button id="abrir-config" title="Configurações">⚙</button>
+  </div>
+</header>
+
+<main>
+  <section id="secao-panorama">
+    <h2>Panorama</h2>
+    <div id="panorama"></div>
+  </section>
+
+  <section id="secao-pendencias">
+    <h2>Pendências</h2>
+    <div id="pendencias"></div>
+  </section>
+
+  <section id="secao-produtos">
+    <h2>Produtos</h2>
+    <div id="produtos"></div>
+  </section>
+
+  <section id="secao-meus-itens">
+    <h2>Meus itens</h2>
+    <div class="filtros" id="mi-filtros" hidden>
+      <input id="mi-busca" type="search" placeholder="filtrar por título ou #id" autocomplete="off">
+      <div id="mi-tipos" class="chips-filtro"></div>
+      <div id="mi-projetos" class="chips-filtro"></div>
+    </div>
+    <div id="meus-itens"></div>
+  </section>
+
+  <section id="secao-projetos">
+    <h2>Projetos</h2>
+    <div id="grid"></div>
+  </section>
+
+  <section id="board-view" hidden>
+    <header class="board-topo">
+      <button id="board-voltar" title="Voltar pra central">←</button>
+      <div class="board-titulos">
+        <h2 id="board-titulo"></h2>
+        <p id="board-sub" class="mudo"></p>
+      </div>
+      <div class="board-acoes">
+        <button id="board-filtro-sprint" aria-pressed="false">Só sprint corrente</button>
+        <a id="board-devops" target="_blank" rel="noopener">Abrir no DevOps</a>
+        <button id="board-atualizar" title="Atualizar board">↻</button>
+      </div>
+    </header>
+    <div class="filtros" id="board-filtros" hidden>
+      <input id="board-busca" type="search" placeholder="filtrar por título ou #id" autocomplete="off">
+      <div id="board-tipos" class="chips-filtro"></div>
+    </div>
+    <p id="board-status" class="mudo" hidden></p>
+    <div id="board-colunas" class="quadro quadro-board"></div>
+  </section>
+
+  <section id="epico-view" hidden>
+    <header class="board-topo">
+      <button id="epico-voltar" title="Voltar pra Produtos">←</button>
+      <div class="board-titulos">
+        <h2 id="epico-titulo"></h2>
+        <p id="epico-sub" class="mudo"></p>
+      </div>
+      <div class="board-acoes">
+        <a id="epico-devops" target="_blank" rel="noopener">Abrir no DevOps</a>
+      </div>
+    </header>
+    <p id="epico-status" class="mudo" hidden></p>
+    <div class="bloco">
+      <div id="epico-lista"></div>
+    </div>
+  </section>
+</main>
+</div>
+</div>
+</div>
+
+<dialog id="wizard">
+  <form method="dialog" onsubmit="return false">
+    <section id="wizard-passo-1">
+      <h2>Conectar ao Azure DevOps</h2>
+      <label>URL da organização
+        <input id="wizard-org" placeholder="dev.azure.com/sua-org" autocomplete="off">
+      </label>
+      <label>Personal Access Token (PAT)
+        <input id="wizard-pat" type="password" autocomplete="off">
+      </label>
+      <details>
+        <summary>Como gerar o PAT</summary>
+        <ol>
+          <li>No DevOps: avatar → <b>Personal access tokens</b> → <b>New Token</b></li>
+          <li>Escopos: <b>Work Items → Read</b> e <b>Project and Team → Read</b></li>
+          <li>Validade: 90 dias (o máximo). Copie e cole aqui.</li>
+        </ol>
+        <p>O token fica só neste navegador (localStorage) — não vai pra arquivo nem pra web.</p>
+      </details>
+      <p id="wizard-erro" class="erro" hidden></p>
+      <p id="wizard-descobrindo" hidden>Descobrindo projetos…</p>
+      <div class="linha-botoes">
+        <button id="wizard-descobrir">Descobrir projetos</button>
+        <label class="botao" title="Restaura uma config exportada em outro navegador — cole o PAT acima antes">Importar JSON<input id="wizard-importar" type="file" accept="application/json" hidden></label>
+      </div>
+    </section>
+    <section id="wizard-passo-2" hidden>
+      <h2>Marque os seus projetos</h2>
+      <div id="wizard-lista"></div>
+      <p id="wizard-erro-2" class="erro" hidden></p>
+      <button id="wizard-concluir">Montar a central</button>
+    </section>
+  </form>
+</dialog>
+
+<dialog id="config">
+  <form method="dialog" onsubmit="return false">
+    <h2>Configurações</h2>
+    <label>Novo PAT (deixe em branco pra manter)
+      <input id="conf-pat" type="password" autocomplete="off">
+    </label>
+    <h3>Projetos (visível / ordem)</h3>
+    <ul id="conf-lista"></ul>
+    <p id="conf-erro" class="erro" hidden></p>
+    <div class="linha-botoes">
+      <button id="conf-salvar">Salvar</button>
+      <button id="conf-redescobrir">Refazer descoberta</button>
+      <button id="conf-exportar">Exportar JSON</button>
+      <label class="botao">Importar JSON<input id="conf-importar" type="file" accept="application/json" hidden></label>
+      <button id="conf-fechar">Fechar</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="assets/core.js?v=2026092220"></script>
+<script src="assets/api.js?v=2026092220"></script>
+<script src="assets/app.js?v=2026092220"></script>
+</body>
+</html>

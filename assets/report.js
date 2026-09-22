@@ -330,11 +330,11 @@ function render() {
   const box = $('report');
   if (!st.leitura) {
     if (!st.config) {
-      box.innerHTML = '<p class="mudo">Nenhuma configuração encontrada. Abra a <a href="index.html">Central</a> e conecte o Azure DevOps primeiro.</p>';
+      box.innerHTML = '<p class="mudo">Nenhuma configuração encontrada. Abra a <a href="central.html">Central</a> e conecte o Azure DevOps primeiro.</p>';
       return;
     }
     if (!st.pat) {
-      box.innerHTML = '<p class="mudo">Sem token neste navegador. Abra a <a href="index.html">Central</a> e cole o PAT.</p>';
+      box.innerHTML = '<p class="mudo">Sem token neste navegador. Abra a <a href="central.html">Central</a> e cole o PAT.</p>';
       return;
     }
   }
