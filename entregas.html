@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entregas — Central de Projetos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/entregas.css?v=2026092220">
+</head>
+<!-- ENTREGAS. Não é uma versão do report: é outro documento, com duas seções
+     (entregas recentes e roadmap) e linguagem de negócio. Usa o MESMO
+     report.js do report — quem muda o desenho é assets/briefing-entregas.js,
+     que se registra no mesmo window.CentralBriefing, e a folha própria. Por
+     isso report.html e report-v2.html seguem intocados.
+     O link de leitura (#r=...) gerado aqui abre aqui. --><body data-pagina="report" class="pagina-entregas">
+<div class="app">
+<div class="corpo">
+<main>
+  <section id="secao-report">
+    <div id="report"><p class="mudo">carregando…</p></div>
+  </section>
+</main>
+</div>
+</div>
+
+<div class="ferramentas" id="ferramentas" hidden>
+  <span id="badge" data-estado="sem-token">sem token</span>
+  <select id="resp-global" aria-label="Recorte por responsável" title="Recorte por responsável" hidden><option value="">todos os responsáveis</option></select>
+  <button id="atualizar" aria-label="Atualizar agora" title="Atualizar agora">↻</button>
+  <button id="sem-nome" class="botao-texto" hidden title="Épicos e Features que aparecem no report e ainda não têm nome de negócio — copia a lista em JSON pra preencher assets/report-nomes.json"></button>
+  <button id="copiar" class="botao-texto" title="Copia o endereço desta página — quem abrir lê o report sem token">Copiar link</button>
+  <a id="ver-v2" class="botao-texto" href="report-v2.html?po=1" title="Abrir a versão 2 do report">v2</a>
+  <a id="voltar" class="botao-texto" href="index.html#panorama" title="Voltar para a Central">Central</a>
+</div>
+<div id="caixa-link" class="caixa-link" hidden></div>
+
+<script src="assets/core.js?v=2026092220"></script>
+<script src="assets/api.js?v=2026092220"></script>
+<script src="assets/briefing-entregas.js?v=2026092220"></script>
+<script src="assets/report.js?v=2026092220"></script>
+</body>
+</html>
