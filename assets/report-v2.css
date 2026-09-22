@@ -1,0 +1,964 @@
+/* ==========================================================================
+   Report v2 — "Bento"
+   Folha de estilo AUTÔNOMA: report-v2.html não carrega style.css. Assim o v2
+   não herda nenhuma decisão do v1 nem briga de especificidade com ela, e o v1
+   continua congelado como está.
+
+   A ideia: blocos. Tamanhos diferentes num mesmo grid, canto bem arredondado,
+   superfície clara flutuando sobre fundo cinza — e, em cada bloco, UM número
+   em corpo de manchete com a unidade miúda colada. O contraste de escala é o
+   que faz a leitura acontecer antes do texto. Um bloco escuro por tela serve
+   de âncora e segura o olho.
+
+   Contra o v1, que é cartão branco com sombra difusa sobre cinza frio, capa
+   escura de ponta a ponta e gradiente roxo→verde: aqui o gradiente some, a
+   capa é clara e o escuro vira peça pontual — um bloco, não a tela toda.
+
+   COR E TIPO SÃO OS DA CENTRAL, não um sistema paralelo: os tokens abaixo são
+   cópia literal do :root de style.css (a mesma paleta quente das telas de
+   Panorama, Pendências, Produtos, Futuro e Meus itens), incluindo a família
+   Plus Jakarta Sans, os dois raios e as duas sombras. O report é uma tela do
+   mesmo produto — ele não deve parecer visita.
+
+   Não existe cor de apoio: a paleta é a da Central e mais nada. Cor aqui só
+   aparece quando SIGNIFICA — verde para progresso e conclusão, vermelho para
+   problema. Retranca, pílula, estado ativo e marcação de "hoje" são tinta e
+   cinza. Identidade quem carrega é a marca no topo e no rodapé, não um
+   acento decorativo espalhado pelo documento.
+   ========================================================================== */
+
+:root {
+  /* --- tokens da Central (style.css), sem alteração --- */
+  --fundo-pagina: #fafaf9;
+  --superficie: #ffffff;
+  --superficie-2: #f3f3f1;
+  --tinta: #1c1c1a;
+  --mudo: #78716c;
+  --borda: #e9e7e4;
+  --positivo: #15803d;
+  --positivo-fundo: #e7f8ef;
+  --erro: #b91c1c;
+  --erro-fundo: #fee2e2;
+  --sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --sombra-painel: 0 1px 2px rgba(28, 25, 23, 0.03), 0 16px 40px rgba(28, 25, 23, 0.06);
+  --sombra-cartao: 0 1px 2px rgba(28, 25, 23, 0.05);
+  --raio-painel: 24px;
+  --raio-cartao: 16px;
+
+  /* --- só do report --- */
+  --neutro: rgba(120, 113, 108, 0.3); /* barra neutra: o --mudo da Central esmaecido */
+  --clarinho: rgba(255, 255, 255, 0.72); /* texto secundário sobre o bloco escuro */
+  --fio: 1px solid var(--borda);
+  --sombra-escura: 0 2px 6px rgba(28, 25, 23, 0.16), 0 20px 40px -18px rgba(28, 25, 23, 0.4);
+  --raio-p: 12px;                     /* mesmo raio dos botões do topo da Central */
+
+  --gutter: clamp(0.9rem, 3vw, 2rem);
+  --largura: 1180px;
+  --gap: clamp(0.6rem, 1.2vw, 0.9rem);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body.pagina-report-v2 {
+  margin: 0;
+  background: var(--fundo-pagina);
+  color: var(--tinta);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.rl-num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+
+.rl-capa, .rl-corpo, .rl-rodape {
+  max-width: var(--largura);
+  margin: 0 auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+/* ---------- Pílulas ---------- */
+/* A retranca virou pílula: aparece na capa (estado do mês) e abrindo cada
+   seção. É o elemento que costura o documento inteiro. */
+.rl-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.7rem;
+  border: var(--fio);
+  border-radius: 999px;
+  background: var(--superficie);
+  box-shadow: var(--sombra-cartao);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--tinta);
+  white-space: nowrap;
+}
+.rl-pill i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mudo);
+}
+.rl-pill-vivo i { background: var(--positivo); }
+
+/* ---------- Capa ---------- */
+.rl-capa { padding-top: clamp(1.25rem, 3vw, 2.25rem); }
+.rl-capa-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: clamp(1.5rem, 4vw, 2.75rem);
+}
+.rl-logo { display: block; height: 24px; width: auto; }
+/* O arquivo da marca é raster e só existe em positivo: sobre superfície
+   escura entra invertido (mesma técnica do .yb-logo--inverse do DS). */
+.rl-logo-inv { filter: invert(1); }
+
+/* Título em duas vozes: a linha fraca situa, a forte é o assunto. */
+.rl-titulo { margin: 0; line-height: 0.98; letter-spacing: -0.04em; }
+.rl-titulo span { display: block; }
+.rl-titulo-fraco {
+  font-size: clamp(1.9rem, 5.4vw, 3.4rem);
+  font-weight: 500;
+  color: var(--mudo);
+}
+.rl-titulo-forte {
+  font-size: clamp(2.3rem, 6.8vw, 4.3rem);
+  font-weight: 800;
+  color: var(--tinta);
+}
+.rl-meta {
+  margin: 0.9rem 0 0;
+  font-size: 0.82rem;
+  color: var(--mudo);
+}
+
+/* ---------- Bento ---------- */
+.rl-bento {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--gap);
+  margin-top: clamp(1.25rem, 3vw, 2rem);
+}
+
+/* O bloco é a unidade do documento: superfície clara, canto grande, sombra
+   curta. Tudo que é conteúdo mora dentro de um. */
+.rl-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  grid-column: span 12;
+  min-width: 0;
+  margin: 0;
+  padding: clamp(1.1rem, 2.2vw, 1.6rem);
+  border: var(--fio);
+  border-radius: var(--raio-painel);
+  background: var(--superficie);
+  box-shadow: var(--sombra-painel);
+}
+.rl-tile-rot {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--tinta);
+  max-width: 22ch;
+}
+/* O número encosta na base do bloco: assim blocos vizinhos de alturas
+   diferentes alinham os números na mesma linha ótica. */
+.rl-tile-num {
+  display: flex;
+  align-items: baseline;
+  gap: 0.1rem;
+  margin: auto 0 0;
+}
+.rl-tile-num b {
+  font-size: clamp(2.6rem, 6vw, 3.9rem);
+  font-weight: 800;
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+}
+.rl-tile-num span {
+  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+  font-weight: 500;
+  color: var(--mudo);
+  letter-spacing: -0.02em;
+}
+/* Só o NÚMERO fica vermelho, nunca o bloco: pintar a superfície inteira faz
+   o bloco parecer quebrado, e o que está errado é a contagem, não o card. */
+.rl-tile-alerta .rl-tile-num b { color: var(--erro); }
+
+.rl-tile-escuro {
+  border-color: transparent;
+  background: var(--tinta);
+  color: #fff;
+  box-shadow: var(--sombra-escura);
+}
+.rl-tile-escuro .rl-tile-rot { color: rgba(255, 255, 255, 0.72); }
+.rl-tile-escuro .rl-tile-num span { color: rgba(255, 255, 255, 0.5); }
+
+/* Capa: blocos pequenos à esquerda, a âncora escura à direita. */
+.rl-bento-capa > .rl-tile { grid-column: span 6; min-height: 8.5rem; }
+.rl-bento-capa > .rl-heroi { grid-column: span 12; }
+
+/* Âncora: a seta fantasma ao fundo aponta pro lado que o número andou. */
+.rl-heroi { overflow: hidden; min-height: 13rem; justify-content: space-between; gap: 1.25rem; }
+/* No escuro o número ganha ar: o rótulo desce pra linha de baixo, senão ele
+   encosta no numeral (que tem line-height apertado de propósito). */
+.rl-heroi .rl-tile-num { display: block; }
+.rl-heroi .rl-tile-num b { display: block; font-size: clamp(3rem, 7vw, 4.6rem); }
+.rl-heroi .rl-tile-num span {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.rl-heroi-fundo {
+  position: absolute;
+  right: -6%;
+  bottom: -12%;
+  width: 62%;
+  height: auto;
+  color: rgba(255, 255, 255, 0.055);
+  pointer-events: none;
+}
+.rl-heroi-frase {
+  position: relative;
+  margin: 0;
+  max-width: 26ch;
+  font-size: clamp(1rem, 2.1vw, 1.2rem);
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+  color: #fff;
+}
+.rl-heroi-base {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.rl-heroi .rl-tile-num { margin: 0; }
+.rl-heroi-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+}
+.rl-heroi-delta.rl-sobe { color: var(--positivo-fundo); }
+.rl-heroi-delta.rl-desce { color: #ffb4ad; }
+.rl-heroi-seta { font-size: 0.95rem; line-height: 1; }
+
+/* ---------- Navegação ---------- */
+/* A pílula de vidro do v1, trazida pra cá. NÃO tem fundo atrás dela de
+   propósito: o documento passa por baixo e é justamente isso que o vidro
+   desfoca — sem conteúdo atravessando, blur nenhum aparece e o efeito morre.
+   Por isso ela também é a única peça do v2 que não usa a sombra da Central:
+   precisa de uma sombra mais funda pra descolar do que está passando. */
+.rl-nav {
+  position: sticky;
+  top: 0.5rem;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  margin: clamp(1.25rem, 3vw, 2rem) auto 0;
+  padding: 0 var(--gutter);
+}
+/* Camada 1 — a borda. Não é `border`: é 2px de padding sobre um fundo em
+   gradiente. Os dois gradientes apontam pra diagonais quase opostas, então o
+   brilho muda de intensidade ao redor da pílula em vez de ficar uniforme, que
+   é o que dá a leitura de vidro biselado. A sombra mora aqui, não no vidro de
+   dentro — é o conjunto que flutua. */
+.rl-nav-borda {
+  max-width: 100%;
+  padding: 2px;
+  border-radius: 99px;
+  box-shadow: 0 16px 32px rgba(28, 25, 23, 0.12);
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0) 69%, rgba(255, 255, 255, 0.6)),
+    linear-gradient(157deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 40%);
+}
+/* Camada 2 — o vidro. O fundo translúcido é o --superficie-2 da Central
+   (quente), não o cinza frio do v1: é o que mantém a peça dentro da paleta. */
+.rl-nav-int {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  max-width: 100%;
+  padding: 0.375rem 0.5rem 0.375rem 0.375rem;
+  overflow-x: auto;
+  border-radius: 99px;
+  background: rgba(233, 231, 228, 0.78);
+  backdrop-filter: blur(8px) saturate(1.8);
+  -webkit-backdrop-filter: blur(8px) saturate(1.8);
+  scrollbar-width: none;
+}
+.rl-nav-int::-webkit-scrollbar { display: none; }
+.rl-nav a {
+  padding: 0.375rem 0.75rem;
+  border-radius: 99px;
+  color: var(--tinta);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.rl-nav a:hover { background: var(--tinta); color: #fff; }
+
+/* O seletor de mês repete a ideia em escala menor: 1px de borda em gradiente
+   em volta de um controle sólido, pra ele ler como peça embutida no vidro e
+   não como um <select> largado ali dentro. */
+.rl-mes-borda {
+  flex: none;
+  margin-left: 0.25rem;
+  padding: 1px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, rgba(28, 25, 23, 0.18), rgba(255, 255, 255, 0.7) 7%, rgba(255, 255, 255, 0.7) 92%, rgba(28, 25, 23, 0.18));
+  box-shadow: 0 8px 16px rgba(28, 25, 23, 0.14);
+}
+.rl-mes {
+  appearance: none;
+  -webkit-appearance: none;
+  max-width: 13rem;
+  padding: 0.375rem 2.1rem;
+  border: none;
+  border-radius: 9999px;
+  background-color: #dedbd6;
+  color: var(--tinta);
+  font-family: inherit;
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%231c1c1a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%231c1c1a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' opacity='0.7'%3E%3Cpath d='M8 2v4'/%3E%3Cpath d='M16 2v4'/%3E%3Crect width='18' height='18' x='3' y='4' rx='2'/%3E%3Cpath d='M3 10h18'/%3E%3C/svg%3E");
+  background-repeat: no-repeat, no-repeat;
+  background-position: right 0.85rem center, left 0.8rem center;
+}
+
+/* ---------- Seções ---------- */
+.rl-corpo { padding-bottom: clamp(2rem, 5vw, 3.5rem); }
+.rl-sec { padding: clamp(2rem, 4.5vw, 3.25rem) 0 0; scroll-margin-top: var(--nav-alt, 5rem); }
+.rl-sec-cab { margin-bottom: clamp(1rem, 2.4vw, 1.5rem); }
+.rl-sec-titulo {
+  margin: 0;
+  font-size: clamp(1.6rem, 3.6vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+.rl-sec-intro {
+  max-width: 58ch;
+  margin: 0.55rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--mudo);
+}
+.rl-nota {
+  margin: 0.9rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--mudo);
+}
+.rl-vazio { padding: 3rem var(--gutter); color: var(--mudo); }
+.rl-rotulo {
+  margin: 0 0 0.5rem;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mudo);
+}
+
+/* ---------- 01 · Resumo ---------- */
+.rl-notas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
+.rl-nota-bloco {
+  margin: 0;
+  padding: clamp(1.1rem, 2.2vw, 1.5rem);
+  border: var(--fio);
+  border-radius: var(--raio-painel);
+  background: var(--superficie);
+  box-shadow: var(--sombra-painel);
+}
+.rl-nota-bloco p { margin: 0; font-size: 0.94rem; line-height: 1.6; color: var(--tinta); }
+.rl-nota-bloco p + p { margin-top: 0.55rem; }
+.rl-nota-bloco b { font-weight: 700; color: var(--tinta); }
+/* O que pede atenção troca a superfície, não ganha enfeite: lavagem rosa e
+   retranca vermelha bastam pra ele saltar na grade. */
+/* Superfície não muda: quem avisa é a retranca. Bloco lavado de vermelho lê
+   como "isto está quebrado", e o card de Atenção é um recorte de leitura, não
+   um defeito. */
+.rl-nota-alerta .rl-rotulo { color: var(--erro); }
+
+.rl-esforco { margin: 0.8rem 0 0; padding: 0; list-style: none; display: grid; gap: 0.45rem; }
+.rl-esforco li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 3.5rem auto;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 0.88rem;
+}
+.rl-esforco-nome { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rl-esforco-regua { height: 6px; border-radius: 999px; background: var(--borda); }
+.rl-esforco-regua i { display: block; height: 100%; border-radius: 999px; background: var(--positivo); }
+.rl-esforco b { font-weight: 700; font-variant-numeric: tabular-nums; }
+.rl-esforco-mais { display: block; color: var(--mudo); font-size: 0.82rem; }
+
+/* ---------- 02 · Por frente ---------- */
+.rl-frentes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
+.rl-frente {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.1rem, 2.2vw, 1.5rem);
+  border: var(--fio);
+  border-radius: var(--raio-painel);
+  background: var(--superficie);
+  box-shadow: var(--sombra-painel);
+}
+/* A frente com item travado NÃO muda de superfície. Uma frente que entregou o
+   mês inteiro e tem um item parado não é um card com erro — o que precisa
+   saltar é o selo ("1 travado"), e ele já é vermelho. */
+.rl-frente-cab { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; }
+.rl-frente-nome {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+.rl-frente-meta { display: flex; align-items: center; gap: 0.4rem; flex: none; flex-wrap: wrap; justify-content: flex-end; }
+.rl-prazo { font-size: 0.74rem; color: var(--mudo); white-space: nowrap; }
+.rl-atrasado { color: var(--erro); font-weight: 600; }
+.rl-selo {
+  flex: none;
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  background: var(--superficie-2);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mudo);
+  white-space: nowrap;
+}
+.rl-selo-risco { background: var(--erro); color: #fff; }
+.rl-selo-ok { background: var(--positivo); color: #fff; }
+.rl-frente-resumo { margin: 0.45rem 0 0; font-size: 0.86rem; line-height: 1.5; color: var(--mudo); }
+
+/* Rumo: cápsula de 6px — mesmo arredondamento das pílulas. */
+.rl-rumo { margin-top: 1rem; }
+.rl-rumo-trilho { display: block; height: 6px; border-radius: 999px; background: var(--borda); }
+.rl-rumo-trilho i { display: block; height: 100%; border-radius: 999px; background: var(--positivo); }
+.rl-rumo-txt { display: block; margin-top: 0.5rem; font-size: 0.74rem; color: var(--mudo); }
+.rl-rumo-txt b { color: var(--tinta); font-weight: 700; }
+
+.rl-fatos { margin: 1.1rem 0 0; display: grid; gap: 0.75rem; }
+.rl-fatos > div { margin: 0; }
+.rl-fatos dt {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mudo);
+}
+.rl-fatos dd { margin: 0.2rem 0 0; font-size: 0.88rem; line-height: 1.5; color: var(--tinta); }
+.rl-fatos dd b { font-weight: 600; color: var(--tinta); }
+
+/* ---------- 03 · Entregas ---------- */
+/* Filtros e lista moram num bloco só — o bloco É a tabela. */
+.rl-filtros {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: var(--gap);
+}
+.rl-busca {
+  flex: 1 1 14rem;
+  min-width: 0;
+  padding: 0.6rem 1rem;
+  border: var(--fio);
+  border-radius: 999px;
+  background: var(--superficie);
+  box-shadow: var(--sombra-cartao);
+  font-family: inherit;
+  font-size: 0.86rem;
+  color: var(--tinta);
+}
+.rl-busca::placeholder { color: var(--mudo); }
+.rl-busca:focus { outline: none; border-color: var(--tinta); }
+.rl-busca::-webkit-search-cancel-button { -webkit-appearance: none; }
+.rl-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.rl-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  max-width: 16rem;
+  padding: 0.45rem 0.8rem;
+  border: var(--fio);
+  border-radius: 999px;
+  background: var(--superficie);
+  box-shadow: var(--sombra-cartao);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--tinta);
+  cursor: pointer;
+}
+.rl-chip > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rl-chip-n { color: var(--mudo); font-weight: 700; }
+.rl-chip:hover { color: var(--tinta); border-color: var(--neutro); }
+.rl-chip.ativo { background: var(--tinta); border-color: transparent; color: #fff; }
+.rl-chip.ativo .rl-chip-n { color: rgba(255, 255, 255, 0.6); }
+.rl-limpar {
+  border: 0;
+  background: none;
+  padding: 0.4rem 0.2rem;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--tinta);
+  cursor: pointer;
+}
+.rl-limpar:hover { text-decoration: underline; }
+.rl-conta { margin-left: auto; font-size: 0.76rem; color: var(--mudo); white-space: nowrap; }
+
+.rl-lista { display: grid; gap: var(--gap); }
+.rl-grupo {
+  padding: clamp(1rem, 2vw, 1.35rem) clamp(1.1rem, 2.2vw, 1.5rem);
+  border: var(--fio);
+  border-radius: var(--raio-painel);
+  background: var(--superficie);
+  box-shadow: var(--sombra-painel);
+}
+.rl-grupo-cab { margin-bottom: 0.9rem; }
+.rl-grupo-topo { display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; }
+.rl-grupo-nome { margin: 0; font-size: 1.05rem; font-weight: 700; letter-spacing: -0.02em; }
+.rl-sem-produto { color: var(--mudo); font-weight: 500; }
+.rl-grupo-detalhe { flex: none; font-size: 0.76rem; color: var(--mudo); }
+
+.rl-linhas { margin: 0; padding: 0; list-style: none; }
+.rl-linha {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 3.8rem;
+  align-items: baseline;
+  gap: 0.9rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: var(--raio-p);
+  font-size: 0.9rem;
+}
+.rl-linhas > li:nth-child(odd) .rl-linha { background: var(--superficie-2); }
+.rl-linha-nome { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rl-linha-fato { font-size: 0.78rem; color: var(--mudo); white-space: nowrap; }
+.rl-linha-id { font-size: 0.76rem; color: var(--mudo); text-align: right; }
+
+/* ---------- 04 · Comparativo ---------- */
+.rl-comp {
+  margin: 0;
+  padding: clamp(1rem, 2vw, 1.4rem) clamp(1.1rem, 2.2vw, 1.5rem);
+  list-style: none;
+  border: var(--fio);
+  border-radius: var(--raio-painel);
+  background: var(--superficie);
+  box-shadow: var(--sombra-painel);
+  display: grid;
+  gap: 0.35rem;
+}
+.rl-comp li {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr) 2.4rem 2.2rem;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: var(--raio-p);
+  font-size: 0.85rem;
+}
+.rl-comp-mes { color: var(--tinta); text-transform: capitalize; }
+.rl-comp-barra { height: 10px; border-radius: 999px; background: var(--superficie-2); }
+.rl-comp-barra i { display: block; height: 100%; border-radius: 999px; background: var(--neutro); }
+.rl-comp-n { font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.rl-comp-delta { font-size: 0.76rem; color: var(--mudo); text-align: right; }
+.rl-comp-delta.rl-sobe { color: var(--positivo); }
+.rl-comp-delta.rl-desce { color: var(--erro); }
+/* O mês que o documento está mostrando é o único em magenta. */
+.rl-comp-atual { background: var(--superficie-2); }
+.rl-comp-atual .rl-comp-mes { color: var(--tinta); font-weight: 700; }
+.rl-comp-atual .rl-comp-barra i { background: var(--positivo); }
+
+/* ---------- 05 · Depende de decisão ---------- */
+.rl-linhas-decisao { display: grid; gap: var(--gap); }
+.rl-linhas-decisao > li {
+  padding: clamp(1rem, 2vw, 1.3rem) clamp(1.1rem, 2.2vw, 1.5rem);
+  border: var(--fio);
+  border-radius: var(--raio-painel);
+  background: var(--superficie);
+  box-shadow: var(--sombra-painel);
+}
+.rl-linhas-decisao .rl-linha { padding: 0; background: none !important; }
+.rl-linhas-decisao .rl-linha-nome { font-weight: 600; white-space: normal; }
+.rl-linhas-decisao .rl-linha-fato { color: var(--erro); font-weight: 600; }
+/* O pedido de decisão é o que o stakeholder precisa responder: superfície
+   própria dentro do bloco, com a cor de ação da marca. */
+.rl-pedido {
+  margin: 0.9rem 0 0;
+  padding: 0.85rem 1rem;
+  border-radius: var(--raio-cartao);
+  background: var(--superficie-2);
+  border: var(--fio);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--tinta);
+}
+.rl-pedido .rl-rotulo { display: block; margin-bottom: 0.3rem; color: var(--tinta); }
+
+/* ---------- 06 · Próximos passos ---------- */
+.rl-bloco {
+  padding: clamp(1rem, 2vw, 1.35rem) clamp(1.1rem, 2.2vw, 1.5rem);
+  border: var(--fio);
+  border-radius: var(--raio-painel);
+  background: var(--superficie);
+  box-shadow: var(--sombra-painel);
+}
+.rl-bloco + .rl-bloco { margin-top: var(--gap); }
+.rl-bloco-titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.7rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mudo);
+}
+.rl-bloco-n {
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: var(--tinta);
+  color: #fff;
+  font-size: 0.7rem;
+  letter-spacing: 0;
+}
+
+/* ---------- 07 · Roadmap ---------- */
+.rl-rm-wrap {
+  overflow-x: auto;
+  padding: clamp(1.1rem, 2.2vw, 1.6rem);
+  border: var(--fio);
+  border-radius: var(--raio-painel);
+  background: var(--superficie);
+  box-shadow: var(--sombra-painel);
+}
+.rl-rm-grade {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(150px, 15rem) 1fr;
+  column-gap: 1.25rem;
+  min-width: 600px;
+}
+.rl-rm-escala { grid-column: 2; position: relative; height: 1.6rem; }
+.rl-rm-escala span {
+  position: absolute;
+  top: 0;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mudo);
+  white-space: nowrap;
+}
+.rl-rm-escala i { font-style: normal; color: var(--mudo); }
+.rl-rm-item { display: contents; }
+/* A coluna de título é estreita (240px no máximo) e a pílula não pode quebrar
+   no meio: ao lado de um nome longo ela desce pra própria linha. */
+/* O fio que separa uma iniciativa da outra é border-TOP, não bottom, e é de
+   propósito: assim a primeira linha fecha a faixa dos meses e a última não
+   deixa um fio solto encostado na borda do painel. Ele é mais claro que o
+   divisor de mês (--borda) porque separa, não mede — quem conta a passagem do
+   tempo é a linha vertical. */
+.rl-rm-titulo, .rl-rm-trilha { border-top: 1px solid var(--superficie-2); }
+.rl-rm-titulo {
+  grid-column: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.45rem;
+  padding: 0.5rem 0;
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+.rl-rm-feito {
+  flex: none;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: var(--positivo);
+  color: #fff;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+/* z-index acima dos divisores de mês: grade é fundo, barra é dado. Sem isso a
+   linha do mês corta a barra ao meio, porque vem depois no DOM. */
+.rl-rm-trilha { grid-column: 2; position: relative; z-index: 1; min-height: 1.5rem; padding: 0.5rem 0; }
+.rl-rm-barra {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 0.7rem;
+  min-width: 6px;
+  border-radius: 999px;
+  background: var(--neutro);
+}
+/* Três estados, e a barra concorda com a pílula: cinza é plano (só a janela no
+   calendário, sem afirmação), tinta é o que está rodando agora — a única cor
+   cheia entre iniciativas futuras — e verde é concluído, como em toda a
+   Central. Antes toda barra era verde, inclusive a de item nem começado. */
+.rl-rm-barra-andamento { background: var(--tinta); }
+.rl-rm-barra-feita { background: var(--positivo); }
+/* O divisor precisa ir da escala até a última linha da grade. `grid-row: 1/-1`
+   parecia dizer isso, mas não dizia: -1 é a última linha do grid EXPLÍCITO, e
+   aqui só as colunas são explícitas — as linhas nascem implícitas, uma por
+   item. Sem linha explícita nenhuma, -1 caía de volta na linha 1 e o divisor
+   ficava com a altura da faixa dos meses (25px), invisível na prática. Em item
+   posicionado absolutamente dentro do grid, um fim `auto` resolve na borda de
+   baixo do container — que é exatamente onde a régua tem que terminar. */
+.rl-rm-mes, .rl-rm-hoje {
+  position: absolute;
+  grid-column: 2;
+  grid-row: 1 / auto;
+  inset: 0;
+  pointer-events: none;
+}
+.rl-rm-mes::after, .rl-rm-hoje::after {
+  content: '';
+  position: absolute;
+  top: 1.4rem;
+  bottom: 0;
+  left: var(--x, 0%);
+}
+.rl-rm-mes::after { border-left: 1px solid var(--borda); }
+/* "Hoje" é a exceção que sobe acima das barras: é a linha que a pessoa procura
+   pra saber onde está no plano. */
+.rl-rm-hoje { z-index: 2; }
+.rl-rm-hoje::after { border-left: 1px dashed var(--tinta); }
+/* O rótulo desce pra linha de baixo da escala: em cima colidia com o nome do
+   mês quando hoje caía perto da virada. */
+.rl-rm-hoje span {
+  position: absolute;
+  top: 1.4rem;
+  left: var(--x, 0%);
+  transform: translate(-50%, -50%);
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  background: var(--tinta);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+/* ---------- Rodapé ---------- */
+.rl-rodape { padding-bottom: clamp(1.5rem, 4vw, 2.5rem); }
+.rl-rodape-int {
+  align-items: center;
+  gap: 0;
+  padding: clamp(2.25rem, 5vw, 3.5rem) clamp(1.25rem, 3vw, 2rem);
+  border-radius: var(--raio-painel);
+  text-align: center;
+}
+.rl-rodape .rl-logo { height: 28px; margin-bottom: 1.4rem; }
+.rl-rodape-titulo { margin: 0; font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; }
+.rl-rodape-sub { margin: 0.35rem 0 0; font-size: 0.85rem; color: rgba(255, 255, 255, 0.6); }
+.rl-rodape-contato {
+  margin: 1.6rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.6);
+}
+.rl-rodape-contato a { color: #fff; font-weight: 600; text-decoration: none; }
+.rl-rodape-contato a:hover { text-decoration: underline; }
+
+/* ---------- Ferramentas do PO ---------- */
+/* Fora do documento: só quem abre com ?po=1 vê. Quem recebe o link não vê
+   nada disso. */
+.ferramentas {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.5rem;
+  border: var(--fio);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--sombra-cartao);
+  font-size: 0.78rem;
+}
+.ferramentas select {
+  appearance: none;
+  -webkit-appearance: none;
+  max-width: 10rem;
+  padding: 0.3rem 0.6rem;
+  border: var(--fio);
+  border-radius: 999px;
+  background: var(--superficie-2);
+  font-family: inherit;
+  font-size: 0.76rem;
+  color: var(--tinta);
+}
+.ferramentas button, .ferramentas .botao-texto {
+  padding: 0.35rem 0.7rem;
+  border: var(--fio);
+  border-radius: 999px;
+  background: var(--superficie-2);
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--tinta);
+  text-decoration: none;
+  cursor: pointer;
+}
+.ferramentas button:hover, .ferramentas .botao-texto:hover { background: var(--tinta); color: #fff; }
+#badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding-left: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--mudo);
+  white-space: nowrap;
+}
+#badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--mudo); }
+#badge[data-estado='conectado']::before { background: var(--positivo); }
+#badge[data-estado='atualizando']::before { background: var(--mudo); }
+#badge[data-estado='vencido'], #badge[data-estado='sem-token'] { color: var(--erro); }
+#badge[data-estado='vencido']::before, #badge[data-estado='sem-token']::before { background: var(--erro); }
+#sem-nome { color: var(--tinta); }
+
+.caixa-link {
+  position: fixed;
+  left: 1rem;
+  right: 1rem;
+  bottom: 4.2rem;
+  z-index: 20;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 1rem 1.1rem;
+  border: var(--fio);
+  border-radius: var(--raio-cartao);
+  background: var(--superficie);
+  box-shadow: var(--sombra-painel);
+}
+.caixa-link .link-aviso { margin: 0 0 0.6rem; font-size: 0.82rem; line-height: 1.5; color: var(--tinta); }
+.caixa-link .link-aviso.mudo { margin: 0.6rem 0 0; color: var(--mudo); font-size: 0.76rem; }
+.caixa-link input, .caixa-link textarea {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: var(--fio);
+  border-radius: var(--raio-p);
+  background: var(--superficie-2);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.76rem;
+  color: var(--tinta);
+}
+.erro { color: var(--erro); }
+.mudo { color: var(--mudo); }
+
+.rl-doc a:focus-visible,
+.rl-chip:focus-visible,
+.rl-busca:focus-visible,
+.rl-mes select:focus-visible,
+.ferramentas button:focus-visible,
+.ferramentas select:focus-visible,
+.ferramentas .botao-texto:focus-visible {
+  outline: 2px solid var(--tinta);
+  outline-offset: 2px;
+}
+
+/* ---------- Grid a partir de tablet ---------- */
+@media (min-width: 720px) {
+  /* Bento da capa: metade esquerda para os blocos pequenos, metade direita
+     para a âncora escura, que sobe e ocupa as duas fileiras. O terceiro bloco
+     atravessa a esquerda inteira — é essa assimetria que faz o bento parecer
+     bento, e não uma grade de cartões iguais. */
+  /* A âncora é posicionada à mão na metade direita, atravessando as duas
+     fileiras. Sem posição explícita ela entraria no fluxo depois do terceiro
+     bloco e cairia pra baixo, virando faixa — que é justamente o que o bento
+     não é. Os blocos pequenos fluem sozinhos nas colunas 1–6. */
+  .rl-bento-capa > .rl-tile { grid-column: span 3; }
+  .rl-bento-capa > .rl-tile:nth-child(3) { grid-column: span 6; min-height: 7rem; }
+  .rl-bento-capa > .rl-heroi { grid-column: 7 / span 6; grid-row: 1 / span 2; }
+  /* Mês fechado: sobra um bloco pequeno só, então ele toma a esquerda inteira
+     e a âncora não precisa esticar por duas fileiras. */
+  .rl-bento-capa > .rl-tile:first-child:nth-last-child(2) { grid-column: span 6; }
+  .rl-bento-capa > .rl-tile:first-child:nth-last-child(2) ~ .rl-heroi { grid-row: 1 / span 1; }
+}
+
+@media (max-width: 719px) {
+  .rl-notas, .rl-frentes { grid-template-columns: minmax(0, 1fr); }
+  .rl-bento-capa > .rl-tile { grid-column: span 6; min-height: 7rem; }
+  /* O terceiro fica sozinho na fileira: meia largura deixaria um buraco no
+     fim da linha, que lê como conteúdo faltando. */
+  .rl-bento-capa > .rl-tile:nth-child(3) { grid-column: span 12; min-height: 0; }
+  .rl-bento-capa > .rl-heroi { grid-column: span 12; }
+  /* Mesma decisão do v1: no celular a pílula estourava a largura e rolava com
+     scrollbar invisível — o seletor de mês ficava fora da tela sem pista
+     nenhuma de que existia. Quebra em linhas e vira retângulo arredondado. */
+  .rl-nav-borda, .rl-nav-int { border-radius: 22px; }
+  .rl-nav-int { flex-wrap: wrap; justify-content: center; row-gap: 0.15rem; overflow-x: visible; }
+  .rl-nav a { padding: 0.5rem 0.8rem; }
+  .rl-comp li { grid-template-columns: 4.8rem minmax(0, 1fr) 2rem 1.8rem; gap: 0.5rem; }
+  .rl-frente-cab { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+  .rl-frente-meta { justify-content: flex-start; }
+  .ferramentas { left: 1rem; right: 1rem; justify-content: center; flex-wrap: wrap; border-radius: var(--raio-cartao); }
+}
+
+/* ---------- Impressão ---------- */
+@media print {
+  body.pagina-report-v2 { background: #fff; }
+  .rl-nav, .ferramentas, .caixa-link, .rl-filtros { display: none !important; }
+  .rl-tile, .rl-nota-bloco, .rl-frente, .rl-grupo, .rl-bloco, .rl-comp,
+  .rl-rm-wrap, .rl-linhas-decisao > li {
+    box-shadow: none;
+    border: 1px solid var(--borda);
+    break-inside: avoid;
+  }
+  .rl-sec { padding-top: 1.4rem; }
+  /* O escuro gastaria tinta à toa: vira claro no papel, inclusive a marca. */
+  .rl-tile-escuro { background: #fff !important; color: var(--tinta); }
+  .rl-tile-escuro .rl-tile-rot, .rl-heroi-frase { color: var(--tinta) !important; }
+  .rl-heroi-fundo { display: none; }
+  .rl-heroi-delta { background: var(--superficie-2); color: var(--tinta) !important; }
+  .rl-logo-inv { filter: none; }
+  .rl-rodape-sub, .rl-rodape-contato { color: var(--mudo) !important; }
+  .rl-rodape-contato a { color: var(--tinta); }
+  /* Barras são só fundo: sem isto o papel sai em branco */
+  .rl-rumo-trilho i, .rl-esforco-regua i, .rl-comp-barra i, .rl-rm-barra,
+  .rl-selo-risco, .rl-selo-ok, .rl-bloco-n, .rl-chip.ativo {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

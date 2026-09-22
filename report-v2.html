@@ -7,14 +7,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026092220">
+<link rel="stylesheet" href="assets/report-v2.css?v=2026092220">
 </head>
-<!-- Página autônoma: só o report, sem as telas de acompanhamento do PO.
-     Não existe header de aplicação aqui, de propósito: o documento é a página
-     inteira, da primeira linha à última. O mês mora na navegação do próprio
-     documento, e as ferramentas do PO ficam numa barra flutuante que só aparece
-     pra quem tem token. Quem abre pelo link não vê ferramenta nenhuma. -->
-<body data-pagina="report" class="pagina-report">
+<!-- Report v2 ("Ledger"). Mesma página autônoma do v1 e o MESMO report.js: o
+     que muda é quem desenha (assets/briefing-v2.js, que se registra no mesmo
+     window.CentralBriefing) e a folha de estilo, que aqui é própria e não
+     carrega style.css. Por isso o v1 continua intocado em report.html.
+     O link de leitura (#r=...) gerado aqui abre aqui — cada versão
+     compartilha a sua. -->
+<body data-pagina="report" class="pagina-report-v2">
 <div class="app">
 <div class="corpo">
 <main>
@@ -31,14 +32,15 @@
   <button id="atualizar" aria-label="Atualizar agora" title="Atualizar agora">↻</button>
   <button id="sem-nome" class="botao-texto" hidden title="Épicos e Features que aparecem no report e ainda não têm nome de negócio — copia a lista em JSON pra preencher assets/report-nomes.json"></button>
   <button id="copiar" class="botao-texto" title="Copia o endereço desta página — quem abrir lê o report sem token">Copiar link</button>
-  <a id="ver-v2" class="botao-texto" href="report-v2.html?po=1" title="Abrir a versão 2 do report">v2</a>
+  <a id="ver-v1" class="botao-texto" href="report.html?po=1" title="Abrir a versão 1 do report">v1</a>
+  <a id="ver-entregas" class="botao-texto" href="entregas.html?po=1" title="Abrir o relatório de Entregas">Entregas</a>
   <a id="voltar" class="botao-texto" href="index.html#panorama" title="Voltar para a Central">Central</a>
 </div>
 <div id="caixa-link" class="caixa-link" hidden></div>
 
 <script src="assets/core.js?v=2026092220"></script>
 <script src="assets/api.js?v=2026092220"></script>
-<script src="assets/briefing.js?v=2026092220"></script>
+<script src="assets/briefing-v2.js?v=2026092220"></script>
 <script src="assets/report.js?v=2026092220"></script>
 </body>
 </html>
