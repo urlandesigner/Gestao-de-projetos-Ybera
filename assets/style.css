@@ -1409,23 +1409,32 @@ body.pagina-report main > section {
 .roadmap-titulo {
   grid-column: 1;
   display: flex;
+  /* Coluna estreita: ao lado de um nome longo o selo desce pra própria linha
+     em vez de quebrar no meio. */
+  flex-wrap: wrap;
   align-items: center;
+  gap: 0.2rem 0;
   padding: 0.4rem 0;
   border-bottom: 1px solid var(--doc-linha);
   font-size: 0.85rem;
   line-height: 1.4;
 }
 .roadmap-feito {
+  flex: none;
   margin-left: 0.35rem;
   font-size: 0.66rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  white-space: nowrap;
   color: #15794a;
 }
 .roadmap-trilha {
   grid-column: 2;
   position: relative;
+  /* Acima dos divisores de mês: gradezinha é fundo, barra é dado. Sem isso a
+     linha do mês corta a barra ao meio, porque vem depois no DOM. */
+  z-index: 1;
   min-height: 1.3rem;
   padding: 0.4rem 0;
   border-bottom: 1px solid var(--doc-linha);
@@ -1440,11 +1449,18 @@ body.pagina-report main > section {
   background: linear-gradient(90deg, #7c5cff, #34d399);
 }
 .roadmap-barra-feita { background: #b9c0cc; }
-/* Abrange da escala até a última linha (grid-row 1/-1): left/right:0 trava a
-   largura na coluna da trilha, pra --x (setado por linha) valer o mesmo % que
-   as barras. Sem isso um item de grid absoluto com span de linhas não tem
-   largura previsível entre navegadores. */
-.roadmap-hoje, .roadmap-mes-linha { position: absolute; grid-column: 2; grid-row: 1 / -1; inset: 0; pointer-events: none; }
+/* Em andamento fica sólido e escuro: entre a barra de plano (gradiente) e a de
+   concluído (cinza apagado), é a que precisa ser encontrada primeiro. */
+.roadmap-barra-andamento { background: var(--doc-tinta, var(--tinta)); }
+/* left/right:0 trava a largura na coluna da trilha, pra --x (setado por linha)
+   valer o mesmo % que as barras.
+   O fim da linha é `auto`, não -1: -1 é a última linha do grid EXPLÍCITO, e
+   aqui só as colunas são explícitas — as linhas nascem implícitas, uma por
+   item. Sem linha explícita nenhuma, -1 caía de volta na linha 1 e o divisor
+   ficava com a altura da faixa dos meses, invisível. Em item posicionado
+   absolutamente dentro do grid, um fim `auto` resolve na borda de baixo do
+   container, que é onde a régua tem que terminar. */
+.roadmap-hoje, .roadmap-mes-linha { position: absolute; grid-column: 2; grid-row: 1 / auto; inset: 0; pointer-events: none; }
 .roadmap-hoje::after, .roadmap-mes-linha::after {
   content: '';
   position: absolute;
@@ -1452,10 +1468,11 @@ body.pagina-report main > section {
   bottom: 0;
   left: var(--x, 0%);
 }
-/* Um divisor por limite de mês (início e fim) — discreto, atrás da linha de
-   hoje na ordem do DOM, então "hoje" sempre pinta por cima e continua se
-   destacando dos demais. */
+/* Um divisor por limite de mês (início e fim), discreto e por baixo das barras.
+   "Hoje" é a exceção: sobe acima de tudo, porque é a linha que a pessoa
+   procura pra saber onde está no plano. */
 .roadmap-mes-linha::after { border-left: 1px solid var(--doc-linha); }
+.roadmap-hoje { z-index: 2; }
 .roadmap-hoje::after { border-left: 1px dashed var(--erro); }
 
 /* Impressão do documento: sem tinta desperdiçada na capa */

@@ -483,10 +483,19 @@
     const linhas = ordenados.map((it) => {
       const esquerda = pct(diaUTC(it.inicio));
       const largura = Math.max(0.6, pct(diaUTC(it.fim)) - esquerda);
+      // Status é escrito à mão no roadmap.json, não lido do DevOps: a janela
+      // do calendário diz quando era pra acontecer, o status diz o que de fato
+      // está acontecendo. Sem status, o item é só plano — e o documento não
+      // inventa estado nenhum pra ele. Em andamento fala só pela barra escura;
+      // o title é pro que a cor sozinha não conta.
       const feito = it.status === 'concluido';
+      const rodando = it.status === 'andamento';
+      const selo = feito ? ' <span class="roadmap-feito">concluído</span>' : '';
+      const modBarra = feito ? ' roadmap-barra-feita' : rodando ? ' roadmap-barra-andamento' : '';
+      const tituloBarra = rodando ? ' title="Em andamento"' : '';
       return `<div class="roadmap-item">
-        <span class="roadmap-titulo">${esc(it.titulo)}${feito ? ' <span class="roadmap-feito">concluído</span>' : ''}</span>
-        <span class="roadmap-trilha"><span class="roadmap-barra${feito ? ' roadmap-barra-feita' : ''}" style="left:${esquerda.toFixed(2)}%;width:${largura.toFixed(2)}%"></span></span>
+        <span class="roadmap-titulo">${esc(it.titulo)}${selo}</span>
+        <span class="roadmap-trilha"><span class="roadmap-barra${modBarra}"${tituloBarra} style="left:${esquerda.toFixed(2)}%;width:${largura.toFixed(2)}%"></span></span>
       </div>`;
     }).join('');
 

@@ -858,6 +858,25 @@ test('htmlReport sinaliza item concluído no roadmap, sem afirmar nada dos que n
   assert.ok(!html.includes('Em aberto <span class="roadmap-feito">'));
 });
 
+test('htmlReport marca item em andamento no roadmap pela barra, sem selo de texto', () => {
+  const itens = [
+    { titulo: 'Rodando', inicio: '2026-01-01', fim: '2026-03-31', status: 'andamento' },
+    { titulo: 'Terminou', inicio: '2026-01-01', fim: '2026-01-31', status: 'concluido' },
+    { titulo: 'Só plano', inicio: '2026-02-01', fim: '2026-02-28' },
+    { titulo: 'Status inventado', inicio: '2026-02-01', fim: '2026-02-28', status: 'talvez' },
+  ];
+  const { html } = B.htmlReport({ items: base(), agora: AGORA, roadmap: itens });
+  assert.equal((html.match(/roadmap-barra-andamento/g) || []).length, 1, 'só o item em andamento muda de cor');
+  // A cor não vai sozinha: quem não enxerga a diferença lê o title.
+  assert.ok(html.includes('title="Em andamento"'));
+  assert.equal((html.match(/title="Em andamento"/g) || []).length, 1);
+  // Em andamento não ganha selo de texto — nem o de concluído, por engano.
+  assert.ok(!html.includes('em andamento</span>'));
+  assert.ok(!html.includes('Rodando <span class="roadmap-feito">'));
+  // Status desconhecido é "nada afirmado": nem barra escura, nem title.
+  assert.equal((html.match(/roadmap-barra"/g) || []).length, 2, 'só plano e status inventado ficam com a barra neutra');
+});
+
 test('htmlReport escapa título forjado no roadmap', () => {
   const itens = [{ titulo: '"><img src=x onerror=alert(1)>', inicio: '2026-01-01', fim: '2026-01-31' }];
   const { html } = B.htmlReport({ items: base(), agora: AGORA, roadmap: itens });
