@@ -110,11 +110,20 @@ function noNome(it) {
 function ctx() { return { base: state.config.org, pat: state.pat, fetchImpl: window.fetch.bind(window) }; }
 function cardKey(p) { return p.projectName + '::' + p.teamName; }
 
+// PAT vencido cai em UM DOS DOIS ramos, e qual deles depende de como o DevOps
+// responde naquele momento: às vezes 401/403 legível (vira AuthError, com a
+// frase certa), às vezes 302 pro login — e aí o navegador segue o redirect,
+// a página de login não traz Access-Control-Allow-Origin pra esta origem, a
+// resposta é cortada antes de virar `res` e não sobra status pra classificar.
+// Sem status, o código não tem como distinguir isso de queda de rede.
+// Por isso o NetworkError não afirma mais "falha de rede": o PAT dura 90 dias
+// no máximo, então token vencido é de longe a causa mais comum e vem primeiro
+// na frase. Ambos os caminhos foram reproduzidos no navegador.
 function mensagemDeErro(e) {
   if (e instanceof A.AuthError) return 'PAT recusado — confira o token e os escopos (Work Items Read, Project and Team Read).';
   if (e instanceof A.NetworkError) {
     if (location.protocol === 'file:') return 'O navegador bloqueou a chamada (CORS via file://). Sirva a pasta: python3 -m http.server e abra http://localhost:8000';
-    return 'Falha de rede — confira a conexão e a URL da organização.';
+    return 'PAT vencido ou sem acesso — o DevOps manda pro login e o navegador corta a resposta. Gere um token novo em Configurações. Se ele estiver válido, aí sim confira a conexão e a URL da organização.';
   }
   return e.message;
 }

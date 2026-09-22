@@ -83,9 +83,13 @@ function noNome(it) {
 }
 function ctx() { return { base: st.config.org, pat: st.pat, fetchImpl: window.fetch.bind(window) }; }
 
+// Mesma armadilha do app.js: PAT vencido pode chegar como NetworkError, e não
+// como AuthError, quando o DevOps responde 302 pro login — o navegador corta a
+// resposta redirecionada e não sobra status pra classificar. O token não se
+// troca aqui: é na Central.
 function mensagemDeErro(e) {
   if (e instanceof A.AuthError) return 'PAT recusado — renove o token na Central.';
-  if (e instanceof A.NetworkError) return 'Falha de rede — confira a conexão.';
+  if (e instanceof A.NetworkError) return 'PAT vencido ou sem acesso — o DevOps manda pro login e o navegador corta a resposta. Renove o token na Central. Se ele estiver válido, aí sim confira a conexão.';
   return e.message;
 }
 
@@ -106,7 +110,10 @@ function saneRoadmapItens(lista) {
       titulo: String(x.titulo || '').slice(0, 200) || 'Sem título',
       inicio: x.inicio,
       fim: x.fim,
-      status: x.status === 'concluido' ? 'concluido' : null,
+      // Só dois status dizem alguma coisa; qualquer outro valor (ou nenhum)
+      // vira null — "não afirmo nada sobre esta iniciativa", que é o estado
+      // certo pra um item que ainda é só janela no calendário.
+      status: (x.status === 'concluido' || x.status === 'andamento') ? x.status : null,
     }));
 }
 
