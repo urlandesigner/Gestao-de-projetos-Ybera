@@ -271,6 +271,7 @@
       pasta: 'assets/entregas/nova-homepage-usa',
       imagens: [
         { arquivo: 'banner.jpg', legenda: 'Banner' },
+        { arquivo: 'bundle.jpg', legenda: 'Bundle' },
         { arquivo: 'quiz-ai.jpg', legenda: 'Quiz AI' },
         { arquivo: 'blog.jpg', legenda: 'Blog' },
         { arquivo: 'shop-by-concern.jpg', legenda: 'Shop by concern' },
