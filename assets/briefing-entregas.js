@@ -297,6 +297,18 @@
       produto: 'Loja Clube USA',
       epicoId: 49290,
       resumo: 'Foram criadas novas opções visuais dos componentes da PDP do site.',
+      // Aqui o resumo não enumera os componentes como o da HOME, então as
+      // legendas saíram da própria tela: quando a seção tem título no site, é
+      // ele que vira legenda; nos outros casos, descrição. A ordem é a da
+      // captura, que desce a página.
+      pasta: 'assets/entregas/nova-pdp-usa',
+      imagens: [
+        { arquivo: 'see-it-in-action.jpg', legenda: 'See it in action' },
+        { arquivo: 'kerafive-22.jpg', legenda: 'Powered by Kerafive-22' },
+        { arquivo: 'avaliacao-e-beneficios.jpg', legenda: 'Avaliação e benefícios' },
+        { arquivo: 'banner-do-produto.jpg', legenda: 'Banner do produto' },
+        { arquivo: 'resultados-profissionais.jpg', legenda: 'Resultados profissionais' },
+      ],
     },
     {
       titulo: 'Migração de ERP — ajustes gerais',
