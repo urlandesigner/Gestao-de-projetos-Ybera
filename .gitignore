@@ -3,3 +3,11 @@
 # Configuração local de ferramentas (caminhos de máquina/sessão)
 .claude/
 .superpowers/
+
+# Caixa de entrada de capturas: as originais em PNG pesam dezenas de MB e não
+# entram no repositório. O que vai publicado são as versões convertidas em
+# assets/entregas/<frente>/ — ver o campo `imagens` em briefing-entregas.js.
+/setembro/
+/outubro/
+/novembro/
+/dezembro/

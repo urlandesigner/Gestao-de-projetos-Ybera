@@ -262,6 +262,23 @@
         'Foram criadas novas opções visuais de todas as seções da home do site.',
         'Ao todo, 12 componentes: Banner, Bundle, Quiz AI, Card de produto, Blog, Shop by concern, Autoridade, Antes e Depois, Reviews, Produto em destaque, Shop by collection e Listagem de produtos.',
       ],
+      // `pasta` + `imagens` é a convenção pra qualquer cartão que queira mostrar
+      // tela: a pasta fica em assets/entregas/<frente>/ e cada arquivo leva a
+      // legenda que nomeia o componente. Ordem = a mesma da lista do resumo.
+      // Os originais são capturas de 13MB em PNG; aqui entram em JPEG a 1600px
+      // de largura, o que dá 1MB no total — o repositório e a página de quem
+      // abre por link agradecem.
+      pasta: 'assets/entregas/nova-homepage-usa',
+      imagens: [
+        { arquivo: 'banner.jpg', legenda: 'Banner' },
+        { arquivo: 'quiz-ai.jpg', legenda: 'Quiz AI' },
+        { arquivo: 'blog.jpg', legenda: 'Blog' },
+        { arquivo: 'shop-by-concern.jpg', legenda: 'Shop by concern' },
+        { arquivo: 'autoridade.jpg', legenda: 'Autoridade' },
+        { arquivo: 'antes-e-depois.jpg', legenda: 'Antes e Depois' },
+        { arquivo: 'produto-em-destaque.jpg', legenda: 'Produto em destaque' },
+        { arquivo: 'shop-by-collection.jpg', legenda: 'Shop by collection' },
+      ],
     },
     {
       titulo: 'Novo cart drawer',
@@ -327,6 +344,25 @@
   // Mesmo cartão do v2 (.rl-frente), com menos dentro: aqui não há prazo,
   // progresso nem lista de itens porque não há dado por trás deles. Inventar
   // um número pra preencher o cartão seria pior que o espaço em branco.
+  /* Galeria do cartão: miniatura clicável que abre a imagem inteira em outra
+     aba. Sem lightbox e sem script — o documento é estático, e um <a> pra
+     própria imagem funciona em qualquer lugar, inclusive impresso e no link de
+     leitura. `loading="lazy"` porque a galeria mora no meio da página: quem só
+     rola até o roadmap não paga o download. */
+  function galeria(f) {
+    const base = String(f.pasta || '').replace(/\/+$/, '');
+    const figuras = (f.imagens || []).map((im) => {
+      const src = `${base}/${im.arquivo}`;
+      return `<figure class="rl-fig">
+        <a class="rl-fig-link" href="${esc(src)}" target="_blank" rel="noopener">
+          <img src="${esc(src)}" alt="${esc(im.legenda)}" loading="lazy" decoding="async">
+        </a>
+        <figcaption>${esc(im.legenda)}</figcaption>
+      </figure>`;
+    }).join('');
+    return `<div class="rl-galeria">${figuras}</div>`;
+  }
+
   // `mostrarProduto` existe por causa dos dois desenhos: na lista corrida a
   // retranca é o que diz a que frente o card pertence; agrupado por épico, o
   // título da seção já disse, e repetir o mesmo nome em cinco cards seguidos
@@ -342,6 +378,7 @@
           <div class="rl-frente-meta">${selo}</div>
         </div>
         ${[].concat(f.resumo || []).map((par) => `<p class="rl-frente-resumo">${esc(par)}</p>`).join('')}
+        ${(f.imagens || []).length ? galeria(f) : ''}
       </article>`;
     }).join('');
     return `<div class="rl-frentes">${cartoes}</div>`;
