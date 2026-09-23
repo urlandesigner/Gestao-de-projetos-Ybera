@@ -398,3 +398,42 @@ test('capa: o papel do responsável aparece por extenso, sem sigla pontuada', ()
   assert.ok(capa.includes('Product Owner: Urlan Dipre'));
   assert.ok(!capa.includes('P.O'), 'a sigla pontuada não existe em nenhum outro lugar do documento');
 });
+
+/* ---- Galeria ----
+   A miniatura é <a> pro arquivo, não <button>: o visor de entregas.html é
+   melhoria por cima, e sem script o clique ainda leva à imagem. E o link não
+   pode usar hash nem target: hash é onde viaja o dado do link de leitura, e
+   target="_blank" era o comportamento que o Urlan pediu pra trocar. */
+
+test('galeria: cada imagem vira uma figura com link pro arquivo e legenda', () => {
+  const h = documento().html;
+  const figs = [...h.matchAll(/<figure class="rl-fig">[\s\S]*?<\/figure>/g)].map((m) => m[0]);
+  assert.ok(figs.length > 0, 'o cartão da HOME tem galeria');
+  for (const f of figs) {
+    assert.match(f, /<a class="rl-fig-link" href="assets\/entregas\/[^"]+\.jpg">/);
+    assert.match(f, /<img src="assets\/entregas\/[^"]+\.jpg" alt="[^"]+" loading="lazy"/);
+    assert.match(f, /<figcaption>[^<]+<\/figcaption>/);
+  }
+});
+
+test('galeria: o link não abre em outra aba nem mexe no hash', () => {
+  const h = documento().html;
+  const trecho = h.slice(h.indexOf('rl-galeria'), h.indexOf('</div>', h.indexOf('rl-galeria')) + 6);
+  assert.ok(!trecho.includes('target='), 'a visualização acontece na própria página');
+  assert.ok(!/href="#/.test(trecho), 'hash é do link de leitura — a galeria não pode tocar nele');
+});
+
+test('galeria: a legenda do alt é a mesma da figcaption — leitor de tela e vidente leem igual', () => {
+  const h = documento().html;
+  for (const m of h.matchAll(/<img src="[^"]+" alt="([^"]+)"[\s\S]*?<figcaption>([^<]+)<\/figcaption>/g)) {
+    assert.equal(m[1], m[2]);
+  }
+});
+
+test('galeria: só aparece em cartão que declara imagens', () => {
+  const h = documento().html;
+  const cartoes = [...h.matchAll(/<article class="rl-frente">[\s\S]*?<\/article>/g)].map((m) => m[0]);
+  const comGaleria = cartoes.filter((c) => c.includes('rl-galeria'));
+  assert.equal(comGaleria.length, 1, 'hoje só a HOME tem telas');
+  assert.ok(comGaleria[0].includes('Novos componentes visuais para HOME'));
+});

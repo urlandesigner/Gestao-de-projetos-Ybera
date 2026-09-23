@@ -344,17 +344,26 @@
   // Mesmo cartão do v2 (.rl-frente), com menos dentro: aqui não há prazo,
   // progresso nem lista de itens porque não há dado por trás deles. Inventar
   // um número pra preencher o cartão seria pior que o espaço em branco.
-  /* Galeria do cartão: miniatura clicável que abre a imagem inteira em outra
-     aba. Sem lightbox e sem script — o documento é estático, e um <a> pra
-     própria imagem funciona em qualquer lugar, inclusive impresso e no link de
-     leitura. `loading="lazy"` porque a galeria mora no meio da página: quem só
-     rola até o roadmap não paga o download. */
+  /* Galeria do cartão: miniatura que abre a imagem inteira num visor dentro da
+     própria página.
+
+     A marcação continua sendo um <a> pro arquivo, e não um <button>, de
+     propósito: sem JavaScript o clique ainda leva à imagem. O visor é melhoria
+     por cima (o script de entregas.html intercepta o clique), não requisito.
+
+     O caminho sem script nenhum seria o truque do :target, e ele está descartado
+     por um motivo duro: :target depende do hash, e o hash é onde viaja o dado do
+     link de leitura (#r=...). Clicar numa miniatura apagaria o report de quem
+     abriu por link.
+
+     `loading="lazy"` porque a galeria mora no meio da página: quem só rola até o
+     roadmap não paga o download. */
   function galeria(f) {
     const base = String(f.pasta || '').replace(/\/+$/, '');
     const figuras = (f.imagens || []).map((im) => {
       const src = `${base}/${im.arquivo}`;
       return `<figure class="rl-fig">
-        <a class="rl-fig-link" href="${esc(src)}" target="_blank" rel="noopener">
+        <a class="rl-fig-link" href="${esc(src)}">
           <img src="${esc(src)}" alt="${esc(im.legenda)}" loading="lazy" decoding="async">
         </a>
         <figcaption>${esc(im.legenda)}</figcaption>

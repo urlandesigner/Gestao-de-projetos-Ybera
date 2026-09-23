@@ -36,9 +36,64 @@
 </div>
 <div id="caixa-link" class="caixa-link" hidden></div>
 
+<!-- Visor das telas da galeria. Mora na página, não no documento: o report.js
+     redesenha #report inteiro a cada render, e o <dialog> precisa sobreviver a
+     isso. Por ser <dialog> nativo, Esc pra fechar, foco preso dentro e fundo
+     escurecido vêm de graça — sem biblioteca. -->
+<dialog id="visor" class="rl-visor" aria-label="Visualização da tela">
+  <button type="button" id="visor-fechar" class="rl-visor-fechar" aria-label="Fechar">✕</button>
+  <img id="visor-img" alt="">
+  <p id="visor-legenda" class="rl-visor-legenda"></p>
+</dialog>
+
 <script src="assets/core.js?v=2026092302"></script>
 <script src="assets/api.js?v=2026092302"></script>
 <script src="assets/briefing-entregas.js?v=2026092302"></script>
 <script src="assets/report.js?v=2026092302"></script>
+<script>
+/* Visor da galeria — vive aqui, e não no report.js nem no briefing.
+
+   No report.js porque ele é compartilhado com report.html e report-v2.html, que
+   não têm galeria; no briefing porque ele é módulo de render puro, testado no
+   Node, e não deve tocar em evento de DOM.
+
+   O clique é delegado em #report: o documento é redesenhado a cada troca de
+   dado, e ouvir no container é o que sobrevive a isso. O <a> continua válido —
+   se este script falhar, o clique leva à imagem como antes. */
+(function () {
+  'use strict';
+  const box = document.getElementById('report');
+  const visor = document.getElementById('visor');
+  const img = document.getElementById('visor-img');
+  const legenda = document.getElementById('visor-legenda');
+  if (!box || !visor || !visor.showModal) return; // sem <dialog>, o <a> resolve
+
+  box.addEventListener('click', (ev) => {
+    const link = ev.target.closest('.rl-fig-link');
+    if (!link) return;
+    ev.preventDefault();
+    const fig = link.closest('.rl-fig');
+    const texto = fig && fig.querySelector('figcaption');
+    img.src = link.getAttribute('href');
+    img.alt = texto ? texto.textContent : '';
+    legenda.textContent = texto ? texto.textContent : '';
+    visor.showModal();
+  });
+
+  // Fechar solta a imagem na hora, e não no evento `close`: o `close` do
+  // <dialog> é disparado de forma assíncrona, então confiar nele deixava o src
+  // da tela anterior pendurado por um tempo indefinido. O listener continua
+  // como rede pro Esc, que fecha sem passar por aqui.
+  function fechar() {
+    visor.close();
+    img.removeAttribute('src');
+  }
+  // Clique no fundo fecha: o alvo só é o próprio <dialog> quando o ponto cai
+  // fora da área do conteúdo.
+  visor.addEventListener('click', (ev) => { if (ev.target === visor) fechar(); });
+  document.getElementById('visor-fechar').addEventListener('click', fechar);
+  visor.addEventListener('close', () => { img.removeAttribute('src'); });
+})();
+</script>
 </body>
 </html>

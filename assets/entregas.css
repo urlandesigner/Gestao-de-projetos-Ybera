@@ -476,6 +476,54 @@ body.pagina-entregas {
 .rl-fig figcaption { font-size: 0.72rem; line-height: 1.35; color: var(--mudo); }
 
 @media (prefers-reduced-motion: reduce) { .rl-fig-link { transition: none; } }
+
+/* Visor: <dialog> nativo, então Esc, foco preso e backdrop vêm do navegador.
+   O que se estiliza aqui é só a caixa e o fundo. */
+.rl-visor {
+  max-width: min(94vw, 1400px);
+  max-height: 92vh;
+  padding: 0;
+  border: 0;
+  border-radius: var(--raio-painel);
+  background: var(--superficie);
+  box-shadow: var(--sombra-escura);
+  overflow: hidden;
+}
+.rl-visor::backdrop { background: rgba(28, 25, 23, 0.72); }
+/* A imagem manda na altura, o resto se ajusta: capturas vão de muito largas a
+   muito altas, e travar proporção cortaria justamente o que se quer ver. */
+.rl-visor img { display: block; max-width: 100%; max-height: calc(92vh - 4rem); margin: 0 auto; object-fit: contain; }
+.rl-visor-legenda {
+  margin: 0;
+  padding: 0.85rem clamp(1rem, 2.4vw, 1.5rem);
+  border-top: var(--fio);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mudo);
+}
+/* Botão sobre a imagem: fundo próprio porque a tela por baixo pode ser clara ou
+   escura, e um ✕ sem superfície some numa das duas. */
+.rl-visor-fechar {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 1;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(28, 25, 23, 0.72);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.9rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.rl-visor-fechar:hover { background: var(--tinta); }
+.rl-visor-fechar:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .rl-frente {
   display: flex;
   flex-direction: column;
