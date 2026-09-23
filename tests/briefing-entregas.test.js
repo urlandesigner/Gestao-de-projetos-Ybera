@@ -430,10 +430,18 @@ test('galeria: a legenda do alt é a mesma da figcaption — leitor de tela e vi
   }
 });
 
+// A contagem de cartões com galeria NÃO se fixa aqui: ela sobe toda vez que o
+// Urlan manda uma tela nova, e um teste que quebra em cada inclusão legítima
+// vira ruído, não guarda. O que se guarda é a relação — moldura só existe onde
+// há imagem declarada, e imagem nenhuma escapa pra fora de uma galeria.
 test('galeria: só aparece em cartão que declara imagens', () => {
   const h = documento().html;
   const cartoes = [...h.matchAll(/<article class="rl-frente">[\s\S]*?<\/article>/g)].map((m) => m[0]);
   const comGaleria = cartoes.filter((c) => c.includes('rl-galeria'));
-  assert.equal(comGaleria.length, 1, 'hoje só a HOME tem telas');
-  assert.ok(comGaleria[0].includes('Novos componentes visuais para HOME'));
+  const comFigura = cartoes.filter((c) => c.includes('rl-fig-link'));
+  assert.ok(comGaleria.length > 0, 'pelo menos um cartão mostra tela');
+  assert.deepEqual(comFigura, comGaleria, 'figura fora de galeria, ou galeria vazia');
+  for (const c of cartoes.filter((c) => !c.includes('rl-galeria'))) {
+    assert.ok(!c.includes('<figure'), 'cartão sem imagens declaradas não desenha moldura');
+  }
 });

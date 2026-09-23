@@ -286,6 +286,10 @@
       produto: 'Loja Clube USA',
       epicoId: 49290,
       resumo: 'Melhoria geral da experiência do cart drawer, no desktop e no mobile.',
+      pasta: 'assets/entregas/novo-cart-drawer',
+      imagens: [
+        { arquivo: 'mobile.jpg', legenda: 'Mobile' },
+      ],
     },
     {
       titulo: 'Novos componentes visuais para PDP',
