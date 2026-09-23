@@ -311,10 +311,13 @@
       ],
     },
     {
-      titulo: 'Migração de ERP — ajustes gerais',
-      produto: 'ERP — Ordoro | Salesforce Rootstock',
-      epicoId: 49282,
-      resumo: 'Ajustes e configurações adicionais pós-migração para a Rootstock.',
+      titulo: 'Testes Shipsmart',
+      produto: 'Shipsmart',
+      epicoId: 49300,
+      resumo: [
+        'Estamos realizando testes da automação do fluxo da Shipsmart para pedidos que têm estoque no Brasil e são entregues nos EUA.',
+        'Já foram feitas 3 rodadas de testes, mas ainda não foi possível concluir 100% sem erros.',
+      ],
     },
     {
       titulo: 'Tratativas do Google compliance',
@@ -328,13 +331,10 @@
       ],
     },
     {
-      titulo: 'Testes Shipsmart',
-      produto: 'Shipsmart',
-      epicoId: 49300,
-      resumo: [
-        'Estamos realizando testes da automação do fluxo da Shipsmart para pedidos que têm estoque no Brasil e são entregues nos EUA.',
-        'Já foram feitas 3 rodadas de testes, mas ainda não foi possível concluir 100% sem erros.',
-      ],
+      titulo: 'Migração de ERP — ajustes gerais',
+      produto: 'ERP — Ordoro | Salesforce Rootstock',
+      epicoId: 49282,
+      resumo: 'Ajustes e configurações adicionais pós-migração para a Rootstock.',
     },
     {
       titulo: 'Tradução do site',

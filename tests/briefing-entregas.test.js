@@ -54,9 +54,9 @@ const TOPICOS = [
   'Novos componentes visuais para HOME',
   'Novo cart drawer',
   'Novos componentes visuais para PDP',
-  'Migração de ERP — ajustes gerais',
-  'Tratativas do Google compliance',
   'Testes Shipsmart',
+  'Tratativas do Google compliance',
+  'Migração de ERP — ajustes gerais',
   'Tradução do site',
   'App Review — ajustes',
 ];
@@ -206,8 +206,8 @@ test('Entregas agrupado por épico: uma seção por épico, na ordem ditada', ()
     .map((m) => m[1]);
   assert.deepEqual(titulos, [
     'Loja Clube USA',
-    'ERP — Ordoro | Salesforce Rootstock',
     'Shipsmart',
+    'ERP — Ordoro | Salesforce Rootstock',
     'Ybera Reviews / API de Reviews',
   ]);
   // A seção única da lista corrida não pode sobrar junto.
