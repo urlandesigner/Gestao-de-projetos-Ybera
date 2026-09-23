@@ -329,6 +329,14 @@
         'Avançamos nos itens que recebemos da agência: 50% dos 18 já estão concluídos, e os demais seguem em andamento com previsão de término ainda este mês.',
         'O que não for finalizado dentro desse prazo será tratado como nova demanda, a partir de outubro.',
       ],
+      // Os mesmos 9 de 18 que o resumo diz em texto. Guardados como contagem, e
+      // não como "50%", pra que a barra e a frase não possam discordar quando um
+      // dos dois for atualizado sozinho.
+      progresso: { feito: 9, total: 18, rotulo: 'itens concluídos' },
+      // TODO(urlan): endereço da planilha de demandas. Sem href http(s) válido o
+      // botão simplesmente não é desenhado — é melhor não ter botão do que ter
+      // um que não leva a lugar nenhum.
+      link: { href: '', rotulo: 'Abrir a planilha de demandas' },
     },
     {
       titulo: 'Migração de ERP — ajustes gerais',
@@ -389,6 +397,42 @@
     return `<div class="rl-galeria">${figuras}</div>`;
   }
 
+  /* Barra de progresso do cartão. Come `feito` e `total`, não uma porcentagem
+     pronta: a porcentagem sai da conta, então ela não tem como divergir dos
+     números que o resumo escreve em texto.
+
+     Sem rótulo visível de propósito. No cartão do compliance o parágrafo logo
+     acima já diz "50% dos 18", e repetir isso embaixo da barra seria a mesma
+     informação duas vezes na mesma respiração. Quem lê por leitor de tela não
+     perde nada: os números vivem nos atributos aria, que é onde eles fazem
+     falta de verdade. */
+  function barra(pr) {
+    const total = Number(pr.total) || 0;
+    const feito = Math.min(Math.max(Number(pr.feito) || 0, 0), total);
+    if (!total) return '';
+    const pct = Math.round((feito / total) * 100);
+    const rotulo = `${feito} de ${total} ${pr.rotulo || 'itens concluídos'}`;
+    return `<div class="rl-progresso" role="progressbar" aria-label="${esc(rotulo)}"
+      aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${feito}"
+      ><i style="width:${pct}%"></i></div>`;
+  }
+
+  /* Chamada pro documento de fora — hoje a planilha de demandas do compliance.
+     Abre em outra aba: o report pode estar aberto por link de leitura, com o
+     conteúdo inteiro viajando no hash, e trocar a página por uma planilha
+     obrigaria o leitor a voltar pra recuperá-lo.
+
+     Só aceita http e https. O dado é escrito aqui do lado, não vem de fora,
+     mas um href é a única coisa neste arquivo que o navegador executaria se
+     alguém colasse `javascript:` — a guarda custa uma linha. */
+  function cta(link) {
+    const href = String((link || {}).href || '');
+    if (!/^https?:\/\//i.test(href)) return '';
+    const rotulo = link.rotulo || 'Abrir';
+    return `<a class="rl-cta" href="${esc(href)}" target="_blank" rel="noopener noreferrer"
+      >${esc(rotulo)}<span class="rl-cta-seta" aria-hidden="true">\u2192</span></a>`;
+  }
+
   // `mostrarProduto` existe por causa dos dois desenhos: na lista corrida a
   // retranca é o que diz a que frente o card pertence; agrupado por épico, o
   // título da seção já disse, e repetir o mesmo nome em cinco cards seguidos
@@ -404,7 +448,9 @@
           <div class="rl-frente-meta">${selo}</div>
         </div>
         ${[].concat(f.resumo || []).map((par) => `<p class="rl-frente-resumo">${esc(par)}</p>`).join('')}
+        ${f.progresso ? barra(f.progresso) : ''}
         ${(f.imagens || []).length ? galeria(f) : ''}
+        ${f.link ? cta(f.link) : ''}
       </article>`;
     }).join('');
     return `<div class="rl-frentes">${cartoes}</div>`;

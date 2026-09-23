@@ -434,6 +434,52 @@ test('galeria: a legenda do alt é a mesma da figcaption — leitor de tela e vi
 // Urlan manda uma tela nova, e um teste que quebra em cada inclusão legítima
 // vira ruído, não guarda. O que se guarda é a relação — moldura só existe onde
 // há imagem declarada, e imagem nenhuma escapa pra fora de uma galeria.
+test('barra: o cartão do compliance mostra o progresso que o texto afirma', () => {
+  const h = documento().html;
+  const card = [...h.matchAll(/<article class="rl-frente">[\s\S]*?<\/article>/g)]
+    .map((m) => m[0]).find((c) => c.includes('Tratativas do Google compliance'));
+  assert.ok(card, 'o cartão existe');
+  const barra = /<div class="rl-progresso"[\s\S]*?<\/div>/.exec(card);
+  assert.ok(barra, 'tem barra');
+  // 9 de 18 é o mesmo número que o resumo escreve como "50% dos 18": a barra
+  // não pode contar uma história diferente do parágrafo acima dela.
+  assert.match(barra[0], /aria-valuenow="9"/);
+  assert.match(barra[0], /aria-valuemax="18"/);
+  assert.match(barra[0], /width:50%/);
+  assert.ok(card.includes('50% dos 18'), 'o texto e a barra dizem o mesmo');
+});
+
+test('barra: sem rótulo visível, mas legível por leitor de tela', () => {
+  const h = documento().html;
+  const barra = /<div class="rl-progresso"[\s\S]*?<\/div>/.exec(h)[0];
+  assert.match(barra, /aria-label="9 de 18 itens concluídos"/);
+  // O único filho é a faixa preenchida — nenhum texto desenhado, porque o
+  // resumo logo acima já diz os números.
+  assert.equal(barra.replace(/<[^>]+>/g, '').trim(), '');
+});
+
+test('barra: cartão que não declara progresso não ganha barra', () => {
+  const h = documento().html;
+  const cartoes = [...h.matchAll(/<article class="rl-frente">[\s\S]*?<\/article>/g)].map((m) => m[0]);
+  const comBarra = cartoes.filter((c) => c.includes('rl-progresso'));
+  assert.equal(comBarra.length, 1, 'hoje só o compliance tem contagem por trás');
+  assert.ok(cartoes.length > comBarra.length);
+});
+
+// O href da planilha ainda não chegou, então hoje este teste guarda a ausência.
+// Ele continua valendo sozinho quando o endereço entrar: o que se afirma é a
+// regra do botão, não o estado de agora.
+test('cta: só desenha com endereço http(s), e sempre em outra aba com rel seguro', () => {
+  const h = documento().html;
+  for (const a of [...h.matchAll(/<a class="rl-cta"[\s\S]*?<\/a>/g)].map((m) => m[0])) {
+    assert.match(a, /href="https?:\/\/[^"]+"/, 'endereço externo de verdade');
+    assert.match(a, /target="_blank"/);
+    assert.match(a, /rel="noopener noreferrer"/);
+  }
+  assert.ok(!/href="javascript:/i.test(h), 'nenhum href executável');
+  assert.ok(!/<a class="rl-cta" href=""/.test(h), 'botão sem destino não é desenhado');
+});
+
 test('galeria: só aparece em cartão que declara imagens', () => {
   const h = documento().html;
   const cartoes = [...h.matchAll(/<article class="rl-frente">[\s\S]*?<\/article>/g)].map((m) => m[0]);
