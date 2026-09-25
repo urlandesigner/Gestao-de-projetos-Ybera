@@ -1,0 +1,53 @@
+<h2>Banner media</h2>
+    <p class="when">Foto com texto por cima, dentro da coluna da página, e o link cobrindo a peça inteira — o banner de conteúdo da PDP. Também recebe a arte pronta do marketing. No topo da home, na largura da tela, o banner é o <a href="bannerhero.html">Banner hero</a>.</p>
+    <h3 class="row-label">Tipo com texto e CTA — <code>--blur</code></h3>
+    <div class="demo demo--rail">
+      <a class="yb-bannermedia yb-bannermedia--blur" href="#demos">
+        <img src="../pages/img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp" alt="">
+        <div class="yb-bannermedia__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="yb-bannermedia__body">
+          <span class="yb-bannermedia__eyebrow">Cronograma system</span>
+          <h3 class="yb-bannermedia__title">Deep repair &amp; shine</h3>
+          <p class="yb-bannermedia__text">A three-step ritual for dry, dull, porous or chemically damaged hair.</p>
+          <span class="yb-btn yb-btn--primary">Shop the ritual</span>
+        </div>
+      </a>
+    </div>
+    <div class="note">
+      <b>Uma aparência só para o banner com texto</b>
+      <p>Sempre <code>--blur</code>, com as três <code>&lt;i&gt;</code> de
+      <code>__blur</code>: a foto desfoca atrás do texto e escurece pouco (65%). O
+      véu cheio (77%) não é opção — é o plano B que a folha aplica sozinha em
+      navegador sem desfoque e para quem pediu menos transparência.</p>
+    </div>
+    <h3 class="row-label">Tipo arte — <code>--arte</code></h3>
+    <div class="demo demo--rail">
+      <div style="max-inline-size:22rem">
+        <a class="yb-bannermedia yb-bannermedia--arte" href="#demos">
+          <img src="../pages/img/FG_Banner_01-61a3d2.webp" alt="Authentic Brazilian keratin — treatment for salon-quality results, formaldehyde-free formula">
+        </a>
+      </div>
+    </div>
+    <div class="note">
+      <b>A arte fica do tamanho dela</b>
+      <p>A imagem entra no fluxo e a caixa acompanha: nem corte, nem sobra, em
+      qualquer formato. A da Fashion Gold é vertical (9:16) e serve às duas telas
+      numa imagem só; arte mais larga que o celular chega em duas, trocadas pelo
+      <code>&lt;picture&gt;</code> em 767px. Sem corpo e sem véu: o <code>alt</code>
+      repete a promessa da arte.</p>
+    </div>
+    <div class="note">
+      <b>No celular ele cresce</b>
+      <p>Abaixo de 768px a altura vai a <code>clamp(16rem, 125vw, 30rem)</code>. Com a
+      altura da tela larga, o texto ocupava o banner inteiro e o véu cobria a foto
+      toda; com 464px em 375, a metade de cima é foto nítida.</p>
+    </div>
+    <div class="note">
+      <b>Por que é uma peça e não um modificador do Banner hero</b>
+      <p>Era o antigo Media banner sem modificador, e o hero era o mesmo com
+      <code>--bleed</code>. Os dois moram em lugares com regras diferentes — altura,
+      cantos, recuo do texto, escala do blur, o que a arte faz quando não cabe — e
+      cada diferença pedia um modificador. Separados, cada um tem uma regra só. A
+      receita do véu e das três folhas de blur é a mesma, e está documentada no
+      <a href="bannerhero.html">Banner hero</a>.</p>
+    </div>

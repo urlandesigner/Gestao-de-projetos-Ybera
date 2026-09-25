@@ -286,10 +286,82 @@
       },
       "$type": "color"
     },
+    "100": {
+      "$value": "#D7F1DB",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-success-100",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "200": {
+      "$value": "#BEE5C4",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-success-200",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "300": {
+      "$value": "#99D1A2",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-success-300",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "400": {
+      "$value": "#63B171",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-success-400",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "500": {
+      "$value": "#3B994E",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-success-500",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
     "600": {
       "$value": "#1F7A34",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-success-600",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "700": {
+      "$value": "#005A1D",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-success-700",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "800": {
+      "$value": "#024114",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-success-800",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "900": {
+      "$value": "#00310C",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-success-900",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "950": {
+      "$value": "#03260A",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-success-950",
         "com.ybera.layer": "primitive"
       },
       "$type": "color"
@@ -328,10 +400,82 @@
       },
       "$type": "color"
     },
+    "100": {
+      "$value": "#F5E9D3",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-warning-100",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "200": {
+      "$value": "#EDD9B8",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-warning-200",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "300": {
+      "$value": "#DDC091",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-warning-300",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "400": {
+      "$value": "#C49A58",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-warning-400",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "500": {
+      "$value": "#B07D2D",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-warning-500",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
     "600": {
       "$value": "#8A5A00",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-warning-600",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "700": {
+      "$value": "#6A4504",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-warning-700",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "800": {
+      "$value": "#4F3201",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-warning-800",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "900": {
+      "$value": "#3B2401",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-warning-900",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "950": {
+      "$value": "#2F1B00",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-warning-950",
         "com.ybera.layer": "primitive"
       },
       "$type": "color"
@@ -370,10 +514,82 @@
       },
       "$type": "color"
     },
+    "100": {
+      "$value": "#FFE4E3",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-danger-100",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "200": {
+      "$value": "#FFD1CD",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-danger-200",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "300": {
+      "$value": "#FFB0A8",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-danger-300",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "400": {
+      "$value": "#FB796F",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-danger-400",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "500": {
+      "$value": "#E95449",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-danger-500",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
     "600": {
       "$value": "#B3261E",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-danger-600",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "700": {
+      "$value": "#981712",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-danger-700",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "800": {
+      "$value": "#740806",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-danger-800",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "900": {
+      "$value": "#550A07",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-danger-900",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "950": {
+      "$value": "#420A07",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-danger-950",
         "com.ybera.layer": "primitive"
       },
       "$type": "color"
@@ -412,10 +628,82 @@
       },
       "$type": "color"
     },
+    "100": {
+      "$value": "#DCECFF",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-info-100",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "200": {
+      "$value": "#C2DEFE",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-info-200",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "300": {
+      "$value": "#9BC7FB",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-info-300",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "400": {
+      "$value": "#67A4EA",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-info-400",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "500": {
+      "$value": "#4289D9",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-info-500",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
     "600": {
       "$value": "#1B5FA8",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-info-600",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "700": {
+      "$value": "#0D4D8E",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-info-700",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "800": {
+      "$value": "#03386C",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-info-800",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "900": {
+      "$value": "#05294F",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-info-900",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "color"
+    },
+    "950": {
+      "$value": "#06203D",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-info-950",
         "com.ybera.layer": "primitive"
       },
       "$type": "color"
@@ -647,6 +935,14 @@
   },
   "line": {
     "height": {
+      "none": {
+        "$value": 1,
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-line-height-none",
+          "com.ybera.layer": "primitive"
+        },
+        "$type": "number"
+      },
       "tight": {
         "$value": 1.05,
         "$extensions": {
@@ -1394,6 +1690,24 @@
       },
       "$type": "number"
     },
+    "wide": {
+      "$value": 3.2,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-aspect-wide",
+        "com.ybera.layer": "primitive",
+        "com.ybera.cssValue": "16 / 5"
+      },
+      "$type": "number"
+    },
+    "tall": {
+      "$value": 0.6666666666666666,
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-aspect-tall",
+        "com.ybera.layer": "primitive",
+        "com.ybera.cssValue": "2 / 3"
+      },
+      "$type": "number"
+    },
     "product": {
       "$value": "{aspect.square}",
       "$extensions": {
@@ -1417,6 +1731,24 @@
         "com.ybera.layer": "semantic"
       },
       "$type": "number"
+    },
+    "campaign": {
+      "default": {
+        "$value": "{aspect.wide}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-aspect-campaign",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "number"
+      },
+      "mobile": {
+        "$value": "{aspect.tall}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-aspect-campaign-mobile",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "number"
+      }
     }
   },
   "measure": {
@@ -2342,6 +2674,16 @@
       }
     }
   },
+  "rhythm": {
+    "loop": {
+      "$value": "1400ms",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-rhythm-loop",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "duration"
+    }
+  },
   "transition": {
     "control": {
       "$value": "var(--yb-duration-fast) var(--yb-ease-standard)",
@@ -2811,6 +3153,14 @@
       },
       "$type": "dimension"
     }
+  },
+  "thumb": {
+    "$value": "3.5rem",
+    "$extensions": {
+      "com.ybera.cssVariable": "--yb-thumb",
+      "com.ybera.layer": "semantic"
+    },
+    "$type": "dimension"
   },
   "target": {
     "min": {

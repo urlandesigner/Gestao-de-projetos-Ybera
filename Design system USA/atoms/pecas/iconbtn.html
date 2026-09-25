@@ -1,0 +1,85 @@
+<h2>Icon button</h2>
+    <p class="when">Botão de 44px que mostra só um ícone, sem rótulo visível. Sexta reescrita da mesma coisa — o ícone do header, o fechar da gaveta, o play do vídeo, o abrir do rodapé e a seta do banner diziam todos 44×44 com fundo transparente, cada um do seu jeito.</p>
+    <h3 class="row-label">States</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <button class="yb-iconbtn" type="button" aria-label="Buscar na loja"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></button>
+        <span class="amostra__rotulo"><code>padrão</code></span>
+      </span>
+      <span class="amostra">
+        <button class="yb-iconbtn" type="button" aria-label="Compartilhar" disabled><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-share"/></svg></button>
+        <span class="amostra__rotulo"><code>[disabled]</code></span>
+      </span>
+    </div>
+    <h3 class="row-label">Sizes</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <button class="yb-iconbtn" type="button" aria-label="Buscar na loja"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></button>
+        <span class="amostra__rotulo"><code>sem modificador · 44px mín.</code></span>
+      </span>
+      <span class="amostra">
+        <button class="yb-iconbtn yb-iconbtn--square" type="button" aria-label="Buscar na loja"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></button>
+        <span class="amostra__rotulo"><code>--square · 44px</code></span>
+      </span>
+      <span class="amostra">
+        <button class="yb-iconbtn yb-iconbtn--lg" type="button" aria-label="Buscar na loja"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></button>
+        <span class="amostra__rotulo"><code>--lg · 56px</code></span>
+      </span>
+    </div>
+    <div class="note">
+      <b>A medida é eixo, e era cópia</b>
+      <p>A base declara <b>mínimo</b>, não medida: ela também serve ícone + rótulo, e
+      por isso cresce. Sete fechares e remover queriam o contrário — um quadrado
+      exato — e cada um reescreveu as mesmas duas linhas: o fechar da gaveta, do
+      carrinho, do alerta, do toast, do diálogo, o remover e o limpar da busca.</p>
+      <p><code>--square</code> é essa decisão, uma vez. <code>--lg</code> são os 56px
+      que o play sobre vídeo já fixava em pixel cru. Os sete de antes seguem como
+      estão: trocá-los mexe na marcação das telas e do tema.</p>
+    </div>
+    <div class="note">
+      <b>44px é o piso, e ele vem do token</b>
+      <p>O <code>min-width</code> e o <code>min-height</code> saem de
+      <code>--yb-target-min</code>. O mínimo da WCAG 2.5.8 é 24px; o do sistema é
+      44, que é o confortável. O botão não tem borda nem fundo — quem desenha a
+      área clicável é o alvo, não a moldura.</p>
+    </div>
+    <h3 class="row-label">Favoritar &mdash; o mesmo botão com um estado a mais</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <button class="yb-iconbtn yb-iconbtn--fav" type="button" data-yb-fav aria-pressed="false"
+              aria-label="Adicionar aos favoritos"
+              data-label-off="Adicionar aos favoritos" data-label-on="Remover dos favoritos"
+              data-icon-off="yb-heart" data-icon-on="yb-heart-filled"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg></button>
+        <span class="amostra__rotulo"><code>--fav</code></span>
+      </span>
+      <span class="amostra">
+        <button class="yb-iconbtn yb-iconbtn--fav" type="button" aria-pressed="true" aria-label="Remover dos favoritos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart-filled"/></svg></button>
+        <span class="amostra__rotulo"><code>[aria-pressed="true"]</code></span>
+      </span>
+    </div>
+    <div class="note">
+      <b>A forma muda junto com a cor</b>
+      <p>Contorno vira sólido, e não só cinza vira vermelho. Cor sozinha reprova a
+      WCAG 1.4.1 — ela não pode ser o único canal que informa estado, e falha
+      primeiro para quem não distingue vermelho de cinza. A troca de símbolo é
+      feita pelo JS porque <code>fill</code> de um <code>&lt;use&gt;</code> para
+      sprite externo não obedece à folha de quem consome.</p>
+    </div>
+    <h3 class="row-label">Sobre foto ou vídeo</h3>
+    <div class="demo demo--amostras demo--dark">
+      <span class="amostra">
+        <button class="yb-iconbtn yb-iconbtn--onmedia" type="button" aria-label="Assistir ao vídeo"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-play"/></svg></button>
+        <span class="amostra__rotulo"><code>--onmedia</code></span>
+      </span>
+      <span class="amostra">
+        <button class="yb-iconbtn yb-iconbtn--onmedia yb-iconbtn--lg" type="button" aria-label="Reproduzir"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-play"/></svg></button>
+        <span class="amostra__rotulo"><code>--onmedia --lg</code></span>
+      </span>
+    </div>
+    <div class="note">
+      <b><code>--onmedia</code> só existe onde há mídia atrás</b>
+      <p>Ele desenha um disco claro para o ícone não sumir na foto. Sobre fundo
+      branco esse disco é branco sobre branco — foi o que aconteceu com o
+      favoritar sobre a foto do produto, que é recorte com fundo transparente. Se
+      não há imagem atrás, a variante certa é a base.</p>
+    </div>

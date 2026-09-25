@@ -1,0 +1,51 @@
+<h2>Radio</h2>
+    <p class="when">Escolha única dentro de um grupo: marcar uma desmarca a anterior. Serve quando as opções se excluem e todas precisam estar à vista.</p>
+    <h3 class="row-label">O grupo &mdash; a pe&ccedil;a &eacute; o conjunto, nunca o bot&atilde;o sozinho</h3>
+    <div class="demo demo--stack">
+      <div role="radiogroup" aria-label="Shipping">
+        <label class="yb-radio"><input type="radio" name="ship" checked><span>Standard shipping — free, arrives Sep 3–5</span></label>
+        <label class="yb-radio"><input type="radio" name="ship"><span>Express shipping — $12.90, arrives Sep 1</span></label>
+        <label class="yb-radio"><input type="radio" name="ship"><span>Pickup at the Miami store — free, ready today</span></label>
+      </div>
+    </div>
+    <h3 class="row-label">Desabilitado &mdash; a op&ccedil;&atilde;o que existe e que este pedido n&atilde;o alcan&ccedil;a</h3>
+    <div class="demo demo--stack">
+      <div role="radiogroup" aria-label="Gift options">
+        <label class="yb-radio"><input type="radio" name="gift" checked><span>No gift message</span></label>
+        <label class="yb-radio"><input type="radio" name="gift" disabled><span>Handwritten card — unavailable for this destination</span></label>
+      </div>
+    </div>
+    <div class="note">
+      <b>Sempre nasce com uma marcada</b>
+      <p>Rádio não desmarca: depois do primeiro clique o visitante consegue trocar,
+      nunca voltar ao vazio. Um grupo que começa todo desmarcado cobra uma escolha
+      que ele não pode desfazer. Ou o HTML já traz o <code>checked</code> do padrão,
+      ou o grupo ganha uma opção explícita de recusa — o &ldquo;No gift message&rdquo;
+      acima é ela.</p>
+    </div>
+    <div class="note">
+      <b><code>name</code> é o que faz o grupo, e <code>role="radiogroup"</code> é o que o anuncia</b>
+      <p>O <code>name</code> repetido é o que dá a exclusão mútua e o que faz as setas
+      do teclado percorrerem as opções — sem ele são caixas redondas independentes.
+      O papel com <code>aria-label</code> (ou <code>aria-labelledby</code> apontando
+      para o rótulo visível) é o que diz ao leitor de tela <b>de que</b> é a escolha:
+      sem isso ele anuncia &ldquo;Standard shipping, 1 de 3&rdquo; sem nunca dizer
+      &ldquo;Shipping&rdquo;.</p>
+    </div>
+    <div class="note">
+      <b>Mesmo desenho do <a href="checkbox.html">Checkbox</a>, de propósito</b>
+      <p>Mesma caixa de 20px, mesma borda de <code>--yb-border-control</code>, mesmo
+      alvo de 36px e mesmo foco — as duas classes dividem uma seção só na folha.
+      Mudam duas linhas: o quadrado vira círculo e o tique vira ponto. A convenção é
+      velha e vale aqui — redondo escolhe um, quadrado escolhe vários —, e ela só é
+      lida se nada <b>mais</b> estiver diferente entre os dois.</p>
+    </div>
+    <div class="note">
+      <b>Quando ele não deve ser uma lista</b>
+      <p>Escolha de variante de produto é grupo de rádio, mas <b>não</b> nesta forma:
+      tamanho e cor viram <a href="../molecules/variant.html">Variant selector</a>,
+      que é o mesmo <code>input[type=radio]</code> desenhado como pastilha. E acima de
+      cinco ou seis opções sem comparação entre elas, o certo é
+      <a href="select.html">Select</a> — a lista longa de rádios ocupa a tela toda
+      para dizer uma coisa só.</p>
+    </div>

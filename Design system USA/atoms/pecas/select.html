@@ -1,0 +1,49 @@
+<h2>Select</h2>
+    <p class="when">Campo de escolha com o rótulo dentro da caixa, que abre o seletor nativo do sistema. Mesmo campo do Input, para quando a resposta já está escrita.</p>
+    <div class="demo demo--stack" style="max-inline-size:24rem">
+      <div class="yb-field">
+        <div class="yb-field__box">
+          <select class="yb-select" id="se1">
+            <option>Straight</option><option>Wavy</option><option>Curly</option><option>Coily</option>
+          </select>
+          <label class="yb-field__label" for="se1">Hair type</label>
+        </div>
+        <span class="yb-field__hint">We use it to suggest the right line.</span>
+      </div>
+    </div>
+    <h3 class="row-label">Estados</h3>
+    <div class="demo demo--stack" style="max-inline-size:24rem">
+      <div class="yb-field">
+        <div class="yb-field__box">
+          <select class="yb-select" id="se2" disabled><option>500g</option></select>
+          <label class="yb-field__label" for="se2">Size</label>
+        </div>
+      </div>
+      <div class="yb-field">
+        <div class="yb-field__box">
+          <select class="yb-select" id="se3" aria-invalid="true" aria-describedby="se3e"><option value="">Choose</option><option>Florida</option></select>
+          <label class="yb-field__label" for="se3">State<span class="req">*</span></label>
+        </div>
+        <span class="yb-field__error" id="se3e">Choose the state for delivery.</span>
+      </div>
+    </div>
+    <h3 class="row-label">Sem rótulo visível</h3>
+    <div class="demo demo--stack" style="max-inline-size:24rem">
+      <select class="yb-select" aria-label="Sort by">
+        <option>Best selling</option><option>Price, low to high</option><option>Price, high to low</option><option>Newest</option>
+      </select>
+    </div>
+    <div class="note">
+      <b>O seletor é o do sistema, de propósito</b>
+      <p>No celular o <code>&lt;select&gt;</code> nativo abre a roleta do iOS ou a lista
+      do Android: alvo grande, leitor de tela, teclado e rolagem de graça. Uma lista
+      desenhada à mão teria de refazer tudo isso para ficar pior. O que o sistema
+      desenha é a caixa, o rótulo e o erro — os mesmos do Input.</p>
+    </div>
+    <div class="note">
+      <b>O rótulo já nasce em cima</b>
+      <p>Um select nunca está vazio: sempre mostra uma opção. Por isso o rótulo dele não
+      desce para dentro da caixa como o do Input — ficaria por cima da opção escolhida.
+      Sem rótulo visível, só na ordenação do catálogo, onde a própria opção já diz o que
+      ordena.</p>
+    </div>

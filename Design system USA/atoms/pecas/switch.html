@@ -1,0 +1,42 @@
+<h2>Switch</h2>
+    <p class="when">Interruptor que liga e desliga na hora, sem confirmar. Se o efeito só acontece depois de um botão de salvar, o certo é a caixa de seleção.</p>
+    <h3 class="row-label">States</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="false" aria-label="Seguro de entrega">
+          <span class="yb-switch__knob"></span>
+        </button>
+        <span class="amostra__rotulo"><code>[aria-checked="false"]</code></span>
+      </span>
+      <span class="amostra">
+        <button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="true" aria-label="Seguro de entrega, ligado">
+          <span class="yb-switch__knob"></span>
+        </button>
+        <span class="amostra__rotulo"><code>[aria-checked="true"]</code></span>
+      </span>
+      <span class="amostra">
+        <button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="false" aria-label="Indisponível" disabled>
+          <span class="yb-switch__knob"></span>
+        </button>
+        <span class="amostra__rotulo"><code>[disabled]</code></span>
+      </span>
+    </div>
+    <h3 class="row-label">Sizes</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="true" aria-label="Seguro de entrega, ligado">
+          <span class="yb-switch__knob"></span>
+        </button>
+        <span class="amostra__rotulo"><code>única · 32×20px</code></span>
+      </span>
+    </div>
+    <div class="note">
+      <b>Não é a caixa de seleção com outra roupa</b>
+      <p>A caixa guarda uma intenção até alguém enviar o formulário; o switch
+      <b>aplica na hora</b>. Trocar um pelo outro faz a pessoa procurar um botão de
+      salvar que não existe — e por isso é
+      <code>&lt;button role="switch"&gt;</code>: com <code>input</code> o leitor de
+      tela anuncia "caixa de seleção", que promete esse formulário.</p>
+      <p>O desenho tem 32&times;20, que é como um switch se lê; o <b>alvo</b> tem
+      56&times;44, estendido por pseudo-elemento.</p>
+    </div>

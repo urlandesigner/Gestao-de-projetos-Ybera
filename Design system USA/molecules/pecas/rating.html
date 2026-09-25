@@ -1,0 +1,29 @@
+<h2>Rating</h2>
+    <p class="when">A média de um produto: as estrelas, a nota e quantas avaliações ela resume. Sempre com a contagem — 5 estrelas de 3 avaliações não é prova de nada.</p>
+    <div class="demo">
+      <span class="yb-rating" role="img" aria-label="4.8 of 5 stars, 412 reviews">
+        <span class="yb-stars" style="--yb-stars:4.8" aria-hidden="true"></span>
+        <span class="yb-rating__score">4.8</span>
+        <span class="yb-rating__count">(412)</span>
+      </span>
+      <span class="yb-rating" role="img" aria-label="4.1 of 5 stars, 56 reviews">
+        <span class="yb-stars" style="--yb-stars:4.1" aria-hidden="true"></span>
+        <span class="yb-rating__score">4.1</span>
+        <span class="yb-rating__count">(56)</span>
+      </span>
+    </div>
+    <div class="note">
+      <b>É a média, não a nota de alguém</b>
+      <p>O Rating resume muitas avaliações — por isso a contagem é obrigatória. A nota
+      de <em>uma</em> pessoa, dentro de uma avaliação, é só o
+      <a href="../atoms/stars.html">Stars</a>, sem contagem: contar "1 avaliação" em
+      cada cartão de review seria ruído. Antes as duas coisas usavam este componente,
+      e a Review o usava quebrando a regra dele.</p>
+    </div>
+    <div class="note">
+      <b>As estrelas não são texto para o leitor de tela</b>
+      <p>Elas são <code>aria-hidden</code> e o valor real vive no <code>aria-label</code>.
+      Sem isso, um leitor de tela anuncia o desenho em vez da nota. O rótulo mora no
+      Rating inteiro, com nota e contagem juntas, e o Stars dentro dele fica
+      <code>aria-hidden</code>.</p>
+    </div>

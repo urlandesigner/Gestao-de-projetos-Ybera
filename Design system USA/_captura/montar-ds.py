@@ -5,8 +5,8 @@ MONTA HOME E PDP COM OS COMPONENTES DO DESIGN SYSTEM.
     python3 _captura/montar-ds.py
 
 Não é overlay: aqui as páginas são construídas do zero usando as classes
-`yb-*` exatamente como estão em components/ e patterns/, sem uma linha de CSS
-novo. Conteúdo, preços e imagens vêm da loja de verdade.
+`yb-*` exatamente como estão nas folhas do sistema. O CSS próprio de cada
+tela é só arranjo de página (CSS_BANNER_V1, CSS_TOLSTOY, CSS_PDP). Conteúdo, preços e imagens vêm da loja de verdade.
 
 Se um componente não couber no conteúdo real, isso aparece — e é essa a
 utilidade de montar em vez de vestir.
@@ -25,14 +25,19 @@ def preparar(destino):
     """Copia o CSS do sistema, o sprite e a fonte. Nada é reescrito."""
     for p in ('yb', 'img'):
         os.makedirs(os.path.join(destino, p), exist_ok=True)
+    # A escada inteira, na ordem dela: a pagina carrega os cinco degraus como
+    # a doc carrega, e nao um bundle — se a ordem quebrar aqui, quebra igual.
     for src, nome in [
         ('tokens/00-primitives.css', '00-primitives.css'),
         ('tokens/01-semantic.css', '01-semantic.css'),
-        ('components/ybera-components.css', 'components.css'),
-        ('patterns/ybera-patterns.css', 'patterns.css'),
+        ('base/ybera-base.css', 'base.css'),
+        ('atoms/ybera-atoms.css', 'atoms.css'),
+        ('molecules/ybera-molecules.css', 'molecules.css'),
+        ('organisms/ybera-organisms.css', 'organisms.css'),
+        ('templates/ybera-templates.css', 'templates.css'),
         ('icons/ybera-icons.css', 'icons.css'),
         ('icons/ybera-icons.svg', 'icons.svg'),
-        ('components/ybera-components.js', 'components.js'),
+        ('behavior/ybera-behavior.js', 'behavior.js'),
     ]:
         shutil.copy(os.path.join(PROJETO, src), os.path.join(destino, 'yb', nome))
 
@@ -60,13 +65,19 @@ def versao():
     """Hash do CSS do sistema. Muda quando o conteudo muda — e so entao."""
     h = hashlib.sha1()
     for f in ('tokens/00-primitives.css', 'tokens/01-semantic.css',
-              'components/ybera-components.css', 'patterns/ybera-patterns.css',
-              'icons/ybera-icons.css', 'components/ybera-components.js'):
+              'base/ybera-base.css', 'atoms/ybera-atoms.css',
+              'molecules/ybera-molecules.css', 'organisms/ybera-organisms.css',
+              'templates/ybera-templates.css', 'icons/ybera-icons.css',
+              'behavior/ybera-behavior.js'):
         h.update(open(os.path.join(PROJETO, f), 'rb').read())
     return h.hexdigest()[:8]
 
 
-CSS_HOME = """  /* Banner: imagem com carrossel, igual producao. Nao e componente do sistema. */
+# CSS de pagina em pedacos, e cada tela leva so o que usa. Era um bloco so
+# (CSS_HOME) que ia para toda tela que nao fosse PDP: o banner de imagem da v1
+# saia em 404, faq, v2, v3 e logada, que nao tem banner, e o Tolstoy em 404 e
+# faq, que nao tem o widget.
+CSS_BANNER_V1 = """  /* Banner: imagem com carrossel, igual producao. Nao e componente do sistema. */
   .banner { position:relative; }
   .banner__track { display:flex; list-style:none; margin:0; padding:0;
     overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none;
@@ -81,12 +92,12 @@ CSS_HOME = """  /* Banner: imagem com carrossel, igual producao. Nao e component
      arte (o "PISCOU, PERDEU", o preco) saia da tela em qualquer desktop
      normal. `aspect-ratio` usa a proporcao real da peca: nada de cortar o
      que o design pediu para caber. */
-  .banner__slide a { display:block; aspect-ratio:16/5; }
+  .banner__slide a { display:block; aspect-ratio:var(--yb-aspect-campaign); }
   .banner__slide img { width:100%; height:100%; object-fit:cover; display:block; }
-  @media (max-width:767px) {
+  @media (max-width:767.98px) {
     /* Mobile e outra peca, nao a mesma cortada: as quatro versoes verticais
        medem entre 400x600 e 750x1095 — 2:3, retrato. */
-    .banner__slide a { aspect-ratio:2/3; }
+    .banner__slide a { aspect-ratio:var(--yb-aspect-campaign-mobile); }
   }
   .banner__arrow { position:absolute; top:50%; transform:translateY(-50%);
     width:var(--yb-target-min); height:var(--yb-target-min);
@@ -97,8 +108,9 @@ CSS_HOME = """  /* Banner: imagem com carrossel, igual producao. Nao e component
   .banner__arrow--prev { inset-inline-start:var(--yb-space-4); }
   .banner__arrow--next { inset-inline-end:var(--yb-space-4); }
   .banner__arrow:focus-visible { outline:var(--yb-focus-width) solid var(--yb-focus-color);
-    outline-offset:var(--yb-focus-offset); }
-  /* O video shoppable sangra ate a borda da tela — em producao ele nao
+    outline-offset:var(--yb-focus-offset); }"""
+
+CSS_TOLSTOY = """  /* O video shoppable sangra ate a borda da tela — em producao ele nao
      respeita o container de 1200px. Por isso a section vive FORA de .page,
      em vez de compensar largura com margem negativa. */
   .tolstoy { overflow:hidden; }
@@ -135,15 +147,47 @@ CSS_HOME = """  /* Banner: imagem com carrossel, igual producao. Nao e component
      arrasta. O widget nao sabe dessa convencao por ser de fora — sem isto,
      esta era a unica secao da pagina com seta visivel no mobile, inconsistencia
      que ninguem decidiu. */
-  @media (max-width:768px) {
+  @media (max-width:767.98px) {
     .tolstoy nav[aria-label="Carousel navigation"] { display:none; }
   }"""
 
-CSS_PDP = """  /* Sem padding-top: quem separa do breadcrumb e o breadcrumb. Com os dois,
-     o produto descia 40px sem ninguem ter pedido, e mexer no breadcrumb nao
-     mudava nada — os 32px daqui e que mandavam. */
+CSS_PDP = """  /* O padding de cima nasceu como modificador (`.pdp--solto`) porque so uma
+     tela nao tinha breadcrumb. Agora nenhuma tem: sem a trilha acima, o
+     produto encostaria no cabecalho em todas, e o respiro que ela dava passa
+     a ser do proprio bloco. Modificador que vale para 100% dos casos nao e
+     modificador — e o padrao escrito no lugar errado. */
   .pdp { display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-12);
-    align-items:start; padding-block:0 var(--yb-space-8); }
+    align-items:start; padding-block:var(--yb-space-8); }
+
+  /* A historia do produto mora dentro da coluna de compra, e a coluna agora
+     tem ritmo: o `gap` dela e a distancia mais curta (ver .yb-buybox). Estes
+     blocos sao outro assunto — nao decisao de compra — e por isso levam o
+     maior vao da coluna. Fica aqui, e nao no padrao, porque `.pdp__*` e classe
+     desta pagina: o sistema nao deve saber que ela existe. */
+  .yb-buybox > .pdp__duo,
+  .yb-buybox > .yb-bannermedia,
+  .yb-buybox > .pdp__prova { margin-block-start: var(--yb-space-8); }
+
+  /* Duas fotos altas lado a lado, e a grade de prova em duas colunas. Sao
+     arranjos DESTA pagina, nao componentes: por isso ficam aqui. */
+  .pdp__duo { display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-3); }
+  /* Altura do par so onde ele e par de verdade, lado a lado. Abaixo de 768
+     vale a do componente, que cresce no celular para a foto aparecer. */
+  @media (min-width:768px) {
+    .pdp__duo .yb-bannermedia { min-height:clamp(18rem, 26vw, 24rem); }
+  }
+  .pdp__duo .yb-bannermedia {
+    /* Metade da largura, entao metade da folga: 80px em 1024 contra 161px do
+       banner inteiro. A queda do sistema (34vw) daria 140px ali e chegaria
+       cortada. Quem aperta o layout devolve a medida. */
+    --yb-veil-fall:clamp(2rem, 26vw - 13rem, 11rem);
+  }
+  @media (min-width:360px){
+    .pdp__duo .yb-bannermedia { --yb-veil-fall:clamp(3.5rem, 26vw - 13rem, 11rem); }
+  }
+  .pdp__prova { display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-3);
+    list-style:none; margin:0; padding:0; }
+  @media (max-width:520px) { .pdp__duo { grid-template-columns:1fr; } }
 
   /* A imagem acompanha a leitura da coluna da direita e para quando o bloco
      acaba — `sticky` ja e limitado pelo pai, entao nao precisa de JS nem de
@@ -154,35 +198,6 @@ CSS_PDP = """  /* Sem padding-top: quem separa do breadcrumb e o breadcrumb. Com
 
      O deslocamento sai do token da barra fixa, senao a imagem gruda por baixo
      dela. */
-  /* Duas fotos altas lado a lado, e a grade de prova em duas colunas. Sao
-     arranjos DESTA pagina, nao componentes: por isso ficam aqui. */
-  /* A historia do produto mora dentro da coluna de compra, e a coluna agora
-     tem ritmo: o `gap` dela e a distancia mais curta (ver .yb-buybox). Estes
-     blocos sao outro assunto — nao decisao de compra — e por isso levam o
-     maior vao da coluna. Fica aqui, e nao no padrao, porque `.pdp__*` e classe
-     desta pagina: o sistema nao deve saber que ela existe. */
-  .yb-buybox > .pdp__duo,
-  .yb-buybox > .yb-mediabanner,
-  .yb-buybox > .pdp__prova { margin-block-start: var(--yb-space-8); }
-
-  .pdp__duo { display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-3); }
-  .pdp__duo .yb-mediabanner {
-    min-height:clamp(18rem, 26vw, 24rem);
-    /* Metade da largura, entao metade da folga: 80px em 1024 contra 161px do
-       banner inteiro. A queda do sistema (34vw) daria 140px ali e chegaria
-       cortada. Quem aperta o layout devolve a medida. */
-    --yb-veil-fall:clamp(2rem, 26vw - 13rem, 11rem);
-  }
-  @media (min-width:360px){
-    .pdp__duo .yb-mediabanner { --yb-veil-fall:clamp(3.5rem, 26vw - 13rem, 11rem); }
-  }
-  .pdp__prova { display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-3);
-    list-style:none; margin:0; padding:0; }
-  @media (max-width:520px) { .pdp__duo { grid-template-columns:1fr; } }
-
-  /* Sem breadcrumb acima, o produto encostaria no cabecalho. O respiro que o
-     breadcrumb dava passa a ser do proprio bloco. */
-  .pdp--solto { padding-block-start: var(--yb-space-8); }
 
   /* `--yb-chrome-h` e nao `--yb-header-h`: o token do cabecalho mede so a
      barra, e quando a faixa do parceiro esta na tela ela soma 3,5rem. Lendo o
@@ -208,23 +223,26 @@ CABECA = """<!doctype html>
 <link rel="stylesheet" href="yb/fonte.css?v={v}">
 <link rel="stylesheet" href="yb/00-primitives.css?v={v}">
 <link rel="stylesheet" href="yb/01-semantic.css?v={v}">
-<link rel="stylesheet" href="yb/components.css?v={v}">
-<link rel="stylesheet" href="yb/patterns.css?v={v}">
+<link rel="stylesheet" href="yb/base.css?v={v}">
+<link rel="stylesheet" href="yb/atoms.css?v={v}">
+<link rel="stylesheet" href="yb/molecules.css?v={v}">
+<link rel="stylesheet" href="yb/organisms.css?v={v}">
+<link rel="stylesheet" href="yb/templates.css?v={v}">
 <link rel="stylesheet" href="yb/icons.css?v={v}">
 <style>
-  /* Só layout de página: largura, respiro entre blocos e o grid do hero.
-     Nenhum componente é redefinido aqui — se um botão precisasse de ajuste,
-     o lugar seria components/, não esta folha. */
+  /* Só arranjo de página. Nenhum componente é redefinido aqui — se um botão
+     precisasse de ajuste, o lugar seria a folha dele, não esta. */
   body {{ margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
          font-family:var(--yb-font-family-base); -webkit-font-smoothing:antialiased; }}
 {css_pagina}
 </style>
 </head>
 <body>
+<a class="yb-skip-link" href="#conteudo">Skip to main content</a>
 """
 
 RODAPE = """
-<script src="yb/components.js?v={v}"></script>
+<script src="yb/behavior.js?v={v}"></script>
 <script>
 // Setas do banner. Carrossel nao e componente do sistema — este JS vive na
 // pagina, nao em components.js, para nao dar a entender que existe.
@@ -405,20 +423,21 @@ def header(carrinho=2, promo=None, cliente=None):
     topo, antes dos links."""
     if cliente:
         inicial = cliente['nome'].strip()[:1].upper()
-        conta = f"""<div class="yb-usermenu">
-        <input class="yb-usermenu__toggle" type="checkbox" id="conta-open">
-        <label class="yb-usermenu__avatar" for="conta-open"
+        conta = f"""<div class="yb-dropdown">
+        <input class="yb-dropdown__toggle" type="checkbox" id="conta-open">
+        <label class="yb-dropdown__gatilho" for="conta-open"
                aria-label="Account menu for {cliente['nome']}">
-          <span class="yb-usermenu__inicial" aria-hidden="true">{inicial}</span></label>
-        <div class="yb-usermenu__panel">
-          <span class="yb-usermenu__quem">
-            <b class="yb-usermenu__nome">{cliente['nome']}</b>
-            <span class="yb-usermenu__email">{cliente['email']}</span>
+          <span class="yb-avatar" aria-hidden="true">{inicial}</span></label>
+        <div class="yb-dropdown__painel">
+          <span class="yb-dropdown__cabeca">
+            <span class="yb-avatar yb-avatar--md" aria-hidden="true">{inicial}</span>
+            <b class="yb-dropdown__nome">{cliente['nome']}</b>
+            <span class="yb-dropdown__email">{cliente['email']}</span>
           </span>
           <a href="/account">{ico('user','yb-icon yb-icon--sm')} Account</a>
           <a href="/account/orders">{ico('truck','yb-icon yb-icon--sm')} Orders</a>
           <a href="/listadedesejos">{ico('heart','yb-icon yb-icon--sm')} Wishlist</a>
-          <span class="yb-usermenu__sair">
+          <span class="yb-dropdown__sair">
             <a href="/account/logout">{ico('lock','yb-icon yb-icon--sm')} Log out</a>
           </span>
         </div>
@@ -488,11 +507,8 @@ def header(carrinho=2, promo=None, cliente=None):
 </header>"""
 
 
-def card(p, vendor=False, flag=True):
-    """O card tem uma parte opcional: os relacionados da PDP mostram a marca,
-    a home nao. Mesma anatomia, conteudo diferente conforme o contexto.
-
-    `flag=False` desliga o selo "Best seller" mesmo em produto `destaque`: numa
+def card(p, flag=True):
+    """`flag=False` desliga o selo "Best seller" mesmo em produto `destaque`: numa
     secao que ja se chama Best Sellers o selo nao informa nada, e quando so
     dois dos quatro cartoes o tem, os outros dois parecem "nao ser".
 
@@ -537,14 +553,12 @@ def card(p, vendor=False, flag=True):
             f'data-yb-open="cart" aria-label="Add to cart: {p["titulo"][:80]}">Add to cart</button>')
     bl_rating = f"""
         <span class="yb-rating" role="img" aria-label="{AVALIACAO['nota']} of 5, {p.get('reviews', AVALIACAO['total'])} reviews">
-          <span class="yb-rating__stars" aria-hidden="true">★★★★★</span>
+          <span class="yb-stars" style="--yb-stars:{AVALIACAO['nota']}" aria-hidden="true"></span>
           <span class="yb-rating__score">{AVALIACAO['nota']}</span>
           <span class="yb-rating__count">({p.get('reviews', AVALIACAO['total']):,})</span></span>"""
-    bl_vendor = (f"""
-        <span class="yb-card__vendor">{p.get('vendor','Ybera USA')}</span>""" if vendor else '')
     return f"""      <article class="yb-card">
         <div class="yb-card__media">{flags}<img src="img/{p['img']}" alt="{p['titulo'][:80]}" loading="lazy">{img2}{acao}</div>
-        <h3 class="yb-card__title"><a href="pdp.html">{p['titulo']}</a></h3>{bl_vendor}{bl_rating}
+        <h3 class="yb-card__title"><a href="pdp.html">{p['titulo']}</a></h3>{bl_rating}
         <span class="{price_cls}"><b class="yb-price__now">{p['preco']}</b>{comp}</span>
       </article>"""
 
@@ -579,12 +593,25 @@ def card(p, vendor=False, flag=True):
 # da imagem e um hash da URL do CDN (ver dados.py): ele muda quando a loja
 # troca a foto, e foi assim que a vitrine trocou de produto sozinha.
 OFERTA = {
-    'produto': 'mirra-oil-90ml',        # handle no catalogo da loja
+    # O handle e do catalogo da loja, e tem de bater EXATO. Estava
+    # 'mirra-oil-90ml', que nao existe — o de verdade e o abaixo. Com o handle
+    # errado o `next(...)` caia no fallback e a vitrine mostrava o primeiro
+    # produto da lista no lugar deste, com o desconto do prototipo colado nele.
+    'produto': 'myrrh-hair-repair-oil-90-ml-special-price_',
     # Arte de campanha, quando houver: ela vira o fundo do cartao no lugar da
     # foto do produto. A ultima (Off1_Set_08-09-10) saiu do ar, e um nome morto
     # aqui so produz aviso a cada build — quem quiser a proxima poe o arquivo
     # de volta nesta linha.
     'arte': None,
+    # QUAL FOTO DO PRODUTO o cartao usa. 'img2' aqui e escolha, nao acaso: a
+    # primeira foto deste produto no catalogo e arte de campanha com
+    # "WAS $79.90 / NOW $59.90" CRAVADO nos pixels — e o cartao desenha o
+    # proprio preco ($59.90 riscado, $47.92 cobrado) e o proprio selo de 20%.
+    # Os dois juntos punham quatro numeros em desacordo na mesma peca.
+    # A segunda foto tambem e campanha, mas sem preco dentro; sobra a estrela
+    # "SPECIAL PRICE" dela competindo com o nosso selo, que e o defeito menor.
+    # Com um packshot limpo no lugar, troque para 'img'.
+    'foto': 'img2',
     # ATENCAO: estes dois sao do PROTOTIPO, nao transcritos da loja. A loja nao
     # publica compare_at_price para este produto, entao o valor cobrado no
     # cartao (real menos 20%) nao e preco que alguem paga hoje. Havendo promocao
@@ -648,7 +675,7 @@ def recortar_arte(destino, nome, manter=0.76):
         return saida
     # A arte de campanha ROTA. A da vez anterior era "SEPTEMBER 2-30"; uma
     # semana depois ela tinha saido do ar e o gerador morreu com
-    # FileNotFoundError no meio da montagem — apagando `nova-loja/` inteira,
+    # FileNotFoundError no meio da montagem — apagando `pages/` inteira,
     # porque o primeiro passo do build e limpar a pasta. Perder o prototipo
     # por causa de uma promocao que acabou e desproporcional: aqui o nome que
     # nao existe mais vira aviso, e a vitrine cai para a foto do produto.
@@ -665,6 +692,12 @@ def recortar_arte(destino, nome, manter=0.76):
         w, h = im.size
         im.crop((0, 0, w, int(h * manter))).save(caminho, 'WEBP', quality=88)
     return saida
+
+
+# O cartao de oferta desenha 266x416 na grade de quatro da home. O recorte da
+# foto nao pode entregar menos do que isso: abaixo disso o navegador amplia, e
+# foto ampliada nao e enquadramento, e perda.
+MIN_OFERTA_W, MIN_OFERTA_H = 266, 416
 
 
 def enquadrar_oferta(destino, nome, margem=0.08):
@@ -730,6 +763,27 @@ def enquadrar_oferta(destino, nome, margem=0.08):
         # troca uma imagem boa por uma pior.
         if (x1 - x0) > w * .94 and (y1 - y0) > h * .94:
             return nome
+        # PISO DE PIXEL. O recorte achava o produto e parava nele: numa foto de
+        # 700x700 o resultado saia com 190px de largura, e o cartao da oferta
+        # desenha 266 — a imagem entrava AMPLIADA em 1,4x, e o que se via era
+        # uma foto mole que parecia zoom. Recortar abaixo do que a caixa pede
+        # troca chao de estudio por perda de nitidez, que e o pior dos dois.
+        #
+        # Entao a caixa cresce pelo centro ate cobrir o que o cartao desenha —
+        # 266x416 em 1x —, sempre dentro da foto original. Onde a foto nao tiver
+        # esse tamanho, ela vai como esta: melhor um pouco de chao do que um
+        # frasco borrado.
+        for pedido, ini, fim, teto in ((MIN_OFERTA_W, x0, x1, w),
+                                       (MIN_OFERTA_H, y0, y1, h)):
+            falta = pedido - (fim - ini)
+            if falta > 0:
+                ini = max(0, ini - falta // 2)
+                fim = min(teto, ini + pedido)
+                ini = max(0, fim - pedido)
+            if pedido == MIN_OFERTA_W:
+                x0, x1 = ini, fim
+            else:
+                y0, y1 = ini, fim
         im.crop((x0, y0, x1, y1)).save(caminho, 'WEBP', quality=88)
     return saida
 
@@ -766,10 +820,31 @@ def um_por_linha(prods, n, excluir=()):
     return escolhidos
 
 
+def escolher_oferta(prods):
+    """O produto do cartao de oferta, e um aviso alto quando ele nao esta la.
+
+    Era `next(..., prods[0])` escrito em tres lugares. O default silencioso e
+    o problema: com o handle errado — e ele ESTAVA errado, 'mirra-oil-90ml'
+    contra 'myrrh-hair-repair-oil-90-ml-special-price_' — a vitrine passou a
+    mostrar o primeiro produto da lista com o desconto do prototipo colado
+    nele, e nada na tela nem no build dizia isso. O cartao anunciava 20% off
+    de um produto que ninguem escolheu para estar ali.
+
+    Continua havendo fallback: uma home sem cartao de oferta seria pior. O que
+    muda e que ele grita."""
+    achado = next((x for x in prods if x['handle'] == OFERTA['produto']), None)
+    if achado:
+        return achado
+    print(f"  AVISO: produto da oferta nao esta no catalogo "
+          f"({OFERTA['produto']!r}) — o cartao vai com {prods[0]['handle']!r}")
+    return prods[0]
+
+
 def cartao_oferta(p, destino):
     """O destaque da vitrine: um produto, foto sangrando, prazo correndo."""
     import datetime
-    arte = recortar_arte(destino, OFERTA['arte']) or enquadrar_oferta(destino, p['img'])
+    foto = p.get(OFERTA.get('foto', 'img')) or p['img']
+    arte = recortar_arte(destino, OFERTA['arte']) or enquadrar_oferta(destino, foto)
     prazo = f"{datetime.date.today().year}{OFERTA['prazo']}"
     de, por, selo = oferta_precos(p)
     # Selo estrelado no lugar da pastilha. A oferta do dia e o unico lugar da
@@ -974,11 +1049,18 @@ def rodape_v2():
         ("Privacy Policy",   "/policies/privacy-policy"),
         ("SMS Terms",        "/pages/sms-terms-amp-conditions"),
     ]
+    # O <input> nao e enfeite de markup: e a metade que REABRE a lista. A folha
+    # so fecha a coluna abaixo de 768 quando encontra este checkbox
+    # (`:has(.yb-footer__toggle)`), e por isso as duas metades andam juntas —
+    # coluna com CSS de sanfona e sem controle e uma lista inalcancavel.
     colunas = "".join(f"""
         <div class="yb-footer__col">
-          <p class="yb-footer__coltitle">{t}</p>
+          <input class="yb-footer__toggle" type="checkbox" id="fcol{i}">
+          <label class="yb-footer__coltitle" for="fcol{i}">{t}
+            {ico('chevron-down', 'yb-icon yb-icon--sm')}
+          </label>
           <div class="yb-footer__collist"><ul>{''.join(f'<li><a href="{h}">{r}</a></li>' for r, h in itens)}</ul></div>
-        </div>""" for t, itens in COLUNAS)
+        </div>""" for i, (t, itens) in enumerate(COLUNAS))
     legal = "".join(f'<a href="{h}">{t}</a>' for t, h in LEGAL)
     return f"""<footer class="yb-footer yb-footer--dark">
   <div class="yb-footer__inner">
@@ -1079,10 +1161,10 @@ def busca(prods):
         <div class="yb-search__group yb-search__group--secondary">
           <h2 class="yb-search__title">Collections</h2>
           <ul class="yb-search__chips">
-            <li><a class="yb-search__chip" href="/collections/smoothing">Smoothing</a></li>
-            <li><a class="yb-search__chip" href="/collections/home-care">Home care</a></li>
-            <li><a class="yb-search__chip" href="/collections/kits">Kits</a></li>
-            <li><a class="yb-search__chip" href="/collections/hair-oils">Hair oils</a></li>
+            <li><a class="yb-chip" href="/collections/smoothing">Smoothing</a></li>
+            <li><a class="yb-chip" href="/collections/home-care">Home care</a></li>
+            <li><a class="yb-chip" href="/collections/kits">Kits</a></li>
+            <li><a class="yb-chip" href="/collections/hair-oils">Hair oils</a></li>
           </ul>
         </div>
       </div>
@@ -1105,9 +1187,9 @@ def busca(prods):
       <p>Nothing found for <strong data-yb-search-echo></strong>.</p>
       <p>Try a shorter word, or the product line instead of the full name.</p>
       <ul class="yb-search__chips">
-        <li><a class="yb-search__chip" href="/collections/best-sellers">Best sellers</a></li>
-        <li><a class="yb-search__chip" href="/collections/new">New arrivals</a></li>
-        <li><a class="yb-search__chip" href="/pages/contact">Talk to a specialist</a></li>
+        <li><a class="yb-chip" href="/collections/best-sellers">Best sellers</a></li>
+        <li><a class="yb-chip" href="/collections/new">New arrivals</a></li>
+        <li><a class="yb-chip" href="/pages/contact">Talk to a specialist</a></li>
       </ul>
     </div>
   </div>
@@ -1177,7 +1259,7 @@ def gaveta(prods):
     # subtotal para a faixa nao contradizer o rodape.
     poupou = subtotal * 0.15
 
-    return f"""<dialog id="cart" class="yb-dialog yb-dialog--drawer" aria-labelledby="cart-t">
+    return f"""<dialog id="cart" class="yb-dialog yb-drawer" aria-labelledby="cart-t">
   <div class="yb-cart">
     <div class="yb-cart__head"><h2 id="cart-t">Your cart ({len(itens)})</h2>
       <div class="yb-cart__head-acoes">
@@ -1445,7 +1527,7 @@ FAQ = [
 ]
 
 
-def faq(curto=False, cabecalho=True):
+def faq(curto=False, cabecalho=True, titulo_pagina=None):
     """A secao de perguntas, montada com pecas que ja existiam.
 
     Nada de componente novo: as perguntas sao `.yb-accordion` e o indice e
@@ -1500,8 +1582,18 @@ def faq(curto=False, cabecalho=True):
         <h2>Frequently asked questions</h2>
         <a class="yb-link" href="/pages/contactus">Talk to us {ico('chevron-right')}</a>
       </div>""" if cabecalho else ''
+    # `titulo_pagina` poe o titulo DENTRO do bloco, na `.yb-faq__cabeca`, em vez
+    # de um `.yb-block` solto acima dele. O bloco passa a se titular sozinho, e
+    # a doc — que nao carrega a folha dos templates — mostra a peca inteira em
+    # vez de decapitada. Na tela ele e <h1>: e o titulo da pagina.
+    cabeca_bloco = f"""
+        <div class="yb-faq__cabeca">
+          <h1>{titulo_pagina}</h1>
+          <p class="yb-faq__lede">Shipping, returns and the products themselves. What
+          is not here, our team answers by email.</p>
+        </div>""" if titulo_pagina else ''
     return f"""    <section class="yb-block" id="faq">{cabeca}
-      <div class="yb-faq">
+      <div class="yb-faq">{cabeca_bloco}
         <ul class="yb-faq__index" aria-label="FAQ topics">{indice}
         </ul>
         <div class="yb-faq__grupos">{grupos}
@@ -1779,7 +1871,6 @@ def carrossel_reviews(topo=True):
     for r in REVIEWS:
         if not r.get('arquivo'):
             continue
-        estrelas = '★' * r['nota'] + '☆' * (5 - r['nota'])
         # O Judge.me usa a primeira frase da avaliacao como "titulo" — o mesmo
         # texto aparecia em negrito e de novo logo abaixo. Titulo que so repete
         # o comeco do texto nao e titulo.
@@ -1802,8 +1893,7 @@ def carrossel_reviews(topo=True):
         <article class="yb-review" data-nota="{r['nota']}">
           <div class="yb-review__media"><img src="img/{r['arquivo']}" alt="" loading="lazy"></div>
           <div class="yb-review__body">
-            <span class="yb-rating" role="img" aria-label="{r['nota']} of 5 stars">
-              <span class="yb-rating__stars" aria-hidden="true">{estrelas}</span></span>
+            <span class="yb-stars" style="--yb-stars:{r['nota']}" role="img" aria-label="{r['nota']} of 5 stars"></span>
             {titulo}
             <p class="yb-review__text">{texto}</p>
             <span class="yb-review__author">{r['autor']}</span>{selo}
@@ -1863,8 +1953,7 @@ def carrossel_reviews(topo=True):
         bloco_topo = f"""      <div class="yb-reviews__topo">
         <div class="yb-reviews__nota">
           <b class="yb-reviews__media">{AVALIACAO['nota']}</b>
-          <span class="yb-rating" role="img" aria-label="{AVALIACAO['nota']} of 5">
-            <span class="yb-rating__stars" aria-hidden="true">★★★★★</span></span>
+          <span class="yb-stars" style="--yb-stars:{AVALIACAO['nota']}" role="img" aria-label="{AVALIACAO['nota']} of 5 stars"></span>
           <span class="yb-reviews__total">{total} reviews</span>
         </div>
         <ul class="yb-reviews__dist">{barras}
@@ -2209,7 +2298,7 @@ def blog_trio():
           <span class="yb-section-head__eyebrow">Expert Advice</span>
           <h2>Professional Secrets</h2>
         </div>
-        <a class="yb-link" href="/blogs/haircare">See all {ico('chevron-right')}</a>
+        <a class="yb-link" href="/blogs/haircare">See all articles {ico('chevron-right')}</a>
       </div>
       <!-- `yb-track` composto na marcacao, como em `.yb-reviews`: abaixo de
            860 os tres cartoes deitam num trilho, acima voltam a ser grade. -->
@@ -2331,7 +2420,7 @@ def widget_tolstoy():
 # reflui no celular e nao pode ser testado em A/B sem refazer a arte. E a
 # promessa chega em portugues para quem le ingles.
 #
-# A v2 troca por `.yb-mediabanner`: mesma foto, texto em HTML. O componente ja
+# A v2 troca por `.yb-bannerhero`: mesma foto, texto em HTML. O componente ja
 # existe e ja resolve o veu medido por cima da foto.
 # Tres slides, tres destinos DIFERENTES. Carrossel com tres variacoes da
 # mesma promessa e so tempo de espera: se os tres levam a "best sellers", o
@@ -2357,7 +2446,31 @@ HERO_V2 = [
 ]
 
 
-def hero_v2():
+# A arte de campanha da v1, como SEGUNDO slide do hero da v3 (pedido do
+# usuario: mesclar o banner com texto e o banner em imagem). Segundo e nao
+# primeiro: o primeiro carrega o h1 da pagina e a imagem prioritaria. O texto
+# da arte continua em portugues, como na v1 — o `alt` diz a promessa em
+# ingles para busca e leitor de tela. Ver `.yb-bannerhero--arte`.
+HERO_ARTE = {
+    'href': '/collections/vello-1',
+    'mb': 'Banner_20_24H_mb_b-61df813f.webp',
+    'img': 'Banner_20_24H_b-96b194d5.webp',
+    'alt': '20% off sitewide for the next 24 hours. Use code Ybera20.',
+}
+
+
+def slide_arte(a):
+    return f"""
+      <a class="yb-bannerhero yb-bannerhero--arte" href="{a['href']}">
+        <img class="yb-bannerhero__fundo" src="img/{a['img']}" alt="" loading="lazy">
+        <picture>
+          <source media="(max-width: 767.98px)" srcset="img/{a['mb']}">
+          <img src="img/{a['img']}" alt="{a['alt']}" loading="lazy">
+        </picture>
+      </a>"""
+
+
+def hero_v2(arte=None):
     """Trilho de banners do topo — o `.yb-track` do sistema, um slide por tela.
 
     Sem `.yb-block`: o respiro vertical dele abriria 64px de branco entre o
@@ -2373,16 +2486,18 @@ def hero_v2():
         prio = 'fetchpriority="high"' if i == 0 else 'loading="lazy"'
         titulo = 'h1' if i == 0 else 'h2'
         slides += f"""
-      <a class="yb-mediabanner yb-mediabanner--bleed yb-mediabanner--blur" href="{href}">
+      <a class="yb-bannerhero yb-bannerhero--blur" href="{href}">
         <img src="img/{h['img']}" alt="" {prio}>
-        <div class="yb-mediabanner__blur" aria-hidden="true"><i></i><i></i><i></i></div>
-        <div class="yb-mediabanner__body">
-          <span class="yb-mediabanner__eyebrow">{h['eyebrow']}</span>
-          <{titulo} class="yb-mediabanner__title">{h['titulo']}</{titulo}>
-          <p class="yb-mediabanner__text">{h['texto']}</p>
+        <div class="yb-bannerhero__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="yb-bannerhero__body">
+          <span class="yb-bannerhero__eyebrow">{h['eyebrow']}</span>
+          <{titulo} class="yb-bannerhero__title">{h['titulo']}</{titulo}>
+          <p class="yb-bannerhero__text">{h['texto']}</p>
           <span class="yb-btn yb-btn--primary">{rot}</span>
         </div>
       </a>"""
+        if i == 0 and arte:
+            slides += slide_arte(arte)
     return f"""  <section class="yb-hero" data-yb-partnerbar-anchor aria-roledescription="carousel" aria-label="Highlights">
 {parceiro()}
     <div class="yb-track yb-track--hero" id="hero-track" data-yb-track-loop>{slides}
@@ -2404,7 +2519,14 @@ def pagina(titulo, corpo, css_pagina=None):
     carimbo do <head> e o do <script> nao tem como divergir.
     """
     v = versao()
-    return (CABECA.format(v=v, css_pagina=css_pagina or CSS_HOME, titulo=titulo)
+    if css_pagina is None:
+        partes = []
+        if 'class="banner"' in corpo:
+            partes.append(CSS_BANNER_V1)
+        if 'tolstoy' in corpo:
+            partes.append(CSS_TOLSTOY)
+        css_pagina = '\n'.join(partes)
+    return (CABECA.format(v=v, css_pagina=css_pagina, titulo=titulo)
             + corpo + RODAPE.replace("{v}", v))
 
 
@@ -2462,7 +2584,7 @@ def montar_home(destino):
     # O primeiro item nao e um cartao de catalogo: e o cartao de oferta, do
     # mesmo tamanho dos outros. O produto em oferta e o da arte de campanha,
     # nao o primeiro da lista: e dele que existe desconto publicado.
-    em_oferta = next((x for x in prods if x['handle'] == OFERTA['produto']), prods[0])
+    em_oferta = escolher_oferta(prods)
     vizinhos = um_por_linha(prods, 3, excluir=[em_oferta])
     cards = vitrine_best_sellers(em_oferta, vizinhos, destino)
 
@@ -2470,7 +2592,7 @@ def montar_home(destino):
     corpo = f"""{header(promo=heroi)}
 {faixa_parceiro()}
 
-<main>
+<main id="conteudo" tabindex="-1">
   {banner()}
 
   <div class="yb-page">
@@ -2547,7 +2669,7 @@ def montar_404(destino):
     vitrine = um_por_linha(prods, 4)
     corpo = f"""{header(promo=vitrine[0])}
 
-<main class="yb-page">
+<main id="conteudo" tabindex="-1" class="yb-page">
   <div class="yb-block">
     <div class="yb-empty">
       <span class="yb-empty__icone">{ico('search')}</span>
@@ -2565,7 +2687,7 @@ def montar_404(destino):
   <section class="yb-block">
     <div class="yb-section-head"><h2>Best sellers</h2></div>
     <div class="yb-grid">
-{chr(10).join(card(r, vendor=False) for r in vitrine)}
+{chr(10).join(card(r) for r in vitrine)}
     </div>
   </section>
 </main>
@@ -2615,26 +2737,26 @@ def copiar_pdp_extra(destino):
 def pdp_historia():
     return """
       <!-- Destaques em midia: duas fotos altas com a afirmacao por cima.
-           `yb-mediabanner` e o componente para exatamente isto. -->
+           `yb-bannermedia` e o componente para exatamente isto. -->
       <!-- <div>, nao <a>: nao ha destino. Antes eram links para "#" com cara
            e cursor de link. E os olhos-de-texto eram numero inventado ("98%
            5-star reviews") e selo repetido ("Best seller", terceiro na pagina);
            agora dizem o que a foto mostra. -->
       <div class="pdp__duo">
-        <div class="yb-mediabanner yb-mediabanner--blur">
+        <div class="yb-bannermedia yb-bannermedia--blur">
           <img src="img/22_1-d5c4b8.webp" alt="" loading="lazy">
-          <div class="yb-mediabanner__blur" aria-hidden="true"><i></i><i></i><i></i></div>
-          <div class="yb-mediabanner__body">
-            <span class="yb-mediabanner__eyebrow">Step 1 · Hydration</span>
-            <h2 class="yb-mediabanner__title">Water back into the fiber.</h2>
+          <div class="yb-bannermedia__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="yb-bannermedia__body">
+            <span class="yb-bannermedia__eyebrow">Step 1 · Hydration</span>
+            <h2 class="yb-bannermedia__title">Water back into the fiber.</h2>
           </div>
         </div>
-        <div class="yb-mediabanner yb-mediabanner--blur">
+        <div class="yb-bannermedia yb-bannermedia--blur">
           <img src="img/29-527a32.webp" alt="" loading="lazy">
-          <div class="yb-mediabanner__blur" aria-hidden="true"><i></i><i></i><i></i></div>
-          <div class="yb-mediabanner__body">
-            <span class="yb-mediabanner__eyebrow">Damp or dry</span>
-            <h2 class="yb-mediabanner__title">Use it your way.</h2>
+          <div class="yb-bannermedia__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="yb-bannermedia__body">
+            <span class="yb-bannermedia__eyebrow">Damp or dry</span>
+            <h2 class="yb-bannermedia__title">Use it your way.</h2>
           </div>
         </div>
       </div>
@@ -2646,18 +2768,18 @@ def pdp_historia():
            — escurecer mais so esconderia o texto DELES embaixo do nosso, o que
            parece disfarce. O `alt` carrega a mensagem, porque agora e a imagem
            que a carrega. Leva a colecao da linha: e um anuncio da Fashion Gold. -->
-      <a class="yb-mediabanner" href="/collections/fashion-gold">
+      <a class="yb-bannermedia yb-bannermedia--arte" href="/collections/fashion-gold">
         <img src="img/FG_Banner_01-61a3d2.webp" loading="lazy"
              alt="Authentic Brazilian keratin — treatment for salon-quality results, formaldehyde-free formula">
       </a>
 
-      <a class="yb-mediabanner yb-mediabanner--blur" href="/collections/cronograma-hair-care-system">
+      <a class="yb-bannermedia yb-bannermedia--blur" href="/collections/cronograma-hair-care-system">
         <img src="img/KitCuidadosProfundos-YberaFashionGold_ab-9c59c4.webp" alt="" loading="lazy">
-        <div class="yb-mediabanner__blur" aria-hidden="true"><i></i><i></i><i></i></div>
-        <div class="yb-mediabanner__body">
-          <span class="yb-mediabanner__eyebrow">Cronograma system</span>
-          <h2 class="yb-mediabanner__title">Deep repair &amp; shine</h2>
-          <p class="yb-mediabanner__text">A three-step ritual for dry, dull, porous
+        <div class="yb-bannermedia__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="yb-bannermedia__body">
+          <span class="yb-bannermedia__eyebrow">Cronograma system</span>
+          <h2 class="yb-bannermedia__title">Deep repair &amp; shine</h2>
+          <p class="yb-bannermedia__text">A three-step ritual for dry, dull, porous
           or chemically damaged hair.</p>
         </div>
       </a>
@@ -2710,7 +2832,12 @@ def linha_do(titulo):
 
 
 def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=None,
-               compare=None, arranjo='padrao'):
+               compare=None, arranjo='padrao', parceiro=False):
+    # `parceiro` e OPT-IN, e nao o contrario: o recado de quem indicou so existe
+    # quando a pessoa chega por link patrocinado. Nasceu ligado no arranjo `v2`
+    # porque esse arranjo tinha uma tela so, que era justamente a do link de
+    # influencer — quando ele virou tambem a PDP padrao, a faixa foi junto e a
+    # loja passou a saudar um parceiro que nao existia.
     p = dados.produto(handle, os.path.join(destino, 'img'))
     # `variantes` so e passado pela tela-prova da variante (ver VARIANTE_FORJADA).
     if variantes:
@@ -3010,7 +3137,7 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
            E link, nao enfeite: nota que nao leva as avaliacoes e beco. -->
       <a class="yb-buybox__rating" href="#reviews">
         <span class="yb-rating" role="img" aria-label="{AVALIACAO['nota']} of 5, {p.get('reviews', AVALIACAO['total'])} reviews">
-          <span class="yb-rating__stars" aria-hidden="true">★★★★★</span>
+          <span class="yb-stars" style="--yb-stars:{AVALIACAO['nota']}" aria-hidden="true"></span>
           <span class="yb-rating__score">{AVALIACAO['nota']}</span>
           <span class="yb-rating__count">({p.get('reviews', AVALIACAO['total']):,} reviews)</span></span>
       </a>
@@ -3073,7 +3200,7 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
     <div class="yb-section-head"><h2>Related Products</h2></div>
     <div class="yb-grid">
       <div class="yb-grid__rail yb-track">
-{chr(10).join(card(r, vendor=False) for r in relacionados)}
+{chr(10).join(card(r) for r in relacionados)}
       </div>
     </div>
   </section>"""
@@ -3089,14 +3216,16 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
         #
         # Sem breadcrumb: tambem nao estava na lista. Ele era o unico caminho
         # de volta para a colecao dentro da pagina; o cabecalho continua tendo
-        # o menu, e e la que esse caminho passa a morar.
+        # o menu, e e la que esse caminho passa a morar. Comecou aqui e hoje
+        # vale para as cinco PDPs — as telas de estado seguiram a padrao, que
+        # e do que elas sao estado.
         corpo = f"""{ld}
 {header(promo=relacionados[0])}
-{faixa_parceiro(ancorada=False)}
+{faixa_parceiro(ancorada=False) if parceiro else ''}
 
-<main>
+<main id="conteudo" tabindex="-1">
   <div class="yb-page">
-  <div class="pdp pdp--solto">
+  <div class="pdp">
     <div class="yb-gallery" data-yb-gallery>
       <div class="yb-gallery__stage">{slides}
         <span class="yb-gallery__count">1 / {len(p['imagens'])}</span>
@@ -3146,7 +3275,7 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
            E link, nao enfeite: nota que nao leva as avaliacoes e beco. -->
       <a class="yb-buybox__rating" href="#reviews">
         <span class="yb-rating" role="img" aria-label="{AVALIACAO['nota']} of 5, {p.get('reviews', AVALIACAO['total'])} reviews">
-          <span class="yb-rating__stars" aria-hidden="true">★★★★★</span>
+          <span class="yb-stars" style="--yb-stars:{AVALIACAO['nota']}" aria-hidden="true"></span>
           <span class="yb-rating__score">{AVALIACAO['nota']}</span>
           <span class="yb-rating__count">({p.get('reviews', AVALIACAO['total']):,} reviews)</span></span>
       </a>
@@ -3216,12 +3345,7 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
         corpo = f"""{ld}
 {header(promo=relacionados[0])}
 
-<main class="yb-page">
-  <nav class="yb-crumb yb-block--tight" aria-label="Breadcrumb">
-    <ol><li><a href="index.html">Home</a></li><li><a href="{linha_href}">{linha_nome}</a></li>
-    <li><span aria-current="page">{p['titulo']}</span></li></ol>
-  </nav>
-
+<main id="conteudo" tabindex="-1" class="yb-page">
 {bloco_compra}
 
   <!-- As avaliacoes tambem vivem aqui, e nao so na home: e o destino da nota
@@ -3262,7 +3386,7 @@ def montar_faq(destino):
     corpo = f"""{header(promo=prods[2])}
 {faixa_parceiro()}
 
-<main class="yb-page">
+<main id="conteudo" tabindex="-1" class="yb-page">
   <!-- `--tight` e o que da o respiro do header: sem ela o breadcrumb encostava
        na barra (medido: 0px) enquanto a PDP, que ja usava a classe, guardava
        24. Duas telas com breadcrumb e dois espacamentos diferentes. -->
@@ -3273,13 +3397,7 @@ def montar_faq(destino):
     </ol>
   </nav>
 
-  <div class="yb-block">
-    <h1>Frequently asked questions</h1>
-    <p class="yb-block__lede">Shipping, returns and the products themselves. What is not
-    here, our team answers by email.</p>
-  </div>
-
-{faq(cabecalho=False)}
+{faq(cabecalho=False, titulo_pagina='Frequently asked questions')}
 </main>
 
 {fim_de_pagina(prods)}"""
@@ -3289,11 +3407,11 @@ def montar_faq(destino):
 def montar_home_v2(destino, cliente=None):
     """Home v2 — a mesma loja na gramatica de e-commerce dos EUA.
 
-    Nao substitui a v1: as duas sao geradas, e a v1 continua sendo `index.html`.
+    Nao substitui a v1: as duas sao geradas, e a v1 continua sendo `home.html`.
     O que muda nao e estilo, e ORDEM e ORIGEM DO TEXTO.
 
     1. O hero deixa de ser arte de campanha com texto dentro do pixel e passa a
-       ser `.yb-mediabanner` com texto em HTML, em ingles. Ver HERO_V2.
+       ser `.yb-bannerhero` com texto em HTML, em ingles. Ver HERO_V2.
 
     2. A faixa de garantias sobe do meio da pagina para logo abaixo do hero.
        Frete, devolucao e "formaldehyde-free" sao a primeira duvida de quem
@@ -3337,14 +3455,14 @@ def montar_home_v2(destino, cliente=None):
     for i, pr in enumerate(prods):
         pr['destaque'] = i in (0, 3)
 
-    em_oferta = next((x for x in prods if x['handle'] == OFERTA['produto']), prods[0])
+    em_oferta = escolher_oferta(prods)
     vizinhos = um_por_linha(prods, 3, excluir=[em_oferta])
     cards = vitrine_best_sellers(em_oferta, vizinhos, destino)
 
     corpo = f"""{header(promo=prods[2], cliente=cliente)}
 {faixa_parceiro()}
 
-<main>
+<main id="conteudo" tabindex="-1">
 {hero_v2()}
 
   <div class="yb-page">
@@ -3427,18 +3545,22 @@ def montar_home_v3(destino):
     terceira vez que o sistema prova que a ordem da loja muda sem tocar em
     folha de estilo.
 
-    O banner do topo e `hero_v2()`, o mesmo da v2: `.yb-mediabanner` com o
+    O banner do topo e `hero_v2()`, o mesmo da v2: `.yb-bannerhero` com o
     texto em HTML e em ingles. A alternativa era `banner()`, a arte de campanha
     da v1 — um JPEG com a promessa desenhada dentro do pixel, em portugues.
     Ela nao e lida por busca, nao e traduzida, nao e lida em voz alta e nao
     reflui no celular (ver a nota de HERO_V2). O recado do parceiro vem dentro
     dos dois, entao "banner + Partner" fica satisfeito de qualquer forma.
+
+    Depois o usuario pediu as duas coisas juntas: a arte da v1 entrou como
+    segundo slide do mesmo trilho (HERO_ARTE, `.yb-bannerhero--arte`). O h1
+    continua no primeiro, que e texto em HTML.
     """
     prods = dados.catalogo(os.path.join(destino, 'img'), 8)
     for i, pr in enumerate(prods):
         pr['destaque'] = i in (0, 3)
 
-    em_oferta = next((x for x in prods if x['handle'] == OFERTA['produto']), prods[0])
+    em_oferta = escolher_oferta(prods)
     vizinhos = um_por_linha(prods, 3, excluir=[em_oferta])
     cards = vitrine_best_sellers(em_oferta, vizinhos, destino)
 
@@ -3447,8 +3569,8 @@ def montar_home_v3(destino):
     corpo = f"""{header(promo=prods[2])}
 {faixa_parceiro()}
 
-<main>
-{hero_v2()}
+<main id="conteudo" tabindex="-1">
+{hero_v2(arte=HERO_ARTE)}
 
   <div class="yb-page">
     <section class="yb-block">
@@ -3494,22 +3616,32 @@ def montar_home_v3(destino):
 
 
 if __name__ == '__main__':
-    # Gera numa pasta temporaria e troca no fim. Apagar `nova-loja/` antes de
+    # Gera numa pasta temporaria e troca no fim. Apagar `pages/` antes de
     # gerar deixava a pasta vazia se a rede falhasse no meio (ja aconteceu com
     # HTTP 429), e dois processos em paralelo derrubavam um ao outro
     # (`OSError: Directory not empty: 'img'`). Agora cada processo escreve na
     # sua propria pasta e a versao publicada so muda quando a nova esta inteira.
-    final = os.path.join(RAIZ, 'nova-loja')
+    # As telas sao o ultimo degrau da escada, e moram com os outros quatro —
+    # `_captura/` guarda o que se CAPTUROU da loja; isto aqui o sistema monta.
+    final = os.path.join(PROJETO, 'pages')
     destino = f'{final}.tmp-{os.getpid()}'
     if os.path.exists(destino): shutil.rmtree(destino)
     os.makedirs(destino)
     print("preparando CSS, sprite e fonte…"); preparar(destino)
     print("montando home…")
-    open(os.path.join(destino, 'index.html'), 'w', encoding='utf-8').write(montar_home(destino))
+    # `home.html`, e nao `index.html`: o index de `pages/` e a pagina do grupo
+    # Páginas, gerada por tools/moldura.mjs. Toda area do sistema tem o proprio
+    # index, e o de pages/ nao podia ser uma das onze telas.
+    open(os.path.join(destino, 'home.html'), 'w', encoding='utf-8').write(montar_home(destino))
     print("montando home v2…")
     open(os.path.join(destino, 'index-v2.html'), 'w', encoding='utf-8').write(montar_home_v2(destino))
     print("montando pdp…")
-    open(os.path.join(destino, 'pdp.html'), 'w', encoding='utf-8').write(montar_pdp(destino))
+    # A PDP padrao passou a usar o arranjo `v2` — faixa, recado do parceiro,
+    # compra, relacionados e avaliacoes, sem breadcrumb e sem acordeao de
+    # navegacao. O arranjo `padrao` continua vivo: e o que as tres telas de
+    # estado (esgotada, variante, promocao) ainda montam.
+    open(os.path.join(destino, 'pdp.html'), 'w', encoding='utf-8').write(
+        montar_pdp(destino, arranjo='v2'))
     print("montando pdp esgotada…")
     open(os.path.join(destino, 'pdp-esgotado.html'), 'w', encoding='utf-8').write(
         montar_pdp(destino, ESGOTADO))
@@ -3528,12 +3660,22 @@ if __name__ == '__main__':
         montar_pdp(destino, compare=COMPARE_FORJADO))
     print("montando home v3…")
     open(os.path.join(destino, 'index-v3.html'), 'w', encoding='utf-8').write(montar_home_v3(destino))
-    print("montando pdp v2…")
-    open(os.path.join(destino, 'pdp-v2.html'), 'w', encoding='utf-8').write(
-        montar_pdp(destino, arranjo='v2'))
+    print("montando pdp de link de influencer…")
+    # Mesmo arranjo da PDP padrao. O nome diz o CAMINHO de chegada: o recado do
+    # parceiro so existe quando a pessoa vem de link patrocinado (ver
+    # `recado_parceiro`), e e isso que esta tela documenta.
+    open(os.path.join(destino, 'pdp-influencer.html'), 'w', encoding='utf-8').write(
+        montar_pdp(destino, arranjo='v2', parceiro=True))
+    # A pagina do grupo Páginas (`pages/index.html`) nao e montada aqui — ela e
+    # gerada por tools/moldura.mjs. Como esta troca substitui a pasta INTEIRA,
+    # ela seria apagada em silencio: o build a reescreve logo depois, mas quem
+    # roda so o gerador ficaria sem o index. Por isso ela vem junto.
     velho = f'{final}.old-{os.getpid()}'
+    indice = os.path.join(final, 'index.html')
+    if os.path.exists(indice):
+        shutil.copy(indice, os.path.join(destino, 'index.html'))
     if os.path.exists(final): os.rename(final, velho)
     os.rename(destino, final)
     shutil.rmtree(velho, ignore_errors=True)
     n = len(os.listdir(os.path.join(final, 'img')))
-    print(f"pronto: nova-loja/  ({n} imagens reais)")
+    print(f"pronto: pages/  ({n} imagens reais)")

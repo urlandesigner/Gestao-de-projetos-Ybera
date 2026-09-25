@@ -1,0 +1,28 @@
+<h2>Architecture</h2>
+    <p class="when">Três camadas mais uma de mercado. A regra é simples: componente só enxerga a camada 1.</p>
+<div class="layers">
+        <div class="layer layer--0">
+          <h3>Camada 0 · Primitivos</h3>
+          <p>Vocabulário bruto. Nenhum componente consome isto direto.</p>
+          <pre>--yb-gray-950: #1E1E1F;
+--yb-magenta-600: #CA235F;</pre>
+        </div>
+        <div class="layer layer--1">
+          <h3>Camada 1 · Semânticos</h3>
+          <p>A intenção. A única camada que componentes consomem e que alguém
+          precisa ler para entender o sistema.</p>
+          <pre>--yb-text-primary: var(--yb-gray-950);
+--yb-action-bg: var(--yb-magenta-600);</pre>
+        </div>
+        <div class="layer layer--2">
+          <h3>Camada 2 · Componente</h3>
+          <p>Só onde há desvio local. Cada desvio fica visível e auditável.</p>
+          <pre>.yb-card{ --yb-card-title-lines: 2; }</pre>
+        </div>
+        <div class="layer layer--m">
+          <h3>Camada de mercado</h3>
+          <p>Aqui não se troca identidade — e hoje não se troca nada: o seletor
+          existe vazio, de propósito (ver a nota em <code>01-semantic.css</code>).</p>
+          <pre>[data-market="br"] { }</pre>
+        </div>
+      </div>

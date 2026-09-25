@@ -1,0 +1,54 @@
+<h2>Partner</h2>
+    <p class="when">Recado de quem indicou o produto, com foto e nome. Aparece quando a pessoa chega por link patrocinado &mdash; e some do caminho assim que ela rola.</p>
+    <p class="when">Os tr&ecirc;s palcos abaixo s&atilde;o o <b>mesmo recado</b> em tr&ecirc;s momentos da
+    rolagem, na ordem em que a pessoa os v&ecirc;. Aqui eles est&atilde;o lado a lado e parados:
+    na loja um vira o outro, e o terceiro vive preso ao cabe&ccedil;alho &mdash; dentro desta
+    p&aacute;gina ele grudaria na janela da documenta&ccedil;&atilde;o em vez de na da loja.</p>
+    <h3 class="row-label">1 &middot; Sobre a arte &mdash; o recado inteiro &middot; <code>.yb-partner</code></h3>
+    <div class="stage stage--dim" style="position:relative; min-height:13rem">
+      <div class="yb-partner" style="inset-inline-start:var(--yb-space-5)">
+        <div class="yb-partner__dock">
+          <button class="yb-partner__avatar" type="button" aria-expanded="true" aria-controls="doc-partner-msg">
+            <img src="../pages/img/02sauana-2896ea7c.webp" alt="">
+            <span class="yb-sr-only">Recado de @naymazzeto</span>
+          </button>
+          <div class="yb-partner__bubble" id="doc-partner-msg">
+            <p>Hey, it&rsquo;s <b>@naymazzeto</b>! Enjoy my exclusive <b>partner discount</b>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <h3 class="row-label">2 &middot; Recolhido &mdash; depois de 96px de rolagem &middot; <code>[data-recolhido]</code></h3>
+    <div class="stage stage--dim" style="position:relative; min-height:8rem">
+      <div class="yb-partner" data-recolhido style="inset-inline-start:var(--yb-space-5)">
+        <div class="yb-partner__dock">
+          <button class="yb-partner__avatar" type="button" aria-expanded="false" aria-controls="doc-partner-msg2">
+            <img src="../pages/img/02sauana-2896ea7c.webp" alt="">
+            <span class="yb-sr-only">Recado de @naymazzeto</span>
+          </button>
+          <div class="yb-partner__bubble" id="doc-partner-msg2">
+            <p>Hey, it&rsquo;s <b>@naymazzeto</b>! Enjoy my exclusive <b>partner discount</b>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <h3 class="row-label">3 &middot; Depois da arte &mdash; a faixa abaixo do cabeçalho &middot; <code>.yb-partnerbar</code></h3>
+    <div class="stage">
+      <!-- `position:static` só aqui na doc: na loja ela é fixa abaixo do cabeçalho,
+           e fixa dentro desta página grudaria na janela da documentação. -->
+      <div class="yb-partnerbar" style="position:static">
+        <p class="yb-partnerbar__text">Hey, it&rsquo;s <b>@naymazzeto</b>! Enjoy my exclusive <b>partner discount</b>.</p>
+      </div>
+    </div>
+    <div class="note">
+      <b>Encolhe, não some</b>
+      <p>O desconto vale a sessão inteira, então o recado não pode sumir: passados 96px
+      de rolagem o balão recolhe e fica o avatar com um ponto de aviso, clicável para
+      reabrir. Depois do primeiro clique a rolagem para de mandar.</p>
+      <p>Passada a arte, uma faixa cinza repete a frase <b>sem a foto</b>. O preto logo
+      acima anuncia a loja; este cinza é o recado de uma pessoa. Nenhum dos dois usa
+      magenta, porque nenhum dos dois é ação.</p>
+      <p>A âncora é o próprio banner, e não a janela: o bloco de cabeçalho mede 117px no
+      desktop e 109 no celular, e somar altura que muda com quebra de linha é chute com
+      cara de cálculo. O pai precisa de <code>position:relative</code>.</p>
+    </div>

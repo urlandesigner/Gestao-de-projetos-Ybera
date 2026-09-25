@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Templates — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../base/ybera-base.css">
+<link rel="stylesheet" href="../atoms/ybera-atoms.css">
+<link rel="stylesheet" href="../molecules/ybera-molecules.css">
+<link rel="stylesheet" href="../organisms/ybera-organisms.css">
+<link rel="stylesheet" href="ybera-templates.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="../doc/doc.css">
+<link rel="stylesheet" href="../doc/doc-nav.css">
+<script src="../doc/doc.js" defer></script>
+<style>
+/* Sem seletor de tipo: ver o cabecalho de doc/doc.css. */
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+</style>
+</head>
+<body class="ficha" data-nivel="templates" data-moldura="centrada">
+<!-- @moldura · gerada por tools/moldura.mjs · não edite -->
+<header class="ds-top">
+  <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
+  <div class="ds-top__busca" hidden>
+    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
+    <input id="ds-filtro" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filtro>
+    <p class="nav-conta" role="status" aria-live="polite"></p>
+  </div>
+  <p class="ds-top__versao">v0.12.1</p>
+</header>
+<nav class="ds-nav" aria-label="Navegação do design system">
+  <ul class="ds-nav__solta">
+    <li><a href="../index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 7 8 2.5 13.5 7"/><path d="M4 6.5V13h8V6.5"/><path d="M6.5 13V9.5h3V13"/></svg>Início</a></li>
+  </ul>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5.5 8 3l6 2.5L8 8 2 5.5Z"/><path d="M2 8.8 8 11.3l6-2.5"/><path d="M2 12l6 2.5 6-2.5"/></svg>Fundação</summary>
+    <ul>
+      <li><a href="../tokens/index.html">Visão geral</a></li>
+      <li><a href="../tokens/architecture.html">Architecture</a></li>
+      <li><a href="../tokens/color.html">Color</a></li>
+      <li><a href="../tokens/typography.html">Typography</a></li>
+      <li><a href="../tokens/space.html">Space</a></li>
+      <li><a href="../tokens/shape.html">Shape</a></li>
+      <li><a href="../tokens/elevation.html">Elevation</a></li>
+      <li><a href="../tokens/state.html">State</a></li>
+      <li><a href="../tokens/usage.html">How to use</a></li>
+      <li><a href="../icons/index.html">Ícones</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Componentes</summary>
+    <ul>
+      <li><a href="../molecules/accordion.html">Accordion</a></li>
+      <li><a href="../molecules/alert.html">Alert</a></li>
+      <li><a href="../atoms/avatar.html">Avatar</a></li>
+      <li><a href="../atoms/badge.html">Badge</a></li>
+      <li><a href="../molecules/bannerhero.html">Banner hero</a></li>
+      <li><a href="../molecules/bannermedia.html">Banner media</a></li>
+      <li><a href="../molecules/crumb.html">Breadcrumb</a></li>
+      <li><a href="../atoms/button.html">Button</a></li>
+      <li><a href="../molecules/offercard.html">Card offer</a></li>
+      <li><a href="../molecules/card.html">Card product</a></li>
+      <li><a href="../atoms/seals.html">Certification seals</a></li>
+      <li><a href="../atoms/checkbox.html">Checkbox</a></li>
+      <li><a href="../atoms/chip.html">Chip</a></li>
+      <li><a href="../molecules/collection.html">Collection card</a></li>
+      <li><a href="../molecules/dropdown.html">Dropdown</a></li>
+      <li><a href="../molecules/empty.html">Empty state</a></li>
+      <li><a href="../atoms/iconbtn.html">Icon button</a></li>
+      <li><a href="../atoms/input.html">Input</a></li>
+      <li><a href="../atoms/link.html">Link</a></li>
+      <li><a href="../atoms/logo.html">Logo</a></li>
+      <li><a href="../atoms/notice.html">Notice</a></li>
+      <li><a href="../atoms/offerseal.html">Offer seal</a></li>
+      <li><a href="../molecules/pagination.html">Pagination</a></li>
+      <li><a href="../molecules/partner.html">Partner</a></li>
+      <li><a href="../molecules/post.html">Post</a></li>
+      <li><a href="../molecules/price.html">Price</a></li>
+      <li><a href="../atoms/progress.html">Progress bar</a></li>
+      <li><a href="../molecules/stepper.html">Quantity stepper</a></li>
+      <li><a href="../atoms/radio.html">Radio</a></li>
+      <li><a href="../molecules/rating.html">Rating</a></li>
+      <li><a href="../molecules/review.html">Review</a></li>
+      <li><a href="../atoms/select.html">Select</a></li>
+      <li><a href="../atoms/skeleton.html">Skeleton</a></li>
+      <li><a href="../atoms/stars.html">Stars</a></li>
+      <li><a href="../atoms/switch.html">Switch</a></li>
+      <li><a href="../atoms/textarea.html">Textarea</a></li>
+      <li><a href="../molecules/toast.html">Toast</a></li>
+      <li><a href="../molecules/track.html">Track</a></li>
+      <li><a href="../molecules/variant.html">Variant picker</a></li>
+      <li><a href="../molecules/video.html">Vertical video carousel</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2.5" width="12" height="3" rx="1"/><rect x="2" y="6.8" width="12" height="3" rx="1"/><rect x="2" y="11.1" width="12" height="2.4" rx="1"/></svg>Blocos</summary>
+    <ul>
+      <li><a href="../organisms/quote.html">Brand quote</a></li>
+      <li><a href="../organisms/buybox.html">Buy box</a></li>
+      <li><a href="../organisms/cart-drawer.html">Cart drawer</a></li>
+      <li><a href="../organisms/catalog.html">Catalog</a></li>
+      <li><a href="../organisms/drawer.html">Drawer</a></li>
+      <li><a href="../organisms/faq.html">FAQ</a></li>
+      <li><a href="../organisms/footer.html">Footer</a></li>
+      <li><a href="../organisms/shipping-progress.html">Free shipping progress</a></li>
+      <li><a href="../organisms/gallery.html">Gallery</a></li>
+      <li><a href="../organisms/header.html">Header</a></li>
+      <li><a href="../organisms/hero.html">Hero</a></li>
+      <li><a href="../organisms/logobar.html">Logo bar</a></li>
+      <li><a href="../organisms/manifesto.html">Manifesto</a></li>
+      <li><a href="../organisms/dialog.html">Modal</a></li>
+      <li><a href="../organisms/nav.html">Nav</a></li>
+      <li><a href="../organisms/search.html">Search overlay</a></li>
+      <li><a href="../organisms/split.html">Split</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3.5" width="9" height="9" rx="1.5"/><path d="M5.5 3.5V1.5h9v9h-2"/></svg>Exemplos</summary>
+    <ul>
+      <li><a href="../pages/index.html">Visão geral</a></li>
+      <li><a href="../pages/home.html" target="_blank" rel="noopener">Home v1<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-v2.html" target="_blank" rel="noopener">Home v2<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-v3.html" target="_blank" rel="noopener">Home v3<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-logado.html" target="_blank" rel="noopener">Home · cliente logado<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp.html" target="_blank" rel="noopener">PDP<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-influencer.html" target="_blank" rel="noopener">PDP link influencer<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-esgotado.html" target="_blank" rel="noopener">PDP esgotada<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-variante.html" target="_blank" rel="noopener">PDP com variante<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-oferta.html" target="_blank" rel="noopener">PDP em promoção<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/faq.html" target="_blank" rel="noopener">FAQ<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/404.html" target="_blank" rel="noopener">404<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+    </ul>
+  </details>
+  <ul class="ds-nav__solta">
+    <li><a href="../preview/index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3" width="13" height="8.5" rx="1.5"/><path d="M5.5 14h5"/><path d="M8 11.5V14"/></svg>Preview</a></li>
+  </ul>
+</nav>
+<!-- /@moldura -->
+
+<main class="main">
+  <a class="ficha-volta" href="../index.html">← Design system</a>
+  <p class="ficha-nivel">Degrau 4 de 4</p>
+  <h1 class="ficha-titulo">Templates</h1>
+  <p class="ficha-quando">O que toda página herda antes de escolher um organismo sequer.</p>
+  <p class="bloco-lede"><b>A regra do degrau:</b> O esqueleto da página, sem conteúdo: largura, ritmo e cabeçalho de seção.</p>
+
+
+  <section class="grade-grupo">
+    <h2>Templates <span class="grade-conta">1</span></h2>
+    <div class="grade">
+      <a class="peca" id="page-layout" href="page-layout.html">
+        <b>Page layout</b>
+        <span>O esqueleto de qualquer página: largura máxima, ritmo entre blocos e cabeçalho de seção. Toda página nova começa por estes três.</span>
+      </a>
+    </div>
+  </section>
+
+
+  <section class="grade-grupo">
+    <h2>Por escrever <span class="grade-conta">5</span></h2>
+    <p class="grade-lede">Este degrau nasceu do CSS, e só o Page layout tem folha
+    (<code>.yb-page</code>, <code>.yb-block</code>, <code>.yb-section</code>). Mas
+    template é <b>arranjo</b>, não estilo: os esqueletos de verdade existem hoje só
+    como as <a href="../pages/index.html">onze telas</a>, sem nenhuma página dizendo
+    o que é obrigatório e qual ordem não se inverte.</p>
+    <ul class="pendente-lista">
+      <li><b>Home</b> — Catorze seções na ordem que o time pediu — e as três versões que existem hoje são a mesma pergunta respondida de três jeitos.</li>
+      <li><b>PDP</b> — Breadcrumb, galeria e bloco de compra acima da dobra; acordeão, relacionados e avaliações abaixo. A ordem dos sete níveis de informação é fixa.</li>
+      <li><b>Catálogo</b> — Título, contagem, filtros ativos e grade. A contagem é obrigatória: é ela que diz se vale filtrar mais.</li>
+      <li><b>FAQ</b> — Perguntas em acordeão com índice lateral, e o recorte curto que a home usa.</li>
+      <li><b>404</b> — O único caminho que terminava numa tela que não era nossa.</li>
+    </ul>
+  </section>
+
+  <nav class="ficha-passo ficha-passo--escada" aria-label="Degrau anterior e próximo">
+    <a href="../organisms/index.html" rel="prev"><span aria-hidden="true">←</span> Blocos</a>
+    <span></span>
+  </nav>
+
+  <p class="doc-credit">Índice gerado por <code>tools/fichas.mjs</code> a partir de
+  <code>templates/pecas/</code>. Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>
+</main>
+
+</body>
+</html>

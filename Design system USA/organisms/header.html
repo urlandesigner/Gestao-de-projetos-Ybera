@@ -1,0 +1,1023 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Header — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../base/ybera-base.css">
+<link rel="stylesheet" href="../atoms/ybera-atoms.css">
+<link rel="stylesheet" href="../molecules/ybera-molecules.css">
+<link rel="stylesheet" href="ybera-organisms.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="../doc/doc.css">
+<link rel="stylesheet" href="../doc/doc-nav.css">
+<script src="../doc/doc.js" defer></script>
+<style>
+/* Sem seletor de tipo: ver o cabecalho de doc/doc.css. */
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+</style>
+</head>
+<body class="ficha" data-nivel="organisms" data-moldura="centrada">
+<!-- @moldura · gerada por tools/moldura.mjs · não edite -->
+<header class="ds-top">
+  <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
+  <div class="ds-top__busca" hidden>
+    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
+    <input id="ds-filtro" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filtro>
+    <p class="nav-conta" role="status" aria-live="polite"></p>
+  </div>
+  <p class="ds-top__versao">v0.12.1</p>
+</header>
+<nav class="ds-nav" aria-label="Navegação do design system">
+  <ul class="ds-nav__solta">
+    <li><a href="../index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 7 8 2.5 13.5 7"/><path d="M4 6.5V13h8V6.5"/><path d="M6.5 13V9.5h3V13"/></svg>Início</a></li>
+  </ul>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5.5 8 3l6 2.5L8 8 2 5.5Z"/><path d="M2 8.8 8 11.3l6-2.5"/><path d="M2 12l6 2.5 6-2.5"/></svg>Fundação</summary>
+    <ul>
+      <li><a href="../tokens/index.html">Visão geral</a></li>
+      <li><a href="../tokens/architecture.html">Architecture</a></li>
+      <li><a href="../tokens/color.html">Color</a></li>
+      <li><a href="../tokens/typography.html">Typography</a></li>
+      <li><a href="../tokens/space.html">Space</a></li>
+      <li><a href="../tokens/shape.html">Shape</a></li>
+      <li><a href="../tokens/elevation.html">Elevation</a></li>
+      <li><a href="../tokens/state.html">State</a></li>
+      <li><a href="../tokens/usage.html">How to use</a></li>
+      <li><a href="../icons/index.html">Ícones</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Componentes</summary>
+    <ul>
+      <li><a href="../molecules/accordion.html">Accordion</a></li>
+      <li><a href="../molecules/alert.html">Alert</a></li>
+      <li><a href="../atoms/avatar.html">Avatar</a></li>
+      <li><a href="../atoms/badge.html">Badge</a></li>
+      <li><a href="../molecules/bannerhero.html">Banner hero</a></li>
+      <li><a href="../molecules/bannermedia.html">Banner media</a></li>
+      <li><a href="../molecules/crumb.html">Breadcrumb</a></li>
+      <li><a href="../atoms/button.html">Button</a></li>
+      <li><a href="../molecules/offercard.html">Card offer</a></li>
+      <li><a href="../molecules/card.html">Card product</a></li>
+      <li><a href="../atoms/seals.html">Certification seals</a></li>
+      <li><a href="../atoms/checkbox.html">Checkbox</a></li>
+      <li><a href="../atoms/chip.html">Chip</a></li>
+      <li><a href="../molecules/collection.html">Collection card</a></li>
+      <li><a href="../molecules/dropdown.html">Dropdown</a></li>
+      <li><a href="../molecules/empty.html">Empty state</a></li>
+      <li><a href="../atoms/iconbtn.html">Icon button</a></li>
+      <li><a href="../atoms/input.html">Input</a></li>
+      <li><a href="../atoms/link.html">Link</a></li>
+      <li><a href="../atoms/logo.html">Logo</a></li>
+      <li><a href="../atoms/notice.html">Notice</a></li>
+      <li><a href="../atoms/offerseal.html">Offer seal</a></li>
+      <li><a href="../molecules/pagination.html">Pagination</a></li>
+      <li><a href="../molecules/partner.html">Partner</a></li>
+      <li><a href="../molecules/post.html">Post</a></li>
+      <li><a href="../molecules/price.html">Price</a></li>
+      <li><a href="../atoms/progress.html">Progress bar</a></li>
+      <li><a href="../molecules/stepper.html">Quantity stepper</a></li>
+      <li><a href="../atoms/radio.html">Radio</a></li>
+      <li><a href="../molecules/rating.html">Rating</a></li>
+      <li><a href="../molecules/review.html">Review</a></li>
+      <li><a href="../atoms/select.html">Select</a></li>
+      <li><a href="../atoms/skeleton.html">Skeleton</a></li>
+      <li><a href="../atoms/stars.html">Stars</a></li>
+      <li><a href="../atoms/switch.html">Switch</a></li>
+      <li><a href="../atoms/textarea.html">Textarea</a></li>
+      <li><a href="../molecules/toast.html">Toast</a></li>
+      <li><a href="../molecules/track.html">Track</a></li>
+      <li><a href="../molecules/variant.html">Variant picker</a></li>
+      <li><a href="../molecules/video.html">Vertical video carousel</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo" open>
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2.5" width="12" height="3" rx="1"/><rect x="2" y="6.8" width="12" height="3" rx="1"/><rect x="2" y="11.1" width="12" height="2.4" rx="1"/></svg>Blocos</summary>
+    <ul>
+      <li><a href="../organisms/quote.html">Brand quote</a></li>
+      <li><a href="../organisms/buybox.html">Buy box</a></li>
+      <li><a href="../organisms/cart-drawer.html">Cart drawer</a></li>
+      <li><a href="../organisms/catalog.html">Catalog</a></li>
+      <li><a href="../organisms/drawer.html">Drawer</a></li>
+      <li><a href="../organisms/faq.html">FAQ</a></li>
+      <li><a href="../organisms/footer.html">Footer</a></li>
+      <li><a href="../organisms/shipping-progress.html">Free shipping progress</a></li>
+      <li><a href="../organisms/gallery.html">Gallery</a></li>
+      <li><a href="../organisms/header.html" aria-current="page">Header</a></li>
+      <li><a href="../organisms/hero.html">Hero</a></li>
+      <li><a href="../organisms/logobar.html">Logo bar</a></li>
+      <li><a href="../organisms/manifesto.html">Manifesto</a></li>
+      <li><a href="../organisms/dialog.html">Modal</a></li>
+      <li><a href="../organisms/nav.html">Nav</a></li>
+      <li><a href="../organisms/search.html">Search overlay</a></li>
+      <li><a href="../organisms/split.html">Split</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3.5" width="9" height="9" rx="1.5"/><path d="M5.5 3.5V1.5h9v9h-2"/></svg>Exemplos</summary>
+    <ul>
+      <li><a href="../pages/index.html">Visão geral</a></li>
+      <li><a href="../pages/home.html" target="_blank" rel="noopener">Home v1<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-v2.html" target="_blank" rel="noopener">Home v2<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-v3.html" target="_blank" rel="noopener">Home v3<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-logado.html" target="_blank" rel="noopener">Home · cliente logado<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp.html" target="_blank" rel="noopener">PDP<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-influencer.html" target="_blank" rel="noopener">PDP link influencer<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-esgotado.html" target="_blank" rel="noopener">PDP esgotada<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-variante.html" target="_blank" rel="noopener">PDP com variante<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-oferta.html" target="_blank" rel="noopener">PDP em promoção<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/faq.html" target="_blank" rel="noopener">FAQ<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/404.html" target="_blank" rel="noopener">404<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+    </ul>
+  </details>
+  <ul class="ds-nav__solta">
+    <li><a href="../preview/index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3" width="13" height="8.5" rx="1.5"/><path d="M5.5 14h5"/><path d="M8 11.5V14"/></svg>Preview</a></li>
+  </ul>
+</nav>
+<!-- /@moldura -->
+
+<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
+  <ol>
+    <li><a href="#demos">Como se parece</a></li>
+    <li><a href="#mobile">Mobile</a></li>
+    <li><a href="#feita-de">De que é feita</a></li>
+    <li><a href="#anatomia">Anatomia e API</a></li>
+    <li><a href="#marcacao">Marcação</a></li>
+    <li><a href="#acessibilidade">Acessibilidade</a></li>
+    <li><a href="#faca">Faça / não faça</a></li>
+  </ol>
+</aside>
+
+<main class="main">
+  <div class="ficha-topo">
+    <nav class="ficha-trilha" aria-label="Você está aqui">
+      
+      <a href="index.html#header">Blocos</a>
+      <span aria-hidden="true">/</span>
+      <b aria-current="page">Header</b>
+    </nav>
+    <nav class="ficha-passo" aria-label="Peça anterior e próxima">
+      <a href="gallery.html" rel="prev"><span aria-hidden="true">←</span> Gallery</a>
+      <a href="hero.html" rel="next">Hero <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
+  <h1 class="ficha-titulo">Header</h1>
+  <p class="ficha-quando">O topo da loja: anúncio, navegação e ações. Um DOM só serve a barra do desktop e a gaveta do mobile; a loja hoje escreve os 25 links duas vezes.</p>
+  <!-- Só a classe base. A fileira trazia também as contagens de modificador,
+       elemento, estado e token — cinco números que ninguém usa para decidir
+       nada e que, desde que a aba Anatomia existe, repetem em placar o que a
+       aba mostra por extenso, com os nomes. Número sem o nome ao lado é um
+       resumo de algo que está a um clique. -->
+  <ul class="ficha-fatos">
+    <li>Classe base <b><code>.yb-header</code></b></li>
+  </ul>
+
+  <!-- A FICHA INTEIRA EM ABAS, e nada solto embaixo delas.
+
+       Antes so tres blocos eram aba (Preview, Codigo, Anatomia) e outros tres
+       ficavam abaixo do container — Mobile, Acessibilidade e Faca/nao faca.
+       Como nada na tela dizia que a area das abas tinha acabado (20px de vao e
+       a mesma tipografia), os tres liam como conteudo da aba aberta, qualquer
+       que fosse ela.
+
+       Agora tudo e aba, na organizacao do outro design system da casa:
+       Componente · Anatomia · Regras de uso · Acessibilidade. "Estados" fica de
+       fora por enquanto — so 2 das 66 pecas tem demonstracao de estado, e uma
+       aba vazia em 64 fichas ensina menos que a ausencia dela.
+
+       O CELULAR E A MARCACAO ENTRARAM EM "COMPONENTE" porque respondem a mesma
+       pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
+       que telefone e assunto separado do desktop, que e o oposto do que um
+       design system quer dizer. -->
+  <div class="abas" data-yb-abas>
+  <section class="bloco" id="demos" data-aba="Componente">
+    <h2 class="bloco-titulo">Como se parece</h2>
+    <div class="stage stage--overflow">
+      <header class="yb-header">
+        <div class="yb-notice">Free shipping on orders over <b>$50</b></div>
+        <input class="yb-header__drawer" type="checkbox" id="dnav-open" aria-label="Menu">
+        <div class="yb-header__bar">
+          <label class="yb-iconbtn yb-header__icon yb-header__burger" for="dnav-open" aria-hidden="true"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-dropdown"/></svg></label>
+          <a class="yb-header__logo" href="#demos"><span class="yb-logo yb-logo--md"><img src="../brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span></a>
+          <nav class="yb-header__nav" aria-label="Main">
+            <div class="yb-nav__head">
+              <span class="yb-logo yb-logo--md" aria-hidden="true"><img src="../brand/ybera-logo.webp" alt="" width="360" height="139"></span>
+              <label class="yb-iconbtn yb-nav__close" for="dnav-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></label>
+            </div>
+            <div class="yb-nav__conta">
+              <span class="yb-nav__conta-quem">
+                <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg>
+                <b class="yb-nav__conta-nome">Welcome, Visitor</b>
+              </span>
+              <a class="yb-btn yb-btn--primary yb-btn--sm" href="#demos">Log in</a>
+            </div>
+            <ul class="yb-nav">
+            <li class="yb-nav__item"><a class="yb-nav__link" href="#demos">Home</a></li>
+            <li class="yb-nav__item">
+              <input class="yb-nav__toggle" type="checkbox" id="dnav1">
+              <label class="yb-nav__link" for="dnav1">Shop <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+              <div class="yb-nav__panel"><div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">All Products</a><ul class="yb-nav__sublist"><li><a href="#demos">Best Sellers</a></li><li><a href="#demos">Kit</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Collection</a><ul class="yb-nav__sublist"><li><a href="#demos">Ybera Paris</a></li><li><a href="#demos">Fashion Gold</a></li><li><a href="#demos">Cronograma</a></li><li><a href="#demos">100Timetros</a></li><li><a href="#demos">Capulana</a></li><li><a href="#demos">Terra Coco</a></li><li><a href="#demos">Hair Mist</a></li><li><a href="#demos">Vello</a></li><li><a href="#demos">Mirra</a></li><li><a href="#demos">Detox</a></li><li><a href="#demos">Life´s Flower</a></li><li><a href="#demos">Essência Brasileira</a></li><li><a href="#demos">Universal</a></li><li><a href="#demos">Genoma</a></li><li><a href="#demos">Quarta Camada</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Hair Problem</a><ul class="yb-nav__sublist"><li><a href="#demos">Damaged Hair</a></li><li><a href="#demos">Frizz &amp; Dryness</a></li><li><a href="#demos">Thinning / Hair Loss</a></li><li><a href="#demos">Undefined Curls</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle yb-nav__grouptitle--sale" href="#demos">Sales</a></div><div class="yb-nav__rail"><a class="yb-nav__promo" href="#demos"><div class="yb-nav__promo-media"><div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div></div><div class="yb-nav__promo-info"><p class="yb-nav__promo-name">Fashion Gold Keratin 300g + Protect &amp; Control Shampoo &amp; Mask</p><span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span><span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span></div></a><a class="yb-nav__pitch" href="#demos"><span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span><p class="yb-nav__pitch-title">Not sure where to start?</p><p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line — no guessing between fifteen collections.</p><ul class="yb-nav__pitch-steps"><li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li><li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li><li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li></ul><span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span></a></div></div></div>
+            </li>
+            <li class="yb-nav__item"><a class="yb-nav__link yb-nav__link--sale" href="#demos">Sales</a></li>
+            <li class="yb-nav__item"><a class="yb-nav__link" href="#demos">AI Hair Analysis</a></li>
+            <li class="yb-nav__item">
+              <input class="yb-nav__toggle" type="checkbox" id="dnav4">
+              <label class="yb-nav__link" for="dnav4">About Us <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+              <div class="yb-nav__panel"><div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Blog</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">New chapter Ybera</a></div></div></div>
+            </li>
+            <li class="yb-nav__item"><a class="yb-nav__link" href="#demos">Contact Us</a></li>
+            </ul>
+          </nav>
+          <div class="yb-header__actions">
+            <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Search" data-yb-open="site-search"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></button>
+            <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Account"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg></button>
+            <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-header__count">2</span></button>
+          </div>
+        </div>
+        <label class="yb-header__scrim" for="dnav-open" aria-hidden="true"></label>
+      </header>
+
+      <!-- A lupa do header abre o overlay de busca (componente `yb-search`).
+           Ele vive aqui, e não só na doc de componentes, porque é o header
+           quem o dispara: um gatilho sem destino é um botão que não faz nada,
+           e nenhum navegador avisa. -->
+      <dialog id="site-search" class="yb-search" aria-label="Search products">
+      <div class="yb-search__bar">
+        <form class="yb-search__form" role="search" action="#header" data-yb-search>
+          <svg class="yb-icon yb-search__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>
+          <input class="yb-search__input" type="search" name="q" autocomplete="off" autofocus
+                 placeholder="Search products, concerns, ingredients" aria-label="Search products">
+          <button class="yb-iconbtn yb-search__clear" type="reset" aria-label="Clear search" hidden>
+            <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg>
+          </button>
+          <button class="yb-search__close" type="button" data-yb-close>Close</button>
+        </form>
+      </div>
+
+      <div class="yb-search__body">
+        <div class="yb-search__panel" data-yb-search-zero>
+          <div class="yb-search__col">
+            <div class="yb-search__group">
+              <h3 class="yb-search__title">Recent</h3>
+              <ul class="yb-search__chips">
+                <li><button class="yb-chip" type="button"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-clock"/></svg>keratin</button></li>
+                <li><button class="yb-chip" type="button"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-clock"/></svg>fashion gold</button></li>
+                <li><button class="yb-chip" type="button"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-clock"/></svg>frizz</button></li>
+              </ul>
+            </div>
+            <div class="yb-search__group yb-search__group--secondary">
+              <h3 class="yb-search__title">Popular</h3>
+              <ul class="yb-search__list">
+                <li><a class="yb-search__link" href="#demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>hair botox</a></li>
+                <li><a class="yb-search__link" href="#demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>progressive brush</a></li>
+                <li><a class="yb-search__link" href="#demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>myrrh oil</a></li>
+              </ul>
+            </div>
+            <div class="yb-search__group yb-search__group--secondary">
+              <h3 class="yb-search__title">Categories</h3>
+              <ul class="yb-search__chips">
+                <li><a class="yb-chip" href="#demos">Smoothing</a></li>
+                <li><a class="yb-chip" href="#demos">Home care</a></li>
+                <li><a class="yb-chip" href="#demos">Kits</a></li>
+                <li><a class="yb-chip" href="#demos">Hair oils</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="yb-search__col">
+            <div class="yb-search__group">
+              <h3 class="yb-search__title">Best sellers</h3>
+              <a class="yb-search__item" href="#demos">
+                <span class="yb-search__thumb"></span>
+                <span>
+                  <span class="yb-search__name">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</span>
+                  <span class="yb-search__meta">Smoothing · 412 reviews</span>
+                </span>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b></span>
+              </a>
+              <a class="yb-search__item" href="#demos">
+                <span class="yb-search__thumb"></span>
+                <span>
+                  <span class="yb-search__name">Myrrh Hair Repair Oil — 15ml / 0.5 fl.oz</span>
+                  <span class="yb-search__meta">Hair oils · 203 reviews</span>
+                </span>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$29.90</b></span>
+              </a>
+              <a class="yb-search__item" href="#demos">
+                <span class="yb-search__thumb"></span>
+                <span>
+                  <span class="yb-search__name">KIT VELLO Shampoo 500ml + Hair Mask 500g</span>
+                  <span class="yb-search__meta">Home care · 87 reviews</span>
+                </span>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="yb-search__panel" data-yb-search-results hidden>
+          <div class="yb-search__col">
+            <div class="yb-search__group" data-yb-search-group>
+              <h3 class="yb-search__title">Suggestions</h3>
+              <ul class="yb-search__list">
+                <li data-termo="keratin"><a class="yb-search__link" href="#demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>keratin treatment</a></li>
+                <li data-termo="keratin"><a class="yb-search__link" href="#demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>keratin for curly hair</a></li>
+                <li data-termo="oil myrrh"><a class="yb-search__link" href="#demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>myrrh repair oil</a></li>
+                <li data-termo="kit vello shampoo"><a class="yb-search__link" href="#demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>vello shampoo</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="yb-search__col">
+            <div class="yb-search__group" data-yb-search-group>
+              <h3 class="yb-search__title">Products</h3>
+              <a class="yb-search__item" href="#demos" data-termo="keratin kit sealant fashion gold">
+                <span class="yb-search__thumb"></span>
+                <span>
+                  <span class="yb-search__name">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</span>
+                  <span class="yb-search__meta">Smoothing · in stock</span>
+                </span>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b></span>
+              </a>
+              <a class="yb-search__item" href="#demos" data-termo="oil myrrh repair">
+                <span class="yb-search__thumb"></span>
+                <span>
+                  <span class="yb-search__name">Myrrh Hair Repair Oil — 15ml / 0.5 fl.oz</span>
+                  <span class="yb-search__meta">Hair oils · in stock</span>
+                </span>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$29.90</b></span>
+              </a>
+              <a class="yb-search__item" href="#demos" data-termo="kit vello shampoo mask">
+                <span class="yb-search__thumb"></span>
+                <span>
+                  <span class="yb-search__name">KIT VELLO Shampoo 500ml + Hair Mask 500g</span>
+                  <span class="yb-search__meta">Home care · in stock</span>
+                </span>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="yb-search__empty" data-yb-search-empty hidden>
+          <p>Nothing found for <strong data-yb-search-echo></strong>.</p>
+          <p>Try a shorter word, or the product line instead of the full name.</p>
+          <ul class="yb-search__chips">
+            <li><a class="yb-chip" href="#demos">Best sellers</a></li>
+            <li><a class="yb-chip" href="#demos">New arrivals</a></li>
+            <li><a class="yb-chip" href="#demos">Talk to a specialist</a></li>
+          </ul>
+        </div>
+      </div>
+      </dialog>
+    </div>
+
+    <h3 class="row-label">Estado logado</h3>
+    <!-- O cabecalho INTEIRO, e nao o avatar sozinho. O demo antigo mostrava so
+         o menu de conta flutuando num palco vazio: dava para ver o painel, mas
+         nao dava para ver o que ele desloca — se a lupa e a sacola continuam no
+         lugar, se o painel cabe sem empurrar a barra, onde ele abre em relacao
+         a borda. Estado de um organismo se avalia dentro do organismo.
+         O `padding-block-end` reserva a altura do painel, que e absoluto e nao
+         empurra o palco. -->
+    <div class="stage stage--overflow" style="padding-block-end:19rem">
+      <header class="yb-header">
+        <div class="yb-notice">Free shipping on orders over <b>$50</b></div>
+        <input class="yb-header__drawer" type="checkbox" id="lnav-open" aria-label="Menu">
+        <div class="yb-header__bar">
+          <label class="yb-iconbtn yb-header__icon yb-header__burger" for="lnav-open" aria-hidden="true"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-dropdown"/></svg></label>
+          <a class="yb-header__logo" href="#demos"><span class="yb-logo yb-logo--md"><img src="../brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span></a>
+          <nav class="yb-header__nav" aria-label="Main">
+            <div class="yb-nav__head">
+              <span class="yb-logo yb-logo--md" aria-hidden="true"><img src="../brand/ybera-logo.webp" alt="" width="360" height="139"></span>
+              <label class="yb-iconbtn yb-nav__close" for="lnav-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></label>
+            </div>
+            <div class="yb-nav__conta">
+              <span class="yb-nav__conta-quem">
+                <span class="yb-nav__conta-inicial" aria-hidden="true">U</span>
+                <b class="yb-nav__conta-nome">Urlan</b>
+              </span>
+              <a class="yb-btn yb-btn--primary yb-btn--sm" href="#demos">Account</a>
+            </div>
+            <ul class="yb-nav">
+            <li class="yb-nav__item"><a class="yb-nav__link" href="#demos">Home</a></li>
+            <li class="yb-nav__item">
+              <input class="yb-nav__toggle" type="checkbox" id="lnav1">
+              <label class="yb-nav__link" for="lnav1">Shop <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+              <div class="yb-nav__panel"><div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">All Products</a><ul class="yb-nav__sublist"><li><a href="#demos">Best Sellers</a></li><li><a href="#demos">Kit</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Collection</a><ul class="yb-nav__sublist"><li><a href="#demos">Ybera Paris</a></li><li><a href="#demos">Fashion Gold</a></li><li><a href="#demos">Cronograma</a></li><li><a href="#demos">100Timetros</a></li><li><a href="#demos">Capulana</a></li><li><a href="#demos">Terra Coco</a></li><li><a href="#demos">Hair Mist</a></li><li><a href="#demos">Vello</a></li><li><a href="#demos">Mirra</a></li><li><a href="#demos">Detox</a></li><li><a href="#demos">Life´s Flower</a></li><li><a href="#demos">Essência Brasileira</a></li><li><a href="#demos">Universal</a></li><li><a href="#demos">Genoma</a></li><li><a href="#demos">Quarta Camada</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Hair Problem</a><ul class="yb-nav__sublist"><li><a href="#demos">Damaged Hair</a></li><li><a href="#demos">Frizz &amp; Dryness</a></li><li><a href="#demos">Thinning / Hair Loss</a></li><li><a href="#demos">Undefined Curls</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle yb-nav__grouptitle--sale" href="#demos">Sales</a></div><div class="yb-nav__rail"><a class="yb-nav__promo" href="#demos"><div class="yb-nav__promo-media"><div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div></div><div class="yb-nav__promo-info"><p class="yb-nav__promo-name">Fashion Gold Keratin 300g + Protect &amp; Control Shampoo &amp; Mask</p><span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span><span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span></div></a><a class="yb-nav__pitch" href="#demos"><span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span><p class="yb-nav__pitch-title">Not sure where to start?</p><p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line — no guessing between fifteen collections.</p><ul class="yb-nav__pitch-steps"><li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li><li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li><li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li></ul><span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span></a></div></div></div>
+            </li>
+            <li class="yb-nav__item"><a class="yb-nav__link yb-nav__link--sale" href="#demos">Sales</a></li>
+            <li class="yb-nav__item"><a class="yb-nav__link" href="#demos">AI Hair Analysis</a></li>
+            <li class="yb-nav__item">
+              <input class="yb-nav__toggle" type="checkbox" id="lnav4">
+              <label class="yb-nav__link" for="lnav4">About Us <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+              <div class="yb-nav__panel"><div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Blog</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">New chapter Ybera</a></div></div></div>
+            </li>
+            <li class="yb-nav__item"><a class="yb-nav__link" href="#demos">Contact Us</a></li>
+            </ul>
+          </nav>
+          <div class="yb-header__actions">
+            <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Search" data-yb-open="site-search"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></button>
+            <div class="yb-dropdown">
+              <input class="yb-dropdown__toggle" type="checkbox" id="conta-header" checked>
+              <label class="yb-dropdown__gatilho" for="conta-header" aria-label="Account menu for Urlan Dipre">
+                <span class="yb-avatar" aria-hidden="true">U</span></label>
+              <div class="yb-dropdown__painel">
+                <span class="yb-dropdown__cabeca">
+                  <span class="yb-avatar yb-avatar--md" aria-hidden="true">U</span>
+                  <b class="yb-dropdown__nome">Urlan Dipre</b>
+                  <span class="yb-dropdown__email">urlan.dipre@ybera.com</span>
+                </span>
+                <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg>Account</a>
+                <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>Orders</a>
+                <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg>Wishlist</a>
+                <span class="yb-dropdown__sair">
+                  <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-lock"/></svg>Log out</a>
+                </span>
+              </div>
+            </div>
+            <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-header__count">2</span></button>
+          </div>
+        </div>
+        <label class="yb-header__scrim" for="lnav-open" aria-hidden="true"></label>
+      </header>
+    </div>
+    <div class="note">
+      <b>O ícone de conta vira a inicial</b>
+      <p>Deslogado, o cabeçalho segue com o botão de ícone. Logado, ele troca pelo
+      <a href="../atoms/avatar.html">Avatar</a> dentro de um
+      <a href="../molecules/dropdown.html">Dropdown</a> — nenhuma peça nova, e por isso o
+      estado logado não tem CSS próprio além da regra de contexto abaixo.</p>
+    </div>
+    <div class="note">
+      <b>O piso de coluna só vale onde há coluna</b>
+      <p><code>.yb-nav__group</code> tem <code>min-inline-size:8rem</code> para as
+      colunas do Shop começarem no mesmo compasso. Mas o painel do About Us não tem
+      sublista — cada grupo é um link solto —, e o piso transformava "Blog" numa coluna
+      de 128px.</p>
+      <p>A condição é <code>:has()</code> e não uma classe porque a condição <b>é o
+      conteúdo</b>: no dia em que esse painel ganhar sublista, a regra volta a valer
+      sozinha.</p>
+    </div>
+    <div class="note">
+      <b>No toque ele não existe</b>
+      <p>Abaixo de 900 o menu some: a gaveta já lista os mesmos destinos, e um
+      painel de 224px ancorado na borda direita de uma tela de 375 nasce apertado
+      contra o carrinho. Quem assume o papel lá é a faixa
+      <code>.yb-nav__conta</code>, no topo da gaveta: deslogado ela saúda e
+      oferece <b>Log in</b>; logado troca o ícone pela inicial, mostra o primeiro
+      nome e leva a <b>Account</b>. É o único bloco com fundo e o único botão da
+      gaveta — era um item de texto no meio da lista, o primeiro de 25 links de
+      mesmo peso, e ninguém o achava.</p>
+    </div>
+
+    <h3 class="rotulo">No celular</h3>
+    <div class="quadro-mob">
+      <iframe src="solo.html?c=header" title="Header em 375px"
+              width="375" height="420" loading="lazy"></iframe>
+    </div>
+
+    <h3 class="rotulo">Marcação</h3>
+    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
+    <div class="snippet">
+      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <pre><code>&lt;header class="yb-header"&gt;
+  &lt;div class="yb-notice"&gt;Free shipping on orders over &lt;b&gt;$50&lt;/b&gt;&lt;/div&gt;
+  &lt;input class="yb-header__drawer" type="checkbox" id="dnav-open" aria-label="Menu"&gt;
+  &lt;div class="yb-header__bar"&gt;
+    &lt;label class="yb-iconbtn yb-header__icon yb-header__burger" for="dnav-open" aria-hidden="true"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-dropdown"/&gt;&lt;/svg&gt;&lt;/label&gt;
+    &lt;a class="yb-header__logo" href="#demos"&gt;&lt;span class="yb-logo yb-logo--md"&gt;&lt;img src="../brand/ybera-logo.webp" alt="Ybera" width="360" height="139"&gt;&lt;/span&gt;&lt;/a&gt;
+    &lt;nav class="yb-header__nav" aria-label="Main"&gt;
+      &lt;div class="yb-nav__head"&gt;
+        &lt;span class="yb-logo yb-logo--md" aria-hidden="true"&gt;&lt;img src="../brand/ybera-logo.webp" alt="" width="360" height="139"&gt;&lt;/span&gt;
+        &lt;label class="yb-iconbtn yb-nav__close" for="dnav-open" role="button" tabindex="0" aria-label="Close menu"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;&lt;/label&gt;
+      &lt;/div&gt;
+      &lt;div class="yb-nav__conta"&gt;
+        &lt;span class="yb-nav__conta-quem"&gt;
+          &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-user"/&gt;&lt;/svg&gt;
+          &lt;b class="yb-nav__conta-nome"&gt;Welcome, Visitor&lt;/b&gt;
+        &lt;/span&gt;
+        &lt;a class="yb-btn yb-btn--primary yb-btn--sm" href="#demos"&gt;Log in&lt;/a&gt;
+      &lt;/div&gt;
+      &lt;ul class="yb-nav"&gt;
+      &lt;li class="yb-nav__item"&gt;&lt;a class="yb-nav__link" href="#demos"&gt;Home&lt;/a&gt;&lt;/li&gt;
+      &lt;li class="yb-nav__item"&gt;
+        &lt;input class="yb-nav__toggle" type="checkbox" id="dnav1"&gt;
+        &lt;label class="yb-nav__link" for="dnav1"&gt;Shop &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;&lt;/label&gt;
+        &lt;div class="yb-nav__panel"&gt;&lt;div class="yb-nav__groups"&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;All Products&lt;/a&gt;&lt;ul class="yb-nav__sublist"&gt;&lt;li&gt;&lt;a href="#demos"&gt;Best Sellers&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Collection&lt;/a&gt;&lt;ul class="yb-nav__sublist"&gt;&lt;li&gt;&lt;a href="#demos"&gt;Ybera Paris&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Fashion Gold&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Cronograma&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;100Timetros&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Capulana&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Terra Coco&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Hair Mist&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Vello&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Mirra&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Detox&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Life´s Flower&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Essência Brasileira&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Universal&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Genoma&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Quarta Camada&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Hair Problem&lt;/a&gt;&lt;ul class="yb-nav__sublist"&gt;&lt;li&gt;&lt;a href="#demos"&gt;Damaged Hair&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Frizz &amp;amp; Dryness&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Thinning / Hair Loss&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Undefined Curls&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle yb-nav__grouptitle--sale" href="#demos"&gt;Sales&lt;/a&gt;&lt;/div&gt;&lt;div class="yb-nav__rail"&gt;&lt;a class="yb-nav__promo" href="#demos"&gt;&lt;div class="yb-nav__promo-media"&gt;&lt;div class="yb-card__flags"&gt;&lt;span class="yb-badge yb-badge--soft"&gt;Best seller&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class="yb-nav__promo-info"&gt;&lt;p class="yb-nav__promo-name"&gt;Fashion Gold Keratin 300g + Protect &amp;amp; Control Shampoo &amp;amp; Mask&lt;/p&gt;&lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$89.90&lt;/b&gt;&lt;/span&gt;&lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;View product&lt;/span&gt;&lt;/div&gt;&lt;/a&gt;&lt;a class="yb-nav__pitch" href="#demos"&gt;&lt;span class="yb-nav__pitch-eyebrow"&gt;AI Hair Analysis&lt;/span&gt;&lt;p class="yb-nav__pitch-title"&gt;Not sure where to start?&lt;/p&gt;&lt;p class="yb-nav__pitch-text"&gt;Six questions, and we match your hair to the right line — no guessing between fifteen collections.&lt;/p&gt;&lt;ul class="yb-nav__pitch-steps"&gt;&lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;&lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;&lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;&lt;/ul&gt;&lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;Start analysis&lt;/span&gt;&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li class="yb-nav__item"&gt;&lt;a class="yb-nav__link yb-nav__link--sale" href="#demos"&gt;Sales&lt;/a&gt;&lt;/li&gt;
+      &lt;li class="yb-nav__item"&gt;&lt;a class="yb-nav__link" href="#demos"&gt;AI Hair Analysis&lt;/a&gt;&lt;/li&gt;
+      &lt;li class="yb-nav__item"&gt;
+        &lt;input class="yb-nav__toggle" type="checkbox" id="dnav4"&gt;
+        &lt;label class="yb-nav__link" for="dnav4"&gt;About Us &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;&lt;/label&gt;
+        &lt;div class="yb-nav__panel"&gt;&lt;div class="yb-nav__groups"&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Our Story&lt;/a&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Blog&lt;/a&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;New chapter Ybera&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li class="yb-nav__item"&gt;&lt;a class="yb-nav__link" href="#demos"&gt;Contact Us&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/nav&gt;
+    &lt;div class="yb-header__actions"&gt;
+      &lt;button type="button" class="yb-iconbtn yb-header__icon" aria-label="Search" data-yb-open="site-search"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;&lt;/button&gt;
+      &lt;button type="button" class="yb-iconbtn yb-header__icon" aria-label="Account"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-user"/&gt;&lt;/svg&gt;&lt;/button&gt;
+      &lt;button type="button" class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-cart"/&gt;&lt;/svg&gt;&lt;span class="yb-header__count"&gt;2&lt;/span&gt;&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;label class="yb-header__scrim" for="dnav-open" aria-hidden="true"&gt;&lt;/label&gt;
+&lt;/header&gt;
+&lt;!-- A lupa do header abre o overlay de busca (componente `yb-search`).
+     Ele vive aqui, e não só na doc de componentes, porque é o header
+     quem o dispara: um gatilho sem destino é um botão que não faz nada,
+     e nenhum navegador avisa. --&gt;
+&lt;dialog id="site-search" class="yb-search" aria-label="Search products"&gt;
+&lt;div class="yb-search__bar"&gt;
+  &lt;form class="yb-search__form" role="search" action="#header" data-yb-search&gt;
+    &lt;svg class="yb-icon yb-search__icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;
+    &lt;input class="yb-search__input" type="search" name="q" autocomplete="off" autofocus
+           placeholder="Search products, concerns, ingredients" aria-label="Search products"&gt;
+    &lt;button class="yb-iconbtn yb-search__clear" type="reset" aria-label="Clear search" hidden&gt;
+      &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;
+    &lt;/button&gt;
+    &lt;button class="yb-search__close" type="button" data-yb-close&gt;Close&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/div&gt;
+&lt;div class="yb-search__body"&gt;
+  &lt;div class="yb-search__panel" data-yb-search-zero&gt;
+    &lt;div class="yb-search__col"&gt;
+      &lt;div class="yb-search__group"&gt;
+        &lt;h3 class="yb-search__title"&gt;Recent&lt;/h3&gt;
+        &lt;ul class="yb-search__chips"&gt;
+          &lt;li&gt;&lt;button class="yb-chip" type="button"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-clock"/&gt;&lt;/svg&gt;keratin&lt;/button&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;button class="yb-chip" type="button"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-clock"/&gt;&lt;/svg&gt;fashion gold&lt;/button&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;button class="yb-chip" type="button"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-clock"/&gt;&lt;/svg&gt;frizz&lt;/button&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class="yb-search__group yb-search__group--secondary"&gt;
+        &lt;h3 class="yb-search__title"&gt;Popular&lt;/h3&gt;
+        &lt;ul class="yb-search__list"&gt;
+          &lt;li&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;hair botox&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;progressive brush&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;myrrh oil&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class="yb-search__group yb-search__group--secondary"&gt;
+        &lt;h3 class="yb-search__title"&gt;Categories&lt;/h3&gt;
+        &lt;ul class="yb-search__chips"&gt;
+          &lt;li&gt;&lt;a class="yb-chip" href="#demos"&gt;Smoothing&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a class="yb-chip" href="#demos"&gt;Home care&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a class="yb-chip" href="#demos"&gt;Kits&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a class="yb-chip" href="#demos"&gt;Hair oils&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-search__col"&gt;
+      &lt;div class="yb-search__group"&gt;
+        &lt;h3 class="yb-search__title"&gt;Best sellers&lt;/h3&gt;
+        &lt;a class="yb-search__item" href="#demos"&gt;
+          &lt;span class="yb-search__thumb"&gt;&lt;/span&gt;
+          &lt;span&gt;
+            &lt;span class="yb-search__name"&gt;Kit Sealant Fashion Gold — 500g / 17.6 fl.oz&lt;/span&gt;
+            &lt;span class="yb-search__meta"&gt;Smoothing · 412 reviews&lt;/span&gt;
+          &lt;/span&gt;
+          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$168.90&lt;/b&gt;&lt;/span&gt;
+        &lt;/a&gt;
+        &lt;a class="yb-search__item" href="#demos"&gt;
+          &lt;span class="yb-search__thumb"&gt;&lt;/span&gt;
+          &lt;span&gt;
+            &lt;span class="yb-search__name"&gt;Myrrh Hair Repair Oil — 15ml / 0.5 fl.oz&lt;/span&gt;
+            &lt;span class="yb-search__meta"&gt;Hair oils · 203 reviews&lt;/span&gt;
+          &lt;/span&gt;
+          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$29.90&lt;/b&gt;&lt;/span&gt;
+        &lt;/a&gt;
+        &lt;a class="yb-search__item" href="#demos"&gt;
+          &lt;span class="yb-search__thumb"&gt;&lt;/span&gt;
+          &lt;span&gt;
+            &lt;span class="yb-search__name"&gt;KIT VELLO Shampoo 500ml + Hair Mask 500g&lt;/span&gt;
+            &lt;span class="yb-search__meta"&gt;Home care · 87 reviews&lt;/span&gt;
+          &lt;/span&gt;
+          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$133.90&lt;/b&gt;&lt;/span&gt;
+        &lt;/a&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="yb-search__panel" data-yb-search-results hidden&gt;
+    &lt;div class="yb-search__col"&gt;
+      &lt;div class="yb-search__group" data-yb-search-group&gt;
+        &lt;h3 class="yb-search__title"&gt;Suggestions&lt;/h3&gt;
+        &lt;ul class="yb-search__list"&gt;
+          &lt;li data-termo="keratin"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;keratin treatment&lt;/a&gt;&lt;/li&gt;
+          &lt;li data-termo="keratin"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;keratin for curly hair&lt;/a&gt;&lt;/li&gt;
+          &lt;li data-termo="oil myrrh"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;myrrh repair oil&lt;/a&gt;&lt;/li&gt;
+          &lt;li data-termo="kit vello shampoo"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;vello shampoo&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-search__col"&gt;
+      &lt;div class="yb-search__group" data-yb-search-group&gt;
+        &lt;h3 class="yb-search__title"&gt;Products&lt;/h3&gt;
+        &lt;a class="yb-search__item" href="#demos" data-termo="keratin kit sealant fashion gold"&gt;
+          &lt;span class="yb-search__thumb"&gt;&lt;/span&gt;
+          &lt;span&gt;
+            &lt;span class="yb-search__name"&gt;Kit Sealant Fashion Gold — 500g / 17.6 fl.oz&lt;/span&gt;
+            &lt;span class="yb-search__meta"&gt;Smoothing · in stock&lt;/span&gt;
+          &lt;/span&gt;
+          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$168.90&lt;/b&gt;&lt;/span&gt;
+        &lt;/a&gt;
+        &lt;a class="yb-search__item" href="#demos" data-termo="oil myrrh repair"&gt;
+          &lt;span class="yb-search__thumb"&gt;&lt;/span&gt;
+          &lt;span&gt;
+            &lt;span class="yb-search__name"&gt;Myrrh Hair Repair Oil — 15ml / 0.5 fl.oz&lt;/span&gt;
+            &lt;span class="yb-search__meta"&gt;Hair oils · in stock&lt;/span&gt;
+          &lt;/span&gt;
+          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$29.90&lt;/b&gt;&lt;/span&gt;
+        &lt;/a&gt;
+        &lt;a class="yb-search__item" href="#demos" data-termo="kit vello shampoo mask"&gt;
+          &lt;span class="yb-search__thumb"&gt;&lt;/span&gt;
+          &lt;span&gt;
+            &lt;span class="yb-search__name"&gt;KIT VELLO Shampoo 500ml + Hair Mask 500g&lt;/span&gt;
+            &lt;span class="yb-search__meta"&gt;Home care · in stock&lt;/span&gt;
+          &lt;/span&gt;
+          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$133.90&lt;/b&gt;&lt;/span&gt;
+        &lt;/a&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="yb-search__empty" data-yb-search-empty hidden&gt;
+    &lt;p&gt;Nothing found for &lt;strong data-yb-search-echo&gt;&lt;/strong&gt;.&lt;/p&gt;
+    &lt;p&gt;Try a shorter word, or the product line instead of the full name.&lt;/p&gt;
+    &lt;ul class="yb-search__chips"&gt;
+      &lt;li&gt;&lt;a class="yb-chip" href="#demos"&gt;Best sellers&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a class="yb-chip" href="#demos"&gt;New arrivals&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a class="yb-chip" href="#demos"&gt;Talk to a specialist&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/dialog&gt;</code></pre>
+    </div>
+  </section>
+
+  <section class="bloco" id="anatomia" data-aba="Anatomia">
+    <h2 class="bloco-titulo">Anatomia e API</h2>
+    <div class="anat" data-yb-anatomia>
+      <div class="anat__palco">
+        <svg class="anat__fios" aria-hidden="true"></svg>
+        <div class="anat__peca"><header class="yb-header">
+  <div class="yb-notice">Free shipping on orders over <b>$50</b></div>
+  <input class="yb-header__drawer" type="checkbox" id="anat-dnav-open" aria-label="Menu">
+  <div class="yb-header__bar">
+    <label class="yb-iconbtn yb-header__icon yb-header__burger" for="anat-dnav-open" aria-hidden="true"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-dropdown"/></svg></label>
+    <a class="yb-header__logo" href="#anat-demos"><span class="yb-logo yb-logo--md"><img src="../brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span></a>
+    <nav class="yb-header__nav" aria-label="Main">
+      <div class="yb-nav__head">
+        <span class="yb-logo yb-logo--md" aria-hidden="true"><img src="../brand/ybera-logo.webp" alt="" width="360" height="139"></span>
+        <label class="yb-iconbtn yb-nav__close" for="anat-dnav-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></label>
+      </div>
+      <div class="yb-nav__conta">
+        <span class="yb-nav__conta-quem">
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg>
+          <b class="yb-nav__conta-nome">Welcome, Visitor</b>
+        </span>
+        <a class="yb-btn yb-btn--primary yb-btn--sm" href="#anat-demos">Log in</a>
+      </div>
+      <ul class="yb-nav">
+      <li class="yb-nav__item"><a class="yb-nav__link" href="#anat-demos">Home</a></li>
+      <li class="yb-nav__item">
+        <input class="yb-nav__toggle" type="checkbox" id="anat-dnav1">
+        <label class="yb-nav__link" for="anat-dnav1">Shop <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+        <div class="yb-nav__panel"><div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#anat-demos">All Products</a><ul class="yb-nav__sublist"><li><a href="#anat-demos">Best Sellers</a></li><li><a href="#anat-demos">Kit</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#anat-demos">Collection</a><ul class="yb-nav__sublist"><li><a href="#anat-demos">Ybera Paris</a></li><li><a href="#anat-demos">Fashion Gold</a></li><li><a href="#anat-demos">Cronograma</a></li><li><a href="#anat-demos">100Timetros</a></li><li><a href="#anat-demos">Capulana</a></li><li><a href="#anat-demos">Terra Coco</a></li><li><a href="#anat-demos">Hair Mist</a></li><li><a href="#anat-demos">Vello</a></li><li><a href="#anat-demos">Mirra</a></li><li><a href="#anat-demos">Detox</a></li><li><a href="#anat-demos">Life´s Flower</a></li><li><a href="#anat-demos">Essência Brasileira</a></li><li><a href="#anat-demos">Universal</a></li><li><a href="#anat-demos">Genoma</a></li><li><a href="#anat-demos">Quarta Camada</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#anat-demos">Hair Problem</a><ul class="yb-nav__sublist"><li><a href="#anat-demos">Damaged Hair</a></li><li><a href="#anat-demos">Frizz &amp; Dryness</a></li><li><a href="#anat-demos">Thinning / Hair Loss</a></li><li><a href="#anat-demos">Undefined Curls</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle yb-nav__grouptitle--sale" href="#anat-demos">Sales</a></div><div class="yb-nav__rail"><a class="yb-nav__promo" href="#anat-demos"><div class="yb-nav__promo-media"><div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div></div><div class="yb-nav__promo-info"><p class="yb-nav__promo-name">Fashion Gold Keratin 300g + Protect &amp; Control Shampoo &amp; Mask</p><span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span><span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span></div></a><a class="yb-nav__pitch" href="#anat-demos"><span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span><p class="yb-nav__pitch-title">Not sure where to start?</p><p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line — no guessing between fifteen collections.</p><ul class="yb-nav__pitch-steps"><li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li><li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li><li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li></ul><span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span></a></div></div></div>
+      </li>
+      <li class="yb-nav__item"><a class="yb-nav__link yb-nav__link--sale" href="#anat-demos">Sales</a></li>
+      <li class="yb-nav__item"><a class="yb-nav__link" href="#anat-demos">AI Hair Analysis</a></li>
+      <li class="yb-nav__item">
+        <input class="yb-nav__toggle" type="checkbox" id="anat-dnav4">
+        <label class="yb-nav__link" for="anat-dnav4">About Us <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+        <div class="yb-nav__panel"><div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#anat-demos">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#anat-demos">Blog</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#anat-demos">New chapter Ybera</a></div></div></div>
+      </li>
+      <li class="yb-nav__item"><a class="yb-nav__link" href="#anat-demos">Contact Us</a></li>
+      </ul>
+    </nav>
+    <div class="yb-header__actions">
+      <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Search" data-yb-open="site-search"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></button>
+      <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Account"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg></button>
+      <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-header__count">2</span></button>
+    </div>
+  </div>
+  <label class="yb-header__scrim" for="anat-dnav-open" aria-hidden="true"></label>
+</header>
+<!-- A lupa do header abre o overlay de busca (componente `yb-search`).
+     Ele vive aqui, e não só na doc de componentes, porque é o header
+     quem o dispara: um gatilho sem destino é um botão que não faz nada,
+     e nenhum navegador avisa. -->
+<dialog id="anat-site-search" class="yb-search" aria-label="Search products">
+<div class="yb-search__bar">
+  <form class="yb-search__form" role="search" action="#header" data-yb-search>
+    <svg class="yb-icon yb-search__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>
+    <input class="yb-search__input" type="search" name="anat-q" autocomplete="off" autofocus
+           placeholder="Search products, concerns, ingredients" aria-label="Search products">
+    <button class="yb-iconbtn yb-search__clear" type="reset" aria-label="Clear search" hidden>
+      <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg>
+    </button>
+    <button class="yb-search__close" type="button" data-yb-close>Close</button>
+  </form>
+</div>
+<div class="yb-search__body">
+  <div class="yb-search__panel" data-yb-search-zero>
+    <div class="yb-search__col">
+      <div class="yb-search__group">
+        <h3 class="yb-search__title">Recent</h3>
+        <ul class="yb-search__chips">
+          <li><button class="yb-chip" type="button"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-clock"/></svg>keratin</button></li>
+          <li><button class="yb-chip" type="button"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-clock"/></svg>fashion gold</button></li>
+          <li><button class="yb-chip" type="button"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-clock"/></svg>frizz</button></li>
+        </ul>
+      </div>
+      <div class="yb-search__group yb-search__group--secondary">
+        <h3 class="yb-search__title">Popular</h3>
+        <ul class="yb-search__list">
+          <li><a class="yb-search__link" href="#anat-demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>hair botox</a></li>
+          <li><a class="yb-search__link" href="#anat-demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>progressive brush</a></li>
+          <li><a class="yb-search__link" href="#anat-demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>myrrh oil</a></li>
+        </ul>
+      </div>
+      <div class="yb-search__group yb-search__group--secondary">
+        <h3 class="yb-search__title">Categories</h3>
+        <ul class="yb-search__chips">
+          <li><a class="yb-chip" href="#anat-demos">Smoothing</a></li>
+          <li><a class="yb-chip" href="#anat-demos">Home care</a></li>
+          <li><a class="yb-chip" href="#anat-demos">Kits</a></li>
+          <li><a class="yb-chip" href="#anat-demos">Hair oils</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="yb-search__col">
+      <div class="yb-search__group">
+        <h3 class="yb-search__title">Best sellers</h3>
+        <a class="yb-search__item" href="#anat-demos">
+          <span class="yb-search__thumb"></span>
+          <span>
+            <span class="yb-search__name">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</span>
+            <span class="yb-search__meta">Smoothing · 412 reviews</span>
+          </span>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b></span>
+        </a>
+        <a class="yb-search__item" href="#anat-demos">
+          <span class="yb-search__thumb"></span>
+          <span>
+            <span class="yb-search__name">Myrrh Hair Repair Oil — 15ml / 0.5 fl.oz</span>
+            <span class="yb-search__meta">Hair oils · 203 reviews</span>
+          </span>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$29.90</b></span>
+        </a>
+        <a class="yb-search__item" href="#anat-demos">
+          <span class="yb-search__thumb"></span>
+          <span>
+            <span class="yb-search__name">KIT VELLO Shampoo 500ml + Hair Mask 500g</span>
+            <span class="yb-search__meta">Home care · 87 reviews</span>
+          </span>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="yb-search__panel" data-yb-search-results hidden>
+    <div class="yb-search__col">
+      <div class="yb-search__group" data-yb-search-group>
+        <h3 class="yb-search__title">Suggestions</h3>
+        <ul class="yb-search__list">
+          <li data-termo="keratin"><a class="yb-search__link" href="#anat-demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>keratin treatment</a></li>
+          <li data-termo="keratin"><a class="yb-search__link" href="#anat-demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>keratin for curly hair</a></li>
+          <li data-termo="oil myrrh"><a class="yb-search__link" href="#anat-demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>myrrh repair oil</a></li>
+          <li data-termo="kit vello shampoo"><a class="yb-search__link" href="#anat-demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>vello shampoo</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="yb-search__col">
+      <div class="yb-search__group" data-yb-search-group>
+        <h3 class="yb-search__title">Products</h3>
+        <a class="yb-search__item" href="#anat-demos" data-termo="keratin kit sealant fashion gold">
+          <span class="yb-search__thumb"></span>
+          <span>
+            <span class="yb-search__name">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</span>
+            <span class="yb-search__meta">Smoothing · in stock</span>
+          </span>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b></span>
+        </a>
+        <a class="yb-search__item" href="#anat-demos" data-termo="oil myrrh repair">
+          <span class="yb-search__thumb"></span>
+          <span>
+            <span class="yb-search__name">Myrrh Hair Repair Oil — 15ml / 0.5 fl.oz</span>
+            <span class="yb-search__meta">Hair oils · in stock</span>
+          </span>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$29.90</b></span>
+        </a>
+        <a class="yb-search__item" href="#anat-demos" data-termo="kit vello shampoo mask">
+          <span class="yb-search__thumb"></span>
+          <span>
+            <span class="yb-search__name">KIT VELLO Shampoo 500ml + Hair Mask 500g</span>
+            <span class="yb-search__meta">Home care · in stock</span>
+          </span>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="yb-search__empty" data-yb-search-empty hidden>
+    <p>Nothing found for <strong data-yb-search-echo></strong>.</p>
+    <p>Try a shorter word, or the product line instead of the full name.</p>
+    <ul class="yb-search__chips">
+      <li><a class="yb-chip" href="#anat-demos">Best sellers</a></li>
+      <li><a class="yb-chip" href="#anat-demos">New arrivals</a></li>
+      <li><a class="yb-chip" href="#anat-demos">Talk to a specialist</a></li>
+    </ul>
+  </div>
+</div>
+</dialog></div>
+      </div>
+      <ol class="anat__legenda">
+        <li data-alvo=".yb-notice"><span class="anat__texto"><b><a href="../atoms/notice.html">Notice</a></b> — Faixa fina de aviso, largura inteira, acima do conteúdo. A loja empilha duas no topo de toda página — uma contextual e a de frete.</span></li>
+        <li data-alvo=".yb-iconbtn"><span class="anat__texto"><b><a href="../atoms/iconbtn.html">Icon button</a></b> — Botão de 44px que mostra só um ícone, sem rótulo visível. Sexta reescrita da mesma coisa — o ícone do header, o fechar da gaveta, o play do vídeo, o abrir do rodapé e a seta do banner diziam todos 44×44 com fundo transparente, cada um do seu jeito.</span></li>
+        <li data-alvo=".yb-logo"><span class="anat__texto"><b><a href="../atoms/logo.html">Logo</a></b> — A marca da loja, em arquivo único e altura controlada por modificador. Vira componente porque aparece em header, footer, e-mail e recibo — e em cada lugar alguém escolhia uma altura diferente.</span></li>
+        <li data-alvo=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
+        <li data-alvo=".yb-nav"><span class="anat__texto"><b><a href="../organisms/nav.html">Nav</a></b> — O menu da loja: cinco itens de topo, dois com painel. Uma árvore só
+    serve a barra do desktop e a gaveta do celular. Não confundir com
+    <a href="../molecules/dropdown.html">Dropdown</a>, que é painel ancorado num gatilho
+    qualquer &mdash; este é a navegação principal, e só há uma por tela.</span></li>
+        <li data-alvo=".yb-badge"><span class="anat__texto"><b><a href="../atoms/badge.html">Badge</a></b> — Etiqueta curta que classifica um item sem competir com ele. Nunca carrega ação — badge não é botão.</span></li>
+        <li data-alvo=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço de um produto, com o valor anterior riscado e o desconto quando existem. Sempre tabular: em grid, dígitos precisam alinhar em coluna.</span></li>
+        <li data-alvo=".yb-search"><span class="anat__texto"><b><a href="../organisms/search.html">Search overlay</a></b> — A busca como folha que cobre a página inteira. Busca é troca de contexto — não caixinha no header.</span></li>
+        <li data-alvo=".yb-chip"><span class="anat__texto"><b><a href="../atoms/chip.html">Chip</a></b> — Filtro que liga e desliga, em fileira. O estado mora em <code>aria-pressed</code>, não numa classe — quem lê a tela ouve "pressionado" sem depender de cor.</span></li>
+      </ol>
+    </div>
+    <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
+         COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres
+         palavras de dentro de casa ("folha", "marcacao", "build"). A aba ao
+         lado ja mostrava o jeito certo — "O mesmo HTML que renderizou acima"
+         diz o que e. Aqui o que a pessoa precisa primeiro e a lista do que vai
+         encontrar; a procedencia vem depois, e vale a frase inteira, porque e
+         ela que autoriza confiar no que esta escrito. -->
+    <p class="bloco-lede">De que a peça é feita, o que ela aceita e os tokens que
+    consome — estes do mais específico desta peça para o mais compartilhado com o
+    resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
+    estiver errado aqui, o errado é o código.</p>
+
+    <p class="rotulo">De que é feita</p>
+    <p class="usa-degrau">Átomos</p>
+    <ul class="usa"><li><a href="../atoms/badge.html">Badge</a></li><li><a href="../atoms/button.html">Button</a></li><li><a href="../atoms/chip.html">Chip</a></li><li><a href="../atoms/iconbtn.html">Icon button</a></li><li><a href="../atoms/logo.html">Logo</a></li><li><a href="../atoms/notice.html">Notice</a></li></ul>
+    <p class="usa-degrau">Moléculas</p>
+    <ul class="usa"><li><a href="../molecules/card.html">Card product</a></li><li><a href="../molecules/price.html">Price</a></li></ul>
+    <p class="usa-degrau">Blocos</p>
+    <ul class="usa"><li><a href="../organisms/nav.html">Nav</a></li><li><a href="../organisms/search.html">Search overlay</a></li></ul>
+    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-header__account</code> <code>.yb-header__actions</code> <code>.yb-header__bar</code> <code>.yb-header__burger</code> <code>.yb-header__count</code> <code>.yb-header__drawer</code> <code>.yb-header__icon</code> <code>.yb-header__logo</code> <code>.yb-header__nav</code> <code>.yb-header__scrim</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:checked</code> · <code>:focus-visible</code> · <code>:hover</code></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">31</span></p>
+    <div class="tokens">
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>10</span></p>
+        <ul class="tokens__lista">
+          <li><i class="tokens__cor" style="background:var(--yb-bg-page)" aria-hidden="true"></i><code>--yb-bg-page</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-surface-overlay)" aria-hidden="true"></i><code>--yb-surface-overlay</code><span class="tokens__valor">rgba(30, 30, 31, .55)</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-surface-raised)" aria-hidden="true"></i><code>--yb-surface-raised</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-text)" aria-hidden="true"></i><code>--yb-action-text</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><code>--yb-border-emphasis</code><span class="tokens__valor">2px</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-bg)" aria-hidden="true"></i><code>--yb-action-bg</code><span class="tokens__valor">#CA235F</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
+          <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>3</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-line-height-none</code><span class="tokens__valor">1</span></li>
+          <li><code>--yb-font-weight-bold</code><span class="tokens__valor">700</span></li>
+          <li><code>--yb-type-caption-size</code><span class="tokens__valor">0.8125rem</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>8</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-header-h</code><span class="tokens__valor">calc(var(--yb-target-min) + var(--yb-space-4) * 2 + 1px)</span></li>
+          <li><code>--yb-container-max</code><span class="tokens__valor">1200px</span></li>
+          <li><code>--yb-page-gutter</code><span class="tokens__valor">1rem</span></li>
+          <li><code>--yb-space-6</code><span class="tokens__valor">1.5rem</span></li>
+          <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
+          <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
+          <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>
+          <li><code>--yb-space-3</code><span class="tokens__valor">0.75rem</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>1</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-radius-full</code><span class="tokens__valor">9999px</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/elevation.html">Elevação</a> <span>4</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-z-modal</code><span class="tokens__valor">1300</span></li>
+          <li><code>--yb-z-sticky</code><span class="tokens__valor">1100</span></li>
+          <li><code>--yb-elevation-drawer</code><span class="tokens__valor">0 12px 28px rgba(30,30,31,.11), 0 4px 8px rgba(30,30,31,.06)</span></li>
+          <li><code>--yb-z-overlay</code><span class="tokens__valor">1200</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>4</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-transition-surface</code><span class="tokens__valor">180ms cubic-bezier(.2, 0, 0, 1)</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
+          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/architecture.html">Componente</a> <span>1</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-dir</code><span class="tokens__valor">1</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+       bloco por escrever passaria a estar atras de um clique, e a razao de ele
+       existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
+       que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
+
+       (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
+       crase em comentario ja derrubou o build antes.) -->
+  <section class="bloco" id="faca" data-aba="Regras de uso" data-pendente>
+    <h2 class="bloco-titulo">Faça / não faça</h2>
+    <p class="pendente">Faça / não faça ainda não escrito para este bloco.
+      O bloco aparece vazio de propósito: seção que some da ficha é uma pergunta
+      que ninguém sabe que ficou sem resposta.</p>
+  </section>
+
+  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade" data-pendente>
+    <h2 class="bloco-titulo">Acessibilidade</h2>
+    <p class="pendente">Acessibilidade ainda não escrita para este bloco.</p>
+  </section>
+  </div>
+
+  <p class="doc-credit">Gerada de <code>organisms/pecas/header.html</code> e
+  <code>organisms/ybera-organisms.css</code>. Não edite à mão: <code>./build.sh</code>.</p>
+</main>
+
+<script src="../behavior/ybera-behavior.js"></script>
+<script>
+/* O quadro de 375 se dimensiona pelo que tem dentro. Conteudo de iframe nao
+   dimensiona o elemento sozinho, entao o solo.html mede a propria caixa e
+   avisa por postMessage — sem isso a ficha do Badge teria a mesma altura da
+   ficha do carrinho, e as duas erradas. */
+addEventListener('message', function (e) {
+  if (!e.data || e.data.yb !== 'altura') return;
+  /* Pelo REMETENTE, e nao pelo primeiro quadro da pagina: uma ficha pode ter
+     mais de um (a comparacao de estados lado a lado tem dois), e os dois
+     mandam a mesma mensagem com o mesmo alvo. Pegando o primeiro, o quadro
+     grande recebia a altura do pequeno. */
+  var f = Array.prototype.find.call(document.querySelectorAll('iframe'),
+    function (x) { return x.contentWindow === e.source; });
+  if (!f || !(e.data.h > 0)) return;
+  f.height = e.data.h;
+  /* Quadros comparados ficam da MESMA altura, sempre a maior. Duas caixas lado
+     a lado com fundos diferentes e uma 44px mais curta leem como recorte, e
+     nao como diferenca de estado. So cresce, entao converge. */
+  var duo = f.closest('.duo');
+  if (!duo) return;
+  var irmaos = duo.querySelectorAll('.duo__quadro');
+  var maior = 0;
+  Array.prototype.forEach.call(irmaos, function (x) {
+    maior = Math.max(maior, parseInt(x.height, 10) || 0);
+  });
+  Array.prototype.forEach.call(irmaos, function (x) {
+    if ((parseInt(x.height, 10) || 0) !== maior) x.height = maior;
+  });
+});
+
+/* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
+   acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-yb-copiar]');
+  if (!b) return;
+  var codigo = b.parentElement.querySelector('code');
+  if (!codigo || !navigator.clipboard) return;
+  navigator.clipboard.writeText(codigo.textContent).then(function () {
+    var antes = b.textContent;
+    b.textContent = 'Copiado';
+    setTimeout(function () { b.textContent = antes; }, 1600);
+  }).catch(function () { /* permissao negada: o codigo continua selecionavel */ });
+});
+</script>
+</body>
+</html>

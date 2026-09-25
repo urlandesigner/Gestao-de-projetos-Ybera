@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Card product — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../base/ybera-base.css">
+<link rel="stylesheet" href="../atoms/ybera-atoms.css">
+<link rel="stylesheet" href="ybera-molecules.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="../doc/doc.css">
+<link rel="stylesheet" href="../doc/doc-nav.css">
+<script src="../doc/doc.js" defer></script>
+<style>
+/* Sem seletor de tipo: ver o cabecalho de doc/doc.css. */
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+</style>
+</head>
+<body class="ficha" data-nivel="molecules" data-moldura="centrada">
+<!-- @moldura · gerada por tools/moldura.mjs · não edite -->
+<header class="ds-top">
+  <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
+  <div class="ds-top__busca" hidden>
+    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
+    <input id="ds-filtro" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filtro>
+    <p class="nav-conta" role="status" aria-live="polite"></p>
+  </div>
+  <p class="ds-top__versao">v0.12.1</p>
+</header>
+<nav class="ds-nav" aria-label="Navegação do design system">
+  <ul class="ds-nav__solta">
+    <li><a href="../index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 7 8 2.5 13.5 7"/><path d="M4 6.5V13h8V6.5"/><path d="M6.5 13V9.5h3V13"/></svg>Início</a></li>
+  </ul>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5.5 8 3l6 2.5L8 8 2 5.5Z"/><path d="M2 8.8 8 11.3l6-2.5"/><path d="M2 12l6 2.5 6-2.5"/></svg>Fundação</summary>
+    <ul>
+      <li><a href="../tokens/index.html">Visão geral</a></li>
+      <li><a href="../tokens/architecture.html">Architecture</a></li>
+      <li><a href="../tokens/color.html">Color</a></li>
+      <li><a href="../tokens/typography.html">Typography</a></li>
+      <li><a href="../tokens/space.html">Space</a></li>
+      <li><a href="../tokens/shape.html">Shape</a></li>
+      <li><a href="../tokens/elevation.html">Elevation</a></li>
+      <li><a href="../tokens/state.html">State</a></li>
+      <li><a href="../tokens/usage.html">How to use</a></li>
+      <li><a href="../icons/index.html">Ícones</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo" open>
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Componentes</summary>
+    <ul>
+      <li><a href="../molecules/accordion.html">Accordion</a></li>
+      <li><a href="../molecules/alert.html">Alert</a></li>
+      <li><a href="../atoms/avatar.html">Avatar</a></li>
+      <li><a href="../atoms/badge.html">Badge</a></li>
+      <li><a href="../molecules/bannerhero.html">Banner hero</a></li>
+      <li><a href="../molecules/bannermedia.html">Banner media</a></li>
+      <li><a href="../molecules/crumb.html">Breadcrumb</a></li>
+      <li><a href="../atoms/button.html">Button</a></li>
+      <li><a href="../molecules/offercard.html">Card offer</a></li>
+      <li><a href="../molecules/card.html" aria-current="page">Card product</a></li>
+      <li><a href="../atoms/seals.html">Certification seals</a></li>
+      <li><a href="../atoms/checkbox.html">Checkbox</a></li>
+      <li><a href="../atoms/chip.html">Chip</a></li>
+      <li><a href="../molecules/collection.html">Collection card</a></li>
+      <li><a href="../molecules/dropdown.html">Dropdown</a></li>
+      <li><a href="../molecules/empty.html">Empty state</a></li>
+      <li><a href="../atoms/iconbtn.html">Icon button</a></li>
+      <li><a href="../atoms/input.html">Input</a></li>
+      <li><a href="../atoms/link.html">Link</a></li>
+      <li><a href="../atoms/logo.html">Logo</a></li>
+      <li><a href="../atoms/notice.html">Notice</a></li>
+      <li><a href="../atoms/offerseal.html">Offer seal</a></li>
+      <li><a href="../molecules/pagination.html">Pagination</a></li>
+      <li><a href="../molecules/partner.html">Partner</a></li>
+      <li><a href="../molecules/post.html">Post</a></li>
+      <li><a href="../molecules/price.html">Price</a></li>
+      <li><a href="../atoms/progress.html">Progress bar</a></li>
+      <li><a href="../molecules/stepper.html">Quantity stepper</a></li>
+      <li><a href="../atoms/radio.html">Radio</a></li>
+      <li><a href="../molecules/rating.html">Rating</a></li>
+      <li><a href="../molecules/review.html">Review</a></li>
+      <li><a href="../atoms/select.html">Select</a></li>
+      <li><a href="../atoms/skeleton.html">Skeleton</a></li>
+      <li><a href="../atoms/stars.html">Stars</a></li>
+      <li><a href="../atoms/switch.html">Switch</a></li>
+      <li><a href="../atoms/textarea.html">Textarea</a></li>
+      <li><a href="../molecules/toast.html">Toast</a></li>
+      <li><a href="../molecules/track.html">Track</a></li>
+      <li><a href="../molecules/variant.html">Variant picker</a></li>
+      <li><a href="../molecules/video.html">Vertical video carousel</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2.5" width="12" height="3" rx="1"/><rect x="2" y="6.8" width="12" height="3" rx="1"/><rect x="2" y="11.1" width="12" height="2.4" rx="1"/></svg>Blocos</summary>
+    <ul>
+      <li><a href="../organisms/quote.html">Brand quote</a></li>
+      <li><a href="../organisms/buybox.html">Buy box</a></li>
+      <li><a href="../organisms/cart-drawer.html">Cart drawer</a></li>
+      <li><a href="../organisms/catalog.html">Catalog</a></li>
+      <li><a href="../organisms/drawer.html">Drawer</a></li>
+      <li><a href="../organisms/faq.html">FAQ</a></li>
+      <li><a href="../organisms/footer.html">Footer</a></li>
+      <li><a href="../organisms/shipping-progress.html">Free shipping progress</a></li>
+      <li><a href="../organisms/gallery.html">Gallery</a></li>
+      <li><a href="../organisms/header.html">Header</a></li>
+      <li><a href="../organisms/hero.html">Hero</a></li>
+      <li><a href="../organisms/logobar.html">Logo bar</a></li>
+      <li><a href="../organisms/manifesto.html">Manifesto</a></li>
+      <li><a href="../organisms/dialog.html">Modal</a></li>
+      <li><a href="../organisms/nav.html">Nav</a></li>
+      <li><a href="../organisms/search.html">Search overlay</a></li>
+      <li><a href="../organisms/split.html">Split</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3.5" width="9" height="9" rx="1.5"/><path d="M5.5 3.5V1.5h9v9h-2"/></svg>Exemplos</summary>
+    <ul>
+      <li><a href="../pages/index.html">Visão geral</a></li>
+      <li><a href="../pages/home.html" target="_blank" rel="noopener">Home v1<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-v2.html" target="_blank" rel="noopener">Home v2<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-v3.html" target="_blank" rel="noopener">Home v3<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-logado.html" target="_blank" rel="noopener">Home · cliente logado<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp.html" target="_blank" rel="noopener">PDP<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-influencer.html" target="_blank" rel="noopener">PDP link influencer<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-esgotado.html" target="_blank" rel="noopener">PDP esgotada<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-variante.html" target="_blank" rel="noopener">PDP com variante<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-oferta.html" target="_blank" rel="noopener">PDP em promoção<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/faq.html" target="_blank" rel="noopener">FAQ<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/404.html" target="_blank" rel="noopener">404<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+    </ul>
+  </details>
+  <ul class="ds-nav__solta">
+    <li><a href="../preview/index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3" width="13" height="8.5" rx="1.5"/><path d="M5.5 14h5"/><path d="M8 11.5V14"/></svg>Preview</a></li>
+  </ul>
+</nav>
+<!-- /@moldura -->
+
+<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
+  <ol>
+    <li><a href="#demos">Como se parece</a></li>
+    <li><a href="#mobile">Mobile</a></li>
+    <li><a href="#feita-de">De que é feita</a></li>
+    <li><a href="#anatomia">Anatomia e API</a></li>
+    <li><a href="#marcacao">Marcação</a></li>
+    <li><a href="#acessibilidade">Acessibilidade</a></li>
+    <li><a href="#faca">Faça / não faça</a></li>
+  </ol>
+</aside>
+
+<main class="main">
+  <div class="ficha-topo">
+    <nav class="ficha-trilha" aria-label="Você está aqui">
+      <a href="../components/index.html">Componentes</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html#card">Moléculas</a>
+      <span aria-hidden="true">/</span>
+      <b aria-current="page">Card product</b>
+    </nav>
+    <nav class="ficha-passo" aria-label="Peça anterior e próxima">
+      <a href="offercard.html" rel="prev"><span aria-hidden="true">←</span> Card offer</a>
+      <a href="collection.html" rel="next">Collection card <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
+  <h1 class="ficha-titulo">Card product</h1>
+  <p class="ficha-quando">O cartão de produto do grid — foto, nome, nota, preço e ação. O título trunca em duas linhas por decisão de sistema.</p>
+  <!-- Só a classe base. A fileira trazia também as contagens de modificador,
+       elemento, estado e token — cinco números que ninguém usa para decidir
+       nada e que, desde que a aba Anatomia existe, repetem em placar o que a
+       aba mostra por extenso, com os nomes. Número sem o nome ao lado é um
+       resumo de algo que está a um clique. -->
+  <ul class="ficha-fatos">
+    <li>Classe base <b><code>.yb-card</code></b></li>
+  </ul>
+
+  <!-- A FICHA INTEIRA EM ABAS, e nada solto embaixo delas.
+
+       Antes so tres blocos eram aba (Preview, Codigo, Anatomia) e outros tres
+       ficavam abaixo do container — Mobile, Acessibilidade e Faca/nao faca.
+       Como nada na tela dizia que a area das abas tinha acabado (20px de vao e
+       a mesma tipografia), os tres liam como conteudo da aba aberta, qualquer
+       que fosse ela.
+
+       Agora tudo e aba, na organizacao do outro design system da casa:
+       Componente · Anatomia · Regras de uso · Acessibilidade. "Estados" fica de
+       fora por enquanto — so 2 das 66 pecas tem demonstracao de estado, e uma
+       aba vazia em 64 fichas ensina menos que a ausencia dela.
+
+       O CELULAR E A MARCACAO ENTRARAM EM "COMPONENTE" porque respondem a mesma
+       pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
+       que telefone e assunto separado do desktop, que e o oposto do que um
+       design system quer dizer. -->
+  <div class="abas" data-yb-abas>
+  <section class="bloco" id="demos" data-aba="Componente">
+    <h2 class="bloco-titulo">Como se parece</h2>
+    <h3 class="row-label">Anatomia &mdash; tr&ecirc;s partes, sempre nesta ordem</h3>
+    <div class="demo demo--grid">
+      <article class="yb-card">
+        <div class="yb-card__media"><img src="../pages/img/105-d0e326.webp" alt="Frasco branco de condicionador Pantanal elixir, 1 litro" loading="lazy"></div>
+        <h3 class="yb-card__title"><a href="#demos">Floral Fusion Hair Mist — 50ml / 1.69 fl.oz</a></h3>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$24.00</b></span>
+      </article>
+    </div>
+    <h3 class="row-label">T&iacute;tulo: uma linha, duas, e o corte na terceira</h3>
+    <div class="demo demo--grid">
+      <article class="yb-card">
+        <div class="yb-card__media"><img src="../pages/img/109_8f48e88f-e728-4b1e-b224-e3d3e29cf532-70f28f.webp" alt="Frasco branco de condicionador Forest elixir, 1 kg" loading="lazy"></div>
+        <h3 class="yb-card__title"><a href="#demos">Detox Shampoo 250ml</a></h3>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$39.90</b></span>
+      </article>
+      <article class="yb-card">
+        <div class="yb-card__media"><img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Kit Terra Coco: shampoo, máscara e elixir lado a lado" loading="lazy"></div>
+        <h3 class="yb-card__title"><a href="#demos">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</a></h3>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+      </article>
+      <article class="yb-card">
+        <div class="yb-card__media"><img src="../pages/img/Off1_August_22-24-11-18aac2.webp" alt="Kit de cuidado capilar sobre fundo claro" loading="lazy"></div>
+        <h3 class="yb-card__title"><a href="#demos">Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask 1kg / 33oz + Coconut Elixir 60ml / 2oz</a></h3>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$169.70</b></span>
+      </article>
+    </div>
+    <h3 class="row-label">Selos sobre a foto &mdash; <code>__flags</code></h3>
+    <div class="demo demo--grid">
+      <article class="yb-card">
+        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--sale">−16%</span></div><img src="../pages/img/105-d0e326.webp" alt="Frasco branco de condicionador Pantanal elixir, 1 litro" loading="lazy"></div>
+        <h3 class="yb-card__title"><a href="#demos">Desconto — o quanto, não a palavra "promoção"</a></h3>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+      </article>
+      <article class="yb-card">
+        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div><img src="../pages/img/109_8f48e88f-e728-4b1e-b224-e3d3e29cf532-70f28f.webp" alt="Frasco branco de condicionador Forest elixir, 1 kg" loading="lazy"></div>
+        <h3 class="yb-card__title"><a href="#demos">Suave — informa sem disputar com o preço</a></h3>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
+      </article>
+      <article class="yb-card">
+        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--sale">−16%</span><span class="yb-badge yb-badge--on-media">Free Cronograma</span></div><img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Kit Terra Coco: shampoo, máscara e elixir lado a lado" loading="lazy"></div>
+        <h3 class="yb-card__title"><a href="#demos">Dois selos — o brinde entra como segundo, nunca sozinho</a></h3>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+      </article>
+    </div>
+    <h3 class="row-label">A&ccedil;&atilde;o sobre a foto &mdash; <code>__action</code> em repouso e revelada</h3>
+    <div class="demo demo--grid demo--preso">
+      <article class="yb-card">
+        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div><img src="../pages/img/Off1_August_22-24-11-18aac2.webp" alt="Kit de cuidado capilar sobre fundo claro" loading="lazy"></div>
+        <h3 class="yb-card__title"><a href="#demos">Em repouso — a foto é o assunto</a></h3>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
+      </article>
+      <article class="yb-card">
+        <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--sale">−16%</span></div><img src="../pages/img/105-d0e326.webp" alt="Frasco branco de condicionador Pantanal elixir, 1 litro" loading="lazy"><button type="button" class="yb-btn yb-btn--primary yb-btn--sm yb-card__action" aria-label="Add to cart: Kit Sealant Fashion Gold">Add to cart</button></div>
+        <h3 class="yb-card__title"><a href="#demos">Revelada — no ponteiro, no foco, ou sempre no toque</a></h3>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+      </article>
+    </div>
+    <h3 class="row-label">Esgotado &mdash; <code>--sold-out</code>, ao lado do sem modificador</h3>
+    <div class="demo demo--grid">
+      <article class="yb-card yb-card--sold-out">
+        <div class="yb-card__media" data-esgotado="Sold out"><img src="../pages/img/Off1_August_22-24-11-18aac2.webp" alt="Kit de cuidado capilar sobre fundo claro" loading="lazy"></div>
+        <h3 class="yb-card__title"><a href="#demos">KIT Hair Sorbet — Vanilla, Chocolate and Strawberry</a></h3>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$119.90</b></span>
+      </article>
+      <article class="yb-card">
+        <div class="yb-card__media"><img src="../pages/img/109_8f48e88f-e728-4b1e-b224-e3d3e29cf532-70f28f.webp" alt="Frasco branco de condicionador Forest elixir, 1 kg" loading="lazy"></div>
+        <h3 class="yb-card__title"><a href="#demos">Disponível — o mesmo cartão, para comparar</a></h3>
+        <span class="yb-price yb-price--sm"><b class="yb-price__now">$119.90</b></span>
+      </article>
+    </div>
+    <div class="note">
+      <b>No ponteiro ela some; no dedo, nunca</b>
+      <p><b>Desktop:</b> a ação nasce invisível e aparece no <code>:hover</code> e no
+      <code>:focus-within</code> &mdash; a foto é o assunto, e o cartão é um entre
+      quatro iguais. <b>Toque:</b> <code>@media (hover:none)</code> a deixa sempre
+      visível, senão é inalcançável: no celular ninguém tem ponteiro para revelar nada.</p>
+      <p>O segundo cartão acima está com o estado <b>preso pela doc</b>, não por classe
+      do sistema. Sem isso a ação não apareceria em lugar nenhum da documentação: o
+      quadro de 375px também roda num navegador de ponteiro, então nem ali o ramo do
+      dedo se mostra sozinho.</p>
+    </div>
+    <div class="note">
+      <b>O botão precisa de <code>z-index</code> para ser clicável</b>
+      <p>O link do título estica um <code>::after</code> sobre o cartão inteiro e vem
+      depois da mídia no DOM: sem <code>z-index:1</code> o botão aparece no hover e
+      quem clica cai na PDP. E cada botão diz o produto no <code>aria-label</code>
+      &mdash; quatro "Add to cart" iguais não dizem nada a quem ouve.</p>
+    </div>
+    <div class="note">
+      <b>Aqui não há fileira de catálogo, e é de propósito</b>
+      <p>Os demos acima são <b>o cartão</b>, um estado por linha. Uma fileira de quatro
+      cartões arrumados já não é o cartão &mdash; é o bloco de catálogo, e ele tem
+      <a href="../organisms/catalog.html">ficha própria</a>, com título, contagem e
+      filtros.</p>
+      <p>A largura aqui também não é a da loja: é a da coluna da doc. Para ver a grade
+      trocando de quatro para três e duas colunas, o lugar é o
+      <a href="../preview/">Preview</a>, que roda a página inteira em viewport de
+      verdade.</p>
+    </div>
+    <div class="note">
+      <b>A grade não é um componente</b>
+      <p><code>.yb-grid</code> é o <b>arranjo</b> de um conjunto de cartões, e mora
+      aqui por isso. Ela não tem anatomia &mdash; nenhum <code>__</code> &mdash;, nem
+      variante, nem estado, nem marcação própria: quatro declarações de layout. Chegou
+      a ter ficha, e a demonstração dela eram quatro cartões, que é esta página.</p>
+      <p>O <a href="track.html">trilho</a> ao lado continua sendo componente: tem
+      <code>__nav</code>, três variantes, encaixe, rolagem e comportamento em JS. A
+      diferença entre os dois não é o tamanho do CSS &mdash; é ter anatomia própria.</p>
+      <p>Em duas colunas o <a href="offercard.html">cartão de oferta</a> ocupa as duas:
+      numa célula de 171px o relógio vaza pela borda e o título clampa em "Fashion
+      Gold…". No desktop é uma célula só, com 266px, e tudo entra.</p>
+    </div>
+    <!-- ARRANJO SO NO QUADRO DE CELULAR.
+         Em largura de desktop os dois arranjos sao a mesma fileira: a grade
+         nao quebrou ainda e o trilho nao precisa rolar. A diferenca entre
+         eles E o celular — duas colunas contra uma fatia que anda —, entao
+         eles vao para os quadros de 375px, lado a lado, e nao para o palco
+         largo, onde a comparacao nao existe. -->
+    <div data-estado="grade" data-rotulo="Em grade — duas por linha" hidden>
+      <div class="yb-grid">
+        <article class="yb-card">
+          <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--sale">−16%</span></div><img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Kit Terra Coco: shampoo, máscara e elixir lado a lado" loading="lazy"></div>
+          <h3 class="yb-card__title"><a href="#demos">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</a></h3>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+        </article>
+        <article class="yb-card">
+          <div class="yb-card__media"><img src="../pages/img/Off1_August_22-24-11-18aac2.webp" alt="Kit de cuidado capilar sobre fundo claro" loading="lazy"></div>
+          <h3 class="yb-card__title"><a href="#demos">Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask</a></h3>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$169.70</b></span>
+        </article>
+        <article class="yb-card">
+          <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div><img src="../pages/img/105-d0e326.webp" alt="Frasco branco de condicionador Pantanal elixir, 1 litro" loading="lazy"></div>
+          <h3 class="yb-card__title"><a href="#demos">KIT VELLO Shampoo 500ml + VELLO Hair Mask 500g</a></h3>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
+        </article>
+        <article class="yb-card">
+          <div class="yb-card__media"><img src="../pages/img/109_8f48e88f-e728-4b1e-b224-e3d3e29cf532-70f28f.webp" alt="Frasco branco de condicionador Forest elixir, 1 kg" loading="lazy"></div>
+          <h3 class="yb-card__title"><a href="#demos">Floral Fusion Hair Mist — 50ml / 1.69 fl.oz</a></h3>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$24.00</b></span>
+        </article>
+      </div>
+    </div>
+    <div data-estado="trilho" data-rotulo="Em carrossel — uma fatia que anda" hidden>
+      <div class="yb-track">
+        <article class="yb-card">
+          <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--sale">−16%</span></div><img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Kit Terra Coco: shampoo, máscara e elixir lado a lado" loading="lazy"></div>
+          <h3 class="yb-card__title"><a href="#demos">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</a></h3>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+        </article>
+        <article class="yb-card">
+          <div class="yb-card__media"><img src="../pages/img/Off1_August_22-24-11-18aac2.webp" alt="Kit de cuidado capilar sobre fundo claro" loading="lazy"></div>
+          <h3 class="yb-card__title"><a href="#demos">Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask</a></h3>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$169.70</b></span>
+        </article>
+        <article class="yb-card">
+          <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div><img src="../pages/img/105-d0e326.webp" alt="Frasco branco de condicionador Pantanal elixir, 1 litro" loading="lazy"></div>
+          <h3 class="yb-card__title"><a href="#demos">KIT VELLO Shampoo 500ml + VELLO Hair Mask 500g</a></h3>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
+        </article>
+        <article class="yb-card">
+          <div class="yb-card__media"><img src="../pages/img/109_8f48e88f-e728-4b1e-b224-e3d3e29cf532-70f28f.webp" alt="Frasco branco de condicionador Forest elixir, 1 kg" loading="lazy"></div>
+          <h3 class="yb-card__title"><a href="#demos">Floral Fusion Hair Mist — 50ml / 1.69 fl.oz</a></h3>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$24.00</b></span>
+        </article>
+      </div>
+    </div>
+    <div class="note">
+      <b>Grade ou trilho é escolha da seção</b>
+      <p>O mesmo cartão serve aos dois: troca-se <code>.yb-grid</code> por
+      <code>.yb-track</code> no contêiner — sem classe nova, sem script, sem controle
+      na tela.</p>
+      <p>Em 375px o ganho é de altura: quatro cartões caem de <b>1133px</b> de grade
+      para <b>528</b> de trilho. No desktop os dois não empatam — quatro cartões de
+      260px só cabem a partir de <b>1152px</b> de viewport; abaixo disso a grade quebra
+      linha e o trilho rola.</p>
+      <p><b>Os dois ao mesmo tempo:</b> <code>.yb-grid__rail</code> envolve os cartões e
+      é trilho abaixo de 768; acima, <code>display:contents</code> o apaga e eles voltam
+      a ser células da grade. O desktop fica byte a byte o que era.</p>
+    </div>
+    <div class="note">
+      <b>Selo que repete o título da seção não é selo</b>
+      <p>"Best seller" dentro de uma grade chamada Best Sellers não informa nada — e
+      quando só dois dos quatro cartões o têm, os outros dois parecem "não ser".
+      O selo vale onde o contexto não diz a mesma coisa: relacionados, busca,
+      coleção. O brinde que vem do título ("| FREE CRONOGRAMA") é informação de
+      venda e vira <code>--accent</code>; nunca fica no título para o clamp engolir.</p>
+    </div>
+    <div class="note">
+      <b>A marca saiu do cartão</b>
+      <p><code>.yb-card__vendor</code> existia entre o título e o preço e <b>nunca teve
+      consumidor</b>: as duas chamadas do gerador passavam <code>vendor=False</code>. O
+      motivo é a loja &mdash; todo produto do catálogo é Ybera. Escrever "Ybera Paris"
+      em cada cartão de uma loja de marca única não informa nada e ainda empurra o preço
+      20px para baixo.</p>
+      <p>A marca continua existindo como <b>dado</b>: a busca a usa na linha de apoio do
+      resultado, e a PDP diz de que linha o produto é. O que saiu foi o lugar dela no
+      cartão.</p>
+    </div>
+    <div class="note">
+      <b>De onde veio o truncamento</b>
+      <p>As telas-prova mostraram títulos reais ocupando 2, 5 e 4 linhas, e o preço
+      desalinhava na fileira. O token <code>--yb-card-title-lines: 2</code> nasceu desse
+      defeito observado.</p>
+      <p>O clamp só limita; não reserva. O <code>min-height</code> do título reserva as
+      mesmas linhas, pela mesma variável — sem ele, um título de uma linha subia o
+      preço 19px.</p>
+    </div>
+    <div class="note">
+      <b>Sem rating: era nota inventada</b>
+      <p>O card mostrava "4.8 of 5" fixo em todo produto — só a contagem de
+      avaliações variava, a nota nunca veio do dado. Review de verdade (texto,
+      nota real, quem comprou) mora só na PDP, na seção de review — não num
+      resumo que ninguém sustenta espremido num cartão de grid. No grid de
+      duas colunas do celular, tirar essa linha também devolve altura.</p>
+    </div>
+
+    <h3 class="rotulo">No celular</h3>
+    <div class="duo">
+      <figure class="duo__col">
+        <p class="duo__rotulo">Em grade — duas por linha</p>
+        <iframe class="duo__quadro" src="solo.html?c=card&amp;s=grade"
+                title="Card product · Em grade — duas por linha" width="375" height="420" loading="lazy"></iframe>
+      </figure>
+      <figure class="duo__col">
+        <p class="duo__rotulo">Em carrossel — uma fatia que anda</p>
+        <iframe class="duo__quadro" src="solo.html?c=card&amp;s=trilho"
+                title="Card product · Em carrossel — uma fatia que anda" width="375" height="420" loading="lazy"></iframe>
+      </figure>
+    </div>
+
+    <h3 class="rotulo">Marcação</h3>
+    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
+    <div class="snippet">
+      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <pre><code>&lt;article class="yb-card"&gt;
+  &lt;div class="yb-card__media"&gt;&lt;img src="../pages/img/105-d0e326.webp" alt="Frasco branco de condicionador Pantanal elixir, 1 litro" loading="lazy"&gt;&lt;/div&gt;
+  &lt;h3 class="yb-card__title"&gt;&lt;a href="#demos"&gt;Floral Fusion Hair Mist — 50ml / 1.69 fl.oz&lt;/a&gt;&lt;/h3&gt;
+  &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$24.00&lt;/b&gt;&lt;/span&gt;
+&lt;/article&gt;</code></pre>
+    </div>
+  </section>
+
+  <section class="bloco" id="anatomia" data-aba="Anatomia">
+    <h2 class="bloco-titulo">Anatomia e API</h2>
+    <div class="anat" data-yb-anatomia>
+      <div class="anat__palco">
+        <svg class="anat__fios" aria-hidden="true"></svg>
+        <div class="anat__peca" style="max-inline-size:260px"><article class="yb-card">
+  <div class="yb-card__media"><img src="../pages/img/105-d0e326.webp" alt="Frasco branco de condicionador Pantanal elixir, 1 litro" loading="lazy"></div>
+  <h3 class="yb-card__title"><a href="#anat-demos">Floral Fusion Hair Mist — 50ml / 1.69 fl.oz</a></h3>
+  <span class="yb-price yb-price--sm"><b class="yb-price__now">$24.00</b></span>
+</article></div>
+      </div>
+      <ol class="anat__legenda">
+        <li data-alvo=".yb-card"><span class="anat__texto"><b>Container</b> — A grade em volta é que decide a largura; o cartão só preenche a coluna.</span></li>
+        <li data-alvo=".yb-card__media"><span class="anat__texto"><b>Foto</b> — A caixa é reservada antes de a imagem chegar — é o que impede o salto de layout.</span></li>
+        <li data-alvo=".yb-card__title"><span class="anat__texto"><b>Título</b> — O link mora aqui e cobre o cartão inteiro. Corta na terceira linha, por decisão de sistema.</span></li>
+        <li data-alvo=".yb-price"><span class="anat__texto"><b>Preço</b> — É outra peça, não parte do cartão: a mesma <code>.yb-price</code> da PDP e da sacola.</span></li>
+      </ol>
+    </div>
+    <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
+         COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres
+         palavras de dentro de casa ("folha", "marcacao", "build"). A aba ao
+         lado ja mostrava o jeito certo — "O mesmo HTML que renderizou acima"
+         diz o que e. Aqui o que a pessoa precisa primeiro e a lista do que vai
+         encontrar; a procedencia vem depois, e vale a frase inteira, porque e
+         ela que autoriza confiar no que esta escrito. -->
+    <p class="bloco-lede">De que a peça é feita, o que ela aceita e os tokens que
+    consome — estes do mais específico desta peça para o mais compartilhado com o
+    resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
+    estiver errado aqui, o errado é o código.</p>
+
+    <p class="rotulo">De que é feita</p>
+    <p class="usa-degrau">Moléculas</p>
+    <ul class="usa"><li><a href="../molecules/price.html">Price</a></li></ul>
+    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-card--sold-out</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-card__action</code> <code>.yb-card__flags</code> <code>.yb-card__media</code> <code>.yb-card__title</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">27</span></p>
+    <div class="tokens">
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>7</span></p>
+        <ul class="tokens__lista">
+          <li><i class="tokens__cor" style="background:var(--yb-surface-sunken)" aria-hidden="true"></i><code>--yb-surface-sunken</code><span class="tokens__valor">#FAFAFA</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>5</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-type-body-sm-line</code><span class="tokens__valor">1.35</span></li>
+          <li><code>--yb-tracking-wider</code><span class="tokens__valor">0.12em</span></li>
+          <li><code>--yb-type-overline-size</code><span class="tokens__valor">0.6875rem</span></li>
+          <li><code>--yb-type-body-size</code><span class="tokens__valor">1rem</span></li>
+          <li><code>--yb-font-weight-semibold</code><span class="tokens__valor">600</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>3</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-space-1</code><span class="tokens__valor">0.25rem</span></li>
+          <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
+          <li><code>--yb-space-3</code><span class="tokens__valor">0.75rem</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>4</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-aspect-product</code><span class="tokens__valor">1 / 1</span></li>
+          <li><code>--yb-radius-media</code><span class="tokens__valor">8px</span></li>
+          <li><code>--yb-radius-card</code><span class="tokens__valor">8px</span></li>
+          <li><code>--yb-radius-sm</code><span class="tokens__valor">4px</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/elevation.html">Elevação</a> <span>2</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-opacity-media-disabled</code><span class="tokens__valor">.55</span></li>
+          <li><code>--yb-elevation-card</code><span class="tokens__valor">0 1px 2px rgba(30,30,31,.06)</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>5</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-transition-surface</code><span class="tokens__valor">180ms cubic-bezier(.2, 0, 0, 1)</span></li>
+          <li><code>--yb-transition-control</code><span class="tokens__valor">120ms cubic-bezier(.2, 0, 0, 1)</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
+          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/architecture.html">Componente</a> <span>1</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-card-title-lines</code><span class="tokens__valor">2</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+       bloco por escrever passaria a estar atras de um clique, e a razao de ele
+       existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
+       que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
+
+       (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
+       crase em comentario ja derrubou o build antes.) -->
+  <section class="bloco" id="faca" data-aba="Regras de uso">
+    <h2 class="bloco-titulo">Faça / não faça</h2>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><button class="yb-btn yb-btn--primary yb-btn--sm" type="button" aria-label="Add to cart: Deep care kit">Add to cart</button></div>
+        <p class="fn-legenda">Botão de compra nomeando o produto.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><button class="yb-btn yb-btn--primary yb-btn--sm" type="button">Add to cart</button><button class="yb-btn yb-btn--primary yb-btn--sm" type="button">Add to cart</button></div>
+        <p class="fn-legenda">Oito botões idênticos na mesma página: a lista de controles do leitor de tela vira oito linhas iguais.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade">
+    <h2 class="bloco-titulo">Acessibilidade</h2>
+    <ul class="bloco-lede"><li>O nome do produto é o link. O “Add to cart” é um botão separado, com <code>aria-label</code> dizendo de qual produto — numa vitrine de oito cartões, oito botões “Add to cart” idênticos não dizem nada na lista de controles.</li><li>A foto é <code>alt=""</code>: o nome do produto está escrito logo abaixo e o leitor de tela leria duas vezes.</li><li>A nota usa <code>role="img"</code> com <code>aria-label</code> — “4.8 de 5, 128 avaliações”. As cinco estrelas desenhadas são <code>aria-hidden</code>.</li></ul>
+  </section>
+  </div>
+
+  <p class="doc-credit">Gerada de <code>molecules/pecas/card.html</code> e
+  <code>molecules/ybera-molecules.css</code>. Não edite à mão: <code>./build.sh</code>.</p>
+</main>
+
+<script src="../behavior/ybera-behavior.js"></script>
+<script>
+/* O quadro de 375 se dimensiona pelo que tem dentro. Conteudo de iframe nao
+   dimensiona o elemento sozinho, entao o solo.html mede a propria caixa e
+   avisa por postMessage — sem isso a ficha do Badge teria a mesma altura da
+   ficha do carrinho, e as duas erradas. */
+addEventListener('message', function (e) {
+  if (!e.data || e.data.yb !== 'altura') return;
+  /* Pelo REMETENTE, e nao pelo primeiro quadro da pagina: uma ficha pode ter
+     mais de um (a comparacao de estados lado a lado tem dois), e os dois
+     mandam a mesma mensagem com o mesmo alvo. Pegando o primeiro, o quadro
+     grande recebia a altura do pequeno. */
+  var f = Array.prototype.find.call(document.querySelectorAll('iframe'),
+    function (x) { return x.contentWindow === e.source; });
+  if (!f || !(e.data.h > 0)) return;
+  f.height = e.data.h;
+  /* Quadros comparados ficam da MESMA altura, sempre a maior. Duas caixas lado
+     a lado com fundos diferentes e uma 44px mais curta leem como recorte, e
+     nao como diferenca de estado. So cresce, entao converge. */
+  var duo = f.closest('.duo');
+  if (!duo) return;
+  var irmaos = duo.querySelectorAll('.duo__quadro');
+  var maior = 0;
+  Array.prototype.forEach.call(irmaos, function (x) {
+    maior = Math.max(maior, parseInt(x.height, 10) || 0);
+  });
+  Array.prototype.forEach.call(irmaos, function (x) {
+    if ((parseInt(x.height, 10) || 0) !== maior) x.height = maior;
+  });
+});
+
+/* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
+   acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-yb-copiar]');
+  if (!b) return;
+  var codigo = b.parentElement.querySelector('code');
+  if (!codigo || !navigator.clipboard) return;
+  navigator.clipboard.writeText(codigo.textContent).then(function () {
+    var antes = b.textContent;
+    b.textContent = 'Copiado';
+    setTimeout(function () { b.textContent = antes; }, 1600);
+  }).catch(function () { /* permissao negada: o codigo continua selecionavel */ });
+});
+</script>
+</body>
+</html>

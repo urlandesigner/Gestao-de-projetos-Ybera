@@ -65,16 +65,63 @@
   --yb-gold-950: #2C2312;         /* 15.48:1 vs branco · AAA  */
 
   /* ---------------------------------------------------------------------
-     COR · ESTADO — todos ≥5.4:1 sobre branco (AA folgado nos dois sentidos)
+     COR · ESTADO — onze tons por família, no mesmo desenho das rampas de
+     marca. Geradas por tools/rampa-estado.py (OKLCH, matiz do 600).
+     O 50 (superfície) e o 600 (texto e traço) são as âncoras: já eram
+     consumidos pela camada semântica e ficaram exatos. 500 é o primeiro
+     tom que serve de UI (≥3:1); do 700 em diante, AAA.
      --------------------------------------------------------------------- */
-  --yb-success-600: #1F7A34;      /*  5.40:1 vs branco · AA */
-  --yb-warning-600: #8A5A00;      /*  5.93:1 vs branco · AA */
-  --yb-danger-600: #B3261E;       /*  6.54:1 vs branco · AA */
-  --yb-info-600: #1B5FA8;         /*  6.46:1 vs branco · AA */
-  --yb-success-50: #EAF6EC;        /* superfície */
-  --yb-warning-50: #FBF3E3;        /* superfície */
-  --yb-danger-50:  #FBEAE9;        /* superfície */
-  --yb-info-50:    #E9F1FA;        /* superfície */
+  /* SUCESSO */
+  --yb-success-50:    #EAF6EC;  /*  1.11:1 vs branco · -- · SUPERFÍCIE */
+  --yb-success-100:   #D7F1DB;  /*  1.20:1 vs branco · -- */
+  --yb-success-200:   #BEE5C4;  /*  1.38:1 vs branco · -- */
+  --yb-success-300:   #99D1A2;  /*  1.75:1 vs branco · -- */
+  --yb-success-400:   #63B171;  /*  2.61:1 vs branco · -- */
+  --yb-success-500:   #3B994E;  /*  3.59:1 vs branco · UI */
+  --yb-success-600:   #1F7A34;  /*  5.40:1 vs branco · AA · TEXTO E TRAÇO */
+  --yb-success-700:   #005A1D;  /*  8.47:1 vs branco · AAA */
+  --yb-success-800:   #024114;  /* 11.87:1 vs branco · AAA */
+  --yb-success-900:   #00310C;  /* 14.54:1 vs branco · AAA */
+  --yb-success-950:   #03260A;  /* 16.34:1 vs branco · AAA */
+
+  /* ATENÇÃO */
+  --yb-warning-50:    #FBF3E3;  /*  1.10:1 vs branco · -- · SUPERFÍCIE */
+  --yb-warning-100:   #F5E9D3;  /*  1.20:1 vs branco · -- */
+  --yb-warning-200:   #EDD9B8;  /*  1.38:1 vs branco · -- */
+  --yb-warning-300:   #DDC091;  /*  1.75:1 vs branco · -- */
+  --yb-warning-400:   #C49A58;  /*  2.59:1 vs branco · -- */
+  --yb-warning-500:   #B07D2D;  /*  3.61:1 vs branco · UI */
+  --yb-warning-600:   #8A5A00;  /*  5.93:1 vs branco · AA · TEXTO E TRAÇO */
+  --yb-warning-700:   #6A4504;  /*  8.52:1 vs branco · AAA */
+  --yb-warning-800:   #4F3201;  /* 11.74:1 vs branco · AAA */
+  --yb-warning-900:   #3B2401;  /* 14.60:1 vs branco · AAA */
+  --yb-warning-950:   #2F1B00;  /* 16.44:1 vs branco · AAA */
+
+  /* ERRO */
+  --yb-danger-50:     #FBEAE9;  /*  1.16:1 vs branco · -- · SUPERFÍCIE */
+  --yb-danger-100:    #FFE4E3;  /*  1.20:1 vs branco · -- */
+  --yb-danger-200:    #FFD1CD;  /*  1.38:1 vs branco · -- */
+  --yb-danger-300:    #FFB0A8;  /*  1.75:1 vs branco · -- */
+  --yb-danger-400:    #FB796F;  /*  2.60:1 vs branco · -- */
+  --yb-danger-500:    #E95449;  /*  3.60:1 vs branco · UI */
+  --yb-danger-600:    #B3261E;  /*  6.54:1 vs branco · AA · TEXTO E TRAÇO */
+  --yb-danger-700:    #981712;  /*  8.51:1 vs branco · AAA */
+  --yb-danger-800:    #740806;  /* 11.80:1 vs branco · AAA */
+  --yb-danger-900:    #550A07;  /* 14.66:1 vs branco · AAA */
+  --yb-danger-950:    #420A07;  /* 16.43:1 vs branco · AAA */
+
+  /* INFORMAÇÃO */
+  --yb-info-50:       #E9F1FA;  /*  1.14:1 vs branco · -- · SUPERFÍCIE */
+  --yb-info-100:      #DCECFF;  /*  1.20:1 vs branco · -- */
+  --yb-info-200:      #C2DEFE;  /*  1.38:1 vs branco · -- */
+  --yb-info-300:      #9BC7FB;  /*  1.76:1 vs branco · -- */
+  --yb-info-400:      #67A4EA;  /*  2.60:1 vs branco · -- */
+  --yb-info-500:      #4289D9;  /*  3.61:1 vs branco · UI */
+  --yb-info-600:      #1B5FA8;  /*  6.46:1 vs branco · AA · TEXTO E TRAÇO */
+  --yb-info-700:      #0D4D8E;  /*  8.50:1 vs branco · AAA */
+  --yb-info-800:      #03386C;  /* 11.76:1 vs branco · AAA */
+  --yb-info-900:      #05294F;  /* 14.62:1 vs branco · AAA */
+  --yb-info-950:      #06203D;  /* 16.38:1 vs branco · AAA */
 
   --yb-white: #FFFFFF;
   --yb-black: #000000;
@@ -109,6 +156,7 @@
   --yb-font-weight-bold:     700;
   --yb-font-weight-extrabold:800;
 
+  --yb-line-height-none:    1;      /* so glifo: selo, contador, x de fechar — nao texto corrido */
   --yb-line-height-tight:   1.05;
   --yb-line-height-snug:    1.15;
   --yb-line-height-base:    1.35;
@@ -202,6 +250,8 @@
   --yb-aspect-portrait:  4 / 5;
   --yb-aspect-landscape: 16 / 9;
   --yb-aspect-vertical:  9 / 16;   /* TikTok/Reels — o carrossel de vídeo */
+  --yb-aspect-wide:      16 / 5;   /* arte de campanha, desktop (1200x375, 1600x501) */
+  --yb-aspect-tall:      2 / 3;    /* arte de campanha, celular (400x600 a 750x1095) */
 
   /* ---------------------------------------------------------------------
      MEDIDA DE LEITURA — largura em caracteres. Linha longa demais faz o olho
@@ -495,7 +545,7 @@
      Limite conhecido: o tingido depende de fundo claro. Sobre a faixa
      escura do header ou sobre foto ele não se sustenta — ali a secundária
      teria de ser contorno claro, e essa variante ainda não existe porque
-     nenhuma tela pede. Ver a nota em components/. */
+     nenhuma tela pede. Ver a nota na ficha do Button. */
   --yb-action-secondary-bg:        var(--yb-magenta-100);
   --yb-action-secondary-bg-hover:  var(--yb-magenta-200);
   --yb-action-secondary-bg-active: var(--yb-magenta-300);
@@ -543,7 +593,7 @@
   --yb-accent:           var(--yb-accent-on-dark);
   --yb-accent-on-dark:   var(--yb-gold-500);  /* só sobre superfície escura */
   /* Acento sobre FOTO, que e outro problema: a superficie escura do
-     --yb-accent-on-dark e conhecida, a foto nao. Sobre o veu do media banner
+     --yb-accent-on-dark e conhecida, a foto nao. Sobre o veu do banner com foto
      (.77 sobre pixel branco puro) o gold-500 da 3.28:1 e reprova como texto;
      o gold-300 da 6.02:1 e continua lendo como dourado. Escurecer o veu ate o
      gold-500 passar exigiria .86 — a essa altura nao ha mais foto embaixo. */
@@ -643,6 +693,15 @@
   /* =====================================================================
      TRANSIÇÃO SEMÂNTICA
      ===================================================================== */
+  /* RITMO DE ESPERA — não é transição, e por isso não sai da mesma rampa.
+     Transição responde a um gesto e termina; espera é um laço que roda
+     enquanto não há resposta, e a rampa de transição para em 420ms — tempo de
+     um clique, não de um laço. A 420ms uma barra indeterminada atravessa a
+     pista duas vezes e meia por segundo, que é estroboscópio, não sinal de
+     trabalho. 1,4s é o ritmo que o brilho do esqueleto já praticava, escrito
+     cru na folha desde que nasceu; agora os dois esperam no mesmo compasso. */
+  --yb-rhythm-loop: 1400ms;
+
   --yb-transition-control: var(--yb-duration-fast) var(--yb-ease-standard);
   --yb-transition-surface: var(--yb-duration-base) var(--yb-ease-standard);
   /* @deprecated desde 0.10 — sem consumidor. Remocao em 1.0.
@@ -796,6 +855,12 @@
   --yb-aspect-product: var(--yb-aspect-square);     /* catálogo é 1:1 */
   --yb-aspect-hero:    var(--yb-aspect-landscape);
   --yb-aspect-reel:    var(--yb-aspect-vertical);
+  /* A arte que o marketing entrega pronta: o hero tem a proporcao dela. */
+  --yb-aspect-campaign:        var(--yb-aspect-wide);
+  --yb-aspect-campaign-mobile: var(--yb-aspect-tall);
+  /* Miniatura de produto em lista — resultado da busca e item da sacola. As
+     duas diziam 56px cada uma do seu jeito. */
+  --yb-thumb: 3.5rem;
 
   /* =====================================================================
      MEDIDA DE LEITURA

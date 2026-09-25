@@ -23,6 +23,8 @@ meses sem o contexto.
 | [007](DDR-007-o-sistema-e-claro-por-decisao.md) | O sistema é claro por decisão: `color-scheme: light` | aceita | 0.1 |
 | [008](DDR-008-comportamento-liga-por-atributo-de-dado.md) | Comportamento liga por `data-yb-*`, é opcional e prefere o elemento nativo | aceita | 0.6 |
 | [009](DDR-009-prefixo-yb-em-tudo.md) | Prefixo `yb-` em tudo, nomenclatura em inglês | aceita | 0.2 |
+| [010](DDR-010-escada-atomica.md) | A escada atômica é a árvore de arquivos | aceita | 0.13 |
+| [011](DDR-011-blocos-no-menu-organismos-na-escada.md) | O menu separa Componentes de Blocos | aceita | 0.13 |
 
 Formato de cada registro: cabeçalho com estado, versão de origem, o que
 substitui e os arquivos que toca; depois **Decisão**, **Intenção**, **Quando se

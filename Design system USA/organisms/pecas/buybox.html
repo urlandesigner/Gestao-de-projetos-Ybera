@@ -1,0 +1,122 @@
+<h2>Buy box</h2>
+    <p class="when">O bloco de compra da PDP: nome, prova, preço, escolha, ação e garantia. Sete níveis de informação acima da dobra, em ordem fixa.</p>
+    <div class="note"><b>Nota de heading</b><p>Nesta galeria o nome do produto é <code>&lt;h2&gt;</code> porque a página já tem um <code>&lt;h1&gt;</code>. Numa PDP real ele é o <code>&lt;h1&gt;</code> — o CSS não depende do nível.</p></div>
+    <!-- doc:vizinha yb-gallery — na PDP a galeria é IRMÃ do bloco de compra
+         dentro de `.pdp`, não parte dele. Ela está aqui porque bloco de compra
+         sem a foto ao lado não mostra a decisão que a pessoa toma. -->
+    <div class="stage stage--pad">
+      <div class="split">
+        <div class="yb-gallery" data-yb-gallery>
+          <div class="yb-gallery__stage">
+            <div class="yb-gallery__slide" data-active="true"><img src="../pages/img/Artboard_1_62a39a8d-9dfe-4cdc-9bfd-7626a-b29a2a.webp" alt="Kit Sealant Fashion Gold — image 1"></div>
+            <div class="yb-gallery__slide"><img src="../pages/img/DSC09878-6f3656.webp" alt="Kit Sealant Fashion Gold — image 2"></div>
+            <div class="yb-gallery__slide"><img src="../pages/img/DSC09857-45ff81.webp" alt="Kit Sealant Fashion Gold — image 3"></div>
+            <div class="yb-gallery__slide"><img src="../pages/img/DSC09865-31f800.webp" alt="Kit Sealant Fashion Gold — image 4"></div>
+            <span class="yb-gallery__count">1 / 4</span>
+          </div>
+          <div class="yb-gallery__thumbs">
+            <input type="radio" name="bbgal" id="bbg1" checked><label for="bbg1" title="Image 1"><img src="../pages/img/Artboard_1_62a39a8d-9dfe-4cdc-9bfd-7626a-b29a2a.webp" alt=""></label>
+            <input type="radio" name="bbgal" id="bbg2"><label for="bbg2" title="Image 2"><img src="../pages/img/DSC09878-6f3656.webp" alt=""></label>
+            <input type="radio" name="bbgal" id="bbg3"><label for="bbg3" title="Image 3"><img src="../pages/img/DSC09857-45ff81.webp" alt=""></label>
+            <input type="radio" name="bbgal" id="bbg4"><label for="bbg4" title="Image 4"><img src="../pages/img/DSC09865-31f800.webp" alt=""></label>
+          </div>
+        </div>
+        <div class="yb-buybox">
+          <div class="yb-buybox__flags">
+            <span class="yb-badge yb-badge--sale">Save 16%</span>
+            <span class="yb-badge yb-badge--soft">Best seller</span>
+          </div>
+          <h2 class="yb-buybox__title">Kit Sealant Fashion Gold</h2>
+          <span class="yb-rating" role="img" aria-label="4.8 of 5, 412 reviews">
+            <span class="yb-stars" style="--yb-stars:4.8" aria-hidden="true"></span>
+            <span class="yb-rating__count">4.8 · 412 reviews</span>
+          </span>
+          <span class="yb-price"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+          <p class="yb-buybox__desc">Professional keratin sealant for frizz-free,
+          mirror-smooth hair. Formulated without formaldehyde and safe for
+          color-treated hair.</p>
+          <div class="yb-buybox__group">
+            <p class="yb-buybox__label">Size</p>
+            <div class="yb-swatches">
+              <input type="radio" name="bs" id="b1" checked><label for="b1">500g</label>
+              <input type="radio" name="bs" id="b2"><label for="b2">300g</label>
+              <input type="radio" name="bs" id="b3" disabled><label for="b3">1kg</label>
+            </div>
+          </div>
+          <div class="yb-buybox__actions">
+            <div class="yb-stepper">
+              <button type="button" aria-label="Decrease" disabled>−</button>
+              <input type="number" value="1" aria-label="Quantity">
+              <button type="button" aria-label="Increase">+</button>
+            </div>
+            <button type="button" class="yb-btn yb-btn--primary">Add to cart — $168.90</button>
+          </div>
+          <div class="yb-buybox__trust">
+            <span>Formaldehyde-free</span><span>Color-safe</span>
+            <span>30-day returns</span><span>Free shipping over $50</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Descrição curta aqui, inteira no acordeão</b>
+      <p>Na tela real a descrição completa (532 caracteres) entrava entre o preço e o
+      botão e repetia no acordeão logo abaixo — o "Add to cart" caía fora da primeira
+      tela em 1440×900. O bloco leva só o gancho, duas ou três frases; o texto
+      inteiro mora em "Description".</p>
+    </div>
+    <div class="note">
+      <b>Só o que o dado sustenta</b>
+      <p>"Best seller", "4.8 · 412 reviews" e "Made in Paris" saíram da tela real: o
+      catálogo não tem nota nem selo, e origem é afirmação que precisa de fonte. O
+      estoque vem do Shopify; o seletor de variante só aparece quando há mais de
+      uma. A fileira de confiança diz o que a <em>loja</em> garante; a lista de
+      benefício, o que o <em>produto</em> faz — uma de cada, não três.</p>
+    </div>
+    <h3 class="row-label">Barra de compra fixa</h3>
+    <div class="stage stage--pad">
+      <!-- Congelada no palco: a barra real e fixa no rodape da tela. -->
+      <div class="yb-buybar" style="position:static; box-shadow:none">
+        <span class="yb-buybar__info">
+          <span class="yb-buybar__name">Kit Sealant Fashion Gold</span>
+          <span class="yb-buybar__price"><b class="yb-price__now">$168.90</b></span>
+        </span>
+        <button class="yb-btn yb-btn--primary" type="button" data-yb-barra-comprar><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg> Add to cart</button>
+        <a class="yb-btn yb-btn--primary" href="#demos" data-yb-barra-avisar hidden><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-mail"/></svg> Notify me</a>
+      </div>
+    </div>
+    <div class="note">
+      <b>Aparece quando o botão real sai de vista</b>
+      <p>O "Add to cart" de verdade fica a duas telas do topo. <code>.yb-buybar</code>
+      é fixa no rodapé da tela e nasce <code>hidden</code>; o JS
+      (<code>data-yb-buybar</code>) a revela quando o botão marcado com
+      <code>data-yb-buybar-anchor</code> já passou para cima — nunca as duas ações
+      ao mesmo tempo. Sem script, o botão real continua lá. Aqui ela está estática
+      só para ser vista.</p>
+    </div>
+    <div class="note">
+      <b>O nome antes do preço</b>
+      <p>A barra mostrava <code>$168.90 · Add to cart</code> sem dizer de que produto.
+      Quem chegou por link de anúncio, rolou e passou por duas fotos de produto no
+      caminho não tem como conferir o que está comprando. O nome vai em cima, uma
+      linha com reticência &mdash; em 320px o título tem 40 caracteres e quebraria
+      em três, empurrando a barra para 110px sobre o conteúdo. O preço fica embaixo,
+      no tamanho que tinha: é ele que a pessoa confere.</p>
+    </div>
+    <div class="note">
+      <b>Duas ações, uma de cada vez</b>
+      <p>A barra carrega as duas: <code>data-yb-barra-comprar</code> e
+      <code>data-yb-barra-avisar</code>, uma delas sempre <code>hidden</code>. Quem
+      troca é o mesmo script da variante que troca o botão real &mdash; escolher um
+      tamanho esgotado muda a página inteira, e a barra é parte dela. Copiar só o
+      "Add to cart" deixa a tela de esgotado sem ação nenhuma no rodapé.</p>
+    </div>
+    <div class="note">
+      <b>Não é só de celular</b>
+      <p>Era, até ficar claro que o problema não é de largura e sim de distância:
+      em qualquer tela, depois que o bloco de compra sai por cima, não há como
+      comprar sem voltar. O que muda acima de 1024px é a <b>forma</b>, não a regra
+      &mdash; o conteúdo se prende à largura do container (o fundo continua
+      sangrando) e o botão volta ao tamanho natural, senão viraria um retângulo
+      magenta de 1.300px atravessando o rodapé.</p>
+    </div>

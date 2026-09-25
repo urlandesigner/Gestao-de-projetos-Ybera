@@ -1,0 +1,69 @@
+<h2>Banner hero</h2>
+    <p class="when">O banner do topo da home, na largura da tela. Em trilho, um slide por tela; cada slide é foto com texto e CTA, ou a arte pronta do marketing. Dentro da coluna da página, o banner é o <a href="bannermedia.html">Banner media</a>.</p>
+    <h3 class="row-label">Tipo com texto e CTA — <code>--blur</code></h3>
+    <div class="stage">
+      <a class="yb-bannerhero yb-bannerhero--blur" href="#demos">
+        <img src="../pages/img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp" alt="">
+        <div class="yb-bannerhero__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="yb-bannerhero__body">
+          <span class="yb-bannerhero__eyebrow">Salon keratin, at home</span>
+          <h3 class="yb-bannerhero__title">Straight, glossy hair that survives humidity.</h3>
+          <p class="yb-bannerhero__text">Brazilian keratin care, formaldehyde-free and safe on color-treated hair.</p>
+          <span class="yb-btn yb-btn--primary">Shop best sellers</span>
+        </div>
+      </a>
+    </div>
+    <div class="note">
+      <b>Uma aparência só para o banner com texto</b>
+      <p>O texto branco precisa de fundo escuro atrás. O blur resolve desfocando a
+      foto e escurecendo pouco (65%); o véu sozinho resolvia escurecendo muito
+      (77%) e apagava a metade de baixo da foto. Por isso o banner com texto é
+      sempre <code>--blur</code>, com as três <code>&lt;i&gt;</code> de
+      <code>__blur</code>. O véu cheio não é opção: é o plano B automático, que a
+      folha aplica sozinha em navegador sem desfoque e para quem pediu menos
+      transparência.</p>
+    </div>
+    <h3 class="row-label">Tipo arte — <code>--arte</code></h3>
+    <div class="stage">
+      <a class="yb-bannerhero yb-bannerhero--arte" href="#demos">
+        <img class="yb-bannerhero__fundo" src="../pages/img/Banner_20_24H_b-96b194d5.webp" alt="" loading="lazy">
+        <picture>
+          <source media="(max-width: 767.98px)" srcset="../pages/img/Banner_20_24H_mb_b-61df813f.webp">
+          <img src="../pages/img/Banner_20_24H_b-96b194d5.webp" alt="20% off sitewide for the next 24 hours. Use code Ybera20.">
+        </picture>
+      </a>
+    </div>
+    <div class="note">
+      <b>Dois tipos: texto em HTML ou texto na imagem</b>
+      <p><b>Com texto e CTA</b> é uma foto só: o texto é HTML, reflui em qualquer
+      largura, e a foto aguenta o corte. <b>Arte</b> é a peça pronta do marketing,
+      com o texto desenhado no pixel, e chega em <b>duas imagens</b> — 16:5 para a
+      tela larga, 2:3 para o celular —, trocadas pelo <code>&lt;picture&gt;</code>
+      em 767px. O hero tem a proporção da arte; entre 768 e 1365px, onde o piso de
+      altura o deixa mais alto que ela, a arte entra inteira sobre uma cópia
+      desfocada dela mesma (<code>__fundo</code>). Sem corpo e sem véu: o
+      <code>alt</code> repete a promessa, porque é o único lugar em que busca e
+      leitor de tela a alcançam.</p>
+    </div>
+    <div class="note">
+      <b>O blur é aparência, não legibilidade</b>
+      <p>Medido nas três fotos do hero: o véu de <b>.65</b> passa <b>com ou sem</b> o
+      blur — 7,75:1 com, 6,98:1 sem. Baixá-lo para .45 contando com o desfoque
+      reprovava em duas delas, porque borrar quase-branco continua quase-branco. Use
+      pelo desfoque, não pelo contraste.</p>
+      <p>São três folhas empilhadas porque <code>backdrop-filter</code> não tem
+      meio-termo: mascarar uma só dissolve o borrado sobre o nítido e deixa aresta —
+      a nitidez caía 17,6 para 0,5 em um pixel; empilhadas, o degrau máximo é 0,64.</p>
+    </div>
+    <div class="note">
+      <b>O véu não é enfeite</b>
+      <p>Contraste sobre foto não se mede — a foto muda. O gradiente
+      <code>--yb-scrim-strong</code> garante o piso de leitura embaixo, onde o texto fica,
+      sem escurecer a imagem inteira.</p>
+    </div>
+    <div class="note">
+      <b>Na home, em carrossel</b>
+      <p>No topo da home os slides formam o bloco <a href="../organisms/hero.html">Hero</a>:
+      vários Banners hero num <a href="track.html">Track</a>, um por tela, com as
+      setas. As setas são do bloco, não do banner.</p>
+    </div>

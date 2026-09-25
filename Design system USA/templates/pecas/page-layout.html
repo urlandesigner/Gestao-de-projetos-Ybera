@@ -1,0 +1,69 @@
+<h2>Page layout</h2>
+    <p class="when">O esqueleto de qualquer página: largura máxima, ritmo entre blocos e cabeçalho de seção. Toda página nova começa por estes três.</p>
+    <div class="stage">
+      <div class="yb-page">
+        <div class="yb-block">
+          <div class="yb-section-head">
+            <h2>Best Sellers</h2>
+            <a class="yb-link" href="#demos">Shop all best sellers <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg></a>
+          </div>
+          <div class="yb-grid">
+            <article class="yb-card">
+              <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div></div>
+              <h3 class="yb-card__title"><a href="#demos">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</a></h3>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+            </article>
+            <article class="yb-card">
+              <div class="yb-card__media"></div>
+              <h3 class="yb-card__title"><a href="#demos">KIT VELLO Shampoo 500ml + VELLO Hair Mask 500g</a></h3>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$133.90</b></span>
+            </article>
+            <article class="yb-card">
+              <div class="yb-card__media"></div>
+              <h3 class="yb-card__title"><a href="#demos">Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask 1kg / 33oz</a></h3>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$169.70</b></span>
+            </article>
+            <article class="yb-card">
+              <div class="yb-card__media"></div>
+              <h3 class="yb-card__title"><a href="#demos">MIRRA Repair Therapy Shampoo + Mask + Vital Serum</a></h3>
+              <span class="yb-price yb-price--sm"><b class="yb-price__now">$119.90</b></span>
+            </article>
+          </div>
+        </div>
+        <div class="yb-block yb-block--tight">
+          <div class="yb-section-head yb-section-head--center">
+            <h2>Explore Our Collections</h2>
+          </div>
+          <div class="yb-section-head">
+            <div class="yb-section-head__col">
+              <span class="yb-section-head__eyebrow">Expert Advice</span>
+              <h2>Professional Secrets</h2>
+            </div>
+            <a class="yb-link" href="#demos">See all <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg></a>
+          </div>
+          <p class="yb-buybox__desc">Fashion Gold, Cronograma, Terra Coco, Vello and Mirra — one system per hair goal, not one product per shelf.</p>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Três peças, e não uma folha de página</b>
+      <p><code>.yb-page</code> centra e dá a goteira; <code>.yb-block</code> é o ritmo
+      vertical entre seções; <code>.yb-section-head</code> é o par título mais atalho.
+      Separadas porque uma seção que sangra usa <code>--flush</code> e continua no
+      mesmo ritmo — o carrossel de vídeo é o caso.</p>
+      <p>O <b>eyebrow</b> é a categoria acima do título, não dentro dele, e vive em
+      coluna própria: o cabeçalho é um flex de duas pontas, e solto ali ele virava um
+      terceiro item disputando a linha.</p>
+    </div>
+    <div class="note">
+      <b>O ritmo encolhe no telefone</b>
+      <p>64px de respiro entre blocos é um oitavo de uma tela de 568px — a PDP
+      levava duas rolagens até o botão de comprar. Abaixo de 768 o respiro cai, e a
+      hierarquia entre <code>--tight</code> e o padrão continua de pé.</p>
+    </div>
+    <div class="note">
+      <b>Por que isto virou sistema</b>
+      <p>Regra dos dois usos: home e PDP já pediam os três. Enquanto viviam na folha
+      de cada gerador, toda página nova ia redefinir container e respiro do seu
+      jeito — que é como um design system começa a divergir de si mesmo.</p>
+    </div>

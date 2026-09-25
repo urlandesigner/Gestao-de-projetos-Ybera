@@ -3,7 +3,7 @@
 <!-- GERADO por tools/inventario.mjs. Não edite à mão: rode ./build.sh.
      A fonte é o CSS. Se uma linha aqui está errada, o errado é o código. -->
 
-49 peças no bundle — 36 estáveis, 13 em beta, 0 em alfa.
+54 peças no bundle — 28 estáveis, 26 em beta, 0 em alfa.
 
 ## Como ler a maturidade
 
@@ -23,55 +23,60 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 
 | Componente | Classe base | Camada | Maturidade | Variantes | Estados | Tokens | Doc | Foco | Comportamento | Tela real |
 |---|---|---|---|---|---|---|---|---|---|---|
-| ACORDEÃO | `.yb-accordion` | Componente | Estável | — | 1 | 16 | sim | sim | — | sim |
-| ALERT | `.yb-alert` | Componente | Beta | 4 | 2 | 28 | sim | sim | sim | — |
-| BADGE | `.yb-badge` | Componente | Beta | 9 | — | 22 | sim | — | sim | sim |
-| BRAND QUOTE | `.yb-quote` | Componente | Estável | — | — | 14 | sim | n/a | — | sim |
-| BREADCRUMB | `.yb-crumb` | Componente | Estável | — | 3 | 8 | sim | sim | — | sim |
-| BUTTON | `.yb-btn` | Componente | Estável | 4 | 4 | 30 | sim | sim | sim | sim |
-| CERTIFICATION SEALS | `.yb-seal` | Componente | Estável | — | — | 13 | sim | n/a | — | sim |
-| CHECKBOX / RADIO | `.yb-check` | Componente | Beta | — | 4 | 21 | sim | sim | — | — |
-| COLLECTION CARD | `.yb-collection` | Componente | Estável | 6 | 2 | 40 | sim | sim | — | sim |
-| DIALOG / MODAL | `.yb-dialog` | Componente | Estável | 1 | 2 | 25 | sim | sim | sim | sim |
-| EMPTY STATE | `.yb-empty` | Componente | Estável | 1 | — | 11 | sim | n/a | — | sim |
-| FORM FIELD | `.yb-field` | Componente | Estável | 1 | 4 | 29 | sim | sim | — | sim |
-| ICONBTN | `.yb-iconbtn` | Componente | Estável | 2 | 3 | 15 | sim | sim | — | sim |
-| LINK | `.yb-link` | Componente | Estável | 1 | 2 | 10 | sim | sim | — | sim |
-| LOGO | `.yb-logo` | Componente | Estável | 4 | 1 | 5 | sim | sim | — | sim |
-| LOGO BAR | `.yb-logobar` | Componente | Estável | — | — | 5 | sim | n/a | — | sim |
-| MEDIABANNER | `.yb-mediabanner` | Componente | Estável | 3 | 1 | 41 | sim | sim | — | sim |
-| NOTICE | `.yb-notice` | Componente | Beta | 2 | — | 15 | sim | — | — | sim |
-| OFFER CARD | `.yb-offercard` | Componente | Estável | 1 | 2 | 38 | sim | sim | sim | sim |
-| OFFER SEAL | `.yb-offerseal` | Componente | Estável | 2 | — | 9 | sim | n/a | — | sim |
-| PAGINATION | `.yb-pagination` | Componente | Beta | — | 3 | 18 | sim | sim | sim | — |
-| PARTNER | `.yb-partner` | Componente | Estável | 1 | 1 | 29 | sim | sim | sim | sim |
-| POST | `.yb-post` | Componente | Estável | 4 | 2 | 21 | sim | sim | — | sim |
-| PRICE | `.yb-price` | Componente | Estável | 2 | — | 10 | sim | n/a | — | sim |
-| PRODUCT CARD | `.yb-card` | Componente | Estável | — | 1 | 20 | sim | sim | — | sim |
-| PRODUCT GALLERY | `.yb-gallery` | Componente | Estável | — | 3 | 19 | sim | sim | sim | sim |
-| PROGRESS BAR | `.yb-progress` | Componente | Estável | 3 | — | 11 | sim | n/a | — | sim |
-| QUANTITY STEPPER | `.yb-stepper` | Componente | Estável | 1 | 3 | 14 | sim | sim | sim | sim |
-| RATING | `.yb-rating` | Componente | Estável | — | — | 7 | sim | n/a | — | sim |
-| REVIEW | `.yb-reviews` | Componente | Estável | — | 1 | 25 | sim | sim | sim | sim |
-| SEARCH OVERLAY | `.yb-search` | Componente | Estável | — | 2 | 42 | sim | sim | sim | sim |
-| SKELETON | `.yb-skeleton` | Componente | Beta | 6 | — | 7 | sim | n/a | — | — |
-| SWITCH | `.yb-switch` | Componente | Estável | — | 2 | 12 | sim | sim | sim | sim |
-| TOAST | `.yb-toast` | Componente | Beta | 3 | 2 | 30 | sim | sim | sim | — |
-| TRACK | `.yb-track` | Componente | Beta | 2 | 1 | 7 | sim | — | sim | sim |
-| VARIANT PICKER | `.yb-swatches` | Componente | Estável | 2 | 4 | 35 | sim | sim | sim | sim |
-| VERTICAL VIDEO CAROUSEL | `.yb-video` | Componente | Beta | — | 1 | 12 | sim | — | sim | sim |
-| BLOCO DE COMPRA (PDP) | `.yb-buybox` | Padrão | Estável | — | 2 | 37 | sim | sim | — | sim |
-| CART DRAWER | `.yb-cart` | Padrão | Estável | 4 | 2 | 45 | sim | sim | — | sim |
-| CATÁLOGO | `.yb-catalog` | Padrão | Beta | — | 2 | 27 | sim | sim | — | — |
-| CONTA LOGADA | `.yb-usermenu` | Padrão | Beta | — | 3 | 28 | sim | sim | — | — |
-| FAQ | `.yb-faq` | Padrão | Beta | 1 | — | 10 | sim | n/a | — | — |
-| FOOTER | `.yb-footer` | Padrão | Estável | 1 | 3 | 39 | sim | sim | — | sim |
-| FREE SHIPPING PROGRESS | `.yb-freeship` | Padrão | Estável | 1 | — | 8 | sim | n/a | — | sim |
-| HEADER | `.yb-nav` | Padrão | Estável | 1 | 3 | 54 | sim | sim | sim | sim |
-| HERO | `.yb-hero` | Padrão | Beta | — | — | 3 | sim | n/a | — | — |
-| MANIFESTO | `.yb-manifesto` | Padrão | Estável | — | — | 25 | sim | n/a | — | sim |
-| PAGE LAYOUT | `.yb-block` | Padrão | Estável | 2 | — | 20 | sim | n/a | — | sim |
-| SPLIT | `.yb-split` | Padrão | Estável | — | — | 17 | sim | n/a | — | sim |
+| AVATAR | `.yb-avatar` | Átomo | Beta | 6 | — | 13 | sim | n/a | — | — |
+| BADGE | `.yb-badge` | Átomo | Beta | 9 | — | 22 | sim | — | sim | sim |
+| BUTTON | `.yb-btn` | Átomo | Estável | 9 | 4 | 45 | sim | sim | sim | sim |
+| CERTIFICATION SEALS | `.yb-seal` | Átomo | Beta | — | — | 13 | sim | n/a | — | — |
+| CHECKBOX / RADIO | `.yb-check` | Átomo | Beta | — | 4 | 22 | sim | sim | — | — |
+| CHIP | `.yb-chip` | Átomo | Estável | — | 3 | 25 | sim | sim | — | sim |
+| ICONBTN | `.yb-iconbtn` | Átomo | Estável | 4 | 3 | 16 | sim | sim | — | sim |
+| INPUT, SELECT, TEXTAREA | `.yb-field` | Átomo | Estável | 1 | 4 | 32 | sim | sim | — | sim |
+| LINK | `.yb-link` | Átomo | Beta | 1 | 2 | 10 | sim | sim | — | — |
+| LOGO | `.yb-logo` | Átomo | Estável | 4 | 1 | 5 | sim | sim | — | sim |
+| NOTICE | `.yb-notice` | Átomo | Beta | 2 | — | 15 | sim | — | — | sim |
+| OFFER SEAL | `.yb-offerseal` | Átomo | Beta | 2 | — | 10 | sim | n/a | — | — |
+| PROGRESS BAR | `.yb-progress` | Átomo | Estável | 3 | — | 11 | sim | n/a | — | sim |
+| SKELETON | `.yb-skeleton` | Átomo | Beta | 6 | — | 9 | sim | n/a | — | — |
+| STARS | `.yb-stars` | Átomo | Estável | — | — | 5 | sim | n/a | — | sim |
+| SWITCH | `.yb-switch` | Átomo | Estável | — | 3 | 13 | sim | sim | sim | sim |
+| ACORDEÃO | `.yb-accordion` | Molécula | Estável | — | 2 | 19 | sim | sim | — | sim |
+| ALERT | `.yb-alert` | Molécula | Beta | 4 | 2 | 29 | sim | sim | sim | — |
+| BANNER HERO | `.yb-bannerhero` | Molécula | Beta | 4 | 2 | 46 | sim | sim | — | — |
+| BANNER MEDIA | `.yb-bannermedia` | Molécula | Estável | 3 | — | 9 | sim | n/a | — | sim |
+| BREADCRUMB | `.yb-crumb` | Molécula | Beta | — | 3 | 8 | sim | sim | — | — |
+| CARD OFFER | `.yb-offercard` | Molécula | Beta | 1 | 2 | 40 | sim | sim | sim | — |
+| CARD PRODUCT | `.yb-card` | Molécula | Estável | 1 | 2 | 28 | sim | sim | — | sim |
+| COLLECTION CARD | `.yb-collection` | Molécula | Estável | 6 | 2 | 41 | sim | sim | — | sim |
+| DROPDOWN | `.yb-dropdown` | Molécula | Beta | — | 3 | 22 | sim | sim | — | — |
+| EMPTY STATE | `.yb-empty` | Molécula | Estável | 1 | — | 13 | sim | n/a | — | sim |
+| PAGINATION | `.yb-pagination` | Molécula | Beta | — | 3 | 18 | sim | sim | sim | — |
+| PARTNER | `.yb-partner` | Molécula | Beta | 1 | 2 | 31 | sim | sim | sim | — |
+| POST | `.yb-post` | Molécula | Beta | 3 | 2 | 23 | sim | sim | — | — |
+| PRICE | `.yb-price` | Molécula | Estável | 2 | — | 10 | sim | n/a | — | sim |
+| QUANTITY STEPPER | `.yb-stepper` | Molécula | Estável | 1 | 3 | 17 | sim | sim | sim | sim |
+| RATING | `.yb-rating` | Molécula | Estável | — | — | 7 | sim | n/a | — | sim |
+| REVIEW | `.yb-reviews` | Molécula | Estável | — | 1 | 28 | sim | sim | sim | sim |
+| TOAST | `.yb-toast` | Molécula | Beta | 3 | 2 | 34 | sim | sim | sim | — |
+| TRACK | `.yb-track` | Molécula | Beta | 2 | 1 | 8 | sim | — | sim | sim |
+| VARIANT PICKER | `.yb-swatches` | Molécula | Estável | 2 | 4 | 37 | sim | sim | sim | sim |
+| VERTICAL VIDEO CAROUSEL | `.yb-video` | Molécula | Beta | — | 1 | 13 | sim | — | sim | — |
+| BLOCO DE COMPRA (PDP) | `.yb-buybox` | Organismo | Estável | — | 2 | 38 | sim | sim | — | sim |
+| BRAND QUOTE | `.yb-quote` | Organismo | Beta | — | — | 16 | sim | n/a | — | — |
+| CART DRAWER | `.yb-cart` | Organismo | Estável | 3 | 2 | 50 | sim | sim | — | sim |
+| CATÁLOGO | `.yb-catalog` | Organismo | Beta | — | — | 14 | sim | n/a | — | — |
+| DRAWER | `.yb-drawer` | Organismo | Estável | — | — | 0 | sim | n/a | — | sim |
+| FAQ | `.yb-faq` | Organismo | Beta | 1 | — | 14 | sim | n/a | — | — |
+| FOOTER | `.yb-footer` | Organismo | Estável | 1 | 3 | 39 | sim | sim | — | sim |
+| FREE SHIPPING PROGRESS | `.yb-freeship` | Organismo | Estável | 1 | — | 8 | sim | n/a | — | sim |
+| HEADER | `.yb-nav` | Organismo | Estável | 1 | 3 | 62 | sim | sim | sim | sim |
+| HERO | `.yb-hero` | Organismo | Beta | — | — | 4 | sim | n/a | — | — |
+| LOGO BAR | `.yb-logobar` | Organismo | Beta | — | — | 5 | sim | n/a | — | — |
+| MANIFESTO | `.yb-manifesto` | Organismo | Beta | — | — | 26 | sim | n/a | — | — |
+| MODAL | `.yb-dialog` | Organismo | Estável | — | 2 | 27 | sim | sim | sim | sim |
+| PRODUCT GALLERY | `.yb-gallery` | Organismo | Estável | — | 3 | 22 | sim | sim | sim | sim |
+| SEARCH OVERLAY | `.yb-search` | Organismo | Estável | — | 2 | 41 | sim | sim | sim | sim |
+| SPLIT | `.yb-split` | Organismo | Beta | — | — | 17 | sim | n/a | — | — |
+| PAGE LAYOUT | `.yb-block` | Template | Estável | 2 | — | 20 | sim | n/a | — | sim |
 
 ## O que cada coluna prova
 

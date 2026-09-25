@@ -8,7 +8,7 @@ como decidir está em [PRINCIPIOS.md](PRINCIPIOS.md). Aqui é a mecânica.
 
 ```bash
 ./serve.sh            # http://localhost:8080 — porta fixa, sem cache
-npm run check         # build + 110 checagens, o mesmo que roda no CI
+npm run check         # build + 140 checagens, o mesmo que roda no CI
 ```
 
 `serve.sh` manda `Cache-Control: no-store`: editar um token e recarregar mostra
@@ -22,10 +22,12 @@ falha aqui e não vira surpresa no tema Shopify.
 
 Três perguntas, nesta ordem. A primeira que der "sim" encerra o assunto.
 
-1. **Já existe?** `INVENTARIO.md` lista as 49 peças que embarcam, com classe
-   base e maturidade. A doc em `/components/` e `/patterns/` mostra cada uma.
-2. **Dá para compor com o que existe?** Se dá, é **padrão**, e vai para
-   `patterns/` — não para `components/`.
+1. **Já existe?** `INVENTARIO.md` lista as 54 peças que embarcam, com classe
+   base, degrau e maturidade. A doc em `/atoms/`, `/molecules/`, `/organisms/`
+   e `/templates/` mostra cada uma.
+2. **Dá para compor com o que existe?** Se dá, ela **sobe um degrau**: o que
+   compõe átomos é molécula, e o que ocupa um lugar na página é organismo.
+   Átomo que compõe outra peça reprova no build — não é opinião, é checagem.
 3. **O caso apareceu duas vezes?** Uma ocorrência é exceção e vive na camada 2,
    justificada no lugar. Duas é padrão e sobe para a camada 1.
 

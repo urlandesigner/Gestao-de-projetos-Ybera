@@ -1,0 +1,2623 @@
+/* =========================================================================
+   YBERA DESIGN SYSTEM · MOLÉCULAS
+
+   Depende de: tokens/ + base/ + atoms/ybera-atoms.css
+
+   Átomos reunidos para resolver UMA tarefa: um campo com rótulo e erro, um
+   cartão de produto, uma paginação. A molécula não tem lugar fixo na página —
+   ela cabe onde a tarefa aparecer.
+
+   PREFIXO `yb-` em tudo. Não é preciosismo: estas peças vão conviver com o
+   tema Shopify, o Ecomposer, o Tailwind e o Judge.me na mesma página. Sem
+   prefixo, `.btn` ou `.card` colide com alguma delas — e a colisão é
+   silenciosa.
+
+   REGRA: cor vem sempre da camada 1. Espaço, peso e tracking podem vir do
+   primitivo (ver a fronteira documentada em tokens/01-semantic.css).
+   ========================================================================= */
+
+/* =========================================================================
+   RATING
+   O texto acessível vive no aria-label; as estrelas são decorativas.
+   ========================================================================= */
+.yb-rating{display:inline-flex; align-items:center; gap:var(--yb-space-2)}
+/* @deprecated desde 0.13 — use `.yb-stars` (atomo). Estrela digitada como
+   texto nao sabe a nota que desenha. Fica porque o bundle e contrato com o
+   tema (DDR-010); nenhuma tela do sistema usa mais. Remocao em 1.0. */
+.yb-rating__stars{
+  /* SEM CONTORNO, a pedido — e o requisito que o contorno cumpria passou para
+     o preenchimento, em vez de sumir com ele.
+
+     O traco existia por acessibilidade, nao por desenho: gold-500 mede 2.39:1
+     sobre branco e reprova o minimo de 3:1 da WCAG 1.4.11 para objeto grafico,
+     e era o gold-700 do contorno (5.68:1) que carregava a silhueta. Tirar o
+     traco e manter o miolo claro deixaria a estrela sem contraste nenhum.
+
+     `--yb-accent-star` desceu um degrau na rampa, para gold-600: 3.45:1 sobre
+     branco, passa sozinho. A estrela fica um tom mais fechada e, em troca,
+     vira uma forma so — sem a linha escura que a fazia parecer desenhada a
+     caneta em cima. */
+  color:var(--yb-accent-star);
+  font-size:var(--yb-type-body-sm-size); letter-spacing:.08em;
+}
+/* A nota fica entre estrela e contagem — mais peso que a contagem (e a
+   informacao que confirma o que as estrelas ja mostram), menos que o preco
+   (que segue sendo a hierarquia mais alta do cartao). */
+.yb-rating__score{font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-medium); color:var(--yb-text-primary)}
+.yb-rating__count{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+
+/* =========================================================================
+   PRICE
+   Sempre tabular: em grid, dígitos precisam alinhar em coluna.
+   ========================================================================= */
+.yb-price{display:flex; align-items:baseline; gap:var(--yb-space-3); flex-wrap:wrap}
+.yb-price__now{
+  font-size:var(--yb-type-price-size); line-height:var(--yb-type-price-line);
+  letter-spacing:var(--yb-type-price-track); font-weight:var(--yb-type-price-weight);
+  font-variant-numeric:tabular-nums; color:var(--yb-text-primary);
+}
+.yb-price__was{
+  font-size:var(--yb-type-body-size); color:var(--yb-text-muted);
+  text-decoration:line-through; font-variant-numeric:tabular-nums;
+}
+.yb-price--sm .yb-price__now{font-size:var(--yb-type-h4-size)}
+/* Empilhado: riscado ACIMA do atual, nao ao lado. `column-reverse` inverte
+   so a ordem VISUAL — o DOM continua com o preco atual primeiro, que e o
+   que importa pra quem ouve a pagina (a informacao principal antes da
+   historica). `align-items:flex-start` porque `baseline` da receita base
+   nao faz sentido entre duas linhas empilhadas. */
+.yb-price--stack{
+  flex-direction:column-reverse; align-items:flex-start; gap:var(--yb-space-1);
+}
+
+/* =========================================================================
+   TRACK — trilho de rolagem horizontal
+   Promovido pela regra de dois, com folga: `.yb-reviews`, `.yb-videos`,
+   `.yb-logobar__track` e o `.banner__track` da home reescreviam a mesma
+   anatomia — rolagem no eixo x, scroll-snap, barra escondida. Quatro copias
+   de quatro larguras de cartao diferentes.
+
+   O que muda entre os usos e SO a largura do item, entao ela e o parametro:
+   `--yb-track-item`. O resto e igual em todos.
+   ========================================================================= */
+.yb-track{
+  display:grid; grid-auto-flow:column;
+  grid-auto-columns:var(--yb-track-item, minmax(260px, 1fr));
+  gap:var(--yb-track-gap, var(--yb-space-4));
+  overflow-x:auto; scroll-snap-type:x proximity;
+  padding-block:var(--yb-space-2);
+  scrollbar-width:none;
+  overscroll-behavior-x:contain;   /* nao arrasta a pagina junto no toque */
+}
+.yb-track::-webkit-scrollbar{ display:none; }
+.yb-track > *{ scroll-snap-align:start; }
+/* GRADE OU CARROSSEL, o mesmo cartao. A escolha e da secao — no tema, o
+   lojista marca qual usar — e nao do visitante: `.yb-grid` ou `.yb-track` na
+   mesma marcacao, sem classe nova no cartao e sem script.
+
+   O ganho e de altura no celular, e e grande: medido em 375, a vitrine de
+   quatro cartoes cai de 1133px de grade para 528px de trilho. No desktop os
+   dois praticamente empatam — quatro cartoes cabem na largura de qualquer
+   jeito —, entao a decisao so importa no celular, que e onde ela foi pedida.
+
+   O CARTAO DE OFERTA precisa de regra propria, E SO NO CELULAR. Na grade ele
+   ocupa as duas colunas do celular (`grid-column:span 2`) porque e A oferta do
+   dia; solto no trilho ele virava mais um cartao de 260px e perdia o que o faz
+   existir. `span 2` sozinho da 536px e passa da tela num aparelho de 375 — o
+   teto de 85vw devolve 319px: maior que os vizinhos, e ainda deixa 24px do
+   proximo aparecendo, que e o que convida a arrastar.
+
+   Acima de 768 a regra nao vale. Ali o trilho tem largura para a fileira
+   inteira — quatro pecas em 1136px — e um cartao de 536 punha 228px de sobra
+   para rolar numa fileira que cabia. Na grade ele sempre foi uma coluna como
+   as outras nessas larguras; o trilho segue o mesmo. */
+@media (max-width:767.98px){
+  .yb-track > .yb-offercard{ grid-column:span 2; max-inline-size:85vw; }
+}
+/* setas: a loja tem 5 pares por pagina e o sistema tinha zero. Nao sao raiz
+   nova — pertencem ao trilho, e o botao em si e .yb-iconbtn. */
+/* Centradas, nao a direita: o unico trilho com setas hoje e o de reviews, e
+   aquela secao e centralizada do titulo para baixo — o par encostado na
+   direita ficava fora do eixo de tudo em volta. */
+.yb-track__nav{display:flex; gap:var(--yb-space-2); justify-content:center; margin-block-start:var(--yb-space-3)}
+.yb-track__nav .yb-iconbtn{border:var(--yb-border-hairline) solid var(--yb-border)}
+.yb-track__nav .yb-iconbtn[disabled]{opacity:var(--yb-opacity-control-disabled)}
+@media (max-width:767.98px){ .yb-track__nav{display:none} }   /* no toque, arrasta */
+
+/* HERO: um slide por tela, e nao uma fileira que se arrasta.
+   O trilho ja resolve rolagem, encaixe, toque e teclado; o que muda aqui sao
+   tres medidas. `mandatory` e nao `proximity` porque meio banner na tela nao
+   e uma previa util, e um erro — no trilho de cartoes a previa CONVIDA a
+   arrastar, aqui ela so mostra a peca cortada. */
+.yb-track--hero{
+  --yb-track-item:100%;
+  --yb-track-gap:0;
+  padding-block:0;
+  scroll-snap-type:x mandatory;
+}
+
+/* variante em fila, para conteudo que nao e cartao (a faixa de logos) */
+.yb-track--row{
+  display:flex; align-items:center;
+  scroll-snap-type:none;
+  /* `safe center`, nao `center` puro. Sem `safe`, centralizar um trilho que
+     ainda rola e uma cilada conhecida: quando o conteudo excede a largura
+     (a faixa de logos no celular), o navegador empurra o inicio para fora
+     da area rolavel — o primeiro logo fica preso, sem como chegar nele nem
+     arrastando. `safe` volta pro alinhamento normal so quando precisa; onde
+     cabe tudo (a faixa de logos no desktop), centraliza. */
+  justify-content:safe center;
+}
+
+/* =========================================================================
+   BANNER HERO — o banner do topo da home, na largura da tela
+   Foto com titulo, texto e CTA por cima, ou a arte pronta do marketing, com
+   um link cobrindo tudo; em trilho (`.yb-track--hero`), um slide por tela.
+   Era tambem o banner de dentro da coluna da PDP, com `--bleed` separando os
+   dois. Os dois viraram pecas: este ficou com o hero, e a largura total que
+   era o `--bleed` passou a ser o padrao; o da coluna e o BANNER MEDIA.
+   ========================================================================= */
+/* `flex` e nao `block`. Com block, o `height:100%` do corpo nao resolvia — a
+   altura do pai vem de `min-height`, e porcentagem contra altura automatica
+   vira `auto`. O corpo ficava do tamanho do texto e o `justify-content:flex-end`
+   dele nao movia nada: em banner mais alto que o texto, a frase subia para o
+   TOPO, exatamente onde o veu de baixo para cima vale zero. Foi assim que o
+   texto da PDP ficou ilegivel. Aqui quem posiciona e o pai, com align-items,
+   que funciona sem depender de altura nenhuma. */
+.yb-bannerhero{
+  position:relative; display:flex; align-items:flex-end;
+  overflow:hidden; isolation:isolate;
+  text-decoration:none;
+  /* Escuro, nao `surface-sunken`. O texto e branco: se a foto nao carregar,
+     um fundo claro deixa o titulo invisivel. O fundo de reserva tem de
+     sustentar o texto sozinho — e e ele que o medidor de contraste le. */
+  background:var(--yb-bg-inverse);
+}
+/* LARGURA TOTAL: o banner encosta nas quatro bordas da tela. Sem isto ele herda o
+   `--yb-radius-media` da receita base e abre quatro cantos arredondados
+   contra a moldura do navegador — canto redondo so faz sentido quando ha
+   fundo em volta para o arredondamento recortar. Como hero, nao ha.
+
+   A ALTURA VEM DA PROPORCAO DA ARTE, e nao da viewport. Era
+   `clamp(22rem, 46vw, 34rem)`: 544px num monitor de 1440, contra os 450 do
+   banner de imagem da home v1 na mesma largura — duas homes lado a lado com
+   o mesmo papel e 94px de diferenca, sem nenhuma razao alem de a conta ser
+   outra. As criacoes de desktop medem 1200x375 ou 1600x501, 16:5 nos dois
+   casos, e as verticais ficam entre 400x600 e 750x1095, 2:3. Sao essas as
+   duas proporcoes, e e a mesma correcao que o banner da home v1 ja tinha
+   recebido — la o comentario continua na propria tela.
+
+   O PISO DE 20rem existe porque a proporcao sozinha nao fecha embaixo de
+   1024: o balao do parceiro e ancorado no topo e o corpo cresce de baixo
+   para cima, entao os dois se encontram quando o hero encurta. Medido em
+   `index-v3.html`: a 992px de largura (hero de 310px) sobram 7px entre o
+   balao e o eyebrow; a 960 (300px) eles ja se cruzam por 3px, e a 768
+   (240px) o balao cobre o titulo e o corpo transborda 7px. 20rem = 320px
+   poe a virada em 1024, onde a medicao deu 73px de folga no corpo. Dai para
+   cima a altura e identica a da home v1; para baixo, o piso ganha.
+
+   (Uma tentativa anterior de por 16:5 no TRILHO inteiro foi revertida por
+   essas mesmas colisoes. O que faltava era o piso.) */
+.yb-bannerhero{
+  border-radius:0;
+  aspect-ratio:var(--yb-aspect-campaign);
+  min-block-size:20rem;
+  /* Largura DECLARADA. Com a largura automatica, o piso de altura volta pelo
+     aspect-ratio e alarga a caixa: abaixo de 1024 o slide media 1024px num
+     trilho de 800, e na ficha, 371px num trilho de 299 — o texto saia cortado
+     pela direita. Com a largura presa ao trilho, o piso so acrescenta altura. */
+  inline-size:100%;
+}
+@media (max-width:767.98px){
+  .yb-bannerhero{ aspect-ratio:var(--yb-aspect-campaign-mobile); }
+}
+/* O texto do hero volta para a prumada do conteudo. Sangrando, o corpo herdava
+   o padding fixo da receita base e comecava a 32px da BORDA DA TELA — 120px a
+   esquerda do resto da pagina em 1440, e 360px em 1920. Ninguem le isso como
+   escolha de layout; le como bug.
+   A conta e a mesma da barra de compra e do painel do split: meia sobra do
+   container, mais o respiro de pagina. Abaixo de 1200 a sobra e zero e resta
+   o respiro, que e o certo. */
+.yb-bannerhero .yb-bannerhero__body{
+  padding-inline:calc(max(0px, (100% - var(--yb-container-max)) / 2) + var(--yb-page-gutter));
+}
+.yb-bannerhero img,
+.yb-bannermedia img{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; z-index:-1;
+}
+/* ARTE — o banner que chega pronto do marketing, com o texto desenhado no
+   pixel (a arte de campanha da home v1). Nao tem corpo nem veu: o texto e da
+   imagem, e o `alt` repete o que ela diz, porque e o unico lugar em que busca e
+   leitor de tela alcancam a promessa.
+
+   A arte nao pode perder texto: cortar demais e perder "20%" ou o cupom. Entre
+   768 e 1365 ela entra INTEIRA (`contain`) e as sobras sao preenchidas por uma
+   copia dela desfocada (`__fundo`), que continua a propria arte.
+   O hero segue a proporcao da arte (16:5 acima de 1024, com piso abaixo
+   disso — ver LARGURA TOTAL, acima), que e a mesma da arte de campanha.
+   No celular a arte vem em 2:3, a mesma proporcao do hero, e fecha exata,
+   sem sobra. */
+.yb-bannerhero--arte{ background:var(--yb-surface-sunken); }
+.yb-bannerhero--arte img{ object-fit:contain; }
+.yb-bannerhero--arte .yb-bannerhero__fundo{
+  object-fit:cover; z-index:-2;
+  filter:blur(var(--yb-blur-lg)); transform:scale(1.15);   /* escala: o blur clareia a borda */
+}
+/* Da 1366 para cima, NO HERO, a arte corta sem perder nada, e corta em vez de
+   sobrar. Medido no pixel: o texto e o cupom ocupam x 175–1062 da arte de
+   1200, entao sobram 138px do lado mais apertado. No hero de 544px de altura,
+   o corte de cada lado cai abaixo disso a partir de 1364px de largura. Abaixo,
+   a arte inteira com o fundo desfocado. So vale no hero: a conta e da altura
+   dele. */
+@media (min-width:1366px){
+  .yb-bannerhero--arte img{ object-fit:cover; }
+  .yb-bannerhero--arte .yb-bannerhero__fundo{ display:none; }
+}
+@media (max-width:767.98px){
+  .yb-bannerhero--arte img{ object-fit:cover; }
+  .yb-bannerhero--arte .yb-bannerhero__fundo{ display:none; }
+}
+/* Veu em duas camadas, porque uma so nao resolve: forte o bastante para o
+   texto, ela apaga a foto; fraca o bastante para a foto, o texto some.
+
+   1) Tinta base sobre a imagem inteira — tira o branco puro e unifica fotos
+      que ninguem controla, sem esconder o produto. */
+.yb-bannerhero::before,
+.yb-bannermedia::before{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:var(--yb-scrim-soft);
+}
+/* Sem texto, sem veu. O veu existe para o texto passar em contraste; escurecer
+   uma imagem que nao tem texto por cima e so estragar a imagem. Vale para a
+   pecas de campanha que ja vem com a propria tipografia embutida e entram
+   inteiras, sem sobreposicao. */
+.yb-bannerhero:not(:has(.yb-bannerhero__body))::before,
+.yb-bannermedia:not(:has(.yb-bannermedia__body))::before{ background:none; }
+/* O CTA e um <span class="yb-btn"> dentro do <a> — botao de verdade dentro de
+   link seria interativo dentro de interativo. Sem esta regra o cartao inteiro
+   e clicavel e nada nele reage ao mouse. Mesmo arranjo de `.yb-nav__promo`. */
+@media (hover:hover){
+  .yb-bannerhero:hover .yb-btn--primary,
+  .yb-bannermedia:hover .yb-btn--primary{ background:var(--yb-action-bg-hover); }
+}
+/* 2) A faixa forte segue o CORPO, nao a imagem: assim ela tem exatamente a
+      altura do texto, qualquer que seja o texto, em vez de uma porcentagem
+      chutada que erra quando a frase cresce uma linha.
+
+      Medido sobre pixel branco puro (o pior caso real das fotos da PDP, p95 =
+      1.0): .18 de base + .72 de faixa compoem .77, e sobre isso o branco da
+      7.86:1, o gold-300 6.02:1 e o gray-300 5.62:1. O gold-500 da marca daria
+      3.28:1 — por isso o eyebrow sobre foto usa --yb-accent-on-media. */
+.yb-bannerhero__body,
+.yb-bannermedia__body{
+  position:relative; display:flex; flex-direction:column; gap:var(--yb-space-3);
+  align-items:flex-start;
+  inline-size:100%;
+  padding:var(--yb-space-8) var(--yb-space-8) var(--yb-space-10);
+  color:var(--yb-text-inverse);
+}
+/* O veu extrapola a faixa para CIMA e dissolve la fora, num pseudo-elemento
+   proprio. A primeira versao dissolvia dentro da faixa, nos 32px do padding —
+   curto demais: o olho lê 32px de transicao como uma BORDA, e o resultado era
+   um retangulo cinza atravessando a foto no meio. Aqui o plato cobre o texto
+   inteiro (a conta de contraste continua valendo em cada glifo) e a queda
+   acontece acima dele, onde nao ha letra nenhuma. O `overflow:hidden` do
+   banner corta o que sobra.
+
+   A queda e UMA curva, nao duas rampas somadas. A versao anterior empilhava
+   uma rampa forte e uma fraca, e isso de fato tira o canto de CIMA — mas o de
+   BAIXO fica: as duas acabam juntas em cima do plato e a inclinacao vai de
+   6,5 milesimos de alfa por pixel a zero de um pixel para o outro. Medido no
+   hero em 1440, o pico batia 13,5 milesimos exatamente nessa junta. Era a
+   emenda que se via atravessando a foto.
+
+   UMA CAMADA, e a curva escrita AQUI. Os quatro degraus vem da camada 1
+   (`--yb-scrim-curve-*`); as posicoes sao daqui, porque so o componente sabe
+   quanto mede a queda. Gradiente pronto em token nao serve: `var()` dentro de
+   um token do `:root` e substituido no `:root`, onde `--yb-veil-fall` nao
+   existe, e a curva nascia ocupando a caixa inteira — alfa .43 atras da
+   primeira linha de texto, reprovando contraste.
+
+   Duas camadas de fundo tambem nao servem, e as duas formas de encaixar
+   falham: 1px de sobra soma os dois veus (.95 contra .77 dos vizinhos, risco
+   escuro) e encaixe exato deixa o arredondamento de subpixel abrir uma linha
+   clara de 1px. Junta que nao existe e a unica que nao erra — por isso o
+   ultimo degrau e o plato, e cor de ultima parada se estende sozinha ate o
+   fim da caixa.
+
+   QUANTO a queda mede e um clamp e nao um numero fixo, porque `overflow:hidden`
+   corta o que passa do topo do banner — e queda cortada no meio e outra
+   aresta, agora na borda de cima da foto. O termo do meio persegue a folga
+   (a altura do banner menos a faixa de texto) e os dois extremos garantem que
+   ela nunca passe do que existe.
+
+   Folga medida no hero: 295px em 1440, 104px em 768, 58px em 320 — em 320
+   sobram 10px, em 1440 sobram 23. Folga do banner de coluna: ver BANNER MEDIA. */
+.yb-bannerhero{ --yb-veil-fall:clamp(3rem, 46vw - 16rem, 17rem); }
+/* A folga do hero e 58px em 320 e 66px em 600, entao 3rem so em 320 e
+   3.5rem dali para cima. */
+@media (min-width:360px){
+  .yb-bannerhero{ --yb-veil-fall:clamp(3.5rem, 46vw - 16rem, 17rem); }
+}
+.yb-bannerhero__body::before,
+.yb-bannermedia__body::before{
+  content:""; position:absolute; z-index:-1;
+  inset:calc(var(--yb-veil-fall) * -1) 0 0;
+  background:linear-gradient(to bottom,
+    var(--yb-scrim-none)    0,
+    var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
+    var(--yb-scrim-curve-2) calc(var(--yb-veil-fall) * .5),
+    var(--yb-scrim-curve-3) calc(var(--yb-veil-fall) * .75),
+    var(--yb-scrim-full)    var(--yb-veil-fall));
+}
+/* A medida de leitura passa para os filhos: a faixa precisa da largura toda,
+   a linha de texto nao. Antes o limite estava no corpo, entao o veu tambem
+   parava em 44ch e virava um retangulo escuro no meio da foto. */
+.yb-bannerhero__body > *,
+.yb-bannermedia__body > *{ max-inline-size:var(--yb-measure-lede); }
+
+/* BLUR PROGRESSIVO — a foto perde o foco descendo, em vez de perder a luz.
+   Variante do BANNER HERO, nao peca nova: mesma familia, mesmo corpo, mesmo
+   veu — o que muda e de onde vem o contraste.
+
+   O veu resolve contraste escurecendo, e escurecer .77 apaga a foto na metade
+   de baixo. Aqui a foto perde NITIDEZ em vez de luz: nitida em cima, macia
+   embaixo, e o veu desce para .65. Atras do texto sobra 35% da luz da foto em
+   vez de 23% — ganho menor do que a primeira medicao prometia, e o comentario
+   do token conta por que.
+
+   POR QUE TRES FOLHAS E NAO UMA. `backdrop-filter` nao tem meio-termo: nao
+   existe "50% borrado". Mascarar UMA folha nao borra gradualmente — dissolve a
+   camada borrada por cima da nitida, e o que se ve e fantasma duplo com uma
+   aresta no fim da mascara. Medido: a nitidez caia de 17,6 para 0,5 EM UM
+   PIXEL, que e a mesma aresta que o veu em curva acabou de perder.
+
+   Empilhadas, cada folha borra o que a de baixo ja borrou, e os raios se
+   compoem pela raiz da soma dos quadrados. Como a folha mais forte e a que
+   acaba PRIMEIRO subindo, e a de baixo dela tem metade do raio e continua
+   inteira, a troca nunca e nitido->borrado: e borrado->menos borrado. Medido,
+   o degrau maximo cai para 0,64 — vinte e sete vezes menor.
+
+   Tres folhas bastam. Medi cinco e tres com o mesmo raio e o mesmo veu: mesmo
+   contraste (6,43:1) e o degrau de tres e MENOR que o de cinco (0,65 contra
+   0,76). Duas folhas a mais so somam camada composta no elemento do LCP.
+
+   A BANDA e ancorada no rodape e limitada em rem, nao em porcentagem da
+   altura: em porcentagem ela encolhe junto com o banner e no celular vira uma
+   tira de 50px que nao le como desfoque, le como borrao. */
+/* Banda e raio sao ESCALA, e escala muda com o tamanho da peca: o Content
+   banner, mais baixo e dentro do container, declara os dele. Mesma receita,
+   outro tamanho — como o cartao de oferta em 1rem. */
+.yb-bannerhero--blur{
+  --yb-blur-band:clamp(8rem, 30vw, 16rem);
+  --yb-blur-radius:2rem;
+  /* Onde o texto acaba: o mesmo recuo que a faixa usa, mais a medida de
+     leitura. 42rem porque o bloco de texto do hero para em
+     `--yb-measure-lede` (45ch), que no corpo de 40px do h1 vale uns 640px.
+     Medi com 40rem antes e sobrava 1px depois da ultima palavra, que nao e
+     folga, e acidente. Como a parada acompanha o recuo do container, sobram
+     33px depois da ultima palavra em toda largura de desktop (eram 38 com a
+     medida antiga de 44ch, antes do token); abaixo de 600
+     ela passa da borda e o blur volta a ir de ponta a ponta sozinho, que e o
+     certo — ali o texto ocupa a largura toda. */
+  --yb-blur-reach:calc(max(0px, (100% - var(--yb-container-max)) / 2)
+                       + var(--yb-page-gutter) + 42rem);
+  /* Em quanto o blur se desfaz depois da ultima palavra. Anda junto com o
+     alcance: sem alcance declarado o padrao e 100% e nao ha o que desfazer. */
+  --yb-blur-falloff:12rem;
+}
+/* A caixa e as folhas sao as MESMAS nas tres familias que tem veu sobre foto.
+   Cada uma diz so onde a banda comeca e quanto o raio mede, porque isso e
+   escala e escala e do componente: 2rem num hero de 1440 e 1rem num cartao de
+   266 sao o mesmo desfoque relativo. A receita — tres folhas, raios pela
+   metade, mascaras encaixadas em tercos — nao muda, e nao deve mudar em um
+   lugar so: veu que borra diferente em cada peca nao le como sistema. */
+.yb-bannerhero__blur,
+.yb-bannermedia__blur,
+.yb-offercard__blur,
+.yb-collection__blur{
+  position:absolute; inset-inline:0; inset-block-end:0; z-index:0;
+  block-size:var(--yb-blur-band); pointer-events:none;
+  /* so o alfa da mascara conta; a cor precisa apenas ser opaca */
+  color:var(--yb-bg-inverse);
+}
+/* DUAS mascaras que se cruzam: a queda vertical (a de sempre) e um fim
+   HORIZONTAL, onde o texto acaba. Sem o segundo, o blur atravessa a faixa
+   inteira e apaga metade da foto para servir um texto que ocupa 44% da
+   largura — medido no hero: 51% do quadro borrado para cobrir 14%.
+
+   Por que cruzar duas mascaras NO MESMO elemento, e nao pendurar a horizontal
+   no pai: mascara faz do elemento uma raiz de backdrop, e `backdrop-filter`
+   num filho passaria a enxergar o pai vazio em vez da foto. No Chrome nao
+   acontece — medi —, mas se acontecer em outro motor o blur some CALADO e
+   sobra o veu leve sozinho, que reprova contraste em 4,25:1. Aqui o pior caso
+   e outro: sem `mask-composite`, o padrao e `add`, as duas mascaras viram
+   UNIAO e o blur cobre MAIS. Volta a ser a faixa inteira, que e de onde
+   viemos. Falha para o lado seguro.
+
+   `--yb-blur-reach` chega como FALLBACK do `var()`, nao como declaracao
+   propria: declarado aqui ele venceria a heranca e o variante nunca seria
+   ouvido — o corte nunca disparava, medido. So o hero, que sangra e sobra
+   largura a direita, declara onde o texto termina; no cartao de oferta e no
+   ladrilho o texto ocupa a caixa e o padrao de 100% nao corta nada. */
+.yb-bannerhero__blur > i,
+.yb-bannermedia__blur > i,
+.yb-offercard__blur > i,
+.yb-collection__blur > i{
+  position:absolute; inset:0; display:block;
+  -webkit-backdrop-filter:blur(calc(var(--yb-blur-radius) * var(--yb-blur-f)));
+  backdrop-filter:blur(calc(var(--yb-blur-radius) * var(--yb-blur-f)));
+  -webkit-mask-image:
+    linear-gradient(to top,
+      currentColor calc(var(--yb-blur-de) * 100% / 3), transparent calc(var(--yb-blur-ate) * 100% / 3)),
+    linear-gradient(to right,
+      currentColor var(--yb-blur-reach, 100%),
+      transparent calc(var(--yb-blur-reach, 100%) + var(--yb-blur-falloff, 12rem)));
+  mask-image:
+    linear-gradient(to top,
+      currentColor calc(var(--yb-blur-de) * 100% / 3), transparent calc(var(--yb-blur-ate) * 100% / 3)),
+    linear-gradient(to right,
+      currentColor var(--yb-blur-reach, 100%),
+      transparent calc(var(--yb-blur-reach, 100%) + var(--yb-blur-falloff, 12rem)));
+  -webkit-mask-composite:source-in;
+  mask-composite:intersect;
+}
+.yb-bannerhero__blur > i:nth-child(1),
+.yb-bannermedia__blur > i:nth-child(1),
+.yb-offercard__blur   > i:nth-child(1),
+.yb-collection__blur  > i:nth-child(1){ --yb-blur-f:1;   --yb-blur-de:0; --yb-blur-ate:1; }
+.yb-bannerhero__blur > i:nth-child(2),
+.yb-bannermedia__blur > i:nth-child(2),
+.yb-offercard__blur   > i:nth-child(2),
+.yb-collection__blur  > i:nth-child(2){ --yb-blur-f:.5;  --yb-blur-de:1; --yb-blur-ate:2; }
+.yb-bannerhero__blur > i:nth-child(3),
+.yb-bannermedia__blur > i:nth-child(3),
+.yb-offercard__blur   > i:nth-child(3),
+.yb-collection__blur  > i:nth-child(3){ --yb-blur-f:.25; --yb-blur-de:2; --yb-blur-ate:3; }
+/* O veu leve (.65) acompanha a variante. Ver o comentario do token: ele NAO
+   depende do blur para passar contraste — medido, o blur soma 0,8 de razao na
+   foto com brilho especular e zero nas outras duas. Ele fica escopado aqui
+   porque .65 sobre foto nitida e cheia de detalhe passa no medidor e ainda
+   deixa o texto sobre ruido, nao porque o blur o sustente. */
+.yb-bannerhero--blur .yb-bannerhero__body::before,
+.yb-bannermedia--blur .yb-bannermedia__body::before{
+  background:linear-gradient(to bottom,
+    var(--yb-scrim-none)         0,
+    var(--yb-scrim-lite-curve-1) calc(var(--yb-veil-fall) * .25),
+    var(--yb-scrim-lite-curve-2) calc(var(--yb-veil-fall) * .5),
+    var(--yb-scrim-lite-curve-3) calc(var(--yb-veil-fall) * .75),
+    var(--yb-scrim-lite)         var(--yb-veil-fall));
+}
+/* Sem blur, o veu leve reprova contraste. Nos dois casos em que o blur nao
+   acontece — motor sem suporte e pessoa que pediu menos transparencia — o veu
+   cheio volta. Nao e degradacao: e a receita padrao do sistema. */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .yb-bannerhero__blur, .yb-bannermedia__blur, .yb-offercard__blur, .yb-collection__blur{ display:none; }
+  .yb-bannerhero--blur .yb-bannerhero__body::before,
+  .yb-bannermedia--blur .yb-bannermedia__body::before{
+    background:linear-gradient(to bottom,
+      var(--yb-scrim-none)    0,
+      var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
+      var(--yb-scrim-curve-2) calc(var(--yb-veil-fall) * .5),
+      var(--yb-scrim-curve-3) calc(var(--yb-veil-fall) * .75),
+      var(--yb-scrim-full)    var(--yb-veil-fall));
+  }
+}
+@media (prefers-reduced-transparency:reduce){
+  .yb-bannerhero__blur, .yb-bannermedia__blur, .yb-offercard__blur, .yb-collection__blur{ display:none; }
+  .yb-bannerhero--blur .yb-bannerhero__body::before,
+  .yb-bannermedia--blur .yb-bannermedia__body::before{
+    background:linear-gradient(to bottom,
+      var(--yb-scrim-none)    0,
+      var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
+      var(--yb-scrim-curve-2) calc(var(--yb-veil-fall) * .5),
+      var(--yb-scrim-curve-3) calc(var(--yb-veil-fall) * .75),
+      var(--yb-scrim-full)    var(--yb-veil-fall));
+  }
+}
+.yb-bannerhero__eyebrow,
+.yb-bannermedia__eyebrow{
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; color:var(--yb-accent-on-media);
+  font-weight:var(--yb-font-weight-semibold);
+}
+.yb-bannerhero__title,
+.yb-bannermedia__title{
+  margin:0; font-size:var(--yb-type-h2-size); line-height:var(--yb-type-h2-line);
+  letter-spacing:var(--yb-type-h2-track); font-weight:var(--yb-type-h2-weight);
+  text-wrap:balance;
+}
+.yb-bannerhero__text,
+.yb-bannermedia__text{margin:0; font-size:var(--yb-type-body-size); color:var(--yb-text-secondary-inverse)}
+.yb-bannerhero:focus-visible,
+.yb-bannermedia:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+@media (max-width:520px){
+  .yb-bannerhero__body,
+  .yb-bannermedia__body{padding:var(--yb-space-5) var(--yb-page-gutter) var(--yb-space-6)}
+}
+
+/* =========================================================================
+   BANNER MEDIA — foto com texto por cima, dentro da coluna da pagina
+   O banner de conteudo da PDP: a foto larga com eyebrow, titulo e texto
+   ("Deep repair & shine"), ou a arte pronta do marketing. Era o Media banner (hoje Banner hero)
+   sem modificador, e o hero era o mesmo com `--bleed`; viraram duas pecas
+   porque vivem em lugares com regras diferentes — altura, cantos, recuo do
+   texto, escala do blur. A receita do veu e das tres folhas de blur e a do
+   BANNER HERO, e o porque de cada numero esta documentado la.
+   ========================================================================= */
+.yb-bannermedia{
+  position:relative; display:flex; align-items:flex-end;
+  overflow:hidden; isolation:isolate;
+  min-height:clamp(16rem, 34vw, 26rem);
+  border-radius:var(--yb-radius-media); text-decoration:none;
+  /* escuro: se a foto nao carregar, o texto branco ainda le */
+  background:var(--yb-bg-inverse);
+}
+.yb-bannermedia--center{ align-items:center; }
+/* ARTE — a peca pronta do marketing, com o texto no pixel. A imagem entra no
+   fluxo e a caixa fica do tamanho dela: nem corte, nem sobra, em QUALQUER
+   formato (o 9:16 da arte da Fashion Gold na PDP). Quando a arte e mais larga
+   que o celular, o <picture> troca pela versao mobile em 767px. Sem corpo e
+   sem veu: o `alt` repete a promessa. */
+.yb-bannermedia--arte{ display:block; min-height:0; background:var(--yb-surface-sunken); }
+.yb-bannermedia--arte img{
+  position:static; display:block; inline-size:100%; block-size:auto;
+}
+/* A queda do veu, na tabela desta peca (a do hero e outra).
+   No banner de CONTEUDO a folga e outra, porque a altura e outra e o texto
+   pesa mais na proporcao: 229px em 1440, 161px em 1024, 74px em 768, 69px em
+   600, 97px em 480 e 390, e 40px em 320. O piso e 2rem por causa desses 40 —
+   com 4rem o veu chegava cortado ali, alfa .223 na primeira linha de pixel.
+   Piso generoso onde ha espaco custa aresta onde nao ha.
+
+   Um banner espremido em coluna estreita tem folga menor que essa tabela, e
+   quem sabe disso e a PAGINA, nao o sistema: quem aperta o layout redeclara
+   `--yb-veil-fall`. E o que o par de destaques da PDP faz. */
+.yb-bannermedia{ --yb-veil-fall:clamp(2rem, 34vw - 13rem, 11rem); }
+/* O piso de 2rem existe por causa de UMA largura: em 320 o titulo quebra em
+   quatro linhas e sobram 40px de folga. De 360 para cima a folga menor passa
+   a ser 69px, em 600. */
+@media (min-width:360px){
+  .yb-bannermedia{ --yb-veil-fall:clamp(3.5rem, 34vw - 13rem, 11rem); }
+}
+.yb-bannermedia--center .yb-bannermedia__body{
+  align-items:center; text-align:center;
+}
+/* A faixa centrada dissolve para os DOIS lados, entao a mesma folga tem de
+   caber duas vezes — a queda vale metade. Sem isto a curva era cortada nas
+   duas pontas: alfa .39 na primeira linha de pixel do banner. */
+.yb-bannermedia--center{ --yb-veil-fall:clamp(1.5rem, 17vw - 6rem, 6.5rem); }
+.yb-bannermedia--center .yb-bannermedia__body::before{
+  inset:calc(var(--yb-veil-fall) * -1) 0;
+  background:linear-gradient(to bottom,
+    var(--yb-scrim-none)    0,
+    var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
+    var(--yb-scrim-curve-2) calc(var(--yb-veil-fall) * .5),
+    var(--yb-scrim-curve-3) calc(var(--yb-veil-fall) * .75),
+    var(--yb-scrim-full)    var(--yb-veil-fall),
+    var(--yb-scrim-full)    calc(100% - var(--yb-veil-fall)),
+    var(--yb-scrim-curve-3) calc(100% - var(--yb-veil-fall) * .75),
+    var(--yb-scrim-curve-2) calc(100% - var(--yb-veil-fall) * .5),
+    var(--yb-scrim-curve-1) calc(100% - var(--yb-veil-fall) * .25),
+    var(--yb-scrim-none)    100%);
+}
+.yb-bannermedia--center .yb-bannermedia__body > *{ max-inline-size:52ch; }
+/* BLUR — as mesmas tres folhas do Banner hero (a lista compartilhada fica
+   la), na escala desta peca: no maximo 26rem de altura contra 34rem do hero,
+   dentro do container de 1200 em vez de sangrar em 1920. */
+.yb-bannermedia--blur{
+  --yb-blur-band:clamp(6rem, 22vw, 12rem);
+  --yb-blur-radius:1.5rem;
+}
+/* No celular o banner cresce para a foto aparecer. Com 256px o corpo (~300px
+   em 289 de largura) ocupava o banner inteiro e o veu cobria a foto toda:
+   sobrava um fundo marrom liso. Com 125vw (464px em 375) a metade de cima e
+   foto nitida. Teto de 30rem para a tela de 767 nao virar um poster. */
+@media (max-width:767.98px){
+  .yb-bannermedia:not(.yb-bannermedia--arte){
+    min-height:clamp(16rem, 125vw, 30rem);
+  }
+}
+
+/* =========================================================================
+   CARD PRODUCT · acao sobre a foto, troca no hover e esgotado
+   Vinha do bloco CARREGANDO, onde nasceu junto do estado de carga. E cartao:
+   mora com o cartao, e ANTES do resto dele, que e a ordem em que sempre
+   esteve na folha.
+   ========================================================================= */
+/* acao sobre a foto: a loja poe "add to cart" em cima da imagem no grid e no
+   upsell do carrinho. Parte do cartao, nao componente novo. */
+.yb-card__action{
+  position:absolute; inset-inline:var(--yb-space-3);
+  inset-block-end:var(--yb-space-3);
+  /* z-index:1 porque o link do titulo estica um ::after por cima do cartao
+     inteiro (ver .yb-card__title a::after) e vem DEPOIS da midia no DOM —
+     sem isto o botao aparece no hover mas quem clica cai na PDP. */
+  z-index:1;
+  opacity:0; transform:translateY(var(--yb-space-2));
+  transition:opacity var(--yb-transition-control), transform var(--yb-transition-control);
+}
+/* no toque nao ha hover: la ela fica sempre visivel, senao e inalcancavel */
+@media (hover:none){ .yb-card__action{opacity:1; transform:none} }
+@media (hover:hover){
+  .yb-card:hover .yb-card__action,
+  .yb-card:focus-within .yb-card__action{opacity:1; transform:none}
+}
+/* segunda foto que troca no hover — a loja ja manda as duas no HTML */
+/* O fundo nao e enfeite: as fotos de produto sao recorte com fundo
+   transparente, e sem ele a primeira foto aparecia POR BAIXO da segunda.
+   No hover viam-se as duas ao mesmo tempo — dois frascos sobrepostos, que
+   parecia defeito de renderizacao. Mesma cor da midia, entao a troca e limpa. */
+.yb-card__media img + img{
+  position:absolute; inset:0; opacity:0;
+  background:var(--yb-surface-sunken);
+  transition:opacity var(--yb-transition-surface);
+}
+@media (hover:hover){ .yb-card:hover .yb-card__media img + img{opacity:1} }
+
+/* esgotado: estado de comercio, nao de interface — o card continua navegavel,
+   mas diz o que aconteceu antes de a pessoa tentar comprar */
+.yb-card--sold-out .yb-card__media{ opacity:var(--yb-opacity-media-disabled); }
+.yb-card--sold-out .yb-card__media::after{
+  content:attr(data-esgotado); position:absolute;
+  inset-inline:0; inset-block-end:0; padding:var(--yb-space-2);
+  text-align:center; background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase;
+}
+
+/* =========================================================================
+   CARD PRODUCT
+   O clamp de título existe porque títulos reais vão de 2 a 5 linhas e
+   desalinham preço e rating na fileira. Ver --yb-card-title-lines.
+   ========================================================================= */
+.yb-card{display:flex; flex-direction:column; gap:var(--yb-space-3); min-width:0;
+  position:relative}
+/* O contorno e do CARD, nao so da midia, e so entra no grid de duas colunas
+   do celular. E la que a reserva de altura do titulo (3 linhas, ver
+   --yb-card-title-lines) deixa um vazio real embaixo de titulo curto, e o
+   grid apertado apaga a costura entre um produto e o outro — no desktop, com
+   4 colunas e mais respiro, ninguem reclamou disso. Borda + fundo fecham o
+   item numa peca so, vazio incluso, so onde o problema existe. */
+@media (max-width:767.98px){
+  .yb-card{
+    padding-block-end:var(--yb-space-3); border:var(--yb-border-hairline) solid var(--yb-border-subtle);
+    border-radius:var(--yb-radius-card); background:var(--yb-surface);
+    box-shadow:var(--yb-elevation-card);
+  }
+  .yb-card > .yb-card__title,
+  .yb-card > .yb-rating,
+  .yb-card > .yb-price{ margin-inline:var(--yb-space-3); }
+}
+/* A midia media 161x161 (26.000px2) e nao era alvo de nada: o unico link era o
+   titulo, 3.900px2 de texto. O ::after estica o link do titulo por cima do card
+   inteiro — um alvo so na arvore de acessibilidade, o card todo no dedo. */
+.yb-card__title a::after{content:""; position:absolute; inset:0; border-radius:inherit}
+/* Decisao de produto: duas linhas tambem no celular, mesmo cortando titulo
+   longo ("FASHION GOLD - Brazilian Ke..."). Sem rating disputando espaco com
+   o preco (ver LINK/nota de remocao), o card ja ganhou altura — a segunda
+   linha e o titulo cede aqui em troca dela. */
+/* Sem borda propria: no celular o card inteiro ja tem contorno (ver acima) —
+   com os dois, a foto virava moldura dentro de moldura. O fundo sunken segue
+   sozinho como piso pra imagem que nao preenche a caixa. */
+.yb-card__media{
+  position:relative; aspect-ratio:var(--yb-aspect-product); overflow:hidden;
+  background:var(--yb-surface-sunken);
+  border-radius:var(--yb-radius-media);
+}
+/* So a midia sangra ate a borda do card no celular (ver .yb-card ali em
+   cima) — o resto mantem respiro lateral. Raio so em cima: embaixo tem mais
+   card vindo, o canto reto e onde a foto encontra o proximo elemento, nao a
+   moldura. Precisa vir DEPOIS da regra base: mesma especificidade, e a de
+   cima tambem declara border-radius — colocada antes, esta perdia em
+   silencio (ja aconteceu com .yb-section-head nesta mesma folha). */
+@media (max-width:767.98px){
+  .yb-card__media{ border-radius:var(--yb-radius-card) var(--yb-radius-card) 0 0; }
+}
+.yb-card__media img{width:100%; height:100%; object-fit:cover; display:block}
+.yb-card__flags{
+  position:absolute; inset-block-start:var(--yb-space-2); inset-inline-start:var(--yb-space-2);
+  inset-inline-end:var(--yb-space-2);
+  display:flex; gap:var(--yb-space-1); flex-wrap:wrap;
+}
+/* Sem largura maxima, um selo de brinde comprido ("Free Cronograma") media
+   147px numa midia de 136px no grid de duas colunas — o overflow:hidden da
+   midia cortava a ultima letra seca, sem reticencias, sem avisar que faltou
+   texto. min-width:0 deixa o filho flex encolher de verdade (senao ele nunca
+   fica menor que o proprio conteudo, mesmo com max-width). */
+.yb-card__flags .yb-badge{
+  max-width:100%; min-width:0; overflow:hidden; text-overflow:ellipsis;
+}
+/* PESO, E NAO TAMANHO. O nome disputava a leitura com o preco e perdia feio:
+   14px/500 contra 20px/700. Numa grade de produtos o preco pode ser o mais
+   forte, mas nao ao ponto de o nome do produto ler como legenda da foto.
+
+   Medi as duas saidas com um nome longo de verdade, no cartao mais apertado
+   que o sistema produz (164px, grade de dois no 375):
+
+     14px/500  40 caracteres cabem nas duas linhas   (hoje)
+     14px/600  40 caracteres                          <-- daqui
+     16px/500  33 caracteres
+     16px/600  33 caracteres
+
+   Aumentar custa 7 caracteres, 18% do nome visivel, e mais 5px de altura em
+   todo cartao. Engrossar nao custa nada disso: de 500 para 600 a mesma frase
+   alarga 1,6% — menos que a folga de uma quebra de palavra, e nao tirou um
+   unico caractere na medicao. De 14 para 16px ela alarga 14,3%, e ai tira.
+
+   Fica em 600 e nao em 700: o preco continua sendo o mais pesado da caixa, e
+   dois pesos iguais ali voltariam a empatar a leitura — de outro jeito. */
+.yb-card__title{
+  /* 16px a pedido, e a entrelinha continua a de `body-sm` (base, nao relaxed):
+     titulo de cartao com duas linhas grampeadas quer leading fechado; o
+     relaxed do `body` e para paragrafo. O `min-height` abaixo acompanha
+     sozinho, porque e calculado em `1em`. */
+  font-size:var(--yb-type-body-size); line-height:var(--yb-type-body-sm-line);
+  font-weight:var(--yb-font-weight-semibold); margin:0;
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:var(--yb-card-title-lines); line-clamp:var(--yb-card-title-lines);
+  overflow:hidden;
+  /* O clamp so LIMITA as linhas; nao as reserva. Um titulo curto ("Deep Care
+     Hair Kit | FREE 1L Shampoo") cabia numa linha ao lado de tres de duas, e
+     rating e preco dele subiam 19px na fileira da home — o mesmo defeito que
+     o clamp existe para evitar, agora pelo lado de baixo. O min-height reserva
+     exatamente as linhas do clamp, com a mesma variavel: mude uma, muda as
+     duas. `1em` porque --yb-type-body-sm-line e fator, nao comprimento. */
+  min-height:calc(var(--yb-card-title-lines) * var(--yb-type-body-sm-line) * 1em);
+}
+.yb-card__title a{color:var(--yb-text-primary); text-decoration:none}
+/* Sem sublinhado no hover. O cartao inteiro ja e o alvo (.yb-card__title
+   a::after cobre a caixa), e ele responde ao ponteiro de duas outras formas
+   que o sublinhado so repetia: a segunda foto entra no lugar da primeira e o
+   botao de acao aparece. Tres sinais para um mesmo estado e ruido — e o
+   sublinhado era o unico que mexia na tipografia, fazendo o nome tremer
+   quando o ponteiro passava pela grade.
+
+   O foco por teclado NAO depende disto: continua no anel de :focus-visible
+   abaixo, que e o que a navegacao sem mouse precisa. */
+.yb-card__title a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+
+/* `.yb-card__vendor` foi removido. Era a marca do produto entre o titulo e o
+   preco, e nunca teve consumidor: as duas chamadas de `card()` no gerador
+   passam `vendor=False`, e o motivo e a loja — todo produto do catalogo e
+   Ybera. Escrever "Ybera Paris" em cada cartao de uma loja de marca unica nao
+   informa nada e ainda empurra o preco 20px para baixo.
+   A marca continua existindo como DADO (`p['vendor']`), usada na busca e na
+   PDP, onde ela responde de que linha o produto e. */
+
+/* A GRADE DE CARTOES — e nao um componente.
+   `.yb-grid` e o arranjo de um conjunto de `.yb-card`: quatro colunas, tres no
+   tablet, duas no celular. Chegou a ter ficha propria, e nao devia: nao tem
+   anatomia (nenhum `__`), nem variante, nem estado, nem marcacao sua — a
+   demonstracao dela era quatro cartoes, que e a ficha do cartao. Uma peca que
+   so existe como quatro declaracoes de layout de um vizinho pertence ao
+   vizinho.
+
+   O trilho, ao lado, continua sendo componente: tem `__nav`, tres variantes,
+   encaixe, rolagem e comportamento em JS. A diferenca entre os dois nao e o
+   tamanho do CSS — e ter anatomia propria.
+
+   Quem escolhe entre grade e trilho e o lojista, nao o visitante: a grade
+   mostra tudo de uma vez e cresce para baixo; o trilho mostra uma fatia e
+   cresce para o lado.
+
+   O invulucro yb-grid__rail NAO esta aqui — e nem o nome dele com ponto na
+   frente, porque ha checagem que varre as folhas de baixo atras do seletor e
+   reprova se o encontrar. Ele e do catalogo, e o display:contents dele precisa
+   vencer o do trilho, o que so acontece de uma folha mais tarde. */
+.yb-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:var(--yb-grid-gap)}
+@media (max-width:1023.98px){.yb-grid{grid-template-columns:repeat(3,1fr)}}
+/* So o .yb-grid encolhe o respiro aqui, nao --yb-grid-gap: o token e
+   compartilhado com .yb-collections, que ninguem pediu para apertar. Agora
+   que o card tem contorno proprio, o respiro entre eles pode ser menor sem
+   os dois se confundirem. */
+@media (max-width:767.98px){.yb-grid{grid-template-columns:repeat(2,1fr); gap:var(--yb-space-4)}}
+/* Em duas colunas o cartao de oferta ocupa as duas. Numa celula de 171px ele
+   nao cabe: o relogio vaza pela borda, o titulo clampa em "Fashion Gold…" e
+   sobra um vao branco ao lado, porque ele e mais alto que o cartao vizinho.
+   No desktop e uma celula so — ali a coluna tem 266px e tudo entra. */
+@media (max-width:767.98px){.yb-grid > .yb-offercard{grid-column:span 2}}
+
+/* =========================================================================
+   CARD OFFER — a oferta do dia, um produto so
+   Nao e variante do cartao de catalogo: la a foto tem lugar proprio e o texto
+   vem embaixo, aqui a foto E o fundo e tudo se sobrepoe a ela. Herda do
+   BANNER HERO a mecanica do veu — mesmo problema, mesma solucao — e do
+   cartao de catalogo nada, porque nao havia o que herdar.
+
+   Existe para UM produto por vez. Uma grade cheia destes cansa e nenhum
+   deles e mais destaque que o outro: destaque que se repete deixa de ser
+   destaque.
+   ========================================================================= */
+.yb-offercard{
+  position:relative; display:flex; align-items:flex-end;
+  overflow:hidden; isolation:isolate;
+  /* `inline-size` explicito antes da razao: numa grade o cartao estica para
+     a altura da fileira, e sem largura definida a razao passa a calcular a
+     LARGURA a partir dessa altura — 416 x 2/3 = 277px numa coluna de 266.
+     O cartao vazava 11px para dentro do vao e a primeira coluna parecia ter
+     menos respiro que as outras. Com a largura definida, a razao so vale
+     onde ela deve valer: fora de grade, quando a altura e livre. */
+  inline-size:100%;
+  aspect-ratio:var(--yb-aspect-tall); min-block-size:26rem;
+  border-radius:var(--yb-radius-card);
+  /* Escuro, como no banner hero: se a foto nao carregar, o texto branco
+     precisa de chao. Com foto SANGRANDO esta cor nunca aparece.
+     Ela aparece — e o cartao vira um retangulo preto — quando a foto e
+     recorte com fundo transparente, que e o material do cartao de catalogo,
+     nao deste. Ver a nota "a foto tem de sangrar" na doc. */
+  background:var(--yb-bg-inverse);
+}
+.yb-offercard img{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; z-index:-1;
+  /* `--surface` e nao `--control`: o rapido e o tempo de um botao responder ao
+     dedo, e a foto nao esta respondendo a um clique — ela esta se mexendo.
+     No tempo de controle o zoom vira um tranco. */
+  transition:transform var(--yb-transition-surface);
+}
+/* ZOOM NA FOTO NO HOVER DO CARTAO — menos quando o ponteiro esta no botao.
+
+   A exclusao e o ponto todo, e ela precisa de `:has()`: `.yb-offercard:hover`
+   continua verdadeiro com o ponteiro sobre o botao, porque o botao e filho do
+   cartao. Sem o `:not(:has(...))` o "Add to cart" mexeria a foto — e o cartao
+   tem DOIS alvos, cada um com o proprio retorno: a foto responde por quem vai
+   a PDP, o botao responde por si.
+
+   Nao dava para usar `.yb-offercard__link:hover` como gatilho, que seria mais
+   simples: o link e irmao do corpo e fica DEBAIXO dele, entao o ponteiro
+   sobre o titulo ou o preco nao o alcanca — e ali o zoom tem de acontecer.
+
+   `scale` pequeno e `overflow:hidden` no cartao: 1.04 move a borda da foto
+   uns 8px numa peca de 400, o bastante para a imagem responder sem que o
+   produto pareça saltar da caixa. Onde `:has()` nao existir, simplesmente nao
+   ha zoom — o cartao continua inteiro e clicavel. */
+@media (hover:hover){
+  .yb-offercard:hover:not(:has(.yb-offercard__action:hover)) img{transform:scale(1.04)}
+}
+/* Sem veu sobre a imagem inteira, ao contrario do banner hero. La a foto e
+   cenario e o veu unifica material que ninguem controla; aqui a foto E o
+   produto, e uma tinta por cima — mesmo fraca — cinzenta o frasco. Quem
+   sustenta o contraste do texto e so a faixa de baixo. */
+/* O selo de desconto acompanha a foto, nao o texto: fica no alto, onde a
+   faixa escura de baixo nao chega — por isso ele traz o proprio fundo
+   (.yb-badge--sale) em vez de contar com o veu. */
+.yb-offercard__off{
+  position:absolute; inset-block-start:var(--yb-space-4);
+  inset-inline-start:var(--yb-space-4); z-index:1;
+  /* Menor que os 4rem do padrao: aqui o selo divide a foto com o titulo e o
+     preco, e no tamanho cheio ele virava o assunto do cartao. A medida vive
+     NESTA regra e nao no HTML — quem muda o cartao muda num lugar so. */
+  --yb-offerseal-size:3.5rem;
+}
+.yb-offercard__body{
+  position:relative; display:flex; flex-direction:column;
+  align-items:flex-start; gap:var(--yb-space-3);
+  inline-size:100%; padding:var(--yb-space-6);
+  color:var(--yb-text-inverse);
+}
+/* Plato sobre o texto, queda acima dele — a mesma curva do banner.
+
+   Aqui estava a receita de duas rampas somadas, e ela tinha os dois defeitos
+   que a curva veio resolver. Medido neste cartao, em 1440:
+
+     pico de 6,68 milesimos de alfa por pixel — acima do teto de 5,5;
+     alfa .036 na PRIMEIRA linha de pixel do cartao, porque o recuo fixo de
+     14rem passava da folga real (167px em 1440) e o `overflow:hidden` cortava
+     a queda no meio. Degrau na borda de cima da foto.
+
+   A folga entre o topo do cartao e a faixa de texto foi medida em cinco
+   larguras e o menor valor e 167px, em 1440 — onde o cartao e mais estreito e
+   por isso mais baixo. 9rem deixa 23px de sobra ali, a mesma sobra do hero.
+
+   O teto de 5,5 continua estourado: 8,3 milesimos, porque 167px de folga para
+   uma queda de .77 nao dao mais que isso. O que a curva tira e a QUINA, que e
+   o que o olho acusa; inclinacao alta e suave le como sombra, inclinacao que
+   muda de golpe le como emenda. */
+/* 4rem de queda, e a historia importa porque ja foi 9rem.
+
+   Os 9rem foram escolhidos OLHANDO, com o cartao mais baixo: sobravam 39px de
+   foto limpa no topo e a transicao longa fazia o escuro virar atmosfera em vez
+   de faixa. O cartao cresceu desde entao e a conta virou: com o corpo
+   comecando em 133px e uma queda de 144px, o veu passou a nascer 11px ACIMA do
+   topo — cobria 100% do cartao e nao havia mais foto limpa nenhuma. Ninguem
+   mudou o veu; a caixa mudou embaixo dele.
+
+   O PLATO nao tem folga, e isso segue valendo. Varri de .65 a zero: .55 ja
+   reprova (4,47:1 na arte real, 3,74:1 sobre branco) e sem veu o texto cai
+   para 1,28:1. Mais blur nao compra folga — desfoque nao tem o que fazer com a
+   media quando o fundo e liso.
+
+   A QUEDA tem folga, e encurtar nao custa contraste: o texto fica sempre
+   DENTRO do plato, entao o titulo mede os mesmos 6,90:1 sobre a arte real com
+   4rem ou com 9rem. O que muda e so quanto da foto aparece — 69px limpos
+   contra zero.
+
+   Quem quiser resolver a CAUSA tira o texto de cima da foto: enquanto 60% do
+   cartao for texto sobre imagem, vai haver um veu grande aqui. E quem mexer na
+   altura do corpo precisa reconferir ESTA conta — foi ela que quebrou. */
+.yb-offercard{ --yb-veil-fall:8.25rem; --yb-veil-avanco:1.5rem; }
+/* `--yb-veil-avanco`: a rampa nao para no topo do CORPO, avanca ate o TITULO.
+   Os 24px entre um e outro sao recuo — nao ha texto neles, e terminar ali
+   desperdicava 24px de rampa e somava 24px de chapado. Avancando, a mesma
+   queda fica mais longa (mais suave) e o plato fica menor. Padrao zero: quem
+   nao declara continua com o comportamento de antes. */
+.yb-offercard__body::before{
+  content:""; position:absolute; z-index:-1;
+  inset:calc(var(--yb-veil-fall) * -1) 0 0;
+  background:linear-gradient(to bottom,
+    var(--yb-scrim-none)    0,
+    var(--yb-scrim-curve-1) calc((var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)) * .25),
+    var(--yb-scrim-curve-2) calc((var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)) * .5),
+    var(--yb-scrim-curve-3) calc((var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)) * .75),
+    var(--yb-scrim-full)    calc(var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)));
+}
+/* Com blur, igual ao banner. A banda e em PORCENTAGEM da altura do cartao e
+   nao em rem: a altura do cartao vem da coluna do grid, nao da janela, e vai
+   de 416px em 1440 a 1056px em 768, quando ele passa a ocupar a linha
+   inteira. Em rem a banda seria metade do cartao numa largura e um oitavo na
+   outra.
+
+   O RAIO E .5rem, e ja foi 1rem. A regra escrita aqui era "desfoque se le em
+   relacao ao tamanho da foto, nao em pixels" — e o valor de 1rem desobedecia a
+   propria regra. O hero desfoca 32px numa foto de 1440: 2,2% da largura. O
+   cartao desfocava 16px em 343 no celular (4,7%) e em 266 no desktop (6,0%),
+   duas a tres vezes mais forte em proporcao. No pe do cartao, onde a folha
+   manda o desfoque ao maximo, isso dissolvia o produto: o Urlan viu como
+   defeito de renderizacao, e apontou duas vezes. Com .5rem sao 2,3% no celular
+   e 3,0% no desktop, e a silhueta do frasco sobrevive ate a base.
+
+   NAO custa contraste, e isso foi medido e nao suposto: so com o veu, sem
+   desfoque nenhum, o pior pixel atras do titulo da 6,64:1, o preco 6,36 e o
+   relogio 5,86. Bate com o que a nota do veu leve ja dizia — o blur somava 0,8
+   de razao numa foto com brilho especular e zero nas outras duas. Ele e
+   acabamento, nao sustentacao. */
+.yb-offercard--blur{ --yb-blur-band:55%; --yb-blur-radius:.5rem; }
+.yb-offercard--blur .yb-offercard__body::before{
+  background:linear-gradient(to bottom,
+    var(--yb-scrim-none)         0,
+    var(--yb-scrim-lite-curve-1) calc((var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)) * .25),
+    var(--yb-scrim-lite-curve-2) calc((var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)) * .5),
+    var(--yb-scrim-lite-curve-3) calc((var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)) * .75),
+    var(--yb-scrim-lite)         calc(var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)));
+}
+/* Duas linhas, como no cartao de catalogo — e aqui o motivo e outro: cada
+   linha a mais do titulo cresce o corpo, e o veu acompanha o corpo. Um nome
+   de quatro linhas ("Fashion Gold keratin 300g + Protect & Control shampoo &
+   mask") empurrava a faixa escura ate o topo e apagava a foto inteira.
+   Ao contrario do catalogo, nao ha `min-height` reservando as duas linhas: o
+   cartao e um so, nao tem vizinho com quem alinhar. */
+.yb-offercard__title{
+  margin:0; max-inline-size:20ch;
+  font-size:var(--yb-type-h3-size); line-height:var(--yb-type-h3-line);
+  font-weight:var(--yb-type-h3-weight); letter-spacing:var(--yb-type-h3-track);
+  text-wrap:balance;
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
+}
+/* DOIS destinos, e por isso DOIS alvos — a mesma anatomia do cartao de
+   catalogo. O cartao inteiro leva a PDP; o botao poe na sacola e nao leva a
+   lugar nenhum. Antes os dois eram links para o mesmo `pdp.html`, o que
+   deixava a peca sem jeito de comprar e dizia o mesmo destino duas vezes para
+   quem ouve a pagina.
+
+   O link e um <a> VAZIO esticado sobre o cartao, e nao um ::after no titulo:
+   `.yb-offercard__body` e posicionado por causa do veu, e o recorte do titulo
+   parava nele — a foto continuava sem alvo. Medido antes de trocar de tatica. */
+.yb-offercard__link{
+  position:absolute; inset:0; z-index:1;
+  border-radius:inherit;
+}
+.yb-offercard__link:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:calc(var(--yb-focus-offset) * -1);
+}
+/* SEMPRE VISIVEL, ao contrario do `.yb-card__action` dos cartoes de catalogo.
+   La o botao se esconde porque a foto e o assunto e o cartao e um entre
+   quatro iguais; aqui o cartao E a oferta do dia, e esconder a acao principal
+   dela ate o ponteiro chegar tira do lugar justamente o que a peca veio
+   fazer. No toque nao ha ponteiro nenhum, e uma oferta sem botao visivel
+   seria uma foto bonita.
+
+   Sao DOIS estados de hover independentes, e e assim de proposito: o cartao
+   responde levando a PDP, o botao responde com o hover dele. Um nao aciona o
+   outro — se o cartao acendesse o botao, o retorno diria "clique aqui" sobre
+   uma area que faz outra coisa.
+
+   `z-index` acima do link, senao o clique no botao cai na PDP — mesma
+   armadilha resolvida do mesmo jeito em `.yb-card__action`. */
+.yb-offercard__action{position:relative; z-index:2}
+
+/* Preco e relogio na mesma linha, com o preco mandando: e ele que decide a
+   compra. O relogio quebra para baixo quando nao couber, em vez de espremer
+   o preco. */
+.yb-offercard__linha{
+  display:flex; align-items:center; flex-wrap:wrap;
+  gap:var(--yb-space-3) var(--yb-space-4); inline-size:100%;
+}
+.yb-offercard__price{
+  font-size:var(--yb-type-h2-size); line-height:var(--yb-line-height-none);
+  font-weight:var(--yb-font-weight-bold);
+  font-variant-numeric:tabular-nums;
+}
+/* Preco de antes. Ao lado e nao empilhado como no cartao de catalogo: aqui
+   o "de/por" e o argumento da peca, nao um detalhe do produto. */
+.yb-offercard__was{
+  font-size:var(--yb-type-body-size);
+  color:var(--yb-text-secondary-inverse);
+  text-decoration:line-through;
+  font-variant-numeric:tabular-nums;
+}
+
+/* --- relogio ---------------------------------------------------------- */
+/* Sem JS, fica a data por extenso no <time>: uma oferta com prazo tem de
+   dizer o prazo mesmo quando o script nao roda. O JS troca isso pelos
+   quadradinhos. */
+.yb-offercard__timer{
+  display:flex; align-items:center; gap:var(--yb-space-1);
+  margin:0; font-variant-numeric:tabular-nums;
+}
+.yb-offercard__timer time{
+  font-size:var(--yb-type-body-sm-size);
+  color:var(--yb-text-secondary-inverse);
+}
+.yb-offercard__chip{
+  display:flex; flex-direction:column; align-items:center;
+  min-inline-size:3rem; padding:var(--yb-space-2) var(--yb-space-1);
+  border-radius:var(--yb-radius-control);
+  background:var(--yb-scrim-strong);
+}
+.yb-offercard__chip b{
+  font-size:var(--yb-type-body-lg-size); line-height:1.1;
+  font-weight:var(--yb-font-weight-bold);
+}
+.yb-offercard__chip small{
+  font-size:var(--yb-type-caption-size);
+  color:var(--yb-text-secondary-inverse);
+}
+/* cor, nao opacidade: opacidade sobre texto e regra dura do sistema. O mesmo
+   cinza do `small` ao lado, para o separador nao competir com os numeros. */
+.yb-offercard__sep{color:var(--yb-text-secondary-inverse)}
+/* Prazo vencido nao vira 00:00:00 parado na tela — isso e relogio quebrado,
+   nao oferta. O relogio sai e o cartao diz o que aconteceu. */
+.yb-offercard__fim{
+  margin:0; font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-medium);
+  color:var(--yb-text-secondary-inverse);
+}
+.yb-offercard[data-encerrada] .yb-offercard__timer{display:none}
+
+.yb-offercard .yb-btn{inline-size:100%}
+
+@media (max-width:520px){
+  .yb-offercard{aspect-ratio:auto; min-block-size:32rem}
+  .yb-offercard__body{padding:var(--yb-space-5)}
+}
+
+/* =========================================================================
+   VARIANT PICKER
+   Radios nativos escondidos: teclado e leitor de tela seguem funcionando.
+   ========================================================================= */
+.yb-swatches{display:flex; gap:var(--yb-space-2); flex-wrap:wrap}
+.yb-swatches input{position:absolute; opacity:0; pointer-events:none}
+.yb-swatches label{
+  box-sizing:border-box;            /* filho sem classe: ver nota em BASE */
+  min-width:var(--yb-target-min);   /* "S" nao pode virar alvo de 30px */
+  display:flex; align-items:center; justify-content:center;
+  border:var(--yb-border-hairline) solid var(--yb-border); border-radius:var(--yb-radius-control);
+  padding:var(--yb-space-3) var(--yb-space-4); cursor:pointer;
+  font-size:var(--yb-type-body-sm-size); min-height:var(--yb-target-min);
+  background:var(--yb-surface); color:var(--yb-text-primary);
+  transition:border-color var(--yb-transition-control), background var(--yb-transition-control);
+}
+
+@media (hover:hover){
+  .yb-swatches label:hover{border-color:var(--yb-border-strong)}
+}
+.yb-swatches input:checked + label{
+  border-color:var(--yb-text-primary); background:var(--yb-bg-muted);
+  font-weight:var(--yb-font-weight-medium);
+}
+.yb-swatches input:focus-visible + label{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-swatches input:disabled + label{
+  /* o riscado e o fundo já dizem "esgotado"; o texto continua legível */
+  color:var(--yb-text-muted); cursor:not-allowed;
+  background:var(--yb-bg-subtle); text-decoration:line-through;
+}
+
+/* -------------------------------------------------------------------------
+   --on-dark · a mesma escolha unica, dentro de um painel escuro
+
+   So cor muda. Estrutura, alvo de 44px, `:checked`, foco e o radio por baixo
+   continuam os do bloco acima — trocar o componente aqui daria duas peças
+   para a mesma pergunta.
+
+   A borda NAO e `--yb-border-inverse`: aquela mede 1.47:1 contra o painel e
+   serve para dividir bloco, nao para dizer que uma coisa e clicavel. Medi a
+   rampa inteira e `--yb-border-inverse-strong` (3.23:1) e o degrau mais
+   escuro que ainda cumpre o 3:1 da WCAG 1.4.11 para fronteira de controle.
+
+   O escolhido inverte para fundo claro em vez de so mudar a borda: sobre
+   escuro a diferenca entre duas bordas cinzas nao se le de relance, e a
+   escolha e a informacao mais importante da fileira.
+   ------------------------------------------------------------------------- */
+/* MAIS BAIXOS QUE O BOTAO, sem perder o alvo de 44px.
+   Os quatro chips mediam 44px de altura contra 50px do "Start analysis" — dois
+   blocos de peso quase igual empilhados, e a escolha disputava a leitura com a
+   acao. A caixa PINTADA cai para 36px; o alvo continua 44, entregue por um
+   pseudo que cresce para FORA em vez de engordar o chip. Mesma manobra do
+   favoritar no buy box: a area de toque cresce para fora, nao para dentro.
+   Abaixo de 44px sem isso seria alvo pequeno demais no celular — e o unico
+   jeito de encolher aqui sem cobrar de quem usa o dedo. */
+.yb-swatches--on-dark label{
+  background:var(--yb-surface-inverse-raised);
+  color:var(--yb-text-inverse);
+  border-color:var(--yb-border-inverse-strong);
+  min-height:var(--yb-control-height-compact); /* 36px pintados */
+  padding-block:var(--yb-space-2);
+  position:relative;
+}
+/* Altura EXPLICITA e centrada, e nao sobra calculada a partir da caixa
+   pintada: com a sobra o alvo media 41px na pagina (subpixel da borda comendo
+   os cantos), e 41 nao e 44. Assim o alvo e 44 por construcao, qualquer que
+   seja a altura pintada. Sobram 20px ate o botao, entao ele nao encosta. */
+.yb-swatches--on-dark label::after{
+  content:""; position:absolute; inset-inline:0;
+  block-size:var(--yb-target-min);
+  inset-block-start:50%; transform:translateY(-50%);
+}
+
+@media (hover:hover){
+  .yb-swatches--on-dark label:hover{border-color:var(--yb-text-muted-inverse)}
+}
+.yb-swatches--on-dark input:checked + label{
+  background:var(--yb-text-inverse);
+  color:var(--yb-bg-inverse);
+  border-color:var(--yb-text-inverse);
+}
+.yb-swatches--on-dark input:focus-visible + label{outline-color:var(--yb-text-inverse)}
+.yb-swatches--on-dark input:disabled + label{
+  background:transparent; color:var(--yb-text-muted-inverse);
+  border-color:var(--yb-border-inverse);
+}
+
+/* -------------------------------------------------------------------------
+   --cards · a variante que a loja passou a usar na PDP
+
+   Mesma peca, outra apresentacao: em vez de pilula com o nome, um cartao com
+   FOTO, nome, preco e estoque empilhados. As opcoes seguem em fileira; o que
+   empilha e o conteudo de cada uma.
+
+   Vale quando a escolha muda o produto que a pessoa recebe — 15ml e 90ml sao
+   frascos diferentes, e a foto decide mais rapido que o texto. Para tamanho
+   de roupa ou cor lisa, a pilula continua melhor: cartao com foto ali seria
+   peso sem informacao.
+
+   Duas divergencias do que a loja faz, ambas por regra do sistema:
+
+   1 · Esgotado. A loja aplica `opacity:.6` no cartao inteiro, o que derruba
+       o texto abaixo do piso de contraste. Aqui a FOTO desbota e o texto
+       fica; quem diz "esgotado" e a palavra, nao a falta de nitidez.
+   2 · A loja pinta "Out of stock" com #DB2955, um dos tres magentas dela —
+       que aqui e cor de ACAO. Estado negativo usa a cor de estado.
+   ------------------------------------------------------------------------- */
+.yb-swatches--cards label{
+  flex-direction:column; align-items:stretch; justify-content:flex-start;
+  gap:var(--yb-space-1); text-align:start;
+  inline-size:8.25rem;                       /* 132px, a medida da loja */
+  padding:var(--yb-space-3); min-height:0;
+}
+.yb-swatches--cards label img{
+  inline-size:100%; aspect-ratio:var(--yb-aspect-product); object-fit:cover; display:block;
+  border-radius:var(--yb-radius-sm); margin-block-end:var(--yb-space-1);
+  background:var(--yb-surface-sunken);
+  transition:opacity var(--yb-transition-control);
+}
+.yb-swatches__name{ font-weight:var(--yb-font-weight-bold); }
+.yb-swatches__price{ font-variant-numeric:tabular-nums; }
+.yb-swatches__stock{
+  font-size:var(--yb-type-caption-size);
+  font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-success-text);
+}
+/* selecionado: traco de 2px, e o padding cede os 2px para a caixa nao pular */
+.yb-swatches--cards input:checked + label{
+  border-width:var(--yb-border-emphasis);
+  padding:calc(var(--yb-space-3) - 1px);
+  background:var(--yb-surface);
+}
+/* Esgotado e um ESTADO DO DADO, nao um controle impedido. Era so `:disabled`,
+   e ai o tamanho sem estoque ficava visivel e inalcancavel — impossivel chegar
+   nele, e chegar nele e o unico caminho para o aviso de volta. Com
+   `[data-yb-esgotado]` o cartao continua selecionavel e continua dizendo que
+   acabou. `:disabled` fica no seletor porque tambem existe opcao que a pagina
+   de fato impede (combinacao invalida), e as duas se parecem. */
+.yb-swatches--cards input:is(:disabled,[data-yb-esgotado]) + label{
+  text-decoration:none;                      /* riscar o cartao inteiro nao le */
+  background:var(--yb-surface);
+}
+.yb-swatches--cards input:is(:disabled,[data-yb-esgotado]) + label img{ opacity:var(--yb-opacity-control-disabled); }
+.yb-swatches--cards input:is(:disabled,[data-yb-esgotado]) + label .yb-swatches__name,
+.yb-swatches--cards input:is(:disabled,[data-yb-esgotado]) + label .yb-swatches__price{
+  text-decoration:line-through; color:var(--yb-text-muted);
+}
+.yb-swatches--cards input:is(:disabled,[data-yb-esgotado]) + label .yb-swatches__stock{
+  color:var(--yb-danger-text);
+}
+/* No toque a fileira rola em vez de quebrar — cabe mais opcao sem empurrar
+   o botao de comprar tela abaixo. */
+@media (max-width:520px){
+  .yb-swatches--cards{
+    flex-wrap:nowrap; overflow-x:auto; scroll-snap-type:x mandatory;
+    scrollbar-width:none; padding-block-end:var(--yb-space-1);
+  }
+  .yb-swatches--cards::-webkit-scrollbar{ display:none; }
+  .yb-swatches--cards label{ scroll-snap-align:start; flex:none; }
+}
+
+/* =========================================================================
+   QUANTITY STEPPER
+   ========================================================================= */
+.yb-stepper{
+  display:inline-flex; align-items:center;
+  border:var(--yb-border-hairline) solid var(--yb-border); border-radius:var(--yb-radius-control);
+  overflow:hidden; background:var(--yb-surface);
+  /* flex:none porque o tamanho dele nao e negociavel: 44 + 48 + 44. Como item
+     de um flex container ele encolhia — no bloco de compra em 320px sobrava
+     24px para os tres controles, e os botoes viravam alvos de 23px. */
+  flex:none;
+}
+.yb-stepper button{
+  width:var(--yb-target-min); height:var(--yb-target-min);
+  border:none; background:transparent; cursor:pointer;
+  color:var(--yb-text-primary); font-size:var(--yb-type-body-lg-size);
+  font-family:inherit; line-height:var(--yb-line-height-none);
+  transition:background var(--yb-transition-control);
+}
+
+@media (hover:hover){
+  .yb-stepper button:hover:not([disabled]){background:var(--yb-bg-muted)}
+}
+.yb-stepper button[disabled]{color:var(--yb-text-disabled); cursor:not-allowed}
+.yb-stepper button:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color); outline-offset:calc(var(--yb-focus-offset) * -1);
+}
+.yb-stepper input{
+  width:48px; height:var(--yb-target-min);   /* o alvo é o input, não só a caixa */
+  border:none; text-align:center; font-family:inherit;
+  font-size:var(--yb-type-body-size); font-variant-numeric:tabular-nums;
+  color:var(--yb-text-primary); background:transparent;
+  -moz-appearance:textfield;
+}
+.yb-stepper input::-webkit-outer-spin-button,
+.yb-stepper input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0}
+.yb-stepper input:focus-visible{outline:var(--yb-focus-width) solid var(--yb-focus-color); outline-offset:calc(var(--yb-focus-offset) * -1)}
+
+/* Pequeno. Existe por causa da gaveta: la o stepper divide 420px com foto,
+   titulo, preco e lixeira, e em 44+48+44 ele empurrava o preco para outra
+   linha. Cai para 36 — o minimo de alvo AA (WCAG 2.5.8) e 24, entao ainda
+   sobra folga; o que se perde e o conforto AAA de 44, e por isso o padrao
+   continua sendo o grande e este e a excecao nomeada.
+   Nao use na PDP: la o stepper e o controle que antecede a compra. */
+.yb-stepper--sm button{
+  inline-size:var(--yb-control-height-compact);
+  block-size:var(--yb-control-height-compact);
+  font-size:var(--yb-type-body-size);
+}
+.yb-stepper--sm input{
+  inline-size:2.5rem; block-size:var(--yb-control-height-compact);
+  font-size:var(--yb-type-body-sm-size);
+}
+
+/* =========================================================================
+   ALERT
+   ========================================================================= */
+/* A barra colorida da esquerda saiu, e o icone entrou no lugar dela — nao e so
+   troca de enfeite. A barra dizia a severidade SO pela cor, e cor sozinha nao
+   informa (WCAG 1.4.1): quem nao distingue ambar de vermelho via dois retangulos
+   iguais. O icone diz a mesma coisa sem depender de enxergar a diferenca, e por
+   isso cada variante tem o SEU:
+
+     --success  check       deu certo
+     --warning  alert       triangulo, atencao
+     --danger   x-circle    circulo com X, deu errado
+     --info     info        circulo com i
+
+   Quatro glifos para quatro variantes, e nao tres com um repetido: warning e
+   danger sao os dois que mais se confundem, e dar o mesmo triangulo aos dois
+   devolveria a cor como unica diferenca — que e de onde viemos. O `x-circle`
+   entrou no sprite para isso.
+
+   O icone herda a `color` da variante, entao ele nao precisa de regra propria
+   de cor; `flex:none` para nao encolher quando o texto for longo, e o alinhamento
+   e no topo porque o alerta pode ter duas linhas e o icone acompanha a primeira. */
+.yb-alert{
+  display:flex; gap:var(--yb-space-3); padding:var(--yb-space-4) var(--yb-space-5);
+  border-radius:var(--yb-radius-card);
+  font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-relaxed);
+}
+.yb-alert__icone{flex:none; margin-block-start:.1em}
+/* O corpo empurra o fechar para a ponta sem precisar de `space-between`, que
+   grudaria o icone no texto quando o alerta fosse curto. */
+.yb-alert__corpo{flex:1; min-width:0}
+.yb-alert__title{
+  display:block; font-weight:var(--yb-font-weight-semibold);
+  margin-bottom:var(--yb-space-1);
+}
+/* FECHAR. Mesma receita do toast: 44px de alvo com margem negativa, para o
+   controle nao inflar a altura do alerta — a caixa cresce para fora.
+   Herda a cor da variante em vez de ser cinza: um X cinza dentro de uma caixa
+   ambar le como elemento de outro lugar. */
+.yb-alert__close{
+  border:none; background:transparent; cursor:pointer; flex:none;
+  color:inherit; padding:0; border-radius:var(--yb-radius-sm); line-height:var(--yb-line-height-none);
+  display:inline-flex; align-items:center; justify-content:center;
+  width:var(--yb-target-min); height:var(--yb-target-min);
+  margin:calc(var(--yb-space-3) * -1) calc(var(--yb-space-3) * -1)
+         calc(var(--yb-space-3) * -1) 0;
+  transition:color var(--yb-transition-control);
+}
+/* Sem `opacity` para apagar: opacidade sobre coisa visivel torna o contraste
+   nao-medivel, e a casa proibe — o proprio validador reprova. O repouso herda
+   a cor da variante, que ja e medida contra aquela superficie; o hover escurece
+   para `--yb-text-primary`, que serve nas quatro tintas por ser o tom mais
+   escuro do sistema. Um X cinza dentro de uma caixa ambar leria como elemento
+   de outro lugar, e por isso ele nao e `--yb-text-muted` como no toast. */
+@media (hover:hover){ .yb-alert__close:hover{color:var(--yb-text-primary)} }
+.yb-alert__close:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:calc(var(--yb-focus-offset) * -1);
+}
+.yb-alert--success{background:var(--yb-success-surface); border-color:var(--yb-success-solid); color:var(--yb-success-text)}
+.yb-alert--warning{background:var(--yb-warning-surface); border-color:var(--yb-warning-solid); color:var(--yb-warning-text)}
+.yb-alert--danger {background:var(--yb-danger-surface);  border-color:var(--yb-danger-solid);  color:var(--yb-danger-text)}
+.yb-alert--info   {background:var(--yb-info-surface);    border-color:var(--yb-info-solid);    color:var(--yb-info-text)}
+.yb-alert p{margin:0; color:var(--yb-text-secondary)}
+
+/* =========================================================================
+   ACORDEÃO — <details> nativo: teclado e leitor de tela de graça.
+   ========================================================================= */
+/* Sem fio em cima. Cada `details` fecha embaixo, entao a lista ja tem tantos
+   fios quantos itens; o de cima era um a mais, e o unico que nao separa nada —
+   acima dele esta o titulo da secao, que ja se distingue por tamanho e peso.
+   Vale para o acordeao inteiro, e nao so no FAQ: dois acordeoes com molduras
+   diferentes na mesma loja e a maneira mais barata de um sistema comecar a
+   divergir de si mesmo. */
+.yb-accordion details{border-bottom:var(--yb-border-hairline) solid var(--yb-border-subtle)}
+.yb-accordion summary{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:var(--yb-space-4) 0; cursor:pointer; list-style:none;
+  font-size:var(--yb-type-body-size); font-weight:var(--yb-font-weight-medium);
+  min-height:var(--yb-target-min); color:var(--yb-text-primary);
+}
+.yb-accordion summary::-webkit-details-marker{display:none}
+.yb-accordion summary::after{
+  content:"+"; color:var(--yb-text-muted); font-size:var(--yb-type-h4-size);
+  font-weight:var(--yb-font-weight-regular); line-height:var(--yb-line-height-none);
+}
+.yb-accordion details[open] summary::after{content:"–"}
+/* A linha inteira e o alvo, e o unico elemento mudo dela e o marcador — entao
+   e ele que sobe. Fundo aqui vazaria ate as bordas do container: o `summary`
+   nao tem respiro no eixo inline, de proposito. */
+@media (hover:hover){
+  .yb-accordion summary:hover::after{color:var(--yb-text-primary)}
+}
+.yb-accordion summary:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+/* ABRIR E FECHAR COM ANIMACAO, sem trocar o <details> por div e script.
+   O nativo abre seco porque altura `auto` nunca foi animavel. Duas peças novas
+   do CSS resolvem isso e as duas degradam sozinhas:
+
+   `::details-content` e a caixa que o navegador ja cria em volta do conteudo —
+   da para dar altura e transicao a ela sem embrulhar nada no HTML.
+   `interpolate-size:allow-keywords` e o que destrava animar ATE `auto`, que e a
+   unica altura que serve quando o texto tem tamanho imprevisivel.
+
+   Declarado no `.yb-accordion` e nao no `:root`: e herdado, entao cobre a
+   arvore do componente sem ligar animacao de `auto` na pagina inteira.
+
+   `transition-behavior:allow-discrete` e o que faz `content-visibility`
+   acompanhar — sem ele o conteudo some no primeiro quadro do fechamento e a
+   altura anima sobre o vazio.
+
+   Onde `::details-content` nao existe, nada disto casa e o acordeao volta a
+   abrir seco — que e exatamente o comportamento de hoje. */
+.yb-accordion{ interpolate-size:allow-keywords; }
+.yb-accordion details::details-content{
+  block-size:0; overflow:hidden;
+  transition:block-size var(--yb-transition-surface),
+             content-visibility var(--yb-transition-surface);
+  transition-behavior:allow-discrete;
+}
+.yb-accordion details[open]::details-content{ block-size:auto; }
+.yb-accordion__body{padding-bottom:var(--yb-space-4)}
+.yb-accordion__body p{
+  margin:0; font-size:var(--yb-type-body-sm-size);
+  line-height:var(--yb-line-height-relaxed);
+  color:var(--yb-text-secondary); max-width:var(--yb-measure-prose);
+}
+
+/* =========================================================================
+   BREADCRUMB
+   ========================================================================= */
+.yb-crumb{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+.yb-crumb ol{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:var(--yb-space-2)}
+/* --yb-text-disabled mede 2.14:1 e existe so para controle inativo. A barra
+   do breadcrumb e pontuacao com significado, nao estado — sobe para o piso. */
+.yb-crumb li:not(:last-child)::after{content:"/"; margin-inline-start:var(--yb-space-2); color:var(--yb-text-muted)}
+.yb-crumb a{color:var(--yb-text-muted); text-decoration:none}
+
+@media (hover:hover){
+  .yb-crumb a:hover{color:var(--yb-text-primary)}
+}
+.yb-crumb a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-crumb [aria-current="page"]{color:var(--yb-text-secondary)}
+
+/* NO CELULAR O ULTIMO ITEM CORTA, EM VEZ DE QUEBRAR A LINHA.
+   O ultimo e o nome do produto — "Deep care hair kit | Ybera Fashion Gold"
+   tem 40 caracteres e nao cabe em 375px depois de "Home / Fashion Gold". Com
+   `wrap` ele descia para uma segunda linha e o breadcrumb, que e uma tira de
+   orientacao, virava um bloco de duas linhas em cima da foto do produto.
+
+   Cortado, a trilha continua legivel: quem le breadcrumb esta procurando ONDE
+   ESTA, e os degraus anteriores — que cabem inteiros — sao o que respondem
+   isso. O nome completo esta no <h1> logo abaixo, entao nada se perde.
+
+   `min-inline-size:0` porque item de flex nasce com `min-width:auto` e se
+   recusa a encolher abaixo do proprio conteudo: sem isto o `text-overflow`
+   fica escrito e inerte, e a tira vaza para fora da tela. Os degraus
+   anteriores ficam com `flex:none` para o corte cair sempre no ultimo. */
+/* 767,98 e nao 768: o degrau pertence ao `min-width`, e o `max` recua 0,02px
+   para as duas regras nunca valerem na mesma largura. */
+@media (max-width:767.98px){
+  .yb-crumb ol{flex-wrap:nowrap}
+  .yb-crumb li{flex:none}
+  .yb-crumb li:last-child{
+    flex:0 1 auto; min-inline-size:0;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+}
+
+/* =========================================================================
+   TOAST
+   Região viva. O container existe sempre; as mensagens entram nele.
+   ========================================================================= */
+.yb-toasts{
+  position:fixed; inset-block-end:var(--yb-space-5);
+  inset-inline-end:var(--yb-space-5); z-index:var(--yb-z-toast);
+  display:flex; flex-direction:column; gap:var(--yb-space-3);
+  max-width:min(380px, calc(100vw - var(--yb-space-8))); pointer-events:none;
+}
+@media (max-width:520px){
+  .yb-toasts{inset-inline:var(--yb-space-4); max-width:none}
+}
+.yb-toast{
+  pointer-events:auto; display:flex; gap:var(--yb-space-3);
+  align-items:flex-start; padding:var(--yb-space-4) var(--yb-space-5);
+  background:var(--yb-surface); color:var(--yb-text-primary);
+  border:var(--yb-border-hairline) solid var(--yb-border); border-inline-start:var(--yb-border-emphasis) solid var(--yb-action-bg);
+  border-radius:var(--yb-radius-card); box-shadow:var(--yb-elevation-dropdown);
+  animation:yb-toast-in var(--yb-duration-slow) var(--yb-ease-enter);
+}
+/* A tarja de 3px era a UNICA diferenca entre sucesso e erro — cor sozinha,
+   e as duas viram a mesma cor de sistema em alto contraste. O glifo antes do
+   titulo carrega a mesma informacao em forma. */
+.yb-toast--success{border-inline-start-color:var(--yb-success-solid)}
+.yb-toast--danger{border-inline-start-color:var(--yb-danger-solid)}
+.yb-toast--success .yb-toast__title::before,
+.yb-toast--danger .yb-toast__title::before{
+  margin-inline-end:var(--yb-space-2); font-weight:var(--yb-font-weight-bold);
+}
+.yb-toast--success .yb-toast__title::before{content:"\2713"; color:var(--yb-success-text)}
+.yb-toast--danger .yb-toast__title::before{content:"\26A0"; color:var(--yb-danger-text)}
+.yb-toast--leaving{animation:yb-toast-out var(--yb-duration-base) var(--yb-ease-exit) forwards}
+.yb-toast__body{flex:1; min-width:0}
+.yb-toast__title{
+  display:block; font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-semibold); margin-bottom:2px;
+}
+.yb-toast__text{margin:0; font-size:var(--yb-type-caption-size);
+  color:var(--yb-text-secondary)}
+.yb-toast__close{
+  border:none; background:transparent; cursor:pointer; flex:none;
+  color:var(--yb-text-muted); padding:0;
+  border-radius:var(--yb-radius-sm); line-height:var(--yb-line-height-none);
+  /* Era o unico controle do sistema sem piso: media 15.8x21.3, um terco do
+     --yb-target-min que o proprio sistema declara. A margem negativa devolve
+     os 44 de alvo sem inflar a altura do toast. */
+  display:inline-flex; align-items:center; justify-content:center;
+  width:var(--yb-target-min); height:var(--yb-target-min);
+  margin:calc(var(--yb-space-3) * -1) calc(var(--yb-space-2) * -1);
+}
+
+@media (hover:hover){
+  .yb-toast__close:hover{color:var(--yb-text-primary)}
+}
+.yb-toast__close:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+@keyframes yb-toast-in{from{opacity:0; transform:translateY(8px)}to{opacity:1; transform:none}}
+@keyframes yb-toast-out{to{opacity:0; transform:translateY(8px)}}
+
+/* =========================================================================
+   PAGINATION
+   ========================================================================= */
+/* Item de flex nasce com `min-width:auto` e se recusa a encolher abaixo do
+   proprio conteudo. Dentro de um pai flex — o palco da doc, o rodape de uma
+   listagem — a paginacao ficava com a largura do conteudo (596px numa tela de
+   375) e empurrava a pagina, em vez de rolar por dentro. */
+.yb-pagination{min-inline-size:0; max-inline-size:100%}
+.yb-pagination ol{
+  list-style:none; margin:0; padding:0; display:flex;
+  gap:var(--yb-space-2); align-items:center; flex-wrap:wrap;
+  justify-content:center;
+}
+.yb-pagination a, .yb-pagination span{
+  display:flex; align-items:center; justify-content:center;
+  min-width:var(--yb-target-min); min-height:var(--yb-target-min);
+  padding:0 var(--yb-space-3); border-radius:var(--yb-radius-control);
+  font-size:var(--yb-type-body-sm-size); text-decoration:none;
+  color:var(--yb-text-secondary); font-variant-numeric:tabular-nums;
+  transition:background var(--yb-transition-control);
+}
+
+@media (hover:hover){
+  .yb-pagination a:hover{background:var(--yb-bg-muted); color:var(--yb-text-primary)}
+}
+.yb-pagination a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+/* A PAGINA ATUAL FALA A LINGUA DOS BOTOES, na variante SECUNDARIA.
+   Era grafite — identidade, pela DDR-001 — e era a unica marca de
+   "selecionado" da loja que nao conversava com nenhum botao do sistema.
+
+   Secundaria, e nao primaria: no primario ela vira o MESMO botao do "Add to
+   cart". Numa listagem, onde cada cartao ja carrega a propria acao, a
+   paginacao passaria a disputar o clique com o que vende. O magenta cheio
+   continua reservado a decisao; o suave diz "voce esta aqui" na mesma
+   familia, sem competir.
+
+   4,86:1 no par — passa em AA para texto normal, e este e 14px em semibold.
+   Se um dia apertar, o degrau seguinte e `--yb-action-secondary-text-hover`
+   (7,12:1) sem mexer no fundo. */
+.yb-pagination [aria-current="page"]{
+  background:var(--yb-action-secondary-bg); color:var(--yb-action-secondary-text);
+  font-weight:var(--yb-font-weight-semibold);
+}
+/* o "…" e informacao estatica sobre paginas omitidas, nao controle inativo.
+   Dois nomes no seletor porque `.yb-pagination span` (0,1,1) vence
+   `.yb-pagination__gap` (0,1,0): escrito com um nome so, o `min-width:auto`
+   perdia e cada reticencia ocupava um alvo inteiro de 68px sem ser alvo de
+   nada — 136px dos 452 da tira, em duas marcas de pontuacao. */
+.yb-pagination .yb-pagination__gap{color:var(--yb-text-muted); min-width:auto; padding:0}
+
+/* NO CELULAR A TIRA ROLA, EM VEZ DE QUEBRAR.
+   Nove alvos de 44px mais os vaos pedem 388px; em 375 sobram 343 depois do
+   gutter, e o `wrap` mandava metade da paginacao para uma segunda linha —
+   com a pagina atual numa fileira e o "proximo" na outra, que e onde a
+   pessoa deixa de entender que aquilo e um controle so.
+
+   Rolar mantem os 44px de alvo, que e o que nao se pode negociar: encolher o
+   botao para caber resolveria o pixel e quebraria o dedo.
+
+   `safe center` centraliza enquanto cabe e vira `flex-start` quando nao cabe.
+   Sem o `safe`, um flex centrado que transborda corta o PRIMEIRO item para
+   fora da area rolavel — e o primeiro aqui e o "anterior". A linha de cima
+   e o fallback para quem nao entende `safe`. */
+@media (max-width:767.98px){
+  /* AS VIZINHAS SAEM ANTES DE QUALQUER OUTRA COISA.
+     O que nao pode sumir e: as duas setas, a primeira, a ultima e onde a
+     pessoa esta. As vizinhas da atual (o "2" e o "4" de "1 … 2 [3] 4 … 12")
+     sao conveniencia — e sao justamente o que faz a tira passar de 343px.
+     Sem elas sobram 7 alvos, 260px, e tudo cabe em 375 sem rolar nada.
+
+     As reticencias ficam: sem elas, "1 [3] 12" mente dizendo que ha tres
+     paginas. Quem monta a paginacao marca as vizinhas com esta classe; quem
+     nao marcar cai na rolagem abaixo, que e a rede de seguranca. */
+  .yb-pagination__perto{display:none}
+  /* O respiro lateral sai; os 44px de alvo ficam. Com `min-width:44` mais
+     12px de cada lado, cada numero ocupava 68 — o alvo continua com os 44
+     quando o respiro vai embora, e a tira cai de 452 para 264. */
+  .yb-pagination a, .yb-pagination span{padding-inline:0}
+  .yb-pagination ol{
+    flex-wrap:nowrap; overflow-x:auto; overscroll-behavior-inline:contain;
+    /* O teto e o que faz o `overflow` valer: sem ele a tira cresce ate o
+       proprio conteudo — dentro de um pai que se dimensiona pelo filho, como
+       o palco da doc, ela empurrava a pagina inteira em vez de rolar. */
+    max-inline-size:100%;
+    gap:var(--yb-space-1);
+    /* `flex-start` e o degrau de baixo para navegador sem `safe`: la o
+       segundo valor e descartado e a tira fica alinhada ao inicio, que rola
+       inteira — nunca o centro que prende o primeiro numero fora da vista. */
+    justify-content:flex-start;
+    justify-content:safe center;
+    scrollbar-width:none;
+  }
+  .yb-pagination ol::-webkit-scrollbar{display:none}
+  .yb-pagination li{flex:none}
+}
+.yb-pagination__off{color:var(--yb-text-disabled); cursor:not-allowed}
+
+/* =========================================================================
+   PARTNER — o recado de quem indicou
+
+   Aparece quando a pessoa chega por link patrocinado de uma influenciadora:
+   avatar mais um balao dizendo de quem e o desconto. E a ponta de cima do
+   mesmo fio que termina em `.yb-cart__parceiro`, la no pe da gaveta — um
+   apresenta, o outro cobra a promessa no instante do total.
+
+   COMPORTAMENTO NA ROLAGEM. O balao e um recado: serve uma vez. Depois de
+   lido vira tarja cobrindo a arte do banner. Mas o desconto vale a sessao
+   inteira, e sem nenhum rastro na tela ele reaparece no carrinho sem que
+   ninguem entenda de onde veio.
+   Por isso a peca nao some: ela ENCOLHE. Passados 96px de rolagem o balao
+   recolhe e fica so o avatar, que continua clicavel para reabrir. Um alvo de
+   44px no canto e o preco de manter a explicacao a mao.
+
+   O balao e `position:absolute` ao lado do avatar de proposito: assim a
+   largura dele nao entra no layout e a transicao e so opacidade e deslocar —
+   animar largura de caixa com texto dentro reflui a cada quadro.
+   ========================================================================= */
+/* TRILHO ABSOLUTO + DOCA GRUDENTA. Sao duas caixas porque nenhuma sozinha
+   resolve, e as duas tentativas anteriores estao aqui para nao serem
+   refeitas:
+
+   `position:fixed` com offset somado a mao passou por cima do logo — medido, o
+   bloco de cabecalho termina em 117px no desktop e 109 no celular, porque a
+   faixa de anuncio entra na conta e nao tem token. Somar altura de coisa que
+   muda com quebra de linha e chute com cara de calculo.
+
+   `position:absolute` dentro do banner acertou o repouso e perdeu a rolagem: o
+   avatar recolhido escorregava para DEBAIXO do `.yb-header__bar`, que e
+   sticky e ocupa 0..77 assim que a pagina anda. A animacao de recolher
+   acontecia atras do cabecalho, ou seja, nunca era vista.
+
+   Aqui o trilho e absoluto (nao ocupa espaco no banner, nao empurra o
+   carrossel) e vai do topo ao fim da arte; a doca gruda dentro dele a 89px do
+   alto — `--yb-header-h` mais respiro, a medida exata do cabecalho preso.
+   No repouso a doca esta na posicao natural, abaixo do cabecalho solto; ao
+   rolar ela encosta logo abaixo dele; quando a arte acaba, sai junto com ela.
+   `inline-size:0` para o trilho nao cobrir o carrossel: so os filhos recebem
+   clique. */
+.yb-partner{
+  position:absolute; z-index:var(--yb-z-dropdown);
+  inset-block:var(--yb-space-5) var(--yb-space-5);
+  inset-inline-start:var(--yb-page-gutter);
+  inline-size:0;
+}
+.yb-partner__dock{
+  position:sticky;
+  inset-block-start:calc(var(--yb-header-h) + var(--yb-space-3));
+  display:flex; align-items:flex-start;
+}
+.yb-partner__avatar{
+  position:relative; flex:none; cursor:pointer;
+  inline-size:var(--yb-target-min); block-size:var(--yb-target-min);
+  padding:0; border-radius:var(--yb-radius-pill); overflow:hidden;
+  /* Anel claro porque o que esta atras e foto de campanha, que muda toda
+     semana: sem ele o avatar encosta na imagem e some em metade das artes. */
+  border:var(--yb-border-emphasis) solid var(--yb-surface);
+  box-shadow:var(--yb-elevation-raised);
+  background:var(--yb-surface-sunken);
+  transition:transform var(--yb-transition-control);
+}
+.yb-partner__avatar img{inline-size:100%; block-size:100%; object-fit:cover; display:block}
+/* Recolhido (`[data-recolhido]`, especificidade maior) continua mandando: o
+   avatar encolhido nao cresce por passar o mouse. */
+@media (hover:hover){
+  .yb-partner__avatar:hover{ transform:scale(1.06); }
+}
+.yb-partner__avatar:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-partner__bubble{
+  position:absolute; inset-inline-start:calc(var(--yb-target-min) + var(--yb-space-3));
+  inset-block-start:0;
+  inline-size:max-content; max-inline-size:min(22rem, calc(100vw - var(--yb-target-min) - var(--yb-space-10)));
+  background:var(--yb-surface); color:var(--yb-text-primary);
+  border-radius:var(--yb-radius-card); box-shadow:var(--yb-elevation-dropdown);
+  padding:var(--yb-space-3) var(--yb-space-4);
+  font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-relaxed);
+  transition:opacity var(--yb-transition-surface),
+             transform var(--yb-transition-surface),
+             visibility var(--yb-transition-surface);
+}
+.yb-partner__bubble p{margin:0}
+.yb-partner__bubble b{font-weight:var(--yb-font-weight-bold)}
+/* O bico e um quadrado girado com o mesmo fundo do balao — nao um triangulo
+   com `border`, que nao herda cor de token nem acompanha a sombra. */
+.yb-partner__bubble::before{
+  content:""; position:absolute; inline-size:.75rem; block-size:.75rem;
+  inset-inline-start:-.3rem; inset-block-start:var(--yb-space-5);
+  background:var(--yb-surface); transform:rotate(45deg);
+}
+/* RECOLHIDO. `visibility` junto com a opacidade para o balao sair da ordem de
+   foco e da leitura — invisivel que ainda recebe Tab e recado fantasma. */
+.yb-partner[data-recolhido] .yb-partner__bubble{
+  opacity:0; visibility:hidden; transform:translateX(-.5rem) scale(.98);
+}
+.yb-partner[data-recolhido] .yb-partner__avatar{transform:scale(.82)}
+/* Ponto de aviso: recolhido, o avatar sozinho nao diz que ha recado atras
+   dele. O ponto e decorativo — quem ouve ja tem o texto do proprio botao. */
+.yb-partner[data-recolhido] .yb-partner__avatar::after{
+  content:""; position:absolute; inset-block-start:2px; inset-inline-end:2px;
+  inline-size:.5rem; block-size:.5rem; border-radius:var(--yb-radius-pill);
+  background:var(--yb-action-bg); border:var(--yb-border-hairline) solid var(--yb-surface);
+}
+
+/* -------------------------------------------------------------------------
+   FAIXA DO PARCEIRO
+   Segunda cara do parceiro, logo acima, e bloco proprio em vez de `__faixa`:
+   o balao vive DENTRO da arte e sai com ela; esta faixa vive presa ao
+   cabecalho e so existe depois que a arte acabou. Elemento de um bloco mora
+   dentro dele, e este mora do outro lado da pagina. Um elemento so tambem
+   nao resolveria: teria de sair de `position:absolute` no banner para
+   `fixed` na tela no meio da rolagem, e isso nao se faz sem salto.
+
+   O mesmo recado, sem a foto: a foto e o que apresenta a pessoa, e quem
+   chegou ate aqui ja passou por ela. Repeti-la em 40px de faixa faria um
+   retrato ilegivel disputando espaco com a frase.
+
+   Cinza, e nao o preto da faixa de cima: sao dois avisos diferentes e a
+   pessoa precisa distinguir sem ler. O preto anuncia a LOJA (frete gratis);
+   este cinza e o recado de UMA pessoa, e fala mais baixo. Nenhum dos dois
+   e acao — por isso nenhum usa o magenta.
+
+   `z-index` abaixo do cabecalho de proposito: o painel do mega-menu desce
+   por cima desta faixa, e nao o contrario.
+   ------------------------------------------------------------------------- */
+.yb-partnerbar{
+  position:fixed; inset-inline:0;
+  inset-block-start:var(--yb-header-h);
+  z-index:var(--yb-z-dropdown);
+  /* o [hidden] da base esconde; nao precisa de display:none + :not([hidden]) */
+  padding:var(--yb-space-2) var(--yb-page-gutter);
+  background:var(--yb-bg-muted); color:var(--yb-text-primary);
+  border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  /* Um degrau abaixo, a pedido, para a faixa encolher: `caption` e o mesmo
+     tamanho da faixa preta de anuncio logo acima — as duas sao aviso de uma
+     linha presas ao topo, e agora falam no mesmo corpo. A escala nao tem
+     12px; o degrau seguinte depois deste e 11px, que e tamanho de legenda de
+     tabela e nao de recado. */
+  font-size:var(--yb-type-caption-size);
+  text-align:center;
+}
+/* SEM ARTE na pagina a faixa deixa de ser sobreposicao e vira conteudo.
+   `fixed` so funciona para ela porque, quando a arte rola, a faixa preta de
+   anuncio ja saiu junto e a barra do cabecalho esta colada no topo: ai
+   `inset-block-start:var(--yb-header-h)` cai exatamente embaixo dela. Numa
+   pagina onde a faixa nasce visivel isso e falso — a faixa preta ainda ocupa
+   os primeiros 40px, a barra termina 40px mais abaixo, e a faixa do parceiro
+   nascia ATRAS dela (medido: faixa em 77, barra terminando em 117).
+
+   `sticky` resolve os dois momentos com uma regra: no fluxo ela ocupa o
+   proprio espaco logo abaixo do cabecalho, e quando a rolagem a alcanca ela
+   gruda no mesmo lugar onde a versao ancorada apareceria. */
+.yb-partnerbar--fluxo{position:sticky}
+/* 3,5rem e a faixa de duas linhas, que e o pior caso (35px numa linha no
+   desktop, 53 em duas no celular). Mesmo recurso que a barra de compra usa
+   para dar respiro ao rodape: a altura e medida, nao calculavel em CSS. */
+body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 3.5rem); }
+.yb-partnerbar__text{
+  margin:0;
+  /* Duas linhas, teto. No desktop o recado cabe numa (405px de texto em
+     1.440), e a segunda linha nunca aparece; em 390px ele pede 405px contra
+     358 de caixa, e uma linha so cortaria a frase justamente no "partner
+     discount", que e o que a faixa existe para dizer. O teto de duas linhas
+     e o que impede a faixa de crescer mais alta que o proprio cabecalho em
+     320px. Mesma mecanica do titulo do cartao. */
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
+}
+.yb-partnerbar__text b{font-weight:var(--yb-font-weight-semibold)}
+
+/* =========================================================================
+   COLLECTION CARD
+   Imagem com um rótulo em pill sobreposto, levando a uma coleção.
+
+   Nasceu da regra da governança, nao de preferencia: a home usa esta mesma
+   anatomia duas vezes — em "What's Standing Between You and Great Hair?" e em
+   "Explore Our Collections". Uma ocorrencia seria excecao de pagina; duas e
+   padrao, e padrao sobe para o sistema.
+
+   As duas diferem so na posicao do rotulo, e por isso ela e modificador em vez
+   de componente novo.
+   ========================================================================= */
+.yb-collection{
+  position:relative; display:block; overflow:hidden;
+  aspect-ratio:3/4; border-radius:var(--yb-radius-media);
+  background:var(--yb-surface-sunken);
+  text-decoration:none;
+}
+.yb-collection img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  transition:transform var(--yb-transition-surface);
+}
+
+@media (hover:hover){
+  .yb-collection:hover img{ transform:scale(1.03); }
+}
+.yb-collection:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+
+.yb-collection__label{
+  position:absolute; inset-inline:var(--yb-space-4);
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  min-height:var(--yb-target-min);
+  padding:var(--yb-space-2) var(--yb-space-4);
+  border-radius:var(--yb-radius-full);
+  /* Era --yb-action-bg: quatro rotulos de categoria com a mesma cor do "Add
+     to cart" e do contador do carrinho — botoes que nao compram nada. O
+     token e explicito: magenta e funcao, existe onde ha decisao a tomar. Um
+     link para colecao e navegacao; a pill vira superficie clara com texto
+     escuro (16.7:1) e uma sombra curta que a descola da foto onde a foto e
+     clara tambem. */
+  background:var(--yb-surface-raised); color:var(--yb-text-primary);
+  box-shadow:var(--yb-elevation-raised);
+  font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-medium);
+  line-height:var(--yb-line-height-base);
+}
+
+/* rótulo no meio da imagem — usado em "What's Standing Between You…" */
+.yb-collection--center .yb-collection__label{ top:50%; transform:translateY(-50%); }
+/* rótulo no rodapé — usado em "Explore Our Collections" */
+.yb-collection--bottom .yb-collection__label{ inset-block-end:var(--yb-space-4); }
+
+/* --- rotulo sem pill, sobre veu -----------------------------------------
+   Terceiro tratamento do MESMO rotulo, nao cartao novo: a pill sai e o nome
+   vira texto branco no canto de baixo, sobre um veu.
+
+   Existe para o mosaico, onde o ladrilho e deitado e largo: a pill centrada
+   num retangulo de 445x242 fica perdida no meio de muita foto, e no ladrilho
+   grande ela fica ridicula de pequena. Ancorado no canto, o nome tem o mesmo
+   peso nos dois tamanhos.
+
+   Nao substitui a pill: onde a foto e clara e o cartao e estreito, a pill
+   continua sendo a resposta certa — ela se descola do fundo sem escurecer a
+   imagem inteira, que e o preco deste veu. */
+.yb-collection--overlay .yb-collection__label{
+  inset-inline:var(--yb-space-5) auto;
+  inset-block-end:var(--yb-space-4);
+  justify-content:flex-start; text-align:start;
+  min-height:0; padding:0;
+  background:none; box-shadow:none; border-radius:0;
+  color:var(--yb-text-inverse);
+  font-size:var(--yb-type-body-lg-size);
+  font-weight:var(--yb-font-weight-bold);
+}
+/* A mesma curva do banner e do cartao de oferta. Aqui a queda e em
+   PORCENTAGEM e nao em rem — o ladrilho tem razao fixa dada pelo mosaico, e
+   nao ha faixa de texto de altura variavel para ancorar: o rotulo e uma linha
+   so, no canto de baixo. 82% e onde a receita antiga punha o fim do plato
+   (18% a partir do rodape), preservado de proposito: o que muda e o CAMINHO
+   ate la, nao onde o veu chega. */
+.yb-collection--overlay{ --yb-veil-fall:82%; }
+.yb-collection--overlay::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(to bottom,
+    var(--yb-scrim-none)    0,
+    var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
+    var(--yb-scrim-curve-2) calc(var(--yb-veil-fall) * .5),
+    var(--yb-scrim-curve-3) calc(var(--yb-veil-fall) * .75),
+    var(--yb-scrim-full)    var(--yb-veil-fall));
+}
+.yb-collection--blur{ --yb-blur-band:45%; --yb-blur-radius:.75rem; }
+.yb-collection--blur.yb-collection--overlay::after{
+  background:linear-gradient(to bottom,
+    var(--yb-scrim-none)         0,
+    var(--yb-scrim-lite-curve-1) calc(var(--yb-veil-fall) * .25),
+    var(--yb-scrim-lite-curve-2) calc(var(--yb-veil-fall) * .5),
+    var(--yb-scrim-lite-curve-3) calc(var(--yb-veil-fall) * .75),
+    var(--yb-scrim-lite)         var(--yb-veil-fall));
+}
+/* o rotulo e irmao do veu: sem isto ele fica por baixo */
+.yb-collection--overlay .yb-collection__label{ z-index:1; }
+/* Em 320 o cartao tem 134px e o recuo fixo de 64px (inset 16x2 + padding 16x2)
+   deixava 70px de caixa a 14px — oito caracteres por linha, e "Frizz Control &
+   Dry Hair" quebrando em quatro. O recuo cede antes da palavra. */
+@media (max-width:479.98px){
+  .yb-collection__label{
+    inset-inline:var(--yb-space-2);
+    padding:var(--yb-space-2);
+    font-size:var(--yb-type-caption-size);
+    border-radius:var(--yb-radius-md);
+  }
+  .yb-collection--bottom .yb-collection__label{ inset-block-end:var(--yb-space-2); }
+}
+
+/* --- CARTAO: foto em cima, rodape branco com nome e atalho ---------------
+   Outra ANATOMIA, nao outra posicao de rotulo. As variantes acima
+   (`--bottom`, `--center`, `--overlay`) sao o mesmo desenho com o rotulo
+   flutuando em lugares diferentes da foto; aqui o rotulo sai de cima da
+   imagem e ganha uma faixa propria.
+
+   A troca entre os dois arranjos e editorial, e nao de gosto:
+
+   - rotulo sobre a foto quando o NOME basta. "Damaged Hair" e um destino
+     obvio, e a pilula nao rouba a foto, que e quem convence.
+   - cartao com rodape quando o nome NAO basta. "Consumer" e "Profesional"
+     nao dizem o que ha dentro, e um atalho escrito ("Shop Collection") faz o
+     trabalho que o nome sozinho nao faz.
+
+   A faixa e opaca de proposito. Sobre a foto ela precisaria de veu, medicao
+   de contraste contra pixel que ninguem controla, e mesmo assim erraria em
+   uma foto clara — todo o custo que o banner com foto paga. Fora da foto, o
+   contraste e o do sistema e ninguem precisa medir de novo. */
+.yb-collection--card{
+  aspect-ratio:auto; display:flex; flex-direction:column;
+  background:var(--yb-surface); box-shadow:var(--yb-elevation-card);
+}
+/* A caixa da foto segue o PACKSHOT, nao o contrario. Era 4/3 deitado, e as
+   fotos de colecao sao retrato 0,72 (1501x2083) cortadas rente ao produto —
+   medido, o frasco ocupa 100% da altura do quadro. Com `cover` num quadro
+   deitado, sobrava 54% da altura: 23% do frasco cortado em cima e 23%
+   embaixo. Os tubos do Cronograma chegavam decapitados na home.
+
+   Nao havia corte seguro a achar: quando o produto preenche o quadro, todo
+   recorte deitado corta produto. 5/7 (0,714) fica a menos de 1% da razao do
+   arquivo, entao `cover` recorta LARGURA — sete pixels de fundo de estudio de
+   cada lado — em vez de recortar as pontas do frasco.
+
+   Preferido a `contain`: com `contain` o quadro sobra e vira tarja, e tarja
+   precisa de uma cor de fundo que combine com um estudio que ninguem
+   controla. Medi as duas — 2 niveis de diferenca — e esta nao pede cor nova.
+
+   O cartao passa de 300 para 511px de altura em 1440. E o preco de mostrar o
+   produto inteiro, e o cartao com rodape existe justamente para quando a foto
+   precisa convencer. */
+.yb-collection--card img{aspect-ratio:5/7; flex:none}
+/* `flex-wrap` porque a largura que importa aqui e a da COLUNA, nao a da tela.
+   O `@media (max-width:560px)` abaixo empilha quando a TELA e estreita — e nao
+   ajuda numa tela de 1440 em que o cartao mora numa coluna de 195px, que foi
+   onde "Shop Collection" empurrou a grade 227px para fora da pagina. Com wrap,
+   o atalho desce para a segunda linha quando nao cabe, seja qual for o motivo
+   de nao caber. */
+.yb-collection__foot{
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:var(--yb-space-3); padding:var(--yb-space-4);
+}
+.yb-collection__name{
+  font-size:var(--yb-type-body-lg-size); font-weight:var(--yb-font-weight-bold);
+  color:var(--yb-text-primary); min-width:0;
+}
+/* Eco do link, nao um segundo link: o cartao inteiro ja e o <a>. Mesma regra
+   do "Continue reading" do post — dois destinos num cartao viram dois itens
+   iguais para quem ouve a pagina. */
+.yb-collection__cta{
+  display:inline-flex; align-items:center; gap:var(--yb-space-2); flex:none;
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-link); white-space:nowrap;
+}
+
+@media (hover:hover){
+  .yb-collection--card:hover .yb-collection__cta{color:var(--yb-text-link-hover)}
+}
+/* Em duas colunas o nome e o atalho nao cabem lado a lado — "Cronograma" mais
+   "Shop Collection" pedem 300px e a coluna tem 170. Empilha, e o atalho vira
+   a segunda linha em vez de sumir. */
+@media (max-width:560px){
+  .yb-collection__foot{flex-direction:column; align-items:flex-start; gap:var(--yb-space-1)}
+}
+
+/* a grade que as duas seções compartilham */
+/* `minmax(0,1fr)` e nao `1fr`: o minimo automatico de uma trilha e o
+   min-content do que esta dentro, entao um rotulo que nao quebra estica a
+   coluna e a grade inteira vaza do container em silencio. */
+.yb-collections{
+  display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:var(--yb-grid-gap); list-style:none; margin:0; padding:0;
+}
+
+/* --- mosaico: um ladrilho grande e quatro pequenos -----------------------
+   Todos os ladrilhos tem a MESMA razao, e nao e coincidencia: o grande mede
+   duas colunas e duas linhas, entao ele cresce nos dois eixos na mesma
+   proporcao. E o que faz o mosaico parecer arrumado em vez de improvisado.
+
+   O grande precisa de `aspect-ratio:auto`: a razao 3/4 da base, esticada por
+   duas linhas, calcularia a LARGURA a partir da altura e o ladrilho vazaria
+   da coluna — foi assim que o cartao de oferta arrastou uma fileira inteira. */
+.yb-collections--mosaic{ grid-template-columns:2fr 1fr 1fr; }
+.yb-collections--mosaic > * > .yb-collection{ aspect-ratio:var(--yb-aspect-landscape); }
+.yb-collections--mosaic > :first-child{ grid-row:span 2; }
+.yb-collections--mosaic > :first-child > .yb-collection{
+  aspect-ratio:auto; block-size:100%;
+}
+/* A foto do ladrilho grande sai do fluxo. Em fluxo, a altura dela definia a
+   altura do ladrilho — e o ladrilho atravessa as duas linhas, entao ele
+   esticava as duas: os pequenos ficavam no topo de linhas altas demais, com
+   um vao morto embaixo de cada um. Fora do fluxo, quem manda na altura sao
+   os pequenos, que e o que o mosaico promete. */
+.yb-collections--mosaic > :first-child > .yb-collection img{
+  position:absolute; inset:0;
+}
+/* Em duas colunas o grande atravessa as duas e volta a ter razao propria —
+   empilhado numa coluna so, um ladrilho de 16/9 vira uma tira fina. */
+@media (max-width:767.98px){
+  .yb-collections--mosaic{ grid-template-columns:1fr 1fr; }
+  .yb-collections--mosaic > :first-child{ grid-row:auto; grid-column:span 2; }
+  .yb-collections--mosaic > :first-child > .yb-collection{ aspect-ratio:var(--yb-aspect-landscape); }
+}
+@media (max-width:767.98px){ .yb-collections{ grid-template-columns:repeat(2,1fr); } }
+
+@media (prefers-reduced-motion:reduce){
+  .yb-collection img{ transition:none; }
+  .yb-collection:hover img{ transform:none; }
+}
+
+/* =========================================================================
+   REVIEW
+   Prova social: foto do produto, nota, texto, quem escreveu e o que comprou.
+
+   Vira componente pela mesma regra do card de coleção: a home usa review em
+   dois lugares — o carrossel do topo e "Hear Directly from our Ambassadors".
+
+   Hoje quem desenha isso é o Judge.me. Diferente do Tolstoy, ele renderiza no
+   DOM normal, sem shadow DOM — por isso o design system alcança. O bridge já
+   traduz as oito variáveis dele em bridge/ybera-bridge.css.
+   ========================================================================= */
+/* `stretch`, e nao `start`: no trilho os cartoes ja nascem da mesma altura (o
+   mais alto manda), e com o corpo esticado o nome e o produto podem ancorar no
+   pe. Antes eles seguiam o fim do texto — um review de uma linha punha o nome
+   22px acima do vizinho de tres, e a fileira lia como desalinhada. A foto
+   continua ancorada no topo por `align-self`, senao ela esticaria junto. */
+.yb-review{
+  display:grid; grid-template-columns:88px 1fr; gap:var(--yb-space-4);
+  align-items:stretch; min-width:0;
+}
+/* Selo de compra verificada. Tom de estado positivo, nao de acao: ele informa,
+   nao convida a clicar. Fica junto do autor porque e sobre QUEM escreveu. */
+.yb-review__verified{
+  display:inline-flex; align-items:center; gap:var(--yb-space-1);
+  color:var(--yb-success-text); font-size:var(--yb-type-caption-size);
+  font-weight:var(--yb-font-weight-semibold);
+}
+.yb-review__media{
+  align-self:start;
+  aspect-ratio:var(--yb-aspect-square); overflow:hidden; border-radius:var(--yb-radius-media);
+  background:var(--yb-surface-sunken); border:var(--yb-border-hairline) solid var(--yb-border-subtle);
+}
+.yb-review__media img{ width:100%; height:100%; object-fit:cover; display:block; }
+.yb-review__body{ display:flex; flex-direction:column; gap:var(--yb-space-2); min-width:0; }
+
+.yb-review__title{
+  margin:0; font-size:var(--yb-type-body-size);
+  font-weight:var(--yb-font-weight-semibold); line-height:var(--yb-line-height-base);
+  color:var(--yb-text-primary);
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
+}
+/* Tres linhas SEMPRE, e nao no maximo tres. O `line-clamp` ja impedia o cartao
+   de crescer; o que faltava era impedi-lo de encolher. Com dois de seis
+   reviews em duas linhas, o buraco entre o texto e o nome mudava de tamanho de
+   cartao para cartao — o pe ja estava alinhado (`margin-block-start:auto` no
+   autor), a fileira e que lia torta, porque o olho segue o FIM do texto, nao a
+   borda de baixo do cartao.
+
+   A caixa reservada e a resposta certa aqui porque o conteudo nao e nosso:
+   quem escreve as avaliacoes sao clientes, e amanha o Judge.me entrega uma de
+   uma linha e outra de sete. Acertar o alinhamento reescrevendo texto duraria
+   ate a primeira avaliacao nova.
+
+   `calc` com os tokens, e nao a unidade `lh`: ela ainda nao existe no Safari
+   que a loja atende. Os tres fatores sao os mesmos que desenham a linha logo
+   acima — se o tamanho ou a entrelinha mudarem, a reserva acompanha. */
+.yb-review__text{
+  margin:0; font-size:var(--yb-type-body-sm-size);
+  line-height:var(--yb-line-height-relaxed); color:var(--yb-text-secondary);
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:3; line-clamp:3; overflow:hidden;
+  min-block-size:calc(var(--yb-type-body-sm-size) * var(--yb-line-height-relaxed) * 3);
+}
+/* O `auto` e o que empurra o par nome+produto para o pe do cartao. Onde nao ha
+   folga — a lista da PDP, que empilha e nao estica — ele nao faz nada. */
+.yb-review__author{
+  margin-block-start:auto;
+  font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-primary);
+}
+.yb-review__product{
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:1; line-clamp:1; overflow:hidden;
+}
+.yb-review__product a{ color:inherit; }
+.yb-review__product a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+
+/* trilho horizontal, como o carrossel de produção */
+/* --- resumo, distribuicao e filtro ---------------------------------------
+   O trilho sozinho respondia "o que dizem" e nao respondia "quantos sao" nem
+   "alguem reclamou". Estas tres pecas respondem, e ficam ACIMA do trilho: o
+   resumo e o que decide se vale a pena arrastar.
+
+   Grid de tres faixas no desktop e uma coluna no toque. A distribuicao no meio
+   porque ela e a ponte entre a nota (esquerda) e o filtro (direita): a barra
+   que a pessoa le e o botao que ela clica dizem a mesma coisa. */
+/* O vao de baixo e MAIOR que o de cima, de proposito. Com 24 dos dois lados a
+   linha ficava equidistante, e equidistante ela nao separa nada: o resumo
+   parecia colado no trilho, e os dois liam como um bloco so. A linha pertence
+   ao resumo — fica perto dele e longe do que vem depois. */
+.yb-reviews__topo{
+  display:grid; gap:var(--yb-space-6) var(--yb-space-10);
+  grid-template-columns:auto minmax(12rem, 20rem) 1fr;
+  align-items:center;
+  padding-block-end:var(--yb-space-8);
+  margin-block-end:var(--yb-space-10);
+  border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);
+}
+.yb-reviews__nota{display:flex; flex-direction:column; gap:var(--yb-space-1)}
+.yb-reviews__media{
+  font-size:var(--yb-type-h1-size); font-weight:var(--yb-font-weight-bold);
+  line-height:var(--yb-line-height-none); font-variant-numeric:proportional-nums;
+}
+.yb-reviews__total{color:var(--yb-text-secondary); font-size:var(--yb-type-body-sm-size)}
+/* 12px e nao 8 entre as barras: cinco linhas de 8px de vao empilham como uma
+   grade cinza unica, e o que a pessoa precisa ler ali sao cinco medidas
+   separadas. */
+.yb-reviews__dist{
+  list-style:none; margin:0; padding:0;
+  display:flex; flex-direction:column; gap:var(--yb-space-3);
+}
+.yb-reviews__linha{display:grid; grid-template-columns:auto 1fr auto; gap:var(--yb-space-3); align-items:center}
+.yb-reviews__estrela{
+  display:inline-flex; align-items:center; gap:var(--yb-space-1);
+  color:var(--yb-text-secondary); font-size:var(--yb-type-body-sm-size);
+  font-variant-numeric:tabular-nums;
+}
+/* Largura fixa na contagem: sem ela a barra do "6" e a barra do "0" terminam em
+   x diferentes e a coluna inteira fica torta. */
+.yb-reviews__qtd{
+  min-inline-size:2ch; text-align:end;
+  color:var(--yb-text-secondary); font-size:var(--yb-type-body-sm-size);
+  font-variant-numeric:tabular-nums;
+}
+.yb-reviews__acoes{
+  display:flex; flex-direction:column; align-items:flex-start;
+  gap:var(--yb-space-4);
+}
+@media (max-width:860px){
+  .yb-reviews__topo{grid-template-columns:1fr}
+}
+
+.yb-reviews{
+  /* herda .yb-track; aqui so o que e proprio do review */
+  --yb-track-item:minmax(320px, 1fr);
+  --yb-track-gap:var(--yb-space-8);
+}
+/* O gap encolhe junto. Antes so o card caia para 280 e o gap seguia em 32:
+   em 320px o scrollport tem 288, 280+32=312, e o segundo review nascia fora
+   da tela. Um trilho de 6 reviews que nao mostra que anda e um card estatico. */
+/* Largura em px, nao em %: `minmax(0, 86%)` deixou o cartao colapsar para
+   35px — o minimo 0 vence quando o trilho e um grid com overflow. Com 248 e
+   gap de 16, em 320px sobram 24px do proximo review a vista: a fatia que
+   ensina que o trilho anda. */
+@media (max-width:520px){
+  .yb-reviews{ grid-auto-columns:minmax(248px, 1fr); gap:var(--yb-space-4); }
+}
+/* Acima de 1280 a pagina ja bateu no --yb-container-max de 1200px — dali para
+   cima o trilho tem sempre os mesmos 1136px de largura util, nunca mais nem
+   menos. `minmax(320px, 1fr)` deixa o 1fr esticar os tres cartoes visiveis
+   sem garantir numero inteiro: sobra fatia da quarta review, que ninguem
+   pediu para ver e a seta ao lado ja avisa que da para navegar. Travar a
+   largura em 100% menos os dois vaos, dividido por tres, fecha exatamente
+   nos 1136px — a quarta nasce fora, nao pela metade. */
+@media (min-width:1280px){
+  .yb-reviews{ grid-auto-columns:calc((100% - var(--yb-space-8) * 2) / 3); }
+}
+
+/* =========================================================================
+   EMPTY STATE
+   Ausencia com saida. Vale para busca sem resultado, filtro que nao acha
+   nada, carrinho vazio e produto que nao existe mais (404).
+
+   O sistema ja tinha UM estado vazio, `.yb-search__empty`, preso dentro da
+   busca — entao toda outra ausencia da loja ou nao existia ou ia virar texto
+   solto no meio da pagina. A regra que este componente carrega e que o texto
+   solto nao carrega: ausencia sem PROXIMO PASSO e beco. Por isso `__acoes`
+   nao e opcional por acidente — e o motivo do componente existir.
+
+   Nao tem cor propria nem fundo: ele mora dentro do bloco que ficou vazio, e
+   um cartao cinza ali chamaria mais atencao para o buraco do que para a
+   saida.
+   ========================================================================= */
+.yb-empty{
+  display:flex; flex-direction:column; align-items:center;
+  text-align:center; gap:var(--yb-space-3);
+  padding-block:var(--yb-space-10);
+  color:var(--yb-text-secondary);
+}
+/* O icone e sinal, nao ilustracao: fica no tom silencioso do texto de apoio,
+   porque quem precisa ser lido aqui e a saida. */
+.yb-empty__icone{
+  display:flex; align-items:center; justify-content:center;
+  inline-size:3.5rem; block-size:3.5rem; border-radius:var(--yb-radius-full);
+  background:var(--yb-bg-muted); color:var(--yb-text-muted);
+  margin-block-end:var(--yb-space-1);
+}
+.yb-empty__icone .yb-icon{--yb-icon-size:var(--yb-icon-lg)}
+.yb-empty__title{
+  margin:0; font-size:var(--yb-type-h3-size);
+  font-weight:var(--yb-font-weight-bold);
+  color:var(--yb-text-primary); text-wrap:balance;
+}
+/* 44ch e nao 100%: linha de apoio atravessando 1200px obriga o olho a varrer
+   a pagina inteira para ler uma frase de consolo. */
+.yb-empty__text{margin:0; max-inline-size:var(--yb-measure-lede)}
+.yb-empty__acoes{
+  display:flex; flex-wrap:wrap; gap:var(--yb-space-3);
+  justify-content:center; margin-block-start:var(--yb-space-3);
+}
+/* Dentro de uma secao que ja tem respiro proprio — o trilho de avaliacoes
+   filtrado, por exemplo — o vao de cima e de baixo vira exagero. */
+.yb-empty--inline{padding-block:var(--yb-space-8)}
+
+/* =========================================================================
+   POST
+   Cartao de artigo do blog. Duas formas da mesma anatomia:
+   --destaque  imagem grande em cima, texto embaixo
+   (padrao)    imagem a esquerda, texto a direita
+
+   Uma so anatomia com modificador, e nao dois componentes, porque o que muda
+   e a disposicao — o conteudo e identico: imagem, titulo, resumo e a chamada.
+   ========================================================================= */
+/* `position:relative` porque o link do titulo se estica por cima do artigo
+   inteiro, como no cartao de produto: so "Continue reading" era clicavel, e
+   titulo e foto — onde a pessoa de fato clica — nao levavam a nada. */
+.yb-post{
+  display:grid; grid-template-columns:160px 1fr;
+  gap:var(--yb-space-5); align-items:start; min-width:0;
+  position:relative;
+}
+.yb-post__media{
+  aspect-ratio:var(--yb-aspect-square); overflow:hidden; border-radius:var(--yb-radius-card);
+  background:var(--yb-surface-sunken);
+}
+.yb-post__media img{ width:100%; height:100%; object-fit:cover; display:block; }
+.yb-post__body{ display:flex; flex-direction:column; gap:var(--yb-space-3); min-width:0; }
+.yb-post__title{
+  margin:0; font-size:var(--yb-type-h4-size); line-height:var(--yb-line-height-base);
+  letter-spacing:var(--yb-type-h4-track); font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-primary); text-wrap:balance;
+}
+/* O titulo E o link — um so por artigo, com nome proprio. Tres "Continue
+   reading" iguais eram tres links identicos para quem ouve (WCAG 2.4.4). */
+.yb-post__title a{ color:inherit; text-decoration:none; }
+.yb-post__title a::after{ content:""; position:absolute; inset:0; border-radius:inherit; }
+@media (hover:hover){
+  .yb-post:hover .yb-post__title a{ text-decoration:underline; text-underline-offset:3px; }
+}
+.yb-post__title a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-post__excerpt{
+  margin:0; font-size:var(--yb-type-body-sm-size);
+  line-height:var(--yb-line-height-relaxed); color:var(--yb-text-secondary);
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:3; line-clamp:3; overflow:hidden;
+}
+/* Reforco visual do link do titulo, nao um segundo link: e <span>, e o
+   clique nele cai no ::after do titulo. Usa `.yb-link yb-link--reinforce`
+   (ver LINK) — so o alinhamento dentro da coluna e proprio daqui. Icone de
+   seta, nao de "sai do site" (yb-external) — o artigo e da propria loja. */
+.yb-post__body .yb-link{ align-self:flex-start; }
+/* Houve aqui um `align-items:flex-start` para empurrar para baixo o respiro que
+   o alvo de 44px do `.yb-link` criava acima do texto. O alvo nao tinha razao de
+   existir num <span aria-hidden>, e `--reinforce` passou a cancela-lo (ver
+   LINK): sem a caixa sobrando, nao ha respiro para reposicionar. */
+
+@media (hover:hover){
+  .yb-post:hover .yb-link{ color:var(--yb-text-link-hover); }
+}
+
+/* destaque: imagem larga em cima */
+.yb-post--featured{ grid-template-columns:1fr; gap:var(--yb-space-5); }
+/* 16/9 e nao 16/11: com 16/11 o destaque media 541px e a coluna ao lado, com
+   dois artigos, 362 — 179px de vazio embaixo do segundo. Ver .yb-posts__list. */
+.yb-post--featured .yb-post__media{ aspect-ratio:var(--yb-aspect-landscape); }
+.yb-post--featured .yb-post__title{ font-size:var(--yb-type-h3-size); }
+
+/* EMPILHADO — foto em cima, titulo embaixo, sem resumo.
+   Nao e o `--featured` com outro nome: aquele e UM artigo que manda na secao,
+   e por isso sobe o titulo para h3 e abre 16/9. Este e um entre iguais numa
+   fileira — mantem o tamanho de titulo do post comum, senao tres h3 lado a
+   lado competem entre si e a secao perde o ponto de entrada.
+   Sem resumo por decisao de conteudo, nao de espaco: com tres cartoes, tres
+   resumos de tres linhas viram um paragrafo so, e o olho pula todos. */
+.yb-post--stacked{ grid-template-columns:1fr; gap:var(--yb-space-4); }
+/* 16/10, medido na referencia (1.63). Nao e 1/1, que empurraria o titulo 100px
+   para baixo e faria a fileira nao caber numa tela; nem o 16/9 do destaque,
+   que aqui, em terco de largura, deixaria a foto baixa demais para se ler o
+   cabelo — que e o assunto de todos os tres artigos. */
+.yb-post--stacked .yb-post__media{ aspect-ratio:16/10; }
+/* Houve aqui uma sobrescrita que vestia o "Read more" do trio de preto e sem
+   sublinhado. O Link nao tem essa variante — a ficha dele diz que o reforco
+   "fica sempre sublinhado: sem isso nao pareceria clicavel" — e o Post estava
+   desfazendo, so neste arranjo, as duas coisas que definem o modificador que
+   ele mesmo usava. O resultado eram dois Posts com dois links diferentes para
+   o mesmo papel. Se o trio um dia precisar de um eco discreto, a variante nasce
+   no LINK, documentada, e nao como excecao aqui. */
+
+/* :not(--featured) porque `.yb-post` e `.yb-post--featured` empatam em
+   especificidade (0,1,0) e a media query vem depois na folha — o modificador
+   perdia em silencio. Abaixo de 560 o destaque virava miniatura de 96x66,
+   MENOR que as irmas de 96x96, com titulo de 24px em cima. */
+/* `--stacked` tambem sai fora, e nao por simetria: a regra foi escrita para o
+   arranjo v1, onde o post comum e uma FILEIRA (miniatura a esquerda, texto a
+   direita) e encolher a miniatura e o certo. O `--stacked` do trio nasceu
+   depois e caiu na regra por tabela — abaixo de 560 os tres cartoes de foto em
+   cima viravam tres fileirinhas de 96px, que e outro componente. Num trilho
+   horizontal isso fica evidente: uma fileira deitada dentro de um slide de
+   268px nao e cartao nenhum. */
+@media (max-width:560px){
+  .yb-post:not(.yb-post--featured):not(.yb-post--stacked){
+    grid-template-columns:96px 1fr; gap:var(--yb-space-4);
+  }
+}
+
+/* um destaque à esquerda, os secundários empilhados à direita */
+.yb-posts{
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:var(--yb-space-10); align-items:start;
+}
+/* Empilhados no topo, respiro fixo. Foi tentado distribuir os dois artigos
+   na altura do destaque (space-between) para os rodapes coincidirem: abria um
+   buraco de 140px entre os dois e a coluna parecia quebrada. Alinhar o fim
+   nao vale desalinhar o meio. A sobra que resta embaixo (uns 66px em 1440,
+   contra 179 antes do destaque virar 16/9) e a diferenca de conteudo. */
+.yb-posts__list{ display:flex; flex-direction:column; gap:var(--yb-space-8); }
+@media (max-width:860px){
+  .yb-posts{ grid-template-columns:1fr; gap:var(--yb-space-8); }
+}
+
+/* TRIO — tres artigos de mesmo peso, em vez de um destaque e dois satelites.
+   A escolha entre os dois arranjos e editorial, nao estetica: `.yb-posts`
+   diz "leia ESTE primeiro"; `--trio` diz "os tres valem igual". Use o
+   destaque quando ha um artigo que a loja quer empurrar, e o trio quando os
+   tres respondem perguntas diferentes — que e o caso das duvidas sobre
+   keratina, onde quem chega ja sabe qual e a dele. */
+.yb-posts--trio{ grid-template-columns:repeat(3, 1fr); gap:var(--yb-space-6); }
+@media (max-width:1023.98px) and (min-width:860.02px){
+  .yb-posts--trio{ gap:var(--yb-space-5); }
+}
+/* O colapso do trio precisa ser DELE, e escrito DEPOIS.
+   `@media (max-width:860px){.yb-posts{grid-template-columns:1fr}}` ja existe
+   la em cima, mas empata em especificidade com `.yb-posts--trio` — e, vindo
+   antes na folha, perdia. O resultado media 98px por cartao em 375: tres
+   colunas espremidas, nao uma. E a mesma armadilha de ordem que ja mordeu o
+   `--featured` nesta folha; a diferenca e que aqui nao havia `:not()` para
+   escrever, porque o modificador e que precisa se desfazer.
+   Dois e um sobrando fica pior que um por linha: a orfa embaixo parece erro
+   de conteudo.
+
+   E abaixo de 860 os tres nao viram UMA COLUNA: viram trilho. Medido em 375px,
+   a secao caiu de 464px para 309 — e o que sai da frente nao e so altura: o
+   blog fica entre os selos e o rodape, e quem desce ate ali esta indo embora,
+   nao lendo. Deitado, a secao ocupa a altura de UM cartao e os outros dois
+   continuam alcancaveis. A previa do segundo cartao e o que diz que ha mais
+   coisa para o lado.
+
+   Os 464 do "antes" sao a lista como ela ERA de fato: tres fileiras de
+   miniatura de 96px, porque o `--stacked` caia na regra de 560 logo abaixo.
+   Empilhados de verdade, em coluna unica, os mesmos tres cartoes medem 1.101px
+   — que e a lista que ninguem chegou a ver.
+
+   A ANATOMIA DA ROLAGEM NAO E ESCRITA AQUI: vem do `.yb-track`, composto na
+   marcacao, como ja fazem `.yb-reviews`, `.yb-videos` e `.yb-logobar__track`.
+   Reescrever rolagem, encaixe e barra escondida neste bloco seria a quinta
+   copia da mesma anatomia — e o TRACK existe justamente porque havia quatro.
+   O que esta folha faz e o contrario: DESFAZ o trilho acima de 860, onde os
+   tres cabem lado a lado e nao ha o que rolar. */
+@media (max-width:860px){
+  /* `none` e nao `1fr`: com uma coluna explicita o `grid-auto-columns` do
+     trilho nao governa nada e os cartoes voltam a empilhar. */
+  .yb-posts--trio{
+    grid-template-columns:none;
+    /* 78% da largura util e o que deixa a previa do proximo cartao aparecer no
+       celular. O teto de 20rem e para a faixa de 560 a 860, onde 78% de 768
+       davam um cartao de 599px — um slide gigante por tela, que e o oposto de
+       um carrossel. Com o teto, a mesma regra da 2,2 cartoes no tablet e 1,3
+       no celular. */
+    --yb-track-item:min(78%, 20rem);
+    /* `gap` direto, e nao `--yb-track-gap`: `.yb-posts` declara `gap` em
+       valor fixo e vem DEPOIS do `.yb-track` na folha — a variavel do trilho
+       nunca seria lida aqui. */
+    gap:var(--yb-space-5);
+  }
+}
+@media (min-width:860.02px){
+  /* O `.yb-track` da marcacao continua valendo no desktop; estas tres linhas
+     sao o que sobra dele para desfazer. `grid-auto-flow:column` pode ficar:
+     com as tres colunas explicitas do trio ele coloca os cartoes nos mesmos
+     lugares. */
+  .yb-posts--trio{ padding-block:0; overflow-x:visible; scroll-snap-type:none; }
+}
+
+/* =========================================================================
+   VERTICAL VIDEO CAROUSEL
+   Conteúdo de creator em formato 9:16, como o TikTok serve.
+
+   Substitui o widget Reputon, que hoje desenha essa seção com layout próprio
+   — e é a única seção de app que dava para trazer para o sistema, porque ela
+   renderiza no DOM normal.
+
+   O vídeo começa como pôster: 45 vídeos autoplay é o que faz a home pesar.
+   Só carrega quando alguém pede.
+   ========================================================================= */
+.yb-videos{
+  --yb-track-item:minmax(210px, 240px);
+}
+/* rolagem, encaixe e barra escondida vem do .yb-track; aqui so a medida */
+@media (max-width:520px){ .yb-videos{ --yb-track-item:minmax(170px, 60vw); } }
+
+/* O cartao NAO e o botao. Era `<button class="yb-video">` com o `<video
+   controls>` injetado dentro — conteudo interativo dentro de botao e HTML
+   invalido, e na pratica os controles do video ficavam inalcancaveis pelo
+   teclado: o botao e uma parada de foco so, e o Tab nunca entra nele. */
+.yb-video{
+  position:relative; display:block; overflow:hidden;
+  aspect-ratio:var(--yb-aspect-reel); border-radius:var(--yb-radius-card);
+  background:var(--yb-bg-inverse); width:100%;
+}
+.yb-video img, .yb-video video{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+
+/* botão de play: alvo real de 56px, não um ícone decorativo de 20 */
+/* compoe .yb-iconbtn --onmedia; aqui so o tamanho maior e a posicao */
+.yb-video__play{
+  position:absolute; inset:0; margin:auto;
+  width:56px; height:56px;
+  transition:transform var(--yb-transition-control);
+}
+/* o clique cobre o cartao inteiro sem que o botao engula o video depois */
+.yb-video__play::after{content:""; position:absolute; inset:-100%}
+.yb-video__erro{
+  position:absolute; inset-inline:0; inset-block-end:0;
+  padding:var(--yb-space-2) var(--yb-space-3);
+  background:var(--yb-danger-surface); color:var(--yb-danger-text);
+  font-size:var(--yb-type-caption-size); text-align:center;
+}
+
+@media (hover:hover){
+  .yb-video:hover .yb-video__play{ transform:scale(1.06); }
+}
+.yb-video__play .yb-icon{ --yb-icon-size:var(--yb-icon-lg); margin-inline-start:3px; }
+.yb-video[data-playing="true"] .yb-video__play{ display:none; }
+/* Sem `data-video` nao ha o que tocar: o play some e o cartao deixa de se
+   oferecer como clicavel. Um botao que promete video e nao entrega e pior do
+   que nao ter botao. */
+.yb-video:not([data-video]) .yb-video__play{ display:none; }
+
+/* legenda opcional sobre o vídeo */
+.yb-video__caption{
+  position:absolute; inset-inline:var(--yb-space-3);
+  inset-block-end:var(--yb-space-3);
+  color:var(--yb-text-inverse); font-size:var(--yb-type-caption-size);
+  line-height:var(--yb-line-height-base); text-align:start;
+  text-shadow:var(--yb-elevation-text-media);
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .yb-video__play{ transition:none; }
+  .yb-video:hover .yb-video__play{ transform:none; }
+}
+
+/* =========================================================================
+   DROPDOWN — painel de links ancorado num gatilho
+
+   Extraído de `.yb-usermenu`, que era um "organismo" chamado Account menu. Não
+   era: na loja ele mora DENTRO de `.yb-header__actions`, e sozinho numa tela
+   não é nada — falhava a própria regra que o sistema declara para organismo.
+   O que havia ali de reaproveitável eram duas peças: o avatar (átomo) e este
+   dropdown.
+
+   Mesma mecânica do menu principal: checkbox escondido + painel irmão, zero
+   JS. Não é escolha de estilo — é a única que sobrevive com o JS fora do ar, e
+   o cabeçalho é a parte da página que mais precisa continuar funcionando.
+
+   O que ela custa está dito: o leitor de tela anuncia "caixa de seleção", não
+   "menu". O padrão da casa já aceita isso no menu principal; trocar aqui só
+   criaria duas mecânicas para a mesma coisa. Quando entrar um menu de verdade
+   (com `aria-expanded` e setas), ele troca os dois de uma vez.
+   ========================================================================= */
+.yb-dropdown{position:relative; display:flex; align-items:center}
+.yb-dropdown__toggle{position:absolute; opacity:0; pointer-events:none; width:1px; height:1px}
+.yb-dropdown__gatilho{
+  display:flex; align-items:center; justify-content:center;
+  inline-size:var(--yb-target-min); block-size:var(--yb-target-min);
+  cursor:pointer; border-radius:var(--yb-radius-pill);
+  color:var(--yb-text-primary);
+}
+@media (hover:hover){
+  .yb-dropdown__gatilho:hover .yb-avatar{background:var(--yb-bg-subtle)}
+}
+.yb-dropdown__toggle:focus-visible + .yb-dropdown__gatilho{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-dropdown__painel{
+  position:absolute; inset-block-start:100%; inset-inline-end:0;
+  /* 16rem e nao 14: com o avatar de 40px na cabeca, a coluna do texto caia
+     para 138px e o e-mail — que precisa de 152 — passou a truncar. Truncar o
+     e-mail derrota o motivo da cabeca existir, que e confirmar de quem e a
+     sessao. Medido com o e-mail mais longo que a loja tem. */
+  z-index:var(--yb-z-dropdown); min-inline-size:16rem;
+  background:var(--yb-surface-raised);
+  border:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-card);
+  box-shadow:var(--yb-elevation-dropdown);
+  padding-block:var(--yb-space-2);
+  opacity:0; visibility:hidden;
+  transition:opacity var(--yb-transition-surface), visibility var(--yb-transition-surface);
+}
+.yb-dropdown__toggle:checked ~ .yb-dropdown__painel{opacity:1; visibility:visible}
+/* Quem e, antes do que fazer. Sem isto o menu abre com quatro verbos e nenhuma
+   confirmacao de que a sessao e da pessoa certa — a duvida que faz alguem
+   clicar em "Account" so para conferir. */
+/* Grade, e nao flex com um <div> no meio: o avatar ocupa a coluna da esquerda
+   nas duas linhas, e nome e e-mail seguem irmaos diretos — o mesmo DOM de
+   antes, com um elemento a mais. `minmax(0,1fr)` e o que preserva a reticencia
+   do e-mail: com `1fr` puro a coluna cresce com o conteudo e nada trunca.
+   Aqui o avatar aparece em 40px, que e o unico lugar onde ele nao divide a
+   linha com mais nada — no cabecalho ele mede 32 e concorre com busca e
+   sacola. */
+.yb-dropdown__cabeca{
+  display:grid; grid-template-columns:auto minmax(0, 1fr);
+  gap:0 var(--yb-space-3); align-items:center;
+  padding:var(--yb-space-3) var(--yb-space-4);
+  border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  margin-block-end:var(--yb-space-2);
+}
+.yb-dropdown__cabeca .yb-avatar{grid-row:span 2}
+.yb-dropdown__nome{display:block; font-weight:var(--yb-font-weight-semibold)}
+.yb-dropdown__email{
+  display:block; font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted);
+  overflow:hidden; text-overflow:ellipsis;
+}
+.yb-dropdown__painel a{
+  display:flex; align-items:center; min-block-size:var(--yb-target-min);
+  padding-inline:var(--yb-space-4); gap:var(--yb-space-3);
+  color:var(--yb-text-primary); text-decoration:none;
+  font-size:var(--yb-type-body-sm-size);
+}
+@media (hover:hover){ .yb-dropdown__painel a:hover{background:var(--yb-bg-muted)} }
+.yb-dropdown__painel a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:calc(var(--yb-focus-offset) * -1);
+}
+/* Sair fica separado e em tom de apoio: e a unica acao do menu que desfaz
+   alguma coisa, e emparelhada com as outras vira quinto item de lista. */
+.yb-dropdown__sair{
+  margin-block-start:var(--yb-space-2);
+  border-block-start:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  padding-block-start:var(--yb-space-2);
+}
+.yb-dropdown__sair a{color:var(--yb-text-secondary)}
+/* No toque o dropdown do cabecalho nao existe — a regra mora no HEADER, na
+   folha dos blocos, porque e o contexto que decide. */

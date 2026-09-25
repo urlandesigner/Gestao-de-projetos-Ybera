@@ -1,0 +1,124 @@
+<h2>Modal</h2>
+    <p class="when">Janela que interrompe a página para pedir <b>uma</b> decisão, e some
+    com a resposta. Se não há decisão a tomar, use <a href="../molecules/toast.html">Toast</a>;
+    se o conteúdo é uma segunda tela para percorrer, use <a href="drawer.html">Drawer</a>.</p>
+
+    <h3 class="row-label">Os três tipos, abertos</h3>
+    <div class="stage stage--modais">
+
+      <p class="tipo-rotulo">1 · Destrutivo &mdash; a ação some algo</p>
+      <dialog open class="yb-dialog" aria-labelledby="t-destrutivo">
+        <div class="yb-dialog__head">
+          <h4 class="yb-dialog__title" id="t-destrutivo">Remove from cart?</h4>
+          <button type="button" class="yb-dialog__close" aria-label="Close">
+            <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
+        </div>
+        <div class="yb-dialog__body">
+          <p>Kit Sealant Fashion Gold — 500g / 17.6 fl oz will be removed from your cart.</p>
+        </div>
+        <div class="yb-dialog__foot">
+          <button type="button" class="yb-btn yb-btn--ghost">Keep it</button>
+          <button type="button" class="yb-btn yb-btn--danger">Remove</button>
+        </div>
+      </dialog>
+
+      <p class="tipo-rotulo">2 · Confirmação &mdash; a ação segue em frente</p>
+      <dialog open class="yb-dialog" aria-labelledby="t-confirma">
+        <div class="yb-dialog__head">
+          <h4 class="yb-dialog__title" id="t-confirma">Apply coupon SUMMER20?</h4>
+          <button type="button" class="yb-dialog__close" aria-label="Close">
+            <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
+        </div>
+        <div class="yb-dialog__body">
+          <p>It replaces WELCOME10, already on this order. Only one coupon per order.</p>
+        </div>
+        <div class="yb-dialog__foot">
+          <button type="button" class="yb-btn yb-btn--ghost">Cancel</button>
+          <button type="button" class="yb-btn yb-btn--primary">Apply</button>
+        </div>
+      </dialog>
+
+      <p class="tipo-rotulo">3 · Formulário &mdash; o corpo é o formulário</p>
+      <dialog open id="dlg-review" class="yb-dialog" aria-labelledby="dlg-review-t">
+        <div class="yb-dialog__head">
+          <h3 class="yb-dialog__title" id="dlg-review-t">Write a review</h3>
+          <button class="yb-dialog__close" aria-label="Close"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
+        </div>
+        <form class="yb-dialog__body"
+              onsubmit="Ybera.toast({title:'Thanks — your review is in review',text:'We publish it once it is checked.',variant:'success'}); this.closest('dialog').close(); return false">
+          <div class="yb-field">
+            <label class="yb-field__label" for="rvd-nota">Your rating</label>
+            <select class="yb-select" id="rvd-nota" required>
+              <option value="5">5 — loved it</option>
+              <option value="4">4 — good</option>
+              <option value="3">3 — it is fine</option>
+              <option value="2">2 — not for me</option>
+              <option value="1">1 — disappointed</option>
+            </select>
+          </div>
+          <div class="yb-field">
+            <label class="yb-field__label" for="rvd-texto">Your review</label>
+            <textarea class="yb-textarea" id="rvd-texto" rows="4"
+                      placeholder="What changed in your hair, and how long it took." required></textarea>
+          </div>
+          <div class="yb-field">
+            <label class="yb-field__label" for="rvd-email">Email</label>
+            <input class="yb-input" id="rvd-email" type="email" autocomplete="email" required>
+            <p class="yb-field__hint">Only to confirm the purchase. It is never published.</p>
+          </div>
+          <div class="yb-dialog__foot">
+            <button class="yb-btn yb-btn--ghost" type="button">Cancel</button>
+            <button class="yb-btn yb-btn--primary" type="submit">Submit review</button>
+          </div>
+        </form>
+      </dialog>
+    </div>
+
+    <h3 class="row-label">Funcionando</h3>
+    <div class="demo">
+      <button type="button" class="yb-btn yb-btn--ghost" data-yb-open="dlg-remove">Abrir de verdade</button>
+    </div>
+
+    <div class="note">
+      <b>Três tipos, um componente</b>
+      <p>A folha não tem variante de modal: os três são a mesma
+      <code>.yb-dialog</code>, e o que muda é o pé. <b>Destrutivo</b> leva a ação em
+      <code>--danger</code> e a saída em <code>--ghost</code>; <b>confirmação</b> troca
+      o vermelho pelo <code>--primary</code>; <b>formulário</b> não tem pé — o
+      <code>.yb-dialog__body</code> <b>é</b> o <code>&lt;form&gt;</code>, e o botão de
+      enviar mora dentro dele.</p>
+      <p>Modal de um botão só é aviso, e aviso não interrompe: é
+      <a href="../molecules/toast.html">Toast</a>.</p>
+    </div>
+    <div class="note">
+      <b>É <code>&lt;dialog&gt;</code> nativo</b>
+      <p>Foco preso, <kbd>Esc</kbd> e backdrop vêm do navegador. O JS só abre,
+      fecha no clique fora e <b>devolve o foco a quem abriu</b> — sem isso o leitor
+      de tela volta ao topo da página depois de fechar.</p>
+      <p>Os três acima estão <code>open</code> e em fluxo, para caberem na mesma
+      tela. O botão acima abre um de verdade, com véu e foco preso.</p>
+    </div>
+    <div class="note">
+      <b>No celular o pé inverte</b>
+      <p>Abaixo de 520px o <code>.yb-dialog__foot</code> vira
+      <code>column-reverse</code> com botões de largura cheia: a ação principal fica
+      embaixo, onde o polegar alcança, e continua sendo a primeira na ordem do
+      teclado.</p>
+    </div>
+
+    <dialog id="dlg-remove" class="yb-dialog" aria-labelledby="dlg-remove-t">
+      <div class="yb-dialog__head">
+        <h3 class="yb-dialog__title" id="dlg-remove-t">Remove from cart?</h3>
+        <button type="button" class="yb-dialog__close" data-yb-close aria-label="Close">×</button>
+      </div>
+      <div class="yb-dialog__body">
+        <p>Kit Sealant Fashion Gold — 500g / 17.6 fl oz will be removed from your cart.</p>
+      </div>
+      <div class="yb-dialog__foot">
+        <button type="button" class="yb-btn yb-btn--ghost" data-yb-close>Keep it</button>
+        <button type="button" class="yb-btn yb-btn--danger" data-yb-close
+          data-yb-toast data-toast-titulo="Removed from cart"
+          data-toast-texto="Kit Sealant Fashion Gold"
+          data-toast-variante="danger">Remove</button>
+      </div>
+    </dialog>

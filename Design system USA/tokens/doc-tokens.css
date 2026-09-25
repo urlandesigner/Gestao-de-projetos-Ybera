@@ -1,0 +1,221 @@
+/* ===========================================================================
+   CROMO DA DOC DE TOKENS
+
+   Era um <style> dentro de tokens/index.html, quando a fundação inteira cabia
+   numa página só. Com as nove seções virando nove páginas, ele precisou sair
+   para uma folha — nove cópias do mesmo bloco divergiriam na primeira vez que
+   alguém mexesse numa delas.
+   O que era MOLDURA saiu daqui: `body`, `.doc`, `.nav*` e `.main` agora vêm de
+   doc/doc.css e doc/doc-nav.css, que toda página de doc carrega. Ficou só o que
+   é desta doc: as amostras de cor, as escalas, os quadros de elevação.
+
+   O seletor de tipo `section{}` saiu junto. Ele pintava a seção da página
+   antiga; nas páginas geradas ele alcançaria qualquer <section>, inclusive a
+   dos blocos da ficha — é o mesmo vazamento que o validador já cobra em
+   `components/`.
+   =========================================================================== */
+html{scroll-behavior:smooth}
+code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+
+/* layout */
+/* itens de grid têm min-width:auto por padrão — sem isto, um <pre> largo
+   empurra a coluna inteira e cria scroll horizontal no mobile */
+pre{max-width:100%}
+code{overflow-wrap:anywhere}
+/* nota lateral — mesma receita das galerias de cada degrau */
+.note{margin-top:var(--yb-space-4);padding:var(--yb-space-4) var(--yb-space-5);
+  background:var(--yb-info-surface);border-left:3px solid var(--yb-info-solid);
+  border-radius:0 var(--yb-radius-sm) var(--yb-radius-sm) 0;max-width:74ch;
+  font-size:var(--yb-type-body-sm-size);color:var(--yb-text-secondary)}
+
+
+@media (max-width:900px){.main{padding:var(--yb-space-10) var(--yb-page-gutter)}}
+
+.facts{display:flex; flex-wrap:wrap; gap:var(--yb-space-2); margin-bottom:var(--yb-space-16)}
+.fact{
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-badge);
+  padding:var(--yb-space-2) var(--yb-space-3); font-size:var(--yb-type-caption-size);
+  color:var(--yb-text-secondary); background:var(--yb-surface);
+}
+.fact b{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
+
+h3.sub{
+  font-size:var(--yb-type-h4-size); font-weight:var(--yb-type-h4-weight);
+  letter-spacing:var(--yb-type-h4-track); margin:var(--yb-space-10) 0 var(--yb-space-4);
+}
+
+/* regra dura */
+.rule{
+  border-left:3px solid var(--yb-danger-solid); background:var(--yb-danger-surface);
+  padding:var(--yb-space-4) var(--yb-space-5); border-radius:0 var(--yb-radius-sm) var(--yb-radius-sm) 0;
+  margin:var(--yb-space-6) 0; max-width:70ch;
+}
+.rule b{
+  display:block; font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; color:var(--yb-danger-text); margin-bottom:var(--yb-space-2);
+  font-weight:var(--yb-font-weight-semibold);
+}
+.rule p{margin:0; font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
+
+/* swatches */
+.ramp{display:flex; flex-direction:column; gap:var(--yb-space-1); margin-bottom:var(--yb-space-8)}
+.sw{display:grid; grid-template-columns:76px 1fr; gap:var(--yb-space-4); align-items:center}
+.sw.is-key .sw-meta code{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
+.sw-chip{
+  height:44px; border-radius:var(--yb-radius-sm);
+  border:1px solid rgba(30,30,31,.08);
+}
+.sw-meta{display:flex; align-items:center; gap:var(--yb-space-3); flex-wrap:wrap}
+.sw-meta code{color:var(--yb-text-secondary)}
+.sw-hex{font-family:var(--yb-font-family-mono); font-size:.75rem; color:var(--yb-text-muted)}
+.sw-cr{
+  font-family:var(--yb-font-family-mono); font-size:.6875rem; color:var(--yb-text-muted);
+  font-variant-numeric:tabular-nums;
+}
+.sw-cr[data-tag="AAA"],.sw-cr[data-tag="AA"]{color:var(--yb-success-text)}
+/* era --yb-text-disabled (gray-400, 2.14:1): é rótulo informativo, não
+   componente inativo — não tem isenção nenhuma. Vai para o piso. */
+.sw-cr[data-tag="—"]{color:var(--yb-text-muted)}
+.sw-note{
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wide);
+  text-transform:uppercase; font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-magenta-600); border:1px solid var(--yb-magenta-300);
+  background:var(--yb-magenta-50); padding:2px var(--yb-space-2); border-radius:var(--yb-radius-badge);
+}
+
+/* tipografia */
+.ty{
+  display:grid; grid-template-columns:230px 1fr; gap:var(--yb-space-6);
+  padding:var(--yb-space-5) 0; border-bottom:1px solid var(--yb-border-subtle); align-items:baseline;
+}
+@media (max-width:760px){.ty{grid-template-columns:1fr; gap:var(--yb-space-2)}}
+.ty-label{display:flex; flex-direction:column; gap:var(--yb-space-1)}
+.ty-label code{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-medium)}
+.ty-label span{font-family:var(--yb-font-family-mono); font-size:.6875rem; color:var(--yb-text-muted)}
+.ty-label em{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted); font-style:normal}
+.ty-sample{color:var(--yb-text-primary); overflow-wrap:anywhere}
+.ty--display-1{font-size:var(--yb-type-display-1-size);line-height:var(--yb-type-display-1-line);letter-spacing:var(--yb-type-display-1-track);font-weight:var(--yb-type-display-1-weight)}
+.ty--display-2{font-size:var(--yb-type-display-2-size);line-height:var(--yb-type-display-2-line);letter-spacing:var(--yb-type-display-2-track);font-weight:var(--yb-type-display-2-weight)}
+.ty--h1{font-size:var(--yb-type-h1-size);line-height:var(--yb-type-h1-line);letter-spacing:var(--yb-type-h1-track);font-weight:var(--yb-type-h1-weight)}
+.ty--h2{font-size:var(--yb-type-h2-size);line-height:var(--yb-type-h2-line);letter-spacing:var(--yb-type-h2-track);font-weight:var(--yb-type-h2-weight)}
+.ty--h3{font-size:var(--yb-type-h3-size);line-height:var(--yb-type-h3-line);letter-spacing:var(--yb-type-h3-track);font-weight:var(--yb-type-h3-weight)}
+.ty--h4{font-size:var(--yb-type-h4-size);line-height:var(--yb-type-h4-line);letter-spacing:var(--yb-type-h4-track);font-weight:var(--yb-type-h4-weight)}
+.ty--body-lg{font-size:var(--yb-type-body-lg-size);line-height:var(--yb-type-body-lg-line);font-weight:var(--yb-type-body-lg-weight)}
+.ty--body{font-size:var(--yb-type-body-size);line-height:var(--yb-type-body-line);font-weight:var(--yb-type-body-weight)}
+.ty--body-sm{font-size:var(--yb-type-body-sm-size);line-height:var(--yb-type-body-sm-line);font-weight:var(--yb-type-body-sm-weight)}
+.ty--caption{font-size:var(--yb-type-caption-size);line-height:var(--yb-type-caption-line);font-weight:var(--yb-type-caption-weight)}
+.ty--overline{font-size:var(--yb-type-overline-size);line-height:var(--yb-type-overline-line);letter-spacing:var(--yb-type-overline-track);font-weight:var(--yb-type-overline-weight);text-transform:uppercase}
+
+/* espaço / raio / elevação / estado */
+.sp{display:grid; grid-template-columns:150px 1fr 60px; gap:var(--yb-space-4); align-items:center; padding:var(--yb-space-2) 0}
+@media (max-width:520px){.sp{grid-template-columns:110px 1fr 48px; gap:var(--yb-space-2)}}
+.sp code{color:var(--yb-text-secondary)}
+/* a barra representa o valor do token, mas nunca pode empurrar o layout:
+   em 320px a coluna disponível é menor que --yb-space-24 (96px) */
+.sp-bar{height:16px; background:var(--yb-magenta-600); border-radius:2px; max-width:100%}
+.sp span{font-family:var(--yb-font-family-mono); font-size:.75rem; color:var(--yb-text-muted); text-align:right}
+
+.grid4{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:var(--yb-space-5)}
+.rd,.el{display:flex; flex-direction:column; gap:var(--yb-space-2)}
+.rd-box{height:72px; background:var(--yb-gray-950)}
+.el-box{height:72px; background:var(--yb-surface); border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card)}
+.rd code,.el code{color:var(--yb-text-secondary)}
+.rd span,.el span{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+
+/* Media & control: caixa de proporcao, barra de medida, degrau de altura */
+.ar,.ct{display:flex; flex-direction:column; gap:var(--yb-space-2)}
+.ar-box{background:var(--yb-bg-muted); border:1px solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-media)}
+.ar code,.ct code{color:var(--yb-text-secondary)}
+.ar span,.ct span{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+.ct-box{background:var(--yb-gray-950); border-radius:var(--yb-radius-control);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--yb-white); font-size:var(--yb-type-caption-size)}
+.ms{border-inline-start:2px solid var(--yb-accent-border); padding-inline-start:var(--yb-space-4);
+  margin-bottom:var(--yb-space-5)}
+.ms p{margin:0 0 var(--yb-space-1); color:var(--yb-text-secondary);
+  font-size:var(--yb-type-body-sm-size)}
+.ms code{color:var(--yb-text-secondary)}
+.st{display:flex; flex-direction:column; gap:var(--yb-space-2); margin-bottom:var(--yb-space-4)}
+.st-banner{padding:var(--yb-space-3) var(--yb-space-4); border-radius:var(--yb-radius-sm);
+  border-left:3px solid; font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-medium)}
+.st code{color:var(--yb-text-secondary)}
+.st span{font-family:var(--yb-font-family-mono); font-size:.6875rem; color:var(--yb-text-muted)}
+
+/* layers */
+.layers{display:flex; flex-direction:column; gap:var(--yb-space-3)}
+.layer{
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-card);
+  padding:var(--yb-space-4) var(--yb-space-5); background:var(--yb-surface);
+}
+.layer h3{margin:0 0 var(--yb-space-2); font-size:var(--yb-type-body-size); font-weight:var(--yb-font-weight-semibold)}
+.layer p{margin:0 0 var(--yb-space-2); font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
+.layer pre{
+  margin:0; padding:var(--yb-space-3); background:var(--yb-bg-muted);
+  border-radius:var(--yb-radius-sm); overflow-x:auto;
+  font-family:var(--yb-font-family-mono); font-size:.75rem; color:var(--yb-text-primary);
+}
+.layer--0{border-left:3px solid var(--yb-gray-400)}
+.layer--1{border-left:3px solid var(--yb-magenta-600)}
+.layer--2{border-left:3px solid var(--yb-gray-300)}
+.layer--m{border-left:3px solid var(--yb-gold-600)}
+
+/* .doc-credit e nao `footer`: seletor de elemento solto numa pagina que
+   exibe componentes vaza para dentro do demo. O `max-width:70ch` daqui
+   estava esmagando o footer do sistema a 599px. */
+.doc-credit{
+  border-top:1px solid var(--yb-border-subtle); padding-top:var(--yb-space-6);
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted); max-width:70ch;
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
+
+/* ===========================================================================
+   QUEM USA — a lista de consumidores pendurada em cada amostra.
+
+   Escrita por tools/tokens-uso.mjs a cada build, e nao no fragmento: ela muda
+   a cada regra de CSS que alguem escreve.
+
+   `<details>` fechado por padrao, e de proposito. A pagina de cor tem 77
+   amostras; setenta e sete listas abertas afogariam as proprias amostras, que
+   sao o assunto. Fechado, cada uma custa uma linha e o numero — que ja e a
+   metade util da resposta: "41 componentes" diz para pensar duas vezes antes
+   de mexer, mesmo sem abrir.
+   =========================================================================== */
+.uso{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+  /* Em pai de GRADE a anotacao toma a linha inteira. A escala de espaco e uma
+     grade de tres colunas (nome, barra, valor); entrando como quarto item, ela
+     empurrava o valor para a linha de baixo e desalinhava a barra. Em pai de
+     flex (as amostras de cor, os raios) a declaracao e inerte, que e o que se
+     quer: uma regra so, para todas as formas de amostra que a doc tem. */
+  grid-column:1/-1; justify-self:start}
+.uso > summary{
+  cursor:pointer; list-style:none; display:inline-flex; align-items:center;
+  gap:var(--yb-space-1); padding-block:var(--yb-space-1);
+  /* alvo pequeno numa lista densa: o alvo e a linha inteira do resumo, e a
+     amostra ao lado ja da a folga vertical. Abaixo do minimo de 44px com
+     razao declarada, como o `.yb-check` da lista empilhada. */
+  color:var(--yb-text-secondary);
+}
+.uso > summary::-webkit-details-marker{display:none}
+.uso > summary::before{
+  content:"›"; display:inline-block; transition:transform var(--yb-transition-control);
+  color:var(--yb-text-muted);
+}
+.uso[open] > summary::before{transform:rotate(90deg)}
+.uso > summary:hover{color:var(--yb-text-primary)}
+.uso > summary:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset); border-radius:var(--yb-radius-sm);
+}
+.uso__lista{
+  margin:var(--yb-space-1) 0 0; padding:var(--yb-space-2) var(--yb-space-3);
+  list-style:none; display:flex; flex-direction:column; gap:var(--yb-space-1);
+  background:var(--yb-bg-subtle); border-radius:var(--yb-radius-sm);
+  max-block-size:14rem; overflow-y:auto;
+}
+.uso__lista a{color:var(--yb-text-primary); text-decoration:none}
+.uso__lista a:hover{text-decoration:underline}
+.uso__lista code{color:var(--yb-text-muted)}
+/* Nao e defeito, e informacao: degrau de rampa que ninguem consome continua
+   sendo vocabulario. Por isso cinza, e nao vermelho. */
+.uso--zero{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted); font-style:italic}

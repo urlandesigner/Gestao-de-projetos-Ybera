@@ -1,0 +1,38 @@
+<h2>Drawer</h2>
+    <p class="when">Segunda tela, ancorada na lateral e com a altura cheia. Serve ao que
+    a pessoa <b>percorre</b> — carrinho, filtros, menu. Para pedir uma decisão e sumir,
+    use <a href="dialog.html">Modal</a>.</p>
+    <div class="demo">
+      <button type="button" class="yb-btn yb-btn--primary" data-yb-open="drw-demo">Abrir gaveta</button>
+    </div>
+    <div class="note">
+      <b>É o mesmo <code>&lt;dialog&gt;</code>, com outra ancoragem</b>
+      <p>Duas famílias no mesmo elemento: <code>class="yb-dialog yb-drawer"</code>.
+      A primeira traz a janela, o foco preso e o backdrop do navegador; a segunda troca
+      a largura, a altura e quem rola. Era <code>.yb-dialog--drawer</code>, e o nome
+      dizia que gaveta era uma variação de modal &mdash; são duas decisões diferentes.</p>
+    </div>
+    <div class="note">
+      <b>O meio é de quem usa</b>
+      <p>A gaveta entrega cabeça, pé e a rolagem entre os dois. O corpo fica vazio de
+      propósito: ele é a única parte que muda de uso para uso, e enchê-lo aqui com um
+      carrinho ensinava que gaveta é carrinho. O exemplo montado está em
+      <a href="cart-drawer.html">Cart drawer</a>.</p>
+      <p><code>display:flex</code> só no <code>[open]</code>: regra de autor vence a
+      folha do navegador por origem, e um <code>flex</code> solto derruba o
+      <code>dialog:not([open]){display:none}</code> da UA &mdash; a gaveta aparece
+      fechada, grudada na lateral. Já aconteceu.</p>
+    </div>
+
+    <dialog id="drw-demo" class="yb-dialog yb-drawer" aria-labelledby="drw-demo-t">
+      <div class="yb-dialog__head">
+        <h3 class="yb-dialog__title" id="drw-demo-t">Filters</h3>
+        <button type="button" class="yb-dialog__close" data-yb-close aria-label="Close">
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg>
+        </button>
+      </div>
+      <div class="yb-dialog__body"></div>
+      <div class="yb-dialog__foot">
+        <button type="button" class="yb-btn yb-btn--primary yb-btn--block" data-yb-close>Apply</button>
+      </div>
+    </dialog>

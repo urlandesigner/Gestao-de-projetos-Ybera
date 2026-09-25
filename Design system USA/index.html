@@ -11,11 +11,16 @@
 <link rel="stylesheet" href="tokens/01-semantic.css">
 <style>
 *{box-sizing:border-box}
+/* Coluna, e nao linha centrada. O `body` era `display:flex` com
+   `align-items:center` para centralizar o <main> — e quando a barra de areas
+   entrou, ela virou um SEGUNDO item da mesma linha: apareceu ao lado do
+   conteudo, no meio da altura da pagina. A barra e a primeira faixa; o respiro
+   e a largura de leitura descem para o <main>, que e de quem eram. */
 body{margin:0;background:var(--yb-bg-page);color:var(--yb-text-primary);
   font-family:var(--yb-font-family-base);-webkit-font-smoothing:antialiased;
-  display:flex;align-items:center;justify-content:center;min-height:100vh;
-  padding:var(--yb-space-8)}
-main{max-width:880px;width:100%}
+  display:flex;flex-direction:column;min-height:100vh}
+main{max-width:var(--doc-medida);width:100%;margin-inline:auto;
+  padding:var(--yb-space-8) var(--doc-respiro) var(--yb-space-20)}
 h1{font-size:var(--yb-type-display-2-size);line-height:var(--yb-type-display-2-line);
   letter-spacing:var(--yb-type-display-2-track);font-weight:var(--yb-type-display-2-weight);
   margin:0 0 var(--yb-space-3)}
@@ -49,7 +54,7 @@ a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
 .grupo > p{margin:calc(var(--yb-space-2) * -1) 0 var(--yb-space-4);
   font-size:var(--yb-type-body-sm-size);color:var(--yb-text-secondary);max-width:62ch}
 /* As telas sao 13 e vinham numa fileira so. Os sub-grupos separam o que e
-   variacao da MESMA tela do que e tela diferente — "PDP v2" ao lado de "404"
+   variacao da MESMA tela do que e tela diferente — "PDP esgotada" ao lado de "404"
    pesava igual, e nao e a mesma pergunta. */
 /* `subgrupo`, e nao `sub`: a classe `sub` ja era o subtitulo da capa, com
    `max-width:56ch`. Reusar o nome espremeu a grade das telas em 616px onde
@@ -61,6 +66,19 @@ a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
    hierarquia que nao existe. O tamanho continua o de rotulo de grupo; o que
    mudou foi so o nivel semantico. O nome da secao segue no `aria-label`, para
    quem navega por regioes. */
+.subgrupo > h3 a{color:inherit;text-decoration:none;border-bottom:1px solid var(--yb-border)}
+.subgrupo > h3 a:hover{color:var(--yb-text-primary);border-bottom-color:var(--yb-text-primary)}
+.subgrupo > h3 a:focus-visible{outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset)}
+.subgrupo > h3{font-size:var(--yb-type-overline-size);
+  letter-spacing:var(--yb-tracking-wider);text-transform:uppercase;
+  font-weight:var(--yb-font-weight-semibold);color:var(--yb-text-muted);
+  margin:0 0 var(--yb-space-1);display:flex;align-items:center;gap:var(--yb-space-2)}
+/* A linha do subgrupo diz o que o grupo É, e não o que ele contém — a lista de
+   cartões abaixo já diz isso. Sem ela, "Fundação" e "Componentes" ficam sendo
+   dois rótulos e nenhuma explicação de por que são dois. */
+.subgrupo-lede{color:var(--yb-text-secondary);font-size:var(--yb-type-body-sm-size);
+  margin:0 0 var(--yb-space-4);max-width:62ch}
 .subgrupo > h2{margin:0 0 var(--yb-space-3);font-size:var(--yb-type-body-sm-size);
   font-weight:var(--yb-font-weight-semibold);color:var(--yb-text-secondary);
   display:flex;align-items:center;gap:var(--yb-space-2)}
@@ -68,55 +86,222 @@ a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
   color:var(--yb-text-muted);background:var(--yb-surface-sunken);
   border-radius:var(--yb-radius-badge);padding:0 var(--yb-space-2)}
 </style>
+<link rel="stylesheet" href="doc/doc-nav.css">
+<script src="doc/doc.js" defer></script>
 </head>
-<body>
+<body data-moldura="centrada">
+<!-- @moldura · gerada por tools/moldura.mjs · não edite -->
+<header class="ds-top">
+  <a class="ds-top__marca" href="index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
+  <div class="ds-top__busca" hidden>
+    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
+    <input id="ds-filtro" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filtro>
+    <p class="nav-conta" role="status" aria-live="polite"></p>
+  </div>
+  <p class="ds-top__versao">v0.12.1</p>
+</header>
+<nav class="ds-nav" aria-label="Navegação do design system">
+  <ul class="ds-nav__solta">
+    <li><a href="index.html" aria-current="page"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 7 8 2.5 13.5 7"/><path d="M4 6.5V13h8V6.5"/><path d="M6.5 13V9.5h3V13"/></svg>Início</a></li>
+  </ul>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5.5 8 3l6 2.5L8 8 2 5.5Z"/><path d="M2 8.8 8 11.3l6-2.5"/><path d="M2 12l6 2.5 6-2.5"/></svg>Fundação</summary>
+    <ul>
+      <li><a href="tokens/index.html">Visão geral</a></li>
+      <li><a href="tokens/architecture.html">Architecture</a></li>
+      <li><a href="tokens/color.html">Color</a></li>
+      <li><a href="tokens/typography.html">Typography</a></li>
+      <li><a href="tokens/space.html">Space</a></li>
+      <li><a href="tokens/shape.html">Shape</a></li>
+      <li><a href="tokens/elevation.html">Elevation</a></li>
+      <li><a href="tokens/state.html">State</a></li>
+      <li><a href="tokens/usage.html">How to use</a></li>
+      <li><a href="icons/index.html">Ícones</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Componentes</summary>
+    <ul>
+      <li><a href="molecules/accordion.html">Accordion</a></li>
+      <li><a href="molecules/alert.html">Alert</a></li>
+      <li><a href="atoms/avatar.html">Avatar</a></li>
+      <li><a href="atoms/badge.html">Badge</a></li>
+      <li><a href="molecules/bannerhero.html">Banner hero</a></li>
+      <li><a href="molecules/bannermedia.html">Banner media</a></li>
+      <li><a href="molecules/crumb.html">Breadcrumb</a></li>
+      <li><a href="atoms/button.html">Button</a></li>
+      <li><a href="molecules/offercard.html">Card offer</a></li>
+      <li><a href="molecules/card.html">Card product</a></li>
+      <li><a href="atoms/seals.html">Certification seals</a></li>
+      <li><a href="atoms/checkbox.html">Checkbox</a></li>
+      <li><a href="atoms/chip.html">Chip</a></li>
+      <li><a href="molecules/collection.html">Collection card</a></li>
+      <li><a href="molecules/dropdown.html">Dropdown</a></li>
+      <li><a href="molecules/empty.html">Empty state</a></li>
+      <li><a href="atoms/iconbtn.html">Icon button</a></li>
+      <li><a href="atoms/input.html">Input</a></li>
+      <li><a href="atoms/link.html">Link</a></li>
+      <li><a href="atoms/logo.html">Logo</a></li>
+      <li><a href="atoms/notice.html">Notice</a></li>
+      <li><a href="atoms/offerseal.html">Offer seal</a></li>
+      <li><a href="molecules/pagination.html">Pagination</a></li>
+      <li><a href="molecules/partner.html">Partner</a></li>
+      <li><a href="molecules/post.html">Post</a></li>
+      <li><a href="molecules/price.html">Price</a></li>
+      <li><a href="atoms/progress.html">Progress bar</a></li>
+      <li><a href="molecules/stepper.html">Quantity stepper</a></li>
+      <li><a href="atoms/radio.html">Radio</a></li>
+      <li><a href="molecules/rating.html">Rating</a></li>
+      <li><a href="molecules/review.html">Review</a></li>
+      <li><a href="atoms/select.html">Select</a></li>
+      <li><a href="atoms/skeleton.html">Skeleton</a></li>
+      <li><a href="atoms/stars.html">Stars</a></li>
+      <li><a href="atoms/switch.html">Switch</a></li>
+      <li><a href="atoms/textarea.html">Textarea</a></li>
+      <li><a href="molecules/toast.html">Toast</a></li>
+      <li><a href="molecules/track.html">Track</a></li>
+      <li><a href="molecules/variant.html">Variant picker</a></li>
+      <li><a href="molecules/video.html">Vertical video carousel</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2.5" width="12" height="3" rx="1"/><rect x="2" y="6.8" width="12" height="3" rx="1"/><rect x="2" y="11.1" width="12" height="2.4" rx="1"/></svg>Blocos</summary>
+    <ul>
+      <li><a href="organisms/quote.html">Brand quote</a></li>
+      <li><a href="organisms/buybox.html">Buy box</a></li>
+      <li><a href="organisms/cart-drawer.html">Cart drawer</a></li>
+      <li><a href="organisms/catalog.html">Catalog</a></li>
+      <li><a href="organisms/drawer.html">Drawer</a></li>
+      <li><a href="organisms/faq.html">FAQ</a></li>
+      <li><a href="organisms/footer.html">Footer</a></li>
+      <li><a href="organisms/shipping-progress.html">Free shipping progress</a></li>
+      <li><a href="organisms/gallery.html">Gallery</a></li>
+      <li><a href="organisms/header.html">Header</a></li>
+      <li><a href="organisms/hero.html">Hero</a></li>
+      <li><a href="organisms/logobar.html">Logo bar</a></li>
+      <li><a href="organisms/manifesto.html">Manifesto</a></li>
+      <li><a href="organisms/dialog.html">Modal</a></li>
+      <li><a href="organisms/nav.html">Nav</a></li>
+      <li><a href="organisms/search.html">Search overlay</a></li>
+      <li><a href="organisms/split.html">Split</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3.5" width="9" height="9" rx="1.5"/><path d="M5.5 3.5V1.5h9v9h-2"/></svg>Exemplos</summary>
+    <ul>
+      <li><a href="pages/index.html">Visão geral</a></li>
+      <li><a href="pages/home.html" target="_blank" rel="noopener">Home v1<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="pages/index-v2.html" target="_blank" rel="noopener">Home v2<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="pages/index-v3.html" target="_blank" rel="noopener">Home v3<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="pages/index-logado.html" target="_blank" rel="noopener">Home · cliente logado<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="pages/pdp.html" target="_blank" rel="noopener">PDP<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="pages/pdp-influencer.html" target="_blank" rel="noopener">PDP link influencer<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="pages/pdp-esgotado.html" target="_blank" rel="noopener">PDP esgotada<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="pages/pdp-variante.html" target="_blank" rel="noopener">PDP com variante<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="pages/pdp-oferta.html" target="_blank" rel="noopener">PDP em promoção<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="pages/faq.html" target="_blank" rel="noopener">FAQ<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="pages/404.html" target="_blank" rel="noopener">404<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+    </ul>
+  </details>
+  <ul class="ds-nav__solta">
+    <li><a href="preview/index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3" width="13" height="8.5" rx="1.5"/><path d="M5.5 14h5"/><path d="M8 11.5V14"/></svg>Preview</a></li>
+  </ul>
+</nav>
+<!-- /@moldura -->
 <main>
   <!-- Volta para o catalogo. So faz sentido publicado, onde `../` e o indice de
        protótipos; local ele cai na pasta acima e nao machuca ninguem. Sem ele,
        quem chega pelo catalogo entra e nao tem como voltar. -->
   <a class="voltar" href="../">← Protótipos</a>
   <h1>Ybera Design System</h1>
-  <p class="sub">Fundação, componentes e padrões.</p>
+  <p class="sub">Atomic design, do token à página: cada degrau carrega o de baixo, e o build reprova quem sobe sem carregar.</p>
   <section class="grupo" aria-label="Telas montadas com o sistema">
     <div class="subgrupo">
       <h2>Home <span class="conta">4</span></h2>
       <div class="grid">
-        <a class="tile" href="_captura/nova-loja/"><b>Home v1</b><span>construída com os componentes do sistema, conteúdo real</span></a>
-        <a class="tile" href="_captura/nova-loja/index-v2.html"><b>Home v2</b><span>a mesma loja na gramática de e-commerce dos EUA — mesmas peças, outra ordem</span></a>
-        <a class="tile" href="_captura/nova-loja/index-v3.html"><b>Home v3</b><span>catorze seções na ordem que o time pediu — a v2 sem o quiz, sem o bloco de autoridade e sem o FAQ curto</span></a>
-        <a class="tile" href="_captura/nova-loja/index-logado.html"><b>Home · cliente logado</b><span>a v2 com sessão aberta — o ícone de conta vira a inicial e abre o menu da conta</span></a>
+        <a class="tile" href="pages/home.html" target="_blank" rel="noopener"><b>Home v1</b><span>construída com os componentes do sistema, conteúdo real</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
+        <a class="tile" href="pages/index-v2.html" target="_blank" rel="noopener"><b>Home v2</b><span>a mesma loja na gramática de e-commerce dos EUA — mesmas peças, outra ordem</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
+        <a class="tile" href="pages/index-v3.html" target="_blank" rel="noopener"><b>Home v3</b><span>catorze seções na ordem que o time pediu — a v2 sem o quiz, sem o bloco de autoridade e sem o FAQ curto</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
+        <a class="tile" href="pages/index-logado.html" target="_blank" rel="noopener"><b>Home · cliente logado</b><span>a v2 com sessão aberta — o ícone de conta vira a inicial e abre o menu da conta</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
       </div>
     </div>
 
     <div class="subgrupo">
       <h2>Produto <span class="conta">5</span></h2>
       <div class="grid">
-        <a class="tile" href="_captura/nova-loja/pdp.html"><b>PDP v1</b><span>galeria, bloco de compra e acordeão do sistema</span></a>
-        <a class="tile" href="_captura/nova-loja/pdp-v2.html"><b>PDP v2</b><span>seis blocos: faixa, recado do parceiro, compra, relacionados e avaliações — sem breadcrumb e sem acordeão de navegação</span></a>
-        <a class="tile" href="_captura/nova-loja/pdp-esgotado.html"><b>PDP esgotada</b><span>o mesmo bloco de compra sem estoque — 41 dos 116 produtos da loja estão assim hoje</span></a>
-        <a class="tile" href="_captura/nova-loja/pdp-variante.html"><b>PDP com variante</b><span>seletor de tamanho movendo preço, estoque e foto — tamanhos e preços forjados, nenhum produto da loja tem opção</span></a>
-        <a class="tile" href="_captura/nova-loja/pdp-oferta.html"><b>PDP em promoção</b><span>preço anterior riscado e selo &ldquo;Save 28%&rdquo; — preço anterior forjado, a loja não preenche <code>compare_at_price</code> em nenhum produto</span></a>
+        <a class="tile" href="pages/pdp.html" target="_blank" rel="noopener"><b>PDP</b><span>compra, relacionados e avaliações — sem breadcrumb, sem acordeão de navegação e sem recado de parceiro</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
+        <a class="tile" href="pages/pdp-influencer.html" target="_blank" rel="noopener"><b>PDP link influencer</b><span>a mesma PDP de quem chega por link patrocinado — o recado do parceiro na faixa abaixo do cabeçalho</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
+        <a class="tile" href="pages/pdp-esgotado.html" target="_blank" rel="noopener"><b>PDP esgotada</b><span>o mesmo bloco de compra sem estoque — 41 dos 116 produtos da loja estão assim hoje</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
+        <a class="tile" href="pages/pdp-variante.html" target="_blank" rel="noopener"><b>PDP com variante</b><span>seletor de tamanho movendo preço, estoque e foto — tamanhos e preços forjados, nenhum produto da loja tem opção</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
+        <a class="tile" href="pages/pdp-oferta.html" target="_blank" rel="noopener"><b>PDP em promoção</b><span>preço anterior riscado e selo &ldquo;Save 28%&rdquo; — preço anterior forjado, a loja não preenche <code>compare_at_price</code> em nenhum produto</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
       </div>
     </div>
 
     <div class="subgrupo">
       <h2>Apoio <span class="conta">2</span></h2>
       <div class="grid">
-        <a class="tile" href="_captura/nova-loja/faq.html"><b>FAQ</b><span>perguntas em acordeão com índice lateral — o padrão de resposta que a loja não tinha</span></a>
-        <a class="tile" href="_captura/nova-loja/404.html"><b>404</b><span>produto que saiu do catálogo — o único caminho que terminava numa tela que não era nossa</span></a>
+        <a class="tile" href="pages/faq.html" target="_blank" rel="noopener"><b>FAQ</b><span>perguntas em acordeão com índice lateral — o padrão de resposta que a loja não tinha</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
+        <a class="tile" href="pages/404.html" target="_blank" rel="noopener"><b>404</b><span>produto que saiu do catálogo — o único caminho que terminava numa tela que não era nossa</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
       </div>
     </div>
   </section>
 
   <section class="grupo">
-    <h2>O sistema</h2>
-    <p>O que se consome para construir: os tokens, as peças e as composições.</p>
-    <div class="grid">
-      <a class="tile" href="docs/"><b>Tokens</b><span>321 tokens em três camadas, com contraste medido</span></a>
-      <a class="tile" href="components/"><b>Components</b><span>37 componentes com variantes, estados e comportamento</span></a>
-      <a class="tile" href="patterns/"><b>Patterns</b><span>12 composições de e-commerce</span></a>
-      <a class="tile" href="icons/"><b>Icons</b><span>40 símbolos SVG · 9,3 KB contra 380 KB de Font Awesome</span></a>
-      <a class="tile" href="preview/"><b>Preview</b><span>componentes e páginas em 320, 375, 414 e 768 — viewport de verdade</span></a>
+    <h2>O que se consome para construir</h2>
+    <p>Coisas diferentes, e a diferença importa: fundação não aparece sozinha na
+    tela, componente serve a qualquer página porque não sabe em qual está,
+    template é o esqueleto sem conteúdo, e exemplo é esse esqueleto com o
+    catálogo da loja dentro — a tela-prova de que ele aguenta conteúdo real.</p>
+
+    <div class="subgrupo">
+      <h3><a href="tokens/">Fundação</a> <span class="conta">2</span></h3>
+      <p class="subgrupo-lede">Não aparece sozinha. Toda peça consome.</p>
+      <div class="grid">
+        <a class="tile" href="tokens/"><b>Tokens</b><span>364 tokens em três camadas — onde a cor, o espaço e o tipo ganham nome</span></a>
+        <a class="tile" href="icons/"><b>Ícones</b><span>42 símbolos SVG · 10,0 KB contra 380 KB de Font Awesome</span></a>
+      </div>
+    </div>
+
+    <div class="subgrupo">
+      <h3><a href="components/">Componentes</a> <span class="conta">2</span></h3>
+      <p class="subgrupo-lede">Reutilizável e sem contexto: serve a qualquer página porque não sabe em qual está.</p>
+      <div class="grid">
+        <a class="tile" href="atoms/"><b>Átomos</b><span>16 átomos indivisíveis — o que a pessoa aperta, lê ou preenche</span></a>
+        <a class="tile" href="molecules/"><b>Moléculas</b><span>21 moléculas: átomos reunidos para uma tarefa — cartão, preço, paginação</span></a>
+      </div>
+    </div>
+
+    <div class="subgrupo">
+      <h3><a href="organisms/">Blocos</a> <span class="conta">16</span></h3>
+      <p class="subgrupo-lede">As regiões da loja. Cada uma tem lugar e existe uma vez por tela — na escada atômica, os organismos.</p>
+      <div class="grid">
+        <a class="tile" href="organisms/"><b>Os 17 blocos</b><span>hero, cabeçalho, menu, gaveta do carrinho, bloco de compra, galeria, FAQ, rodapé</span></a>
+      </div>
+    </div>
+
+    <div class="subgrupo">
+      <h3><a href="templates/">Templates</a> <span class="conta">1</span></h3>
+      <p class="subgrupo-lede">O esqueleto da página, sem conteúdo.</p>
+      <div class="grid">
+        <a class="tile" href="templates/page-layout.html"><b>Page layout</b><span>largura máxima, ritmo entre blocos e cabeçalho de seção — o que toda página herda antes de escolher um organismo</span></a>
+      </div>
+    </div>
+
+    <div class="subgrupo">
+      <h3><a href="pages/">Exemplos</a> <span class="conta">11</span></h3>
+      <p class="subgrupo-lede">A evidência: o esqueleto com catálogo, foto e preço de verdade dentro. É delas que sai a coluna de maturidade do inventário.</p>
+      <div class="grid">
+        <a class="tile" href="pages/index.html"><b>As 11 telas</b><span>catálogo, fotos e preços ao vivo — as mesmas listadas no topo desta página</span></a>
+      </div>
+    </div>
+
+    <div class="subgrupo">
+      <h3>Ferramenta <span class="conta">1</span></h3>
+      <p class="subgrupo-lede">Não se constrói com ela — se confere.</p>
+      <div class="grid">
+        <a class="tile" href="preview/"><b>Preview</b><span>as 11 páginas da loja em 320, 375, 414, 768 e 1280 — viewport de verdade</span></a>
+      </div>
     </div>
   </section>
 
@@ -125,8 +310,8 @@ a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
     <p>Por que ele é assim, e o que fazer quando duas regras se chocam.</p>
     <div class="grid">
       <a class="tile" href="PRINCIPIOS.md"><b>Princípios</b><span>cinco regras em ordem — o que ganha quando duas se chocam</span></a>
-      <a class="tile" href="decision-log/"><b>Decisões</b><span>nove DDR: por que o sistema é assim, com a evidência</span></a>
-      <a class="tile" href="INVENTARIO.md"><b>Inventário</b><span>49 peças com maturidade conferida a cada build</span></a>
+      <a class="tile" href="decision-log/"><b>Decisões</b><span>dez DDR: por que o sistema é assim, com a evidência</span></a>
+      <a class="tile" href="INVENTARIO.md"><b>Inventário</b><span>54 peças com maturidade conferida a cada build</span></a>
       <a class="tile" href="CONTRIBUINDO.md"><b>Contribuindo</b><span>o laço local e o que o CI reprova</span></a>
     </div>
   </section>

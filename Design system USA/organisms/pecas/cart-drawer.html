@@ -1,0 +1,320 @@
+<h2>Cart drawer</h2>
+    <p class="when">O carrinho como gaveta lateral, sobre a página. Abre sobre, não substitui: interromper a navegação para mostrar o carrinho custa compras.</p>
+    <div class="stage stage--dim">
+      <div class="yb-cart">
+        <div class="yb-cart__head">
+          <h2>Your cart (2)</h2>
+          <div class="yb-cart__head-acoes">
+            <button type="button" class="yb-cart__share" aria-label="Share cart">
+              <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-share"/></svg></button>
+            <button type="button" class="yb-cart__close" aria-label="Close cart">
+              <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
+          </div>
+        </div>
+        <div class="yb-cart__ship yb-cart__ship--ok">
+          <div class="yb-freeship yb-freeship--done">
+            <span class="yb-freeship__text">
+              <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>
+              Free shipping unlocked</span>
+            <div class="yb-progress" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Progress to free shipping">
+              <span class="yb-progress__fill" style="inline-size:100%"></span>
+            </div>
+          </div>
+        </div>
+        <div class="yb-cart__brinde-card">
+          <div class="yb-cart__brinde-corpo">
+            <p class="yb-cart__brinde-texto">Add <b>$50.00</b> and receive your first gift</p>
+            <div class="yb-cart__brinde-trilhos" role="progressbar" aria-valuenow="245" aria-valuemin="0" aria-valuemax="400"
+                 aria-valuetext="$244.70 of $400.00 toward the best gift">
+              <span class="yb-progress yb-progress--sm"><span class="yb-progress__fill yb-progress__fill--success" style="inline-size:60%"></span></span>
+              <span class="yb-progress yb-progress--sm"><span class="yb-progress__fill yb-progress__fill--success" style="inline-size:0%"></span></span>
+            </div>
+          </div>
+          <div class="yb-cart__brinde-premio"></div>
+        </div>
+        <div class="yb-cart__items">
+          <div class="yb-cart__item">
+            <div class="yb-card__media"></div>
+            <div class="yb-cart__item-body">
+              <div class="yb-cart__item-topo">
+                <p class="yb-cart__item-title">Kit Sealant Fashion Gold</p>
+                <button type="button" class="yb-cart__remove" aria-label="Remove Kit Sealant Fashion Gold">
+                  <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-trash"/></svg></button>
+              </div>
+              <span class="yb-cart__item-variant">500g / 17.6 fl.oz</span>
+              <div class="yb-cart__item-foot">
+                <span class="yb-cart__item-precos">
+                  <s class="yb-price__was">$198.00</s><span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b></span><span class="yb-cart__economia">-15%</span>
+                </span>
+                <div class="yb-stepper yb-stepper--sm" data-yb-stepper>
+                  <button type="button" data-yb-step="down" aria-label="Decrease quantity of Kit Sealant Fashion Gold">&minus;</button>
+                  <input type="number" value="1" min="1" max="10" aria-label="Quantity of Kit Sealant Fashion Gold">
+                  <button type="button" data-yb-step="up" aria-label="Increase quantity of Kit Sealant Fashion Gold">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="yb-cart__item">
+            <div class="yb-card__media"></div>
+            <div class="yb-cart__item-body">
+              <div class="yb-cart__item-topo">
+                <p class="yb-cart__item-title">Vello Alpha-Lactobaby® System</p>
+                <button type="button" class="yb-cart__remove" aria-label="Remove Vello Alpha-Lactobaby® System">
+                  <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-trash"/></svg></button>
+              </div>
+              <span class="yb-cart__item-variant">250ml + 200g</span>
+              <div class="yb-cart__item-foot">
+                <span class="yb-cart__item-precos">
+                  <s class="yb-price__was">$100.50</s><span class="yb-price yb-price--sm"><b class="yb-price__now">$75.80</b></span><span class="yb-cart__economia">-25%</span>
+                </span>
+                <div class="yb-stepper yb-stepper--sm" data-yb-stepper>
+                  <button type="button" data-yb-step="down" aria-label="Decrease quantity of Vello Alpha-Lactobaby® System">&minus;</button>
+                  <input type="number" value="1" min="1" max="10" aria-label="Quantity of Vello Alpha-Lactobaby® System">
+                  <button type="button" data-yb-step="up" aria-label="Increase quantity of Vello Alpha-Lactobaby® System">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="yb-cart__protecao">
+          <div class="yb-cart__protecao-corpo">
+            <b>Route Package Protection</b>
+            <p>Guard against loss, theft, or damage for only $4.98</p>
+          </div>
+          <button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="false" aria-label="Route Package Protection">
+            <span class="yb-switch__knob"></span>
+          </button>
+        </div>
+        <div class="yb-cart__cupom">
+          <form class="yb-field yb-field--row">
+            <div class="yb-field__box">
+              <input class="yb-input" id="cupom-demo" type="text" placeholder=" " autocomplete="off">
+              <label class="yb-field__label" for="cupom-demo">Promo code</label>
+            </div>
+            <button class="yb-btn yb-btn--ghost yb-btn--sm" type="submit">Apply</button>
+          </form>
+          <p class="yb-cart__note">Taxes, shipping and discounts calculated at checkout</p>
+        </div>
+        <div class="yb-cart__cross">
+          <div class="yb-cart__cross-head">
+            <h3 class="yb-cart__cross-title">Complete your routine</h3>
+            <div class="yb-track__nav" data-yb-track-nav="cross-demo">
+              <button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous suggestion">
+                <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-left"/></svg></button>
+              <button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next suggestion">
+                <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg></button>
+            </div>
+          </div>
+          <div class="yb-track" id="cross-demo">
+            <div class="yb-cart__oferta">
+              <div class="yb-card__media"></div>
+              <div class="yb-cart__oferta-corpo">
+                <p class="yb-cart__oferta-nome">Ybera Hydrating Shampoo</p>
+                <span class="yb-cart__oferta-variante">300ml</span>
+                <span class="yb-cart__oferta-precos">
+                  <span class="yb-cart__oferta-cheio">$32.00</span>
+                  <b class="yb-cart__oferta-add">Add for $27.20</b>
+                  <span class="yb-cart__economia">&minus;15%</span>
+                </span>
+              </div>
+              <button type="button" class="yb-btn yb-btn--primary yb-btn--sm">Add</button>
+            </div>
+            <div class="yb-cart__oferta">
+              <div class="yb-card__media"></div>
+              <div class="yb-cart__oferta-corpo">
+                <p class="yb-cart__oferta-nome">Floral Fusion Hair Mist</p>
+                <span class="yb-cart__oferta-variante">50ml</span>
+                <span class="yb-cart__oferta-precos">
+                  <span class="yb-cart__oferta-cheio">$24.00</span>
+                  <b class="yb-cart__oferta-add">Add for $19.20</b>
+                  <span class="yb-cart__economia">&minus;20%</span>
+                </span>
+              </div>
+              <button type="button" class="yb-btn yb-btn--primary yb-btn--sm">Add</button>
+            </div>
+          </div>
+        </div>
+        <p class="yb-cart__prova">
+          <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-trending-up"/></svg>
+          <span><b>247 people</b> bought this kit this week</span>
+        </p>
+        <div class="yb-cart__foot">
+          <div class="yb-cart__parceiro">
+            <span class="yb-cart__parceiro-inicial" aria-hidden="true">YP</span>
+            <p><b>@yberapartner</b> saved you $53.80</p>
+          </div>
+          <div class="yb-cart__resumo">
+            <div class="yb-cart__totais">
+              <s class="yb-cart__tabela">$298.50</s>
+              <div class="yb-cart__total-linha">
+                <b class="yb-cart__total">$244.70</b>
+                <span class="yb-cart__economia">
+                  <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-clock"/></svg>
+                  save 18%</span>
+              </div>
+            </div>
+            <button type="button" class="yb-btn yb-btn--primary yb-cart__checkout">Checkout (2)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>O cupom rola com a lista; o total não</b>
+      <p>Campo de digitação parado no pé é campo que o teclado do celular cobre.
+      Rolando com os itens, o navegador o leva para cima do teclado sozinho. Fixos
+      ficam só o total e o botão.</p>
+      <p><b>Não é componente novo:</b> é <code>.yb-field--row</code> com um
+      <code>.yb-btn--sm</code> do lado. O que nasce aqui é a posição.</p>
+    </div>
+
+    <div class="note">
+      <b>A oferta entra depois do cupom, não antes da lista</b>
+      <p>Acima dos itens ela competiria com o que a pessoa acabou de escolher; depois
+      do botão, ninguém a veria. Entre o cupom e o total é o único ponto do caminho em
+      que a compra já está formada e ainda não foi fechada.</p>
+      <p>A linha repete a anatomia da linha do carrinho &mdash; miniatura, corpo, ação
+      &mdash; de propósito: é o que faz a oferta ler como "mais um item", que é
+      exatamente o que ela quer virar.</p>
+    </div>
+    <div class="note">
+      <b>O preço cheio não leva risco</b>
+      <p>Ele não foi cancelado: é a referência do que o item custa fora do combo. Risco
+      prometeria um desconto que só existe se o item entrar <b>neste</b> carrinho, e
+      quem vir o mesmo produto na PDP pelo preço normal vai achar que perdeu a oferta.</p>
+    </div>
+    <div class="note">
+      <b>Um cartão por tela, com encaixe obrigatório</b>
+      <p><code>--yb-track-item:100%</code> e <code>scroll-snap-type:x mandatory</code>:
+      meia oferta cortada na borda de uma gaveta de 420px não é prévia, é peça quebrada
+      &mdash; a mesma razão do hero. As setas são <code>.yb-track__nav</code> e somem
+      no toque, onde se arrasta: no print elas aparecem porque é uma simulação, mas um
+      par de alvos de 44px dentro da gaveta custa mais do que ensina.</p>
+    </div>
+    <div class="note">
+      <b>Três blocos, três perguntas</b>
+      <p>O topo diz quanto falta para o frete grátis, o meio lista o que já está no
+      carrinho, o pé cobra a promessa de quem indicou. Cada um responde uma pergunta
+      diferente — juntá-los num bloco só faz nenhuma das três ser lida.</p>
+    </div>
+
+    <h3 class="row-label">Cupom aplicado</h3>
+    <div class="stage stage--dim">
+      <div class="yb-cart">
+        <div class="yb-cart__cupom">
+          <div class="yb-cart__cupom-ok">
+            <div>
+              <span class="yb-cart__cupom-codigo">WELCOME15</span>
+              <span class="yb-cart__economia">Applied</span>
+            </div>
+            <button class="yb-link" type="button">Remove</button>
+          </div>
+          <p class="yb-cart__note">Taxes, shipping and discounts calculated at checkout</p>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Aplicado tira o campo</b>
+      <p>Deixar o input com o código digitado dentro não diz se o desconto pegou. A
+      etiqueta com o código, o "Applied" em verde e o link de remover dizem as três
+      coisas que a pessoa quer saber: qual código, se valeu, como desfazer.</p>
+    </div>
+    <h3 class="row-label">Estados da linha</h3>
+    <div class="stage stage--dim">
+      <div class="yb-cart">
+        <div class="yb-cart__items">
+          <div class="yb-cart__item yb-cart__item--esgotado">
+            <div class="yb-card__media"></div>
+            <div class="yb-cart__item-body">
+              <p class="yb-cart__item-title">Cronograma &ndash; step 2 Cortex</p>
+              <span class="yb-cart__item-variant">250g</span>
+              <p class="yb-cart__aviso">Out of stock &mdash; remove to check out</p>
+              <button type="button" class="yb-cart__remove">Remove</button>
+            </div>
+          </div>
+          <div class="yb-cart__item">
+            <div class="yb-card__media"></div>
+            <div class="yb-cart__item-body">
+              <p class="yb-cart__item-title">Fashion Gold keratin 300g</p>
+              <span class="yb-cart__item-variant">300g</span>
+              <div class="yb-cart__item-foot">
+                <div class="yb-stepper">
+                  <button type="button" aria-label="Decrease quantity">&minus;</button>
+                  <input type="number" value="9" aria-label="Quantity">
+                  <button type="button" aria-label="Increase quantity" disabled>+</button>
+                </div>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+              </div>
+              <p class="yb-cart__aviso">Max 9 per order</p>
+            </div>
+          </div>
+          <div class="yb-cart__item yb-cart__item--brinde">
+            <div class="yb-card__media"></div>
+            <div class="yb-cart__item-body">
+              <p class="yb-cart__item-title">
+                <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-gift"/></svg>Mirra travel size 50ml</p>
+              <span class="yb-cart__brinde">Free gift</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Cada estado tira um controle, não acrescenta aviso</b>
+      <p>O brinde não tem quantidade a escolher, o esgotado não tem o que somar, e o
+      que bateu o limite não tem para onde subir. Aviso ao lado de um controle que
+      continua funcionando ensina a pessoa a tentar de novo &mdash; e falhar de novo.</p>
+      <p>O aviso herda a cor do estado: esgotado bloqueia a compra e fala em vermelho;
+      limite é só um teto e fala em âmbar.</p>
+    </div>
+
+    <h3 class="row-label">Vazio e carregando</h3>
+    <div class="split">
+      <div class="stage stage--dim">
+        <div class="yb-cart yb-cart--vazio">
+          <div class="yb-cart__head">
+            <h2>Your cart</h2>
+            <button type="button" class="yb-iconbtn yb-cart__close" aria-label="Close cart">&times;</button>
+          </div>
+          <div class="yb-cart__estado">
+            <div class="yb-empty">
+              <span class="yb-empty__icone" aria-hidden="true">
+                <svg class="yb-icon"><use href="../icons/ybera-icons.svg#yb-cart"/></svg></span>
+              <p class="yb-empty__title">Your cart is empty</p>
+              <div class="yb-empty__acoes"><a class="yb-btn yb-btn--secondary" href="#demos">Go to home</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="stage stage--dim">
+        <div class="yb-cart yb-cart--carregando">
+          <div class="yb-cart__head">
+            <h2>Your cart</h2>
+            <button type="button" class="yb-iconbtn yb-cart__close" aria-label="Close cart">&times;</button>
+          </div>
+          <div class="yb-cart__items" aria-busy="true">
+            <div class="yb-cart__item">
+              <div class="yb-skeleton yb-skeleton--media"></div>
+              <div class="yb-cart__item-body">
+                <div class="yb-skeleton yb-skeleton--title"></div>
+                <div class="yb-skeleton yb-skeleton--line-short"></div>
+              </div>
+            </div>
+            <div class="yb-cart__item">
+              <div class="yb-skeleton yb-skeleton--media"></div>
+              <div class="yb-cart__item-body">
+                <div class="yb-skeleton yb-skeleton--title"></div>
+                <div class="yb-skeleton yb-skeleton--line-short"></div>
+              </div>
+            </div>
+          </div>
+          <div class="yb-cart__foot">
+            <div class="yb-skeleton yb-skeleton--btn"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>A divisória do cabeçalho só existe quando não há lista</b>
+      <p>Com itens, a barra de frete já separa o cabeçalho do resto &mdash; duas linhas
+      seguidas viram sujeira. Vazio ou carregando, a barra some e a divisória assume.</p>
+    </div>

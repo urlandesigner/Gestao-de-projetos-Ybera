@@ -1,0 +1,73 @@
+<h2>Hero</h2>
+    <p class="when">O topo da home: vários <a href="../molecules/bannerhero.html">Banners hero</a> num <a href="../molecules/track.html">Track</a>, um por tela, com as setas no canto de baixo à direita. As setas são do bloco, não do banner — um banner sozinho não tem para onde ir.</p>
+    <div class="stage">
+      <section class="yb-hero" aria-roledescription="carousel" aria-label="Highlights">
+        <div class="yb-track yb-track--hero" id="doc-hero" data-yb-track-loop>
+          <a class="yb-bannerhero yb-bannerhero--blur" href="#demos">
+            <img src="../pages/img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp" alt="">
+            <div class="yb-bannerhero__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="yb-bannerhero__body">
+              <span class="yb-bannerhero__eyebrow">Salon keratin, at home</span>
+              <h3 class="yb-bannerhero__title">Straight, glossy hair that survives humidity.</h3>
+              <p class="yb-bannerhero__text">Brazilian keratin care, formaldehyde-free and safe on color-treated hair.</p>
+              <span class="yb-btn yb-btn--primary">Shop best sellers</span>
+            </div>
+          </a>
+          <a class="yb-bannerhero yb-bannerhero--arte" href="#demos">
+            <img class="yb-bannerhero__fundo" src="../pages/img/Banner_20_24H_b-96b194d5.webp" alt="" loading="lazy">
+            <picture>
+              <source media="(max-width: 767.98px)" srcset="../pages/img/Banner_20_24H_mb_b-61df813f.webp">
+              <img src="../pages/img/Banner_20_24H_b-96b194d5.webp" alt="20% off sitewide for the next 24 hours. Use code Ybera20." loading="lazy">
+            </picture>
+          </a>
+          <a class="yb-bannerhero yb-bannerhero--blur" href="#demos">
+            <img src="../pages/img/Does_Keratin_Treatment_Damage_Hair-9540a201.webp" alt="" loading="lazy">
+            <div class="yb-bannerhero__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="yb-bannerhero__body">
+              <span class="yb-bannerhero__eyebrow">Damaged hair</span>
+              <h3 class="yb-bannerhero__title">Repair the fiber, not just the surface.</h3>
+              <p class="yb-bannerhero__text">Reconstruction, nutrition and hydration &mdash; one step for each layer.</p>
+              <span class="yb-btn yb-btn--primary">Shop by concern</span>
+            </div>
+          </a>
+          <a class="yb-bannerhero yb-bannerhero--blur" href="#demos">
+            <img src="../pages/img/Is_Keratin_Good_For_Hair-b3d5999d.webp" alt="" loading="lazy">
+            <div class="yb-bannerhero__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="yb-bannerhero__body">
+              <span class="yb-bannerhero__eyebrow">AI Hair Analysis</span>
+              <h3 class="yb-bannerhero__title">Not sure where to start?</h3>
+              <p class="yb-bannerhero__text">Answer a few questions and we match your hair to the right line.</p>
+              <span class="yb-btn yb-btn--primary">Start analysis</span>
+            </div>
+          </a>
+        </div>
+        <div class="yb-track__nav" data-yb-track-nav="doc-hero" hidden>
+          <button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous highlight"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-left"/></svg></button>
+          <button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next highlight"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg></button>
+        </div>
+      </section>
+    </div>
+    <div class="note">
+      <b>As setas, e por que no canto</b>
+      <p>Ficam juntas no canto de baixo à direita, o único lugar vazio em todo
+      slide: o texto do banner fica à esquerda e termina em 42rem, e a arte tem ali
+      só o fundo. No meio das laterais, a da esquerda caía sobre o título (768 e
+      1024px) e a da direita sobre o cupom da arte. Com
+      <code>data-yb-track-loop</code> o último slide volta ao primeiro, então elas
+      nunca desabilitam. No toque (abaixo de 768px) somem: ali se arrasta.</p>
+    </div>
+    <div class="note">
+      <b>Um destino por slide</b>
+      <p>Três variações da mesma promessa levando ao mesmo lugar são só tempo de
+      espera: o segundo e o terceiro slide não existem para quem chega. Cada slide
+      leva a um destino diferente. O primeiro carrega o <code>h1</code> da página e
+      a única imagem com <code>fetchpriority="high"</code>; os outros são
+      <code>loading="lazy"</code>.</p>
+    </div>
+    <div class="note">
+      <b>O invólucro ainda se chama <code>.yb-hero</code></b>
+      <p>A classe está no bundle, e o bundle é contrato com o tema da loja (ver
+      <a href="../decision-log/DDR-010-escada-atomica.md">DDR-010</a>). Na home ele
+      leva também <code>data-yb-partnerbar-anchor</code> e o balão do
+      <a href="../molecules/partner.html">Partner</a>.</p>
+    </div>

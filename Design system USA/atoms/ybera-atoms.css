@@ -1,0 +1,1149 @@
+/* =========================================================================
+   YBERA DESIGN SYSTEM · ÁTOMOS
+
+   Depende de: tokens/ + base/ybera-base.css
+
+   A menor unidade com função própria. Um átomo perde o sentido se você tirar
+   qualquer parte dele, e NÃO usa nenhuma outra peça do sistema — é essa a
+   linha que o separa da molécula, e o validador a verifica.
+
+   PREFIXO `yb-` em tudo. Não é preciosismo: estas peças vão conviver com o
+   tema Shopify, o Ecomposer, o Tailwind e o Judge.me na mesma página. Sem
+   prefixo, `.btn` ou `.card` colide com alguma delas — e a colisão é
+   silenciosa.
+
+   REGRA: cor vem sempre da camada 1. Espaço, peso e tracking podem vir do
+   primitivo (ver a fronteira documentada em tokens/01-semantic.css).
+   ========================================================================= */
+
+/* =========================================================================
+   BUTTON
+   Anatomia: [ícone] rótulo [ícone]
+
+   Altura mínima 44px — WCAG 2.5.5. A frase antiga aqui dizia "em todos os
+   tamanhos", e era falsa: `--sm` sempre mediu 36. Ver ALVO COMPACTO abaixo.
+   ========================================================================= */
+.yb-btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:var(--yb-space-2); position:relative;
+  font-family:inherit; font-size:var(--yb-type-body-size);
+  font-weight:var(--yb-font-weight-semibold); line-height:var(--yb-line-height-none);
+  text-decoration:none; text-align:center; white-space:nowrap;
+  border:var(--yb-border-hairline) solid transparent; border-radius:var(--yb-radius-control);
+  padding:var(--yb-space-4) var(--yb-space-6);
+  min-height:var(--yb-target-min); cursor:pointer;
+  transition:background var(--yb-transition-control),
+             border-color var(--yb-transition-control),
+             color var(--yb-transition-control);
+}
+.yb-btn:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-btn[disabled],.yb-btn[aria-disabled="true"]{
+  cursor:not-allowed;
+  background:var(--yb-action-bg-disabled);
+  /* WCAG 1.4.3 isenta componente inativo, mas "Sold out" a 2.86:1 é ilegível
+     de verdade. O fundo já comunica o estado; o texto não precisa sumir junto. */
+  color:var(--yb-text-muted);
+  border-color:transparent;
+}
+
+.yb-btn--primary{background:var(--yb-action-bg); color:var(--yb-action-text)}
+
+@media (hover:hover){
+  .yb-btn--primary:hover:not([disabled]){background:var(--yb-action-bg-hover)}
+}
+.yb-btn--primary:active:not([disabled]){background:var(--yb-action-bg-active)}
+
+.yb-btn--secondary{
+  background:var(--yb-action-secondary-bg); color:var(--yb-action-secondary-text);
+  border-color:var(--yb-action-secondary-border);
+}
+
+@media (hover:hover){
+  .yb-btn--secondary:hover:not([disabled]){
+    background:var(--yb-action-secondary-bg-hover);
+    border-color:var(--yb-action-secondary-border-hover);
+    color:var(--yb-action-secondary-text-hover);
+  }
+}
+
+.yb-btn--ghost{
+  background:transparent; color:var(--yb-action-ghost-text);
+  border-color:var(--yb-action-ghost-border);
+}
+
+@media (hover:hover){
+  .yb-btn--ghost:hover:not([disabled]){background:var(--yb-action-ghost-bg-hover)}
+}
+
+.yb-btn--danger{background:var(--yb-danger-solid); color:var(--yb-text-inverse)}
+
+@media (hover:hover){
+  .yb-btn--danger:hover:not([disabled]){background:var(--yb-danger-text)}
+}
+
+/* :active existia em UMA variante em 1893 linhas de CSS. No toque nao ha
+   hover — o pressionado e a unica confirmacao de que o dedo acertou. */
+.yb-btn--secondary:active:not([disabled]){
+  background:var(--yb-action-secondary-bg-active);
+  color:var(--yb-action-secondary-text-hover);
+}
+.yb-btn--ghost:active:not([disabled]){background:var(--yb-action-ghost-bg-hover)}
+.yb-btn--danger:active:not([disabled]){background:var(--yb-danger-text)}
+.yb-btn:active:not([disabled]){transform:translateY(1px)}
+@media (prefers-reduced-motion:reduce){ .yb-btn:active:not([disabled]){transform:none} }
+
+/* =========================================================================
+   BUTTON · tamanho, painel escuro e carregando
+   Mesma origem: o bloco CARREGANDO. E botao, e vem DEPOIS do resto dele —
+   `--sm` precisa ganhar do tamanho cheio, e quem decide isso e a ordem.
+   ========================================================================= */
+/* Sobre painel escuro a acao inverte: fundo claro, texto grafite. O magenta
+   da marca continua sendo a acao da PAGINA — mas dentro de um bloco escuro
+   ele briga com o proprio fundo, enquanto o branco cheio nao tem como perder.
+   Medido: grafite sobre branco 16.66:1, e o proprio botao contra o painel
+   tambem 16.66:1, entao ele nao precisa de borda para existir.
+   Nao use isto sobre foto: ali o fundo nao e conhecido e o token e outro. */
+.yb-btn--on-dark{background:var(--yb-text-inverse); color:var(--yb-bg-inverse)}
+
+/* O branco nao tem para onde clarear: o hover AFUNDA. Sao os dois degraus de
+   superficie clara que o sistema ja tem, na ordem em que ele os usa. */
+@media (hover:hover){
+  .yb-btn--on-dark:hover:not([disabled]){background:var(--yb-surface-sunken)}
+}
+.yb-btn--on-dark:active:not([disabled]){background:var(--yb-bg-muted)}
+/* O anel de foco padrao e magenta e some contra o proprio botao branco;
+   sobre o painel escuro quem se ve e o branco. */
+.yb-btn--on-dark:focus-visible{
+  outline-color:var(--yb-text-inverse); outline-offset:var(--yb-focus-offset);
+}
+
+.yb-btn--sm{
+  font-size:var(--yb-type-body-sm-size);
+  padding:var(--yb-space-2) var(--yb-space-4);
+  /* alvo-compacto: botão de fileira — "aplicar", "limpar", ação de célula.
+     Nunca use --sm para a ação principal de uma tela. */
+  min-height:var(--yb-control-height-compact);
+}
+.yb-btn--lg{font-size:var(--yb-type-body-lg-size); padding:var(--yb-space-5) var(--yb-space-8)}
+.yb-btn--block{width:100%}
+
+/* carregando: o rótulo some mas a largura fica, evitando salto de layout.
+   `!important` porque o estado tem de vencer a cor de TODA variante e de seus
+   :hover/:active, que tem especificidade igual ou maior — sem ele o rotulo
+   reaparece por cima do spinner quando o mouse passa. */
+.yb-btn--loading{color:transparent !important; pointer-events:none}
+.yb-btn--loading::after{
+  content:""; position:absolute; width:var(--yb-icon-sm); height:var(--yb-icon-sm);
+  border:var(--yb-border-emphasis) solid currentColor; border-top-color:transparent;
+  border-radius:var(--yb-radius-full);
+  animation:yb-spin var(--yb-duration-slower) linear infinite;
+}
+/* Cada variante pinta o spinner na cor do PROPRIO rotulo. Sem isto ele herda
+   o transparente do `--loading` e some: foi o que aconteceu com o `--danger`
+   ("Remove item" virava um retangulo vermelho vazio) e com o `--on-dark`. A
+   secundaria usava o branco de quando era grafite; sobre o magenta-100 de
+   agora, 1,1:1 — invisivel. */
+.yb-btn--primary.yb-btn--loading::after,
+.yb-btn--danger.yb-btn--loading::after{border-color:var(--yb-text-inverse); border-top-color:transparent}
+.yb-btn--secondary.yb-btn--loading::after{border-color:var(--yb-action-secondary-text); border-top-color:transparent}
+.yb-btn--ghost.yb-btn--loading::after{border-color:var(--yb-text-primary); border-top-color:transparent}
+.yb-btn--on-dark.yb-btn--loading::after{border-color:var(--yb-bg-inverse); border-top-color:transparent}
+
+/* =========================================================================
+   BADGE
+   ========================================================================= */
+.yb-badge{
+  display:inline-flex; align-items:center; gap:var(--yb-space-1);
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; font-weight:var(--yb-font-weight-semibold);
+  padding:var(--yb-space-1) var(--yb-space-2);
+  border-radius:var(--yb-radius-badge); white-space:nowrap;
+}
+.yb-badge--sale{background:var(--yb-action-bg); color:var(--yb-action-text)}
+/* O par do botao secundario, e de proposito os MESMOS tokens dele — nao uma
+   copia dos valores. Quem afinar o botao secundario um dia move este selo
+   junto, que e o que "mesmo padrao de cor do secundario" quer dizer; dois
+   magentas claros que se separam sozinhos seriam pior do que um.
+   E o irmao quieto do `--sale`: mesma cor de marca, sem o fundo cheio. Onde
+   o `--sale` grita um desconto, este rotula sem disputar com o preco.
+   Medido: texto 4,86:1 sobre o proprio fundo (AA), e fundo 1,10:1 sobre
+   branco — o mesmo do `--warning`, que e como os selos claros da casa se
+   comportam: quem desenha a forma e o texto, nao a caixa. */
+.yb-badge--secondary{
+  background:var(--yb-action-secondary-bg); color:var(--yb-action-secondary-text);
+}
+.yb-badge--soft{background:var(--yb-bg-muted); color:var(--yb-text-secondary)}
+/* O SELO QUE SOBREVIVE A UMA FOTO. Traz o proprio fundo grafite em vez de
+   contar com o que estiver atras, e por isso e o unico da familia que pode ir
+   sobre imagem: os claros (`--soft`, `--secondary`, `--success`, `--warning`,
+   `--danger`) medem ~1,2:1 contra um packshot e somem.
+   O texto e `--yb-action-on-dark`, nao a cor de acao crua: o magenta-600
+   canonico da 3.11:1 sobre o grafite e reprova. Ver o token. */
+.yb-badge--on-media,
+.yb-badge--accent{background:var(--yb-bg-inverse); color:var(--yb-action-on-dark)}
+/* @deprecated desde 0.12 — use .yb-badge--on-media. Remocao em 1.0.
+   Chamava-se `--accent` porque o texto era o dourado da marca; quando ele
+   virou magenta o nome passou a descrever o que a classe NAO e mais — e
+   "accent" nesta casa quer dizer ouro. Fica como apelido enquanto durar a
+   convivencia de duas versoes menores, para nao quebrar quem ja usa — por
+   isso divide a regra do `--on-media`, acima, em vez de repeti-la. */
+.yb-badge--success{background:var(--yb-success-surface); color:var(--yb-success-text)}
+.yb-badge--warning{background:var(--yb-warning-surface); color:var(--yb-warning-text)}
+.yb-badge--danger{background:var(--yb-danger-surface); color:var(--yb-danger-text)}
+/* Sobre painel escuro. Nao e o `--on-media` invertido: aquele e fundo escuro
+   sobre pagina clara, este e fundo levantado sobre fundo JA escuro. O texto
+   branco sobre a superficie levantada mede 11.35:1. */
+.yb-badge--on-dark{background:var(--yb-surface-inverse-raised); color:var(--yb-text-inverse)}
+
+/* =========================================================================
+   OFFER SEAL — o selo estrelado de oferta
+
+   Para brinde e desconto, e so para isso. Nao e badge com outra roupa: o
+   badge rotula de lado (`In stock`, `Best seller`), este INTERROMPE. Um por
+   peca, no maximo — dois selos estrelados na mesma foto viram enfeite e
+   nenhum dos dois e lido.
+
+   POR QUE ELE EXISTE. Medido nesta casa: selo claro sobre foto de produto
+   cai para 1,2:1 contra a imagem e some. A forma cheia resolve pelo
+   contorno, que nao depende de qual foto o catalogo mandar — e foi por isso
+   que a estrela entrou, nao por enfeite.
+
+   A FORMA E CSS, NAO SVG NEM IMAGEM. `clip-path` com poligono de 20 pontas
+   (raio interno .90 do externo), recortado em porcentagem: o mesmo selo
+   serve 56px no cartao e 96px na PDP sem virar outro arquivo e sem pedir
+   uma requisicao. Os 40 vertices sao GERADOS, nao desenhados a mao:
+
+     para i em 0..39:  r = (i impar ? .90 : 1) * 50
+                       a = PI*i/20 - PI/2
+                       ponto = (50 + r*cos(a), 50 + r*sin(a))
+
+   Editar um vertice a mao entorta a estrela sem ninguem ver — ha checagem
+   para isso. Quem quiser outra quantidade de pontas gera de novo pela
+   formula e troca o bloco inteiro.
+
+   `border-radius:50%` fica debaixo do recorte de proposito: onde
+   `clip-path` nao existir, o selo degrada para circulo — que continua
+   legivel — em vez de virar quadrado.
+   ========================================================================= */
+.yb-offerseal{
+  --yb-offerseal-size:4rem;
+  inline-size:var(--yb-offerseal-size); block-size:var(--yb-offerseal-size);
+  /* `align-content:center` e o que mantem as duas linhas COLADAS. Sem ele as
+     duas faixas automaticas do grid esticam para preencher a altura fixa do
+     selo e o `place-items:center` centraliza cada texto dentro da sua faixa —
+     nascia um vao de 10,5px que nao vinha de line-height nenhum e que nao
+     adiantava caçar na tipografia. Com ele as faixas ficam do tamanho do
+     conteudo e o bloco inteiro e que se centraliza. */
+  display:grid; align-content:center; justify-items:center; text-align:center;
+  line-height:var(--yb-line-height-tight);
+  padding:calc(var(--yb-offerseal-size) / 10);
+  border-radius:50%;
+  clip-path:polygon(
+    50.00% 0.00%, 57.04% 5.55%, 65.45% 2.45%, 70.43% 9.90%, 79.39% 9.55%,
+    81.82% 18.18%, 90.45% 20.61%, 90.10% 29.57%, 97.55% 34.55%,
+    94.45% 42.96%, 100.00% 50.00%, 94.45% 57.04%, 97.55% 65.45%,
+    90.10% 70.43%, 90.45% 79.39%, 81.82% 81.82%, 79.39% 90.45%,
+    70.43% 90.10%, 65.45% 97.55%, 57.04% 94.45%, 50.00% 100.00%,
+    42.96% 94.45%, 34.55% 97.55%, 29.57% 90.10%, 20.61% 90.45%,
+    18.18% 81.82%, 9.55% 79.39%, 9.90% 70.43%, 2.45% 65.45%, 5.55% 57.04%,
+    0.00% 50.00%, 5.55% 42.96%, 2.45% 34.55%, 9.90% 29.57%, 9.55% 20.61%,
+    18.18% 18.18%, 20.61% 9.55%, 29.57% 9.90%, 34.55% 2.45%, 42.96% 5.55%);
+  font-size:var(--yb-type-caption-size);
+  font-weight:var(--yb-font-weight-bold);
+  text-transform:uppercase; letter-spacing:var(--yb-tracking-wide);
+}
+/* O recorte corta a CAIXA, nao o texto: sem esta trava a palavra longa
+   atravessa as pontas e fica decepada na borda da estrela. */
+.yb-offerseal__value{
+  display:block; max-inline-size:100%; overflow:hidden; text-overflow:ellipsis;
+  font-size:calc(var(--yb-offerseal-size) / 4.2); line-height:var(--yb-line-height-none);
+}
+.yb-offerseal__label{display:block; max-inline-size:100%}
+
+/* As mesmas tres roupas do badge, com os mesmos nomes: quem aprendeu o badge
+   nao reaprende aqui. `--accent` mede 14,0:1 contra as fotos do catalogo e e
+   a escolha para cima de foto; `--sale` mede 3,3:1 nas mesmas fotos — passa o
+   minimo de 3:1 de objeto grafico, mas raspando e variando com a imagem, e
+   por isso e a roupa de superficie lisa. */
+.yb-offerseal--sale{background:var(--yb-action-bg); color:var(--yb-action-text)}
+.yb-offerseal--accent{background:var(--yb-bg-inverse); color:var(--yb-accent-on-dark)}
+/* Nao ha `--gold`. Faltou token semantico para DOURADO DE FUNDO — o que
+   existe e `--yb-accent-on-dark`, que e cor de TEXTO sobre escuro — e
+   componente que consome primitivo de cor direto fura a regra de camadas
+   (o validador reprova, e reprovou). Um selo dourado sobre pagina branca
+   tambem mediria 2,39:1 de forma contra o fundo, entao nao e so burocracia. */
+
+/* =========================================================================
+   ICONBTN — controle de 44px que é só ícone
+   Sexta reescrita da mesma coisa: `.yb-header__icon`, `.yb-cart__close`,
+   `.yb-nav__close`, `.yb-video__play`, `.yb-footer__toggle` e a seta do
+   banner. Todas diziam 44x44, fundo transparente, raio de controle e anel
+   de foco — cada uma com sua propria combinacao.
+   ========================================================================= */
+.yb-iconbtn{
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:var(--yb-space-2); position:relative;
+  min-width:var(--yb-target-min); min-height:var(--yb-target-min);
+  padding:0; border:none; background:transparent; cursor:pointer;
+  color:var(--yb-text-primary); font-family:inherit;
+  font-size:var(--yb-type-body-sm-size);
+  border-radius:var(--yb-radius-control);
+}
+.yb-iconbtn:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-iconbtn[disabled]{ color:var(--yb-text-disabled); cursor:not-allowed; }
+/* QUADRADO — o alvo vira medida, e nao piso.
+
+   A base declara `min-width`/`min-height`: o botao cresce com o conteudo,
+   porque ele tambem serve icone+rotulo (dai o `gap`). Sete lugares nao querem
+   isso — querem um quadrado exato — e cada um reescreveu as mesmas duas linhas
+   por conta propria: `.yb-nav__close`, `.yb-cart__close`, `.yb-alert__close`,
+   `.yb-toast__close`, `.yb-dialog__close`, `.yb-cart__remove` e
+   `.yb-search__clear`. Sete copias da mesma decisao e a definicao de API que
+   faltava.
+
+   Os sete continuam como estao: trocar para o modificador mexe na MARCACAO das
+   telas e do tema, e isso e outra entrega. Codigo novo usa este. */
+.yb-iconbtn--square{
+  inline-size:var(--yb-target-min); block-size:var(--yb-target-min);
+  flex:none;
+}
+/* GRANDE — 56px, o play sobre video.
+   O numero nao e novo: e o que `.yb-video__play` ja fixa em pixel cru desde
+   que existe. Alvo maior porque ele flutua sobre imagem em movimento, onde
+   errar o toque custa recomecar o video. */
+.yb-iconbtn--lg{
+  inline-size:3.5rem; block-size:3.5rem; flex:none;
+}
+.yb-iconbtn--lg .yb-icon{ --yb-icon-size:var(--yb-icon-lg); }
+
+/* sobre imagem ou video, onde nao ha superficie por tras */
+.yb-iconbtn--onmedia{
+  background:var(--yb-surface-on-media); color:var(--yb-text-primary);
+  border-radius:var(--yb-radius-full);
+}
+@media (hover:hover){
+  .yb-iconbtn:hover:not([disabled]){ background:var(--yb-bg-muted); }
+  .yb-iconbtn--onmedia:hover:not([disabled]){ background:var(--yb-surface-on-media); }
+}
+@media (forced-colors: active){
+  .yb-iconbtn{ border:var(--yb-border-hairline) solid; }
+}
+/* FAVORITAR — mesmo botao, um estado a mais.
+   Nao e componente novo: e `.yb-iconbtn` com um `aria-pressed` que muda a
+   leitura do mesmo coracao. A FORMA muda junto com a cor — contorno vira
+   solido — porque cor sozinha reprova a WCAG 1.4.1 (nao pode ser o unico
+   canal que informa estado) e falha primeiro para quem nao distingue
+   vermelho de cinza.
+
+   A troca de forma NAO acontece aqui: `fill` de um `<use>` para arquivo de
+   sprite EXTERNO nao obedece ao CSS de quem consome — as regras do proprio
+   `icons.svg` resolvem antes de qualquer folha de fora entrar na disputa.
+   Por isso o JS troca o `href` do `<use>` para `#yb-heart-filled`, o unico
+   simbolo do sprite com preenchimento proprio (ver a nota la). Aqui so cabe
+   a COR, que e propriedade normal de CSS e obedece a esta folha. */
+.yb-iconbtn--fav[aria-pressed="true"]{ color:var(--yb-accent-love); }
+/* O pop e so na chegada ao estado favoritado — o oposto (soltar o favorito)
+   nao precisa de enfase, e enfase nos dois sentidos vira piscar. */
+.yb-iconbtn--fav[aria-pressed="true"] .yb-icon{
+  /* So o token: ele ja traz duracao E curva. Um `ease` a mais dava duas
+     curvas, a declaracao inteira ficava invalida e o pop nunca rodava. */
+  animation:yb-favbtn-pop var(--yb-transition-control);
+}
+@keyframes yb-favbtn-pop{
+  from{ transform:scale(.65); }
+  to{ transform:scale(1); }
+}
+
+/* =========================================================================
+   NOTICE — aviso de faixa, no topo ou onde couber
+   A loja empilha DOIS no topo de toda pagina: um contextual, colorido, que o
+   JS revela, e o de frete, preto. O sistema modelava isso como parte do
+   header (`yb-header__announce`), entao o segundo nao tinha onde morar.
+   Aqui e peca solta: o header usa uma, a pagina pode usar outra — e desde
+   0.13 o proprio header consome esta, em vez de repetir a receita.
+   ========================================================================= */
+/* `display:block` e nao flex: o conteudo da faixa e UMA FRASE, e cada trecho
+   de texto solto vira item flex anonimo. Com `gap`, "orders over <b>$50</b>"
+   ganhava 12px de vao no meio da frase — medido. Quem precisa de ícone ou
+   botão ao lado põe o proprio espaco. */
+/* 8px e nao 12 no eixo vertical: a faixa mede 32px em vez de 40. Ela e a
+   primeira coisa da pagina e a menos importante delas — um aviso de frete nao
+   compete com o cabecalho, e os 8px que ela devolve sao 8px a mais de loja na
+   primeira tela. O alvo de toque nao entra na conta: a faixa e texto, e o
+   `<a>` que ela as vezes tem tem o proprio minimo. */
+.yb-notice{
+  display:block;
+  padding:var(--yb-space-2) var(--yb-page-gutter);
+  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  font-size:var(--yb-type-caption-size); letter-spacing:var(--yb-tracking-wide);
+  text-align:center;
+}
+.yb-notice b{color:var(--yb-accent-on-dark); font-weight:var(--yb-font-weight-semibold)}
+.yb-notice a{color:inherit; text-decoration:underline}
+.yb-notice--action{background:var(--yb-action-bg); color:var(--yb-action-text)}
+.yb-notice--action b{color:var(--yb-action-text)}
+.yb-notice--soft{
+  background:var(--yb-bg-muted); color:var(--yb-text-secondary);
+  border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);
+}
+.yb-notice--soft b{color:var(--yb-text-primary)}
+.yb-notice__close{margin-inline-start:auto; color:inherit}
+@media (forced-colors: active){ .yb-notice{ border-block-end:var(--yb-border-hairline) solid; } }
+
+/* =========================================================================
+   CHECKBOX / RADIO — mesma caixa, duas decisoes
+
+   Sao DUAS pecas na doc (`pecas/checkbox.html` e `pecas/radio.html`) porque
+   sao duas decisoes diferentes: a caixa escolhe de forma independente — zero,
+   uma ou todas — e o radio escolhe UMA dentro de um grupo e nunca volta ao
+   vazio. Numa ficha so, as demos ficavam intercaladas e nenhum dos dois
+   mostrava os proprios estados.
+
+   Sao UMA secao no CSS, como Input, Select e Textarea: dividem a caixa, o
+   alvo, o foco, o desabilitado e o alto contraste, e a convencao "redondo
+   escolhe um, quadrado escolhe varios" so e lida se NADA mais estiver
+   diferente entre os dois. O que muda cabe em duas regras, e elas estao
+   juntas mais abaixo.
+
+   A forma vem da CLASSE, e nao de `input[type="radio"]`: o seletor de atributo
+   funcionava, mas so dizia a verdade depois de abrir o HTML. Com a classe, a
+   marcacao anuncia qual dos dois e — e a ficha tem uma classe base para
+   chamar de sua.
+   ========================================================================= */
+.yb-check,.yb-radio{display:flex; align-items:flex-start; gap:var(--yb-space-3); cursor:pointer;
+  /* alvo-compacto: o label é o alvo, e caixas de seleção vivem empilhadas —
+     o gap da lista dá a folga. Com uma linha de texto media 22px, abaixo do
+     mínimo 24×24 da WCAG 2.5.8; 36 passa com margem. */
+  padding-block:var(--yb-space-2); min-height:var(--yb-control-height-compact)}
+/* DESENHADOS PELO SISTEMA, e nao pelo sistema operacional.
+   Eram os controles nativos com `accent-color`: quadrado de canto vivo, tique
+   do navegador, nenhuma transicao, e a borda do desmarcado escolhida pelo
+   motor. Dentro de uma pagina que tem raio, tom de borda e tempo de transicao
+   proprios, eles liam como widget colado de fora.
+
+   O contorno usa `--yb-border-control` e nao `--yb-border`: quando a caixa
+   esta desmarcada a borda E o controle, e e ela que precisa dos 3:1 da WCAG
+   1.4.11. O `--yb-border` da 1.40:1 — serve para dividir bloco, nao para
+   dizer "clique aqui". Foi por causa deste componente que o token nasceu.
+
+   O tique e desenhado em CSS (dois lados de uma caixa girada) e nao vem do
+   sprite: `<use>` exige um elemento no HTML, e a caixa e um `<input>`, que nao
+   tem filhos. `currentColor` mantem tudo em token. */
+.yb-check input,.yb-radio input{
+  appearance:none; -webkit-appearance:none;
+  inline-size:1.25rem; block-size:1.25rem; margin:0; flex:none; margin-top:1px;
+  display:grid; place-content:center;
+  background:var(--yb-surface);
+  border:var(--yb-border-hairline) solid var(--yb-border-control);
+  color:var(--yb-text-inverse);
+  cursor:pointer;
+  transition:background var(--yb-transition-control),
+             border-color var(--yb-transition-control);
+  /* se `appearance:none` nao pegar, o accent ainda pinta o nativo */
+  accent-color:var(--yb-action-bg);
+}
+@media (hover:hover){
+  .yb-check input:not(:checked):not(:disabled):hover,
+  .yb-radio input:not(:checked):not(:disabled):hover{border-color:var(--yb-text-primary)}
+}
+.yb-check input:checked,.yb-radio input:checked{
+  background:var(--yb-action-bg); border-color:var(--yb-action-bg);
+}
+/* O QUE SEPARA OS DOIS, e so isto: a forma da caixa e a marca dentro dela.
+   As quatro regras ficam juntas, e NENHUMA das duas formas e "o padrao" —
+   escrever so o redondo como excecao ensinaria que rádio e um checkbox
+   torto. Separadas, alguem muda uma e a convencao "redondo escolhe um,
+   quadrado escolhe varios" passa a valer pela metade.
+
+   O tique e uma caixa girada com dois lados; o `translate` centra o L, que
+   nasce fora do centro optico por ser assimetrico. */
+.yb-check input{border-radius:var(--yb-radius-sm)}
+.yb-check input:checked::after{
+  content:""; inline-size:.3125rem; block-size:.625rem;
+  border:solid currentColor; border-width:0 var(--yb-border-emphasis) var(--yb-border-emphasis) 0;
+  transform:rotate(45deg) translate(-1px, -1px);
+}
+.yb-radio input{border-radius:var(--yb-radius-pill)}
+.yb-radio input:checked::after{
+  content:""; inline-size:.5rem; block-size:.5rem;
+  border-radius:var(--yb-radius-pill); background:currentColor;
+}
+.yb-check input:disabled,.yb-radio input:disabled{
+  cursor:not-allowed; background:var(--yb-bg-subtle);
+  border-color:var(--yb-border-strong);
+}
+.yb-check input:disabled:checked,
+.yb-radio input:disabled:checked{background:var(--yb-text-muted); border-color:var(--yb-text-muted)}
+.yb-check input:focus-visible,.yb-radio input:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+/* Em alto contraste o sistema descarta as cores do autor, e um controle
+   desenhado por nos vira um quadrado vazio: o fundo `--yb-action-bg` do
+   marcado some e o tique de `currentColor` vai junto. Devolver o nativo e o
+   unico caminho honesto — ali quem desenha e o sistema operacional, e ele
+   sabe desenhar marcado e desmarcado. */
+@media (forced-colors: active){
+  .yb-check input,.yb-radio input{appearance:auto; -webkit-appearance:auto}
+  .yb-check input::after,.yb-radio input::after{content:none}
+}
+.yb-check span,.yb-radio span{font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+  line-height:var(--yb-line-height-relaxed)}
+
+/* =========================================================================
+   SKELETON
+   Só para carregamento REAL. Skeleton eterno é pior que spinner: promete
+   conteúdo que não chega.
+   ========================================================================= */
+.yb-skeleton{
+  display:block; background:var(--yb-bg-muted);
+  border-radius:var(--yb-radius-sm); position:relative; overflow:hidden;
+}
+/* DOIS defeitos moravam aqui, e os dois eram invisiveis de propósito nenhum.
+
+   1. A direcao era `to inline-end`. Palavra logica nao vale em
+      `linear-gradient()` — o valor inteiro e descartado e o `background` do
+      pseudo virava `none`. A animacao rodava o tempo todo, arrastando um
+      elemento transparente de um lado ao outro. Medido: `background-image`
+      computado em `none`, `transform` animando normalmente.
+
+      Agora e `to right`, que e fisico. Em RTL o brilho tem de varrer ao
+      contrario, e como o gradiente e simetrico (transparente nas duas pontas)
+      basta inverter a animacao — nao ha segundo gradiente para manter.
+
+   2. O brilho era `--yb-bg-subtle` sobre `--yb-bg-muted`: cinco degraus de
+      cinza em 255, 1,045:1. Mesmo valido, ninguem veria. O branco da
+      superficie dobra a diferenca (1,09:1) e continua discreto — esqueleto
+      que pisca forte demais parece defeito, nao carregamento. */
+.yb-skeleton::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(to right, transparent, var(--yb-surface), transparent);
+  transform:translateX(-100%);
+  animation:yb-shimmer var(--yb-rhythm-loop) infinite;
+}
+[dir="rtl"] .yb-skeleton::after{ animation-direction:reverse; }
+@keyframes yb-shimmer{to{transform:translateX(100%)}}
+.yb-skeleton--text{height:1em; margin-block:.25em}
+.yb-skeleton--title{height:1.4em; width:70%}
+.yb-skeleton--line{height:1em}
+.yb-skeleton--line-short{height:1em; width:45%}
+.yb-skeleton--media{aspect-ratio:var(--yb-aspect-product); border-radius:var(--yb-radius-media)}
+.yb-skeleton--btn{height:var(--yb-target-min); border-radius:var(--yb-radius-control)}
+.yb-skeleton-card{display:flex; flex-direction:column; gap:var(--yb-space-3)}
+
+/* =========================================================================
+   SWITCH
+   Nao e a caixa de selecao com outra roupa. A caixa guarda uma intencao ate
+   alguem enviar o formulario; o switch APLICA na hora — o seguro de entrega
+   entra no total no mesmo instante em que a pessoa liga. Trocar um pelo
+   outro faz procurar um botao de salvar que nao existe.
+
+   <button role="switch" aria-checked> e nao <input type="checkbox">: com o
+   input o leitor de tela anuncia "caixa de selecao, marcada", que promete
+   exatamente o formulario que nao ha.
+   ========================================================================= */
+.yb-switch{
+  position:relative; flex:none;
+  display:inline-flex; align-items:center;
+  inline-size:2rem; block-size:1.25rem; padding:2px;
+  border:0; border-radius:var(--yb-radius-pill); cursor:pointer;
+  background:var(--yb-border);
+  transition:background-color var(--yb-transition-control);
+}
+/* O desenho tem 32x20 porque e assim que um switch se le. O ALVO nao pode ter
+   32x20: o minimo da WCAG 2.5.8 e 24x24. O pseudo estende a area de clique
+   para 56x44 sem mexer no desenho — crescer o desenho ate 44 daria um
+   interruptor do tamanho de um botao. */
+.yb-switch::after{content:''; position:absolute; inset:-12px}
+.yb-switch[aria-checked="true"]{background:var(--yb-success-solid)}
+/* So o DESLIGADO. O ligado ja e verde solido: escurecer no hover encostaria os
+   dois estados na mesma faixa de cor, que e a unica coisa que a peca comunica. */
+@media (hover:hover){
+  .yb-switch:not([aria-checked="true"]):not([disabled]):hover{background:var(--yb-border-strong)}
+}
+.yb-switch:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-switch[disabled]{cursor:not-allowed; opacity:var(--yb-opacity-control-disabled)}
+.yb-switch__knob{
+  inline-size:1rem; block-size:1rem; border-radius:var(--yb-radius-pill);
+  background:var(--yb-surface); box-shadow:var(--yb-elevation-raised);
+  transition:transform var(--yb-duration-base) var(--yb-ease-standard);
+}
+.yb-switch[aria-checked="true"] .yb-switch__knob{transform:translateX(.75rem)}
+[dir="rtl"] .yb-switch[aria-checked="true"] .yb-switch__knob{transform:translateX(-.75rem)}
+
+/* =========================================================================
+   LOGO
+   Arquivo oficial do header da loja (Union_3), 360x139, monocromatico preto
+   com fundo transparente.
+
+   Por que e componente e nao uma <img> solta: o logo aparece em header,
+   footer, e-mail e recibo, e em cada lugar alguem escolhia uma altura
+   diferente. Aqui a altura vem de token e o alt vem certo por padrao — em
+   producao ele diz "Fashion Gold", que e nome de linha, nao da marca: um
+   leitor de tela anuncia a loja errada.
+   ========================================================================= */
+.yb-logo{
+  display:inline-flex; align-items:center;
+  height:var(--yb-logo-height, 32px);
+  flex:none;
+}
+.yb-logo img{
+  height:100%; width:auto; display:block;
+  /* a proporcao do arquivo e 2,59:1 — deixar a largura livre evita distorcer */
+}
+.yb-logo:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+  border-radius:var(--yb-radius-sm);
+}
+
+.yb-logo--sm{ --yb-logo-height:22px; }
+.yb-logo--md{ --yb-logo-height:32px; }
+.yb-logo--lg{ --yb-logo-height:44px; }
+
+/* Sobre fundo escuro. Funciona porque o logo e monocromatico preto: inverter
+   devolve branco puro. Nao vale para logo colorido — se a marca ganhar uma
+   versao em cor, o certo passa a ser um segundo arquivo, nao um filtro. */
+.yb-logo--inverse img{ filter:invert(1); }
+
+/* =========================================================================
+   CERTIFICATION SEALS
+   Cruelty free, vegan, sem parabeno, sem sulfato, sem formaldeído.
+
+   Faixa de garantia, não de venda: tom neutro de propósito. Se ela usasse a
+   cor de ação, competiria com o botão de compra pela mesma atenção.
+   ========================================================================= */
+/* Era `grid-auto-flow:column` com `1fr` — cinco colunas dividindo a tela
+   INTEIRA em partes iguais, cada uma bem mais larga que o proprio selo. O
+   resultado nao era um grupo de cinco selos: eram cinco ilhas, tao longe
+   umas das outras quanto a tela permitia. `flex` com `justify-content:center`
+   deixa o grupo do tamanho do proprio conteudo e centraliza o grupo, nao
+   cada peca dentro da sua fatia. */
+.yb-seals{
+  display:flex; flex-wrap:wrap; justify-content:center;
+  gap:var(--yb-space-8) var(--yb-space-10);
+  /* padding-inline tambem: so o padding-block deixava "Paraben Free" a 5px da
+     borda em 320, enquanto o resto da pagina respeita a goteira. */
+  padding:var(--yb-space-10) var(--yb-page-gutter);
+  background:var(--yb-bg-subtle);
+}
+@media (max-width:767.98px){
+  .yb-seals{ gap:var(--yb-space-6) var(--yb-space-5); }
+}
+.yb-seal{
+  display:flex; flex-direction:column; align-items:center;
+  gap:var(--yb-space-3); text-align:center; min-width:0;
+}
+.yb-seal__mark{
+  width:64px; height:64px; border-radius:var(--yb-radius-full);
+  background:var(--yb-bg-muted); color:var(--yb-text-secondary);
+  display:flex; align-items:center; justify-content:center; flex:none;
+}
+.yb-seal__mark .yb-icon{ --yb-icon-size:var(--yb-icon-xl); }  /* 32 = metade do disco de 64 */
+.yb-seal__label{
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+  line-height:var(--yb-line-height-base);
+}
+
+/* =========================================================================
+   LINK — texto de acao com icone, do tamanho de alvo de toque
+   Nasceu de duas receitas identicas escritas em arquivos diferentes:
+   `.yb-section-head a` (hoje nos templates) e o link do post.
+   Mesmo inline-flex, mesmo gap, mesmo alvo de 44px, mesma cor de link — so
+   o peso da fonte e o sublinhado divergiam, e ninguem tinha decidido isso
+   de proposito. Uma receita, dois lugares que a consomem.
+   ========================================================================= */
+.yb-link{
+  display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  min-height:var(--yb-target-min);
+  font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-medium);
+  color:var(--yb-text-link); text-decoration:none;
+}
+/* <button class="yb-link"> e uso legitimo: acao que nao navega — remover um
+   cupom, desfazer uma remocao. Sem este reset o botao entra com a moldura e o
+   fundo do navegador e para de parecer link, que era o ponto. Escrever <a>
+   nesses casos e pior: link que nao leva a lugar nenhum quebra o teclado. */
+button.yb-link{
+  background:none; border:0; padding:0;
+  font-family:inherit; cursor:pointer;
+}
+.yb-link:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+/* O sublinhado no hover era promessa escrita e nao cumprida: a ficha dizia
+   "some o sublinhado ATE o hover" e a folha so trocava a cor. Cor sozinha e um
+   canal so — e o unico que falha primeiro para quem nao distingue os dois
+   magentas. Agora o hover tem os dois. */
+@media (hover:hover){
+  .yb-link:hover{
+    color:var(--yb-text-link-hover);
+    text-decoration:underline; text-underline-offset:3px;
+  }
+}
+/* REFORCO — nao e o link em si, e o eco visual de um link que ja existe em
+   outro lugar do mesmo bloco (o "Continue reading" ao lado do titulo do
+   post, que e <span>, nao <a> — quem clica e o titulo, esticado por cima do
+   cartao inteiro). Por isso fica sempre sublinhado: sem isso nao pareceria
+   clicavel, e ele PARECE sem ser. */
+.yb-link--reinforce{
+  font-weight:var(--yb-font-weight-semibold);
+  text-decoration:underline; text-underline-offset:3px;
+  /* `min-height:44px` e piso de ALVO DE TOQUE, e existe no `.yb-link` porque
+     la ha o que tocar. Aqui nao ha: o reforco e <span aria-hidden>, e o
+     modificador so existe para o caso em que o elemento NAO e o link. Medido
+     no cartao de post: 44px de caixa para 17px de texto — 27px que nasciam de
+     uma regra sem motivo, e que o proprio Post precisou remendar depois com
+     `align-items:flex-start` para o "Continue reading" nao descolar do resumo.
+     Cancelado aqui, o remendo de la deixou de ser preciso. */
+  min-height:0;
+}
+
+/* =========================================================================
+   PROGRESS BAR
+   Duas leituras: a barra para quem vê e o número para quem ouve. A barra
+   sozinha não diz nada a um leitor de tela; o número sozinho não diz nada
+   a quem passa o olho.
+   ========================================================================= */
+.yb-progress{
+  display:block; inline-size:100%; overflow:hidden;
+  block-size:var(--yb-progress-h, 8px);
+  background:var(--yb-bg-muted); border-radius:var(--yb-radius-pill);
+}
+.yb-progress--sm{--yb-progress-h:4px}
+.yb-progress--lg{--yb-progress-h:12px}
+.yb-progress__fill{
+  display:block; block-size:100%; inline-size:0;
+  background:var(--yb-action-bg); border-radius:inherit;
+  transition:inline-size var(--yb-duration-slow) var(--yb-ease-standard);
+}
+.yb-progress__fill--success{background:var(--yb-success-solid)}
+.yb-progress__fill--warning{background:var(--yb-warning-solid)}
+.yb-progress__fill--danger{background:var(--yb-danger-solid)}
+
+/* Indeterminado: não existe `aria-valuenow` para anunciar, então a barra é o
+   único sinal — e ela precisa se mexer para dizer "ainda estou trabalhando".
+   A faixa é menor que a pista e atravessa; encher a pista inteira e piscar
+   seria indistinguível de uma barra travada em 100%. */
+/* `alternate` era o defeito, e o tempo piorava: a faixa atravessava a pista em
+   420ms e VOLTAVA, com `ease` nas duas pontas — parava, hesitava e disparava
+   ao contrario, duas vezes e meia por segundo. Isso nao le como "trabalhando",
+   le como alarme; e vaivem de faixa colorida e o gatilho classico de quem tem
+   sensibilidade a movimento.
+   Agora e um sentido so, em velocidade constante e no ritmo de espera do
+   sistema: a faixa entra pela esquerda, atravessa e sai pela direita, sempre
+   igual. Esteira, e nao pendulo. */
+.yb-progress--indeterminate .yb-progress__fill{
+  inline-size:40%; transition:none;
+  animation:yb-progress-vai var(--yb-rhythm-loop) linear infinite;
+}
+@keyframes yb-progress-vai{
+  from{transform:translateX(calc(-100% * var(--yb-dir)))}
+  to{transform:translateX(calc(250% * var(--yb-dir)))}
+}
+/* Sem movimento a faixa vira uma barra parada em 40%, que MENTE sobre o
+   progresso. Entao ela enche a pista inteira e desbota: presenca sem promessa
+   — da para ver que ha algo acontecendo sem ler um numero que nao existe.
+   (O comentario antigo dizia "a pista fica listrada"; nunca houve listra, e a
+   regra abaixo sempre foi esta.) */
+@media (prefers-reduced-motion:reduce){
+  .yb-progress--indeterminate .yb-progress__fill{
+    inline-size:100%; animation:none; opacity:.35;
+  }
+}
+
+/* =========================================================================
+   INPUT, SELECT, TEXTAREA — os controles de texto
+
+   Viviam dentro do bloco do Form field, e por isso nao tinham ficha: eram
+   tratados como peca interna de uma molecula. Nao sao. O campo de e-mail do
+   rodape (onze telas) e a ordenacao do catalogo usam o controle SOZINHO, sem
+   rotulo flutuante nem caixa — e um atomo e isso: nao usa nenhuma outra peca
+   e funciona por conta propria. O Form field e que os compoe.
+
+   Os tres dividem a mesma caixa, os mesmos estados e a mesma regra de erro.
+   O que muda e o que o elemento nativo ja faz: o select abre a lista do
+   sistema, o textarea tem varias linhas e redimensiona na vertical.
+   ========================================================================= */
+.yb-input,.yb-select,.yb-textarea{
+  width:100%; font-family:inherit; font-size:var(--yb-type-body-size);
+  color:var(--yb-text-primary); background:var(--yb-surface);
+  border:var(--yb-border-hairline) solid var(--yb-border); border-radius:var(--yb-radius-control);
+  padding:var(--yb-space-3) var(--yb-space-4); min-height:var(--yb-control-h);
+  transition:border-color var(--yb-transition-control);
+}
+.yb-textarea{min-height:96px; resize:vertical; line-height:var(--yb-line-height-relaxed)}
+.yb-input::placeholder,.yb-textarea::placeholder{color:var(--yb-text-muted)}
+
+@media (hover:hover){
+  .yb-input:hover,.yb-select:hover,.yb-textarea:hover{border-color:var(--yb-border-strong)}
+}
+.yb-input:focus-visible,.yb-select:focus-visible,.yb-textarea:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset); border-color:var(--yb-text-primary);
+}
+.yb-input[disabled],.yb-select[disabled],.yb-textarea[disabled]{
+  background:var(--yb-bg-subtle); color:var(--yb-text-disabled); cursor:not-allowed;
+}
+
+/* Erro por FORMA, nao so por cor (WCAG 1.4.1): a borda engrossa por
+   `box-shadow` inset — pintura, nao layout, entao nada reflui — e o icone de
+   alerta entra como fundo, que sobrevive ao forced-colors. `%23B3261E` =
+   --yb-danger-600; data-URI nao le var(), e ha checagem para o hex. Dentro da
+   caixa do Form field quem desenha o erro e a caixa (ver FORM FIELD). */
+.yb-input[aria-invalid="true"],.yb-select[aria-invalid="true"],.yb-textarea[aria-invalid="true"]{
+  border-color:var(--yb-danger-solid);
+  box-shadow:inset 0 0 0 var(--yb-border-hairline) var(--yb-danger-solid);
+  padding-inline-end:var(--yb-space-10);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B3261E' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4.2 2.8 20h18.4Z'/%3E%3Cpath d='M12 10v4'/%3E%3Cpath d='M12 17.2v.1' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right var(--yb-space-3) center;
+  background-size:var(--yb-icon-md) var(--yb-icon-md);
+}
+[dir="rtl"] .yb-input[aria-invalid="true"]{
+  background-position:left var(--yb-space-3) center;
+}
+
+/* =========================================================================
+   INPUT, SELECT, TEXTAREA · rótulo, dica e erro — a caixa em volta do controle
+   Era o bloco do "Form field", uma molécula à parte. Não é: rótulo, dica e
+   erro são o próprio campo, e Input, Select e Textarea são este mesmo campo
+   com um controle diferente dentro. Fica DEPOIS das regras do controle solto
+   (acima), de propósito — as regras da caixa têm a mesma especificidade de
+   algumas do controle e precisam vencer pela ordem, como venciam quando
+   moravam na folha de cima.
+   O erro é anunciado por texto, não só por cor — daltônicos existem.
+
+   O rótulo vive DENTRO da caixa e sobe para cima da borda quando o campo
+   ganha foco ou já tem valor, abrindo um entalhe com o próprio fundo.
+   Mecânica sem uma linha de JS: o input leva `placeholder=" "` (um espaço).
+   Não é descuido — é o que dá a `:placeholder-shown` algo em que casar, e é
+   assim que o CSS distingue "vazio" de "preenchido". O estado flutuado é o
+   DEFAULT; a regra `:placeholder-shown:not(:focus)` é que empurra o rótulo
+   de volta para baixo, porque só o campo vazio-e-sem-foco é a exceção.
+
+   Ordem no HTML importa: o <label> vem DEPOIS do input, senão o combinador
+   `~` não alcança. Continua sendo <label for>, então clicar nele foca o
+   campo e o leitor de tela anuncia o nome — placeholder não é rótulo.
+   ========================================================================= */
+.yb-field{display:flex; flex-direction:column; gap:var(--yb-space-2); inline-size:100%}
+
+/* Campo + ação na mesma linha: o "calculate shipping" da PDP e o cupom da
+   sacola. Grid e não flex porque a mensagem precisa ocupar a linha inteira
+   embaixo dos dois — com flex-wrap ela herdaria só a largura que sobrou. */
+.yb-field--row{
+  display:grid; grid-template-columns:1fr auto;
+  gap:var(--yb-space-2) var(--yb-space-3); align-items:start;
+}
+.yb-field--row > .yb-field__hint,
+.yb-field--row > .yb-field__error{grid-column:1 / -1}
+
+/* A caixa desenha borda, fundo e anel de foco; o controle lá dentro fica
+   transparente. Duas bordas concêntricas é o defeito clássico de quem
+   embrulha um input que já tinha a sua. */
+.yb-field__box{
+  position:relative;
+  display:flex; align-items:center; gap:var(--yb-space-2);
+  padding:var(--yb-space-3) var(--yb-space-4);
+  /* trava com a altura do .yb-btn padrão: os dois vivem lado a lado na linha
+     de calcular frete, e 4px de diferença ali é a primeira coisa que se vê. */
+  min-height:var(--yb-control-h);
+  background:var(--yb-surface);
+  border:var(--yb-border-hairline) solid var(--yb-border);
+  border-radius:var(--yb-radius-control);
+  transition:border-color var(--yb-transition-control),
+             box-shadow var(--yb-transition-control);
+}
+.yb-field__box > :is(.yb-input,.yb-select,.yb-textarea){
+  border:0; background:transparent; padding:0; min-height:0;
+  border-radius:0; flex:1; min-inline-size:0;
+}
+/* O anel é da caixa, não do controle — dois anéis concêntricos piscariam. */
+.yb-field__box > :is(.yb-input,.yb-select,.yb-textarea):focus-visible{outline:0} /* anel: .yb-field__box */
+/* `:focus-visible` e não `:focus-within`: o anel é para quem navega por
+   teclado. Clicar com o mouse já diz onde o cursor está. */
+.yb-field__box:has(:focus-visible){
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+  border-color:var(--yb-text-primary);
+}
+.yb-field__box > .yb-icon{flex:none; color:var(--yb-text-muted)}
+
+.yb-field__label{
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-medium);
+  color:var(--yb-text-primary);
+}
+.yb-field__label .req{color:var(--yb-danger-text); margin-inline-start:2px}
+
+/* Estado flutuado — o default. `background-color:inherit` e não um token
+   fixo: o entalhe precisa acompanhar o fundo da caixa, que muda quando o
+   campo está desabilitado. `inherit` copia a cor, não a imagem de fundo do
+   ícone de erro, que passaria a aparecer atrás do rótulo. */
+.yb-field__box > .yb-field__label{
+  position:absolute; z-index:1;
+  inset-block-start:0; inset-inline-start:var(--yb-space-2);
+  transform:translateY(-50%) scale(.857);   /* 14px → 12px, dois passos da escala */
+  transform-origin:0 50%;
+  background-color:inherit; padding-inline:var(--yb-space-1);
+  line-height:var(--yb-line-height-none); white-space:nowrap; pointer-events:none;
+  color:var(--yb-text-muted); font-weight:var(--yb-font-weight-regular);
+  transition:inset-block-start var(--yb-duration-base) var(--yb-ease-enter),
+             inset-inline-start var(--yb-duration-base) var(--yb-ease-enter),
+             transform var(--yb-duration-base) var(--yb-ease-enter),
+             color var(--yb-transition-control);
+}
+[dir="rtl"] .yb-field__box > .yb-field__label{transform-origin:100% 50%}
+
+/* Repouso: campo vazio e sem foco. O rótulo ocupa o lugar do placeholder e
+   alinha com o padding da caixa. <select> nunca casa `:placeholder-shown`
+   — não existe select vazio — então o rótulo dele fica flutuado sempre, que
+   é o certo: a primeira opção já é um valor. */
+.yb-field__box > :is(input,textarea):placeholder-shown:not(:focus) ~ .yb-field__label{
+  inset-block-start:50%; inset-inline-start:var(--yb-space-4);
+  transform:translateY(-50%) scale(1);
+}
+/* ...e só abre espaço para o ícone quando ele existe de verdade. Reservar
+   sempre deixava o rótulo boiando 24px adentro nos campos sem ícone. */
+.yb-field__box:has(> .yb-icon) > input:placeholder-shown:not(:focus) ~ .yb-field__label{
+  inset-inline-start:calc(var(--yb-space-4) + 1.25rem + var(--yb-space-2));
+}
+/* Textarea alinha no topo: o repouso é na 1ª linha, não no centro da caixa. */
+.yb-field__box:has(> .yb-textarea){align-items:flex-start}
+.yb-field__box > .yb-textarea:placeholder-shown:not(:focus) ~ .yb-field__label{
+  inset-block-start:calc(var(--yb-space-3) + .55em);
+}
+.yb-field__box:has(:focus-visible) > .yb-field__label{color:var(--yb-text-primary)}
+
+.yb-field__box > .yb-textarea{min-height:72px}
+
+@media (hover:hover){
+  .yb-field__box:hover{border-color:var(--yb-border-strong)}
+  .yb-field__box > :is(.yb-input,.yb-select,.yb-textarea):hover{border-color:transparent}
+}
+.yb-field__box:has([disabled]){
+  background:var(--yb-bg-subtle); border-color:var(--yb-border-subtle);
+}
+.yb-field__box:has([disabled]) > .yb-field__label{color:var(--yb-text-disabled)}
+.yb-field__box > :is(.yb-input,.yb-select,.yb-textarea)[disabled]{background:transparent}
+
+/* Cor sozinha reprova em WCAG 1.4.1 e some inteira em alto contraste. A borda
+   engrossa — forma, nao so cor — e o campo ganha o icone de alerta como fundo,
+   que sobrevive ao forced-colors.
+
+   A espessura vem de `box-shadow` inset, nao de `border-width`. Dobrar a borda
+   é mudança de LAYOUT: a caixa reflui 1px e o rotulo flutuante, ancorado nela,
+   treme junto. Como pintura, o mesmo 2px interpola sem mover nada. */
+/* O controle solto tem a mesma regra na folha dos atomos (INPUT, SELECT,
+   TEXTAREA); aqui fica so a da caixa, que e onde o Form field desenha a borda. */
+.yb-field__box:has([aria-invalid="true"]){
+  border-color:var(--yb-danger-solid);
+  box-shadow:inset 0 0 0 var(--yb-border-hairline) var(--yb-danger-solid);
+  padding-inline-end:var(--yb-space-10);
+  /* `%23B3261E` = --yb-danger-600 (= --yb-danger-solid). Data-URI nao le
+     var(); se a rampa de perigo mudar, este hex muda junto — ha checagem. */
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B3261E' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4.2 2.8 20h18.4Z'/%3E%3Cpath d='M12 10v4'/%3E%3Cpath d='M12 17.2v.1' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right var(--yb-space-3) center;
+  background-size:var(--yb-icon-md) var(--yb-icon-md);
+}
+/* Dentro da caixa o alerta já é da caixa — repetir daria dois triângulos. */
+.yb-field__box > :is(.yb-input,.yb-select,.yb-textarea)[aria-invalid="true"]{
+  box-shadow:none; background-image:none; padding-inline-end:0;
+}
+[dir="rtl"] .yb-field__box:has([aria-invalid="true"]){
+  background-position:left var(--yb-space-3) center;
+}
+.yb-field__box:has([aria-invalid="true"]) > .yb-field__label{color:var(--yb-danger-text)}
+.yb-field__hint{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+.yb-field__error{
+  font-size:var(--yb-type-caption-size); color:var(--yb-danger-text);
+  font-weight:var(--yb-font-weight-medium);
+  display:flex; align-items:center; gap:var(--yb-space-1);
+}
+
+/* =========================================================================
+   STARS — a nota desenhada em cinco estrelas
+
+   A nota e um NUMERO, e o desenho sai dele: `style="--yb-stars:4.8"`. Antes as
+   estrelas eram texto digitado — `★★★★☆` —, e isso tinha tres defeitos:
+   quem montava a peca escolhia cheia ou vazia no teclado; nota quebrada nao
+   existia (4,8 aparecia como cinco cheias, arredondando para cima); e o gerador
+   escrevia `★★★★★` fixo no cartao de produto, qualquer que fosse a nota.
+
+   Duas camadas, a mesma cor: `::before` sao as cinco estrelas VAZADAS, sempre
+   inteiras; `::after` sao as CHEIAS, cortadas na largura da nota. Cheia e vazia
+   se distinguem pela FORMA, nao pela cor — o mesmo que o ☆ fazia —, e as duas
+   medem os 3,45:1 do `--yb-accent-star` sobre branco (grafismo, WCAG 1.4.11).
+
+   A cor entra por `background` e a forma por `mask`: data-URI nao le var(),
+   mas a mascara so usa o alfa do SVG, entao o token manda na cor sem hex
+   nenhum no desenho. Cada estrela fica centrada no proprio ladrilho, e por isso
+   meia nota e exatamente meia estrela.
+
+   Mede o que o texto media — 76 x 17px a 14px de corpo —, para trocar uma
+   pela outra sem mexer em linha nenhuma.
+   ========================================================================= */
+.yb-stars{
+  --yb-stars:5;   /* o padrao; a nota de verdade chega no style="" da marcacao */
+  --yb-stars-gap:.085em;
+  position:relative; display:inline-block; flex:none; vertical-align:middle;
+  font-size:var(--yb-type-body-sm-size);
+  inline-size:calc(5 * (1em + var(--yb-stars-gap))); block-size:1.2em;
+}
+.yb-stars::before,.yb-stars::after{
+  content:""; position:absolute; inset-block:0; inset-inline-start:0;
+  background:var(--yb-accent-star);
+  -webkit-mask:var(--yb-stars-forma) 0 50% / calc(1em + var(--yb-stars-gap)) 1em repeat-x;
+          mask:var(--yb-stars-forma) 0 50% / calc(1em + var(--yb-stars-gap)) 1em repeat-x;
+}
+.yb-stars::before{ --yb-stars-forma:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6l2.93 6.03 6.62.84-4.87 4.59 1.24 6.58L12 17.43l-5.92 3.21 1.24-6.58L2.45 9.47l6.62-.84z' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linejoin='round'/%3E%3C/svg%3E"); inline-size:100%; }
+.yb-stars::after{
+  --yb-stars-forma:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6l2.93 6.03 6.62.84-4.87 4.59 1.24 6.58L12 17.43l-5.92 3.21 1.24-6.58L2.45 9.47l6.62-.84z'/%3E%3C/svg%3E");
+  inline-size:calc(clamp(0, var(--yb-stars), 5) / 5 * 100%);
+}
+/* Em RTL a nota enche da direita para a esquerda: a camada cheia ja nasce na
+   borda inicial (logica); a mascara so precisa ladrilhar a partir do mesmo lado. */
+[dir="rtl"] .yb-stars::before,[dir="rtl"] .yb-stars::after{
+  -webkit-mask-position:100% 50%; mask-position:100% 50%;
+}
+/* Alto contraste troca fundo por Canvas — a estrela desenhada por `background`
+   sumiria inteira. `CanvasText` com `forced-color-adjust:none` devolve a forma. */
+@media (forced-colors: active){
+  .yb-stars::before,.yb-stars::after{ background:CanvasText; forced-color-adjust:none; }
+}
+
+/* =========================================================================
+   AVATAR — a inicial de quem está logado
+
+   A INICIAL, e não uma foto: a loja não guarda foto de cliente, e círculo
+   cinza vazio é pior do que uma letra. Quem carrega o nome inteiro é o rótulo
+   do gatilho que o embrulha — a inicial sozinha não diz de quem é a conta, e
+   por isso ela é `aria-hidden` na marcação.
+
+   32px pintados: o alvo de toque é de quem envolve o avatar, não dele. A caixa
+   cresce para fora, não para dentro.
+   ========================================================================= */
+.yb-avatar{
+  display:flex; align-items:center; justify-content:center;
+  /* `flex:none` porque ele quase sempre nasce dentro de um flex — o gatilho do
+     menu, a barra de acoes do cabecalho. Com o `flex-shrink:1` que vem de
+     fabrica, container apertado achatava o circulo: medido em 60px de faixa,
+     32x32 virava 13x32. Circulo que vira elipse nao e detalhe de acabamento,
+     e a peca inteira, que e uma forma. */
+  /* Um numero governa o circulo: diametro e a propria caixa. O tamanho da
+     letra NAO sai dele por calculo — 44% de 24px e 10,5px, que e menor que
+     qualquer degrau da escala. Cada tamanho escolhe o degrau que lhe cabe. */
+  inline-size:var(--yb-avatar-d); block-size:var(--yb-avatar-d); flex:none;
+  --yb-avatar-d:2rem;
+  border-radius:var(--yb-radius-pill);
+  background:var(--yb-bg-muted); color:var(--yb-text-primary);
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
+  line-height:var(--yb-line-height-none);
+  /* A inicial nao depende de como o nome foi digitado no cadastro: "marina" e
+     "Marina" desenham o mesmo circulo. Sem isto, a peca herdava um defeito de
+     dado que ela pode resolver sozinha em uma linha. */
+  text-transform:uppercase;
+  /* Uma letra e o contrato (ver a ficha). `overflow:hidden` e o que faz um
+     acidente de dado falhar PARA DENTRO: com "Marina" o conteudo mede 40px
+     numa caixa de 32 e vazava por cima dos vizinhos, empurrando o cabecalho.
+     Cortado dentro do circulo o erro fica visivel e contido — vazando, ele
+     quebra a barra inteira. */
+  overflow:hidden;
+}
+/* Em alto contraste o fundo `--yb-bg-muted` vira Canvas e o circulo some: sobra
+   uma letra solta no meio da barra. Mesma receita do `.yb-iconbtn`, que tem o
+   mesmo problema pelo mesmo motivo. */
+@media (forced-colors: active){ .yb-avatar{ border:var(--yb-border-hairline) solid; } }
+
+/* TAMANHO — rampa de 8 em 8, de 24 a 64.
+
+   Sem modificador ele mede 32, que e o mesmo que `--sm`: a classe existe para
+   quem prefere dizer o tamanho em vez de depender do padrao, e nao ha um
+   degrau escondido entre as duas.
+
+   A LETRA NAO E UMA PORCENTAGEM DO CIRCULO. A proporcao cai de .54 no menor
+   para .38 no maior, de proposito: legibilidade tem PISO, nao proporcao. A
+   44% que serve o de 32 daria 10,5px no de 24 — ilegivel; e a mesma conta no
+   de 64 daria 28px, que nao existe na escala e faria a inicial parecer um
+   logotipo, nao a marca de uma pessoa. Cada degrau escolhe o degrau de tipo
+   que lhe cabe, e todos sao degraus de verdade — nenhum valor cru.
+
+   Onde cada um esta HOJE: 32 no gatilho da conta no cabecalho, 40 na cabeca do
+   painel. Os outros quatro sao a rampa completa, e a ficha diz quais estao em
+   uso — rampa com buraco (24, 32, 40, 56) e mais estranha que rampa inteira,
+   e quem vai precisar de 48 nao deve inventar um valor cru para chegar la. */
+.yb-avatar--xs { --yb-avatar-d:1.5rem;  font-size:var(--yb-type-caption-size) }
+.yb-avatar--sm { --yb-avatar-d:2rem;    font-size:var(--yb-type-body-sm-size) }
+.yb-avatar--md { --yb-avatar-d:2.5rem;  font-size:var(--yb-type-body-size) }
+.yb-avatar--lg { --yb-avatar-d:3rem;    font-size:var(--yb-type-body-lg-size) }
+.yb-avatar--xl { --yb-avatar-d:3.5rem;  font-size:var(--yb-type-h4-size) }
+.yb-avatar--2xl{ --yb-avatar-d:4rem;    font-size:var(--yb-type-h3-size) }
+
+/* =========================================================================
+   CHIP — filtro que liga e desliga
+   Pilula com estado preso em `aria-pressed`, e um `__x` opcional para o
+   filtro que ja esta aplicado. Nao usa nenhuma outra peca do sistema: e por
+   isso que e atomo, e nao molecula.
+
+   Estava na folha dos organismos, dentro do bloco de catalogo, porque foi ali
+   que nasceu. Mas a ficha do catalogo carrega ate os organismos e a do chip
+   carrega ate os atomos — um bloco pode consumir um atomo, o contrario nao.
+   ========================================================================= */
+.yb-chip{
+  /* barra de filtro do mobile: 36px e alvo de ponteiro, nao de dedo */
+  display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  border:var(--yb-border-hairline) solid var(--yb-border); border-radius:var(--yb-radius-pill);
+  padding:var(--yb-space-2) var(--yb-space-4); background:var(--yb-surface);
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+  cursor:pointer; font-family:inherit; text-decoration:none;
+  /* Altura de linha declarada, e nao herdada: `<button>` nao herda (fica em
+     `normal`), `<a>` herda o 1.55 do corpo. Sem isto o chip-link media 40px e
+     o chip-botao 36, lado a lado na mesma fileira da busca. */
+  line-height:var(--yb-line-height-snug);
+  transition:border-color var(--yb-transition-control),
+             color var(--yb-transition-control);
+  /* alvo-compacto: chip de filtro vive em fileira que rola. Em 44px, sete
+     filtros empurram o primeiro produto para fora da primeira tela — e é no
+     celular que o alvo mais importa. O gap da fileira dá a folga. */
+  min-height:var(--yb-control-height-compact);
+}
+
+@media (hover:hover){
+  .yb-chip:not([disabled]):hover{border-color:var(--yb-border-strong); color:var(--yb-text-primary)}
+}
+.yb-chip[aria-pressed="true"]{
+  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  border-color:var(--yb-bg-inverse);
+}
+/* Desligado: o filtro existe, mas não há produto para ele agora (0 resultados).
+   Só em <button> — `<a>` não tem `disabled`, e link que não leva a lugar
+   nenhum não deveria ser link. Sai do hover e do clique, e o texto cai para o
+   token de desabilitado, o mesmo do Button. */
+.yb-chip[disabled]{
+  color:var(--yb-text-disabled); border-color:var(--yb-border-subtle);
+  cursor:not-allowed;
+}
+.yb-chip:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+/* o × era `opacity:.7` sobre --yb-text-secondary: 7.67:1 caía para ~4.3:1,
+   e nada media a queda. Texto apagado tem token próprio, que é medido. */
+.yb-chip__x{font-size:var(--yb-type-body-size); line-height:var(--yb-line-height-none); color:var(--yb-text-muted)}
+.yb-chip[aria-pressed="true"] .yb-chip__x{color:var(--yb-text-muted-inverse)}
+/* Ícone antes do texto: a busca recente leva um relógio. Era `.yb-search__chip`,
+   uma cópia inteira deste átomo dentro do organismo da busca — mesma altura,
+   borda e padding. Agora a busca usa o chip, e o que só ela tinha ficou aqui:
+   o `text-decoration:none` (lá o chip é link) e este ícone. */
+.yb-chip .yb-icon{--yb-icon-size:var(--yb-icon-sm); color:var(--yb-text-muted)}
+.yb-chip[aria-pressed="true"] .yb-icon{color:var(--yb-text-muted-inverse)}

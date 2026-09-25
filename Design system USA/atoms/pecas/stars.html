@@ -1,0 +1,34 @@
+<h2>Stars</h2>
+    <p class="when">A nota desenhada em cinco estrelas, com preenchimento parcial. Recebe um número de 0 a 5; sozinha é a nota de uma pessoa, dentro do Rating é a média.</p>
+    <div class="demo">
+      <span class="yb-stars" style="--yb-stars:4.8" role="img" aria-label="4.8 of 5 stars"></span>
+    </div>
+    <h3 class="row-label">Da nota ao desenho</h3>
+    <div class="demo" style="gap:var(--yb-space-8); align-items:flex-start">
+      <span style="display:flex; flex-direction:column; gap:var(--yb-space-2)"><span class="yb-stars" style="--yb-stars:5" role="img" aria-label="5 of 5 stars"></span><code>--yb-stars:5</code></span>
+      <span style="display:flex; flex-direction:column; gap:var(--yb-space-2)"><span class="yb-stars" style="--yb-stars:4.5" role="img" aria-label="4.5 of 5 stars"></span><code>--yb-stars:4.5</code></span>
+      <span style="display:flex; flex-direction:column; gap:var(--yb-space-2)"><span class="yb-stars" style="--yb-stars:3.2" role="img" aria-label="3.2 of 5 stars"></span><code>--yb-stars:3.2</code></span>
+      <span style="display:flex; flex-direction:column; gap:var(--yb-space-2)"><span class="yb-stars" style="--yb-stars:1" role="img" aria-label="1 of 5 stars"></span><code>--yb-stars:1</code></span>
+    </div>
+    <div class="note">
+      <b>A nota é um número, e o desenho sai dele</b>
+      <p>Quem monta escreve só <code>style="--yb-stars:4.8"</code>. Antes as estrelas
+      eram texto digitado (<code>★★★★☆</code>): quem montava escolhia cheia ou vazia no
+      teclado, nota quebrada não existia — 4,8 virava cinco cheias — e o gerador
+      escrevia <code>★★★★★</code> fixo no cartão de produto, qualquer que fosse a
+      nota. Meia nota agora é exatamente meia estrela.</p>
+    </div>
+    <div class="note">
+      <b>Cheia e vazia se distinguem pela forma</b>
+      <p>As vazias são estrelas vazadas; as cheias, sólidas — na mesma cor
+      <code>--yb-accent-star</code>, 3,45:1 sobre branco. Um cinza claro para as vazias
+      reprovaria o contraste de grafismo e deixaria a diferença só na cor. No alto
+      contraste as duas viram <code>CanvasText</code>, em vez de sumir com o fundo.</p>
+    </div>
+    <div class="note">
+      <b>Sozinha ou dentro do Rating</b>
+      <p>Sozinha, numa avaliação, ela leva <code>role="img"</code> e o
+      <code>aria-label</code> com a nota. Dentro do <a href="../molecules/rating.html">Rating</a>,
+      quem fala é o Rating (nota e contagem juntas), e ela fica
+      <code>aria-hidden</code>.</p>
+    </div>

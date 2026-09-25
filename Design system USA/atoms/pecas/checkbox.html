@@ -1,0 +1,40 @@
+<h2>Checkbox</h2>
+    <p class="when">Escolha independente: cada caixa decide sozinha. Numa lista, dá para marcar nenhuma, uma ou todas — é o que separa a caixa do <a href="radio.html">rádio</a>.</p>
+    <h3 class="row-label">Desmarcado e marcado &mdash; o par que carrega o sentido</h3>
+    <div class="demo demo--stack">
+      <label class="yb-check"><input type="checkbox"><span>Add gift wrapping (+$4.90)</span></label>
+      <label class="yb-check"><input type="checkbox" checked><span>Email me when this is back in stock</span></label>
+    </div>
+    <h3 class="row-label">Desabilitado &mdash; e por que o marcado desabilitado tamb&eacute;m existe</h3>
+    <div class="demo demo--stack">
+      <label class="yb-check"><input type="checkbox" disabled><span>Gift message — unavailable for this destination</span></label>
+      <label class="yb-check"><input type="checkbox" checked disabled><span>Ships from the US warehouse</span></label>
+    </div>
+    <div class="note">
+      <b>Nativo por dentro, do sistema por fora</b>
+      <p>Continua sendo <code>&lt;input&gt;</code>: teclado, leitor de tela,
+      <code>:checked</code> e o envio do formulário vêm de graça. Muda só o desenho —
+      <code>appearance:none</code> e a caixa com o raio, a borda e o tempo da casa.</p>
+      <p>Em alto contraste do Windows o nativo <b>volta</b>: ali o sistema descarta as
+      cores do autor, e o controle desenhado viraria um quadrado vazio.</p>
+    </div>
+    <div class="note">
+      <b><code>--yb-border-control</code>, e não <code>--yb-border</code></b>
+      <p>Quando a caixa está desmarcada, a borda <b>é</b> o controle — e é ela que
+      precisa dos 3:1 da WCAG 1.4.11. O <code>--yb-border</code> mede 1,40:1 e o
+      <code>--yb-border-strong</code>, 2,14:1: servem para dividir bloco, não para
+      dizer &ldquo;clique aqui&rdquo;. O token novo dá <b>3,44:1</b>, medido na
+      página. Foi este componente que o fez nascer.</p>
+    </div>
+    <div class="note">
+      <b>O tique é CSS, não vem do sprite</b>
+      <p><code>&lt;use&gt;</code> exige um elemento no HTML, e a caixa é um
+      <code>&lt;input&gt;</code>, que não tem filhos. Os dois lados de uma caixa
+      girada resolvem sem asset e sem cor crua — o traço é <code>currentColor</code>.</p>
+    </div>
+    <div class="note">
+      <b>Desabilitado marcado não é enfeite</b>
+      <p>É o único jeito honesto de mostrar uma condição que vale e que o visitante
+      não escolhe — frete da origem, imposto obrigatório. Desmarcado e desabilitado
+      diria o contrário, e desabilitar sem marcar some com a informação.</p>
+    </div>

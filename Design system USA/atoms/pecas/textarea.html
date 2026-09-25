@@ -1,0 +1,39 @@
+<h2>Textarea</h2>
+    <p class="when">Campo de várias linhas com o rótulo dentro da caixa, que cresce na vertical. Mesmo campo do Input, para mensagem, nota de presente ou avaliação.</p>
+    <div class="demo demo--stack" style="max-inline-size:28rem">
+      <div class="yb-field">
+        <div class="yb-field__box">
+          <textarea class="yb-textarea" id="ta1" placeholder=" "></textarea>
+          <label class="yb-field__label" for="ta1">Gift note</label>
+        </div>
+        <span class="yb-field__hint">Printed on the packing slip, up to 200 characters.</span>
+      </div>
+    </div>
+    <h3 class="row-label">Estados</h3>
+    <div class="demo demo--stack" style="max-inline-size:28rem">
+      <div class="yb-field">
+        <div class="yb-field__box">
+          <textarea class="yb-textarea" id="ta2" placeholder=" " disabled>Not editable</textarea>
+          <label class="yb-field__label" for="ta2">Message</label>
+        </div>
+      </div>
+      <div class="yb-field">
+        <div class="yb-field__box">
+          <textarea class="yb-textarea" id="ta3" placeholder=" " aria-invalid="true" aria-describedby="ta3e"></textarea>
+          <label class="yb-field__label" for="ta3">Your review<span class="req">*</span></label>
+        </div>
+        <span class="yb-field__error" id="ta3e">Tell us a little about how it worked for you.</span>
+      </div>
+    </div>
+    <div class="note">
+      <b>Redimensiona só na vertical</b>
+      <p><code>resize:vertical</code>: a pessoa pode pedir mais linhas, mas não alarga o
+      campo para fora da coluna. Dentro da caixa nasce com 72px, porque o rótulo já
+      ocupa o topo; solto, com 96px.</p>
+    </div>
+    <div class="note">
+      <b>O rótulo sobe para o topo, não para o meio</b>
+      <p>No Input o rótulo descansa no centro da caixa; aqui ele descansa na primeira
+      linha, que é onde a pessoa vai começar a escrever. Mesmo mecanismo, sem JS:
+      <code>placeholder=" "</code> e <code>:placeholder-shown</code>.</p>
+    </div>

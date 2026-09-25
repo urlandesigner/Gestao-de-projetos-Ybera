@@ -1,0 +1,56 @@
+<h2>Dropdown</h2>
+    <p class="when">Painel de links que abre embaixo de um gatilho. No cabeçalho o gatilho é o avatar; em qualquer outro lugar é o que a marcação puser dentro.</p>
+    <h3 class="row-label">Aberto · <code>__toggle</code> <code>[checked]</code></h3>
+    <div class="stage stage--pad stage--overflow" style="padding-block-end:19rem">
+      <div style="display:flex; justify-content:flex-end">
+        <div class="yb-dropdown">
+          <input class="yb-dropdown__toggle" type="checkbox" id="conta-demo" checked>
+          <label class="yb-dropdown__gatilho" for="conta-demo" aria-label="Account menu for Urlan Dipre">
+            <span class="yb-avatar" aria-hidden="true">U</span></label>
+          <div class="yb-dropdown__painel">
+            <span class="yb-dropdown__cabeca">
+              <span class="yb-avatar yb-avatar--md" aria-hidden="true">U</span>
+              <b class="yb-dropdown__nome">Urlan Dipre</b>
+              <span class="yb-dropdown__email">urlan.dipre@ybera.com</span>
+            </span>
+            <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg>Account</a>
+            <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>Orders</a>
+            <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg>Wishlist</a>
+            <span class="yb-dropdown__sair">
+              <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-lock"/></svg>Log out</a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>O palco desta demo não recorta</b>
+      <p>O painel é <code>position:absolute</code> e passa da altura da caixa. Com o
+      <code>overflow:hidden</code> que o palco usa por padrão, ele apareceria
+      cortado na metade — e a documentação mostraria um defeito que o componente
+      não tem.</p>
+    </div>
+    <div class="note">
+      <b>Quem, antes do que fazer</b>
+      <p>O menu abre dizendo o nome e o e-mail da sessão. Sem isso ele abre com
+      quatro verbos e nenhuma confirmação de que a conta é a certa — e a dúvida
+      faz a pessoa clicar em <code>Account</code> só para conferir.</p>
+    </div>
+    <div class="note">
+      <b>Sem JS, e o que isso custa</b>
+      <p>Mesma mecânica do menu principal: <code>checkbox</code> escondido mais
+      painel irmão. Sobrevive com o JS fora do ar, que é o que o cabeçalho mais
+      precisa. Em troca, o leitor de tela anuncia &ldquo;caixa de seleção&rdquo;, não
+      &ldquo;menu&rdquo;. A casa já aceita isso no menu principal; quando entrar um
+      menu de verdade, com <code>aria-expanded</code> e setas, ele troca os dois
+      de uma vez.</p>
+    </div>
+    <div class="note">
+      <b>Por que ele deixou de ser &ldquo;Account menu&rdquo;</b>
+      <p>Isto era um organismo chamado Account menu. Não era organismo: na loja ele
+      mora dentro de <code>.yb-header__actions</code>, e sozinho numa tela não é
+      nada — falhava a regra que o próprio sistema declara para o degrau. O que
+      havia ali de reaproveitável eram duas peças, e agora elas existem: o
+      <a href="../atoms/avatar.html">Avatar</a> e este dropdown. A conta logada virou
+      um <b>estado do</b> <a href="../organisms/header.html">Header</a>.</p>
+    </div>

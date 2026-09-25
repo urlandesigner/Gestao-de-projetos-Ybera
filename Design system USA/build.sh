@@ -15,8 +15,17 @@ cp bridge/ybera-bridge.css dist/ybera-bridge.css
 # O comportamento tambem e asset. Sem esta linha o CSS do bundle ganhava
 # seletores novos ([data-playing]) e o JS ficava para tras — o video subia
 # para o Shopify sem quem o fizesse tocar.
-cp components/ybera-components.js dist/ybera-components.js
-{ echo "$HEAD"; cat components/ybera-components.css; echo; cat patterns/ybera-patterns.css; } > dist/ybera-components.css
+cp behavior/ybera-behavior.js dist/ybera-components.js
+# A escada inteira num arquivo so, NA ORDEM DELA. O nome do bundle e contrato
+# com o tema Shopify, que ja linka `ybera-components.css` como asset — por isso
+# ele nao virou `ybera-escada.css` quando as pastas viraram atomic. Trocar o
+# nome aqui e uma mudanca na loja, nao no design system.
+{ echo "$HEAD"
+  cat base/ybera-base.css; echo
+  cat atoms/ybera-atoms.css; echo
+  cat molecules/ybera-molecules.css; echo
+  cat organisms/ybera-organisms.css; echo
+  cat templates/ybera-templates.css; } > dist/ybera-components.css
 # Os tokens tambem saem em W3C DTCG. O CSS continua sendo a fonte; o JSON e
 # derivado, para quem nao le CSS — Figma Variables, Style Dictionary, tema
 # nativo. Sem esta linha o JSON ficaria para tras do CSS sem ninguem ver.
@@ -26,10 +35,13 @@ node tools/tokens-to-json.mjs > /dev/null || exit 1
 # depois que a doc parou de mostrar o componente.
 node tools/inventario.mjs > /dev/null || exit 1
 node tools/fichas.mjs || exit 1
+# O cabecalho das paginas escritas a mao (capa, tokens, icones, preview,
+# decisoes). As geradas ja saem com ele — o gerador importa a mesma funcao.
+node tools/moldura.mjs || exit 1
 
 # ---------------------------------------------------------------------------
-# TELAS-PROVA
-# _captura/nova-loja/ e a home e a PDP montadas so com o sistema, e e a unica
+# PAGES — o ultimo degrau da escada
+# pages/ e a home e a PDP montadas so com o sistema, e e a unica
 # evidencia de que os componentes sobrevivem a conteudo e imagem de verdade —
 # a coluna "Tela real" do INVENTARIO.md le exatamente estes arquivos.
 #
@@ -44,20 +56,24 @@ node tools/fichas.mjs || exit 1
 # versao. O calculo do carimbo espelha `versao()` do gerador — se um dos dois
 # mudar, os dois mudam.
 # ---------------------------------------------------------------------------
-PROVA=_captura/nova-loja
+PROVA=pages
 if [ -d "$PROVA/yb" ]; then
-  cp tokens/00-primitives.css        "$PROVA/yb/00-primitives.css"
-  cp tokens/01-semantic.css          "$PROVA/yb/01-semantic.css"
-  cp components/ybera-components.css "$PROVA/yb/components.css"
-  cp patterns/ybera-patterns.css     "$PROVA/yb/patterns.css"
-  cp icons/ybera-icons.css           "$PROVA/yb/icons.css"
-  cp icons/ybera-icons.svg           "$PROVA/yb/icons.svg"
-  cp components/ybera-components.js  "$PROVA/yb/components.js"
+  cp tokens/00-primitives.css          "$PROVA/yb/00-primitives.css"
+  cp tokens/01-semantic.css            "$PROVA/yb/01-semantic.css"
+  cp base/ybera-base.css               "$PROVA/yb/base.css"
+  cp atoms/ybera-atoms.css             "$PROVA/yb/atoms.css"
+  cp molecules/ybera-molecules.css     "$PROVA/yb/molecules.css"
+  cp organisms/ybera-organisms.css     "$PROVA/yb/organisms.css"
+  cp templates/ybera-templates.css     "$PROVA/yb/templates.css"
+  cp icons/ybera-icons.css             "$PROVA/yb/icons.css"
+  cp icons/ybera-icons.svg             "$PROVA/yb/icons.svg"
+  cp behavior/ybera-behavior.js        "$PROVA/yb/behavior.js"
   # shasum (perl) no macOS e na maioria das distros; sha1sum (coreutils) onde nao ha
   if command -v shasum >/dev/null 2>&1; then SHA1="shasum -a 1"; else SHA1="sha1sum"; fi
   V=$(cat tokens/00-primitives.css tokens/01-semantic.css \
-          components/ybera-components.css patterns/ybera-patterns.css \
-          icons/ybera-icons.css components/ybera-components.js \
+          base/ybera-base.css atoms/ybera-atoms.css molecules/ybera-molecules.css \
+          organisms/ybera-organisms.css templates/ybera-templates.css \
+          icons/ybera-icons.css behavior/ybera-behavior.js \
       | $SHA1 | cut -c1-8)
   for f in "$PROVA"/*.html; do
     [ -e "$f" ] || continue

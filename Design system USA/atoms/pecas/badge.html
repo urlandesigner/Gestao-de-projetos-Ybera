@@ -1,0 +1,70 @@
+<h2>Badge</h2>
+    <p class="when">Etiqueta curta que classifica um item sem competir com ele. Nunca carrega ação — badge não é botão.</p>
+    <h3 class="row-label">Variants</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <span class="yb-badge yb-badge--sale">Save 16%</span>
+        <span class="amostra__rotulo"><code>--sale</code></span>
+      </span>
+      <span class="amostra">
+        <span class="yb-badge yb-badge--secondary">Members only</span>
+        <span class="amostra__rotulo"><code>--secondary</code></span>
+      </span>
+      <span class="amostra">
+        <span class="yb-badge yb-badge--soft">Best seller</span>
+        <span class="amostra__rotulo"><code>--soft</code></span>
+      </span>
+      <span class="amostra">
+        <span class="yb-badge yb-badge--success">In stock</span>
+        <span class="amostra__rotulo"><code>--success</code></span>
+      </span>
+      <span class="amostra">
+        <span class="yb-badge yb-badge--warning">Low stock</span>
+        <span class="amostra__rotulo"><code>--warning</code></span>
+      </span>
+      <span class="amostra">
+        <span class="yb-badge yb-badge--danger">Sold out</span>
+        <span class="amostra__rotulo"><code>--danger</code></span>
+      </span>
+    </div>
+    <h3 class="row-label">On dark surface</h3>
+    <div class="demo demo--dark demo--amostras">
+      <span class="amostra">
+        <span class="yb-badge yb-badge--on-media">New line</span>
+        <span class="amostra__rotulo"><code>--on-media</code></span>
+      </span>
+      <span class="amostra">
+        <span class="yb-badge yb-badge--sale">Limited</span>
+        <span class="amostra__rotulo"><code>--sale</code></span>
+      </span>
+      <span class="amostra">
+        <span class="yb-badge yb-badge--on-dark">10k+ routines created</span>
+        <span class="amostra__rotulo"><code>--on-dark</code></span>
+      </span>
+    </div>
+    <div class="note">
+      <b>Nenhum selo claro serve sobre foto</b>
+      <p>O <code>--secondary</code> foi testado nos selos de brinde do cartão de
+      produto, que ficam sobre o packshot, e reprovou: medido nas fotos reais, o
+      chip cai para <b>1,2:1</b> contra a foto e o texto para 3,78:1 — abaixo de
+      AA. Fundo claro deixa de isolar o texto, e quem decide a leitura passa a
+      ser uma foto que ninguém controla. Sobre foto, use <code>--on-media</code>
+      (12,6:1 nas mesmas fotos) ou <code>--sale</code>. Os claros
+      — <code>--secondary</code>, <code>--soft</code>, <code>--success</code>,
+      <code>--warning</code>, <code>--danger</code> — são para superfície lisa.</p>
+    </div>
+    <div class="note">
+      <b><code>--sale</code> e <code>--secondary</code> são o mesmo magenta em dois volumes</b>
+      <p>O <code>--sale</code> traz o fundo cheio da ação e grita; o
+      <code>--secondary</code> usa os mesmos tokens do botão secundário e rotula
+      sem disputar com o preço ao lado. Um por contexto — dois magentas na mesma
+      linha voltam a empatar a leitura.</p>
+    </div>
+    <div class="note">
+      <b>O magenta sobre escuro não é o magenta de ação</b>
+      <p><code>--on-media</code> escreve em <code>--yb-action-on-dark</code>, que mede
+      6,49:1 sobre o grafite. O magenta canônico foi escolhido para ler sobre
+      <b>branco</b> e cai para 3,11:1 ali. Nenhuma cor é escura o bastante para o
+      branco e clara o bastante para o grafite — por isso o contexto está no nome do
+      token.</p>
+    </div>

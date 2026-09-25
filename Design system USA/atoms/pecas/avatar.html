@@ -1,0 +1,117 @@
+<h2>Avatar</h2>
+    <p class="when">Círculo com a inicial de quem está logado. Sozinho não diz de quem é a conta — quem carrega o nome é o rótulo de quem o embrulha.</p>
+    <h3 class="row-label">Default — sem modificador · 32px</h3>
+    <div class="demo">
+      <span class="yb-avatar" aria-hidden="true">U</span>
+      <span class="yb-avatar" aria-hidden="true">M</span>
+      <span class="yb-avatar" aria-hidden="true">A</span>
+    </div>
+    <h3 class="row-label">Sizes</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <span class="yb-avatar yb-avatar--xs" aria-hidden="true">M</span>
+        <span class="amostra__rotulo"><code>--xs · 24px</code></span>
+      </span>
+      <span class="amostra">
+        <span class="yb-avatar yb-avatar--sm" aria-hidden="true">M</span>
+        <span class="amostra__rotulo"><code>--sm · 32px</code></span>
+      </span>
+      <span class="amostra">
+        <span class="yb-avatar yb-avatar--md" aria-hidden="true">M</span>
+        <span class="amostra__rotulo"><code>--md · 40px</code></span>
+      </span>
+      <span class="amostra">
+        <span class="yb-avatar yb-avatar--lg" aria-hidden="true">M</span>
+        <span class="amostra__rotulo"><code>--lg · 48px</code></span>
+      </span>
+      <span class="amostra">
+        <span class="yb-avatar yb-avatar--xl" aria-hidden="true">M</span>
+        <span class="amostra__rotulo"><code>--xl · 56px</code></span>
+      </span>
+      <span class="amostra">
+        <span class="yb-avatar yb-avatar--2xl" aria-hidden="true">M</span>
+        <span class="amostra__rotulo"><code>--2xl · 64px</code></span>
+      </span>
+    </div>
+    <div class="note">
+      <b>A inicial, e não uma foto</b>
+      <p>A loja não guarda foto de cliente, e círculo cinza vazio é pior do que uma
+      letra. Enquanto não houver foto, a inicial é a informação disponível — e ela
+      cabe sem rede, sem recorte e sem estado de carregamento.</p>
+    </div>
+    <div class="note">
+      <b>Ele é <code>aria-hidden</code>, sempre</b>
+      <p>Uma letra solta não é conteúdo: lida em voz alta, &ldquo;U&rdquo; não diz nada.
+      Quem anuncia é o elemento que o envolve — no cabeçalho, o
+      <code>aria-label</code> do gatilho do <a href="../molecules/dropdown.html">Dropdown</a>,
+      com o nome inteiro.</p>
+    </div>
+    <div class="note">
+      <b>Três garantias contra o dado e contra o container</b>
+      <p><b>Não achata.</b> Ele quase sempre nasce dentro de um flex &mdash; o gatilho
+      do menu, a barra de ações. Com o <code>flex-shrink</code> de fábrica, container
+      apertado fazia 32&times;32 virar <b>13&times;32</b> (medido numa faixa de 60px):
+      círculo que vira elipse não é acabamento, é a peça inteira.
+      <b>Não depende de digitação.</b> <code>text-transform:uppercase</code> &mdash;
+      "marina" e "Marina" desenham o mesmo círculo.
+      <b>Falha para dentro.</b> Uma letra é o contrato, mas com "Marina" o conteúdo
+      mede 40px numa caixa de 32 e vazava por cima dos vizinhos; cortado dentro do
+      círculo, o erro fica visível e contido.</p>
+    </div>
+    <div class="note">
+      <b>Em alto contraste ele ganha contorno</b>
+      <p>O fundo <code>--yb-bg-muted</code> vira <code>Canvas</code> em
+      <code>forced-colors</code> e o círculo some &mdash; sobrava uma letra solta no
+      meio da barra. A borda de 1px devolve a forma, mesma receita do
+      <a href="iconbtn.html">Icon button</a>, que tem o problema pelo mesmo motivo.</p>
+    </div>
+    <div class="note">
+      <b>Rampa de 8 em 8, e dois em uso</b>
+      <p>Hoje a loja usa dois: <b>32</b> no gatilho do cabeçalho, disputando espaço
+      com busca e sacola, e <b>40</b> na cabeça do painel da conta, ao lado do nome
+      inteiro e do e-mail &mdash; ver <a href="../molecules/dropdown.html">Dropdown</a>. Os
+      outros quatro são a rampa completa: rampa com buraco é mais estranha que rampa
+      inteira, e quem precisar de 48 não deve inventar um valor cru para chegar lá.
+      Sem modificador ele mede 32, o mesmo que <code>--sm</code>.</p>
+    </div>
+    <div class="note">
+      <b>A letra não é uma porcentagem do círculo</b>
+      <p>A proporção cai de <b>.54</b> no menor para <b>.38</b> no maior, de propósito:
+      legibilidade tem <b>piso</b>, não proporção. Os 44% que servem o de 32 dariam
+      10,5px no de 24 &mdash; ilegível; e a mesma conta no de 64 daria 28px, que nem
+      existe na escala e faria a inicial parecer um logotipo, não a marca de uma
+      pessoa. Cada diâmetro escolhe o degrau de tipo que lhe cabe, e todos são degraus
+      de verdade: <code>caption</code>, <code>body-sm</code>, <code>body</code>,
+      <code>body-lg</code>, <code>h4</code>, <code>h3</code>.</p>
+    </div>
+    <div class="note">
+      <b>Duas iniciais, de 32 para cima</b>
+      <p>Medido com &ldquo;WM&rdquo;, o par mais largo: 26px no círculo de 32 e 45 no
+      de 64. No de <b>24 não cabem</b> &mdash; são 25px numa caixa de 24, e o
+      <code>overflow:hidden</code> corta. O menor leva uma letra, que é o que a loja
+      manda de qualquer forma: ela guarda o nome, não as iniciais.</p>
+    </div>
+    <div class="note">
+      <b>Um fundo só, e a letra é quem carrega o contraste</b>
+      <p>Cinza <code>--yb-bg-muted</code> com a inicial em <code>--yb-text-primary</code>:
+      <b>15,28:1</b>, AAA. Folgado de propósito, porque a letra é pequena e é a única
+      coisa que identifica a conta. O disco <em>não</em> carrega contraste contra a
+      página (1,09:1) e não precisa &mdash; quem identifica é a letra, e é por isso que
+      ela é escura e o disco é claro, não o contrário.</p>
+      <p>Sem paleta de tons: cor de avatar só serve para <em>reconhecer</em> alguém, e
+      reconhecer exige uma cor que saia de um valor estável da pessoa e nunca mude. A
+      loja mostra o avatar de uma pessoa só, a que está logada, e para uma pessoa só
+      não há quem distinguir.</p>
+    </div>
+    <div class="note">
+      <b>A foto do parceiro não é este componente</b>
+      <p>É <code>.yb-partner__avatar</code>, que carrega uma imagem real e é parte do
+      <a href="../molecules/partner.html">Partner</a>. Aqui não há foto: a loja não
+      guarda foto de cliente.</p>
+    </div>
+    <div class="note">
+      <b>32px pintados dentro de um alvo de 44</b>
+      <p>O alvo de toque é de quem envolve o avatar, não dele: a caixa cresce para
+      fora, não para dentro. Por isso ele não declara <code>min-height</code> — se
+      declarasse, empataria com o alvo e o círculo encostaria nas bordas.</p>
+    </div>

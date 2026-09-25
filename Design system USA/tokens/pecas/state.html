@@ -1,0 +1,35 @@
+<h2>State</h2>
+    <p class="when">Quatro estados, todos acima de 5.4:1 sobre branco.</p>
+<div class="st">
+        <div class="st-banner" style="background:var(--yb-success-surface); color:var(--yb-success-text); border-color:var(--yb-success-600)">Pedido confirmado</div>
+        <code>--yb-success-text</code><span>#1F7A34 · 5.40:1</span>
+      </div>
+      <div class="st">
+        <div class="st-banner" style="background:var(--yb-warning-surface); color:var(--yb-warning-text); border-color:var(--yb-warning-600)">Estoque baixo</div>
+        <code>--yb-warning-text</code><span>#8A5A00 · 5.93:1</span>
+      </div>
+      <div class="st">
+        <div class="st-banner" style="background:var(--yb-danger-surface); color:var(--yb-danger-text); border-color:var(--yb-danger-600)">Pagamento recusado</div>
+        <code>--yb-danger-text</code><span>#B3261E · 6.54:1</span>
+      </div>
+      <div class="st">
+        <div class="st-banner" style="background:var(--yb-info-surface); color:var(--yb-info-text); border-color:var(--yb-info-600)">Envio em 2 dias</div>
+        <code>--yb-info-text</code><span>#1B5FA8 · 6.46:1</span>
+      </div>
+
+
+      <h3>Opacidade</h3>
+      <p class="note">Opacidade tem <b>uma regra dura</b>: nunca sobre texto.
+      Aplicada a palavra, ela derruba o contraste sem que nada no CSS registre a
+      queda — 5.15:1 a 65% vira 2.9:1, e nenhuma medição do sistema vê. Para
+      texto apagado existe <code>--yb-text-muted</code>, que é medido.</p>
+      <div class="grid4">
+        <div class="ct">
+          <div class="ct-box" style="height:var(--yb-target-min); opacity:var(--yb-opacity-control-disabled)">.45</div>
+          <code>--yb-opacity-control-disabled</code><span>só superfície e ícone</span>
+        </div>
+        <div class="ct">
+          <div class="ct-box" style="height:var(--yb-target-min); background:var(--yb-surface-overlay)">.55</div>
+          <code>--yb-surface-overlay</code><span>o véu atrás do modal</span>
+        </div>
+      </div>

@@ -1,0 +1,105 @@
+{
+  "dialog": {
+    "a11y": [
+      "É <code>&lt;dialog&gt;</code> nativo aberto com <code>showModal()</code>: o foco fica preso dentro, Esc fecha e o resto da página vira inerte — três coisas que a versão em <code>&lt;div&gt;</code> quase nunca acerta.",
+      "Ao fechar, o foco volta para o botão que abriu. Sem isso a pessoa que navega por teclado é devolvida ao topo do documento.",
+      "O título é ligado por <code>aria-labelledby</code>, para o leitor de tela anunciar o que abriu."
+    ],
+    "faca": {
+      "legenda": "Dialog nativo, com título ligado e foco devolvido a quem abriu.",
+      "html": "<button class=\"yb-btn yb-btn--secondary\" type=\"button\">Abre &lt;dialog&gt; com showModal()</button>"
+    },
+    "naoFaca": {
+      "legenda": "Div com overlay: o foco continua correndo pela página atrás, Esc não fecha e o leitor de tela lê o conteúdo escondido.",
+      "html": "<button class=\"yb-btn yb-btn--secondary\" type=\"button\">Abre &lt;div class=\"modal\"&gt;</button>"
+    }
+  },
+  "gallery": {
+    "a11y": [
+      "As miniaturas são um grupo de <code>radio</code> nativo. As setas do teclado navegam entre elas de graça — não há <code>keydown</code> escrito para isso.",
+      "A foto grande troca por CSS com <code>:checked</code>. Sem JavaScript a galeria continua funcionando; o script só mantém o contador em dia.",
+      "Cada miniatura tem <code>title</code> e a foto grande tem <code>alt</code> com o nome do produto e o número da imagem — “image 3 de 5” diz onde a pessoa está."
+    ],
+    "faca": {
+      "legenda": "Radios nativos: Tab entra no grupo, setas percorrem, e o CSS troca o slide.",
+      "html": "<p class=\"yb-field__label\" style=\"margin:0\">Miniaturas como <code>input type=\"radio\"</code> + <code>label</code></p>"
+    },
+    "naoFaca": {
+      "legenda": "Div com <code>onclick</code> não recebe Tab, não anda com as setas e não diz qual imagem está ativa.",
+      "html": "<p class=\"yb-field__label\" style=\"margin:0\">Miniaturas como <code>&lt;div onclick&gt;</code></p>"
+    }
+  },
+  "logobar": {
+    "a11y": [
+      "A faixa é <code>role=\"group\"</code> com <code>aria-label</code> dizendo o que aquela fileira de marcas significa — “as seen in”, “our retailers”. Sem isso são logotipos soltos sem contexto.",
+      "Cada logo tem <code>alt</code> com o nome da publicação. Aqui a imagem <em>é</em> a informação, ao contrário da foto ilustrativa."
+    ],
+    "faca": {
+      "legenda": "Grupo rotulado, cada logo com o nome no alt.",
+      "html": "<div class=\"yb-logobar\" role=\"group\" aria-label=\"As seen in\"><span class=\"yb-field__label\" style=\"margin:0\">alt=\"Vogue\" · alt=\"Allure\"</span></div>"
+    },
+    "naoFaca": {
+      "legenda": "Sem rótulo do grupo e com <code>alt=\"\"</code>, a fileira inteira é invisível para quem não a vê.",
+      "html": "<div class=\"yb-logobar\"><span class=\"yb-field__label\" style=\"margin:0\">alt=\"\" · alt=\"\"</span></div>"
+    }
+  },
+  "search": {
+    "a11y": [
+      "O overlay é <code>&lt;dialog&gt;</code> com <code>role=\"search\"</code> dentro: o foco entra no campo, Esc fecha e o resto da página fica inerte.",
+      "O resultado vazio é anunciado — a região dos resultados é live, senão a pessoa digita e nada é dito.",
+      "O indicador de foco do campo é o cursor, e o <code>outline</code> é desligado com selo <code>anel:</code> na folha. Um anel de 1100px de largura em volta da barra inteira não indica nada."
+    ],
+    "faca": {
+      "legenda": "Campo dentro de <code>role=\"search\"</code>, com rótulo.",
+      "html": "<span class=\"yb-field__box\" style=\"inline-size:280px\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-search\"/></svg><input class=\"yb-input\" id=\"sx\" type=\"search\" placeholder=\" \" aria-label=\"Search the store\"></span>"
+    },
+    "naoFaca": {
+      "legenda": "Input solto sem rótulo e sem papel: na lista de controles ele aparece como “edit”, sem dizer para quê.",
+      "html": "<input class=\"yb-input\" type=\"text\" placeholder=\"Buscar\" style=\"inline-size:280px;border:1px solid var(--yb-border);border-radius:8px;padding:12px\">"
+    }
+  },
+  "nav": {
+    "a11y": [
+      "A lista mora num <code>&lt;nav aria-label&gt;</code>: a tela tem três navegações — topo, rodapé e trilha — e sem rótulo as três se anunciam igual.",
+      "O gatilho do painel recebe foco porque é <code>label</code>. Com <code>span</code>, como está na loja, o painel existe e o teclado não chega nele.",
+      "<code>Sales</code> é magenta <b>e</b> diz “Sales”. A cor não carrega sozinha o que o item tem de diferente."
+    ],
+    "faca": {
+      "legenda": "Gatilho que entra no tab order: <code>label</code> ligado a um <code>checkbox</code>.",
+      "html": "<ul class=\"yb-nav\"><li class=\"yb-nav__item\"><input class=\"yb-nav__toggle\" type=\"checkbox\" id=\"nav-faca\"><label class=\"yb-nav__link\" for=\"nav-faca\">Shop <svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-chevron-down\"/></svg></label></li></ul>"
+    },
+    "naoFaca": {
+      "legenda": "Idêntico na tela, e é esse o problema: <code>span</code> não recebe foco.",
+      "html": "<ul class=\"yb-nav\"><li class=\"yb-nav__item\"><span class=\"yb-nav__link\">Shop <svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-chevron-down\"/></svg></span></li></ul>"
+    }
+  },
+  "quote": {
+    "a11y": [
+      "A citação é conteúdo, não decoração: vai em <code>&lt;blockquote&gt;</code> com a autoria em <code>&lt;cite&gt;</code>, para o leitor de tela anunciar onde ela começa e termina.",
+      "A foto que acompanha é ilustrativa — <code>alt=\"\"</code>. Descrevê-la faz o leitor de tela ler duas vezes o mesmo assunto."
+    ],
+    "faca": {
+      "legenda": "Foto com <code>alt=\"\"</code>: ela ilustra a frase, não acrescenta informação.",
+      "html": "<figure class=\"yb-quote\" style=\"inline-size:100%;margin:0\"><blockquote class=\"yb-quote__text\">Hair is memory. Every service leaves a mark.</blockquote><figcaption class=\"yb-quote__author\">Ybera Paris</figcaption></figure>"
+    },
+    "naoFaca": {
+      "legenda": "Alt repetindo a frase faz o leitor de tela ler a citação duas vezes seguidas.",
+      "html": "<p class=\"yb-quote__text\" style=\"margin:0\">alt=\"Hair is memory. Every service leaves a mark.\"</p>"
+    }
+  },
+  "hero": {
+    "a11y": [
+      "A seção se anuncia como carrossel: <code>aria-roledescription=\"carousel\"</code> e um <code>aria-label</code> que diz o assunto (\"Highlights\").",
+      "As setas são <code>&lt;button&gt;</code> com <code>aria-label</code> próprio (\"Previous highlight\", \"Next highlight\"); o ícone vai com <code>aria-hidden</code>.",
+      "Sem rolagem automática: o slide só muda quando a pessoa pede, então nada se move enquanto alguém lê."
+    ],
+    "faca": {
+      "legenda": "Cada slide leva a um destino diferente.",
+      "html": "<span class=\"yb-field__label\" style=\"margin:0\">best sellers · damaged hair · quiz</span>"
+    },
+    "naoFaca": {
+      "legenda": "Três slides com a mesma promessa e o mesmo link: o segundo e o terceiro são só espera.",
+      "html": "<span class=\"yb-field__label\" style=\"margin:0\">best sellers · best sellers · best sellers</span>"
+    }
+  }
+}

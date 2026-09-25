@@ -1,0 +1,32 @@
+<h2>Toast</h2>
+    <p class="when">Aviso curto e temporário que confirma o que já aconteceu. Não pede nada e não bloqueia nada.</p>
+    <h3 class="row-label">Variants</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <button type="button" class="yb-btn yb-btn--primary"
+          data-yb-toast data-toast-titulo="Added to cart"
+          data-toast-texto="Kit Sealant Fashion Gold — 500 g"
+          data-toast-variante="success">Adicionar ao carrinho</button>
+        <span class="amostra__rotulo"><code>--success</code></span>
+      </span>
+      <span class="amostra">
+        <button type="button" class="yb-btn yb-btn--ghost"
+          data-yb-toast data-toast-titulo="Saved for later"
+          data-toast-texto="Find it in your wishlist">Salvar</button>
+        <span class="amostra__rotulo"><code>sem modificador</code></span>
+      </span>
+      <span class="amostra">
+        <button type="button" class="yb-btn yb-btn--ghost"
+          data-yb-toast data-toast-titulo="Payment declined"
+          data-toast-texto="Your bank rejected the charge. Try another card."
+          data-toast-variante="danger" data-toast-duracao="0">Erro (não some)</button>
+        <span class="amostra__rotulo"><code>--danger</code></span>
+      </span>
+    </div>
+    <div class="note">
+      <b>Some sozinho — menos quando você está lendo</b>
+      <p>Cinco segundos por padrão, mas o relógio para no <code>mouseenter</code> e
+      no <code>focusin</code>. O de erro usa <code>duration:0</code> e
+      <code>role="alert"</code>: erro não desaparece antes de ser lido, e interrompe
+      o leitor de tela. Os outros usam <code>role="status"</code> e esperam a pausa.</p>
+    </div>

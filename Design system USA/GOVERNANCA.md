@@ -77,8 +77,10 @@ ocorrência é exceção e vive na camada 2; duas é padrão e sobe para a camad
 O `--yb-card-title-lines` nasceu assim: as telas-prova mostraram títulos de 2 a 5
 linhas desalinhando o grid. Defeito observado, não preferência.
 
-**Componente novo:** antes de criar, tente montar com os existentes. Se conseguiu,
-é padrão — vai para `patterns/`, não para `components/`.
+**Peça nova:** antes de criar, tente montar com as existentes — e o resultado
+diz o degrau. Não usa nenhuma outra peça? É **átomo**. Reúne átomos para uma
+tarefa? É **molécula**. Ocupa um lugar fixo na página? É **organismo**. O build
+cobra a primeira dessas regras: átomo que compõe outra peça reprova.
 
 **Mudança de cor:** roda o cálculo de contraste antes. Nenhum valor entra sem
 medição — os números anotados em `00-primitives.css` são medidos, não estimados.
@@ -104,7 +106,7 @@ Quebrar qualquer uma delas exige mudança maior e justificativa no changelog.
 
 ## Antes de publicar uma versão
 
-O checklist virou comando. As 110 checagens rodam sozinhas:
+O checklist virou comando. As 140 checagens rodam sozinhas:
 
 ```bash
 npm run check
@@ -119,8 +121,8 @@ que as telas-prova carregam. Sai com código 1 se algo falhar, e roda em CI a
 cada push que toque esta pasta.
 
 **Artefato derivado nunca se edita à mão.** `dist/`, `dist/ybera-tokens.json`,
-`INVENTARIO.md`, `components/<componente>.html`, `components/index.html` e
-`_captura/nova-loja/yb/` saem de `./build.sh`. O CI compara o
+`INVENTARIO.md`, `<degrau>/<peça>.html`, `<degrau>/index.html`,
+`<degrau>/solo.html` e `pages/yb/` saem de `./build.sh`. O CI compara o
 que o build gerou com o que foi commitado — porque rodar o validador logo depois
 do build sempre passa: ele confere o derivado contra a fonte que acabou de
 gerá-lo. Quem pega a defasagem é o `git`.

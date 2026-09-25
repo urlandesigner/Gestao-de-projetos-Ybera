@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Breadcrumb — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../base/ybera-base.css">
+<link rel="stylesheet" href="../atoms/ybera-atoms.css">
+<link rel="stylesheet" href="ybera-molecules.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="../doc/doc.css">
+<link rel="stylesheet" href="../doc/doc-nav.css">
+<script src="../doc/doc.js" defer></script>
+<style>
+/* Sem seletor de tipo: ver o cabecalho de doc/doc.css. */
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+</style>
+</head>
+<body class="ficha" data-nivel="molecules" data-moldura="centrada">
+<!-- @moldura · gerada por tools/moldura.mjs · não edite -->
+<header class="ds-top">
+  <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
+  <div class="ds-top__busca" hidden>
+    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
+    <input id="ds-filtro" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filtro>
+    <p class="nav-conta" role="status" aria-live="polite"></p>
+  </div>
+  <p class="ds-top__versao">v0.12.1</p>
+</header>
+<nav class="ds-nav" aria-label="Navegação do design system">
+  <ul class="ds-nav__solta">
+    <li><a href="../index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 7 8 2.5 13.5 7"/><path d="M4 6.5V13h8V6.5"/><path d="M6.5 13V9.5h3V13"/></svg>Início</a></li>
+  </ul>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5.5 8 3l6 2.5L8 8 2 5.5Z"/><path d="M2 8.8 8 11.3l6-2.5"/><path d="M2 12l6 2.5 6-2.5"/></svg>Fundação</summary>
+    <ul>
+      <li><a href="../tokens/index.html">Visão geral</a></li>
+      <li><a href="../tokens/architecture.html">Architecture</a></li>
+      <li><a href="../tokens/color.html">Color</a></li>
+      <li><a href="../tokens/typography.html">Typography</a></li>
+      <li><a href="../tokens/space.html">Space</a></li>
+      <li><a href="../tokens/shape.html">Shape</a></li>
+      <li><a href="../tokens/elevation.html">Elevation</a></li>
+      <li><a href="../tokens/state.html">State</a></li>
+      <li><a href="../tokens/usage.html">How to use</a></li>
+      <li><a href="../icons/index.html">Ícones</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo" open>
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Componentes</summary>
+    <ul>
+      <li><a href="../molecules/accordion.html">Accordion</a></li>
+      <li><a href="../molecules/alert.html">Alert</a></li>
+      <li><a href="../atoms/avatar.html">Avatar</a></li>
+      <li><a href="../atoms/badge.html">Badge</a></li>
+      <li><a href="../molecules/bannerhero.html">Banner hero</a></li>
+      <li><a href="../molecules/bannermedia.html">Banner media</a></li>
+      <li><a href="../molecules/crumb.html" aria-current="page">Breadcrumb</a></li>
+      <li><a href="../atoms/button.html">Button</a></li>
+      <li><a href="../molecules/offercard.html">Card offer</a></li>
+      <li><a href="../molecules/card.html">Card product</a></li>
+      <li><a href="../atoms/seals.html">Certification seals</a></li>
+      <li><a href="../atoms/checkbox.html">Checkbox</a></li>
+      <li><a href="../atoms/chip.html">Chip</a></li>
+      <li><a href="../molecules/collection.html">Collection card</a></li>
+      <li><a href="../molecules/dropdown.html">Dropdown</a></li>
+      <li><a href="../molecules/empty.html">Empty state</a></li>
+      <li><a href="../atoms/iconbtn.html">Icon button</a></li>
+      <li><a href="../atoms/input.html">Input</a></li>
+      <li><a href="../atoms/link.html">Link</a></li>
+      <li><a href="../atoms/logo.html">Logo</a></li>
+      <li><a href="../atoms/notice.html">Notice</a></li>
+      <li><a href="../atoms/offerseal.html">Offer seal</a></li>
+      <li><a href="../molecules/pagination.html">Pagination</a></li>
+      <li><a href="../molecules/partner.html">Partner</a></li>
+      <li><a href="../molecules/post.html">Post</a></li>
+      <li><a href="../molecules/price.html">Price</a></li>
+      <li><a href="../atoms/progress.html">Progress bar</a></li>
+      <li><a href="../molecules/stepper.html">Quantity stepper</a></li>
+      <li><a href="../atoms/radio.html">Radio</a></li>
+      <li><a href="../molecules/rating.html">Rating</a></li>
+      <li><a href="../molecules/review.html">Review</a></li>
+      <li><a href="../atoms/select.html">Select</a></li>
+      <li><a href="../atoms/skeleton.html">Skeleton</a></li>
+      <li><a href="../atoms/stars.html">Stars</a></li>
+      <li><a href="../atoms/switch.html">Switch</a></li>
+      <li><a href="../atoms/textarea.html">Textarea</a></li>
+      <li><a href="../molecules/toast.html">Toast</a></li>
+      <li><a href="../molecules/track.html">Track</a></li>
+      <li><a href="../molecules/variant.html">Variant picker</a></li>
+      <li><a href="../molecules/video.html">Vertical video carousel</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2.5" width="12" height="3" rx="1"/><rect x="2" y="6.8" width="12" height="3" rx="1"/><rect x="2" y="11.1" width="12" height="2.4" rx="1"/></svg>Blocos</summary>
+    <ul>
+      <li><a href="../organisms/quote.html">Brand quote</a></li>
+      <li><a href="../organisms/buybox.html">Buy box</a></li>
+      <li><a href="../organisms/cart-drawer.html">Cart drawer</a></li>
+      <li><a href="../organisms/catalog.html">Catalog</a></li>
+      <li><a href="../organisms/drawer.html">Drawer</a></li>
+      <li><a href="../organisms/faq.html">FAQ</a></li>
+      <li><a href="../organisms/footer.html">Footer</a></li>
+      <li><a href="../organisms/shipping-progress.html">Free shipping progress</a></li>
+      <li><a href="../organisms/gallery.html">Gallery</a></li>
+      <li><a href="../organisms/header.html">Header</a></li>
+      <li><a href="../organisms/hero.html">Hero</a></li>
+      <li><a href="../organisms/logobar.html">Logo bar</a></li>
+      <li><a href="../organisms/manifesto.html">Manifesto</a></li>
+      <li><a href="../organisms/dialog.html">Modal</a></li>
+      <li><a href="../organisms/nav.html">Nav</a></li>
+      <li><a href="../organisms/search.html">Search overlay</a></li>
+      <li><a href="../organisms/split.html">Split</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3.5" width="9" height="9" rx="1.5"/><path d="M5.5 3.5V1.5h9v9h-2"/></svg>Exemplos</summary>
+    <ul>
+      <li><a href="../pages/index.html">Visão geral</a></li>
+      <li><a href="../pages/home.html" target="_blank" rel="noopener">Home v1<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-v2.html" target="_blank" rel="noopener">Home v2<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-v3.html" target="_blank" rel="noopener">Home v3<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-logado.html" target="_blank" rel="noopener">Home · cliente logado<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp.html" target="_blank" rel="noopener">PDP<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-influencer.html" target="_blank" rel="noopener">PDP link influencer<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-esgotado.html" target="_blank" rel="noopener">PDP esgotada<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-variante.html" target="_blank" rel="noopener">PDP com variante<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-oferta.html" target="_blank" rel="noopener">PDP em promoção<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/faq.html" target="_blank" rel="noopener">FAQ<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/404.html" target="_blank" rel="noopener">404<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+    </ul>
+  </details>
+  <ul class="ds-nav__solta">
+    <li><a href="../preview/index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3" width="13" height="8.5" rx="1.5"/><path d="M5.5 14h5"/><path d="M8 11.5V14"/></svg>Preview</a></li>
+  </ul>
+</nav>
+<!-- /@moldura -->
+
+<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
+  <ol>
+    <li><a href="#demos">Como se parece</a></li>
+    <li><a href="#mobile">Mobile</a></li>
+    <li><a href="#feita-de">De que é feita</a></li>
+    <li><a href="#anatomia">Anatomia e API</a></li>
+    <li><a href="#marcacao">Marcação</a></li>
+    <li><a href="#acessibilidade">Acessibilidade</a></li>
+    <li><a href="#faca">Faça / não faça</a></li>
+  </ol>
+</aside>
+
+<main class="main">
+  <div class="ficha-topo">
+    <nav class="ficha-trilha" aria-label="Você está aqui">
+      <a href="../components/index.html">Componentes</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html#crumb">Moléculas</a>
+      <span aria-hidden="true">/</span>
+      <b aria-current="page">Breadcrumb</b>
+    </nav>
+    <nav class="ficha-passo" aria-label="Peça anterior e próxima">
+      <a href="bannermedia.html" rel="prev"><span aria-hidden="true">←</span> Banner media</a>
+      <a href="offercard.html" rel="next">Card offer <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
+  <h1 class="ficha-titulo">Breadcrumb</h1>
+  <p class="ficha-quando">Trilha dos níveis acima da página atual, do topo até ela. A página atual não é link.</p>
+  <!-- Só a classe base. A fileira trazia também as contagens de modificador,
+       elemento, estado e token — cinco números que ninguém usa para decidir
+       nada e que, desde que a aba Anatomia existe, repetem em placar o que a
+       aba mostra por extenso, com os nomes. Número sem o nome ao lado é um
+       resumo de algo que está a um clique. -->
+  <ul class="ficha-fatos">
+    <li>Classe base <b><code>.yb-crumb</code></b></li>
+  </ul>
+
+  <!-- A FICHA INTEIRA EM ABAS, e nada solto embaixo delas.
+
+       Antes so tres blocos eram aba (Preview, Codigo, Anatomia) e outros tres
+       ficavam abaixo do container — Mobile, Acessibilidade e Faca/nao faca.
+       Como nada na tela dizia que a area das abas tinha acabado (20px de vao e
+       a mesma tipografia), os tres liam como conteudo da aba aberta, qualquer
+       que fosse ela.
+
+       Agora tudo e aba, na organizacao do outro design system da casa:
+       Componente · Anatomia · Regras de uso · Acessibilidade. "Estados" fica de
+       fora por enquanto — so 2 das 66 pecas tem demonstracao de estado, e uma
+       aba vazia em 64 fichas ensina menos que a ausencia dela.
+
+       O CELULAR E A MARCACAO ENTRARAM EM "COMPONENTE" porque respondem a mesma
+       pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
+       que telefone e assunto separado do desktop, que e o oposto do que um
+       design system quer dizer. -->
+  <div class="abas" data-yb-abas>
+  <section class="bloco" id="demos" data-aba="Componente">
+    <h2 class="bloco-titulo">Como se parece</h2>
+    <h3 class="row-label">Sem modificador · página atual em <code>[aria-current="page"]</code></h3>
+    <div class="demo">
+      <nav class="yb-crumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="#demos">Home</a></li>
+          <li><a href="#demos">Treatments</a></li>
+          <li><a href="#demos">Sealants</a></li>
+          <li><span aria-current="page">Fashion Gold</span></li>
+        </ol>
+      </nav>
+    </div>
+
+    <h3 class="rotulo">No celular</h3>
+    <div class="quadro-mob">
+      <iframe src="solo.html?c=crumb" title="Breadcrumb em 375px"
+              width="375" height="420" loading="lazy"></iframe>
+    </div>
+
+    <h3 class="rotulo">Marcação</h3>
+    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
+    <div class="snippet">
+      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <pre><code>&lt;nav class="yb-crumb" aria-label="Breadcrumb"&gt;
+  &lt;ol&gt;
+    &lt;li&gt;&lt;a href="#demos"&gt;Home&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#demos"&gt;Treatments&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#demos"&gt;Sealants&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;span aria-current="page"&gt;Fashion Gold&lt;/span&gt;&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;</code></pre>
+    </div>
+  </section>
+
+  <section class="bloco" id="anatomia" data-aba="Anatomia">
+    <h2 class="bloco-titulo">Anatomia e API</h2>
+    <div class="anat" data-yb-anatomia>
+      <div class="anat__palco">
+        <svg class="anat__fios" aria-hidden="true"></svg>
+        <div class="anat__peca"><nav class="yb-crumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="#anat-demos">Home</a></li>
+    <li><a href="#anat-demos">Treatments</a></li>
+    <li><a href="#anat-demos">Sealants</a></li>
+    <li><span aria-current="page">Fashion Gold</span></li>
+  </ol>
+</nav></div>
+      </div>
+      <ol class="anat__legenda">
+        <li data-alvo=".yb-crumb"><span class="anat__texto"><b>Trilha</b> — <code>&lt;nav&gt;</code> com <code>aria-label</code> próprio — sem ele são só links soltos.</span></li>
+        <li data-alvo="ol"><span class="anat__texto"><b>Lista</b> — Ordenada, porque a ordem é o caminho. O separador é desenhado pelo CSS, não digitado.</span></li>
+        <li data-alvo="[aria-current]"><span class="anat__texto"><b>Página atual</b> — Não é link: já se está nela. <code>aria-current</code> é o que anuncia isso.</span></li>
+      </ol>
+    </div>
+    <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
+         COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres
+         palavras de dentro de casa ("folha", "marcacao", "build"). A aba ao
+         lado ja mostrava o jeito certo — "O mesmo HTML que renderizou acima"
+         diz o que e. Aqui o que a pessoa precisa primeiro e a lista do que vai
+         encontrar; a procedencia vem depois, e vale a frase inteira, porque e
+         ela que autoriza confiar no que esta escrito. -->
+    <p class="bloco-lede">De que a peça é feita, o que ela aceita e os tokens que
+    consome — estes do mais específico desta peça para o mais compartilhado com o
+    resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
+    estiver errado aqui, o errado é o código.</p>
+
+    <p class="api-linha"><span class="api-linha__rotulo">De que é feita</span><span class="api-linha__corpo">Nenhuma: não consome nenhum outro componente. O que ela desenha sai todo da folha dela.</span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo">Nenhum. A peça é um elemento só.</span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code> · <code>[aria-current]</code></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">9</span></p>
+    <div class="tokens">
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>3</span></p>
+        <ul class="tokens__lista">
+          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>1</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-type-caption-size</code><span class="tokens__valor">0.8125rem</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>2</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-space-6</code><span class="tokens__valor">1.5rem</span></li>
+          <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>3</span></p>
+        <ul class="tokens__lista">
+          <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
+          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+       bloco por escrever passaria a estar atras de um clique, e a razao de ele
+       existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
+       que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
+
+       (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
+       crase em comentario ja derrubou o build antes.) -->
+  <section class="bloco" id="faca" data-aba="Regras de uso">
+    <h2 class="bloco-titulo">Faça / não faça</h2>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><nav class="yb-crumb" aria-label="Breadcrumb"><ol><li><a href="#faca">Home</a></li><li><a href="#faca">Fashion Gold</a></li><li><span aria-current="page">Deep care kit</span></li></ol></nav></div>
+        <p class="fn-legenda">Último item sem link, marcado como página atual.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><nav class="yb-crumb" aria-label="Breadcrumb"><ol><li><a href="#faca">Home</a></li><li><a href="#faca">Fashion Gold</a></li><li><a href="#faca">Deep care kit</a></li></ol></nav></div>
+        <p class="fn-legenda">Último item como link leva a pessoa para onde ela já está — e o leitor de tela não tem como dizer onde ela está.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade">
+    <h2 class="bloco-titulo">Acessibilidade</h2>
+    <ul class="bloco-lede"><li>A trilha é um <code>&lt;nav aria-label="Breadcrumb"&gt;</code> com <code>&lt;ol&gt;</code> dentro: a ordem é informação, e a lista ordenada é o que a transmite.</li><li>O último item não é link — é <code>aria-current="page"</code>. Link para a página em que já se está é um destino que não leva a lugar nenhum.</li><li>Declara <code>:focus-visible</code> e respeita o alvo mínimo em cada link.</li></ul>
+  </section>
+  </div>
+
+  <p class="doc-credit">Gerada de <code>molecules/pecas/crumb.html</code> e
+  <code>molecules/ybera-molecules.css</code>. Não edite à mão: <code>./build.sh</code>.</p>
+</main>
+
+<script src="../behavior/ybera-behavior.js"></script>
+<script>
+/* O quadro de 375 se dimensiona pelo que tem dentro. Conteudo de iframe nao
+   dimensiona o elemento sozinho, entao o solo.html mede a propria caixa e
+   avisa por postMessage — sem isso a ficha do Badge teria a mesma altura da
+   ficha do carrinho, e as duas erradas. */
+addEventListener('message', function (e) {
+  if (!e.data || e.data.yb !== 'altura') return;
+  /* Pelo REMETENTE, e nao pelo primeiro quadro da pagina: uma ficha pode ter
+     mais de um (a comparacao de estados lado a lado tem dois), e os dois
+     mandam a mesma mensagem com o mesmo alvo. Pegando o primeiro, o quadro
+     grande recebia a altura do pequeno. */
+  var f = Array.prototype.find.call(document.querySelectorAll('iframe'),
+    function (x) { return x.contentWindow === e.source; });
+  if (!f || !(e.data.h > 0)) return;
+  f.height = e.data.h;
+  /* Quadros comparados ficam da MESMA altura, sempre a maior. Duas caixas lado
+     a lado com fundos diferentes e uma 44px mais curta leem como recorte, e
+     nao como diferenca de estado. So cresce, entao converge. */
+  var duo = f.closest('.duo');
+  if (!duo) return;
+  var irmaos = duo.querySelectorAll('.duo__quadro');
+  var maior = 0;
+  Array.prototype.forEach.call(irmaos, function (x) {
+    maior = Math.max(maior, parseInt(x.height, 10) || 0);
+  });
+  Array.prototype.forEach.call(irmaos, function (x) {
+    if ((parseInt(x.height, 10) || 0) !== maior) x.height = maior;
+  });
+});
+
+/* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
+   acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-yb-copiar]');
+  if (!b) return;
+  var codigo = b.parentElement.querySelector('code');
+  if (!codigo || !navigator.clipboard) return;
+  navigator.clipboard.writeText(codigo.textContent).then(function () {
+    var antes = b.textContent;
+    b.textContent = 'Copiado';
+    setTimeout(function () { b.textContent = antes; }, 1600);
+  }).catch(function () { /* permissao negada: o codigo continua selecionavel */ });
+});
+</script>
+</body>
+</html>

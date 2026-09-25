@@ -1,0 +1,78 @@
+<h2>Shape</h2>
+    <p class="when">Seis raios. A loja hoje pratica doze valores diferentes.</p>
+<div class="grid4">
+      <div class="rd">
+        <div class="rd-box" style="border-radius:var(--yb-radius-none)"></div>
+        <code>--yb-radius-none</code><span>0</span>
+      </div>
+      <div class="rd">
+        <div class="rd-box" style="border-radius:var(--yb-radius-sm)"></div>
+        <code>--yb-radius-sm</code><span>4px</span>
+      </div>
+      <div class="rd">
+        <div class="rd-box" style="border-radius:var(--yb-radius-md)"></div>
+        <code>--yb-radius-md</code><span>8px · padrão</span>
+      </div>
+      <div class="rd">
+        <div class="rd-box" style="border-radius:var(--yb-radius-lg)"></div>
+        <code>--yb-radius-lg</code><span>12px</span>
+      </div>
+      <div class="rd">
+        <div class="rd-box" style="border-radius:var(--yb-radius-xl)"></div>
+        <code>--yb-radius-xl</code><span>16px</span>
+      </div>
+      <div class="rd">
+        <div class="rd-box" style="border-radius:var(--yb-radius-full)"></div>
+        <code>--yb-radius-full</code><span>9999px</span>
+      </div>
+      </div>
+
+      <h3>Proporção de mídia</h3>
+      <p class="note">Reservar a caixa antes da imagem chegar é o que impede o
+      salto de layout. Sem isto, o card cresce quando a foto carrega e empurra o
+      preço para baixo do dedo que já estava indo nele.</p>
+      <div class="grid4">
+        <div class="ar">
+          <div class="ar-box" style="aspect-ratio:var(--yb-aspect-product)"></div>
+          <code>--yb-aspect-product</code><span>1:1 · o catálogo é fotografado assim</span>
+        </div>
+        <div class="ar">
+          <div class="ar-box" style="aspect-ratio:var(--yb-aspect-hero)"></div>
+          <code>--yb-aspect-hero</code><span>16:9 · paisagem</span>
+        </div>
+        <div class="ar">
+          <div class="ar-box" style="aspect-ratio:var(--yb-aspect-reel)"></div>
+          <code>--yb-aspect-reel</code><span>9:16 · vídeo vertical</span>
+        </div>
+        <div class="ar">
+          <div class="ar-box" style="aspect-ratio:var(--yb-aspect-portrait)"></div>
+          <code>--yb-aspect-portrait</code><span>4:5 · retrato</span>
+        </div>
+        <div class="ar">
+          <div class="ar-box" style="aspect-ratio:var(--yb-aspect-campaign)"></div>
+          <code>--yb-aspect-campaign</code><span>16:5 · arte de campanha, desktop</span>
+        </div>
+        <div class="ar">
+          <div class="ar-box" style="aspect-ratio:var(--yb-aspect-campaign-mobile)"></div>
+          <code>--yb-aspect-campaign-mobile</code><span>2:3 · arte de campanha, celular</span>
+        </div>
+      </div>
+      <p class="note"><code>--yb-thumb</code> · 3.5rem (56px): a miniatura de produto
+      em lista — resultado da busca e item da sacola, que antes diziam 56px cada
+      um do seu jeito.</p>
+
+      <h3>Largura de borda</h3>
+      <p class="note">Duas espessuras, e cada uma diz uma coisa: 1px divide, 2px
+      marca o que está selecionado ou em foco.</p>
+      <div class="grid4">
+        <div class="ct">
+          <div class="ct-box" style="height:var(--yb-target-min); background:var(--yb-surface);
+            border:var(--yb-border-hairline) solid var(--yb-border); color:var(--yb-text-secondary)">1px</div>
+          <code>--yb-border-hairline</code><span>linha divisória</span>
+        </div>
+        <div class="ct">
+          <div class="ct-box" style="height:var(--yb-target-min); background:var(--yb-surface);
+            border:var(--yb-border-emphasis) solid var(--yb-text-primary); color:var(--yb-text-secondary)">2px</div>
+          <code>--yb-border-emphasis</code><span>selecionado, foco</span>
+        </div>
+      </div>

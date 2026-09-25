@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Button — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../base/ybera-base.css">
+<link rel="stylesheet" href="ybera-atoms.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="../doc/doc.css">
+<link rel="stylesheet" href="../doc/doc-nav.css">
+<script src="../doc/doc.js" defer></script>
+<style>
+/* Sem seletor de tipo: ver o cabecalho de doc/doc.css. */
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+</style>
+</head>
+<body class="ficha" data-nivel="atoms" data-moldura="centrada">
+<!-- @moldura · gerada por tools/moldura.mjs · não edite -->
+<header class="ds-top">
+  <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
+  <div class="ds-top__busca" hidden>
+    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
+    <input id="ds-filtro" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filtro>
+    <p class="nav-conta" role="status" aria-live="polite"></p>
+  </div>
+  <p class="ds-top__versao">v0.12.1</p>
+</header>
+<nav class="ds-nav" aria-label="Navegação do design system">
+  <ul class="ds-nav__solta">
+    <li><a href="../index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 7 8 2.5 13.5 7"/><path d="M4 6.5V13h8V6.5"/><path d="M6.5 13V9.5h3V13"/></svg>Início</a></li>
+  </ul>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5.5 8 3l6 2.5L8 8 2 5.5Z"/><path d="M2 8.8 8 11.3l6-2.5"/><path d="M2 12l6 2.5 6-2.5"/></svg>Fundação</summary>
+    <ul>
+      <li><a href="../tokens/index.html">Visão geral</a></li>
+      <li><a href="../tokens/architecture.html">Architecture</a></li>
+      <li><a href="../tokens/color.html">Color</a></li>
+      <li><a href="../tokens/typography.html">Typography</a></li>
+      <li><a href="../tokens/space.html">Space</a></li>
+      <li><a href="../tokens/shape.html">Shape</a></li>
+      <li><a href="../tokens/elevation.html">Elevation</a></li>
+      <li><a href="../tokens/state.html">State</a></li>
+      <li><a href="../tokens/usage.html">How to use</a></li>
+      <li><a href="../icons/index.html">Ícones</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo" open>
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Componentes</summary>
+    <ul>
+      <li><a href="../molecules/accordion.html">Accordion</a></li>
+      <li><a href="../molecules/alert.html">Alert</a></li>
+      <li><a href="../atoms/avatar.html">Avatar</a></li>
+      <li><a href="../atoms/badge.html">Badge</a></li>
+      <li><a href="../molecules/bannerhero.html">Banner hero</a></li>
+      <li><a href="../molecules/bannermedia.html">Banner media</a></li>
+      <li><a href="../molecules/crumb.html">Breadcrumb</a></li>
+      <li><a href="../atoms/button.html" aria-current="page">Button</a></li>
+      <li><a href="../molecules/offercard.html">Card offer</a></li>
+      <li><a href="../molecules/card.html">Card product</a></li>
+      <li><a href="../atoms/seals.html">Certification seals</a></li>
+      <li><a href="../atoms/checkbox.html">Checkbox</a></li>
+      <li><a href="../atoms/chip.html">Chip</a></li>
+      <li><a href="../molecules/collection.html">Collection card</a></li>
+      <li><a href="../molecules/dropdown.html">Dropdown</a></li>
+      <li><a href="../molecules/empty.html">Empty state</a></li>
+      <li><a href="../atoms/iconbtn.html">Icon button</a></li>
+      <li><a href="../atoms/input.html">Input</a></li>
+      <li><a href="../atoms/link.html">Link</a></li>
+      <li><a href="../atoms/logo.html">Logo</a></li>
+      <li><a href="../atoms/notice.html">Notice</a></li>
+      <li><a href="../atoms/offerseal.html">Offer seal</a></li>
+      <li><a href="../molecules/pagination.html">Pagination</a></li>
+      <li><a href="../molecules/partner.html">Partner</a></li>
+      <li><a href="../molecules/post.html">Post</a></li>
+      <li><a href="../molecules/price.html">Price</a></li>
+      <li><a href="../atoms/progress.html">Progress bar</a></li>
+      <li><a href="../molecules/stepper.html">Quantity stepper</a></li>
+      <li><a href="../atoms/radio.html">Radio</a></li>
+      <li><a href="../molecules/rating.html">Rating</a></li>
+      <li><a href="../molecules/review.html">Review</a></li>
+      <li><a href="../atoms/select.html">Select</a></li>
+      <li><a href="../atoms/skeleton.html">Skeleton</a></li>
+      <li><a href="../atoms/stars.html">Stars</a></li>
+      <li><a href="../atoms/switch.html">Switch</a></li>
+      <li><a href="../atoms/textarea.html">Textarea</a></li>
+      <li><a href="../molecules/toast.html">Toast</a></li>
+      <li><a href="../molecules/track.html">Track</a></li>
+      <li><a href="../molecules/variant.html">Variant picker</a></li>
+      <li><a href="../molecules/video.html">Vertical video carousel</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2.5" width="12" height="3" rx="1"/><rect x="2" y="6.8" width="12" height="3" rx="1"/><rect x="2" y="11.1" width="12" height="2.4" rx="1"/></svg>Blocos</summary>
+    <ul>
+      <li><a href="../organisms/quote.html">Brand quote</a></li>
+      <li><a href="../organisms/buybox.html">Buy box</a></li>
+      <li><a href="../organisms/cart-drawer.html">Cart drawer</a></li>
+      <li><a href="../organisms/catalog.html">Catalog</a></li>
+      <li><a href="../organisms/drawer.html">Drawer</a></li>
+      <li><a href="../organisms/faq.html">FAQ</a></li>
+      <li><a href="../organisms/footer.html">Footer</a></li>
+      <li><a href="../organisms/shipping-progress.html">Free shipping progress</a></li>
+      <li><a href="../organisms/gallery.html">Gallery</a></li>
+      <li><a href="../organisms/header.html">Header</a></li>
+      <li><a href="../organisms/hero.html">Hero</a></li>
+      <li><a href="../organisms/logobar.html">Logo bar</a></li>
+      <li><a href="../organisms/manifesto.html">Manifesto</a></li>
+      <li><a href="../organisms/dialog.html">Modal</a></li>
+      <li><a href="../organisms/nav.html">Nav</a></li>
+      <li><a href="../organisms/search.html">Search overlay</a></li>
+      <li><a href="../organisms/split.html">Split</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3.5" width="9" height="9" rx="1.5"/><path d="M5.5 3.5V1.5h9v9h-2"/></svg>Exemplos</summary>
+    <ul>
+      <li><a href="../pages/index.html">Visão geral</a></li>
+      <li><a href="../pages/home.html" target="_blank" rel="noopener">Home v1<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-v2.html" target="_blank" rel="noopener">Home v2<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-v3.html" target="_blank" rel="noopener">Home v3<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-logado.html" target="_blank" rel="noopener">Home · cliente logado<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp.html" target="_blank" rel="noopener">PDP<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-influencer.html" target="_blank" rel="noopener">PDP link influencer<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-esgotado.html" target="_blank" rel="noopener">PDP esgotada<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-variante.html" target="_blank" rel="noopener">PDP com variante<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-oferta.html" target="_blank" rel="noopener">PDP em promoção<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/faq.html" target="_blank" rel="noopener">FAQ<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/404.html" target="_blank" rel="noopener">404<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+    </ul>
+  </details>
+  <ul class="ds-nav__solta">
+    <li><a href="../preview/index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3" width="13" height="8.5" rx="1.5"/><path d="M5.5 14h5"/><path d="M8 11.5V14"/></svg>Preview</a></li>
+  </ul>
+</nav>
+<!-- /@moldura -->
+
+<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
+  <ol>
+    <li><a href="#demos">Como se parece</a></li>
+    <li><a href="#mobile">Mobile</a></li>
+    <li><a href="#feita-de">De que é feita</a></li>
+    <li><a href="#anatomia">Anatomia e API</a></li>
+    <li><a href="#marcacao">Marcação</a></li>
+    <li><a href="#acessibilidade">Acessibilidade</a></li>
+    <li><a href="#faca">Faça / não faça</a></li>
+  </ol>
+</aside>
+
+<main class="main">
+  <div class="ficha-topo">
+    <nav class="ficha-trilha" aria-label="Você está aqui">
+      <a href="../components/index.html">Componentes</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html#button">Átomos</a>
+      <span aria-hidden="true">/</span>
+      <b aria-current="page">Button</b>
+    </nav>
+    <nav class="ficha-passo" aria-label="Peça anterior e próxima">
+      <a href="badge.html" rel="prev"><span aria-hidden="true">←</span> Badge</a>
+      <a href="seals.html" rel="next">Certification seals <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
+  <h1 class="ficha-titulo">Button</h1>
+  <p class="ficha-quando">O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</p>
+  <!-- Só a classe base. A fileira trazia também as contagens de modificador,
+       elemento, estado e token — cinco números que ninguém usa para decidir
+       nada e que, desde que a aba Anatomia existe, repetem em placar o que a
+       aba mostra por extenso, com os nomes. Número sem o nome ao lado é um
+       resumo de algo que está a um clique. -->
+  <ul class="ficha-fatos">
+    <li>Classe base <b><code>.yb-btn</code></b></li>
+  </ul>
+
+  <!-- A FICHA INTEIRA EM ABAS, e nada solto embaixo delas.
+
+       Antes so tres blocos eram aba (Preview, Codigo, Anatomia) e outros tres
+       ficavam abaixo do container — Mobile, Acessibilidade e Faca/nao faca.
+       Como nada na tela dizia que a area das abas tinha acabado (20px de vao e
+       a mesma tipografia), os tres liam como conteudo da aba aberta, qualquer
+       que fosse ela.
+
+       Agora tudo e aba, na organizacao do outro design system da casa:
+       Componente · Anatomia · Regras de uso · Acessibilidade. "Estados" fica de
+       fora por enquanto — so 2 das 66 pecas tem demonstracao de estado, e uma
+       aba vazia em 64 fichas ensina menos que a ausencia dela.
+
+       O CELULAR E A MARCACAO ENTRARAM EM "COMPONENTE" porque respondem a mesma
+       pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
+       que telefone e assunto separado do desktop, que e o oposto do que um
+       design system quer dizer. -->
+  <div class="abas" data-yb-abas>
+  <section class="bloco" id="demos" data-aba="Componente">
+    <h2 class="bloco-titulo">Como se parece</h2>
+    <h3 class="row-label">Variants</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <button type="button" class="yb-btn yb-btn--primary">Add to cart</button>
+        <span class="amostra__rotulo"><code>--primary</code></span>
+      </span>
+      <span class="amostra">
+        <button type="button" class="yb-btn yb-btn--secondary">Continue shopping</button>
+        <span class="amostra__rotulo"><code>--secondary</code></span>
+      </span>
+      <span class="amostra">
+        <button type="button" class="yb-btn yb-btn--ghost">Size guide</button>
+        <span class="amostra__rotulo"><code>--ghost</code></span>
+      </span>
+      <span class="amostra">
+        <button type="button" class="yb-btn yb-btn--danger">Remove item</button>
+        <span class="amostra__rotulo"><code>--danger</code></span>
+      </span>
+    </div>
+    <div class="note">
+      <b>Por que a secundária é magenta tingido e não grafite</b>
+      <p>Era um bloco de grafite sólido: <b>16,66:1</b> contra o primário de
+      <b>5,36:1</b> — pesava 3,1× mais e virava o elemento mais forte da tela,
+      mais que o título do produto. Cinza claro foi tentado e descartado: a
+      1,09:1 o bloco some no branco, e onde não some é confundido com
+      desabilitado, que também é cinza. Tingir com a própria cor de ação separa
+      por <b>matiz</b>, não por peso — e matiz não se confunde. O texto mede
+      8,09:1, mais legível que o branco do primário.</p>
+    </div>
+    <div class="note">
+      <b>Limite conhecido: só funciona sobre fundo claro</b>
+      <p>O tingido some sobre a faixa escura do header ou sobre foto. Ali a
+      secundária teria de ser contorno claro — variante que <b>ainda não
+      existe</b>, porque nenhuma tela pede. Se alguma pedir, ela entra aqui
+      antes de ser usada.</p>
+    </div>
+
+    <h3 class="row-label">Sobre painel escuro</h3>
+    <div class="demo demo--dark demo--amostras">
+      <span class="amostra">
+        <button class="yb-btn yb-btn--on-dark" type="button">Start quiz</button>
+        <span class="amostra__rotulo"><code>--on-dark</code></span>
+      </span>
+      <span class="amostra">
+        <button class="yb-btn yb-btn--on-dark" type="button" disabled>Start quiz</button>
+        <span class="amostra__rotulo"><code>--on-dark</code> <code>[disabled]</code></span>
+      </span>
+    </div>
+    <div class="note">
+      <b>Dentro de um bloco escuro a ação inverte</b>
+      <p>O magenta continua sendo a ação da <b>página</b>, mas sobre grafite ele briga
+      com o próprio fundo. Medido: o botão branco contra o painel dá 16,66:1, então ele
+      não precisa de borda para existir. O hover <b>afunda</b> em vez de clarear, e o
+      anel de foco vira branco.</p>
+      <p>Não use sobre foto: ali o fundo não é conhecido e o token é outro.</p>
+    </div>
+
+    <h3 class="row-label">Sizes</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <button type="button" class="yb-btn yb-btn--primary yb-btn--sm">Small</button>
+        <span class="amostra__rotulo"><code>--sm</code> · 36px</span>
+      </span>
+      <span class="amostra">
+        <button type="button" class="yb-btn yb-btn--primary">Medium</button>
+        <span class="amostra__rotulo">sem modificador · 50px</span>
+      </span>
+      <span class="amostra">
+        <button type="button" class="yb-btn yb-btn--primary yb-btn--lg">Large</button>
+        <span class="amostra__rotulo"><code>--lg</code> · 60px</span>
+      </span>
+    </div>
+    <h3 class="row-label">States</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <button type="button" class="yb-btn yb-btn--primary">Normal</button>
+        <span class="amostra__rotulo">repouso</span>
+      </span>
+      <span class="amostra">
+        <button type="button" class="yb-btn yb-btn--primary yb-btn--loading">Adding</button>
+        <span class="amostra__rotulo"><code>--loading</code></span>
+      </span>
+      <span class="amostra">
+        <button type="button" class="yb-btn yb-btn--primary" disabled>Sold out</button>
+        <span class="amostra__rotulo"><code>[disabled]</code></span>
+      </span>
+      <span class="amostra">
+        <button type="button" class="yb-btn yb-btn--ghost" disabled>Unavailable</button>
+        <span class="amostra__rotulo"><code>--ghost</code> <code>[disabled]</code></span>
+      </span>
+    </div>
+    <h3 class="row-label">O ciclo completo — clique, espera, resposta</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <button class="yb-btn yb-btn--primary" type="button" data-yb-comprar
+                data-toast-titulo="Added to cart" data-toast-texto="Deep care kit">Add to cart</button>
+        <span class="amostra__rotulo"><code>data-yb-comprar</code></span>
+      </span>
+      <span class="amostra">
+        <button class="yb-btn yb-btn--secondary" type="button" data-yb-comprar data-yb-falhar
+                data-toast-erro="Could not add to cart"
+                data-toast-erro-texto="Check your connection and try again.">Add to cart (falha)</button>
+        <span class="amostra__rotulo"><code>data-yb-falhar</code></span>
+      </span>
+    </div>
+    <div class="note">
+      <b>O erro se prova aqui, não no protótipo</b>
+      <p>A PDP sempre consegue adicionar — protótipo que falha por sorteio ensina
+      errado. Mas o caminho do erro precisa existir em algum lugar revisável, e
+      esse lugar é a documentação de estado: o segundo botão declara
+      <code>data-yb-falhar</code> e mostra o toast <code>--danger</code>, que
+      interrompe o leitor de tela com <code>role="alert"</code> em vez de esperar
+      a pausa.</p>
+    </div>
+    <h3 class="row-label">Full width</h3>
+    <div class="demo demo--stack">
+      <button type="button" class="yb-btn yb-btn--primary yb-btn--block">Add to cart — $168.90</button>
+      <p class="amostra__rotulo"><code>--block</code></p>
+    </div>
+    <div class="note">
+      <b>Por que o carregando mantém a largura</b>
+      <p>No estado <code>--loading</code> o rótulo fica transparente em vez de sumir.
+      Se o texto saísse, o botão encolheria e o layout saltaria embaixo do dedo —
+      exatamente no momento em que a pessoa acabou de tocar para comprar.
+      O <code>--sm</code> é o único que fica abaixo dos 44px: use só onde não há toque.</p>
+    </div>
+
+    <h3 class="row-label">Icon button</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <button class="yb-iconbtn" type="button" aria-label="Open cart">
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg>
+        </button>
+        <span class="amostra__rotulo"><code>.yb-iconbtn</code> · 44px</span>
+      </span>
+      <span class="amostra">
+        <span class="amostra__foto">
+          <button class="yb-iconbtn yb-iconbtn--onmedia" type="button" aria-label="Play video">
+            <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-play"/></svg>
+          </button>
+        </span>
+        <span class="amostra__rotulo"><code>--onmedia</code></span>
+      </span>
+      <span class="amostra">
+        <button class="yb-iconbtn yb-iconbtn--fav" type="button" data-yb-fav
+                aria-pressed="false" aria-label="Add to favorites"
+                data-label-off="Add to favorites" data-label-on="Remove from favorites"
+                data-icon-off="yb-heart" data-icon-on="yb-heart-filled">
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg>
+        </button>
+        <span class="amostra__rotulo"><code>--fav</code> <code>aria-pressed="false"</code></span>
+      </span>
+      <span class="amostra">
+        <button class="yb-iconbtn yb-iconbtn--fav" type="button" data-yb-fav
+                aria-pressed="true" aria-label="Remove from favorites"
+                data-label-off="Add to favorites" data-label-on="Remove from favorites"
+                data-icon-off="yb-heart" data-icon-on="yb-heart-filled">
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart-filled"/></svg>
+        </button>
+        <span class="amostra__rotulo"><code>--fav</code> <code>aria-pressed="true"</code></span>
+      </span>
+    </div>
+    <div class="note">
+      <b>Favoritar é este botão com um estado a mais</b>
+      <p>Mesmo <code>.yb-iconbtn</code>, mesmo alvo. O que muda é
+      <code>aria-pressed</code>: a cor vira <code>--yb-accent-love</code> e o ícone
+      troca de traço para preenchido. Cor sozinha reprovaria a WCAG 1.4.1, e falha
+      primeiro para quem não distingue magenta de cinza. Sem JS o botão continua
+      clicável, só não guarda nada.</p>
+    </div>
+
+    <h3 class="rotulo">No celular</h3>
+    <div class="quadro-mob">
+      <iframe src="solo.html?c=button" title="Button em 375px"
+              width="375" height="420" loading="lazy"></iframe>
+    </div>
+
+    <h3 class="rotulo">Marcação</h3>
+    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
+    <div class="snippet">
+      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <pre><code>&lt;span class="amostra"&gt;
+  &lt;button type="button" class="yb-btn yb-btn--primary"&gt;Add to cart&lt;/button&gt;
+  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--primary&lt;/code&gt;&lt;/span&gt;
+&lt;/span&gt;
+&lt;span class="amostra"&gt;
+  &lt;button type="button" class="yb-btn yb-btn--secondary"&gt;Continue shopping&lt;/button&gt;
+  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--secondary&lt;/code&gt;&lt;/span&gt;
+&lt;/span&gt;
+&lt;span class="amostra"&gt;
+  &lt;button type="button" class="yb-btn yb-btn--ghost"&gt;Size guide&lt;/button&gt;
+  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--ghost&lt;/code&gt;&lt;/span&gt;
+&lt;/span&gt;
+&lt;span class="amostra"&gt;
+  &lt;button type="button" class="yb-btn yb-btn--danger"&gt;Remove item&lt;/button&gt;
+  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--danger&lt;/code&gt;&lt;/span&gt;
+&lt;/span&gt;</code></pre>
+    </div>
+  </section>
+
+  <section class="bloco" id="anatomia" data-aba="Anatomia">
+    <h2 class="bloco-titulo">Anatomia e API</h2>
+    <div class="anat" data-yb-anatomia>
+      <div class="anat__palco">
+        <svg class="anat__fios" aria-hidden="true"></svg>
+        <div class="anat__peca"><button type="button" class="yb-btn yb-btn--primary">Add to cart</button></div>
+      </div>
+      <ol class="anat__legenda">
+        <li data-alvo=".yb-btn"><span class="anat__texto"><b>Botão</b> — Uma ação primária por tela. O rótulo é o que vai acontecer — “Add to cart”, não “Enviar”.</span></li>
+      </ol>
+    </div>
+    <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
+         COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres
+         palavras de dentro de casa ("folha", "marcacao", "build"). A aba ao
+         lado ja mostrava o jeito certo — "O mesmo HTML que renderizou acima"
+         diz o que e. Aqui o que a pessoa precisa primeiro e a lista do que vai
+         encontrar; a procedencia vem depois, e vale a frase inteira, porque e
+         ela que autoriza confiar no que esta escrito. -->
+    <p class="bloco-lede">De que a peça é feita, o que ela aceita e os tokens que
+    consome — estes do mais específico desta peça para o mais compartilhado com o
+    resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
+    estiver errado aqui, o errado é o código.</p>
+
+    <p class="api-linha"><span class="api-linha__rotulo">De que é feita</span><span class="api-linha__corpo">Nenhuma. Um átomo não compõe outras peças — é isso que faz dele átomo.</span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-btn--block</code> <code>.yb-btn--danger</code> <code>.yb-btn--ghost</code> <code>.yb-btn--lg</code> <code>.yb-btn--loading</code> <code>.yb-btn--on-dark</code> <code>.yb-btn--primary</code> <code>.yb-btn--secondary</code> <code>.yb-btn--sm</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo">Nenhum. A peça é um elemento só.</span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:active</code> · <code>:focus-visible</code> · <code>:hover</code> · <code>[aria-disabled]</code> · <code>[disabled]</code></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">45</span></p>
+    <div class="tokens">
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>25</span></p>
+        <ul class="tokens__lista">
+          <li><i class="tokens__cor" style="background:var(--yb-action-bg-active)" aria-hidden="true"></i><code>--yb-action-bg-active</code><span class="tokens__valor">#5D1932</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-bg-disabled)" aria-hidden="true"></i><code>--yb-action-bg-disabled</code><span class="tokens__valor">#EAEAEA</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-ghost-bg-hover)" aria-hidden="true"></i><code>--yb-action-ghost-bg-hover</code><span class="tokens__valor">#F5F5F5</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-ghost-border)" aria-hidden="true"></i><code>--yb-action-ghost-border</code><span class="tokens__valor">#DADADB</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-ghost-text)" aria-hidden="true"></i><code>--yb-action-ghost-text</code><span class="tokens__valor">#1E1E1F</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-secondary-bg-active)" aria-hidden="true"></i><code>--yb-action-secondary-bg-active</code><span class="tokens__valor">#EBCAD6</span></li>
+          <li><code>--yb-action-secondary-border</code><span class="tokens__valor">transparent</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-secondary-bg-hover)" aria-hidden="true"></i><code>--yb-action-secondary-bg-hover</code><span class="tokens__valor">#F3E1E8</span></li>
+          <li><code>--yb-action-secondary-border-hover</code><span class="tokens__valor">transparent</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-secondary-text-hover)" aria-hidden="true"></i><code>--yb-action-secondary-text-hover</code><span class="tokens__valor">#8A1E45</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-secondary-bg)" aria-hidden="true"></i><code>--yb-action-secondary-bg</code><span class="tokens__valor">#F9F2F4</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-secondary-text)" aria-hidden="true"></i><code>--yb-action-secondary-text</code><span class="tokens__valor">#CA235F</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-bg-hover)" aria-hidden="true"></i><code>--yb-action-bg-hover</code><span class="tokens__valor">#8A1E45</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-text)" aria-hidden="true"></i><code>--yb-action-text</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><code>--yb-border-emphasis</code><span class="tokens__valor">2px</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-danger-solid)" aria-hidden="true"></i><code>--yb-danger-solid</code><span class="tokens__valor">#B3261E</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-danger-text)" aria-hidden="true"></i><code>--yb-danger-text</code><span class="tokens__valor">#B3261E</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-bg)" aria-hidden="true"></i><code>--yb-action-bg</code><span class="tokens__valor">#CA235F</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-surface-sunken)" aria-hidden="true"></i><code>--yb-surface-sunken</code><span class="tokens__valor">#FAFAFA</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
+          <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>5</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-type-body-lg-size</code><span class="tokens__valor">1.125rem</span></li>
+          <li><code>--yb-line-height-none</code><span class="tokens__valor">1</span></li>
+          <li><code>--yb-type-body-size</code><span class="tokens__valor">1rem</span></li>
+          <li><code>--yb-font-weight-semibold</code><span class="tokens__valor">600</span></li>
+          <li><code>--yb-type-body-sm-size</code><span class="tokens__valor">0.875rem</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>8</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-icon-sm</code><span class="tokens__valor">16px</span></li>
+          <li><code>--yb-control-height-compact</code><span class="tokens__valor">36px</span></li>
+          <li><code>--yb-space-6</code><span class="tokens__valor">1.5rem</span></li>
+          <li><code>--yb-space-8</code><span class="tokens__valor">2rem</span></li>
+          <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
+          <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
+          <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
+          <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>2</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-radius-control</code><span class="tokens__valor">8px</span></li>
+          <li><code>--yb-radius-full</code><span class="tokens__valor">9999px</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>5</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-duration-slower</code><span class="tokens__valor">420ms</span></li>
+          <li><code>--yb-transition-control</code><span class="tokens__valor">120ms cubic-bezier(.2, 0, 0, 1)</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
+          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+       bloco por escrever passaria a estar atras de um clique, e a razao de ele
+       existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
+       que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
+
+       (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
+       crase em comentario ja derrubou o build antes.) -->
+  <section class="bloco" id="faca" data-aba="Regras de uso">
+    <h2 class="bloco-titulo">Faça / não faça</h2>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><button class="yb-btn yb-btn--primary" type="button">Add to cart</button><button class="yb-btn yb-btn--secondary" type="button">Size guide</button></div>
+        <p class="fn-legenda">Um primário, com o rótulo dizendo o que acontece.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><button class="yb-btn yb-btn--primary" type="button">Click here</button><button class="yb-btn yb-btn--primary" type="button">Continue</button></div>
+        <p class="fn-legenda">Dois primários lado a lado não são duas opções — são nenhuma escolha clara. E “Click here” não diz nada fora de contexto.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade">
+    <h2 class="bloco-titulo">Acessibilidade</h2>
+    <ul class="bloco-lede"><li>Uma ação primária por tela. Com duas, quem navega por teclado percorre as duas sem saber qual é a saída.</li><li>O rótulo descreve a ação: “Add to cart”, não “Click here”.</li><li>Em <code>--loading</code> ele recebe <code>aria-busy</code> e mantém a largura. Não recebe <code>disabled</code>: o fundo viraria cinza, e spinner branco sobre cinza é spinner invisível.</li><li>Botão com <code>disabled</code> some do teclado. Quando o motivo importa, ele tem de estar escrito ao lado.</li></ul>
+  </section>
+  </div>
+
+  <p class="doc-credit">Gerada de <code>atoms/pecas/button.html</code> e
+  <code>atoms/ybera-atoms.css</code>. Não edite à mão: <code>./build.sh</code>.</p>
+</main>
+
+<script src="../behavior/ybera-behavior.js"></script>
+<script>
+/* O quadro de 375 se dimensiona pelo que tem dentro. Conteudo de iframe nao
+   dimensiona o elemento sozinho, entao o solo.html mede a propria caixa e
+   avisa por postMessage — sem isso a ficha do Badge teria a mesma altura da
+   ficha do carrinho, e as duas erradas. */
+addEventListener('message', function (e) {
+  if (!e.data || e.data.yb !== 'altura') return;
+  /* Pelo REMETENTE, e nao pelo primeiro quadro da pagina: uma ficha pode ter
+     mais de um (a comparacao de estados lado a lado tem dois), e os dois
+     mandam a mesma mensagem com o mesmo alvo. Pegando o primeiro, o quadro
+     grande recebia a altura do pequeno. */
+  var f = Array.prototype.find.call(document.querySelectorAll('iframe'),
+    function (x) { return x.contentWindow === e.source; });
+  if (!f || !(e.data.h > 0)) return;
+  f.height = e.data.h;
+  /* Quadros comparados ficam da MESMA altura, sempre a maior. Duas caixas lado
+     a lado com fundos diferentes e uma 44px mais curta leem como recorte, e
+     nao como diferenca de estado. So cresce, entao converge. */
+  var duo = f.closest('.duo');
+  if (!duo) return;
+  var irmaos = duo.querySelectorAll('.duo__quadro');
+  var maior = 0;
+  Array.prototype.forEach.call(irmaos, function (x) {
+    maior = Math.max(maior, parseInt(x.height, 10) || 0);
+  });
+  Array.prototype.forEach.call(irmaos, function (x) {
+    if ((parseInt(x.height, 10) || 0) !== maior) x.height = maior;
+  });
+});
+
+/* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
+   acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-yb-copiar]');
+  if (!b) return;
+  var codigo = b.parentElement.querySelector('code');
+  if (!codigo || !navigator.clipboard) return;
+  navigator.clipboard.writeText(codigo.textContent).then(function () {
+    var antes = b.textContent;
+    b.textContent = 'Copiado';
+    setTimeout(function () { b.textContent = antes; }, 1600);
+  }).catch(function () { /* permissao negada: o codigo continua selecionavel */ });
+});
+</script>
+</body>
+</html>

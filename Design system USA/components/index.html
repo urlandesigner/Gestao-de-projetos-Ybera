@@ -3,276 +3,371 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Components — Ybera Design System</title>
+<title>Componentes — Ybera Design System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="../tokens/00-primitives.css">
 <link rel="stylesheet" href="../tokens/01-semantic.css">
-<link rel="stylesheet" href="../icons/ybera-icons.css">
-<link rel="stylesheet" href="ybera-components.css">
-<link rel="stylesheet" href="doc.css">
-<script src="doc.js" defer></script>
+<link rel="stylesheet" href="../base/ybera-base.css">
+<link rel="stylesheet" href="../doc/doc.css">
+<link rel="stylesheet" href="../doc/doc-nav.css">
+<script src="../doc/doc.js" defer></script>
 <style>
 .ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
   font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
   line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
-.ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:var(--yb-type-caption-size)}
+/* Página de grupo não tem coluna lateral: ela É o sumário do grupo. */
+.grupo-main{max-width:var(--doc-medida); margin-inline:auto;
+  padding:var(--yb-space-8) var(--doc-respiro) var(--yb-space-20)}
+@media (max-width:900px){.grupo-main{padding:var(--yb-space-10) var(--doc-respiro)}}
 </style>
 </head>
-<body class="ficha">
-<div class="doc">
-
-<nav class="nav">
-  <p class="nav-brand">Ybera</p>
-  <p class="nav-ver">Components · v0.12.1</p>
-  <!-- Nasce escondido e o doc.js liga: campo de filtro sem script e uma caixa
-       que nao faz nada, e marcacao sem gatilho e peso morto. A lista completa
-       continua no HTML, na mesma ordem — o filtro so esconde. -->
-  <div class="nav-filtro" hidden>
-    <label class="yb-sr-only" for="filtro">Filtrar peças</label>
-    <input id="filtro" type="search" class="yb-input" placeholder="Filtrar…"
+<body class="ficha" data-moldura="centrada">
+<!-- @moldura · gerada por tools/moldura.mjs · não edite -->
+<header class="ds-top">
+  <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
+  <div class="ds-top__busca" hidden>
+    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
+    <input id="ds-filtro" type="search" placeholder="Buscar…"
            autocomplete="off" data-yb-filtro>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
-  <ul>
-    <li><a href="accordion.html">Accordion</a></li>
-    <li><a href="alert.html">Alert</a></li>
-    <li><a href="badge.html">Badge</a></li>
-    <li><a href="quote.html">Brand quote</a></li>
-    <li><a href="crumb.html">Breadcrumb</a></li>
-    <li><a href="button.html">Button</a></li>
-    <li><a href="seals.html">Certification seals</a></li>
-    <li><a href="check.html">Checkbox &amp; radio</a></li>
-    <li><a href="collection.html">Collection card</a></li>
-    <li><a href="empty.html">Empty state</a></li>
-    <li><a href="field.html">Form field</a></li>
-    <li><a href="gallery.html">Gallery</a></li>
-    <li><a href="iconbtn.html">Icon button</a></li>
-    <li><a href="link.html">Link</a></li>
-    <li><a href="logo.html">Logo</a></li>
-    <li><a href="logobar.html">Logo bar</a></li>
-    <li><a href="mediabanner.html">Media banner</a></li>
-    <li><a href="dialog.html">Modal &amp; drawer</a></li>
-    <li><a href="notice.html">Notice</a></li>
-    <li><a href="offercard.html">Offer card</a></li>
-    <li><a href="offerseal.html">Offer seal</a></li>
-    <li><a href="pagination.html">Pagination</a></li>
-    <li><a href="partner.html">Partner</a></li>
-    <li><a href="post.html">Post</a></li>
-    <li><a href="price.html">Price</a></li>
-    <li><a href="card.html">Product card</a></li>
-    <li><a href="progress.html">Progress bar</a></li>
-    <li><a href="stepper.html">Quantity stepper</a></li>
-    <li><a href="rating.html">Rating</a></li>
-    <li><a href="review.html">Review</a></li>
-    <li><a href="search.html">Search overlay</a></li>
-    <li><a href="skeleton.html">Skeleton</a></li>
-    <li><a href="switch.html">Switch</a></li>
-    <li><a href="toast.html">Toast</a></li>
-    <li><a href="track.html">Track</a></li>
-    <li><a href="variant.html">Variant picker</a></li>
-    <li><a href="video.html">Vertical video carousel</a></li>
+  <p class="ds-top__versao">v0.12.1</p>
+</header>
+<nav class="ds-nav" aria-label="Navegação do design system">
+  <ul class="ds-nav__solta">
+    <li><a href="../index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 7 8 2.5 13.5 7"/><path d="M4 6.5V13h8V6.5"/><path d="M6.5 13V9.5h3V13"/></svg>Início</a></li>
   </ul>
-  <div class="nav-back">
-    <a href="../index.html">← Design system</a>
-  </div>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5.5 8 3l6 2.5L8 8 2 5.5Z"/><path d="M2 8.8 8 11.3l6-2.5"/><path d="M2 12l6 2.5 6-2.5"/></svg>Fundação</summary>
+    <ul>
+      <li><a href="../tokens/index.html">Visão geral</a></li>
+      <li><a href="../tokens/architecture.html">Architecture</a></li>
+      <li><a href="../tokens/color.html">Color</a></li>
+      <li><a href="../tokens/typography.html">Typography</a></li>
+      <li><a href="../tokens/space.html">Space</a></li>
+      <li><a href="../tokens/shape.html">Shape</a></li>
+      <li><a href="../tokens/elevation.html">Elevation</a></li>
+      <li><a href="../tokens/state.html">State</a></li>
+      <li><a href="../tokens/usage.html">How to use</a></li>
+      <li><a href="../icons/index.html">Ícones</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo" open>
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Componentes</summary>
+    <ul>
+      <li><a href="../molecules/accordion.html">Accordion</a></li>
+      <li><a href="../molecules/alert.html">Alert</a></li>
+      <li><a href="../atoms/avatar.html">Avatar</a></li>
+      <li><a href="../atoms/badge.html">Badge</a></li>
+      <li><a href="../molecules/bannerhero.html">Banner hero</a></li>
+      <li><a href="../molecules/bannermedia.html">Banner media</a></li>
+      <li><a href="../molecules/crumb.html">Breadcrumb</a></li>
+      <li><a href="../atoms/button.html">Button</a></li>
+      <li><a href="../molecules/offercard.html">Card offer</a></li>
+      <li><a href="../molecules/card.html">Card product</a></li>
+      <li><a href="../atoms/seals.html">Certification seals</a></li>
+      <li><a href="../atoms/checkbox.html">Checkbox</a></li>
+      <li><a href="../atoms/chip.html">Chip</a></li>
+      <li><a href="../molecules/collection.html">Collection card</a></li>
+      <li><a href="../molecules/dropdown.html">Dropdown</a></li>
+      <li><a href="../molecules/empty.html">Empty state</a></li>
+      <li><a href="../atoms/iconbtn.html">Icon button</a></li>
+      <li><a href="../atoms/input.html">Input</a></li>
+      <li><a href="../atoms/link.html">Link</a></li>
+      <li><a href="../atoms/logo.html">Logo</a></li>
+      <li><a href="../atoms/notice.html">Notice</a></li>
+      <li><a href="../atoms/offerseal.html">Offer seal</a></li>
+      <li><a href="../molecules/pagination.html">Pagination</a></li>
+      <li><a href="../molecules/partner.html">Partner</a></li>
+      <li><a href="../molecules/post.html">Post</a></li>
+      <li><a href="../molecules/price.html">Price</a></li>
+      <li><a href="../atoms/progress.html">Progress bar</a></li>
+      <li><a href="../molecules/stepper.html">Quantity stepper</a></li>
+      <li><a href="../atoms/radio.html">Radio</a></li>
+      <li><a href="../molecules/rating.html">Rating</a></li>
+      <li><a href="../molecules/review.html">Review</a></li>
+      <li><a href="../atoms/select.html">Select</a></li>
+      <li><a href="../atoms/skeleton.html">Skeleton</a></li>
+      <li><a href="../atoms/stars.html">Stars</a></li>
+      <li><a href="../atoms/switch.html">Switch</a></li>
+      <li><a href="../atoms/textarea.html">Textarea</a></li>
+      <li><a href="../molecules/toast.html">Toast</a></li>
+      <li><a href="../molecules/track.html">Track</a></li>
+      <li><a href="../molecules/variant.html">Variant picker</a></li>
+      <li><a href="../molecules/video.html">Vertical video carousel</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2.5" width="12" height="3" rx="1"/><rect x="2" y="6.8" width="12" height="3" rx="1"/><rect x="2" y="11.1" width="12" height="2.4" rx="1"/></svg>Blocos</summary>
+    <ul>
+      <li><a href="../organisms/quote.html">Brand quote</a></li>
+      <li><a href="../organisms/buybox.html">Buy box</a></li>
+      <li><a href="../organisms/cart-drawer.html">Cart drawer</a></li>
+      <li><a href="../organisms/catalog.html">Catalog</a></li>
+      <li><a href="../organisms/drawer.html">Drawer</a></li>
+      <li><a href="../organisms/faq.html">FAQ</a></li>
+      <li><a href="../organisms/footer.html">Footer</a></li>
+      <li><a href="../organisms/shipping-progress.html">Free shipping progress</a></li>
+      <li><a href="../organisms/gallery.html">Gallery</a></li>
+      <li><a href="../organisms/header.html">Header</a></li>
+      <li><a href="../organisms/hero.html">Hero</a></li>
+      <li><a href="../organisms/logobar.html">Logo bar</a></li>
+      <li><a href="../organisms/manifesto.html">Manifesto</a></li>
+      <li><a href="../organisms/dialog.html">Modal</a></li>
+      <li><a href="../organisms/nav.html">Nav</a></li>
+      <li><a href="../organisms/search.html">Search overlay</a></li>
+      <li><a href="../organisms/split.html">Split</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3.5" width="9" height="9" rx="1.5"/><path d="M5.5 3.5V1.5h9v9h-2"/></svg>Exemplos</summary>
+    <ul>
+      <li><a href="../pages/index.html">Visão geral</a></li>
+      <li><a href="../pages/home.html" target="_blank" rel="noopener">Home v1<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-v2.html" target="_blank" rel="noopener">Home v2<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-v3.html" target="_blank" rel="noopener">Home v3<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-logado.html" target="_blank" rel="noopener">Home · cliente logado<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp.html" target="_blank" rel="noopener">PDP<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-influencer.html" target="_blank" rel="noopener">PDP link influencer<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-esgotado.html" target="_blank" rel="noopener">PDP esgotada<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-variante.html" target="_blank" rel="noopener">PDP com variante<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-oferta.html" target="_blank" rel="noopener">PDP em promoção<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/faq.html" target="_blank" rel="noopener">FAQ<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/404.html" target="_blank" rel="noopener">404<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+    </ul>
+  </details>
+  <ul class="ds-nav__solta">
+    <li><a href="../preview/index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3" width="13" height="8.5" rx="1.5"/><path d="M5.5 14h5"/><path d="M8 11.5V14"/></svg>Preview</a></li>
+  </ul>
 </nav>
-
-<main class="main">
+<!-- /@moldura -->
+<main class="grupo-main">
   <a class="ficha-volta" href="../index.html">← Design system</a>
-  <h1 class="ficha-titulo">Components</h1>
-  <p class="ficha-quando">37 páginas, uma por peça, com
-  as demonstrações, a API lida da folha, a marcação para copiar, o que a
-  acessibilidade exige e o que não fazer.</p>
+  <h1 class="ficha-titulo">Componentes</h1>
+  <p class="ficha-quando">A peça reutilizável e sem contexto. Serve a qualquer página porque não sabe em qual está.</p>
 
-    <section class="grade-grupo" id="g-button">
-      <h2>Ação e entrada <span class="grade-conta">8</span></h2>
-      <p class="grade-lede">O que a pessoa aperta, escolhe ou preenche.</p>
-      <div class="grade">
-        <a class="peca" href="button.html">
-          <b>Button</b>
-          <span>Uma ação primária por tela. Se há duas, uma delas não é primária.</span>
-        </a>
-        <a class="peca" href="iconbtn.html">
-          <b>Icon button</b>
-          <span>Controle de 44px que é só ícone. Sexta reescrita da mesma coisa — o ícone do header, o fechar da gaveta, o play do vídeo, o abrir do rodapé e a seta do banner diziam todos 44×44 com fundo transparente, cada um do seu jeito.</span>
-        </a>
-        <a class="peca" href="link.html">
-          <b>Link</b>
-          <span>Texto de ação com ícone atrás, do tamanho de alvo de toque (44px). Fica ao lado de um título de seção ou reforça visualmente um link que já existe em outro lugar do mesmo cartão.</span>
-        </a>
-        <a class="peca" href="field.html">
-          <b>Form field</b>
-          <span>Rótulo dentro da caixa, sem uma linha de JS. Erro sempre em texto, nunca só em cor.</span>
-        </a>
-        <a class="peca" href="check.html">
-          <b>Checkbox &amp; radio</b>
-          <span>Input nativo, aparência do sistema. Teclado e leitor de tela funcionam sem código.</span>
-        </a>
-        <a class="peca" href="switch.html">
-          <b>Switch</b>
-          <span>Liga e desliga na hora. Se o efeito só acontece depois de um botão de salvar, o certo é a caixa de seleção.</span>
-        </a>
-        <a class="peca" href="stepper.html">
-          <b>Quantity stepper</b>
-          <span>Botões de 44px, e funcionam — clique. Limites em 1 e 10: o botão desabilita sozinho na ponta.</span>
-        </a>
-        <a class="peca" href="variant.html">
-          <b>Variant picker</b>
-          <span>Tamanho, volume, fragrância. Esgotado aparece riscado, não some — sumir esconde que o produto existe.</span>
-        </a>
-      </div>
-    </section>
-    <section class="grade-grupo" id="g-crumb">
-      <h2>Navegação <span class="grade-conta">4</span></h2>
-      <p class="grade-lede">Onde ela está, e como chega ao resto da loja.</p>
-      <div class="grade">
-        <a class="peca" href="crumb.html">
-          <b>Breadcrumb</b>
-          <span>Onde a pessoa está. A página atual não é link.</span>
-        </a>
-        <a class="peca" href="pagination.html">
-          <b>Pagination</b>
-          <span>A página atual não é link. Primeira e última sempre visíveis.</span>
-        </a>
-        <a class="peca" href="search.html">
-          <b>Search overlay</b>
-          <span>Busca é troca de contexto da página inteira — folha do topo, não caixinha no header.</span>
-        </a>
-        <a class="peca" href="track.html">
-          <b>Track</b>
-          <span>Trilho de rolagem horizontal. É o que carrega as fileiras que não cabem na tela — avaliações, vídeos, logos, banners do hero — sem quebrar em duas linhas nem empurrar a página de lado.</span>
-        </a>
-      </div>
-    </section>
-    <section class="grade-grupo" id="g-card">
-      <h2>Produto e venda <span class="grade-conta">8</span></h2>
-      <p class="grade-lede">A vitrine: o que se compra, por quanto, e o que outras pessoas acharam.</p>
-      <div class="grade">
-        <a class="peca" href="card.html">
-          <b>Product card</b>
-          <span>A unidade do grid. O título trunca em duas linhas por decisão de sistema.</span>
-        </a>
-        <a class="peca" href="offercard.html">
-          <b>Offer card</b>
-          <span>A oferta do dia, um produto só. A foto é o fundo, o texto vive
-    por cima dela e o relógio diz até quando. Não é o cartão de catálogo com outra
-    roupa: ali cabem doze na grade, aqui cabe <b>um</b>.</span>
-        </a>
-        <a class="peca" href="offerseal.html">
-          <b>Offer seal</b>
-          <span>Selo estrelado de brinde e desconto, sobre a foto do produto. Interrompe — não rotula. Um por peça.</span>
-        </a>
-        <a class="peca" href="price.html">
-          <b>Price</b>
-          <span>Sempre tabular. Em grid, dígitos precisam alinhar em coluna.</span>
-        </a>
-        <a class="peca" href="badge.html">
-          <b>Badge</b>
-          <span>Rotula sem competir. Nunca carrega ação — badge não é botão.</span>
-        </a>
-        <a class="peca" href="collection.html">
-          <b>Collection card</b>
-          <span>Porta de entrada para uma coleção. O cartão inteiro é o link — o rótulo sozinho seria um alvo pequeno dentro de uma imagem grande.</span>
-        </a>
-        <a class="peca" href="rating.html">
-          <b>Rating</b>
-          <span>Prova social ao lado do preço. Sempre com a contagem: 5 estrelas de 3 avaliações não é prova de nada.</span>
-        </a>
-        <a class="peca" href="review.html">
-          <b>Review</b>
-          <span>Prova social com nota, texto, quem escreveu e o que comprou. Sem o produto ao lado, o elogio não prova nada.</span>
-        </a>
-      </div>
-    </section>
-    <section class="grade-grupo" id="g-accordion">
-      <h2>Conteúdo e marca <span class="grade-conta">10</span></h2>
-      <p class="grade-lede">O que a loja conta quando não está vendendo.</p>
-      <div class="grade">
-        <a class="peca" href="accordion.html">
-          <b>Accordion</b>
-          <span>Informação secundária da PDP: ingredientes, modo de uso, frete.</span>
-        </a>
-        <a class="peca" href="mediabanner.html">
-          <b>Media banner</b>
-          <span>Imagem larga com título por cima e o link cobrindo tudo. Duas seções
-    da home usam esta mesma anatomia — o mesmo critério que já admitiu o cartão de coleção.</span>
-        </a>
-        <a class="peca" href="gallery.html">
-          <b>Gallery</b>
-          <span>As miniaturas são radios nativos: seta do teclado navega, leitor de tela anuncia.</span>
-        </a>
-        <a class="peca" href="video.html">
-          <b>Vertical video carousel</b>
-          <span>Conteúdo de creator em 9:16, como o TikTok serve. O cartão entra como pôster; o vídeo só nasce no primeiro clique.</span>
-        </a>
-        <a class="peca" href="post.html">
-          <b>Post</b>
-          <span>Artigo do blog na home. Dois arranjos, e a escolha entre eles é editorial — não estética.</span>
-        </a>
-        <a class="peca" href="quote.html">
-          <b>Brand quote</b>
-          <span>A fala de quem assina a marca. Uma por página — repetida, vira slogan.</span>
-        </a>
-        <a class="peca" href="logo.html">
-          <b>Logo</b>
-          <span>O arquivo oficial do header da loja. Vira componente porque aparece em header, footer, e-mail e recibo — e em cada lugar alguém escolhia uma altura diferente.</span>
-        </a>
-        <a class="peca" href="logobar.html">
-          <b>Logo bar</b>
-          <span>As sublinhas da marca em faixa escura, entre o conteúdo e o rodapé. Só entra arte monocromática.</span>
-        </a>
-        <a class="peca" href="seals.html">
-          <b>Certification seals</b>
-          <span>Faixa de garantia entre a prova social e o rodapé. Diz o que o produto não tem — não é peça de venda.</span>
-        </a>
-        <a class="peca" href="partner.html">
-          <b>Partner</b>
-          <span>O recado de quem indicou. Aparece quando a pessoa chega por link patrocinado &mdash; e some do caminho assim que ela rola.</span>
-        </a>
-      </div>
-    </section>
-    <section class="grade-grupo" id="g-alert">
-      <h2>Aviso e estado <span class="grade-conta">7</span></h2>
-      <p class="grade-lede">O que o sistema responde: espera, erro, vazio, confirmação.</p>
-      <div class="grade">
-        <a class="peca" href="alert.html">
-          <b>Alert</b>
-          <span>Uma mensagem, um alerta. Empilhar três é garantir que nenhum seja lido.</span>
-        </a>
-        <a class="peca" href="notice.html">
-          <b>Notice</b>
-          <span>Faixa de aviso. A loja empilha duas no topo de toda página — uma
-    contextual e a de frete. Modelada como parte do header, a segunda não tinha onde morar.</span>
-        </a>
-        <a class="peca" href="toast.html">
-          <b>Toast</b>
-          <span>Confirma o que já aconteceu. Não pede nada e não bloqueia nada.</span>
-        </a>
-        <a class="peca" href="dialog.html">
-          <b>Modal &amp; drawer</b>
-          <span>Interrompe para pedir uma decisão. Se não há decisão a tomar, use toast.</span>
-        </a>
-        <a class="peca" href="progress.html">
-          <b>Progress bar</b>
-          <span>Espera com fim conhecido. Sem número para anunciar, use a variante indeterminada.</span>
-        </a>
-        <a class="peca" href="skeleton.html">
-          <b>Skeleton</b>
-          <span>Só para carregamento real. Skeleton eterno é pior que spinner: promete conteúdo que não chega.</span>
-        </a>
-        <a class="peca" href="empty.html">
-          <b>Empty state</b>
-          <span>Busca sem resultado, filtro que não acha nada, carrinho vazio, produto que saiu do catálogo. Sempre com o próximo passo.</span>
-        </a>
-      </div>
-    </section>
+  <nav class="chips" aria-label="Degraus do sistema">
+    <a class="chip" href="../components/index.html" aria-current="page">Todos <span>40</span></a>
+    <a class="chip" href="../atoms/index.html">Átomos <span>19</span></a>
+    <a class="chip" href="../molecules/index.html">Moléculas <span>21</span></a>
+  </nav>
 
-  <p class="doc-credit">Índice gerado por <code>tools/fichas.mjs</code> a partir de
-  <code>components/pecas/</code>. Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>
+  <section class="grade-grupo">
+    <h2>Todos os componentes <span class="grade-conta">40</span></h2>
+    <p class="grade-lede">Em ordem de nome, os dois degraus juntos — 19 átomos e 21 moléculas.
+    A proporção 19 / 21 é o que diz se o sistema está
+    saudável: base larga. Poucos átomos para muitas moléculas significa que alguém está
+    reescrevendo botão. As regiões da página estão em <a href="../organisms/index.html">Blocos</a>.</p>
+    <div class="grade">
+      <a class="peca" href="../molecules/accordion.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Accordion</b>
+        <span>Lista de seções que abrem e fecham sob um rótulo clicável, uma de cada vez. Na loja carrega o secundário da PDP: ingredientes, modo de uso, frete.</span>
+      </a>
+      <a class="peca" href="../molecules/alert.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Alert</b>
+        <span>Mensagem fixa no fluxo da página, com tom de estado e ação opcional. Uma por vez: empilhar três é garantir que nenhum seja lido.</span>
+      </a>
+      <a class="peca" href="../atoms/avatar.html">
+        <span class="peca-nivel">átomo</span>
+        <b>Avatar</b>
+        <span>Círculo com a inicial de quem está logado. Sozinho não diz de quem é a conta — quem carrega o nome é o rótulo de quem o embrulha.</span>
+      </a>
+      <a class="peca" href="../atoms/badge.html">
+        <span class="peca-nivel">átomo</span>
+        <b>Badge</b>
+        <span>Etiqueta curta que classifica um item sem competir com ele. Nunca carrega ação — badge não é botão.</span>
+      </a>
+      <a class="peca" href="../molecules/bannerhero.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Banner hero</b>
+        <span>O banner do topo da home, na largura da tela. Em trilho, um slide por tela; cada slide é foto com texto e CTA, ou a arte pronta do marketing. Dentro da coluna da página, o banner é o Banner media.</span>
+      </a>
+      <a class="peca" href="../molecules/bannermedia.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Banner media</b>
+        <span>Foto com texto por cima, dentro da coluna da página, e o link cobrindo a peça inteira — o banner de conteúdo da PDP. Também recebe a arte pronta do marketing. No topo da home, na largura da tela, o banner é o Banner hero.</span>
+      </a>
+      <a class="peca" href="../molecules/crumb.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Breadcrumb</b>
+        <span>Trilha dos níveis acima da página atual, do topo até ela. A página atual não é link.</span>
+      </a>
+      <a class="peca" href="../atoms/button.html">
+        <span class="peca-nivel">átomo</span>
+        <b>Button</b>
+        <span>O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span>
+      </a>
+      <a class="peca" href="../molecules/offercard.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Card offer</b>
+        <span>Cartão grande de uma oferta única: foto ao fundo, texto por cima e relógio de prazo. Não é o cartão de catálogo com outra roupa: ali cabem doze na grade, aqui cabe um.</span>
+      </a>
+      <a class="peca" href="../molecules/card.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Card product</b>
+        <span>O cartão de produto do grid — foto, nome, nota, preço e ação. O título trunca em duas linhas por decisão de sistema.</span>
+      </a>
+      <a class="peca" href="../atoms/seals.html">
+        <span class="peca-nivel">átomo</span>
+        <b>Certification seals</b>
+        <span>Selo de certificação: ícone e rótulo do que o produto não tem. Formam a faixa de garantia entre a prova social e o rodapé — não é peça de venda.</span>
+      </a>
+      <a class="peca" href="../atoms/checkbox.html">
+        <span class="peca-nivel">átomo</span>
+        <b>Checkbox</b>
+        <span>Escolha independente: cada caixa decide sozinha. Numa lista, dá para marcar nenhuma, uma ou todas — é o que separa a caixa do rádio.</span>
+      </a>
+      <a class="peca" href="../atoms/chip.html">
+        <span class="peca-nivel">átomo</span>
+        <b>Chip</b>
+        <span>Filtro que liga e desliga, em fileira. O estado mora em aria-pressed, não numa classe — quem lê a tela ouve "pressionado" sem depender de cor.</span>
+      </a>
+      <a class="peca" href="../molecules/collection.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Collection card</b>
+        <span>Cartão de entrada para uma coleção: arte, nome e contagem. O cartão inteiro é o link — o rótulo sozinho seria um alvo pequeno dentro de uma imagem grande.</span>
+      </a>
+      <a class="peca" href="../molecules/dropdown.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Dropdown</b>
+        <span>Painel de links que abre embaixo de um gatilho. No cabeçalho o gatilho é o avatar; em qualquer outro lugar é o que a marcação puser dentro.</span>
+      </a>
+      <a class="peca" href="../molecules/empty.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Empty state</b>
+        <span>O que a tela mostra quando não há o que mostrar: ícone, motivo e o próximo passo. Busca sem resultado, filtro vazio, carrinho vazio, produto fora do catálogo.</span>
+      </a>
+      <a class="peca" href="../atoms/iconbtn.html">
+        <span class="peca-nivel">átomo</span>
+        <b>Icon button</b>
+        <span>Botão de 44px que mostra só um ícone, sem rótulo visível. Sexta reescrita da mesma coisa — o ícone do header, o fechar da gaveta, o play do vídeo, o abrir do rodapé e a seta do banner diziam todos 44×44 com fundo transparente, cada um do seu jeito.</span>
+      </a>
+      <a class="peca" href="../atoms/input.html">
+        <span class="peca-nivel">átomo</span>
+        <b>Input</b>
+        <span>Campo de uma linha com o rótulo dentro da caixa, que sobe quando a pessoa digita. Leva dica e erro em texto; serve para nome, e-mail, CEP, senha.</span>
+      </a>
+      <a class="peca" href="../atoms/link.html">
+        <span class="peca-nivel">átomo</span>
+        <b>Link</b>
+        <span>Texto que leva a outro lugar, com ícone atrás e alvo de toque de 44px. Fica ao lado de um título de seção ou reforça um link que já existe no mesmo cartão.</span>
+      </a>
+      <a class="peca" href="../atoms/logo.html">
+        <span class="peca-nivel">átomo</span>
+        <b>Logo</b>
+        <span>A marca da loja, em arquivo único e altura controlada por modificador. Vira componente porque aparece em header, footer, e-mail e recibo — e em cada lugar alguém escolhia uma altura diferente.</span>
+      </a>
+      <a class="peca" href="../atoms/notice.html">
+        <span class="peca-nivel">átomo</span>
+        <b>Notice</b>
+        <span>Faixa fina de aviso, largura inteira, acima do conteúdo. A loja empilha duas no topo de toda página — uma contextual e a de frete.</span>
+      </a>
+      <a class="peca" href="../atoms/offerseal.html">
+        <span class="peca-nivel">átomo</span>
+        <b>Offer seal</b>
+        <span>Selo estrelado que marca brinde ou desconto sobre a foto do produto. Interrompe — não rotula. Um por peça.</span>
+      </a>
+      <a class="peca" href="../molecules/pagination.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Pagination</b>
+        <span>Navegação numerada entre as páginas de uma listagem. A página atual não é link; primeira e última sempre visíveis.</span>
+      </a>
+      <a class="peca" href="../molecules/partner.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Partner</b>
+        <span>Recado de quem indicou o produto, com foto e nome. Aparece quando a pessoa chega por link patrocinado &mdash; e some do caminho assim que ela rola.</span>
+      </a>
+      <a class="peca" href="../molecules/post.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Post</b>
+        <span>Cartão de artigo do blog: arte, título e chamada. Dois arranjos, e a escolha entre eles é editorial — não estética.</span>
+      </a>
+      <a class="peca" href="../molecules/price.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Price</b>
+        <span>O preço de um produto, com o valor anterior riscado e o desconto quando existem. Sempre tabular: em grid, dígitos precisam alinhar em coluna.</span>
+      </a>
+      <a class="peca" href="../atoms/progress.html">
+        <span class="peca-nivel">átomo</span>
+        <b>Progress bar</b>
+        <span>Barra que mostra quanto de uma tarefa já passou. Espera com fim conhecido; sem número para anunciar, use a variante indeterminada.</span>
+      </a>
+      <a class="peca" href="../molecules/stepper.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Quantity stepper</b>
+        <span>Controle de quantidade — menos, número e mais. Botões de 44px que funcionam no clique; limites em 1 e 10, e o botão desabilita sozinho na ponta.</span>
+      </a>
+      <a class="peca" href="../atoms/radio.html">
+        <span class="peca-nivel">átomo</span>
+        <b>Radio</b>
+        <span>Escolha única dentro de um grupo: marcar uma desmarca a anterior. Serve quando as opções se excluem e todas precisam estar à vista.</span>
+      </a>
+      <a class="peca" href="../molecules/rating.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Rating</b>
+        <span>A média de um produto: as estrelas, a nota e quantas avaliações ela resume. Sempre com a contagem — 5 estrelas de 3 avaliações não é prova de nada.</span>
+      </a>
+      <a class="peca" href="../molecules/review.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Review</b>
+        <span>A avaliação de uma pessoa: nota, texto, quem escreveu e o que comprou. Sem o produto ao lado, o elogio não prova nada.</span>
+      </a>
+      <a class="peca" href="../atoms/select.html">
+        <span class="peca-nivel">átomo</span>
+        <b>Select</b>
+        <span>Campo de escolha com o rótulo dentro da caixa, que abre o seletor nativo do sistema. Mesmo campo do Input, para quando a resposta já está escrita.</span>
+      </a>
+      <a class="peca" href="../atoms/skeleton.html">
+        <span class="peca-nivel">átomo</span>
+        <b>Skeleton</b>
+        <span>Bloco cinza que ocupa o lugar do conteúdo enquanto ele carrega. Só para carregamento real: skeleton eterno é pior que spinner — promete conteúdo que não chega.</span>
+      </a>
+      <a class="peca" href="../atoms/stars.html">
+        <span class="peca-nivel">átomo</span>
+        <b>Stars</b>
+        <span>A nota desenhada em cinco estrelas, com preenchimento parcial. Recebe um número de 0 a 5; sozinha é a nota de uma pessoa, dentro do Rating é a média.</span>
+      </a>
+      <a class="peca" href="../atoms/switch.html">
+        <span class="peca-nivel">átomo</span>
+        <b>Switch</b>
+        <span>Interruptor que liga e desliga na hora, sem confirmar. Se o efeito só acontece depois de um botão de salvar, o certo é a caixa de seleção.</span>
+      </a>
+      <a class="peca" href="../atoms/textarea.html">
+        <span class="peca-nivel">átomo</span>
+        <b>Textarea</b>
+        <span>Campo de várias linhas com o rótulo dentro da caixa, que cresce na vertical. Mesmo campo do Input, para mensagem, nota de presente ou avaliação.</span>
+      </a>
+      <a class="peca" href="../molecules/toast.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Toast</b>
+        <span>Aviso curto e temporário que confirma o que já aconteceu. Não pede nada e não bloqueia nada.</span>
+      </a>
+      <a class="peca" href="../molecules/track.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Track</b>
+        <span>Trilho de rolagem horizontal que carrega uma fileira maior que a tela. Avaliações, vídeos, logos e banners do hero — sem quebrar em duas linhas nem empurrar a página de lado.</span>
+      </a>
+      <a class="peca" href="../molecules/variant.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Variant picker</b>
+        <span>Seletor das opções de um produto: tamanho, volume, fragrância. Esgotado aparece riscado, não some — sumir esconde que o produto existe.</span>
+      </a>
+      <a class="peca" href="../molecules/video.html">
+        <span class="peca-nivel">molécula</span>
+        <b>Vertical video carousel</b>
+        <span>Cartão de vídeo vertical em 9:16, como o TikTok serve. O cartão entra como pôster; o vídeo só nasce no primeiro clique.</span>
+      </a>
+    </div>
+  </section>
+
+  <p class="doc-credit">Página gerada por <code>tools/moldura.mjs</code>. Os números
+  são contados do disco a cada build. Não edite este arquivo à mão — rode
+  <code>./build.sh</code>.</p>
 </main>
-
-</div>
 </body>
 </html>

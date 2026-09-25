@@ -1,0 +1,31 @@
+<h2>Pagination</h2>
+    <p class="when">Navegação numerada entre as páginas de uma listagem. A página atual não é link; primeira e última sempre visíveis.</p>
+    <h3 class="row-label">Sem modificador · atual <code>[aria-current="page"]</code></h3>
+    <div class="demo demo--stack">
+      <nav class="yb-pagination" aria-label="Pagination">
+        <ol>
+          <li><a href="#demos" aria-label="Previous page">←</a></li>
+          <li><a href="#demos">1</a></li>
+          <li><span class="yb-pagination__gap">…</span></li>
+          <li class="yb-pagination__perto"><a href="#demos">2</a></li>
+          <li><span aria-current="page">3</span></li>
+          <li class="yb-pagination__perto"><a href="#demos">4</a></li>
+          <li><span class="yb-pagination__gap">…</span></li>
+          <li><a href="#demos">12</a></li>
+          <li><a href="#demos" aria-label="Next page">→</a></li>
+        </ol>
+      </nav>
+    </div>
+    <div class="note">
+      <b>No celular saem as vizinhas, não as setas</b>
+      <p>Nove alvos pedem 452px e uma tela de 375 oferece 343. Não podem sumir as duas
+      setas, a primeira, a última e onde a pessoa está; podem as <b>vizinhas</b> da
+      atual (<code>.yb-pagination__perto</code>). Sobram sete itens e 288px, que cabem
+      até em 320.</p>
+      <p><b>O alvo não encolhe</b> — sai o respiro lateral. Com <code>min-width:44</code>
+      mais 12px de cada lado, cada número ocupava 68; sem o respiro o alvo mantém os 44
+      e a tira cai para 264.</p>
+      <p>A página atual usa o <b>botão secundário</b>: o magenta cheio é de quem decide,
+      o suave diz "você está aqui". Emenda na
+      <a href="../decision-log/DDR-001-primaria-e-grafite.md">DDR-001</a>.</p>
+    </div>

@@ -1,0 +1,70 @@
+<h2>Vertical video carousel</h2>
+    <p class="when">Cartão de vídeo vertical em 9:16, como o TikTok serve. O cartão entra como pôster; o vídeo só nasce no primeiro clique.</p>
+    <h3 class="row-label">Com <code>[data-video]</code> — play</h3>
+    <div class="demo demo--rail">
+      <div class="yb-track yb-videos">
+        <div class="yb-video" data-video="../pages/video/tt.mp4">
+          <img src="../pages/img/tt-1.jpg" alt="Fashion Gold on curly hair, first result" loading="lazy">
+          <button class="yb-iconbtn yb-iconbtn--onmedia yb-video__play" type="button" aria-label="Play: Fashion Gold on curly hair, first result"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-play"/></svg></button>
+        </div>
+        <div class="yb-video" data-video="../pages/video/tt.mp4">
+          <img src="../pages/img/tt-4.jpg" alt="Satin bonnet routine after a keratin treatment" loading="lazy">
+          <button class="yb-iconbtn yb-iconbtn--onmedia yb-video__play" type="button" aria-label="Play: Satin bonnet routine after a keratin treatment"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-play"/></svg></button>
+        </div>
+        <div class="yb-video" data-video="../pages/video/tt.mp4">
+          <img src="../pages/img/tt-5.jpg" alt="Which Cronograma tube for which hair damage" loading="lazy">
+          <button class="yb-iconbtn yb-iconbtn--onmedia yb-video__play" type="button" aria-label="Play: Which Cronograma tube for which hair damage"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-play"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <h3 class="row-label">Sem <code>data-video</code> — pôster, com <code>.yb-video__caption</code></h3>
+    <div class="demo demo--rail">
+      <div class="yb-track yb-videos">
+        <div class="yb-video">
+          <img src="../pages/img/tt-2.jpg" alt="Cronograma routine explained in Times Square" loading="lazy">
+          <span class="yb-video__caption">Cronograma, week one</span>
+        </div>
+        <div class="yb-video">
+          <img src="../pages/img/tt-3.jpg" alt="I cut my hair and regretted it" loading="lazy">
+          <span class="yb-video__caption">Growing it back with Vello</span>
+        </div>
+        <div class="yb-video">
+          <img src="../pages/img/tt-6.jpg" alt="Red hair kept vivid after the treatment" loading="lazy">
+          <span class="yb-video__caption">Color-safe, six weeks in</span>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>O cartão não é o botão</b>
+      <p>O cartão é <code>&lt;div&gt;</code> e quem recebe o clique é o
+      <code>.yb-video__play</code>, que é um <a href="../atoms/iconbtn.html">Icon
+      button</a>. Já foi <code>&lt;button class="yb-video"&gt;</code> com o
+      <code>&lt;video controls&gt;</code> injetado dentro: conteúdo interativo dentro de
+      botão é HTML inválido, e na prática os controles do vídeo ficavam inalcançáveis —
+      o botão é uma parada de foco só, e o Tab nunca entra nele.</p>
+      <p>O play <b>só aparece com <code>data-video</code></b>. Sem a fonte, o cartão é
+      pôster e não promete o que não entrega. As onze telas estão assim hoje: nenhuma
+      declara o atributo, então nenhuma mostra o play.</p>
+    </div>
+    <div class="note">
+      <b>Sem <code>data-video</code> não existe play</b>
+      <p>O design system não hospeda mídia. A primeira fileira declara
+      <code>data-video</code> só para mostrar o play: o caminho não existe, e o clique
+      não toca nada. Na segunda, sem o atributo, o play some sozinho, por regra da folha. Em produção o atributo
+      traz a URL do CDN e o botão aparece no mesmo lugar. Um botão que promete vídeo
+      e não entrega é pior do que não ter botão.</p>
+    </div>
+    <div class="note">
+      <b>Pôster primeiro, vídeo depois</b>
+      <p>Quarenta e cinco vídeos em autoplay é o que faz uma home pesar. O
+      <code>&lt;video&gt;</code> só entra no DOM no clique, com o pôster já pintado —
+      então não há salto de layout quando ele chega, e quem passa direto não paga
+      nada.</p>
+    </div>
+    <div class="note">
+      <b>A legenda é opcional, o rótulo não</b>
+      <p><code>.yb-video__caption</code> aparece só onde o pôster não tem texto
+      próprio queimado — duas camadas de legenda no mesmo canto não se leem. O
+      <code>aria-label</code> do botão, esse existe em todos: sem ele o leitor de
+      tela anuncia seis botões idênticos e sem nome.</p>
+    </div>

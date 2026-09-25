@@ -1,0 +1,72 @@
+<h2>Chip</h2>
+    <p class="when">Filtro que liga e desliga, em fileira. O estado mora em <code>aria-pressed</code>, não numa classe — quem lê a tela ouve "pressionado" sem depender de cor.</p>
+    <h3 class="row-label">States</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <button type="button" class="yb-chip">Color-safe</button>
+        <span class="amostra__rotulo"><code>padrão</code></span>
+      </span>
+      <span class="amostra">
+        <button type="button" class="yb-chip" aria-pressed="true">Keratin <span class="yb-chip__x">×</span></button>
+        <span class="amostra__rotulo"><code>[aria-pressed="true"]</code></span>
+      </span>
+      <span class="amostra">
+        <button type="button" class="yb-chip" disabled>Travel size</button>
+        <span class="amostra__rotulo"><code>[disabled]</code></span>
+      </span>
+    </div>
+    <h3 class="row-label">Sizes</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <button type="button" class="yb-chip">Kits</button>
+        <span class="amostra__rotulo"><code>única · 36px</code></span>
+      </span>
+    </div>
+    <h3 class="row-label">Conteúdo</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <button type="button" class="yb-chip">Kits</button>
+        <span class="amostra__rotulo"><code>só texto</code></span>
+      </span>
+      <span class="amostra">
+        <button type="button" class="yb-chip" aria-pressed="true">Under $150 <span class="yb-chip__x">×</span></button>
+        <span class="amostra__rotulo"><code>__x</code></span>
+      </span>
+      <span class="amostra">
+        <a class="yb-chip" href="#demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-clock"/></svg>keratin</a>
+        <span class="amostra__rotulo"><code>.yb-icon</code></span>
+      </span>
+    </div>
+    <div class="note">
+      <b>O × não é um segundo botão</b>
+      <p>É um <code>&lt;span&gt;</code> dentro do próprio chip: quem clica em qualquer
+      ponto da pílula desliga o filtro. Um <code>&lt;button&gt;</code> aninhado seria
+      marcação inválida, e dois alvos de 12px colados dentro de um alvo de 36 é pior
+      para o dedo do que um alvo só.</p>
+      <p>A cor do × é <code>--yb-text-muted</code>, que é medido. Era
+      <code>opacity:.7</code> sobre o texto secundário: 7,67:1 caía para ~4,3:1 e nada
+      media a queda.</p>
+    </div>
+    <div class="note">
+      <b>Um tamanho só: 36px, e isso é decisão, não descuido</b>
+      <p>O piso de toque do sistema é 44. O chip usa
+      <code>--yb-control-height-compact</code> porque vive em fileira que rola: em
+      44px, sete filtros empurram o primeiro produto para fora da primeira tela — e é
+      no celular que o alvo mais importa. O respiro da fileira dá a folga que a altura
+      não dá.</p>
+    </div>
+    <div class="note">
+      <b>A busca usa este chip</b>
+      <p>O painel de busca tinha o seu, <code>.yb-search__chip</code>: mesma altura,
+      borda e padding, escritos de novo dentro do organismo. Virou
+      <code>.yb-chip</code>. O que só a cópia sabia fazer passou para cá — ser
+      <code>&lt;a&gt;</code> sem sublinhado e levar um ícone antes do texto, o
+      relógio da busca recente.</p>
+    </div>
+    <div class="note">
+      <b>Por que átomo</b>
+      <p>Não usa nenhuma outra peça do sistema e não perde a função fora do catálogo:
+      serve a qualquer fileira de filtro. Morava na folha dos organismos, dentro do
+      bloco de catálogo, porque foi ali que nasceu — mas um bloco pode consumir um
+      átomo, e o contrário não.</p>
+    </div>

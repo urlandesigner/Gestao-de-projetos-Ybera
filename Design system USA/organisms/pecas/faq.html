@@ -1,0 +1,82 @@
+<h2>FAQ</h2>
+    <p class="when">A página de perguntas frequentes: respostas em acordeão com índice ao lado. Não há componente novo — as perguntas são <code>.yb-accordion</code> e o índice é <code>.yb-link</code>.</p>
+    <h3 class="row-label">Completo &mdash; a p&aacute;gina de FAQ</h3>
+    <div class="stage stage--pad">
+      <div class="yb-faq">
+        <div class="yb-faq__cabeca">
+          <h2>Frequently asked questions</h2>
+          <p class="yb-faq__lede">Shipping, returns and the products themselves.
+          What is not here, our team answers by email.</p>
+        </div>
+        <ul class="yb-faq__index" aria-label="FAQ topics">
+          <li><a class="yb-link" href="#faq-demo-envio"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg>Shipping &amp; delivery</a></li>
+          <li><a class="yb-link" href="#faq-demo-devolucao"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg>Returns &amp; refunds</a></li>
+        </ul>
+        <div class="yb-faq__grupos">
+          <section class="yb-faq__grupo" id="faq-demo-envio">
+            <h3 class="yb-faq__titulo">Shipping &amp; delivery</h3>
+            <div class="yb-accordion">
+              <details name="faq-demo-1"><summary>When will my order ship?</summary>
+                <div class="yb-accordion__body"><p>Orders are processed within 1&ndash;2 business days. Nothing ships on weekends or holidays.</p></div></details>
+              <details name="faq-demo-1"><summary>Is shipping free?</summary>
+                <div class="yb-accordion__body"><p>Economy shipping is free on orders over $50 and $8.90 under that. Priority Express is $9.90.</p></div></details>
+            </div>
+          </section>
+          <section class="yb-faq__grupo" id="faq-demo-devolucao">
+            <h3 class="yb-faq__titulo">Returns &amp; refunds</h3>
+            <div class="yb-accordion">
+              <details name="faq-demo-2"><summary>Can I return an order?</summary>
+                <div class="yb-accordion__body"><p>You have 30 days from delivery to request one, and the return has to be requested first.</p></div></details>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>O bloco se titula sozinho</b>
+      <p><code>.yb-faq__cabeca</code> atravessa as duas colunas e carrega título e lede.
+      Antes o título vinha de um <code>.yb-block</code> da <b>página</b>, um degrau
+      acima: funcionava na loja e quebrava aqui, porque ficha de bloco não carrega a
+      folha dos templates &mdash; bloco não consome template. A peça aparecia decapitada
+      na doc, e o cabeçalho colado nela quando tentei ilustrá-lo.</p>
+      <p>O <b>nível</b> do título continua sendo de quem monta: <code>&lt;h1&gt;</code>
+      na tela de FAQ, <code>&lt;h2&gt;</code> aqui e em qualquer página que já tenha o
+      seu. O bloco dá o lugar e o ritmo, não o nível.</p>
+    </div>
+    <h3 class="row-label">Curto &mdash; o recorte da home</h3>
+    <div class="stage stage--pad">
+      <div class="yb-faq yb-faq--curto">
+        <div class="yb-section-head yb-faq__cabeca"><h2>Before you buy</h2></div>
+        <div class="yb-faq__apoio">
+          <p class="yb-block__lede">The four things people ask before a first order.
+          Tracking, split shipments and refunds are answered in the full list.</p>
+          <a class="yb-btn yb-btn--secondary" href="#demos">See all questions</a>
+        </div>
+        <div class="yb-accordion">
+          <details name="faq-demo-3"><summary>How long does delivery take?</summary>
+            <div class="yb-accordion__body"><p>Economy (USPS) takes 5&ndash;8 business days and Priority Express 2&ndash;4, counted from the order date.</p></div></details>
+          <details name="faq-demo-3"><summary>Can I return an order?</summary>
+            <div class="yb-accordion__body"><p>You have 30 days from delivery to request one, and the return has to be requested first.</p></div></details>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Dois recortes, uma fonte</b>
+      <p>A home leva <b>quatro</b> perguntas — prazo, frete, devolução e formol, as que
+      travam a compra; a tela cheia leva as treze. As duas leem a mesma lista: a
+      pergunta da home é marcada no dado, não copiada para uma segunda lista que
+      envelheceria sozinha.</p>
+      <p>No recorte curto a coluna deixa de ser índice e vira apoio — com quatro
+      perguntas, o índice seria mais longo que a lista que indexa.</p>
+    </div>
+    <div class="note">
+      <b>O índice não é enfeite</b>
+      <p>A resposta mora dentro de um acordeão <b>fechado</b>, e acordeão fechado não
+      aparece no Ctrl+F. O índice é o único lugar em que os assuntos aparecem todos de
+      uma vez.</p>
+      <p>É <code>sticky</code> abaixo do cabeçalho preso — a seção tem três telas de
+      altura. Abaixo de 860px vira uma fileira acima das perguntas e <b>deixa de ser
+      sticky</b>: preso numa tela de 812px, comeria a primeira resposta.</p>
+      <p><b>O conteúdo é transcrito das políticas publicadas pela loja.</b> FAQ
+      inventado parece compromisso e vira reclamação no suporte.</p>
+    </div>

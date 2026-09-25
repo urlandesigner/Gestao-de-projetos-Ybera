@@ -1,0 +1,1051 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cart drawer — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../base/ybera-base.css">
+<link rel="stylesheet" href="../atoms/ybera-atoms.css">
+<link rel="stylesheet" href="../molecules/ybera-molecules.css">
+<link rel="stylesheet" href="ybera-organisms.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="../doc/doc.css">
+<link rel="stylesheet" href="../doc/doc-nav.css">
+<script src="../doc/doc.js" defer></script>
+<style>
+/* Sem seletor de tipo: ver o cabecalho de doc/doc.css. */
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
+</style>
+</head>
+<body class="ficha" data-nivel="organisms" data-moldura="centrada">
+<!-- @moldura · gerada por tools/moldura.mjs · não edite -->
+<header class="ds-top">
+  <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
+  <div class="ds-top__busca" hidden>
+    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
+    <input id="ds-filtro" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filtro>
+    <p class="nav-conta" role="status" aria-live="polite"></p>
+  </div>
+  <p class="ds-top__versao">v0.12.1</p>
+</header>
+<nav class="ds-nav" aria-label="Navegação do design system">
+  <ul class="ds-nav__solta">
+    <li><a href="../index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 7 8 2.5 13.5 7"/><path d="M4 6.5V13h8V6.5"/><path d="M6.5 13V9.5h3V13"/></svg>Início</a></li>
+  </ul>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5.5 8 3l6 2.5L8 8 2 5.5Z"/><path d="M2 8.8 8 11.3l6-2.5"/><path d="M2 12l6 2.5 6-2.5"/></svg>Fundação</summary>
+    <ul>
+      <li><a href="../tokens/index.html">Visão geral</a></li>
+      <li><a href="../tokens/architecture.html">Architecture</a></li>
+      <li><a href="../tokens/color.html">Color</a></li>
+      <li><a href="../tokens/typography.html">Typography</a></li>
+      <li><a href="../tokens/space.html">Space</a></li>
+      <li><a href="../tokens/shape.html">Shape</a></li>
+      <li><a href="../tokens/elevation.html">Elevation</a></li>
+      <li><a href="../tokens/state.html">State</a></li>
+      <li><a href="../tokens/usage.html">How to use</a></li>
+      <li><a href="../icons/index.html">Ícones</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Componentes</summary>
+    <ul>
+      <li><a href="../molecules/accordion.html">Accordion</a></li>
+      <li><a href="../molecules/alert.html">Alert</a></li>
+      <li><a href="../atoms/avatar.html">Avatar</a></li>
+      <li><a href="../atoms/badge.html">Badge</a></li>
+      <li><a href="../molecules/bannerhero.html">Banner hero</a></li>
+      <li><a href="../molecules/bannermedia.html">Banner media</a></li>
+      <li><a href="../molecules/crumb.html">Breadcrumb</a></li>
+      <li><a href="../atoms/button.html">Button</a></li>
+      <li><a href="../molecules/offercard.html">Card offer</a></li>
+      <li><a href="../molecules/card.html">Card product</a></li>
+      <li><a href="../atoms/seals.html">Certification seals</a></li>
+      <li><a href="../atoms/checkbox.html">Checkbox</a></li>
+      <li><a href="../atoms/chip.html">Chip</a></li>
+      <li><a href="../molecules/collection.html">Collection card</a></li>
+      <li><a href="../molecules/dropdown.html">Dropdown</a></li>
+      <li><a href="../molecules/empty.html">Empty state</a></li>
+      <li><a href="../atoms/iconbtn.html">Icon button</a></li>
+      <li><a href="../atoms/input.html">Input</a></li>
+      <li><a href="../atoms/link.html">Link</a></li>
+      <li><a href="../atoms/logo.html">Logo</a></li>
+      <li><a href="../atoms/notice.html">Notice</a></li>
+      <li><a href="../atoms/offerseal.html">Offer seal</a></li>
+      <li><a href="../molecules/pagination.html">Pagination</a></li>
+      <li><a href="../molecules/partner.html">Partner</a></li>
+      <li><a href="../molecules/post.html">Post</a></li>
+      <li><a href="../molecules/price.html">Price</a></li>
+      <li><a href="../atoms/progress.html">Progress bar</a></li>
+      <li><a href="../molecules/stepper.html">Quantity stepper</a></li>
+      <li><a href="../atoms/radio.html">Radio</a></li>
+      <li><a href="../molecules/rating.html">Rating</a></li>
+      <li><a href="../molecules/review.html">Review</a></li>
+      <li><a href="../atoms/select.html">Select</a></li>
+      <li><a href="../atoms/skeleton.html">Skeleton</a></li>
+      <li><a href="../atoms/stars.html">Stars</a></li>
+      <li><a href="../atoms/switch.html">Switch</a></li>
+      <li><a href="../atoms/textarea.html">Textarea</a></li>
+      <li><a href="../molecules/toast.html">Toast</a></li>
+      <li><a href="../molecules/track.html">Track</a></li>
+      <li><a href="../molecules/variant.html">Variant picker</a></li>
+      <li><a href="../molecules/video.html">Vertical video carousel</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo" open>
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2.5" width="12" height="3" rx="1"/><rect x="2" y="6.8" width="12" height="3" rx="1"/><rect x="2" y="11.1" width="12" height="2.4" rx="1"/></svg>Blocos</summary>
+    <ul>
+      <li><a href="../organisms/quote.html">Brand quote</a></li>
+      <li><a href="../organisms/buybox.html">Buy box</a></li>
+      <li><a href="../organisms/cart-drawer.html" aria-current="page">Cart drawer</a></li>
+      <li><a href="../organisms/catalog.html">Catalog</a></li>
+      <li><a href="../organisms/drawer.html">Drawer</a></li>
+      <li><a href="../organisms/faq.html">FAQ</a></li>
+      <li><a href="../organisms/footer.html">Footer</a></li>
+      <li><a href="../organisms/shipping-progress.html">Free shipping progress</a></li>
+      <li><a href="../organisms/gallery.html">Gallery</a></li>
+      <li><a href="../organisms/header.html">Header</a></li>
+      <li><a href="../organisms/hero.html">Hero</a></li>
+      <li><a href="../organisms/logobar.html">Logo bar</a></li>
+      <li><a href="../organisms/manifesto.html">Manifesto</a></li>
+      <li><a href="../organisms/dialog.html">Modal</a></li>
+      <li><a href="../organisms/nav.html">Nav</a></li>
+      <li><a href="../organisms/search.html">Search overlay</a></li>
+      <li><a href="../organisms/split.html">Split</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3.5" width="9" height="9" rx="1.5"/><path d="M5.5 3.5V1.5h9v9h-2"/></svg>Exemplos</summary>
+    <ul>
+      <li><a href="../pages/index.html">Visão geral</a></li>
+      <li><a href="../pages/home.html" target="_blank" rel="noopener">Home v1<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-v2.html" target="_blank" rel="noopener">Home v2<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-v3.html" target="_blank" rel="noopener">Home v3<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-logado.html" target="_blank" rel="noopener">Home · cliente logado<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp.html" target="_blank" rel="noopener">PDP<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-influencer.html" target="_blank" rel="noopener">PDP link influencer<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-esgotado.html" target="_blank" rel="noopener">PDP esgotada<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-variante.html" target="_blank" rel="noopener">PDP com variante<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-oferta.html" target="_blank" rel="noopener">PDP em promoção<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/faq.html" target="_blank" rel="noopener">FAQ<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/404.html" target="_blank" rel="noopener">404<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+    </ul>
+  </details>
+  <ul class="ds-nav__solta">
+    <li><a href="../preview/index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3" width="13" height="8.5" rx="1.5"/><path d="M5.5 14h5"/><path d="M8 11.5V14"/></svg>Preview</a></li>
+  </ul>
+</nav>
+<!-- /@moldura -->
+
+<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
+  <ol>
+    <li><a href="#demos">Como se parece</a></li>
+    <li><a href="#mobile">Mobile</a></li>
+    <li><a href="#feita-de">De que é feita</a></li>
+    <li><a href="#anatomia">Anatomia e API</a></li>
+    <li><a href="#marcacao">Marcação</a></li>
+    <li><a href="#acessibilidade">Acessibilidade</a></li>
+    <li><a href="#faca">Faça / não faça</a></li>
+  </ol>
+</aside>
+
+<main class="main">
+  <div class="ficha-topo">
+    <nav class="ficha-trilha" aria-label="Você está aqui">
+      
+      <a href="index.html#cart-drawer">Blocos</a>
+      <span aria-hidden="true">/</span>
+      <b aria-current="page">Cart drawer</b>
+    </nav>
+    <nav class="ficha-passo" aria-label="Peça anterior e próxima">
+      <a href="buybox.html" rel="prev"><span aria-hidden="true">←</span> Buy box</a>
+      <a href="catalog.html" rel="next">Catalog <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
+  <h1 class="ficha-titulo">Cart drawer</h1>
+  <p class="ficha-quando">O carrinho como gaveta lateral, sobre a página. Abre sobre, não substitui: interromper a navegação para mostrar o carrinho custa compras.</p>
+  <!-- Só a classe base. A fileira trazia também as contagens de modificador,
+       elemento, estado e token — cinco números que ninguém usa para decidir
+       nada e que, desde que a aba Anatomia existe, repetem em placar o que a
+       aba mostra por extenso, com os nomes. Número sem o nome ao lado é um
+       resumo de algo que está a um clique. -->
+  <ul class="ficha-fatos">
+    <li>Classe base <b><code>.yb-cart</code></b></li>
+  </ul>
+
+  <!-- A FICHA INTEIRA EM ABAS, e nada solto embaixo delas.
+
+       Antes so tres blocos eram aba (Preview, Codigo, Anatomia) e outros tres
+       ficavam abaixo do container — Mobile, Acessibilidade e Faca/nao faca.
+       Como nada na tela dizia que a area das abas tinha acabado (20px de vao e
+       a mesma tipografia), os tres liam como conteudo da aba aberta, qualquer
+       que fosse ela.
+
+       Agora tudo e aba, na organizacao do outro design system da casa:
+       Componente · Anatomia · Regras de uso · Acessibilidade. "Estados" fica de
+       fora por enquanto — so 2 das 66 pecas tem demonstracao de estado, e uma
+       aba vazia em 64 fichas ensina menos que a ausencia dela.
+
+       O CELULAR E A MARCACAO ENTRARAM EM "COMPONENTE" porque respondem a mesma
+       pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
+       que telefone e assunto separado do desktop, que e o oposto do que um
+       design system quer dizer. -->
+  <div class="abas" data-yb-abas>
+  <section class="bloco" id="demos" data-aba="Componente">
+    <h2 class="bloco-titulo">Como se parece</h2>
+    <div class="stage stage--dim">
+      <div class="yb-cart">
+        <div class="yb-cart__head">
+          <h2>Your cart (2)</h2>
+          <div class="yb-cart__head-acoes">
+            <button type="button" class="yb-cart__share" aria-label="Share cart">
+              <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-share"/></svg></button>
+            <button type="button" class="yb-cart__close" aria-label="Close cart">
+              <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
+          </div>
+        </div>
+        <div class="yb-cart__ship yb-cart__ship--ok">
+          <div class="yb-freeship yb-freeship--done">
+            <span class="yb-freeship__text">
+              <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>
+              Free shipping unlocked</span>
+            <div class="yb-progress" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Progress to free shipping">
+              <span class="yb-progress__fill" style="inline-size:100%"></span>
+            </div>
+          </div>
+        </div>
+        <div class="yb-cart__brinde-card">
+          <div class="yb-cart__brinde-corpo">
+            <p class="yb-cart__brinde-texto">Add <b>$50.00</b> and receive your first gift</p>
+            <div class="yb-cart__brinde-trilhos" role="progressbar" aria-valuenow="245" aria-valuemin="0" aria-valuemax="400"
+                 aria-valuetext="$244.70 of $400.00 toward the best gift">
+              <span class="yb-progress yb-progress--sm"><span class="yb-progress__fill yb-progress__fill--success" style="inline-size:60%"></span></span>
+              <span class="yb-progress yb-progress--sm"><span class="yb-progress__fill yb-progress__fill--success" style="inline-size:0%"></span></span>
+            </div>
+          </div>
+          <div class="yb-cart__brinde-premio"></div>
+        </div>
+        <div class="yb-cart__items">
+          <div class="yb-cart__item">
+            <div class="yb-card__media"></div>
+            <div class="yb-cart__item-body">
+              <div class="yb-cart__item-topo">
+                <p class="yb-cart__item-title">Kit Sealant Fashion Gold</p>
+                <button type="button" class="yb-cart__remove" aria-label="Remove Kit Sealant Fashion Gold">
+                  <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-trash"/></svg></button>
+              </div>
+              <span class="yb-cart__item-variant">500g / 17.6 fl.oz</span>
+              <div class="yb-cart__item-foot">
+                <span class="yb-cart__item-precos">
+                  <s class="yb-price__was">$198.00</s><span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b></span><span class="yb-cart__economia">-15%</span>
+                </span>
+                <div class="yb-stepper yb-stepper--sm" data-yb-stepper>
+                  <button type="button" data-yb-step="down" aria-label="Decrease quantity of Kit Sealant Fashion Gold">&minus;</button>
+                  <input type="number" value="1" min="1" max="10" aria-label="Quantity of Kit Sealant Fashion Gold">
+                  <button type="button" data-yb-step="up" aria-label="Increase quantity of Kit Sealant Fashion Gold">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="yb-cart__item">
+            <div class="yb-card__media"></div>
+            <div class="yb-cart__item-body">
+              <div class="yb-cart__item-topo">
+                <p class="yb-cart__item-title">Vello Alpha-Lactobaby® System</p>
+                <button type="button" class="yb-cart__remove" aria-label="Remove Vello Alpha-Lactobaby® System">
+                  <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-trash"/></svg></button>
+              </div>
+              <span class="yb-cart__item-variant">250ml + 200g</span>
+              <div class="yb-cart__item-foot">
+                <span class="yb-cart__item-precos">
+                  <s class="yb-price__was">$100.50</s><span class="yb-price yb-price--sm"><b class="yb-price__now">$75.80</b></span><span class="yb-cart__economia">-25%</span>
+                </span>
+                <div class="yb-stepper yb-stepper--sm" data-yb-stepper>
+                  <button type="button" data-yb-step="down" aria-label="Decrease quantity of Vello Alpha-Lactobaby® System">&minus;</button>
+                  <input type="number" value="1" min="1" max="10" aria-label="Quantity of Vello Alpha-Lactobaby® System">
+                  <button type="button" data-yb-step="up" aria-label="Increase quantity of Vello Alpha-Lactobaby® System">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="yb-cart__protecao">
+          <div class="yb-cart__protecao-corpo">
+            <b>Route Package Protection</b>
+            <p>Guard against loss, theft, or damage for only $4.98</p>
+          </div>
+          <button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="false" aria-label="Route Package Protection">
+            <span class="yb-switch__knob"></span>
+          </button>
+        </div>
+        <div class="yb-cart__cupom">
+          <form class="yb-field yb-field--row">
+            <div class="yb-field__box">
+              <input class="yb-input" id="cupom-demo" type="text" placeholder=" " autocomplete="off">
+              <label class="yb-field__label" for="cupom-demo">Promo code</label>
+            </div>
+            <button class="yb-btn yb-btn--ghost yb-btn--sm" type="submit">Apply</button>
+          </form>
+          <p class="yb-cart__note">Taxes, shipping and discounts calculated at checkout</p>
+        </div>
+        <div class="yb-cart__cross">
+          <div class="yb-cart__cross-head">
+            <h3 class="yb-cart__cross-title">Complete your routine</h3>
+            <div class="yb-track__nav" data-yb-track-nav="cross-demo">
+              <button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous suggestion">
+                <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-left"/></svg></button>
+              <button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next suggestion">
+                <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg></button>
+            </div>
+          </div>
+          <div class="yb-track" id="cross-demo">
+            <div class="yb-cart__oferta">
+              <div class="yb-card__media"></div>
+              <div class="yb-cart__oferta-corpo">
+                <p class="yb-cart__oferta-nome">Ybera Hydrating Shampoo</p>
+                <span class="yb-cart__oferta-variante">300ml</span>
+                <span class="yb-cart__oferta-precos">
+                  <span class="yb-cart__oferta-cheio">$32.00</span>
+                  <b class="yb-cart__oferta-add">Add for $27.20</b>
+                  <span class="yb-cart__economia">&minus;15%</span>
+                </span>
+              </div>
+              <button type="button" class="yb-btn yb-btn--primary yb-btn--sm">Add</button>
+            </div>
+            <div class="yb-cart__oferta">
+              <div class="yb-card__media"></div>
+              <div class="yb-cart__oferta-corpo">
+                <p class="yb-cart__oferta-nome">Floral Fusion Hair Mist</p>
+                <span class="yb-cart__oferta-variante">50ml</span>
+                <span class="yb-cart__oferta-precos">
+                  <span class="yb-cart__oferta-cheio">$24.00</span>
+                  <b class="yb-cart__oferta-add">Add for $19.20</b>
+                  <span class="yb-cart__economia">&minus;20%</span>
+                </span>
+              </div>
+              <button type="button" class="yb-btn yb-btn--primary yb-btn--sm">Add</button>
+            </div>
+          </div>
+        </div>
+        <p class="yb-cart__prova">
+          <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-trending-up"/></svg>
+          <span><b>247 people</b> bought this kit this week</span>
+        </p>
+        <div class="yb-cart__foot">
+          <div class="yb-cart__parceiro">
+            <span class="yb-cart__parceiro-inicial" aria-hidden="true">YP</span>
+            <p><b>@yberapartner</b> saved you $53.80</p>
+          </div>
+          <div class="yb-cart__resumo">
+            <div class="yb-cart__totais">
+              <s class="yb-cart__tabela">$298.50</s>
+              <div class="yb-cart__total-linha">
+                <b class="yb-cart__total">$244.70</b>
+                <span class="yb-cart__economia">
+                  <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-clock"/></svg>
+                  save 18%</span>
+              </div>
+            </div>
+            <button type="button" class="yb-btn yb-btn--primary yb-cart__checkout">Checkout (2)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>O cupom rola com a lista; o total não</b>
+      <p>Campo de digitação parado no pé é campo que o teclado do celular cobre.
+      Rolando com os itens, o navegador o leva para cima do teclado sozinho. Fixos
+      ficam só o total e o botão.</p>
+      <p><b>Não é componente novo:</b> é <code>.yb-field--row</code> com um
+      <code>.yb-btn--sm</code> do lado. O que nasce aqui é a posição.</p>
+    </div>
+
+    <div class="note">
+      <b>A oferta entra depois do cupom, não antes da lista</b>
+      <p>Acima dos itens ela competiria com o que a pessoa acabou de escolher; depois
+      do botão, ninguém a veria. Entre o cupom e o total é o único ponto do caminho em
+      que a compra já está formada e ainda não foi fechada.</p>
+      <p>A linha repete a anatomia da linha do carrinho &mdash; miniatura, corpo, ação
+      &mdash; de propósito: é o que faz a oferta ler como "mais um item", que é
+      exatamente o que ela quer virar.</p>
+    </div>
+    <div class="note">
+      <b>O preço cheio não leva risco</b>
+      <p>Ele não foi cancelado: é a referência do que o item custa fora do combo. Risco
+      prometeria um desconto que só existe se o item entrar <b>neste</b> carrinho, e
+      quem vir o mesmo produto na PDP pelo preço normal vai achar que perdeu a oferta.</p>
+    </div>
+    <div class="note">
+      <b>Um cartão por tela, com encaixe obrigatório</b>
+      <p><code>--yb-track-item:100%</code> e <code>scroll-snap-type:x mandatory</code>:
+      meia oferta cortada na borda de uma gaveta de 420px não é prévia, é peça quebrada
+      &mdash; a mesma razão do hero. As setas são <code>.yb-track__nav</code> e somem
+      no toque, onde se arrasta: no print elas aparecem porque é uma simulação, mas um
+      par de alvos de 44px dentro da gaveta custa mais do que ensina.</p>
+    </div>
+    <div class="note">
+      <b>Três blocos, três perguntas</b>
+      <p>O topo diz quanto falta para o frete grátis, o meio lista o que já está no
+      carrinho, o pé cobra a promessa de quem indicou. Cada um responde uma pergunta
+      diferente — juntá-los num bloco só faz nenhuma das três ser lida.</p>
+    </div>
+
+    <h3 class="row-label">Cupom aplicado</h3>
+    <div class="stage stage--dim">
+      <div class="yb-cart">
+        <div class="yb-cart__cupom">
+          <div class="yb-cart__cupom-ok">
+            <div>
+              <span class="yb-cart__cupom-codigo">WELCOME15</span>
+              <span class="yb-cart__economia">Applied</span>
+            </div>
+            <button class="yb-link" type="button">Remove</button>
+          </div>
+          <p class="yb-cart__note">Taxes, shipping and discounts calculated at checkout</p>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Aplicado tira o campo</b>
+      <p>Deixar o input com o código digitado dentro não diz se o desconto pegou. A
+      etiqueta com o código, o "Applied" em verde e o link de remover dizem as três
+      coisas que a pessoa quer saber: qual código, se valeu, como desfazer.</p>
+    </div>
+    <h3 class="row-label">Estados da linha</h3>
+    <div class="stage stage--dim">
+      <div class="yb-cart">
+        <div class="yb-cart__items">
+          <div class="yb-cart__item yb-cart__item--esgotado">
+            <div class="yb-card__media"></div>
+            <div class="yb-cart__item-body">
+              <p class="yb-cart__item-title">Cronograma &ndash; step 2 Cortex</p>
+              <span class="yb-cart__item-variant">250g</span>
+              <p class="yb-cart__aviso">Out of stock &mdash; remove to check out</p>
+              <button type="button" class="yb-cart__remove">Remove</button>
+            </div>
+          </div>
+          <div class="yb-cart__item">
+            <div class="yb-card__media"></div>
+            <div class="yb-cart__item-body">
+              <p class="yb-cart__item-title">Fashion Gold keratin 300g</p>
+              <span class="yb-cart__item-variant">300g</span>
+              <div class="yb-cart__item-foot">
+                <div class="yb-stepper">
+                  <button type="button" aria-label="Decrease quantity">&minus;</button>
+                  <input type="number" value="9" aria-label="Quantity">
+                  <button type="button" aria-label="Increase quantity" disabled>+</button>
+                </div>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+              </div>
+              <p class="yb-cart__aviso">Max 9 per order</p>
+            </div>
+          </div>
+          <div class="yb-cart__item yb-cart__item--brinde">
+            <div class="yb-card__media"></div>
+            <div class="yb-cart__item-body">
+              <p class="yb-cart__item-title">
+                <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-gift"/></svg>Mirra travel size 50ml</p>
+              <span class="yb-cart__brinde">Free gift</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Cada estado tira um controle, não acrescenta aviso</b>
+      <p>O brinde não tem quantidade a escolher, o esgotado não tem o que somar, e o
+      que bateu o limite não tem para onde subir. Aviso ao lado de um controle que
+      continua funcionando ensina a pessoa a tentar de novo &mdash; e falhar de novo.</p>
+      <p>O aviso herda a cor do estado: esgotado bloqueia a compra e fala em vermelho;
+      limite é só um teto e fala em âmbar.</p>
+    </div>
+
+    <h3 class="row-label">Vazio e carregando</h3>
+    <div class="split">
+      <div class="stage stage--dim">
+        <div class="yb-cart yb-cart--vazio">
+          <div class="yb-cart__head">
+            <h2>Your cart</h2>
+            <button type="button" class="yb-iconbtn yb-cart__close" aria-label="Close cart">&times;</button>
+          </div>
+          <div class="yb-cart__estado">
+            <div class="yb-empty">
+              <span class="yb-empty__icone" aria-hidden="true">
+                <svg class="yb-icon"><use href="../icons/ybera-icons.svg#yb-cart"/></svg></span>
+              <p class="yb-empty__title">Your cart is empty</p>
+              <div class="yb-empty__acoes"><a class="yb-btn yb-btn--secondary" href="#demos">Go to home</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="stage stage--dim">
+        <div class="yb-cart yb-cart--carregando">
+          <div class="yb-cart__head">
+            <h2>Your cart</h2>
+            <button type="button" class="yb-iconbtn yb-cart__close" aria-label="Close cart">&times;</button>
+          </div>
+          <div class="yb-cart__items" aria-busy="true">
+            <div class="yb-cart__item">
+              <div class="yb-skeleton yb-skeleton--media"></div>
+              <div class="yb-cart__item-body">
+                <div class="yb-skeleton yb-skeleton--title"></div>
+                <div class="yb-skeleton yb-skeleton--line-short"></div>
+              </div>
+            </div>
+            <div class="yb-cart__item">
+              <div class="yb-skeleton yb-skeleton--media"></div>
+              <div class="yb-cart__item-body">
+                <div class="yb-skeleton yb-skeleton--title"></div>
+                <div class="yb-skeleton yb-skeleton--line-short"></div>
+              </div>
+            </div>
+          </div>
+          <div class="yb-cart__foot">
+            <div class="yb-skeleton yb-skeleton--btn"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>A divisória do cabeçalho só existe quando não há lista</b>
+      <p>Com itens, a barra de frete já separa o cabeçalho do resto &mdash; duas linhas
+      seguidas viram sujeira. Vazio ou carregando, a barra some e a divisória assume.</p>
+    </div>
+
+    <h3 class="rotulo">No celular</h3>
+    <div class="quadro-mob">
+      <iframe src="solo.html?c=cart-drawer" title="Cart drawer em 375px"
+              width="375" height="420" loading="lazy"></iframe>
+    </div>
+
+    <h3 class="rotulo">Marcação</h3>
+    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
+    <div class="snippet">
+      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <pre><code>&lt;div class="yb-cart"&gt;
+  &lt;div class="yb-cart__head"&gt;
+    &lt;h2&gt;Your cart (2)&lt;/h2&gt;
+    &lt;div class="yb-cart__head-acoes"&gt;
+      &lt;button type="button" class="yb-cart__share" aria-label="Share cart"&gt;
+        &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-share"/&gt;&lt;/svg&gt;&lt;/button&gt;
+      &lt;button type="button" class="yb-cart__close" aria-label="Close cart"&gt;
+        &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="yb-cart__ship yb-cart__ship--ok"&gt;
+    &lt;div class="yb-freeship yb-freeship--done"&gt;
+      &lt;span class="yb-freeship__text"&gt;
+        &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-truck"/&gt;&lt;/svg&gt;
+        Free shipping unlocked&lt;/span&gt;
+      &lt;div class="yb-progress" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Progress to free shipping"&gt;
+        &lt;span class="yb-progress__fill" style="inline-size:100%"&gt;&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="yb-cart__brinde-card"&gt;
+    &lt;div class="yb-cart__brinde-corpo"&gt;
+      &lt;p class="yb-cart__brinde-texto"&gt;Add &lt;b&gt;$50.00&lt;/b&gt; and receive your first gift&lt;/p&gt;
+      &lt;div class="yb-cart__brinde-trilhos" role="progressbar" aria-valuenow="245" aria-valuemin="0" aria-valuemax="400"
+           aria-valuetext="$244.70 of $400.00 toward the best gift"&gt;
+        &lt;span class="yb-progress yb-progress--sm"&gt;&lt;span class="yb-progress__fill yb-progress__fill--success" style="inline-size:60%"&gt;&lt;/span&gt;&lt;/span&gt;
+        &lt;span class="yb-progress yb-progress--sm"&gt;&lt;span class="yb-progress__fill yb-progress__fill--success" style="inline-size:0%"&gt;&lt;/span&gt;&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-cart__brinde-premio"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="yb-cart__items"&gt;
+    &lt;div class="yb-cart__item"&gt;
+      &lt;div class="yb-card__media"&gt;&lt;/div&gt;
+      &lt;div class="yb-cart__item-body"&gt;
+        &lt;div class="yb-cart__item-topo"&gt;
+          &lt;p class="yb-cart__item-title"&gt;Kit Sealant Fashion Gold&lt;/p&gt;
+          &lt;button type="button" class="yb-cart__remove" aria-label="Remove Kit Sealant Fashion Gold"&gt;
+            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-trash"/&gt;&lt;/svg&gt;&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;span class="yb-cart__item-variant"&gt;500g / 17.6 fl.oz&lt;/span&gt;
+        &lt;div class="yb-cart__item-foot"&gt;
+          &lt;span class="yb-cart__item-precos"&gt;
+            &lt;s class="yb-price__was"&gt;$198.00&lt;/s&gt;&lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$168.90&lt;/b&gt;&lt;/span&gt;&lt;span class="yb-cart__economia"&gt;-15%&lt;/span&gt;
+          &lt;/span&gt;
+          &lt;div class="yb-stepper yb-stepper--sm" data-yb-stepper&gt;
+            &lt;button type="button" data-yb-step="down" aria-label="Decrease quantity of Kit Sealant Fashion Gold"&gt;&amp;minus;&lt;/button&gt;
+            &lt;input type="number" value="1" min="1" max="10" aria-label="Quantity of Kit Sealant Fashion Gold"&gt;
+            &lt;button type="button" data-yb-step="up" aria-label="Increase quantity of Kit Sealant Fashion Gold"&gt;+&lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-cart__item"&gt;
+      &lt;div class="yb-card__media"&gt;&lt;/div&gt;
+      &lt;div class="yb-cart__item-body"&gt;
+        &lt;div class="yb-cart__item-topo"&gt;
+          &lt;p class="yb-cart__item-title"&gt;Vello Alpha-Lactobaby® System&lt;/p&gt;
+          &lt;button type="button" class="yb-cart__remove" aria-label="Remove Vello Alpha-Lactobaby® System"&gt;
+            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-trash"/&gt;&lt;/svg&gt;&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;span class="yb-cart__item-variant"&gt;250ml + 200g&lt;/span&gt;
+        &lt;div class="yb-cart__item-foot"&gt;
+          &lt;span class="yb-cart__item-precos"&gt;
+            &lt;s class="yb-price__was"&gt;$100.50&lt;/s&gt;&lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$75.80&lt;/b&gt;&lt;/span&gt;&lt;span class="yb-cart__economia"&gt;-25%&lt;/span&gt;
+          &lt;/span&gt;
+          &lt;div class="yb-stepper yb-stepper--sm" data-yb-stepper&gt;
+            &lt;button type="button" data-yb-step="down" aria-label="Decrease quantity of Vello Alpha-Lactobaby® System"&gt;&amp;minus;&lt;/button&gt;
+            &lt;input type="number" value="1" min="1" max="10" aria-label="Quantity of Vello Alpha-Lactobaby® System"&gt;
+            &lt;button type="button" data-yb-step="up" aria-label="Increase quantity of Vello Alpha-Lactobaby® System"&gt;+&lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="yb-cart__protecao"&gt;
+    &lt;div class="yb-cart__protecao-corpo"&gt;
+      &lt;b&gt;Route Package Protection&lt;/b&gt;
+      &lt;p&gt;Guard against loss, theft, or damage for only $4.98&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="false" aria-label="Route Package Protection"&gt;
+      &lt;span class="yb-switch__knob"&gt;&lt;/span&gt;
+    &lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="yb-cart__cupom"&gt;
+    &lt;form class="yb-field yb-field--row"&gt;
+      &lt;div class="yb-field__box"&gt;
+        &lt;input class="yb-input" id="cupom-demo" type="text" placeholder=" " autocomplete="off"&gt;
+        &lt;label class="yb-field__label" for="cupom-demo"&gt;Promo code&lt;/label&gt;
+      &lt;/div&gt;
+      &lt;button class="yb-btn yb-btn--ghost yb-btn--sm" type="submit"&gt;Apply&lt;/button&gt;
+    &lt;/form&gt;
+    &lt;p class="yb-cart__note"&gt;Taxes, shipping and discounts calculated at checkout&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="yb-cart__cross"&gt;
+    &lt;div class="yb-cart__cross-head"&gt;
+      &lt;h3 class="yb-cart__cross-title"&gt;Complete your routine&lt;/h3&gt;
+      &lt;div class="yb-track__nav" data-yb-track-nav="cross-demo"&gt;
+        &lt;button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous suggestion"&gt;
+          &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-left"/&gt;&lt;/svg&gt;&lt;/button&gt;
+        &lt;button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next suggestion"&gt;
+          &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-track" id="cross-demo"&gt;
+      &lt;div class="yb-cart__oferta"&gt;
+        &lt;div class="yb-card__media"&gt;&lt;/div&gt;
+        &lt;div class="yb-cart__oferta-corpo"&gt;
+          &lt;p class="yb-cart__oferta-nome"&gt;Ybera Hydrating Shampoo&lt;/p&gt;
+          &lt;span class="yb-cart__oferta-variante"&gt;300ml&lt;/span&gt;
+          &lt;span class="yb-cart__oferta-precos"&gt;
+            &lt;span class="yb-cart__oferta-cheio"&gt;$32.00&lt;/span&gt;
+            &lt;b class="yb-cart__oferta-add"&gt;Add for $27.20&lt;/b&gt;
+            &lt;span class="yb-cart__economia"&gt;&amp;minus;15%&lt;/span&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;button type="button" class="yb-btn yb-btn--primary yb-btn--sm"&gt;Add&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div class="yb-cart__oferta"&gt;
+        &lt;div class="yb-card__media"&gt;&lt;/div&gt;
+        &lt;div class="yb-cart__oferta-corpo"&gt;
+          &lt;p class="yb-cart__oferta-nome"&gt;Floral Fusion Hair Mist&lt;/p&gt;
+          &lt;span class="yb-cart__oferta-variante"&gt;50ml&lt;/span&gt;
+          &lt;span class="yb-cart__oferta-precos"&gt;
+            &lt;span class="yb-cart__oferta-cheio"&gt;$24.00&lt;/span&gt;
+            &lt;b class="yb-cart__oferta-add"&gt;Add for $19.20&lt;/b&gt;
+            &lt;span class="yb-cart__economia"&gt;&amp;minus;20%&lt;/span&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;button type="button" class="yb-btn yb-btn--primary yb-btn--sm"&gt;Add&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;p class="yb-cart__prova"&gt;
+    &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-trending-up"/&gt;&lt;/svg&gt;
+    &lt;span&gt;&lt;b&gt;247 people&lt;/b&gt; bought this kit this week&lt;/span&gt;
+  &lt;/p&gt;
+  &lt;div class="yb-cart__foot"&gt;
+    &lt;div class="yb-cart__parceiro"&gt;
+      &lt;span class="yb-cart__parceiro-inicial" aria-hidden="true"&gt;YP&lt;/span&gt;
+      &lt;p&gt;&lt;b&gt;@yberapartner&lt;/b&gt; saved you $53.80&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-cart__resumo"&gt;
+      &lt;div class="yb-cart__totais"&gt;
+        &lt;s class="yb-cart__tabela"&gt;$298.50&lt;/s&gt;
+        &lt;div class="yb-cart__total-linha"&gt;
+          &lt;b class="yb-cart__total"&gt;$244.70&lt;/b&gt;
+          &lt;span class="yb-cart__economia"&gt;
+            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-clock"/&gt;&lt;/svg&gt;
+            save 18%&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;button type="button" class="yb-btn yb-btn--primary yb-cart__checkout"&gt;Checkout (2)&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+  </section>
+
+  <section class="bloco" id="anatomia" data-aba="Anatomia">
+    <h2 class="bloco-titulo">Anatomia e API</h2>
+    <div class="anat" data-yb-anatomia>
+      <div class="anat__palco">
+        <svg class="anat__fios" aria-hidden="true"></svg>
+        <div class="anat__peca"><div class="yb-cart">
+  <div class="yb-cart__head">
+    <h2>Your cart (2)</h2>
+    <div class="yb-cart__head-acoes">
+      <button type="button" class="yb-cart__share" aria-label="Share cart">
+        <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-share"/></svg></button>
+      <button type="button" class="yb-cart__close" aria-label="Close cart">
+        <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
+    </div>
+  </div>
+  <div class="yb-cart__ship yb-cart__ship--ok">
+    <div class="yb-freeship yb-freeship--done">
+      <span class="yb-freeship__text">
+        <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>
+        Free shipping unlocked</span>
+      <div class="yb-progress" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Progress to free shipping">
+        <span class="yb-progress__fill" style="inline-size:100%"></span>
+      </div>
+    </div>
+  </div>
+  <div class="yb-cart__brinde-card">
+    <div class="yb-cart__brinde-corpo">
+      <p class="yb-cart__brinde-texto">Add <b>$50.00</b> and receive your first gift</p>
+      <div class="yb-cart__brinde-trilhos" role="progressbar" aria-valuenow="245" aria-valuemin="0" aria-valuemax="400"
+           aria-valuetext="$244.70 of $400.00 toward the best gift">
+        <span class="yb-progress yb-progress--sm"><span class="yb-progress__fill yb-progress__fill--success" style="inline-size:60%"></span></span>
+        <span class="yb-progress yb-progress--sm"><span class="yb-progress__fill yb-progress__fill--success" style="inline-size:0%"></span></span>
+      </div>
+    </div>
+    <div class="yb-cart__brinde-premio"></div>
+  </div>
+  <div class="yb-cart__items">
+    <div class="yb-cart__item">
+      <div class="yb-card__media"></div>
+      <div class="yb-cart__item-body">
+        <div class="yb-cart__item-topo">
+          <p class="yb-cart__item-title">Kit Sealant Fashion Gold</p>
+          <button type="button" class="yb-cart__remove" aria-label="Remove Kit Sealant Fashion Gold">
+            <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-trash"/></svg></button>
+        </div>
+        <span class="yb-cart__item-variant">500g / 17.6 fl.oz</span>
+        <div class="yb-cart__item-foot">
+          <span class="yb-cart__item-precos">
+            <s class="yb-price__was">$198.00</s><span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b></span><span class="yb-cart__economia">-15%</span>
+          </span>
+          <div class="yb-stepper yb-stepper--sm" data-yb-stepper>
+            <button type="button" data-yb-step="down" aria-label="Decrease quantity of Kit Sealant Fashion Gold">&minus;</button>
+            <input type="number" value="1" min="1" max="10" aria-label="Quantity of Kit Sealant Fashion Gold">
+            <button type="button" data-yb-step="up" aria-label="Increase quantity of Kit Sealant Fashion Gold">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="yb-cart__item">
+      <div class="yb-card__media"></div>
+      <div class="yb-cart__item-body">
+        <div class="yb-cart__item-topo">
+          <p class="yb-cart__item-title">Vello Alpha-Lactobaby® System</p>
+          <button type="button" class="yb-cart__remove" aria-label="Remove Vello Alpha-Lactobaby® System">
+            <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-trash"/></svg></button>
+        </div>
+        <span class="yb-cart__item-variant">250ml + 200g</span>
+        <div class="yb-cart__item-foot">
+          <span class="yb-cart__item-precos">
+            <s class="yb-price__was">$100.50</s><span class="yb-price yb-price--sm"><b class="yb-price__now">$75.80</b></span><span class="yb-cart__economia">-25%</span>
+          </span>
+          <div class="yb-stepper yb-stepper--sm" data-yb-stepper>
+            <button type="button" data-yb-step="down" aria-label="Decrease quantity of Vello Alpha-Lactobaby® System">&minus;</button>
+            <input type="number" value="1" min="1" max="10" aria-label="Quantity of Vello Alpha-Lactobaby® System">
+            <button type="button" data-yb-step="up" aria-label="Increase quantity of Vello Alpha-Lactobaby® System">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="yb-cart__protecao">
+    <div class="yb-cart__protecao-corpo">
+      <b>Route Package Protection</b>
+      <p>Guard against loss, theft, or damage for only $4.98</p>
+    </div>
+    <button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="false" aria-label="Route Package Protection">
+      <span class="yb-switch__knob"></span>
+    </button>
+  </div>
+  <div class="yb-cart__cupom">
+    <form class="yb-field yb-field--row">
+      <div class="yb-field__box">
+        <input class="yb-input" id="anat-cupom-demo" type="text" placeholder=" " autocomplete="off">
+        <label class="yb-field__label" for="anat-cupom-demo">Promo code</label>
+      </div>
+      <button class="yb-btn yb-btn--ghost yb-btn--sm" type="submit">Apply</button>
+    </form>
+    <p class="yb-cart__note">Taxes, shipping and discounts calculated at checkout</p>
+  </div>
+  <div class="yb-cart__cross">
+    <div class="yb-cart__cross-head">
+      <h3 class="yb-cart__cross-title">Complete your routine</h3>
+      <div class="yb-track__nav" data-yb-track-nav="cross-demo">
+        <button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous suggestion">
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-left"/></svg></button>
+        <button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next suggestion">
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg></button>
+      </div>
+    </div>
+    <div class="yb-track" id="anat-cross-demo">
+      <div class="yb-cart__oferta">
+        <div class="yb-card__media"></div>
+        <div class="yb-cart__oferta-corpo">
+          <p class="yb-cart__oferta-nome">Ybera Hydrating Shampoo</p>
+          <span class="yb-cart__oferta-variante">300ml</span>
+          <span class="yb-cart__oferta-precos">
+            <span class="yb-cart__oferta-cheio">$32.00</span>
+            <b class="yb-cart__oferta-add">Add for $27.20</b>
+            <span class="yb-cart__economia">&minus;15%</span>
+          </span>
+        </div>
+        <button type="button" class="yb-btn yb-btn--primary yb-btn--sm">Add</button>
+      </div>
+      <div class="yb-cart__oferta">
+        <div class="yb-card__media"></div>
+        <div class="yb-cart__oferta-corpo">
+          <p class="yb-cart__oferta-nome">Floral Fusion Hair Mist</p>
+          <span class="yb-cart__oferta-variante">50ml</span>
+          <span class="yb-cart__oferta-precos">
+            <span class="yb-cart__oferta-cheio">$24.00</span>
+            <b class="yb-cart__oferta-add">Add for $19.20</b>
+            <span class="yb-cart__economia">&minus;20%</span>
+          </span>
+        </div>
+        <button type="button" class="yb-btn yb-btn--primary yb-btn--sm">Add</button>
+      </div>
+    </div>
+  </div>
+  <p class="yb-cart__prova">
+    <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-trending-up"/></svg>
+    <span><b>247 people</b> bought this kit this week</span>
+  </p>
+  <div class="yb-cart__foot">
+    <div class="yb-cart__parceiro">
+      <span class="yb-cart__parceiro-inicial" aria-hidden="true">YP</span>
+      <p><b>@yberapartner</b> saved you $53.80</p>
+    </div>
+    <div class="yb-cart__resumo">
+      <div class="yb-cart__totais">
+        <s class="yb-cart__tabela">$298.50</s>
+        <div class="yb-cart__total-linha">
+          <b class="yb-cart__total">$244.70</b>
+          <span class="yb-cart__economia">
+            <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-clock"/></svg>
+            save 18%</span>
+        </div>
+      </div>
+      <button type="button" class="yb-btn yb-btn--primary yb-cart__checkout">Checkout (2)</button>
+    </div>
+  </div>
+</div></div>
+      </div>
+      <ol class="anat__legenda">
+        <li data-alvo=".yb-freeship"><span class="anat__texto"><b><a href="../organisms/shipping-progress.html">Free shipping progress</a></b> — Barra que mostra quanto falta para o frete grátis, no carrinho e no topo. Move ticket médio como nenhum outro, e é o mais feito errado: barra sem número não diz nada.</span></li>
+        <li data-alvo=".yb-progress"><span class="anat__texto"><b><a href="../atoms/progress.html">Progress bar</a></b> — Barra que mostra quanto de uma tarefa já passou. Espera com fim conhecido; sem número para anunciar, use a variante indeterminada.</span></li>
+        <li data-alvo=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço de um produto, com o valor anterior riscado e o desconto quando existem. Sempre tabular: em grid, dígitos precisam alinhar em coluna.</span></li>
+        <li data-alvo=".yb-stepper"><span class="anat__texto"><b><a href="../molecules/stepper.html">Quantity stepper</a></b> — Controle de quantidade — menos, número e mais. Botões de 44px que funcionam no clique; limites em 1 e 10, e o botão desabilita sozinho na ponta.</span></li>
+        <li data-alvo=".yb-switch"><span class="anat__texto"><b><a href="../atoms/switch.html">Switch</a></b> — Interruptor que liga e desliga na hora, sem confirmar. Se o efeito só acontece depois de um botão de salvar, o certo é a caixa de seleção.</span></li>
+        <li data-alvo=".yb-input"><span class="anat__texto"><b><a href="../atoms/input.html">Input</a></b> — Campo de uma linha com o rótulo dentro da caixa, que sobe quando a pessoa digita. Leva dica e erro em texto; serve para nome, e-mail, CEP, senha.</span></li>
+        <li data-alvo=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
+        <li data-alvo=".yb-iconbtn"><span class="anat__texto"><b><a href="../atoms/iconbtn.html">Icon button</a></b> — Botão de 44px que mostra só um ícone, sem rótulo visível. Sexta reescrita da mesma coisa — o ícone do header, o fechar da gaveta, o play do vídeo, o abrir do rodapé e a seta do banner diziam todos 44×44 com fundo transparente, cada um do seu jeito.</span></li>
+        <li data-alvo=".yb-track"><span class="anat__texto"><b><a href="../molecules/track.html">Track</a></b> — Trilho de rolagem horizontal que carrega uma fileira maior que a tela. Avaliações, vídeos, logos e banners do hero — sem quebrar em duas linhas nem empurrar a página de lado.</span></li>
+      </ol>
+    </div>
+    <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
+         COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres
+         palavras de dentro de casa ("folha", "marcacao", "build"). A aba ao
+         lado ja mostrava o jeito certo — "O mesmo HTML que renderizou acima"
+         diz o que e. Aqui o que a pessoa precisa primeiro e a lista do que vai
+         encontrar; a procedencia vem depois, e vale a frase inteira, porque e
+         ela que autoriza confiar no que esta escrito. -->
+    <p class="bloco-lede">De que a peça é feita, o que ela aceita e os tokens que
+    consome — estes do mais específico desta peça para o mais compartilhado com o
+    resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
+    estiver errado aqui, o errado é o código.</p>
+
+    <p class="rotulo">De que é feita</p>
+    <p class="usa-degrau">Átomos</p>
+    <ul class="usa"><li><a href="../atoms/button.html">Button</a></li><li><a href="../atoms/iconbtn.html">Icon button</a></li><li><a href="../atoms/input.html">Input</a></li><li><a href="../atoms/progress.html">Progress bar</a></li><li><a href="../atoms/switch.html">Switch</a></li></ul>
+    <p class="usa-degrau">Moléculas</p>
+    <ul class="usa"><li><a href="../molecules/card.html">Card product</a></li><li><a href="../molecules/price.html">Price</a></li><li><a href="../molecules/stepper.html">Quantity stepper</a></li><li><a href="../molecules/track.html">Track</a></li></ul>
+    <p class="usa-degrau">Blocos</p>
+    <ul class="usa"><li><a href="../organisms/shipping-progress.html">Free shipping progress</a></li></ul>
+    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-cart--carregando</code> <code>.yb-cart--vazio</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-cart__aviso</code> <code>.yb-cart__brinde</code> <code>.yb-cart__brinde-card</code> <code>.yb-cart__brinde-card--completo</code> <code>.yb-cart__brinde-corpo</code> <code>.yb-cart__brinde-premio</code> <code>.yb-cart__brinde-texto</code> <code>.yb-cart__brinde-trilhos</code> <code>.yb-cart__checkout</code> <code>.yb-cart__close</code> <code>.yb-cart__cross</code> <code>.yb-cart__cross-head</code> <code>.yb-cart__cross-title</code> <code>.yb-cart__cupom</code> <code>.yb-cart__cupom-codigo</code> <code>.yb-cart__cupom-ok</code> <code>.yb-cart__economia</code> <code>.yb-cart__estado</code> <code>.yb-cart__foot</code> <code>.yb-cart__head</code> <code>.yb-cart__head-acoes</code> <code>.yb-cart__item</code> <code>.yb-cart__item--brinde</code> <code>.yb-cart__item--esgotado</code> <code>.yb-cart__item-body</code> <code>.yb-cart__item-foot</code> <code>.yb-cart__item-precos</code> <code>.yb-cart__item-title</code> <code>.yb-cart__item-topo</code> <code>.yb-cart__item-variant</code> <code>.yb-cart__items</code> <code>.yb-cart__note</code> <code>.yb-cart__oferta</code> <code>.yb-cart__oferta-add</code> <code>.yb-cart__oferta-cheio</code> <code>.yb-cart__oferta-corpo</code> <code>.yb-cart__oferta-nome</code> <code>.yb-cart__oferta-precos</code> <code>.yb-cart__oferta-variante</code> <code>.yb-cart__parceiro</code> <code>.yb-cart__parceiro-inicial</code> <code>.yb-cart__protecao</code> <code>.yb-cart__protecao-corpo</code> <code>.yb-cart__prova</code> <code>.yb-cart__remove</code> <code>.yb-cart__resumo</code> <code>.yb-cart__share</code> <code>.yb-cart__ship</code> <code>.yb-cart__ship--ok</code> <code>.yb-cart__tabela</code> <code>.yb-cart__totais</code> <code>.yb-cart__total</code> <code>.yb-cart__total-linha</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">50</span></p>
+    <div class="tokens">
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>16</span></p>
+        <ul class="tokens__lista">
+          <li><i class="tokens__cor" style="background:var(--yb-success-surface)" aria-hidden="true"></i><code>--yb-success-surface</code><span class="tokens__valor">#EAF6EC</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-warning-text)" aria-hidden="true"></i><code>--yb-warning-text</code><span class="tokens__valor">#8A5A00</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-danger-surface)" aria-hidden="true"></i><code>--yb-danger-surface</code><span class="tokens__valor">#FBEAE9</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-danger-text)" aria-hidden="true"></i><code>--yb-danger-text</code><span class="tokens__valor">#B3261E</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-success-text)" aria-hidden="true"></i><code>--yb-success-text</code><span class="tokens__valor">#1F7A34</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-bg-subtle)" aria-hidden="true"></i><code>--yb-bg-subtle</code><span class="tokens__valor">#FAFAFA</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-surface-sunken)" aria-hidden="true"></i><code>--yb-surface-sunken</code><span class="tokens__valor">#FAFAFA</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
+          <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>14</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-type-h4-weight</code><span class="tokens__valor">600</span></li>
+          <li><code>--yb-type-h4-track</code><span class="tokens__valor">-0.015em</span></li>
+          <li><code>--yb-tracking-wide</code><span class="tokens__valor">0.04em</span></li>
+          <li><code>--yb-tracking-wider</code><span class="tokens__valor">0.12em</span></li>
+          <li><code>--yb-type-overline-size</code><span class="tokens__valor">0.6875rem</span></li>
+          <li><code>--yb-font-weight-medium</code><span class="tokens__valor">500</span></li>
+          <li><code>--yb-type-h4-size</code><span class="tokens__valor">1.25rem</span></li>
+          <li><code>--yb-line-height-base</code><span class="tokens__valor">1.35</span></li>
+          <li><code>--yb-line-height-none</code><span class="tokens__valor">1</span></li>
+          <li><code>--yb-font-weight-bold</code><span class="tokens__valor">700</span></li>
+          <li><code>--yb-type-body-size</code><span class="tokens__valor">1rem</span></li>
+          <li><code>--yb-type-caption-size</code><span class="tokens__valor">0.8125rem</span></li>
+          <li><code>--yb-font-weight-semibold</code><span class="tokens__valor">600</span></li>
+          <li><code>--yb-type-body-sm-size</code><span class="tokens__valor">0.875rem</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>8</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-icon-sm</code><span class="tokens__valor">16px</span></li>
+          <li><code>--yb-space-1</code><span class="tokens__valor">0.25rem</span></li>
+          <li><code>--yb-space-8</code><span class="tokens__valor">2rem</span></li>
+          <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
+          <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
+          <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
+          <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>
+          <li><code>--yb-space-3</code><span class="tokens__valor">0.75rem</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>7</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-radius-badge</code><span class="tokens__valor">4px</span></li>
+          <li><code>--yb-aspect-product</code><span class="tokens__valor">1 / 1</span></li>
+          <li><code>--yb-radius-pill</code><span class="tokens__valor">9999px</span></li>
+          <li><code>--yb-radius-media</code><span class="tokens__valor">8px</span></li>
+          <li><code>--yb-radius-card</code><span class="tokens__valor">8px</span></li>
+          <li><code>--yb-radius-sm</code><span class="tokens__valor">4px</span></li>
+          <li><code>--yb-radius-control</code><span class="tokens__valor">8px</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/elevation.html">Elevação</a> <span>1</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-elevation-drawer</code><span class="tokens__valor">0 12px 28px rgba(30,30,31,.11), 0 4px 8px rgba(30,30,31,.06)</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>3</span></p>
+        <ul class="tokens__lista">
+          <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
+          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/architecture.html">Componente</a> <span>1</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-thumb</code><span class="tokens__valor">3.5rem</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+       bloco por escrever passaria a estar atras de um clique, e a razao de ele
+       existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
+       que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
+
+       (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
+       crase em comentario ja derrubou o build antes.) -->
+  <section class="bloco" id="faca" data-aba="Regras de uso" data-pendente>
+    <h2 class="bloco-titulo">Faça / não faça</h2>
+    <p class="pendente">Faça / não faça ainda não escrito para este bloco.
+      O bloco aparece vazio de propósito: seção que some da ficha é uma pergunta
+      que ninguém sabe que ficou sem resposta.</p>
+  </section>
+
+  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade" data-pendente>
+    <h2 class="bloco-titulo">Acessibilidade</h2>
+    <p class="pendente">Acessibilidade ainda não escrita para este bloco.</p>
+  </section>
+  </div>
+
+  <p class="doc-credit">Gerada de <code>organisms/pecas/cart-drawer.html</code> e
+  <code>organisms/ybera-organisms.css</code>. Não edite à mão: <code>./build.sh</code>.</p>
+</main>
+
+<script src="../behavior/ybera-behavior.js"></script>
+<script>
+/* O quadro de 375 se dimensiona pelo que tem dentro. Conteudo de iframe nao
+   dimensiona o elemento sozinho, entao o solo.html mede a propria caixa e
+   avisa por postMessage — sem isso a ficha do Badge teria a mesma altura da
+   ficha do carrinho, e as duas erradas. */
+addEventListener('message', function (e) {
+  if (!e.data || e.data.yb !== 'altura') return;
+  /* Pelo REMETENTE, e nao pelo primeiro quadro da pagina: uma ficha pode ter
+     mais de um (a comparacao de estados lado a lado tem dois), e os dois
+     mandam a mesma mensagem com o mesmo alvo. Pegando o primeiro, o quadro
+     grande recebia a altura do pequeno. */
+  var f = Array.prototype.find.call(document.querySelectorAll('iframe'),
+    function (x) { return x.contentWindow === e.source; });
+  if (!f || !(e.data.h > 0)) return;
+  f.height = e.data.h;
+  /* Quadros comparados ficam da MESMA altura, sempre a maior. Duas caixas lado
+     a lado com fundos diferentes e uma 44px mais curta leem como recorte, e
+     nao como diferenca de estado. So cresce, entao converge. */
+  var duo = f.closest('.duo');
+  if (!duo) return;
+  var irmaos = duo.querySelectorAll('.duo__quadro');
+  var maior = 0;
+  Array.prototype.forEach.call(irmaos, function (x) {
+    maior = Math.max(maior, parseInt(x.height, 10) || 0);
+  });
+  Array.prototype.forEach.call(irmaos, function (x) {
+    if ((parseInt(x.height, 10) || 0) !== maior) x.height = maior;
+  });
+});
+
+/* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
+   acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-yb-copiar]');
+  if (!b) return;
+  var codigo = b.parentElement.querySelector('code');
+  if (!codigo || !navigator.clipboard) return;
+  navigator.clipboard.writeText(codigo.textContent).then(function () {
+    var antes = b.textContent;
+    b.textContent = 'Copiado';
+    setTimeout(function () { b.textContent = antes; }, 1600);
+  }).catch(function () { /* permissao negada: o codigo continua selecionavel */ });
+});
+</script>
+</body>
+</html>

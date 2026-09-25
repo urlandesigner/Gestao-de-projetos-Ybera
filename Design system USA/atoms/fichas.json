@@ -1,0 +1,554 @@
+{
+  "badge": {
+    "a11y": [
+      "Badge não é botão: não recebe <code>href</code>, <code>onclick</code> nem foco. Se o rótulo precisa levar a algum lugar, o componente certo é outro.",
+      "O texto é quem informa. Não existe badge que comunique só por cor — “Sold out” diz o que a cor sozinha não diria a quem não a distingue.",
+      "O dourado (<code>--accent</code>) vive só sobre superfície escura: mede 6.96:1 lá e 2.39:1 sobre branco, que reprova."
+    ],
+    "faca": {
+      "legenda": "Rótulo curto, sem ação, com a palavra fazendo o trabalho.",
+      "html": "<span class=\"yb-badge yb-badge--success\">In stock</span><span class=\"yb-badge yb-badge--danger\">Sold out</span>"
+    },
+    "naoFaca": {
+      "legenda": "Badge com link vira um alvo de 20px que parece rótulo. Quem navega por teclado encontra um foco onde não esperava clique.",
+      "html": "<a class=\"yb-badge yb-badge--sale\" href=\"#faca\">Save 16% →</a>"
+    },
+    "anatomia": [
+      {
+        "alvo": ".yb-badge",
+        "nome": "Etiqueta",
+        "texto": "Rótulo estático, não é botão. A variante dá a cor; o texto diz o quanto, não a palavra “promoção”."
+      }
+    ]
+  },
+  "button": {
+    "a11y": [
+      "Uma ação primária por tela. Com duas, quem navega por teclado percorre as duas sem saber qual é a saída.",
+      "O rótulo descreve a ação: “Add to cart”, não “Click here”.",
+      "Em <code>--loading</code> ele recebe <code>aria-busy</code> e mantém a largura. Não recebe <code>disabled</code>: o fundo viraria cinza, e spinner branco sobre cinza é spinner invisível.",
+      "Botão com <code>disabled</code> some do teclado. Quando o motivo importa, ele tem de estar escrito ao lado."
+    ],
+    "faca": {
+      "legenda": "Um primário, com o rótulo dizendo o que acontece.",
+      "html": "<button class=\"yb-btn yb-btn--primary\" type=\"button\">Add to cart</button><button class=\"yb-btn yb-btn--secondary\" type=\"button\">Size guide</button>"
+    },
+    "naoFaca": {
+      "legenda": "Dois primários lado a lado não são duas opções — são nenhuma escolha clara. E “Click here” não diz nada fora de contexto.",
+      "html": "<button class=\"yb-btn yb-btn--primary\" type=\"button\">Click here</button><button class=\"yb-btn yb-btn--primary\" type=\"button\">Continue</button>"
+    },
+    "anatomia": [
+      {
+        "alvo": ".yb-btn",
+        "nome": "Botão",
+        "texto": "Uma ação primária por tela. O rótulo é o que vai acontecer — “Add to cart”, não “Enviar”."
+      }
+    ]
+  },
+  "iconbtn": {
+    "a11y": [
+      "<code>aria-label</code> é obrigatório: botão só de ícone não tem texto de onde tirar nome. Sem ele, seis botões viram seis linhas iguais na lista de controles.",
+      "O <code>&lt;svg&gt;</code> é <code>aria-hidden</code>. Quem nomeia é o rótulo.",
+      "O alvo tem 44×44, acima dos 24 que a WCAG 2.5.8 pede, e é maior que o glifo.",
+      "Em <code>--fav</code> o estado vive em <code>aria-pressed</code> e o rótulo troca junto. A forma muda com a cor porque cor sozinha reprova a WCAG 1.4.1.",
+      "Sob <code>forced-colors</code> ele ganha borda: fundo transparente desapareceria."
+    ],
+    "faca": {
+      "legenda": "Cada botão nomeia a própria ação.",
+      "html": "<button class=\"yb-iconbtn\" type=\"button\" aria-label=\"Remover do carrinho\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-trash\"/></svg></button><button class=\"yb-iconbtn\" type=\"button\" aria-label=\"Adicionar aos favoritos\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-heart\"/></svg></button>"
+    },
+    "naoFaca": {
+      "legenda": "Sem rótulo, os dois são “botão” — e o leitor de tela não tem como dizer qual apaga o item.",
+      "html": "<button class=\"yb-iconbtn\" type=\"button\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-trash\"/></svg></button><button class=\"yb-iconbtn\" type=\"button\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-heart\"/></svg></button>"
+    },
+    "anatomia": [
+      {
+        "alvo": ".yb-iconbtn",
+        "nome": "Botão",
+        "texto": "Alvo de 44px. Sem texto visível, então <code>aria-label</code> é obrigatório."
+      },
+      {
+        "alvo": ".yb-icon",
+        "nome": "Ícone",
+        "texto": "Vem do sprite e herda a cor do botão. Decorativo: quem nomeia a ação é o rótulo acessível."
+      }
+    ]
+  },
+  "link": {
+    "a11y": [
+      "O sublinhado é o sinal, não a cor. Link identificado só por cor desaparece para quem não a distingue — e o texto do sistema é escuro sobre claro, onde a diferença de matiz é sutil.",
+      "O texto do link diz o destino. “Leia mais” repetido cinco vezes na mesma página dá ao leitor de tela cinco links idênticos que vão para lugares diferentes.",
+      "Ícone dentro do link é <code>aria-hidden=\"true\"</code>: a seta não é parte do nome do destino."
+    ],
+    "faca": {
+      "legenda": "O texto nomeia o destino; a seta é decorativa.",
+      "html": "<a class=\"yb-link\" href=\"#faca\">Ver todos os tratamentos <svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-arrow-right\"/></svg></a>"
+    },
+    "naoFaca": {
+      "legenda": "“Leia mais” só funciona para quem tem o parágrafo anterior à vista. Fora de contexto — que é como o leitor de tela lista os links — não diz nada.",
+      "html": "<a class=\"yb-link\" href=\"#faca\">Leia mais</a>"
+    },
+    "anatomia": [
+      {
+        "alvo": ".yb-link",
+        "nome": "Link",
+        "texto": "Leva a outro lugar. Se a ação acontece nesta tela, o certo é botão."
+      },
+      {
+        "alvo": ".yb-icon",
+        "nome": "Seta",
+        "texto": "Opcional e decorativa. Indica continuidade; nunca carrega sozinha o destino."
+      }
+    ]
+  },
+  "logo": {
+    "a11y": [
+      "No cabeçalho o logo é link para a home e precisa de nome acessível: <code>aria-label</code> ou texto escondido. Uma imagem sem alt dentro de um link vira “link, ybera-logo.webp”.",
+      "Declara <code>:focus-visible</code> e respeita o alvo mínimo — é o primeiro elemento que o teclado alcança na página."
+    ],
+    "faca": {
+      "legenda": "Link com nome acessível, não só a imagem.",
+      "html": "<a class=\"yb-logo yb-logo--md\" href=\"#faca\" aria-label=\"Ybera, home\"><img src=\"../brand/ybera-logo.webp\" alt=\"\" width=\"360\" height=\"139\"></a>"
+    },
+    "naoFaca": {
+      "legenda": "Sem nome, o leitor de tela lê o nome do arquivo — e o primeiro link da página vira ruído.",
+      "html": "<a class=\"yb-logo yb-logo--md\" href=\"#faca\"><img src=\"../brand/ybera-logo.webp\" alt=\"\" width=\"360\" height=\"139\"></a>"
+    },
+    "anatomia": [
+      {
+        "alvo": ".yb-logo",
+        "nome": "Marca",
+        "texto": "A altura vem do modificador; a largura sai da proporção do arquivo."
+      },
+      {
+        "alvo": "img",
+        "nome": "Arquivo",
+        "texto": "Leva <code>width</code> e <code>height</code> reais no HTML — é o que reserva a caixa antes de carregar."
+      }
+    ]
+  },
+  "notice": {
+    "a11y": [
+      "É informação persistente da página, não mensagem que chegou agora: não usa <code>role=\"alert\"</code> nem <code>status</code>. Anunciar como novidade algo que sempre esteve ali é falso alarme.",
+      "A cor não carrega o significado sozinha — o texto diz o que a faixa informa."
+    ],
+    "faca": {
+      "legenda": "Faixa informativa, sem papel de mensagem viva.",
+      "html": "<div class=\"yb-notice\" style=\"inline-size:100%\">Free standard shipping on orders over $50</div>"
+    },
+    "naoFaca": {
+      "legenda": "Com <code>role=\"alert\"</code>, o leitor de tela interrompe a leitura a cada carregamento para anunciar algo que nunca muda.",
+      "html": "<div class=\"yb-notice\" role=\"alert\" style=\"inline-size:100%\">Free standard shipping on orders over $50</div>"
+    },
+    "anatomia": [
+      {
+        "alvo": ".yb-notice",
+        "nome": "Faixa",
+        "texto": "Uma linha no topo da loja. Diz uma promessa da casa, não um alerta de sistema."
+      }
+    ]
+  },
+  "offerseal": {
+    "a11y": [
+      "Selo não é botão nem link: sem <code>href</code>, sem foco. Quem clica no cartão já chega ao produto.",
+      "O texto é quem informa — “28% off” é o que o leitor de tela anuncia. Não existe selo que comunique só pela forma.",
+      "Sobre foto, use <code>--accent</code>: medido nos packshots dá 14,0:1, contra 3,3:1 do <code>--sale</code>.",
+      "Se o mesmo desconto já está num <code>.yb-badge--sale</code> ao lado, quem ouve escuta a oferta duas vezes. Escolha um."
+    ],
+    "faca": {
+      "legenda": "Um selo, escuro, sobre a foto — e o texto dizendo a oferta.",
+      "html": "<span class=\"yb-offerseal yb-offerseal--accent\"><b class=\"yb-offerseal__value\">Free</b><span class=\"yb-offerseal__label\">gift</span></span>"
+    },
+    "naoFaca": {
+      "legenda": "Dois selos na mesma peça viram enfeite e nenhum dos dois é lido — e o claro ainda some sobre foto clara.",
+      "html": "<span class=\"yb-offerseal yb-offerseal--sale\"><b class=\"yb-offerseal__value\">28%</b><span class=\"yb-offerseal__label\">off</span></span><span class=\"yb-offerseal yb-offerseal--accent\"><b class=\"yb-offerseal__value\">Free</b><span class=\"yb-offerseal__label\">gift</span></span>"
+    },
+    "anatomia": [
+      {
+        "alvo": ".yb-offerseal",
+        "nome": "Selo",
+        "texto": "Estrela de 20 pontas desenhada em CSS. O tamanho vem de quem o posiciona."
+      },
+      {
+        "alvo": ".yb-offerseal__value",
+        "nome": "Número",
+        "texto": "O que a pessoa ganha. É a linha grande, e é o que se lê de longe."
+      },
+      {
+        "alvo": ".yb-offerseal__label",
+        "nome": "Unidade",
+        "texto": "“off”, “gift”. Completa o número; sozinha não diz nada."
+      }
+    ]
+  },
+  "progress": {
+    "a11y": [
+      "Com valor conhecido: <code>role=\"progressbar\"</code> com <code>aria-valuenow</code>, <code>valuemin</code> e <code>valuemax</code>, mais <code>aria-label</code> dizendo progresso de quê.",
+      "Sem valor conhecido, a variante indeterminada não declara <code>aria-valuenow</code> — número inventado é pior que número ausente.",
+      "Sob <code>prefers-reduced-motion</code> a faixa indeterminada para de andar e some: uma barra parada em 40% mentiria sobre o progresso."
+    ],
+    "faca": {
+      "legenda": "Valor anunciado junto com o que ele mede.",
+      "html": "<div class=\"yb-progress\" role=\"progressbar\" aria-label=\"Progress to free shipping\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-valuenow=\"76\" style=\"inline-size:220px\"><span class=\"yb-progress__fill\" style=\"inline-size:76%\"></span></div>"
+    },
+    "naoFaca": {
+      "legenda": "Barra sem papel nem valor: quem não a vê não sabe que existe progresso.",
+      "html": "<div class=\"yb-progress\" style=\"inline-size:220px\"><span class=\"yb-progress__fill\" style=\"inline-size:76%\"></span></div>"
+    },
+    "anatomia": {
+      "largura": "340px",
+      "partes": [
+        {
+          "alvo": ".yb-progress",
+          "nome": "Trilho",
+          "texto": "Leva <code>role=&quot;progressbar&quot;</code> e os três <code>aria-value*</code> — sem eles é só um retângulo."
+        },
+        {
+          "alvo": ".yb-progress__fill",
+          "nome": "Preenchimento",
+          "texto": "A largura é escrita no <code>style</code>, porque o valor vem do dado e não do CSS."
+        }
+      ]
+    }
+  },
+  "seals": {
+    "a11y": [
+      "A faixa é um <code>role=\"group\"</code> com <code>aria-label</code>: sem o rótulo, o leitor de tela lê cinco palavras soltas sem dizer do que elas são uma lista.",
+      "O ícone é <code>aria-hidden=\"true\"</code>. Quem informa é o texto — “Cruelty free” dito uma vez, não duas.",
+      "Tom neutro de propósito: se usasse a cor de ação, competiria com o botão de compra pela mesma atenção."
+    ],
+    "faca": {
+      "legenda": "Ícone escondido do leitor, texto visível fazendo o trabalho.",
+      "html": "<div class=\"yb-seals\" role=\"group\" aria-label=\"Certifications\"><span class=\"yb-seal\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-cruelty-free\"/></svg><span>Cruelty free</span></span><span class=\"yb-seal\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-vegan\"/></svg><span>Vegan</span></span></div>"
+    },
+    "naoFaca": {
+      "legenda": "Só o ícone obriga a decorar um símbolo — e some inteiro para quem usa leitor de tela.",
+      "html": "<div class=\"yb-seals\"><span class=\"yb-seal\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-cruelty-free\"/></svg></span><span class=\"yb-seal\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-vegan\"/></svg></span></div>"
+    },
+    "anatomia": [
+      {
+        "alvo": ".yb-seals",
+        "nome": "Fileira",
+        "texto": "Agrupa os selos com <code>role=&quot;group&quot;</code> e um rótulo — quatro imagens soltas não formam garantia."
+      },
+      {
+        "alvo": ".yb-seal",
+        "nome": "Selo",
+        "texto": "Marca e texto, sempre juntos. O desenho sozinho não é reconhecido por quem chega."
+      },
+      {
+        "alvo": ".yb-seal__mark",
+        "nome": "Marca",
+        "texto": "O disco com o ícone. Decorativo: quem informa é o rótulo ao lado."
+      },
+      {
+        "alvo": ".yb-seal__label",
+        "nome": "Rótulo",
+        "texto": "A garantia escrita. Duas palavras, sem promessa que a loja não cumpre."
+      }
+    ]
+  },
+  "skeleton": {
+    "a11y": [
+      "A área que carrega declara <code>aria-busy=\"true\"</code>. O esqueleto é sinal visual; sem o atributo, quem usa leitor de tela ouve silêncio e conclui que a página acabou.",
+      "Os blocos são <code>aria-hidden=\"true\"</code>: retângulos cinzas não têm nada a dizer.",
+      "Sob <code>prefers-reduced-motion</code> o brilho para. Ele é a única animação da página que roda em loop indefinido."
+    ],
+    "faca": {
+      "legenda": "Região marcada como ocupada, blocos escondidos do leitor.",
+      "html": "<div aria-busy=\"true\" style=\"inline-size:220px\"><span class=\"yb-skeleton\" aria-hidden=\"true\" style=\"block-size:14px;display:block;margin-bottom:8px\"></span><span class=\"yb-skeleton\" aria-hidden=\"true\" style=\"block-size:14px;display:block;inline-size:60%\"></span></div>"
+    },
+    "naoFaca": {
+      "legenda": "Sem <code>aria-busy</code>, o carregamento é invisível para quem não vê a animação.",
+      "html": "<div style=\"inline-size:220px\"><span class=\"yb-skeleton\" style=\"block-size:14px;display:block;margin-bottom:8px\"></span><span class=\"yb-skeleton\" style=\"block-size:14px;display:block;inline-size:60%\"></span></div>"
+    },
+    "anatomia": {
+      "largura": "260px",
+      "partes": [
+        {
+          "alvo": ".yb-skeleton-card",
+          "nome": "Molde",
+          "texto": "Repete a forma do que vai chegar. Esqueleto que não se parece com o conteúdo só atrasa a leitura."
+        },
+        {
+          "alvo": ".yb-skeleton--media",
+          "nome": "Foto",
+          "texto": "A caixa da imagem, na proporção real — é o que evita o salto quando ela carrega."
+        },
+        {
+          "alvo": ".yb-skeleton--line",
+          "nome": "Linha",
+          "texto": "Uma linha de texto. A variante curta faz o fim do parágrafo parecer parágrafo."
+        }
+      ]
+    }
+  },
+  "switch": {
+    "a11y": [
+      "É <code>&lt;button role=\"switch\"&gt;</code> com <code>aria-checked</code>. Não é checkbox: switch aplica na hora, checkbox espera um “salvar”. O papel diz qual dos dois é.",
+      "O alvo real tem 56×44 via <code>::after</code>, maior que o desenho de 32×20 — o gesto no celular acerta a área, não o pixel.",
+      "O rótulo fica fora do controle, associado por <code>aria-label</code> ou <code>aria-labelledby</code>."
+    ],
+    "faca": {
+      "legenda": "Papel e estado no próprio controle.",
+      "html": "<button class=\"yb-switch\" type=\"button\" role=\"switch\" aria-checked=\"true\" aria-label=\"Route package protection\"><span class=\"yb-switch__knob\"></span></button>"
+    },
+    "naoFaca": {
+      "legenda": "Div com classe “on”: sem papel, sem estado, sem teclado.",
+      "html": "<span class=\"yb-switch\" aria-hidden=\"true\"><span class=\"yb-switch__knob\"></span></span>"
+    },
+    "anatomia": [
+      {
+        "alvo": ".yb-switch",
+        "nome": "Chave",
+        "texto": "<code>role=&quot;switch&quot;</code> com <code>aria-checked</code>. Vale para ligar algo agora; para escolher no formulário, é checkbox."
+      },
+      {
+        "alvo": ".yb-switch__knob",
+        "nome": "Botão",
+        "texto": "Desliza de um lado ao outro. A posição é o estado — e a cor do trilho é a segunda pista."
+      }
+    ]
+  },
+  "avatar": {
+    "a11y": [
+      "É <code>aria-hidden</code> sempre. Uma letra solta lida em voz alta não diz nada: quem anuncia a conta é o rótulo de quem o embrulha, com o nome inteiro.",
+      "A inicial é resumo, não informação. Quem chega por leitor de tela recebe o nome completo pelo <code>aria-label</code> do gatilho — nunca a letra.",
+      "Inicial em <code>--yb-text-primary</code> sobre <code>--yb-bg-muted</code>: <b>15,28:1</b>. Passa em AAA, e é o que sobra quando a pessoa aumenta o texto e o círculo não cresce junto."
+    ],
+    "faca": {
+      "legenda": "Dentro de um gatilho que tem nome. O avatar decora; o rótulo informa.",
+      "html": "<button class=\"yb-iconbtn\" type=\"button\" aria-label=\"Account: Marina Duarte\"><span class=\"yb-avatar\" aria-hidden=\"true\">M</span></button>"
+    },
+    "naoFaca": {
+      "legenda": "Sozinho e anunciável: o leitor de tela lê “M”, e “M” não é uma conta.",
+      "html": "<span class=\"yb-avatar\">M</span>"
+    },
+    "anatomia": {
+      "largura": "120px",
+      "partes": [
+        {
+          "alvo": ".yb-avatar",
+          "nome": "Disco",
+          "texto": "Círculo de tamanho fixo. A cor de fundo é a mesma para todos — não codifica pessoa nem papel."
+        }
+      ]
+    }
+  },
+  "input": {
+    "a11y": [
+      "Todo campo tem <code>&lt;label for&gt;</code>. Placeholder não é rótulo: some quando a pessoa começa a digitar, exatamente quando ela mais precisa lembrar o que o campo pede.",
+      "O erro é anunciado por texto, não só por cor: <code>aria-invalid=\"true\"</code> no controle e <code>aria-describedby</code> apontando para a mensagem.",
+      "O <code>type</code> e o <code>autocomplete</code> certos abrem o teclado certo no celular e deixam o navegador preencher."
+    ],
+    "faca": {
+      "legenda": "Rótulo persistente, erro escrito e ligado ao campo.",
+      "html": "<div class=\"yb-field\" style=\"inline-size:280px\"><div class=\"yb-field__box\"><input class=\"yb-input\" id=\"fx-ok\" type=\"email\" placeholder=\" \" aria-invalid=\"true\" aria-describedby=\"fx-err\"><label class=\"yb-field__label\" for=\"fx-ok\">Email</label></div><p class=\"yb-field__error\" id=\"fx-err\">Enter an address with an @.</p></div>"
+    },
+    "naoFaca": {
+      "legenda": "Placeholder como rótulo: o nome do campo desaparece assim que a pessoa digita, e a borda vermelha sozinha não diz o que está errado.",
+      "html": "<div class=\"yb-field\" style=\"inline-size:280px\"><div class=\"yb-field__box\"><input class=\"yb-input\" type=\"email\" placeholder=\"Email\" aria-invalid=\"true\"></div></div>"
+    },
+    "anatomia": {
+      "largura": "340px",
+      "partes": [
+        {
+          "alvo": ".yb-field",
+          "nome": "Campo",
+          "texto": "A caixa em volta: controle, rótulo, dica e erro. É ela que empilha os três."
+        },
+        {
+          "alvo": ".yb-field__box",
+          "nome": "Moldura",
+          "texto": "Onde o rótulo flutua. O entalhe na borda é desenhado com o próprio fundo."
+        },
+        {
+          "alvo": ".yb-input",
+          "nome": "Controle",
+          "texto": "Leva <code>placeholder</code> com um espaço — é o que dá à <code>:placeholder-shown</code> algo em que casar."
+        },
+        {
+          "alvo": ".yb-field__label",
+          "nome": "Rótulo",
+          "texto": "Vem <b>depois</b> do input no HTML, senão o combinador <code>~</code> não alcança. Continua <code>&lt;label for&gt;</code>."
+        },
+        {
+          "alvo": ".yb-field__hint",
+          "nome": "Dica",
+          "texto": "Opcional. Explica o porquê do campo, não repete o rótulo."
+        }
+      ]
+    }
+  },
+  "select": {
+    "a11y": [
+      "Nativo: teclado, leitor de tela e a roleta do celular vêm do sistema operacional. Não troque por lista desenhada.",
+      "Sempre com nome, como o Input. A opção selecionada não é o rótulo do campo.",
+      "Erro em <code>aria-invalid=\"true\"</code>, com a mesma borda e o mesmo ícone do Input."
+    ],
+    "faca": {
+      "legenda": "Nome no campo, opções que dizem o que ordenam.",
+      "html": "<select class=\"yb-select\" aria-label=\"Sort by\"><option>Price, low to high</option></select>"
+    },
+    "naoFaca": {
+      "legenda": "A primeira opção fazendo papel de rótulo: depois de escolher, o campo perde o nome.",
+      "html": "<select class=\"yb-select\"><option>Sort by</option><option>Price</option></select>"
+    },
+    "anatomia": {
+      "largura": "340px",
+      "partes": [
+        {
+          "alvo": ".yb-field",
+          "nome": "Campo",
+          "texto": "A mesma caixa do Input: rótulo, dica e erro em volta do controle."
+        },
+        {
+          "alvo": ".yb-select",
+          "nome": "Controle",
+          "texto": "<code>&lt;select&gt;</code> nativo. A lista que abre é do sistema operacional, e é isso que se quer no celular."
+        },
+        {
+          "alvo": ".yb-field__label",
+          "nome": "Rótulo",
+          "texto": "Não flutua como no Input: o select nunca está vazio, então o rótulo fica sempre em cima."
+        }
+      ]
+    }
+  },
+  "textarea": {
+    "a11y": [
+      "Sempre com nome, como o Input.",
+      "Se houver limite de caracteres, diga o limite antes e conte enquanto a pessoa digita — descobrir o corte depois de escrever é o erro mais caro.",
+      "Erro em <code>aria-invalid=\"true\"</code>, com a mesma borda e o mesmo ícone do Input."
+    ],
+    "faca": {
+      "legenda": "Campo com nome e altura que cabe a resposta esperada.",
+      "html": "<textarea class=\"yb-textarea\" aria-label=\"Order note\"></textarea>"
+    },
+    "naoFaca": {
+      "legenda": "Input de uma linha para texto livre: a pessoa escreve às cegas, vendo só o fim da frase.",
+      "html": "<input class=\"yb-input\" aria-label=\"Your review\">"
+    },
+    "anatomia": {
+      "largura": "340px",
+      "partes": [
+        {
+          "alvo": ".yb-field",
+          "nome": "Campo",
+          "texto": "A mesma caixa do Input, com o controle de várias linhas dentro."
+        },
+        {
+          "alvo": ".yb-textarea",
+          "nome": "Controle",
+          "texto": "Redimensiona só na vertical: esticar na horizontal quebraria a coluna de leitura."
+        },
+        {
+          "alvo": ".yb-field__label",
+          "nome": "Rótulo",
+          "texto": "Flutua como no Input, pela mesma mecânica de <code>placeholder</code> com um espaço."
+        }
+      ]
+    }
+  },
+  "checkbox": {
+    "a11y": [
+      "O <code>&lt;label&gt;</code> envolve o input: o alvo de clique é a frase inteira, não o quadrado de 20px.",
+      "O input nativo continua lá, apenas repintado. Espaço marca, Tab alcança, o leitor de tela anuncia “marcado” — nada disso é reimplementado.",
+      "Declara <code>:focus-visible</code> no controle, e o anel aparece em volta do quadrado, não do parágrafo inteiro."
+    ],
+    "faca": {
+      "legenda": "Label envolvendo o input: clicar na palavra marca.",
+      "html": "<label class=\"yb-check\"><input type=\"checkbox\" checked><span>Save my details for next time</span></label>"
+    },
+    "naoFaca": {
+      "legenda": "Input e texto soltos: só o quadrado é clicável, e nada liga um ao outro para o leitor de tela.",
+      "html": "<span style=\"display:inline-flex;gap:8px;align-items:center\"><input type=\"checkbox\"><span>Save my details for next time</span></span>"
+    },
+    "anatomia": {
+      "largura": "340px",
+      "partes": [
+        {
+          "alvo": ".yb-check",
+          "nome": "Alvo",
+          "texto": "O <code>&lt;label&gt;</code> envolve tudo: clicar na frase marca, e o alvo tem 36px de altura."
+        },
+        {
+          "alvo": "input",
+          "nome": "Caixa",
+          "texto": "<code>&lt;input&gt;</code> nativo repintado. Desmarcada, a borda <b>é</b> o controle, e por isso usa o token de 3:1."
+        },
+        {
+          "alvo": ".yb-check span",
+          "nome": "Texto",
+          "texto": "A frase. Diz o que acontece ao marcar, no afirmativo."
+        }
+      ]
+    }
+  },
+  "radio": {
+    "a11y": [
+      "O <code>&lt;label&gt;</code> envolve o input: o alvo de clique é a frase inteira, não o círculo de 20px.",
+      "O <code>name</code> repetido é o que faz o grupo: o teclado o trata como UMA parada de Tab e as setas percorrem as opções, sem script.",
+      "O grupo precisa do próprio nome: <code>role=\"radiogroup\"</code> com <code>aria-label</code>, ou <code>&lt;fieldset&gt;</code> com <code>&lt;legend&gt;</code>. Sem ele o leitor anuncia a opção sem nunca dizer de que escolha se trata.",
+      "Nasce com uma marcada: rádio não desmarca, e um grupo vazio cobra uma escolha que ninguém pode desfazer."
+    ],
+    "faca": {
+      "legenda": "Grupo nomeado, mesmo <code>name</code> nos dois e um padrão já marcado.",
+      "html": "<div role=\"radiogroup\" aria-label=\"Shipping\"><label class=\"yb-radio\"><input type=\"radio\" name=\"faca-ship\" checked><span>Standard — free</span></label><label class=\"yb-radio\"><input type=\"radio\" name=\"faca-ship\"><span>Express — $12.90</span></label></div>"
+    },
+    "naoFaca": {
+      "legenda": "Sem <code>name</code> em comum: viram dois controles independentes — dá para marcar os dois, as setas não andam, e não há grupo para o leitor de tela anunciar.",
+      "html": "<label class=\"yb-radio\"><input type=\"radio\" name=\"a\"><span>Standard — free</span></label><label class=\"yb-radio\"><input type=\"radio\" name=\"b\"><span>Express — $12.90</span></label>"
+    },
+    "anatomia": {
+      "largura": "340px",
+      "partes": [
+        {
+          "alvo": "[role=radiogroup]",
+          "nome": "Grupo",
+          "texto": "O <code>name</code> em comum é o que faz a exclusão mútua; o <code>role</code> é o que a anuncia."
+        },
+        {
+          "alvo": ".yb-radio",
+          "nome": "Opção",
+          "texto": "O rótulo inteiro é o alvo. Nasce uma marcada — rádio não volta ao vazio."
+        },
+        {
+          "alvo": ".yb-radio input",
+          "nome": "Círculo",
+          "texto": "Mesma caixa do checkbox, redonda. Redondo escolhe um; quadrado escolhe vários."
+        }
+      ]
+    }
+  },
+  "stars": {
+    "a11y": [
+      "Sozinha: <code>role=\"img\"</code> e <code>aria-label</code> com a nota (\"4 of 5 stars\"). O desenho não tem texto para ser lido.",
+      "Dentro do Rating: <code>aria-hidden=\"true\"</code> — o rótulo mora no Rating, com nota e contagem juntas.",
+      "Cheia e vazia se distinguem pela forma (sólida e vazada), não pela cor; as duas medem 3,45:1 sobre branco."
+    ],
+    "faca": {
+      "legenda": "A nota como número, e o rótulo dizendo a mesma nota.",
+      "html": "<span class=\"yb-stars\" style=\"--yb-stars:4.5\" role=\"img\" aria-label=\"4.5 of 5 stars\"></span>"
+    },
+    "naoFaca": {
+      "legenda": "Estrelas digitadas: o componente não sabe a nota, e o leitor de tela lê o desenho.",
+      "html": "<span>★★★★☆</span>"
+    },
+    "anatomia": [
+      {
+        "alvo": ".yb-stars",
+        "nome": "Estrelas",
+        "texto": "A nota vem da variável <code>--yb-stars</code> no <code>style</code>. Preenche em fração, não em degraus."
+      }
+    ]
+  },
+  "chip": {
+    "anatomia": [
+      {
+        "alvo": ".yb-chip",
+        "nome": "Chip",
+        "texto": "Filtro que liga e desliga. É <code>&lt;button&gt;</code> com <code>aria-pressed</code> — o estado é anunciado, não só pintado."
+      }
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+<h2>Free shipping progress</h2>
+    <p class="when">Barra que mostra quanto falta para o frete grátis, no carrinho e no topo. Move ticket médio como nenhum outro, e é o mais feito errado: barra sem número não diz nada.</p>
+    <div class="split">
+      <div class="stage stage--pad">
+        <div class="yb-freeship">
+          <span class="yb-freeship__text">Add <b>$12.10</b> more for free shipping</span>
+          <div class="yb-progress" role="progressbar" aria-valuenow="76" aria-valuemin="0" aria-valuemax="100" aria-label="Progress to free shipping">
+            <span class="yb-progress__fill" style="inline-size:76%"></span>
+          </div>
+        </div>
+      </div>
+      <div class="stage stage--pad">
+        <div class="yb-freeship yb-freeship--done">
+          <span class="yb-freeship__text">✓ You qualify for free shipping</span>
+          <div class="yb-progress" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Free shipping unlocked">
+            <span class="yb-progress__fill" style="inline-size:100%"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>O número antes da barra</b>
+      <p>"Add $12.10 more" diz exatamente quanto falta. Uma barra sozinha obriga a
+      pessoa a estimar, e estimativa não gera compra. A barra tem
+      <code>role="progressbar"</code> com valor real — para quem usa leitor de tela,
+      ela é a única fonte da informação.</p>
+    </div>

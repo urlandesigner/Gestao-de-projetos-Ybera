@@ -31,16 +31,28 @@ const talvez = (p) => {
 };
 
 /* --------------------------------------------------------------- fontes */
-// A doc de componente deixou de ser uma pagina so: cada peca tem o proprio
-// fragmento em components/pecas/, e a coluna "Doc" desta matriz pergunta se a
-// familia aparece em ALGUM deles. Apontar para o index.html novo daria "nao"
-// para os 34 — ele agora e um indice de nomes, sem marcacao de componente.
-const FOLHAS = [
-  { camada: 'Componente', css: 'components/ybera-components.css', doc: 'components/pecas' },
-  { camada: 'Padrão', css: 'patterns/ybera-patterns.css', doc: 'patterns/index.html' },
-];
+/* A ESCADA, na ordem dela. A coluna "Camada" desta matriz e o degrau atomico:
+   e a mesma lista de tools/fichas.mjs, e as duas tem de contar a mesma
+   historia sobre o mesmo arquivo.
 
-const js = ler('components/ybera-components.js');
+   `base/` fica de fora de proposito: reset, corte de movimento e utilitario de
+   acessibilidade nao sao peca, e uma linha "Maturidade: alfa" para o `:focus`
+   global seria ruido com cara de pendencia.
+
+   A doc de cada degrau e uma PASTA de fragmentos, e nao um index.html: a
+   coluna "Doc" pergunta se a familia aparece em ALGUM deles. Apontar para o
+   index.html daria "nao" para todas — ele agora e um indice de nomes. */
+const FOLHAS = [
+  { camada: 'Átomo', css: 'atoms/ybera-atoms.css', doc: 'atoms/pecas' },
+  { camada: 'Molécula', css: 'molecules/ybera-molecules.css', doc: 'molecules/pecas' },
+  { camada: 'Organismo', css: 'organisms/ybera-organisms.css', doc: 'organisms/pecas' },
+  { camada: 'Template', css: 'templates/ybera-templates.css', doc: 'templates/pecas' },
+];
+// a ordem da escada, e nao a alfabetica: "Átomo, Molécula, Organismo, Template"
+// so por acaso quase coincide, e o acaso acaba na primeira peca nova.
+const DEGRAU = new Map(FOLHAS.map((f, i) => [f.camada, i]));
+
+const js = ler('behavior/ybera-behavior.js');
 // so codigo: `js.includes('yb-iconbtn')` casava um COMENTARIO e a matriz dizia
 // "Comportamento: sim" para uma peca que o JS nunca toca.
 const jsCodigo = js.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
@@ -49,7 +61,7 @@ const GANCHO_POR_FAMILIA = { 'yb-dialog': 'data-yb-open' };
 
 // as telas-prova: home e PDP montadas só com o sistema. São a evidência de que
 // o componente sobrevive a conteúdo real, e não só ao demo que o autor escolheu.
-const provas = ['_captura/nova-loja/index.html', '_captura/nova-loja/pdp.html']
+const provas = ['pages/index.html', 'pages/pdp.html']
   .filter((p) => existsSync(join(raiz, p)));
 const provaHtml = provas.map(talvez).join('\n');
 
@@ -80,13 +92,24 @@ for (const { camada, css: caminho, doc } of FOLHAS) {
   const marcacao = marcacaoDe(html);
   const blocos = [...folha.matchAll(/\/\*\s*=+\s*\n\s{3}([^\n]+)\n([\s\S]*?)=+\s*\*\//g)];
 
+  /* Um bloco chamado `NOME · complemento` e MAIS DO MESMO: a folha o separa
+     para poder explica-lo, e nao porque nasceu uma peca. Sem esta juncao o
+     `BUTTON · tamanho, painel escuro e carregando` virava a 50a linha da
+     matriz, com classe base `.yb-btn` — o Button aparecendo duas vezes e a
+     contagem do sistema subindo sozinha. */
+    const pedacos = [];
   for (let i = 0; i < blocos.length; i++) {
-    const nome = blocos[i][1].trim().replace(/\s*—.*$/, '');
+    const cheio = blocos[i][1].trim().replace(/\s*—.*$/, '');
+    const nome = cheio.split(' · ')[0].trim();
     if (NAO_E_COMPONENTE.test(nome)) continue;
-
     const inicio = blocos[i].index + blocos[i][0].length;
     const fim = i + 1 < blocos.length ? blocos[i + 1].index : folha.length;
-    const corpo = folha.slice(inicio, fim);
+    const antes = pedacos.find((x) => x.nome === nome);
+    if (antes) antes.corpo += '\n' + folha.slice(inicio, fim);
+    else pedacos.push({ nome, corpo: folha.slice(inicio, fim) });
+  }
+
+  for (const { nome, corpo } of pedacos) {
     const familias = familiaDe(corpo);
     if (!familias.length) continue;
 
@@ -158,7 +181,9 @@ for (const { camada, css: caminho, doc } of FOLHAS) {
   }
 }
 
-linhas.sort((a, b) => (a.camada === b.camada ? a.nome.localeCompare(b.nome) : a.camada < b.camada ? -1 : 1));
+linhas.sort((a, b) => (a.camada === b.camada
+  ? a.nome.localeCompare(b.nome)
+  : DEGRAU.get(a.camada) - DEGRAU.get(b.camada)));
 
 /* ------------------------------------------------------------- maturidade
    Três degraus, e cada um é uma AFIRMAÇÃO VERIFICÁVEL, não uma opinião:

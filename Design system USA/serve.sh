@@ -56,12 +56,19 @@ class Servidor(http.server.SimpleHTTPRequestHandler):
 
 
 port = int(sys.argv[1])
-socketserver.TCPServer.allow_reuse_address = True
-with socketserver.TCPServer(("", port), Servidor) as srv:
+# Com threads. O TCPServer puro atende uma conexao por vez: uma aba que deixa a
+# conexao aberta (keep-alive, preconnect) segura todas as outras, e o servidor
+# parece no ar (a porta escuta) mas nao responde nada.
+socketserver.ThreadingTCPServer.allow_reuse_address = True
+socketserver.ThreadingTCPServer.daemon_threads = True
+with socketserver.ThreadingTCPServer(("", port), Servidor) as srv:
     print(f"Ybera Design System  ->  http://localhost:{port}/")
-    print(f"  tokens      http://localhost:{port}/docs/")
-    print(f"  componentes http://localhost:{port}/components/")
-    print(f"  padrões     http://localhost:{port}/patterns/")
+    print(f"  tokens      http://localhost:{port}/tokens/")
+    print(f"  átomos      http://localhost:{port}/atoms/")
+    print(f"  moléculas   http://localhost:{port}/molecules/")
+    print(f"  organismos  http://localhost:{port}/organisms/")
+    print(f"  templates   http://localhost:{port}/templates/")
+    print(f"  páginas     http://localhost:{port}/pages/")
     print(f"  retrato     POST http://localhost:{port}/__retrato  ->  {DESTINO}")
     print("Ctrl+C para parar.")
     srv.serve_forever()

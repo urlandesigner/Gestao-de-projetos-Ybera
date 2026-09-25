@@ -67,7 +67,7 @@ conteúdo — é construída só com `yb-`. Nenhum template existente é tocado.
 
 Esta é a fase que produz confiança sem produzir exposição: o sistema aparece
 em produção, é medido, e nada que já funcionava foi mexido. As telas-prova em
-`_captura/nova-loja/` são o ensaio dela — home e PDP inteiras montadas com os
+`pages/` são o ensaio dela — home e PDP inteiras montadas com os
 componentes, zero CSS de componente novo.
 
 ### 4 · PDP · risco médio

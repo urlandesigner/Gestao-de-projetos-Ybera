@@ -9,7 +9,7 @@
 #
 # A lista é literal e não derivada dos links da capa de validação de
 # propósito. A capa lista o que se CLICA — cinco telas e o catálogo. Esta
-# lista diz o que se ALCANÇA, e são coisas diferentes: `components/*.html` são
+# lista diz o que se ALCANÇA, e são coisas diferentes: `<degrau>/*.html` são
 # 39 páginas, e nenhuma delas aparece na capa, porque quem chega ao catálogo
 # navega por lá dentro.
 #
@@ -18,19 +18,22 @@
 # escrito aqui no momento em que se publica.
 #
 # O que NÃO está listado continua exigindo a senha do time — inclusive as
-# outras telas-prova (home v1, v2, logada, PDP v1, FAQ, 404) e toda a
+# outras telas-prova (home v1, v2, logada, PDP, FAQ, 404) e toda a
 # documentação de fundação, governança e decisões.
 
 validacao/index.html
 
 # As telas em revisão nesta rodada.
-_captura/nova-loja/index-v3.html
-_captura/nova-loja/pdp-v2.html
-_captura/nova-loja/pdp-variante.html
-_captura/nova-loja/pdp-oferta.html
-_captura/nova-loja/pdp-esgotado.html
+pages/index-v3.html
+pages/pdp-influencer.html
+pages/pdp-variante.html
+pages/pdp-oferta.html
+pages/pdp-esgotado.html
 
-# O catálogo de componentes inteiro: o índice e as 39 fichas. A pasta `pecas/`
-# não entra porque não são páginas — são fragmentos sem <head>, carregados
-# dentro das fichas, e o marcador os ignora sozinho.
-components/*.html
+# A escada inteira: as quatro galerias e as 49 fichas. A pasta `pecas/` de cada
+# degrau não entra porque não são páginas — são fragmentos sem <head>,
+# carregados dentro das fichas, e o marcador os ignora sozinho.
+atoms/*.html
+molecules/*.html
+organisms/*.html
+templates/*.html

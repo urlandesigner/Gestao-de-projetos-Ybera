@@ -1,0 +1,367 @@
+/* ===========================================================================
+   A COLUNA DE NAVEGAÇÃO — cromo da documentação, não peça do sistema.
+
+   Uma só, em toda página de doc. Antes eram duas navegações: uma barra no topo
+   com cinco áreas e uma coluna lateral que só existia nas fichas — quem estava
+   na página de tokens não tinha coluna nenhuma, e quem estava numa ficha tinha
+   duas listas diferentes, acima e ao lado.
+
+   ELA NÃO PODE PARECER UM COMPONENTE. A doc mostra cabeçalhos, gavetas e menus
+   de verdade dentro da página — a ficha do organismo `Header` tem um
+   `.yb-header` completo ao lado desta coluna. Por isso ela usa o fundo e a
+   borda do cromo, tipo pequeno e nenhuma cor de ação: continente tem cara de
+   sumário, peça tem cara de produto.
+
+   `position:fixed` e `padding` no corpo, e não uma grade: as páginas escritas
+   à mão (a capa, a de tokens, o preview, o decision-log) têm layout próprio, e
+   envolvê-las numa grade exigiria reescrever o corpo de cada uma. Assim a
+   coluna se instala sem tocar no que já existe.
+   =========================================================================== */
+:root{
+  --ds-nav-w: 17.5rem;
+  /* A GEOMETRIA DA COLUNA, declarada uma vez. Os três primeiros são degraus da
+     escala de espaço do sistema; os dois últimos são as âncoras que eles
+     produzem, e por isso são conta e não número escolhido a olho.
+
+     A primeira versão escreveu o recuo do sub-item como `space-7` — degrau que
+     NÃO EXISTE na escala (ela pula de 6 para 8). O `calc` inválido foi
+     descartado em silêncio, o atalho de padding assumiu, e os sub-itens
+     nasceram 11px à esquerda de onde deviam. */
+  --ds-nav-gutter: var(--yb-space-4);            /* 16 — a margem da coluna   */
+  --ds-nav-chip:   var(--yb-space-8);            /* 32 — a caixa do ícone     */
+  --ds-nav-gap:    var(--yb-space-3);            /* 12 — do chip ao rótulo    */
+  /* onde o rótulo do grupo começa, e onde o sub-item tem de começar também */
+  --ds-nav-rotulo: calc(var(--ds-nav-gutter) + var(--ds-nav-chip) + var(--ds-nav-gap));
+  /* o filete cai no centro do chip */
+  --ds-nav-filete: calc(var(--ds-nav-gutter) + var(--ds-nav-chip) / 2);
+  --ds-top-h: 3.5rem;
+  --ds-nesta-w: 13rem;
+  /* 1280, e não 940. A medida de 940 nasceu do `.main` das fichas, quando a
+     doc era duas colunas e o conteúdo dividia a tela com a lista de peças. Com
+     a coluna fixa e o índice à direita, ela passou a deixar tela vazia em
+     monitor grande enquanto a grade de 48 cartões rodava em duas colunas.
+
+     Alargar aqui NÃO estica linha de texto: toda prosa da doc já tem teto em
+     `ch` — 62 na lede de galeria, 64 no "quando usar", 70 no lede de bloco e
+     74 na nota. Quem cresce é o que tem de crescer: as grades de cartão, os
+     palcos de demonstração e os trechos de marcação. */
+  --doc-medida: 1280px;
+  --doc-respiro: var(--yb-space-10);
+  --doc-respiro-largo: var(--yb-space-6);
+}
+@media (max-width:900px){
+  :root{
+    --doc-respiro: var(--yb-page-gutter);
+    --doc-respiro-largo: var(--yb-page-gutter);
+  }
+}
+
+body{
+  padding-inline-start:var(--ds-nav-w);
+  padding-block-start:var(--ds-top-h);
+}
+
+/* ------------------------------------------------------------------ o topo
+   A marca e a busca. A marca sai da coluna porque é do sistema inteiro, não da
+   navegação; a busca sobe junto porque procura em tudo, e não só no que o
+   grupo aberto mostra.
+
+   Ele é fixo e a coluna começa abaixo dele: assim a marca não some quando a
+   árvore rola, que é o único conteúdo que rola sozinho aqui. */
+.ds-top{
+  position:fixed; inset-block-start:0; inset-inline:0; z-index:20;
+  block-size:var(--ds-top-h);
+  display:flex; align-items:center; gap:var(--yb-space-5);
+  padding-inline:var(--yb-space-5);
+  background:var(--yb-surface);
+  border-block-end:1px solid var(--yb-border-subtle);
+  font-family:var(--yb-font-family-base);
+  font-size:var(--yb-type-body-sm-size);
+}
+.ds-top__marca{
+  inline-size:calc(var(--ds-nav-w) - var(--yb-space-5) * 2); flex:none;
+  color:var(--yb-text-primary); text-decoration:none; line-height:1.2;
+  letter-spacing:var(--yb-tracking-tighter);
+}
+.ds-top__marca b{display:block; font-weight:var(--yb-font-weight-extrabold);
+  font-size:var(--yb-type-body-size)}
+
+/* ------------------------------------------------------------------ USA
+   Gradiente horizontal nas cores oficiais da bandeira: Old Glory Red e Old
+   Glory Blue. São valores crus de propósito — não entram nos tokens porque não
+   são cor do sistema: o sistema tem grafite de identidade e magenta de ação
+   (DDR-001), e uma bandeira não é nenhum dos dois. Aqui é cromo da doc, e é o
+   único lugar em que essas duas cores podem aparecer.
+
+   O BRANCO DA BANDEIRA FICA DE FORA. Numa faixa de fundo claro, a listra
+   branca no meio do gradiente apaga as letras centrais — "USA" viraria "U A".
+   O que resta é a leitura que sobrevive: vermelho à esquerda, azul à direita.
+
+   Contraste medido contra o fundo da barra (#FFFFFF): o vermelho dá 6,70:1 e o
+   azul 12,92:1 — os dois passam em AA para texto normal, e nenhum ponto do
+   gradiente fica mais claro que a ponta mais clara, que é o vermelho.
+
+   `@supports` porque `color:transparent` sem o recorte deixa a palavra
+   invisível: onde o recorte não existe, ela fica no grafite do resto da marca,
+   que é o degrau certo para descer. */
+.ds-top__usa{ color:var(--yb-text-primary); }
+@supports (background-clip:text) or (-webkit-background-clip:text){
+  .ds-top__usa{
+    background-image:linear-gradient(90deg, #B31942 0%, #0A3161 100%);
+    -webkit-background-clip:text; background-clip:text;
+    color:transparent;
+  }
+}
+/* No modo de alto contraste do Windows a cor do autor é descartada: sem isto a
+   palavra ficaria transparente e sumiria de vez. */
+@media (forced-colors:active){
+  .ds-top__usa{ background-image:none; color:CanvasText; }
+}
+.ds-top__busca{margin-inline-start:auto; position:relative}
+.ds-top__busca[hidden]{display:none}
+.ds-top__busca[hidden] ~ .ds-top__versao{margin-inline-start:auto}
+.ds-top__busca input{
+  inline-size:18rem; max-inline-size:40vw; min-block-size:var(--yb-target-min);
+  padding:0 var(--yb-space-3);
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-control);
+  background:var(--yb-bg-subtle); color:var(--yb-text-primary);
+  font-family:inherit; font-size:var(--yb-type-body-sm-size);
+}
+.ds-top__busca input:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+/* A contagem flutua sob o campo: ocupar espaço na barra faria a marca saltar a
+   cada tecla digitada. */
+.ds-top .nav-conta{
+  position:absolute; inset-block-start:100%; inset-inline-end:0;
+  margin:var(--yb-space-1) 0 0; font-size:var(--yb-type-caption-size);
+  color:var(--yb-text-muted);
+}
+.ds-top .nav-conta:empty{display:none}
+/* A versão fecha a barra à direita, colada na busca. O `auto` fica na busca —
+   com ele nos dois, o espaço livre era DIVIDIDO entre as duas e o campo
+   aparecia boiando no meio da barra. Quando a busca está escondida (a página
+   não carregou o script, ou ele ainda não rodou), o `auto` passa para cá pela
+   regra abaixo, senão a versão cola na marca. */
+.ds-top__versao{
+  margin:0; flex:none; color:var(--yb-text-muted);
+  font-size:var(--yb-type-caption-size); font-variant-numeric:tabular-nums;
+}
+
+.ds-nav{
+  position:fixed; inset-block:var(--ds-top-h) 0; inset-inline-start:0; z-index:10;
+  inline-size:var(--ds-nav-w); overflow-y:auto; overscroll-behavior:contain;
+  padding:var(--yb-space-4) 0 var(--yb-space-10);
+  background:var(--yb-bg-subtle);
+  border-inline-end:1px solid var(--yb-border-subtle);
+  font-family:var(--yb-font-family-base);
+  font-size:var(--yb-type-body-sm-size);
+  line-height:var(--yb-type-body-line);
+}
+
+.ds-nav ul{list-style:none; margin:0; padding:0}
+
+/* ----------------------------------------------------------- os grupos
+   `<details>` nativo: abrir com Enter, o anúncio de expandido/recolhido e o
+   Ctrl+F achando texto dentro de grupo fechado vêm de graça. É a mesma escolha
+   que o acordeão do sistema faz, pelo mesmo motivo.
+
+   A GEOMETRIA da linha, que é o que segura a coluna inteira:
+
+     │← 16 →│← 32 →│← 12 →│ rótulo                         chevron │← 16 →│
+              chip    gap
+                │
+                └── o filete da sublista cai no CENTRO do chip (16 + 16 = 32),
+                    e os sub-itens começam onde o RÓTULO do grupo começa
+                    (16 + 32 + 12 = 60). São essas duas âncoras que fazem a
+                    lista parecer pendurada no grupo em vez de recuada dele.
+
+   Todo número aqui sai da escala de espaço do sistema: 16 é `space-4`, 32 é
+   `space-8`, 12 é `space-3`. Nenhum é escolhido a olho. */
+.ds-nav__grupo > summary{
+  display:flex; align-items:center; gap:var(--ds-nav-gap);
+  min-block-size:var(--yb-target-min);
+  padding:var(--yb-space-2) var(--ds-nav-gutter);
+  color:var(--yb-text-muted); font-size:var(--yb-type-body-size);
+  cursor:pointer; list-style:none;
+}
+.ds-nav__grupo > summary::-webkit-details-marker{display:none}
+
+/* O chevron fica à DIREITA, como em toda árvore de documentação: à esquerda
+   ele competiria com o chip do ícone por ser a primeira coisa da linha, e o
+   que a pessoa lê primeiro tem de ser o nome do grupo. */
+.ds-nav__grupo > summary::after{
+  content:""; margin-inline-start:auto; flex:none;
+  inline-size:.4rem; block-size:.4rem;
+  border-inline-end:1.5px solid currentColor; border-block-end:1.5px solid currentColor;
+  transform:translateY(-1px) rotate(45deg);
+  transition:transform var(--yb-transition-control);
+}
+.ds-nav__grupo[open] > summary::after{transform:translateY(2px) rotate(-135deg)}
+
+/* O chip do ícone: caixa de 32 com fundo próprio, e não o ícone solto. Solto
+   ele flutua e a linha perde a coluna da esquerda — é o chip que constrói o
+   eixo que o filete da sublista continua. */
+.ds-nav__icone{
+  inline-size:var(--ds-nav-chip); block-size:var(--ds-nav-chip); flex:none;
+  padding:var(--yb-space-2);
+  border-radius:var(--yb-radius-sm);
+  /* Preenchimento, e não contorno: sobre o cinza da coluna, um chip branco com
+     borda lê como caixa de entrada — algo em que se clica e se digita. O que
+     ele precisa ser é uma marca d'água que segura a coluna da esquerda. */
+  background:var(--yb-bg-muted); color:var(--yb-text-muted);
+}
+.ds-nav__grupo > summary:hover{color:var(--yb-text-primary)}
+.ds-nav__grupo > summary:hover .ds-nav__icone{color:var(--yb-text-primary)}
+.ds-nav__grupo > summary:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:calc(var(--yb-focus-offset) * -1);
+}
+/* Grupo aberto é o contexto em que a pessoa está: ele escurece e engrossa,
+   e o chip acompanha. É a única diferença de peso na coluna. */
+.ds-nav__grupo[open] > summary{
+  color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold);
+}
+.ds-nav__grupo[open] > summary .ds-nav__icone{
+  color:var(--yb-text-primary); background:var(--yb-surface-sunken);
+}
+
+.ds-nav__grupo > ul{
+  margin:var(--yb-space-1) 0 var(--yb-space-2) var(--ds-nav-filete);
+  padding-inline-start:0;
+  border-inline-start:1px solid var(--yb-border);
+}
+/* Cada item carrega o PRÓPRIO pedaço do filete, deitado por cima do filete
+   contínuo do <ul>: 2px de borda com `margin-inline-start:-1px` cobrem
+   exatamente o 1px de baixo. Transparente em repouso, ele não aparece; no
+   hover e na página aberta ele engrossa, e o trecho do filete ao lado do nome
+   é o que marca onde a pessoa está.
+
+   É isto no lugar do fundo pintado: fundo numa lista de 49 nomes vira bloco de
+   cor no meio da coluna, e o realce compete com o próprio nome. Um traço mais
+   grosso diz a mesma coisa sem pintar nada. */
+.ds-nav__grupo > ul > li > a{
+  /* o rótulo do grupo, menos o que a margem e o filete já andaram */
+  padding-inline-start:calc(var(--ds-nav-rotulo) - var(--ds-nav-filete) - 1px);
+  padding-inline-end:var(--ds-nav-gutter);
+  margin-inline-start:-1px;
+  border-inline-start:2px solid transparent;
+  border-radius:0;
+}
+
+/* Os itens soltos (Início, Preview, Decisões) são IRMÃOS dos grupos: mesma
+   linha, mesmo chip, mesmo rótulo no mesmo x. A única diferença é não terem
+   chevron, porque não há o que abrir — e essa é a diferença certa. */
+.ds-nav__solta{margin-block-end:var(--yb-space-1)}
+.ds-nav__solta > li > a{
+  display:flex; align-items:center; gap:var(--ds-nav-gap);
+  min-block-size:var(--yb-target-min);
+  padding:var(--yb-space-2) var(--ds-nav-gutter);
+  font-size:var(--yb-type-body-size); color:var(--yb-text-muted);
+}
+.ds-nav__solta > li > a:hover .ds-nav__icone{color:var(--yb-text-primary)}
+.ds-nav__solta > li > a[aria-current="page"] .ds-nav__icone{
+  color:var(--yb-text-primary); background:var(--yb-surface-sunken);
+}
+
+.ds-nav a{
+  display:block; padding:var(--yb-space-2) var(--ds-nav-gutter);
+  color:var(--yb-text-secondary); text-decoration:none;
+}
+/* Hover e página aberta são o mesmo gesto em dois graus: o nome escurece, e o
+   filete ao lado dele ganha cor. Nenhum fundo — ver a nota acima. */
+.ds-nav a:hover{color:var(--yb-text-primary)}
+.ds-nav__grupo > ul > li > a:hover{border-inline-start-color:var(--yb-border-strong)}
+.ds-nav a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:calc(var(--yb-focus-offset) * -1);
+}
+/* A página atual: grafite cheio e peso. É a única decisão que a coluna
+   registra — onde a pessoa está. */
+.ds-nav a[aria-current="page"]{
+  color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold);
+}
+.ds-nav__grupo > ul > li > a[aria-current="page"]{
+  border-inline-start-color:var(--yb-text-primary);
+}
+
+/* --------------------------------------------------------------- no toque
+   Abaixo de 900 a coluna deixa de ser coluna: vira o topo da página, com os
+   grupos fechados. Gaveta com sobreposição precisaria de JS e de um botão
+   flutuante, e a doc não tem tela suficiente para pagar isso — aqui o índice
+   ser a primeira coisa da página é resposta honesta. */
+@media (max-width:900px){
+  body{padding-inline-start:0}
+  .ds-top{position:sticky}
+  .ds-top__marca{inline-size:auto}
+  .ds-top__busca input{inline-size:10rem}
+}
+/* Abaixo de 560 não cabem marca, busca e versão na mesma linha, e a versão é
+   a que menos serve ali: é referência para quem vai citar o sistema, não para
+   quem está navegando com o polegar. */
+@media (max-width:560px){
+  .ds-top__versao{display:none}
+  .ds-top__busca input{inline-size:9rem}
+  .ds-nav{
+    position:static; inline-size:auto; inset:auto;
+    border-inline-end:0; border-block-end:1px solid var(--yb-border-subtle);
+    padding-block:var(--yb-space-4);
+    /* Teto, e não altura livre: com o grupo de Componentes aberto, as 48 peças
+       empurravam o conteúdo da página para 2.000px abaixo da dobra. Aqui o
+       índice é uma caixa que rola, e a página começa logo depois dela. */
+    max-block-size:50vh;
+  }
+}
+
+/* ======================================================= NESTA PÁGINA
+   O índice da própria ficha, à direita. Só aparece quando há largura que
+   sobre: abaixo de 1280 ele roubaria da coluna de leitura, e a ficha tem sete
+   blocos — rolar até o sétimo é barato, ler numa coluna de 500px não é.
+
+   `position:fixed` pela mesma razão da coluna da esquerda: as páginas não
+   compartilham um invólucro comum, e uma grade exigiria reescrever cada uma.
+   Ele não marca a seção visível porque isso pede observador de rolagem, e um
+   índice que não se move é melhor que um que pisca. */
+.ds-nesta{display:none}
+@media (min-width:1280px){
+  body:has(.ds-nesta){padding-inline-end:var(--ds-nesta-w)}
+  .ds-nesta{
+    display:block; position:fixed;
+    inset-block-start:calc(var(--ds-top-h) + var(--yb-space-8));
+    inset-inline-end:0; inline-size:var(--ds-nesta-w);
+    max-block-size:calc(100vh - var(--ds-top-h) - var(--yb-space-8));
+    overflow-y:auto; padding-inline:var(--yb-space-5);
+    font-family:var(--yb-font-family-base);
+    font-size:var(--yb-type-body-sm-size);
+  }
+}
+.ds-nesta__titulo{
+  margin:0 0 var(--yb-space-3); font-size:var(--yb-type-overline-size);
+  letter-spacing:var(--yb-tracking-wider); text-transform:uppercase;
+  color:var(--yb-text-muted); font-weight:var(--yb-font-weight-semibold);
+}
+.ds-nesta ol{list-style:none; margin:0; padding:0;
+  border-inline-start:1px solid var(--yb-border-subtle)}
+.ds-nesta a{
+  display:block; padding:var(--yb-space-1) var(--yb-space-4);
+  margin-inline-start:-1px; border-inline-start:2px solid transparent;
+  color:var(--yb-text-secondary); text-decoration:none;
+}
+.ds-nesta a:hover{color:var(--yb-text-primary); border-inline-start-color:var(--yb-border-strong)}
+.ds-nesta a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+
+/* Só para leitor de tela. `display:none` e `visibility:hidden` removeriam da
+   árvore de acessibilidade, que é o contrário do que se quer — e sem esta
+   regra o rótulo "Buscar no design system" aparecia escrito ao lado do campo.
+
+   Ela não é `.yb-sr-only`: a coluna e o topo vivem em páginas que não carregam
+   as folhas do sistema (a capa, o decision-log), e cromo que depende de
+   componente aparece sem estilo exatamente onde não há componente nenhum. */
+.ds-sr-only{
+  position:absolute; inline-size:1px; block-size:1px; overflow:hidden;
+  clip-path:inset(50%); white-space:nowrap;
+}

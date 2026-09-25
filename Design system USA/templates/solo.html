@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>solo</title>
+<!--
+  GERADO por tools/fichas.mjs. Não edite à mão.
+
+  A marcação não é copiada: esta página busca o fragmento da peça em
+  `pecas/<id>.html`. Uma fonte só — editar a peça lá muda aqui.
+-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../base/ybera-base.css">
+<link rel="stylesheet" href="../atoms/ybera-atoms.css">
+<link rel="stylesheet" href="../molecules/ybera-molecules.css">
+<link rel="stylesheet" href="../organisms/ybera-organisms.css">
+<link rel="stylesheet" href="ybera-templates.css">
+<link rel="stylesheet" href="../icons/ybera-icons.css">
+<link rel="stylesheet" href="../doc/doc.css">
+<style>
+  html,body{margin:0;padding:0}
+  body{font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+    line-height:var(--yb-type-body-line); color:var(--yb-text-primary); background:#fff}
+  #solo{padding:12px}
+  /* o palco da doc tem moldura própria; aqui ela só duplicaria a do iframe */
+  #solo .stage{border:0;border-radius:0}
+  #solo .demo{margin:0 0 12px}
+  #solo .row-label{margin:16px 0 8px}
+  /* DOIS DEMOS SEGUIDOS AQUI LEEM COMO UM.
+     No quadro o palco perde a moldura — a do iframe basta —, e sobra um
+     rotulo de 16px separando duas peças. Na nav isso ficou evidente: as duas
+     gavetas abrem com o mesmo logo e o mesmo X, e visitante e logado viraram
+     uma gaveta so, de dois cabeçalhos.
+     A regua vale do SEGUNDO demo em diante. No primeiro ela seria uma linha
+     no topo do quadro, separando a peça de nada. O segundo seletor pega o
+     rotulo que vem dentro de um invólucro — .so-gaveta, que existe justamente
+     para aparecer so aqui. */
+  #solo .stage + .row-label,
+  #solo .stage + * > .row-label:first-child{
+    margin-block-start:28px; padding-block-start:20px;
+    border-block-start:1px solid var(--yb-border-subtle);
+  }
+  #solo .note{display:none}
+</style>
+</head>
+<body class="ficha" data-nivel="templates" data-moldura="larga">
+<div id="solo"></div>
+<script>
+(function () {
+  'use strict';
+  var busca = new URLSearchParams(location.search);
+  var alvo = busca.get('c');
+  /* UM ESTADO SO. A peca declara estados em divs com data-estado, escondidos
+     na ficha — la eles apareceriam empilhados — e revelados aqui um de cada
+     vez. E o que permite por dois lado a lado num viewport de celular, que e
+     o unico lugar onde alguns estados existem. */
+  var estado = busca.get('s');
+  var caixa = document.getElementById('solo');
+
+  /* Mede a CAIXA, nao o documento. `documentElement.scrollHeight` conta
+     elemento `position:fixed` dimensionado pela viewport — a gaveta do header
+     tem inset-block:0, entao ela crescia junto com o iframe, que crescia junto
+     com ela: o quadro do header foi de 157px reais para 1969. */
+  function avisarAltura() {
+    var r = caixa.getBoundingClientRect();
+    var pad = parseFloat(getComputedStyle(caixa).paddingBottom) || 0;
+    var h = Math.max(120, Math.ceil(r.height + pad));
+    try { parent.postMessage({ yb: 'altura', c: alvo, h: h }, '*'); } catch (e) {}
+  }
+
+  if (!alvo || !/^[a-z0-9-]+$/.test(alvo)) { caixa.textContent = 'sem peça'; return; }
+
+  fetch('pecas/' + alvo + '.html').then(function (r) {
+    if (!r.ok) throw new Error(r.status);
+    return r.text();
+  }).then(function (html) {
+    var doc = new DOMParser().parseFromString('<div>' + html + '</div>', 'text/html');
+    var frag = doc.body.firstElementChild;
+
+    // fica o que é peça renderizada; sai o que é prosa e sai .duo, que é
+    // moldura de quadro — copiá-la aqui abriria um iframe dentro do iframe
+    Array.prototype.forEach.call(frag.children, function (n) {
+      if (n.matches('h2, p.when, .note, .duo')) return;
+      if (estado && n.matches('[data-estado]') && n.getAttribute('data-estado') !== estado) return;
+      if (estado && !n.matches('[data-estado="' + estado + '"]')) return;
+      var c = n.cloneNode(true);
+      c.removeAttribute('hidden');
+      caixa.appendChild(c);
+    });
+
+    var s = document.createElement('script');
+    s.src = '../behavior/ybera-behavior.js';
+    s.onload = avisarAltura;
+    document.body.appendChild(s);
+
+    /* A altura muda tres vezes: quando a marcacao entra, quando as folhas
+       aplicam, e quando fonte e imagem chegam. Observar o documentElement nao
+       pegava as duas ultimas — 11 dos 18 quadros ficavam na altura padrao. */
+    var caixaObs = new ResizeObserver(avisarAltura);
+    caixaObs.observe(caixa);
+    avisarAltura();
+    [60, 200, 600, 1500].forEach(function (t) { setTimeout(avisarAltura, t); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(avisarAltura);
+    if (document.readyState === 'complete') avisarAltura();
+    else addEventListener('load', avisarAltura);
+    Array.prototype.forEach.call(document.images, function (im) {
+      if (!im.complete) im.addEventListener('load', avisarAltura, { once: true });
+    });
+  }).catch(function () { caixa.textContent = 'peça "' + alvo + '" não existe'; });
+})();
+</script>
+</body>
+</html>

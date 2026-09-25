@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shape — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../base/ybera-base.css">
+<link rel="stylesheet" href="../doc/doc.css">
+<link rel="stylesheet" href="../doc/doc-nav.css">
+<link rel="stylesheet" href="doc-tokens.css">
+<script src="../doc/doc.js" defer></script>
+<style>
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:var(--yb-type-caption-size)}
+</style>
+</head>
+<body class="ficha" data-moldura="centrada">
+<!-- @moldura · gerada por tools/moldura.mjs · não edite -->
+<header class="ds-top">
+  <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
+  <div class="ds-top__busca" hidden>
+    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
+    <input id="ds-filtro" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filtro>
+    <p class="nav-conta" role="status" aria-live="polite"></p>
+  </div>
+  <p class="ds-top__versao">v0.12.1</p>
+</header>
+<nav class="ds-nav" aria-label="Navegação do design system">
+  <ul class="ds-nav__solta">
+    <li><a href="../index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 7 8 2.5 13.5 7"/><path d="M4 6.5V13h8V6.5"/><path d="M6.5 13V9.5h3V13"/></svg>Início</a></li>
+  </ul>
+  <details class="ds-nav__grupo" open>
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5.5 8 3l6 2.5L8 8 2 5.5Z"/><path d="M2 8.8 8 11.3l6-2.5"/><path d="M2 12l6 2.5 6-2.5"/></svg>Fundação</summary>
+    <ul>
+      <li><a href="../tokens/index.html">Visão geral</a></li>
+      <li><a href="../tokens/architecture.html">Architecture</a></li>
+      <li><a href="../tokens/color.html">Color</a></li>
+      <li><a href="../tokens/typography.html">Typography</a></li>
+      <li><a href="../tokens/space.html">Space</a></li>
+      <li><a href="../tokens/shape.html" aria-current="page">Shape</a></li>
+      <li><a href="../tokens/elevation.html">Elevation</a></li>
+      <li><a href="../tokens/state.html">State</a></li>
+      <li><a href="../tokens/usage.html">How to use</a></li>
+      <li><a href="../icons/index.html">Ícones</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Componentes</summary>
+    <ul>
+      <li><a href="../molecules/accordion.html">Accordion</a></li>
+      <li><a href="../molecules/alert.html">Alert</a></li>
+      <li><a href="../atoms/avatar.html">Avatar</a></li>
+      <li><a href="../atoms/badge.html">Badge</a></li>
+      <li><a href="../molecules/bannerhero.html">Banner hero</a></li>
+      <li><a href="../molecules/bannermedia.html">Banner media</a></li>
+      <li><a href="../molecules/crumb.html">Breadcrumb</a></li>
+      <li><a href="../atoms/button.html">Button</a></li>
+      <li><a href="../molecules/offercard.html">Card offer</a></li>
+      <li><a href="../molecules/card.html">Card product</a></li>
+      <li><a href="../atoms/seals.html">Certification seals</a></li>
+      <li><a href="../atoms/checkbox.html">Checkbox</a></li>
+      <li><a href="../atoms/chip.html">Chip</a></li>
+      <li><a href="../molecules/collection.html">Collection card</a></li>
+      <li><a href="../molecules/dropdown.html">Dropdown</a></li>
+      <li><a href="../molecules/empty.html">Empty state</a></li>
+      <li><a href="../atoms/iconbtn.html">Icon button</a></li>
+      <li><a href="../atoms/input.html">Input</a></li>
+      <li><a href="../atoms/link.html">Link</a></li>
+      <li><a href="../atoms/logo.html">Logo</a></li>
+      <li><a href="../atoms/notice.html">Notice</a></li>
+      <li><a href="../atoms/offerseal.html">Offer seal</a></li>
+      <li><a href="../molecules/pagination.html">Pagination</a></li>
+      <li><a href="../molecules/partner.html">Partner</a></li>
+      <li><a href="../molecules/post.html">Post</a></li>
+      <li><a href="../molecules/price.html">Price</a></li>
+      <li><a href="../atoms/progress.html">Progress bar</a></li>
+      <li><a href="../molecules/stepper.html">Quantity stepper</a></li>
+      <li><a href="../atoms/radio.html">Radio</a></li>
+      <li><a href="../molecules/rating.html">Rating</a></li>
+      <li><a href="../molecules/review.html">Review</a></li>
+      <li><a href="../atoms/select.html">Select</a></li>
+      <li><a href="../atoms/skeleton.html">Skeleton</a></li>
+      <li><a href="../atoms/stars.html">Stars</a></li>
+      <li><a href="../atoms/switch.html">Switch</a></li>
+      <li><a href="../atoms/textarea.html">Textarea</a></li>
+      <li><a href="../molecules/toast.html">Toast</a></li>
+      <li><a href="../molecules/track.html">Track</a></li>
+      <li><a href="../molecules/variant.html">Variant picker</a></li>
+      <li><a href="../molecules/video.html">Vertical video carousel</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2.5" width="12" height="3" rx="1"/><rect x="2" y="6.8" width="12" height="3" rx="1"/><rect x="2" y="11.1" width="12" height="2.4" rx="1"/></svg>Blocos</summary>
+    <ul>
+      <li><a href="../organisms/quote.html">Brand quote</a></li>
+      <li><a href="../organisms/buybox.html">Buy box</a></li>
+      <li><a href="../organisms/cart-drawer.html">Cart drawer</a></li>
+      <li><a href="../organisms/catalog.html">Catalog</a></li>
+      <li><a href="../organisms/drawer.html">Drawer</a></li>
+      <li><a href="../organisms/faq.html">FAQ</a></li>
+      <li><a href="../organisms/footer.html">Footer</a></li>
+      <li><a href="../organisms/shipping-progress.html">Free shipping progress</a></li>
+      <li><a href="../organisms/gallery.html">Gallery</a></li>
+      <li><a href="../organisms/header.html">Header</a></li>
+      <li><a href="../organisms/hero.html">Hero</a></li>
+      <li><a href="../organisms/logobar.html">Logo bar</a></li>
+      <li><a href="../organisms/manifesto.html">Manifesto</a></li>
+      <li><a href="../organisms/dialog.html">Modal</a></li>
+      <li><a href="../organisms/nav.html">Nav</a></li>
+      <li><a href="../organisms/search.html">Search overlay</a></li>
+      <li><a href="../organisms/split.html">Split</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3.5" width="9" height="9" rx="1.5"/><path d="M5.5 3.5V1.5h9v9h-2"/></svg>Exemplos</summary>
+    <ul>
+      <li><a href="../pages/index.html">Visão geral</a></li>
+      <li><a href="../pages/home.html" target="_blank" rel="noopener">Home v1<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-v2.html" target="_blank" rel="noopener">Home v2<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-v3.html" target="_blank" rel="noopener">Home v3<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-logado.html" target="_blank" rel="noopener">Home · cliente logado<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp.html" target="_blank" rel="noopener">PDP<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-influencer.html" target="_blank" rel="noopener">PDP link influencer<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-esgotado.html" target="_blank" rel="noopener">PDP esgotada<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-variante.html" target="_blank" rel="noopener">PDP com variante<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-oferta.html" target="_blank" rel="noopener">PDP em promoção<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/faq.html" target="_blank" rel="noopener">FAQ<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/404.html" target="_blank" rel="noopener">404<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+    </ul>
+  </details>
+  <ul class="ds-nav__solta">
+    <li><a href="../preview/index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3" width="13" height="8.5" rx="1.5"/><path d="M5.5 14h5"/><path d="M8 11.5V14"/></svg>Preview</a></li>
+  </ul>
+</nav>
+<!-- /@moldura -->
+<main class="main">
+  <div class="ficha-topo">
+    <nav class="ficha-trilha" aria-label="Você está aqui">
+      <a href="index.html">Fundação</a>
+      <span aria-hidden="true">/</span>
+      <b aria-current="page">Shape</b>
+    </nav>
+    <nav class="ficha-passo" aria-label="Seção anterior e próxima">
+      <a href="space.html" rel="prev"><span aria-hidden="true">←</span> Space</a>
+      <a href="elevation.html" rel="next">Elevation <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
+  <h1 class="ficha-titulo">Shape</h1>
+  <p class="ficha-quando">Seis raios. A loja hoje pratica doze valores diferentes.</p>
+
+<div class="grid4">
+      <div class="rd">
+        <div class="rd-box" style="border-radius:var(--yb-radius-none)"></div>
+        <code>--yb-radius-none</code><span>0</span>
+      <span class="uso uso--zero">sem classe consumidora</span></div>
+      <div class="rd">
+        <div class="rd-box" style="border-radius:var(--yb-radius-sm)"></div>
+        <code>--yb-radius-sm</code><span>4px</span>
+      <details class="uso"><summary>13 componentes</summary><ul class="uso__lista"><li><a href="../molecules/alert.html">Alert</a> <code>.yb-alert</code></li><li><a href="../atoms/badge.html">Badge</a> <code>.yb-badge</code></li><li><a href="../organisms/buybox.html">Buy box</a> <code>.yb-buybox</code></li><li><a href="../molecules/card.html">Card product</a> <code>.yb-card</code></li><li><a href="../organisms/cart-drawer.html">Cart drawer</a> <code>.yb-cart</code></li><li><a href="../atoms/checkbox.html">Checkbox</a> <code>.yb-check</code></li><li><a href="../organisms/gallery.html">Gallery</a> <code>.yb-gallery</code></li><li><a href="../atoms/logo.html">Logo</a> <code>.yb-logo</code></li><li><a href="../organisms/nav.html">Nav</a> <code>.yb-nav</code></li><li><a href="../organisms/search.html">Search overlay</a> <code>.yb-search</code></li><li><a href="../atoms/skeleton.html">Skeleton</a> <code>.yb-skeleton</code></li><li><a href="../molecules/toast.html">Toast</a> <code>.yb-toast</code></li><li><a href="../molecules/variant.html">Variant picker</a> <code>.yb-swatches</code></li></ul></details></div>
+      <div class="rd">
+        <div class="rd-box" style="border-radius:var(--yb-radius-md)"></div>
+        <code>--yb-radius-md</code><span>8px · padrão</span>
+      <details class="uso"><summary>27 componentes</summary><ul class="uso__lista"><li><a href="../molecules/alert.html">Alert</a> <code>.yb-alert</code></li><li><a href="../molecules/bannermedia.html">Banner media</a> <code>.yb-bannermedia</code></li><li><a href="../organisms/quote.html">Brand quote</a> <code>.yb-quote</code></li><li><a href="../atoms/button.html">Button</a> <code>.yb-btn</code></li><li><a href="../molecules/offercard.html">Card offer</a> <code>.yb-offercard</code></li><li><a href="../molecules/card.html">Card product</a> <code>.yb-card</code></li><li><a href="../organisms/cart-drawer.html">Cart drawer</a> <code>.yb-cart</code></li><li><a href="../molecules/collection.html">Collection card</a> <code>.yb-collection</code></li><li><a href="../molecules/dropdown.html">Dropdown</a> <code>.yb-dropdown</code></li><li><a href="../organisms/footer.html">Footer</a> <code>.yb-footer</code></li><li><a href="../organisms/gallery.html">Gallery</a> <code>.yb-gallery</code></li><li><a href="../atoms/iconbtn.html">Icon button</a> <code>.yb-iconbtn</code></li><li><a href="../atoms/input.html">Input</a> <code>.yb-input</code></li><li><a href="../organisms/dialog.html">Modal</a> <code>.yb-dialog</code></li><li><a href="../organisms/nav.html">Nav</a> <code>.yb-nav</code></li><li><a href="../molecules/pagination.html">Pagination</a> <code>.yb-pagination</code></li><li><a href="../molecules/partner.html">Partner</a> <code>.yb-partner</code></li><li><a href="../molecules/post.html">Post</a> <code>.yb-post</code></li><li><a href="../molecules/stepper.html">Quantity stepper</a> <code>.yb-stepper</code></li><li><a href="../molecules/review.html">Review</a> <code>.yb-review</code></li><li><a href="../organisms/search.html">Search overlay</a> <code>.yb-search</code></li><li><a href="../atoms/select.html">Select</a> <code>.yb-select</code></li><li><a href="../atoms/skeleton.html">Skeleton</a> <code>.yb-skeleton</code></li><li><a href="../atoms/textarea.html">Textarea</a> <code>.yb-textarea</code></li><li><a href="../molecules/toast.html">Toast</a> <code>.yb-toast</code></li><li><a href="../molecules/variant.html">Variant picker</a> <code>.yb-swatches</code></li><li><a href="../molecules/video.html">Vertical video carousel</a> <code>.yb-video</code></li></ul></details></div>
+      <div class="rd">
+        <div class="rd-box" style="border-radius:var(--yb-radius-lg)"></div>
+        <code>--yb-radius-lg</code><span>12px</span>
+      <span class="uso uso--zero">sem classe consumidora</span></div>
+      <div class="rd">
+        <div class="rd-box" style="border-radius:var(--yb-radius-xl)"></div>
+        <code>--yb-radius-xl</code><span>16px</span>
+      <span class="uso uso--zero">sem classe consumidora</span></div>
+      <div class="rd">
+        <div class="rd-box" style="border-radius:var(--yb-radius-full)"></div>
+        <code>--yb-radius-full</code><span>9999px</span>
+      <details class="uso"><summary>15 componentes</summary><ul class="uso__lista"><li><a href="../atoms/avatar.html">Avatar</a> <code>.yb-avatar</code></li><li><a href="../atoms/button.html">Button</a> <code>.yb-btn</code></li><li><a href="../organisms/cart-drawer.html">Cart drawer</a> <code>.yb-cart</code></li><li><a href="../atoms/seals.html">Certification seals</a> <code>.yb-seal</code></li><li><a href="../atoms/chip.html">Chip</a> <code>.yb-chip</code></li><li><a href="../molecules/collection.html">Collection card</a> <code>.yb-collection</code></li><li><a href="../molecules/dropdown.html">Dropdown</a> <code>.yb-dropdown</code></li><li><a href="../molecules/empty.html">Empty state</a> <code>.yb-empty</code></li><li><a href="../organisms/header.html">Header</a> <code>.yb-header</code></li><li><a href="../atoms/iconbtn.html">Icon button</a> <code>.yb-iconbtn</code></li><li><a href="../organisms/nav.html">Nav</a> <code>.yb-nav</code></li><li><a href="../molecules/partner.html">Partner</a> <code>.yb-partner</code></li><li><a href="../atoms/progress.html">Progress bar</a> <code>.yb-progress</code></li><li><a href="../atoms/radio.html">Radio</a> <code>.yb-radio</code></li><li><a href="../atoms/switch.html">Switch</a> <code>.yb-switch</code></li></ul></details></div>
+      </div>
+
+      <h3>Proporção de mídia</h3>
+      <p class="note">Reservar a caixa antes da imagem chegar é o que impede o
+      salto de layout. Sem isto, o card cresce quando a foto carrega e empurra o
+      preço para baixo do dedo que já estava indo nele.</p>
+      <div class="grid4">
+        <div class="ar">
+          <div class="ar-box" style="aspect-ratio:var(--yb-aspect-product)"></div>
+          <code>--yb-aspect-product</code><span>1:1 · o catálogo é fotografado assim</span>
+        <details class="uso"><summary>6 componentes</summary><ul class="uso__lista"><li><a href="../molecules/card.html">Card product</a> <code>.yb-card</code></li><li><a href="../organisms/cart-drawer.html">Cart drawer</a> <code>.yb-cart</code></li><li><a href="../organisms/gallery.html">Gallery</a> <code>.yb-gallery</code></li><li><a href="../organisms/search.html">Search overlay</a> <code>.yb-search</code></li><li><a href="../atoms/skeleton.html">Skeleton</a> <code>.yb-skeleton</code></li><li><a href="../molecules/variant.html">Variant picker</a> <code>.yb-swatches</code></li></ul></details></div>
+        <div class="ar">
+          <div class="ar-box" style="aspect-ratio:var(--yb-aspect-hero)"></div>
+          <code>--yb-aspect-hero</code><span>16:9 · paisagem</span>
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+        <div class="ar">
+          <div class="ar-box" style="aspect-ratio:var(--yb-aspect-reel)"></div>
+          <code>--yb-aspect-reel</code><span>9:16 · vídeo vertical</span>
+        <details class="uso"><summary>1 componente</summary><ul class="uso__lista"><li><a href="../molecules/video.html">Vertical video carousel</a> <code>.yb-video</code></li></ul></details></div>
+        <div class="ar">
+          <div class="ar-box" style="aspect-ratio:var(--yb-aspect-portrait)"></div>
+          <code>--yb-aspect-portrait</code><span>4:5 · retrato</span>
+        <details class="uso"><summary>1 componente</summary><ul class="uso__lista"><li><a href="../organisms/quote.html">Brand quote</a> <code>.yb-quote</code></li></ul></details></div>
+        <div class="ar">
+          <div class="ar-box" style="aspect-ratio:var(--yb-aspect-campaign)"></div>
+          <code>--yb-aspect-campaign</code><span>16:5 · arte de campanha, desktop</span>
+        <details class="uso"><summary>1 componente</summary><ul class="uso__lista"><li><a href="../molecules/bannerhero.html">Banner hero</a> <code>.yb-bannerhero</code></li></ul></details></div>
+        <div class="ar">
+          <div class="ar-box" style="aspect-ratio:var(--yb-aspect-campaign-mobile)"></div>
+          <code>--yb-aspect-campaign-mobile</code><span>2:3 · arte de campanha, celular</span>
+        <details class="uso"><summary>1 componente</summary><ul class="uso__lista"><li><a href="../molecules/bannerhero.html">Banner hero</a> <code>.yb-bannerhero</code></li></ul></details></div>
+      </div>
+      <p class="note"><code>--yb-thumb</code> · 3.5rem (56px): a miniatura de produto
+      em lista — resultado da busca e item da sacola, que antes diziam 56px cada
+      um do seu jeito.</p>
+
+      <h3>Largura de borda</h3>
+      <p class="note">Duas espessuras, e cada uma diz uma coisa: 1px divide, 2px
+      marca o que está selecionado ou em foco.</p>
+      <div class="grid4">
+        <div class="ct">
+          <div class="ct-box" style="height:var(--yb-target-min); background:var(--yb-surface);
+            border:var(--yb-border-hairline) solid var(--yb-border); color:var(--yb-text-secondary)">1px</div>
+          <code>--yb-border-hairline</code><span>linha divisória</span>
+        <details class="uso"><summary>31 componentes</summary><ul class="uso__lista"><li><a href="../molecules/accordion.html">Accordion</a> <code>.yb-accordion</code></li><li><a href="../atoms/avatar.html">Avatar</a> <code>.yb-avatar</code></li><li><a href="../organisms/quote.html">Brand quote</a> <code>.yb-quote</code></li><li><a href="../atoms/button.html">Button</a> <code>.yb-btn</code></li><li><a href="../organisms/buybox.html">Buy box</a> <code>.yb-buybox</code></li><li><a href="../molecules/card.html">Card product</a> <code>.yb-card</code></li><li><a href="../organisms/cart-drawer.html">Cart drawer</a> <code>.yb-cart</code></li><li><a href="../organisms/catalog.html">Catalog</a> <code>.yb-catalog</code></li><li><a href="../atoms/checkbox.html">Checkbox</a> <code>.yb-check</code></li><li><a href="../atoms/chip.html">Chip</a> <code>.yb-chip</code></li><li><a href="../molecules/dropdown.html">Dropdown</a> <code>.yb-dropdown</code></li><li><a href="../organisms/faq.html">FAQ</a> <code>.yb-faq</code></li><li><a href="../organisms/footer.html">Footer</a> <code>.yb-footer</code></li><li><a href="../organisms/gallery.html">Gallery</a> <code>.yb-gallery</code></li><li><a href="../organisms/header.html">Header</a> <code>.yb-header</code></li><li><a href="../atoms/iconbtn.html">Icon button</a> <code>.yb-iconbtn</code></li><li><a href="../atoms/input.html">Input</a> <code>.yb-input</code></li><li><a href="../organisms/manifesto.html">Manifesto</a> <code>.yb-manifesto</code></li><li><a href="../organisms/dialog.html">Modal</a> <code>.yb-dialog</code></li><li><a href="../organisms/nav.html">Nav</a> <code>.yb-nav</code></li><li><a href="../atoms/notice.html">Notice</a> <code>.yb-notice</code></li><li><a href="../molecules/partner.html">Partner</a> <code>.yb-partner</code></li><li><a href="../molecules/stepper.html">Quantity stepper</a> <code>.yb-stepper</code></li><li><a href="../atoms/radio.html">Radio</a> <code>.yb-radio</code></li><li><a href="../molecules/review.html">Review</a> <code>.yb-review</code></li><li><a href="../organisms/search.html">Search overlay</a> <code>.yb-search</code></li><li><a href="../atoms/select.html">Select</a> <code>.yb-select</code></li><li><a href="../atoms/textarea.html">Textarea</a> <code>.yb-textarea</code></li><li><a href="../molecules/toast.html">Toast</a> <code>.yb-toast</code></li><li><a href="../molecules/track.html">Track</a> <code>.yb-track</code></li><li><a href="../molecules/variant.html">Variant picker</a> <code>.yb-swatches</code></li></ul></details></div>
+        <div class="ct">
+          <div class="ct-box" style="height:var(--yb-target-min); background:var(--yb-surface);
+            border:var(--yb-border-emphasis) solid var(--yb-text-primary); color:var(--yb-text-secondary)">2px</div>
+          <code>--yb-border-emphasis</code><span>selecionado, foco</span>
+        <details class="uso"><summary>7 componentes</summary><ul class="uso__lista"><li><a href="../atoms/button.html">Button</a> <code>.yb-btn</code></li><li><a href="../atoms/checkbox.html">Checkbox</a> <code>.yb-check</code></li><li><a href="../organisms/gallery.html">Gallery</a> <code>.yb-gallery</code></li><li><a href="../organisms/header.html">Header</a> <code>.yb-header</code></li><li><a href="../molecules/partner.html">Partner</a> <code>.yb-partner</code></li><li><a href="../molecules/toast.html">Toast</a> <code>.yb-toast</code></li><li><a href="../molecules/variant.html">Variant picker</a> <code>.yb-swatches</code></li></ul></details></div>
+      </div>
+
+  <p class="doc-credit">Página gerada por <code>tools/moldura.mjs</code> a partir de
+  <code>tokens/pecas/shape.html</code>. Não edite este arquivo à mão — rode
+  <code>./build.sh</code>.</p>
+</main>
+</body>
+</html>

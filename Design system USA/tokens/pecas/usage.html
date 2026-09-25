@@ -1,0 +1,21 @@
+<h2>How to use</h2>
+    <p class="when">Um link, e os tokens ficam disponíveis em qualquer plataforma.</p>
+<div class="layer">
+        <pre>&lt;link rel="stylesheet" href="ybera-tokens.css"&gt;
+&lt;html data-market="us"&gt;
+
+.meu-botao {
+  background: var(--yb-action-bg);
+  color: var(--yb-action-text);
+  border-radius: var(--yb-radius-control);
+  padding: var(--yb-space-4) var(--yb-space-6);
+  font-size: var(--yb-type-body-size);
+  transition: background var(--yb-transition-control);
+}</pre>
+      </div>
+      <div class="rule">
+        <b>A regra que sustenta o sistema</b>
+        <p>Componente nunca consome a camada 0. Se você escreveu
+        <code>var(--yb-magenta-600)</code> num componente, ou falta um token semântico
+        ou o componente está errado. Nos dois casos, a correção é na camada 1.</p>
+      </div>

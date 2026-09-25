@@ -4,14 +4,15 @@ A fundação da marca Ybera em tokens. **Independente de plataforma por decisão
 projeto**: a loja US roda Shopify e a BR roda Wake Commerce — CSS custom properties
 é o único denominador comum entre as duas.
 
-Versão **0.12.1** — fundação de 321 tokens, 37 componentes e 12 padrões com
-comportamento, 40 ícones, governança, decisões registradas e 110 checagens
+Versão **0.12.1** — fundação de 364 tokens e uma escada atômica de 16 átomos,
+21 moléculas, 16 organismos e 1 template, com
+comportamento, 42 ícones, governança, decisões registradas e 140 checagens
 automatizadas.
 
 | Onde olhar | O quê |
 |---|---|
 | [PRINCIPIOS.md](PRINCIPIOS.md) | os cinco princípios, **em ordem** — o que ganha quando dois se chocam |
-| [INVENTARIO.md](INVENTARIO.md) | as 49 peças com maturidade conferida a cada build |
+| [INVENTARIO.md](INVENTARIO.md) | as 54 peças com maturidade conferida a cada build |
 | [decision-log/](decision-log/) | por que o sistema é assim, decisão por decisão |
 | [CONTRIBUINDO.md](CONTRIBUINDO.md) | a mecânica: laço local, o que o CI reprova |
 | [GOVERNANCA.md](GOVERNANCA.md) · [PLANO.md](PLANO.md) | como muda · como entra na loja |
@@ -61,31 +62,38 @@ arquivo não é versionado; `./serve.sh` é o caminho que vale para todo mundo.
 
 ```
 tokens/
+  pecas/<id>.html        a fonte das nove seções da fundação
+  <seção>.html           nove páginas geradas: architecture, color, typography…
+  index.html             a visão geral da Fundação (gerada)
+  doc-tokens.css         o cromo desta doc: amostras de cor, escalas, elevação
   00-primitives.css   camada 0 — vocabulário bruto, ninguém consome direto
   01-semantic.css     camada 1 — a intenção, é o que componentes consomem
   ybera.css           ponto de entrada
-components/
-  ybera-components.css   37 componentes, prefixo yb-
-  ybera-components.js    comportamento — vanilla, sem dependência nem build
-  doc.js / doc.css       moldura e navegação das fichas (só documentação)
+tokens/ components/ pages/   — as três páginas de grupo, geradas: o menu tem
+  index.html                       cinco itens, e item de menu sem página atrás
+                                   é rótulo clicável que não leva a lugar nenhum
+base/
+  ybera-base.css         o chão: reset, corte de movimento, utilitários de a11y
+atoms/ molecules/ organisms/ templates/    — a escada, um degrau por pasta
+  ybera-<degrau>.css     as regras daquele degrau (carrega os de baixo, nesta ordem)
   pecas/<id>.html        a fonte: demos, quando usar e notas de cada peça
-  <componente>.html      37 fichas geradas: demos, 375px, API, marcação, a11y, faça/não faça
-  index.html             índice gerado — nome, uma linha e o link
+  <peça>.html            ficha gerada: demos, 375px, de que é feita, API, marcação, a11y
+  index.html             galeria gerada — nome, uma linha e o link
+  solo.html              gerado: uma peça sozinha, para o quadro de 375px
   fichas.json            o que a máquina não sabe — escrito à mão
-  doc.css                a moldura das fichas
-  solo.html              uma peça sozinha, para o quadro de 375px
-patterns/
-  ybera-patterns.css     12 padrões — header, carrinho, coleção, footer…
-  index.html             galeria de composições
-  solo.html              um padrão sozinho, para o quadro de 375px
+behavior/
+  ybera-behavior.js      comportamento — vanilla, sem dependência nem build
+doc/
+  doc.css / doc.js       moldura e navegação das fichas (só documentação)
+  doc-nav.css            a coluna de navegação, presente em toda página de doc
 icons/
-  ybera-icons.svg        sprite com 40 ícones (9,3 KB)
+  ybera-icons.svg        sprite com 42 ícones (10,0 KB)
   ybera-icons.css        tamanhos e alinhamento
   index.html             galeria
 bridge/
   ybera-bridge.css       ponte tokens Ybera -> Ecomposer / tema / Judge.me
 test/
-  validate.mjs           110 checagens, roda em CI
+  validate.mjs           140 checagens, roda em CI
   a11y.js                auditoria no DOM (colar no console)
   adocao.js              mede adoção na loja (colar no console)
   layout.js              retrato de geometria das telas-prova (colar no console)
@@ -93,35 +101,50 @@ test/
 tools/
   tokens-to-json.mjs     deriva dist/ybera-tokens.json (W3C DTCG)
   inventario.mjs         deriva INVENTARIO.md do CSS
-  fichas.mjs             deriva components/<componente>.html e components/index.html
+  fichas.mjs             deriva <degrau>/<peça>.html, index.html e solo.html
+  moldura.mjs            a coluna de navegação e as 3 páginas de grupo — fonte única
+  escada.mjs             a tabela dos degraus, importada pelos dois geradores
   baseline.mjs           compara test/atual.json com test/baseline.json
-docs/
-  index.html          documentação de tokens
 preview/
-  index.html          componentes e páginas em 320/375/414/768, em <iframe>
+  index.html          as 11 páginas da loja em 320/375/414/768/1280, em <iframe>
 decision-log/         DDR-001…009 — por que o sistema é assim
 brand/                logo (a única cópia-fonte; _captura/nova-loja/brand/ é gerada)
 dist/                 GERADO por ./build.sh — o que sobe para o tema
-_captura/             telas-prova (nova-loja/, gerada) e captura da loja atual — ver _captura/README.md
+pages/                o último degrau: 11 telas montadas só com o sistema (GERADA)
+                      `home.html` é a Home v1; `index.html` é a página do grupo
+_captura/             a captura da loja atual e o gerador das páginas — ver _captura/README.md
 _canvas/              canvas de decisão do véu sobre foto; não é produção
-build.sh              gera dist/, INVENTARIO.md, fichas e sincroniza as telas-prova
+build.sh              gera dist/, INVENTARIO.md, as fichas dos quatro degraus e sincroniza pages/
 serve.sh              servidor local na porta 8080, sem cache
 adocao.json           livro-razão da adoção medida na loja (lido pelo validador)
 ```
 
-**Fonte × gerado.** Edita-se: `tokens/`, `components/ybera-components.{css,js}`,
-`components/pecas/`, `components/fichas.json`, `patterns/ybera-patterns.css`,
-`icons/`, `bridge/`, `_captura/montar-ds.py`. Gera-se (nunca à mão): `dist/`,
-`INVENTARIO.md`, `components/<componente>.html`, `components/index.html`,
-`_captura/nova-loja/` inteira. O validador reprova derivado defasado.
+**Fonte × gerado.** Edita-se: `tokens/`, `base/`, `<degrau>/ybera-<degrau>.css`,
+`<degrau>/pecas/`, `<degrau>/fichas.json`, `behavior/`, `doc/`, `icons/`,
+`bridge/`, `_captura/montar-ds.py`. Gera-se (nunca à mão): `dist/`,
+`INVENTARIO.md`, `<degrau>/<peça>.html`, `<degrau>/index.html`,
+`<degrau>/solo.html`, `pages/` inteira. O validador reprova derivado defasado.
 
-Para usar os componentes, some ao link dos tokens:
+Para usar os componentes, some ao link dos tokens. A **ordem importa**: cada
+degrau da escada depende do anterior, e é assim que o `dist/` é concatenado.
 
 ```html
 <link rel="stylesheet" href="ybera-tokens.css">
-<link rel="stylesheet" href="components/ybera-components.css">
-<link rel="stylesheet" href="patterns/ybera-patterns.css">
-<script src="components/ybera-components.js" defer></script>
+<link rel="stylesheet" href="ybera-components.css">
+<script src="ybera-components.js" defer></script>
+```
+
+`dist/ybera-components.css` já traz os cinco degraus na ordem — base, átomos,
+moléculas, organismos e templates. Quem consome as pastas direto, em vez do
+bundle, linka os cinco na mesma ordem:
+
+```html
+<link rel="stylesheet" href="base/ybera-base.css">
+<link rel="stylesheet" href="atoms/ybera-atoms.css">
+<link rel="stylesheet" href="molecules/ybera-molecules.css">
+<link rel="stylesheet" href="organisms/ybera-organisms.css">
+<link rel="stylesheet" href="templates/ybera-templates.css">
+<script src="behavior/ybera-behavior.js" defer></script>
 ```
 
 O JavaScript é opcional. Sem ele a página continua funcionando — ele adiciona
@@ -165,7 +188,7 @@ histórico em [CHANGELOG.md](CHANGELOG.md).
 npm run check
 ```
 
-110 checagens sem dependência: integridade entre camadas, disciplina de cor
+140 checagens sem dependência: integridade entre camadas, disciplina de cor
 (inclusive `rgba()` e cor nomeada, não só `#hex`), monotonia das rampas,
 contraste anotado versus medido, regras duras, foco visível,
 `prefers-reduced-motion`, `dist/` e `INVENTARIO.md` em dia, versão única em

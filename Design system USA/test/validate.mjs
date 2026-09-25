@@ -53,11 +53,22 @@ const contraste = (a, b) => {
 const ARQUIVOS = {
   primitivos: 'tokens/00-primitives.css',
   semanticos: 'tokens/01-semantic.css',
-  componentes: 'components/ybera-components.css',
-  padroes: 'patterns/ybera-patterns.css',
+  base: 'base/ybera-base.css',
+  atomos: 'atoms/ybera-atoms.css',
+  moleculas: 'molecules/ybera-molecules.css',
+  organismos: 'organisms/ybera-organisms.css',
+  templates: 'templates/ybera-templates.css',
   icones: 'icons/ybera-icons.css',
   ponte: 'bridge/ybera-bridge.css',
 };
+/* Os degraus que contem PECA, na ordem da escada. `base` fica fora: reset,
+   corte de movimento e utilitario de acessibilidade sao regra global, nao
+   peca — cobrar deles "demonstracao na doc" seria pedir uma ficha para o
+   `:focus-visible` do sistema. */
+const ESCADA = ['atomos', 'moleculas', 'organismos', 'templates'];
+// tudo que e folha de peca ou de chao: onde a disciplina de cor vale inteira
+const FOLHAS_DO_SISTEMA = ['base', ...ESCADA];
+const PASTA = { atomos: 'atoms', moleculas: 'molecules', organismos: 'organisms', templates: 'templates' };
 const css = {};
 for (const [k, p] of Object.entries(ARQUIVOS)) {
   if (!existsSync(join(raiz, p))) { falha(`arquivo ausente: ${p}`); continue; }
@@ -118,7 +129,7 @@ for (const [nome, s] of Object.entries(css)) {
 /* ==================================================== 2 · disciplina de camada */
 secao('Disciplina de camadas (cor)');
 // a ponte é exceção declarada: traduz para variáveis externas ao sistema
-for (const nome of ['componentes', 'padroes', 'icones']) {
+for (const nome of [...FOLHAS_DO_SISTEMA, 'icones']) {
   const s = semComentario(css[nome] || '');
   const crus = usados(s).filter(EH_COR);
   crus.length
@@ -139,7 +150,7 @@ secao('Cor crua');
 {
   const paleta = new Set([...ler('tokens/00-primitives.css').matchAll(/#([0-9a-fA-F]{6})\b/g)].map(m => m[1].toUpperCase()));
   const fora = [];
-  for (const nome of ['componentes', 'padroes'])
+  for (const nome of FOLHAS_DO_SISTEMA)
     for (const m of semComentario(css[nome] || '').matchAll(/%23([0-9a-fA-F]{6})\b/g))
       if (!paleta.has(m[1].toUpperCase())) fora.push(`${nome}: %23${m[1]}`);
   fora.length
@@ -161,7 +172,7 @@ secao('Cor crua');
     '|gray|grey|silver|gold|navy|teal|olive|maroon|lime|aqua|fuchsia|cyan' +
     '|magenta|beige|ivory|khaki|salmon|tan|violet|indigo|crimson)(?![\\w-])', 'gi');
 
-  for (const nome of ['componentes', 'padroes', 'icones', 'ponte']) {
+  for (const nome of [...FOLHAS_DO_SISTEMA, 'icones', 'ponte']) {
     const s = semComentario(css[nome] || '');
     // so o LADO DIREITO das declaracoes: `--yb-magenta-600:` e nome de token,
     // nao uso de cor, e `.yb-badge--gold` e seletor.
@@ -285,7 +296,11 @@ secao('Breakpoints');
   // Abaixo dali a faixa de texto come 216 dos 256px do banner e sobram 40 de
   // folga para o veu; acima, a folga menor passa a ser 69px. E medida de
   // conteudo, nao de aparelho — por isso nao entra na escala.
-  const DE_COMPONENTE = new Set(['360', '520', '560', '860', '900']);
+  // 1366: onde a arte de campanha do hero (.yb-bannerhero--arte) passa a caber
+  // cortada sem perder o texto desenhado nela — o texto ocupa x 175-1062 da arte
+  // de 1200, e no hero de 544px o corte lateral fica abaixo da margem de 138px
+  // a partir de 1364. Medida de conteudo, de novo.
+  const DE_COMPONENTE = new Set(['360', '520', '560', '860', '900', '1366']);
   const DE_PARIDADE = new Set(['767']);   // espelha o <source media> do <picture>
   const conhecido = (px) => !!escala[px] || DE_COMPONENTE.has(px) || DE_PARIDADE.has(px);
   // `max-width` recua 0,02px do degrau e `min-width` pode avancar 0,02 do ponto
@@ -301,7 +316,7 @@ secao('Breakpoints');
   };
   const usados = new Set();
   const lados = new Map();     // degrau -> Set('min'|'max')
-  for (const nome of ['componentes', 'padroes', 'semanticos']) {
+  for (const nome of [...FOLHAS_DO_SISTEMA, 'semanticos']) {
     // a escala e de largura; `max-height` e outra dimensao e nao presta contas a ela
     for (const m of (css[nome] || '').matchAll(/@media[^{]*?(?:(max|min)-width\s*:\s*)([\d.]+)px/g)) {
       if (/\b(max|min)-height\s*:/.test(m[0])) continue;
@@ -324,7 +339,7 @@ secao('Breakpoints');
     if (!(l.has('min') && l.has('max'))) continue;
     const temMin = new RegExp(`min-width\\s*:\\s*${degrau}px`);
     const temMax = new RegExp(`max-width\\s*:\\s*${degrau}px`);
-    const folha = ['componentes', 'padroes', 'semanticos'].map(n => css[n] || '').join('\n');
+    const folha = [...FOLHAS_DO_SISTEMA, 'semanticos'].map(n => css[n] || '').join('\n');
     if (temMin.test(folha) && temMax.test(folha)) ambiguos.push(degrau);
   }
   ambiguos.length
@@ -336,11 +351,19 @@ secao('Breakpoints');
 
 /* ============================================ 5 · acessibilidade estrutural */
 secao('Acessibilidade no CSS');
-for (const nome of ['componentes', 'padroes']) {
+/* Foco so e exigivel de quem declara elemento focavel. `templates/` e
+   esqueleto de pagina — largura, ritmo e cabecalho de secao —, e cobrar dele
+   um `:focus-visible` proprio seria pedir uma regra para um pixel que ele nao
+   desenha. A condicao e a MARCACAO da folha, e nao uma lista de excecoes:
+   no dia em que um template ganhar um controle, a cobranca volta sozinha. */
+const FOCAVEL_NA_FOLHA = /(?:^|[\s,>+~(])(?:a|button|input|select|textarea|summary|details|label)(?=[\s,.:#[{>+~)])/m;
+for (const nome of FOLHAS_DO_SISTEMA) {
   const s = css[nome] || '';
   const foco = (s.match(/:focus-visible/g) || []).length;
+  const precisa = FOCAVEL_NA_FOLHA.test(semComentario(s)) || /:hover|:checked/.test(s);
   foco > 0 ? ok(`${nome}: foco visível`, `${foco} regras`)
-           : falha(`${nome}: nenhuma regra :focus-visible`);
+           : precisa ? falha(`${nome}: nenhuma regra :focus-visible`)
+           : ok(`${nome}: sem elemento focável`, 'nada a declarar');
   // Matar o outline e a forma mais comum de matar o foco — e `outline:0` mata
   // igual a `outline:none`, entao os dois contam. Suprimir e legitimo quando o
   // anel e desenhado por OUTRO elemento (o input dentro da caixa de campo, o
@@ -377,7 +400,7 @@ for (const nome of ['componentes', 'padroes']) {
 {
   // Antes o corte de movimento era por componente, e quem entrava depois
   // esquecia. O corte global cobre `[class*="yb-"]` de uma vez.
-  const s = semComentario(css.componentes || '');
+  const s = semComentario(css.base || '');
   const bloco = s.match(/@media\s*\(\s*prefers-reduced-motion\s*:\s*reduce\s*\)\s*\{[\s\S]{0,400}?\}\s*\}/);
   bloco && /\[class\*=["']yb-["']\]/.test(bloco[0])
     ? ok('corte de movimento é global', 'cobre todo [class*="yb-"]')
@@ -392,7 +415,7 @@ for (const nome of ['componentes', 'padroes']) {
 }
 {
   // WCAG 2.4.1 e o utilitário mais básico que existe. Os dois faltavam.
-  const s = css.componentes || '';
+  const s = css.base || '';
   const temSr = /\.yb-sr-only\s*\{/.test(s);
   const temSkip = /\.yb-skip-link\s*\{/.test(s);
   temSr && temSkip
@@ -414,10 +437,10 @@ for (const nome of ['componentes', 'padroes']) {
 {
   // No modo de alto contraste do Windows a cor do autor é descartada. Botão
   // sólido com borda transparente perde o contorno; foco colorido some.
-  const s = css.componentes || '';
+  const s = css.base || '';
   /@media\s*\(\s*forced-colors\s*:\s*active\s*\)/.test(s)
-    ? ok('componentes: trata forced-colors', 'alto contraste do Windows')
-    : falha('componentes: sem bloco forced-colors',
+    ? ok('a base trata forced-colors', 'alto contraste do Windows')
+    : falha('a base não tem bloco forced-colors',
         'botão sólido perde o contorno e o anel de foco some');
 }
 {
@@ -433,7 +456,7 @@ for (const nome of ['componentes', 'padroes']) {
   // Opacidade sobre palavra derruba o contraste sem que nada registre a
   // queda: 5.15:1 a 65% vira 2.9:1, e nenhuma medição do sistema vê.
   const alvos = [];
-  for (const nome of ['componentes', 'padroes']) {
+  for (const nome of FOLHAS_DO_SISTEMA) {
     const s = semComentario(css[nome] || '');
     for (const m of s.matchAll(/([^{}]+)\{([^}]*)\}/g)) {
       const sel = m[1].trim(), corpo = m[2];
@@ -459,7 +482,7 @@ for (const nome of ['componentes', 'padroes']) {
   // não são controle: rótulo visualmente oculto, decoração, medidor
   const NAO_E_ALVO = /yb-(sr-only|skeleton|freeship__track|btn--loading|check input|nav__toggle)/;
   const semMarcador = [];
-  for (const nome of ['componentes', 'padroes']) {
+  for (const nome of FOLHAS_DO_SISTEMA) {
     const bruto = css[nome] || '';
     for (const m of bruto.matchAll(/([^{}]*)\{([^}]*)\}/g)) {
       const sel = m[1].replace(/\/\*[\s\S]*?\*\//g, '').trim();
@@ -486,10 +509,16 @@ for (const nome of ['componentes', 'padroes']) {
   // promessa que o sistema não cumpre — e a governança diz que token novo só
   // entra quando o caso aparece duas vezes. Primitivo é outra coisa: rampa é
   // vocabulário, e degrau não usado continua sendo vocabulário.
-  const consumidores = ['components/ybera-components.css', 'patterns/ybera-patterns.css',
+  // Os demos das duas camadas moram em fragmentos, e nao mais nos index.html:
+  // um token usado so num `style=` de demonstracao passaria por orfao se a
+  // lista continuasse olhando so para as galerias.
+  const fragmentos = [...ESCADA.map(n => `${PASTA[n]}/pecas`), 'tokens/pecas']
+    .filter(d => existsSync(join(raiz, d)))
+    .flatMap(d => readdirSync(join(raiz, d)).filter(f => f.endsWith('.html')).map(f => `${d}/${f}`));
+  const consumidores = [...FOLHAS_DO_SISTEMA.map(n => ARQUIVOS[n]),
     'icons/ybera-icons.css', 'bridge/ybera-bridge.css', 'tokens/01-semantic.css',
-    'docs/index.html', 'components/index.html', 'patterns/index.html',
-    'icons/index.html', 'preview/index.html', 'index.html'];
+    'tokens/index.html', ...ESCADA.map(n => `${PASTA[n]}/index.html`),
+    'icons/index.html', 'preview/index.html', 'index.html', ...fragmentos];
   const consumidos = new Set();
   for (const f of consumidores)
     if (existsSync(join(raiz, f))) usados(semComentario(ler(f))).forEach(t => consumidos.add(t));
@@ -539,7 +568,7 @@ for (const nome of ['componentes', 'padroes']) {
 /* ============================================================ 6 · JS */
 secao('Comportamento');
 {
-  const p = 'components/ybera-components.js';
+  const p = 'behavior/ybera-behavior.js';
   if (!existsSync(join(raiz, p))) falha('ybera-components.js ausente');
   else {
     const js = ler(p);
@@ -567,7 +596,7 @@ secao('Comportamento');
       ? ok('toast pausa no foco de teclado')
       : aviso('toast não pausa no foco de teclado');
     // o play so pode aparecer onde existe video para tocar
-    css.componentes.includes('.yb-video:not([data-video]) .yb-video__play')
+    css.moleculas.includes('.yb-video:not([data-video]) .yb-video__play')
       ? ok('play some quando nao ha video')
       : falha('o play aparece mesmo sem data-video',
           'um botao que promete video e nao entrega e pior que nenhum botao');
@@ -582,14 +611,16 @@ secao('Paleta documentada');
   // dizer que havia primitivo atras. Quem lia a paleta achava que tinham
   // saido do nada.
   const prim = css.primitivos || '';
-  const docs = existsSync(join(raiz, 'docs/index.html')) ? ler('docs/index.html') : '';
-  const cor = docs.includes('<section id="color">')
-    ? docs.slice(docs.indexOf('<section id="color">'), docs.indexOf('<section id="typography">'))
-    : '';
+  /* A doc de token virou uma pagina por secao: a de cor e um arquivo inteiro,
+     e nao mais um pedaco de `tokens/index.html` entre duas ancoras. A FONTE e o
+     fragmento — a pagina gerada diria o mesmo, mas quem edita edita o
+     fragmento, e e nele que o token novo precisa aparecer. */
+  const cor = existsSync(join(raiz, 'tokens/pecas/color.html'))
+    ? ler('tokens/pecas/color.html') : '';
   const doPrim = [...prim.matchAll(/--yb-([a-z]+)-(\d+):\s*#[0-9A-Fa-f]{6}/g)]
     .map(m => `--yb-${m[1]}-${m[2]}`);
   const familias = [...new Set(doPrim.map(t => t.split('-')[3]))];   // --/yb/familia/passo
-  if (!cor) falha('secao Color nao encontrada em docs/', '');
+  if (!cor) falha('tokens/pecas/color.html ausente', 'a doc de cor e a fonte desta checagem');
   else {
     const fora = doPrim.filter(t => !cor.includes(t));
     fora.length
@@ -606,7 +637,7 @@ secao('Direção de leitura');
   // (top/bottom) so importa em escrita vertical e fica de fora.
   const FISICAS = /(^|[;{\s])(margin|padding|border)-(left|right)(-color|-width|-style)?\s*:|(^|[;{\s])(left|right)\s*:/;
   const achados = [];
-  for (const nome of ['componentes', 'padroes']) {
+  for (const nome of FOLHAS_DO_SISTEMA) {
     const folha = (css[nome] || '').replace(/\/\*[\s\S]*?\*\//g, '');
     folha.split('\n').forEach((l, i) => {
       if (l.includes('background-position') || l.includes('inset-inline')) return;
@@ -644,10 +675,10 @@ secao('Dialog');
   // `display` no proprio <dialog> sem [open] derruba o `dialog:not([open]){
   // display:none }` do navegador — regra de autor vence a folha da UA por
   // ORIGEM, nao por especificidade. O resultado e a gaveta aparecendo fechada,
-  // colada na lateral da pagina. Aconteceu com .yb-dialog--drawer.
+  // colada na lateral da pagina. Aconteceu com .yb-drawer.
   // sem tirar comentario, o parser le `> * { height:100dvh }` de dentro de um
   // comentario como se fosse regra e acusa o seletor errado.
-  const alvo = (css.componentes || '').replace(/\/\*[\s\S]*?\*\//g, '');
+  const alvo = (css.organismos || '').replace(/\/\*[\s\S]*?\*\//g, '');
   const maus = [];
   for (const m of alvo.matchAll(/([^{}]+)\{([^}]*)\}/g)) {
     const sel = m[1].trim(), corpo = m[2];
@@ -665,7 +696,7 @@ secao('Bundles');
 // O JS entra na mesma checagem: era o unico asset que build.sh nao gerava, e
 // por isso ficou 27 linhas atras da fonte sem ninguem perceber.
 {
-  const fonte = 'components/ybera-components.js', bundle = 'dist/ybera-components.js';
+  const fonte = 'behavior/ybera-behavior.js', bundle = 'dist/ybera-components.js';
   if (!existsSync(join(raiz, bundle))) falha(`${bundle} ausente`, 'rode ./build.sh');
   else {
     const a = ler(fonte).trim(), b = ler(bundle).trim();
@@ -684,7 +715,7 @@ for (const f of ['dist/ybera-tokens.css', 'dist/ybera-components.css', 'dist/ybe
   // declara nenhuma, e a checagem dele passava com qualquer conteudo.)
   const partes = f.includes('tokens') ? ['tokens/00-primitives.css', 'tokens/01-semantic.css']
                : f.includes('bridge') ? ['bridge/ybera-bridge.css']
-               : ['components/ybera-components.css', 'patterns/ybera-patterns.css'];
+               : FOLHAS_DO_SISTEMA.map(n => ARQUIVOS[n]);
   const faltando = partes.filter(p => !bundle.includes(ler(p).trim()));
   faltando.length
     ? falha(`${f} defasado`, `${faltando.join(', ')} — rode ./build.sh`)
@@ -737,18 +768,21 @@ secao('Tokens em W3C DTCG');
 }
 
 secao('Telas-prova');
-// A coluna "Tela real" do INVENTARIO.md le _captura/nova-loja/. Se a copia do
+// A coluna "Tela real" do INVENTARIO.md le pages/. Se a copia do
 // CSS que aquelas paginas carregam nao for a do sistema, a evidencia prova um
 // sistema que nao existe mais — e prova com a cara de quem prova a versao atual.
 {
   const PARES = [
-    ['tokens/00-primitives.css', '_captura/nova-loja/yb/00-primitives.css'],
-    ['tokens/01-semantic.css', '_captura/nova-loja/yb/01-semantic.css'],
-    ['components/ybera-components.css', '_captura/nova-loja/yb/components.css'],
-    ['patterns/ybera-patterns.css', '_captura/nova-loja/yb/patterns.css'],
-    ['icons/ybera-icons.css', '_captura/nova-loja/yb/icons.css'],
-    ['icons/ybera-icons.svg', '_captura/nova-loja/yb/icons.svg'],
-    ['components/ybera-components.js', '_captura/nova-loja/yb/components.js'],
+    ['tokens/00-primitives.css', 'pages/yb/00-primitives.css'],
+    ['tokens/01-semantic.css', 'pages/yb/01-semantic.css'],
+    ['base/ybera-base.css', 'pages/yb/base.css'],
+    ['atoms/ybera-atoms.css', 'pages/yb/atoms.css'],
+    ['molecules/ybera-molecules.css', 'pages/yb/molecules.css'],
+    ['organisms/ybera-organisms.css', 'pages/yb/organisms.css'],
+    ['templates/ybera-templates.css', 'pages/yb/templates.css'],
+    ['icons/ybera-icons.css', 'pages/yb/icons.css'],
+    ['icons/ybera-icons.svg', 'pages/yb/icons.svg'],
+    ['behavior/ybera-behavior.js', 'pages/yb/behavior.js'],
   ].filter(([, copia]) => existsSync(join(raiz, copia)));
 
   if (!PARES.length) {
@@ -764,16 +798,20 @@ secao('Telas-prova');
     // senao o navegador serve CSS velho de cache e a tela mente sem nem derivar.
     const { createHash } = await import('node:crypto');
     const h = createHash('sha1');
+    // a mesma lista, na mesma ordem, de build.sh e de _captura/montar-ds.py:
+    // se as tres divergirem, o carimbo passa a acusar deriva que nao existe
     for (const f of ['tokens/00-primitives.css', 'tokens/01-semantic.css',
-                     'components/ybera-components.css', 'patterns/ybera-patterns.css',
-                     'icons/ybera-icons.css', 'components/ybera-components.js'])
+                     'base/ybera-base.css', 'atoms/ybera-atoms.css',
+                     'molecules/ybera-molecules.css', 'organisms/ybera-organisms.css',
+                     'templates/ybera-templates.css', 'icons/ybera-icons.css',
+                     'behavior/ybera-behavior.js'])
       h.update(readFileSync(join(raiz, f)));
     const esperado = h.digest('hex').slice(0, 8);
 
-    const paginas = readdirSync(join(raiz, '_captura/nova-loja'))
+    const paginas = readdirSync(join(raiz, 'pages'))
       .filter(f => f.endsWith('.html'));
     const erradas = paginas.filter(f => {
-      const marcas = new Set([...ler(join('_captura/nova-loja', f)).matchAll(/\?v=([0-9a-f]{8})/g)].map(m => m[1]));
+      const marcas = new Set([...ler(join('pages', f)).matchAll(/\?v=([0-9a-f]{8})/g)].map(m => m[1]));
       return marcas.size && ![...marcas].every(v => v === esperado);
     });
     erradas.length
@@ -787,9 +825,9 @@ secao('Telas-prova');
     // nenhum. Aconteceu com um banner da PDP.
     const semArquivo = [];
     for (const f of paginas) {
-      const h = ler(join('_captura/nova-loja', f));
+      const h = ler(join('pages', f));
       for (const m of h.matchAll(/(?:src|href)="(img\/[^"]+)"/g))
-        if (!existsSync(join(raiz, '_captura/nova-loja', m[1]))) semArquivo.push(`${f} → ${m[1]}`);
+        if (!existsSync(join(raiz, 'pages', m[1]))) semArquivo.push(`${f} → ${m[1]}`);
     }
     semArquivo.length
       ? falha('imagem citada que não existe', [...new Set(semArquivo)].join(', '))
@@ -866,11 +904,251 @@ secao('Inventário');
   }
 }
 
-secao('Fichas de componente');
-// Uma pagina por peca, gerada de components/pecas/ + a folha. Tres coisas
-// podem apodrecer aqui, e as tres apodrecem em silencio: a ficha ficar para
-// tras do CSS, uma secao nova nao ganhar ficha, e um bloco escrito a mao
-// nunca ser escrito.
+secao('Moldura');
+/* A coluna de navegacao e a unica navegacao que atravessa a doc inteira, e ela
+   e COPIA em dezenas de paginas — geradas e escritas a mao. Copia sem checagem
+   vira todas iguais menos uma, e a esquecida e sempre a que alguem abre. */
+{
+  const { execFileSync } = await import('node:child_process');
+  try {
+    const saida = execFileSync(process.execPath, [join(raiz, 'tools/moldura.mjs'), '--check'],
+      { cwd: raiz, encoding: 'utf8' }).trim();
+    ok('moldura em dia nas páginas escritas à mão', saida);
+  } catch (e) {
+    falha('moldura defasada', 'rode ./build.sh e commite');
+  }
+
+  /* Toda pagina de doc tem de ter a barra, e todas tem de ter a MESMA. A
+     comparacao ignora o `aria-current` e a profundidade do caminho, que sao
+     justamente o que muda de pagina para pagina. */
+  const COM_MOLDURA = ['index.html', 'tokens/index.html', 'icons/index.html',
+    'preview/index.html', 'decision-log/index.html',
+    ...ESCADA.flatMap(n => readdirSync(join(raiz, PASTA[n]))
+      .filter(f => f.endsWith('.html') && f !== 'solo.html').map(f => `${PASTA[n]}/${f}`))];
+  /* Ignora o que MUDA de pagina para pagina: qual item esta aberto, qual esta
+     marcado e a profundidade do caminho. O resto tem de ser identico. */
+  const esqueleto = (h) => {
+    const i = h.indexOf('<nav class="ds-nav"');
+    if (i < 0) return null;
+    return h.slice(i, h.indexOf('</nav>\n', i))
+      .replace(/ aria-current="page"/g, '')
+      .replace(/<details class="ds-nav__grupo" open>/g, '<details class="ds-nav__grupo">')
+      .replace(/href="(?:\.\.\/)?/g, 'href="')
+      .replace(/\s+/g, ' ').trim();
+  };
+  const sem = COM_MOLDURA.filter(f => !existsSync(join(raiz, f)) || !esqueleto(ler(f)));
+  const formas = new Set(COM_MOLDURA.filter(f => existsSync(join(raiz, f)))
+    .map(f => esqueleto(ler(f))).filter(Boolean));
+  sem.length
+    ? falha('página de doc sem a coluna de navegação', sem.slice(0, 6).join(', '))
+    : formas.size > 1
+      ? falha('as cópias da coluna divergiram', `${formas.size} versões em ${COM_MOLDURA.length} páginas`)
+      : ok('a coluna de navegação diz a mesma coisa em toda a doc', `${COM_MOLDURA.length} páginas, uma forma só`);
+
+  // pages/ fica FORA de proposito: ali a pagina e a loja, e um cabecalho nosso
+  // por cima competiria com o `.yb-header` que esta sendo demonstrado.
+  // `pages/index.html` e a pagina do GRUPO, e nao uma tela: ela leva a barra
+  // como qualquer pagina de doc. As onze telas e que nao podem.
+  const invadidas = readdirSync(join(raiz, 'pages'))
+    .filter(f => f.endsWith('.html') && f !== 'index.html')
+    .filter(f => ler(`pages/${f}`).includes('ds-nav'));
+  invadidas.length
+    ? falha('a coluna de navegação entrou nas telas', invadidas.join(', '))
+    : ok('as telas não levam cromo de documentação', `${readdirSync(join(raiz, 'pages')).filter(f => f.endsWith('.html')).length} telas limpas`);
+
+  /* QUEM USA CADA TOKEN. A anotacao e escrita por tools/tokens-uso.mjs a cada
+     build, e o `--check` da moldura nao a protege: se alguem tirar a chamada,
+     as paginas nascem sem a lista e o `--check` passa, porque comparam-se com
+     elas mesmas. Esta checagem cobra o resultado — toda amostra de token tem
+     de dizer quem a consome, nem que seja para dizer que ninguem consome. */
+  {
+    const semUso = [];
+    for (const f of readdirSync(join(raiz, 'tokens')).filter(x => x.endsWith('.html') && x !== 'index.html')) {
+      const html = ler(`tokens/${f}`);
+      // mesma regra do gerador: so o <code> que ROTULA amostra, e nao o da prosa
+      const amostras = [...html.replace(/<p\b[\s\S]*?<\/p>/g, '')
+        .matchAll(/<code>--yb-[\w-]+<\/code>/g)].length;
+      const anotadas = [...html.matchAll(/class="uso[" ]/g)].length;
+      if (amostras && anotadas < amostras) semUso.push(`${f}: ${anotadas}/${amostras}`);
+    }
+    semUso.length
+      ? falha('amostra de token sem dizer quem a usa', semUso.join(' · ')
+          + ' — sem isso, mexer num token é apostar')
+      : ok('toda amostra de token diz quem a consome', 'índice invertido em dia');
+  }
+
+  /* OS CHIPS DO DEGRAU. O catalogo ja teve um controle que nunca apareceu — o
+     campo `.grade-filtro`, `hidden` no HTML esperando um script que pegava
+     outro campo. Controle morto nao acusa nada: ele so nao esta la. Estas duas
+     checagens sao o que faz a fileira de chips nao virar o proximo.
+
+     Templates fica fora de proposito, como fica do catalogo e da coluna. */
+  const DEGRAUS_DO_CATALOGO = ['atomos', 'moleculas'];
+  const COM_CHIPS = ['components/index.html',
+    ...DEGRAUS_DO_CATALOGO.map(n => `${PASTA[n]}/index.html`)];
+  const chipsDe = (f) => [...ler(f).matchAll(/<a class="chip" href="([^"]+)"([^>]*)>/g)]
+    .map(m => ({ href: m[1], atual: m[2].includes('aria-current') }));
+  const tortas = COM_CHIPS
+    .map(f => [f, chipsDe(f)])
+    .filter(([f, c]) => c.length !== COM_CHIPS.length || c.filter(x => x.atual).length !== 1
+      || !c.find(x => x.atual).href.endsWith(f));
+  tortas.length
+    ? falha('fileira de chips torta', tortas.map(([f, c]) => `${f}: ${c.length} chips, ${c.filter(x => x.atual).length} atual`).join(' · '))
+    : ok('cada catálogo marca o próprio degrau', `${COM_CHIPS.length} páginas · ${COM_CHIPS.length} chips · 1 atual`);
+
+  const quebrados = COM_CHIPS.flatMap(f =>
+    chipsDe(f).map(c => [f, join(dirname(join(raiz, f)), c.href)])
+      .filter(([, alvo]) => !existsSync(alvo)));
+  quebrados.length
+    ? falha('chip aponta para arquivo que não existe', quebrados.map(([f, a]) => `${f} → ${a}`).join(', '))
+    : ok('todo chip leva a uma página que existe', `${COM_CHIPS.length ** 2} links`);
+
+  /* Blocos e Templates não levam chip: cada um é um grupo de um degrau só, e
+     chip que não tem para onde alternar é decoração com alvo de toque. */
+  const intrusos = ['organisms', 'templates'].filter(d =>
+    existsSync(join(raiz, `${d}/index.html`)) && ler(`${d}/index.html`).includes('class="chip"'));
+  if (intrusos.length) falha('degrau fora do catálogo entrou na fileira de chips', intrusos.join(', '));
+}
+
+secao('Tamanho da prosa');
+/* A DOC TINHA 169 MIL CARACTERES, e 68% deles estavam nas notas das peças.
+   Elas haviam virado registro de engenharia: a nota do Partner tinha 2.485
+   caracteres e contava a história de três tentativas antes de dizer a regra.
+   Texto assim não é lido — é rolado.
+
+   O teto não é gosto. Nota é uma observação sobre UMA decisão; quando passa de
+   uns poucos parágrafos, ou são duas notas, ou é uma nota que está narrando o
+   caminho em vez de dar a regra. Dividir é sempre uma saída — o limite é por
+   nota, não por peça.
+
+   O número sai do estado depois da limpeza (a maior ficou em 645) com folga
+   para uma nota legitimamente densa. Ele reprova, e não avisa: aviso a gente
+   aprende a ignorar, e foi assim que 2.485 caracteres entraram sem ninguém
+   notar. */
+{
+  const TETO_NOTA = 700;
+  const semTag = (s) => s.replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/g, ' ')
+    .replace(/\s+/g, ' ').trim();
+  const gordas = [];
+  let notas = 0, soma = 0;
+  for (const n of ESCADA)
+    for (const f of readdirSync(join(raiz, `${PASTA[n]}/pecas`)).filter(f => f.endsWith('.html')))
+      for (const m of ler(`${PASTA[n]}/pecas/${f}`).matchAll(/<div class="note">([\s\S]*?)<\/div>/g)) {
+        const corpo = semTag(m[1]);
+        notas++; soma += corpo.length;
+        if (corpo.length > TETO_NOTA)
+          gordas.push(`${PASTA[n]}/${f.replace(/\.html$/, '')}: ${corpo.length} em "${semTag((m[1].match(/<b>([\s\S]*?)<\/b>/) || [, '?'])[1]).slice(0, 34)}"`);
+      }
+  gordas.length
+    ? falha(`nota acima de ${TETO_NOTA} caracteres`, gordas.join(' · ')
+        + ' — ou são duas notas, ou é uma narrando o caminho em vez de dar a regra')
+    : ok('nenhuma nota passa do teto', `${notas} notas · ${Math.round(soma / notas)} caracteres em média`);
+
+  /* Mesma régua para a acessibilidade, que é lista e por isso cresce de outro
+     jeito: cada linha é uma exigência, e uma peça com mais de meia dúzia delas
+     está descrevendo o HTML em vez de dizer o que o HTML exige. */
+  const TETO_A11Y = 560;
+  const longas = [];
+  let pecas = 0;
+  for (const n of ESCADA) {
+    const arq = `${PASTA[n]}/fichas.json`;
+    if (!existsSync(join(raiz, arq))) continue;
+    for (const [id, v] of Object.entries(JSON.parse(ler(arq)))) {
+      if (!v.a11y) continue;
+      pecas++;
+      const total = v.a11y.reduce((s, l) => s + semTag(l).length, 0);
+      if (total > TETO_A11Y) longas.push(`${PASTA[n]}/${id}: ${total}`);
+    }
+  }
+  longas.length
+    ? falha(`acessibilidade acima de ${TETO_A11Y} caracteres`, longas.join(' · '))
+    : ok('a acessibilidade cabe na régua', `${pecas} peças escritas`);
+}
+
+secao('Completude das peças');
+/* CONTROLE PRÓPRIO SEM RETORNO. Uma peça que traz o próprio <button>, <a> ou
+   <summary> tem de dizer o que acontece quando o teclado chega nele e quando o
+   mouse passa por cima. Não havia regra global de foco no `base/` — só o skip
+   link —, então quem não declara não tem.
+
+   O "PRÓPRIO" é o que faz esta checagem não mentir. O botão do Empty state é
+   um `.yb-btn` emprestado: o estado é do Button, e cobrar do Empty state
+   encheria a lista de falso positivo até ninguém mais ler. Só conta o
+   elemento interativo cuja classe é da PRÓPRIA família — ou que não tem
+   classe nenhuma e portanto depende do CSS desta peça (o `<summary>` do
+   acordeão).
+
+   Isto nasceu de uma varredura à mão das 35 peças de componente. Varredura à
+   mão roda uma vez; regra roda a cada build. */
+{
+  const TAG = /<(a|button|select|textarea|summary|input)\b([^>]*)>/g;
+  const folhas = ESCADA.map(n => ler(`${PASTA[n]}/ybera-${PASTA[n]}.css`)).join('\n')
+    + ler('base/ybera-base.css');
+  const regras = [...folhas.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+    .map(m => m[1].trim()).filter(sel => sel && !sel.startsWith('@'));
+
+  /* Só átomos e moléculas. Organismos e templates pedem uma varredura própria:
+     lá o controle sem classe quase sempre mora dentro de outra peça, e a regra
+     de dono abaixo vira chute. Cobrar antes de olhar encheria o build de falso
+     positivo — que é como uma checagem morre. */
+  const pecas = [];
+  for (const n of ['atomos', 'moleculas']) {
+    const dir = PASTA[n];
+    if (!existsSync(join(raiz, `${dir}/pecas`))) continue;
+    for (const f of readdirSync(join(raiz, dir)).filter(x => x.endsWith('.html') && !['index.html', 'solo.html'].includes(x))) {
+      const ficha = ler(`${dir}/${f}`);
+      const base = (ficha.match(/Classe base[\s\S]*?<code>\.([\w-]+)<\/code>/) || [])[1];
+      const id = f.replace(/\.html$/, '');
+      if (!base || !existsSync(join(raiz, `${dir}/pecas/${id}.html`))) continue;
+      pecas.push({ id, dir, base, titulo: (ficha.match(/<h1 class="ficha-titulo">(.*?)<\/h1>/) || [, id])[1] });
+    }
+  }
+  const familias = new Set(pecas.map(p => p.base));
+
+  const semRetorno = { foco: [], hover: [] };
+  for (const p of pecas) {
+    const frag = ler(`${p.dir}/pecas/${p.id}.html`);
+    const palco = frag.slice(frag.indexOf('</p>', frag.indexOf('class="when"')) + 4);
+    const demo = palco.split('<div class="note"')[0];
+    let proprio = false;
+    for (const m of demo.matchAll(TAG)) {
+      if (m[1] === 'input' && /type="hidden"/.test(m[2])) continue;
+      const cls = ((m[2].match(/class="([^"]*)"/) || [, ''])[1]).split(/\s+/).filter(Boolean);
+      const fams = [...new Set(cls.map(c => (c.match(/^(yb-[a-z0-9]+)(?:__|--|$)/) || [])[1]).filter(Boolean))];
+      /* Sem classe, quem manda é o container. O <summary> do acordeão não tem
+         classe e é do acordeão; o <summary> do FAQ também não tem, e é do
+         acordeão do mesmo jeito — o FAQ só põe os dois lado a lado. Sem esta
+         linha o FAQ respondia por um estado que não é dele. */
+      const dono = fams.length ? fams
+        : [(demo.slice(0, m.index).match(/class="[^"]*\b(yb-[a-z0-9]+)(?:__|--)?[^"]*"[^"]*$/) || [])[1]].filter(Boolean);
+      /* Carrega a família de OUTRA peça junto? Então o estado é de lá. O botão
+         de play do carrossel é `.yb-iconbtn .yb-video__play`: quem diz onde o
+         teclado está é o Icon button, e cobrar do carrossel seria cobrar duas
+         vezes a mesma regra. */
+      if (dono.some((x) => familias.has(x) && x !== p.base)) continue;
+      if (dono.includes(p.base) || !dono.length) { proprio = true; break; }
+    }
+    if (!proprio) continue;
+    const alcance = new RegExp(`\\.${p.base}(?:__[a-z0-9-]+|--[a-z0-9-]+)?\\b`);
+    const tem = (estado) => regras.some(sel => alcance.test(sel) && sel.includes(estado));
+    if (!tem(':focus-visible') && !tem(':focus-within')) semRetorno.foco.push(p.titulo);
+    if (!tem(':hover')) semRetorno.hover.push(p.titulo);
+  }
+
+  semRetorno.foco.length
+    ? falha('peça com controle próprio e sem indicador de foco', semRetorno.foco.join(', '))
+    : ok('todo controle próprio diz onde o teclado está', `${pecas.length} peças conferidas`);
+  semRetorno.hover.length
+    ? falha('peça com controle próprio e sem :hover', semRetorno.hover.join(', '))
+    : ok('todo controle próprio responde ao mouse', `${pecas.length} peças conferidas`);
+}
+
+secao('Fichas');
+// Uma pagina por peca em cada degrau, gerada de <nivel>/pecas/ + a folha do
+// nivel. Quatro coisas podem apodrecer aqui, e as quatro apodrecem em
+// silencio: a ficha ficar para tras do CSS, uma peca nova nao ganhar ficha, um
+// bloco escrito a mao nunca ser escrito, e o quadro de 375px sumir junto com o
+// solo.html do degrau.
 {
   const { execFileSync } = await import('node:child_process');
   try {
@@ -881,71 +1159,62 @@ secao('Fichas de componente');
     falha('fichas defasadas', 'rode ./build.sh e commite');
   }
 
-  const idsDoc = readdirSync(join(raiz, 'components/pecas'))
-    .filter(f => f.endsWith('.html')).map(f => f.replace(/\.html$/, ''));
-  const semFicha = idsDoc.filter(id => !existsSync(join(raiz, `components/${id}.html`)));
+  const porDegrau = ESCADA.map(n => ({
+    n, dir: PASTA[n],
+    ids: readdirSync(join(raiz, `${PASTA[n]}/pecas`))
+      .filter(f => f.endsWith('.html')).map(f => f.replace(/\.html$/, '')),
+  }));
+  const total = porDegrau.reduce((s, d) => s + d.ids.length, 0);
+
+  const semFicha = porDegrau.flatMap(d => d.ids
+    .filter(id => !existsSync(join(raiz, `${d.dir}/${id}.html`)))
+    .map(id => `${d.dir}/${id}`));
   semFicha.length
-    ? falha('seção da doc sem ficha', semFicha.join(', '))
-    : ok('toda seção da doc tem ficha', `${idsDoc.length} componentes`);
+    ? falha('peça da doc sem ficha', semFicha.join(', '))
+    : ok('toda peça tem ficha', `${total} peças em ${ESCADA.length} degraus`);
+
+  // O quadro de 375px morava na galeria antiga, com um toggle global. Ele
+  // desceu para a ficha — o lugar onde a pessoa ja esta olhando A PECA.
+  const semQuadro = porDegrau.flatMap(d => d.ids
+    .filter(id => existsSync(join(raiz, `${d.dir}/${id}.html`))
+      && !ler(`${d.dir}/${id}.html`).includes(`solo.html?c=${id}`))
+    .map(id => `${d.dir}/${id}`));
+  const semSolo = porDegrau.filter(d => !existsSync(join(raiz, `${d.dir}/solo.html`)));
+  (semQuadro.length || semSolo.length)
+    ? falha('ficha sem o quadro de 375px',
+        semSolo.length ? `falta ${semSolo.map(d => `${d.dir}/solo.html`).join(', ')}` : semQuadro.join(', '))
+    : ok('toda ficha mostra a peça em 375px', `${total} quadros`);
+
+  /* A ESCADA E UMA AFIRMACAO SOBRE O CODIGO, e esta e a linha em que ela se
+     verifica: um atomo que compoe outra peca deixou de ser atomo. Sem isto, a
+     taxonomia vira rotulo — alguem move um cartao de produto para `atoms/` e
+     nada acusa, porque o CSS continua funcionando igual. */
+  const impostores = porDegrau[0].ids.filter(id => {
+    const h = ler(`atoms/${id}.html`);
+    return /<ul class="usa">/.test(h);
+  });
+  impostores.length
+    ? falha('átomo que compõe outra peça', `${impostores.join(', ')} — sobe um degrau`)
+    : ok('nenhum átomo compõe outra peça', `${porDegrau[0].ids.length} átomos indivisíveis`);
+
+  /* E o contrario tambem: um organismo que nao consome NADA nao e regiao de
+     pagina, e uma peca solta no degrau errado. O template e a excecao legitima
+     — ele e esqueleto, e esqueleto nao tem conteudo. */
+  const ocos = porDegrau.find(d => d.n === 'organismos').ids
+    .filter(id => !/<ul class="usa">/.test(ler(`organisms/${id}.html`)));
+  ocos.length
+    ? aviso(`${ocos.length} organismo(s) que não compõem nada`, `${ocos.join(', ')} — confira o degrau`)
+    : ok('todo organismo compõe peças de baixo', `${porDegrau.find(d => d.n === 'organismos').ids.length} organismos`);
 
   // Bloco pendente aparece DECLARADO na ficha, e nao ausente — mas declarado
   // ele ainda e uma pergunta sem resposta, e o placar precisa dize-lo.
-  const pendentes = idsDoc.filter(id =>
-    existsSync(join(raiz, `components/${id}.html`)) &&
-    ler(`components/${id}.html`).includes('class="pendente"'));
+  const pendentes = porDegrau.flatMap(d => d.ids
+    .filter(id => existsSync(join(raiz, `${d.dir}/${id}.html`))
+      && ler(`${d.dir}/${id}.html`).includes('class="pendente"'))
+    .map(id => `${d.dir}/${id}`));
   pendentes.length
     ? aviso(`${pendentes.length} ficha(s) com bloco por escrever`, pendentes.join(', '))
-    : ok('toda ficha tem acessibilidade e faça / não faça', `${idsDoc.length} componentes`);
-
-  // O quadro de 375px morava na galeria antiga, com um toggle global. Ele
-  // desceu para a ficha — o lugar onde a pessoa ja esta olhando A PECA. A
-  // checagem generica de solo.html pula pagina que nao o cita, entao sem esta
-  // aqui os 34 quadros podiam sumir juntos sem nada acusar.
-  const semQuadro = idsDoc.filter(id =>
-    existsSync(join(raiz, `components/${id}.html`)) &&
-    !ler(`components/${id}.html`).includes(`solo.html?c=${id}`));
-  const temSolo = existsSync(join(raiz, 'components/solo.html'));
-  (semQuadro.length || !temSolo)
-    ? falha('ficha sem o quadro de 375px',
-        (!temSolo ? 'falta components/solo.html' : semQuadro.join(', ')))
-    : ok('toda ficha mostra a peça em 375px', `${idsDoc.length} quadros`);
-}
-
-secao('Versão');
-{
-  // Havia SEIS numeros de versao convivendo — package.json 0.7.0, README 0.7,
-  // a capa v0.9, componentes v0.8, padroes v0.3 e tokens v0.1. Cada pagina
-  // congelou no dia em que foi escrita, e quem lia a doc de tokens acreditava
-  // estar num sistema em que componente ainda nao existia.
-  const pkg = JSON.parse(ler('package.json'));
-  const versao = pkg.version;
-  const curta = versao.replace(/\.0$/, '');       // 0.10.0 -> 0.10
-
-  const divergentes = [];
-  const ARQS = ['README.md', 'index.html', 'docs/index.html', 'components/index.html',
-                'patterns/index.html', 'icons/index.html', 'preview/index.html'];
-  for (const f of ARQS) {
-    if (!existsSync(join(raiz, f))) continue;
-    for (const m of ler(f).matchAll(/\bv?(\d+\.\d+(?:\.\d+)?)\b/g)) {
-      const achado = m[1];
-      // só interessa o que se apresenta COMO versão do sistema
-      const redor = ler(f).slice(Math.max(0, m.index - 60), m.index + 20);
-      // `vers` solto casava dentro de "inverse". Bastava uma nota com razao de
-      // contraste perto de `--yb-border-inverse` — "mede 1.47:1" — para a
-      // checagem de VERSAO reprovar dizendo que 1.47 diverge de 0.12.1.
-      // Ancorar na palavra inteira mantem o que ela quer pegar (`Versao`,
-      // `v0.12.1`, `nav-ver`) e para de morder texto tecnico.
-      if (!/[Vv]ers[ãa]o|[Vv]ersion|v\d|nav-ver|class="ver"/.test(redor)) continue;
-      if (achado !== versao && achado !== curta) divergentes.push(`${f}: ${achado}`);
-    }
-  }
-  // o topo do changelog tem de ser a versão que o pacote declara
-  const topo = ler('CHANGELOG.md').match(/^##\s*\[(\d+\.\d+\.\d+)\]/m);
-  if (topo && topo[1] !== versao) divergentes.push(`CHANGELOG.md: topo é ${topo[1]}`);
-
-  divergentes.length
-    ? falha(`versão divergente de package.json (${versao})`, divergentes.join(' · '))
-    : ok('uma versão só em todo lugar', `${versao} · ${ARQS.length} páginas + changelog`);
+    : ok('toda ficha tem acessibilidade e faça / não faça', `${total} peças`);
 }
 
 secao('Páginas');
@@ -953,8 +1222,14 @@ secao('Páginas');
 // 300x150 — o tamanho padrao de elemento substituido. Foi o que aconteceu com
 // patterns/index.html: sete icones gigantes, e nenhuma checagem viu.
 {
+  /* As paginas de DOCUMENTACAO: a capa e o index.html de cada pasta. `pages/`
+     fica de fora — as telas-prova sao o ultimo degrau da escada, nao doc, e
+     tem a propria secao de checagens mais abaixo. Sem esta linha a home da
+     loja entrava aqui e era cobrada por sumario alfabetico e por carregar
+     a folha de icone que ela carrega com outro nome, dentro de `yb/`. */
   const paginas = readdirSync(raiz, { withFileTypes: true })
-    .flatMap(d => d.isDirectory() && d.name !== 'node_modules' && !d.name.startsWith('_') && !d.name.startsWith('.')
+    .flatMap(d => d.isDirectory() && d.name !== 'node_modules' && d.name !== 'pages'
+      && !d.name.startsWith('_') && !d.name.startsWith('.')
       ? [join(d.name, 'index.html')] : [])
     .concat('index.html')
     .filter(p => existsSync(join(raiz, p)));
@@ -989,7 +1264,7 @@ secao('Páginas');
   // inteiro sem quem fechasse no Escape.
   {
     // a lista sai do proprio JS: escrita a mao ela tinha 9 ganchos de 38
-    const ganchos = [...new Set([...semComentario(ler('components/ybera-components.js')).matchAll(/data-yb-[a-z-]+/g)].map(m => m[0]))];
+    const ganchos = [...new Set([...semComentario(ler('behavior/ybera-behavior.js')).matchAll(/data-yb-[a-z-]+/g)].map(m => m[0]))];
     const MARCADORES = [
       ...ganchos.filter(m => m !== 'data-yb-bound'),   // este o JS escreve, ninguem emite
       'yb-nav__toggle', 'yb-header__drawer'];
@@ -1049,7 +1324,7 @@ secao('Páginas');
 
       for (const { id, arquivo, nome } of sumario) {
         // o titulo mora na secao (ancora) ou no fragmento da peca (arquivo)
-        const fonte = arquivo ? `components/pecas/${id}.html` : null;
+        const fonte = arquivo ? `${dirname(p)}/pecas/${id}.html` : null;
         const alvo = arquivo
           ? (existsSync(join(raiz, fonte)) ? ler(fonte).match(/<h2>([^<]+)<\/h2>/) : null)
           : h.match(new RegExp(`<section id="${id}">\\s*<h2>([^<]+)</h2>`));
@@ -1060,7 +1335,7 @@ secao('Páginas');
 
       // Catalogo se ordena; sequencia de leitura, nao. A pagina de tokens vai
       // de fundamentos a estado numa ordem que ensina — alfabeta-la piora.
-      const CATALOGO = ['components/index.html', 'patterns/index.html'];
+      const CATALOGO = ESCADA.map(n => `${PASTA[n]}/index.html`);
       if (!CATALOGO.includes(p)) continue;
 
       const chave = s => s.replace(/&amp;/g, '&').normalize('NFKD')
@@ -1073,13 +1348,14 @@ secao('Páginas');
       // Na forma de arquivo nao ha secao para comparar: o que tem de bater e a
       // lista de fragmentos, e a ordem ja foi conferida acima.
       if (sumario.every(x => x.arquivo)) {
-        const fragmentos = existsSync(join(raiz, 'components/pecas'))
-          ? readdirSync(join(raiz, 'components/pecas')).filter(f => f.endsWith('.html'))
+        const dirPecas = `${dirname(p)}/pecas`;
+        const fragmentos = existsSync(join(raiz, dirPecas))
+          ? readdirSync(join(raiz, dirPecas)).filter(f => f.endsWith('.html'))
               .map(f => f.replace(/\.html$/, '')).sort()
           : [];
         const listados = sumario.map(x => x.id).sort();
         if (fragmentos.join() !== listados.join())
-          problemas.push(`${p}: sumário e components/pecas/ não têm as mesmas peças`);
+          problemas.push(`${p}: sumário e ${dirPecas}/ não têm as mesmas peças`);
         continue;
       }
       const ids = [...h.matchAll(/<section id="([\w-]+)">/g)].map(m => m[1]);
@@ -1129,10 +1405,10 @@ secao('Páginas');
   // disco — e nenhuma olhava o que esta escrito no HTML. Uma cor crua na home
   // nao acusava nada, e a home e justamente a peca que se mostra para provar
   // que o sistema se sustenta. As duas checagens abaixo fecham isso.
-  const PROVA = existsSync(join(raiz, '_captura/nova-loja'))
-    ? readdirSync(join(raiz, '_captura/nova-loja'))
+  const PROVA = existsSync(join(raiz, 'pages'))
+    ? readdirSync(join(raiz, 'pages'))
         .filter(f => f.endsWith('.html'))
-        .map(f => join('_captura/nova-loja', f))
+        .map(f => join('pages', f))
     : [];
 
   {
@@ -1144,8 +1420,10 @@ secao('Páginas');
       '|gray|grey|silver|gold|navy|teal|olive|maroon|lime|aqua|fuchsia|cyan' +
       '|magenta|beige|ivory|khaki|salmon|tan|violet|indigo|crimson)(?![\\w-])', 'gi');
     // A largura de preenchimento de barra e DADO, nao estilo: sai do subtotal e
-    // muda a cada carrinho. Nao ha onde declara-la a nao ser aqui.
-    const INLINE_OK = /^(?:inline-size|width):\s*\d+(?:\.\d+)?%$/;
+    // muda a cada carrinho. Nao ha onde declara-la a nao ser aqui. A nota do
+    // Stars e o mesmo caso — sai das avaliacoes e muda por produto — e por isso
+    // entra pela mesma porta, e so ela: um numero de 0 a 5, nada de cor ou medida.
+    const INLINE_OK = /^(?:(?:inline-size|width):\s*\d+(?:\.\d+)?%|--yb-stars:\s*[0-5](?:\.\d+)?)$/;
 
     const problemas = [];
     for (const p of PROVA) {
@@ -1202,7 +1480,7 @@ secao('Páginas');
     // some da vista sem ninguem perceber. Foi assim que ele passou meses sem
     // prova. A checagem existe para que o dia da volta seja barulhento —
     // trocar ESGOTADO por outro handle da lista e a correcao, e leva uma linha.
-    const alvo = '_captura/nova-loja/pdp-esgotado.html';
+    const alvo = 'pages/pdp-esgotado.html';
     if (!existsSync(join(raiz, alvo))) {
       aviso('tela-prova de esgotado ausente', 'o ramo sem estoque da PDP fica sem evidência');
     } else {
@@ -1268,7 +1546,7 @@ secao('Páginas');
     // que a tela que o declara realmente exercita o ramo, e que o dado NAO
     // aparece em nenhuma outra pagina. Tres cartoes de tamanho inventados ja
     // moraram no gerador e foram lidos como preco de verdade.
-    const alvo = '_captura/nova-loja/pdp-variante.html';
+    const alvo = 'pages/pdp-variante.html';
     if (!existsSync(join(raiz, alvo))) {
       aviso('tela-prova de variante ausente', 'o seletor de tamanho fica sem evidência');
     } else {
@@ -1288,7 +1566,7 @@ secao('Páginas');
         ? falha('a tela-prova de variante não prova a variante', faltando.join(', '))
         : ok('a variante está ligada ao preço, ao estoque e à foto', `${entradas.length} opções`);
 
-      const vazou = ['_captura/nova-loja/pdp.html', '_captura/nova-loja/pdp-esgotado.html']
+      const vazou = ['pages/pdp.html', 'pages/pdp-esgotado.html']
         .filter(p => existsSync(join(raiz, p)))
         .filter(p => /data-preco="\$/.test(ler(p)));
       vazou.length
@@ -1303,7 +1581,7 @@ secao('Páginas');
     // cerca da variante. Alem de existir, o selo tem que FECHAR com os dois
     // precos: um selo que anuncia um desconto que os numeros desmentem e pior
     // do que nenhum selo, e o cartao de oferta ja e checado assim.
-    const alvo = '_captura/nova-loja/pdp-oferta.html';
+    const alvo = 'pages/pdp-oferta.html';
     if (!existsSync(join(raiz, alvo))) {
       falha('tela-prova de promoção ausente', 'o riscado e o selo "Save X%" ficam sem evidência');
       falha('o desconto da PDP não pôde ser conferido', `${alvo} não existe`);
@@ -1332,7 +1610,7 @@ secao('Páginas');
         }
       }
       const vazou = ['pdp', 'pdp-esgotado', 'pdp-variante', 'index', 'index-v2']
-        .map(n => `_captura/nova-loja/${n}.html`)
+        .map(n => `pages/${n}.html`)
         .filter(f => existsSync(join(raiz, f)))
         .filter(f => /yb-price__was">\$/.test(ler(f)));
       if (vazou.length) torto.push(`dado forjado vazou para ${vazou.join(', ')}`);
@@ -1378,12 +1656,11 @@ secao('Páginas');
   // documentação: collection, review, seals, logobar, post, quote e video.
   // Componente que ninguém encontra é componente que alguém reescreve.
   {
-    // A doc de componente virou um arquivo por peca. `pagina` aceita as duas
-    // formas: pasta de fragmentos (le todos) ou pagina unica, que e como os
-    // padroes continuam.
+    // As duas docs viraram um arquivo por peca. `pagina` aceita as duas formas:
+    // pasta de fragmentos (le todos) ou pagina unica, que nenhuma das duas usa
+    // mais — a forma continua aceita porque a proxima camada pode nascer assim.
     const PARES = [
-      { css: 'componentes', pagina: 'components/pecas' },
-      { css: 'padroes', pagina: 'patterns/index.html' },
+      ...ESCADA.map(n => ({ css: n, pagina: `${PASTA[n]}/pecas` })),
     ];
     const lerDoc = (p) => {
       const abs = join(raiz, p);
@@ -1451,7 +1728,8 @@ secao('Páginas');
   // Se o solo.html sumir da pasta, os quadros ficam vazios sem nada acusar.
   {
     const problemas = [];
-    const fichas = readdirSync(join(raiz, 'components')).filter(f => f.endsWith('.html')).map(f => `components/${f}`);
+    const fichas = ESCADA.flatMap(n => readdirSync(join(raiz, PASTA[n]))
+      .filter(f => f.endsWith('.html')).map(f => `${PASTA[n]}/${f}`));
     for (const p of [...paginas, ...fichas]) {
       const h = ler(p);
       if (!h.includes("solo.html?c=")) continue;
@@ -1559,9 +1837,9 @@ secao('Véu sobre foto');
 // Conta gradientes no TOPO do valor, nao virgulas — a curva tem nove paradas
 // separadas por virgula dentro de UM gradiente.
 {
-  const s = semComentario(css.componentes || '');
+  const s = semComentario(css.moleculas || '');
   const erradas = [];
-  for (const m of s.matchAll(/\.yb-mediabanner[^{}]*::before\s*\{([^{}]*)\}/g)) {
+  for (const m of s.matchAll(/\.yb-banner(?:hero|media)[^{}]*::before\s*\{([^{}]*)\}/g)) {
     const decl = [...m[1].matchAll(/(^|;)\s*background\s*:([^;]*)/g)].map(d => d[2]).pop();
     if (!decl) continue;
     const camadas = (decl.match(/\b(?:linear|radial|conic)-gradient\s*\(/g) || []).length;
@@ -1583,7 +1861,7 @@ secao('Véu sobre foto');
 // Todo degrau da curva tem de ser posicionado pela variavel; parada em
 // porcentagem quer dizer que alguem voltou a amarrar a curva na caixa.
 {
-  const s = semComentario(css.componentes || '');
+  const s = semComentario(css.moleculas || '');
   const erradas = [];
   for (const m of s.matchAll(/var\(--yb-scrim-curve-\d\)\s*([^,)]+)/g))
     if (!m[1].includes('--yb-veil-fall')) erradas.push(m[0].trim());
@@ -1610,7 +1888,7 @@ secao('Véu leve e blur');
 // nao quebra nada visivel — o blur so fica mais fraco, que e exatamente o tipo
 // de defeito que ninguem percebe.
 {
-  const s = semComentario(css.componentes || '');
+  const s = semComentario(css.moleculas || '');
   const fora = [];
   for (const m of s.matchAll(/([^{}]*)\{([^{}]*)\}/g)) {
     if (!/--yb-scrim-lite/.test(m[2])) continue;
@@ -1629,13 +1907,13 @@ secao('Véu leve e blur');
   // nao quebra nada visivel de imediato: o blur fica mais fraco e o contraste
   // cai, que e exatamente o tipo de defeito que passa despercebido.
   const alvos = [
-    ...(existsSync(join(raiz, '_captura/nova-loja'))
-      ? readdirSync(join(raiz, '_captura/nova-loja')).filter(f => f.endsWith('.html'))
-          .map(f => join('_captura/nova-loja', f))
+    ...(existsSync(join(raiz, 'pages'))
+      ? readdirSync(join(raiz, 'pages')).filter(f => f.endsWith('.html'))
+          .map(f => join('pages', f))
       : []),
-    ...readdirSync(join(raiz, 'components')).filter(f => f.endsWith('.html'))
-      .map(f => join('components', f)),
-    ...['patterns/index.html', 'index.html'].filter(f => existsSync(join(raiz, f))),
+    ...ESCADA.flatMap(n => readdirSync(join(raiz, PASTA[n])).filter(f => f.endsWith('.html'))
+      .map(f => join(PASTA[n], f))),
+    ...['index.html'].filter(f => existsSync(join(raiz, f))),
   ];
   const erradas = [];
   for (const f of alvos) {
@@ -1663,7 +1941,7 @@ secao('Véu leve e blur');
 // A mascara do blur cruza DUAS: a queda vertical e o fim horizontal, onde o
 // texto acaba. Duas coisas dao errado nela, e as duas em silencio.
 {
-  const s = semComentario(css.componentes || '');
+  const s = semComentario(css.moleculas || '');
   // SEMPRE dois resultados, ache ou nao ache a regra. Com um `if` que emitia
   // uma falha e um `else` que emitia dois `ok`, o TOTAL de checagens mudava
   // conforme o codigo estivesse sao ou doente — e como a doc promete esse
@@ -1712,13 +1990,13 @@ secao('Véu leve e blur');
 // perguntas diferentes. O que esta checagem proibe e a ficha A vestir a
 // classe base da ficha B.
 {
-  const arqs = readdirSync(join(raiz, 'components'))
-    .filter(f => f.endsWith('.html') && f !== 'index.html');
   const base = new Map();
-  for (const f of arqs) {
-    const m = ler(join('components', f)).match(/Classe base <b><code>\.([\w-]+)<\/code>/);
-    if (m) base.set(f.replace(/\.html$/, ''), m[1]);
-  }
+  for (const n of ESCADA)
+    for (const f of readdirSync(join(raiz, PASTA[n]))
+      .filter(f => f.endsWith('.html') && f !== 'index.html' && f !== 'solo.html')) {
+      const m = ler(join(PASTA[n], f)).match(/Classe base <b><code>\.([\w-]+)<\/code>/);
+      if (m) base.set(f.replace(/\.html$/, ''), m[1]);
+    }
   const nomes = new Set([...base.keys()].map(id => 'yb-' + id));
   const erradas = [...base.entries()]
     .filter(([id, b]) => b !== 'yb-' + id && nomes.has(b))
@@ -1757,10 +2035,10 @@ secao('Véu leve e blur');
     .replace(/\s+(?:href|action)="[^"]*"/g, '')   // destino e de cada pagina
     .replace(/\.\.\//g, '')                        // profundidade idem
     .replace(/\s+/g, ' ').trim();
-  const a = overlay('components/pecas/search.html');
-  const b = overlay('patterns/index.html');
+  const a = overlay('organisms/pecas/search.html');
+  const b = overlay('organisms/pecas/header.html');
   if (!a || !b) {
-    falha('overlay de busca ausente', !a ? 'components/pecas/search.html' : 'patterns/index.html');
+    falha('overlay de busca ausente', !a ? 'organisms/pecas/search.html' : 'organisms/pecas/header.html');
   } else if (esqueleto(a) !== esqueleto(b)) {
     // primeiro ponto em que divergem, para nao imprimir 8 KB
     const x = esqueleto(a), y = esqueleto(b);
@@ -1788,8 +2066,8 @@ secao('Véu leve e blur');
       que e o que Safari exige.
    =========================================================================== */
 {
-  const js = ler('components/ybera-components.js');
-  const telas = ['_captura/nova-loja/index-v2.html'];
+  const js = ler('behavior/ybera-behavior.js');
+  const telas = ['pages/index-v2.html'];
   const semLoop = telas.filter(f => existsSync(join(raiz, f)))
     .filter(f => !aberturas(ler(f)).some(t => /id="hero-track"/.test(t) && temAttr(t, 'data-yb-track-loop')));
 
@@ -1827,7 +2105,7 @@ secao('Véu leve e blur');
    selo de perto. Aqui a formula e refeita e comparada com o que esta na folha.
    =========================================================================== */
 {
-  const css = ler('components/ybera-components.css');
+  const css = ler('atoms/ybera-atoms.css');
   const m = css.match(/\.yb-offerseal\{[^}]*?clip-path:\s*polygon\(([^)]*)\)/s);
   const PONTAS = 20, DENTRO = 0.90;
   const esperado = [];
@@ -1861,22 +2139,19 @@ secao('Véu leve e blur');
    Tela que ninguem encontra e tela que ninguem revisa, e no proximo redesenho
    ela sai do ar sem ninguem notar que existia.
 
-   A home v1 e linkada como a PASTA (`_captura/nova-loja/`), nao pelo nome do
+   A home v1 e linkada como a PASTA (`pages/`), nao pelo nome do
    arquivo — por isso o link do diretorio conta como cobertura de index.html.
    =========================================================================== */
 {
-  const dir = '_captura/nova-loja';
+  const dir = 'pages';
   if (!existsSync(join(raiz, dir)) || !existsSync(join(raiz, 'index.html'))) {
     aviso('não deu para conferir telas órfãs', 'capa ou pasta de telas-prova ausente');
   } else {
     const capa = ler('index.html');
-    const telas = readdirSync(join(raiz, dir)).filter(f => f.endsWith('.html'));
-    const orfas = telas.filter(f => {
-      if (capa.includes(`${dir}/${f}`)) return false;
-      // o link da pasta cobre o index
-      if (f === 'index.html' && capa.includes(`${dir}/"`)) return false;
-      return true;
-    });
+    // `index.html` e a pagina do GRUPO, gerada, e nao uma tela
+    const telas = readdirSync(join(raiz, dir))
+      .filter(f => f.endsWith('.html') && f !== 'index.html');
+    const orfas = telas.filter(f => !capa.includes(`${dir}/${f}`));
     orfas.length
       ? falha('tela-prova que a capa não lista', orfas.join(', ')
           + ' — tela que ninguém encontra é tela que ninguém revisa')
@@ -1900,21 +2175,21 @@ secao('Véu leve e blur');
    A primeira e a marcacao: sem o invulucro, a secao volta as tres fileiras e
    nada acusa. A segunda e a CASCATA. `.yb-grid__rail` e `.yb-track` tem a mesma
    especificidade, entao `display:contents` so ganha do `display:grid` do trilho
-   porque patterns.css carrega depois de components.css. Mover a regra para
-   components.css — o que parece arrumacao, ja que ela fala de trilho — faria o
-   desktop virar um trilho de tres cartoes com o destaque solto ao lado.
+   porque a folha dos organismos carrega depois da das moleculas. Mover a regra
+   para as moleculas — o que parece arrumacao, ja que ela fala de trilho — faria
+   o desktop virar um trilho de tres cartoes com o destaque solto ao lado.
    =========================================================================== */
 {
   const vitrines = [
-    ['index.html', 'Best Sellers'], ['index-v2.html', 'Best Sellers'],
+    ['home.html', 'Best Sellers'], ['index-v2.html', 'Best Sellers'],
     ['index-v3.html', 'Best Sellers'], ['index-logado.html', 'Best Sellers'],
-    ['pdp.html', 'Related Products'], ['pdp-v2.html', 'Related Products'],
+    ['pdp.html', 'Related Products'], ['pdp-influencer.html', 'Related Products'],
     ['pdp-variante.html', 'Related Products'], ['pdp-oferta.html', 'Related Products'],
     ['pdp-esgotado.html', 'Related Products'],
   ];
   const problemas = [];
   for (const [nome, titulo] of vitrines) {
-    const caminho = `_captura/nova-loja/${nome}`;
+    const caminho = `pages/${nome}`;
     if (!existsSync(join(raiz, caminho))) { problemas.push(`${nome}: nao existe`); continue; }
     const html = ler(caminho);
     const h = html.indexOf(`<h2>${titulo}</h2>`);
@@ -1922,14 +2197,13 @@ secao('Véu leve e blur');
     const sec = html.slice(html.lastIndexOf('<section', h), html.indexOf('</section>', h));
     if (!/class="yb-grid__rail yb-track"/.test(sec)) problemas.push(`${nome}: ${titulo} sem o trilho`);
   }
-  const folha = ler('patterns/ybera-patterns.css');
-  if (!/@media \(min-width:768px\)\{ \.yb-grid__rail\{ display:contents \} \}/.test(folha))
-    problemas.push('patterns: falta o display:contents acima de 768');
-  if (/\.yb-grid__rail/.test(ler('components/ybera-components.css')))
-    problemas.push('a regra do trilho migrou para components.css e perde a cascata para .yb-track');
+  if (!/@media \(min-width:768px\)\{ \.yb-grid__rail\{ display:contents \} \}/.test(css.organismos))
+    problemas.push('organisms: falta o display:contents acima de 768');
+  if (ESCADA.slice(0, ESCADA.indexOf('organismos')).some(n => /\.yb-grid__rail/.test(css[n])))
+    problemas.push('a regra do trilho desceu de degrau e perde a cascata para .yb-track');
   problemas.length
     ? falha('o trilho das vitrines no celular', problemas.join(' · '))
-    : ok('as vitrines viram trilho no celular', `invólucro em ${vitrines.length} telas, display:contents em patterns`);
+    : ok('as vitrines viram trilho no celular', `invólucro em ${vitrines.length} telas, display:contents nos organismos`);
 }
 
 /* ===========================================================================
@@ -1959,15 +2233,28 @@ secao('Autodescrição');
   const icones = existsSync(join(raiz, 'icons/ybera-icons.svg'))
     ? (ler('icons/ybera-icons.svg').match(/<symbol id=/g) || []).length : 0;
 
-  // "peças" e o total da matriz — componente + padrao. A capa e o README
-  // diziam 42 quando ja eram 48, e a checagem nao via: ela so conhecia as
-  // palavras "componentes" e "padrões". O mesmo vale para "composições", que e
-  // como a capa chama os padroes — dizia 8 com 11 na folha.
-  const total = camada('Componente') + camada('Padrão');
+  /* "peças" e o total da matriz — a escada inteira. A capa e o README diziam
+     42 quando ja eram 48, e a checagem nao via: ela so conhecia as palavras
+     que estavam escritas ali naquele dia.
+
+     A licao vale duas vezes agora: quando as camadas viraram atomic, as
+     palavras "componentes" e "padrões" pararam de existir na matriz, e a
+     checagem passou a conferir zero contra zero — verde, e cega. Por isso os
+     nomes saem da PROPRIA matriz, e nao de uma lista escrita aqui: degrau que
+     nascer amanha entra sozinho. */
+  const DEGRAUS = { 'Átomo': 'átomos', 'Molécula': 'moléculas',
+                    'Organismo': 'organismos', 'Template': 'templates' };
+  const total = Object.keys(DEGRAUS).reduce((s, d) => s + camada(d), 0);
+  if (!total) falha('a matriz não tem nenhum degrau conhecido',
+    'INVENTARIO.md mudou o nome das camadas e a autodescrição ficou cega');
   const VERDADE = {
-    'componentes': camada('Componente'),
-    'padrões':     camada('Padrão'),
-    'composições': camada('Padrão'),
+    ...Object.fromEntries(Object.entries(DEGRAUS).map(([d, palavra]) => [palavra, camada(d)])),
+    /* "blocos" e a palavra do menu para o degrau que o inventario chama de
+       "Organismo". O NUMERO, porem, sai das fichas e nao da matriz: a matriz
+       tem uma linha por BLOCO DE COMENTARIO da folha, e o `.yb-nav` divide o
+       bloco HEADER com o `.yb-header` — sao duas pecas documentadas e uma
+       linha so. A checagem logo abaixo cobra essa diferenca pelo nome. */
+    'blocos':      readdirSync(join(raiz, 'organisms/pecas')).filter(f => f.endsWith('.html')).length,
     'ícones':      icones,
     'símbolos':    icones,   // a capa chama o mesmo numero de "símbolos SVG"
     'tokens':      tokens,
@@ -1980,13 +2267,13 @@ secao('Autodescrição');
     ? (statSync(join(raiz, 'icons/ybera-icons.svg')).size / 1024).toFixed(1).replace('.', ',')
     : null;
   const ONDE = ['README.md', 'GOVERNANCA.md', 'CONTRIBUINDO.md', 'index.html',
-                'docs/index.html', 'components/index.html', 'patterns/index.html',
+                'tokens/index.html', ...ESCADA.map(n => `${PASTA[n]}/index.html`),
                 'icons/index.html', 'preview/index.html'];
 
   const erradas = [];
   for (const f of ONDE) {
     if (!existsSync(join(raiz, f))) continue;
-    for (const m of ler(f).matchAll(/(\d+)\s+(componentes|padrões|composições|ícones|símbolos|tokens|peças)\b/g)) {
+    for (const m of ler(f).matchAll(new RegExp(`(\\d+)\\s+(${Object.keys(VERDADE).join('|')})\\b`, 'g'))) {
       const certo = VERDADE[m[2]];
       if (certo && Number(m[1]) !== certo) erradas.push(`${f}: diz ${m[1]} ${m[2]}, são ${certo}`);
     }
@@ -1996,10 +2283,27 @@ secao('Autodescrição');
             && m[1] !== pesoSprite)
           erradas.push(`${f}: diz ${m[1]} KB de sprite, são ${pesoSprite} KB`);
   }
+  /* A MATRIZ TEM UMA LINHA POR BLOCO DE COMENTARIO, e a doc uma ficha por
+     peca. Enquanto duas pecas dividirem um bloco, a matriz conta menos — e
+     conta em silencio, com autoridade de documento derivado. Foi assim que o
+     `.yb-nav` (58 regras, 26 elementos, nas 11 telas) passou a aparecer como
+     "HEADER" e marcado Estavel: o criterio "aparece na doc" era satisfeito
+     pelas classes estarem na pagina de OUTRA peca. */
+  {
+    const CAMADA_DE = { atomos: 'Átomo', moleculas: 'Molécula', organismos: 'Organismo', templates: 'Template' };
+    const fora = ESCADA.map(n => [n, readdirSync(join(raiz, `${PASTA[n]}/pecas`))
+      .filter(f => f.endsWith('.html')).length, camada(CAMADA_DE[n])])
+      .filter(([, fichas, linhas]) => fichas !== linhas);
+    fora.length
+      ? aviso(`${fora.length} degrau(s) em que a matriz conta menos que a doc`,
+          fora.map(([n, f, l]) => `${n}: ${f} fichas, ${l} linhas`).join(' · ') + ' — peças que dividem bloco de comentário')
+      : ok('a matriz tem uma linha por peça documentada', `${ESCADA.length} degraus`);
+  }
+
   erradas.length
     ? falha('a doc promete um número de peças que o código desmente', erradas.join(' · '))
     : ok('a prosa conta as peças certas',
-        `${VERDADE['componentes']} componentes · ${VERDADE['padrões']} padrões · ${VERDADE['ícones']} ícones · ${VERDADE['tokens']} tokens`);
+        `${VERDADE['átomos']} átomos · ${VERDADE['moléculas']} moléculas · ${VERDADE['organismos']} organismos · ${VERDADE['templates']} template · ${VERDADE['tokens']} tokens`);
 }
 
 {

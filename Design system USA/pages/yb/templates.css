@@ -1,0 +1,145 @@
+/* =========================================================================
+   YBERA DESIGN SYSTEM · TEMPLATES
+
+   Depende de: tokens/ + base/ + atoms/ + molecules/ + organisms/ybera-organisms.css
+
+   O esqueleto da página, sem conteúdo: largura máxima, ritmo entre blocos e
+   cabeçalho de seção. É o que toda página nova herda antes de escolher um
+   organismo sequer.
+
+   PREFIXO `yb-` em tudo. Não é preciosismo: estas peças vão conviver com o
+   tema Shopify, o Ecomposer, o Tailwind e o Judge.me na mesma página. Sem
+   prefixo, `.btn` ou `.card` colide com alguma delas — e a colisão é
+   silenciosa.
+
+   REGRA: cor vem sempre da camada 1. Espaço, peso e tracking podem vir do
+   primitivo (ver a fronteira documentada em tokens/01-semantic.css).
+   ========================================================================= */
+
+/* =========================================================================
+   PAGE LAYOUT
+   Container, ritmo vertical e cabeçalho de seção.
+
+   Sobem para o sistema pela regra dos dois usos: home e PDP usam os três, e
+   qualquer página nova vai precisar. Enquanto viviam na folha do gerador, cada
+   página que nascesse iria redefini-los — que é como um design system começa
+   a divergir de si mesmo.
+   ========================================================================= */
+.yb-page{
+  max-width:var(--yb-container-max);
+  margin-inline:auto;
+  padding-inline:var(--yb-page-gutter);
+}
+
+.yb-block{ padding-block:var(--yb-space-16); }
+/* A linha que apresenta a pagina, abaixo do <h1>. Existe pela mesma regra dos
+   tres acima: a primeira tela interna (o FAQ) pediu, e toda tela interna que
+   vier depois vai pedir — escrita solta no gerador, cada uma inventaria a
+   propria. O teto de medida e de leitura: acima de ~70 caracteres por linha o
+   olho perde a volta da linha. */
+.yb-block__lede{
+  margin:var(--yb-space-3) 0 0;
+  max-inline-size:62ch;
+  font-size:var(--yb-type-body-lg-size);
+  line-height:var(--yb-type-body-lg-line);
+  color:var(--yb-text-secondary);
+}
+/* Assimetrico, e para BAIXO. O breadcrumb pertence ao conteudo que ele
+   apresenta, nao ao header: menos espaco embaixo que em cima. Mas MENOS nao
+   e ZERO — a 8px da moldura da imagem os dois tracos duros leem como colisao,
+   nao como proximidade. 24/12 guarda a hierarquia e devolve a imagem o
+   direito de ser um objeto separado. Simetrico em 32 dava 64px de caixa para
+   uma linha de 16 e empurrava o produto tela abaixo — o topo subiu de 20
+   para 24 (a barra do header termina num traco solido; 20 lia como colado
+   nele), o fundo continua em 12, junto da imagem. */
+.yb-block--tight{ padding-block:var(--yb-space-6) var(--yb-space-3); }
+/* CABECALHO DE PAGINA — o bloco logo depois do breadcrumb.
+   Ele nao e uma secao, e o TITULO da pagina, e estava sendo tratado como
+   secao: 64px de respiro em cima, que o breadcrumb logo acima ja tinha dado,
+   e 64px embaixo, que somados aos 64 do bloco seguinte abriam 205px entre a
+   linha de apresentacao e o primeiro conteudo. Medido no FAQ.
+
+   Em cima, 24px: a mesma distancia que o breadcrumb guarda do header, entao a
+   coluna inteira anda no mesmo compasso. Embaixo, zero: quem separa o titulo
+   do conteudo e o respiro do proprio conteudo, uma vez so.
+
+   `> :first-child` porque a margem do `<h1>` vem do navegador e, com o
+   padding do topo zerado, ela escapa do bloco e volta a empurrar. */
+.yb-crumb + .yb-block{ padding-block:var(--yb-space-6) 0; }
+.yb-crumb + .yb-block > :first-child{ margin-block-start:0; }
+
+/* O ritmo vertical foi desenhado para a tela larga. Numa de 568px, 64px de
+   respiro entre blocos e um oitavo da tela gasto em nada — a PDP levava duas
+   telas de rolagem ate o botao de comprar. O ritmo encolhe; a hierarquia
+   entre --tight e o padrao continua. */
+@media (max-width:767.98px){
+  .yb-block{ padding-block:var(--yb-space-10); }
+  .yb-block--tight{ padding-block:var(--yb-space-3); }
+}
+/* Bloco sangrado. Ele nao mora dentro do .yb-page — e irmao dele. Nao existe
+   jeito honesto de escapar do contentor por dentro: `50% - 50vw` erra pela
+   largura da barra de rolagem e a pagina passa a rolar de lado. Quem precisa
+   da tela inteira nasce fora da caixa.
+
+   O recuo volta em dois filhos nomeados, e so neles: o cabecalho alinha com o
+   resto da home e a pista comeca no gutter em vez de encostar no bezel — mas a
+   pista continua correndo ate a borda, que e o ponto.
+
+   Nomeados e nao `> *`: o outro morador desta classe e o widget do Tolstoy,
+   que e sangrado de proposito e nao pode ganhar recuo por tabela. */
+.yb-block--flush{ padding-inline:0; }
+.yb-block--flush > .yb-section-head{ padding-inline:var(--yb-page-gutter); }
+.yb-block--flush > .yb-track{
+  padding-inline:var(--yb-page-gutter);
+  scroll-padding-inline-start:var(--yb-page-gutter);
+}
+/* Mesma logica do `.yb-track` acima: a SECAO sangra, a grade em si mantem o
+   gutter — senao o primeiro e o ultimo cartao colam na moldura do aparelho. */
+.yb-block--flush > .yb-collections{ padding-inline:var(--yb-page-gutter); }
+
+.yb-section-head{
+  display:flex; align-items:flex-end; justify-content:space-between;
+  gap:var(--yb-space-6); flex-wrap:wrap;
+  margin-bottom:var(--yb-space-8);
+}
+/* Titulo e atalho sempre empilham em telas estreitas — nem "Best Sellers"
+   cabe ao lado do proprio link em 375px. Empilhado, os 24px de gap pensados
+   para lado a lado leem como parede entre titulo e CTA, e o `.yb-link` ainda
+   centraliza o texto dentro do alvo de 44px — mesma dupla causa ja corrigida
+   no post (ver .yb-post__body .yb-link). Mesma solucao: respiro real menor,
+   alvo que cresce so para baixo. Precisa vir DEPOIS do bloco base: as duas
+   regras tem a mesma especificidade, e a de cima declara `gap` (que seta
+   row-gap e column-gap juntos) — colocada antes, esta perdia em silencio. */
+@media (max-width:767.98px){
+  .yb-section-head{ row-gap:var(--yb-space-3); }
+  .yb-section-head .yb-link{ align-items:flex-start; }
+}
+/* Eyebrow: a categoria ACIMA do titulo, nao dentro dele. "Expert Advice" nao
+   e o nome da secao — e o assunto de que ela trata, e por isso vem antes, em
+   caixa alta e no tom da marca. Some do fluxo de leitura de quem so passa o
+   olho e fica para quem parou.
+   Ele mora numa coluna propria porque o `.yb-section-head` e um flex de duas
+   pontas: solto ali dentro, o eyebrow virava um terceiro item disputando a
+   linha com o titulo e o atalho. */
+.yb-section-head__col{ display:flex; flex-direction:column; gap:var(--yb-space-2); min-width:0 }
+/* Com eyebrow o cabecalho tem tres linhas de um lado e uma do outro, e o
+   `flex-end` da receita base descia o atalho para a base do titulo — longe da
+   primeira linha, que e por onde o olho entra. Com a coluna presente, o
+   atalho sobe e encosta no eyebrow. */
+.yb-section-head:has(.yb-section-head__col){ align-items:flex-start; }
+.yb-section-head__eyebrow{
+  font-size:var(--yb-type-overline-size); line-height:var(--yb-type-overline-line);
+  letter-spacing:var(--yb-type-overline-track); text-transform:uppercase;
+  font-weight:var(--yb-font-weight-bold); color:var(--yb-text-link);
+}
+.yb-section-head--center{ justify-content:center; text-align:center; }
+.yb-section-head h2{
+  margin:0;
+  font-size:var(--yb-type-h2-size);
+  line-height:var(--yb-type-h2-line);
+  letter-spacing:var(--yb-type-h2-track);
+  font-weight:var(--yb-type-h2-weight);
+}
+/* O atalho ao lado do titulo e o componente LINK (`.yb-link`, em
+   components.css) — nao redeclare a receita aqui. Marcacao:
+   <a class="yb-link" href="...">Texto {chevron}</a>. */

@@ -1,0 +1,839 @@
+/* ===========================================================================
+   MOLDURA DAS FICHAS
+
+   As fichas sao GERADAS (tools/fichas.mjs). Esta folha e a moldura delas:
+   navegacao, palco de demonstracao, tabelas de API e os blocos de faca /
+   nao faca.
+
+   Por que ela nao serve tambem a components/index.html: aquela pagina carrega
+   a maquinaria do par desktop+mobile (iframe de 375, toggle, breakpoint de
+   1600) que nenhuma ficha usa, e o `<style>` dela e escrito e comentado a mao
+   ha meses. Unificar as duas trocaria uma duplicacao visivel por uma folha
+   com metade das regras servindo a uma pagina so.
+
+   REGRA: nenhum seletor de TIPO solto aqui. Esta folha convive com os
+   componentes do sistema renderizados dentro do palco — um `section{}` ou um
+   `ul{}` aqui vaza para dentro do demo e o demo passa a mentir.
+   =========================================================================== */
+
+.ficha *{box-sizing:border-box}
+
+/* ------------------------------------------------------------ esqueleto */
+/* A grade de duas colunas saiu daqui: a navegação virou uma coluna fixa única
+   (doc/doc-nav.css), presente em toda página, e a ficha voltou a ser uma
+   coluna de leitura só. O que sobrou de `.nav*` abaixo ainda serve à galeria
+   antiga? Não — foi removido junto. */
+.main{
+/* O respiro do topo é MENOR que o de baixo, e isso é deliberado. Com 64px em
+   cima, o primeiro elemento da página nascia abaixo do primeiro item da coluna
+   lateral — a barra fixa já come 56px, e os dois somados jogavam a trilha para
+   120px da borda enquanto "Início" estava em 72. A página parecia começar
+   depois do menu.
+
+   32 no topo alinha o começo do conteúdo com o começo da coluna; embaixo o
+   respiro continua largo, porque lá ele serve para o fim do texto não encostar
+   na borda da janela. */
+  padding:var(--yb-space-8) var(--doc-respiro) var(--yb-space-20);
+  max-width:var(--doc-medida); width:100%; margin-inline:auto;
+}
+@media (max-width:900px){.main{padding:var(--yb-space-10) var(--yb-page-gutter)}}
+
+/* -------------------------------------------------------------- cabecalho */
+/* O RESPIRO ENTRE A VOLTA E O TÍTULO É UM SÓ: `--yb-space-6`.
+
+   Eram três. A capa deixava 24px, a página de grupo deixava 1 (o `.ficha-volta`
+   não declarava margem nenhuma, e o que se via era só a entrelinha) e a ficha
+   deixava 20, vindo do `.ficha-topo`. Ninguém escolheu nenhum dos três: cada um
+   apareceu no dia em que aquela página foi escrita.
+
+   Vale o da capa, que é a página que a pessoa vê primeiro. */
+.ficha-volta{
+  display:inline-block; margin-block-end:var(--yb-space-6);
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+}
+/* PASSO ENTRE FICHAS. Com dezenas de peças, a coluna da esquerda e o índice servem
+   para ESCOLHER; para percorrer, cada um custava uma viagem de volta ao
+   índice. Aqui o vizinho vem pelo NOME, não só pela seta — "próximo" não diz
+   para onde se vai, e o nome dispensa a viagem só para descobrir.
+
+   Ausente vira `<span>` vazio, não controle apagado: nas pontas da lista não
+   há para onde ir, e o vazio preserva o `space-between` sem prometer clique
+   que não existe. */
+.ficha-trilha{
+  display:flex; align-items:center; gap:var(--yb-space-2);
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted);
+}
+.ficha-trilha a{color:var(--yb-text-secondary); text-decoration:none}
+.ficha-trilha a:hover{color:var(--yb-text-primary); text-decoration:underline}
+.ficha-trilha a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.ficha-trilha b{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
+
+.ficha-topo{
+  display:flex; flex-wrap:wrap; align-items:center; gap:var(--yb-space-3);
+  justify-content:space-between; margin-bottom:var(--yb-space-6);
+}
+.ficha-passo{display:flex; align-items:center; gap:var(--yb-space-2)}
+.ficha-passo a{
+  display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  min-height:var(--yb-target-min);
+  padding:var(--yb-space-2) var(--yb-space-4);
+  border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-control);
+  color:var(--yb-text-secondary); text-decoration:none;
+  font-size:var(--yb-type-body-sm-size);
+  transition:border-color var(--yb-transition-control),
+             color var(--yb-transition-control);
+}
+@media (hover:hover){
+  .ficha-passo a:hover{border-color:var(--yb-border-strong); color:var(--yb-text-primary)}
+}
+.ficha-passo a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+/* Em coluna estreita o nome do vizinho é a primeira coisa que sobra de fora;
+   a seta sozinha continua dizendo a direção. */
+@media (max-width:560px){
+  .ficha-passo a{
+    padding-inline:var(--yb-space-3);
+    max-inline-size:9rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+}
+.ficha-titulo{
+  font-size:var(--yb-type-display-2-size); line-height:var(--yb-type-display-2-line);
+  letter-spacing:var(--yb-type-display-2-track); font-weight:var(--yb-type-display-2-weight);
+  margin:0 0 var(--yb-space-3);
+}
+.ficha-quando{
+  color:var(--yb-text-secondary); max-width:64ch;
+  font-size:var(--yb-type-body-lg-size); line-height:var(--yb-type-body-lg-line);
+  margin:0 0 var(--yb-space-5);
+}
+/* A fila de fatos e a mesma coisa que o INVENTARIO.md diz em tabela: classe
+   base, camada, maturidade. Aqui ela abre a ficha porque e o que decide se a
+   pessoa deve usar a peca — nao o que ela e. */
+.ficha-fatos{
+  display:flex; flex-wrap:wrap; gap:var(--yb-space-2);
+  margin:0 0 var(--yb-space-10); padding:0; list-style:none;
+}
+/* Estes fatos NAO sao clicaveis, e por isso deixaram de parecer. Eram pilula
+   com borda de 1px, e no sistema essa forma tem dono: `.yb-chip`, o
+   avatar do parceiro e os aneis de carregando — os tres clicaveis ou vivos.
+   Conferi a folha inteira e nao ha excecao: pilula COM borda e sempre
+   controle; as estaticas (`__label`, `__mark`, `progress`) nao tem borda.
+   Emprestar a forma de um controle para texto parado promete clique que nao
+   existe.
+   A forma certa ja existia: `.yb-badge`, que e o rotulo estatico do sistema —
+   preenchido, `--yb-radius-badge`, sem borda. */
+.ficha-fatos li{
+  display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  padding:var(--yb-space-2) var(--yb-space-3);
+  background:var(--yb-surface-sunken); border-radius:var(--yb-radius-badge);
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-secondary);
+}
+.ficha-fatos b{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
+.ficha-fatos code{color:var(--yb-text-primary)}
+
+/* ------------------------------------------------------------- a galeria */
+/* A galeria em familias. O titulo do grupo e menor que o da pagina e maior
+   que o do cartao — ele existe para ser varrido de relance, nao lido. */
+.grade-grupo{margin-block-start:var(--yb-space-10)}
+.grade-grupo:first-of-type{margin-block-start:var(--yb-space-8)}
+.grade-grupo > h2{
+  display:flex; align-items:center; gap:var(--yb-space-3);
+  margin:0 0 var(--yb-space-1);
+  font-size:var(--yb-type-h4-size); font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-primary);
+}
+/* A contagem por grupo responde de relance "quanto disso existe?", que era a
+   pergunta que a lista de 37 nomes obrigava a contar no dedo. */
+.grade-conta{
+  font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-regular);
+  color:var(--yb-text-muted); background:var(--yb-surface-sunken);
+  border-radius:var(--yb-radius-badge); padding:0 var(--yb-space-2);
+}
+.grade-lede{
+  margin:0 0 var(--yb-space-4); max-inline-size:62ch;
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+}
+/* O filtro mora na COLUNA, e nao acima da galeria: ele serve as 37 fichas,
+   nao so o indice. Fica preso no topo dela porque a lista rola por baixo — um
+   campo que sai de vista na rolagem deixa de existir justamente quando a lista
+   ficou longa demais para ler. */
+.nav-conta{margin:0; font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+.nav-conta:empty{display:none}
+.grade{
+  display:grid; gap:var(--yb-space-4);
+  grid-template-columns:repeat(auto-fill, minmax(15rem, 1fr));
+}
+.peca{
+  scroll-margin-block-start:var(--yb-space-8);
+  display:flex; flex-direction:column; gap:var(--yb-space-2);
+  padding:var(--yb-space-5);
+  border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card);
+  background:var(--yb-surface); text-decoration:none;
+}
+.peca:hover{border-color:var(--yb-text-primary)}
+.peca:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+/* `>` e nao descendente: o nome e filho direto. A capa do sistema ja tropecou
+   nisso — todo <b> dentro do texto virava um segundo titulo. */
+.peca > b{
+  font-size:var(--yb-type-h4-size); font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-primary);
+}
+.peca > span{font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted)}
+/* O DEGRAU ABRE O CARTÃO, e não o fecha. Ele era a última linha, em cinza,
+   depois da descrição inteira — e "que espécie de coisa é essa?" é a pergunta
+   que vem ANTES do nome: numa lista em ordem alfabética, o Button e o Buy box
+   liam como a mesma espécie até a última linha dizer que não eram.
+
+   Continua pequeno e mudo: sobretítulo, não etiqueta colorida. A cor aqui
+   dividiria a grade em três blocos visuais e desfaria a lista única. */
+.peca-nivel{
+  font-size:var(--yb-type-caption-size);
+  letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; color:var(--yb-text-muted);
+}
+/* ------------------------------------------------------- modal em fluxo
+   `<dialog open>` é não-modal, e o navegador o posiciona `absolute` — três
+   deles num palco ficariam um por cima do outro. Aqui eles entram no fluxo,
+   e é só isso que muda: largura, borda, sombra e respiro continuam sendo os
+   da peça.
+
+   O palco vira coluna porque os tipos se comparam de cima para baixo, com o
+   rótulo de cada um acima. Aberto no palco a pessoa lê os três de uma vez;
+   atrás de um botão, lê um e esquece antes de abrir o seguinte. */
+.stage--modais{display:flex; flex-direction:column; gap:var(--yb-space-6)}
+.stage--modais .yb-dialog[open]{position:static; inset:auto; margin:0}
+.tipo-rotulo{
+  margin:0; font-size:var(--yb-type-caption-size);
+  letter-spacing:var(--yb-tracking-wider); text-transform:uppercase;
+  color:var(--yb-text-muted);
+}
+
+/* -------------------------------------------------------------------- duo
+   DOIS ESTADOS LADO A LADO, cada um no seu quadro de celular.
+
+   Alguns estados só existem abaixo de um breakpoint — a faixa de conta do menu
+   é `display:none` acima de 900px, por decisão do componente. Empilhados num
+   quadro só, a pessoa rola de um para o outro e compara de memória; forçá-los
+   no palco largo mostraria a faixa sem fundo e sem respiro, porque todo o
+   estilo dela mora dentro da media query.
+
+   Dois iframes resolvem os dois problemas de uma vez: cada um é um viewport de
+   celular de verdade, e ficam a 24px um do outro. Empilham abaixo de 820, que é
+   onde os dois de 375 deixam de caber lado a lado. */
+.duo{
+  display:flex; flex-wrap:wrap; gap:var(--yb-space-6);
+  margin-block:var(--yb-space-5);
+}
+/* 375 EXATOS, e nao uma coluna elastica. Espremido a 320 o quadro deixa de
+   ser um celular e vira um celular estreito: a faixa de conta quebra em duas
+   linhas e a doc passa a mostrar um arranjo que a loja nao tem — a gaveta
+   mede 352 no mínimo. Se os dois nao couberem, empilham. */
+.duo__col{margin:0; flex:0 0 auto; inline-size:375px; max-inline-size:100%}
+.duo__rotulo{
+  margin:0 0 var(--yb-space-3);
+  font-size:var(--yb-type-caption-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; color:var(--yb-text-muted);
+}
+.duo__quadro{
+  inline-size:100%; max-inline-size:375px; border:1px solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-card); background:var(--yb-surface); display:block;
+}
+
+/* ---------------------------------------------------------------- chips
+   O corte por degrau, em cima da grade. São LINKS para as páginas de degrau,
+   que já existem e já dizem a regra do nível — não botão de filtro, que sem
+   script seria controle morto.
+
+   O ativo é preenchido com o grafite do texto, e não com o magenta: magenta é
+   a cor de ação do SISTEMA, e um chip magenta aqui viraria um `.yb-btn` aos
+   olhos de quem está justamente tentando reconhecer as peças. Cromo de doc
+   fica em cinza, como as abas. */
+.chips{
+  display:flex; flex-wrap:wrap; gap:var(--yb-space-2);
+  margin-block:var(--yb-space-5) var(--yb-space-6);
+}
+.chip{
+  display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  min-block-size:var(--yb-target-min); padding-inline:var(--yb-space-4);
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-pill);
+  background:var(--yb-surface); color:var(--yb-text-primary);
+  font-size:var(--yb-type-body-sm-size); text-decoration:none;
+}
+.chip:hover{border-color:var(--yb-text-primary)}
+.chip:focus-visible{outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset)}
+.chip span{font-variant-numeric:tabular-nums; color:var(--yb-text-muted)}
+.chip[aria-current]{background:var(--yb-text-primary); border-color:var(--yb-text-primary);
+  color:var(--yb-bg-page)}
+.chip[aria-current] span{color:inherit; opacity:.72}
+/* Sem a cor, o chip ativo some — e ele é o que diz onde a pessoa está. */
+@media (forced-colors:active){
+  .chip[aria-current]{outline:2px solid CanvasText; outline-offset:2px}
+}
+
+/* ---------------------------------------------------------------- blocos */
+/* ------------------------------------------------------------------ abas
+   Preview · Código · Anatomia. Cromo de documentação, e não um componente do
+   sistema — se as abas da doc se parecessem com uma peça, a pessoa não saberia
+   qual das duas está sendo documentada. Por isso: sem fundo, sem cápsula, só
+   o traço embaixo da ativa. */
+.abas{
+  margin-bottom:var(--yb-space-16);
+  /* A barra do topo é fixa: sem esta margem, abrir `#marcacao` por link rola
+     as abas para debaixo dela e a pessoa cai no meio do painel sem ver qual
+     aba está aberta. O `0px` de reserva é para a regra sobreviver se a barra
+     deixar de existir — margem de rolagem que aponta para uma variável morta
+     não falha, só para de valer. */
+  scroll-margin-block-start:calc(var(--ds-top-h, 0px) + var(--yb-space-4));
+}
+.abas > .bloco{margin-bottom:0}
+.abas__tiras{
+  display:flex; gap:var(--yb-space-6);
+  border-bottom:1px solid var(--yb-border-subtle);
+  margin-bottom:var(--yb-space-6);
+  overflow-x:auto; scrollbar-width:none;
+}
+.abas__tiras::-webkit-scrollbar{display:none}
+.abas__tira{
+  flex:none; appearance:none; background:none; border:0;
+  /* o alvo de 44px do sistema vale aqui também: a aba é um controle */
+  min-height:var(--yb-target-min); padding:0 0 var(--yb-space-2);
+  margin-bottom:-1px; border-bottom:2px solid transparent;
+  font-family:inherit; font-size:var(--yb-type-overline-size);
+  letter-spacing:var(--yb-tracking-wider); text-transform:uppercase;
+  font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-muted); cursor:pointer;
+}
+.abas__tira:hover{color:var(--yb-text-primary)}
+.abas__tira:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+/* O PONTO DA ABA POR ESCREVER. Cor de aviso e nao de erro: bloco que falta e
+   pendencia, nao defeito — e a ficha continua correta no que ela afirma. */
+.abas__tira--pendente{display:inline-flex; align-items:center; gap:var(--yb-space-2)}
+.abas__ponto{
+  inline-size:.375rem; block-size:.375rem; flex:none;
+  border-radius:var(--yb-radius-pill); background:var(--yb-warning-solid);
+}
+.abas__tira[aria-selected="true"]{
+  color:var(--yb-text-primary); border-bottom-color:var(--yb-text-primary);
+}
+/* O painel recebe foco pelo teclado (é um tabpanel), mas o anel em volta de uma
+   caixa da largura da página não diz nada — o que importa já está marcado na
+   aba. Some o anel do painel, não o da aba. */
+.abas > .bloco:focus{outline:none}
+
+.bloco{margin-bottom:var(--yb-space-16); scroll-margin-top:var(--yb-space-10)}
+.bloco-titulo{
+  font-size:var(--yb-type-h3-size); line-height:var(--yb-type-h3-line);
+  font-weight:var(--yb-font-weight-bold);
+  margin:0 0 var(--yb-space-2);
+  padding-bottom:var(--yb-space-3);
+  border-bottom:1px solid var(--yb-border-subtle);
+}
+.bloco-lede{color:var(--yb-text-secondary); max-width:70ch; margin:var(--yb-space-4) 0}
+/* `.row-label` e o nome que a marcacao copiada da galeria usa; `.rotulo` e o
+   que os blocos gerados usam. Dois nomes para a mesma coisa e feio, e resolver
+   renomeando a galeria mexeria em todas as secoes escritas a mao — o alias custa uma
+   linha e nao pode divergir. */
+.rotulo,
+.row-label{
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; color:var(--yb-text-muted);
+  font-weight:var(--yb-font-weight-semibold);
+  margin:var(--yb-space-8) 0 var(--yb-space-3);
+}
+/* A classe no título da fileira fica como se escreve: `--success`, não `--SUCCESS`. */
+.row-label code{text-transform:none; letter-spacing:0}
+
+/* Palco para peca que se posiciona sozinha (o Partner flutua sobre o banner).
+   `overflow:hidden` porque sem ele a bolha escapa 8px da viewport em 390 e a
+   pagina inteira ganha rolagem lateral — a doc violando a regra que o proprio
+   sistema tem sobre conteudo largo. */
+.stage{
+  position:relative; overflow:hidden;
+  padding:var(--yb-space-6);
+  border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card);
+  background:var(--yb-surface);
+}
+.stage--dim{background:var(--yb-bg-muted)}
+
+/* ------------------------------------------------- o palco de cada nível
+   Átomo e molécula se demonstram no meio de um respiro: a peça é menor que a
+   caixa, e a moldura ajuda a ver onde ela começa. Organismo e template não —
+   cabeçalho, rodapé e hero encostam na borda na loja, e um palco acolchoado
+   os mostraria com uma margem que eles não têm.
+
+   Por isso o respiro é o padrão e o `data-nivel` o retira, em vez do
+   contrário: quem tem respiro são 32 peças, quem não tem são 17. */
+/* `:not(.stage--pad)` e conserto, nao estilo: sem ele o seletor de nivel
+   (0,2,0) vencia `.stage--pad` (0,1,0), e a classe ficava escrita e inerte nos
+   dois degraus de cima. Media na ficha do Free shipping progress, que a pedia
+   ha tempo: padding 0 nos dois palcos, conteudo encostado na borda do cartao.
+   Nem todo organismo sangra — cabecalho, rodape e hero encostam na tela, mas
+   FAQ e barra de frete sao secoes DENTRO do respiro da pagina, e um palco sem
+   respiro os mostra com uma margem que eles nao tem. */
+[data-nivel="organisms"] .stage:not(.stage--pad),
+[data-nivel="templates"] .stage:not(.stage--pad){padding:0}
+.stage--pad{padding:var(--yb-space-8)}
+@media (max-width:760px){.stage--pad{padding:var(--yb-page-gutter)}}
+
+/* O painel do mega menu é absoluto e passa da altura do palco; com o
+   overflow:hidden acima ele aparecia cortado na documentação. */
+.stage--overflow{overflow:visible}
+
+/* A gaveta do carrinho entra pela direita: o palco a empurra para lá em vez
+   de centralizá-la, senão o demo mostra uma gaveta que flutua no meio da tela.
+   Em 320px o respiro do palco espremia a gaveta a 222px — largura que telefone
+   nenhum tem, e que fazia o demo mentir sobre o componente. */
+[data-nivel="organisms"] .stage--dim{
+  padding:var(--yb-space-8); display:flex; justify-content:flex-end;
+}
+@media (max-width:480px){[data-nivel="organisms"] .stage--dim{padding:var(--yb-space-2)}}
+
+/* Duas colunas de demonstração (galeria + bloco de compra, arte + texto). */
+.split{display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-6)}
+@media (max-width:860px){.split{grid-template-columns:1fr}}
+
+/* ------------------------------------------------------- do que é feito
+   A lista de peças do nível de baixo que esta peça consome, lida da marcação
+   a cada build. Lista de links e não de código: cada uma abre a ficha dela. */
+/* O degrau acima da fileira: as peças de baixo vêm separadas por nível, e não
+   numa lista só com o nível impresso em cada pílula — repetir "átomo" cinco
+   vezes numa fileira de cinco é ruído onde cabia um rótulo. */
+.usa-degrau{
+  margin:var(--yb-space-4) 0 var(--yb-space-2);
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+}
+.usa{display:flex; flex-wrap:wrap; gap:var(--yb-space-2); margin:0; padding:0; list-style:none}
+.usa a{
+  display:inline-block; padding:var(--yb-space-1) var(--yb-space-3);
+  border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-pill);
+  background:var(--yb-surface); color:var(--yb-text-secondary);
+  font-size:var(--yb-type-body-sm-size); text-decoration:none;
+}
+.usa a:hover{border-color:var(--yb-text-primary); color:var(--yb-text-primary)}
+.usa a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.usa .nivel{color:var(--yb-text-muted)}
+
+/* ------------------------------------------------------------ o par de 375
+   `content-box` para a borda ficar FORA dos 375 — com border-box ela comia dois
+   pixels e o viewport de dentro virava 373. Rola em vez de encolher: numa doc
+   estreita, um quadro de "375" que nao mede 375 mente. */
+/* POR QUE IFRAME, e nao uma div estreita: @media consulta a VIEWPORT. Encolher
+   uma div entregaria a peca fina com o CSS de desktop — foi assim que a gaveta
+   do carrinho apareceu com 222px fingindo estar quebrada.
+
+   A explicacao mora aqui, e nao na pagina: ela e a mesma nas 49 fichas, e um
+   paragrafo repetido 49 vezes deixa de ser lido na primeira. */
+.quadro-mob{overflow-x:auto}
+.quadro-mob iframe{
+  display:block; box-sizing:content-box; width:375px; border:1px solid var(--yb-border);
+  border-radius:var(--yb-radius-card); background:var(--yb-bg-page);
+}
+
+/* ----------------------------------------------------------------- palco */
+.demo{
+  display:flex; gap:var(--yb-space-4); flex-wrap:wrap; align-items:center;
+  padding:var(--yb-space-6);
+  border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card);
+  background:var(--yb-surface);
+}
+.demo--stack{flex-direction:column; align-items:stretch}
+
+/* ---------------------------------------------------------------- amostra
+   O NOME DEBAIXO DA AMOSTRA. Uma fileira de quatro botões diz que há quatro
+   variantes e não diz quais: para descobrir que o rosa claro é `--secondary`
+   a pessoa abre a Anatomia, acha a lista de modificadores e volta contando
+   posições. A Anatomia continua listando todos; aqui cada um está ligado ao
+   que desenha.
+
+   O rótulo é o modificador e nada mais: `--primary`, e não "--primary · ação
+   principal". Quem olha a fileira vai escrever a classe; o que a variante
+   significa está na nota, e repeti-lo debaixo de cada amostra transformava a
+   régua numa segunda leitura.
+
+   `align-items:end` alinha as amostras pela BASE do rótulo, não pela do
+   controle — então os rótulos de uma fileira têm de ter o mesmo número de
+   linhas, senão o de duas empurra a própria amostra para cima. Foi o que
+   aconteceu na régua de tamanhos: com "abaixo do alvo" embaixo do `--sm`, os
+   três botões ficavam em três alturas e a comparação de 36/50/60 se perdia. A
+   ressalva mora na nota, que é onde cabe a frase inteira. */
+.demo--amostras{align-items:flex-end; gap:var(--yb-space-5) var(--yb-space-4)}
+.amostra{display:inline-flex; flex-direction:column; align-items:center; gap:var(--yb-space-2)}
+.amostra__rotulo{
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+  text-align:center; line-height:var(--yb-line-height-snug);
+}
+.amostra__rotulo code{
+  color:var(--yb-text-secondary); font-family:var(--yb-font-family-mono);
+  white-space:nowrap;
+}
+/* Sobre painel escuro o rótulo não pode herdar o cinza de fundo claro. */
+/* Fundo escuro de uma amostra so, para peca que existe sobre foto
+   (`--onmedia`): a fileira continua clara, so a amostra ganha chao. */
+.amostra__foto{display:inline-flex; padding:var(--yb-space-2);
+  background:var(--yb-bg-inverse); border-radius:var(--yb-radius-control)}
+.demo--dark .amostra__rotulo{color:var(--yb-text-muted-inverse)}
+.demo--dark .amostra__rotulo code{color:var(--yb-text-inverse)}
+
+.demo--grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+/* 266px e a largura da CELULA da home, nao um numero redondo: o cartao de
+   oferta ocupa uma coluna da grade de quatro, e e nessa largura que o veu de
+   tres folhas foi medido. Com `minmax(300px,1fr)` o demo esticava para 323 e
+   o veu crescia junto — a doc mostrava uma geometria que a loja nao tem. */
+.demo--oferta{display:grid; grid-template-columns:repeat(auto-fill,266px); align-items:start}
+.demo--dark{background:var(--yb-bg-inverse)}
+.demo--rail{display:block}
+/* ESTADO PRESO, para a doc conseguir mostrar o que so existe em movimento.
+   A acao sobre a foto do cartao some ate o ponteiro chegar, e no toque nasce
+   visivel — duas regras que NENHUM navegador de desktop mostra parado: o
+   quadro de 375px tambem roda com `hover:hover`, entao nem ali o ramo do dedo
+   aparece. Sem isto o estado do celular nao existia em lugar nenhum da doc.
+   E classe da DOC, nao do sistema: ela prende o fim da animacao, nao cria
+   estado novo. Quem copiar a marcacao nao leva nada disto junto. */
+.demo--preso .yb-card__action{opacity:1; transform:none}
+
+.note{
+  margin-top:var(--yb-space-4); padding:var(--yb-space-4) var(--yb-space-5);
+  background:var(--yb-info-surface); border-left:3px solid var(--yb-info-solid);
+  border-radius:0 var(--yb-radius-sm) var(--yb-radius-sm) 0; max-width:74ch;
+}
+/* `>` e nao descendente: o titulo da nota e FILHO DIRETO. Sem isso, todo
+   <b> dentro do paragrafo virava outro titulo — bloco, maiusculas e azul no
+   meio da frase. A ficha do Button mostrava "16,66:1" e "MATIZ" como se
+   fossem cabecalhos. */
+.note > b{
+  display:block; font-size:var(--yb-type-overline-size);
+  letter-spacing:var(--yb-tracking-wider); text-transform:uppercase;
+  color:var(--yb-info-text); margin-bottom:var(--yb-space-2);
+  font-weight:var(--yb-font-weight-semibold);
+}
+.note p{margin:0; font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
+
+/* ------------------------------------------------------------------- API */
+.api{
+  inline-size:100%; border-collapse:collapse;
+  font-size:var(--yb-type-body-sm-size);
+}
+.api caption{
+  text-align:start; color:var(--yb-text-muted);
+  font-size:var(--yb-type-caption-size); padding-bottom:var(--yb-space-2);
+}
+.api th{
+  text-align:start; font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-muted); font-size:var(--yb-type-caption-size);
+  text-transform:uppercase; letter-spacing:var(--yb-tracking-wide);
+  padding:var(--yb-space-2) var(--yb-space-3);
+  border-bottom:1px solid var(--yb-border);
+}
+.api td{
+  padding:var(--yb-space-3);
+  border-bottom:1px solid var(--yb-border-subtle);
+  color:var(--yb-text-secondary); vertical-align:top;
+}
+.api td:first-child{color:var(--yb-text-primary); white-space:nowrap}
+/* ---------------------------------------------------------------- tokens
+   Agrupados pela família do próprio nome — `--yb-action-*` com os de ação,
+   `--yb-space-*` com os de espaço. A convenção de nome do sistema já é a
+   taxonomia; agrupar por outra coisa exigiria uma tabela paralela.
+
+   O VALOR ao lado do nome é o que faz a lista valer: `--yb-space-4` não diz
+   nada, `--yb-space-4 · 16px` responde a pergunta que levou alguém ali. */
+.tokens{
+  display:grid; gap:var(--yb-space-4);
+  grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+  margin:var(--yb-space-2) 0 0;
+}
+/* CADA TÓPICO NUM CARTÃO. Solto na grade, um grupo de catorze linhas e outro
+   de duas encostavam sem nada dizendo onde um terminava — a coluna do meio
+   parecia continuação da primeira. A caixa dá a fronteira; o fio embaixo do
+   título continua separando o nome do grupo da lista dele. */
+.tokens__grupo{
+  padding:var(--yb-space-4);
+  /* Cinza e não branco: a página já é branca, então o cartão branco só existia
+     pelo fio de 1px — e fio de 1px não é fronteira suficiente entre dois
+     grupos encostados. Com o fundo afundado a caixa se vê sem precisar de
+     borda, e a borda sai junto. */
+  background:var(--yb-bg-subtle);
+  border-radius:var(--yb-radius-card);
+}
+.tokens__familia{
+  margin:0 0 var(--yb-space-2); padding-block-end:var(--yb-space-2);
+  border-block-end:1px solid var(--yb-border-subtle);
+  font-size:var(--yb-type-caption-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-secondary);
+}
+.tokens__familia span{color:var(--yb-text-muted); font-weight:var(--yb-font-weight-regular)}
+/* O titulo do grupo leva para a secao da Fundacao que explica aquela familia.
+   E o mesmo par de perguntas dos dois lados: aqui, "de que esta peca e feita";
+   la, "quem mais usa isto". */
+.tokens__familia a{color:inherit; text-decoration:none;
+  border-block-end:1px solid transparent}
+.tokens__familia a:hover{border-block-end-color:var(--yb-text-secondary)}
+.tokens__familia a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset); border-radius:var(--yb-radius-sm);
+}
+.tokens__lista{list-style:none; margin:0; padding:0; display:grid; gap:var(--yb-space-1)}
+.tokens__lista li{
+  display:flex; align-items:baseline; gap:var(--yb-space-2); flex-wrap:wrap;
+  font-size:var(--yb-type-caption-size); line-height:var(--yb-type-body-line);
+}
+/* O NOME nunca quebra; o valor sim. `--yb-elevation-card` tem 28 caracteres de
+   sombra ao lado, e com os dois quebrando o nome saía partido em três linhas —
+   nome de token partido não se lê nem se copia. Sem espaço, o valor desce para
+   a linha de baixo e continua alinhado à direita pelo `margin auto`. */
+.tokens__lista code{color:var(--yb-text-primary); white-space:nowrap}
+.tokens__valor{
+  margin-inline-start:auto; color:var(--yb-text-muted);
+  font-family:var(--yb-font-family-mono); font-variant-numeric:tabular-nums;
+}
+/* A amostra tem borda porque metade da rampa é quase-branca: sem ela, seis
+   quadradinhos claros viram seis buracos na lista. */
+.tokens__cor{
+  inline-size:.75rem; block-size:.75rem; flex:none; align-self:center;
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-xs, 2px);
+}
+.rotulo-conta{
+  color:var(--yb-text-muted); font-weight:var(--yb-font-weight-regular);
+  letter-spacing:0;
+}
+
+.lista-api{display:flex; flex-wrap:wrap; gap:var(--yb-space-2); margin:0}
+.lista-api code{
+  padding:var(--yb-space-1) var(--yb-space-2);
+  background:var(--yb-surface-sunken); border-radius:var(--yb-radius-sm);
+  color:var(--yb-text-primary);
+}
+.api-vazia{color:var(--yb-text-muted); font-size:var(--yb-type-body-sm-size); margin:0}
+
+/* UM FATO POR LINHA — rotulo a esquerda, resposta a direita.
+
+   Eram seis rotulos de bloco, cada um com 32px de respiro acima e um paragrafo
+   embaixo: 192px de altura so para separar seis fatos, quatro deles de meia
+   linha. O fio faz o trabalho que o espaco fazia, por 1px.
+
+   A coluna do rotulo e `minmax(0, 11rem)` e nao largura fixa: "Estados que a
+   folha trata" quebra em duas linhas ali, e com largura fixa ela empurraria a
+   resposta para fora em telas estreitas. */
+.api-linha{
+  display:grid; grid-template-columns:minmax(0, 11rem) 1fr;
+  gap:var(--yb-space-2) var(--yb-space-5); align-items:baseline;
+  margin:0; padding-block:var(--yb-space-3);
+  border-block-start:1px solid var(--yb-border-subtle);
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+}
+/* A primeira linha vem logo depois do lede, que ja tem respiro embaixo: mais
+   um fio ali seria uma divisao de nada com nada. */
+.api-linha + .api-linha{margin-block-start:0}
+.api-linha:first-of-type{border-block-start:0}
+.api-linha__rotulo{
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; color:var(--yb-text-muted);
+  font-weight:var(--yb-font-weight-semibold);
+}
+.api-linha__corpo{min-inline-size:0}
+.api-linha code{color:var(--yb-text-primary)}
+/* Empilha antes de a coluna do rotulo comer a resposta: com 11rem de rotulo,
+   abaixo de 560 sobra menos de 20ch para o lado direito, e `.yb-accordion__body`
+   sozinho ja passa disso. */
+@media (max-width:560px){
+  .api-linha{grid-template-columns:1fr; gap:var(--yb-space-1)}
+}
+/* Dentro da linha os chips continuam fluindo, so que sem virar bloco proprio. */
+.api-linha .lista-api{display:inline-flex}
+/* A tabela e larga por natureza (classe + descricao). Rolar dentro do proprio
+   quadro em vez de empurrar a pagina inteira de lado. */
+.rolagem{overflow-x:auto}
+
+/* --------------------------------------------------------------- snippet */
+.snippet{position:relative}
+.snippet pre{
+  margin:0; padding:var(--yb-space-5); padding-inline-end:var(--yb-space-16);
+  background:var(--yb-surface-sunken); border:1px solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-card);
+  overflow-x:auto; font-family:var(--yb-font-family-mono);
+  font-size:.8125rem; line-height:var(--yb-line-height-relaxed);
+  color:var(--yb-text-primary);
+}
+.snippet-copiar{
+  position:absolute; inset-block-start:var(--yb-space-3);
+  inset-inline-end:var(--yb-space-3);
+  min-height:var(--yb-target-min); padding:0 var(--yb-space-4);
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-control);
+  background:var(--yb-surface); color:var(--yb-text-secondary);
+  font-family:inherit; font-size:var(--yb-type-body-sm-size); cursor:pointer;
+}
+.snippet-copiar:hover{border-color:var(--yb-border-strong); color:var(--yb-text-primary)}
+.snippet-copiar:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+
+/* ------------------------------------------------------- faca / nao faca
+   Cor NAO e o unico sinal: cada lado tem o rotulo escrito e um simbolo. Um
+   par verde/vermelho sem palavra e ilegivel para 8% dos homens. */
+.fn{display:grid; gap:var(--yb-space-5); grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.fn-caso{
+  border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card);
+  overflow:hidden; display:flex; flex-direction:column;
+}
+.fn-cabeca{
+  display:flex; align-items:center; gap:var(--yb-space-2);
+  padding:var(--yb-space-3) var(--yb-space-4);
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; font-weight:var(--yb-font-weight-semibold);
+}
+.fn-caso--sim .fn-cabeca{background:var(--yb-success-surface); color:var(--yb-success-text)}
+.fn-caso--nao .fn-cabeca{background:var(--yb-danger-surface); color:var(--yb-danger-text)}
+.fn-palco{
+  padding:var(--yb-space-6); background:var(--yb-surface);
+  display:flex; flex-wrap:wrap; gap:var(--yb-space-3); align-items:center;
+  flex:1;
+}
+.fn-palco--dark{background:var(--yb-bg-inverse)}
+.fn-legenda{
+  margin:0; padding:var(--yb-space-4);
+  border-top:1px solid var(--yb-border-subtle);
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+}
+
+/* ------------------------------------------------------------- pendencia
+   Bloco que ainda nao foi escrito aparece DECLARADO como pendente, e nao
+   ausente. Secao que some da ficha e uma pergunta que ninguem sabe que
+   ficou sem resposta. */
+/* A lista do que ainda não existe. Tracejada pelo mesmo motivo do bloco
+   pendente da ficha: a borda diz "aqui vai entrar coisa" sem que ninguém
+   precise escrever isso. */
+.pendente-lista{
+  list-style:none; margin:var(--yb-space-4) 0 0; padding:var(--yb-space-4) var(--yb-space-5);
+  border:1px dashed var(--yb-border); border-radius:var(--yb-radius-card);
+  display:grid; gap:var(--yb-space-3); max-width:74ch;
+}
+.pendente-lista li{color:var(--yb-text-secondary); font-size:var(--yb-type-body-sm-size)}
+.pendente-lista b{color:var(--yb-text-primary)}
+
+.pendente{
+  padding:var(--yb-space-4) var(--yb-space-5);
+  border:1px dashed var(--yb-border); border-radius:var(--yb-radius-card);
+  color:var(--yb-text-muted); font-size:var(--yb-type-body-sm-size);
+  max-width:74ch;
+}
+
+.doc-credit{
+  border-top:1px solid var(--yb-border-subtle); padding-top:var(--yb-space-6);
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted); max-width:70ch;
+}
+@media (prefers-reduced-motion:reduce){
+  .ficha *{transition:none !important}
+}
+
+/* ===========================================================================
+   ANATOMIA DESENHADA — a peça, os números na margem e o fio até cada parte.
+
+   O palco é a própria peça, não um wireframe: desenho à parte envelhece
+   sozinho, e passa a contar a versão antiga com autoridade de documentação.
+
+   O SELO VIVE NA MARGEM. Colado no canto do elemento ele cobria justamente o
+   que apontava — no alerta, três números caíam em cima do título. Na margem
+   não há o que cobrir, e quem diz qual pedaço é qual passa a ser o fio.
+   =========================================================================== */
+/* PALCO EM CIMA, LEGENDA EMBAIXO — e não lado a lado. Em duas colunas o palco
+   ficava com 362px, e depois de tirar as duas calhas sobravam 258 para a peça:
+   um alerta de três linhas, e os selos da esquerda empilhados para fora da
+   caixa. O desenho precisa da largura inteira; a legenda, não. */
+.anat{
+  display:grid; gap:var(--yb-space-5);
+  margin:var(--yb-space-4) 0 var(--yb-space-8);
+}
+/* A calha de 52px de cada lado é onde os selos moram, e o respiro de cima é
+   para os que ancoram no topo. Sem a calha o selo sairia cortado na borda. */
+.anat__palco{
+  position:relative; isolation:isolate;
+  padding:var(--yb-space-12) 52px var(--yb-space-8);
+  background:var(--yb-bg-subtle); border-radius:var(--yb-radius-card);
+}
+.anat__peca{position:relative; z-index:1}
+/* OS FIOS PASSAM POR CIMA DA PEÇA. Atrás dela, o tracejado sumia na borda do
+   cartão e o número ficava apontando para o lado do componente em vez de para
+   a parte — foi o que a primeira versão mostrou. Por cima não atrapalha,
+   porque a perna vertical fica na calha e o que entra na peça é só uma reta
+   na altura do elemento, terminando na borda dele. */
+.anat__fios{
+  position:absolute; inset:0; z-index:2; pointer-events:none;
+  overflow:visible;
+}
+/* O fio agora corre sobre o cartão, então precisa de contraste próprio: a .5
+   de opacidade sumia em cima do fundo da peça. */
+.anat__fios path{
+  stroke:var(--yb-action-bg); stroke-width:1; stroke-dasharray:4 3; opacity:.75;
+}
+.anat__selo{
+  position:absolute; z-index:3;
+  inline-size:1.75rem; block-size:1.75rem;
+  display:grid; place-content:center;
+  border-radius:var(--yb-radius-pill);
+  background:var(--yb-surface); color:var(--yb-action-bg);
+  border:1px solid var(--yb-action-bg);
+  font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-semibold);
+  font-variant-numeric:tabular-nums;
+  transition:background var(--yb-transition-control), color var(--yb-transition-control);
+}
+.anat__selo--aceso{background:var(--yb-action-bg); color:var(--yb-text-inverse)}
+/* `outline` e não `border`: borda mudaria a caixa e a peça reflui debaixo do
+   próprio destaque — o fio apontaria para onde o elemento estava. */
+.anat__alvo--aceso{outline:2px solid var(--yb-action-bg); outline-offset:2px}
+
+.anat__legenda{
+  list-style:none; margin:0; padding:0;
+  display:grid; gap:var(--yb-space-1);
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+}
+/* Com a largura inteira, a legenda em uma coluna só deixaria meia tela vazia
+   ao lado de linhas curtas. Duas colunas, e a ordem continua a de leitura
+   porque a grade preenche por linha. */
+@media (min-width:760px){
+  .anat__legenda{grid-template-columns:repeat(2, minmax(0,1fr)); gap:var(--yb-space-1) var(--yb-space-6)}
+}
+/* Exatamente DOIS filhos: o número e o texto inteiro dentro de um <span>.
+   Com o texto solto, cada trecho entre tags virava um item de grade por conta
+   própria — o "— " caía na coluna de 1.75rem e a descrição saía uma palavra
+   por linha. */
+.anat__legenda > li{
+  display:grid; grid-template-columns:1.75rem minmax(0,1fr); gap:var(--yb-space-3);
+  align-items:baseline;
+  padding:var(--yb-space-2) var(--yb-space-3);
+  border-radius:var(--yb-radius-sm);
+  transition:background var(--yb-transition-control);
+}
+.anat__item--aceso{background:var(--yb-bg-subtle)}
+.anat__legenda > li:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.anat__num{
+  inline-size:1.75rem; block-size:1.75rem; display:grid; place-content:center;
+  border-radius:var(--yb-radius-pill);
+  border:1px solid var(--yb-action-bg); color:var(--yb-action-bg);
+  font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-semibold);
+  font-variant-numeric:tabular-nums;
+}
+.anat__legenda b{color:var(--yb-text-primary)}
+/* PARTE DECLARADA QUE NÃO EXISTE NA MARCAÇÃO. Some o número e fica o aviso: a
+   legenda estaria apontando para o nada, e nada na tela diria isso. */
+.anat__item--perdido{color:var(--yb-danger-text)}
+.anat__item--perdido::after{content:" — classe não encontrada na demonstração"}

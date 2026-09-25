@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="pt-BR" data-market="us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Color — Ybera Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../tokens/00-primitives.css">
+<link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../base/ybera-base.css">
+<link rel="stylesheet" href="../doc/doc.css">
+<link rel="stylesheet" href="../doc/doc-nav.css">
+<link rel="stylesheet" href="doc-tokens.css">
+<script src="../doc/doc.js" defer></script>
+<style>
+.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
+.ficha code{font-family:var(--yb-font-family-mono); font-size:var(--yb-type-caption-size)}
+</style>
+</head>
+<body class="ficha" data-moldura="centrada">
+<!-- @moldura · gerada por tools/moldura.mjs · não edite -->
+<header class="ds-top">
+  <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
+  <div class="ds-top__busca" hidden>
+    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
+    <input id="ds-filtro" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filtro>
+    <p class="nav-conta" role="status" aria-live="polite"></p>
+  </div>
+  <p class="ds-top__versao">v0.12.1</p>
+</header>
+<nav class="ds-nav" aria-label="Navegação do design system">
+  <ul class="ds-nav__solta">
+    <li><a href="../index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 7 8 2.5 13.5 7"/><path d="M4 6.5V13h8V6.5"/><path d="M6.5 13V9.5h3V13"/></svg>Início</a></li>
+  </ul>
+  <details class="ds-nav__grupo" open>
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5.5 8 3l6 2.5L8 8 2 5.5Z"/><path d="M2 8.8 8 11.3l6-2.5"/><path d="M2 12l6 2.5 6-2.5"/></svg>Fundação</summary>
+    <ul>
+      <li><a href="../tokens/index.html">Visão geral</a></li>
+      <li><a href="../tokens/architecture.html">Architecture</a></li>
+      <li><a href="../tokens/color.html" aria-current="page">Color</a></li>
+      <li><a href="../tokens/typography.html">Typography</a></li>
+      <li><a href="../tokens/space.html">Space</a></li>
+      <li><a href="../tokens/shape.html">Shape</a></li>
+      <li><a href="../tokens/elevation.html">Elevation</a></li>
+      <li><a href="../tokens/state.html">State</a></li>
+      <li><a href="../tokens/usage.html">How to use</a></li>
+      <li><a href="../icons/index.html">Ícones</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Componentes</summary>
+    <ul>
+      <li><a href="../molecules/accordion.html">Accordion</a></li>
+      <li><a href="../molecules/alert.html">Alert</a></li>
+      <li><a href="../atoms/avatar.html">Avatar</a></li>
+      <li><a href="../atoms/badge.html">Badge</a></li>
+      <li><a href="../molecules/bannerhero.html">Banner hero</a></li>
+      <li><a href="../molecules/bannermedia.html">Banner media</a></li>
+      <li><a href="../molecules/crumb.html">Breadcrumb</a></li>
+      <li><a href="../atoms/button.html">Button</a></li>
+      <li><a href="../molecules/offercard.html">Card offer</a></li>
+      <li><a href="../molecules/card.html">Card product</a></li>
+      <li><a href="../atoms/seals.html">Certification seals</a></li>
+      <li><a href="../atoms/checkbox.html">Checkbox</a></li>
+      <li><a href="../atoms/chip.html">Chip</a></li>
+      <li><a href="../molecules/collection.html">Collection card</a></li>
+      <li><a href="../molecules/dropdown.html">Dropdown</a></li>
+      <li><a href="../molecules/empty.html">Empty state</a></li>
+      <li><a href="../atoms/iconbtn.html">Icon button</a></li>
+      <li><a href="../atoms/input.html">Input</a></li>
+      <li><a href="../atoms/link.html">Link</a></li>
+      <li><a href="../atoms/logo.html">Logo</a></li>
+      <li><a href="../atoms/notice.html">Notice</a></li>
+      <li><a href="../atoms/offerseal.html">Offer seal</a></li>
+      <li><a href="../molecules/pagination.html">Pagination</a></li>
+      <li><a href="../molecules/partner.html">Partner</a></li>
+      <li><a href="../molecules/post.html">Post</a></li>
+      <li><a href="../molecules/price.html">Price</a></li>
+      <li><a href="../atoms/progress.html">Progress bar</a></li>
+      <li><a href="../molecules/stepper.html">Quantity stepper</a></li>
+      <li><a href="../atoms/radio.html">Radio</a></li>
+      <li><a href="../molecules/rating.html">Rating</a></li>
+      <li><a href="../molecules/review.html">Review</a></li>
+      <li><a href="../atoms/select.html">Select</a></li>
+      <li><a href="../atoms/skeleton.html">Skeleton</a></li>
+      <li><a href="../atoms/stars.html">Stars</a></li>
+      <li><a href="../atoms/switch.html">Switch</a></li>
+      <li><a href="../atoms/textarea.html">Textarea</a></li>
+      <li><a href="../molecules/toast.html">Toast</a></li>
+      <li><a href="../molecules/track.html">Track</a></li>
+      <li><a href="../molecules/variant.html">Variant picker</a></li>
+      <li><a href="../molecules/video.html">Vertical video carousel</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2.5" width="12" height="3" rx="1"/><rect x="2" y="6.8" width="12" height="3" rx="1"/><rect x="2" y="11.1" width="12" height="2.4" rx="1"/></svg>Blocos</summary>
+    <ul>
+      <li><a href="../organisms/quote.html">Brand quote</a></li>
+      <li><a href="../organisms/buybox.html">Buy box</a></li>
+      <li><a href="../organisms/cart-drawer.html">Cart drawer</a></li>
+      <li><a href="../organisms/catalog.html">Catalog</a></li>
+      <li><a href="../organisms/drawer.html">Drawer</a></li>
+      <li><a href="../organisms/faq.html">FAQ</a></li>
+      <li><a href="../organisms/footer.html">Footer</a></li>
+      <li><a href="../organisms/shipping-progress.html">Free shipping progress</a></li>
+      <li><a href="../organisms/gallery.html">Gallery</a></li>
+      <li><a href="../organisms/header.html">Header</a></li>
+      <li><a href="../organisms/hero.html">Hero</a></li>
+      <li><a href="../organisms/logobar.html">Logo bar</a></li>
+      <li><a href="../organisms/manifesto.html">Manifesto</a></li>
+      <li><a href="../organisms/dialog.html">Modal</a></li>
+      <li><a href="../organisms/nav.html">Nav</a></li>
+      <li><a href="../organisms/search.html">Search overlay</a></li>
+      <li><a href="../organisms/split.html">Split</a></li>
+    </ul>
+  </details>
+  <details class="ds-nav__grupo">
+    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3.5" width="9" height="9" rx="1.5"/><path d="M5.5 3.5V1.5h9v9h-2"/></svg>Exemplos</summary>
+    <ul>
+      <li><a href="../pages/index.html">Visão geral</a></li>
+      <li><a href="../pages/home.html" target="_blank" rel="noopener">Home v1<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-v2.html" target="_blank" rel="noopener">Home v2<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-v3.html" target="_blank" rel="noopener">Home v3<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/index-logado.html" target="_blank" rel="noopener">Home · cliente logado<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp.html" target="_blank" rel="noopener">PDP<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-influencer.html" target="_blank" rel="noopener">PDP link influencer<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-esgotado.html" target="_blank" rel="noopener">PDP esgotada<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-variante.html" target="_blank" rel="noopener">PDP com variante<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/pdp-oferta.html" target="_blank" rel="noopener">PDP em promoção<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/faq.html" target="_blank" rel="noopener">FAQ<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+      <li><a href="../pages/404.html" target="_blank" rel="noopener">404<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
+    </ul>
+  </details>
+  <ul class="ds-nav__solta">
+    <li><a href="../preview/index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3" width="13" height="8.5" rx="1.5"/><path d="M5.5 14h5"/><path d="M8 11.5V14"/></svg>Preview</a></li>
+  </ul>
+</nav>
+<!-- /@moldura -->
+<main class="main">
+  <div class="ficha-topo">
+    <nav class="ficha-trilha" aria-label="Você está aqui">
+      <a href="index.html">Fundação</a>
+      <span aria-hidden="true">/</span>
+      <b aria-current="page">Color</b>
+    </nav>
+    <nav class="ficha-passo" aria-label="Seção anterior e próxima">
+      <a href="architecture.html" rel="prev"><span aria-hidden="true">←</span> Architecture</a>
+      <a href="typography.html" rel="next">Typography <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
+  <h1 class="ficha-titulo">Color</h1>
+  <p class="ficha-quando">Sete rampas de onze degraus — três de marca e quatro de estado —, cada uma gerada por script e validada em contraste. O número ao lado de cada degrau é a razão medida contra branco.</p>
+
+<h3 class="sub">Neutro — derivado da primária</h3>
+      <div class="ramp">
+      <div class="sw ">
+        <div class="sw-chip" style="background:#FAFAFA;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-50</code>
+          <span class="sw-hex">#FAFAFA</span>
+          <span class="sw-cr" data-tag="—">1.04:1 · —</span>
+          
+        <details class="uso"><summary>22 componentes</summary><ul class="uso__lista"><li><a href="../atoms/avatar.html">Avatar</a> <code>.yb-avatar</code></li><li><a href="../molecules/bannerhero.html">Banner hero</a> <code>.yb-bannerhero</code></li><li><a href="../molecules/bannermedia.html">Banner media</a> <code>.yb-bannermedia</code></li><li><a href="../organisms/quote.html">Brand quote</a> <code>.yb-quote</code></li><li><a href="../atoms/button.html">Button</a> <code>.yb-btn</code></li><li><a href="../molecules/card.html">Card product</a> <code>.yb-card</code></li><li><a href="../organisms/cart-drawer.html">Cart drawer</a> <code>.yb-cart</code></li><li><a href="../atoms/checkbox.html">Checkbox</a> <code>.yb-check</code></li><li><a href="../molecules/collection.html">Collection card</a> <code>.yb-collection</code></li><li><a href="../molecules/dropdown.html">Dropdown</a> <code>.yb-dropdown</code></li><li><a href="../organisms/gallery.html">Gallery</a> <code>.yb-gallery</code></li><li><a href="../atoms/input.html">Input</a> <code>.yb-input</code></li><li><a href="../organisms/dialog.html">Modal</a> <code>.yb-dialog</code></li><li><a href="../organisms/nav.html">Nav</a> <code>.yb-nav</code></li><li><a href="../molecules/partner.html">Partner</a> <code>.yb-partner</code></li><li><a href="../molecules/post.html">Post</a> <code>.yb-post</code></li><li><a href="../atoms/radio.html">Radio</a> <code>.yb-radio</code></li><li><a href="../molecules/review.html">Review</a> <code>.yb-review</code></li><li><a href="../atoms/select.html">Select</a> <code>.yb-select</code></li><li><a href="../organisms/split.html">Split</a> <code>.yb-split</code></li><li><a href="../atoms/textarea.html">Textarea</a> <code>.yb-textarea</code></li><li><a href="../molecules/variant.html">Variant picker</a> <code>.yb-swatches</code></li></ul></details></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#F5F5F5;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-100</code>
+          <span class="sw-hex">#F5F5F5</span>
+          <span class="sw-cr" data-tag="—">1.09:1 · —</span>
+          
+        <details class="uso"><summary>19 componentes</summary><ul class="uso__lista"><li><a href="../atoms/avatar.html">Avatar</a> <code>.yb-avatar</code></li><li><a href="../atoms/badge.html">Badge</a> <code>.yb-badge</code></li><li><a href="../atoms/button.html">Button</a> <code>.yb-btn</code></li><li><a href="../organisms/cart-drawer.html">Cart drawer</a> <code>.yb-cart</code></li><li><a href="../atoms/seals.html">Certification seals</a> <code>.yb-seal</code></li><li><a href="../molecules/dropdown.html">Dropdown</a> <code>.yb-dropdown</code></li><li><a href="../molecules/empty.html">Empty state</a> <code>.yb-empty</code></li><li><a href="../organisms/footer.html">Footer</a> <code>.yb-footer</code></li><li><a href="../organisms/header.html">Header</a> <code>.yb-header</code></li><li><a href="../atoms/iconbtn.html">Icon button</a> <code>.yb-iconbtn</code></li><li><a href="../organisms/dialog.html">Modal</a> <code>.yb-dialog</code></li><li><a href="../organisms/nav.html">Nav</a> <code>.yb-nav</code></li><li><a href="../atoms/notice.html">Notice</a> <code>.yb-notice</code></li><li><a href="../molecules/pagination.html">Pagination</a> <code>.yb-pagination</code></li><li><a href="../atoms/progress.html">Progress bar</a> <code>.yb-progress</code></li><li><a href="../molecules/stepper.html">Quantity stepper</a> <code>.yb-stepper</code></li><li><a href="../organisms/search.html">Search overlay</a> <code>.yb-search</code></li><li><a href="../atoms/skeleton.html">Skeleton</a> <code>.yb-skeleton</code></li><li><a href="../molecules/variant.html">Variant picker</a> <code>.yb-swatches</code></li></ul></details></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#EAEAEA;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-200</code>
+          <span class="sw-hex">#EAEAEA</span>
+          <span class="sw-cr" data-tag="—">1.20:1 · —</span>
+          
+        <details class="uso"><summary>17 componentes</summary><ul class="uso__lista"><li><a href="../molecules/accordion.html">Accordion</a> <code>.yb-accordion</code></li><li><a href="../organisms/quote.html">Brand quote</a> <code>.yb-quote</code></li><li><a href="../atoms/button.html">Button</a> <code>.yb-btn</code></li><li><a href="../organisms/buybox.html">Buy box</a> <code>.yb-buybox</code></li><li><a href="../molecules/card.html">Card product</a> <code>.yb-card</code></li><li><a href="../organisms/cart-drawer.html">Cart drawer</a> <code>.yb-cart</code></li><li><a href="../organisms/catalog.html">Catalog</a> <code>.yb-catalog</code></li><li><a href="../atoms/chip.html">Chip</a> <code>.yb-chip</code></li><li><a href="../molecules/dropdown.html">Dropdown</a> <code>.yb-dropdown</code></li><li><a href="../organisms/faq.html">FAQ</a> <code>.yb-faq</code></li><li><a href="../organisms/gallery.html">Gallery</a> <code>.yb-gallery</code></li><li><a href="../organisms/header.html">Header</a> <code>.yb-header</code></li><li><a href="../organisms/dialog.html">Modal</a> <code>.yb-dialog</code></li><li><a href="../organisms/nav.html">Nav</a> <code>.yb-nav</code></li><li><a href="../atoms/notice.html">Notice</a> <code>.yb-notice</code></li><li><a href="../molecules/review.html">Review</a> <code>.yb-review</code></li><li><a href="../organisms/search.html">Search overlay</a> <code>.yb-search</code></li></ul></details></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#DADADB;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-300</code>
+          <span class="sw-hex">#DADADB</span>
+          <span class="sw-cr" data-tag="—">1.40:1 · —</span>
+          
+        <details class="uso"><summary>17 componentes</summary><ul class="uso__lista"><li><a href="../molecules/bannerhero.html">Banner hero</a> <code>.yb-bannerhero</code></li><li><a href="../molecules/bannermedia.html">Banner media</a> <code>.yb-bannermedia</code></li><li><a href="../atoms/button.html">Button</a> <code>.yb-btn</code></li><li><a href="../molecules/offercard.html">Card offer</a> <code>.yb-offercard</code></li><li><a href="../atoms/chip.html">Chip</a> <code>.yb-chip</code></li><li><a href="../organisms/footer.html">Footer</a> <code>.yb-footer</code></li><li><a href="../atoms/iconbtn.html">Icon button</a> <code>.yb-iconbtn</code></li><li><a href="../atoms/input.html">Input</a> <code>.yb-input</code></li><li><a href="../organisms/manifesto.html">Manifesto</a> <code>.yb-manifesto</code></li><li><a href="../molecules/stepper.html">Quantity stepper</a> <code>.yb-stepper</code></li><li><a href="../atoms/select.html">Select</a> <code>.yb-select</code></li><li><a href="../organisms/split.html">Split</a> <code>.yb-split</code></li><li><a href="../atoms/switch.html">Switch</a> <code>.yb-switch</code></li><li><a href="../atoms/textarea.html">Textarea</a> <code>.yb-textarea</code></li><li><a href="../molecules/toast.html">Toast</a> <code>.yb-toast</code></li><li><a href="../molecules/track.html">Track</a> <code>.yb-track</code></li><li><a href="../molecules/variant.html">Variant picker</a> <code>.yb-swatches</code></li></ul></details></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#B1B1B4;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-400</code>
+          <span class="sw-hex">#B1B1B4</span>
+          <span class="sw-cr" data-tag="—">2.14:1 · —</span>
+          
+        <details class="uso"><summary>15 componentes</summary><ul class="uso__lista"><li><a href="../atoms/checkbox.html">Checkbox</a> <code>.yb-check</code></li><li><a href="../atoms/chip.html">Chip</a> <code>.yb-chip</code></li><li><a href="../organisms/footer.html">Footer</a> <code>.yb-footer</code></li><li><a href="../organisms/gallery.html">Gallery</a> <code>.yb-gallery</code></li><li><a href="../atoms/iconbtn.html">Icon button</a> <code>.yb-iconbtn</code></li><li><a href="../atoms/input.html">Input</a> <code>.yb-input</code></li><li><a href="../organisms/manifesto.html">Manifesto</a> <code>.yb-manifesto</code></li><li><a href="../molecules/pagination.html">Pagination</a> <code>.yb-pagination</code></li><li><a href="../molecules/stepper.html">Quantity stepper</a> <code>.yb-stepper</code></li><li><a href="../atoms/radio.html">Radio</a> <code>.yb-radio</code></li><li><a href="../atoms/select.html">Select</a> <code>.yb-select</code></li><li><a href="../organisms/split.html">Split</a> <code>.yb-split</code></li><li><a href="../atoms/switch.html">Switch</a> <code>.yb-switch</code></li><li><a href="../atoms/textarea.html">Textarea</a> <code>.yb-textarea</code></li><li><a href="../molecules/variant.html">Variant picker</a> <code>.yb-swatches</code></li></ul></details></div>
+      </div>
+      <div class="sw is-key">
+        <div class="sw-chip" style="background:#8A8A8E;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-500</code>
+          <span class="sw-hex">#8A8A8E</span>
+          <span class="sw-cr" data-tag="UI">3.44:1 · UI</span>
+          <span class="sw-note">ícone e borda — nunca texto</span>
+        <details class="uso"><summary>2 componentes</summary><ul class="uso__lista"><li><a href="../atoms/checkbox.html">Checkbox</a> <code>.yb-check</code></li><li><a href="../atoms/radio.html">Radio</a> <code>.yb-radio</code></li></ul></details></div>
+      </div>
+      <div class="sw is-key">
+        <div class="sw-chip" style="background:#6D6D71;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-600</code>
+          <span class="sw-hex">#6D6D71</span>
+          <span class="sw-cr" data-tag="AA">5.15:1 · AA</span>
+          <span class="sw-note">piso de texto</span>
+        <details class="uso"><summary>24 componentes</summary><ul class="uso__lista"><li><a href="../molecules/accordion.html">Accordion</a> <code>.yb-accordion</code></li><li><a href="../molecules/crumb.html">Breadcrumb</a> <code>.yb-crumb</code></li><li><a href="../atoms/button.html">Button</a> <code>.yb-btn</code></li><li><a href="../organisms/buybox.html">Buy box</a> <code>.yb-buybox</code></li><li><a href="../organisms/cart-drawer.html">Cart drawer</a> <code>.yb-cart</code></li><li><a href="../organisms/catalog.html">Catalog</a> <code>.yb-catalog</code></li><li><a href="../atoms/checkbox.html">Checkbox</a> <code>.yb-check</code></li><li><a href="../atoms/chip.html">Chip</a> <code>.yb-chip</code></li><li><a href="../molecules/dropdown.html">Dropdown</a> <code>.yb-dropdown</code></li><li><a href="../molecules/empty.html">Empty state</a> <code>.yb-empty</code></li><li><a href="../organisms/footer.html">Footer</a> <code>.yb-footer</code></li><li><a href="../atoms/input.html">Input</a> <code>.yb-input</code></li><li><a href="../organisms/manifesto.html">Manifesto</a> <code>.yb-manifesto</code></li><li><a href="../organisms/dialog.html">Modal</a> <code>.yb-dialog</code></li><li><a href="../organisms/nav.html">Nav</a> <code>.yb-nav</code></li><li><a href="../molecules/pagination.html">Pagination</a> <code>.yb-pagination</code></li><li><a href="../molecules/price.html">Price</a> <code>.yb-price</code></li><li><a href="../atoms/radio.html">Radio</a> <code>.yb-radio</code></li><li><a href="../molecules/rating.html">Rating</a> <code>.yb-rating</code></li><li><a href="../molecules/review.html">Review</a> <code>.yb-review</code></li><li><a href="../organisms/search.html">Search overlay</a> <code>.yb-search</code></li><li><a href="../atoms/textarea.html">Textarea</a> <code>.yb-textarea</code></li><li><a href="../molecules/toast.html">Toast</a> <code>.yb-toast</code></li><li><a href="../molecules/variant.html">Variant picker</a> <code>.yb-swatches</code></li></ul></details></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#535356;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-700</code>
+          <span class="sw-hex">#535356</span>
+          <span class="sw-cr" data-tag="AAA">7.67:1 · AAA</span>
+          
+        <details class="uso"><summary>23 componentes</summary><ul class="uso__lista"><li><a href="../molecules/accordion.html">Accordion</a> <code>.yb-accordion</code></li><li><a href="../molecules/alert.html">Alert</a> <code>.yb-alert</code></li><li><a href="../atoms/badge.html">Badge</a> <code>.yb-badge</code></li><li><a href="../molecules/crumb.html">Breadcrumb</a> <code>.yb-crumb</code></li><li><a href="../organisms/buybox.html">Buy box</a> <code>.yb-buybox</code></li><li><a href="../organisms/cart-drawer.html">Cart drawer</a> <code>.yb-cart</code></li><li><a href="../atoms/seals.html">Certification seals</a> <code>.yb-seal</code></li><li><a href="../atoms/checkbox.html">Checkbox</a> <code>.yb-check</code></li><li><a href="../atoms/chip.html">Chip</a> <code>.yb-chip</code></li><li><a href="../molecules/dropdown.html">Dropdown</a> <code>.yb-dropdown</code></li><li><a href="../molecules/empty.html">Empty state</a> <code>.yb-empty</code></li><li><a href="../organisms/faq.html">FAQ</a> <code>.yb-faq</code></li><li><a href="../organisms/footer.html">Footer</a> <code>.yb-footer</code></li><li><a href="../organisms/shipping-progress.html">Free shipping progress</a> <code>.yb-freeship</code></li><li><a href="../organisms/dialog.html">Modal</a> <code>.yb-dialog</code></li><li><a href="../organisms/nav.html">Nav</a> <code>.yb-nav</code></li><li><a href="../atoms/notice.html">Notice</a> <code>.yb-notice</code></li><li><a href="../molecules/pagination.html">Pagination</a> <code>.yb-pagination</code></li><li><a href="../molecules/post.html">Post</a> <code>.yb-post</code></li><li><a href="../atoms/radio.html">Radio</a> <code>.yb-radio</code></li><li><a href="../molecules/review.html">Review</a> <code>.yb-review</code></li><li><a href="../organisms/search.html">Search overlay</a> <code>.yb-search</code></li><li><a href="../molecules/toast.html">Toast</a> <code>.yb-toast</code></li></ul></details></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#3A3A3C;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-800</code>
+          <span class="sw-hex">#3A3A3C</span>
+          <span class="sw-cr" data-tag="AAA">11.35:1 · AAA</span>
+          
+        <details class="uso"><summary>4 componentes</summary><ul class="uso__lista"><li><a href="../atoms/badge.html">Badge</a> <code>.yb-badge</code></li><li><a href="../organisms/footer.html">Footer</a> <code>.yb-footer</code></li><li><a href="../atoms/input.html">Input</a> <code>.yb-input</code></li><li><a href="../molecules/variant.html">Variant picker</a> <code>.yb-swatches</code></li></ul></details></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#272728;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-900</code>
+          <span class="sw-hex">#272728</span>
+          <span class="sw-cr" data-tag="AAA">14.92:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw is-key">
+        <div class="sw-chip" style="background:#1E1E1F;"></div>
+        <div class="sw-meta">
+          <code>--yb-gray-950</code>
+          <span class="sw-hex">#1E1E1F</span>
+          <span class="sw-cr" data-tag="AAA">16.66:1 · AAA</span>
+          <span class="sw-note">PRIMÁRIA</span>
+        <details class="uso"><summary>44 componentes</summary><ul class="uso__lista"><li><a href="../molecules/accordion.html">Accordion</a> <code>.yb-accordion</code></li><li><a href="../molecules/alert.html">Alert</a> <code>.yb-alert</code></li><li><a href="../atoms/avatar.html">Avatar</a> <code>.yb-avatar</code></li><li><a href="../atoms/badge.html">Badge</a> <code>.yb-badge</code></li><li><a href="../molecules/bannerhero.html">Banner hero</a> <code>.yb-bannerhero</code></li><li><a href="../molecules/bannermedia.html">Banner media</a> <code>.yb-bannermedia</code></li><li><a href="../organisms/quote.html">Brand quote</a> <code>.yb-quote</code></li><li><a href="../molecules/crumb.html">Breadcrumb</a> <code>.yb-crumb</code></li><li><a href="../atoms/button.html">Button</a> <code>.yb-btn</code></li><li><a href="../organisms/buybox.html">Buy box</a> <code>.yb-buybox</code></li><li><a href="../molecules/offercard.html">Card offer</a> <code>.yb-offercard</code></li><li><a href="../molecules/card.html">Card product</a> <code>.yb-card</code></li><li><a href="../organisms/cart-drawer.html">Cart drawer</a> <code>.yb-cart</code></li><li><a href="../atoms/checkbox.html">Checkbox</a> <code>.yb-check</code></li><li><a href="../atoms/chip.html">Chip</a> <code>.yb-chip</code></li><li><a href="../molecules/collection.html">Collection card</a> <code>.yb-collection</code></li><li><a href="../molecules/dropdown.html">Dropdown</a> <code>.yb-dropdown</code></li><li><a href="../molecules/empty.html">Empty state</a> <code>.yb-empty</code></li><li><a href="../organisms/footer.html">Footer</a> <code>.yb-footer</code></li><li><a href="../organisms/shipping-progress.html">Free shipping progress</a> <code>.yb-freeship</code></li><li><a href="../organisms/gallery.html">Gallery</a> <code>.yb-gallery</code></li><li><a href="../atoms/iconbtn.html">Icon button</a> <code>.yb-iconbtn</code></li><li><a href="../atoms/input.html">Input</a> <code>.yb-input</code></li><li><a href="../organisms/logobar.html">Logo bar</a> <code>.yb-logobar</code></li><li><a href="../organisms/manifesto.html">Manifesto</a> <code>.yb-manifesto</code></li><li><a href="../organisms/dialog.html">Modal</a> <code>.yb-dialog</code></li><li><a href="../organisms/nav.html">Nav</a> <code>.yb-nav</code></li><li><a href="../atoms/notice.html">Notice</a> <code>.yb-notice</code></li><li><a href="../atoms/offerseal.html">Offer seal</a> <code>.yb-offerseal</code></li><li><a href="../molecules/pagination.html">Pagination</a> <code>.yb-pagination</code></li><li><a href="../molecules/partner.html">Partner</a> <code>.yb-partner</code></li><li><a href="../molecules/post.html">Post</a> <code>.yb-post</code></li><li><a href="../molecules/price.html">Price</a> <code>.yb-price</code></li><li><a href="../molecules/stepper.html">Quantity stepper</a> <code>.yb-stepper</code></li><li><a href="../atoms/radio.html">Radio</a> <code>.yb-radio</code></li><li><a href="../molecules/rating.html">Rating</a> <code>.yb-rating</code></li><li><a href="../molecules/review.html">Review</a> <code>.yb-review</code></li><li><a href="../organisms/search.html">Search overlay</a> <code>.yb-search</code></li><li><a href="../atoms/select.html">Select</a> <code>.yb-select</code></li><li><a href="../organisms/split.html">Split</a> <code>.yb-split</code></li><li><a href="../atoms/textarea.html">Textarea</a> <code>.yb-textarea</code></li><li><a href="../molecules/toast.html">Toast</a> <code>.yb-toast</code></li><li><a href="../molecules/variant.html">Variant picker</a> <code>.yb-swatches</code></li><li><a href="../molecules/video.html">Vertical video carousel</a> <code>.yb-video</code></li></ul></details></div>
+      </div>
+      </div>
+      <div class="rule">
+        <b>Regra dura · piso de texto</b>
+        <p>O <code>gray-500</code> mede 3.44:1 e reprova em AA. Ele existe para ícone
+        e borda. Texto nunca desce abaixo do <code>gray-600</code>. A loja hoje usa
+        <code>zinc-500</code> (4.83:1) em 266 elementos — passa raspando, e é por isso
+        que tanto texto secundário parece apagado.</p>
+      </div>
+
+      <h3 class="sub">Magenta — ação</h3>
+      <div class="ramp">
+      <div class="sw ">
+        <div class="sw-chip" style="background:#FCF9FA;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-50</code>
+          <span class="sw-hex">#FCF9FA</span>
+          <span class="sw-cr" data-tag="—">1.05:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#F9F2F4;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-100</code>
+          <span class="sw-hex">#F9F2F4</span>
+          <span class="sw-cr" data-tag="—">1.10:1 · —</span>
+          
+        <details class="uso"><summary>3 componentes</summary><ul class="uso__lista"><li><a href="../atoms/badge.html">Badge</a> <code>.yb-badge</code></li><li><a href="../atoms/button.html">Button</a> <code>.yb-btn</code></li><li><a href="../molecules/pagination.html">Pagination</a> <code>.yb-pagination</code></li></ul></details></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#F3E1E8;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-200</code>
+          <span class="sw-hex">#F3E1E8</span>
+          <span class="sw-cr" data-tag="—">1.25:1 · —</span>
+          
+        <details class="uso"><summary>2 componentes</summary><ul class="uso__lista"><li><a href="../atoms/button.html">Button</a> <code>.yb-btn</code></li><li><a href="../organisms/nav.html">Nav</a> <code>.yb-nav</code></li></ul></details></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#EBCAD6;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-300</code>
+          <span class="sw-hex">#EBCAD6</span>
+          <span class="sw-cr" data-tag="—">1.51:1 · —</span>
+          
+        <details class="uso"><summary>1 componente</summary><ul class="uso__lista"><li><a href="../atoms/button.html">Button</a> <code>.yb-btn</code></li></ul></details></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#DC89A7;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-400</code>
+          <span class="sw-hex">#DC89A7</span>
+          <span class="sw-cr" data-tag="—">2.57:1 · —</span>
+          
+        <details class="uso"><summary>1 componente</summary><ul class="uso__lista"><li><a href="../atoms/badge.html">Badge</a> <code>.yb-badge</code></li></ul></details></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#D64277;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-500</code>
+          <span class="sw-hex">#D64277</span>
+          <span class="sw-cr" data-tag="UI">4.28:1 · UI</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw is-key">
+        <div class="sw-chip" style="background:#CA235F;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-600</code>
+          <span class="sw-hex">#CA235F</span>
+          <span class="sw-cr" data-tag="AA">5.36:1 · AA</span>
+          <span class="sw-note">AÇÃO canônica</span>
+        <details class="uso"><summary>39 componentes</summary><ul class="uso__lista"><li><a href="../molecules/accordion.html">Accordion</a> <code>.yb-accordion</code></li><li><a href="../molecules/alert.html">Alert</a> <code>.yb-alert</code></li><li><a href="../atoms/badge.html">Badge</a> <code>.yb-badge</code></li><li><a href="../molecules/bannerhero.html">Banner hero</a> <code>.yb-bannerhero</code></li><li><a href="../molecules/bannermedia.html">Banner media</a> <code>.yb-bannermedia</code></li><li><a href="../molecules/crumb.html">Breadcrumb</a> <code>.yb-crumb</code></li><li><a href="../atoms/button.html">Button</a> <code>.yb-btn</code></li><li><a href="../organisms/buybox.html">Buy box</a> <code>.yb-buybox</code></li><li><a href="../molecules/offercard.html">Card offer</a> <code>.yb-offercard</code></li><li><a href="../molecules/card.html">Card product</a> <code>.yb-card</code></li><li><a href="../organisms/cart-drawer.html">Cart drawer</a> <code>.yb-cart</code></li><li><a href="../atoms/checkbox.html">Checkbox</a> <code>.yb-check</code></li><li><a href="../atoms/chip.html">Chip</a> <code>.yb-chip</code></li><li><a href="../molecules/collection.html">Collection card</a> <code>.yb-collection</code></li><li><a href="../molecules/dropdown.html">Dropdown</a> <code>.yb-dropdown</code></li><li><a href="../organisms/footer.html">Footer</a> <code>.yb-footer</code></li><li><a href="../organisms/gallery.html">Gallery</a> <code>.yb-gallery</code></li><li><a href="../organisms/header.html">Header</a> <code>.yb-header</code></li><li><a href="../atoms/iconbtn.html">Icon button</a> <code>.yb-iconbtn</code></li><li><a href="../atoms/input.html">Input</a> <code>.yb-input</code></li><li><a href="../atoms/link.html">Link</a> <code>.yb-link</code></li><li><a href="../atoms/logo.html">Logo</a> <code>.yb-logo</code></li><li><a href="../organisms/dialog.html">Modal</a> <code>.yb-dialog</code></li><li><a href="../organisms/nav.html">Nav</a> <code>.yb-nav</code></li><li><a href="../atoms/notice.html">Notice</a> <code>.yb-notice</code></li><li><a href="../atoms/offerseal.html">Offer seal</a> <code>.yb-offerseal</code></li><li><a href="../molecules/pagination.html">Pagination</a> <code>.yb-pagination</code></li><li><a href="../molecules/partner.html">Partner</a> <code>.yb-partner</code></li><li><a href="../molecules/post.html">Post</a> <code>.yb-post</code></li><li><a href="../atoms/progress.html">Progress bar</a> <code>.yb-progress</code></li><li><a href="../molecules/stepper.html">Quantity stepper</a> <code>.yb-stepper</code></li><li><a href="../atoms/radio.html">Radio</a> <code>.yb-radio</code></li><li><a href="../molecules/review.html">Review</a> <code>.yb-review</code></li><li><a href="../organisms/search.html">Search overlay</a> <code>.yb-search</code></li><li><a href="../atoms/select.html">Select</a> <code>.yb-select</code></li><li><a href="../atoms/switch.html">Switch</a> <code>.yb-switch</code></li><li><a href="../atoms/textarea.html">Textarea</a> <code>.yb-textarea</code></li><li><a href="../molecules/toast.html">Toast</a> <code>.yb-toast</code></li><li><a href="../molecules/variant.html">Variant picker</a> <code>.yb-swatches</code></li></ul></details></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#8A1E45;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-700</code>
+          <span class="sw-hex">#8A1E45</span>
+          <span class="sw-cr" data-tag="AAA">8.93:1 · AAA</span>
+          
+        <details class="uso"><summary>8 componentes</summary><ul class="uso__lista"><li><a href="../molecules/bannerhero.html">Banner hero</a> <code>.yb-bannerhero</code></li><li><a href="../molecules/bannermedia.html">Banner media</a> <code>.yb-bannermedia</code></li><li><a href="../atoms/button.html">Button</a> <code>.yb-btn</code></li><li><a href="../molecules/collection.html">Collection card</a> <code>.yb-collection</code></li><li><a href="../organisms/footer.html">Footer</a> <code>.yb-footer</code></li><li><a href="../atoms/link.html">Link</a> <code>.yb-link</code></li><li><a href="../organisms/nav.html">Nav</a> <code>.yb-nav</code></li><li><a href="../molecules/post.html">Post</a> <code>.yb-post</code></li></ul></details></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#5D1932;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-800</code>
+          <span class="sw-hex">#5D1932</span>
+          <span class="sw-cr" data-tag="AAA">12.72:1 · AAA</span>
+          
+        <details class="uso"><summary>1 componente</summary><ul class="uso__lista"><li><a href="../atoms/button.html">Button</a> <code>.yb-btn</code></li></ul></details></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#3D1222;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-900</code>
+          <span class="sw-hex">#3D1222</span>
+          <span class="sw-cr" data-tag="AAA">16.05:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#2E0F1A;"></div>
+        <div class="sw-meta">
+          <code>--yb-magenta-950</code>
+          <span class="sw-hex">#2E0F1A</span>
+          <span class="sw-cr" data-tag="AAA">17.51:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      </div>
+
+      <h3 class="sub">Dourado — acento</h3>
+      <div class="ramp">
+      <div class="sw ">
+        <div class="sw-chip" style="background:#FCFBF8;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-50</code>
+          <span class="sw-hex">#FCFBF8</span>
+          <span class="sw-cr" data-tag="—">1.03:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#F9F7F1;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-100</code>
+          <span class="sw-hex">#F9F7F1</span>
+          <span class="sw-cr" data-tag="—">1.07:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#F3EDE1;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-200</code>
+          <span class="sw-hex">#F3EDE1</span>
+          <span class="sw-cr" data-tag="—">1.17:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#ECE0CA;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-300</code>
+          <span class="sw-hex">#ECE0CA</span>
+          <span class="sw-cr" data-tag="—">1.31:1 · —</span>
+          
+        <details class="uso"><summary>3 componentes</summary><ul class="uso__lista"><li><a href="../molecules/bannerhero.html">Banner hero</a> <code>.yb-bannerhero</code></li><li><a href="../molecules/bannermedia.html">Banner media</a> <code>.yb-bannermedia</code></li><li><a href="../organisms/nav.html">Nav</a> <code>.yb-nav</code></li></ul></details></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#DDC088;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-400</code>
+          <span class="sw-hex">#DDC088</span>
+          <span class="sw-cr" data-tag="—">1.75:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw is-key">
+        <div class="sw-chip" style="background:#D29F3E;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-500</code>
+          <span class="sw-hex">#D29F3E</span>
+          <span class="sw-cr" data-tag="—">2.39:1 · —</span>
+          <span class="sw-note">MARCA — só sobre escuro</span>
+        <details class="uso"><summary>2 componentes</summary><ul class="uso__lista"><li><a href="../atoms/notice.html">Notice</a> <code>.yb-notice</code></li><li><a href="../atoms/offerseal.html">Offer seal</a> <code>.yb-offerseal</code></li></ul></details></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#AE8330;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-600</code>
+          <span class="sw-hex">#AE8330</span>
+          <span class="sw-cr" data-tag="UI">3.45:1 · UI</span>
+          
+        <details class="uso"><summary>2 componentes</summary><ul class="uso__lista"><li><a href="../molecules/rating.html">Rating</a> <code>.yb-rating</code></li><li><a href="../atoms/stars.html">Stars</a> <code>.yb-stars</code></li></ul></details></div>
+      </div>
+      <div class="sw is-key">
+        <div class="sw-chip" style="background:#806228;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-700</code>
+          <span class="sw-hex">#806228</span>
+          <span class="sw-cr" data-tag="AA">5.68:1 · AA</span>
+          <span class="sw-note">texto sobre claro</span>
+        <details class="uso"><summary>1 componente</summary><ul class="uso__lista"><li><a href="../organisms/nav.html">Nav</a> <code>.yb-nav</code></li></ul></details></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#57441F;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-800</code>
+          <span class="sw-hex">#57441F</span>
+          <span class="sw-cr" data-tag="AAA">9.33:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#392D16;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-900</code>
+          <span class="sw-hex">#392D16</span>
+          <span class="sw-cr" data-tag="AAA">13.45:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw ">
+        <div class="sw-chip" style="background:#2C2312;"></div>
+        <div class="sw-meta">
+          <code>--yb-gold-950</code>
+          <span class="sw-hex">#2C2312</span>
+          <span class="sw-cr" data-tag="AAA">15.48:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      </div>
+      <div class="rule">
+        <b>Regra dura · dourado nunca é texto sobre claro</b>
+        <p>O dourado de marca <code>gold-500</code> mede 2.39:1 sobre branco — reprova
+        até para texto grande. Sobre grafite mede 6.96:1 e passa com folga. Para texto
+        sobre fundo claro existe <code>--yb-accent-text</code> (gold-700, 5.68:1).</p>
+      </div>
+          <h3 class="sub">Estado — sucesso, atenção, erro, informação</h3>
+      <p>Onze tons por família, no mesmo desenho do neutro, do magenta e do
+      dourado. Duas âncoras não mudaram: o <code>600</code> é a cor de texto e de
+      traço, e mede <b>≥5.4:1</b> sobre branco, com folga de AA porque estado
+      costuma aparecer em texto pequeno; o <code>50</code> é a superfície. O
+      <code>500</code> é o primeiro tom que serve de UI (borda, ícone). Quem
+      consome são os aliases <code>--yb-success-text</code>,
+      <code>--yb-success-surface</code> e <code>--yb-success-solid</code>, vistos em
+      <a href="#state">State</a>.</p>
+      <h3 class="sub">Sucesso</h3>
+      <div class="ramp">
+      <div class="sw">
+        <div class="sw-chip" style="background:#EAF6EC;"></div>
+        <div class="sw-meta">
+          <code>--yb-success-50</code>
+          <span class="sw-hex">#EAF6EC</span>
+          <span class="sw-cr" data-tag="—">1.11:1 · —</span>
+          <span class="sw-note">superfície</span>
+        <details class="uso"><summary>3 componentes</summary><ul class="uso__lista"><li><a href="../molecules/alert.html">Alert</a> <code>.yb-alert</code></li><li><a href="../atoms/badge.html">Badge</a> <code>.yb-badge</code></li><li><a href="../organisms/cart-drawer.html">Cart drawer</a> <code>.yb-cart</code></li></ul></details></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#D7F1DB;"></div>
+        <div class="sw-meta">
+          <code>--yb-success-100</code>
+          <span class="sw-hex">#D7F1DB</span>
+          <span class="sw-cr" data-tag="—">1.20:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#BEE5C4;"></div>
+        <div class="sw-meta">
+          <code>--yb-success-200</code>
+          <span class="sw-hex">#BEE5C4</span>
+          <span class="sw-cr" data-tag="—">1.38:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#99D1A2;"></div>
+        <div class="sw-meta">
+          <code>--yb-success-300</code>
+          <span class="sw-hex">#99D1A2</span>
+          <span class="sw-cr" data-tag="—">1.75:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#63B171;"></div>
+        <div class="sw-meta">
+          <code>--yb-success-400</code>
+          <span class="sw-hex">#63B171</span>
+          <span class="sw-cr" data-tag="—">2.61:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#3B994E;"></div>
+        <div class="sw-meta">
+          <code>--yb-success-500</code>
+          <span class="sw-hex">#3B994E</span>
+          <span class="sw-cr" data-tag="UI">3.59:1 · UI</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw is-key">
+        <div class="sw-chip" style="background:#1F7A34;"></div>
+        <div class="sw-meta">
+          <code>--yb-success-600</code>
+          <span class="sw-hex">#1F7A34</span>
+          <span class="sw-cr" data-tag="AA">5.40:1 · AA</span>
+          <span class="sw-note">texto e traço</span>
+        <details class="uso"><summary>9 componentes</summary><ul class="uso__lista"><li><a href="../molecules/alert.html">Alert</a> <code>.yb-alert</code></li><li><a href="../atoms/badge.html">Badge</a> <code>.yb-badge</code></li><li><a href="../organisms/cart-drawer.html">Cart drawer</a> <code>.yb-cart</code></li><li><a href="../organisms/shipping-progress.html">Free shipping progress</a> <code>.yb-freeship</code></li><li><a href="../atoms/progress.html">Progress bar</a> <code>.yb-progress</code></li><li><a href="../molecules/review.html">Review</a> <code>.yb-review</code></li><li><a href="../atoms/switch.html">Switch</a> <code>.yb-switch</code></li><li><a href="../molecules/toast.html">Toast</a> <code>.yb-toast</code></li><li><a href="../molecules/variant.html">Variant picker</a> <code>.yb-swatches</code></li></ul></details></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#005A1D;"></div>
+        <div class="sw-meta">
+          <code>--yb-success-700</code>
+          <span class="sw-hex">#005A1D</span>
+          <span class="sw-cr" data-tag="AAA">8.47:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#024114;"></div>
+        <div class="sw-meta">
+          <code>--yb-success-800</code>
+          <span class="sw-hex">#024114</span>
+          <span class="sw-cr" data-tag="AAA">11.87:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#00310C;"></div>
+        <div class="sw-meta">
+          <code>--yb-success-900</code>
+          <span class="sw-hex">#00310C</span>
+          <span class="sw-cr" data-tag="AAA">14.54:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#03260A;"></div>
+        <div class="sw-meta">
+          <code>--yb-success-950</code>
+          <span class="sw-hex">#03260A</span>
+          <span class="sw-cr" data-tag="AAA">16.34:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      </div>
+      <h3 class="sub">Atenção</h3>
+      <div class="ramp">
+      <div class="sw">
+        <div class="sw-chip" style="background:#FBF3E3;"></div>
+        <div class="sw-meta">
+          <code>--yb-warning-50</code>
+          <span class="sw-hex">#FBF3E3</span>
+          <span class="sw-cr" data-tag="—">1.10:1 · —</span>
+          <span class="sw-note">superfície</span>
+        <details class="uso"><summary>2 componentes</summary><ul class="uso__lista"><li><a href="../molecules/alert.html">Alert</a> <code>.yb-alert</code></li><li><a href="../atoms/badge.html">Badge</a> <code>.yb-badge</code></li></ul></details></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#F5E9D3;"></div>
+        <div class="sw-meta">
+          <code>--yb-warning-100</code>
+          <span class="sw-hex">#F5E9D3</span>
+          <span class="sw-cr" data-tag="—">1.20:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#EDD9B8;"></div>
+        <div class="sw-meta">
+          <code>--yb-warning-200</code>
+          <span class="sw-hex">#EDD9B8</span>
+          <span class="sw-cr" data-tag="—">1.38:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#DDC091;"></div>
+        <div class="sw-meta">
+          <code>--yb-warning-300</code>
+          <span class="sw-hex">#DDC091</span>
+          <span class="sw-cr" data-tag="—">1.75:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#C49A58;"></div>
+        <div class="sw-meta">
+          <code>--yb-warning-400</code>
+          <span class="sw-hex">#C49A58</span>
+          <span class="sw-cr" data-tag="—">2.59:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#B07D2D;"></div>
+        <div class="sw-meta">
+          <code>--yb-warning-500</code>
+          <span class="sw-hex">#B07D2D</span>
+          <span class="sw-cr" data-tag="UI">3.61:1 · UI</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw is-key">
+        <div class="sw-chip" style="background:#8A5A00;"></div>
+        <div class="sw-meta">
+          <code>--yb-warning-600</code>
+          <span class="sw-hex">#8A5A00</span>
+          <span class="sw-cr" data-tag="AA">5.93:1 · AA</span>
+          <span class="sw-note">texto e traço</span>
+        <details class="uso"><summary>4 componentes</summary><ul class="uso__lista"><li><a href="../molecules/alert.html">Alert</a> <code>.yb-alert</code></li><li><a href="../atoms/badge.html">Badge</a> <code>.yb-badge</code></li><li><a href="../organisms/cart-drawer.html">Cart drawer</a> <code>.yb-cart</code></li><li><a href="../atoms/progress.html">Progress bar</a> <code>.yb-progress</code></li></ul></details></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#6A4504;"></div>
+        <div class="sw-meta">
+          <code>--yb-warning-700</code>
+          <span class="sw-hex">#6A4504</span>
+          <span class="sw-cr" data-tag="AAA">8.52:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#4F3201;"></div>
+        <div class="sw-meta">
+          <code>--yb-warning-800</code>
+          <span class="sw-hex">#4F3201</span>
+          <span class="sw-cr" data-tag="AAA">11.74:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#3B2401;"></div>
+        <div class="sw-meta">
+          <code>--yb-warning-900</code>
+          <span class="sw-hex">#3B2401</span>
+          <span class="sw-cr" data-tag="AAA">14.60:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#2F1B00;"></div>
+        <div class="sw-meta">
+          <code>--yb-warning-950</code>
+          <span class="sw-hex">#2F1B00</span>
+          <span class="sw-cr" data-tag="AAA">16.44:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      </div>
+      <h3 class="sub">Erro</h3>
+      <div class="ramp">
+      <div class="sw">
+        <div class="sw-chip" style="background:#FBEAE9;"></div>
+        <div class="sw-meta">
+          <code>--yb-danger-50</code>
+          <span class="sw-hex">#FBEAE9</span>
+          <span class="sw-cr" data-tag="—">1.16:1 · —</span>
+          <span class="sw-note">superfície</span>
+        <details class="uso"><summary>4 componentes</summary><ul class="uso__lista"><li><a href="../molecules/alert.html">Alert</a> <code>.yb-alert</code></li><li><a href="../atoms/badge.html">Badge</a> <code>.yb-badge</code></li><li><a href="../organisms/cart-drawer.html">Cart drawer</a> <code>.yb-cart</code></li><li><a href="../molecules/video.html">Vertical video carousel</a> <code>.yb-video</code></li></ul></details></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#FFE4E3;"></div>
+        <div class="sw-meta">
+          <code>--yb-danger-100</code>
+          <span class="sw-hex">#FFE4E3</span>
+          <span class="sw-cr" data-tag="—">1.20:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#FFD1CD;"></div>
+        <div class="sw-meta">
+          <code>--yb-danger-200</code>
+          <span class="sw-hex">#FFD1CD</span>
+          <span class="sw-cr" data-tag="—">1.38:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#FFB0A8;"></div>
+        <div class="sw-meta">
+          <code>--yb-danger-300</code>
+          <span class="sw-hex">#FFB0A8</span>
+          <span class="sw-cr" data-tag="—">1.75:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#FB796F;"></div>
+        <div class="sw-meta">
+          <code>--yb-danger-400</code>
+          <span class="sw-hex">#FB796F</span>
+          <span class="sw-cr" data-tag="—">2.60:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#E95449;"></div>
+        <div class="sw-meta">
+          <code>--yb-danger-500</code>
+          <span class="sw-hex">#E95449</span>
+          <span class="sw-cr" data-tag="UI">3.60:1 · UI</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw is-key">
+        <div class="sw-chip" style="background:#B3261E;"></div>
+        <div class="sw-meta">
+          <code>--yb-danger-600</code>
+          <span class="sw-hex">#B3261E</span>
+          <span class="sw-cr" data-tag="AA">6.54:1 · AA</span>
+          <span class="sw-note">texto e traço</span>
+        <details class="uso"><summary>11 componentes</summary><ul class="uso__lista"><li><a href="../molecules/alert.html">Alert</a> <code>.yb-alert</code></li><li><a href="../atoms/badge.html">Badge</a> <code>.yb-badge</code></li><li><a href="../atoms/button.html">Button</a> <code>.yb-btn</code></li><li><a href="../organisms/cart-drawer.html">Cart drawer</a> <code>.yb-cart</code></li><li><a href="../atoms/input.html">Input</a> <code>.yb-input</code></li><li><a href="../atoms/progress.html">Progress bar</a> <code>.yb-progress</code></li><li><a href="../atoms/select.html">Select</a> <code>.yb-select</code></li><li><a href="../atoms/textarea.html">Textarea</a> <code>.yb-textarea</code></li><li><a href="../molecules/toast.html">Toast</a> <code>.yb-toast</code></li><li><a href="../molecules/variant.html">Variant picker</a> <code>.yb-swatches</code></li><li><a href="../molecules/video.html">Vertical video carousel</a> <code>.yb-video</code></li></ul></details></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#981712;"></div>
+        <div class="sw-meta">
+          <code>--yb-danger-700</code>
+          <span class="sw-hex">#981712</span>
+          <span class="sw-cr" data-tag="AAA">8.51:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#740806;"></div>
+        <div class="sw-meta">
+          <code>--yb-danger-800</code>
+          <span class="sw-hex">#740806</span>
+          <span class="sw-cr" data-tag="AAA">11.80:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#550A07;"></div>
+        <div class="sw-meta">
+          <code>--yb-danger-900</code>
+          <span class="sw-hex">#550A07</span>
+          <span class="sw-cr" data-tag="AAA">14.66:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#420A07;"></div>
+        <div class="sw-meta">
+          <code>--yb-danger-950</code>
+          <span class="sw-hex">#420A07</span>
+          <span class="sw-cr" data-tag="AAA">16.43:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      </div>
+      <h3 class="sub">Informação</h3>
+      <div class="ramp">
+      <div class="sw">
+        <div class="sw-chip" style="background:#E9F1FA;"></div>
+        <div class="sw-meta">
+          <code>--yb-info-50</code>
+          <span class="sw-hex">#E9F1FA</span>
+          <span class="sw-cr" data-tag="—">1.14:1 · —</span>
+          <span class="sw-note">superfície</span>
+        <details class="uso"><summary>1 componente</summary><ul class="uso__lista"><li><a href="../molecules/alert.html">Alert</a> <code>.yb-alert</code></li></ul></details></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#DCECFF;"></div>
+        <div class="sw-meta">
+          <code>--yb-info-100</code>
+          <span class="sw-hex">#DCECFF</span>
+          <span class="sw-cr" data-tag="—">1.20:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#C2DEFE;"></div>
+        <div class="sw-meta">
+          <code>--yb-info-200</code>
+          <span class="sw-hex">#C2DEFE</span>
+          <span class="sw-cr" data-tag="—">1.38:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#9BC7FB;"></div>
+        <div class="sw-meta">
+          <code>--yb-info-300</code>
+          <span class="sw-hex">#9BC7FB</span>
+          <span class="sw-cr" data-tag="—">1.76:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#67A4EA;"></div>
+        <div class="sw-meta">
+          <code>--yb-info-400</code>
+          <span class="sw-hex">#67A4EA</span>
+          <span class="sw-cr" data-tag="—">2.60:1 · —</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#4289D9;"></div>
+        <div class="sw-meta">
+          <code>--yb-info-500</code>
+          <span class="sw-hex">#4289D9</span>
+          <span class="sw-cr" data-tag="UI">3.61:1 · UI</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw is-key">
+        <div class="sw-chip" style="background:#1B5FA8;"></div>
+        <div class="sw-meta">
+          <code>--yb-info-600</code>
+          <span class="sw-hex">#1B5FA8</span>
+          <span class="sw-cr" data-tag="AA">6.46:1 · AA</span>
+          <span class="sw-note">texto e traço</span>
+        <details class="uso"><summary>1 componente</summary><ul class="uso__lista"><li><a href="../molecules/alert.html">Alert</a> <code>.yb-alert</code></li></ul></details></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#0D4D8E;"></div>
+        <div class="sw-meta">
+          <code>--yb-info-700</code>
+          <span class="sw-hex">#0D4D8E</span>
+          <span class="sw-cr" data-tag="AAA">8.50:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#03386C;"></div>
+        <div class="sw-meta">
+          <code>--yb-info-800</code>
+          <span class="sw-hex">#03386C</span>
+          <span class="sw-cr" data-tag="AAA">11.76:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#05294F;"></div>
+        <div class="sw-meta">
+          <code>--yb-info-900</code>
+          <span class="sw-hex">#05294F</span>
+          <span class="sw-cr" data-tag="AAA">14.62:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:#06203D;"></div>
+        <div class="sw-meta">
+          <code>--yb-info-950</code>
+          <span class="sw-hex">#06203D</span>
+          <span class="sw-cr" data-tag="AAA">16.38:1 · AAA</span>
+          
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
+      </div>
+
+  <p class="doc-credit">Página gerada por <code>tools/moldura.mjs</code> a partir de
+  <code>tokens/pecas/color.html</code>. Não edite este arquivo à mão — rode
+  <code>./build.sh</code>.</p>
+</main>
+</body>
+</html>

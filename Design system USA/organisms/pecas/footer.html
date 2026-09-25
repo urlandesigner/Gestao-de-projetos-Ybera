@@ -1,0 +1,111 @@
+<h2>Footer</h2>
+    <p class="when">O rodapé da loja: assinatura, três colunas de destino, marca e avisos legais. Superfície escura dentro de página clara — não é tema, são os tokens <code>*-inverse</code> da camada 1.</p>
+    <div class="stage">
+      <footer class="yb-footer yb-footer--dark">
+        <div class="yb-footer__inner">
+
+          <div class="yb-footer__news-zona">
+            <div>
+              <p class="yb-footer__newstitle">First to know</p>
+              <label class="yb-footer__newslabel" for="news-footer">New arrivals, routines and offers. No spam.</label>
+            </div>
+            <form class="yb-footer__news" onsubmit="return false">
+              <span class="yb-footer__newsfield">
+                <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-mail"/></svg>
+                <input class="yb-input" id="news-footer" type="email" placeholder="Your best email" autocomplete="email" required>
+              </span>
+              <button class="yb-footer__newsbtn" type="submit" aria-label="Subscribe">
+                <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg>
+              </button>
+            </form>
+          </div>
+
+          <div class="yb-footer__top">
+            <div class="yb-footer__brand">
+              <a class="yb-footer__logo" href="#demos"><span class="yb-logo yb-logo--lg"><img src="../brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span></a>
+              <p class="yb-footer__info">info.usa@ybera.com</p>
+              <p class="yb-footer__info">Mon&ndash;Fri, 8am&ndash;4pm EST</p>
+              <div class="yb-footer__social">
+                <a href="#demos"><svg class="yb-icon" role="img" aria-label="Ybera on Instagram"><use href="../icons/ybera-icons.svg#yb-instagram"/></svg></a>
+                <a href="#demos"><svg class="yb-icon" role="img" aria-label="Ybera on TikTok"><use href="../icons/ybera-icons.svg#yb-tiktok"/></svg></a>
+              </div>
+            </div>
+
+            <div class="yb-footer__menus">
+              <div class="yb-footer__col">
+                <input class="yb-footer__toggle" type="checkbox" id="fcol0">
+                <label class="yb-footer__coltitle" for="fcol0">Shop
+                  <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
+                </label>
+                <div class="yb-footer__collist"><ul><li><a href="#demos">Best Sellers</a></li><li><a href="#demos">Kits</a></li><li><a href="#demos">All Products</a></li></ul></div>
+              </div>
+              <div class="yb-footer__col">
+                <input class="yb-footer__toggle" type="checkbox" id="fcol1">
+                <label class="yb-footer__coltitle" for="fcol1">Help
+                  <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
+                </label>
+                <div class="yb-footer__collist"><ul><li><a href="#demos">FAQ</a></li><li><a href="#demos">Contact Us</a></li><li><a href="#demos">Shipping Policy</a></li><li><a href="#demos">Refund Policy</a></li></ul></div>
+              </div>
+              <div class="yb-footer__col">
+                <input class="yb-footer__toggle" type="checkbox" id="fcol2">
+                <label class="yb-footer__coltitle" for="fcol2">Company
+                  <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
+                </label>
+                <div class="yb-footer__collist"><ul><li><a href="#demos">Our Story</a></li><li><a href="#demos">Blog</a></li><li><a href="#demos">AI Hair Analysis</a></li></ul></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="yb-footer__bottom"><span>&copy; 2026 Ybera Paris USA</span><a href="#demos">Terms of Service</a><a href="#demos">Privacy Policy</a><a href="#demos">SMS Terms</a></div>
+        </div>
+      </footer>
+    </div>
+    <div class="note">
+      <b>Esta é a versão que as onze telas publicam</b>
+      <p>A doc mostrava o rodapé anterior: claro, com as colunas em acordeão e
+      <b>28 destinos</b> &mdash; 15 links em três colunas, 4 no bloco de marca e 6 legais.
+      Era o padrão de 2010, quando o rodapé servia de mapa do site. Hoje quem procura
+      usa a busca, e a lista longa só dilui os três ou quatro links que alguém de fato
+      clica.</p>
+      <p>Aqui são <b>9 links em três colunas</b> mais 3 legais, e cada coluna responde
+      uma pergunta diferente: onde compro, quem me ajuda, quem são vocês. A lista legal
+      também perdeu uma duplicata que o rodapé antigo carregava &mdash; "Terms &amp;
+      Conditions" e "Terms of Service" apontavam para o mesmo destino com dois rótulos.</p>
+    </div>
+    <div class="note">
+      <b>Escuro é superfície, não tema</b>
+      <p><code>--dark</code> é superfície escura dentro de página clara, com os tokens
+      <code>*-inverse</code> que a camada 1 já tinha medidos (ver
+      <a href="../decision-log/DDR-007-o-sistema-e-claro-por-decisao.md">DDR-007</a>). O que <b>não</b>
+      deu para reaproveitar foi o magenta: como texto sobre este fundo ele mede
+      <b>3,11:1</b> e reprova em AA. Por isso o hover dos links é branco, e não a cor
+      de ação.</p>
+    </div>
+    <div class="note">
+      <b>Acordeão no celular</b>
+      <p>Abaixo de 768 cada coluna fecha e o título vira o controle que a abre: o
+      rodapé cabe numa tela em vez de virar uma pilha de doze linhas depois do
+      formulário de assinatura. É um DOM só &mdash; o <code>&lt;input&gt;</code> governa
+      o estado no celular e a media query o ignora no desktop, onde as listas ficam
+      abertas e o título volta a ser rótulo. A loja hoje duplica o menu inteiro no HTML
+      para fazer isso, e quem usa leitor de tela ouve tudo duas vezes.</p>
+    </div>
+    <div class="note">
+      <b>Centrado no mesmo eixo</b>
+      <p>No celular título e links ficam centrados, como a marca, os ícones sociais e a
+      barra legal já eram. A seta anda junto do rótulo em vez de presa à borda direita:
+      encostada ali, ela puxava o título para fora do eixo. O alvo de toque continua a
+      linha inteira &mdash; mudou onde o texto senta, não o tamanho do que o dedo
+      acerta.</p>
+    </div>
+    <div class="note">
+      <b>Só sanfona onde há sanfona</b>
+      <p>A coluna sanfonada tem duas metades: a regra que <b>fecha</b> a lista e o
+      checkbox que a <b>reabre</b>. Houve uma versão deste rodapé com a primeira metade
+      e sem a segunda &mdash; medido em 375px, as três listas com
+      <code>max-height:0</code>, dez links no DOM e nenhum alcançável, nenhum controle
+      na tela para abrir. Por isso as duas metades andam juntas, e o bloco pende de
+      <code>.yb-footer__col:has(.yb-footer__toggle)</code>. Onde <code>:has()</code>
+      não existir as regras caem e a lista fica aberta: conteúdo a mais, nunca conteúdo
+      inalcançável.</p>
+    </div>
