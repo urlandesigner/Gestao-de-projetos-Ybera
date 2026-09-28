@@ -96,6 +96,18 @@
     return nome.charAt(0).toUpperCase() + nome.slice(1) + ' de ' + ano;
   }
 
+  /* Rótulo do período na capa.
+
+     Este documento é curado — os cartões são lista escrita à mão, não recorte
+     do DevOps — então o período que ele cobre também é declarado aqui, e não
+     derivado do mês selecionado. Vazio faz a capa voltar a nomear o mês.
+
+     ATENÇÃO ao mexer: o número grande da capa e a variação ao lado dele NÃO
+     leem esta constante. Eles continuam vindo do mês do DevOps (`escolhido`),
+     ou seja, contam só setembro e comparam com agosto. Enquanto este rótulo
+     nomear dois meses, a capa afirma um período e conta outro. */
+  const PERIODO = 'Agosto e Setembro de 2026';
+
   function plural(n, um, muitos) { return n + ' ' + (n === 1 ? um : muitos); }
 
   const CAMPO_ALVO = 'Microsoft.VSTS.Scheduling.TargetDate';
@@ -204,7 +216,7 @@
       </div>
       <h1 class="rl-titulo">
         <span class="rl-titulo-fraco">Relatório de</span>
-        <span class="rl-titulo-forte">${esc(mesPorExtenso(escolhido))}</span>
+        <span class="rl-titulo-forte">${esc(PERIODO || mesPorExtenso(escolhido))}</span>
       </h1>
       ${meta ? `<p class="rl-meta">${esc(meta)}</p>` : ''}
       <div class="rl-bento rl-bento-capa">${tiles}${hero}</div>
@@ -316,7 +328,7 @@
       epicoId: 49300,
       resumo: [
         'Estamos realizando testes da automação do fluxo da Shipsmart para pedidos que têm estoque no Brasil e são entregues nos EUA.',
-        'Já foram feitas 3 rodadas de testes, mas ainda não foi possível concluir 100% sem erros.',
+        'Estamos avançando: a automação da Shipsmart já está acertada, e agora testamos a etapa seguinte do fluxo, depois dela.',
       ],
     },
     {
@@ -326,13 +338,14 @@
       epicoId: 49290,
       status: 'andamento',
       resumo: [
-        'Avançamos nos itens que recebemos da agência: 50% dos 18 já estão concluídos, e os demais seguem em andamento com previsão de término ainda este mês.',
+        'Avançamos nos itens que recebemos da agência: 10 dos 18 já estão concluídos, e os demais seguem em andamento com previsão de término ainda este mês.',
         'O que não for finalizado dentro desse prazo será tratado como nova demanda, a partir de outubro.',
       ],
-      // Os mesmos 9 de 18 que o resumo diz em texto. Guardados como contagem, e
-      // não como "50%", pra que a barra e a frase não possam discordar quando um
-      // dos dois for atualizado sozinho.
-      progresso: { feito: 9, total: 18, rotulo: 'itens concluídos' },
+      // Os mesmos 10 de 18 que o resumo diz em texto. O texto agora dá a
+      // contagem, e não mais a porcentagem: "50%" era exato com 9 de 18 e
+      // passou a mentir assim que virou 10 — a frase e a barra só ficam
+      // presas uma na outra enquanto as duas falam na mesma unidade.
+      progresso: { feito: 10, total: 18, rotulo: 'itens concluídos' },
       // TODO(urlan): endereço da planilha de demandas. Sem href http(s) válido o
       // botão simplesmente não é desenhado — é melhor não ter botão do que ter
       // um que não leva a lugar nenhum.
@@ -350,7 +363,7 @@
       produto: 'Loja Clube USA',
       epicoId: 49290,
       resumo: [
-        'Configurando todo o site para ser possível traduzir, tanto os textos quanto as imagens.',
+        'Desenvolvimento concluído: todo o site foi configurado para ser possível traduzir, tanto os textos quanto as imagens. A frente está em validação.',
         'No caso das imagens, elas deverão ser criadas em versões diferentes por idioma.',
       ],
     },
@@ -361,7 +374,7 @@
       epicoId: 49302,
       resumo: [
         'Realizamos discovery para levantar as melhores opções de apps de reviews dentro do Shopify.',
-        'Depois da pesquisa, fizemos um alinhamento com o Wendel e decidimos que não seria produtivo trocar o app atual, o Judge.me, por outro: não haveria ganho real, seria basicamente trocar um pelo outro, e demandaria muitas horas do time técnico. Preferimos manter o Judge.me e fazer alguns pequenos ajustes.',
+        'Depois da pesquisa, fizemos um alinhamento com o Wendel e decidimos que não seria produtivo trocar o app atual, o Judge.me, por outro: não haveria ganho real, seria basicamente trocar um pelo outro, e demandaria muitas horas do time técnico. Preferimos manter o Judge.me e fazer alguns pequenos ajustes, que já foram concluídos.',
       ],
     },
   ];

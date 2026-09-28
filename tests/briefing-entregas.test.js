@@ -441,18 +441,19 @@ test('barra: o cartão do compliance mostra o progresso que o texto afirma', () 
   assert.ok(card, 'o cartão existe');
   const barra = /<div class="rl-progresso"[\s\S]*?<\/div>/.exec(card);
   assert.ok(barra, 'tem barra');
-  // 9 de 18 é o mesmo número que o resumo escreve como "50% dos 18": a barra
-  // não pode contar uma história diferente do parágrafo acima dela.
-  assert.match(barra[0], /aria-valuenow="9"/);
+  // 10 de 18 é o mesmo número que o resumo escreve em texto: a barra não pode
+  // contar uma história diferente do parágrafo acima dela. O texto dá a
+  // contagem, não a porcentagem — "50%" só era exato em 9 de 18.
+  assert.match(barra[0], /aria-valuenow="10"/);
   assert.match(barra[0], /aria-valuemax="18"/);
-  assert.match(barra[0], /width:50%/);
-  assert.ok(card.includes('50% dos 18'), 'o texto e a barra dizem o mesmo');
+  assert.match(barra[0], /width:56%/);
+  assert.ok(card.includes('10 dos 18'), 'o texto e a barra dizem o mesmo');
 });
 
 test('barra: sem rótulo visível, mas legível por leitor de tela', () => {
   const h = documento().html;
   const barra = /<div class="rl-progresso"[\s\S]*?<\/div>/.exec(h)[0];
-  assert.match(barra, /aria-label="9 de 18 itens concluídos"/);
+  assert.match(barra, /aria-label="10 de 18 itens concluídos"/);
   // O único filho é a faixa preenchida — nenhum texto desenhado, porque o
   // resumo logo acima já diz os números.
   assert.equal(barra.replace(/<[^>]+>/g, '').trim(), '');
