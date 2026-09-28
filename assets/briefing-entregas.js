@@ -109,7 +109,9 @@
      afirmava um período e contava outro. Com uma fonte só, não há como
      divergirem.
 
-     Lista vazia devolve o comportamento antigo — o mês escolhido, sozinho. */
+     Lista vazia devolve o comportamento antigo — o mês escolhido, sozinho. Quem
+     faz esse desvio é o ternário da montagem, lá embaixo, e não este arquivo
+     aqui em cima. */
   const PERIODO_MESES = ['2026-08', '2026-09'];
 
   /* "Agosto e Setembro de 2026" — o ano aparece uma vez quando é o mesmo pra
@@ -200,7 +202,7 @@
   // existam no DevOps — e uma variação que some ou mente conforme o dado é
   // pior que variação nenhuma.
   function heroi(mesesDoPeriodo) {
-    const total = (mesesDoPeriodo || []).reduce((n, m) => n + contaPbis(m), 0);
+    const total = mesesDoPeriodo.reduce((n, m) => n + contaPbis(m), 0);
     // Sem recorte de tempo no rótulo: o título da capa já nomeia o período
     // três centímetros acima, e repetir aqui e no bloco vizinho era dizer a
     // mesma coisa três vezes na mesma tela. Sem ponto final também — rótulo
@@ -580,7 +582,9 @@
     const mesesPeriodo = chavesPeriodo
       .map((k) => meses.find((m) => m.mes === k))
       .filter(Boolean);
-    const periodo = rotuloPeriodo(chavesPeriodo) || mesPorExtenso(escolhido);
+    // Sem `||` de reserva: `chavesPeriodo` tem sempre pelo menos um item pelos
+    // três ramos acima, então rotuloPeriodo nunca devolve vazio aqui.
+    const periodo = rotuloPeriodo(chavesPeriodo);
     const dAgora = new Date(agora);
     const ano = String(dAgora.getUTCFullYear());
     const doAno = [];

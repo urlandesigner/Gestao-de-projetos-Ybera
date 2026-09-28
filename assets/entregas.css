@@ -255,13 +255,12 @@ body.pagina-entregas {
   letter-spacing: -0.015em;
   color: #fff;
 }
-.rl-heroi-base {
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1rem;
-}
+/* Só `position`, e ela é necessária: põe o numeral na camada posicionada, acima
+   do SVG absoluto do fundo. O flex daqui existia pra empurrar a pílula da
+   variação pro lado do número — com um filho só, não fazia mais nada.
+   A regra gêmea em report-v2.css continua inteira: lá a pílula ainda é
+   desenhada, e o container ainda tem dois filhos. */
+.rl-heroi-base { position: relative; }
 .rl-heroi .rl-tile-num { margin: 0; }
 
 /* ---------- Navegação ---------- */

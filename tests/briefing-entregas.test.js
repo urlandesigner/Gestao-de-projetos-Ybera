@@ -254,7 +254,9 @@ test('Entregas cai no agrupamento por iniciativa do roadmap por padrão', () => 
    lista curada logo abaixo: dizia "1 produto" numa página com 8 cartões em 4
    frentes. Estes testes existem pra essa contradição não voltar sem avisar. */
 
-// Um mês com os três níveis fechados, e um mês anterior pra comparar.
+// Um mês com os três níveis fechados, e um mês antes dele. O item de agosto não
+// serve mais de base de comparação — a variação saiu da capa — e sim de metade
+// do período nos testes que somam dois meses.
 function mesComNiveis(extra) {
   const items = [
     { id: 1, fields: { 'System.WorkItemType': 'Epic', 'System.State': 'Done', 'System.Title': 'Frente', 'Microsoft.VSTS.Common.ClosedDate': iso(AGORA - 2 * dia), 'System.ChangedDate': iso(AGORA - dia) } },
