@@ -374,15 +374,15 @@
       epicoId: 49290,
       status: 'andamento',
       resumo: [
-        'Avançamos nos itens que recebemos da agência: faltam apenas 5 dos 18 para finalizar, com previsão de término ainda este mês.',
+        'Avançamos nos itens que recebemos da agência: faltam apenas 4 dos 18 para finalizar, com previsão de término ainda este mês.',
         'O que não for finalizado dentro desse prazo será tratado como nova demanda, a partir de outubro.',
       ],
-      // 13 concluídos é o complemento dos 5 que faltam, ditos no texto. A barra
+      // 14 concluídos é o complemento dos 4 que faltam, ditos no texto. A barra
       // guarda o total e o feito; o texto conta pelo que sobra, que é o que
       // interessa a esta altura. Ao mexer num, refaça a conta no outro: 18 - 13
       // = 5. Porcentagem no texto já foi tentada e saiu — "50%" era exato em 9
       // de 18 e mentia em 10.
-      progresso: { feito: 13, total: 18, rotulo: 'itens concluídos' },
+      progresso: { feito: 14, total: 18, rotulo: 'itens concluídos' },
       /* `/view` e não `/edit`: a planilha é pública para LEITURA, e o /edit faz o
          Google avaliar se a identidade de quem abre pode editar — quem está
          logado numa conta sem permissão de edição cai no pedido de acesso em
