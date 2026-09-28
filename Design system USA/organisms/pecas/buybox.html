@@ -31,7 +31,10 @@
             <span class="yb-stars" style="--yb-stars:4.8" aria-hidden="true"></span>
             <span class="yb-rating__count">4.8 · 412 reviews</span>
           </span>
-          <span class="yb-price"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+          <div class="yb-buybox__priceline">
+            <span class="yb-price"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+            <span class="yb-buybox__flags"><span class="yb-badge yb-badge--success">In stock</span><span class="yb-badge yb-badge--success" data-yb-ship-badge><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>Free shipping</span></span>
+          </div>
           <p class="yb-buybox__desc">Professional keratin sealant for frizz-free,
           mirror-smooth hair. Formulated without formaldehyde and safe for
           color-treated hair.</p>
@@ -53,10 +56,31 @@
           </div>
           <div class="yb-buybox__trust">
             <span>Formaldehyde-free</span><span>Color-safe</span>
-            <span>30-day returns</span><span>Free shipping over $50</span>
+            <span>30-day returns</span>
           </div>
         </div>
       </div>
+    </div>
+    <h3 class="row-label">Frete do item &mdash; selo quando é grátis, linha quando não é</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <span class="yb-badge yb-badge--success" data-yb-ship-badge><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>Free shipping</span>
+        <span class="amostra__rotulo">a partir de $50 · <code>[data-yb-ship-badge]</code></span>
+      </span>
+      <span class="amostra">
+        <p class="yb-buybox__ship" data-yb-ship data-yb-ship-min="50"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>Free shipping on orders over $50</p>
+        <span class="amostra__rotulo">abaixo de $50 · <code>.yb-buybox__ship</code></span>
+      </span>
+    </div>
+    <div class="note">
+      <b>Vantagem é selo, regra é texto</b>
+      <p>Passou da meta, o frete é vantagem e vira selo ao lado do estoque, com o
+      caminhão para não se confundir com o &ldquo;In stock&rdquo;, do mesmo verde.
+      Abaixo da meta, é regra, e fica em texto de apoio sob o preço: selo para o
+      que o item não cumpre destacaria o que não é benefício.</p>
+      <p>Os dois seguem a variante (<code>data-price</code> contra
+      <code>data-yb-ship-min</code>) e somem no esgotado. &ldquo;Free shipping over
+      $50&rdquo; saiu das garantias, que agora seria repetição.</p>
     </div>
     <div class="note">
       <b>Descrição curta aqui, inteira no acordeão</b>
@@ -81,8 +105,8 @@
           <span class="yb-buybar__name">Kit Sealant Fashion Gold</span>
           <span class="yb-buybar__price"><b class="yb-price__now">$168.90</b></span>
         </span>
-        <button class="yb-btn yb-btn--primary" type="button" data-yb-barra-comprar><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg> Add to cart</button>
-        <a class="yb-btn yb-btn--primary" href="#demos" data-yb-barra-avisar hidden><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-mail"/></svg> Notify me</a>
+        <button class="yb-btn yb-btn--primary" type="button" data-yb-bar-buy><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg> Add to cart</button>
+        <a class="yb-btn yb-btn--primary" href="#demos" data-yb-bar-notify hidden><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-mail"/></svg> Notify me</a>
       </div>
     </div>
     <div class="note">
@@ -105,8 +129,8 @@
     </div>
     <div class="note">
       <b>Duas ações, uma de cada vez</b>
-      <p>A barra carrega as duas: <code>data-yb-barra-comprar</code> e
-      <code>data-yb-barra-avisar</code>, uma delas sempre <code>hidden</code>. Quem
+      <p>A barra carrega as duas: <code>data-yb-bar-buy</code> e
+      <code>data-yb-bar-notify</code>, uma delas sempre <code>hidden</code>. Quem
       troca é o mesmo script da variante que troca o botão real &mdash; escolher um
       tamanho esgotado muda a página inteira, e a barra é parte dela. Copiar só o
       "Add to cart" deixa a tela de esgotado sem ação nenhuma no rodapé.</p>

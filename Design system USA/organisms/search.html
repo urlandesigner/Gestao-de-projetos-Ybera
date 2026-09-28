@@ -25,14 +25,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="organisms" data-moldura="centrada">
+<body class="ficha" data-level="organisms" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -150,7 +150,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,8 +204,8 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <div class="demo">
       <button class="yb-btn yb-btn--secondary" type="button" data-yb-open="site-search">
@@ -219,7 +219,7 @@
             <svg class="yb-icon yb-search__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>
             <input class="yb-search__input" type="search" name="q" autocomplete="off" autofocus
                    placeholder="Search products, concerns, ingredients" aria-label="Search products">
-            <button class="yb-iconbtn yb-search__clear" type="reset" aria-label="Clear search" hidden>
+            <button class="yb-iconbtn yb-iconbtn--square yb-search__clear" type="reset" aria-label="Clear search" hidden>
               <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg>
             </button>
             <button class="yb-search__close" type="button" data-yb-close>Close</button>
@@ -291,17 +291,17 @@
               <div class="yb-search__group" data-yb-search-group>
                 <h3 class="yb-search__title">Suggestions</h3>
                 <ul class="yb-search__list">
-                  <li data-termo="keratin"><a class="yb-search__link" href="#demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>keratin treatment</a></li>
-                  <li data-termo="keratin"><a class="yb-search__link" href="#demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>keratin for curly hair</a></li>
-                  <li data-termo="oil myrrh"><a class="yb-search__link" href="#demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>myrrh repair oil</a></li>
-                  <li data-termo="kit vello shampoo"><a class="yb-search__link" href="#demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>vello shampoo</a></li>
+                  <li data-term="keratin"><a class="yb-search__link" href="#demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>keratin treatment</a></li>
+                  <li data-term="keratin"><a class="yb-search__link" href="#demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>keratin for curly hair</a></li>
+                  <li data-term="oil myrrh"><a class="yb-search__link" href="#demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>myrrh repair oil</a></li>
+                  <li data-term="kit vello shampoo"><a class="yb-search__link" href="#demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>vello shampoo</a></li>
                 </ul>
               </div>
             </div>
             <div class="yb-search__col">
               <div class="yb-search__group" data-yb-search-group>
                 <h3 class="yb-search__title">Products</h3>
-                <a class="yb-search__item" href="#demos" data-termo="keratin kit sealant fashion gold">
+                <a class="yb-search__item" href="#demos" data-term="keratin kit sealant fashion gold">
                   <span class="yb-search__thumb"></span>
                   <span>
                     <span class="yb-search__name">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</span>
@@ -309,7 +309,7 @@
                   </span>
                   <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b></span>
                 </a>
-                <a class="yb-search__item" href="#demos" data-termo="oil myrrh repair">
+                <a class="yb-search__item" href="#demos" data-term="oil myrrh repair">
                   <span class="yb-search__thumb"></span>
                   <span>
                     <span class="yb-search__name">Myrrh Hair Repair Oil — 15ml / 0.5 fl.oz</span>
@@ -317,7 +317,7 @@
                   </span>
                   <span class="yb-price yb-price--sm"><b class="yb-price__now">$29.90</b></span>
                 </a>
-                <a class="yb-search__item" href="#demos" data-termo="kit vello shampoo mask">
+                <a class="yb-search__item" href="#demos" data-term="kit vello shampoo mask">
                   <span class="yb-search__thumb"></span>
                   <span>
                     <span class="yb-search__name">KIT VELLO Shampoo 500ml + Hair Mask 500g</span>
@@ -370,7 +370,7 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;button class="yb-btn yb-btn--secondary" type="button" data-yb-open="site-search"&gt;
   &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;
   Open search
@@ -381,7 +381,7 @@
       &lt;svg class="yb-icon yb-search__icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;
       &lt;input class="yb-search__input" type="search" name="q" autocomplete="off" autofocus
              placeholder="Search products, concerns, ingredients" aria-label="Search products"&gt;
-      &lt;button class="yb-iconbtn yb-search__clear" type="reset" aria-label="Clear search" hidden&gt;
+      &lt;button class="yb-iconbtn yb-iconbtn--square yb-search__clear" type="reset" aria-label="Clear search" hidden&gt;
         &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;
       &lt;/button&gt;
       &lt;button class="yb-search__close" type="button" data-yb-close&gt;Close&lt;/button&gt;
@@ -451,17 +451,17 @@
         &lt;div class="yb-search__group" data-yb-search-group&gt;
           &lt;h3 class="yb-search__title"&gt;Suggestions&lt;/h3&gt;
           &lt;ul class="yb-search__list"&gt;
-            &lt;li data-termo="keratin"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;keratin treatment&lt;/a&gt;&lt;/li&gt;
-            &lt;li data-termo="keratin"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;keratin for curly hair&lt;/a&gt;&lt;/li&gt;
-            &lt;li data-termo="oil myrrh"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;myrrh repair oil&lt;/a&gt;&lt;/li&gt;
-            &lt;li data-termo="kit vello shampoo"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;vello shampoo&lt;/a&gt;&lt;/li&gt;
+            &lt;li data-term="keratin"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;keratin treatment&lt;/a&gt;&lt;/li&gt;
+            &lt;li data-term="keratin"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;keratin for curly hair&lt;/a&gt;&lt;/li&gt;
+            &lt;li data-term="oil myrrh"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;myrrh repair oil&lt;/a&gt;&lt;/li&gt;
+            &lt;li data-term="kit vello shampoo"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;vello shampoo&lt;/a&gt;&lt;/li&gt;
           &lt;/ul&gt;
         &lt;/div&gt;
       &lt;/div&gt;
       &lt;div class="yb-search__col"&gt;
         &lt;div class="yb-search__group" data-yb-search-group&gt;
           &lt;h3 class="yb-search__title"&gt;Products&lt;/h3&gt;
-          &lt;a class="yb-search__item" href="#demos" data-termo="keratin kit sealant fashion gold"&gt;
+          &lt;a class="yb-search__item" href="#demos" data-term="keratin kit sealant fashion gold"&gt;
             &lt;span class="yb-search__thumb"&gt;&lt;/span&gt;
             &lt;span&gt;
               &lt;span class="yb-search__name"&gt;Kit Sealant Fashion Gold — 500g / 17.6 fl.oz&lt;/span&gt;
@@ -469,7 +469,7 @@
             &lt;/span&gt;
             &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$168.90&lt;/b&gt;&lt;/span&gt;
           &lt;/a&gt;
-          &lt;a class="yb-search__item" href="#demos" data-termo="oil myrrh repair"&gt;
+          &lt;a class="yb-search__item" href="#demos" data-term="oil myrrh repair"&gt;
             &lt;span class="yb-search__thumb"&gt;&lt;/span&gt;
             &lt;span&gt;
               &lt;span class="yb-search__name"&gt;Myrrh Hair Repair Oil — 15ml / 0.5 fl.oz&lt;/span&gt;
@@ -477,7 +477,7 @@
             &lt;/span&gt;
             &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$29.90&lt;/b&gt;&lt;/span&gt;
           &lt;/a&gt;
-          &lt;a class="yb-search__item" href="#demos" data-termo="kit vello shampoo mask"&gt;
+          &lt;a class="yb-search__item" href="#demos" data-term="kit vello shampoo mask"&gt;
             &lt;span class="yb-search__thumb"&gt;&lt;/span&gt;
             &lt;span&gt;
               &lt;span class="yb-search__name"&gt;KIT VELLO Shampoo 500ml + Hair Mask 500g&lt;/span&gt;
@@ -502,9 +502,9 @@
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca"><button class="yb-btn yb-btn--secondary" type="button" data-yb-open="site-search">
@@ -517,7 +517,7 @@
       <svg class="yb-icon yb-search__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>
       <input class="yb-search__input" type="search" name="anat-q" autocomplete="off" autofocus
              placeholder="Search products, concerns, ingredients" aria-label="Search products">
-      <button class="yb-iconbtn yb-search__clear" type="reset" aria-label="Clear search" hidden>
+      <button class="yb-iconbtn yb-iconbtn--square yb-search__clear" type="reset" aria-label="Clear search" hidden>
         <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg>
       </button>
       <button class="yb-search__close" type="button" data-yb-close>Close</button>
@@ -587,17 +587,17 @@
         <div class="yb-search__group" data-yb-search-group>
           <h3 class="yb-search__title">Suggestions</h3>
           <ul class="yb-search__list">
-            <li data-termo="keratin"><a class="yb-search__link" href="#anat-demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>keratin treatment</a></li>
-            <li data-termo="keratin"><a class="yb-search__link" href="#anat-demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>keratin for curly hair</a></li>
-            <li data-termo="oil myrrh"><a class="yb-search__link" href="#anat-demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>myrrh repair oil</a></li>
-            <li data-termo="kit vello shampoo"><a class="yb-search__link" href="#anat-demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>vello shampoo</a></li>
+            <li data-term="keratin"><a class="yb-search__link" href="#anat-demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>keratin treatment</a></li>
+            <li data-term="keratin"><a class="yb-search__link" href="#anat-demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>keratin for curly hair</a></li>
+            <li data-term="oil myrrh"><a class="yb-search__link" href="#anat-demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>myrrh repair oil</a></li>
+            <li data-term="kit vello shampoo"><a class="yb-search__link" href="#anat-demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>vello shampoo</a></li>
           </ul>
         </div>
       </div>
       <div class="yb-search__col">
         <div class="yb-search__group" data-yb-search-group>
           <h3 class="yb-search__title">Products</h3>
-          <a class="yb-search__item" href="#anat-demos" data-termo="keratin kit sealant fashion gold">
+          <a class="yb-search__item" href="#anat-demos" data-term="keratin kit sealant fashion gold">
             <span class="yb-search__thumb"></span>
             <span>
               <span class="yb-search__name">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</span>
@@ -605,7 +605,7 @@
             </span>
             <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b></span>
           </a>
-          <a class="yb-search__item" href="#anat-demos" data-termo="oil myrrh repair">
+          <a class="yb-search__item" href="#anat-demos" data-term="oil myrrh repair">
             <span class="yb-search__thumb"></span>
             <span>
               <span class="yb-search__name">Myrrh Hair Repair Oil — 15ml / 0.5 fl.oz</span>
@@ -613,7 +613,7 @@
             </span>
             <span class="yb-price yb-price--sm"><b class="yb-price__now">$29.90</b></span>
           </a>
-          <a class="yb-search__item" href="#anat-demos" data-termo="kit vello shampoo mask">
+          <a class="yb-search__item" href="#anat-demos" data-term="kit vello shampoo mask">
             <span class="yb-search__thumb"></span>
             <span>
               <span class="yb-search__name">KIT VELLO Shampoo 500ml + Hair Mask 500g</span>
@@ -637,10 +637,10 @@
 </dialog></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
-        <li data-alvo=".yb-iconbtn"><span class="anat__texto"><b><a href="../atoms/iconbtn.html">Icon button</a></b> — Botão de 44px que mostra só um ícone, sem rótulo visível. Sexta reescrita da mesma coisa — o ícone do header, o fechar da gaveta, o play do vídeo, o abrir do rodapé e a seta do banner diziam todos 44×44 com fundo transparente, cada um do seu jeito.</span></li>
-        <li data-alvo=".yb-chip"><span class="anat__texto"><b><a href="../atoms/chip.html">Chip</a></b> — Filtro que liga e desliga, em fileira. O estado mora em <code>aria-pressed</code>, não numa classe — quem lê a tela ouve "pressionado" sem depender de cor.</span></li>
-        <li data-alvo=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço de um produto, com o valor anterior riscado e o desconto quando existem. Sempre tabular: em grid, dígitos precisam alinhar em coluna.</span></li>
+        <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
+        <li data-target=".yb-iconbtn"><span class="anat__texto"><b><a href="../atoms/iconbtn.html">Icon button</a></b> — Botão de 44px que mostra só um ícone, sem rótulo visível. Sexta reescrita da mesma coisa — o ícone do header, o fechar da gaveta, o play do vídeo, o abrir do rodapé e a seta do banner diziam todos 44×44 com fundo transparente, cada um do seu jeito.</span></li>
+        <li data-target=".yb-chip"><span class="anat__texto"><b><a href="../atoms/chip.html">Chip</a></b> — Filtro que liga e desliga, em fileira. O estado mora em <code>aria-pressed</code>, não numa classe — quem lê a tela ouve "pressionado" sem depender de cor.</span></li>
+        <li data-target=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço de um produto, com o valor anterior riscado e o desconto quando existem. Sempre tabular: em grid, dígitos precisam alinhar em coluna.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -673,8 +673,8 @@
           <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
         </ul>
@@ -703,9 +703,9 @@
           <li><code>--yb-space-10</code><span class="tokens__valor">2.5rem</span></li>
           <li><code>--yb-page-gutter</code><span class="tokens__valor">1rem</span></li>
           <li><code>--yb-space-6</code><span class="tokens__valor">1.5rem</span></li>
+          <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
           <li><code>--yb-space-8</code><span class="tokens__valor">2rem</span></li>
           <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
-          <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
           <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
           <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>
           <li><code>--yb-space-3</code><span class="tokens__valor">0.75rem</span></li>
@@ -716,8 +716,8 @@
         <ul class="tokens__lista">
           <li><code>--yb-aspect-product</code><span class="tokens__valor">1 / 1</span></li>
           <li><code>--yb-radius-media</code><span class="tokens__valor">8px</span></li>
-          <li><code>--yb-radius-sm</code><span class="tokens__valor">4px</span></li>
           <li><code>--yb-radius-control</code><span class="tokens__valor">8px</span></li>
+          <li><code>--yb-radius-sm</code><span class="tokens__valor">4px</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
@@ -732,7 +732,7 @@
           <li><code>--yb-ease-enter</code><span class="tokens__valor">cubic-bezier(0, 0, 0, 1)</span></li>
           <li><code>--yb-duration-base</code><span class="tokens__valor">180ms</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
           <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
         </ul>
       </div>
@@ -745,14 +745,14 @@
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso">
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
@@ -768,7 +768,7 @@
     </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade">
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
     <ul class="bloco-lede"><li>O overlay é <code>&lt;dialog&gt;</code> com <code>role="search"</code> dentro: o foco entra no campo, Esc fecha e o resto da página fica inerte.</li><li>O resultado vazio é anunciado — a região dos resultados é live, senão a pessoa digita e nada é dito.</li><li>O indicador de foco do campo é o cursor, e o <code>outline</code> é desligado com selo <code>anel:</code> na folha. Um anel de 1100px de largura em volta da barra inteira não indica nada.</li></ul>
   </section>
@@ -812,7 +812,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

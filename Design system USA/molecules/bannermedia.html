@@ -24,14 +24,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="molecules" data-moldura="centrada">
+<body class="ficha" data-level="molecules" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -149,7 +149,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,8 +204,8 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <h3 class="row-label">Tipo com texto e CTA — <code>--blur</code></h3>
     <div class="demo demo--rail">
@@ -230,7 +230,7 @@
     <h3 class="row-label">Tipo arte — <code>--arte</code></h3>
     <div class="demo demo--rail">
       <div style="max-inline-size:22rem">
-        <a class="yb-bannermedia yb-bannermedia--arte" href="#demos">
+        <a class="yb-bannermedia yb-bannermedia--art" href="#demos">
           <img src="../pages/img/FG_Banner_01-61a3d2.webp" alt="Authentic Brazilian keratin — treatment for salon-quality results, formaldehyde-free formula">
         </a>
       </div>
@@ -268,7 +268,7 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;a class="yb-bannermedia yb-bannermedia--blur" href="#demos"&gt;
   &lt;img src="../pages/img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp" alt=""&gt;
   &lt;div class="yb-bannermedia__blur" aria-hidden="true"&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;/div&gt;
@@ -282,9 +282,9 @@
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca"><a class="yb-bannermedia yb-bannermedia--blur" href="#anat-demos">
@@ -299,14 +299,14 @@
 </a></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-bannermedia"><span class="anat__texto"><b>Container</b> — Banner dentro do conteúdo, com canto arredondado. O link cobre a peça inteira.</span></li>
-        <li data-alvo="img"><span class="anat__texto"><b>Foto</b> — Cobre a caixa. É a imagem que carrega o clima; o texto carrega a informação.</span></li>
-        <li data-alvo=".yb-bannermedia__blur"><span class="anat__texto"><b>Desfoque</b> — As três folhas do véu, onde o texto vai pousar.</span></li>
-        <li data-alvo=".yb-bannermedia__eyebrow"><span class="anat__texto"><b>Sobretítulo</b> — Situa a peça na linha de produtos. Opcional.</span></li>
-        <li data-alvo=".yb-bannermedia__title"><span class="anat__texto"><b>Título</b> — Uma frase. Se precisar de duas, é bloco de história, não banner.</span></li>
-        <li data-alvo=".yb-bannermedia__text"><span class="anat__texto"><b>Texto</b> — Opcional. Some no celular, onde a foto já ocupa a tela.</span></li>
-        <li data-alvo=".yb-bannermedia__body"><span class="anat__texto"><b>Corpo</b> — O bloco de texto sobre o véu. Some no celular quando a foto já ocupa a tela.</span></li>
-        <li data-alvo=".yb-btn"><span class="anat__texto"><b>Ação</b> — Opcional. É o <code>.yb-btn</code>, outra peça, na variante para fundo escuro.</span></li>
+        <li data-target=".yb-bannermedia"><span class="anat__texto"><b>Container</b> — Banner dentro do conteúdo, com canto arredondado. O link cobre a peça inteira.</span></li>
+        <li data-target="img"><span class="anat__texto"><b>Foto</b> — Cobre a caixa. É a imagem que carrega o clima; o texto carrega a informação.</span></li>
+        <li data-target=".yb-bannermedia__blur"><span class="anat__texto"><b>Desfoque</b> — As três folhas do véu, onde o texto vai pousar.</span></li>
+        <li data-target=".yb-bannermedia__eyebrow"><span class="anat__texto"><b>Sobretítulo</b> — Situa a peça na linha de produtos. Opcional.</span></li>
+        <li data-target=".yb-bannermedia__title"><span class="anat__texto"><b>Título</b> — Uma frase. Se precisar de duas, é bloco de história, não banner.</span></li>
+        <li data-target=".yb-bannermedia__text"><span class="anat__texto"><b>Texto</b> — Opcional. Some no celular, onde a foto já ocupa a tela.</span></li>
+        <li data-target=".yb-bannermedia__body"><span class="anat__texto"><b>Corpo</b> — O bloco de texto sobre o véu. Some no celular quando a foto já ocupa a tela.</span></li>
+        <li data-target=".yb-btn"><span class="anat__texto"><b>Ação</b> — Opcional. É o <code>.yb-btn</code>, outra peça, na variante para fundo escuro.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -324,7 +324,7 @@
     <p class="rotulo">De que é feita</p>
     <p class="usa-degrau">Átomos</p>
     <ul class="usa"><li><a href="../atoms/button.html">Button</a></li></ul>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-bannermedia--arte</code> <code>.yb-bannermedia--blur</code> <code>.yb-bannermedia--center</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-bannermedia--art</code> <code>.yb-bannermedia--blur</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-bannermedia__blur</code> <code>.yb-bannermedia__body</code> <code>.yb-bannermedia__eyebrow</code> <code>.yb-bannermedia__text</code> <code>.yb-bannermedia__title</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
@@ -375,13 +375,13 @@
         <p class="tokens__familia"><a href="../tokens/elevation.html">Elevação</a> <span>17</span></p>
         <ul class="tokens__lista">
           <li><i class="tokens__cor" style="background:var(--yb-scrim-soft)" aria-hidden="true"></i><code>--yb-scrim-soft</code><span class="tokens__valor">rgba(30, 30, 31, .18)</span></li>
-          <li><code>--yb-blur-ate</code></li>
           <li><code>--yb-blur-band</code></li>
-          <li><code>--yb-blur-de</code></li>
           <li><code>--yb-blur-f</code></li>
           <li><code>--yb-blur-falloff</code></li>
+          <li><code>--yb-blur-from</code></li>
           <li><code>--yb-blur-radius</code></li>
           <li><code>--yb-blur-reach</code></li>
+          <li><code>--yb-blur-to</code></li>
           <li><i class="tokens__cor" style="background:var(--yb-scrim-curve-1)" aria-hidden="true"></i><code>--yb-scrim-curve-1</code><span class="tokens__valor">rgba(30, 30, 31, .12)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-scrim-curve-2)" aria-hidden="true"></i><code>--yb-scrim-curve-2</code><span class="tokens__valor">rgba(30, 30, 31, .385)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-scrim-curve-3)" aria-hidden="true"></i><code>--yb-scrim-curve-3</code><span class="tokens__valor">rgba(30, 30, 31, .65)</span></li>
@@ -397,7 +397,7 @@
         <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>3</span></p>
         <ul class="tokens__lista">
           <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
           <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
         </ul>
       </div>
@@ -410,14 +410,14 @@
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso">
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
@@ -433,7 +433,7 @@
     </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade">
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
     <ul class="bloco-lede"><li>No tipo com texto, o texto é HTML, não pixel: é lido, traduzido, buscado e escala com o zoom de fonte. A foto é decorativa (<code>alt=""</code>).</li><li>No tipo arte, o texto está na imagem, então o <code>alt</code> repete a promessa inteira da arte — é o único lugar em que leitor de tela e busca a alcançam.</li><li>O link cobre a peça inteira; o CTA é um <code>&lt;span class="yb-btn"&gt;</code>, para não pôr interativo dentro de interativo.</li></ul>
   </section>
@@ -477,7 +477,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

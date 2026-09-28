@@ -24,14 +24,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="molecules" data-moldura="centrada">
+<body class="ficha" data-level="molecules" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -149,7 +149,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,8 +204,8 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <p class="when">Os tr&ecirc;s palcos abaixo s&atilde;o o <b>mesmo recado</b> em tr&ecirc;s momentos da
     rolagem, na ordem em que a pessoa os v&ecirc;. Aqui eles est&atilde;o lado a lado e parados:
@@ -225,9 +225,9 @@
         </div>
       </div>
     </div>
-    <h3 class="row-label">2 &middot; Recolhido &mdash; depois de 96px de rolagem &middot; <code>[data-recolhido]</code></h3>
+    <h3 class="row-label">2 &middot; Recolhido &mdash; depois de 96px de rolagem &middot; <code>[data-collapsed]</code></h3>
     <div class="stage stage--dim" style="position:relative; min-height:8rem">
-      <div class="yb-partner" data-recolhido style="inset-inline-start:var(--yb-space-5)">
+      <div class="yb-partner" data-collapsed style="inset-inline-start:var(--yb-space-5)">
         <div class="yb-partner__dock">
           <button class="yb-partner__avatar" type="button" aria-expanded="false" aria-controls="doc-partner-msg2">
             <img src="../pages/img/02sauana-2896ea7c.webp" alt="">
@@ -269,7 +269,7 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;div class="yb-partner" style="inset-inline-start:var(--yb-space-5)"&gt;
   &lt;div class="yb-partner__dock"&gt;
     &lt;button class="yb-partner__avatar" type="button" aria-expanded="true" aria-controls="doc-partner-msg"&gt;
@@ -284,9 +284,9 @@
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca" style="max-inline-size:420px"><div class="yb-partner" style="inset-inline-start:var(--yb-space-5)">
@@ -302,10 +302,10 @@
 </div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-partner"><span class="anat__texto"><b>Container</b> — Flutua sobre o topo da loja, e só existe quando há um parceiro na URL.</span></li>
-        <li data-alvo=".yb-partner__dock"><span class="anat__texto"><b>Doca</b> — Ancora avatar e balão juntos. É ela que mantém os dois alinhados ao rolar.</span></li>
-        <li data-alvo=".yb-partner__avatar"><span class="anat__texto"><b>Avatar</b> — Quem convidou. É o botão que abre e fecha o recado, com <code>aria-expanded</code>.</span></li>
-        <li data-alvo=".yb-partner__bubble"><span class="anat__texto"><b>Balão</b> — O recado. O <code>@</code> e o benefício em negrito são o que se lê de relance.</span></li>
+        <li data-target=".yb-partner"><span class="anat__texto"><b>Container</b> — Flutua sobre o topo da loja, e só existe quando há um parceiro na URL.</span></li>
+        <li data-target=".yb-partner__dock"><span class="anat__texto"><b>Doca</b> — Ancora avatar e balão juntos. É ela que mantém os dois alinhados ao rolar.</span></li>
+        <li data-target=".yb-partner__avatar"><span class="anat__texto"><b>Avatar</b> — Quem convidou. É o botão que abre e fecha o recado, com <code>aria-expanded</code>.</span></li>
+        <li data-target=".yb-partner__bubble"><span class="anat__texto"><b>Balão</b> — O recado. O <code>@</code> e o benefício em negrito são o que se lê de relance.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -330,7 +330,7 @@
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>6</span></p>
         <ul class="tokens__lista">
-          <li><i class="tokens__cor" style="background:var(--yb-accent-brand)" aria-hidden="true"></i><code>--yb-accent-brand</code><span class="tokens__valor">#CA235F</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-accent-signal)" aria-hidden="true"></i><code>--yb-accent-signal</code><span class="tokens__valor">#CA235F</span></li>
           <li><code>--yb-border-emphasis</code><span class="tokens__valor">2px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface-sunken)" aria-hidden="true"></i><code>--yb-surface-sunken</code><span class="tokens__valor">#FAFAFA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
@@ -352,8 +352,8 @@
           <li><code>--yb-header-h</code><span class="tokens__valor">calc(var(--yb-target-min) + var(--yb-space-4) * 2 + 1px)</span></li>
           <li><code>--yb-space-10</code><span class="tokens__valor">2.5rem</span></li>
           <li><code>--yb-page-gutter</code><span class="tokens__valor">1rem</span></li>
-          <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
           <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
+          <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
           <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>
           <li><code>--yb-space-3</code><span class="tokens__valor">0.75rem</span></li>
         </ul>
@@ -379,21 +379,21 @@
           <li><code>--yb-transition-surface</code><span class="tokens__valor">180ms cubic-bezier(.2, 0, 0, 1)</span></li>
           <li><code>--yb-transition-control</code><span class="tokens__valor">120ms cubic-bezier(.2, 0, 0, 1)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
           <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso">
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
@@ -409,7 +409,7 @@
     </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade">
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
     <ul class="bloco-lede"><li>O botão que recolhe a bolha declara <code>aria-expanded</code> e <code>aria-controls</code>: o estado é anunciado, não só desenhado.</li><li>A animação de recolher respeita <code>prefers-reduced-motion</code>. Movimento em elemento que aparece sobre o conteúdo é o que mais incomoda quem tem sensibilidade vestibular.</li><li>A foto da influenciadora é <code>alt=""</code> quando o nome dela está escrito na bolha ao lado.</li></ul>
   </section>
@@ -453,7 +453,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

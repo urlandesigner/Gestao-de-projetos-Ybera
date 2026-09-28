@@ -251,7 +251,7 @@ const valorDoToken = (() => {
 // Cor se reconhece pelo VALOR — nao ha lista de quais tokens sao de cor.
 const ehCor = (v) => /^(#[0-9a-f]{3,8}|rgba?\(|hsla?\()/i.test(v);
 
-/* A CATEGORIA SAI DO NOME, e nao de uma tabela escrita aqui. `--yb-action-bg`
+/* A CATEGORIA SAI DO NOME, e nao de uma tabela escrita aqui. `--yb-action-primary-bg`
    e da familia `action`, `--yb-space-4` da `space`: a convencao de nome do
    sistema ja e a taxonomia, e uma tabela paralela seria uma segunda verdade
    para manter.
@@ -354,13 +354,13 @@ const pecas = NIVEIS.flatMap(lerPecas);
 for (const p of pecas)
   for (const fam of contarFamilias(p.palco).keys())
     espalhamento.set(fam, (espalhamento.get(fam) || 0) + 1);
-/* ESTADOS COMPARAVEIS. A peca marca um bloco com data-estado + data-rotulo, e
+/* ESTADOS COMPARAVEIS. A peca marca um bloco com data-state + data-label, e
    o quadro de Mobile passa a ser UM POR ESTADO, lado a lado, em vez de um so.
    E como se documenta o estado que existe apenas abaixo de um breakpoint: a
    faixa de conta do menu e `display:none` acima de 900, entao no palco largo
    ela apareceria sem nenhuma das regras que a desenham. */
 const estadosDe = (palco) =>
-  [...palco.matchAll(/data-estado="([a-z0-9-]+)"(?:[^>]*?data-rotulo="([^"]*)")?/g)]
+  [...palco.matchAll(/data-state="([a-z0-9-]+)"(?:[^>]*?data-label="([^"]*)")?/g)]
     .map((m) => ({ id: m[1], rotulo: m[2] || m[1] }));
 
 for (const p of pecas) {
@@ -565,13 +565,13 @@ const blocoAnatomia = (f, n) => {
     }
     marcacao = m[0];
   }
-  return `<div class="anat" data-yb-anatomia>
+  return `<div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca"${largura ? ` style="max-inline-size:${largura}"` : ''}>${prefixar(marcacao)}</div>
       </div>
       <ol class="anat__legenda">
-${partes.map((x) => `        <li data-alvo="${x.alvo}"><span class="anat__texto"><b>${x.nome}</b> — ${x.texto}</span></li>`).join('\n')}
+${partes.map((x) => `        <li data-target="${x.alvo}"><span class="anat__texto"><b>${x.nome}</b> — ${x.texto}</span></li>`).join('\n')}
       </ol>
     </div>`;
 };
@@ -611,7 +611,7 @@ ${folhasAte(n)}
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="${n.dir}" data-moldura="centrada">
+<body class="ficha" data-level="${n.dir}" data-frame="centered">
 ${cabecalho({ raiz: '../', atual, grupo: n.grupo || n.dir })}
 `;
 
@@ -648,7 +648,7 @@ for (const n of NIVEIS) {
   for (let i = 0; i < doNivel.length; i++) {
     const f = doNivel[i], ant = doNivel[i - 1], prox = doNivel[i + 1];
     const pagina = CABECA(f.titulo, n, `${n.dir}-${f.id}`) + `
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
 ${BLOCOS.map((b) => `    <li><a href="#${b.id}">${b.rotulo}</a></li>`).join('\n')}
@@ -697,8 +697,8 @@ ${BLOCOS.map((b) => `    <li><a href="#${b.id}">${b.rotulo}</a></li>`).join('\n'
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     ${f.palco}
 
@@ -720,14 +720,14 @@ ${f.estados.map((e) => `      <figure class="duo__col">
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     ${f.snippet
       ? `<div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>${escapar(f.snippet)}</code></pre>
     </div>`
       : '<p class="api-vazia">Sem demonstração de onde extrair.</p>'}
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia"${
-    (partesDaAnatomia(f.texto).length || (n.base === 'involucro' && f.usa.length)) ? '' : ' data-pendente'}>
+  <section class="bloco" id="anatomia" data-tab="Anatomia"${
+    (partesDaAnatomia(f.texto).length || (n.base === 'involucro' && f.usa.length)) ? '' : ' data-pending'}>
     <h2 class="bloco-titulo">Anatomia e API</h2>
     ${blocoAnatomia(f, n)}
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -768,21 +768,21 @@ ${f.estados.map((e) => `      <figure class="duo__col">
     ${blocoDeTokens(f.api.tokens)}
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso"${
-    (!f.texto.faca && !f.texto.naoFaca) ? ' data-pendente' : ''}>
+  <section class="bloco" id="faca" data-tab="Regras de uso"${
+    (!f.texto.faca && !f.texto.naoFaca) ? ' data-pending' : ''}>
     <h2 class="bloco-titulo">Faça / não faça</h2>
     ${blocoFN(f.texto, n)}
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade"${
-    (!f.texto.a11y || !f.texto.a11y.length) ? ' data-pendente' : ''}>
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade"${
+    (!f.texto.a11y || !f.texto.a11y.length) ? ' data-pending' : ''}>
     <h2 class="bloco-titulo">Acessibilidade</h2>
     ${blocoA11y(f.texto, n)}
   </section>
@@ -826,7 +826,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;
@@ -945,14 +945,14 @@ ${folhasAte(n)}
   #solo .note{display:none}
 </style>
 </head>
-<body class="ficha" data-nivel="${n.dir}" data-moldura="larga">
+<body class="ficha" data-level="${n.dir}" data-frame="wide">
 <div id="solo"></div>
 <script>
 (function () {
   'use strict';
   var busca = new URLSearchParams(location.search);
   var alvo = busca.get('c');
-  /* UM ESTADO SO. A peca declara estados em divs com data-estado, escondidos
+  /* UM ESTADO SO. A peca declara estados em divs com data-state, escondidos
      na ficha — la eles apareceriam empilhados — e revelados aqui um de cada
      vez. E o que permite por dois lado a lado num viewport de celular, que e
      o unico lugar onde alguns estados existem. */
@@ -983,8 +983,8 @@ ${folhasAte(n)}
     // moldura de quadro — copiá-la aqui abriria um iframe dentro do iframe
     Array.prototype.forEach.call(frag.children, function (n) {
       if (n.matches('h2, p.when, .note, .duo')) return;
-      if (estado && n.matches('[data-estado]') && n.getAttribute('data-estado') !== estado) return;
-      if (estado && !n.matches('[data-estado="' + estado + '"]')) return;
+      if (estado && n.matches('[data-state]') && n.getAttribute('data-state') !== estado) return;
+      if (estado && !n.matches('[data-state="' + estado + '"]')) return;
       var c = n.cloneNode(true);
       c.removeAttribute('hidden');
       caixa.appendChild(c);

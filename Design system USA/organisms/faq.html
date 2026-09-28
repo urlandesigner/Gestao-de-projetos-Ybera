@@ -25,14 +25,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="organisms" data-moldura="centrada">
+<body class="ficha" data-level="organisms" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -150,7 +150,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,13 +204,13 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <h3 class="row-label">Completo &mdash; a p&aacute;gina de FAQ</h3>
     <div class="stage stage--pad">
       <div class="yb-faq">
-        <div class="yb-faq__cabeca">
+        <div class="yb-faq__head">
           <h2>Frequently asked questions</h2>
           <p class="yb-faq__lede">Shipping, returns and the products themselves.
           What is not here, our team answers by email.</p>
@@ -219,9 +219,9 @@
           <li><a class="yb-link" href="#faq-demo-envio"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg>Shipping &amp; delivery</a></li>
           <li><a class="yb-link" href="#faq-demo-devolucao"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg>Returns &amp; refunds</a></li>
         </ul>
-        <div class="yb-faq__grupos">
-          <section class="yb-faq__grupo" id="faq-demo-envio">
-            <h3 class="yb-faq__titulo">Shipping &amp; delivery</h3>
+        <div class="yb-faq__groups">
+          <section class="yb-faq__group" id="faq-demo-envio">
+            <h3 class="yb-faq__title">Shipping &amp; delivery</h3>
             <div class="yb-accordion">
               <details name="faq-demo-1"><summary>When will my order ship?</summary>
                 <div class="yb-accordion__body"><p>Orders are processed within 1&ndash;2 business days. Nothing ships on weekends or holidays.</p></div></details>
@@ -229,8 +229,8 @@
                 <div class="yb-accordion__body"><p>Economy shipping is free on orders over $50 and $8.90 under that. Priority Express is $9.90.</p></div></details>
             </div>
           </section>
-          <section class="yb-faq__grupo" id="faq-demo-devolucao">
-            <h3 class="yb-faq__titulo">Returns &amp; refunds</h3>
+          <section class="yb-faq__group" id="faq-demo-devolucao">
+            <h3 class="yb-faq__title">Returns &amp; refunds</h3>
             <div class="yb-accordion">
               <details name="faq-demo-2"><summary>Can I return an order?</summary>
                 <div class="yb-accordion__body"><p>You have 30 days from delivery to request one, and the return has to be requested first.</p></div></details>
@@ -241,7 +241,7 @@
     </div>
     <div class="note">
       <b>O bloco se titula sozinho</b>
-      <p><code>.yb-faq__cabeca</code> atravessa as duas colunas e carrega título e lede.
+      <p><code>.yb-faq__head</code> atravessa as duas colunas e carrega título e lede.
       Antes o título vinha de um <code>.yb-block</code> da <b>página</b>, um degrau
       acima: funcionava na loja e quebrava aqui, porque ficha de bloco não carrega a
       folha dos templates &mdash; bloco não consome template. A peça aparecia decapitada
@@ -252,9 +252,9 @@
     </div>
     <h3 class="row-label">Curto &mdash; o recorte da home</h3>
     <div class="stage stage--pad">
-      <div class="yb-faq yb-faq--curto">
-        <div class="yb-section-head yb-faq__cabeca"><h2>Before you buy</h2></div>
-        <div class="yb-faq__apoio">
+      <div class="yb-faq yb-faq--short">
+        <div class="yb-section-head yb-faq__head"><h2>Before you buy</h2></div>
+        <div class="yb-faq__support">
           <p class="yb-block__lede">The four things people ask before a first order.
           Tracking, split shipments and refunds are answered in the full list.</p>
           <a class="yb-btn yb-btn--secondary" href="#demos">See all questions</a>
@@ -297,9 +297,9 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;div class="yb-faq"&gt;
-  &lt;div class="yb-faq__cabeca"&gt;
+  &lt;div class="yb-faq__head"&gt;
     &lt;h2&gt;Frequently asked questions&lt;/h2&gt;
     &lt;p class="yb-faq__lede"&gt;Shipping, returns and the products themselves.
     What is not here, our team answers by email.&lt;/p&gt;
@@ -308,9 +308,9 @@
     &lt;li&gt;&lt;a class="yb-link" href="#faq-demo-envio"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;Shipping &amp;amp; delivery&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;&lt;a class="yb-link" href="#faq-demo-devolucao"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;Returns &amp;amp; refunds&lt;/a&gt;&lt;/li&gt;
   &lt;/ul&gt;
-  &lt;div class="yb-faq__grupos"&gt;
-    &lt;section class="yb-faq__grupo" id="faq-demo-envio"&gt;
-      &lt;h3 class="yb-faq__titulo"&gt;Shipping &amp;amp; delivery&lt;/h3&gt;
+  &lt;div class="yb-faq__groups"&gt;
+    &lt;section class="yb-faq__group" id="faq-demo-envio"&gt;
+      &lt;h3 class="yb-faq__title"&gt;Shipping &amp;amp; delivery&lt;/h3&gt;
       &lt;div class="yb-accordion"&gt;
         &lt;details name="faq-demo-1"&gt;&lt;summary&gt;When will my order ship?&lt;/summary&gt;
           &lt;div class="yb-accordion__body"&gt;&lt;p&gt;Orders are processed within 1&amp;ndash;2 business days. Nothing ships on weekends or holidays.&lt;/p&gt;&lt;/div&gt;&lt;/details&gt;
@@ -318,8 +318,8 @@
           &lt;div class="yb-accordion__body"&gt;&lt;p&gt;Economy shipping is free on orders over $50 and $8.90 under that. Priority Express is $9.90.&lt;/p&gt;&lt;/div&gt;&lt;/details&gt;
       &lt;/div&gt;
     &lt;/section&gt;
-    &lt;section class="yb-faq__grupo" id="faq-demo-devolucao"&gt;
-      &lt;h3 class="yb-faq__titulo"&gt;Returns &amp;amp; refunds&lt;/h3&gt;
+    &lt;section class="yb-faq__group" id="faq-demo-devolucao"&gt;
+      &lt;h3 class="yb-faq__title"&gt;Returns &amp;amp; refunds&lt;/h3&gt;
       &lt;div class="yb-accordion"&gt;
         &lt;details name="faq-demo-2"&gt;&lt;summary&gt;Can I return an order?&lt;/summary&gt;
           &lt;div class="yb-accordion__body"&gt;&lt;p&gt;You have 30 days from delivery to request one, and the return has to be requested first.&lt;/p&gt;&lt;/div&gt;&lt;/details&gt;
@@ -330,13 +330,13 @@
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca"><div class="yb-faq">
-  <div class="yb-faq__cabeca">
+  <div class="yb-faq__head">
     <h2>Frequently asked questions</h2>
     <p class="yb-faq__lede">Shipping, returns and the products themselves.
     What is not here, our team answers by email.</p>
@@ -345,9 +345,9 @@
     <li><a class="yb-link" href="#anat-faq-demo-envio"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg>Shipping &amp; delivery</a></li>
     <li><a class="yb-link" href="#anat-faq-demo-devolucao"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg>Returns &amp; refunds</a></li>
   </ul>
-  <div class="yb-faq__grupos">
-    <section class="yb-faq__grupo" id="anat-faq-demo-envio">
-      <h3 class="yb-faq__titulo">Shipping &amp; delivery</h3>
+  <div class="yb-faq__groups">
+    <section class="yb-faq__group" id="anat-faq-demo-envio">
+      <h3 class="yb-faq__title">Shipping &amp; delivery</h3>
       <div class="yb-accordion">
         <details name="anat-faq-demo-1"><summary>When will my order ship?</summary>
           <div class="yb-accordion__body"><p>Orders are processed within 1&ndash;2 business days. Nothing ships on weekends or holidays.</p></div></details>
@@ -355,8 +355,8 @@
           <div class="yb-accordion__body"><p>Economy shipping is free on orders over $50 and $8.90 under that. Priority Express is $9.90.</p></div></details>
       </div>
     </section>
-    <section class="yb-faq__grupo" id="anat-faq-demo-devolucao">
-      <h3 class="yb-faq__titulo">Returns &amp; refunds</h3>
+    <section class="yb-faq__group" id="anat-faq-demo-devolucao">
+      <h3 class="yb-faq__title">Returns &amp; refunds</h3>
       <div class="yb-accordion">
         <details name="anat-faq-demo-2"><summary>Can I return an order?</summary>
           <div class="yb-accordion__body"><p>You have 30 days from delivery to request one, and the return has to be requested first.</p></div></details>
@@ -366,8 +366,8 @@
 </div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-link"><span class="anat__texto"><b><a href="../atoms/link.html">Link</a></b> — Texto que leva a outro lugar, com ícone atrás e alvo de toque de 44px. Fica ao lado de um título de seção ou reforça um link que já existe no mesmo cartão.</span></li>
-        <li data-alvo=".yb-accordion"><span class="anat__texto"><b><a href="../molecules/accordion.html">Accordion</a></b> — Lista de seções que abrem e fecham sob um rótulo clicável, uma de cada vez. Na loja carrega o secundário da PDP: ingredientes, modo de uso, frete.</span></li>
+        <li data-target=".yb-link"><span class="anat__texto"><b><a href="../atoms/link.html">Link</a></b> — Texto que leva a outro lugar, com ícone atrás e alvo de toque de 44px. Fica ao lado de um título de seção ou reforça um link que já existe no mesmo cartão.</span></li>
+        <li data-target=".yb-accordion"><span class="anat__texto"><b><a href="../molecules/accordion.html">Accordion</a></b> — Lista de seções que abrem e fecham sob um rótulo clicável, uma de cada vez. Na loja carrega o secundário da PDP: ingredientes, modo de uso, frete.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -387,8 +387,8 @@
     <ul class="usa"><li><a href="../atoms/link.html">Link</a></li></ul>
     <p class="usa-degrau">Moléculas</p>
     <ul class="usa"><li><a href="../molecules/accordion.html">Accordion</a></li></ul>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-faq--curto</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-faq__apoio</code> <code>.yb-faq__cabeca</code> <code>.yb-faq__grupo</code> <code>.yb-faq__grupos</code> <code>.yb-faq__index</code> <code>.yb-faq__lede</code> <code>.yb-faq__titulo</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-faq--short</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-faq__group</code> <code>.yb-faq__groups</code> <code>.yb-faq__head</code> <code>.yb-faq__index</code> <code>.yb-faq__lede</code> <code>.yb-faq__support</code> <code>.yb-faq__title</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo">Nenhum. A peça não muda por interação.</span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
     <p class="rotulo">Tokens <span class="rotulo-conta">14</span></p>
@@ -425,23 +425,32 @@
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso" data-pendente>
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
-    <p class="pendente">Faça / não faça ainda não escrito para este bloco.
-      O bloco aparece vazio de propósito: seção que some da ficha é uma pergunta
-      que ninguém sabe que ficou sem resposta.</p>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><details><summary>Do you ship to Canada?</summary><div class="yb-accordion__body"><p>Not yet — only inside the US.</p></div></details></div>
+        <p class="fn-legenda">Pergunta em <code>&lt;summary&gt;</code>: o navegador entrega teclado e busca.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><p><b>Do you ship to Canada?</b></p></div>
+        <p class="fn-legenda">Pergunta em <code>&lt;p&gt;</code> com resposta escondida por classe: não abre por teclado, e o Ctrl+F não acha a resposta.</p>
+      </div>
+    </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade" data-pendente>
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <p class="pendente">Acessibilidade ainda não escrita para este bloco.</p>
+    <ul class="bloco-lede"><li>Cada pergunta é <code>&lt;summary&gt;</code> dentro de <code>&lt;details&gt;</code>: abre por teclado, é anunciada como “expansível” e o Ctrl+F do navegador acha o texto fechado.</li><li>O índice lateral são links reais para as âncoras de cada grupo — não um menu que rola por script.</li><li>A pergunta é o alvo inteiro, não um ícone de seta ao lado. Alvo de 44px vale também para quem tem dificuldade de mira.</li><li>Uma resposta aberta não fecha as outras: o <code>name</code> comum é o que faria isso, e aqui a pessoa costuma comparar duas.</li></ul>
   </section>
   </div>
 
@@ -483,7 +492,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

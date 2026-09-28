@@ -23,14 +23,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="atoms" data-moldura="centrada">
+<body class="ficha" data-level="atoms" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -148,7 +148,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -203,8 +203,8 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <h3 class="row-label">Variants</h3>
     <div class="demo demo--amostras">
@@ -264,15 +264,16 @@
       <code>--warning</code>, <code>--danger</code> — são para superfície lisa.</p>
     </div>
     <div class="note">
-      <b><code>--sale</code> e <code>--secondary</code> são o mesmo magenta em dois volumes</b>
-      <p>O <code>--sale</code> traz o fundo cheio da ação e grita; o
-      <code>--secondary</code> usa os mesmos tokens do botão secundário e rotula
-      sem disputar com o preço ao lado. Um por contexto — dois magentas na mesma
-      linha voltam a empatar a leitura.</p>
+      <b><code>--sale</code> grita, <code>--secondary</code> rotula</b>
+      <p>O <code>--sale</code> é o magenta cheio do sinal
+      (<code>--yb-accent-signal</code>): desconto é marca que precisa ser vista antes
+      de ser lida. O <code>--secondary</code> usa os mesmos tokens do botão
+      secundário, contorno preto, e rotula sem disputar com o preço ao lado. Um por
+      contexto &mdash; dois selos cheios na mesma linha voltam a empatar a leitura.</p>
     </div>
     <div class="note">
-      <b>O magenta sobre escuro não é o magenta de ação</b>
-      <p><code>--on-media</code> escreve em <code>--yb-action-on-dark</code>, que mede
+      <b>O magenta sobre escuro não é o magenta canônico</b>
+      <p><code>--on-media</code> escreve em <code>--yb-accent-signal-on-dark</code>, que mede
       6,49:1 sobre o grafite. O magenta canônico foi escolhido para ler sobre
       <b>branco</b> e cai para 3,11:1 ali. Nenhuma cor é escura o bastante para o
       branco e clara o bastante para o grafite — por isso o contexto está no nome do
@@ -288,7 +289,7 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;span class="amostra"&gt;
   &lt;span class="yb-badge yb-badge--sale"&gt;Save 16%&lt;/span&gt;
   &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--sale&lt;/code&gt;&lt;/span&gt;
@@ -320,15 +321,15 @@
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca"><span class="yb-badge yb-badge--sale">Save 16%</span></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-badge"><span class="anat__texto"><b>Etiqueta</b> — Rótulo estático, não é botão. A variante dá a cor; o texto diz o quanto, não a palavra “promoção”.</span></li>
+        <li data-target=".yb-badge"><span class="anat__texto"><b>Etiqueta</b> — Rótulo estático, não é botão. A variante dá a cor; o texto diz o quanto, não a palavra “promoção”.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -348,26 +349,26 @@
     <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo">Nenhum. A peça é um elemento só.</span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo">Nenhum. A peça não muda por interação.</span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
-    <p class="rotulo">Tokens <span class="rotulo-conta">24</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">25</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>17</span></p>
         <ul class="tokens__lista">
-          <li><i class="tokens__cor" style="background:var(--yb-action-on-dark)" aria-hidden="true"></i><code>--yb-action-on-dark</code><span class="tokens__valor">#DC89A7</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-accent-signal-on-dark)" aria-hidden="true"></i><code>--yb-accent-signal-on-dark</code><span class="tokens__valor">#DC89A7</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-action-secondary-border)" aria-hidden="true"></i><code>--yb-action-secondary-border</code><span class="tokens__valor">#1E1E1F</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-surface-inverse-raised)" aria-hidden="true"></i><code>--yb-surface-inverse-raised</code><span class="tokens__valor">#3A3A3C</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-warning-surface)" aria-hidden="true"></i><code>--yb-warning-surface</code><span class="tokens__valor">#FBF3E3</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-action-secondary-bg)" aria-hidden="true"></i><code>--yb-action-secondary-bg</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-action-secondary-text)" aria-hidden="true"></i><code>--yb-action-secondary-text</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-success-surface)" aria-hidden="true"></i><code>--yb-success-surface</code><span class="tokens__valor">#EAF6EC</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-warning-text)" aria-hidden="true"></i><code>--yb-warning-text</code><span class="tokens__valor">#8A5A00</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-danger-surface)" aria-hidden="true"></i><code>--yb-danger-surface</code><span class="tokens__valor">#FBEAE9</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-surface-inverse-raised)" aria-hidden="true"></i><code>--yb-surface-inverse-raised</code><span class="tokens__valor">#3A3A3C</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-accent-brand)" aria-hidden="true"></i><code>--yb-accent-brand</code><span class="tokens__valor">#CA235F</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-accent-signal)" aria-hidden="true"></i><code>--yb-accent-signal</code><span class="tokens__valor">#CA235F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-on-action)" aria-hidden="true"></i><code>--yb-text-on-action</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-danger-text)" aria-hidden="true"></i><code>--yb-danger-text</code><span class="tokens__valor">#B3261E</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-success-text)" aria-hidden="true"></i><code>--yb-success-text</code><span class="tokens__valor">#1F7A34</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
         </ul>
@@ -381,8 +382,9 @@
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>2</span></p>
+        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>3</span></p>
         <ul class="tokens__lista">
+          <li><code>--yb-icon-sm</code><span class="tokens__valor">16px</span></li>
           <li><code>--yb-space-1</code><span class="tokens__valor">0.25rem</span></li>
           <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
         </ul>
@@ -397,14 +399,14 @@
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso">
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
@@ -420,7 +422,7 @@
     </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade">
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
     <ul class="bloco-lede"><li>Badge não é botão: não recebe <code>href</code>, <code>onclick</code> nem foco. Se o rótulo precisa levar a algum lugar, o componente certo é outro.</li><li>O texto é quem informa. Não existe badge que comunique só por cor — “Sold out” diz o que a cor sozinha não diria a quem não a distingue.</li><li>O dourado (<code>--accent</code>) vive só sobre superfície escura: mede 6.96:1 lá e 2.39:1 sobre branco, que reprova.</li></ul>
   </section>
@@ -464,7 +466,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

@@ -25,14 +25,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="organisms" data-moldura="centrada">
+<body class="ficha" data-level="organisms" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -150,7 +150,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -207,8 +207,8 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <div class="stage stage--overflow">
       <nav aria-label="Main">
@@ -271,16 +271,16 @@
       </nav>
     </div>
 
-    <div data-estado="visitante" data-rotulo="Visitante" hidden>
+    <div data-state="guest" data-label="Visitante" hidden>
       <div class="yb-nav__head">
               <span class="yb-logo yb-logo--md" aria-hidden="true">
                 <img src="../brand/ybera-logo.webp" alt="" width="360" height="139"></span>
-              <label class="yb-iconbtn yb-nav__close" for="nva-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></label>
+              <label class="yb-iconbtn yb-iconbtn--square yb-nav__close" for="nva-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></label>
             </div>
-            <div class="yb-nav__conta">
-              <span class="yb-nav__conta-quem">
+            <div class="yb-nav__account">
+              <span class="yb-nav__account-who">
                 <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg>
-                <b class="yb-nav__conta-nome">Welcome, Visitor</b>
+                <b class="yb-nav__account-name">Welcome, Visitor</b>
               </span>
               <a class="yb-btn yb-btn--primary yb-btn--sm" href="#demos">Log in</a>
             </div>
@@ -341,16 +341,16 @@
               </li>
             </ul>
     </div>
-    <div data-estado="logada" data-rotulo="Conta logada" hidden>
+    <div data-state="signed-in" data-label="Conta logada" hidden>
       <div class="yb-nav__head">
               <span class="yb-logo yb-logo--md" aria-hidden="true">
                 <img src="../brand/ybera-logo.webp" alt="" width="360" height="139"></span>
-              <label class="yb-iconbtn yb-nav__close" for="nvb-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></label>
+              <label class="yb-iconbtn yb-iconbtn--square yb-nav__close" for="nvb-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></label>
             </div>
-            <div class="yb-nav__conta">
-              <span class="yb-nav__conta-quem">
-                <span class="yb-nav__conta-inicial" aria-hidden="true">U</span>
-                <b class="yb-nav__conta-nome">Urlan</b>
+            <div class="yb-nav__account">
+              <span class="yb-nav__account-who">
+                <span class="yb-nav__account-initial" aria-hidden="true">U</span>
+                <b class="yb-nav__account-name">Urlan</b>
               </span>
               <a class="yb-btn yb-btn--primary yb-btn--sm" href="#demos">Account</a>
             </div>
@@ -426,7 +426,7 @@
       <b>A conta muda de casa, não de peça</b>
       <p>No desktop quem identifica é o <code>.yb-header__account</code>, com
       <a href="../atoms/avatar.html">Avatar</a> e <a href="../molecules/dropdown.html">Dropdown</a>.
-      Na gaveta é a faixa <code>.yb-nav__conta</code> &mdash; o único bloco com fundo e o
+      Na gaveta é a faixa <code>.yb-nav__account</code> &mdash; o único bloco com fundo e o
       único botão lá dentro. Sem ela, &ldquo;Log in&rdquo; seria o 26º link de uma lista
       de links iguais.</p>
       <p>Deslogado ela traz ícone e <b>Welcome, Visitor</b>; logado, a inicial e o
@@ -445,12 +445,12 @@
     <div class="duo">
       <figure class="duo__col">
         <p class="duo__rotulo">Visitante</p>
-        <iframe class="duo__quadro" src="solo.html?c=nav&amp;s=visitante"
+        <iframe class="duo__quadro" src="solo.html?c=nav&amp;s=guest"
                 title="Nav · Visitante" width="375" height="420" loading="lazy"></iframe>
       </figure>
       <figure class="duo__col">
         <p class="duo__rotulo">Conta logada</p>
-        <iframe class="duo__quadro" src="solo.html?c=nav&amp;s=logada"
+        <iframe class="duo__quadro" src="solo.html?c=nav&amp;s=signed-in"
                 title="Nav · Conta logada" width="375" height="420" loading="lazy"></iframe>
       </figure>
     </div>
@@ -458,7 +458,7 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;nav aria-label="Main"&gt;
 &lt;ul class="yb-nav"&gt;
         &lt;li class="yb-nav__item"&gt;&lt;a class="yb-nav__link" href="#demos"&gt;Home&lt;/a&gt;&lt;/li&gt;
@@ -520,9 +520,9 @@
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca"><nav aria-label="Main">
@@ -585,9 +585,9 @@
 </nav></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-badge"><span class="anat__texto"><b><a href="../atoms/badge.html">Badge</a></b> — Etiqueta curta que classifica um item sem competir com ele. Nunca carrega ação — badge não é botão.</span></li>
-        <li data-alvo=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço de um produto, com o valor anterior riscado e o desconto quando existem. Sempre tabular: em grid, dígitos precisam alinhar em coluna.</span></li>
-        <li data-alvo=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
+        <li data-target=".yb-badge"><span class="anat__texto"><b><a href="../atoms/badge.html">Badge</a></b> — Etiqueta curta que classifica um item sem competir com ele. Nunca carrega ação — badge não é botão.</span></li>
+        <li data-target=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço de um produto, com o valor anterior riscado e o desconto quando existem. Sempre tabular: em grid, dígitos precisam alinhar em coluna.</span></li>
+        <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -608,10 +608,10 @@
     <p class="usa-degrau">Moléculas</p>
     <ul class="usa"><li><a href="../molecules/card.html">Card product</a></li><li><a href="../molecules/price.html">Price</a></li></ul>
     <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-nav__close</code> <code>.yb-nav__conta</code> <code>.yb-nav__conta-inicial</code> <code>.yb-nav__conta-nome</code> <code>.yb-nav__conta-quem</code> <code>.yb-nav__group</code> <code>.yb-nav__groups</code> <code>.yb-nav__grouptitle</code> <code>.yb-nav__grouptitle--sale</code> <code>.yb-nav__head</code> <code>.yb-nav__item</code> <code>.yb-nav__link</code> <code>.yb-nav__link--sale</code> <code>.yb-nav__panel</code> <code>.yb-nav__pitch</code> <code>.yb-nav__pitch-eyebrow</code> <code>.yb-nav__pitch-steps</code> <code>.yb-nav__pitch-text</code> <code>.yb-nav__pitch-title</code> <code>.yb-nav__promo</code> <code>.yb-nav__promo-info</code> <code>.yb-nav__promo-media</code> <code>.yb-nav__promo-name</code> <code>.yb-nav__rail</code> <code>.yb-nav__sublist</code> <code>.yb-nav__toggle</code> <code>.yb-nav__vitrine</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:checked</code> · <code>:focus-visible</code> · <code>:hover</code> · <code>[data-yb-vitrine-ativo]</code></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-nav__account</code> <code>.yb-nav__account-initial</code> <code>.yb-nav__account-name</code> <code>.yb-nav__account-who</code> <code>.yb-nav__close</code> <code>.yb-nav__group</code> <code>.yb-nav__groups</code> <code>.yb-nav__grouptitle</code> <code>.yb-nav__grouptitle--sale</code> <code>.yb-nav__head</code> <code>.yb-nav__item</code> <code>.yb-nav__link</code> <code>.yb-nav__link--sale</code> <code>.yb-nav__panel</code> <code>.yb-nav__pitch</code> <code>.yb-nav__pitch-eyebrow</code> <code>.yb-nav__pitch-steps</code> <code>.yb-nav__pitch-text</code> <code>.yb-nav__pitch-title</code> <code>.yb-nav__promo</code> <code>.yb-nav__promo-info</code> <code>.yb-nav__promo-media</code> <code>.yb-nav__promo-name</code> <code>.yb-nav__rail</code> <code>.yb-nav__showcase</code> <code>.yb-nav__sublist</code> <code>.yb-nav__toggle</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:checked</code> · <code>:focus-visible</code> · <code>:hover</code> · <code>[data-yb-showcase-active]</code></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
-    <p class="rotulo">Tokens <span class="rotulo-conta">49</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">48</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>15</span></p>
@@ -627,8 +627,8 @@
           <li><i class="tokens__cor" style="background:var(--yb-surface-sunken)" aria-hidden="true"></i><code>--yb-surface-sunken</code><span class="tokens__valor">#FAFAFA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
         </ul>
@@ -656,22 +656,21 @@
           <li><code>--yb-page-gutter</code><span class="tokens__valor">1rem</span></li>
           <li><code>--yb-space-1</code><span class="tokens__valor">0.25rem</span></li>
           <li><code>--yb-space-6</code><span class="tokens__valor">1.5rem</span></li>
+          <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
           <li><code>--yb-space-8</code><span class="tokens__valor">2rem</span></li>
           <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
-          <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
           <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
           <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>
           <li><code>--yb-space-3</code><span class="tokens__valor">0.75rem</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>5</span></p>
+        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>4</span></p>
         <ul class="tokens__lista">
           <li><code>--yb-radius-pill</code><span class="tokens__valor">9999px</span></li>
           <li><code>--yb-radius-media</code><span class="tokens__valor">8px</span></li>
           <li><code>--yb-radius-card</code><span class="tokens__valor">8px</span></li>
           <li><code>--yb-radius-sm</code><span class="tokens__valor">4px</span></li>
-          <li><code>--yb-radius-control</code><span class="tokens__valor">8px</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
@@ -688,21 +687,21 @@
           <li><code>--yb-transition-surface</code><span class="tokens__valor">180ms cubic-bezier(.2, 0, 0, 1)</span></li>
           <li><code>--yb-transition-control</code><span class="tokens__valor">120ms cubic-bezier(.2, 0, 0, 1)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
           <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso">
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
@@ -718,7 +717,7 @@
     </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade">
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
     <ul class="bloco-lede"><li>A lista mora num <code>&lt;nav aria-label&gt;</code>: a tela tem três navegações — topo, rodapé e trilha — e sem rótulo as três se anunciam igual.</li><li>O gatilho do painel recebe foco porque é <code>label</code>. Com <code>span</code>, como está na loja, o painel existe e o teclado não chega nele.</li><li><code>Sales</code> é magenta <b>e</b> diz “Sales”. A cor não carrega sozinha o que o item tem de diferente.</li></ul>
   </section>
@@ -762,7 +761,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

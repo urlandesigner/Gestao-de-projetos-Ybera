@@ -7,7 +7,7 @@
     ],
     "faca": {
       "legenda": "O elemento nativo. O navegador entrega teclado, anúncio de estado e busca dentro da página.",
-      "html": "<div class=\"yb-accordion\" style=\"inline-size:100%\"><details name=\"fn-acordeao\"><summary>Shipping &amp; returns</summary><div class=\"yb-accordion__body\"><p>Free standard shipping over $50.</p></div></details></div>"
+      "html": "<div class=\"yb-accordion\" style=\"inline-size:100%\"><details name=\"fn-accordion\"><summary>Shipping &amp; returns</summary><div class=\"yb-accordion__body\"><p>Free standard shipping over $50.</p></div></details></div>"
     },
     "naoFaca": {
       "legenda": "Div com clique reimplementa o que o navegador já faz — e esquece metade: Enter, Espaço, busca na página e o anúncio do estado.",
@@ -44,11 +44,11 @@
     ],
     "faca": {
       "legenda": "Um alerta, com o papel certo para o que ele é.",
-      "html": "<div class=\"yb-alert yb-alert--danger\" role=\"alert\" style=\"inline-size:100%\"><svg class=\"yb-icon yb-alert__icone\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-x-circle\"/></svg><div class=\"yb-alert__corpo\"><b class=\"yb-alert__title\">Payment declined</b><p>Your bank rejected the charge. Try another card.</p></div><button class=\"yb-alert__close\" type=\"button\" data-yb-dispensar aria-label=\"Dismiss payment declined\"><svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-close\"/></svg></button></div>"
+      "html": "<div class=\"yb-alert yb-alert--danger\" role=\"alert\" style=\"inline-size:100%\"><svg class=\"yb-icon yb-alert__icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-x-circle\"/></svg><div class=\"yb-alert__body\"><b class=\"yb-alert__title\">Payment declined</b><p>Your bank rejected the charge. Try another card.</p></div><button class=\"yb-iconbtn yb-iconbtn--square yb-alert__close\" type=\"button\" data-yb-dispensar aria-label=\"Dismiss payment declined\"><svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-close\"/></svg></button></div>"
     },
     "naoFaca": {
       "legenda": "Três empilhados é garantir que nenhum seja lido — e três <code>role=\"alert\"</code> transformam o leitor de tela em ruído.",
-      "html": "<div style=\"inline-size:100%;display:flex;flex-direction:column;gap:8px\"><div class=\"yb-alert yb-alert--info\" role=\"alert\"><svg class=\"yb-icon yb-alert__icone\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-info\"/></svg><div class=\"yb-alert__corpo\"><b class=\"yb-alert__title\">Free shipping</b><p>Add $12 more.</p></div><button class=\"yb-alert__close\" type=\"button\" data-yb-dispensar aria-label=\"Dismiss free shipping\"><svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-close\"/></svg></button></div><div class=\"yb-alert yb-alert--warning\" role=\"alert\"><svg class=\"yb-icon yb-alert__icone\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-alert\"/></svg><div class=\"yb-alert__corpo\"><b class=\"yb-alert__title\">Only 3 left</b><p>Running low.</p></div><button class=\"yb-alert__close\" type=\"button\" data-yb-dispensar aria-label=\"Dismiss only 3 left\"><svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-close\"/></svg></button></div><div class=\"yb-alert yb-alert--danger\" role=\"alert\"><svg class=\"yb-icon yb-alert__icone\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-x-circle\"/></svg><div class=\"yb-alert__corpo\"><b class=\"yb-alert__title\">Payment declined</b><p>Try another card.</p></div><button class=\"yb-alert__close\" type=\"button\" data-yb-dispensar aria-label=\"Dismiss payment declined\"><svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-close\"/></svg></button></div></div>"
+      "html": "<div style=\"inline-size:100%;display:flex;flex-direction:column;gap:8px\"><div class=\"yb-alert yb-alert--info\" role=\"alert\"><svg class=\"yb-icon yb-alert__icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-info\"/></svg><div class=\"yb-alert__body\"><b class=\"yb-alert__title\">Free shipping</b><p>Add $12 more.</p></div><button class=\"yb-iconbtn yb-iconbtn--square yb-alert__close\" type=\"button\" data-yb-dispensar aria-label=\"Dismiss free shipping\"><svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-close\"/></svg></button></div><div class=\"yb-alert yb-alert--warning\" role=\"alert\"><svg class=\"yb-icon yb-alert__icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-alert\"/></svg><div class=\"yb-alert__body\"><b class=\"yb-alert__title\">Only 3 left</b><p>Running low.</p></div><button class=\"yb-iconbtn yb-iconbtn--square yb-alert__close\" type=\"button\" data-yb-dispensar aria-label=\"Dismiss only 3 left\"><svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-close\"/></svg></button></div><div class=\"yb-alert yb-alert--danger\" role=\"alert\"><svg class=\"yb-icon yb-alert__icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-x-circle\"/></svg><div class=\"yb-alert__body\"><b class=\"yb-alert__title\">Payment declined</b><p>Try another card.</p></div><button class=\"yb-iconbtn yb-iconbtn--square yb-alert__close\" type=\"button\" data-yb-dispensar aria-label=\"Dismiss payment declined\"><svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-close\"/></svg></button></div></div>"
     },
     "anatomia": [
       {
@@ -57,12 +57,12 @@
         "texto": "Leva a variante, que dá a cor, e o <code>role</code> — <code>status</code> para confirmação, <code>alert</code> para erro."
       },
       {
-        "alvo": ".yb-alert__icone",
+        "alvo": ".yb-alert__icon",
         "nome": "Ícone",
         "texto": "Decorativo. Repete em desenho o que a cor e o texto já dizem; nunca é a única pista."
       },
       {
-        "alvo": ".yb-alert__corpo",
+        "alvo": ".yb-alert__body",
         "nome": "Corpo",
         "texto": "Título e descrição. A descrição é opcional; o título não."
       },
@@ -312,7 +312,7 @@
     ],
     "faca": {
       "legenda": "Diz o que aconteceu e oferece a saída.",
-      "html": "<div class=\"yb-empty yb-empty--inline\" style=\"inline-size:100%\"><span class=\"yb-empty__icone\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-search\"/></svg></span><p class=\"yb-empty__title\">No results for “keratine”</p><p class=\"yb-empty__text\">Check the spelling, or browse the treatments.</p><div class=\"yb-empty__acoes\"><a class=\"yb-btn yb-btn--primary\" href=\"#faca\">Browse treatments</a></div></div>"
+      "html": "<div class=\"yb-empty yb-empty--inline\" style=\"inline-size:100%\"><span class=\"yb-empty__icon\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-search\"/></svg></span><p class=\"yb-empty__title\">No results for “keratine”</p><p class=\"yb-empty__text\">Check the spelling, or browse the treatments.</p><div class=\"yb-empty__actions\"><a class=\"yb-btn yb-btn--primary\" href=\"#faca\">Browse treatments</a></div></div>"
     },
     "naoFaca": {
       "legenda": "Um beco. Diz que não há nada e deixa a pessoa sem nada para fazer.",
@@ -327,7 +327,7 @@
           "texto": "Ocupa o lugar do que não veio. Estado vazio que só diz “sem resultados” é beco."
         },
         {
-          "alvo": ".yb-empty__icone",
+          "alvo": ".yb-empty__icon",
           "nome": "Ícone",
           "texto": "Decorativo. Dá tom à mensagem, não a substitui."
         },
@@ -342,7 +342,7 @@
           "texto": "Diz o próximo passo. É esta linha que tira a pessoa do beco."
         },
         {
-          "alvo": ".yb-empty__acoes",
+          "alvo": ".yb-empty__actions",
           "nome": "Ações",
           "texto": "A saída em botão. Uma principal; a segunda, se houver, é discreta."
         }
@@ -422,7 +422,7 @@
     ],
     "faca": {
       "legenda": "Nav rotulada, página atual marcada e sem link.",
-      "html": "<nav class=\"yb-pagination\" aria-label=\"Pagination\"><a href=\"#faca\">1</a><span aria-current=\"page\">2</span><a href=\"#faca\">3</a></nav>"
+      "html": "<nav class=\"yb-pagination\" data-yb-pagination aria-label=\"Pagination\"><a href=\"#faca\">1</a><span aria-current=\"page\">2</span><a href=\"#faca\">3</a></nav>"
     },
     "naoFaca": {
       "legenda": "Todos como link e nenhum marcado: nada diz em que página a pessoa está.",
@@ -445,7 +445,7 @@
         "texto": "O salto de faixa. Não é botão — não há para onde ir a partir dele."
       },
       {
-        "alvo": ".yb-pagination__perto",
+        "alvo": ".yb-pagination__near",
         "nome": "Vizinha",
         "texto": "A página imediatamente antes e depois. Some no celular, onde só cabem três destinos."
       }
@@ -756,12 +756,12 @@
   "variant": {
     "a11y": [
       "É um grupo de <code>radio</code> com <code>role=\"radiogroup\"</code> e <code>aria-labelledby</code> apontando para o rótulo “Size:”. As setas do teclado percorrem as opções sem JavaScript.",
-      "A opção esgotada continua selecionável: <code>data-yb-esgotado</code>, não <code>disabled</code>. Desabilitada, ela era visível e inalcançável — e chegar nela é o único caminho para o aviso de volta ao estoque.",
+      "A opção esgotada continua selecionável: <code>data-yb-soldout</code>, não <code>disabled</code>. Desabilitada, ela era visível e inalcançável — e chegar nela é o único caminho para o aviso de volta ao estoque.",
       "O rótulo ecoa a escolha (“Size: <b>500g</b>”) e nasce correto no HTML: sem JavaScript a página não muda, mas também não mente."
     ],
     "faca": {
       "legenda": "Esgotado alcançável, com o estado escrito no cartão.",
-      "html": "<div class=\"yb-swatches\" role=\"radiogroup\" aria-label=\"Size\"><input type=\"radio\" name=\"fx-v\" id=\"fx-v1\" checked><label for=\"fx-v1\">250g</label><input type=\"radio\" name=\"fx-v\" id=\"fx-v2\" data-yb-esgotado><label for=\"fx-v2\">1kg — Sold out</label></div>"
+      "html": "<div class=\"yb-swatches\" role=\"radiogroup\" aria-label=\"Size\"><input type=\"radio\" name=\"fx-v\" id=\"fx-v1\" checked><label for=\"fx-v1\">250g</label><input type=\"radio\" name=\"fx-v\" id=\"fx-v2\" data-yb-soldout><label for=\"fx-v2\">1kg — Sold out</label></div>"
     },
     "naoFaca": {
       "legenda": "Com <code>disabled</code>, o tamanho esgotado aparece e não pode ser alcançado — nem pelo mouse, nem pelo Tab.",
@@ -836,25 +836,39 @@
         "texto": "Checkbox escondido. É o <code>:checked</code> dele que abre o painel irmão."
       },
       {
-        "alvo": ".yb-dropdown__gatilho",
+        "alvo": ".yb-dropdown__trigger",
         "nome": "Gatilho",
         "texto": "O <code>&lt;label&gt;</code> que abre. Precisa de <code>aria-label</code> quando é só o avatar."
       },
       {
-        "alvo": ".yb-dropdown__painel",
+        "alvo": ".yb-dropdown__panel",
         "nome": "Painel",
         "texto": "Os links. Fecha ao clicar fora pelo scrim, não por script."
       },
       {
-        "alvo": ".yb-dropdown__cabeca",
+        "alvo": ".yb-dropdown__head",
         "nome": "Cabeça",
         "texto": "Quem está logado: avatar, nome e e-mail. Some quando o painel não é de conta."
       },
       {
-        "alvo": ".yb-dropdown__sair",
+        "alvo": ".yb-dropdown__signout",
         "nome": "Sair",
         "texto": "Separado do resto por fio. Ação destrutiva de sessão não fica junto dos links."
       }
-    ]
+    ],
+    "a11y": [
+      "Abre por <code>&lt;input type=&quot;checkbox&quot;&gt;</code> escondido e <code>&lt;label&gt;</code>: o teclado abre e fecha sem uma linha de JavaScript.",
+      "O gatilho precisa de nome próprio. Quando ele é só o avatar, <code>aria-label</code> é obrigatório — “Account menu for Urlan Dipre”, não “Menu”.",
+      "Fecha ao clicar fora pelo scrim, que é um irmão e não um ouvinte global: sem JS, e sem prender o clique de quem só queria sair.",
+      "O painel é uma lista de links de verdade. Setas do teclado não navegam entre eles porque não é <code>menu</code> ARIA — é conteúdo, e Tab basta."
+    ],
+    "faca": {
+      "legenda": "Gatilho com nome próprio, painel de links reais.",
+      "html": "<div class=\"yb-dropdown\"><input class=\"yb-dropdown__toggle\" type=\"checkbox\" id=\"fn-dd\"><label class=\"yb-dropdown__trigger\" for=\"fn-dd\" aria-label=\"Account menu for Urlan Dipre\"><span class=\"yb-avatar\" aria-hidden=\"true\">U</span></label><div class=\"yb-dropdown__panel\"><a href=\"#demos\">Orders</a><a href=\"#demos\">Addresses</a></div></div>"
+    },
+    "naoFaca": {
+      "legenda": "Gatilho sem rótulo: o leitor de tela anuncia “botão” e mais nada — não dá para saber o que abre.",
+      "html": "<div class=\"yb-dropdown\"><input class=\"yb-dropdown__toggle\" type=\"checkbox\" id=\"fn-dd2\"><label class=\"yb-dropdown__trigger\" for=\"fn-dd2\"><span class=\"yb-avatar\" aria-hidden=\"true\">U</span></label><div class=\"yb-dropdown__panel\"><a href=\"#demos\">Orders</a></div></div>"
+    }
   }
 }

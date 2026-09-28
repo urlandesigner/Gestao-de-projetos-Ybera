@@ -60,6 +60,17 @@ carregada por JS do tema.
   troca do pôster pelo vídeo só acontece no primeiro clique porque **45 vídeos
   carregando de uma vez** é o que faz uma home pesar.
 
+- **Partes internas de uma peça já ligada** (desde 0.13). O script entra pelo
+  atributo e, dentro da peça, acha as partes pela classe da própria família:
+  `.yb-gallery__slide` dentro de `[data-yb-gallery]`, `.yb-search__input`
+  dentro de `[data-yb-search]`. Um atributo por parte dobraria a marcação sem
+  mudar o risco, porque parte e peça são renomeadas juntas. O que **não** pode
+  é ENTRAR por classe, ou atravessar para outra família: a paginação entrava por
+  `.yb-pagination ol`, o alerta se achava por `.yb-alert` e o prazo da oferta
+  por `.yb-offercard`. Os três passaram a `data-yb-pagination`, ao papel ARIA
+  do alerta e a `data-yb-offercard`. O custo fica escrito: renomear uma parte
+  interna pede olhar o JS da peça.
+
 ## Evidência
 
 - 0.6 entregou `ybera-components.js` como *progressive enhancement*, com a

@@ -99,7 +99,7 @@ const blocoApos = (src, ancora) => {
   return null;
 };
 /* Toda tag de abertura do HTML, para checar ATRIBUTOS sem depender da ordem
-   em que foram escritos: `data-yb-avisar onsubmit` reprovava se alguem
+   em que foram escritos: `data-yb-notify onsubmit` reprovava se alguem
    trocasse os dois de lugar. */
 const aberturas = (html, nome = '[a-z][\\w-]*') =>
   [...html.matchAll(new RegExp(`<${nome}\\b[^>]*>`, 'gi'))].map(m => m[0]);
@@ -284,6 +284,84 @@ const hexDe = (token) => {
 }
 
 /* ==================================== 4b · escala de breakpoint de página */
+secao('Vocabulário das classes');
+/* UM IDIOMA SÓ PARA NOME DE ELEMENTO, e o idioma é o inglês.
+
+   O sistema chegou a 0.13 com doze das quarenta e quatro famílias nomeando
+   elemento nos dois idiomas, e o Buy box tinha os dois para a mesma coisa:
+   `__acoes` na linha 1691 e `__actions` na 1758, sessenta e sete linhas de
+   distância. Quem escrevia o terceiro não tinha como adivinhar qual usar — e
+   nenhuma checagem pegava, porque as duas formas são válidas.
+
+   Inglês e não português: a loja é dos EUA, o HTML que o dev recebe é inglês, e
+   os modificadores já eram (`--sale`, `--soft`, `--on-media`). O comentário
+   continua em português, que é o idioma de quem mantém.
+
+   A lista é de RAÍZES, não de palavras inteiras: pega `__brinde` e
+   `__brinde-card` de uma vez. camelCase entra junto porque o sistema é kebab —
+   `__precoLinha` era o único, e existia pelo mesmo descuido. */
+{
+  const RAIZES_PT = ['acao', 'acoes', 'altura', 'alvo', 'apoio', 'arte', 'ate', 'ativo',
+    'avanco', 'avisar', 'aviso', 'barra', 'benef', 'brinde', 'cabeca', 'carregando', 'cheio',
+    'compra', 'comprar', 'conta', 'conteudo', 'copiado', 'corpo', 'cupom', 'curto', 'de',
+    'desce', 'duracao', 'eco', 'economia', 'encerrada', 'erro', 'escrever', 'esgotado',
+    'estado', 'estrela', 'falhar', 'fim', 'filtro', 'fluxo', 'forma', 'foto', 'fundo',
+    'gatilho', 'gaveta', 'grupo', 'grupos', 'icone', 'inicial', 'limpar', 'linha', 'moldura',
+    'nome', 'nota', 'oferta', 'padrao', 'painel', 'parceiro', 'passo', 'perto', 'peso',
+    'preco', 'precos', 'premio', 'protecao', 'prova', 'qtd', 'quantidade', 'quem',
+    'recolhido', 'resumo', 'rotulo', 'sair', 'selo', 'selos', 'tabela', 'tam', 'termo',
+    'texto', 'titulo', 'topo', 'totais', 'trilho', 'trilhos', 'vai', 'variante', 'vazio',
+    'vitrine', 'vitrines', 'zona'];
+  /* Todo pedaco do nome, e nao so a primeira raiz do elemento. A versao
+     anterior olhava `__elemento` e parava no primeiro hifen: deixou passar
+     `--arte`, `__item-topo`, `__kit-nome`, 35 atributos `data-*`, cinco tokens
+     de componente, duas `@keyframes` e os ids que o JS procura. O vocabulario
+     publicado e tudo o que outra folha ou outro script enxerga. */
+  const pt = (nome) => nome.split(/[-_]+/).some((w) => RAIZES_PT.includes(w));
+  const achados = new Set();
+  const olhar = (nome, onde) => {
+    if (/[A-Z]/.test(nome.replace(/^--yb-/, ''))) achados.add(`${nome} (camelCase, ${onde})`);
+    else if (pt(nome.replace(/^(--yb-|yb-|data-yb-|data-)/, ''))) achados.add(`${nome} (${onde})`);
+  };
+  for (const n of ESCADA) {
+    const css = semComentario(ler(ARQUIVOS[n]));
+    for (const m of css.matchAll(/\.(yb-[A-Za-z0-9_-]+)/g)) olhar(m[1], n);
+    for (const m of css.matchAll(/(--yb-[A-Za-z0-9-]+)\s*:/g)) olhar(m[1], n);
+    for (const m of css.matchAll(/@keyframes\s+([\w-]+)/g)) olhar(m[1], n);
+    for (const m of css.matchAll(/\[(data-[a-z0-9-]+)/g)) olhar(m[1], n);
+  }
+  const js = ler('behavior/ybera-behavior.js').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+  for (const m of js.matchAll(/['"\[](data-[a-z0-9-]+)/g)) olhar(m[1], 'js');
+  for (const m of js.matchAll(/getElementById\(\s*'([\w-]+)'/g)) olhar(m[1], 'js');
+  // `dataset.x` e o mesmo atributo escrito em camelCase: `dataset.aba` lia
+  // `data-aba`, e foi o que escapou da primeira versao desta checagem
+  for (const f of ['behavior/ybera-behavior.js', 'doc/doc.js'])
+    for (const m of ler(f).matchAll(/dataset\.([a-zA-Z]+)/g))
+      olhar('data-' + m[1].replace(/[A-Z]/g, (c) => '-' + c.toLowerCase()), f);
+  for (const f of readdirSync(join(raiz, 'pages')).filter((f) => f.endsWith('.html'))) {
+    const h = ler(`pages/${f}`);
+    for (const m of h.matchAll(/\s(data-[a-z0-9-]+)=/g)) olhar(m[1], 'telas');
+    for (const m of h.matchAll(/\sid="([\w-]+)"/g)) olhar(m[1], 'telas');
+    for (const m of h.matchAll(/\sname="([\w-]+)"/g)) olhar(m[1], 'telas');
+  }
+  // a doc tambem publica vocabulario: as fichas e a moldura sao lidas por quem
+  // copia o exemplo, e um `data-nivel` ali ensina o nome errado
+  for (const n of ESCADA)
+    for (const f of readdirSync(join(raiz, `${PASTA[n]}/pecas`)).filter((f) => f.endsWith('.html'))) {
+      const h = ler(`${PASTA[n]}/pecas/${f}`);
+      for (const m of h.matchAll(/\s(data-[a-z0-9-]+)=/g)) olhar(m[1], 'fichas');
+      for (const m of h.matchAll(/\s(?:id|name)="([\w-]+)"/g)) olhar(m[1], 'fichas');
+    }
+  for (const f of ['tools/moldura.mjs', 'tools/fichas.mjs', 'doc/doc.js'])
+    for (const m of ler(f).matchAll(/(data-[a-z0-9-]+)/g)) olhar(m[1], f);
+  const unicos = [...achados];
+  unicos.length
+    ? falha('nome publicado fora do vocabulário', unicos.slice(0, 8).join(' · ')
+        + (unicos.length > 8 ? ` (+${unicos.length - 8})` : '')
+        + ' — classe, token, atributo e id se nomeiam em inglês e em kebab-case')
+    : ok('todo nome publicado é inglês', 'classe, token, keyframe, atributo e id');
+}
+
 secao('Breakpoints');
 {
   // `@media` nao le custom property, entao a escala so se sustenta se alguem
@@ -296,7 +374,7 @@ secao('Breakpoints');
   // Abaixo dali a faixa de texto come 216 dos 256px do banner e sobram 40 de
   // folga para o veu; acima, a folga menor passa a ser 69px. E medida de
   // conteudo, nao de aparelho — por isso nao entra na escala.
-  // 1366: onde a arte de campanha do hero (.yb-bannerhero--arte) passa a caber
+  // 1366: onde a arte de campanha do hero (.yb-bannerhero--art) passa a caber
   // cortada sem perder o texto desenhado nela — o texto ocupa x 175-1062 da arte
   // de 1200, e no hero de 544px o corte lateral fica abaixo da margem de 138px
   // a partir de 1364. Medida de conteudo, de novo.
@@ -393,7 +471,11 @@ for (const nome of FOLHAS_DO_SISTEMA) {
   }
   mata.length ? falha(`${nome}: outline suprimido sem selo`, `${mata.length} ocorrência(s)`)
               : ok(`${nome}: nenhum foco morto`);
-  s.includes('prefers-reduced-motion')
+  // Folha que nao se move nao tem o que cortar: exigir o bloco dela e pedir
+  // uma media query vazia so para calar o aviso.
+  const move = /\b(transition|animation)\s*:|scroll-behavior\s*:\s*smooth/.test(s.replace(/\/\*[\s\S]*?\*\//g, ''));
+  !move ? ok(`${nome}: sem movimento, nada a cortar`)
+  : s.includes('prefers-reduced-motion')
     ? ok(`${nome}: respeita prefers-reduced-motion`)
     : aviso(`${nome}: sem prefers-reduced-motion`);
 }
@@ -1197,14 +1279,28 @@ secao('Fichas');
     ? falha('átomo que compõe outra peça', `${impostores.join(', ')} — sobe um degrau`)
     : ok('nenhum átomo compõe outra peça', `${porDegrau[0].ids.length} átomos indivisíveis`);
 
-  /* E o contrario tambem: um organismo que nao consome NADA nao e regiao de
-     pagina, e uma peca solta no degrau errado. O template e a excecao legitima
-     — ele e esqueleto, e esqueleto nao tem conteudo. */
-  const ocos = porDegrau.find(d => d.n === 'organismos').ids
+  /* ORGANISMO QUE NAO CONSOME NADA — e quando isso e defeito.
+
+     A regra escrita do degrau nao fala de composicao: "e uma regiao da pagina:
+     tem lugar, e sobrevive sozinho numa tela". Pela regra, a galeria da PDP e a
+     faixa de manifesto SAO organismos — tem lugar, e nao caberiam em outro. O
+     aviso cru, que so contava os ocos, cobrava uma regra que a escada nunca
+     escreveu, e ficou meses sem chegar a zero. Um aviso que ninguem zera e um
+     aviso que ninguem le — a mesma frase que a checagem de token orfao ja
+     carrega.
+
+     Agora a peca pode DECLARAR que e folha, com o motivo ao lado, num
+     `<!-- doc:folha ... -->` no proprio fragmento. Declarada, ela sai da conta
+     e entra no placar. Sem declaracao, continua avisando: o caso comum de um
+     organismo oco e mesmo uma molecula no degrau errado. */
+  const OCO = porDegrau.find(d => d.n === 'organismos').ids
     .filter(id => !/<ul class="usa">/.test(ler(`organisms/${id}.html`)));
+  const declarados = OCO.filter(id => existsSync(join(raiz, `organisms/pecas/${id}.html`))
+    && /<!--\s*doc:folha\s+\S/.test(ler(`organisms/pecas/${id}.html`)));
+  const ocos = OCO.filter(id => !declarados.includes(id));
   ocos.length
-    ? aviso(`${ocos.length} organismo(s) que não compõem nada`, `${ocos.join(', ')} — confira o degrau`)
-    : ok('todo organismo compõe peças de baixo', `${porDegrau.find(d => d.n === 'organismos').ids.length} organismos`);
+    ? aviso(`${ocos.length} organismo(s) que não compõem nada`, `${ocos.join(', ')} — declare com doc:folha ou desça de degrau`)
+    : ok('todo bloco é região de página', `${declarados.length} declarado(s) folha com razão escrita`);
 
   // Bloco pendente aparece DECLARADO na ficha, e nao ausente — mas declarado
   // ele ainda e uma pergunta sem resposta, e o placar precisa dize-lo.
@@ -1495,10 +1591,10 @@ secao('Páginas');
       if (!aberturas(zona).some(t => temAttr(t, 'data-yb-stepper', 'hidden')))
         faltando.push('a quantidade nasce escondida');
       // o aviso nasce VISÍVEL: existe e não traz `hidden`
-      const oAviso = aberturas(zona).find(t => temAttr(t, 'data-yb-avisar'));
+      const oAviso = aberturas(zona).find(t => temAttr(t, 'data-yb-notify'));
       if (!oAviso || temAttr(oAviso, 'hidden')) faltando.push('o aviso de volta nasce visível');
       if (!h.includes('Sold out')) faltando.push('o selo diz Sold out');
-      if (!/id="avisar"/.test(h)) faltando.push('o aviso de volta ao estoque');
+      if (!/id="notify-email"/.test(h)) faltando.push('o aviso de volta ao estoque');
       faltando.length
         ? falha('a tela-prova de esgotado não prova o esgotado',
             faltando.join(', ') + ' — o produto voltou ao estoque? troque ESGOTADO em montar-ds.py')
@@ -1551,24 +1647,24 @@ secao('Páginas');
       aviso('tela-prova de variante ausente', 'o seletor de tamanho fica sem evidência');
     } else {
       const h = ler(alvo);
-      const entradas = [...h.matchAll(/<input type="radio" name="tam"[\s\S]*?>/g)].map(m => m[0]);
+      const entradas = [...h.matchAll(/<input type="radio" name="size"[\s\S]*?>/g)].map(m => m[0]);
       const faltando = [];
       if (entradas.length < 2) faltando.push('mais de uma opção');
-      if (!entradas.every(e => /data-preco="\$/.test(e) && /data-foto="\d/.test(e)))
+      if (!entradas.every(e => /data-price="\$/.test(e) && /data-photo="\d/.test(e)))
         faltando.push('preço e foto em cada opção');
-      if (!entradas.some(e => /data-yb-esgotado/.test(e)))
+      if (!entradas.some(e => /data-yb-soldout/.test(e)))
         faltando.push('uma opção sem estoque, que é o estado que a tela existe para provar');
       // Esgotado selecionavel: `disabled` no radio torna impossivel chegar ao
       // aviso de volta daquele tamanho.
       if (entradas.some(e => /\sdisabled/.test(e))) faltando.push('a opção sem estoque continua selecionável');
-      if (!h.includes('data-yb-preco')) faltando.push('o preço marcado para trocar');
+      if (!h.includes('data-yb-price')) faltando.push('o preço marcado para trocar');
       faltando.length
         ? falha('a tela-prova de variante não prova a variante', faltando.join(', '))
         : ok('a variante está ligada ao preço, ao estoque e à foto', `${entradas.length} opções`);
 
       const vazou = ['pages/pdp.html', 'pages/pdp-esgotado.html']
         .filter(p => existsSync(join(raiz, p)))
-        .filter(p => /data-preco="\$/.test(ler(p)));
+        .filter(p => /data-price="\$/.test(ler(p)));
       vazou.length
         ? falha('dado forjado de variante vazou', vazou.join(', ') + ' — só pdp-variante.html declara VARIANTE_FORJADA')
         : ok('o dado forjado não sai da tela que o declara', 'pdp.html lê só o catálogo');
@@ -1588,7 +1684,7 @@ secao('Páginas');
     } else {
       const h = ler(alvo);
       const was = h.match(/yb-price__was">\$([\d.]+)/);
-      const now = h.match(/data-yb-preco>\$([\d.]+)/);
+      const now = h.match(/data-yb-price>\$([\d.]+)/);
       const selo = h.match(/yb-badge--sale">Save (\d+)%/);
 
       const faltando = [];
@@ -2291,12 +2387,18 @@ secao('Autodescrição');
      pelas classes estarem na pagina de OUTRA peca. */
   {
     const CAMADA_DE = { atomos: 'Átomo', moleculas: 'Molécula', organismos: 'Organismo', templates: 'Template' };
+    /* Uma linha pode declarar mais de uma peca no nome — `CHECKBOX / RADIO`,
+       `INPUT, SELECT, TEXTAREA`, `HEADER / NAV` — quando o CSS e um so de
+       proposito. O que o aviso pegava era a peca que sumia EM SILENCIO dentro
+       da linha de outra; nomeada, ela aparece na matriz e conta. */
+    const pecasNaMatriz = r => (inv.match(new RegExp(`^\\| ([^|]+?) \\|[^|]+\\| ${r} `, 'gm')) || [])
+      .reduce((s, l) => s + l.split('|')[1].split(/\s*(?:\/|,)\s*/).length, 0);
     const fora = ESCADA.map(n => [n, readdirSync(join(raiz, `${PASTA[n]}/pecas`))
-      .filter(f => f.endsWith('.html')).length, camada(CAMADA_DE[n])])
+      .filter(f => f.endsWith('.html')).length, pecasNaMatriz(CAMADA_DE[n])])
       .filter(([, fichas, linhas]) => fichas !== linhas);
     fora.length
       ? aviso(`${fora.length} degrau(s) em que a matriz conta menos que a doc`,
-          fora.map(([n, f, l]) => `${n}: ${f} fichas, ${l} linhas`).join(' · ') + ' — peças que dividem bloco de comentário')
+          fora.map(([n, f, l]) => `${n}: ${f} fichas, ${l} peças nomeadas`).join(' · ') + ' — peça escondida no bloco de outra')
       : ok('a matriz tem uma linha por peça documentada', `${ESCADA.length} degraus`);
   }
 

@@ -100,7 +100,7 @@
 .yb-section-head{
   display:flex; align-items:flex-end; justify-content:space-between;
   gap:var(--yb-space-6); flex-wrap:wrap;
-  margin-bottom:var(--yb-space-8);
+  margin-block-end:var(--yb-space-8);
 }
 /* Titulo e atalho sempre empilham em telas estreitas — nem "Best Sellers"
    cabe ao lado do proprio link em 375px. Empilhado, os 24px de gap pensados

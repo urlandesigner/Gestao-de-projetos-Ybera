@@ -25,14 +25,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="organisms" data-moldura="centrada">
+<body class="ficha" data-level="organisms" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -150,7 +150,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,8 +204,8 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <div class="stage">
       <div class="yb-split">
@@ -227,7 +227,7 @@
             <label for="doc-quiz-3">Chemically Treated</label>
           </div>
           <button class="yb-btn yb-btn--on-dark" type="button">Start quiz</button>
-          <p class="yb-split__nota">4 quick questions</p>
+          <p class="yb-split__note">4 quick questions</p>
         </div>
       </div>
     </div>
@@ -247,7 +247,7 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;div class="yb-split"&gt;
   &lt;div class="yb-split__media"&gt;
     &lt;img src="../pages/img/02_hair-problem-f838107d.webp" alt="" loading="lazy"&gt;
@@ -267,15 +267,15 @@
       &lt;label for="doc-quiz-3"&gt;Chemically Treated&lt;/label&gt;
     &lt;/div&gt;
     &lt;button class="yb-btn yb-btn--on-dark" type="button"&gt;Start quiz&lt;/button&gt;
-    &lt;p class="yb-split__nota"&gt;4 quick questions&lt;/p&gt;
+    &lt;p class="yb-split__note"&gt;4 quick questions&lt;/p&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca"><div class="yb-split">
@@ -297,14 +297,14 @@
       <label for="anat-doc-quiz-3">Chemically Treated</label>
     </div>
     <button class="yb-btn yb-btn--on-dark" type="button">Start quiz</button>
-    <p class="yb-split__nota">4 quick questions</p>
+    <p class="yb-split__note">4 quick questions</p>
   </div>
 </div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-badge"><span class="anat__texto"><b><a href="../atoms/badge.html">Badge</a></b> — Etiqueta curta que classifica um item sem competir com ele. Nunca carrega ação — badge não é botão.</span></li>
-        <li data-alvo=".yb-swatches"><span class="anat__texto"><b><a href="../molecules/variant.html">Variant picker</a></b> — Seletor das opções de um produto: tamanho, volume, fragrância. Esgotado aparece riscado, não some — sumir esconde que o produto existe.</span></li>
-        <li data-alvo=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
+        <li data-target=".yb-badge"><span class="anat__texto"><b><a href="../atoms/badge.html">Badge</a></b> — Etiqueta curta que classifica um item sem competir com ele. Nunca carrega ação — badge não é botão.</span></li>
+        <li data-target=".yb-swatches"><span class="anat__texto"><b><a href="../molecules/variant.html">Variant picker</a></b> — Seletor das opções de um produto: tamanho, volume, fragrância. Esgotado aparece riscado, não some — sumir esconde que o produto existe.</span></li>
+        <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -325,7 +325,7 @@
     <p class="usa-degrau">Moléculas</p>
     <ul class="usa"><li><a href="../molecules/variant.html">Variant picker</a></li></ul>
     <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-split__media</code> <code>.yb-split__nota</code> <code>.yb-split__panel</code> <code>.yb-split__sub</code> <code>.yb-split__title</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-split__media</code> <code>.yb-split__note</code> <code>.yb-split__panel</code> <code>.yb-split__sub</code> <code>.yb-split__title</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo">Nenhum. A peça não muda por interação.</span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
     <p class="rotulo">Tokens <span class="rotulo-conta">17</span></p>
@@ -333,8 +333,8 @@
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>5</span></p>
         <ul class="tokens__lista">
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted-inverse)" aria-hidden="true"></i><code>--yb-text-muted-inverse</code><span class="tokens__valor">#B1B1B4</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary-inverse)" aria-hidden="true"></i><code>--yb-text-secondary-inverse</code><span class="tokens__valor">#DADADB</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-muted-inverse)" aria-hidden="true"></i><code>--yb-text-muted-inverse</code><span class="tokens__valor">#B1B1B4</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface-sunken)" aria-hidden="true"></i><code>--yb-surface-sunken</code><span class="tokens__valor">#FAFAFA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
@@ -365,23 +365,32 @@
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso" data-pendente>
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
-    <p class="pendente">Faça / não faça ainda não escrito para este bloco.
-      O bloco aparece vazio de propósito: seção que some da ficha é uma pergunta
-      que ninguém sabe que ficou sem resposta.</p>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><div class="yb-split__panel"><h2 class="yb-split__title">What does your hair need?</h2><a class="yb-btn yb-btn--primary" href="#demos">Start analysis</a></div></div>
+        <p class="fn-legenda">Painel com título e uma ação.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><div class="yb-split__panel"><h2 class="yb-split__title">What does your hair need?</h2><a class="yb-btn yb-btn--primary" href="#demos">Start analysis</a> <a class="yb-btn yb-btn--primary" href="#demos">See products</a></div></div>
+        <p class="fn-legenda">Duas ações de mesmo peso: o bloco existe para levar a um lugar, e dois destinos iguais anulam a escolha.</p>
+      </div>
+    </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade" data-pendente>
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <p class="pendente">Acessibilidade ainda não escrita para este bloco.</p>
+    <ul class="bloco-lede"><li>A foto é decorativa (<code>alt</code> vazio): quem informa é o painel ao lado. Descrever a foto duplicaria o texto que já está escrito.</li><li>O painel tem o título da seção e uma ação só. Duas ações de mesmo peso num bloco de duas colunas desfazem o ponto dele.</li><li>A ordem do DOM é foto, depois painel — e no celular ela vira a ordem visual. Inverter só no CSS deixaria o teclado andando ao contrário do olho.</li><li>O painel tem fundo próprio, então o contraste do texto não depende da foto ao lado.</li></ul>
   </section>
   </div>
 
@@ -423,7 +432,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

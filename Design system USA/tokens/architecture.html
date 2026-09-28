@@ -21,14 +21,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:var(--yb-type-caption-size)}
 </style>
 </head>
-<body class="ficha" data-moldura="centrada">
+<body class="ficha" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -171,8 +171,8 @@
           <h3>Camada 1 · Semânticos</h3>
           <p>A intenção. A única camada que componentes consomem e que alguém
           precisa ler para entender o sistema.</p>
-          <pre>--yb-text-primary: var(--yb-gray-950);
---yb-action-bg: var(--yb-magenta-600);</pre>
+          <pre>--yb-action-primary-bg: var(--yb-gray-950);
+--yb-accent-signal: var(--yb-magenta-600);</pre>
         </div>
         <div class="layer layer--2">
           <h3>Camada 2 · Componente</h3>

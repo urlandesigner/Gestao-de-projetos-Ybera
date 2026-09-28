@@ -10,7 +10,8 @@
 
 :root {
   /* ---------------------------------------------------------------------
-     COR · NEUTRO — derivado da primária #1E1E1F (matiz 240°, sat 1.6%)
+     COR · NEUTRO — a primária é o 950 (#1E1E1F); os outros dez degraus
+     herdam o matiz dela (240°, sat 1.6%)
      Substitui a mistura atual de Tailwind zinc + gray + cinzas avulsos.
      --------------------------------------------------------------------- */
   --yb-gray-50: #FAFAFA;          /*  1.04:1 vs branco · --   */
@@ -26,7 +27,8 @@
   --yb-gray-950: #1E1E1F;         /* 16.66:1 vs branco · AAA · PRIMÁRIA DA MARCA */
 
   /* ---------------------------------------------------------------------
-     COR · MAGENTA — cor de AÇÃO, não de identidade.
+     COR · MAGENTA — SINAL: link, anel de foco e destaque (desconto,
+     contagem do carrinho, favorito). Foi a cor de ação até 0.13.
      Consolida os três magentas divergentes da loja
      (#CA235F botão, #DB2855 Judge.me, #DD2955 avulso) em um só.
      --------------------------------------------------------------------- */
@@ -36,7 +38,7 @@
   --yb-magenta-300: #EBCAD6;      /*  1.51:1 vs branco · --   */
   --yb-magenta-400: #DC89A7;      /*  2.57:1 vs branco · --   */
   --yb-magenta-500: #D64277;      /*  4.28:1 vs branco · UI  · só UI/large */
-  --yb-magenta-600: #CA235F;      /*  5.36:1 vs branco · AA  · AÇÃO CANÔNICA */
+  --yb-magenta-600: #CA235F;      /*  5.36:1 vs branco · AA  · SINAL CANÔNICO */
   --yb-magenta-700: #8A1E45;      /*  8.93:1 vs branco · AAA · hover */
   --yb-magenta-800: #5D1932;      /* 12.72:1 vs branco · AAA · active */
   --yb-magenta-900: #3D1222;      /* 16.05:1 vs branco · AAA  */

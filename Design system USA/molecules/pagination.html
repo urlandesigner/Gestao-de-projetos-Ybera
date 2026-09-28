@@ -24,14 +24,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="molecules" data-moldura="centrada">
+<body class="ficha" data-level="molecules" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -149,7 +149,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,19 +204,19 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <h3 class="row-label">Sem modificador · atual <code>[aria-current="page"]</code></h3>
     <div class="demo demo--stack">
-      <nav class="yb-pagination" aria-label="Pagination">
+      <nav class="yb-pagination" data-yb-pagination aria-label="Pagination">
         <ol>
           <li><a href="#demos" aria-label="Previous page">←</a></li>
           <li><a href="#demos">1</a></li>
           <li><span class="yb-pagination__gap">…</span></li>
-          <li class="yb-pagination__perto"><a href="#demos">2</a></li>
+          <li class="yb-pagination__near"><a href="#demos">2</a></li>
           <li><span aria-current="page">3</span></li>
-          <li class="yb-pagination__perto"><a href="#demos">4</a></li>
+          <li class="yb-pagination__near"><a href="#demos">4</a></li>
           <li><span class="yb-pagination__gap">…</span></li>
           <li><a href="#demos">12</a></li>
           <li><a href="#demos" aria-label="Next page">→</a></li>
@@ -227,7 +227,7 @@
       <b>No celular saem as vizinhas, não as setas</b>
       <p>Nove alvos pedem 452px e uma tela de 375 oferece 343. Não podem sumir as duas
       setas, a primeira, a última e onde a pessoa está; podem as <b>vizinhas</b> da
-      atual (<code>.yb-pagination__perto</code>). Sobram sete itens e 288px, que cabem
+      atual (<code>.yb-pagination__near</code>). Sobram sete itens e 288px, que cabem
       até em 320.</p>
       <p><b>O alvo não encolhe</b> — sai o respiro lateral. Com <code>min-width:44</code>
       mais 12px de cada lado, cada número ocupava 68; sem o respiro o alvo mantém os 44
@@ -246,15 +246,15 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
-      <pre><code>&lt;nav class="yb-pagination" aria-label="Pagination"&gt;
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+      <pre><code>&lt;nav class="yb-pagination" data-yb-pagination aria-label="Pagination"&gt;
   &lt;ol&gt;
     &lt;li&gt;&lt;a href="#demos" aria-label="Previous page"&gt;←&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;&lt;a href="#demos"&gt;1&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;&lt;span class="yb-pagination__gap"&gt;…&lt;/span&gt;&lt;/li&gt;
-    &lt;li class="yb-pagination__perto"&gt;&lt;a href="#demos"&gt;2&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="yb-pagination__near"&gt;&lt;a href="#demos"&gt;2&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;&lt;span aria-current="page"&gt;3&lt;/span&gt;&lt;/li&gt;
-    &lt;li class="yb-pagination__perto"&gt;&lt;a href="#demos"&gt;4&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="yb-pagination__near"&gt;&lt;a href="#demos"&gt;4&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;&lt;span class="yb-pagination__gap"&gt;…&lt;/span&gt;&lt;/li&gt;
     &lt;li&gt;&lt;a href="#demos"&gt;12&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;&lt;a href="#demos" aria-label="Next page"&gt;→&lt;/a&gt;&lt;/li&gt;
@@ -263,19 +263,19 @@
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
-        <div class="anat__peca"><nav class="yb-pagination" aria-label="Pagination">
+        <div class="anat__peca"><nav class="yb-pagination" data-yb-pagination aria-label="Pagination">
   <ol>
     <li><a href="#anat-demos" aria-label="Previous page">←</a></li>
     <li><a href="#anat-demos">1</a></li>
     <li><span class="yb-pagination__gap">…</span></li>
-    <li class="yb-pagination__perto"><a href="#anat-demos">2</a></li>
+    <li class="yb-pagination__near"><a href="#anat-demos">2</a></li>
     <li><span aria-current="page">3</span></li>
-    <li class="yb-pagination__perto"><a href="#anat-demos">4</a></li>
+    <li class="yb-pagination__near"><a href="#anat-demos">4</a></li>
     <li><span class="yb-pagination__gap">…</span></li>
     <li><a href="#anat-demos">12</a></li>
     <li><a href="#anat-demos" aria-label="Next page">→</a></li>
@@ -283,10 +283,10 @@
 </nav></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-pagination"><span class="anat__texto"><b>Paginação</b> — <code>&lt;nav&gt;</code> com rótulo próprio. Cada número é um link de verdade, indexável.</span></li>
-        <li data-alvo="[aria-current]"><span class="anat__texto"><b>Página atual</b> — Não é link. É o único item que muda de peso e de fundo.</span></li>
-        <li data-alvo=".yb-pagination__gap"><span class="anat__texto"><b>Reticências</b> — O salto de faixa. Não é botão — não há para onde ir a partir dele.</span></li>
-        <li data-alvo=".yb-pagination__perto"><span class="anat__texto"><b>Vizinha</b> — A página imediatamente antes e depois. Some no celular, onde só cabem três destinos.</span></li>
+        <li data-target=".yb-pagination"><span class="anat__texto"><b>Paginação</b> — <code>&lt;nav&gt;</code> com rótulo próprio. Cada número é um link de verdade, indexável.</span></li>
+        <li data-target="[aria-current]"><span class="anat__texto"><b>Página atual</b> — Não é link. É o único item que muda de peso e de fundo.</span></li>
+        <li data-target=".yb-pagination__gap"><span class="anat__texto"><b>Reticências</b> — O salto de faixa. Não é botão — não há para onde ir a partir dele.</span></li>
+        <li data-target=".yb-pagination__near"><span class="anat__texto"><b>Vizinha</b> — A página imediatamente antes e depois. Some no celular, onde só cabem três destinos.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -303,20 +303,19 @@
 
     <p class="api-linha"><span class="api-linha__rotulo">De que é feita</span><span class="api-linha__corpo">Nenhuma: não consome nenhum outro componente. O que ela desenha sai todo da folha dela.</span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-pagination__gap</code> <code>.yb-pagination__off</code> <code>.yb-pagination__perto</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-pagination__gap</code> <code>.yb-pagination__near</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code> · <code>[aria-current]</code></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
-    <p class="rotulo">Tokens <span class="rotulo-conta">18</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">17</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>7</span></p>
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>6</span></p>
         <ul class="tokens__lista">
           <li><i class="tokens__cor" style="background:var(--yb-action-secondary-bg)" aria-hidden="true"></i><code>--yb-action-secondary-bg</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-action-secondary-text)" aria-hidden="true"></i><code>--yb-action-secondary-text</code><span class="tokens__valor">#1E1E1F</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-disabled)" aria-hidden="true"></i><code>--yb-text-disabled</code><span class="tokens__valor">#B1B1B4</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
         </ul>
       </div>
@@ -347,26 +346,26 @@
         <ul class="tokens__lista">
           <li><code>--yb-transition-control</code><span class="tokens__valor">120ms cubic-bezier(.2, 0, 0, 1)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
           <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso">
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
         <p class="fn-cabeca">✓ Faça</p>
-        <div class="fn-palco"><nav class="yb-pagination" aria-label="Pagination"><a href="#faca">1</a><span aria-current="page">2</span><a href="#faca">3</a></nav></div>
+        <div class="fn-palco"><nav class="yb-pagination" data-yb-pagination aria-label="Pagination"><a href="#faca">1</a><span aria-current="page">2</span><a href="#faca">3</a></nav></div>
         <p class="fn-legenda">Nav rotulada, página atual marcada e sem link.</p>
       </div>
       <div class="fn-caso fn-caso--nao">
@@ -377,7 +376,7 @@
     </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade">
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
     <ul class="bloco-lede"><li>É <code>&lt;nav aria-label="Pagination"&gt;</code>: a página tem mais de uma navegação, e sem rótulo o leitor de tela lista duas “navigation” idênticas.</li><li>A página atual usa <code>aria-current="page"</code> e não é link.</li><li>Cada número respeita o alvo mínimo de 44px — é o controle mais fácil de errar o dedo numa lista longa.</li></ul>
   </section>
@@ -421,7 +420,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

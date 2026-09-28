@@ -2,38 +2,38 @@
     <p class="when">Cartão grande de uma oferta única: foto ao fundo, texto por cima e relógio de prazo. Não é o cartão de catálogo com outra roupa: ali cabem doze na grade, aqui cabe <b>um</b>.</p>
     <h3 class="row-label">Variant <code>--blur</code></h3>
     <div class="demo demo--oferta">
-      <article class="yb-offercard yb-offercard--blur">
+      <article class="yb-offercard yb-offercard--blur" data-yb-offercard>
         <img src="../pages/img/Off2_Set_18-20-9_1-081255.webp" alt="">
         <span class="yb-offerseal yb-offerseal--sale yb-offercard__off"><b class="yb-offerseal__value">20%</b><span class="yb-offerseal__label">off</span></span>
         <div class="yb-offercard__blur" aria-hidden="true"><i></i><i></i><i></i></div>
-        <a class="yb-offercard__link" href="#demos" aria-labelledby="oferta-demo-1"></a>
+        <a class="yb-offercard__link" href="#demos" aria-labelledby="offer-demo-1"></a>
         <div class="yb-offercard__body">
-          <h3 class="yb-offercard__title" id="oferta-demo-1">Myrrh hair repair oil 90 ml | Special price</h3>
-          <div class="yb-offercard__linha">
+          <h3 class="yb-offercard__title" id="offer-demo-1">Myrrh hair repair oil 90 ml | Special price</h3>
+          <div class="yb-offercard__row">
             <span class="yb-offercard__price">$47.92</span>
             <s class="yb-offercard__was">$59.90</s>
             <p class="yb-offercard__timer" data-yb-countdown="{PRAZO+2d}"><time datetime="{PRAZO+2d:iso}">{PRAZO+2d:humano}</time></p>
           </div>
-          <p class="yb-offercard__fim" hidden>Offer ended</p>
+          <p class="yb-offercard__deadline" data-yb-offercard-end hidden>Offer ended</p>
           <button class="yb-btn yb-btn--on-dark yb-offercard__action" type="button"
                   data-yb-open="cart" aria-label="Add to cart: Myrrh hair repair oil">Add to cart</button>
         </div>
       </article>
     </div>
-    <h3 class="row-label">Sem modificador · prazo vencido <code>[data-encerrada]</code></h3>
+    <h3 class="row-label">Sem modificador · prazo vencido <code>[data-ended]</code></h3>
     <div class="demo demo--oferta">
-      <article class="yb-offercard">
+      <article class="yb-offercard" data-yb-offercard>
         <img src="../pages/img/Off2_Set_18-20-9_1-081255.webp" alt="">
         <span class="yb-offerseal yb-offerseal--sale yb-offercard__off"><b class="yb-offerseal__value">18%</b><span class="yb-offerseal__label">off</span></span>
-        <a class="yb-offercard__link" href="#demos" aria-labelledby="oferta-demo-2"></a>
+        <a class="yb-offercard__link" href="#demos" aria-labelledby="offer-demo-2"></a>
         <div class="yb-offercard__body">
-          <h3 class="yb-offercard__title" id="oferta-demo-2">Cronograma hair care system</h3>
-          <div class="yb-offercard__linha">
+          <h3 class="yb-offercard__title" id="offer-demo-2">Cronograma hair care system</h3>
+          <div class="yb-offercard__row">
             <span class="yb-offercard__price">$37.90</span>
             <s class="yb-offercard__was">$46.20</s>
             <p class="yb-offercard__timer" data-yb-countdown="2020-01-01T00:00:00Z"><time>Jan 1, 2020</time></p>
           </div>
-          <p class="yb-offercard__fim" hidden>Offer ended</p>
+          <p class="yb-offercard__deadline" data-yb-offercard-end hidden>Offer ended</p>
           <button class="yb-btn yb-btn--on-dark yb-offercard__action" type="button"
                   data-yb-open="cart" aria-label="Add to cart: Cronograma hair care system">Add to cart</button>
         </div>

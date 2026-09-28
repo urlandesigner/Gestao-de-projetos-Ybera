@@ -10,7 +10,7 @@
       <dialog open class="yb-dialog" aria-labelledby="t-destrutivo">
         <div class="yb-dialog__head">
           <h4 class="yb-dialog__title" id="t-destrutivo">Remove from cart?</h4>
-          <button type="button" class="yb-dialog__close" aria-label="Close">
+          <button type="button" class="yb-iconbtn yb-iconbtn--square yb-dialog__close" aria-label="Close">
             <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
         </div>
         <div class="yb-dialog__body">
@@ -26,7 +26,7 @@
       <dialog open class="yb-dialog" aria-labelledby="t-confirma">
         <div class="yb-dialog__head">
           <h4 class="yb-dialog__title" id="t-confirma">Apply coupon SUMMER20?</h4>
-          <button type="button" class="yb-dialog__close" aria-label="Close">
+          <button type="button" class="yb-iconbtn yb-iconbtn--square yb-dialog__close" aria-label="Close">
             <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
         </div>
         <div class="yb-dialog__body">
@@ -42,13 +42,13 @@
       <dialog open id="dlg-review" class="yb-dialog" aria-labelledby="dlg-review-t">
         <div class="yb-dialog__head">
           <h3 class="yb-dialog__title" id="dlg-review-t">Write a review</h3>
-          <button class="yb-dialog__close" aria-label="Close"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
+          <button class="yb-iconbtn yb-iconbtn--square yb-dialog__close" aria-label="Close"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
         </div>
         <form class="yb-dialog__body"
               onsubmit="Ybera.toast({title:'Thanks — your review is in review',text:'We publish it once it is checked.',variant:'success'}); this.closest('dialog').close(); return false">
           <div class="yb-field">
-            <label class="yb-field__label" for="rvd-nota">Your rating</label>
-            <select class="yb-select" id="rvd-nota" required>
+            <label class="yb-field__label" for="rvd-rating">Your rating</label>
+            <select class="yb-select" id="rvd-rating" required>
               <option value="5">5 — loved it</option>
               <option value="4">4 — good</option>
               <option value="3">3 — it is fine</option>
@@ -57,8 +57,8 @@
             </select>
           </div>
           <div class="yb-field">
-            <label class="yb-field__label" for="rvd-texto">Your review</label>
-            <textarea class="yb-textarea" id="rvd-texto" rows="4"
+            <label class="yb-field__label" for="rvd-text">Your review</label>
+            <textarea class="yb-textarea" id="rvd-text" rows="4"
                       placeholder="What changed in your hair, and how long it took." required></textarea>
           </div>
           <div class="yb-field">
@@ -109,7 +109,7 @@
     <dialog id="dlg-remove" class="yb-dialog" aria-labelledby="dlg-remove-t">
       <div class="yb-dialog__head">
         <h3 class="yb-dialog__title" id="dlg-remove-t">Remove from cart?</h3>
-        <button type="button" class="yb-dialog__close" data-yb-close aria-label="Close">×</button>
+        <button type="button" class="yb-iconbtn yb-iconbtn--square yb-dialog__close" data-yb-close aria-label="Close">×</button>
       </div>
       <div class="yb-dialog__body">
         <p>Kit Sealant Fashion Gold — 500g / 17.6 fl oz will be removed from your cart.</p>
@@ -117,8 +117,8 @@
       <div class="yb-dialog__foot">
         <button type="button" class="yb-btn yb-btn--ghost" data-yb-close>Keep it</button>
         <button type="button" class="yb-btn yb-btn--danger" data-yb-close
-          data-yb-toast data-toast-titulo="Removed from cart"
-          data-toast-texto="Kit Sealant Fashion Gold"
-          data-toast-variante="danger">Remove</button>
+          data-yb-toast data-toast-title="Removed from cart"
+          data-toast-text="Kit Sealant Fashion Gold"
+          data-toast-variant="danger">Remove</button>
       </div>
     </dialog>

@@ -23,14 +23,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="atoms" data-moldura="centrada">
+<body class="ficha" data-level="atoms" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -148,7 +148,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -203,8 +203,8 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <h3 class="row-label">States</h3>
     <div class="demo demo--amostras">
@@ -286,7 +286,7 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;span class="amostra"&gt;
   &lt;button type="button" class="yb-chip"&gt;Color-safe&lt;/button&gt;
   &lt;span class="amostra__rotulo"&gt;&lt;code&gt;padrão&lt;/code&gt;&lt;/span&gt;
@@ -302,15 +302,15 @@
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca"><button type="button" class="yb-chip">Color-safe</button></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-chip"><span class="anat__texto"><b>Chip</b> — Filtro que liga e desliga. É <code>&lt;button&gt;</code> com <code>aria-pressed</code> — o estado é anunciado, não só pintado.</span></li>
+        <li data-target=".yb-chip"><span class="anat__texto"><b>Chip</b> — Filtro que liga e desliga. É <code>&lt;button&gt;</code> com <code>aria-pressed</code> — o estado é anunciado, não só pintado.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -335,16 +335,16 @@
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>12</span></p>
         <ul class="tokens__lista">
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted-inverse)" aria-hidden="true"></i><code>--yb-text-muted-inverse</code><span class="tokens__valor">#B1B1B4</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-disabled)" aria-hidden="true"></i><code>--yb-text-disabled</code><span class="tokens__valor">#B1B1B4</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-muted-inverse)" aria-hidden="true"></i><code>--yb-text-muted-inverse</code><span class="tokens__valor">#B1B1B4</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border-strong)" aria-hidden="true"></i><code>--yb-border-strong</code><span class="tokens__valor">#B1B1B4</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border)" aria-hidden="true"></i><code>--yb-border</code><span class="tokens__valor">#DADADB</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
         </ul>
@@ -378,30 +378,39 @@
         <ul class="tokens__lista">
           <li><code>--yb-transition-control</code><span class="tokens__valor">120ms cubic-bezier(.2, 0, 0, 1)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
           <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso" data-pendente>
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
-    <p class="pendente">Faça / não faça ainda não escrito para este átomo.
-      O bloco aparece vazio de propósito: seção que some da ficha é uma pergunta
-      que ninguém sabe que ficou sem resposta.</p>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><button type="button" class="yb-chip" aria-pressed="true">Keratin <span class="yb-chip__x">×</span></button></div>
+        <p class="fn-legenda">Botão com <code>aria-pressed</code>: o estado é anunciado, não só pintado.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><span class="yb-chip" style="background:var(--yb-gray-950);color:#fff">Keratin ×</span></div>
+        <p class="fn-legenda"><code>&lt;span&gt;</code> com classe de ativo: não recebe foco, não responde a Enter e o leitor de tela lê só o texto.</p>
+      </div>
+    </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade" data-pendente>
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <p class="pendente">Acessibilidade ainda não escrita para este átomo.</p>
+    <ul class="bloco-lede"><li>É <code>&lt;button&gt;</code>, e não um <code>&lt;span&gt;</code> com clique: teclado, Enter e o anúncio de “botão” vêm do elemento.</li><li>O estado mora em <code>aria-pressed</code>, não numa classe. Classe pinta; <code>aria-pressed</code> é o que o leitor de tela lê como “pressionado”.</li><li>O × é decorativo — quem remove o filtro é o próprio botão, que já está pressionado. Um segundo alvo dentro do primeiro confunde teclado e dedo.</li><li>A fileira inteira precisa de nome: <code>&lt;nav&gt;</code> ou <code>role=&quot;group&quot;</code> com rótulo. Sete botões soltos não dizem do que são filtro.</li></ul>
   </section>
   </div>
 
@@ -443,7 +452,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

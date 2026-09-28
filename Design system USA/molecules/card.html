@@ -24,14 +24,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="molecules" data-moldura="centrada">
+<body class="ficha" data-level="molecules" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -149,7 +149,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,8 +204,8 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <h3 class="row-label">Anatomia &mdash; tr&ecirc;s partes, sempre nesta ordem</h3>
     <div class="demo demo--grid">
@@ -267,7 +267,7 @@
     <h3 class="row-label">Esgotado &mdash; <code>--sold-out</code>, ao lado do sem modificador</h3>
     <div class="demo demo--grid">
       <article class="yb-card yb-card--sold-out">
-        <div class="yb-card__media" data-esgotado="Sold out"><img src="../pages/img/Off1_August_22-24-11-18aac2.webp" alt="Kit de cuidado capilar sobre fundo claro" loading="lazy"></div>
+        <div class="yb-card__media" data-soldout="Sold out"><img src="../pages/img/Off1_August_22-24-11-18aac2.webp" alt="Kit de cuidado capilar sobre fundo claro" loading="lazy"></div>
         <h3 class="yb-card__title"><a href="#demos">KIT Hair Sorbet — Vanilla, Chocolate and Strawberry</a></h3>
         <span class="yb-price yb-price--sm"><b class="yb-price__now">$119.90</b></span>
       </article>
@@ -325,7 +325,7 @@
          eles E o celular — duas colunas contra uma fatia que anda —, entao
          eles vao para os quadros de 375px, lado a lado, e nao para o palco
          largo, onde a comparacao nao existe. -->
-    <div data-estado="grade" data-rotulo="Em grade — duas por linha" hidden>
+    <div data-state="grid" data-label="Em grade — duas por linha" hidden>
       <div class="yb-grid">
         <article class="yb-card">
           <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--sale">−16%</span></div><img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Kit Terra Coco: shampoo, máscara e elixir lado a lado" loading="lazy"></div>
@@ -349,7 +349,7 @@
         </article>
       </div>
     </div>
-    <div data-estado="trilho" data-rotulo="Em carrossel — uma fatia que anda" hidden>
+    <div data-state="track" data-label="Em carrossel — uma fatia que anda" hidden>
       <div class="yb-track">
         <article class="yb-card">
           <div class="yb-card__media"><div class="yb-card__flags"><span class="yb-badge yb-badge--sale">−16%</span></div><img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Kit Terra Coco: shampoo, máscara e elixir lado a lado" loading="lazy"></div>
@@ -427,12 +427,12 @@
     <div class="duo">
       <figure class="duo__col">
         <p class="duo__rotulo">Em grade — duas por linha</p>
-        <iframe class="duo__quadro" src="solo.html?c=card&amp;s=grade"
+        <iframe class="duo__quadro" src="solo.html?c=card&amp;s=grid"
                 title="Card product · Em grade — duas por linha" width="375" height="420" loading="lazy"></iframe>
       </figure>
       <figure class="duo__col">
         <p class="duo__rotulo">Em carrossel — uma fatia que anda</p>
-        <iframe class="duo__quadro" src="solo.html?c=card&amp;s=trilho"
+        <iframe class="duo__quadro" src="solo.html?c=card&amp;s=track"
                 title="Card product · Em carrossel — uma fatia que anda" width="375" height="420" loading="lazy"></iframe>
       </figure>
     </div>
@@ -440,7 +440,7 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;article class="yb-card"&gt;
   &lt;div class="yb-card__media"&gt;&lt;img src="../pages/img/105-d0e326.webp" alt="Frasco branco de condicionador Pantanal elixir, 1 litro" loading="lazy"&gt;&lt;/div&gt;
   &lt;h3 class="yb-card__title"&gt;&lt;a href="#demos"&gt;Floral Fusion Hair Mist — 50ml / 1.69 fl.oz&lt;/a&gt;&lt;/h3&gt;
@@ -449,9 +449,9 @@
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca" style="max-inline-size:260px"><article class="yb-card">
@@ -461,10 +461,10 @@
 </article></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-card"><span class="anat__texto"><b>Container</b> — A grade em volta é que decide a largura; o cartão só preenche a coluna.</span></li>
-        <li data-alvo=".yb-card__media"><span class="anat__texto"><b>Foto</b> — A caixa é reservada antes de a imagem chegar — é o que impede o salto de layout.</span></li>
-        <li data-alvo=".yb-card__title"><span class="anat__texto"><b>Título</b> — O link mora aqui e cobre o cartão inteiro. Corta na terceira linha, por decisão de sistema.</span></li>
-        <li data-alvo=".yb-price"><span class="anat__texto"><b>Preço</b> — É outra peça, não parte do cartão: a mesma <code>.yb-price</code> da PDP e da sacola.</span></li>
+        <li data-target=".yb-card"><span class="anat__texto"><b>Container</b> — A grade em volta é que decide a largura; o cartão só preenche a coluna.</span></li>
+        <li data-target=".yb-card__media"><span class="anat__texto"><b>Foto</b> — A caixa é reservada antes de a imagem chegar — é o que impede o salto de layout.</span></li>
+        <li data-target=".yb-card__title"><span class="anat__texto"><b>Título</b> — O link mora aqui e cobre o cartão inteiro. Corta na terceira linha, por decisão de sistema.</span></li>
+        <li data-target=".yb-price"><span class="anat__texto"><b>Preço</b> — É outra peça, não parte do cartão: a mesma <code>.yb-price</code> da PDP e da sacola.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -495,8 +495,8 @@
           <li><i class="tokens__cor" style="background:var(--yb-surface-sunken)" aria-hidden="true"></i><code>--yb-surface-sunken</code><span class="tokens__valor">#FAFAFA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
         </ul>
@@ -542,7 +542,7 @@
           <li><code>--yb-transition-surface</code><span class="tokens__valor">180ms cubic-bezier(.2, 0, 0, 1)</span></li>
           <li><code>--yb-transition-control</code><span class="tokens__valor">120ms cubic-bezier(.2, 0, 0, 1)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
           <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
         </ul>
       </div>
@@ -555,14 +555,14 @@
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso">
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
@@ -578,7 +578,7 @@
     </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade">
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
     <ul class="bloco-lede"><li>O nome do produto é o link. O “Add to cart” é um botão separado, com <code>aria-label</code> dizendo de qual produto — numa vitrine de oito cartões, oito botões “Add to cart” idênticos não dizem nada na lista de controles.</li><li>A foto é <code>alt=""</code>: o nome do produto está escrito logo abaixo e o leitor de tela leria duas vezes.</li><li>A nota usa <code>role="img"</code> com <code>aria-label</code> — “4.8 de 5, 128 avaliações”. As cinco estrelas desenhadas são <code>aria-hidden</code>.</li></ul>
   </section>
@@ -622,7 +622,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

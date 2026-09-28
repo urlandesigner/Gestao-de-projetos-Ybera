@@ -44,14 +44,14 @@
   #solo .note{display:none}
 </style>
 </head>
-<body class="ficha" data-nivel="molecules" data-moldura="larga">
+<body class="ficha" data-level="molecules" data-frame="wide">
 <div id="solo"></div>
 <script>
 (function () {
   'use strict';
   var busca = new URLSearchParams(location.search);
   var alvo = busca.get('c');
-  /* UM ESTADO SO. A peca declara estados em divs com data-estado, escondidos
+  /* UM ESTADO SO. A peca declara estados em divs com data-state, escondidos
      na ficha — la eles apareceriam empilhados — e revelados aqui um de cada
      vez. E o que permite por dois lado a lado num viewport de celular, que e
      o unico lugar onde alguns estados existem. */
@@ -82,8 +82,8 @@
     // moldura de quadro — copiá-la aqui abriria um iframe dentro do iframe
     Array.prototype.forEach.call(frag.children, function (n) {
       if (n.matches('h2, p.when, .note, .duo')) return;
-      if (estado && n.matches('[data-estado]') && n.getAttribute('data-estado') !== estado) return;
-      if (estado && !n.matches('[data-estado="' + estado + '"]')) return;
+      if (estado && n.matches('[data-state]') && n.getAttribute('data-state') !== estado) return;
+      if (estado && !n.matches('[data-state="' + estado + '"]')) return;
       var c = n.cloneNode(true);
       c.removeAttribute('hidden');
       caixa.appendChild(c);

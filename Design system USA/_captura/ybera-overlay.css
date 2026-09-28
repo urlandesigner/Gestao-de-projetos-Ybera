@@ -58,8 +58,8 @@ body { color: var(--yb-text-primary); }
 .product-detail__buy-button,
 button[name="add"],
 .shopify-payment-button__button--unbranded {
-  background: var(--yb-action-bg) !important;
-  color: var(--yb-action-text) !important;
+  background: var(--yb-action-primary-bg) !important;
+  color: var(--yb-action-primary-text) !important;
   border: 1px solid transparent !important;
   border-radius: var(--yb-radius-control) !important;
   font-family: var(--yb-font-family-base) !important;
@@ -74,7 +74,7 @@ button[name="add"],
 .checkout-button:hover,
 .product-detail__buy-button:hover,
 button[name="add"]:hover {
-  background: var(--yb-action-bg-hover) !important;
+  background: var(--yb-action-primary-bg-hover) !important;
 }
 
 .newsletter-form__button, .field__button {

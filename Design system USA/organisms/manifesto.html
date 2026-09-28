@@ -25,14 +25,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="organisms" data-moldura="centrada">
+<body class="ficha" data-level="organisms" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -150,7 +150,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,9 +204,13 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
+    <!-- doc:folha A faixa nao monta peca nenhuma de proposito: ela e o unico
+     bloco da home que nao pede nada, e qualquer componente dentro dela — um
+     botao, um selo — desfaria isso. E bloco porque tem lugar e sobrevive
+     sozinha numa tela; o que falta nao e composicao, e vontade de pedir. -->
     <div class="stage">
       <!-- <div> e nao <section> SO aqui: a folha desta pagina tem um `section{}`
            proprio, e um <section> aninhado no demo herdaria o respiro dela. No
@@ -242,7 +246,7 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;!-- &lt;div&gt; e nao &lt;section&gt; SO aqui: a folha desta pagina tem um `section{}`
      proprio, e um &lt;section&gt; aninhado no demo herdaria o respiro dela. No
      prototipo a faixa e &lt;section&gt;, que e o elemento certo. --&gt;
@@ -260,10 +264,33 @@
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia" data-pendente>
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <p class="pendente">Este bloco não compõe nenhuma peça do sistema, então não há o que apontar.
-         O desenho de um bloco é o mapa dos componentes que ele monta.</p>
+    <div class="anat" data-yb-anatomy>
+      <div class="anat__palco">
+        <svg class="anat__fios" aria-hidden="true"></svg>
+        <div class="anat__peca"><!-- <div> e nao <section> SO aqui: a folha desta pagina tem um `section{}`
+     proprio, e um <section> aninhado no demo herdaria o respiro dela. No
+     prototipo a faixa e <section>, que e o elemento certo. -->
+<div class="yb-manifesto">
+  <div class="yb-manifesto__inner">
+    <h2 class="yb-manifesto__title">Born in the salon. Made for every home.</h2>
+    <p class="yb-manifesto__text">Driven by Brazilian heritage and professional expertise,
+    we create transformative hair care that bridges the gap between expert stylist results
+    and daily self-care.</p>
+    <hr class="yb-manifesto__rule">
+    <span class="yb-manifesto__brand">YBERA</span>
+    <p class="yb-manifesto__sub">Professional Paris</p>
+  </div>
+</div></div>
+      </div>
+      <ol class="anat__legenda">
+        <li data-target=".yb-manifesto"><span class="anat__texto"><b>Faixa</b> — Sangra até as bordas, fundo grafite. Texto branco em 16,66:1, sem foto atrás.</span></li>
+        <li data-target=".yb-manifesto__inner"><span class="anat__texto"><b>Prumada</b> — Traz o texto de volta à largura do conteúdo, que a faixa acabou de atravessar.</span></li>
+        <li data-target=".yb-manifesto__title"><span class="anat__texto"><b>Afirmação</b> — Uma frase. É a peça inteira — se precisar de duas, o bloco certo é outro.</span></li>
+        <li data-target=".yb-manifesto__text"><span class="anat__texto"><b>Apoio</b> — Opcional, duas linhas. Sustenta a afirmação sem pedir nada.</span></li>
+      </ol>
+    </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres
          palavras de dentro de casa ("folha", "marcacao", "build"). A aba ao
@@ -287,8 +314,8 @@
         <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>6</span></p>
         <ul class="tokens__lista">
           <li><i class="tokens__cor" style="background:var(--yb-border-inverse-strong)" aria-hidden="true"></i><code>--yb-border-inverse-strong</code><span class="tokens__valor">#6D6D71</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted-inverse)" aria-hidden="true"></i><code>--yb-text-muted-inverse</code><span class="tokens__valor">#B1B1B4</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary-inverse)" aria-hidden="true"></i><code>--yb-text-secondary-inverse</code><span class="tokens__valor">#DADADB</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-muted-inverse)" aria-hidden="true"></i><code>--yb-text-muted-inverse</code><span class="tokens__valor">#B1B1B4</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
@@ -327,23 +354,32 @@
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso" data-pendente>
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
-    <p class="pendente">Faça / não faça ainda não escrito para este bloco.
-      O bloco aparece vazio de propósito: seção que some da ficha é uma pergunta
-      que ninguém sabe que ficou sem resposta.</p>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><div class="yb-manifesto"><div class="yb-manifesto__inner"><h2 class="yb-manifesto__title">Born in the salon. Made for every day.</h2></div></div></div>
+        <p class="fn-legenda">Afirmação curta, com título de seção.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><div class="yb-manifesto"><div class="yb-manifesto__inner"><h2 class="yb-manifesto__title">Born in the salon.</h2><a class="yb-btn yb-btn--primary" href="#demos">Shop now</a></div></div></div>
+        <p class="fn-legenda">Faixa com botão: vira promessa de ação no único bloco que existe para não pedir nada — e o olho procura o que clicar em vez de ler.</p>
+      </div>
+    </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade" data-pendente>
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <p class="pendente">Acessibilidade ainda não escrita para este bloco.</p>
+    <ul class="bloco-lede"><li>É <code>&lt;section&gt;</code> com título de verdade: a faixa não pede nada, mas continua sendo uma seção da página e entra na lista de cabeçalhos.</li><li>Texto branco sobre grafite, medido em 16,66:1. A faixa não tem foto atrás — o contraste não depende de véu.</li><li>Não leva link nem botão. Se precisar de um, o bloco certo é o Split, que foi feito para pedir alguma coisa.</li></ul>
   </section>
   </div>
 
@@ -385,7 +421,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

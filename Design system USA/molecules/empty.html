@@ -24,14 +24,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="molecules" data-moldura="centrada">
+<body class="ficha" data-level="molecules" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -149,7 +149,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,16 +204,16 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <h3 class="row-label">Variant sem modificador · respiro 40px</h3>
     <div class="demo demo--stack">
       <div class="yb-empty">
-        <span class="yb-empty__icone"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></span>
+        <span class="yb-empty__icon"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></span>
         <p class="yb-empty__title">No results for “keratine”</p>
         <p class="yb-empty__text">Check the spelling, or browse the treatments — the shelf is smaller than the search box suggests.</p>
-        <div class="yb-empty__acoes">
+        <div class="yb-empty__actions">
           <a class="yb-btn yb-btn--primary" href="#demos">Browse treatments</a>
           <a class="yb-btn yb-btn--secondary" href="#demos">Talk to us</a>
         </div>
@@ -222,10 +222,10 @@
     <h3 class="row-label">Variant <code>--inline</code> · respiro 32px</h3>
     <div class="demo demo--stack">
       <div class="yb-empty yb-empty--inline">
-        <span class="yb-empty__icone"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-star"/></svg></span>
+        <span class="yb-empty__icon"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-star"/></svg></span>
         <p class="yb-empty__title">No 3-star reviews yet</p>
         <p class="yb-empty__text">Every review this product has so far is a five.</p>
-        <div class="yb-empty__acoes">
+        <div class="yb-empty__actions">
           <button class="yb-btn yb-btn--secondary" type="button">Show all reviews</button>
         </div>
       </div>
@@ -250,18 +250,18 @@
     <div class="split">
       <div class="stage">
         <div class="yb-empty">
-          <span class="yb-empty__icone" aria-hidden="true"><svg class="yb-icon"><use href="../icons/ybera-icons.svg#yb-cart"/></svg></span>
+          <span class="yb-empty__icon" aria-hidden="true"><svg class="yb-icon"><use href="../icons/ybera-icons.svg#yb-cart"/></svg></span>
           <h3 class="yb-empty__title">Your cart is empty</h3>
           <p class="yb-empty__text">Take the 60-second hair quiz and we'll recommend the treatment for your hair type.</p>
-          <div class="yb-empty__acoes"><button class="yb-btn yb-btn--primary" type="button">Take the quiz</button></div>
+          <div class="yb-empty__actions"><button class="yb-btn yb-btn--primary" type="button">Take the quiz</button></div>
         </div>
       </div>
       <div class="stage">
         <div class="yb-empty">
-          <span class="yb-empty__icone" aria-hidden="true"><svg class="yb-icon"><use href="../icons/ybera-icons.svg#yb-search"/></svg></span>
+          <span class="yb-empty__icon" aria-hidden="true"><svg class="yb-icon"><use href="../icons/ybera-icons.svg#yb-search"/></svg></span>
           <h3 class="yb-empty__title">No results for "keratine"</h3>
           <p class="yb-empty__text">Did you mean <b>keratin</b>? You can also browse all treatments.</p>
-          <div class="yb-empty__acoes"><button class="yb-btn yb-btn--ghost" type="button">Browse treatments</button></div>
+          <div class="yb-empty__actions"><button class="yb-btn yb-btn--ghost" type="button">Browse treatments</button></div>
         </div>
       </div>
     </div>
@@ -281,12 +281,12 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;div class="yb-empty"&gt;
-  &lt;span class="yb-empty__icone"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;&lt;/span&gt;
+  &lt;span class="yb-empty__icon"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;&lt;/span&gt;
   &lt;p class="yb-empty__title"&gt;No results for “keratine”&lt;/p&gt;
   &lt;p class="yb-empty__text"&gt;Check the spelling, or browse the treatments — the shelf is smaller than the search box suggests.&lt;/p&gt;
-  &lt;div class="yb-empty__acoes"&gt;
+  &lt;div class="yb-empty__actions"&gt;
     &lt;a class="yb-btn yb-btn--primary" href="#demos"&gt;Browse treatments&lt;/a&gt;
     &lt;a class="yb-btn yb-btn--secondary" href="#demos"&gt;Talk to us&lt;/a&gt;
   &lt;/div&gt;
@@ -294,27 +294,27 @@
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca" style="max-inline-size:420px"><div class="yb-empty">
-  <span class="yb-empty__icone"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></span>
+  <span class="yb-empty__icon"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></span>
   <p class="yb-empty__title">No results for “keratine”</p>
   <p class="yb-empty__text">Check the spelling, or browse the treatments — the shelf is smaller than the search box suggests.</p>
-  <div class="yb-empty__acoes">
+  <div class="yb-empty__actions">
     <a class="yb-btn yb-btn--primary" href="#anat-demos">Browse treatments</a>
     <a class="yb-btn yb-btn--secondary" href="#anat-demos">Talk to us</a>
   </div>
 </div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-empty"><span class="anat__texto"><b>Container</b> — Ocupa o lugar do que não veio. Estado vazio que só diz “sem resultados” é beco.</span></li>
-        <li data-alvo=".yb-empty__icone"><span class="anat__texto"><b>Ícone</b> — Decorativo. Dá tom à mensagem, não a substitui.</span></li>
-        <li data-alvo=".yb-empty__title"><span class="anat__texto"><b>Título</b> — Diz o que aconteceu, com o termo que a pessoa digitou dentro.</span></li>
-        <li data-alvo=".yb-empty__text"><span class="anat__texto"><b>Texto</b> — Diz o próximo passo. É esta linha que tira a pessoa do beco.</span></li>
-        <li data-alvo=".yb-empty__acoes"><span class="anat__texto"><b>Ações</b> — A saída em botão. Uma principal; a segunda, se houver, é discreta.</span></li>
+        <li data-target=".yb-empty"><span class="anat__texto"><b>Container</b> — Ocupa o lugar do que não veio. Estado vazio que só diz “sem resultados” é beco.</span></li>
+        <li data-target=".yb-empty__icon"><span class="anat__texto"><b>Ícone</b> — Decorativo. Dá tom à mensagem, não a substitui.</span></li>
+        <li data-target=".yb-empty__title"><span class="anat__texto"><b>Título</b> — Diz o que aconteceu, com o termo que a pessoa digitou dentro.</span></li>
+        <li data-target=".yb-empty__text"><span class="anat__texto"><b>Texto</b> — Diz o próximo passo. É esta linha que tira a pessoa do beco.</span></li>
+        <li data-target=".yb-empty__actions"><span class="anat__texto"><b>Ações</b> — A saída em botão. Uma principal; a segunda, se houver, é discreta.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -333,7 +333,7 @@
     <p class="usa-degrau">Átomos</p>
     <ul class="usa"><li><a href="../atoms/button.html">Button</a></li></ul>
     <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-empty--inline</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-empty__acoes</code> <code>.yb-empty__icone</code> <code>.yb-empty__text</code> <code>.yb-empty__title</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-empty__actions</code> <code>.yb-empty__icon</code> <code>.yb-empty__text</code> <code>.yb-empty__title</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo">Nenhum. A peça não muda por interação.</span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
     <p class="rotulo">Tokens <span class="rotulo-conta">13</span></p>
@@ -342,8 +342,8 @@
         <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>4</span></p>
         <ul class="tokens__lista">
           <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
         </ul>
       </div>
@@ -374,19 +374,19 @@
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso">
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
         <p class="fn-cabeca">✓ Faça</p>
-        <div class="fn-palco"><div class="yb-empty yb-empty--inline" style="inline-size:100%"><span class="yb-empty__icone"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></span><p class="yb-empty__title">No results for “keratine”</p><p class="yb-empty__text">Check the spelling, or browse the treatments.</p><div class="yb-empty__acoes"><a class="yb-btn yb-btn--primary" href="#faca">Browse treatments</a></div></div></div>
+        <div class="fn-palco"><div class="yb-empty yb-empty--inline" style="inline-size:100%"><span class="yb-empty__icon"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></span><p class="yb-empty__title">No results for “keratine”</p><p class="yb-empty__text">Check the spelling, or browse the treatments.</p><div class="yb-empty__actions"><a class="yb-btn yb-btn--primary" href="#faca">Browse treatments</a></div></div></div>
         <p class="fn-legenda">Diz o que aconteceu e oferece a saída.</p>
       </div>
       <div class="fn-caso fn-caso--nao">
@@ -397,7 +397,7 @@
     </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade">
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
     <ul class="bloco-lede"><li>O ícone é <code>aria-hidden="true"</code>: ele ilustra a ausência, não a explica.</li><li>O título entra no nível de heading do contexto em que o bloco mora — dentro de uma seção com <code>h2</code>, ele é <code>h3</code>. Vazio não é motivo para quebrar a hierarquia da página.</li><li>A ação é obrigatória. Ausência sem próximo passo é beco: a pessoa chegou onde não há nada e a página não diz para onde ir.</li></ul>
   </section>
@@ -441,7 +441,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

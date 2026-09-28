@@ -24,14 +24,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="molecules" data-moldura="centrada">
+<body class="ficha" data-level="molecules" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -149,7 +149,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,24 +204,24 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <h3 class="row-label">Variant <code>--success</code></h3>
     <div class="demo demo--stack">
-      <div class="yb-alert yb-alert--success" role="status"><svg class="yb-icon yb-alert__icone" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg><div class="yb-alert__corpo"><b class="yb-alert__title">Order confirmed</b><p>We sent the tracking number to you@example.com.</p></div><button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss order confirmed"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div>
+      <div class="yb-alert yb-alert--success" role="status"><svg class="yb-icon yb-alert__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg><div class="yb-alert__body"><b class="yb-alert__title">Order confirmed</b><p>We sent the tracking number to you@example.com.</p></div><button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss order confirmed"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div>
     </div>
     <h3 class="row-label">Variant <code>--warning</code></h3>
     <div class="demo demo--stack">
-      <div class="yb-alert yb-alert--warning" role="status"><svg class="yb-icon yb-alert__icone" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-alert"/></svg><div class="yb-alert__corpo"><b class="yb-alert__title">Only 3 left</b><p>This size is running low.</p></div><button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss only 3 left"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div>
+      <div class="yb-alert yb-alert--warning" role="status"><svg class="yb-icon yb-alert__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-alert"/></svg><div class="yb-alert__body"><b class="yb-alert__title">Only 3 left</b><p>This size is running low.</p></div><button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss only 3 left"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div>
     </div>
     <h3 class="row-label">Variant <code>--danger</code></h3>
     <div class="demo demo--stack">
-      <div class="yb-alert yb-alert--danger" role="alert"><svg class="yb-icon yb-alert__icone" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg><div class="yb-alert__corpo"><b class="yb-alert__title">Payment declined</b><p>Your bank rejected the charge. Try another card or contact your bank.</p></div><button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss payment declined"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div>
+      <div class="yb-alert yb-alert--danger" role="alert"><svg class="yb-icon yb-alert__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg><div class="yb-alert__body"><b class="yb-alert__title">Payment declined</b><p>Your bank rejected the charge. Try another card or contact your bank.</p></div><button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss payment declined"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div>
     </div>
     <h3 class="row-label">Variant <code>--info</code></h3>
     <div class="demo demo--stack">
-      <div class="yb-alert yb-alert--info" role="status"><svg class="yb-icon yb-alert__icone" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-info"/></svg><div class="yb-alert__corpo"><b class="yb-alert__title">Free shipping</b><p>Add $12.10 more to qualify for free standard shipping.</p></div><button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss free shipping"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div>
+      <div class="yb-alert yb-alert--info" role="status"><svg class="yb-icon yb-alert__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-info"/></svg><div class="yb-alert__body"><b class="yb-alert__title">Free shipping</b><p>Add $12.10 more to qualify for free standard shipping.</p></div><button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss free shipping"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div>
     </div>
     <div class="note">
       <b>Um ícone por variante, e não um para todas</b>
@@ -257,24 +257,24 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
-      <pre><code>&lt;div class="yb-alert yb-alert--success" role="status"&gt;&lt;svg class="yb-icon yb-alert__icone" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;&lt;div class="yb-alert__corpo"&gt;&lt;b class="yb-alert__title"&gt;Order confirmed&lt;/b&gt;&lt;p&gt;We sent the tracking number to you@example.com.&lt;/p&gt;&lt;/div&gt;&lt;button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss order confirmed"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;&lt;/button&gt;&lt;/div&gt;</code></pre>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+      <pre><code>&lt;div class="yb-alert yb-alert--success" role="status"&gt;&lt;svg class="yb-icon yb-alert__icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;&lt;div class="yb-alert__body"&gt;&lt;b class="yb-alert__title"&gt;Order confirmed&lt;/b&gt;&lt;p&gt;We sent the tracking number to you@example.com.&lt;/p&gt;&lt;/div&gt;&lt;button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss order confirmed"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;&lt;/button&gt;&lt;/div&gt;</code></pre>
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
-        <div class="anat__peca"><div class="yb-alert yb-alert--success" role="status"><svg class="yb-icon yb-alert__icone" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg><div class="yb-alert__corpo"><b class="yb-alert__title">Order confirmed</b><p>We sent the tracking number to you@example.com.</p></div><button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss order confirmed"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div></div>
+        <div class="anat__peca"><div class="yb-alert yb-alert--success" role="status"><svg class="yb-icon yb-alert__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg><div class="yb-alert__body"><b class="yb-alert__title">Order confirmed</b><p>We sent the tracking number to you@example.com.</p></div><button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss order confirmed"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-alert"><span class="anat__texto"><b>Container</b> — Leva a variante, que dá a cor, e o <code>role</code> — <code>status</code> para confirmação, <code>alert</code> para erro.</span></li>
-        <li data-alvo=".yb-alert__icone"><span class="anat__texto"><b>Ícone</b> — Decorativo. Repete em desenho o que a cor e o texto já dizem; nunca é a única pista.</span></li>
-        <li data-alvo=".yb-alert__corpo"><span class="anat__texto"><b>Corpo</b> — Título e descrição. A descrição é opcional; o título não.</span></li>
-        <li data-alvo=".yb-alert__title"><span class="anat__texto"><b>Título</b> — Uma linha, no passado: diz o que aconteceu, não o que o sistema fez.</span></li>
-        <li data-alvo=".yb-alert__close"><span class="anat__texto"><b>Fechar</b> — Opcional. Precisa de <code>aria-label</code> próprio — “Dispensar” sozinho não diz o quê.</span></li>
+        <li data-target=".yb-alert"><span class="anat__texto"><b>Container</b> — Leva a variante, que dá a cor, e o <code>role</code> — <code>status</code> para confirmação, <code>alert</code> para erro.</span></li>
+        <li data-target=".yb-alert__icon"><span class="anat__texto"><b>Ícone</b> — Decorativo. Repete em desenho o que a cor e o texto já dizem; nunca é a única pista.</span></li>
+        <li data-target=".yb-alert__body"><span class="anat__texto"><b>Corpo</b> — Título e descrição. A descrição é opcional; o título não.</span></li>
+        <li data-target=".yb-alert__title"><span class="anat__texto"><b>Título</b> — Uma linha, no passado: diz o que aconteceu, não o que o sistema fez.</span></li>
+        <li data-target=".yb-alert__close"><span class="anat__texto"><b>Fechar</b> — Opcional. Precisa de <code>aria-label</code> próprio — “Dispensar” sozinho não diz o quê.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -289,12 +289,14 @@
     resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
     estiver errado aqui, o errado é o código.</p>
 
-    <p class="api-linha"><span class="api-linha__rotulo">De que é feita</span><span class="api-linha__corpo">Nenhuma: não consome nenhum outro componente. O que ela desenha sai todo da folha dela.</span></p>
+    <p class="rotulo">De que é feita</p>
+    <p class="usa-degrau">Átomos</p>
+    <ul class="usa"><li><a href="../atoms/iconbtn.html">Icon button</a></li></ul>
     <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-alert--danger</code> <code>.yb-alert--info</code> <code>.yb-alert--success</code> <code>.yb-alert--warning</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-alert__close</code> <code>.yb-alert__corpo</code> <code>.yb-alert__icone</code> <code>.yb-alert__title</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-alert__body</code> <code>.yb-alert__close</code> <code>.yb-alert__icon</code> <code>.yb-alert__title</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
-    <p class="rotulo">Tokens <span class="rotulo-conta">29</span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">28</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>14</span></p>
@@ -325,11 +327,10 @@
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>5</span></p>
+        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>4</span></p>
         <ul class="tokens__lista">
           <li><code>--yb-space-1</code><span class="tokens__valor">0.25rem</span></li>
           <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
-          <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
           <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>
           <li><code>--yb-space-3</code><span class="tokens__valor">0.75rem</span></li>
         </ul>
@@ -346,37 +347,37 @@
         <ul class="tokens__lista">
           <li><code>--yb-transition-control</code><span class="tokens__valor">120ms cubic-bezier(.2, 0, 0, 1)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
           <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso">
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
         <p class="fn-cabeca">✓ Faça</p>
-        <div class="fn-palco"><div class="yb-alert yb-alert--danger" role="alert" style="inline-size:100%"><svg class="yb-icon yb-alert__icone" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg><div class="yb-alert__corpo"><b class="yb-alert__title">Payment declined</b><p>Your bank rejected the charge. Try another card.</p></div><button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss payment declined"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div></div>
+        <div class="fn-palco"><div class="yb-alert yb-alert--danger" role="alert" style="inline-size:100%"><svg class="yb-icon yb-alert__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg><div class="yb-alert__body"><b class="yb-alert__title">Payment declined</b><p>Your bank rejected the charge. Try another card.</p></div><button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss payment declined"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div></div>
         <p class="fn-legenda">Um alerta, com o papel certo para o que ele é.</p>
       </div>
       <div class="fn-caso fn-caso--nao">
         <p class="fn-cabeca">✕ Não faça</p>
-        <div class="fn-palco"><div style="inline-size:100%;display:flex;flex-direction:column;gap:8px"><div class="yb-alert yb-alert--info" role="alert"><svg class="yb-icon yb-alert__icone" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-info"/></svg><div class="yb-alert__corpo"><b class="yb-alert__title">Free shipping</b><p>Add $12 more.</p></div><button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss free shipping"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div><div class="yb-alert yb-alert--warning" role="alert"><svg class="yb-icon yb-alert__icone" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-alert"/></svg><div class="yb-alert__corpo"><b class="yb-alert__title">Only 3 left</b><p>Running low.</p></div><button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss only 3 left"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div><div class="yb-alert yb-alert--danger" role="alert"><svg class="yb-icon yb-alert__icone" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg><div class="yb-alert__corpo"><b class="yb-alert__title">Payment declined</b><p>Try another card.</p></div><button class="yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss payment declined"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div></div></div>
+        <div class="fn-palco"><div style="inline-size:100%;display:flex;flex-direction:column;gap:8px"><div class="yb-alert yb-alert--info" role="alert"><svg class="yb-icon yb-alert__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-info"/></svg><div class="yb-alert__body"><b class="yb-alert__title">Free shipping</b><p>Add $12 more.</p></div><button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss free shipping"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div><div class="yb-alert yb-alert--warning" role="alert"><svg class="yb-icon yb-alert__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-alert"/></svg><div class="yb-alert__body"><b class="yb-alert__title">Only 3 left</b><p>Running low.</p></div><button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss only 3 left"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div><div class="yb-alert yb-alert--danger" role="alert"><svg class="yb-icon yb-alert__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg><div class="yb-alert__body"><b class="yb-alert__title">Payment declined</b><p>Try another card.</p></div><button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss payment declined"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div></div></div>
         <p class="fn-legenda">Três empilhados é garantir que nenhum seja lido — e três <code>role="alert"</code> transformam o leitor de tela em ruído.</p>
       </div>
     </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade">
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
     <ul class="bloco-lede"><li><code>role="alert"</code> interrompe o leitor de tela na hora e é só para o que precisa interromper — erro que impede a compra. Todo o resto usa <code>role="status"</code>, que espera a pausa.</li><li>A cor não é o único sinal: cada alerta carrega título escrito. Um retângulo vermelho sem palavra não existe para quem não distingue vermelho de verde.</li><li>Não é focável e não deve ser: alerta que rouba o foco tira a pessoa de onde ela estava digitando.</li></ul>
   </section>
@@ -420,7 +421,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

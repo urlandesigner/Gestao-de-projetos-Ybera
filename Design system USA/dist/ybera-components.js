@@ -15,7 +15,7 @@
      <button data-yb-fav aria-pressed="false" data-label-off="…" data-label-on="…">
      <button class="yb-switch" role="switch" aria-checked="false" data-yb-switch>
      <aside class="yb-partner" data-yb-partner>  +  <button class="yb-partner__avatar">
-     <button data-yb-toast data-toast-titulo="Saved for later">
+     <button data-yb-toast data-toast-title="Saved for later">
      <div class="yb-track__nav" data-yb-track-nav="<id do trilho>" hidden>
      <div class="yb-buybar" data-yb-buybar hidden>  +  <button data-yb-buybar-anchor>
 
@@ -68,7 +68,8 @@
     if (!(e.target instanceof Element)) return;
     var d = e.target.closest('[data-yb-dispensar]');
     if (!d) return;
-    var alerta = d.closest('.yb-alert');
+    // o alerta se acha pelo papel que ele anuncia, e nao pela classe de estilo
+    var alerta = d.closest('[role="alert"], [role="status"]');
     if (alerta) alerta.remove();
   });
 
@@ -142,7 +143,7 @@
     }
 
     var x = document.createElement('button');
-    x.className = 'yb-toast__close';
+    x.className = 'yb-iconbtn yb-iconbtn--square yb-toast__close';
     x.type = 'button';
     x.setAttribute('aria-label', opts.closeLabel || 'Dismiss');
     x.textContent = '×';
@@ -283,14 +284,14 @@
     var naMao = false;
 
     function pintar(recolhido) {
-      if (recolhido) alvo.setAttribute('data-recolhido', '');
-      else alvo.removeAttribute('data-recolhido');
+      if (recolhido) alvo.setAttribute('data-collapsed', '');
+      else alvo.removeAttribute('data-collapsed');
       if (botao) botao.setAttribute('aria-expanded', String(!recolhido));
     }
 
     if (botao) botao.addEventListener('click', function () {
       naMao = true;
-      pintar(!alvo.hasAttribute('data-recolhido') );
+      pintar(!alvo.hasAttribute('data-collapsed') );
     });
 
     window.addEventListener('scroll', function () {
@@ -341,7 +342,7 @@
      rolavel na mao — o que se perde e o atalho, nao a funcao.
      --------------------------------------------------------------------- */
   (function () {
-    var tiras = document.querySelectorAll('.yb-pagination ol');
+    var tiras = document.querySelectorAll('[data-yb-pagination] ol');
     for (var i = 0; i < tiras.length; i++) {
       var ol = tiras[i];
       var atual = ol.querySelector('[aria-current="page"]');
@@ -520,14 +521,14 @@
   /* ---------------------------------------------------------------------
      VARIANTE — a escolha muda a PAGINA, nao so o rotulo
 
-       <div data-yb-variante>
-         <input type="radio" data-preco="$59.90" data-foto="1" [data-yb-esgotado]>
-       <b data-yb-variante-eco>          o eco "Size: 500g"
-       [data-yb-preco]                   preco do bloco de compra E da barra
-       [data-yb-selo]                    In stock / Sold out
-       [data-yb-comprar]                 o botao, com data-rotulo
-       [data-yb-avisar]                  o campo de aviso de volta
-       [data-yb-barra-comprar] / [data-yb-barra-avisar]
+       <div data-yb-variant>
+         <input type="radio" data-price="$59.90" data-photo="1" [data-yb-soldout]>
+       <b data-yb-variant-echo>          o eco "Size: 500g"
+       [data-yb-price]                   preco do bloco de compra E da barra
+       [data-yb-seal]                    In stock / Sold out
+       [data-yb-buy]                 o botao, com data-label
+       [data-yb-notify]                  o campo de aviso de volta
+       [data-yb-bar-buy] / [data-yb-bar-notify]
 
      Antes daqui, o script so mantinha o eco em dia: trocar de tamanho
      mudava a palavra ao lado de "Size:" e mais nada. O preco do topo ficava
@@ -542,60 +543,72 @@
        aqui dentro. Duas listas do mesmo fato divergem no primeiro dia.
      --------------------------------------------------------------------- */
   function trocarVariante(entrada) {
-    var grupo = entrada.closest('[data-yb-variante]');
+    var grupo = entrada.closest('[data-yb-variant]');
     if (!grupo) return;
-    var rotulo = grupo.parentElement.querySelector('[data-yb-variante-eco]');
+    var rotulo = grupo.parentElement.querySelector('[data-yb-variant-echo]');
     var nome = document.querySelector('label[for="' + entrada.id + '"] .yb-swatches__name');
     if (rotulo && nome) rotulo.textContent = nome.textContent.trim();
 
-    var preco = entrada.getAttribute('data-preco');
-    // Presenca, nao valor: `data-yb-esgotado` no radio e o mesmo gancho que a
+    var preco = entrada.getAttribute('data-price');
+    // Presenca, nao valor: `data-yb-soldout` no radio e o mesmo gancho que a
     // folha usa para riscar o cartao. Um fato, um atributo.
-    var tem = !entrada.hasAttribute('data-yb-esgotado');
+    var tem = !entrada.hasAttribute('data-yb-soldout');
 
     if (preco) {
-      [].forEach.call(document.querySelectorAll('[data-yb-preco]'), function (el) {
+      [].forEach.call(document.querySelectorAll('[data-yb-price]'), function (el) {
         el.textContent = preco;
       });
     }
 
-    var selo = document.querySelector('[data-yb-selo]');
+    // O frete segue o preco da variante: selo "Free shipping" acima da meta,
+    // a linha com a regra abaixo dela. Os dois somem no esgotado, que nao vai
+    // chegar a lugar nenhum.
+    var frete = document.querySelector('[data-yb-ship]');
+    var seloFrete = document.querySelector('[data-yb-ship-badge]');
+    var valor = parseFloat(String(preco || '').replace(/[^\d.]/g, ''));
+    if (frete && !isNaN(valor)) {
+      var livre = valor >= (parseFloat(frete.getAttribute('data-yb-ship-min')) || 0);
+      frete.hidden = !tem || livre;
+      if (seloFrete) seloFrete.hidden = !tem || !livre;
+    }
+
+    var selo = document.querySelector('[data-yb-seal]');
     if (selo) {
       selo.textContent = tem ? 'In stock' : 'Sold out';
       selo.classList.toggle('yb-badge--success', tem);
       selo.classList.toggle('yb-badge--danger', !tem);
     }
 
-    // `[data-rotulo]` desempata: os DOIS botoes de comprar carregam
-    // `data-yb-comprar` (a acao e a mesma), mas so o da pagina tem rotulo com
+    // `[data-label]` desempata: os DOIS botoes de comprar carregam
+    // `data-yb-buy` (a acao e a mesma), mas so o da pagina tem rotulo com
     // preco dentro. O da barra fixa diz so "Add to cart" — o preco dele mora
-    // no `[data-yb-preco]` ao lado, que o laco acima ja atualizou.
-    var botao = document.querySelector('[data-yb-comprar][data-rotulo]');
+    // no `[data-yb-price]` ao lado, que o laco acima ja atualizou.
+    var botao = document.querySelector('[data-yb-buy][data-label]');
     if (botao) {
       botao.disabled = !tem;
       // Os dois rotulos vem do HTML: string de interface escrita aqui dentro
       // e string que ninguem encontra no dia de traduzir a loja.
       botao.textContent = tem
-        ? (botao.getAttribute('data-rotulo') || '') + (preco || '')
-        : (botao.getAttribute('data-rotulo-esgotado') || '');
+        ? (botao.getAttribute('data-label') || '') + (preco || '')
+        : (botao.getAttribute('data-label-soldout') || '');
     }
 
     // Quantidade some quando nao ha o que contar; o aviso de volta ocupa o
     // lugar da acao.
-    var zona = grupo.closest('[data-yb-compra]') || document;
+    var zona = grupo.closest('[data-yb-purchase]') || document;
     var passo = zona.querySelector('[data-yb-stepper]');
     if (passo) passo.hidden = !tem;
-    var avisar = document.querySelector('[data-yb-avisar]');
+    var avisar = document.querySelector('[data-yb-notify]');
     if (avisar) avisar.hidden = tem;
-    var bComprar = document.querySelector('[data-yb-barra-comprar]');
+    var bComprar = document.querySelector('[data-yb-bar-buy]');
     if (bComprar) bComprar.hidden = !tem;
-    var bAvisar = document.querySelector('[data-yb-barra-avisar]');
+    var bAvisar = document.querySelector('[data-yb-bar-notify]');
     if (bAvisar) bAvisar.hidden = tem;
 
     // A galeria acompanha: escolher 1kg e continuar vendo o pote de 250g e a
     // mentira mais silenciosa das tres. Reaproveita o radio das miniaturas,
     // que ja e o mecanismo de troca de slide — nada de segundo caminho.
-    var foto = entrada.getAttribute('data-foto');
+    var foto = entrada.getAttribute('data-photo');
     if (foto !== null) {
       var mini = document.getElementById('g' + foto);
       if (mini && !mini.checked) {
@@ -611,21 +624,21 @@
     // escolha de combo.
     if (window.history && history.replaceState) {
       var u = new URL(window.location.href);
-      u.searchParams.set('variant', entrada.id.replace(/^tam/, ''));
+      u.searchParams.set('variant', entrada.id.replace(/^size/, ''));
       history.replaceState(null, '', u);
     }
   }
 
   document.addEventListener('change', function (e) {
-    if (e.target.matches && e.target.matches('[data-yb-variante] input')) trocarVariante(e.target);
+    if (e.target.matches && e.target.matches('[data-yb-variant] input')) trocarVariante(e.target);
   });
 
   // Abertura com ?variant=N: o link precisa abrir no tamanho que ele promete.
   (function () {
     var n = new URLSearchParams(window.location.search).get('variant');
     if (n === null) return;
-    var entrada = document.getElementById('tam' + n);
-    if (!entrada || !entrada.matches('[data-yb-variante] input')) return;
+    var entrada = document.getElementById('size' + n);
+    if (!entrada || !entrada.matches('[data-yb-variant] input')) return;
     entrada.checked = true;
     trocarVariante(entrada);
   })();
@@ -633,10 +646,10 @@
   /* ---------------------------------------------------------------------
      COMPRAR — a acao tem duracao, e duracao precisa de forma
 
-       <button data-yb-comprar
-               data-toast-titulo="Added to cart" data-toast-texto="Deep care kit">
-       <div data-yb-compra>            a zona, para achar a quantidade
-       <button ... data-yb-falhar>     so na doc: prova o caminho do erro
+       <button data-yb-buy
+               data-toast-title="Added to cart" data-toast-text="Deep care kit">
+       <div data-yb-purchase>            a zona, para achar a quantidade
+       <button ... data-yb-fail>     so na doc: prova o caminho do erro
 
      Era um `onclick` inline que abria o toast de sucesso no mesmo quadro do
      clique. Isso descreve uma loja onde adicionar ao carrinho e instantaneo e
@@ -653,20 +666,20 @@
      provar que existe um estado entre o clique e a resposta. O que ela nao faz
      e simular FALHA sozinha — protótipo que falha por sorteio ensina errado.
      O caminho do erro se prova onde estado se prova, na doc, por um botao que
-     declara `data-yb-falhar`.
+     declara `data-yb-fail`.
      --------------------------------------------------------------------- */
   var ESPERA_COMPRA = 700;   // ms
 
   document.addEventListener('click', function (e) {
     if (!(e.target instanceof Element)) return;
-    var b = e.target.closest('[data-yb-comprar]');
+    var b = e.target.closest('[data-yb-buy]');
     if (!b || b.disabled || b.getAttribute('aria-busy') === 'true') return;
 
-    var zona = b.closest('[data-yb-compra]');
+    var zona = b.closest('[data-yb-purchase]');
     var campo = zona && zona.querySelector('[data-yb-stepper] input');
     var qtd = campo ? Math.max(1, +campo.value || 1) : 1;
-    var nome = b.getAttribute('data-toast-texto') || '';
-    var falha = b.hasAttribute('data-yb-falhar');
+    var nome = b.getAttribute('data-toast-text') || '';
+    var falha = b.hasAttribute('data-yb-fail');
 
     b.classList.add('yb-btn--loading');
     b.setAttribute('aria-busy', 'true');
@@ -676,14 +689,14 @@
       b.removeAttribute('aria-busy');
       if (falha) {
         toast({
-          title: b.getAttribute('data-toast-erro') || '',
-          text: b.getAttribute('data-toast-erro-texto') || '',
+          title: b.getAttribute('data-toast-error') || '',
+          text: b.getAttribute('data-toast-error-text') || '',
           variant: 'danger'
         });
         return;
       }
       toast({
-        title: b.getAttribute('data-toast-titulo') || '',
+        title: b.getAttribute('data-toast-title') || '',
         // A quantidade estava sumindo: somar tres e receber "Added to cart"
         // sem numero deixa a pessoa sem saber se somou tres ou um.
         text: (qtd > 1 ? qtd + ' × ' : '') + nome,
@@ -695,27 +708,27 @@
   /* ---------------------------------------------------------------------
      TOAST POR ATRIBUTO — para quem so precisa dizer uma coisa
 
-       <button data-yb-toast data-toast-titulo="Saved for later"
-               data-toast-texto="Find it in your wishlist"
-               data-toast-variante="success" data-toast-duracao="0">
+       <button data-yb-toast data-toast-title="Saved for later"
+               data-toast-text="Find it in your wishlist"
+               data-toast-variant="success" data-toast-duration="0">
 
-     O `data-yb-comprar` ao lado faz mais: espera, estado de carga e so entao
+     O `data-yb-buy` ao lado faz mais: espera, estado de carga e so entao
      o toast. Quem so quer o recado — a doc, um botao de tema que ja resolveu
      sozinho — chamava `onclick="Ybera.toast({...})"`, que e comportamento
      escrito na marcacao e nao aparece em nenhuma busca por `data-yb-`.
 
-     `data-toast-duracao="0"` mantem o toast ate alguem fechar; sem o
+     `data-toast-duration="0"` mantem o toast ate alguem fechar; sem o
      atributo vale o padrao de 5s.
      --------------------------------------------------------------------- */
   document.addEventListener('click', function (e) {
     if (!(e.target instanceof Element)) return;
     var b = e.target.closest('[data-yb-toast]');
     if (!b) return;
-    var prazo = b.getAttribute('data-toast-duracao');
+    var prazo = b.getAttribute('data-toast-duration');
     toast({
-      title: b.getAttribute('data-toast-titulo') || '',
-      text: b.getAttribute('data-toast-texto') || '',
-      variant: b.getAttribute('data-toast-variante') || '',
+      title: b.getAttribute('data-toast-title') || '',
+      text: b.getAttribute('data-toast-text') || '',
+      variant: b.getAttribute('data-toast-variant') || '',
       duration: prazo === null ? undefined : +prazo
     });
   });
@@ -723,7 +736,7 @@
   /* ---------------------------------------------------------------------
      COMPARTILHAR — a folha nativa quando existe, copiar quando nao
 
-       <button data-yb-share data-copiado="Link copied" data-erro="…">
+       <button data-yb-share data-copied="Link copied" data-error="…">
 
      No celular `navigator.share` abre a folha do sistema, que e onde a pessoa
      ja sabe mandar para o WhatsApp. No desktop ela quase nunca existe: ali o
@@ -743,11 +756,11 @@
     var copiar = function () {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(location.href)
-          .then(function () { aviso('data-copiado', 'success'); })
-          .catch(function () { aviso('data-erro', 'danger'); });
+          .then(function () { aviso('data-copied', 'success'); })
+          .catch(function () { aviso('data-error', 'danger'); });
         return;
       }
-      aviso('data-erro', 'danger');
+      aviso('data-error', 'danger');
     };
     if (navigator.share) {
       navigator.share({ title: document.title, url: location.href }).catch(function (err) {
@@ -762,10 +775,10 @@
   /* ---------------------------------------------------------------------
      FILTRO DE AVALIACOES
 
-       <div data-yb-review-filtro>   grupo de radio com value="all|5|4|3|2|1"
-       <article class="yb-review" data-nota="5">
-       <div data-yb-review-vazio hidden>  + [data-yb-review-vazio-titulo]
-       <button data-yb-review-limpar>
+       <div data-yb-review-filter>   grupo de radio com value="all|5|4|3|2|1"
+       <article class="yb-review" data-rating="5">
+       <div data-yb-review-empty hidden>  + [data-yb-review-empty-title]
+       <button data-yb-review-clear>
 
      Esconde o que nao bate e mostra o estado vazio quando nada sobra. O estado
      vazio nao e enfeite defensivo: com as avaliacoes que a loja tem hoje,
@@ -777,11 +790,11 @@
      --------------------------------------------------------------------- */
   function filtrarAvaliacoes(valor) {
     var trilho = document.getElementById('reviews-track');
-    var vazio = document.querySelector('[data-yb-review-vazio]');
+    var vazio = document.querySelector('[data-yb-review-empty]');
     if (!trilho) return;
     var visiveis = 0;
-    [].forEach.call(trilho.querySelectorAll('[data-nota]'), function (c) {
-      var bate = valor === 'all' || c.getAttribute('data-nota') === valor;
+    [].forEach.call(trilho.querySelectorAll('[data-rating]'), function (c) {
+      var bate = valor === 'all' || c.getAttribute('data-rating') === valor;
       c.hidden = !bate;
       if (bate) visiveis++;
     });
@@ -791,20 +804,20 @@
     // "No 5-star reviews yet" guardado atras de um bloco escondido, pronto
     // para piscar errado no proximo filtro que zerasse.
     if (visiveis > 0) return;
-    var t = vazio.querySelector('[data-yb-review-vazio-titulo]');
+    var t = vazio.querySelector('[data-yb-review-empty-title]');
     if (t && valor !== 'all') t.textContent = 'No ' + valor + '-star reviews yet';
   }
 
   document.addEventListener('change', function (e) {
     var alvo = e.target;
-    if (!alvo.matches || !alvo.matches('[data-yb-review-filtro] input')) return;
+    if (!alvo.matches || !alvo.matches('[data-yb-review-filter] input')) return;
     filtrarAvaliacoes(alvo.value);
   });
 
   document.addEventListener('click', function (e) {
     if (!(e.target instanceof Element)) return;
-    if (!e.target.closest('[data-yb-review-limpar]')) return;
-    var todos = document.querySelector('[data-yb-review-filtro] input[value="all"]');
+    if (!e.target.closest('[data-yb-review-clear]')) return;
+    var todos = document.querySelector('[data-yb-review-filter] input[value="all"]');
     if (todos) { todos.checked = true; }
     filtrarAvaliacoes('all');
   });
@@ -847,7 +860,7 @@
        [data-yb-search-results]   com termo e com resultado
        [data-yb-search-empty]     com termo e sem resultado
        [data-yb-search-echo]      onde o termo aparece escrito no estado vazio
-       [data-termo]               em cada resultado, o texto contra o qual casar
+       [data-term]               em cada resultado, o texto contra o qual casar
      --------------------------------------------------------------------- */
   function pinta(form) {
     var campo = form.querySelector('.yb-search__input');
@@ -863,15 +876,15 @@
 
     var visiveis = 0;
     if (achados) {
-      achados.querySelectorAll('[data-termo]').forEach(function (it) {
-        var casa = !!termo && it.getAttribute('data-termo').toLowerCase().indexOf(termo) > -1;
+      achados.querySelectorAll('[data-term]').forEach(function (it) {
+        var casa = !!termo && it.getAttribute('data-term').toLowerCase().indexOf(termo) > -1;
         it.hidden = !casa;
         if (casa) visiveis++;
       });
       // um título de grupo sem nenhum resultado embaixo anuncia uma seção
       // que não existe — some junto com os seus.
       achados.querySelectorAll('[data-yb-search-group]').forEach(function (g) {
-        g.hidden = !g.querySelector('[data-termo]:not([hidden])');
+        g.hidden = !g.querySelector('[data-term]:not([hidden])');
       });
     }
 
@@ -906,7 +919,7 @@
   });
 
   /* ---------------------------------------------------------------------
-     VITRINE DO MENU — `data-yb-vitrines` na vitrine, `data-yb-vitrine-alvo`
+     VITRINE DO MENU — `data-yb-showcases` na vitrine, `data-yb-showcase-target`
      nos itens do painel.
      Passar o mouse (ou chegar pelo Tab) num item mostra a vitrine dele: o
      cartao da colecao e um produto em destaque. Sair do item NAO volta a
@@ -922,31 +935,31 @@
     var painel = rail.closest('.yb-nav__panel');
     var item = rail.closest('.yb-nav__item');
     if (!painel) return;
-    var vitrines = rail.querySelectorAll('[data-yb-vitrine]');
+    var vitrines = rail.querySelectorAll('[data-yb-showcase]');
 
-    var links = painel.querySelectorAll('.yb-nav__groups a[data-yb-vitrine-alvo]');
+    var links = painel.querySelectorAll('.yb-nav__groups a[data-yb-showcase-target]');
     function mostrar(id) {
       links.forEach(function (a) {
-        if (a.getAttribute('data-yb-vitrine-alvo') === id) a.setAttribute('data-yb-vitrine-ativo', '');
-        else a.removeAttribute('data-yb-vitrine-ativo');
+        if (a.getAttribute('data-yb-showcase-target') === id) a.setAttribute('data-yb-showcase-active', '');
+        else a.removeAttribute('data-yb-showcase-active');
       });
       var achou = false;
-      vitrines.forEach(function (v) { if (v.getAttribute('data-yb-vitrine') === id) achou = true; });
-      if (!achou) id = 'padrao';
+      vitrines.forEach(function (v) { if (v.getAttribute('data-yb-showcase') === id) achou = true; });
+      if (!achou) id = 'default';
       vitrines.forEach(function (v) {
-        v.hidden = v.getAttribute('data-yb-vitrine') !== id;
+        v.hidden = v.getAttribute('data-yb-showcase') !== id;
       });
     }
 
     painel.querySelectorAll('.yb-nav__groups a').forEach(function (a) {
       if (rail.contains(a)) return;
-      var id = a.getAttribute('data-yb-vitrine-alvo') || 'padrao';
+      var id = a.getAttribute('data-yb-showcase-target') || 'default';
       a.addEventListener('mouseenter', function () { mostrar(id); });
       a.addEventListener('focus', function () { mostrar(id); });
     });
-    (item || painel).addEventListener('mouseleave', function () { mostrar('padrao'); });
+    (item || painel).addEventListener('mouseleave', function () { mostrar('default'); });
     painel.addEventListener('focusout', function (e) {
-      if (!painel.contains(e.relatedTarget)) mostrar('padrao');
+      if (!painel.contains(e.relatedTarget)) mostrar('default');
     });
   }
 
@@ -961,7 +974,7 @@
     r.querySelectorAll('[data-yb-partner]').forEach(ligarPartner);
     r.querySelectorAll('[data-yb-partnerbar]').forEach(ligarPartnerbar);
     r.querySelectorAll('[data-yb-buybar]').forEach(ligarBuybar);
-    r.querySelectorAll('[data-yb-vitrines]').forEach(ligarVitrine);
+    r.querySelectorAll('[data-yb-showcases]').forEach(ligarVitrine);
     ligarTrilhos(r);
     // os blocos fora deste fechamento (navegacao, relogio) escutam este evento
     document.dispatchEvent(new CustomEvent('yb:init', { detail: { raiz: r } }));
@@ -1012,9 +1025,9 @@
       v.remove();
       if (img) alvo.insertBefore(img, alvo.firstChild);
       bt.hidden = false;
-      if (!alvo.querySelector('.yb-video__erro')) {
+      if (!alvo.querySelector('.yb-video__error')) {
         var aviso = document.createElement('p');
-        aviso.className = 'yb-video__erro';
+        aviso.className = 'yb-video__error';
         aviso.setAttribute('role', 'status');
         aviso.textContent = 'Video unavailable';
         alvo.appendChild(aviso);
@@ -1232,10 +1245,10 @@
   }
 
   function encerrar(el) {
-    var cartao = el.closest('.yb-offercard');
+    var cartao = el.closest('[data-yb-offercard]');
     if (!cartao) return;
-    cartao.setAttribute('data-encerrada', '');
-    var fim = cartao.querySelector('.yb-offercard__fim');
+    cartao.setAttribute('data-ended', '');
+    var fim = cartao.querySelector('[data-yb-offercard-end]');
     if (fim) fim.hidden = false;
   }
 

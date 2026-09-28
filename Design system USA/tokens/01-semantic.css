@@ -182,7 +182,7 @@
      escura reabrindo o mesmo buraco. */
   --yb-text-secondary-inverse: var(--yb-gray-300);
   --yb-text-muted-inverse:     var(--yb-gray-400);
-  --yb-text-on-action: var(--yb-white);     /*  5.36:1 sobre a ação */
+  --yb-text-on-action: var(--yb-white);     /* 16.66:1 sobre a ação primária */
   --yb-text-link:      var(--yb-magenta-600);
   --yb-text-link-hover: var(--yb-magenta-700);
 
@@ -201,17 +201,30 @@
      escuro na rampa: o pressionado teria de ser preto puro, que o sistema não
      tem, e o hover ficaria igual ao repouso. Clarear um degrau move 5 pontos
      de contraste (16.66 → 11.35) e continua AAA com texto branco. */
-  --yb-action-bg:         var(--yb-gray-950);   /* 16.66:1 com texto branco */
-  --yb-action-bg-hover:   var(--yb-gray-800);   /* 11.35:1 */
-  --yb-action-bg-active:  var(--yb-gray-700);   /*  7.67:1 */
+  /* PRIMARIA NO NOME desde 0.13. A secundaria sempre disse que era
+     (`--yb-action-secondary-*`) e o botao se chama `.yb-btn--primary`, mas a
+     primaria era so `--yb-action-bg` — quem procurava "primaria" no sistema
+     nao achava. O desabilitado fica sem papel no nome: e o mesmo para todas
+     as variantes. */
+  --yb-action-primary-bg:         var(--yb-gray-950);   /* 16.66:1 com texto branco */
+  --yb-action-primary-bg-hover:   var(--yb-gray-800);   /* 11.35:1 */
+  --yb-action-primary-bg-active:  var(--yb-gray-700);   /*  7.67:1 */
+  --yb-action-primary-text:       var(--yb-text-on-action);
   --yb-action-bg-disabled: var(--yb-gray-200);
-  --yb-action-text:        var(--yb-text-on-action);
   /* @deprecated desde 0.10 — use --yb-text-muted. Remocao em 1.0.
      Este token era uma ARMADILHA: gray-500 sobre --yb-action-bg-disabled
      (gray-200) mede 2.86:1. O proprio .yb-btn[disabled] o recusou e usa
      --yb-text-muted (4.28:1), com a razao escrita no CSS. Um token que o
      sistema nao usa porque e ilegivel nao pode continuar oferecido. */
   --yb-action-text-disabled: var(--yb-text-muted);
+  /* @deprecated desde 0.13 — use --yb-action-primary-bg, --yb-action-primary-bg-hover,
+     --yb-action-primary-bg-active e --yb-action-primary-text. Remocao em 1.0.
+     So o nome mudou: os quatro seguem apontando para o mesmo valor, e o tema
+     da loja que ainda os consome nao muda uma linha ate migrar. */
+  --yb-action-bg:        var(--yb-action-primary-bg);
+  --yb-action-bg-hover:  var(--yb-action-primary-bg-hover);
+  --yb-action-bg-active: var(--yb-action-primary-bg-active);
+  --yb-action-text:      var(--yb-action-primary-text);
 
   /* AÇÃO SECUNDÁRIA — contorno, e não bloco.
      Historico: foi grafite solido (pesava 3,1x a primaria magenta e virava
@@ -286,13 +299,14 @@
 
      Nao e contradicao com "a acao virou preta": aqui nao ha acao nenhuma. O
      selo nao e clicavel — ele informa, e informacao sobre foto e justamente o
-     caso em que a cor carrega mais que a forma. O nome do token continua
-     dizendo "action" por contrato com quem ja consome; o que ele significa
-     hoje e "a marca sobre escuro".
+     caso em que a cor carrega mais que a forma. Por isso o nome: ate 0.13
+     ele se chamava `--yb-action-on-dark` e dizia "acao" onde nao ha acao —
+     o botao de acao sobre escuro e o branco do `--on-dark`. Agora e o sinal
+     sobre escuro, par do `--yb-accent-signal`.
 
      magenta-400 e nao o 600 canonico: o 600 da 3.11:1 sobre o grafite e
      reprova. O 400 da 6.49:1. */
-  --yb-action-on-dark:   var(--yb-magenta-400);  /* só sobre superfície escura */
+  --yb-accent-signal-on-dark: var(--yb-magenta-400);  /* só sobre superfície escura */
   /* @reservado — superficie e borda de acento andam juntas; a doc ja usa a
      borda. Ver a nota de --yb-text-secondary-inverse. */
   --yb-accent-surface:   var(--yb-gold-100);
@@ -318,14 +332,14 @@
      volta do glifo fazia a estrela parecer desenhada por cima. */
   --yb-accent-star-edge: var(--yb-gold-700);
 
-  /* Favoritar. O magenta ja e a cor de ACAO do sistema (--yb-action-bg) —
+  /* Favoritar. O magenta era a cor de ACAO do sistema ate 0.13 —
      reaproveitado aqui de proposito, e nao redefinido como valor proprio,
      porque "favoritado" e uma leitura a mais do mesmo vermelho-rosa que a
      marca ja usa para "isto e Ybera". O nome separado existe para o dia em
      que os dois precisarem divergir (accent-love vira estado, action-bg
      continua sendo estimulo a clicar) sem procurar hex em CSS de componente.
      5.36:1 sobre branco — passa o 3:1 de grafico com informacao (1.4.11). */
-  /* A MARCA ONDE ELA INFORMA — e nao onde se clica.
+  /* O SINAL — o magenta onde ele informa, e nao onde se clica.
 
      A regra que a troca de 0.13 deixou no sistema cabe em uma linha: preto e
      onde se CLICA, magenta e MARCACAO. Desconto, contagem do carrinho, ponto
@@ -334,19 +348,27 @@
      no meio do texto e do grafite da interface, que virou a cor de tudo o que
      e clicavel.
 
-     Estes quatro apontavam para `--yb-action-bg` e acompanharam a acao para o
+     Estes quatro apontavam para `--yb-action-bg` (hoje `--yb-action-primary-bg`) e acompanharam a acao para o
      preto sem que ninguem tivesse decidido isso — a troca de papel de um token
      arrasta quem o consome. Aqui eles ganham o motivo escrito e param de
      depender de onde a acao for parar amanha.
 
+     SINAL NO NOME desde 0.13, e nao "brand": a marca hoje e o preto, e um
+     token chamado brand pintando magenta mandava o leitor para a cor errada.
+
      magenta-600, o canonico: 5.36:1 com texto branco. */
-  --yb-accent-brand: var(--yb-magenta-600);
+  --yb-accent-signal: var(--yb-magenta-600);
+  /* @deprecated desde 0.13 — use --yb-accent-signal e --yb-accent-signal-on-dark.
+     Remocao em 1.0. Mesmo valor, nome novo. */
+  --yb-accent-brand:   var(--yb-accent-signal);
+  --yb-action-on-dark: var(--yb-accent-signal-on-dark);
+
 
   /* VALOR PROPRIO desde 0.13, e nao mais `var(--yb-action-bg)`. O dia em que
      os dois precisariam divergir, previsto no comentario acima, chegou: a
      acao virou preta e "favoritado" continua sendo o vermelho-rosa da marca.
      Um coracao preto nao le como favorito — le como desabilitado. */
-  --yb-accent-love: var(--yb-accent-brand);
+  --yb-accent-love: var(--yb-accent-signal);
 
   /* =====================================================================
      ESTADO
@@ -372,7 +394,21 @@
      ===================================================================== */
   --yb-focus-color:  var(--yb-magenta-600);
   --yb-focus-width:  2px;
-  --yb-focus-offset: 2px;
+  /* ZERO desde 0.13, e era 2px. O afastamento existe para o anel nao se fundir
+     com a borda do controle — encostado, ele pode ler como uma borda que
+     engrossou e mudou de cor. Num campo com contorno o efeito era o contrario
+     do pretendido: apareciam tres tracos, a borda do campo, o vao branco e o
+     anel, e o vao lia como falha de desenho.
+
+     Zerado, o anel de 2px nasce na propria borda. A leitura continua se
+     sustentando porque ele nao depende do vao e sim do CONTRASTE: magenta sobre
+     a pagina branca mede 5.36:1, e sobre o grafite que a borda do campo assume
+     no foco, 3.11:1 — os dois acima do 3:1 que a WCAG 1.4.11 pede para
+     fronteira de componente.
+
+     Uma vez so, e nao por componente: anel com afastamento diferente em cada
+     controle seria a pergunta "por que este e diferente" outra vez. */
+  --yb-focus-offset: 0;
 
   /* =====================================================================
      FAMÍLIA
@@ -418,6 +454,18 @@
      Família única: a hierarquia vem de escala, peso e tracking.
      Quanto maior o tamanho, mais negativo o tracking.
      ===================================================================== */
+  /* @deprecated desde 0.13 — use --yb-type-display-2-*. Remocao em 1.0.
+
+     Os quatro nasceram como o teto da escala e nunca foram consumidos por peca
+     nenhuma: o `display-2` deu conta de todo titulo grande que a loja pediu, do
+     hero da home ao manifesto. A GOVERNANCA manda o contrario do que a inercia
+     sugere — token semantico e intencao COM consumidor, e token novo so entra
+     quando o caso aparece duas vezes. Este apareceu zero.
+
+     Nao vai embora agora porque remover semantico e mudanca maior; fica
+     depreciado o tempo que a governanca pede, apontando para onde ir. Se um dia
+     uma campanha pedir um degrau acima do `display-2`, o caminho e reabrir com
+     o caso na mao — nao manter a promessa parada esperando por ele. */
   --yb-type-display-1-size:   var(--yb-font-size-6xl);
   --yb-type-display-1-line:   var(--yb-line-height-tight);
   --yb-type-display-1-track:  var(--yb-tracking-tightest);

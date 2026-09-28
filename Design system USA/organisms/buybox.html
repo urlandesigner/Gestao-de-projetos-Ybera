@@ -25,14 +25,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="organisms" data-moldura="centrada">
+<body class="ficha" data-level="organisms" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -150,7 +150,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,8 +204,8 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <div class="note"><b>Nota de heading</b><p>Nesta galeria o nome do produto é <code>&lt;h2&gt;</code> porque a página já tem um <code>&lt;h1&gt;</code>. Numa PDP real ele é o <code>&lt;h1&gt;</code> — o CSS não depende do nível.</p></div>
     <!-- doc:vizinha yb-gallery — na PDP a galeria é IRMÃ do bloco de compra
@@ -238,7 +238,10 @@
             <span class="yb-stars" style="--yb-stars:4.8" aria-hidden="true"></span>
             <span class="yb-rating__count">4.8 · 412 reviews</span>
           </span>
-          <span class="yb-price"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+          <div class="yb-buybox__priceline">
+            <span class="yb-price"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+            <span class="yb-buybox__flags"><span class="yb-badge yb-badge--success">In stock</span><span class="yb-badge yb-badge--success" data-yb-ship-badge><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>Free shipping</span></span>
+          </div>
           <p class="yb-buybox__desc">Professional keratin sealant for frizz-free,
           mirror-smooth hair. Formulated without formaldehyde and safe for
           color-treated hair.</p>
@@ -260,10 +263,31 @@
           </div>
           <div class="yb-buybox__trust">
             <span>Formaldehyde-free</span><span>Color-safe</span>
-            <span>30-day returns</span><span>Free shipping over $50</span>
+            <span>30-day returns</span>
           </div>
         </div>
       </div>
+    </div>
+    <h3 class="row-label">Frete do item &mdash; selo quando é grátis, linha quando não é</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <span class="yb-badge yb-badge--success" data-yb-ship-badge><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>Free shipping</span>
+        <span class="amostra__rotulo">a partir de $50 · <code>[data-yb-ship-badge]</code></span>
+      </span>
+      <span class="amostra">
+        <p class="yb-buybox__ship" data-yb-ship data-yb-ship-min="50"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>Free shipping on orders over $50</p>
+        <span class="amostra__rotulo">abaixo de $50 · <code>.yb-buybox__ship</code></span>
+      </span>
+    </div>
+    <div class="note">
+      <b>Vantagem é selo, regra é texto</b>
+      <p>Passou da meta, o frete é vantagem e vira selo ao lado do estoque, com o
+      caminhão para não se confundir com o &ldquo;In stock&rdquo;, do mesmo verde.
+      Abaixo da meta, é regra, e fica em texto de apoio sob o preço: selo para o
+      que o item não cumpre destacaria o que não é benefício.</p>
+      <p>Os dois seguem a variante (<code>data-price</code> contra
+      <code>data-yb-ship-min</code>) e somem no esgotado. &ldquo;Free shipping over
+      $50&rdquo; saiu das garantias, que agora seria repetição.</p>
     </div>
     <div class="note">
       <b>Descrição curta aqui, inteira no acordeão</b>
@@ -288,8 +312,8 @@
           <span class="yb-buybar__name">Kit Sealant Fashion Gold</span>
           <span class="yb-buybar__price"><b class="yb-price__now">$168.90</b></span>
         </span>
-        <button class="yb-btn yb-btn--primary" type="button" data-yb-barra-comprar><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg> Add to cart</button>
-        <a class="yb-btn yb-btn--primary" href="#demos" data-yb-barra-avisar hidden><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-mail"/></svg> Notify me</a>
+        <button class="yb-btn yb-btn--primary" type="button" data-yb-bar-buy><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg> Add to cart</button>
+        <a class="yb-btn yb-btn--primary" href="#demos" data-yb-bar-notify hidden><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-mail"/></svg> Notify me</a>
       </div>
     </div>
     <div class="note">
@@ -312,8 +336,8 @@
     </div>
     <div class="note">
       <b>Duas ações, uma de cada vez</b>
-      <p>A barra carrega as duas: <code>data-yb-barra-comprar</code> e
-      <code>data-yb-barra-avisar</code>, uma delas sempre <code>hidden</code>. Quem
+      <p>A barra carrega as duas: <code>data-yb-bar-buy</code> e
+      <code>data-yb-bar-notify</code>, uma delas sempre <code>hidden</code>. Quem
       troca é o mesmo script da variante que troca o botão real &mdash; escolher um
       tamanho esgotado muda a página inteira, e a barra é parte dela. Copiar só o
       "Add to cart" deixa a tela de esgotado sem ação nenhuma no rodapé.</p>
@@ -337,7 +361,7 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;div class="split"&gt;
   &lt;div class="yb-gallery" data-yb-gallery&gt;
     &lt;div class="yb-gallery__stage"&gt;
@@ -364,7 +388,10 @@
       &lt;span class="yb-stars" style="--yb-stars:4.8" aria-hidden="true"&gt;&lt;/span&gt;
       &lt;span class="yb-rating__count"&gt;4.8 · 412 reviews&lt;/span&gt;
     &lt;/span&gt;
-    &lt;span class="yb-price"&gt;&lt;b class="yb-price__now"&gt;$168.90&lt;/b&gt;&lt;s class="yb-price__was"&gt;$199.90&lt;/s&gt;&lt;/span&gt;
+    &lt;div class="yb-buybox__priceline"&gt;
+      &lt;span class="yb-price"&gt;&lt;b class="yb-price__now"&gt;$168.90&lt;/b&gt;&lt;s class="yb-price__was"&gt;$199.90&lt;/s&gt;&lt;/span&gt;
+      &lt;span class="yb-buybox__flags"&gt;&lt;span class="yb-badge yb-badge--success"&gt;In stock&lt;/span&gt;&lt;span class="yb-badge yb-badge--success" data-yb-ship-badge&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-truck"/&gt;&lt;/svg&gt;Free shipping&lt;/span&gt;&lt;/span&gt;
+    &lt;/div&gt;
     &lt;p class="yb-buybox__desc"&gt;Professional keratin sealant for frizz-free,
     mirror-smooth hair. Formulated without formaldehyde and safe for
     color-treated hair.&lt;/p&gt;
@@ -386,16 +413,16 @@
     &lt;/div&gt;
     &lt;div class="yb-buybox__trust"&gt;
       &lt;span&gt;Formaldehyde-free&lt;/span&gt;&lt;span&gt;Color-safe&lt;/span&gt;
-      &lt;span&gt;30-day returns&lt;/span&gt;&lt;span&gt;Free shipping over $50&lt;/span&gt;
+      &lt;span&gt;30-day returns&lt;/span&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca"><div class="split">
@@ -424,7 +451,10 @@
       <span class="yb-stars" style="--yb-stars:4.8" aria-hidden="true"></span>
       <span class="yb-rating__count">4.8 · 412 reviews</span>
     </span>
-    <span class="yb-price"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+    <div class="yb-buybox__priceline">
+      <span class="yb-price"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+      <span class="yb-buybox__flags"><span class="yb-badge yb-badge--success">In stock</span><span class="yb-badge yb-badge--success" data-yb-ship-badge><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>Free shipping</span></span>
+    </div>
     <p class="yb-buybox__desc">Professional keratin sealant for frizz-free,
     mirror-smooth hair. Formulated without formaldehyde and safe for
     color-treated hair.</p>
@@ -446,19 +476,19 @@
     </div>
     <div class="yb-buybox__trust">
       <span>Formaldehyde-free</span><span>Color-safe</span>
-      <span>30-day returns</span><span>Free shipping over $50</span>
+      <span>30-day returns</span>
     </div>
   </div>
 </div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-badge"><span class="anat__texto"><b><a href="../atoms/badge.html">Badge</a></b> — Etiqueta curta que classifica um item sem competir com ele. Nunca carrega ação — badge não é botão.</span></li>
-        <li data-alvo=".yb-rating"><span class="anat__texto"><b><a href="../molecules/rating.html">Rating</a></b> — A média de um produto: as estrelas, a nota e quantas avaliações ela resume. Sempre com a contagem — 5 estrelas de 3 avaliações não é prova de nada.</span></li>
-        <li data-alvo=".yb-stars"><span class="anat__texto"><b><a href="../atoms/stars.html">Stars</a></b> — A nota desenhada em cinco estrelas, com preenchimento parcial. Recebe um número de 0 a 5; sozinha é a nota de uma pessoa, dentro do Rating é a média.</span></li>
-        <li data-alvo=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço de um produto, com o valor anterior riscado e o desconto quando existem. Sempre tabular: em grid, dígitos precisam alinhar em coluna.</span></li>
-        <li data-alvo=".yb-swatches"><span class="anat__texto"><b><a href="../molecules/variant.html">Variant picker</a></b> — Seletor das opções de um produto: tamanho, volume, fragrância. Esgotado aparece riscado, não some — sumir esconde que o produto existe.</span></li>
-        <li data-alvo=".yb-stepper"><span class="anat__texto"><b><a href="../molecules/stepper.html">Quantity stepper</a></b> — Controle de quantidade — menos, número e mais. Botões de 44px que funcionam no clique; limites em 1 e 10, e o botão desabilita sozinho na ponta.</span></li>
-        <li data-alvo=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
+        <li data-target=".yb-badge"><span class="anat__texto"><b><a href="../atoms/badge.html">Badge</a></b> — Etiqueta curta que classifica um item sem competir com ele. Nunca carrega ação — badge não é botão.</span></li>
+        <li data-target=".yb-rating"><span class="anat__texto"><b><a href="../molecules/rating.html">Rating</a></b> — A média de um produto: as estrelas, a nota e quantas avaliações ela resume. Sempre com a contagem — 5 estrelas de 3 avaliações não é prova de nada.</span></li>
+        <li data-target=".yb-stars"><span class="anat__texto"><b><a href="../atoms/stars.html">Stars</a></b> — A nota desenhada em cinco estrelas, com preenchimento parcial. Recebe um número de 0 a 5; sozinha é a nota de uma pessoa, dentro do Rating é a média.</span></li>
+        <li data-target=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço de um produto, com o valor anterior riscado e o desconto quando existem. Sempre tabular: em grid, dígitos precisam alinhar em coluna.</span></li>
+        <li data-target=".yb-swatches"><span class="anat__texto"><b><a href="../molecules/variant.html">Variant picker</a></b> — Seletor das opções de um produto: tamanho, volume, fragrância. Esgotado aparece riscado, não some — sumir esconde que o produto existe.</span></li>
+        <li data-target=".yb-stepper"><span class="anat__texto"><b><a href="../molecules/stepper.html">Quantity stepper</a></b> — Controle de quantidade — menos, número e mais. Botões de 44px que funcionam no clique; limites em 1 e 10, e o botão desabilita sozinho na ponta.</span></li>
+        <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -479,7 +509,7 @@
     <p class="usa-degrau">Moléculas</p>
     <ul class="usa"><li><a href="../molecules/price.html">Price</a></li><li><a href="../molecules/stepper.html">Quantity stepper</a></li><li><a href="../molecules/rating.html">Rating</a></li><li><a href="../molecules/variant.html">Variant picker</a></li></ul>
     <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-buybox__acoes</code> <code>.yb-buybox__actions</code> <code>.yb-buybox__benef</code> <code>.yb-buybox__compra</code> <code>.yb-buybox__desc</code> <code>.yb-buybox__fav</code> <code>.yb-buybox__flags</code> <code>.yb-buybox__group</code> <code>.yb-buybox__kit</code> <code>.yb-buybox__kit-nome</code> <code>.yb-buybox__kit-peso</code> <code>.yb-buybox__label</code> <code>.yb-buybox__preco</code> <code>.yb-buybox__rating</code> <code>.yb-buybox__selos</code> <code>.yb-buybox__title</code> <code>.yb-buybox__topo</code> <code>.yb-buybox__trust</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-buybox__actions</code> <code>.yb-buybox__desc</code> <code>.yb-buybox__fav</code> <code>.yb-buybox__flags</code> <code>.yb-buybox__group</code> <code>.yb-buybox__kit</code> <code>.yb-buybox__kit-name</code> <code>.yb-buybox__kit-weight</code> <code>.yb-buybox__label</code> <code>.yb-buybox__perks</code> <code>.yb-buybox__priceline</code> <code>.yb-buybox__purchase</code> <code>.yb-buybox__rating</code> <code>.yb-buybox__ship</code> <code>.yb-buybox__title</code> <code>.yb-buybox__tools</code> <code>.yb-buybox__top</code> <code>.yb-buybox__trust</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
     <p class="rotulo">Tokens <span class="rotulo-conta">31</span></p>
@@ -488,8 +518,8 @@
         <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>5</span></p>
         <ul class="tokens__lista">
           <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
         </ul>
@@ -519,8 +549,8 @@
           <li><code>--yb-icon-size</code><span class="tokens__valor">20px</span></li>
           <li><code>--yb-space-1</code><span class="tokens__valor">0.25rem</span></li>
           <li><code>--yb-space-6</code><span class="tokens__valor">1.5rem</span></li>
-          <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
           <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
+          <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
           <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
           <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>
           <li><code>--yb-space-3</code><span class="tokens__valor">0.75rem</span></li>
@@ -536,30 +566,39 @@
         <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>3</span></p>
         <ul class="tokens__lista">
           <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
           <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso" data-pendente>
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
-    <p class="pendente">Faça / não faça ainda não escrito para este bloco.
-      O bloco aparece vazio de propósito: seção que some da ficha é uma pergunta
-      que ninguém sabe que ficou sem resposta.</p>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><a class="yb-buybox__rating" href="#demos"><span class="yb-rating" role="img" aria-label="5.0 of 5, 6 reviews"><span class="yb-stars" style="--yb-stars:5" aria-hidden="true"></span><span class="yb-rating__score">5.0</span><span class="yb-rating__count">(6 reviews)</span></span></a></div>
+        <p class="fn-legenda">Nota como link para as avaliações.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><span class="yb-stars" style="--yb-stars:5"></span></div>
+        <p class="fn-legenda">Estrelas soltas, sem destino e sem rótulo: quem não enxerga recebe silêncio, e quem enxerga não tem para onde ir conferir.</p>
+      </div>
+    </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade" data-pendente>
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <p class="pendente">Acessibilidade ainda não escrita para este bloco.</p>
+    <ul class="bloco-lede"><li>O nome do produto é o <code>&lt;h1&gt;</code> da PDP. Na galeria é <code>&lt;h2&gt;</code> porque a página já tem um.</li><li>A nota é link para as avaliações: nota que não leva a lugar nenhum é beco para quem quer conferir.</li><li>Favoritar e compartilhar levam <code>aria-label</code> e <code>aria-pressed</code> — sem texto visível, o rótulo é o único nome que têm.</li><li>A escolha de tamanho é <code>role=&quot;radiogroup&quot;</code>, e a opção esgotada fica selecionável: chegar nela é o caminho para o aviso de reposição.</li></ul>
   </section>
   </div>
 
@@ -601,7 +640,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

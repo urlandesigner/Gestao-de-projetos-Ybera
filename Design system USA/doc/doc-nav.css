@@ -31,11 +31,11 @@
   --ds-nav-chip:   var(--yb-space-8);            /* 32 — a caixa do ícone     */
   --ds-nav-gap:    var(--yb-space-3);            /* 12 — do chip ao rótulo    */
   /* onde o rótulo do grupo começa, e onde o sub-item tem de começar também */
-  --ds-nav-rotulo: calc(var(--ds-nav-gutter) + var(--ds-nav-chip) + var(--ds-nav-gap));
+  --ds-nav-label: calc(var(--ds-nav-gutter) + var(--ds-nav-chip) + var(--ds-nav-gap));
   /* o filete cai no centro do chip */
-  --ds-nav-filete: calc(var(--ds-nav-gutter) + var(--ds-nav-chip) / 2);
+  --ds-nav-rule: calc(var(--ds-nav-gutter) + var(--ds-nav-chip) / 2);
   --ds-top-h: 3.5rem;
-  --ds-nesta-w: 13rem;
+  --ds-onpage-w: 13rem;
   /* 1280, e não 940. A medida de 940 nasceu do `.main` das fichas, quando a
      doc era duas colunas e o conteúdo dividia a tela com a lista de peças. Com
      a coluna fixa e o índice à direita, ela passou a deixar tela vazia em
@@ -97,9 +97,19 @@ body{
    branca no meio do gradiente apaga as letras centrais — "USA" viraria "U A".
    O que resta é a leitura que sobrevive: vermelho à esquerda, azul à direita.
 
-   Contraste medido contra o fundo da barra (#FFFFFF): o vermelho dá 6,70:1 e o
-   azul 12,92:1 — os dois passam em AA para texto normal, e nenhum ponto do
-   gradiente fica mais claro que a ponta mais clara, que é o vermelho.
+   PANTONE 186 C E 286 C, e não os hex de Old Glory. As duas referências são da
+   mesma bandeira: `#B31942` e `#0A3161` são a especificação em hex, e
+   `#C8102E`/`#0057B8` são os equivalentes Pantone coated que a bandeira
+   impressa usa. Os primeiros são corretos e apagados — num logotipo de 16px o
+   azul de Old Glory lê como grafite escuro, e o gradiente inteiro some no
+   grafite do resto da marca ao lado.
+
+   Contraste medido contra o fundo da barra (#FFFFFF) em onze pontos do
+   gradiente: o vermelho dá 5,88:1, o azul 6,87:1, e o meio sobe até 9,21:1 —
+   a ponta mais clara continua sendo o vermelho, e nenhum ponto reprova o 4,5:1
+   de AA para texto normal. Sobrou menos folga que antes (5,88 contra 6,70), e é
+   o preço de ser mais vivo: qualquer vermelho mais aceso que este passa a
+   depender de o fundo da barra nunca escurecer.
 
    `@supports` porque `color:transparent` sem o recorte deixa a palavra
    invisível: onde o recorte não existe, ela fica no grafite do resto da marca,
@@ -107,7 +117,7 @@ body{
 .ds-top__usa{ color:var(--yb-text-primary); }
 @supports (background-clip:text) or (-webkit-background-clip:text){
   .ds-top__usa{
-    background-image:linear-gradient(90deg, #B31942 0%, #0A3161 100%);
+    background-image:linear-gradient(90deg, #C8102E 0%, #0057B8 100%);
     -webkit-background-clip:text; background-clip:text;
     color:transparent;
   }
@@ -245,7 +255,7 @@ body{
 }
 
 .ds-nav__grupo > ul{
-  margin:var(--yb-space-1) 0 var(--yb-space-2) var(--ds-nav-filete);
+  margin:var(--yb-space-1) 0 var(--yb-space-2) var(--ds-nav-rule);
   padding-inline-start:0;
   border-inline-start:1px solid var(--yb-border);
 }
@@ -260,7 +270,7 @@ body{
    grosso diz a mesma coisa sem pintar nada. */
 .ds-nav__grupo > ul > li > a{
   /* o rótulo do grupo, menos o que a margem e o filete já andaram */
-  padding-inline-start:calc(var(--ds-nav-rotulo) - var(--ds-nav-filete) - 1px);
+  padding-inline-start:calc(var(--ds-nav-label) - var(--ds-nav-rule) - 1px);
   padding-inline-end:var(--ds-nav-gutter);
   margin-inline-start:-1px;
   border-inline-start:2px solid transparent;
@@ -345,13 +355,13 @@ body{
    compartilham um invólucro comum, e uma grade exigiria reescrever cada uma.
    Ele não marca a seção visível porque isso pede observador de rolagem, e um
    índice que não se move é melhor que um que pisca. */
-.ds-nesta{display:none}
+.ds-onpage{display:none}
 @media (min-width:1280px){
-  body:has(.ds-nesta){padding-inline-end:var(--ds-nesta-w)}
-  .ds-nesta{
+  body:has(.ds-onpage){padding-inline-end:var(--ds-onpage-w)}
+  .ds-onpage{
     display:block; position:fixed;
     inset-block-start:calc(var(--ds-top-h) + var(--yb-space-8));
-    inset-inline-end:0; inline-size:var(--ds-nesta-w);
+    inset-inline-end:0; inline-size:var(--ds-onpage-w);
     max-block-size:calc(100vh - var(--ds-top-h) - var(--yb-space-8));
     overflow-y:auto; padding-inline:var(--yb-space-5);
     font-family:var(--yb-font-family-base);
@@ -363,15 +373,15 @@ body{
   letter-spacing:var(--yb-tracking-wider); text-transform:uppercase;
   color:var(--yb-text-muted); font-weight:var(--yb-font-weight-semibold);
 }
-.ds-nesta ol{list-style:none; margin:0; padding:0;
+.ds-onpage ol{list-style:none; margin:0; padding:0;
   border-inline-start:1px solid var(--yb-border-subtle)}
-.ds-nesta a{
+.ds-onpage a{
   display:block; padding:var(--yb-space-1) var(--yb-space-4);
   margin-inline-start:-1px; border-inline-start:2px solid transparent;
   color:var(--yb-text-secondary); text-decoration:none;
 }
-.ds-nesta a:hover{color:var(--yb-text-primary); border-inline-start-color:var(--yb-border-strong)}
-.ds-nesta a:focus-visible{
+.ds-onpage a:hover{color:var(--yb-text-primary); border-inline-start-color:var(--yb-border-strong)}
+.ds-onpage a:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
 }

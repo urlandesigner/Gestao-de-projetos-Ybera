@@ -3,7 +3,7 @@
    QUEM USA CADA TOKEN — o índice invertido, derivado a cada build.
 
    A doc ja respondia a pergunta de um lado: toda ficha lista os tokens da
-   familia dela. O outro lado nao tinha resposta — "quem usa `--yb-action-bg`?"
+   familia dela. O outro lado nao tinha resposta — "quem usa `--yb-action-primary-bg`?"
    so se respondia com grep, e e essa a pergunta que se faz ANTES de mexer num
    token. Sem ela, mudar um valor e apostar.
 

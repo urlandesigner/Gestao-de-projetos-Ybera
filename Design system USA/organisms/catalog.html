@@ -25,14 +25,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="organisms" data-moldura="centrada">
+<body class="ficha" data-level="organisms" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -150,7 +150,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,8 +204,8 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <div class="stage stage--pad">
       <div class="yb-catalog">
@@ -262,7 +262,7 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;div class="yb-catalog"&gt;
 &lt;div class="yb-catalog__head"&gt;
   &lt;div class="yb-catalog__title"&gt;
@@ -309,9 +309,9 @@
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca"><div class="yb-catalog">
@@ -359,12 +359,12 @@
 </div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
-        <li data-alvo=".yb-select"><span class="anat__texto"><b><a href="../atoms/select.html">Select</a></b> — Campo de escolha com o rótulo dentro da caixa, que abre o seletor nativo do sistema. Mesmo campo do Input, para quando a resposta já está escrita.</span></li>
-        <li data-alvo=".yb-chip"><span class="anat__texto"><b><a href="../atoms/chip.html">Chip</a></b> — Filtro que liga e desliga, em fileira. O estado mora em <code>aria-pressed</code>, não numa classe — quem lê a tela ouve "pressionado" sem depender de cor.</span></li>
-        <li data-alvo=".yb-card"><span class="anat__texto"><b><a href="../molecules/card.html">Card product</a></b> — O cartão de produto do grid — foto, nome, nota, preço e ação. O título trunca em duas linhas por decisão de sistema.</span></li>
-        <li data-alvo=".yb-badge"><span class="anat__texto"><b><a href="../atoms/badge.html">Badge</a></b> — Etiqueta curta que classifica um item sem competir com ele. Nunca carrega ação — badge não é botão.</span></li>
-        <li data-alvo=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço de um produto, com o valor anterior riscado e o desconto quando existem. Sempre tabular: em grid, dígitos precisam alinhar em coluna.</span></li>
+        <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
+        <li data-target=".yb-select"><span class="anat__texto"><b><a href="../atoms/select.html">Select</a></b> — Campo de escolha com o rótulo dentro da caixa, que abre o seletor nativo do sistema. Mesmo campo do Input, para quando a resposta já está escrita.</span></li>
+        <li data-target=".yb-chip"><span class="anat__texto"><b><a href="../atoms/chip.html">Chip</a></b> — Filtro que liga e desliga, em fileira. O estado mora em <code>aria-pressed</code>, não numa classe — quem lê a tela ouve "pressionado" sem depender de cor.</span></li>
+        <li data-target=".yb-card"><span class="anat__texto"><b><a href="../molecules/card.html">Card product</a></b> — O cartão de produto do grid — foto, nome, nota, preço e ação. O título trunca em duas linhas por decisão de sistema.</span></li>
+        <li data-target=".yb-badge"><span class="anat__texto"><b><a href="../atoms/badge.html">Badge</a></b> — Etiqueta curta que classifica um item sem competir com ele. Nunca carrega ação — badge não é botão.</span></li>
+        <li data-target=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço de um produto, com o valor anterior riscado e o desconto quando existem. Sempre tabular: em grid, dígitos precisam alinhar em coluna.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -422,23 +422,32 @@
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso" data-pendente>
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
-    <p class="pendente">Faça / não faça ainda não escrito para este bloco.
-      O bloco aparece vazio de propósito: seção que some da ficha é uma pergunta
-      que ninguém sabe que ficou sem resposta.</p>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><div class="yb-catalog__title"><h2>Treatments</h2><span class="yb-catalog__count">24 products</span></div></div>
+        <p class="fn-legenda">Contagem ao lado do título, antes da grade.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><div class="yb-catalog__title"><h2>Treatments</h2></div></div>
+        <p class="fn-legenda">Só o título: quem filtrou não sabe se sobraram 24 ou 2 sem rolar a página inteira.</p>
+      </div>
+    </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade" data-pendente>
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <p class="pendente">Acessibilidade ainda não escrita para este bloco.</p>
+    <ul class="bloco-lede"><li>A contagem é obrigatória e vem antes da grade: “24 products” é o que diz se o filtro devolveu algo, sem precisar rolar até o fim.</li><li>A grade é lista (<code>&lt;ul&gt;</code>), e cada cartão é <code>&lt;li&gt;</code>: o leitor de tela anuncia “lista de 24 itens” e a pessoa decide se percorre.</li><li>Filtro ativo é <code>.yb-chip</code> com <code>aria-pressed</code>, e a fileira tem rótulo próprio — sete botões soltos não dizem do que são filtro.</li><li>Quando o filtro não devolve nada, o lugar da grade recebe o <code>.yb-empty</code>, com a saída em botão. Grade vazia sem texto é beco.</li></ul>
   </section>
   </div>
 
@@ -480,7 +489,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

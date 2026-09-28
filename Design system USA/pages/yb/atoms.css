@@ -49,12 +49,12 @@
   border-color:transparent;
 }
 
-.yb-btn--primary{background:var(--yb-action-bg); color:var(--yb-action-text)}
+.yb-btn--primary{background:var(--yb-action-primary-bg); color:var(--yb-action-primary-text)}
 
 @media (hover:hover){
-  .yb-btn--primary:hover:not([disabled]){background:var(--yb-action-bg-hover)}
+  .yb-btn--primary:hover:not([disabled]){background:var(--yb-action-primary-bg-hover)}
 }
-.yb-btn--primary:active:not([disabled]){background:var(--yb-action-bg-active)}
+.yb-btn--primary:active:not([disabled]){background:var(--yb-action-primary-bg-active)}
 
 .yb-btn--secondary{
   background:var(--yb-action-secondary-bg); color:var(--yb-action-secondary-text);
@@ -141,7 +141,7 @@
 .yb-btn--loading{color:transparent !important; pointer-events:none}
 .yb-btn--loading::after{
   content:""; position:absolute; width:var(--yb-icon-sm); height:var(--yb-icon-sm);
-  border:var(--yb-border-emphasis) solid currentColor; border-top-color:transparent;
+  border:var(--yb-border-emphasis) solid currentColor; border-block-start-color:transparent;
   border-radius:var(--yb-radius-full);
   animation:yb-spin var(--yb-duration-slower) linear infinite;
 }
@@ -151,10 +151,10 @@
    secundaria usava o branco de quando era grafite; sobre o magenta-100 de
    agora, 1,1:1 — invisivel. */
 .yb-btn--primary.yb-btn--loading::after,
-.yb-btn--danger.yb-btn--loading::after{border-color:var(--yb-text-inverse); border-top-color:transparent}
-.yb-btn--secondary.yb-btn--loading::after{border-color:var(--yb-action-secondary-text); border-top-color:transparent}
-.yb-btn--ghost.yb-btn--loading::after{border-color:var(--yb-text-primary); border-top-color:transparent}
-.yb-btn--on-dark.yb-btn--loading::after{border-color:var(--yb-bg-inverse); border-top-color:transparent}
+.yb-btn--danger.yb-btn--loading::after{border-color:var(--yb-text-inverse); border-block-start-color:transparent}
+.yb-btn--secondary.yb-btn--loading::after{border-color:var(--yb-action-secondary-text); border-block-start-color:transparent}
+.yb-btn--ghost.yb-btn--loading::after{border-color:var(--yb-text-primary); border-block-start-color:transparent}
+.yb-btn--on-dark.yb-btn--loading::after{border-color:var(--yb-bg-inverse); border-block-start-color:transparent}
 
 /* =========================================================================
    BADGE
@@ -167,8 +167,8 @@
   border-radius:var(--yb-radius-badge); white-space:nowrap;
 }
 /* MAGENTA, e nao o preto da acao: o desconto nao e um botao. Ver
-   --yb-accent-brand. */
-.yb-badge--sale{background:var(--yb-accent-brand); color:var(--yb-text-on-action)}
+   --yb-accent-signal. */
+.yb-badge--sale{background:var(--yb-accent-signal); color:var(--yb-text-on-action)}
 /* O par do botao secundario, e de proposito os MESMOS tokens dele — nao uma
    copia dos valores. Quem afinar o botao secundario um dia move este selo
    junto, que e o que "mesmo padrao de cor do secundario" quer dizer; dois
@@ -205,10 +205,10 @@
    contar com o que estiver atras, e por isso e o unico da familia que pode ir
    sobre imagem: os claros (`--soft`, `--secondary`, `--success`, `--warning`,
    `--danger`) medem ~1,2:1 contra um packshot e somem.
-   O texto e `--yb-action-on-dark`, nao a cor de acao crua: o magenta-600
+   O texto e `--yb-accent-signal-on-dark`, nao a cor de acao crua: o magenta-600
    canonico da 3.11:1 sobre o grafite e reprova. Ver o token. */
 .yb-badge--on-media,
-.yb-badge--accent{background:var(--yb-bg-inverse); color:var(--yb-action-on-dark)}
+.yb-badge--accent{background:var(--yb-bg-inverse); color:var(--yb-accent-signal-on-dark)}
 /* @deprecated desde 0.12 — use .yb-badge--on-media. Remocao em 1.0.
    Chamava-se `--accent` porque o texto era o dourado da marca; quando ele
    virou magenta o nome passou a descrever o que a classe NAO e mais — e
@@ -216,6 +216,9 @@
    convivencia de duas versoes menores, para nao quebrar quem ja usa — por
    isso divide a regra do `--on-media`, acima, em vez de repeti-la. */
 .yb-badge--success{background:var(--yb-success-surface); color:var(--yb-success-text)}
+/* Icone no selo: 16px, mas sem crescer o selo. A margem negativa devolve a
+   diferenca para a linha, e o selo com icone fica da altura do selo sem. */
+.yb-badge .yb-icon{--yb-icon-size:var(--yb-icon-sm); margin-block:calc(var(--yb-space-1) * -1)}
 .yb-badge--warning{background:var(--yb-warning-surface); color:var(--yb-warning-text)}
 .yb-badge--danger{background:var(--yb-danger-surface); color:var(--yb-danger-text)}
 /* Sobre painel escuro. Nao e o `--on-media` invertido: aquele e fundo escuro
@@ -293,7 +296,7 @@
    a escolha para cima de foto; `--sale` mede 3,3:1 nas mesmas fotos — passa o
    minimo de 3:1 de objeto grafico, mas raspando e variando com a imagem, e
    por isso e a roupa de superficie lisa. */
-.yb-offerseal--sale{background:var(--yb-accent-brand); color:var(--yb-text-on-action)}
+.yb-offerseal--sale{background:var(--yb-accent-signal); color:var(--yb-text-on-action)}
 .yb-offerseal--accent{background:var(--yb-bg-inverse); color:var(--yb-accent-on-dark)}
 /* Nao ha `--gold`. Faltou token semantico para DOURADO DE FUNDO — o que
    existe e `--yb-accent-on-dark`, que e cor de TEXTO sobre escuro — e
@@ -332,8 +335,8 @@
    `.yb-search__clear`. Sete copias da mesma decisao e a definicao de API que
    faltava.
 
-   Os sete continuam como estao: trocar para o modificador mexe na MARCACAO das
-   telas e do tema, e isso e outra entrega. Codigo novo usa este. */
+   Desde 0.13 os sete (e o compartilhar do carrinho) usam este modificador na
+   marcacao; o CSS de cada um ficou so com o que e dele — cor, margem, raio. */
 .yb-iconbtn--square{
   inline-size:var(--yb-target-min); block-size:var(--yb-target-min);
   flex:none;
@@ -352,9 +355,19 @@
   background:var(--yb-surface-on-media); color:var(--yb-text-primary);
   border-radius:var(--yb-radius-full);
 }
+/* INVERSO — branco cheio, para painel escuro. Mesma receita do
+   `.yb-btn--on-dark`, pelo mesmo motivo: com a primaria preta, o botao de
+   acao sobre o rodape escuro media 1:1 contra o proprio fundo e so existia
+   no hover. O branco fica a 16.66:1 do painel e o glifo grafite a 16.66:1 do
+   botao. Diferente do `--onmedia`, que e translucido e pede foto atras. */
+.yb-iconbtn--on-dark{ background:var(--yb-text-inverse); color:var(--yb-bg-inverse); }
+.yb-iconbtn--on-dark:active:not([disabled]){ background:var(--yb-bg-muted); }
+/* O anel magenta some contra o botao branco; sobre o escuro quem se ve e o branco. */
+.yb-iconbtn--on-dark:focus-visible{ outline-color:var(--yb-text-inverse); }
 @media (hover:hover){
   .yb-iconbtn:hover:not([disabled]){ background:var(--yb-bg-muted); }
   .yb-iconbtn--onmedia:hover:not([disabled]){ background:var(--yb-surface-on-media); }
+  .yb-iconbtn--on-dark:hover:not([disabled]){ background:var(--yb-surface-sunken); }
 }
 @media (forced-colors: active){
   .yb-iconbtn{ border:var(--yb-border-hairline) solid; }
@@ -410,15 +423,43 @@
   text-align:center;
 }
 .yb-notice b{color:var(--yb-accent-on-dark); font-weight:var(--yb-font-weight-semibold)}
-.yb-notice a{color:inherit; text-decoration:underline}
-.yb-notice--action{background:var(--yb-action-bg); color:var(--yb-action-text)}
-.yb-notice--action b{color:var(--yb-action-text)}
+/* O LINK DA FAIXA TINHA SUBLINHADO E MAIS NADA. A faixa e o unico atomo com
+   conteudo clicavel dentro e nenhum estado declarado — a matriz o marcava como
+   interativo e com a coluna de foco vazia, o que e exatamente o buraco que
+   aquela coluna existe para acusar.
+
+   Nao da para herdar o foco de ninguem: o anel global do `base/` so vale sob
+   `forced-colors`, e o `<a>` aqui nao e `.yb-link` — ele herda a cor da faixa
+   de proposito, porque magenta sobre grafite reprova.
+
+   Hover engrossa o sublinhado em vez de trocar a cor: sobre a faixa escura so
+   ha o branco, e clarear o que ja e branco nao e uma resposta. */
+.yb-notice a{
+  color:inherit; text-decoration:underline;
+  text-underline-offset:2px;
+  transition:text-decoration-thickness var(--yb-transition-control);
+}
+@media (hover:hover){
+  .yb-notice a:hover{ text-decoration-thickness:2px; }
+}
+.yb-notice a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-text-inverse);
+  outline-offset:var(--yb-focus-offset); border-radius:var(--yb-radius-sm);
+}
+/* Anel BRANCO, e nao `--yb-focus-color`: o magenta canonico mede 3.11:1 sobre o
+   grafite da faixa e reprova o 3:1 da WCAG 1.4.11 — o unico anel que se ve aqui
+   e o da propria cor do texto. A faixa `--soft` e clara e volta ao anel do
+   sistema, logo abaixo. */
+.yb-notice--soft a:focus-visible{
+  outline-color:var(--yb-focus-color);
+}
+.yb-notice--action{background:var(--yb-action-primary-bg); color:var(--yb-action-primary-text)}
+.yb-notice--action b{color:var(--yb-action-primary-text)}
 .yb-notice--soft{
   background:var(--yb-bg-muted); color:var(--yb-text-secondary);
   border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);
 }
 .yb-notice--soft b{color:var(--yb-text-primary)}
-.yb-notice__close{margin-inline-start:auto; color:inherit}
 @media (forced-colors: active){ .yb-notice{ border-block-end:var(--yb-border-hairline) solid; } }
 
 /* =========================================================================
@@ -462,7 +503,7 @@
    tem filhos. `currentColor` mantem tudo em token. */
 .yb-check input,.yb-radio input{
   appearance:none; -webkit-appearance:none;
-  inline-size:1.25rem; block-size:1.25rem; margin:0; flex:none; margin-top:1px;
+  inline-size:1.25rem; block-size:1.25rem; margin:0; flex:none; margin-block-start:1px;
   display:grid; place-content:center;
   background:var(--yb-surface);
   border:var(--yb-border-hairline) solid var(--yb-border-control);
@@ -471,14 +512,14 @@
   transition:background var(--yb-transition-control),
              border-color var(--yb-transition-control);
   /* se `appearance:none` nao pegar, o accent ainda pinta o nativo */
-  accent-color:var(--yb-action-bg);
+  accent-color:var(--yb-action-primary-bg);
 }
 @media (hover:hover){
   .yb-check input:not(:checked):not(:disabled):hover,
   .yb-radio input:not(:checked):not(:disabled):hover{border-color:var(--yb-text-primary)}
 }
 .yb-check input:checked,.yb-radio input:checked{
-  background:var(--yb-action-bg); border-color:var(--yb-action-bg);
+  background:var(--yb-action-primary-bg); border-color:var(--yb-action-primary-bg);
 }
 /* O QUE SEPARA OS DOIS, e so isto: a forma da caixa e a marca dentro dela.
    As quatro regras ficam juntas, e NENHUMA das duas formas e "o padrao" —
@@ -510,7 +551,7 @@
   outline-offset:var(--yb-focus-offset);
 }
 /* Em alto contraste o sistema descarta as cores do autor, e um controle
-   desenhado por nos vira um quadrado vazio: o fundo `--yb-action-bg` do
+   desenhado por nos vira um quadrado vazio: o fundo `--yb-action-primary-bg` do
    marcado some e o tique de `currentColor` vai junto. Devolver o nativo e o
    unico caminho honesto — ali quem desenha e o sistema operacional, e ele
    sabe desenhar marcado e desmarcado. */
@@ -749,12 +790,11 @@ button.yb-link{
 .yb-progress--lg{--yb-progress-h:12px}
 .yb-progress__fill{
   display:block; block-size:100%; inline-size:0;
-  background:var(--yb-action-bg); border-radius:inherit;
+  background:var(--yb-action-primary-bg); border-radius:inherit;
   transition:inline-size var(--yb-duration-slow) var(--yb-ease-standard);
 }
 .yb-progress__fill--success{background:var(--yb-success-solid)}
 .yb-progress__fill--warning{background:var(--yb-warning-solid)}
-.yb-progress__fill--danger{background:var(--yb-danger-solid)}
 
 /* Indeterminado: não existe `aria-valuenow` para anunciar, então a barra é o
    único sinal — e ela precisa se mexer para dizer "ainda estou trabalhando".
@@ -770,9 +810,9 @@ button.yb-link{
    igual. Esteira, e nao pendulo. */
 .yb-progress--indeterminate .yb-progress__fill{
   inline-size:40%; transition:none;
-  animation:yb-progress-vai var(--yb-rhythm-loop) linear infinite;
+  animation:yb-progress-slide var(--yb-rhythm-loop) linear infinite;
 }
-@keyframes yb-progress-vai{
+@keyframes yb-progress-slide{
   from{transform:translateX(calc(-100% * var(--yb-dir)))}
   to{transform:translateX(calc(250% * var(--yb-dir)))}
 }
@@ -791,10 +831,15 @@ button.yb-link{
    INPUT, SELECT, TEXTAREA — os controles de texto
 
    Viviam dentro do bloco do Form field, e por isso nao tinham ficha: eram
-   tratados como peca interna de uma molecula. Nao sao. O campo de e-mail do
-   rodape (onze telas) e a ordenacao do catalogo usam o controle SOZINHO, sem
-   rotulo flutuante nem caixa — e um atomo e isso: nao usa nenhuma outra peca
-   e funciona por conta propria. O Form field e que os compoe.
+   tratados como peca interna de uma molecula. Nao sao. A ordenacao do catalogo
+   usa o controle SOZINHO, sem rotulo flutuante nem caixa — e um atomo e isso:
+   nao usa nenhuma outra peca e funciona por conta propria. O Form field e que
+   os compoe.
+
+   (O campo de e-mail do rodape era o segundo exemplo disto, e deixou de ser em
+   0.13: ele voltou para a caixa, porque ser o unico campo da loja sem rotulo
+   flutuante custava mais do que a caixa branca que a decisao original evitava.
+   Ver a nota na ficha do Input.)
 
    Os tres dividem a mesma caixa, os mesmos estados e a mesma regra de erro.
    O que muda e o que o elemento nativo ja faz: o select abre a lista do
@@ -904,6 +949,8 @@ button.yb-link{
 }
 .yb-field__box > .yb-icon{flex:none; color:var(--yb-text-muted)}
 
+
+
 .yb-field__label{
   font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-medium);
   color:var(--yb-text-primary);
@@ -938,16 +985,69 @@ button.yb-link{
   transform:translateY(-50%) scale(1);
 }
 /* ...e só abre espaço para o ícone quando ele existe de verdade. Reservar
-   sempre deixava o rótulo boiando 24px adentro nos campos sem ícone. */
-.yb-field__box:has(> .yb-icon) > input:placeholder-shown:not(:focus) ~ .yb-field__label{
+   sempre deixava o rótulo boiando 24px adentro nos campos sem ícone.
+
+   `> .yb-icon + input` e não `:has(> .yb-icon)`: o deslocamento vale para o
+   ícone que vem ANTES do controle, porque é ele que ocupa o lugar onde o rótulo
+   pousaria. Com `:has()`, um ícone à direita — o olho da senha, o × de limpar —
+   empurrava o rótulo 24px para dentro sem nada na frente dele, e o rótulo
+   nascia desalinhado do texto que ele mesmo descreve. O irmão adjacente só casa
+   quando o ícone precede. */
+.yb-field__box > .yb-icon + input:placeholder-shown:not(:focus) ~ .yb-field__label{
   inset-inline-start:calc(var(--yb-space-4) + 1.25rem + var(--yb-space-2));
 }
+
+
 /* Textarea alinha no topo: o repouso é na 1ª linha, não no centro da caixa. */
 .yb-field__box:has(> .yb-textarea){align-items:flex-start}
 .yb-field__box > .yb-textarea:placeholder-shown:not(:focus) ~ .yb-field__label{
   inset-block-start:calc(var(--yb-space-3) + .55em);
 }
 .yb-field__box:has(:focus-visible) > .yb-field__label{color:var(--yb-text-primary)}
+
+/* SOBRE FUNDO ESCURO — `--on-dark`, a mesma convencao do botao, do icon button,
+   do badge e do seletor de variante.
+
+   Ela nasceu escondida: o campo do rodape reescrevia cor, borda e anel dentro
+   da folha dos organismos, escopado em `.yb-footer--dark`. Funcionava e era
+   invisivel — quem fosse pôr um campo sobre qualquer outra superficie escura
+   reescreveria tudo de novo, provavelmente com outros tokens. Variante que
+   existe na pratica e nao existe na doc e a definicao de peca que a proxima
+   pessoa reinventa.
+
+   O FUNDO E OPACO e nao `transparent`: o rotulo flutuado recorta a borda com
+   `background-color:inherit`, e sem cor para herdar a linha atravessa o texto.
+   `--yb-bg-inverse` e a superficie escura do sistema, entao o recorte fica
+   invisivel sobre ela.
+
+   FICA NO FIM DO BLOCO DA CAIXA, depois de TODAS as regras de rotulo: elas tem
+   a mesma especificidade e, empatado, quem ganha e a ordem. Esta variante ja
+   nasceu errada duas vezes por causa disso — primeiro o rotulo em repouso saiu
+   em cinza-600 (2.9:1), e depois, ja corrigido o repouso, o rotulo NO FOCO saiu
+   no grafite que a caixa clara usa, que aqui e a propria cor do fundo: 1:1,
+   invisivel. A licao esta na posicao, nao no seletor.
+
+   O ANEL DE FOCO E BRANCO, e nao o magenta do sistema: sobre o grafite o
+   magenta canonico mede 3.11:1 e reprova o 3:1 da WCAG 1.4.11 — o mesmo motivo
+   pelo qual o link do rodape tambem nao e magenta. */
+.yb-field__box--on-dark{
+  background:var(--yb-bg-inverse);
+  border-color:var(--yb-text-muted-inverse);
+}
+.yb-field__box--on-dark > .yb-icon{color:var(--yb-text-muted-inverse)}
+.yb-field__box--on-dark > :is(.yb-input,.yb-select,.yb-textarea){color:var(--yb-text-inverse)}
+.yb-field__box--on-dark > :is(.yb-input,.yb-textarea)::placeholder{color:var(--yb-text-muted-inverse)}
+.yb-field__box--on-dark > .yb-field__label{color:var(--yb-text-secondary-inverse)}
+.yb-field__box--on-dark:has(:focus-visible){
+  outline-color:var(--yb-text-inverse);
+  border-color:var(--yb-text-inverse);
+}
+/* E O ROTULO NO FOCO, que era o buraco: a caixa clara escurece o rotulo no foco
+   (`--yb-text-primary`, o grafite) para ele ganhar peso junto com a borda. Na
+   caixa escura esse grafite e a propria cor do fundo — 1:1, o texto sumia
+   inteiro e sobrava o entalhe vazio na borda. Aqui ele CLAREIA, que e o mesmo
+   gesto na direcao certa. */
+.yb-field__box--on-dark:has(:focus-visible) > .yb-field__label{color:var(--yb-text-inverse)}
 
 .yb-field__box > .yb-textarea{min-height:72px}
 
@@ -1028,12 +1128,12 @@ button.yb-link{
 .yb-stars::before,.yb-stars::after{
   content:""; position:absolute; inset-block:0; inset-inline-start:0;
   background:var(--yb-accent-star);
-  -webkit-mask:var(--yb-stars-forma) 0 50% / calc(1em + var(--yb-stars-gap)) 1em repeat-x;
-          mask:var(--yb-stars-forma) 0 50% / calc(1em + var(--yb-stars-gap)) 1em repeat-x;
+  -webkit-mask:var(--yb-stars-shape) 0 50% / calc(1em + var(--yb-stars-gap)) 1em repeat-x;
+          mask:var(--yb-stars-shape) 0 50% / calc(1em + var(--yb-stars-gap)) 1em repeat-x;
 }
-.yb-stars::before{ --yb-stars-forma:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6l2.93 6.03 6.62.84-4.87 4.59 1.24 6.58L12 17.43l-5.92 3.21 1.24-6.58L2.45 9.47l6.62-.84z' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linejoin='round'/%3E%3C/svg%3E"); inline-size:100%; }
+.yb-stars::before{ --yb-stars-shape:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6l2.93 6.03 6.62.84-4.87 4.59 1.24 6.58L12 17.43l-5.92 3.21 1.24-6.58L2.45 9.47l6.62-.84z' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linejoin='round'/%3E%3C/svg%3E"); inline-size:100%; }
 .yb-stars::after{
-  --yb-stars-forma:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6l2.93 6.03 6.62.84-4.87 4.59 1.24 6.58L12 17.43l-5.92 3.21 1.24-6.58L2.45 9.47l6.62-.84z'/%3E%3C/svg%3E");
+  --yb-stars-shape:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6l2.93 6.03 6.62.84-4.87 4.59 1.24 6.58L12 17.43l-5.92 3.21 1.24-6.58L2.45 9.47l6.62-.84z'/%3E%3C/svg%3E");
   inline-size:calc(clamp(0, var(--yb-stars), 5) / 5 * 100%);
 }
 /* Em RTL a nota enche da direita para a esquerda: a camada cheia ja nasce na

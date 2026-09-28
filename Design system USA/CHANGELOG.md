@@ -8,7 +8,87 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 [GOVERNANCA.md](GOVERNANCA.md), componente novo pede versão **menor** (0.13.0).
 
+### Mudado
+- **Nomes em inglês, sem exceção no que o sistema publica.** 69 nomes em
+  português foram renomeados, sem apelido:
+  - **Classes:** `--arte` → `--art`, `__topo` → `__top`, `--vazio` → `--empty`,
+    `--carregando` → `--loading`, `__gatilho` → `__trigger`, e mais 24.
+  - **Tokens de componente:** `--yb-blur-de/-ate` → `-from/-to`,
+    `--yb-stars-forma` → `-shape`, `--yb-veil-avanco` → `-advance`,
+    `--yb-buybar-altura` → `-height`.
+  - **Atributos de comportamento:** `data-yb-comprar` → `data-yb-buy`,
+    `-avisar` → `-notify`, `-esgotado` → `-soldout`, `-variante` → `-variant`,
+    `-vitrine*` → `-showcase*`, `-filtro` → `-filter`, e os demais.
+  - **Atributos de estado e configuração:** `data-toast-titulo/-texto/...` →
+    `data-toast-title/-text/...`, `data-preco` → `data-price`, `data-foto` →
+    `data-photo`, `data-nota` → `data-rating`, `data-encerrada` → `data-ended`,
+    `data-recolhido` → `data-collapsed`, e os demais.
+  - **Ids e nomes que o script procura:** `tam*` → `size*`, `escrever` →
+    `write-review`, `avisar` → `notify-email`, vitrine `padrao` → `default`,
+    `#conteudo` → `#content`, e os campos de formulário.
+  - **Na doc:** `data-nivel`, `data-aba`, `data-alvo`, `data-yb-abas` e os ids
+    das fichas.
+  - **Quebra:** quem já escrevia marcação com os nomes antigos precisa trocar.
+    A checagem de nomes do validador agora olha tudo isso (DDR-009).
+- **Limpeza de código morto e sujo.**
+  - **Morto:** saem `.yb-bannermedia--center`, `.yb-notice__close`,
+    `.yb-pagination__off` e `.yb-progress__fill--danger`, que nada usava, e o
+    rodapé v1 guardado no gerador, com o CSS que só ele usava
+    (`__links`, `__contact`, `__info strong`). `rodape_v2()` virou `rodape()`.
+  - **Fechar e compartilhar:** os 7 botões de fechar e o compartilhar do
+    carrinho usam `.yb-iconbtn--square` na marcação, e o CSS de cada um guarda
+    só cor, margem e raio. O play do vídeo usa `--lg`.
+  - **Barra de compra:** a altura virou `--yb-buybar-altura` (76px), lida pela
+    barra e pelo respiro do rodapé, no lugar de um 74px medido.
+  - **Propriedades lógicas:** 35 propriedades físicas de direção
+    (`margin-top`, `border-bottom`, `top`…) viraram lógicas.
+  - **JS:** paginação, alerta e oferta passam a ser achados por atributo, e
+    não por classe (DDR-008 ganhou a regra das partes internas).
+  - **Validador:** a matriz conta as peças nomeadas na linha
+    (`HEADER / NAV`), e folha sem movimento não precisa de
+    `prefers-reduced-motion`. Zero avisos.
+- **Cor: os nomes dizem o papel de hoje.** A primária ganhou o nome:
+  `--yb-action-bg`, `-bg-hover`, `-bg-active` e `--yb-action-text` viraram
+  `--yb-action-primary-*`, simétricos à `--yb-action-secondary-*`. O magenta
+  deixou de se chamar marca e ação: `--yb-accent-brand` virou
+  `--yb-accent-signal`, e `--yb-action-on-dark` virou
+  `--yb-accent-signal-on-dark`. Os seis nomes antigos ficam como apelidos
+  `@deprecated` até a 1.0, então o tema da loja não quebra. Na página Color, o
+  neutro diz que a primária é o 950 e o magenta passou a "sinal: link, foco e
+  destaque".
+
 ### Adicionado
+
+- **`.yb-field__box--on-dark` — o campo sobre fundo escuro, agora como variante
+  documentada.** Ela já existia na prática e estava escondida: o campo do rodapé
+  reescrevia cor, borda, placeholder e anel dentro da folha dos organismos,
+  escopado em `.yb-footer--dark`. Funcionava e era invisível — quem fosse pôr um
+  campo sobre qualquer outra superfície escura reescreveria tudo de novo,
+  provavelmente com outros tokens. Variante que existe e não está na doc é a
+  definição de peça que a próxima pessoa reinventa. Agora vive no átomo, com o
+  resto das variantes escuras do sistema (`--on-dark` do botão, do icon button,
+  do badge e do seletor de variante), e a ficha do Input mostra a fileira sobre
+  fundo escuro.
+  Duas coisas ficaram escritas porque não se deduzem: o fundo é **opaco** de
+  propósito — o rótulo flutuado recorta a borda com `background-color:inherit`,
+  e sem cor para herdar a linha atravessa o texto —, e o bloco fica **depois**
+  das regras de rótulo flutuante, que têm a mesma especificidade e pintam
+  `--yb-text-muted`: escrito antes, o rótulo saía em cinza-600 sobre grafite,
+  2,9:1. Com a ordem certa, 11,92:1.
+- **Frete do item na PDP.** Quando o item passa de $50, um selo verde "Free
+  shipping", com o caminhão, entra ao lado de "In stock", na linha do preço.
+  Abaixo da meta, fica a regra em texto de apoio sob o preço
+  (`.yb-buybox__ship`). Os dois acompanham a variante e somem no esgotado.
+  "Free shipping over $50" saiu das garantias do Buy box, que agora seria
+  repetição. O Badge aceita ícone sem mudar de altura.
+- **`.yb-iconbtn--on-dark`**, o inverso branco do Icon button, com a receita do
+  `.yb-btn--on-dark`. O enviar da assinatura no rodapé escuro passa a usá-lo:
+  com a primária preta ele media 1:1 contra o fundo e só aparecia no hover.
+  `.yb-footer__newsbtn` ficou só com posição; a cor vem do átomo.
+- **Footer com Collection e Hair Problems**, as duas colunas do rodapé da loja
+  que faltavam (7 linhas e 6 problemas). São cinco colunas agora, 23 links; no
+  desktop cabem numa linha até 800px e no celular as cinco sanfonam. Vale para a
+  ficha e para as onze telas.
 - **"Baixar tokens (JSON)" no topo da documentação**, no canto direito, ao lado
   da versão: baixa o `dist/ybera-tokens.json` (formato W3C Design Tokens, que o
   build gera a partir do CSS). A busca foi para a esquerda, colada na marca, no
@@ -101,6 +181,147 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   cantos, altura que cresce no celular, arte do tamanho da imagem.
 
 ### Alterado
+- **O ícone do campo entrou na anatomia dos DOIS lados, e o lado passou a
+  importar.** O desenho do Input mostrava cinco partes e nenhum ícone, porque a
+  primeira demo não tinha um. Agora ela tem os dois — envelope antes, × de
+  limpar depois — e o desenho os numera separadamente: **Ícone antes** (parte 3)
+  e **Ícone depois** (parte 6), pela posição no DOM. Os alvos são
+  `> .yb-icon:first-child` e `:last-child`, porque uma classe só não distingue
+  lado. Junto entrou a fileira
+  "Ícone — antes ou depois do controle".
+  E o deslocamento do rótulo foi corrigido: era `.yb-field__box:has(> .yb-icon)`,
+  que vale para ícone em qualquer posição. Com ícone à **direita** — o olho da
+  senha, o × de limpar — o rótulo era empurrado 24px para dentro sem nada na
+  frente dele, e nascia desalinhado do texto que descreve. Agora é
+  `> .yb-icon + input`, o irmão adjacente, que só casa quando o ícone precede.
+  Medido: rótulo a 44px com ícone antes, 16px com ícone depois.
+  Documentado o critério, que não se deduz do código: **antes** quando o ícone
+  diz o que o campo é; **depois** quando é ação sobre o que foi digitado. E
+  ícone que é botão não é ícone — é `.yb-iconbtn` dentro da caixa, com
+  `aria-label` próprio.
+- **O anel de foco encostou na borda: `--yb-focus-offset` passou de 2px a zero.**
+  O afastamento existe para o anel não se fundir com a borda do controle, mas num
+  campo com contorno o efeito era o contrário do pretendido — apareciam três
+  traços (a borda do campo, o vão branco e o anel), e o vão lia como falha de
+  desenho. Zerado, o anel de 2px nasce na própria borda, e a leitura continua se
+  sustentando pelo contraste e não pelo vão: magenta sobre a página branca mede
+  5,36:1, e sobre o grafite que a borda assume no foco, 3,11:1 — os dois acima do
+  3:1 que a WCAG 1.4.11 pede para fronteira de componente. Mexido no token, uma
+  vez só: anel com afastamento diferente em cada controle seria a pergunta "por
+  que este é diferente" outra vez.
+- **O e-mail de contato passou a ser `info@ybera.us`**, no lugar de
+  `info.usa@ybera.com` — 24 ocorrências em 14 arquivos: FAQ, rodapé, PDPs e o
+  gerador. As duas que sobraram estão em `_captura/`, que são capturas da loja
+  em produção: ali o endereço antigo é o que a loja tinha no dia, e corrigir a
+  captura apagaria a evidência.
+- **O campo de e-mail do rodapé ganhou o rótulo flutuante do sistema.** Ele
+  usava o `.yb-input` solto, e a razão escrita era boa — sobre o rodapé escuro a
+  caixa branca do Form field competiria com o botão ao lado. Só que o preço não
+  estava na conta: virou o único campo da loja sem a animação que todos os
+  outros têm, e "por que este é diferente" é a pergunta que ninguém deveria
+  precisar fazer num design system. Agora usa a mesma caixa, com uma
+  sobreposição só: o fundo do próprio rodapé, com borda clara em vez do branco.
+  O entalhe funciona porque o rótulo flutuado recorta com
+  `background-color:inherit` — e, sendo a cor a mesma do rodapé, o recorte fica
+  invisível e o rótulo lê como se estivesse pousado sobre a linha.
+  Duas correções que a primeira versão pediu: o fundo da caixa era
+  `transparent`, e sem cor opaca o entalhe some e a borda atravessa o texto; e a
+  regra antiga que pintava o próprio `<input>` — fundo levantado e borda,
+  herança de quando o rodapé usava o controle solto — desenhava um segundo
+  retângulo mais claro dentro do contorno. O anel de foco
+  é branco, pelo mesmo motivo que o link do rodapé não é magenta: sobre grafite
+  o magenta mede 3.11:1.
+- **O campo de e-mail do rodapé deixou de se chamar pela frase de marketing.** O
+  `<label for>` dele era a chamada — "New arrivals, routines and offers. No
+  spam." —, então era esse o nome acessível do campo: quem usa leitor de tela
+  ouvia a promessa no lugar de "Email", e o que dizia o que digitar era o
+  `placeholder`, que some no primeiro caractere. Agora a chamada é `<p>` ligada
+  por `aria-describedby`, e o nome vem de um `<label>` que só o leitor de tela
+  vê. **Na tela não muda nada** — o campo do rodapé usa o controle solto de
+  propósito, sem a caixa do Form field e sem rótulo flutuante, porque sobre o
+  rodapé escuro a caixa clara competiria com o botão ao lado.
+- **A faixa legal do rodapé virou a da loja.** Eram três destinos com rótulos
+  nossos; são cinco com os rótulos que a ybera.us publica: Terms & Conditions,
+  Privacy Policy, **Refund Policy**, **Shipping Policy** e SMS Terms &
+  Conditions. Os dois que faltavam — devolução e frete — são justamente os que
+  o cliente procura *depois* de comprar, que é quando ele chega ao rodapé. A
+  assinatura passou de "Ybera Paris USA" para a razão social, **YBERA USA LLC**.
+  Atualizado no gerador, na ficha e nas onze telas. Medido: a 1440 os seis itens
+  cabem numa linha de 73px; a 375 quebram em quatro linhas sem estourar a
+  viewport.
+- **O gradiente do "USA" na marca da doc ficou mais vivo.** Trocou os hex de
+  Old Glory (`#B31942` → `#0A3161`) pelos equivalentes Pantone coated da mesma
+  bandeira (`#C8102E` → `#0057B8`). Os primeiros são corretos e apagados: num
+  logotipo de 16px o azul de Old Glory lê como grafite escuro, e o gradiente
+  inteiro sumia no grafite do resto da marca ao lado. Medido em onze pontos do
+  gradiente: vermelho 5,88:1, azul 6,87:1, meio subindo a 9,21:1 — nenhum ponto
+  reprova AA, e a ponta mais clara continua sendo o vermelho. Sobrou menos folga
+  que antes (5,88 contra 6,70), e é o preço de ser mais vivo.
+- **Bloco que não compõe nada agora se declara, com o motivo ao lado.** O aviso
+  contava organismos "ocos" e ficou meses sem chegar a zero — e cobrava uma regra
+  que a escada nunca escreveu: a regra do degrau é *"é uma região da página: tem
+  lugar, e sobrevive sozinho numa tela"*, e não fala de composição. Pela regra,
+  Gallery e Manifesto **são** blocos. Agora a peça declara com
+  `<!-- doc:folha … -->` e sai da conta; sem declaração, continua avisando,
+  porque o caso comum de bloco oco é mesmo molécula no degrau errado. A galeria
+  declara que o que ela usa não são componentes e sim `input[type=radio]` e
+  `label` nativos; o manifesto, que não compor é o ponto dele — é o único bloco
+  da home que não pede nada. Os dois ganharam anatomia escrita à mão, e as duas
+  últimas pendências de doc fecharam.
+- **Os quatro `--yb-type-display-1-*` foram depreciados.** Nasceram como o teto
+  da escala e nunca foram consumidos por peça nenhuma: o `display-2` deu conta de
+  todo título grande que a loja pediu. A GOVERNANCA é clara — semântico é
+  intenção com consumidor, e token novo só entra quando o caso aparece duas
+  vezes; este apareceu zero. Não saem agora porque remover semântico é mudança
+  maior: ficam depreciados o tempo que a governança pede, apontando para o
+  `display-2`.
+  Os outros sete `@deprecated` estão corretos — cada um nomeia substituto e
+  versão de remoção, e o portão já cobra isso.
+  **Avisos do portão: 5 → 2.**
+- **Acessibilidade e Regras de uso escritas para as treze fichas que faltavam** —
+  Chip, Dropdown, Buy box, Cart drawer, Catálogo, Drawer, FAQ, Footer, Header,
+  Manifesto, Free shipping progress, Split e Page layout. As duas abas passaram
+  de 13 pendências para **zero**. Eram quase todas blocos, ou seja, justamente
+  onde a decisão é mais cara de refazer depois.
+- **A faixa de aviso ganhou os estados que não tinha.** Era o único átomo com
+  conteúdo clicável dentro e nenhum estado declarado — a matriz o marcava como
+  interativo e com a coluna de foco vazia, que é exatamente o buraco que aquela
+  coluna existe para acusar. O `<a>` dentro dela não herda foco de ninguém: o
+  anel global do `base/` só vale sob `forced-colors`. Agora tem `:hover` que
+  engrossa o sublinhado (sobre a faixa escura só há o branco, e clarear o que já
+  é branco não é resposta) e `:focus-visible` com anel **branco** — o magenta
+  canônico mede 3.11:1 sobre o grafite e reprova o 3:1 da WCAG 1.4.11. Na
+  variante `--soft`, que é clara, o anel volta ao do sistema.
+- **A matriz parou de cobrar foco de quem não é controle.** `interativo` somava
+  `temJs`, que responde "o JS menciona esta classe" — e o comportamento escreve
+  `yb-badge--success` ao montar um toast, o que faz do Badge uma peça que o JS
+  RENDERIZA, não uma peça com que se interage. A matriz cobrava foco visível de
+  um rótulo estático, gastando a única coluna que tinha o trabalho de acusar
+  controle sem foco. Ficam os dois sinais que vêm da própria seção: elemento
+  focável no seletor, ou estado declarado. Nenhum componente aparece mais como
+  interativo sem foco e sem estado, e a maturidade subiu para **46 estáveis e 8
+  beta**.
+- **Um idioma só para nome de elemento: inglês.** Doze das quarenta e quatro
+  famílias nomeavam em dois, e o Buy box tinha os dois para a mesma coisa —
+  `__acoes` na linha 1691 e `__actions` na 1758, sessenta e sete linhas de
+  distância. Nenhuma checagem pegava, porque as duas formas são válidas.
+  **55 elementos renomeados, 1.168 ocorrências** em 31 arquivos: folhas, peças,
+  telas, gerador, comportamento e os seletores das anatomias. `__precoLinha`, o
+  único camelCase do sistema, foi junto.
+  **Sem alias, e a razão está medida:** o `adocao.json` tem uma medição, fase 0,
+  de antes da adoção — a loja ainda não escreve classe nenhuma do sistema, e o
+  `bridge/` traduz token, não classe. Renomear agora não quebra consumidor
+  nenhum; renomear depois quebraria.
+  Checagem nova (140 → 141) proíbe a volta: 45 raízes em português e qualquer
+  camelCase reprovam o build. A lista é de raízes, não de palavras inteiras, para
+  pegar `__brinde` e `__brinde-card` de uma vez.
+- **A matriz voltou a dizer a verdade sobre adoção.** A coluna "Tela real" lia
+  duas telas escritas à mão, e uma delas — `pages/index.html` — tinha deixado de
+  ser tela quando virou a capa do grupo Exemplos. A matriz media o sistema contra
+  um índice de links e uma PDP. Agora lê as onze do disco: **48 componentes em
+  tela real, não 31**, e a maturidade corrigiu junto — **44 estáveis e 10 beta,
+  contra 28 e 26**. Dezessete componentes estavam no ar carimbados como se não
+  estivessem.
 - **As anatomias foram conferidas contra o que as peças mostram hoje**, e onze
   ganharam partes que faltavam. O desenho nasceu antes de várias mudanças desta
   rodada e ficou para trás em silêncio — o caso que apareceu primeiro foi o
@@ -321,6 +542,10 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   nome novo ela vencia a altura de celular do componente.
 
 ### Corrigido
+- **Sacola calculava frete grátis a partir de $200**, enquanto a faixa do topo,
+  o FAQ e a PDP diziam $50: um carrinho de $127.80 via "Add $72.20 more for
+  free shipping". A meta virou `FRETE_GRATIS = 50`, uma constante só no
+  gerador, e a sacola das onze telas passou a "Free shipping unlocked".
 - **Valores fixos trocados por token** (auditoria de 25/09):
   - Bordas: 40 `1px` e 6 `2px` crus, mais 12 usos do primitivo, viraram
     `--yb-border-hairline` e `--yb-border-emphasis` — os semânticos existiam e

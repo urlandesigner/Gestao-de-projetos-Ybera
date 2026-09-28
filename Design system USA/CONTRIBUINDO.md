@@ -8,7 +8,7 @@ como decidir está em [PRINCIPIOS.md](PRINCIPIOS.md). Aqui é a mecânica.
 
 ```bash
 ./serve.sh            # http://localhost:8080 — porta fixa, sem cache
-npm run check         # build + 140 checagens, o mesmo que roda no CI
+npm run check         # build + 141 checagens, o mesmo que roda no CI
 ```
 
 `serve.sh` manda `Cache-Control: no-store`: editar um token e recarregar mostra
@@ -66,7 +66,7 @@ a próxima pessoa reescreve, e aí o sistema tem dois.
 
 ## Mudar um valor existente
 
-Trocar o valor de um token semântico **não é mudança maior**. Se `--yb-action-bg`
+Trocar o valor de um token semântico **não é mudança maior**. Se `--yb-action-primary-bg`
 deixa de ser magenta e vira grafite, quem consome não muda uma linha — é
 exatamente para isso que a camada existe.
 

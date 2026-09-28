@@ -64,16 +64,16 @@
       </nav>
     </div>
 
-    <div data-estado="visitante" data-rotulo="Visitante" hidden>
+    <div data-state="guest" data-label="Visitante" hidden>
       <div class="yb-nav__head">
               <span class="yb-logo yb-logo--md" aria-hidden="true">
                 <img src="../brand/ybera-logo.webp" alt="" width="360" height="139"></span>
-              <label class="yb-iconbtn yb-nav__close" for="nva-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></label>
+              <label class="yb-iconbtn yb-iconbtn--square yb-nav__close" for="nva-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></label>
             </div>
-            <div class="yb-nav__conta">
-              <span class="yb-nav__conta-quem">
+            <div class="yb-nav__account">
+              <span class="yb-nav__account-who">
                 <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg>
-                <b class="yb-nav__conta-nome">Welcome, Visitor</b>
+                <b class="yb-nav__account-name">Welcome, Visitor</b>
               </span>
               <a class="yb-btn yb-btn--primary yb-btn--sm" href="#demos">Log in</a>
             </div>
@@ -134,16 +134,16 @@
               </li>
             </ul>
     </div>
-    <div data-estado="logada" data-rotulo="Conta logada" hidden>
+    <div data-state="signed-in" data-label="Conta logada" hidden>
       <div class="yb-nav__head">
               <span class="yb-logo yb-logo--md" aria-hidden="true">
                 <img src="../brand/ybera-logo.webp" alt="" width="360" height="139"></span>
-              <label class="yb-iconbtn yb-nav__close" for="nvb-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></label>
+              <label class="yb-iconbtn yb-iconbtn--square yb-nav__close" for="nvb-open" role="button" tabindex="0" aria-label="Close menu"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></label>
             </div>
-            <div class="yb-nav__conta">
-              <span class="yb-nav__conta-quem">
-                <span class="yb-nav__conta-inicial" aria-hidden="true">U</span>
-                <b class="yb-nav__conta-nome">Urlan</b>
+            <div class="yb-nav__account">
+              <span class="yb-nav__account-who">
+                <span class="yb-nav__account-initial" aria-hidden="true">U</span>
+                <b class="yb-nav__account-name">Urlan</b>
               </span>
               <a class="yb-btn yb-btn--primary yb-btn--sm" href="#demos">Account</a>
             </div>
@@ -219,7 +219,7 @@
       <b>A conta muda de casa, não de peça</b>
       <p>No desktop quem identifica é o <code>.yb-header__account</code>, com
       <a href="../atoms/avatar.html">Avatar</a> e <a href="../molecules/dropdown.html">Dropdown</a>.
-      Na gaveta é a faixa <code>.yb-nav__conta</code> &mdash; o único bloco com fundo e o
+      Na gaveta é a faixa <code>.yb-nav__account</code> &mdash; o único bloco com fundo e o
       único botão lá dentro. Sem ela, &ldquo;Log in&rdquo; seria o 26º link de uma lista
       de links iguais.</p>
       <p>Deslogado ela traz ícone e <b>Welcome, Visitor</b>; logado, a inicial e o

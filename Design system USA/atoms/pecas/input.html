@@ -3,8 +3,10 @@
     <div class="demo demo--stack" style="max-inline-size:24rem">
       <div class="yb-field">
         <div class="yb-field__box">
+          <svg class="yb-icon yb-icon--md" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-mail"/></svg>
           <input class="yb-input" id="in1" type="email" placeholder=" " autocomplete="email">
           <label class="yb-field__label" for="in1">Email<span class="req">*</span></label>
+          <svg class="yb-icon yb-icon--md" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg>
         </div>
         <span class="yb-field__hint">Only for order tracking.</span>
       </div>
@@ -31,6 +33,40 @@
         <span class="yb-field__error" id="in4e">Enter a 5-digit ZIP code, like 33101.</span>
       </div>
     </div>
+    <h3 class="row-label">&Iacute;cone &mdash; antes ou depois do controle</h3>
+    <div class="demo demo--stack" style="max-inline-size:24rem">
+      <div class="yb-field">
+        <div class="yb-field__box">
+          <svg class="yb-icon yb-icon--md" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg>
+          <input class="yb-input" id="in-ic1" type="search" placeholder=" ">
+          <label class="yb-field__label" for="in-ic1">Search the store</label>
+        </div>
+        <span class="yb-field__hint">Antes: diz o que o campo é, e o rótulo desloca para caber.</span>
+      </div>
+      <div class="yb-field">
+        <div class="yb-field__box">
+          <input class="yb-input" id="in-ic2" type="password" placeholder="">
+          <label class="yb-field__label" for="in-ic2">Password</label>
+          <svg class="yb-icon yb-icon--md" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-eye"/></svg>
+        </div>
+        <span class="yb-field__hint">Depois: é ação sobre o que foi digitado, e o rótulo não sai do lugar.</span>
+      </div>
+    </div>
+    <div class="note">
+      <b>De que lado, e por quê</b>
+      <p><b>Antes</b> quando o ícone diz o que o campo é — envelope, lupa, CEP.
+      Ele ocupa o lugar onde o rótulo pousaria, e por isso o rótulo desloca
+      24px para caber.</p>
+      <p><b>Depois</b> quando é ação sobre o que foi digitado — o olho da senha,
+      o × de limpar. Aí o rótulo <b>não</b> desloca: não há nada na frente dele.
+      A regra distingue os dois pelo irmão adjacente (<code>.yb-icon + input</code>),
+      e não por <code>:has()</code> — com <code>:has()</code> o ícone da direita
+      empurrava o rótulo sem nada na frente.</p>
+      <p>Ícone que é <b>botão</b> não é ícone: é <code>.yb-iconbtn</code> dentro
+      da caixa, com <code>aria-label</code> próprio. O <code>&lt;svg&gt;</code>
+      solto é sempre decorativo.</p>
+    </div>
+
     <h3 class="row-label">Com ícone e ação ao lado</h3>
     <div class="demo demo--stack" style="max-inline-size:28rem">
       <form class="yb-field yb-field--row" onsubmit="return false">
@@ -68,9 +104,34 @@
       liga ao campo por <code>aria-describedby</code>, então o leitor de tela anuncia
       a correção junto com o campo — e a borda vermelha nunca é o único sinal.</p>
     </div>
+    <h3 class="row-label">Sobre fundo escuro &mdash; <code>--on-dark</code></h3>
+    <div class="demo demo--stack demo--dark" style="max-inline-size:24rem">
+      <div class="yb-field">
+        <div class="yb-field__box yb-field__box--on-dark">
+          <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-mail"/></svg>
+          <input class="yb-input" id="in-dark" type="email" placeholder=" " autocomplete="email">
+          <label class="yb-field__label" for="in-dark">Your best email</label>
+        </div>
+      </div>
+    </div>
     <div class="note">
-      <b>Sem rótulo visível, só onde o contexto já diz</b>
-      <p>O e-mail da newsletter no rodapé vem logo abaixo de "First to know" e não tem
-      rótulo flutuante: é a caixa sozinha, com <code>aria-label</code>. É a exceção,
-      não o padrão — num formulário de verdade o rótulo aparece sempre.</p>
+      <b>A variante escura, e por que ela existe</b>
+      <p>Mesma caixa, mesma mecânica de rótulo flutuante: muda a cor. O fundo é
+      <code>--yb-bg-inverse</code> e <b>opaco de propósito</b> — o rótulo recorta
+      a borda com <code>background-color:inherit</code>, e sem cor para herdar a
+      linha atravessa o texto.</p>
+      <p>O anel de foco é <b>branco</b>, e não o magenta do sistema: sobre o
+      grafite o magenta mede 3,11:1 e reprova o 3:1 da WCAG 1.4.11 — o mesmo
+      motivo pelo qual o link do rodapé também não é magenta.</p>
+    </div>
+    <div class="note">
+      <b>O campo do rodapé deixou de ser exceção</b>
+      <p>Ele usava a caixa sozinha, sem rótulo flutuante, porque sobre o rodapé
+      escuro a caixa branca competiria com o botão ao lado. A razão era boa e o
+      preço não estava na conta: virou o único campo da loja sem a animação que
+      todos os outros têm, e “por que este é diferente” é a pergunta que ninguém
+      deveria precisar fazer num design system. Agora usa a mesma caixa, com uma
+      sobreposição só — fundo transparente e borda clara. O entalhe continua
+      funcionando porque o rótulo flutuado recorta com
+      <code>background-color:inherit</code>, e ali ele herda o grafite.</p>
     </div>

@@ -384,7 +384,7 @@
    cabeçalho, rodapé e hero encostam na borda na loja, e um palco acolchoado
    os mostraria com uma margem que eles não têm.
 
-   Por isso o respiro é o padrão e o `data-nivel` o retira, em vez do
+   Por isso o respiro é o padrão e o `data-level` o retira, em vez do
    contrário: quem tem respiro são 32 peças, quem não tem são 17. */
 /* `:not(.stage--pad)` e conserto, nao estilo: sem ele o seletor de nivel
    (0,2,0) vencia `.stage--pad` (0,1,0), e a classe ficava escrita e inerte nos
@@ -393,8 +393,8 @@
    Nem todo organismo sangra — cabecalho, rodape e hero encostam na tela, mas
    FAQ e barra de frete sao secoes DENTRO do respiro da pagina, e um palco sem
    respiro os mostra com uma margem que eles nao tem. */
-[data-nivel="organisms"] .stage:not(.stage--pad),
-[data-nivel="templates"] .stage:not(.stage--pad){padding:0}
+[data-level="organisms"] .stage:not(.stage--pad),
+[data-level="templates"] .stage:not(.stage--pad){padding:0}
 .stage--pad{padding:var(--yb-space-8)}
 @media (max-width:760px){.stage--pad{padding:var(--yb-page-gutter)}}
 
@@ -406,10 +406,10 @@
    de centralizá-la, senão o demo mostra uma gaveta que flutua no meio da tela.
    Em 320px o respiro do palco espremia a gaveta a 222px — largura que telefone
    nenhum tem, e que fazia o demo mentir sobre o componente. */
-[data-nivel="organisms"] .stage--dim{
+[data-level="organisms"] .stage--dim{
   padding:var(--yb-space-8); display:flex; justify-content:flex-end;
 }
-@media (max-width:480px){[data-nivel="organisms"] .stage--dim{padding:var(--yb-space-2)}}
+@media (max-width:480px){[data-level="organisms"] .stage--dim{padding:var(--yb-space-2)}}
 
 /* Duas colunas de demonstração (galeria + bloco de compra, arte + texto). */
 .split{display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-6)}

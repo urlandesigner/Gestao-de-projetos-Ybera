@@ -129,7 +129,7 @@
   display:inline-flex; align-items:center;
   min-height:var(--yb-target-min);
   padding:var(--yb-space-3) var(--yb-space-5);
-  background:var(--yb-action-bg); color:var(--yb-action-text);
+  background:var(--yb-action-primary-bg); color:var(--yb-action-primary-text);
   font-family:inherit; font-size:var(--yb-type-body-sm-size);
   font-weight:var(--yb-font-weight-semibold);
   text-decoration:none;
@@ -305,12 +305,12 @@
   border-color:transparent;
 }
 
-.yb-btn--primary{background:var(--yb-action-bg); color:var(--yb-action-text)}
+.yb-btn--primary{background:var(--yb-action-primary-bg); color:var(--yb-action-primary-text)}
 
 @media (hover:hover){
-  .yb-btn--primary:hover:not([disabled]){background:var(--yb-action-bg-hover)}
+  .yb-btn--primary:hover:not([disabled]){background:var(--yb-action-primary-bg-hover)}
 }
-.yb-btn--primary:active:not([disabled]){background:var(--yb-action-bg-active)}
+.yb-btn--primary:active:not([disabled]){background:var(--yb-action-primary-bg-active)}
 
 .yb-btn--secondary{
   background:var(--yb-action-secondary-bg); color:var(--yb-action-secondary-text);
@@ -397,7 +397,7 @@
 .yb-btn--loading{color:transparent !important; pointer-events:none}
 .yb-btn--loading::after{
   content:""; position:absolute; width:var(--yb-icon-sm); height:var(--yb-icon-sm);
-  border:var(--yb-border-emphasis) solid currentColor; border-top-color:transparent;
+  border:var(--yb-border-emphasis) solid currentColor; border-block-start-color:transparent;
   border-radius:var(--yb-radius-full);
   animation:yb-spin var(--yb-duration-slower) linear infinite;
 }
@@ -407,10 +407,10 @@
    secundaria usava o branco de quando era grafite; sobre o magenta-100 de
    agora, 1,1:1 — invisivel. */
 .yb-btn--primary.yb-btn--loading::after,
-.yb-btn--danger.yb-btn--loading::after{border-color:var(--yb-text-inverse); border-top-color:transparent}
-.yb-btn--secondary.yb-btn--loading::after{border-color:var(--yb-action-secondary-text); border-top-color:transparent}
-.yb-btn--ghost.yb-btn--loading::after{border-color:var(--yb-text-primary); border-top-color:transparent}
-.yb-btn--on-dark.yb-btn--loading::after{border-color:var(--yb-bg-inverse); border-top-color:transparent}
+.yb-btn--danger.yb-btn--loading::after{border-color:var(--yb-text-inverse); border-block-start-color:transparent}
+.yb-btn--secondary.yb-btn--loading::after{border-color:var(--yb-action-secondary-text); border-block-start-color:transparent}
+.yb-btn--ghost.yb-btn--loading::after{border-color:var(--yb-text-primary); border-block-start-color:transparent}
+.yb-btn--on-dark.yb-btn--loading::after{border-color:var(--yb-bg-inverse); border-block-start-color:transparent}
 
 /* =========================================================================
    BADGE
@@ -423,8 +423,8 @@
   border-radius:var(--yb-radius-badge); white-space:nowrap;
 }
 /* MAGENTA, e nao o preto da acao: o desconto nao e um botao. Ver
-   --yb-accent-brand. */
-.yb-badge--sale{background:var(--yb-accent-brand); color:var(--yb-text-on-action)}
+   --yb-accent-signal. */
+.yb-badge--sale{background:var(--yb-accent-signal); color:var(--yb-text-on-action)}
 /* O par do botao secundario, e de proposito os MESMOS tokens dele — nao uma
    copia dos valores. Quem afinar o botao secundario um dia move este selo
    junto, que e o que "mesmo padrao de cor do secundario" quer dizer; dois
@@ -461,10 +461,10 @@
    contar com o que estiver atras, e por isso e o unico da familia que pode ir
    sobre imagem: os claros (`--soft`, `--secondary`, `--success`, `--warning`,
    `--danger`) medem ~1,2:1 contra um packshot e somem.
-   O texto e `--yb-action-on-dark`, nao a cor de acao crua: o magenta-600
+   O texto e `--yb-accent-signal-on-dark`, nao a cor de acao crua: o magenta-600
    canonico da 3.11:1 sobre o grafite e reprova. Ver o token. */
 .yb-badge--on-media,
-.yb-badge--accent{background:var(--yb-bg-inverse); color:var(--yb-action-on-dark)}
+.yb-badge--accent{background:var(--yb-bg-inverse); color:var(--yb-accent-signal-on-dark)}
 /* @deprecated desde 0.12 — use .yb-badge--on-media. Remocao em 1.0.
    Chamava-se `--accent` porque o texto era o dourado da marca; quando ele
    virou magenta o nome passou a descrever o que a classe NAO e mais — e
@@ -472,6 +472,9 @@
    convivencia de duas versoes menores, para nao quebrar quem ja usa — por
    isso divide a regra do `--on-media`, acima, em vez de repeti-la. */
 .yb-badge--success{background:var(--yb-success-surface); color:var(--yb-success-text)}
+/* Icone no selo: 16px, mas sem crescer o selo. A margem negativa devolve a
+   diferenca para a linha, e o selo com icone fica da altura do selo sem. */
+.yb-badge .yb-icon{--yb-icon-size:var(--yb-icon-sm); margin-block:calc(var(--yb-space-1) * -1)}
 .yb-badge--warning{background:var(--yb-warning-surface); color:var(--yb-warning-text)}
 .yb-badge--danger{background:var(--yb-danger-surface); color:var(--yb-danger-text)}
 /* Sobre painel escuro. Nao e o `--on-media` invertido: aquele e fundo escuro
@@ -549,7 +552,7 @@
    a escolha para cima de foto; `--sale` mede 3,3:1 nas mesmas fotos — passa o
    minimo de 3:1 de objeto grafico, mas raspando e variando com a imagem, e
    por isso e a roupa de superficie lisa. */
-.yb-offerseal--sale{background:var(--yb-accent-brand); color:var(--yb-text-on-action)}
+.yb-offerseal--sale{background:var(--yb-accent-signal); color:var(--yb-text-on-action)}
 .yb-offerseal--accent{background:var(--yb-bg-inverse); color:var(--yb-accent-on-dark)}
 /* Nao ha `--gold`. Faltou token semantico para DOURADO DE FUNDO — o que
    existe e `--yb-accent-on-dark`, que e cor de TEXTO sobre escuro — e
@@ -588,8 +591,8 @@
    `.yb-search__clear`. Sete copias da mesma decisao e a definicao de API que
    faltava.
 
-   Os sete continuam como estao: trocar para o modificador mexe na MARCACAO das
-   telas e do tema, e isso e outra entrega. Codigo novo usa este. */
+   Desde 0.13 os sete (e o compartilhar do carrinho) usam este modificador na
+   marcacao; o CSS de cada um ficou so com o que e dele — cor, margem, raio. */
 .yb-iconbtn--square{
   inline-size:var(--yb-target-min); block-size:var(--yb-target-min);
   flex:none;
@@ -608,9 +611,19 @@
   background:var(--yb-surface-on-media); color:var(--yb-text-primary);
   border-radius:var(--yb-radius-full);
 }
+/* INVERSO — branco cheio, para painel escuro. Mesma receita do
+   `.yb-btn--on-dark`, pelo mesmo motivo: com a primaria preta, o botao de
+   acao sobre o rodape escuro media 1:1 contra o proprio fundo e so existia
+   no hover. O branco fica a 16.66:1 do painel e o glifo grafite a 16.66:1 do
+   botao. Diferente do `--onmedia`, que e translucido e pede foto atras. */
+.yb-iconbtn--on-dark{ background:var(--yb-text-inverse); color:var(--yb-bg-inverse); }
+.yb-iconbtn--on-dark:active:not([disabled]){ background:var(--yb-bg-muted); }
+/* O anel magenta some contra o botao branco; sobre o escuro quem se ve e o branco. */
+.yb-iconbtn--on-dark:focus-visible{ outline-color:var(--yb-text-inverse); }
 @media (hover:hover){
   .yb-iconbtn:hover:not([disabled]){ background:var(--yb-bg-muted); }
   .yb-iconbtn--onmedia:hover:not([disabled]){ background:var(--yb-surface-on-media); }
+  .yb-iconbtn--on-dark:hover:not([disabled]){ background:var(--yb-surface-sunken); }
 }
 @media (forced-colors: active){
   .yb-iconbtn{ border:var(--yb-border-hairline) solid; }
@@ -666,15 +679,43 @@
   text-align:center;
 }
 .yb-notice b{color:var(--yb-accent-on-dark); font-weight:var(--yb-font-weight-semibold)}
-.yb-notice a{color:inherit; text-decoration:underline}
-.yb-notice--action{background:var(--yb-action-bg); color:var(--yb-action-text)}
-.yb-notice--action b{color:var(--yb-action-text)}
+/* O LINK DA FAIXA TINHA SUBLINHADO E MAIS NADA. A faixa e o unico atomo com
+   conteudo clicavel dentro e nenhum estado declarado — a matriz o marcava como
+   interativo e com a coluna de foco vazia, o que e exatamente o buraco que
+   aquela coluna existe para acusar.
+
+   Nao da para herdar o foco de ninguem: o anel global do `base/` so vale sob
+   `forced-colors`, e o `<a>` aqui nao e `.yb-link` — ele herda a cor da faixa
+   de proposito, porque magenta sobre grafite reprova.
+
+   Hover engrossa o sublinhado em vez de trocar a cor: sobre a faixa escura so
+   ha o branco, e clarear o que ja e branco nao e uma resposta. */
+.yb-notice a{
+  color:inherit; text-decoration:underline;
+  text-underline-offset:2px;
+  transition:text-decoration-thickness var(--yb-transition-control);
+}
+@media (hover:hover){
+  .yb-notice a:hover{ text-decoration-thickness:2px; }
+}
+.yb-notice a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-text-inverse);
+  outline-offset:var(--yb-focus-offset); border-radius:var(--yb-radius-sm);
+}
+/* Anel BRANCO, e nao `--yb-focus-color`: o magenta canonico mede 3.11:1 sobre o
+   grafite da faixa e reprova o 3:1 da WCAG 1.4.11 — o unico anel que se ve aqui
+   e o da propria cor do texto. A faixa `--soft` e clara e volta ao anel do
+   sistema, logo abaixo. */
+.yb-notice--soft a:focus-visible{
+  outline-color:var(--yb-focus-color);
+}
+.yb-notice--action{background:var(--yb-action-primary-bg); color:var(--yb-action-primary-text)}
+.yb-notice--action b{color:var(--yb-action-primary-text)}
 .yb-notice--soft{
   background:var(--yb-bg-muted); color:var(--yb-text-secondary);
   border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);
 }
 .yb-notice--soft b{color:var(--yb-text-primary)}
-.yb-notice__close{margin-inline-start:auto; color:inherit}
 @media (forced-colors: active){ .yb-notice{ border-block-end:var(--yb-border-hairline) solid; } }
 
 /* =========================================================================
@@ -718,7 +759,7 @@
    tem filhos. `currentColor` mantem tudo em token. */
 .yb-check input,.yb-radio input{
   appearance:none; -webkit-appearance:none;
-  inline-size:1.25rem; block-size:1.25rem; margin:0; flex:none; margin-top:1px;
+  inline-size:1.25rem; block-size:1.25rem; margin:0; flex:none; margin-block-start:1px;
   display:grid; place-content:center;
   background:var(--yb-surface);
   border:var(--yb-border-hairline) solid var(--yb-border-control);
@@ -727,14 +768,14 @@
   transition:background var(--yb-transition-control),
              border-color var(--yb-transition-control);
   /* se `appearance:none` nao pegar, o accent ainda pinta o nativo */
-  accent-color:var(--yb-action-bg);
+  accent-color:var(--yb-action-primary-bg);
 }
 @media (hover:hover){
   .yb-check input:not(:checked):not(:disabled):hover,
   .yb-radio input:not(:checked):not(:disabled):hover{border-color:var(--yb-text-primary)}
 }
 .yb-check input:checked,.yb-radio input:checked{
-  background:var(--yb-action-bg); border-color:var(--yb-action-bg);
+  background:var(--yb-action-primary-bg); border-color:var(--yb-action-primary-bg);
 }
 /* O QUE SEPARA OS DOIS, e so isto: a forma da caixa e a marca dentro dela.
    As quatro regras ficam juntas, e NENHUMA das duas formas e "o padrao" —
@@ -766,7 +807,7 @@
   outline-offset:var(--yb-focus-offset);
 }
 /* Em alto contraste o sistema descarta as cores do autor, e um controle
-   desenhado por nos vira um quadrado vazio: o fundo `--yb-action-bg` do
+   desenhado por nos vira um quadrado vazio: o fundo `--yb-action-primary-bg` do
    marcado some e o tique de `currentColor` vai junto. Devolver o nativo e o
    unico caminho honesto — ali quem desenha e o sistema operacional, e ele
    sabe desenhar marcado e desmarcado. */
@@ -1005,12 +1046,11 @@ button.yb-link{
 .yb-progress--lg{--yb-progress-h:12px}
 .yb-progress__fill{
   display:block; block-size:100%; inline-size:0;
-  background:var(--yb-action-bg); border-radius:inherit;
+  background:var(--yb-action-primary-bg); border-radius:inherit;
   transition:inline-size var(--yb-duration-slow) var(--yb-ease-standard);
 }
 .yb-progress__fill--success{background:var(--yb-success-solid)}
 .yb-progress__fill--warning{background:var(--yb-warning-solid)}
-.yb-progress__fill--danger{background:var(--yb-danger-solid)}
 
 /* Indeterminado: não existe `aria-valuenow` para anunciar, então a barra é o
    único sinal — e ela precisa se mexer para dizer "ainda estou trabalhando".
@@ -1026,9 +1066,9 @@ button.yb-link{
    igual. Esteira, e nao pendulo. */
 .yb-progress--indeterminate .yb-progress__fill{
   inline-size:40%; transition:none;
-  animation:yb-progress-vai var(--yb-rhythm-loop) linear infinite;
+  animation:yb-progress-slide var(--yb-rhythm-loop) linear infinite;
 }
-@keyframes yb-progress-vai{
+@keyframes yb-progress-slide{
   from{transform:translateX(calc(-100% * var(--yb-dir)))}
   to{transform:translateX(calc(250% * var(--yb-dir)))}
 }
@@ -1047,10 +1087,15 @@ button.yb-link{
    INPUT, SELECT, TEXTAREA — os controles de texto
 
    Viviam dentro do bloco do Form field, e por isso nao tinham ficha: eram
-   tratados como peca interna de uma molecula. Nao sao. O campo de e-mail do
-   rodape (onze telas) e a ordenacao do catalogo usam o controle SOZINHO, sem
-   rotulo flutuante nem caixa — e um atomo e isso: nao usa nenhuma outra peca
-   e funciona por conta propria. O Form field e que os compoe.
+   tratados como peca interna de uma molecula. Nao sao. A ordenacao do catalogo
+   usa o controle SOZINHO, sem rotulo flutuante nem caixa — e um atomo e isso:
+   nao usa nenhuma outra peca e funciona por conta propria. O Form field e que
+   os compoe.
+
+   (O campo de e-mail do rodape era o segundo exemplo disto, e deixou de ser em
+   0.13: ele voltou para a caixa, porque ser o unico campo da loja sem rotulo
+   flutuante custava mais do que a caixa branca que a decisao original evitava.
+   Ver a nota na ficha do Input.)
 
    Os tres dividem a mesma caixa, os mesmos estados e a mesma regra de erro.
    O que muda e o que o elemento nativo ja faz: o select abre a lista do
@@ -1160,6 +1205,8 @@ button.yb-link{
 }
 .yb-field__box > .yb-icon{flex:none; color:var(--yb-text-muted)}
 
+
+
 .yb-field__label{
   font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-medium);
   color:var(--yb-text-primary);
@@ -1194,16 +1241,69 @@ button.yb-link{
   transform:translateY(-50%) scale(1);
 }
 /* ...e só abre espaço para o ícone quando ele existe de verdade. Reservar
-   sempre deixava o rótulo boiando 24px adentro nos campos sem ícone. */
-.yb-field__box:has(> .yb-icon) > input:placeholder-shown:not(:focus) ~ .yb-field__label{
+   sempre deixava o rótulo boiando 24px adentro nos campos sem ícone.
+
+   `> .yb-icon + input` e não `:has(> .yb-icon)`: o deslocamento vale para o
+   ícone que vem ANTES do controle, porque é ele que ocupa o lugar onde o rótulo
+   pousaria. Com `:has()`, um ícone à direita — o olho da senha, o × de limpar —
+   empurrava o rótulo 24px para dentro sem nada na frente dele, e o rótulo
+   nascia desalinhado do texto que ele mesmo descreve. O irmão adjacente só casa
+   quando o ícone precede. */
+.yb-field__box > .yb-icon + input:placeholder-shown:not(:focus) ~ .yb-field__label{
   inset-inline-start:calc(var(--yb-space-4) + 1.25rem + var(--yb-space-2));
 }
+
+
 /* Textarea alinha no topo: o repouso é na 1ª linha, não no centro da caixa. */
 .yb-field__box:has(> .yb-textarea){align-items:flex-start}
 .yb-field__box > .yb-textarea:placeholder-shown:not(:focus) ~ .yb-field__label{
   inset-block-start:calc(var(--yb-space-3) + .55em);
 }
 .yb-field__box:has(:focus-visible) > .yb-field__label{color:var(--yb-text-primary)}
+
+/* SOBRE FUNDO ESCURO — `--on-dark`, a mesma convencao do botao, do icon button,
+   do badge e do seletor de variante.
+
+   Ela nasceu escondida: o campo do rodape reescrevia cor, borda e anel dentro
+   da folha dos organismos, escopado em `.yb-footer--dark`. Funcionava e era
+   invisivel — quem fosse pôr um campo sobre qualquer outra superficie escura
+   reescreveria tudo de novo, provavelmente com outros tokens. Variante que
+   existe na pratica e nao existe na doc e a definicao de peca que a proxima
+   pessoa reinventa.
+
+   O FUNDO E OPACO e nao `transparent`: o rotulo flutuado recorta a borda com
+   `background-color:inherit`, e sem cor para herdar a linha atravessa o texto.
+   `--yb-bg-inverse` e a superficie escura do sistema, entao o recorte fica
+   invisivel sobre ela.
+
+   FICA NO FIM DO BLOCO DA CAIXA, depois de TODAS as regras de rotulo: elas tem
+   a mesma especificidade e, empatado, quem ganha e a ordem. Esta variante ja
+   nasceu errada duas vezes por causa disso — primeiro o rotulo em repouso saiu
+   em cinza-600 (2.9:1), e depois, ja corrigido o repouso, o rotulo NO FOCO saiu
+   no grafite que a caixa clara usa, que aqui e a propria cor do fundo: 1:1,
+   invisivel. A licao esta na posicao, nao no seletor.
+
+   O ANEL DE FOCO E BRANCO, e nao o magenta do sistema: sobre o grafite o
+   magenta canonico mede 3.11:1 e reprova o 3:1 da WCAG 1.4.11 — o mesmo motivo
+   pelo qual o link do rodape tambem nao e magenta. */
+.yb-field__box--on-dark{
+  background:var(--yb-bg-inverse);
+  border-color:var(--yb-text-muted-inverse);
+}
+.yb-field__box--on-dark > .yb-icon{color:var(--yb-text-muted-inverse)}
+.yb-field__box--on-dark > :is(.yb-input,.yb-select,.yb-textarea){color:var(--yb-text-inverse)}
+.yb-field__box--on-dark > :is(.yb-input,.yb-textarea)::placeholder{color:var(--yb-text-muted-inverse)}
+.yb-field__box--on-dark > .yb-field__label{color:var(--yb-text-secondary-inverse)}
+.yb-field__box--on-dark:has(:focus-visible){
+  outline-color:var(--yb-text-inverse);
+  border-color:var(--yb-text-inverse);
+}
+/* E O ROTULO NO FOCO, que era o buraco: a caixa clara escurece o rotulo no foco
+   (`--yb-text-primary`, o grafite) para ele ganhar peso junto com a borda. Na
+   caixa escura esse grafite e a propria cor do fundo — 1:1, o texto sumia
+   inteiro e sobrava o entalhe vazio na borda. Aqui ele CLAREIA, que e o mesmo
+   gesto na direcao certa. */
+.yb-field__box--on-dark:has(:focus-visible) > .yb-field__label{color:var(--yb-text-inverse)}
 
 .yb-field__box > .yb-textarea{min-height:72px}
 
@@ -1284,12 +1384,12 @@ button.yb-link{
 .yb-stars::before,.yb-stars::after{
   content:""; position:absolute; inset-block:0; inset-inline-start:0;
   background:var(--yb-accent-star);
-  -webkit-mask:var(--yb-stars-forma) 0 50% / calc(1em + var(--yb-stars-gap)) 1em repeat-x;
-          mask:var(--yb-stars-forma) 0 50% / calc(1em + var(--yb-stars-gap)) 1em repeat-x;
+  -webkit-mask:var(--yb-stars-shape) 0 50% / calc(1em + var(--yb-stars-gap)) 1em repeat-x;
+          mask:var(--yb-stars-shape) 0 50% / calc(1em + var(--yb-stars-gap)) 1em repeat-x;
 }
-.yb-stars::before{ --yb-stars-forma:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6l2.93 6.03 6.62.84-4.87 4.59 1.24 6.58L12 17.43l-5.92 3.21 1.24-6.58L2.45 9.47l6.62-.84z' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linejoin='round'/%3E%3C/svg%3E"); inline-size:100%; }
+.yb-stars::before{ --yb-stars-shape:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6l2.93 6.03 6.62.84-4.87 4.59 1.24 6.58L12 17.43l-5.92 3.21 1.24-6.58L2.45 9.47l6.62-.84z' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linejoin='round'/%3E%3C/svg%3E"); inline-size:100%; }
 .yb-stars::after{
-  --yb-stars-forma:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6l2.93 6.03 6.62.84-4.87 4.59 1.24 6.58L12 17.43l-5.92 3.21 1.24-6.58L2.45 9.47l6.62-.84z'/%3E%3C/svg%3E");
+  --yb-stars-shape:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6l2.93 6.03 6.62.84-4.87 4.59 1.24 6.58L12 17.43l-5.92 3.21 1.24-6.58L2.45 9.47l6.62-.84z'/%3E%3C/svg%3E");
   inline-size:calc(clamp(0, var(--yb-stars), 5) / 5 * 100%);
 }
 /* Em RTL a nota enche da direita para a esquerda: a camada cheia ja nasce na
@@ -1669,9 +1769,9 @@ button.yb-link{
    disso — ver LARGURA TOTAL, acima), que e a mesma da arte de campanha.
    No celular a arte vem em 2:3, a mesma proporcao do hero, e fecha exata,
    sem sobra. */
-.yb-bannerhero--arte{ background:var(--yb-surface-sunken); }
-.yb-bannerhero--arte img{ object-fit:contain; }
-.yb-bannerhero--arte .yb-bannerhero__fundo{
+.yb-bannerhero--art{ background:var(--yb-surface-sunken); }
+.yb-bannerhero--art img{ object-fit:contain; }
+.yb-bannerhero--art .yb-bannerhero__backdrop{
   object-fit:cover; z-index:-2;
   filter:blur(var(--yb-blur-lg)); transform:scale(1.15);   /* escala: o blur clareia a borda */
 }
@@ -1682,12 +1782,12 @@ button.yb-link{
    a arte inteira com o fundo desfocado. So vale no hero: a conta e da altura
    dele. */
 @media (min-width:1366px){
-  .yb-bannerhero--arte img{ object-fit:cover; }
-  .yb-bannerhero--arte .yb-bannerhero__fundo{ display:none; }
+  .yb-bannerhero--art img{ object-fit:cover; }
+  .yb-bannerhero--art .yb-bannerhero__backdrop{ display:none; }
 }
 @media (max-width:767.98px){
-  .yb-bannerhero--arte img{ object-fit:cover; }
-  .yb-bannerhero--arte .yb-bannerhero__fundo{ display:none; }
+  .yb-bannerhero--art img{ object-fit:cover; }
+  .yb-bannerhero--art .yb-bannerhero__backdrop{ display:none; }
 }
 /* Veu em duas camadas, porque uma so nao resolve: forte o bastante para o
    texto, ela apaga a foto; fraca o bastante para a foto, o texto some.
@@ -1881,13 +1981,13 @@ button.yb-link{
   backdrop-filter:blur(calc(var(--yb-blur-radius) * var(--yb-blur-f)));
   -webkit-mask-image:
     linear-gradient(to top,
-      currentColor calc(var(--yb-blur-de) * 100% / 3), transparent calc(var(--yb-blur-ate) * 100% / 3)),
+      currentColor calc(var(--yb-blur-from) * 100% / 3), transparent calc(var(--yb-blur-to) * 100% / 3)),
     linear-gradient(to right,
       currentColor var(--yb-blur-reach, 100%),
       transparent calc(var(--yb-blur-reach, 100%) + var(--yb-blur-falloff, 12rem)));
   mask-image:
     linear-gradient(to top,
-      currentColor calc(var(--yb-blur-de) * 100% / 3), transparent calc(var(--yb-blur-ate) * 100% / 3)),
+      currentColor calc(var(--yb-blur-from) * 100% / 3), transparent calc(var(--yb-blur-to) * 100% / 3)),
     linear-gradient(to right,
       currentColor var(--yb-blur-reach, 100%),
       transparent calc(var(--yb-blur-reach, 100%) + var(--yb-blur-falloff, 12rem)));
@@ -1897,15 +1997,15 @@ button.yb-link{
 .yb-bannerhero__blur > i:nth-child(1),
 .yb-bannermedia__blur > i:nth-child(1),
 .yb-offercard__blur   > i:nth-child(1),
-.yb-collection__blur  > i:nth-child(1){ --yb-blur-f:1;   --yb-blur-de:0; --yb-blur-ate:1; }
+.yb-collection__blur  > i:nth-child(1){ --yb-blur-f:1;   --yb-blur-from:0; --yb-blur-to:1; }
 .yb-bannerhero__blur > i:nth-child(2),
 .yb-bannermedia__blur > i:nth-child(2),
 .yb-offercard__blur   > i:nth-child(2),
-.yb-collection__blur  > i:nth-child(2){ --yb-blur-f:.5;  --yb-blur-de:1; --yb-blur-ate:2; }
+.yb-collection__blur  > i:nth-child(2){ --yb-blur-f:.5;  --yb-blur-from:1; --yb-blur-to:2; }
 .yb-bannerhero__blur > i:nth-child(3),
 .yb-bannermedia__blur > i:nth-child(3),
 .yb-offercard__blur   > i:nth-child(3),
-.yb-collection__blur  > i:nth-child(3){ --yb-blur-f:.25; --yb-blur-de:2; --yb-blur-ate:3; }
+.yb-collection__blur  > i:nth-child(3){ --yb-blur-f:.25; --yb-blur-from:2; --yb-blur-to:3; }
 /* O veu leve (.65) acompanha a variante. Ver o comentario do token: ele NAO
    depende do blur para passar contraste — medido, o blur soma 0,8 de razao na
    foto com brilho especular e zero nas outras duas. Ele fica escopado aqui
@@ -1990,14 +2090,13 @@ button.yb-link{
   /* escuro: se a foto nao carregar, o texto branco ainda le */
   background:var(--yb-bg-inverse);
 }
-.yb-bannermedia--center{ align-items:center; }
 /* ARTE — a peca pronta do marketing, com o texto no pixel. A imagem entra no
    fluxo e a caixa fica do tamanho dela: nem corte, nem sobra, em QUALQUER
    formato (o 9:16 da arte da Fashion Gold na PDP). Quando a arte e mais larga
    que o celular, o <picture> troca pela versao mobile em 767px. Sem corpo e
    sem veu: o `alt` repete a promessa. */
-.yb-bannermedia--arte{ display:block; min-height:0; background:var(--yb-surface-sunken); }
-.yb-bannermedia--arte img{
+.yb-bannermedia--art{ display:block; min-height:0; background:var(--yb-surface-sunken); }
+.yb-bannermedia--art img{
   position:static; display:block; inline-size:100%; block-size:auto;
 }
 /* A queda do veu, na tabela desta peca (a do hero e outra).
@@ -2017,28 +2116,6 @@ button.yb-link{
 @media (min-width:360px){
   .yb-bannermedia{ --yb-veil-fall:clamp(3.5rem, 34vw - 13rem, 11rem); }
 }
-.yb-bannermedia--center .yb-bannermedia__body{
-  align-items:center; text-align:center;
-}
-/* A faixa centrada dissolve para os DOIS lados, entao a mesma folga tem de
-   caber duas vezes — a queda vale metade. Sem isto a curva era cortada nas
-   duas pontas: alfa .39 na primeira linha de pixel do banner. */
-.yb-bannermedia--center{ --yb-veil-fall:clamp(1.5rem, 17vw - 6rem, 6.5rem); }
-.yb-bannermedia--center .yb-bannermedia__body::before{
-  inset:calc(var(--yb-veil-fall) * -1) 0;
-  background:linear-gradient(to bottom,
-    var(--yb-scrim-none)    0,
-    var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
-    var(--yb-scrim-curve-2) calc(var(--yb-veil-fall) * .5),
-    var(--yb-scrim-curve-3) calc(var(--yb-veil-fall) * .75),
-    var(--yb-scrim-full)    var(--yb-veil-fall),
-    var(--yb-scrim-full)    calc(100% - var(--yb-veil-fall)),
-    var(--yb-scrim-curve-3) calc(100% - var(--yb-veil-fall) * .75),
-    var(--yb-scrim-curve-2) calc(100% - var(--yb-veil-fall) * .5),
-    var(--yb-scrim-curve-1) calc(100% - var(--yb-veil-fall) * .25),
-    var(--yb-scrim-none)    100%);
-}
-.yb-bannermedia--center .yb-bannermedia__body > *{ max-inline-size:52ch; }
 /* BLUR — as mesmas tres folhas do Banner hero (a lista compartilhada fica
    la), na escala desta peca: no maximo 26rem de altura contra 34rem do hero,
    dentro do container de 1200 em vez de sangrar em 1920. */
@@ -2051,7 +2128,7 @@ button.yb-link{
    sobrava um fundo marrom liso. Com 125vw (464px em 375) a metade de cima e
    foto nitida. Teto de 30rem para a tela de 767 nao virar um poster. */
 @media (max-width:767.98px){
-  .yb-bannermedia:not(.yb-bannermedia--arte){
+  .yb-bannermedia:not(.yb-bannermedia--art){
     min-height:clamp(16rem, 125vw, 30rem);
   }
 }
@@ -2171,7 +2248,7 @@ button.yb-link{
    mas diz o que aconteceu antes de a pessoa tentar comprar */
 .yb-card--sold-out .yb-card__media{ opacity:var(--yb-opacity-media-disabled); }
 .yb-card--sold-out .yb-card__media::after{
-  content:attr(data-esgotado); position:absolute;
+  content:attr(data-soldout); position:absolute;
   inset-inline:0; inset-block-end:0; padding:var(--yb-space-2);
   text-align:center; background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
   font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
@@ -2451,8 +2528,8 @@ button.yb-link{
    Quem quiser resolver a CAUSA tira o texto de cima da foto: enquanto 60% do
    cartao for texto sobre imagem, vai haver um veu grande aqui. E quem mexer na
    altura do corpo precisa reconferir ESTA conta — foi ela que quebrou. */
-.yb-offercard{ --yb-veil-fall:8.25rem; --yb-veil-avanco:1.5rem; }
-/* `--yb-veil-avanco`: a rampa nao para no topo do CORPO, avanca ate o TITULO.
+.yb-offercard{ --yb-veil-fall:8.25rem; --yb-veil-advance:1.5rem; }
+/* `--yb-veil-advance`: a rampa nao para no topo do CORPO, avanca ate o TITULO.
    Os 24px entre um e outro sao recuo — nao ha texto neles, e terminar ali
    desperdicava 24px de rampa e somava 24px de chapado. Avancando, a mesma
    queda fica mais longa (mais suave) e o plato fica menor. Padrao zero: quem
@@ -2462,10 +2539,10 @@ button.yb-link{
   inset:calc(var(--yb-veil-fall) * -1) 0 0;
   background:linear-gradient(to bottom,
     var(--yb-scrim-none)    0,
-    var(--yb-scrim-curve-1) calc((var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)) * .25),
-    var(--yb-scrim-curve-2) calc((var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)) * .5),
-    var(--yb-scrim-curve-3) calc((var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)) * .75),
-    var(--yb-scrim-full)    calc(var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)));
+    var(--yb-scrim-curve-1) calc((var(--yb-veil-fall) + var(--yb-veil-advance, 0px)) * .25),
+    var(--yb-scrim-curve-2) calc((var(--yb-veil-fall) + var(--yb-veil-advance, 0px)) * .5),
+    var(--yb-scrim-curve-3) calc((var(--yb-veil-fall) + var(--yb-veil-advance, 0px)) * .75),
+    var(--yb-scrim-full)    calc(var(--yb-veil-fall) + var(--yb-veil-advance, 0px)));
 }
 /* Com blur, igual ao banner. A banda e em PORCENTAGEM da altura do cartao e
    nao em rem: a altura do cartao vem da coluna do grid, nao da janela, e vai
@@ -2491,10 +2568,10 @@ button.yb-link{
 .yb-offercard--blur .yb-offercard__body::before{
   background:linear-gradient(to bottom,
     var(--yb-scrim-none)         0,
-    var(--yb-scrim-lite-curve-1) calc((var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)) * .25),
-    var(--yb-scrim-lite-curve-2) calc((var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)) * .5),
-    var(--yb-scrim-lite-curve-3) calc((var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)) * .75),
-    var(--yb-scrim-lite)         calc(var(--yb-veil-fall) + var(--yb-veil-avanco, 0px)));
+    var(--yb-scrim-lite-curve-1) calc((var(--yb-veil-fall) + var(--yb-veil-advance, 0px)) * .25),
+    var(--yb-scrim-lite-curve-2) calc((var(--yb-veil-fall) + var(--yb-veil-advance, 0px)) * .5),
+    var(--yb-scrim-lite-curve-3) calc((var(--yb-veil-fall) + var(--yb-veil-advance, 0px)) * .75),
+    var(--yb-scrim-lite)         calc(var(--yb-veil-fall) + var(--yb-veil-advance, 0px)));
 }
 /* Duas linhas, como no cartao de catalogo — e aqui o motivo e outro: cada
    linha a mais do titulo cresce o corpo, e o veu acompanha o corpo. Um nome
@@ -2546,7 +2623,7 @@ button.yb-link{
 /* Preco e relogio na mesma linha, com o preco mandando: e ele que decide a
    compra. O relogio quebra para baixo quando nao couber, em vez de espremer
    o preco. */
-.yb-offercard__linha{
+.yb-offercard__row{
   display:flex; align-items:center; flex-wrap:wrap;
   gap:var(--yb-space-3) var(--yb-space-4); inline-size:100%;
 }
@@ -2595,12 +2672,12 @@ button.yb-link{
 .yb-offercard__sep{color:var(--yb-text-secondary-inverse)}
 /* Prazo vencido nao vira 00:00:00 parado na tela — isso e relogio quebrado,
    nao oferta. O relogio sai e o cartao diz o que aconteceu. */
-.yb-offercard__fim{
+.yb-offercard__deadline{
   margin:0; font-size:var(--yb-type-body-sm-size);
   font-weight:var(--yb-font-weight-medium);
   color:var(--yb-text-secondary-inverse);
 }
-.yb-offercard[data-encerrada] .yb-offercard__timer{display:none}
+.yb-offercard[data-ended] .yb-offercard__timer{display:none}
 
 .yb-offercard .yb-btn{inline-size:100%}
 
@@ -2741,25 +2818,25 @@ button.yb-link{
 /* selecionado: traco de 2px, e o padding cede os 2px para a caixa nao pular */
 .yb-swatches--cards input:checked + label{
   border-width:var(--yb-border-emphasis);
-  padding:calc(var(--yb-space-3) - 1px);
+  padding:calc(var(--yb-space-3) - (var(--yb-border-emphasis) - var(--yb-border-hairline)));
   background:var(--yb-surface);
 }
 /* Esgotado e um ESTADO DO DADO, nao um controle impedido. Era so `:disabled`,
    e ai o tamanho sem estoque ficava visivel e inalcancavel — impossivel chegar
    nele, e chegar nele e o unico caminho para o aviso de volta. Com
-   `[data-yb-esgotado]` o cartao continua selecionavel e continua dizendo que
+   `[data-yb-soldout]` o cartao continua selecionavel e continua dizendo que
    acabou. `:disabled` fica no seletor porque tambem existe opcao que a pagina
    de fato impede (combinacao invalida), e as duas se parecem. */
-.yb-swatches--cards input:is(:disabled,[data-yb-esgotado]) + label{
+.yb-swatches--cards input:is(:disabled,[data-yb-soldout]) + label{
   text-decoration:none;                      /* riscar o cartao inteiro nao le */
   background:var(--yb-surface);
 }
-.yb-swatches--cards input:is(:disabled,[data-yb-esgotado]) + label img{ opacity:var(--yb-opacity-control-disabled); }
-.yb-swatches--cards input:is(:disabled,[data-yb-esgotado]) + label .yb-swatches__name,
-.yb-swatches--cards input:is(:disabled,[data-yb-esgotado]) + label .yb-swatches__price{
+.yb-swatches--cards input:is(:disabled,[data-yb-soldout]) + label img{ opacity:var(--yb-opacity-control-disabled); }
+.yb-swatches--cards input:is(:disabled,[data-yb-soldout]) + label .yb-swatches__name,
+.yb-swatches--cards input:is(:disabled,[data-yb-soldout]) + label .yb-swatches__price{
   text-decoration:line-through; color:var(--yb-text-muted);
 }
-.yb-swatches--cards input:is(:disabled,[data-yb-esgotado]) + label .yb-swatches__stock{
+.yb-swatches--cards input:is(:disabled,[data-yb-soldout]) + label .yb-swatches__stock{
   color:var(--yb-danger-text);
 }
 /* No toque a fileira rola em vez de quebrar — cabe mais opcao sem empurrar
@@ -2854,23 +2931,20 @@ button.yb-link{
   border-radius:var(--yb-radius-card);
   font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-relaxed);
 }
-.yb-alert__icone{flex:none; margin-block-start:.1em}
+.yb-alert__icon{flex:none; margin-block-start:.1em}
 /* O corpo empurra o fechar para a ponta sem precisar de `space-between`, que
    grudaria o icone no texto quando o alerta fosse curto. */
-.yb-alert__corpo{flex:1; min-width:0}
+.yb-alert__body{flex:1; min-width:0}
 .yb-alert__title{
   display:block; font-weight:var(--yb-font-weight-semibold);
-  margin-bottom:var(--yb-space-1);
+  margin-block-end:var(--yb-space-1);
 }
 /* FECHAR. Mesma receita do toast: 44px de alvo com margem negativa, para o
    controle nao inflar a altura do alerta — a caixa cresce para fora.
    Herda a cor da variante em vez de ser cinza: um X cinza dentro de uma caixa
    ambar le como elemento de outro lugar. */
 .yb-alert__close{
-  border:none; background:transparent; cursor:pointer; flex:none;
-  color:inherit; padding:0; border-radius:var(--yb-radius-sm); line-height:var(--yb-line-height-none);
-  display:inline-flex; align-items:center; justify-content:center;
-  width:var(--yb-target-min); height:var(--yb-target-min);
+  color:inherit; border-radius:var(--yb-radius-sm); line-height:var(--yb-line-height-none);
   margin:calc(var(--yb-space-3) * -1) calc(var(--yb-space-3) * -1)
          calc(var(--yb-space-3) * -1) 0;
   transition:color var(--yb-transition-control);
@@ -2881,7 +2955,11 @@ button.yb-link{
    para `--yb-text-primary`, que serve nas quatro tintas por ser o tom mais
    escuro do sistema. Um X cinza dentro de uma caixa ambar leria como elemento
    de outro lugar, e por isso ele nao e `--yb-text-muted` como no toast. */
-@media (hover:hover){ .yb-alert__close:hover{color:var(--yb-text-primary)} }
+/* `:not([disabled])` para empatar com o hover do `.yb-iconbtn`, que poe fundo
+   cinza — cinza dentro de uma caixa ambar e o mesmo erro do X cinza. */
+@media (hover:hover){
+  .yb-alert__close:hover:not([disabled]){color:var(--yb-text-primary); background:transparent}
+}
 .yb-alert__close:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:calc(var(--yb-focus-offset) * -1);
@@ -2901,7 +2979,7 @@ button.yb-link{
    Vale para o acordeao inteiro, e nao so no FAQ: dois acordeoes com molduras
    diferentes na mesma loja e a maneira mais barata de um sistema comecar a
    divergir de si mesmo. */
-.yb-accordion details{border-bottom:var(--yb-border-hairline) solid var(--yb-border-subtle)}
+.yb-accordion details{border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle)}
 .yb-accordion summary{
   display:flex; justify-content:space-between; align-items:center;
   padding:var(--yb-space-4) 0; cursor:pointer; list-style:none;
@@ -2950,7 +3028,7 @@ button.yb-link{
   transition-behavior:allow-discrete;
 }
 .yb-accordion details[open]::details-content{ block-size:auto; }
-.yb-accordion__body{padding-bottom:var(--yb-space-4)}
+.yb-accordion__body{padding-block-end:var(--yb-space-4)}
 .yb-accordion__body p{
   margin:0; font-size:var(--yb-type-body-sm-size);
   line-height:var(--yb-line-height-relaxed);
@@ -3018,7 +3096,7 @@ button.yb-link{
   pointer-events:auto; display:flex; gap:var(--yb-space-3);
   align-items:flex-start; padding:var(--yb-space-4) var(--yb-space-5);
   background:var(--yb-surface); color:var(--yb-text-primary);
-  border:var(--yb-border-hairline) solid var(--yb-border); border-inline-start:var(--yb-border-emphasis) solid var(--yb-action-bg);
+  border:var(--yb-border-hairline) solid var(--yb-border); border-inline-start:var(--yb-border-emphasis) solid var(--yb-action-primary-bg);
   border-radius:var(--yb-radius-card); box-shadow:var(--yb-elevation-dropdown);
   animation:yb-toast-in var(--yb-duration-slow) var(--yb-ease-enter);
 }
@@ -3037,28 +3115,20 @@ button.yb-link{
 .yb-toast__body{flex:1; min-width:0}
 .yb-toast__title{
   display:block; font-size:var(--yb-type-body-sm-size);
-  font-weight:var(--yb-font-weight-semibold); margin-bottom:2px;
+  font-weight:var(--yb-font-weight-semibold); margin-block-end:2px;
 }
 .yb-toast__text{margin:0; font-size:var(--yb-type-caption-size);
   color:var(--yb-text-secondary)}
 .yb-toast__close{
-  border:none; background:transparent; cursor:pointer; flex:none;
-  color:var(--yb-text-muted); padding:0;
+  color:var(--yb-text-muted);
   border-radius:var(--yb-radius-sm); line-height:var(--yb-line-height-none);
-  /* Era o unico controle do sistema sem piso: media 15.8x21.3, um terco do
-     --yb-target-min que o proprio sistema declara. A margem negativa devolve
-     os 44 de alvo sem inflar a altura do toast. */
-  display:inline-flex; align-items:center; justify-content:center;
-  width:var(--yb-target-min); height:var(--yb-target-min);
+  /* O alvo de 44 vem do `.yb-iconbtn--square`; a margem negativa o devolve
+     sem inflar a altura do toast. */
   margin:calc(var(--yb-space-3) * -1) calc(var(--yb-space-2) * -1);
 }
 
 @media (hover:hover){
   .yb-toast__close:hover{color:var(--yb-text-primary)}
-}
-.yb-toast__close:focus-visible{
-  outline:var(--yb-focus-width) solid var(--yb-focus-color);
-  outline-offset:var(--yb-focus-offset);
 }
 @keyframes yb-toast-in{from{opacity:0; transform:translateY(8px)}to{opacity:1; transform:none}}
 @keyframes yb-toast-out{to{opacity:0; transform:translateY(8px)}}
@@ -3139,7 +3209,7 @@ button.yb-link{
      As reticencias ficam: sem elas, "1 [3] 12" mente dizendo que ha tres
      paginas. Quem monta a paginacao marca as vizinhas com esta classe; quem
      nao marcar cai na rolagem abaixo, que e a rede de seguranca. */
-  .yb-pagination__perto{display:none}
+  .yb-pagination__near{display:none}
   /* O respiro lateral sai; os 44px de alvo ficam. Com `min-width:44` mais
      12px de cada lado, cada numero ocupava 68 — o alvo continua com os 44
      quando o respiro vai embora, e a tira cai de 452 para 264. */
@@ -3161,14 +3231,13 @@ button.yb-link{
   .yb-pagination ol::-webkit-scrollbar{display:none}
   .yb-pagination li{flex:none}
 }
-.yb-pagination__off{color:var(--yb-text-disabled); cursor:not-allowed}
 
 /* =========================================================================
    PARTNER — o recado de quem indicou
 
    Aparece quando a pessoa chega por link patrocinado de uma influenciadora:
    avatar mais um balao dizendo de quem e o desconto. E a ponta de cima do
-   mesmo fio que termina em `.yb-cart__parceiro`, la no pe da gaveta — um
+   mesmo fio que termina em `.yb-cart__partner`, la no pe da gaveta — um
    apresenta, o outro cobra a promessa no instante do total.
 
    COMPORTAMENTO NA ROLAGEM. O balao e um recado: serve uma vez. Depois de
@@ -3227,7 +3296,7 @@ button.yb-link{
   transition:transform var(--yb-transition-control);
 }
 .yb-partner__avatar img{inline-size:100%; block-size:100%; object-fit:cover; display:block}
-/* Recolhido (`[data-recolhido]`, especificidade maior) continua mandando: o
+/* Recolhido (`[data-collapsed]`, especificidade maior) continua mandando: o
    avatar encolhido nao cresce por passar o mouse. */
 @media (hover:hover){
   .yb-partner__avatar:hover{ transform:scale(1.06); }
@@ -3259,16 +3328,16 @@ button.yb-link{
 }
 /* RECOLHIDO. `visibility` junto com a opacidade para o balao sair da ordem de
    foco e da leitura — invisivel que ainda recebe Tab e recado fantasma. */
-.yb-partner[data-recolhido] .yb-partner__bubble{
+.yb-partner[data-collapsed] .yb-partner__bubble{
   opacity:0; visibility:hidden; transform:translateX(-.5rem) scale(.98);
 }
-.yb-partner[data-recolhido] .yb-partner__avatar{transform:scale(.82)}
+.yb-partner[data-collapsed] .yb-partner__avatar{transform:scale(.82)}
 /* Ponto de aviso: recolhido, o avatar sozinho nao diz que ha recado atras
    dele. O ponto e decorativo — quem ouve ja tem o texto do proprio botao. */
-.yb-partner[data-recolhido] .yb-partner__avatar::after{
+.yb-partner[data-collapsed] .yb-partner__avatar::after{
   content:""; position:absolute; inset-block-start:2px; inset-inline-end:2px;
   inline-size:.5rem; block-size:.5rem; border-radius:var(--yb-radius-pill);
-  background:var(--yb-accent-brand); border:var(--yb-border-hairline) solid var(--yb-surface);
+  background:var(--yb-accent-signal); border:var(--yb-border-hairline) solid var(--yb-surface);
 }
 
 /* -------------------------------------------------------------------------
@@ -3319,7 +3388,7 @@ button.yb-link{
    `sticky` resolve os dois momentos com uma regra: no fluxo ela ocupa o
    proprio espaco logo abaixo do cabecalho, e quando a rolagem a alcanca ela
    gruda no mesmo lugar onde a versao ancorada apareceria. */
-.yb-partnerbar--fluxo{position:sticky}
+.yb-partnerbar--inline{position:sticky}
 /* 3,5rem e a faixa de duas linhas, que e o pior caso (35px numa linha no
    desktop, 53 em duas no celular). Mesmo recurso que a barra de compra usa
    para dar respiro ao rodape: a altura e medida, nao calculavel em CSS. */
@@ -3374,7 +3443,7 @@ body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 
   min-height:var(--yb-target-min);
   padding:var(--yb-space-2) var(--yb-space-4);
   border-radius:var(--yb-radius-full);
-  /* Era --yb-action-bg: quatro rotulos de categoria com a mesma cor do "Add
+  /* Era --yb-action-primary-bg: quatro rotulos de categoria com a mesma cor do "Add
      to cart" e do contador do carrinho — botoes que nao compram nada. O
      token e explicito: magenta e funcao, existe onde ha decisao a tomar. Um
      link para colecao e navegacao; a pill vira superficie clara com texto
@@ -3454,7 +3523,7 @@ body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 
 
 /* --- CARTAO: foto em cima, rodape branco com nome e atalho ---------------
    Outra ANATOMIA, nao outra posicao de rotulo. As variantes acima
-   (`--bottom`, `--center`, `--overlay`) sao o mesmo desenho com o rotulo
+   (`--bottom`, `--overlay`) sao o mesmo desenho com o rotulo
    flutuando em lugares diferentes da foto; aqui o rotulo sai de cima da
    imagem e ganha uma faixa propria.
 
@@ -3671,7 +3740,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
    linha ficava equidistante, e equidistante ela nao separa nada: o resumo
    parecia colado no trilho, e os dois liam como um bloco so. A linha pertence
    ao resumo — fica perto dele e longe do que vem depois. */
-.yb-reviews__topo{
+.yb-reviews__top{
   display:grid; gap:var(--yb-space-6) var(--yb-space-10);
   grid-template-columns:auto minmax(12rem, 20rem) 1fr;
   align-items:center;
@@ -3679,7 +3748,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
   margin-block-end:var(--yb-space-10);
   border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);
 }
-.yb-reviews__nota{display:flex; flex-direction:column; gap:var(--yb-space-1)}
+.yb-reviews__score{display:flex; flex-direction:column; gap:var(--yb-space-1)}
 .yb-reviews__media{
   font-size:var(--yb-type-h1-size); font-weight:var(--yb-font-weight-bold);
   line-height:var(--yb-line-height-none); font-variant-numeric:proportional-nums;
@@ -3692,25 +3761,25 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
   list-style:none; margin:0; padding:0;
   display:flex; flex-direction:column; gap:var(--yb-space-3);
 }
-.yb-reviews__linha{display:grid; grid-template-columns:auto 1fr auto; gap:var(--yb-space-3); align-items:center}
-.yb-reviews__estrela{
+.yb-reviews__row{display:grid; grid-template-columns:auto 1fr auto; gap:var(--yb-space-3); align-items:center}
+.yb-reviews__star{
   display:inline-flex; align-items:center; gap:var(--yb-space-1);
   color:var(--yb-text-secondary); font-size:var(--yb-type-body-sm-size);
   font-variant-numeric:tabular-nums;
 }
 /* Largura fixa na contagem: sem ela a barra do "6" e a barra do "0" terminam em
    x diferentes e a coluna inteira fica torta. */
-.yb-reviews__qtd{
+.yb-reviews__count{
   min-inline-size:2ch; text-align:end;
   color:var(--yb-text-secondary); font-size:var(--yb-type-body-sm-size);
   font-variant-numeric:tabular-nums;
 }
-.yb-reviews__acoes{
+.yb-reviews__actions{
   display:flex; flex-direction:column; align-items:flex-start;
   gap:var(--yb-space-4);
 }
 @media (max-width:860px){
-  .yb-reviews__topo{grid-template-columns:1fr}
+  .yb-reviews__top{grid-template-columns:1fr}
 }
 
 .yb-reviews{
@@ -3762,13 +3831,13 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 }
 /* O icone e sinal, nao ilustracao: fica no tom silencioso do texto de apoio,
    porque quem precisa ser lido aqui e a saida. */
-.yb-empty__icone{
+.yb-empty__icon{
   display:flex; align-items:center; justify-content:center;
   inline-size:3.5rem; block-size:3.5rem; border-radius:var(--yb-radius-full);
   background:var(--yb-bg-muted); color:var(--yb-text-muted);
   margin-block-end:var(--yb-space-1);
 }
-.yb-empty__icone .yb-icon{--yb-icon-size:var(--yb-icon-lg)}
+.yb-empty__icon .yb-icon{--yb-icon-size:var(--yb-icon-lg)}
 .yb-empty__title{
   margin:0; font-size:var(--yb-type-h3-size);
   font-weight:var(--yb-font-weight-bold);
@@ -3777,7 +3846,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 /* 44ch e nao 100%: linha de apoio atravessando 1200px obriga o olho a varrer
    a pagina inteira para ler uma frase de consolo. */
 .yb-empty__text{margin:0; max-inline-size:var(--yb-measure-lede)}
-.yb-empty__acoes{
+.yb-empty__actions{
   display:flex; flex-wrap:wrap; gap:var(--yb-space-3);
   justify-content:center; margin-block-start:var(--yb-space-3);
 }
@@ -3998,15 +4067,14 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 }
 
 /* botão de play: alvo real de 56px, não um ícone decorativo de 20 */
-/* compoe .yb-iconbtn --onmedia; aqui so o tamanho maior e a posicao */
+/* compoe .yb-iconbtn --onmedia --lg; aqui so a posicao */
 .yb-video__play{
   position:absolute; inset:0; margin:auto;
-  width:56px; height:56px;
   transition:transform var(--yb-transition-control);
 }
 /* o clique cobre o cartao inteiro sem que o botao engula o video depois */
 .yb-video__play::after{content:""; position:absolute; inset:-100%}
-.yb-video__erro{
+.yb-video__error{
   position:absolute; inset-inline:0; inset-block-end:0;
   padding:var(--yb-space-2) var(--yb-space-3);
   background:var(--yb-danger-surface); color:var(--yb-danger-text);
@@ -4016,7 +4084,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 @media (hover:hover){
   .yb-video:hover .yb-video__play{ transform:scale(1.06); }
 }
-.yb-video__play .yb-icon{ --yb-icon-size:var(--yb-icon-lg); margin-inline-start:3px; }
+.yb-video__play .yb-icon{ margin-inline-start:3px; }  /* o triangulo pesa a esquerda: 3px o centram no olho */
 .yb-video[data-playing="true"] .yb-video__play{ display:none; }
 /* Sem `data-video` nao ha o que tocar: o play some e o cartao deixa de se
    oferecer como clicavel. Um botao que promete video e nao entrega e pior do
@@ -4059,20 +4127,20 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
    ========================================================================= */
 .yb-dropdown{position:relative; display:flex; align-items:center}
 .yb-dropdown__toggle{position:absolute; opacity:0; pointer-events:none; width:1px; height:1px}
-.yb-dropdown__gatilho{
+.yb-dropdown__trigger{
   display:flex; align-items:center; justify-content:center;
   inline-size:var(--yb-target-min); block-size:var(--yb-target-min);
   cursor:pointer; border-radius:var(--yb-radius-pill);
   color:var(--yb-text-primary);
 }
 @media (hover:hover){
-  .yb-dropdown__gatilho:hover .yb-avatar{background:var(--yb-bg-subtle)}
+  .yb-dropdown__trigger:hover .yb-avatar{background:var(--yb-bg-subtle)}
 }
-.yb-dropdown__toggle:focus-visible + .yb-dropdown__gatilho{
+.yb-dropdown__toggle:focus-visible + .yb-dropdown__trigger{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
 }
-.yb-dropdown__painel{
+.yb-dropdown__panel{
   position:absolute; inset-block-start:100%; inset-inline-end:0;
   /* 16rem e nao 14: com o avatar de 40px na cabeca, a coluna do texto caia
      para 138px e o e-mail — que precisa de 152 — passou a truncar. Truncar o
@@ -4087,7 +4155,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
   opacity:0; visibility:hidden;
   transition:opacity var(--yb-transition-surface), visibility var(--yb-transition-surface);
 }
-.yb-dropdown__toggle:checked ~ .yb-dropdown__painel{opacity:1; visibility:visible}
+.yb-dropdown__toggle:checked ~ .yb-dropdown__panel{opacity:1; visibility:visible}
 /* Quem e, antes do que fazer. Sem isto o menu abre com quatro verbos e nenhuma
    confirmacao de que a sessao e da pessoa certa — a duvida que faz alguem
    clicar em "Account" so para conferir. */
@@ -4098,38 +4166,38 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
    Aqui o avatar aparece em 40px, que e o unico lugar onde ele nao divide a
    linha com mais nada — no cabecalho ele mede 32 e concorre com busca e
    sacola. */
-.yb-dropdown__cabeca{
+.yb-dropdown__head{
   display:grid; grid-template-columns:auto minmax(0, 1fr);
   gap:0 var(--yb-space-3); align-items:center;
   padding:var(--yb-space-3) var(--yb-space-4);
   border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);
   margin-block-end:var(--yb-space-2);
 }
-.yb-dropdown__cabeca .yb-avatar{grid-row:span 2}
-.yb-dropdown__nome{display:block; font-weight:var(--yb-font-weight-semibold)}
+.yb-dropdown__head .yb-avatar{grid-row:span 2}
+.yb-dropdown__name{display:block; font-weight:var(--yb-font-weight-semibold)}
 .yb-dropdown__email{
   display:block; font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted);
   overflow:hidden; text-overflow:ellipsis;
 }
-.yb-dropdown__painel a{
+.yb-dropdown__panel a{
   display:flex; align-items:center; min-block-size:var(--yb-target-min);
   padding-inline:var(--yb-space-4); gap:var(--yb-space-3);
   color:var(--yb-text-primary); text-decoration:none;
   font-size:var(--yb-type-body-sm-size);
 }
-@media (hover:hover){ .yb-dropdown__painel a:hover{background:var(--yb-bg-muted)} }
-.yb-dropdown__painel a:focus-visible{
+@media (hover:hover){ .yb-dropdown__panel a:hover{background:var(--yb-bg-muted)} }
+.yb-dropdown__panel a:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:calc(var(--yb-focus-offset) * -1);
 }
 /* Sair fica separado e em tom de apoio: e a unica acao do menu que desfaz
    alguma coisa, e emparelhada com as outras vira quinto item de lista. */
-.yb-dropdown__sair{
+.yb-dropdown__signout{
   margin-block-start:var(--yb-space-2);
   border-block-start:var(--yb-border-hairline) solid var(--yb-border-subtle);
   padding-block-start:var(--yb-space-2);
 }
-.yb-dropdown__sair a{color:var(--yb-text-secondary)}
+.yb-dropdown__signout a{color:var(--yb-text-secondary)}
 /* No toque o dropdown do cabecalho nao existe — a regra mora no HEADER, na
    folha dos blocos, porque e o contexto que decide. */
 
@@ -4170,25 +4238,16 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 .yb-dialog__head{
   display:flex; align-items:flex-start; justify-content:space-between;
   gap:var(--yb-space-4); padding:var(--yb-space-5) var(--yb-space-6);
-  border-bottom:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);
 }
 .yb-dialog__title{
   margin:0; font-size:var(--yb-type-h4-size);
   font-weight:var(--yb-type-h4-weight); letter-spacing:var(--yb-type-h4-track);
 }
-.yb-dialog__close{
-  width:var(--yb-target-min); height:var(--yb-target-min); flex:none;
-  border:none; background:transparent; cursor:pointer; color:var(--yb-text-muted);
-  border-radius:var(--yb-radius-control); display:flex;
-  align-items:center; justify-content:center; margin:calc(var(--yb-space-2) * -1);
-}
+.yb-dialog__close{color:var(--yb-text-muted); margin:calc(var(--yb-space-2) * -1)}
 
 @media (hover:hover){
   .yb-dialog__close:hover{background:var(--yb-bg-muted); color:var(--yb-text-primary)}
-}
-.yb-dialog__close:focus-visible{
-  outline:var(--yb-focus-width) solid var(--yb-focus-color);
-  outline-offset:var(--yb-focus-offset);
 }
 .yb-dialog__body{padding:var(--yb-space-6)}
 .yb-dialog__body p{margin:0; color:var(--yb-text-secondary);
@@ -4196,7 +4255,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 .yb-dialog__foot{
   display:flex; gap:var(--yb-space-3); justify-content:flex-end; flex-wrap:wrap;
   padding:var(--yb-space-5) var(--yb-space-6);
-  border-top:var(--yb-border-hairline) solid var(--yb-border-subtle); background:var(--yb-bg-subtle);
+  border-block-start:var(--yb-border-hairline) solid var(--yb-border-subtle); background:var(--yb-bg-subtle);
   border-radius:0 0 var(--yb-radius-card) var(--yb-radius-card);
 }
 @media (max-width:520px){
@@ -4337,9 +4396,9 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
    aberta em toda página que carregar esta folha. */
 .yb-search[open]{
   display:flex; flex-direction:column;
-  animation:yb-search-desce var(--yb-duration-base) var(--yb-ease-enter);
+  animation:yb-search-drop var(--yb-duration-base) var(--yb-ease-enter);
 }
-@keyframes yb-search-desce{from{transform:translateY(-1rem); opacity:0}}
+@keyframes yb-search-drop{from{transform:translateY(-1rem); opacity:0}}
 
 /* A barra não muda de forma quando se digita — só o conteúdo abaixo troca.
    Campo que se mexe enquanto a pessoa digita nele é campo que perde o cursor. */
@@ -4535,7 +4594,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 
 
 /* =========================================================================
-   HEADER
+   HEADER / NAV
    Anúncio + navegação + ações. Sticky, porque o carrinho precisa estar
    sempre a um toque.
    ========================================================================= */
@@ -4691,7 +4750,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 
 /* --- painel largo (>= 900) ------------------------------------------- */
 .yb-nav__panel{
-  position:absolute; inset-inline:0; top:100%; z-index:var(--yb-z-dropdown);
+  position:absolute; inset-inline:0; inset-block-start:100%; z-index:var(--yb-z-dropdown);
   background:var(--yb-surface-raised);
   border-block-start:var(--yb-border-hairline) solid var(--yb-border-subtle);
   box-shadow:var(--yb-elevation-dropdown);
@@ -4753,7 +4812,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
   /* display:block tira a isencao de alvo inline do WCAG 2.5.8, e o titulo
      media 17px. Os 24 vem do min-height, sem mexer no ritmo da coluna. */
   display:flex; align-items:center; min-height:var(--yb-space-6);
-  margin-bottom:var(--yb-space-2);
+  margin-block-end:var(--yb-space-2);
   font-size:var(--yb-type-body-sm-size);
   font-weight:var(--yb-font-weight-semibold);
   color:var(--yb-text-primary); text-decoration:none;
@@ -4800,7 +4859,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 }
 /* O item que esta mostrando a vitrine continua aceso quando o mouse vai ate
    os cartoes — senao a vitrine parece solta, sem dizer de que item veio. */
-.yb-nav__sublist a[data-yb-vitrine-ativo]{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
+.yb-nav__sublist a[data-yb-showcase-active]{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
 .yb-nav__sublist a:focus-visible,.yb-nav__grouptitle:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
@@ -4834,17 +4893,17 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
   flex:1 1 18rem; min-width:0;
   display:flex; justify-content:flex-end; gap:var(--yb-space-6);
 }
-/* A vitrine tem varios estados (`.yb-nav__vitrine`, um por item do painel;
+/* A vitrine tem varios estados (`.yb-nav__showcase`, um por item do painel;
    so um aparece). O invólucro some da caixa com `display:contents`, entao os
    dois cartoes de cada estado continuam sendo os itens do flex da vitrine —
    a medida e a mesma com qualquer estado na tela. */
-.yb-nav__vitrine{display:contents}
-.yb-nav__vitrine > *{flex:1 1 0; min-width:0; max-width:18rem}
+.yb-nav__showcase{display:contents}
+.yb-nav__showcase > *{flex:1 1 0; min-width:0; max-width:18rem}
 /* O cartao de colecao, dentro da vitrine, divide a altura com o do produto:
    a foto cresce ate onde o painel da, em vez de impor a razao 5/7 de vitrine
    de colecao — que aqui esticaria o menu inteiro. */
-.yb-nav__vitrine > .yb-collection--card img{aspect-ratio:auto; flex:1 1 auto; min-height:8rem; height:0}
-.yb-nav__vitrine > .yb-collection--card .yb-collection__foot{flex-grow:0}
+.yb-nav__showcase > .yb-collection--card img{aspect-ratio:auto; flex:1 1 auto; min-height:8rem; height:0}
+.yb-nav__showcase > .yb-collection--card .yb-collection__foot{flex-grow:0}
 
 /* Um unico <a>, como `.yb-search__item` — midia e botao separados dariam
    dois links pro mesmo produto, ruido extra pra teclado e leitor de tela.
@@ -4974,7 +5033,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
    marca ja esta na barra e a conta e o icone a direita; aqui elas seriam duas
    copias do mesmo no meio da navegacao. */
 .yb-nav__head{display:none}
-.yb-nav__conta{display:none}
+.yb-nav__account{display:none}
 .yb-header__scrim{display:none}
 /* Acima de 900 nao ha gaveta — logo nao pode sobrar um controle que o
    teclado alcanca e que nao abre nada. Mesma regra do acordeao do footer. */
@@ -5006,7 +5065,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
      escreve o menu duas vezes no HTML, 25 links repetidos, e o sistema existe
      em parte para nao fazer isso. */
   .yb-nav__rail{ display:none; }
-  /* Conta muda de casa: some da barra e vira a faixa `.yb-nav__conta` no topo
+  /* Conta muda de casa: some da barra e vira a faixa `.yb-nav__account` no topo
      da gaveta. Era um item de texto no meio da lista — o primeiro de 25 links
      de mesmo peso, que ninguem achava. */
   .yb-header__account{ display:none; }
@@ -5047,7 +5106,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
   /* Faixa de conta: o unico bloco com fundo dentro da gaveta, e o unico botao.
      E o que a distingue dos links — sem ela, "Log in" seria o 26o link de uma
      lista de links iguais. */
-  .yb-nav__conta{
+  .yb-nav__account{
     display:flex; align-items:center; justify-content:space-between;
     flex-wrap:wrap; gap:var(--yb-space-4);
     padding:var(--yb-space-3) var(--yb-space-3) var(--yb-space-3) var(--yb-space-4);
@@ -5062,7 +5121,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
      botao, que desce para a segunda linha — em 320px "Welcome, Visitor"
      virava "Welcome, ..." para dar espaco a um botao que tinha para onde ir.
      Reticencias no lugar de uma palavra que cabia. */
-  .yb-nav__conta-quem{
+  .yb-nav__account-who{
     display:flex; align-items:center; gap:var(--yb-space-3);
     flex:1 1 auto; min-width:10.5rem;
   }
@@ -5075,17 +5134,17 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
      especificidade (0,1,0) a folha de tras ganha, e uma regra de classe unica
      no proprio icone nao pinta nada. Mesma razao de `.yb-nav__pitch-steps
      .yb-icon` logo acima. */
-  .yb-nav__conta-quem .yb-icon{ color:var(--yb-accent-text); flex:none; }
+  .yb-nav__account-who .yb-icon{ color:var(--yb-accent-text); flex:none; }
   /* Mesma pastilha do `.yb-avatar`, um grau menor: na barra ela
      divide espaco com busca e sacola, aqui divide com uma frase. */
-  .yb-nav__conta-inicial{
+  .yb-nav__account-initial{
     display:flex; align-items:center; justify-content:center; flex:none;
     inline-size:1.75rem; block-size:1.75rem; border-radius:var(--yb-radius-pill);
     background:var(--yb-surface-raised); color:var(--yb-text-primary);
     font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
     line-height:var(--yb-line-height-none);
   }
-  .yb-nav__conta-nome{
+  .yb-nav__account-name{
     min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
     font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-primary);
   }
@@ -5098,22 +5157,11 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
      "Welcome, Vis...". O `min-height` devolve os 44px de toque que o `--sm`
      tiraria — e a ressalva que a propria folha faz sobre `--sm` e acao
      principal deixa de valer quando o alvo volta ao minimo do sistema. */
-  .yb-nav__conta .yb-btn{ flex:none; min-height:var(--yb-target-min);
+  .yb-nav__account .yb-btn{ flex:none; min-height:var(--yb-target-min);
     margin-inline-start:auto; }
-  .yb-nav__close{
-    display:flex; align-items:center; justify-content:center;
-    width:var(--yb-target-min); height:var(--yb-target-min);
-    margin-inline-start:auto;
-    cursor:pointer; color:var(--yb-text-primary);
-    border-radius:var(--yb-radius-control);
-  }
-  @media (hover:hover){ .yb-nav__close:hover{background:var(--yb-bg-muted)} }
-  /* Era o unico controle do sistema sem anel de foco — e o unico jeito de
-     sair da gaveta pelo teclado, fora o Escape. */
-  .yb-nav__close:focus-visible{
-    outline:var(--yb-focus-width) solid var(--yb-focus-color);
-    outline-offset:var(--yb-focus-offset);
-  }
+  /* Forma, alvo, hover e anel vem do `.yb-iconbtn--square`; aqui so o
+     que o esconde fora da gaveta e o empurra para a borda. */
+  .yb-nav__close{display:inline-flex; margin-inline-start:auto}
   .yb-header__scrim{
     display:block; position:fixed; inset:0; z-index:var(--yb-z-overlay);
     background:var(--yb-surface-overlay);
@@ -5166,14 +5214,14 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
      Mesmo `:has()` do piso de coluna la em cima, e mesma queda elegante: sem
      suporte, volta ao espacamento de antes. */
   .yb-nav__groups:not(:has(.yb-nav__sublist)){ gap:var(--yb-space-1); }
-  .yb-nav__groups:not(:has(.yb-nav__sublist)) .yb-nav__grouptitle{ margin-bottom:0; }
+  .yb-nav__groups:not(:has(.yb-nav__sublist)) .yb-nav__grouptitle{ margin-block-end:0; }
 }
 /* Sem margin-inline-start:auto: quem empurra as acoes pra ponta agora e o
    flex:1 do menu, que ja respeita a direcao de leitura sozinho. */
 .yb-header__actions{display:flex; align-items:center; gap:0; justify-self:end}
 
 /* =========================================================================
-   HEADER · a conta logada, montada com Avatar e Dropdown
+   HEADER / NAV · a conta logada, montada com Avatar e Dropdown
 
    Não há CSS de conta aqui, e é esse o ponto: o avatar é `.yb-avatar` (átomo)
    o painel é `.yb-dropdown` (molécula). O que sobra é a única regra que fala do
@@ -5181,7 +5229,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 
    No toque o dropdown não existe: a gaveta já lista os mesmos destinos, e um
    painel de 256px ancorado na borda direita de uma tela de 375 nasce apertado
-   contra o carrinho. Quem assume o papel lá é `.yb-nav__conta`, no topo da
+   contra o carrinho. Quem assume o papel lá é `.yb-nav__account`, no topo da
    gaveta. A regra é escopada ao cabeçalho — um dropdown em outro lugar da página
    não tem por que sumir junto.
    ========================================================================= */
@@ -5217,8 +5265,8 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
      o selo caia sobre a alca da sacola e a apagava. Deslocado para fora, ele
      encosta na quina e o desenho continua inteiro. */
   position:absolute; inset-block-start:1px; inset-inline-end:-4px;
-  /* A contagem e marcacao, nao acao — ver --yb-accent-brand. */
-  background:var(--yb-accent-brand); color:var(--yb-text-on-action);
+  /* A contagem e marcacao, nao acao — ver --yb-accent-signal. */
+  background:var(--yb-accent-signal); color:var(--yb-text-on-action);
   font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-bold);
   /* Circulo, nao pilula. Com `box-sizing:border-box` a borda de 2px entra na
      conta: o digito (8px) mais 10px de respiro mais 4px de borda davam 22 de
@@ -5295,8 +5343,8 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 }
 /* A divisoria so aparece quando NAO ha lista embaixo. Com itens, a barra de
    frete ja separa o cabecalho do resto, e duas linhas seguidas viram sujeira. */
-.yb-cart--vazio .yb-cart__head,
-.yb-cart--carregando .yb-cart__head{ border-bottom:var(--yb-border-hairline) solid var(--yb-border-subtle); }
+.yb-cart--empty .yb-cart__head,
+.yb-cart--loading .yb-cart__head{ border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle); }
 .yb-cart__head h2{
   margin:0; font-size:var(--yb-type-h4-size);
   font-weight:var(--yb-type-h4-weight); letter-spacing:var(--yb-type-h4-track);
@@ -5305,27 +5353,19 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
    itens — sacola vazia nao se manda para ninguem. Fechar fica por ULTIMO,
    encostado na borda: e o destino do polegar que ja mira aquele canto, e
    trocar a ordem faz a pessoa compartilhar quando queria sair. */
-.yb-cart__head-acoes{display:flex; align-items:center; gap:var(--yb-space-1)}
+.yb-cart__head-actions{display:flex; align-items:center; gap:var(--yb-space-1)}
 .yb-cart__close,
 .yb-cart__share{
-  display:inline-flex; align-items:center; justify-content:center;
-  width:var(--yb-target-min); height:var(--yb-target-min);
-  border:none; background:transparent; cursor:pointer;
   color:var(--yb-text-muted); font-size:var(--yb-type-h4-size);
   border-radius:var(--yb-radius-pill); line-height:var(--yb-line-height-none);
 }
 
 @media (hover:hover){
   .yb-cart__close:hover,
-  .yb-cart__share:hover{background:var(--yb-bg-muted); color:var(--yb-text-primary)}
-}
-.yb-cart__close:focus-visible,
-.yb-cart__share:focus-visible{
-  outline:var(--yb-focus-width) solid var(--yb-focus-color);
-  outline-offset:var(--yb-focus-offset);
+  .yb-cart__share:hover{color:var(--yb-text-primary)}
 }
 .yb-cart__ship{padding:var(--yb-space-2) var(--yb-space-3);
-  border-bottom:var(--yb-border-hairline) solid var(--yb-border-subtle); background:var(--yb-bg-subtle)}
+  border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle); background:var(--yb-bg-subtle)}
 /* Alcancado, a faixa inteira fica verde e a barra de progresso sai: barra
    cheia e ruido, porque nao ha mais o que preencher. A cor sozinha ja diz
    "conquistado", e o icone de caminhao diz do que se trata. */
@@ -5344,8 +5384,8 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 .yb-cart__ship--ok .yb-progress{display:none}
 
 /* barra de frete so existe com item e fora do carregando */
-.yb-cart--vazio .yb-cart__ship,
-.yb-cart--carregando .yb-cart__ship{ display:none; }
+.yb-cart--empty .yb-cart__ship,
+.yb-cart--loading .yb-cart__ship{ display:none; }
 .yb-cart__items{
   flex:1; overflow-y:auto; padding:var(--yb-space-2) var(--yb-space-3);
   display:flex; flex-direction:column; gap:var(--yb-space-2);
@@ -5368,8 +5408,8 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 }
 .yb-cart__item .yb-card__media{aspect-ratio:var(--yb-aspect-product); border-radius:var(--yb-radius-sm)}
 .yb-cart__item-body{display:flex; flex-direction:column; gap:var(--yb-space-1); min-width:0}
-.yb-cart__item-topo{display:flex; align-items:flex-start; gap:var(--yb-space-2)}
-.yb-cart__item-topo .yb-cart__item-title{flex:1; min-width:0}
+.yb-cart__item-top{display:flex; align-items:flex-start; gap:var(--yb-space-2)}
+.yb-cart__item-top .yb-cart__item-title{flex:1; min-width:0}
 .yb-cart__item-title{
   font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
   margin:0; display:-webkit-box; -webkit-box-orient:vertical;
@@ -5382,7 +5422,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
   display:flex; align-items:center; justify-content:space-between;
   gap:var(--yb-space-2); flex-wrap:wrap; margin-block-start:var(--yb-space-1);
 }
-.yb-cart__item-precos{
+.yb-cart__item-prices{
   display:flex; align-items:baseline; gap:var(--yb-space-2);
   flex-wrap:wrap; min-width:0;
 }
@@ -5406,21 +5446,13 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
    para a borda do icone cair na mesma prumada da borda do stepper logo
    abaixo. Com -8px fixos, o icone ficava 14px para dentro da coluna. */
 .yb-cart__remove{
-  display:inline-flex; align-items:center; justify-content:center;
-  flex:none;
-  inline-size:var(--yb-target-min); block-size:var(--yb-target-min);
   margin-block:calc(var(--yb-space-2) * -1);
   margin-inline-end:calc((var(--yb-target-min) - var(--yb-icon-sm)) / -2);
-  background:none; border:0; cursor:pointer;
-  color:var(--yb-text-muted); border-radius:var(--yb-radius-control);
+  color:var(--yb-text-muted);
 }
 
 @media (hover:hover){
-  .yb-cart__remove:hover{color:var(--yb-danger-text); background:var(--yb-bg-muted)}
-}
-.yb-cart__remove:focus-visible{
-  outline:var(--yb-focus-width) solid var(--yb-focus-color);
-  outline-offset:var(--yb-focus-offset);
+  .yb-cart__remove:hover{color:var(--yb-danger-text)}
 }
 /* A quantidade e o `.yb-stepper--sm`, nao um <select> proprio da gaveta. Um
    controle de quantidade que muda de forma entre a PDP e o carrinho obriga a
@@ -5440,44 +5472,44 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 
    A recompensa aparece como foto, nao como texto: "Ybera Repair Mask 50ml" e
    um nome; a foto e o motivo de gastar mais $50. */
-.yb-cart__brinde-card{
+.yb-cart__gift-card{
   margin:var(--yb-space-2) var(--yb-space-3);
   display:flex; align-items:center; gap:var(--yb-space-3);
   padding:var(--yb-space-3); border:var(--yb-border-hairline) solid var(--yb-border-subtle);
   border-radius:var(--yb-radius-card); background:var(--yb-bg-subtle);
 }
-.yb-cart__brinde-corpo{display:flex; flex-direction:column; gap:var(--yb-space-3); flex:1; min-width:0}
-.yb-cart__brinde-texto{
+.yb-cart__gift-body{display:flex; flex-direction:column; gap:var(--yb-space-3); flex:1; min-width:0}
+.yb-cart__gift-text{
   margin:0; font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
 }
-.yb-cart__brinde-texto b{color:var(--yb-success-text); font-weight:var(--yb-font-weight-semibold)}
+.yb-cart__gift-text b{color:var(--yb-success-text); font-weight:var(--yb-font-weight-semibold)}
 /* Os trilhos sao `.yb-progress`, um por degrau. O `role="progressbar"` fica
    no PAI, com um valor so: dois medidores lado a lado fazem o leitor de tela
    anunciar dois progressos concorrentes para uma coisa que tem um progresso. */
-.yb-cart__brinde-trilhos{display:flex; align-items:center; gap:var(--yb-space-1)}
-.yb-cart__brinde-trilhos .yb-progress{flex:1}
-.yb-cart__brinde-premio{
+.yb-cart__gift-track{display:flex; align-items:center; gap:var(--yb-space-1)}
+.yb-cart__gift-track .yb-progress{flex:1}
+.yb-cart__gift-prize{
   inline-size:var(--yb-thumb); block-size:var(--yb-thumb); flex:none; overflow:hidden;
   border-radius:var(--yb-radius-media); background:var(--yb-surface-sunken);
 }
-.yb-cart__brinde-premio img{inline-size:100%; block-size:100%; object-fit:cover; display:block}
+.yb-cart__gift-prize img{inline-size:100%; block-size:100%; object-fit:cover; display:block}
 /* Tudo conquistado: nao ha mais o que somar, entao nao ha barra a mostrar. */
-.yb-cart__brinde-card--completo .yb-cart__brinde-trilhos{display:none}
-.yb-cart__brinde-card--completo .yb-cart__brinde-texto{color:var(--yb-success-text)}
+.yb-cart__gift-card--done .yb-cart__gift-track{display:none}
+.yb-cart__gift-card--done .yb-cart__gift-text{color:var(--yb-success-text)}
 
 /* --- seguro de entrega --------------------------------------------------
    Fica DESLIGADO por padrao. Servico opcional pre-marcado e cobranca que a
    pessoa nao pediu, e nos EUA isso tem nome: dark pattern. O preco vai na
    frase, nao so no total — quem liga tem de saber quanto custa antes. */
-.yb-cart__protecao{
+.yb-cart__shield{
   display:flex; align-items:center; gap:var(--yb-space-3);
   padding:var(--yb-space-2) var(--yb-space-3);
 }
-.yb-cart__protecao-corpo{display:flex; flex-direction:column; gap:var(--yb-space-1); flex:1; min-width:0}
-.yb-cart__protecao-corpo b{
+.yb-cart__shield-body{display:flex; flex-direction:column; gap:var(--yb-space-1); flex:1; min-width:0}
+.yb-cart__shield-body b{
   font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
 }
-.yb-cart__protecao-corpo p{
+.yb-cart__shield-body p{
   margin:0; font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
 }
 
@@ -5491,21 +5523,21 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
    um campo de digitacao ali abre o teclado do celular por cima do proprio
    campo. Rolando junto com a lista, o navegador leva o campo para cima do
    teclado sozinho. */
-.yb-cart__cupom{
+.yb-cart__coupon{
   padding:var(--yb-space-2) var(--yb-space-3);
   display:flex; flex-direction:column; gap:var(--yb-space-2);
 }
 /* Aplicado: o codigo vira etiqueta e o campo sai. Deixar o input com o texto
    dentro nao diz se o desconto pegou — foi o mesmo defeito do nome no modo
    comentario. */
-.yb-cart__cupom-ok{
+.yb-cart__coupon-ok{
   display:flex; align-items:center; justify-content:space-between;
   gap:var(--yb-space-3); padding:var(--yb-space-3);
   border:var(--yb-border-hairline) solid var(--yb-border-subtle); border-radius:var(--yb-radius-card);
   background:var(--yb-bg-subtle);
 }
-.yb-cart__cupom-ok > div{display:flex; align-items:center; gap:var(--yb-space-2)}
-.yb-cart__cupom-codigo{
+.yb-cart__coupon-ok > div{display:flex; align-items:center; gap:var(--yb-space-2)}
+.yb-cart__coupon-code{
   padding:var(--yb-space-1) var(--yb-space-2); border-radius:var(--yb-radius-badge);
   background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
   font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-bold);
@@ -5514,7 +5546,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 
 .yb-cart__foot{
   padding:var(--yb-space-3) var(--yb-space-4) var(--yb-space-8);
-  border-top:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  border-block-start:var(--yb-border-hairline) solid var(--yb-border-subtle);
   display:flex; flex-direction:column; gap:var(--yb-space-3);
   background:var(--yb-surface);
 }
@@ -5533,20 +5565,20 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
    lado do total, no instante da decisao. Fundo invertido chapado, e nao o
    degrade de tres pretos da referencia: nao ha token que descreva aquele
    degrade, e cor escrita a mao no padrao e cor que a camada 1 nao troca. */
-.yb-cart__parceiro{
+.yb-cart__partner{
   display:flex; align-items:center; justify-content:center;
   gap:var(--yb-space-2); padding:var(--yb-space-2) var(--yb-space-3);
   background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
   font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-medium);
 }
-.yb-cart__parceiro p{margin:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
-.yb-cart__parceiro b{font-weight:var(--yb-font-weight-semibold)}
+.yb-cart__partner p{margin:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.yb-cart__partner b{font-weight:var(--yb-font-weight-semibold)}
 /* Iniciais, nao foto: a foto do parceiro vem de fora e chega em qualquer
    tamanho e recorte. Duas letras cabem sempre e nunca carregam errado.
    Disco CLARO com letra escura, e nao branco translucido como na referencia:
    letra clara sobre veu claro em cima de fundo escuro fica com contraste de
    sobra em nenhum dos dois lados, e nao ha token para aquele veu. */
-.yb-cart__parceiro-inicial{
+.yb-cart__partner-initial{
   display:inline-flex; align-items:center; justify-content:center; flex:none;
   inline-size:1.25rem; block-size:1.25rem; border-radius:var(--yb-radius-pill);
   background:var(--yb-text-inverse); color:var(--yb-bg-inverse);
@@ -5554,16 +5586,16 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 }
 /* A faixa fica DENTRO do pe, antes do respiro dele: com a faixa fora, a linha
    do topo do pe passava por cima dela e apareciam duas divisorias. */
-.yb-cart__foot:has(.yb-cart__parceiro){padding-block-start:0}
-.yb-cart__parceiro{margin:0 calc(var(--yb-space-4) * -1) var(--yb-space-3)}
+.yb-cart__foot:has(.yb-cart__partner){padding-block-start:0}
+.yb-cart__partner{margin:0 calc(var(--yb-space-4) * -1) var(--yb-space-3)}
 
-.yb-cart__resumo{display:flex; align-items:center; gap:var(--yb-space-3)}
-.yb-cart__totais{display:flex; flex-direction:column; min-width:0; flex:1}
-.yb-cart__tabela{
+.yb-cart__summary{display:flex; align-items:center; gap:var(--yb-space-3)}
+.yb-cart__totals{display:flex; flex-direction:column; min-width:0; flex:1}
+.yb-cart__table{
   font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted);
   white-space:nowrap;
 }
-.yb-cart__total-linha{display:flex; align-items:center; gap:var(--yb-space-2)}
+.yb-cart__total-row{display:flex; align-items:center; gap:var(--yb-space-2)}
 .yb-cart__total{
   font-size:var(--yb-type-h4-size); font-weight:var(--yb-font-weight-bold);
   color:var(--yb-text-primary); font-variant-numeric:proportional-nums;
@@ -5610,45 +5642,45 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 /* Tres colunas, como a linha do carrinho logo acima: miniatura, corpo, acao.
    Repetir a anatomia da linha nao e preguica — e o que faz a oferta ler como
    "mais um item", que e exatamente o que ela quer virar. */
-.yb-cart__oferta{
+.yb-cart__offer{
   display:grid; grid-template-columns:auto 1fr auto;
   gap:var(--yb-space-3); align-items:center; min-width:0;
 }
-.yb-cart__oferta .yb-card__media{
+.yb-cart__offer .yb-card__media{
   inline-size:4rem; block-size:4rem; flex:none; border-radius:var(--yb-radius-media);
 }
-.yb-cart__oferta-corpo{display:flex; flex-direction:column; gap:var(--yb-space-1); min-width:0}
-.yb-cart__oferta-nome{
+.yb-cart__offer-body{display:flex; flex-direction:column; gap:var(--yb-space-1); min-width:0}
+.yb-cart__offer-name{
   margin:0; font-size:var(--yb-type-body-sm-size);
   font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-primary);
   display:-webkit-box; -webkit-box-orient:vertical;
   -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
 }
-.yb-cart__oferta-variante{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
-.yb-cart__oferta-precos{
+.yb-cart__offer-variant{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+.yb-cart__offer-prices{
   display:flex; align-items:baseline; gap:var(--yb-space-2); flex-wrap:wrap;
   font-size:var(--yb-type-body-sm-size);
 }
 /* O preco cheio fica em cinza e SEM risco: ele nao foi cancelado, e a
    referencia do que o item custa fora do combo. Risco aqui prometeria um
    desconto que so existe se o item entrar neste carrinho. */
-.yb-cart__oferta-cheio{color:var(--yb-text-muted)}
-.yb-cart__oferta-add{
+.yb-cart__offer-full{color:var(--yb-text-muted)}
+.yb-cart__offer-add{
   color:var(--yb-success-text); font-weight:var(--yb-font-weight-semibold);
 }
-.yb-cart__oferta .yb-btn{flex:none}
+.yb-cart__offer .yb-btn{flex:none}
 
 /* --- PROVA SOCIAL --------------------------------------------------------
    Uma linha, e no fim do bloco de oferta: ela justifica a oferta que acabou
    de ser feita, nao o carrinho inteiro. Numero primeiro, porque e o numero
    que carrega a frase. */
-.yb-cart__prova{
+.yb-cart__proof{
   display:flex; align-items:center; gap:var(--yb-space-2);
   padding:0 var(--yb-space-3) var(--yb-space-3);
   font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
 }
-.yb-cart__prova .yb-icon{color:var(--yb-success-text); flex:none}
-.yb-cart__prova b{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
+.yb-cart__proof .yb-icon{color:var(--yb-success-text); flex:none}
+.yb-cart__proof b{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
 
 /* O icone do brinde na linha: o selo diz que e brinde, o icone diz do que se
    trata antes de a pessoa ler o selo. Alinha pelo centro optico do titulo. */
@@ -5663,25 +5695,25 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
    brinde nao tem quantidade a escolher, o esgotado nao tem o que somar, e o
    limite atingido nao tem para onde subir. Aviso sem sumir com o controle
    ensina a pessoa a tentar de novo. */
-.yb-cart__item--brinde{
+.yb-cart__item--gift{
   grid-template-columns:1fr; justify-items:center; text-align:center;
   padding:var(--yb-space-3); border-radius:var(--yb-radius-card);
   background:var(--yb-bg-subtle);
 }
-.yb-cart__item--brinde .yb-card__media{inline-size:72px}
-.yb-cart__item--esgotado{
+.yb-cart__item--gift .yb-card__media{inline-size:72px}
+.yb-cart__item--soldout{
   padding:var(--yb-space-2); border-radius:var(--yb-radius-card);
   background:var(--yb-danger-surface);
 }
 /* O aviso herda a cor do estado: `--esgotado` bloqueia a compra e fala em
    vermelho; `--limite` so avisa que chegou ao teto e fala em ambar. */
-.yb-cart__aviso{
+.yb-cart__notice{
   display:flex; align-items:center; gap:var(--yb-space-1);
   font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-medium);
   color:var(--yb-warning-text); margin:0;
 }
-.yb-cart__item--esgotado .yb-cart__aviso{color:var(--yb-danger-text)}
-.yb-cart__brinde{
+.yb-cart__item--soldout .yb-cart__notice{color:var(--yb-danger-text)}
+.yb-cart__gift{
   font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
   text-transform:uppercase; font-weight:var(--yb-font-weight-semibold);
   color:var(--yb-success-text);
@@ -5693,7 +5725,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 /* A economia e um chip ao lado do total, com o preco de tabela riscado logo
    acima: e comparacao contra tabela, nao desconto saindo do subtotal. Escrita
    como "-$53.80" numa linha propria, fazia o Total parecer errado. */
-.yb-cart__economia{
+.yb-cart__savings{
   display:inline-flex; align-items:center; gap:var(--yb-space-1);
   padding:var(--yb-space-1) var(--yb-space-2); border-radius:var(--yb-radius-badge);
   background:var(--yb-success-surface); color:var(--yb-success-text);
@@ -5703,11 +5735,11 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 /* --- vazio e carregando -------------------------------------------------
    O vazio usa o componente .yb-empty; o carregando usa .yb-skeleton. Nenhum
    dos dois nasce aqui — a gaveta so os posiciona. */
-.yb-cart__estado{
+.yb-cart__empty{
   flex:1; display:flex; align-items:center; justify-content:center;
   padding:var(--yb-space-8) var(--yb-space-4);
 }
-.yb-cart--carregando .yb-cart__foot .yb-btn{pointer-events:none}
+.yb-cart--loading .yb-cart__foot .yb-btn{pointer-events:none}
 
 /* =========================================================================
    CATÁLOGO — cabeçalho de listagem + grade
@@ -5719,8 +5751,8 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
    ========================================================================= */
 .yb-catalog__head{
   display:flex; align-items:flex-end; justify-content:space-between;
-  gap:var(--yb-space-6); flex-wrap:wrap; margin-bottom:var(--yb-space-6);
-  padding-bottom:var(--yb-space-5); border-bottom:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  gap:var(--yb-space-6); flex-wrap:wrap; margin-block-end:var(--yb-space-6);
+  padding-block-end:var(--yb-space-5); border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);
 }
 .yb-catalog__title{display:flex; flex-direction:column; gap:var(--yb-space-2); min-width:0}
 .yb-catalog__title h1, .yb-catalog__title h2{
@@ -5738,7 +5770,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
   padding:var(--yb-space-2) var(--yb-space-4);
 }
 .yb-catalog__filters{
-  display:flex; gap:var(--yb-space-2); flex-wrap:wrap; margin-bottom:var(--yb-space-6);
+  display:flex; gap:var(--yb-space-2); flex-wrap:wrap; margin-block-end:var(--yb-space-6);
 }
 /* `.yb-grid__rail` FICA. Ele nao e a grade: e o invulucro que o catalogo usa
    para transformar tres cartoes num trilho quando a grade cai para duas
@@ -5799,12 +5831,12 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
    detalhe que so quem quer abre. */
 .yb-buybox{display:flex; flex-direction:column; gap:var(--yb-space-3); min-width:0}
 /* a nota e atributo do nome — fica colada nele, nos 12 da base */
-.yb-buybox > .yb-buybox__precoLinha{margin-block-start:var(--yb-space-3)}
+.yb-buybox > .yb-buybox__priceline{margin-block-start:var(--yb-space-3)}
 /* preco e resumo sao a MESMA frase: "custa isto, e isto e o que e" */
 .yb-buybox > .yb-buybox__desc{margin-block-start:var(--yb-space-1)}
-.yb-buybox > .yb-buybox__benef{margin-block-start:var(--yb-space-3)}
+.yb-buybox > .yb-buybox__perks{margin-block-start:var(--yb-space-3)}
 .yb-buybox > .yb-buybox__group,
-.yb-buybox > .yb-buybox__compra,
+.yb-buybox > .yb-buybox__purchase,
 .yb-buybox > .yb-buybox__trust{margin-block-start:var(--yb-space-5)}
 .yb-buybox > .yb-accordion{margin-block-start:var(--yb-space-6)}
 /* A fileira de selos continua existindo — o buy box da doc a usa para
@@ -5815,15 +5847,15 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
    anatomia da linha do carrinho: o controle acompanha o nome do que ele age.
    `align-items:flex-start` porque o titulo tem duas linhas e o coracao tem de
    ficar na altura da PRIMEIRA, nao no meio do bloco. */
-.yb-buybox__topo{
+.yb-buybox__top{
   display:flex; align-items:flex-start; justify-content:space-between;
   gap:var(--yb-space-4);
 }
-.yb-buybox__topo .yb-buybox__title{flex:1; min-inline-size:0}
+.yb-buybox__top .yb-buybox__title{flex:1; min-inline-size:0}
 /* Compartilhar e favoritar andam juntos, e por isso moram num embrulho: soltos
    no `__topo` eles herdariam o `gap` de 16px que separa o TITULO deles — folga
    certa entre texto e controle, larga demais entre dois alvos irmaos. */
-.yb-buybox__acoes{display:flex; align-items:center; flex:none}
+.yb-buybox__tools{display:flex; align-items:center; flex:none}
 /* Preco e selos na MESMA linha, com os selos empurrados para a direita. Eles
    qualificam o numero — disponibilidade, brinde, desconto — e qualificar de
    longe nao funciona. `align-items:baseline` nao serve: o preco e 24px e o
@@ -5831,11 +5863,17 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 /* Alinhados a ESQUERDA, colados no preco. Com `space-between` o selo era
    jogado para a borda direita da coluna e ficava sozinho no meio do vazio,
    longe do numero que ele qualifica — parecia elemento de outra secao. */
-.yb-buybox__precoLinha{
+.yb-buybox__priceline{
   display:flex; align-items:center; justify-content:flex-start;
   gap:var(--yb-space-4); flex-wrap:wrap;
 }
-.yb-buybox__selos{display:flex; align-items:center; gap:var(--yb-space-2); flex-wrap:wrap}
+/* FRETE DO ITEM. Gratis, ele e selo na linha do preco (`frete_selo`);
+   abaixo da meta, e esta linha em texto de apoio, logo embaixo. */
+.yb-buybox__ship{
+  display:flex; align-items:center; gap:var(--yb-space-2); margin:0;
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+}
+.yb-buybox > .yb-buybox__ship{margin-block-start:calc(var(--yb-space-2) * -1)}
 /* O selo de estoque a esquerda, favoritar encostado na direita — a linha tem
    544px e o selo ocupa 80. `margin-inline-start:auto` e nao `space-between`
    porque a linha pode ganhar um segundo selo um dia, e ai os dois primeiros
@@ -5887,7 +5925,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
    ancora num dos dois botoes, ela subia enquanto o outro ainda estava na
    tela. Repete a coluna e o `gap` do `.yb-buybox` porque, como filho unico,
    ela passou a ser quem separa o botao do campo de aviso. */
-.yb-buybox__compra{
+.yb-buybox__purchase{
   display:flex; flex-direction:column; gap:var(--yb-space-5);
 }
 .yb-buybox__actions{display:flex; flex-wrap:wrap; gap:var(--yb-space-3); align-items:stretch}
@@ -5922,27 +5960,27 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
    entre elas. Coladas pelo line-height normal, nome e camada viravam um bloco
    so; com o vao dos itens (16px) elas ficam claramente mais perto uma da
    outra do que do proximo item, que e o que faz tres itens lerem como tres. */
-.yb-buybox__kit-nome{
+.yb-buybox__kit-name{
   display:flex; flex-direction:column; gap:var(--yb-space-1);
   min-inline-size:0;
 }
-.yb-buybox__kit-nome b{
+.yb-buybox__kit-name b{
   font-weight:var(--yb-font-weight-semibold);
   line-height:var(--yb-line-height-tight);
 }
 /* A camada do fio em que a mascara age vem impressa na propria lata. Fica
    abaixo do nome e em tom de apoio: e o que DIFERENCIA as tres, mas nao e o
    que a pessoa procura primeiro. */
-.yb-buybox__kit-nome small{
+.yb-buybox__kit-name small{
   color:var(--yb-text-muted); font-size:var(--yb-type-caption-size);
   text-transform:uppercase; letter-spacing:var(--yb-tracking-wide);
   line-height:var(--yb-line-height-tight);
 }
-.yb-buybox__kit-peso{
+.yb-buybox__kit-weight{
   color:var(--yb-text-secondary);
   font-variant-numeric:proportional-nums; flex:none;
 }
-.yb-buybox__benef{
+.yb-buybox__perks{
   display:flex; flex-wrap:wrap; gap:var(--yb-space-2);
   list-style:none; margin:0; padding:0;
 }
@@ -5951,7 +5989,7 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
    alcanca. Padrao dizendo como um componente se desenha era o buraco. */
 .yb-buybox__trust{
   display:flex; gap:var(--yb-space-5); flex-wrap:wrap;
-  padding-top:var(--yb-space-4); border-top:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  padding-block-start:var(--yb-space-4); border-block-start:var(--yb-border-hairline) solid var(--yb-border-subtle);
 }
 .yb-buybox__trust span{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
 
@@ -5975,6 +6013,10 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
   background:var(--yb-bg-page);
   border-block-start:var(--yb-border-hairline) solid var(--yb-border-subtle);
   box-shadow:var(--yb-elevation-drawer);
+  /* A altura e declarada, e nao descoberta: o rodape reserva a mesma medida
+     (abaixo), e antes os dois combinavam por coincidencia num 74px medido. */
+  box-sizing:border-box;
+  min-block-size:calc(var(--yb-buybar-height) + env(safe-area-inset-bottom, 0px));
 }
 /* O NOME antes do preco. A barra so aparece depois que a caixa de compra sai
    por cima, e ate agora ela mostrava "$89.90 · Add to cart" sem dizer de que
@@ -5993,9 +6035,12 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 /* O botao volta ao tamanho natural: com `flex:1` ele engolia a largura e o
    nome nascia com reticencia ja no terceiro caractere. */
 .yb-buybar .yb-btn{flex:none}
-/* a barra cobre os ultimos 74px da pagina: o rodape ganha o mesmo respiro
-   para o ultimo link nao nascer por baixo dela */
-body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-space-10) + 74px)}
+/* A barra cobre o fim da pagina: o rodape ganha o mesmo respiro para o
+   ultimo link nao nascer por baixo dela. Token de componente, no `body`,
+   porque barra e rodape sao irmaos distantes e os dois leem a medida. O alvo
+   do botao mais um respiro de cada lado: 76px. */
+body:has(.yb-buybar){--yb-buybar-height:calc(var(--yb-target-min) + var(--yb-space-4) * 2)}
+body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-space-10) + var(--yb-buybar-height))}
 /* Ela era so de celular, ate ficar claro que o problema nao e de largura e
    sim de distancia: em qualquer tela, depois que a caixa de compra sai por
    cima, nao ha mais como comprar sem voltar. O que muda no desktop e a
@@ -6037,9 +6082,9 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
    o `gap` da grade (40px) ja da o respiro ate o indice. O nivel do titulo
    continua sendo decisao de quem monta: <h1> na tela de FAQ, <h2> na doc e em
    qualquer pagina que ja tenha o seu. */
-.yb-faq > .yb-faq__cabeca{grid-column:1 / -1}
-.yb-faq > .yb-faq__cabeca > :first-child{margin-block-start:0}
-.yb-faq__cabeca .yb-faq__lede{
+.yb-faq > .yb-faq__head{grid-column:1 / -1}
+.yb-faq > .yb-faq__head > :first-child{margin-block-start:0}
+.yb-faq__head .yb-faq__lede{
   margin-block:var(--yb-space-3) 0; max-inline-size:var(--yb-measure-lede);
   font-size:var(--yb-type-body-lg-size); line-height:var(--yb-line-height-relaxed);
   color:var(--yb-text-secondary);
@@ -6055,7 +6100,7 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
    por linha, aqui cabe uma frase. Declarada ANTES do @media de propósito —
    as duas regras tem a mesma especificidade, e e a ordem que decide quem
    vence no celular, onde tudo empilha. */
-.yb-faq--curto{
+.yb-faq--short{
   grid-template-columns:minmax(0, 20rem) minmax(0, 1fr);
   /* Duas linhas, e o titulo sozinho na primeira: as perguntas comecam na
      altura do TEXTO de apoio, nao na do titulo. Alinhadas ao titulo, a
@@ -6070,20 +6115,20 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
    MAIS ABAIXO neste arquivo, e com a mesma especificidade ela venceria pela
    ordem — sobravam 48px entre o titulo e a linha de apoio, que e o que fazia
    o titulo parecer descolado da propria secao. */
-.yb-faq--curto > .yb-faq__cabeca{grid-area:titulo; margin-bottom:0}
-.yb-faq__apoio{grid-area:apoio}
-.yb-faq--curto > .yb-accordion{grid-area:perguntas}
-.yb-faq__apoio .yb-btn{margin-block-start:var(--yb-space-6)}
+.yb-faq--short > .yb-faq__head{grid-area:titulo; margin-block-end:0}
+.yb-faq__support{grid-area:apoio}
+.yb-faq--short > .yb-accordion{grid-area:perguntas}
+.yb-faq__support .yb-btn{margin-block-start:var(--yb-space-6)}
 /* O lede ja esta colado no titulo pelo `row-gap`; a margem dele aqui seria
    respiro em cima de respiro. */
-.yb-faq__apoio > .yb-block__lede{margin-block-start:0}
+.yb-faq__support > .yb-block__lede{margin-block-start:0}
 /* O acordeao sobe o respiro que o proprio `summary` tem por dentro. O que se
    alinha e o TEXTO, nao a caixa: o paragrafo de apoio nao tem padding e o
    `summary` tem 16px mais a centragem dentro do alvo de 44. Medido a 1440:
    sem compensacao a primeira pergunta nascia 26px abaixo da linha de apoio;
    com `--yb-space-6` ela nasce a 2px, que e menos do que a diferenca de
    entrelinha entre os dois tamanhos de texto. */
-.yb-faq--curto > .yb-accordion{margin-block-start:calc(var(--yb-space-6) * -1)}
+.yb-faq--short > .yb-accordion{margin-block-start:calc(var(--yb-space-6) * -1)}
 
 /* `sticky` colado abaixo do cabecalho preso, como a doca do parceiro — a
    secao tem tres telas de altura e um indice que rola embora e um indice que
@@ -6099,9 +6144,9 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
 .yb-faq__index .yb-link{display:flex; inline-size:100%}
 /* `min-width:0` porque item de grade nasce com `min-width:auto`: sem isto uma
    pergunta longa numa unica palavra estouraria a coluna em vez de quebrar. */
-.yb-faq__grupos{min-inline-size:0}
-.yb-faq__grupo + .yb-faq__grupo{margin-block-start:var(--yb-space-10)}
-.yb-faq__titulo{
+.yb-faq__groups{min-inline-size:0}
+.yb-faq__group + .yb-faq__group{margin-block-start:var(--yb-space-10)}
+.yb-faq__title{
   margin:0 0 var(--yb-space-3);
   font-size:var(--yb-type-h4-size); font-weight:var(--yb-font-weight-semibold);
   color:var(--yb-text-secondary);
@@ -6109,16 +6154,16 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
 /* Alvo de rolagem: sem isto o titulo do grupo para EMBAIXO do cabecalho preso
    quando se clica no indice, e a pessoa cai no meio das perguntas sem ver de
    que grupo elas sao. */
-.yb-faq__grupo{scroll-margin-block-start:calc(var(--yb-chrome-h) + var(--yb-space-6))}
+.yb-faq__group{scroll-margin-block-start:calc(var(--yb-chrome-h) + var(--yb-space-6))}
 @media (max-width:860px){
   /* Empilhado, o indice vira uma fileira de assuntos acima das perguntas. Ele
      NAO fica sticky aqui: preso no topo de uma tela de 812px ele comeria a
      primeira resposta. */
   .yb-faq{grid-template-columns:1fr; gap:var(--yb-space-6)}
-  .yb-faq--curto{grid-template-areas:"titulo" "apoio" "perguntas"}
+  .yb-faq--short{grid-template-areas:"titulo" "apoio" "perguntas"}
   /* Empilhado nao ha o que alinhar: a compensacao viraria aperto entre o CTA
      e a primeira pergunta. */
-  .yb-faq--curto > .yb-accordion{margin-block-start:0}
+  .yb-faq--short > .yb-accordion{margin-block-start:0}
   .yb-faq__index{
     position:static; display:flex; flex-wrap:wrap;
     gap:0 var(--yb-space-5);
@@ -6176,8 +6221,8 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
   font-style:normal;
 }
 .yb-quote__action{
-  margin-top:var(--yb-space-6); padding-top:var(--yb-space-6);
-  border-top:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  margin-block-start:var(--yb-space-6); padding-block-start:var(--yb-space-6);
+  border-block-start:var(--yb-border-hairline) solid var(--yb-border-subtle);
 }
 .yb-quote__media{
   /* `auto` porque a altura vem da linha do grid, nao da razao. Manter 4/5 aqui
@@ -6205,7 +6250,7 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
        de contraste nota.
 
    2 · Magenta. A producao usa #DB2955, um dos tres magentas divergentes da
-       loja. O sistema tem um so: --yb-action-bg (#CA235F).
+       loja. O sistema tem um so: --yb-action-primary-bg (#CA235F).
 
    Os menus sao acordeao no mobile e lista aberta no desktop, com um DOM so:
    o checkbox governa o estado abaixo de 768 e a media query o ignora acima.
@@ -6234,14 +6279,7 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
   min-width:0; flex:0 0 auto;
 }
 @media (max-width:767.98px){.yb-footer__brand{align-items:center}}
-/* O footer da loja e claro e o logo e monocromatico preto: aqui ele NAO
-   inverte. Se algum dia o footer voltar a ser escuro, e --inverse que
-   resolve, nao um filter escondido no padrao. */
 .yb-footer__logo{margin:0; display:block}
-.yb-footer__links{
-  display:flex; flex-direction:column; gap:var(--yb-space-2);
-  list-style:none; margin:0; padding:0;
-}
 .yb-footer__social{display:flex; gap:0; align-items:center}
 .yb-footer__social a{
   display:inline-flex; align-items:center; justify-content:center;
@@ -6291,7 +6329,7 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
 }
 .yb-footer__collist > ul{list-style:none; margin:0; padding:0}
 .yb-footer__collist li{padding-block:var(--yb-space-1)}
-/* Os irmaos desta lista (.yb-footer__bottom a, .yb-footer__links a) ja tinham
+/* Os irmaos desta lista (.yb-footer__bottom a) ja tinham
    os 24px; estes ficaram para tras com 17. No mobile viram 44, que e o alvo
    de dedo — e ali eles sao a navegacao inteira do rodape. */
 /* display:flex e nao inline-flex: com inline o alvo tinha a largura do texto,
@@ -6307,7 +6345,7 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
   .yb-footer__coltitle{justify-content:center}
   .yb-footer__collist a{min-height:var(--yb-target-min); justify-content:center}
   /* os irmaos ficaram para tras com 24px em toda largura */
-  .yb-footer__bottom a,.yb-footer__links a{min-height:var(--yb-target-min)}
+  .yb-footer__bottom a{min-height:var(--yb-target-min)}
 }
 
 /* SANFONA SO ONDE HA SANFONA.
@@ -6332,7 +6370,7 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
      tres itens. O que separa as colunas e o ritmo das linhas, nao o desenho. */
   .yb-footer__col:has(.yb-footer__toggle) .yb-footer__coltitle{
     cursor:pointer;
-    margin-bottom:var(--yb-space-1); min-height:var(--yb-target-min);
+    margin-block-end:var(--yb-space-1); min-height:var(--yb-target-min);
   }
   .yb-footer__col:has(.yb-footer__toggle) .yb-footer__coltitle .yb-icon{
     display:inline-flex; transition:transform var(--yb-transition-control);
@@ -6352,53 +6390,39 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
   }
 }
 
-/* --- zona 3 · contato ------------------------------------------------- */
-.yb-footer__contact{
-  display:flex; flex-direction:column; gap:var(--yb-space-5);
-  flex:0 1 28rem; min-width:0;
-}
+/* --- assinatura ------------------------------------------------------ */
 .yb-footer__newslabel{
-  display:block; margin-bottom:var(--yb-space-1);
+  display:block; margin-block-end:var(--yb-space-1);
   font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
 }
 .yb-footer__news{display:flex; align-items:stretch; gap:var(--yb-space-2)}
-.yb-footer__newsfield{position:relative; flex:1 1 auto; min-width:0}
-.yb-footer__newsfield .yb-icon{
-  position:absolute; inset-block:0; inset-inline-start:var(--yb-space-4);
-  margin-block:auto; color:var(--yb-text-muted); pointer-events:none;
-}
-.yb-footer__news .yb-input{padding-inline-start:var(--yb-space-12)}
-.yb-footer__newsbtn{
-  display:inline-flex; align-items:center; justify-content:center;
-  min-width:var(--yb-target-min); min-height:var(--yb-target-min);
-  border:none; cursor:pointer; padding:0 var(--yb-space-3);
-  background:var(--yb-action-bg); color:var(--yb-action-text);
-  border-radius:var(--yb-radius-control);
-  transition:background-color var(--yb-transition-control);
-}
+/* O CAMPO DO RODAPE E O CAMPO DO SISTEMA, na variante escura.
 
-@media (hover:hover){
-  .yb-footer__newsbtn:hover{background:var(--yb-action-bg-hover)}
-}
-.yb-footer__newsbtn:focus-visible{
-  outline:var(--yb-focus-width) solid var(--yb-focus-color);
-  outline-offset:var(--yb-focus-offset);
-}
+   Ele usava o `.yb-input` solto, e a razao escrita era boa: sobre o rodape
+   escuro a caixa branca do Form field competiria com o botao ao lado. So que o
+   preco disso nao estava na conta — virou o unico campo da loja sem a animacao
+   que todos os outros tem.
+
+   A cor NAO mora mais aqui. Ela era um bloco de sobreposicoes nesta folha, e
+   virou `.yb-field__box--on-dark` no atomo, com o resto das variantes escuras
+   do sistema. Aqui sobra o que e do rodape: quanto o campo ocupa na linha. */
+.yb-footer__newsfield{flex:1 1 auto; min-width:0}
+/* So posicao. Cor, alvo, raio e foco vem do atomo na marcacao
+   (`.yb-iconbtn--on-dark`). Antes este
+   seletor pintava a cor de acao por conta propria, e quando a primaria virou
+   preta o botao sumiu no rodape preto sem nenhum atomo acusar. */
+.yb-footer__newsbtn{flex:none; padding:0 var(--yb-space-3)}
 .yb-footer__info{margin:0}
-.yb-footer__info strong{
-  display:block; color:var(--yb-text-secondary);
-  font-weight:var(--yb-font-weight-semibold);
-}
 
 /* --- barra legal ------------------------------------------------------ */
 .yb-footer__bottom{
   display:flex; flex-wrap:wrap; align-items:center; gap:var(--yb-space-5);
-  margin-top:var(--yb-space-8); padding-top:var(--yb-space-12);
-  border-top:var(--yb-border-hairline) solid var(--yb-border-strong);
+  margin-block-start:var(--yb-space-8); padding-block-start:var(--yb-space-12);
+  border-block-start:var(--yb-border-hairline) solid var(--yb-border-strong);
 }
 @media (max-width:767.98px){
   .yb-footer__bottom{justify-content:center; text-align:center;
-    padding-top:var(--yb-space-8)}
+    padding-block-start:var(--yb-space-8)}
 }
 
 /* --- links do footer, em qualquer zona -------------------------------- */
@@ -6406,7 +6430,7 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
 /* Link em container flex perde o display:inline e com ele a isencao de alvo
    do WCAG 2.5.8. Na barra legal isso deixa alvo de 19px — o padding devolve
    os 24 sem mexer no ritmo da linha. */
-.yb-footer__bottom a,.yb-footer__links a{
+.yb-footer__bottom a{
   display:inline-flex; align-items:center; min-height:var(--yb-space-6);
 }
 
@@ -6448,26 +6472,20 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
 .yb-footer--dark .yb-footer__bottom{border-block-start-color:var(--yb-border-inverse)}
 /* A marca e monocromatica preta: sobre o rodape escuro ela sumiria. */
 .yb-footer--dark .yb-footer__logo img{filter:invert(1)}
-/* O campo e um controle: a borda dele precisa dos 3:1, e `--yb-border-inverse`
-   (1.47:1) so serve para dividir bloco. Mesmo par medido do chip do quiz. */
-.yb-footer--dark .yb-footer__news .yb-input{
-  background:var(--yb-surface-inverse-raised);
-  border-color:var(--yb-border-inverse-strong);
-  color:var(--yb-text-inverse);
-}
-.yb-footer--dark .yb-footer__news .yb-input::placeholder{color:var(--yb-text-muted-inverse)}
-.yb-footer--dark .yb-footer__newsfield .yb-icon{color:var(--yb-text-muted-inverse)}
+/* A COR SAIU DAQUI e foi para `.yb-field__box--on-dark`, no atomo. Esta regra
+   pintava o proprio `<input>` porque ate 0.13 o rodape usava o controle solto;
+   com a caixa em volta, os dois desenhos se sobrepunham. */
 
 /* A assinatura de e-mail lidera o rodape, e nao fica espremida numa terceira
    coluna: e a unica coisa ali que a loja QUER que aconteca. Separada por uma
    linha, ela deixa de competir com os menus. */
-.yb-footer__news-zona{
+.yb-footer__news-field{
   display:flex; align-items:center; justify-content:space-between;
   gap:var(--yb-space-8); flex-wrap:wrap;
   padding-block-end:var(--yb-space-8); margin-block-end:var(--yb-space-8);
   border-block-end:var(--yb-border-hairline) solid var(--yb-border-inverse);
 }
-.yb-footer__news-zona .yb-footer__news{flex:1 1 22rem; max-inline-size:30rem}
+.yb-footer__news-field .yb-footer__news{flex:1 1 22rem; max-inline-size:30rem}
 .yb-footer__newstitle{
   margin:0 0 var(--yb-space-1); font-size:var(--yb-type-h4-size);
   font-weight:var(--yb-font-weight-bold);
@@ -6581,7 +6599,7 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
   margin:0; color:var(--yb-text-secondary-inverse);
   font-size:var(--yb-type-body-size); line-height:var(--yb-line-height-relaxed);
 }
-.yb-split__nota{
+.yb-split__note{
   margin:0; color:var(--yb-text-muted-inverse);
   font-size:var(--yb-type-body-sm-size); align-self:center;
 }
@@ -6707,7 +6725,7 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
 .yb-section-head{
   display:flex; align-items:flex-end; justify-content:space-between;
   gap:var(--yb-space-6); flex-wrap:wrap;
-  margin-bottom:var(--yb-space-8);
+  margin-block-end:var(--yb-space-8);
 }
 /* Titulo e atalho sempre empilham em telas estreitas — nem "Best Sellers"
    cabe ao lado do proprio link em 375px. Empilhado, os 24px de gap pensados

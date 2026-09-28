@@ -2355,31 +2355,43 @@
     }
   },
   "action": {
+    "primary": {
+      "bg": {
+        "default": {
+          "$value": "{gray.950}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-action-primary-bg",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "color"
+        },
+        "hover": {
+          "$value": "{gray.800}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-action-primary-bg-hover",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "color"
+        },
+        "active": {
+          "$value": "{gray.700}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-action-primary-bg-active",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "color"
+        }
+      },
+      "text": {
+        "$value": "{text.on.action}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-action-primary-text",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      }
+    },
     "bg": {
-      "default": {
-        "$value": "{gray.950}",
-        "$extensions": {
-          "com.ybera.cssVariable": "--yb-action-bg",
-          "com.ybera.layer": "semantic"
-        },
-        "$type": "color"
-      },
-      "hover": {
-        "$value": "{gray.800}",
-        "$extensions": {
-          "com.ybera.cssVariable": "--yb-action-bg-hover",
-          "com.ybera.layer": "semantic"
-        },
-        "$type": "color"
-      },
-      "active": {
-        "$value": "{gray.700}",
-        "$extensions": {
-          "com.ybera.cssVariable": "--yb-action-bg-active",
-          "com.ybera.layer": "semantic"
-        },
-        "$type": "color"
-      },
       "disabled": {
         "$value": "{gray.200}",
         "$extensions": {
@@ -2387,21 +2399,45 @@
           "com.ybera.layer": "semantic"
         },
         "$type": "color"
-      }
-    },
-    "text": {
+      },
       "default": {
-        "$value": "{text.on.action}",
+        "$value": "{action.primary.bg.default}",
         "$extensions": {
-          "com.ybera.cssVariable": "--yb-action-text",
+          "com.ybera.cssVariable": "--yb-action-bg",
           "com.ybera.layer": "semantic"
         },
         "$type": "color"
       },
+      "hover": {
+        "$value": "{action.primary.bg.hover}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-action-bg-hover",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      },
+      "active": {
+        "$value": "{action.primary.bg.active}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-action-bg-active",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      }
+    },
+    "text": {
       "disabled": {
         "$value": "{text.muted.default}",
         "$extensions": {
           "com.ybera.cssVariable": "--yb-action-text-disabled",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      },
+      "default": {
+        "$value": "{action.primary.text}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-action-text",
           "com.ybera.layer": "semantic"
         },
         "$type": "color"
@@ -2501,7 +2537,7 @@
     },
     "on": {
       "dark": {
-        "$value": "{magenta.400}",
+        "$value": "{accent.signal.on.dark}",
         "$extensions": {
           "com.ybera.cssVariable": "--yb-action-on-dark",
           "com.ybera.layer": "semantic"
@@ -2545,6 +2581,26 @@
       },
       "$type": "color"
     },
+    "signal": {
+      "on": {
+        "dark": {
+          "$value": "{magenta.400}",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-accent-signal-on-dark",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "color"
+        }
+      },
+      "default": {
+        "$value": "{magenta.600}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-accent-signal",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
+      }
+    },
     "surface": {
       "$value": "{gold.100}",
       "$extensions": {
@@ -2580,7 +2636,7 @@
       }
     },
     "brand": {
-      "$value": "{magenta.600}",
+      "$value": "{accent.signal.default}",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-accent-brand",
         "com.ybera.layer": "semantic"
@@ -2588,7 +2644,7 @@
       "$type": "color"
     },
     "love": {
-      "$value": "{accent.brand}",
+      "$value": "{accent.signal.default}",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-accent-love",
         "com.ybera.layer": "semantic"
@@ -2614,12 +2670,12 @@
       "$type": "dimension"
     },
     "offset": {
-      "$value": "2px",
+      "$value": 0,
       "$extensions": {
         "com.ybera.cssVariable": "--yb-focus-offset",
         "com.ybera.layer": "semantic"
       },
-      "$type": "dimension"
+      "$type": "number"
     }
   },
   "elevation": {

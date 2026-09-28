@@ -254,9 +254,9 @@ ${n.itens.map(link).join('\n')}
 <header class="ds-top">
   <a class="ds-top__marca" href="${raiz}index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v${versao}</p>
@@ -305,7 +305,7 @@ const contar = (dir) => existsSync(join(raizFs, dir))
    Os chips são LINKS para as páginas de degrau, que já existem e já dizem a
    regra. Não são botão de filtro: filtro sem script é controle morto, e esta
    página já teve um — o campo `.grade-filtro`, que nascia `hidden` e nunca
-   era revelado porque o doc.js pega o PRIMEIRO `[data-yb-filtro]` do
+   era revelado porque o doc.js pega o PRIMEIRO `[data-yb-filter]` do
    documento, que é sempre a busca do topo.
 
    Templates fica de fora, como já fica do catálogo e da coluna: um degrau com
@@ -486,7 +486,7 @@ export function paginaDeGrupo(g, extra) {
 @media (max-width:900px){.grupo-main{padding:var(--yb-space-10) var(--doc-respiro)}}
 </style>
 </head>
-<body class="ficha" data-moldura="centrada">
+<body class="ficha" data-frame="centered">
 ${cabecalho({ raiz, atual: g.id })}
 <main class="grupo-main">
   <a class="ficha-volta" href="${raiz}index.html">← Design system</a>
@@ -546,7 +546,7 @@ export function paginaDeToken(s, ant, prox) {
 .ficha code{font-family:var(--yb-font-family-mono); font-size:var(--yb-type-caption-size)}
 </style>
 </head>
-<body class="ficha" data-moldura="centrada">
+<body class="ficha" data-frame="centered">
 ${cabecalho({ raiz, atual: s.id })}
 <main class="main">
   <div class="ficha-topo">
@@ -582,10 +582,10 @@ const FOLHA = 'doc/doc-nav.css';
    `tokens/` marca "Fundação". Quem diz em que ponto do grupo a pessoa esta e a
    coluna lateral, que e de cada area. */
 const ESCRITAS = [
-  { arq: 'index.html', raiz: '', atual: 'inicio', moldura: 'centrada' },
-  { arq: 'icons/index.html', raiz: '../', atual: 'icons', moldura: 'centrada' },
-  { arq: 'preview/index.html', raiz: '../', atual: 'preview', moldura: 'larga' },
-  { arq: 'decision-log/index.html', raiz: '../', atual: 'decision-log', moldura: 'centrada' },
+  { arq: 'index.html', raiz: '', atual: 'inicio', moldura: 'centered' },
+  { arq: 'icons/index.html', raiz: '../', atual: 'icons', moldura: 'centered' },
+  { arq: 'preview/index.html', raiz: '../', atual: 'preview', moldura: 'wide' },
+  { arq: 'decision-log/index.html', raiz: '../', atual: 'decision-log', moldura: 'centered' },
 ];
 
 /* `tokens/index.html` NÃO está aqui: ela virou a página do grupo Fundação, e é
@@ -594,9 +594,9 @@ const ESCRITAS = [
    aplicada por cima, e o `--check` da passada seguinte acusava defasagem que o
    build "consertava" para ficar defasada de novo.
 
-   `larga` para as páginas de duas colunas (a ficha e a de tokens, onde a
+   `wide` para as páginas de duas colunas (a ficha e a de tokens, onde a
    coluna lateral começa na borda) e para o preview, que é uma bancada de
-   iframes de ponta a ponta. `centrada` para as que têm uma coluna de leitura
+   iframes de ponta a ponta. `centered` para as que têm uma coluna de leitura
    no meio. O atributo mora no <body> porque é do LAYOUT da página, e não do
    cabeçalho — o cabeçalho é idêntico em todas, e é uma checagem que isso
    continue verdade. */
@@ -624,7 +624,7 @@ function aplicar(html, { raiz, atual, grupo, moldura }) {
   if (!html.includes(js)) html = html.replace('</head>', `${js}\n</head>`);
   if (moldura) {
     html = html.replace(/<body([^>]*)>/, (m, attrs) =>
-      `<body${attrs.replace(/\s*data-moldura="[^"]*"/, '')} data-moldura="${moldura}">`);
+      `<body${attrs.replace(/\s*data-frame="[^"]*"/, '')} data-frame="${moldura}">`);
   }
   return html;
 }

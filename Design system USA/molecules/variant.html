@@ -24,14 +24,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="molecules" data-moldura="centrada">
+<body class="ficha" data-level="molecules" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -149,7 +149,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,8 +204,8 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <h3 class="row-label">Variant <code>sem modificador</code></h3>
     <div class="demo">
@@ -259,8 +259,8 @@
 
     <h3 class="row-label">Variant <code>--cards</code> — quando a escolha muda o frasco</h3>
     <div class="demo demo--rail">
-      <p class="yb-field__label" id="rot-doc">Size: <b data-yb-variante-eco>750g</b></p>
-      <div class="yb-swatches yb-swatches--cards" role="radiogroup" aria-labelledby="rot-doc" data-yb-variante>
+      <p class="yb-field__label" id="rot-doc">Size: <b data-yb-variant-echo>750g</b></p>
+      <div class="yb-swatches yb-swatches--cards" role="radiogroup" aria-labelledby="rot-doc" data-yb-variant>
         <input type="radio" name="szc" id="c1" checked>
         <label for="c1">
           <img src="../pages/img/KitCuidadosProfundos-YberaFashionGold_ab-9c59c4.webp" alt="" loading="lazy">
@@ -275,7 +275,7 @@
           <span class="yb-swatches__price">$34.90</span>
           <span class="yb-swatches__stock">In stock</span>
         </label>
-        <input type="radio" name="szc" id="c3" data-yb-esgotado>
+        <input type="radio" name="szc" id="c3" data-yb-soldout>
         <label for="c3">
           <img src="../pages/img/90_mascara_reconstrucao_250g_cuidados_pr-2fb01d.webp" alt="" loading="lazy">
           <span class="yb-swatches__name">1kg</span>
@@ -292,7 +292,7 @@
       sistema é cor de <b>ação</b>; estado negativo usa cor de estado.</p>
     </div>
     <div class="note">
-      <b>O esgotado continua clicável — <code>data-yb-esgotado</code>, não <code>disabled</code></b>
+      <b>O esgotado continua clicável — <code>data-yb-soldout</code>, não <code>disabled</code></b>
       <p>Era <code>disabled</code>: o tamanho sem estoque aparecia e não podia ser
       alcançado. Só que chegar nele é o único caminho para o aviso de volta ao
       estoque — desabilitar tirava do cliente a única coisa que ele ainda podia
@@ -316,7 +316,7 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;div class="yb-swatches"&gt;
   &lt;input type="radio" name="sz" id="z1" checked&gt;&lt;label for="z1"&gt;500g / 17.6 fl.oz&lt;/label&gt;
   &lt;input type="radio" name="sz" id="z2"&gt;&lt;label for="z2"&gt;300g / 10.5 fl.oz&lt;/label&gt;
@@ -326,9 +326,9 @@
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca" style="max-inline-size:420px"><div class="yb-swatches">
@@ -339,9 +339,9 @@
 </div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-swatches"><span class="anat__texto"><b>Grupo</b> — Rádios desenhados como pastilhas. As setas do teclado percorrem as opções.</span></li>
-        <li data-alvo="label"><span class="anat__texto"><b>Opção</b> — O rótulo é a pastilha. O tamanho por extenso, nas duas unidades.</span></li>
-        <li data-alvo="input[disabled] + label"><span class="anat__texto"><b>Indisponível</b> — Visível e fora de alcance. Sumir esconderia que o tamanho existe.</span></li>
+        <li data-target=".yb-swatches"><span class="anat__texto"><b>Grupo</b> — Rádios desenhados como pastilhas. As setas do teclado percorrem as opções.</span></li>
+        <li data-target="label"><span class="anat__texto"><b>Opção</b> — O rótulo é a pastilha. O tamanho por extenso, nas duas unidades.</span></li>
+        <li data-target="input[disabled] + label"><span class="anat__texto"><b>Indisponível</b> — Visível e fora de alcance. Sumir esconderia que o tamanho existe.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -359,7 +359,7 @@
     <p class="api-linha"><span class="api-linha__rotulo">De que é feita</span><span class="api-linha__corpo">Nenhuma: não consome nenhum outro componente. O que ela desenha sai todo da folha dela.</span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-swatches--cards</code> <code>.yb-swatches--on-dark</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-swatches__name</code> <code>.yb-swatches__price</code> <code>.yb-swatches__stock</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:checked</code> · <code>:disabled</code> · <code>:focus-visible</code> · <code>:hover</code> · <code>[data-yb-esgotado]</code></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:checked</code> · <code>:disabled</code> · <code>:focus-visible</code> · <code>:hover</code> · <code>[data-yb-soldout]</code></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
     <p class="rotulo">Tokens <span class="rotulo-conta">37</span></p>
     <div class="tokens">
@@ -369,18 +369,18 @@
           <li><i class="tokens__cor" style="background:var(--yb-border-inverse)" aria-hidden="true"></i><code>--yb-border-inverse</code><span class="tokens__valor">#3A3A3C</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border-inverse-strong)" aria-hidden="true"></i><code>--yb-border-inverse-strong</code><span class="tokens__valor">#6D6D71</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface-inverse-raised)" aria-hidden="true"></i><code>--yb-surface-inverse-raised</code><span class="tokens__valor">#3A3A3C</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted-inverse)" aria-hidden="true"></i><code>--yb-text-muted-inverse</code><span class="tokens__valor">#B1B1B4</span></li>
           <li><code>--yb-border-emphasis</code><span class="tokens__valor">2px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-danger-text)" aria-hidden="true"></i><code>--yb-danger-text</code><span class="tokens__valor">#B3261E</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-success-text)" aria-hidden="true"></i><code>--yb-success-text</code><span class="tokens__valor">#1F7A34</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-muted-inverse)" aria-hidden="true"></i><code>--yb-text-muted-inverse</code><span class="tokens__valor">#B1B1B4</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-subtle)" aria-hidden="true"></i><code>--yb-bg-subtle</code><span class="tokens__valor">#FAFAFA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border-strong)" aria-hidden="true"></i><code>--yb-border-strong</code><span class="tokens__valor">#B1B1B4</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border)" aria-hidden="true"></i><code>--yb-border</code><span class="tokens__valor">#DADADB</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface-sunken)" aria-hidden="true"></i><code>--yb-surface-sunken</code><span class="tokens__valor">#FAFAFA</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
@@ -411,8 +411,8 @@
         <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>3</span></p>
         <ul class="tokens__lista">
           <li><code>--yb-aspect-product</code><span class="tokens__valor">1 / 1</span></li>
-          <li><code>--yb-radius-sm</code><span class="tokens__valor">4px</span></li>
           <li><code>--yb-radius-control</code><span class="tokens__valor">8px</span></li>
+          <li><code>--yb-radius-sm</code><span class="tokens__valor">4px</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
@@ -426,26 +426,26 @@
         <ul class="tokens__lista">
           <li><code>--yb-transition-control</code><span class="tokens__valor">120ms cubic-bezier(.2, 0, 0, 1)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
           <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso">
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
         <p class="fn-cabeca">✓ Faça</p>
-        <div class="fn-palco"><div class="yb-swatches" role="radiogroup" aria-label="Size"><input type="radio" name="fx-v" id="fx-v1" checked><label for="fx-v1">250g</label><input type="radio" name="fx-v" id="fx-v2" data-yb-esgotado><label for="fx-v2">1kg — Sold out</label></div></div>
+        <div class="fn-palco"><div class="yb-swatches" role="radiogroup" aria-label="Size"><input type="radio" name="fx-v" id="fx-v1" checked><label for="fx-v1">250g</label><input type="radio" name="fx-v" id="fx-v2" data-yb-soldout><label for="fx-v2">1kg — Sold out</label></div></div>
         <p class="fn-legenda">Esgotado alcançável, com o estado escrito no cartão.</p>
       </div>
       <div class="fn-caso fn-caso--nao">
@@ -456,9 +456,9 @@
     </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade">
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <ul class="bloco-lede"><li>É um grupo de <code>radio</code> com <code>role="radiogroup"</code> e <code>aria-labelledby</code> apontando para o rótulo “Size:”. As setas do teclado percorrem as opções sem JavaScript.</li><li>A opção esgotada continua selecionável: <code>data-yb-esgotado</code>, não <code>disabled</code>. Desabilitada, ela era visível e inalcançável — e chegar nela é o único caminho para o aviso de volta ao estoque.</li><li>O rótulo ecoa a escolha (“Size: <b>500g</b>”) e nasce correto no HTML: sem JavaScript a página não muda, mas também não mente.</li></ul>
+    <ul class="bloco-lede"><li>É um grupo de <code>radio</code> com <code>role="radiogroup"</code> e <code>aria-labelledby</code> apontando para o rótulo “Size:”. As setas do teclado percorrem as opções sem JavaScript.</li><li>A opção esgotada continua selecionável: <code>data-yb-soldout</code>, não <code>disabled</code>. Desabilitada, ela era visível e inalcançável — e chegar nela é o único caminho para o aviso de volta ao estoque.</li><li>O rótulo ecoa a escolha (“Size: <b>500g</b>”) e nasce correto no HTML: sem JavaScript a página não muda, mas também não mente.</li></ul>
   </section>
   </div>
 
@@ -500,7 +500,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

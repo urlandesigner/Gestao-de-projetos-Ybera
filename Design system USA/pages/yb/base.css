@@ -123,7 +123,7 @@
   display:inline-flex; align-items:center;
   min-height:var(--yb-target-min);
   padding:var(--yb-space-3) var(--yb-space-5);
-  background:var(--yb-action-bg); color:var(--yb-action-text);
+  background:var(--yb-action-primary-bg); color:var(--yb-action-primary-text);
   font-family:inherit; font-size:var(--yb-type-body-sm-size);
   font-weight:var(--yb-font-weight-semibold);
   text-decoration:none;

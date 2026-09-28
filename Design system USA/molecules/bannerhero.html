@@ -24,14 +24,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="molecules" data-moldura="centrada">
+<body class="ficha" data-level="molecules" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -149,7 +149,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,8 +204,8 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <h3 class="row-label">Tipo com texto e CTA — <code>--blur</code></h3>
     <div class="stage">
@@ -232,8 +232,8 @@
     </div>
     <h3 class="row-label">Tipo arte — <code>--arte</code></h3>
     <div class="stage">
-      <a class="yb-bannerhero yb-bannerhero--arte" href="#demos">
-        <img class="yb-bannerhero__fundo" src="../pages/img/Banner_20_24H_b-96b194d5.webp" alt="" loading="lazy">
+      <a class="yb-bannerhero yb-bannerhero--art" href="#demos">
+        <img class="yb-bannerhero__backdrop" src="../pages/img/Banner_20_24H_b-96b194d5.webp" alt="" loading="lazy">
         <picture>
           <source media="(max-width: 767.98px)" srcset="../pages/img/Banner_20_24H_mb_b-61df813f.webp">
           <img src="../pages/img/Banner_20_24H_b-96b194d5.webp" alt="20% off sitewide for the next 24 hours. Use code Ybera20.">
@@ -284,7 +284,7 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;a class="yb-bannerhero yb-bannerhero--blur" href="#demos"&gt;
   &lt;img src="../pages/img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp" alt=""&gt;
   &lt;div class="yb-bannerhero__blur" aria-hidden="true"&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;/div&gt;
@@ -298,9 +298,9 @@
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca"><a class="yb-bannerhero yb-bannerhero--blur" href="#anat-demos">
@@ -315,14 +315,14 @@
 </a></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-bannerhero"><span class="anat__texto"><b>Container</b> — O topo da home, sangrando até as bordas. A altura é a proporção da arte: 16:5 no desktop, 2:3 no celular.</span></li>
-        <li data-alvo="img"><span class="anat__texto"><b>Foto</b> — Cobre a caixa inteira. O <code>alt</code> fica vazio quando a mensagem está no texto ao lado.</span></li>
-        <li data-alvo=".yb-bannerhero__blur"><span class="anat__texto"><b>Desfoque</b> — Três folhas sobre a foto. É o que sustenta o texto branco em qualquer imagem.</span></li>
-        <li data-alvo=".yb-bannerhero__eyebrow"><span class="anat__texto"><b>Sobretítulo</b> — Uma linha curta que situa. Opcional; sem ele o título fica sozinho e funciona.</span></li>
-        <li data-alvo=".yb-bannerhero__title"><span class="anat__texto"><b>Título</b> — A promessa da tela. Volta para a prumada do conteúdo, e não para a borda da janela.</span></li>
-        <li data-alvo=".yb-bannerhero__text"><span class="anat__texto"><b>Texto</b> — Opcional, uma ou duas linhas. Explica a promessa sem repeti-la.</span></li>
-        <li data-alvo=".yb-bannerhero__body"><span class="anat__texto"><b>Corpo</b> — O bloco de texto. Cresce de baixo para cima, que é onde o véu é mais forte.</span></li>
-        <li data-alvo=".yb-btn"><span class="anat__texto"><b>Ação</b> — Opcional. É o <code>.yb-btn</code>, outra peça, na variante para fundo escuro.</span></li>
+        <li data-target=".yb-bannerhero"><span class="anat__texto"><b>Container</b> — O topo da home, sangrando até as bordas. A altura é a proporção da arte: 16:5 no desktop, 2:3 no celular.</span></li>
+        <li data-target="img"><span class="anat__texto"><b>Foto</b> — Cobre a caixa inteira. O <code>alt</code> fica vazio quando a mensagem está no texto ao lado.</span></li>
+        <li data-target=".yb-bannerhero__blur"><span class="anat__texto"><b>Desfoque</b> — Três folhas sobre a foto. É o que sustenta o texto branco em qualquer imagem.</span></li>
+        <li data-target=".yb-bannerhero__eyebrow"><span class="anat__texto"><b>Sobretítulo</b> — Uma linha curta que situa. Opcional; sem ele o título fica sozinho e funciona.</span></li>
+        <li data-target=".yb-bannerhero__title"><span class="anat__texto"><b>Título</b> — A promessa da tela. Volta para a prumada do conteúdo, e não para a borda da janela.</span></li>
+        <li data-target=".yb-bannerhero__text"><span class="anat__texto"><b>Texto</b> — Opcional, uma ou duas linhas. Explica a promessa sem repeti-la.</span></li>
+        <li data-target=".yb-bannerhero__body"><span class="anat__texto"><b>Corpo</b> — O bloco de texto. Cresce de baixo para cima, que é onde o véu é mais forte.</span></li>
+        <li data-target=".yb-btn"><span class="anat__texto"><b>Ação</b> — Opcional. É o <code>.yb-btn</code>, outra peça, na variante para fundo escuro.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -340,8 +340,8 @@
     <p class="rotulo">De que é feita</p>
     <p class="usa-degrau">Átomos</p>
     <ul class="usa"><li><a href="../atoms/button.html">Button</a></li></ul>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-bannerhero--arte</code> <code>.yb-bannerhero--blur</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-bannerhero__blur</code> <code>.yb-bannerhero__body</code> <code>.yb-bannerhero__eyebrow</code> <code>.yb-bannerhero__fundo</code> <code>.yb-bannerhero__text</code> <code>.yb-bannerhero__title</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-bannerhero--art</code> <code>.yb-bannerhero--blur</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-bannerhero__backdrop</code> <code>.yb-bannerhero__blur</code> <code>.yb-bannerhero__body</code> <code>.yb-bannerhero__eyebrow</code> <code>.yb-bannerhero__text</code> <code>.yb-bannerhero__title</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
     <p class="rotulo">Tokens <span class="rotulo-conta">45</span></p>
@@ -394,13 +394,13 @@
         <ul class="tokens__lista">
           <li><code>--yb-blur-lg</code><span class="tokens__valor">24px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-scrim-soft)" aria-hidden="true"></i><code>--yb-scrim-soft</code><span class="tokens__valor">rgba(30, 30, 31, .18)</span></li>
-          <li><code>--yb-blur-ate</code></li>
           <li><code>--yb-blur-band</code></li>
-          <li><code>--yb-blur-de</code></li>
           <li><code>--yb-blur-f</code></li>
           <li><code>--yb-blur-falloff</code></li>
+          <li><code>--yb-blur-from</code></li>
           <li><code>--yb-blur-radius</code></li>
           <li><code>--yb-blur-reach</code></li>
+          <li><code>--yb-blur-to</code></li>
           <li><i class="tokens__cor" style="background:var(--yb-scrim-curve-1)" aria-hidden="true"></i><code>--yb-scrim-curve-1</code><span class="tokens__valor">rgba(30, 30, 31, .12)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-scrim-curve-2)" aria-hidden="true"></i><code>--yb-scrim-curve-2</code><span class="tokens__valor">rgba(30, 30, 31, .385)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-scrim-curve-3)" aria-hidden="true"></i><code>--yb-scrim-curve-3</code><span class="tokens__valor">rgba(30, 30, 31, .65)</span></li>
@@ -416,7 +416,7 @@
         <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>3</span></p>
         <ul class="tokens__lista">
           <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
           <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
         </ul>
       </div>
@@ -429,14 +429,14 @@
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso">
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
@@ -452,7 +452,7 @@
     </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade">
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
     <ul class="bloco-lede"><li>No tipo com texto, o texto é HTML, não pixel: é lido, traduzido, buscado e escala com o zoom de fonte.</li><li>A foto é decorativa (<code>alt=""</code>) no tipo com texto; no tipo arte, o <code>alt</code> repete a promessa desenhada na imagem.</li><li>O contraste do texto é medido contra a região da foto onde ele cai — não contra a média da imagem.</li></ul>
   </section>
@@ -496,7 +496,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

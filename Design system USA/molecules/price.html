@@ -24,14 +24,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="molecules" data-moldura="centrada">
+<body class="ficha" data-level="molecules" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -149,7 +149,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,8 +204,8 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <h3 class="row-label">Variants</h3>
     <div class="demo demo--amostras">
@@ -239,7 +239,7 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;span class="amostra"&gt;
   &lt;span class="yb-price"&gt;&lt;b class="yb-price__now"&gt;$168.90&lt;/b&gt;&lt;s class="yb-price__was"&gt;$199.90&lt;/s&gt;&lt;span class="yb-badge yb-badge--sale"&gt;Save $31&lt;/span&gt;&lt;/span&gt;
   &lt;span class="amostra__rotulo"&gt;&lt;code&gt;sem modificador&lt;/code&gt;&lt;/span&gt;
@@ -251,18 +251,18 @@
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca"><span class="yb-price"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s><span class="yb-badge yb-badge--sale">Save $31</span></span></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-price"><span class="anat__texto"><b>Preço</b> — Agrupa o que se paga, o que se pagava e o quanto se economiza.</span></li>
-        <li data-alvo=".yb-price__now"><span class="anat__texto"><b>Agora</b> — O que se paga. É sempre o mais pesado da linha.</span></li>
-        <li data-alvo=".yb-price__was"><span class="anat__texto"><b>Antes</b> — <code>&lt;s&gt;</code>, riscado. Só aparece quando existe de verdade.</span></li>
-        <li data-alvo=".yb-badge"><span class="anat__texto"><b>Economia</b> — Opcional. É o <code>.yb-badge</code>, outra peça, com o valor poupado.</span></li>
+        <li data-target=".yb-price"><span class="anat__texto"><b>Preço</b> — Agrupa o que se paga, o que se pagava e o quanto se economiza.</span></li>
+        <li data-target=".yb-price__now"><span class="anat__texto"><b>Agora</b> — O que se paga. É sempre o mais pesado da linha.</span></li>
+        <li data-target=".yb-price__was"><span class="anat__texto"><b>Antes</b> — <code>&lt;s&gt;</code>, riscado. Só aparece quando existe de verdade.</span></li>
+        <li data-target=".yb-badge"><span class="anat__texto"><b>Economia</b> — Opcional. É o <code>.yb-badge</code>, outra peça, com o valor poupado.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -283,7 +283,7 @@
     <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-price--sm</code> <code>.yb-price--stack</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-price__now</code> <code>.yb-price__was</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo">Nenhum. A peça não muda por interação.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
     <p class="rotulo">Tokens <span class="rotulo-conta">12</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
@@ -316,14 +316,14 @@
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso">
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
@@ -339,7 +339,7 @@
     </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade">
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
     <ul class="bloco-lede"><li>O preço antigo vai em <code>&lt;s&gt;</code>, não em <code>text-decoration</code> aplicada a um span. O elemento diz “isto não vale mais”; o estilo só desenha.</li><li>Preço isolado usa <code>proportional-nums</code>: com <code>tabular-nums</code> o ponto ganha largura de dígito e “$149.90” lê como “$149 . 90”.</li><li>Quando há desconto, o quanto se economiza está escrito ao lado — dois números riscados não são uma conta que todo mundo faz de cabeça.</li></ul>
   </section>
@@ -383,7 +383,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

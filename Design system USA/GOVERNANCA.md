@@ -30,7 +30,7 @@ Semver adaptado. O número comunica **o que quem consome precisa fazer**.
 | Correção de contraste, ajuste de valor, documentação | **correção** `0.4.1` | seguro: aplique e siga |
 
 **Trocar o valor de um token semântico não é mudança maior.** Se
-`--yb-action-bg` deixa de ser magenta e vira grafite, quem consome não muda uma
+`--yb-action-primary-bg` deixa de ser magenta e vira grafite, quem consome não muda uma
 linha — é exatamente para isso que a camada existe. Mudança maior é quando o
 token **some** ou passa a significar outra coisa.
 
@@ -106,7 +106,7 @@ Quebrar qualquer uma delas exige mudança maior e justificativa no changelog.
 
 ## Antes de publicar uma versão
 
-O checklist virou comando. As 140 checagens rodam sozinhas:
+O checklist virou comando. As 141 checagens rodam sozinhas:
 
 ```bash
 npm run check

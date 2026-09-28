@@ -25,14 +25,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="organisms" data-moldura="centrada">
+<body class="ficha" data-level="organisms" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -150,7 +150,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,24 +204,24 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <div class="stage">
       <footer class="yb-footer yb-footer--dark">
         <div class="yb-footer__inner">
 
-          <div class="yb-footer__news-zona">
+          <div class="yb-footer__news-field">
             <div>
               <p class="yb-footer__newstitle">First to know</p>
-              <label class="yb-footer__newslabel" for="news-footer">New arrivals, routines and offers. No spam.</label>
+              <p class="yb-footer__newslabel" id="news-footer-sobre">New arrivals, routines and offers. No spam.</p>
             </div>
             <form class="yb-footer__news" onsubmit="return false">
-              <span class="yb-footer__newsfield">
+              <span class="yb-field__box yb-field__box--on-dark yb-footer__newsfield">
                 <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-mail"/></svg>
-                <input class="yb-input" id="news-footer" type="email" placeholder="Your best email" autocomplete="email" required>
+                                <input class="yb-input" id="news-footer" type="email" placeholder=" " autocomplete="email" aria-describedby="news-footer-sobre" required><label class="yb-field__label" for="news-footer">Your best email</label>
               </span>
-              <button class="yb-footer__newsbtn" type="submit" aria-label="Subscribe">
+              <button class="yb-iconbtn yb-iconbtn--on-dark yb-footer__newsbtn" type="submit" aria-label="Subscribe">
                 <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg>
               </button>
             </form>
@@ -230,7 +230,7 @@
           <div class="yb-footer__top">
             <div class="yb-footer__brand">
               <a class="yb-footer__logo" href="#demos"><span class="yb-logo yb-logo--lg"><img src="../brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span></a>
-              <p class="yb-footer__info">info.usa@ybera.com</p>
+              <p class="yb-footer__info">info@ybera.us</p>
               <p class="yb-footer__info">Mon&ndash;Fri, 8am&ndash;4pm EST</p>
               <div class="yb-footer__social">
                 <a href="#demos"><svg class="yb-icon" role="img" aria-label="Ybera on Instagram"><use href="../icons/ybera-icons.svg#yb-instagram"/></svg></a>
@@ -248,14 +248,28 @@
               </div>
               <div class="yb-footer__col">
                 <input class="yb-footer__toggle" type="checkbox" id="fcol1">
-                <label class="yb-footer__coltitle" for="fcol1">Help
+                <label class="yb-footer__coltitle" for="fcol1">Collection
+                  <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
+                </label>
+                <div class="yb-footer__collist"><ul><li><a href="#demos">Progressiva</a></li><li><a href="#demos">Cronograma</a></li><li><a href="#demos">Ybera Paris</a></li><li><a href="#demos">100Timetros</a></li><li><a href="#demos">Capulana</a></li><li><a href="#demos">Terra Coco</a></li><li><a href="#demos">Hair Mist</a></li></ul></div>
+              </div>
+              <div class="yb-footer__col">
+                <input class="yb-footer__toggle" type="checkbox" id="fcol2">
+                <label class="yb-footer__coltitle" for="fcol2">Hair Problems
+                  <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
+                </label>
+                <div class="yb-footer__collist"><ul><li><a href="#demos">Damaged Hair</a></li><li><a href="#demos">Frizz &amp; Dryness</a></li><li><a href="#demos">Thinning / Hair Loss</a></li><li><a href="#demos">Undefined Curls</a></li><li><a href="#demos">Hair Smoothing</a></li><li><a href="#demos">Hair Straightening</a></li></ul></div>
+              </div>
+              <div class="yb-footer__col">
+                <input class="yb-footer__toggle" type="checkbox" id="fcol3">
+                <label class="yb-footer__coltitle" for="fcol3">Help
                   <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
                 </label>
                 <div class="yb-footer__collist"><ul><li><a href="#demos">FAQ</a></li><li><a href="#demos">Contact Us</a></li><li><a href="#demos">Shipping Policy</a></li><li><a href="#demos">Refund Policy</a></li></ul></div>
               </div>
               <div class="yb-footer__col">
-                <input class="yb-footer__toggle" type="checkbox" id="fcol2">
-                <label class="yb-footer__coltitle" for="fcol2">Company
+                <input class="yb-footer__toggle" type="checkbox" id="fcol4">
+                <label class="yb-footer__coltitle" for="fcol4">Company
                   <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
                 </label>
                 <div class="yb-footer__collist"><ul><li><a href="#demos">Our Story</a></li><li><a href="#demos">Blog</a></li><li><a href="#demos">AI Hair Analysis</a></li></ul></div>
@@ -263,21 +277,19 @@
             </div>
           </div>
 
-          <div class="yb-footer__bottom"><span>&copy; 2026 Ybera Paris USA</span><a href="#demos">Terms of Service</a><a href="#demos">Privacy Policy</a><a href="#demos">SMS Terms</a></div>
+          <div class="yb-footer__bottom"><span>&copy; 2026 YBERA USA LLC</span><a href="#demos">Terms &amp; Conditions</a><a href="#demos">Privacy Policy</a><a href="#demos">Refund Policy</a><a href="#demos">Shipping Policy</a><a href="#demos">SMS Terms &amp; Conditions</a></div>
         </div>
       </footer>
     </div>
     <div class="note">
       <b>Esta é a versão que as onze telas publicam</b>
-      <p>A doc mostrava o rodapé anterior: claro, com as colunas em acordeão e
-      <b>28 destinos</b> &mdash; 15 links em três colunas, 4 no bloco de marca e 6 legais.
-      Era o padrão de 2010, quando o rodapé servia de mapa do site. Hoje quem procura
-      usa a busca, e a lista longa só dilui os três ou quatro links que alguém de fato
-      clica.</p>
-      <p>Aqui são <b>9 links em três colunas</b> mais 3 legais, e cada coluna responde
-      uma pergunta diferente: onde compro, quem me ajuda, quem são vocês. A lista legal
-      também perdeu uma duplicata que o rodapé antigo carregava &mdash; "Terms &amp;
-      Conditions" e "Terms of Service" apontavam para o mesmo destino com dois rótulos.</p>
+      <p>Aqui são <b>23 links em cinco colunas</b> mais 5 legais, e cada coluna
+      responde uma pergunta diferente: onde compro, que linha, que problema, quem me
+      ajuda, quem são vocês. <b>Collection</b> e <b>Hair Problems</b> seguem o rodapé
+      da loja: são as duas entradas pelas quais ela organiza o catálogo, por linha e
+      por problema. A lista legal perdeu uma duplicata que o rodapé antigo carregava
+      &mdash; "Terms &amp; Conditions" e "Terms of Service" apontavam para o mesmo
+      destino com dois rótulos.</p>
     </div>
     <div class="note">
       <b>Escuro é superfície, não tema</b>
@@ -326,20 +338,20 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;footer class="yb-footer yb-footer--dark"&gt;
   &lt;div class="yb-footer__inner"&gt;
-    &lt;div class="yb-footer__news-zona"&gt;
+    &lt;div class="yb-footer__news-field"&gt;
       &lt;div&gt;
         &lt;p class="yb-footer__newstitle"&gt;First to know&lt;/p&gt;
-        &lt;label class="yb-footer__newslabel" for="news-footer"&gt;New arrivals, routines and offers. No spam.&lt;/label&gt;
+        &lt;p class="yb-footer__newslabel" id="news-footer-sobre"&gt;New arrivals, routines and offers. No spam.&lt;/p&gt;
       &lt;/div&gt;
       &lt;form class="yb-footer__news" onsubmit="return false"&gt;
-        &lt;span class="yb-footer__newsfield"&gt;
+        &lt;span class="yb-field__box yb-field__box--on-dark yb-footer__newsfield"&gt;
           &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-mail"/&gt;&lt;/svg&gt;
-          &lt;input class="yb-input" id="news-footer" type="email" placeholder="Your best email" autocomplete="email" required&gt;
+                          &lt;input class="yb-input" id="news-footer" type="email" placeholder=" " autocomplete="email" aria-describedby="news-footer-sobre" required&gt;&lt;label class="yb-field__label" for="news-footer"&gt;Your best email&lt;/label&gt;
         &lt;/span&gt;
-        &lt;button class="yb-footer__newsbtn" type="submit" aria-label="Subscribe"&gt;
+        &lt;button class="yb-iconbtn yb-iconbtn--on-dark yb-footer__newsbtn" type="submit" aria-label="Subscribe"&gt;
           &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;
         &lt;/button&gt;
       &lt;/form&gt;
@@ -347,7 +359,7 @@
     &lt;div class="yb-footer__top"&gt;
       &lt;div class="yb-footer__brand"&gt;
         &lt;a class="yb-footer__logo" href="#demos"&gt;&lt;span class="yb-logo yb-logo--lg"&gt;&lt;img src="../brand/ybera-logo.webp" alt="Ybera" width="360" height="139"&gt;&lt;/span&gt;&lt;/a&gt;
-        &lt;p class="yb-footer__info"&gt;info.usa@ybera.com&lt;/p&gt;
+        &lt;p class="yb-footer__info"&gt;info@ybera.us&lt;/p&gt;
         &lt;p class="yb-footer__info"&gt;Mon&amp;ndash;Fri, 8am&amp;ndash;4pm EST&lt;/p&gt;
         &lt;div class="yb-footer__social"&gt;
           &lt;a href="#demos"&gt;&lt;svg class="yb-icon" role="img" aria-label="Ybera on Instagram"&gt;&lt;use href="../icons/ybera-icons.svg#yb-instagram"/&gt;&lt;/svg&gt;&lt;/a&gt;
@@ -364,44 +376,58 @@
         &lt;/div&gt;
         &lt;div class="yb-footer__col"&gt;
           &lt;input class="yb-footer__toggle" type="checkbox" id="fcol1"&gt;
-          &lt;label class="yb-footer__coltitle" for="fcol1"&gt;Help
+          &lt;label class="yb-footer__coltitle" for="fcol1"&gt;Collection
+            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;
+          &lt;/label&gt;
+          &lt;div class="yb-footer__collist"&gt;&lt;ul&gt;&lt;li&gt;&lt;a href="#demos"&gt;Progressiva&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Cronograma&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Ybera Paris&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;100Timetros&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Capulana&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Terra Coco&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Hair Mist&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="yb-footer__col"&gt;
+          &lt;input class="yb-footer__toggle" type="checkbox" id="fcol2"&gt;
+          &lt;label class="yb-footer__coltitle" for="fcol2"&gt;Hair Problems
+            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;
+          &lt;/label&gt;
+          &lt;div class="yb-footer__collist"&gt;&lt;ul&gt;&lt;li&gt;&lt;a href="#demos"&gt;Damaged Hair&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Frizz &amp;amp; Dryness&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Thinning / Hair Loss&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Undefined Curls&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Hair Smoothing&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Hair Straightening&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="yb-footer__col"&gt;
+          &lt;input class="yb-footer__toggle" type="checkbox" id="fcol3"&gt;
+          &lt;label class="yb-footer__coltitle" for="fcol3"&gt;Help
             &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;
           &lt;/label&gt;
           &lt;div class="yb-footer__collist"&gt;&lt;ul&gt;&lt;li&gt;&lt;a href="#demos"&gt;FAQ&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Contact Us&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Shipping Policy&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Refund Policy&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;
         &lt;/div&gt;
         &lt;div class="yb-footer__col"&gt;
-          &lt;input class="yb-footer__toggle" type="checkbox" id="fcol2"&gt;
-          &lt;label class="yb-footer__coltitle" for="fcol2"&gt;Company
+          &lt;input class="yb-footer__toggle" type="checkbox" id="fcol4"&gt;
+          &lt;label class="yb-footer__coltitle" for="fcol4"&gt;Company
             &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;
           &lt;/label&gt;
           &lt;div class="yb-footer__collist"&gt;&lt;ul&gt;&lt;li&gt;&lt;a href="#demos"&gt;Our Story&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Blog&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;AI Hair Analysis&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;
         &lt;/div&gt;
       &lt;/div&gt;
     &lt;/div&gt;
-    &lt;div class="yb-footer__bottom"&gt;&lt;span&gt;&amp;copy; 2026 Ybera Paris USA&lt;/span&gt;&lt;a href="#demos"&gt;Terms of Service&lt;/a&gt;&lt;a href="#demos"&gt;Privacy Policy&lt;/a&gt;&lt;a href="#demos"&gt;SMS Terms&lt;/a&gt;&lt;/div&gt;
+    &lt;div class="yb-footer__bottom"&gt;&lt;span&gt;&amp;copy; 2026 YBERA USA LLC&lt;/span&gt;&lt;a href="#demos"&gt;Terms &amp;amp; Conditions&lt;/a&gt;&lt;a href="#demos"&gt;Privacy Policy&lt;/a&gt;&lt;a href="#demos"&gt;Refund Policy&lt;/a&gt;&lt;a href="#demos"&gt;Shipping Policy&lt;/a&gt;&lt;a href="#demos"&gt;SMS Terms &amp;amp; Conditions&lt;/a&gt;&lt;/div&gt;
   &lt;/div&gt;
 &lt;/footer&gt;</code></pre>
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca"><footer class="yb-footer yb-footer--dark">
   <div class="yb-footer__inner">
-    <div class="yb-footer__news-zona">
+    <div class="yb-footer__news-field">
       <div>
         <p class="yb-footer__newstitle">First to know</p>
-        <label class="yb-footer__newslabel" for="anat-news-footer">New arrivals, routines and offers. No spam.</label>
+        <p class="yb-footer__newslabel" id="anat-news-footer-sobre">New arrivals, routines and offers. No spam.</p>
       </div>
       <form class="yb-footer__news" onsubmit="return false">
-        <span class="yb-footer__newsfield">
+        <span class="yb-field__box yb-field__box--on-dark yb-footer__newsfield">
           <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-mail"/></svg>
-          <input class="yb-input" id="anat-news-footer" type="email" placeholder="Your best email" autocomplete="email" required>
+                          <input class="yb-input" id="anat-news-footer" type="email" placeholder=" " autocomplete="email" aria-describedby="anat-news-footer-sobre" required><label class="yb-field__label" for="anat-news-footer">Your best email</label>
         </span>
-        <button class="yb-footer__newsbtn" type="submit" aria-label="Subscribe">
+        <button class="yb-iconbtn yb-iconbtn--on-dark yb-footer__newsbtn" type="submit" aria-label="Subscribe">
           <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg>
         </button>
       </form>
@@ -409,7 +435,7 @@
     <div class="yb-footer__top">
       <div class="yb-footer__brand">
         <a class="yb-footer__logo" href="#anat-demos"><span class="yb-logo yb-logo--lg"><img src="../brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span></a>
-        <p class="yb-footer__info">info.usa@ybera.com</p>
+        <p class="yb-footer__info">info@ybera.us</p>
         <p class="yb-footer__info">Mon&ndash;Fri, 8am&ndash;4pm EST</p>
         <div class="yb-footer__social">
           <a href="#anat-demos"><svg class="yb-icon" role="img" aria-label="Ybera on Instagram"><use href="../icons/ybera-icons.svg#yb-instagram"/></svg></a>
@@ -426,27 +452,42 @@
         </div>
         <div class="yb-footer__col">
           <input class="yb-footer__toggle" type="checkbox" id="anat-fcol1">
-          <label class="yb-footer__coltitle" for="anat-fcol1">Help
+          <label class="yb-footer__coltitle" for="anat-fcol1">Collection
+            <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
+          </label>
+          <div class="yb-footer__collist"><ul><li><a href="#anat-demos">Progressiva</a></li><li><a href="#anat-demos">Cronograma</a></li><li><a href="#anat-demos">Ybera Paris</a></li><li><a href="#anat-demos">100Timetros</a></li><li><a href="#anat-demos">Capulana</a></li><li><a href="#anat-demos">Terra Coco</a></li><li><a href="#anat-demos">Hair Mist</a></li></ul></div>
+        </div>
+        <div class="yb-footer__col">
+          <input class="yb-footer__toggle" type="checkbox" id="anat-fcol2">
+          <label class="yb-footer__coltitle" for="anat-fcol2">Hair Problems
+            <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
+          </label>
+          <div class="yb-footer__collist"><ul><li><a href="#anat-demos">Damaged Hair</a></li><li><a href="#anat-demos">Frizz &amp; Dryness</a></li><li><a href="#anat-demos">Thinning / Hair Loss</a></li><li><a href="#anat-demos">Undefined Curls</a></li><li><a href="#anat-demos">Hair Smoothing</a></li><li><a href="#anat-demos">Hair Straightening</a></li></ul></div>
+        </div>
+        <div class="yb-footer__col">
+          <input class="yb-footer__toggle" type="checkbox" id="anat-fcol3">
+          <label class="yb-footer__coltitle" for="anat-fcol3">Help
             <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
           </label>
           <div class="yb-footer__collist"><ul><li><a href="#anat-demos">FAQ</a></li><li><a href="#anat-demos">Contact Us</a></li><li><a href="#anat-demos">Shipping Policy</a></li><li><a href="#anat-demos">Refund Policy</a></li></ul></div>
         </div>
         <div class="yb-footer__col">
-          <input class="yb-footer__toggle" type="checkbox" id="anat-fcol2">
-          <label class="yb-footer__coltitle" for="anat-fcol2">Company
+          <input class="yb-footer__toggle" type="checkbox" id="anat-fcol4">
+          <label class="yb-footer__coltitle" for="anat-fcol4">Company
             <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
           </label>
           <div class="yb-footer__collist"><ul><li><a href="#anat-demos">Our Story</a></li><li><a href="#anat-demos">Blog</a></li><li><a href="#anat-demos">AI Hair Analysis</a></li></ul></div>
         </div>
       </div>
     </div>
-    <div class="yb-footer__bottom"><span>&copy; 2026 Ybera Paris USA</span><a href="#anat-demos">Terms of Service</a><a href="#anat-demos">Privacy Policy</a><a href="#anat-demos">SMS Terms</a></div>
+    <div class="yb-footer__bottom"><span>&copy; 2026 YBERA USA LLC</span><a href="#anat-demos">Terms &amp; Conditions</a><a href="#anat-demos">Privacy Policy</a><a href="#anat-demos">Refund Policy</a><a href="#anat-demos">Shipping Policy</a><a href="#anat-demos">SMS Terms &amp; Conditions</a></div>
   </div>
 </footer></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-input"><span class="anat__texto"><b><a href="../atoms/input.html">Input</a></b> — Campo de uma linha com o rótulo dentro da caixa, que sobe quando a pessoa digita. Leva dica e erro em texto; serve para nome, e-mail, CEP, senha.</span></li>
-        <li data-alvo=".yb-logo"><span class="anat__texto"><b><a href="../atoms/logo.html">Logo</a></b> — A marca da loja, em arquivo único e altura controlada por modificador. Vira componente porque aparece em header, footer, e-mail e recibo — e em cada lugar alguém escolhia uma altura diferente.</span></li>
+        <li data-target=".yb-input"><span class="anat__texto"><b><a href="../atoms/input.html">Input</a></b> — Campo de uma linha com o rótulo dentro da caixa, que sobe quando a pessoa digita. Leva dica e erro em texto; serve para nome, e-mail, CEP, senha.</span></li>
+        <li data-target=".yb-iconbtn"><span class="anat__texto"><b><a href="../atoms/iconbtn.html">Icon button</a></b> — Botão de 44px que mostra só um ícone, sem rótulo visível. Sexta reescrita da mesma coisa — o ícone do header, o fechar da gaveta, o play do vídeo, o abrir do rodapé e a seta do banner diziam todos 44×44 com fundo transparente, cada um do seu jeito.</span></li>
+        <li data-target=".yb-logo"><span class="anat__texto"><b><a href="../atoms/logo.html">Logo</a></b> — A marca da loja, em arquivo único e altura controlada por modificador. Vira componente porque aparece em header, footer, e-mail e recibo — e em cada lugar alguém escolhia uma altura diferente.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -463,31 +504,25 @@
 
     <p class="rotulo">De que é feita</p>
     <p class="usa-degrau">Átomos</p>
-    <ul class="usa"><li><a href="../atoms/input.html">Input</a></li><li><a href="../atoms/logo.html">Logo</a></li></ul>
+    <ul class="usa"><li><a href="../atoms/iconbtn.html">Icon button</a></li><li><a href="../atoms/input.html">Input</a></li><li><a href="../atoms/logo.html">Logo</a></li></ul>
     <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-footer--dark</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-footer__bottom</code> <code>.yb-footer__brand</code> <code>.yb-footer__col</code> <code>.yb-footer__collist</code> <code>.yb-footer__coltitle</code> <code>.yb-footer__contact</code> <code>.yb-footer__info</code> <code>.yb-footer__inner</code> <code>.yb-footer__links</code> <code>.yb-footer__logo</code> <code>.yb-footer__menus</code> <code>.yb-footer__news</code> <code>.yb-footer__news-zona</code> <code>.yb-footer__newsbtn</code> <code>.yb-footer__newsfield</code> <code>.yb-footer__newslabel</code> <code>.yb-footer__newstitle</code> <code>.yb-footer__social</code> <code>.yb-footer__toggle</code> <code>.yb-footer__top</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-footer__bottom</code> <code>.yb-footer__brand</code> <code>.yb-footer__col</code> <code>.yb-footer__collist</code> <code>.yb-footer__coltitle</code> <code>.yb-footer__info</code> <code>.yb-footer__inner</code> <code>.yb-footer__logo</code> <code>.yb-footer__menus</code> <code>.yb-footer__news</code> <code>.yb-footer__news-field</code> <code>.yb-footer__newsbtn</code> <code>.yb-footer__newsfield</code> <code>.yb-footer__newslabel</code> <code>.yb-footer__newstitle</code> <code>.yb-footer__social</code> <code>.yb-footer__toggle</code> <code>.yb-footer__top</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:checked</code> · <code>:focus-visible</code> · <code>:hover</code> · <code>[hidden]</code></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
-    <p class="rotulo">Tokens <span class="rotulo-conta">40</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">34</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>16</span></p>
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>10</span></p>
         <ul class="tokens__lista">
-          <li><i class="tokens__cor" style="background:var(--yb-action-bg-hover)" aria-hidden="true"></i><code>--yb-action-bg-hover</code><span class="tokens__valor">#3A3A3C</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border-inverse)" aria-hidden="true"></i><code>--yb-border-inverse</code><span class="tokens__valor">#3A3A3C</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-action-text)" aria-hidden="true"></i><code>--yb-action-text</code><span class="tokens__valor">#FFFFFF</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-border-inverse-strong)" aria-hidden="true"></i><code>--yb-border-inverse-strong</code><span class="tokens__valor">#6D6D71</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-surface-inverse-raised)" aria-hidden="true"></i><code>--yb-surface-inverse-raised</code><span class="tokens__valor">#3A3A3C</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-link)" aria-hidden="true"></i><code>--yb-text-link</code><span class="tokens__valor">#CA235F</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted-inverse)" aria-hidden="true"></i><code>--yb-text-muted-inverse</code><span class="tokens__valor">#B1B1B4</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary-inverse)" aria-hidden="true"></i><code>--yb-text-secondary-inverse</code><span class="tokens__valor">#DADADB</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-action-bg)" aria-hidden="true"></i><code>--yb-action-bg</code><span class="tokens__valor">#1E1E1F</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-muted-inverse)" aria-hidden="true"></i><code>--yb-text-muted-inverse</code><span class="tokens__valor">#B1B1B4</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border-strong)" aria-hidden="true"></i><code>--yb-border-strong</code><span class="tokens__valor">#B1B1B4</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
         </ul>
       </div>
@@ -503,7 +538,7 @@
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>12</span></p>
+        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>11</span></p>
         <ul class="tokens__lista">
           <li><code>--yb-space-12</code><span class="tokens__valor">3rem</span></li>
           <li><code>--yb-container-max</code><span class="tokens__valor">1200px</span></li>
@@ -511,11 +546,10 @@
           <li><code>--yb-page-gutter</code><span class="tokens__valor">1rem</span></li>
           <li><code>--yb-space-1</code><span class="tokens__valor">0.25rem</span></li>
           <li><code>--yb-space-6</code><span class="tokens__valor">1.5rem</span></li>
+          <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
           <li><code>--yb-space-8</code><span class="tokens__valor">2rem</span></li>
           <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
-          <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
           <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
-          <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>
           <li><code>--yb-space-3</code><span class="tokens__valor">0.75rem</span></li>
         </ul>
       </div>
@@ -531,30 +565,45 @@
           <li><code>--yb-transition-surface</code><span class="tokens__valor">180ms cubic-bezier(.2, 0, 0, 1)</span></li>
           <li><code>--yb-transition-control</code><span class="tokens__valor">120ms cubic-bezier(.2, 0, 0, 1)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
           <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/architecture.html">Componente</a> <span>1</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-buybar-height</code></li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso" data-pendente>
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
-    <p class="pendente">Faça / não faça ainda não escrito para este bloco.
-      O bloco aparece vazio de propósito: seção que some da ficha é uma pergunta
-      que ninguém sabe que ficou sem resposta.</p>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><div class="yb-footer__col"><h2 class="yb-footer__coltitle">Help</h2><ul class="yb-footer__collist"><li><a href="#demos">Shipping</a></li><li><a href="#demos">Returns</a></li></ul></div></div>
+        <p class="fn-legenda">Coluna com título e lista.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><div class="yb-footer__col"><a href="#demos">Shipping</a> <a href="#demos">Returns</a></div></div>
+        <p class="fn-legenda">Links soltos sem título: não há como saber que aqueles dois são sobre entrega.</p>
+      </div>
+    </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade" data-pendente>
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <p class="pendente">Acessibilidade ainda não escrita para este bloco.</p>
+    <ul class="bloco-lede"><li>É <code>&lt;footer&gt;</code>: o leitor de tela oferece pular direto para ele.</li><li>Cada coluna tem título de verdade e lista de links — blocos de <code>&lt;a&gt;</code> soltos não dizem do que são destino.</li><li>No celular a coluna vira sanfona, e o título vira <code>&lt;summary&gt;</code>. Sem gatilho, lista fechada é link inalcançável.</li><li>Superfície escura: texto <code>--yb-text-inverse</code> e links sublinhados — sobre grafite a cor sozinha não distingue link de texto.</li><li>No campo de e-mail o nome vem de um <code>&lt;label&gt;</code> só para leitor de tela; a chamada entra por <code>aria-describedby</code>, senão o nome do campo seria a frase de marketing inteira.</li></ul>
   </section>
   </div>
 
@@ -596,7 +645,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

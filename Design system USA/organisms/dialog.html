@@ -25,14 +25,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="organisms" data-moldura="centrada">
+<body class="ficha" data-level="organisms" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -150,7 +150,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -206,8 +206,8 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <h3 class="row-label">Os três tipos, abertos</h3>
     <div class="stage stage--modais">
@@ -216,7 +216,7 @@
       <dialog open class="yb-dialog" aria-labelledby="t-destrutivo">
         <div class="yb-dialog__head">
           <h4 class="yb-dialog__title" id="t-destrutivo">Remove from cart?</h4>
-          <button type="button" class="yb-dialog__close" aria-label="Close">
+          <button type="button" class="yb-iconbtn yb-iconbtn--square yb-dialog__close" aria-label="Close">
             <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
         </div>
         <div class="yb-dialog__body">
@@ -232,7 +232,7 @@
       <dialog open class="yb-dialog" aria-labelledby="t-confirma">
         <div class="yb-dialog__head">
           <h4 class="yb-dialog__title" id="t-confirma">Apply coupon SUMMER20?</h4>
-          <button type="button" class="yb-dialog__close" aria-label="Close">
+          <button type="button" class="yb-iconbtn yb-iconbtn--square yb-dialog__close" aria-label="Close">
             <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
         </div>
         <div class="yb-dialog__body">
@@ -248,13 +248,13 @@
       <dialog open id="dlg-review" class="yb-dialog" aria-labelledby="dlg-review-t">
         <div class="yb-dialog__head">
           <h3 class="yb-dialog__title" id="dlg-review-t">Write a review</h3>
-          <button class="yb-dialog__close" aria-label="Close"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
+          <button class="yb-iconbtn yb-iconbtn--square yb-dialog__close" aria-label="Close"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
         </div>
         <form class="yb-dialog__body"
               onsubmit="Ybera.toast({title:'Thanks — your review is in review',text:'We publish it once it is checked.',variant:'success'}); this.closest('dialog').close(); return false">
           <div class="yb-field">
-            <label class="yb-field__label" for="rvd-nota">Your rating</label>
-            <select class="yb-select" id="rvd-nota" required>
+            <label class="yb-field__label" for="rvd-rating">Your rating</label>
+            <select class="yb-select" id="rvd-rating" required>
               <option value="5">5 — loved it</option>
               <option value="4">4 — good</option>
               <option value="3">3 — it is fine</option>
@@ -263,8 +263,8 @@
             </select>
           </div>
           <div class="yb-field">
-            <label class="yb-field__label" for="rvd-texto">Your review</label>
-            <textarea class="yb-textarea" id="rvd-texto" rows="4"
+            <label class="yb-field__label" for="rvd-text">Your review</label>
+            <textarea class="yb-textarea" id="rvd-text" rows="4"
                       placeholder="What changed in your hair, and how long it took." required></textarea>
           </div>
           <div class="yb-field">
@@ -315,7 +315,7 @@
     <dialog id="dlg-remove" class="yb-dialog" aria-labelledby="dlg-remove-t">
       <div class="yb-dialog__head">
         <h3 class="yb-dialog__title" id="dlg-remove-t">Remove from cart?</h3>
-        <button type="button" class="yb-dialog__close" data-yb-close aria-label="Close">×</button>
+        <button type="button" class="yb-iconbtn yb-iconbtn--square yb-dialog__close" data-yb-close aria-label="Close">×</button>
       </div>
       <div class="yb-dialog__body">
         <p>Kit Sealant Fashion Gold — 500g / 17.6 fl oz will be removed from your cart.</p>
@@ -323,9 +323,9 @@
       <div class="yb-dialog__foot">
         <button type="button" class="yb-btn yb-btn--ghost" data-yb-close>Keep it</button>
         <button type="button" class="yb-btn yb-btn--danger" data-yb-close
-          data-yb-toast data-toast-titulo="Removed from cart"
-          data-toast-texto="Kit Sealant Fashion Gold"
-          data-toast-variante="danger">Remove</button>
+          data-yb-toast data-toast-title="Removed from cart"
+          data-toast-text="Kit Sealant Fashion Gold"
+          data-toast-variant="danger">Remove</button>
       </div>
     </dialog>
 
@@ -338,12 +338,12 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;p class="tipo-rotulo"&gt;1 · Destrutivo &amp;mdash; a ação some algo&lt;/p&gt;
 &lt;dialog open class="yb-dialog" aria-labelledby="t-destrutivo"&gt;
   &lt;div class="yb-dialog__head"&gt;
     &lt;h4 class="yb-dialog__title" id="t-destrutivo"&gt;Remove from cart?&lt;/h4&gt;
-    &lt;button type="button" class="yb-dialog__close" aria-label="Close"&gt;
+    &lt;button type="button" class="yb-iconbtn yb-iconbtn--square yb-dialog__close" aria-label="Close"&gt;
       &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;&lt;/button&gt;
   &lt;/div&gt;
   &lt;div class="yb-dialog__body"&gt;
@@ -358,7 +358,7 @@
 &lt;dialog open class="yb-dialog" aria-labelledby="t-confirma"&gt;
   &lt;div class="yb-dialog__head"&gt;
     &lt;h4 class="yb-dialog__title" id="t-confirma"&gt;Apply coupon SUMMER20?&lt;/h4&gt;
-    &lt;button type="button" class="yb-dialog__close" aria-label="Close"&gt;
+    &lt;button type="button" class="yb-iconbtn yb-iconbtn--square yb-dialog__close" aria-label="Close"&gt;
       &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;&lt;/button&gt;
   &lt;/div&gt;
   &lt;div class="yb-dialog__body"&gt;
@@ -373,13 +373,13 @@
 &lt;dialog open id="dlg-review" class="yb-dialog" aria-labelledby="dlg-review-t"&gt;
   &lt;div class="yb-dialog__head"&gt;
     &lt;h3 class="yb-dialog__title" id="dlg-review-t"&gt;Write a review&lt;/h3&gt;
-    &lt;button class="yb-dialog__close" aria-label="Close"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;&lt;/button&gt;
+    &lt;button class="yb-iconbtn yb-iconbtn--square yb-dialog__close" aria-label="Close"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;&lt;/button&gt;
   &lt;/div&gt;
   &lt;form class="yb-dialog__body"
         onsubmit="Ybera.toast({title:'Thanks — your review is in review',text:'We publish it once it is checked.',variant:'success'}); this.closest('dialog').close(); return false"&gt;
     &lt;div class="yb-field"&gt;
-      &lt;label class="yb-field__label" for="rvd-nota"&gt;Your rating&lt;/label&gt;
-      &lt;select class="yb-select" id="rvd-nota" required&gt;
+      &lt;label class="yb-field__label" for="rvd-rating"&gt;Your rating&lt;/label&gt;
+      &lt;select class="yb-select" id="rvd-rating" required&gt;
         &lt;option value="5"&gt;5 — loved it&lt;/option&gt;
         &lt;option value="4"&gt;4 — good&lt;/option&gt;
         &lt;option value="3"&gt;3 — it is fine&lt;/option&gt;
@@ -388,8 +388,8 @@
       &lt;/select&gt;
     &lt;/div&gt;
     &lt;div class="yb-field"&gt;
-      &lt;label class="yb-field__label" for="rvd-texto"&gt;Your review&lt;/label&gt;
-      &lt;textarea class="yb-textarea" id="rvd-texto" rows="4"
+      &lt;label class="yb-field__label" for="rvd-text"&gt;Your review&lt;/label&gt;
+      &lt;textarea class="yb-textarea" id="rvd-text" rows="4"
                 placeholder="What changed in your hair, and how long it took." required&gt;&lt;/textarea&gt;
     &lt;/div&gt;
     &lt;div class="yb-field"&gt;
@@ -406,16 +406,16 @@
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca"><p class="tipo-rotulo">1 · Destrutivo &mdash; a ação some algo</p>
 <dialog open class="yb-dialog" aria-labelledby="anat-t-destrutivo">
   <div class="yb-dialog__head">
     <h4 class="yb-dialog__title" id="anat-t-destrutivo">Remove from cart?</h4>
-    <button type="button" class="yb-dialog__close" aria-label="Close">
+    <button type="button" class="yb-iconbtn yb-iconbtn--square yb-dialog__close" aria-label="Close">
       <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
   </div>
   <div class="yb-dialog__body">
@@ -430,7 +430,7 @@
 <dialog open class="yb-dialog" aria-labelledby="anat-t-confirma">
   <div class="yb-dialog__head">
     <h4 class="yb-dialog__title" id="anat-t-confirma">Apply coupon SUMMER20?</h4>
-    <button type="button" class="yb-dialog__close" aria-label="Close">
+    <button type="button" class="yb-iconbtn yb-iconbtn--square yb-dialog__close" aria-label="Close">
       <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
   </div>
   <div class="yb-dialog__body">
@@ -445,13 +445,13 @@
 <dialog open id="anat-dlg-review" class="yb-dialog" aria-labelledby="anat-dlg-review-t">
   <div class="yb-dialog__head">
     <h3 class="yb-dialog__title" id="anat-dlg-review-t">Write a review</h3>
-    <button class="yb-dialog__close" aria-label="Close"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
+    <button class="yb-iconbtn yb-iconbtn--square yb-dialog__close" aria-label="Close"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
   </div>
   <form class="yb-dialog__body"
         onsubmit="Ybera.toast({title:'Thanks — your review is in review',text:'We publish it once it is checked.',variant:'success'}); this.closest('dialog').close(); return false">
     <div class="yb-field">
-      <label class="yb-field__label" for="anat-rvd-nota">Your rating</label>
-      <select class="yb-select" id="anat-rvd-nota" required>
+      <label class="yb-field__label" for="anat-rvd-rating">Your rating</label>
+      <select class="yb-select" id="anat-rvd-rating" required>
         <option value="5">5 — loved it</option>
         <option value="4">4 — good</option>
         <option value="3">3 — it is fine</option>
@@ -460,8 +460,8 @@
       </select>
     </div>
     <div class="yb-field">
-      <label class="yb-field__label" for="anat-rvd-texto">Your review</label>
-      <textarea class="yb-textarea" id="anat-rvd-texto" rows="4"
+      <label class="yb-field__label" for="anat-rvd-text">Your review</label>
+      <textarea class="yb-textarea" id="anat-rvd-text" rows="4"
                 placeholder="What changed in your hair, and how long it took." required></textarea>
     </div>
     <div class="yb-field">
@@ -477,10 +477,11 @@
 </dialog></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
-        <li data-alvo=".yb-select"><span class="anat__texto"><b><a href="../atoms/select.html">Select</a></b> — Campo de escolha com o rótulo dentro da caixa, que abre o seletor nativo do sistema. Mesmo campo do Input, para quando a resposta já está escrita.</span></li>
-        <li data-alvo=".yb-textarea"><span class="anat__texto"><b><a href="../atoms/textarea.html">Textarea</a></b> — Campo de várias linhas com o rótulo dentro da caixa, que cresce na vertical. Mesmo campo do Input, para mensagem, nota de presente ou avaliação.</span></li>
-        <li data-alvo=".yb-input"><span class="anat__texto"><b><a href="../atoms/input.html">Input</a></b> — Campo de uma linha com o rótulo dentro da caixa, que sobe quando a pessoa digita. Leva dica e erro em texto; serve para nome, e-mail, CEP, senha.</span></li>
+        <li data-target=".yb-iconbtn"><span class="anat__texto"><b><a href="../atoms/iconbtn.html">Icon button</a></b> — Botão de 44px que mostra só um ícone, sem rótulo visível. Sexta reescrita da mesma coisa — o ícone do header, o fechar da gaveta, o play do vídeo, o abrir do rodapé e a seta do banner diziam todos 44×44 com fundo transparente, cada um do seu jeito.</span></li>
+        <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
+        <li data-target=".yb-select"><span class="anat__texto"><b><a href="../atoms/select.html">Select</a></b> — Campo de escolha com o rótulo dentro da caixa, que abre o seletor nativo do sistema. Mesmo campo do Input, para quando a resposta já está escrita.</span></li>
+        <li data-target=".yb-textarea"><span class="anat__texto"><b><a href="../atoms/textarea.html">Textarea</a></b> — Campo de várias linhas com o rótulo dentro da caixa, que cresce na vertical. Mesmo campo do Input, para mensagem, nota de presente ou avaliação.</span></li>
+        <li data-target=".yb-input"><span class="anat__texto"><b><a href="../atoms/input.html">Input</a></b> — Campo de uma linha com o rótulo dentro da caixa, que sobe quando a pessoa digita. Leva dica e erro em texto; serve para nome, e-mail, CEP, senha.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -497,12 +498,12 @@
 
     <p class="rotulo">De que é feita</p>
     <p class="usa-degrau">Átomos</p>
-    <ul class="usa"><li><a href="../atoms/button.html">Button</a></li><li><a href="../atoms/input.html">Input</a></li><li><a href="../atoms/select.html">Select</a></li><li><a href="../atoms/textarea.html">Textarea</a></li></ul>
+    <ul class="usa"><li><a href="../atoms/button.html">Button</a></li><li><a href="../atoms/iconbtn.html">Icon button</a></li><li><a href="../atoms/input.html">Input</a></li><li><a href="../atoms/select.html">Select</a></li><li><a href="../atoms/textarea.html">Textarea</a></li></ul>
     <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-dialog__body</code> <code>.yb-dialog__close</code> <code>.yb-dialog__foot</code> <code>.yb-dialog__head</code> <code>.yb-dialog__title</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:hover</code></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
-    <p class="rotulo">Tokens <span class="rotulo-conta">27</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">22</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>9</span></p>
@@ -512,8 +513,8 @@
           <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
         </ul>
@@ -529,22 +530,20 @@
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>7</span></p>
+        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>6</span></p>
         <ul class="tokens__lista">
           <li><code>--yb-space-6</code><span class="tokens__valor">1.5rem</span></li>
           <li><code>--yb-space-8</code><span class="tokens__valor">2rem</span></li>
           <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
-          <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
           <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
           <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>
           <li><code>--yb-space-3</code><span class="tokens__valor">0.75rem</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>2</span></p>
+        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>1</span></p>
         <ul class="tokens__lista">
           <li><code>--yb-radius-card</code><span class="tokens__valor">8px</span></li>
-          <li><code>--yb-radius-control</code><span class="tokens__valor">8px</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
@@ -553,25 +552,17 @@
           <li><code>--yb-elevation-modal</code><span class="tokens__valor">0 24px 56px rgba(30,30,31,.14)</span></li>
         </ul>
       </div>
-      <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>3</span></p>
-        <ul class="tokens__lista">
-          <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
-          <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
-        </ul>
-      </div>
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso">
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
@@ -587,7 +578,7 @@
     </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade">
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
     <ul class="bloco-lede"><li>É <code>&lt;dialog&gt;</code> nativo aberto com <code>showModal()</code>: o foco fica preso dentro, Esc fecha e o resto da página vira inerte — três coisas que a versão em <code>&lt;div&gt;</code> quase nunca acerta.</li><li>Ao fechar, o foco volta para o botão que abriu. Sem isso a pessoa que navega por teclado é devolvida ao topo do documento.</li><li>O título é ligado por <code>aria-labelledby</code>, para o leitor de tela anunciar o que abriu.</li></ul>
   </section>
@@ -631,7 +622,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

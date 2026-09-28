@@ -27,6 +27,36 @@
     "naoFaca": {
       "legenda": "Div com <code>onclick</code> não recebe Tab, não anda com as setas e não diz qual imagem está ativa.",
       "html": "<p class=\"yb-field__label\" style=\"margin:0\">Miniaturas como <code>&lt;div onclick&gt;</code></p>"
+    },
+    "anatomia": {
+      "largura": "380px",
+      "partes": [
+        {
+          "alvo": ".yb-gallery",
+          "nome": "Container",
+          "texto": "Palco e miniaturas, ancorados juntos. A troca acontece em CSS, sem script."
+        },
+        {
+          "alvo": ".yb-gallery__stage",
+          "nome": "Palco",
+          "texto": "A caixa da foto grande, com a proporção reservada — é o que evita o salto ao carregar."
+        },
+        {
+          "alvo": ".yb-gallery__slide",
+          "nome": "Foto",
+          "texto": "Uma por imagem. A ativa leva <code>data-active</code>; as outras ficam no DOM, prontas."
+        },
+        {
+          "alvo": ".yb-gallery__count",
+          "nome": "Contagem",
+          "texto": "“1 / 4”. Diz que há mais foto antes de a pessoa tentar descobrir sozinha."
+        },
+        {
+          "alvo": ".yb-gallery__thumbs",
+          "nome": "Miniaturas",
+          "texto": "Rádios escondidos com <code>&lt;label&gt;</code> em cima: o teclado percorre com as setas."
+        }
+      ]
     }
   },
   "logobar": {
@@ -100,6 +130,191 @@
     "naoFaca": {
       "legenda": "Três slides com a mesma promessa e o mesmo link: o segundo e o terceiro são só espera.",
       "html": "<span class=\"yb-field__label\" style=\"margin:0\">best sellers · best sellers · best sellers</span>"
+    }
+  },
+  "buybox": {
+    "a11y": [
+      "O nome do produto é o <code>&lt;h1&gt;</code> da PDP. Na galeria é <code>&lt;h2&gt;</code> porque a página já tem um.",
+      "A nota é link para as avaliações: nota que não leva a lugar nenhum é beco para quem quer conferir.",
+      "Favoritar e compartilhar levam <code>aria-label</code> e <code>aria-pressed</code> — sem texto visível, o rótulo é o único nome que têm.",
+      "A escolha de tamanho é <code>role=&quot;radiogroup&quot;</code>, e a opção esgotada fica selecionável: chegar nela é o caminho para o aviso de reposição."
+    ],
+    "faca": {
+      "legenda": "Nota como link para as avaliações.",
+      "html": "<a class=\"yb-buybox__rating\" href=\"#demos\"><span class=\"yb-rating\" role=\"img\" aria-label=\"5.0 of 5, 6 reviews\"><span class=\"yb-stars\" style=\"--yb-stars:5\" aria-hidden=\"true\"></span><span class=\"yb-rating__score\">5.0</span><span class=\"yb-rating__count\">(6 reviews)</span></span></a>"
+    },
+    "naoFaca": {
+      "legenda": "Estrelas soltas, sem destino e sem rótulo: quem não enxerga recebe silêncio, e quem enxerga não tem para onde ir conferir.",
+      "html": "<span class=\"yb-stars\" style=\"--yb-stars:5\"></span>"
+    }
+  },
+  "cart-drawer": {
+    "a11y": [
+      "<code>&lt;dialog&gt;</code> nativo: o foco entra, fica preso e volta ao gatilho — nada disso escrito à mão.",
+      "Esc fecha, e o scrim também. Gaveta que só fecha no × prende quem navega por teclado no meio da compra.",
+      "Remover diz o que remove: “Remove Kit Sealant”. Cinco botões iguais não se distinguem em leitor de tela.",
+      "O total é <code>aria-live=&quot;polite&quot;</code>: mudar a quantidade sem anunciar o novo total esconde o efeito da ação."
+    ],
+    "faca": {
+      "legenda": "Remover diz o que remove.",
+      "html": "<button class=\"yb-iconbtn yb-iconbtn--square yb-cart__remove\" type=\"button\" aria-label=\"Remove Kit Sealant Fashion Gold\">×</button>"
+    },
+    "naoFaca": {
+      "legenda": "Cinco “Remove” idênticos na lista: o leitor de tela anuncia todos igual, e quem navega por teclado remove no escuro.",
+      "html": "<button class=\"yb-iconbtn yb-iconbtn--square yb-cart__remove\" type=\"button\" aria-label=\"Remove\">×</button>"
+    }
+  },
+  "catalog": {
+    "a11y": [
+      "A contagem é obrigatória e vem antes da grade: “24 products” é o que diz se o filtro devolveu algo, sem precisar rolar até o fim.",
+      "A grade é lista (<code>&lt;ul&gt;</code>), e cada cartão é <code>&lt;li&gt;</code>: o leitor de tela anuncia “lista de 24 itens” e a pessoa decide se percorre.",
+      "Filtro ativo é <code>.yb-chip</code> com <code>aria-pressed</code>, e a fileira tem rótulo próprio — sete botões soltos não dizem do que são filtro.",
+      "Quando o filtro não devolve nada, o lugar da grade recebe o <code>.yb-empty</code>, com a saída em botão. Grade vazia sem texto é beco."
+    ],
+    "faca": {
+      "legenda": "Contagem ao lado do título, antes da grade.",
+      "html": "<div class=\"yb-catalog__title\"><h2>Treatments</h2><span class=\"yb-catalog__count\">24 products</span></div>"
+    },
+    "naoFaca": {
+      "legenda": "Só o título: quem filtrou não sabe se sobraram 24 ou 2 sem rolar a página inteira.",
+      "html": "<div class=\"yb-catalog__title\"><h2>Treatments</h2></div>"
+    }
+  },
+  "drawer": {
+    "a11y": [
+      "<code>&lt;dialog&gt;</code> nativo. O foco entra, fica preso e volta ao gatilho — é o navegador que faz, e é por isso que a peça não tem script próprio.",
+      "Esc e o scrim fecham. Segunda tela que só fecha no × prende quem chegou por teclado.",
+      "O gatilho aponta pelo <code>data-yb-open</code>, e o painel leva <code>aria-label</code> ou um título referenciado: “gaveta” não diz o que tem dentro.",
+      "A página atrás não rola enquanto a gaveta está aberta. Rolar o fundo por baixo de um painel aberto desorienta quem usa ampliação."
+    ],
+    "faca": {
+      "legenda": "Gatilho que nomeia o que abre.",
+      "html": "<button type=\"button\" class=\"yb-btn yb-btn--primary\" data-yb-open=\"menu\">Menu</button>"
+    },
+    "naoFaca": {
+      "legenda": "<code>&lt;div&gt;</code> com clique: não recebe foco, não responde a Enter e não é anunciado como controle.",
+      "html": "<div class=\"yb-btn yb-btn--primary\" data-yb-open=\"menu\">Menu</div>"
+    }
+  },
+  "faq": {
+    "a11y": [
+      "Cada pergunta é <code>&lt;summary&gt;</code> dentro de <code>&lt;details&gt;</code>: abre por teclado, é anunciada como “expansível” e o Ctrl+F do navegador acha o texto fechado.",
+      "O índice lateral são links reais para as âncoras de cada grupo — não um menu que rola por script.",
+      "A pergunta é o alvo inteiro, não um ícone de seta ao lado. Alvo de 44px vale também para quem tem dificuldade de mira.",
+      "Uma resposta aberta não fecha as outras: o <code>name</code> comum é o que faria isso, e aqui a pessoa costuma comparar duas."
+    ],
+    "faca": {
+      "legenda": "Pergunta em <code>&lt;summary&gt;</code>: o navegador entrega teclado e busca.",
+      "html": "<details><summary>Do you ship to Canada?</summary><div class=\"yb-accordion__body\"><p>Not yet — only inside the US.</p></div></details>"
+    },
+    "naoFaca": {
+      "legenda": "Pergunta em <code>&lt;p&gt;</code> com resposta escondida por classe: não abre por teclado, e o Ctrl+F não acha a resposta.",
+      "html": "<p><b>Do you ship to Canada?</b></p>"
+    }
+  },
+  "footer": {
+    "a11y": [
+      "É <code>&lt;footer&gt;</code>: o leitor de tela oferece pular direto para ele.",
+      "Cada coluna tem título de verdade e lista de links — blocos de <code>&lt;a&gt;</code> soltos não dizem do que são destino.",
+      "No celular a coluna vira sanfona, e o título vira <code>&lt;summary&gt;</code>. Sem gatilho, lista fechada é link inalcançável.",
+      "Superfície escura: texto <code>--yb-text-inverse</code> e links sublinhados — sobre grafite a cor sozinha não distingue link de texto.",
+      "No campo de e-mail o nome vem de um <code>&lt;label&gt;</code> só para leitor de tela; a chamada entra por <code>aria-describedby</code>, senão o nome do campo seria a frase de marketing inteira."
+    ],
+    "faca": {
+      "legenda": "Coluna com título e lista.",
+      "html": "<div class=\"yb-footer__col\"><h2 class=\"yb-footer__coltitle\">Help</h2><ul class=\"yb-footer__collist\"><li><a href=\"#demos\">Shipping</a></li><li><a href=\"#demos\">Returns</a></li></ul></div>"
+    },
+    "naoFaca": {
+      "legenda": "Links soltos sem título: não há como saber que aqueles dois são sobre entrega.",
+      "html": "<div class=\"yb-footer__col\"><a href=\"#demos\">Shipping</a> <a href=\"#demos\">Returns</a></div>"
+    }
+  },
+  "header": {
+    "a11y": [
+      "Um DOM só serve a barra do desktop e a gaveta do celular. Duas cópias divergiriam, e a segunda seria sempre a esquecida.",
+      "A gaveta abre por checkbox escondido e <code>&lt;label&gt;</code>: teclado sem script. O gatilho leva <code>aria-expanded</code> e nome próprio.",
+      "Cada ícone de ação é <code>&lt;button&gt;</code> com <code>aria-label</code> — busca, conta e sacola não têm texto visível.",
+      "A contagem da sacola entra no rótulo, não só no desenho: “Cart, 2 items”, senão o número é invisível para quem ouve.",
+      "O submenu abre no <code>:hover</code> e no <code>:focus-within</code>. Só no hover, ele não existe para o teclado."
+    ],
+    "faca": {
+      "legenda": "Ícone de ação com rótulo que inclui o estado.",
+      "html": "<button class=\"yb-iconbtn yb-header__icon\" type=\"button\" aria-label=\"Cart, 2 items\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-cart\"/></svg><span class=\"yb-header__count\">2</span></button>"
+    },
+    "naoFaca": {
+      "legenda": "Sem rótulo: o leitor de tela anuncia “botão, 2” — o número sem o nome do que ele conta.",
+      "html": "<button class=\"yb-iconbtn yb-header__icon\" type=\"button\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-cart\"/></svg><span class=\"yb-header__count\">2</span></button>"
+    }
+  },
+  "manifesto": {
+    "a11y": [
+      "É <code>&lt;section&gt;</code> com título de verdade: a faixa não pede nada, mas continua sendo uma seção da página e entra na lista de cabeçalhos.",
+      "Texto branco sobre grafite, medido em 16,66:1. A faixa não tem foto atrás — o contraste não depende de véu.",
+      "Não leva link nem botão. Se precisar de um, o bloco certo é o Split, que foi feito para pedir alguma coisa."
+    ],
+    "faca": {
+      "legenda": "Afirmação curta, com título de seção.",
+      "html": "<div class=\"yb-manifesto\"><div class=\"yb-manifesto__inner\"><h2 class=\"yb-manifesto__title\">Born in the salon. Made for every day.</h2></div></div>"
+    },
+    "naoFaca": {
+      "legenda": "Faixa com botão: vira promessa de ação no único bloco que existe para não pedir nada — e o olho procura o que clicar em vez de ler.",
+      "html": "<div class=\"yb-manifesto\"><div class=\"yb-manifesto__inner\"><h2 class=\"yb-manifesto__title\">Born in the salon.</h2><a class=\"yb-btn yb-btn--primary\" href=\"#demos\">Shop now</a></div></div>"
+    },
+    "anatomia": {
+      "partes": [
+        {
+          "alvo": ".yb-manifesto",
+          "nome": "Faixa",
+          "texto": "Sangra até as bordas, fundo grafite. Texto branco em 16,66:1, sem foto atrás."
+        },
+        {
+          "alvo": ".yb-manifesto__inner",
+          "nome": "Prumada",
+          "texto": "Traz o texto de volta à largura do conteúdo, que a faixa acabou de atravessar."
+        },
+        {
+          "alvo": ".yb-manifesto__title",
+          "nome": "Afirmação",
+          "texto": "Uma frase. É a peça inteira — se precisar de duas, o bloco certo é outro."
+        },
+        {
+          "alvo": ".yb-manifesto__text",
+          "nome": "Apoio",
+          "texto": "Opcional, duas linhas. Sustenta a afirmação sem pedir nada."
+        }
+      ]
+    }
+  },
+  "shipping-progress": {
+    "a11y": [
+      "A barra é <code>role=&quot;progressbar&quot;</code> com <code>aria-valuenow</code>, <code>min</code> e <code>max</code>. Sem os três, é um retângulo que cresce.",
+      "O texto diz o que falta em dinheiro, não em porcentagem: “Add $12.10 more” é acionável; “76%” não.",
+      "O texto é o rótulo, e a barra repete a informação em forma. Quem não distingue a cor da barra lê a frase e sabe o mesmo.",
+      "Quando o frete é atingido, o texto muda antes da barra encher — a confirmação é a frase, não o preenchimento."
+    ],
+    "faca": {
+      "legenda": "Frase em dinheiro, barra com os três valores.",
+      "html": "<div class=\"yb-freeship\"><span class=\"yb-freeship__text\">Add <b>$12.10</b> more for free shipping</span><div class=\"yb-progress\" role=\"progressbar\" aria-valuenow=\"76\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-label=\"Progress to free shipping\"><span class=\"yb-progress__fill\" style=\"inline-size:76%\"></span></div></div>"
+    },
+    "naoFaca": {
+      "legenda": "Só a barra, sem frase e sem valores ARIA: quem ouve não recebe nada, e quem vê não sabe quanto falta.",
+      "html": "<div class=\"yb-freeship\"><div class=\"yb-progress\"><span class=\"yb-progress__fill\" style=\"inline-size:76%\"></span></div></div>"
+    }
+  },
+  "split": {
+    "a11y": [
+      "A foto é decorativa (<code>alt</code> vazio): quem informa é o painel ao lado. Descrever a foto duplicaria o texto que já está escrito.",
+      "O painel tem o título da seção e uma ação só. Duas ações de mesmo peso num bloco de duas colunas desfazem o ponto dele.",
+      "A ordem do DOM é foto, depois painel — e no celular ela vira a ordem visual. Inverter só no CSS deixaria o teclado andando ao contrário do olho.",
+      "O painel tem fundo próprio, então o contraste do texto não depende da foto ao lado."
+    ],
+    "faca": {
+      "legenda": "Painel com título e uma ação.",
+      "html": "<div class=\"yb-split__panel\"><h2 class=\"yb-split__title\">What does your hair need?</h2><a class=\"yb-btn yb-btn--primary\" href=\"#demos\">Start analysis</a></div>"
+    },
+    "naoFaca": {
+      "legenda": "Duas ações de mesmo peso: o bloco existe para levar a um lugar, e dois destinos iguais anulam a escolha.",
+      "html": "<div class=\"yb-split__panel\"><h2 class=\"yb-split__title\">What does your hair need?</h2><a class=\"yb-btn yb-btn--primary\" href=\"#demos\">Start analysis</a> <a class=\"yb-btn yb-btn--primary\" href=\"#demos\">See products</a></div>"
     }
   }
 }

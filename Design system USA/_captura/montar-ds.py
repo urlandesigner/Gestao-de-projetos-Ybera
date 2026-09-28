@@ -238,7 +238,7 @@ CABECA = """<!doctype html>
 </style>
 </head>
 <body>
-<a class="yb-skip-link" href="#conteudo">Skip to main content</a>
+<a class="yb-skip-link" href="#content">Skip to main content</a>
 """
 
 RODAPE = """
@@ -336,6 +336,35 @@ _P = {
     'myrrh-oil':   ('Off2_Set_18-20-10-ccb0ae.webp', 'Myrrh hair repair oil 90 ml', '$59.90'),
     'pantanal':    ('105-d0e326.webp', 'Pantanal elixir conditioner 1l – essencia brasileira', '$63.90'),
 }
+# FRETE GRATIS a partir de $50 — o numero que a faixa do topo, o FAQ e a
+# secao "Shipping & returns" dizem. A sacola calculava contra $200 e dizia
+# "faltam $72.20" num carrinho que ja tinha passado da meta. Um numero, um lugar.
+FRETE_GRATIS = 50
+
+
+def frete_livre(preco):
+    return float(re.sub(r'[^\d.]', '', preco or '0') or 0) >= FRETE_GRATIS
+
+
+def frete_selo(preco, disponivel):
+    """Frete gratis e VANTAGEM, e vantagem sobe para a fileira de selos do
+    preco, ao lado do estoque. O caminhao e o que separa os dois selos verdes
+    antes da leitura."""
+    mostra = disponivel and frete_livre(preco)
+    return (f'<span class="yb-badge yb-badge--success" data-yb-ship-badge'
+            f'{"" if mostra else " hidden"}>{ico("truck", "yb-icon yb-icon--sm")}Free shipping</span>')
+
+
+def frete_item(preco, disponivel):
+    """Abaixo da meta, a regra — em texto de apoio, e nao em selo: selo para
+    uma condicao que o item NAO cumpre chamaria atencao para o que nao e
+    beneficio. O JS alterna selo e linha pelo `data-price` da variante."""
+    mostra = disponivel and not frete_livre(preco)
+    return (f'<p class="yb-buybox__ship" data-yb-ship data-yb-ship-min="{FRETE_GRATIS}"'
+            f'{"" if mostra else " hidden"}>{ico("truck", "yb-icon yb-icon--sm")}'
+            f'Free shipping on orders over ${FRETE_GRATIS}</p>')
+
+
 VITRINES = {  # href do item: (arte da colecao, produto em destaque ou None)
     '/collections/best-sellers':                ('44_831fc84e-57db-4d51-ba41-ed4ed02438f3-284281.webp', 'terra-coco'),
     '/collections/collections':                 ('KitCuidadosProfundos-YberaFashionGold_ab-9c59c4.webp', 'double-care'),
@@ -376,7 +405,7 @@ def nav_pitch(img='img/', ico_href='yb/icons.svg'):
 
 def vitrines_html(img='img/', ico_href='yb/icons.svg', pdp='pdp.html'):
     """Os paineis extras da vitrine, um por item que tem o que mostrar. Nascem
-    `hidden`; o JS (`data-yb-vitrine-alvo`) troca qual aparece."""
+    `hidden`; o JS (`data-yb-showcase-target`) troca qual aparece."""
     rotulo = {h: t for it in MENU if it.get('rotulo') == 'Shop'
               for g in it['grupos'] for t, h in g['itens']}
     seta = f'<svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="{ico_href}#yb-arrow-right"/></svg>'
@@ -406,7 +435,7 @@ def vitrines_html(img='img/', ico_href='yb/icons.svg', pdp='pdp.html'):
             </a>"""
         else:
             segundo = nav_pitch(img, ico_href)
-        out.append(f"""<div class="yb-nav__vitrine" data-yb-vitrine="{vitrine_id(href)}" hidden>
+        out.append(f"""<div class="yb-nav__showcase" data-yb-showcase="{vitrine_id(href)}" hidden>
             {colecao}
             {segundo}
           </div>""")
@@ -420,8 +449,8 @@ def vitrines_html(img='img/', ico_href='yb/icons.svg', pdp='pdp.html'):
 # ja tem em maos, e as duas passam a mostrar a mesma coisa por construcao,
 # nao por copia.
 def nav_rail(produto):
-    return f"""<div class="yb-nav__rail" data-yb-vitrines>
-          <div class="yb-nav__vitrine" data-yb-vitrine="padrao">
+    return f"""<div class="yb-nav__rail" data-yb-showcases>
+          <div class="yb-nav__showcase" data-yb-showcase="default">
             <a class="yb-nav__promo" href="pdp.html">
               <div class="yb-nav__promo-media">
                 <div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div>
@@ -481,7 +510,7 @@ def menu(promo=None):
         grupos = []
         for g in it["grupos"]:
             itens = "".join(
-                f'<li><a href="{h}" data-yb-vitrine-alvo="{vitrine_id(h)}">{t}</a></li>'
+                f'<li><a href="{h}" data-yb-showcase-target="{vitrine_id(h)}">{t}</a></li>'
                 if (it["rotulo"] == "Shop" and h in VITRINES) else f'<li><a href="{h}">{t}</a></li>'
                 for t, h in g["itens"])
             lista = f'<ul class="yb-nav__sublist">{itens}</ul>' if itens else ""
@@ -516,26 +545,26 @@ def header(carrinho=2, promo=None, cliente=None):
     menu da conta. Deslogado continua sendo um botao de icone so — e o que a
     loja mostra hoje.
 
-    A gaveta do celular tem a sua propria linha de conta (`.yb-nav__conta`),
+    A gaveta do celular tem a sua propria linha de conta (`.yb-nav__account`),
     porque la nao ha menu suspenso: a saudacao e o botao ficam a vista, no
     topo, antes dos links."""
     if cliente:
         inicial = cliente['nome'].strip()[:1].upper()
         conta = f"""<div class="yb-dropdown">
-        <input class="yb-dropdown__toggle" type="checkbox" id="conta-open">
-        <label class="yb-dropdown__gatilho" for="conta-open"
+        <input class="yb-dropdown__toggle" type="checkbox" id="account-open">
+        <label class="yb-dropdown__trigger" for="account-open"
                aria-label="Account menu for {cliente['nome']}">
           <span class="yb-avatar" aria-hidden="true">{inicial}</span></label>
-        <div class="yb-dropdown__painel">
-          <span class="yb-dropdown__cabeca">
+        <div class="yb-dropdown__panel">
+          <span class="yb-dropdown__head">
             <span class="yb-avatar yb-avatar--md" aria-hidden="true">{inicial}</span>
-            <b class="yb-dropdown__nome">{cliente['nome']}</b>
+            <b class="yb-dropdown__name">{cliente['nome']}</b>
             <span class="yb-dropdown__email">{cliente['email']}</span>
           </span>
           <a href="/account">{ico('user','yb-icon yb-icon--sm')} Account</a>
           <a href="/account/orders">{ico('truck','yb-icon yb-icon--sm')} Orders</a>
           <a href="/listadedesejos">{ico('heart','yb-icon yb-icon--sm')} Wishlist</a>
-          <span class="yb-dropdown__sair">
+          <span class="yb-dropdown__signout">
             <a href="/account/logout">{ico('lock','yb-icon yb-icon--sm')} Log out</a>
           </span>
         </div>
@@ -550,10 +579,10 @@ def header(carrinho=2, promo=None, cliente=None):
         # cliente em "Welcome, Url...". Cortar o proprio nome de quem entrou e
         # pior do que nao saudar. Avatar + nome e o que o menu de conta do
         # desktop ja faz.
-        conta_gaveta = f"""<div class="yb-nav__conta">
-        <span class="yb-nav__conta-quem">
-          <span class="yb-nav__conta-inicial" aria-hidden="true">{inicial}</span>
-          <b class="yb-nav__conta-nome">{primeiro}</b>
+        conta_gaveta = f"""<div class="yb-nav__account">
+        <span class="yb-nav__account-who">
+          <span class="yb-nav__account-initial" aria-hidden="true">{inicial}</span>
+          <b class="yb-nav__account-name">{primeiro}</b>
         </span>
         <a class="yb-btn yb-btn--primary yb-btn--sm" href="/account">Account</a>
       </div>"""
@@ -563,10 +592,10 @@ def header(carrinho=2, promo=None, cliente=None):
         # A linha de conta no topo da gaveta. Substitui o antigo item de texto
         # "Account" no meio da lista: ali ele era o 1o de 25 links iguais e
         # ninguem o achava. Aqui e faixa propria, com o unico botao da gaveta.
-        conta_gaveta = f"""<div class="yb-nav__conta">
-        <span class="yb-nav__conta-quem">
+        conta_gaveta = f"""<div class="yb-nav__account">
+        <span class="yb-nav__account-who">
           {ico('user')}
-          <b class="yb-nav__conta-nome">Welcome, Visitor</b>
+          <b class="yb-nav__account-name">Welcome, Visitor</b>
         </span>
         <a class="yb-btn yb-btn--primary yb-btn--sm" href="/account/login">Log in</a>
       </div>"""
@@ -587,7 +616,7 @@ def header(carrinho=2, promo=None, cliente=None):
       <div class="yb-nav__head">
         <span class="yb-logo yb-logo--md" aria-hidden="true">
           <img src="brand/ybera-logo.webp" alt="" width="360" height="139"></span>
-        <label class="yb-iconbtn yb-nav__close" for="nav-open" role="button" tabindex="0" aria-label="Close menu">{ico('close')}</label>
+        <label class="yb-iconbtn yb-iconbtn--square yb-nav__close" for="nav-open" role="button" tabindex="0" aria-label="Close menu">{ico('close')}</label>
       </div>
       {conta_gaveta}
       <ul class="yb-nav">
@@ -957,7 +986,7 @@ def cartao_oferta(p, destino):
              f'<span class="yb-offerseal__label">off</span></span>'
              if selo else '')
     riscado = f'<s class="yb-offercard__was">{de}</s>' if de else ''
-    return f"""      <article class="yb-offercard yb-offercard--blur">
+    return f"""      <article class="yb-offercard yb-offercard--blur" data-yb-offercard>
         <img src="img/{arte}" alt="{p['titulo'][:80]}">
         {marca}
         <div class="yb-offercard__blur" aria-hidden="true"><i></i><i></i><i></i></div>
@@ -967,16 +996,16 @@ def cartao_oferta(p, destino):
              no corpo, deixando a foto — a maior area da peca — sem alvo.
              `aria-labelledby` aponta para o titulo, entao o link continua se
              chamando pelo nome do produto em vez de virar "link, em branco". -->
-        <a class="yb-offercard__link" href="pdp.html" aria-labelledby="oferta-nome"></a>
+        <a class="yb-offercard__link" href="pdp.html" aria-labelledby="offer-name"></a>
         <div class="yb-offercard__body">
-          <h3 class="yb-offercard__title" id="oferta-nome">{p['titulo']}</h3>
-          <div class="yb-offercard__linha">
+          <h3 class="yb-offercard__title" id="offer-name">{p['titulo']}</h3>
+          <div class="yb-offercard__row">
             <span class="yb-offercard__price">{por}</span>
             {riscado}
             <p class="yb-offercard__timer" data-yb-countdown="{prazo}">
               <time datetime="{prazo}">{OFERTA['prazo_extenso']}</time></p>
           </div>
-          <p class="yb-offercard__fim" hidden>Offer ended</p>
+          <p class="yb-offercard__deadline" data-yb-offercard-end hidden>Offer ended</p>
           <!-- Mesmo controle dos outros tres cartoes: <button> que abre a
                sacola, nao link. Era um <a> para o MESMO pdp.html do titulo —
                dois links com o mesmo destino, e o cartao sem nenhum jeito de
@@ -990,133 +1019,19 @@ def cartao_oferta(p, destino):
 
 
 def rodape():
-    """@guardado — NAO e chamado por nenhuma pagina hoje.
+    """Rodape da loja — escuro, o unico que as telas usam.
 
-    E a versao longa, clara, com as tres colunas em sanfona. Fica aqui de
-    proposito: as duas versoes do rodape sao para comparar, e apagar esta
-    obrigaria a reescrever 28 links e a sanfona para ver de novo o que ja
-    estava pronto. Quem for limpar codigo morto: este nao e.
+    Houve um v1 claro que repetia a navegacao inteira (28 destinos, tres
+    colunas sanfonadas). Ficou guardado aqui para comparar e saiu em 0.13:
+    nenhuma tela o chamava, e o historico do git guarda a versao.
 
-    Footer da loja, montado so com componentes e tokens do sistema. O conteudo
-    e o mesmo que esta em producao — mesmos menus, mesmos textos, mesmos
-    destinos. O que mudou e de onde vem cada cor e cada medida."""
+    Aqui sao 23 links em cinco colunas, mais 5 legais. Cada coluna responde
+    uma pergunta diferente: onde compro, que linha, que problema, quem me
+    ajuda, quem sao voces. Collection e Hair Problems voltaram porque sao as
+    duas entradas pelas quais a loja organiza o catalogo — linha e problema —
+    e o rodape da loja as oferece. No celular as cinco sanfonam.
 
-    MENUS = [
-        ("All Products", "/collections", [
-            ("Best Sellers", "/collections/best-sellers"),
-            ("Kit",          "/collections/collections"),
-        ]),
-        ("Collection", "/collections", [
-            ("Progressiva", "/collections/fashion-gold"),
-            ("Cronograma",  "/collections/cronograma-hair-care-system"),
-            ("Ybera Paris", "/collections/ybera-paris"),
-            ("100Timetros", "/collections/100timetros"),
-            ("Capulana",    "/collections/capulana"),
-            ("Terra Coco",  "/collections/terra-coco"),
-            ("Hair Mist",   "/collections/hair-mist"),
-        ]),
-        ("Hair Problems", "/collections/hair-repair-products", [
-            ("Damaged Hair",         "/collections/dullness"),
-            ("Frizz &amp; Dryness",  "/collections/dryness-frizz"),
-            ("Thinning / Hair Loss", "/collections/hair-loss-thinning-hair"),
-            ("Undefined Curls",      "/collections/frizz-lack-of-volume"),
-            ("Hair Smoothing",       "/collections/hair-smoothing-treatment"),
-            ("Hair Straightening",   "/collections/hair-straightening-treatment"),
-        ]),
-    ]
-
-    LEGAL = [
-        ("Terms &amp; Conditions",     "/policies/terms-of-service"),
-        ("Privacy Policy",             "/policies/privacy-policy"),
-        ("Refund Policy",              "/policies/refund-policy"),
-        ("Terms of Service",           "/policies/terms-of-service"),
-        ("Shipping Policy",            "/policies/shipping-policy"),
-        ("SMS Terms &amp; Conditions", "/pages/sms-terms-amp-conditions"),
-    ]
-
-    def coluna(n, titulo, itens):
-        li = "".join(f'<li><a href="{h}">{t}</a></li>' for t, h in itens)
-        return f"""      <div class="yb-footer__col">
-        <input class="yb-footer__toggle" type="checkbox" id="fc{n}">
-        <label class="yb-footer__coltitle" for="fc{n}">{titulo}
-          <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-down"/></svg>
-        </label>
-        <div class="yb-footer__collist"><ul>{li}</ul></div>
-      </div>"""
-
-    colunas = "\n".join(coluna(i, t, itens) for i, (t, _, itens) in enumerate(MENUS))
-    legal = "".join(f'<a href="{h}">{t}</a>' for t, h in LEGAL)
-
-    return f"""<footer class="yb-footer">
-  <div class="yb-footer__inner">
-    <div class="yb-footer__top">
-
-      <div class="yb-footer__brand">
-        <a class="yb-footer__logo" href="index.html"><span class="yb-logo yb-logo--lg"><img src="brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span></a>
-        <ul class="yb-footer__links">
-          <li><a href="/collections">Shop</a></li>
-          <li><a href="/blogs/haircare">Blog</a></li>
-          <li><a href="/pages/contactus">Contact Us</a></li>
-          <li><a href="/pages/our-story">About Us</a></li>
-        </ul>
-        <div class="yb-footer__social">
-          <a href="https://www.instagram.com/ybera.usa/" target="_blank" rel="noopener">
-            <svg class="yb-icon" role="img" aria-label="Ybera on Instagram"><use href="yb/icons.svg#yb-instagram"/></svg>
-          </a>
-          <a href="https://www.tiktok.com/@ybera.us" target="_blank" rel="noopener">
-            <svg class="yb-icon" role="img" aria-label="Ybera on TikTok"><use href="yb/icons.svg#yb-tiktok"/></svg>
-          </a>
-        </div>
-      </div>
-
-      <div class="yb-footer__menus">
-{colunas}
-      </div>
-
-      <div class="yb-footer__contact">
-        <div>
-          <label class="yb-footer__newslabel" for="news-email">Subscribe to receive exclusive offers</label>
-          <form class="yb-footer__news" method="post" action="/contact#ContactFooter">
-            <span class="yb-footer__newsfield">
-              <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-mail"/></svg>
-              <input class="yb-input" id="news-email" type="email" name="contact[email]" placeholder="Your best email" autocomplete="email" required>
-            </span>
-            <button class="yb-footer__newsbtn" type="submit" aria-label="Subscribe">
-              <svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-arrow-right"/></svg>
-            </button>
-          </form>
-        </div>
-        <p class="yb-footer__info"><strong>For more information, please send us an Email to:</strong> info.usa@ybera.com</p>
-        <p class="yb-footer__info"><strong>Customer Service:</strong> OPEN: Monday - Friday 8am - 4pm (EST)</p>
-        <p class="yb-footer__info"><strong>Customer Service:</strong> CLOSED: Weekends and Holidays</p>
-      </div>
-
-    </div>
-    <div class="yb-footer__bottom"><span>© 2026</span>{legal}</div>
-  </div>
-</footer>"""
-
-
-def rodape_v2():
-    """Rodape v2 — escuro, e mais curto do que o v1 por subtracao.
-
-    ONDE ELE ESTA HOJE: na home v1. Os dois rodapes foram TROCADOS entre as
-    duas homes, de proposito, para ver cada um fora da pagina que o gerou. O
-    nome da funcao continua descrevendo o RODAPE, nao a pagina que o chama —
-    `rodape_v2` e o rodape curto e escuro, esteja ele onde estiver.
-
-    A v1 repete a navegacao inteira: 15 links em tres colunas sanfonadas, mais
-    4 no bloco de marca, mais 6 legais — 28 destinos num rodape. Era o padrao
-    de 2010, quando o rodape servia de mapa do site; hoje quem procura usa a
-    busca, e a lista longa so dilui os tres ou quatro links que alguem de fato
-    clica.
-
-    Aqui sao 9 links em tres colunas de tres, mais 3 legais. Cada coluna
-    responde uma pergunta diferente: onde compro, quem me ajuda, quem sao
-    voces. As colunas nao sanfonam no celular — com tres itens cada, a sanfona
-    esconde menos do que custa em toque.
-
-    DUPLICATA CORRIGIDA: a lista legal da v1 tem "Terms & Conditions" e "Terms
+    DUPLICATA CORRIGIDA: a lista legal do v1 tinha "Terms & Conditions" e "Terms
     of Service" apontando para /policies/terms-of-service. Mesmo destino, dois
     rotulos. Aqui ficou um.
 
@@ -1130,6 +1045,23 @@ def rodape_v2():
             ("Kits",         "/collections/collections"),
             ("All Products", "/collections"),
         ]),
+        ("Collection", [
+            ("Progressiva", "/collections/fashion-gold"),
+            ("Cronograma",  "/collections/cronograma-hair-care-system"),
+            ("Ybera Paris", "/collections/ybera-paris"),
+            ("100Timetros", "/collections/100timetros"),
+            ("Capulana",    "/collections/capulana"),
+            ("Terra Coco",  "/collections/terra-coco"),
+            ("Hair Mist",   "/collections/hair-mist"),
+        ]),
+        ("Hair Problems", [
+            ("Damaged Hair",         "/collections/dullness"),
+            ("Frizz &amp; Dryness",  "/collections/dryness-frizz"),
+            ("Thinning / Hair Loss", "/collections/hair-loss-thinning-hair"),
+            ("Undefined Curls",      "/collections/frizz-lack-of-volume"),
+            ("Hair Smoothing",       "/collections/hair-smoothing-treatment"),
+            ("Hair Straightening",   "/collections/hair-straightening-treatment"),
+        ]),
         ("Help", [
             ("FAQ",             "faq.html"),
             ("Contact Us",      "/pages/contactus"),
@@ -1142,10 +1074,18 @@ def rodape_v2():
             ("AI Hair Analysis", "/pages/ai-hair-routine-quiz"),
         ]),
     ]
+    # A FAIXA LEGAL E A DA LOJA, com os cinco destinos e os rotulos que ela
+    # publica. Eram tres, e os dois que faltavam — devolucao e frete — sao
+    # justamente os que o cliente procura DEPOIS de comprar, que e quando ele
+    # chega ao rodape. Os rotulos tambem eram nossos e nao dela: "Terms of
+    # Service" e "SMS Terms" viraram "Terms & Conditions" e "SMS Terms &
+    # Conditions", que e como estao escritos na ybera.us.
     LEGAL = [
-        ("Terms of Service", "/policies/terms-of-service"),
-        ("Privacy Policy",   "/policies/privacy-policy"),
-        ("SMS Terms",        "/pages/sms-terms-amp-conditions"),
+        ("Terms & Conditions",     "/policies/terms-of-service"),
+        ("Privacy Policy",         "/policies/privacy-policy"),
+        ("Refund Policy",          "/policies/refund-policy"),
+        ("Shipping Policy",        "/policies/shipping-policy"),
+        ("SMS Terms & Conditions", "/pages/sms-terms-amp-conditions"),
     ]
     # O <input> nao e enfeite de markup: e a metade que REABRE a lista. A folha
     # so fecha a coluna abaixo de 768 quando encontra este checkbox
@@ -1163,7 +1103,7 @@ def rodape_v2():
     return f"""<footer class="yb-footer yb-footer--dark">
   <div class="yb-footer__inner">
 
-    <div class="yb-footer__news-zona">
+    <div class="yb-footer__news-field">
       <div>
         <!-- Sem "10% off your first order": a loja nao tem esse programa. Um
              desconto de boas-vindas e a chamada padrao de rodape americano e
@@ -1171,14 +1111,24 @@ def rodape_v2():
              loja nao cumpre e o mesmo defeito da nota inventada na PDP. A
              chamada diz o que a assinatura entrega de verdade. -->
         <p class="yb-footer__newstitle">First to know</p>
-        <label class="yb-footer__newslabel" for="news-email">New arrivals, routines and offers. No spam.</label>
+        <!-- A CHAMADA E DESCRICAO, NAO NOME. Ela era o <label for> do campo, e
+             por isso o nome acessivel do input virava a frase inteira: quem usa
+             leitor de tela ouvia "New arrivals, routines and offers. No spam."
+             no lugar de "Email". O que dizia o que digitar era o `placeholder`,
+             que some no primeiro caractere.
+             Agora a frase e <p> ligada por `aria-describedby` — ela continua
+             sendo lida, depois do nome e nao no lugar dele — e o nome vem de um
+             <label> que so o leitor de tela ve. Na tela nao muda nada: o campo
+             do rodape usa o controle solto de proposito, sem a caixa
+             `.yb-field` e sem rotulo flutuante (ver a folha dos atomos). -->
+        <p class="yb-footer__newslabel" id="news-sobre">New arrivals, routines and offers. No spam.</p>
       </div>
       <form class="yb-footer__news" method="post" action="/contact#ContactFooter">
-        <span class="yb-footer__newsfield">
+        <span class="yb-field__box yb-field__box--on-dark yb-footer__newsfield">
           {ico('mail', 'yb-icon yb-icon--sm')}
-          <input class="yb-input" id="news-email" type="email" name="contact[email]" placeholder="Your best email" autocomplete="email" required>
+          <input class="yb-input" id="news-email" type="email" name="contact[email]" placeholder=" " autocomplete="email" aria-describedby="news-sobre" required><label class="yb-field__label" for="news-email">Your best email</label>
         </span>
-        <button class="yb-footer__newsbtn" type="submit" aria-label="Subscribe">
+        <button class="yb-iconbtn yb-iconbtn--on-dark yb-footer__newsbtn" type="submit" aria-label="Subscribe">
           {ico('arrow-right')}
         </button>
       </form>
@@ -1187,7 +1137,7 @@ def rodape_v2():
     <div class="yb-footer__top">
       <div class="yb-footer__brand">
         <a class="yb-footer__logo" href="index-v2.html"><span class="yb-logo yb-logo--lg"><img src="brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span></a>
-        <p class="yb-footer__info">info.usa@ybera.com</p>
+        <p class="yb-footer__info">info@ybera.us</p>
         <p class="yb-footer__info">Mon&ndash;Fri, 8am&ndash;4pm EST</p>
         <div class="yb-footer__social">
           <a href="https://www.instagram.com/ybera.usa/" target="_blank" rel="noopener">
@@ -1203,7 +1153,7 @@ def rodape_v2():
       </div>
     </div>
 
-    <div class="yb-footer__bottom"><span>&copy; 2026 Ybera Paris USA</span>{legal}</div>
+    <div class="yb-footer__bottom"><span>&copy; 2026 YBERA USA LLC</span>{legal}</div>
   </div>
 </footer>"""
 
@@ -1220,7 +1170,7 @@ def busca(prods):
     Filtrar de verdade e trabalho do servidor. O JS do sistema so decide QUAL
     dos tres paineis mostrar; sem ele o <form> continua enviando a busca."""
     def linha(p, termo=None):
-        return f"""            <a class="yb-search__item" href="pdp.html"{f' data-termo="{termo}"' if termo else ''}>
+        return f"""            <a class="yb-search__item" href="pdp.html"{f' data-term="{termo}"' if termo else ''}>
               <span class="yb-search__thumb"><img src="img/{p['img']}" alt="" loading="lazy" width="56" height="56"></span>
               <span>
                 <span class="yb-search__name">{p['titulo']}</span>
@@ -1241,7 +1191,7 @@ def busca(prods):
       {ico('search', 'yb-icon yb-search__icon')}
       <input class="yb-search__input" type="search" name="q" autocomplete="off" autofocus
              placeholder="Search products, concerns, ingredients" aria-label="Search products">
-      <button class="yb-iconbtn yb-search__clear" type="reset" aria-label="Clear search" hidden>{ico('close')}</button>
+      <button class="yb-iconbtn yb-iconbtn--square yb-search__clear" type="reset" aria-label="Clear search" hidden>{ico('close')}</button>
       <button class="yb-search__close" type="button" data-yb-close>Close</button>
     </form>
   </div>
@@ -1306,20 +1256,20 @@ def gaveta(prods):
 
     itens = prods[:2]
     subtotal = sum(valor(p['preco']) for p in itens)
-    falta = max(0, 200 - subtotal)
-    pct = min(100, round(subtotal / 200 * 100))
+    falta = max(0, FRETE_GRATIS - subtotal)
+    pct = min(100, round(subtotal / FRETE_GRATIS * 100))
 
     linhas = "".join(f"""
       <div class="yb-cart__item">
         <div class="yb-card__media"><img src="img/{p['img']}" alt="" loading="lazy"></div>
         <div class="yb-cart__item-body">
-          <div class="yb-cart__item-topo">
+          <div class="yb-cart__item-top">
             <p class="yb-cart__item-title">{p['titulo']}</p>
-            <button class="yb-cart__remove" aria-label="Remove {p['titulo'][:40]}">{ico('trash','yb-icon yb-icon--sm')}</button>
+            <button class="yb-iconbtn yb-iconbtn--square yb-cart__remove" aria-label="Remove {p['titulo'][:40]}">{ico('trash','yb-icon yb-icon--sm')}</button>
           </div>
           <span class="yb-cart__item-variant">{p.get('variante', 'Default')}</span>
           <div class="yb-cart__item-foot">
-            <span class="yb-cart__item-precos"><span class="yb-price yb-price--sm"><b class="yb-price__now">{p['preco']}</b></span></span>
+            <span class="yb-cart__item-prices"><span class="yb-price yb-price--sm"><b class="yb-price__now">{p['preco']}</b></span></span>
             <div class="yb-stepper yb-stepper--sm" data-yb-stepper>
               <button type="button" data-yb-step="down" aria-label="Decrease quantity of {p['titulo'][:30]}">&minus;</button>
               <input type="number" value="1" min="1" max="10" aria-label="Quantity of {p['titulo'][:30]}">
@@ -1332,7 +1282,7 @@ def gaveta(prods):
     frete = (f'<span class="yb-freeship__text">Add <b>${falta:.2f}</b> more for free shipping</span>'
              if falta else f'<span class="yb-freeship__text">{ico("truck", "yb-icon yb-icon--sm")} Free shipping unlocked</span>')
 
-    # Degraus de brinde. Como o frete gratis de $200, sao NUMEROS DE PROTOTIPO:
+    # Degraus de brinde. Diferente do frete gratis, sao NUMEROS DE PROTOTIPO:
     # a loja nao tem programa de brinde por meta hoje. Ficam aqui em cima, num
     # so lugar, para quem for ligar de verdade saber onde trocar.
     DEGRAUS = (250, 400)
@@ -1351,7 +1301,7 @@ def gaveta(prods):
         brinde_mod = ''
     else:
         brinde_txt = "You've unlocked the best gift available"
-        brinde_mod = ' yb-cart__brinde-card--completo'
+        brinde_mod = ' yb-cart__gift-card--done'
 
     # Parceiro: identificador de exemplo, nao uma pessoa. O valor sai do
     # subtotal para a faixa nao contradizer o rodape.
@@ -1360,9 +1310,9 @@ def gaveta(prods):
     return f"""<dialog id="cart" class="yb-dialog yb-drawer" aria-labelledby="cart-t">
   <div class="yb-cart">
     <div class="yb-cart__head"><h2 id="cart-t">Your cart ({len(itens)})</h2>
-      <div class="yb-cart__head-acoes">
-        <button class="yb-cart__share" aria-label="Share cart">{ico('share')}</button>
-        <button class="yb-cart__close" data-yb-close aria-label="Close cart">{ico('close')}</button>
+      <div class="yb-cart__head-actions">
+        <button class="yb-iconbtn yb-iconbtn--square yb-cart__share" aria-label="Share cart">{ico('share')}</button>
+        <button class="yb-iconbtn yb-iconbtn--square yb-cart__close" data-yb-close aria-label="Close cart">{ico('close')}</button>
       </div></div>
     <div class="yb-cart__ship{'' if falta else ' yb-cart__ship--ok'}">
       <div class="yb-freeship">
@@ -1371,19 +1321,19 @@ def gaveta(prods):
           <span class="yb-progress__fill" style="inline-size:{pct}%"></span></div>
       </div>
     </div>
-    <div class="yb-cart__brinde-card{brinde_mod}">
-      <div class="yb-cart__brinde-corpo">
-        <p class="yb-cart__brinde-texto">{brinde_txt}</p>
-        <div class="yb-cart__brinde-trilhos" role="progressbar"
+    <div class="yb-cart__gift-card{brinde_mod}">
+      <div class="yb-cart__gift-body">
+        <p class="yb-cart__gift-text">{brinde_txt}</p>
+        <div class="yb-cart__gift-track" role="progressbar"
              aria-valuenow="{int(subtotal)}" aria-valuemin="0" aria-valuemax="{DEGRAUS[-1]}"
              aria-valuetext="${subtotal:.2f} of ${DEGRAUS[-1]}.00 toward the best gift">{trilhos}</div>
       </div>
-      <div class="yb-cart__brinde-premio"><img src="img/{premio['img']}" alt="" loading="lazy"></div>
+      <div class="yb-cart__gift-prize"><img src="img/{premio['img']}" alt="" loading="lazy"></div>
     </div>
     <div class="yb-cart__items">{linhas}
     </div>
-    <div class="yb-cart__protecao">
-      <div class="yb-cart__protecao-corpo">
+    <div class="yb-cart__shield">
+      <div class="yb-cart__shield-body">
         <b>Route Package Protection</b>
         <p>Guard against loss, theft, or damage for only $4.98</p>
       </div>
@@ -1391,24 +1341,24 @@ def gaveta(prods):
         <span class="yb-switch__knob"></span>
       </button>
     </div>
-    <div class="yb-cart__cupom">
+    <div class="yb-cart__coupon">
       <form class="yb-field yb-field--row">
         <div class="yb-field__box">
-          <input class="yb-input" id="cupom" type="text" placeholder=" " autocomplete="off">
-          <label class="yb-field__label" for="cupom">Promo code</label>
+          <input class="yb-input" id="coupon" type="text" placeholder=" " autocomplete="off">
+          <label class="yb-field__label" for="coupon">Promo code</label>
         </div>
         <button class="yb-btn yb-btn--ghost yb-btn--sm" type="submit">Apply</button>
       </form>
       <p class="yb-cart__note">Taxes, shipping and discounts calculated at checkout</p>
     </div>
     <div class="yb-cart__foot">
-      <div class="yb-cart__parceiro">
-        <span class="yb-cart__parceiro-inicial" aria-hidden="true">YP</span>
+      <div class="yb-cart__partner">
+        <span class="yb-cart__partner-initial" aria-hidden="true">YP</span>
         <p><b>{PARCEIRO['identificador']}</b> saved you ${poupou:.2f}</p>
       </div>
-      <div class="yb-cart__resumo">
-        <div class="yb-cart__totais">
-          <div class="yb-cart__total-linha"><b class="yb-cart__total">${subtotal:.2f}</b></div>
+      <div class="yb-cart__summary">
+        <div class="yb-cart__totals">
+          <div class="yb-cart__total-row"><b class="yb-cart__total">${subtotal:.2f}</b></div>
         </div>
         <button class="yb-btn yb-btn--primary yb-cart__checkout">Checkout ({len(itens)})</button>
       </div>
@@ -1530,8 +1480,8 @@ def faixa_parceiro(ancorada=True):
     significaria que o recado some por completo quando o script nao carrega —
     e nao ha observador para liga-la, porque nao ha o que observar."""
     oculta = ' hidden' if ancorada else ''
-    # Sem arte ela entra no fluxo em vez de sobrepor — ver .yb-partnerbar--fluxo.
-    classe = 'yb-partnerbar' if ancorada else 'yb-partnerbar yb-partnerbar--fluxo'
+    # Sem arte ela entra no fluxo em vez de sobrepor — ver .yb-partnerbar--inline.
+    classe = 'yb-partnerbar' if ancorada else 'yb-partnerbar yb-partnerbar--inline'
     return (f'<aside class="{classe}" data-yb-partnerbar{oculta} '
             'aria-label="Partner greeting">\n'
             f'  <p class="yb-partnerbar__text">{recado_parceiro()}</p>\n'
@@ -1596,12 +1546,12 @@ FAQ = [
         (HOME + 'Can I return an order?',
          'You have 30 days from delivery to request one. The item has to come back '
          'unused, in its original packaging, with the receipt &mdash; and the return '
-         'has to be requested first, at info.usa@ybera.com. Packages sent back '
+         'has to be requested first, at info@ybera.us. Packages sent back '
          'without a request are not accepted.'),
         ('Are hair products returnable?',
          'The policy lists personal care goods, which includes beauty products, '
          'among the items that cannot be returned, along with sale items and gift '
-         'cards. Write to info.usa@ybera.com before sending anything back, so your '
+         'cards. Write to info@ybera.us before sending anything back, so your '
          'specific item is checked.'),
         ('My order arrived damaged or wrong.',
          'Contact us as soon as you open it. For damaged, defective or incorrect '
@@ -1610,7 +1560,7 @@ FAQ = [
          'Once the return is received and inspected we tell you whether it was '
          'approved. Approved refunds go back to the original payment method within '
          '10 business days, and your bank can take a few more to post it. Past 15 '
-         'business days, write to info.usa@ybera.com.'),
+         'business days, write to info@ybera.us.'),
     ]),
     ('The products', 'faq-products', [
         (HOME + 'Is the keratin formaldehyde-free?',
@@ -1647,9 +1597,9 @@ def faq(curto=False, cabecalho=True, titulo_pagina=None):
             <div class="yb-accordion__body"><p>{r}</p></div></details>"""
             for _, _, pares in FAQ for q, r in pares if q.startswith(HOME))
         return f"""    <section class="yb-block" id="faq">
-      <div class="yb-faq yb-faq--curto">
-        <div class="yb-section-head yb-faq__cabeca"><h2>Before you buy</h2></div>
-        <div class="yb-faq__apoio">
+      <div class="yb-faq yb-faq--short">
+        <div class="yb-section-head yb-faq__head"><h2>Before you buy</h2></div>
+        <div class="yb-faq__support">
           <p class="yb-block__lede">The four things people ask before a first order.
           Tracking, split shipments and refunds are answered in the full list.</p>
           <a class="yb-btn yb-btn--secondary" href="faq.html">See all questions</a>
@@ -1668,8 +1618,8 @@ def faq(curto=False, cabecalho=True, titulo_pagina=None):
             <details name="faq-{alvo}"><summary>{sem_marca(q)}</summary>
               <div class="yb-accordion__body"><p>{r}</p></div></details>""" for q, r in pares)
         grupos += f"""
-        <section class="yb-faq__grupo" id="{alvo}" aria-labelledby="{alvo}-t">
-          <h3 class="yb-faq__titulo" id="{alvo}-t">{titulo}</h3>
+        <section class="yb-faq__group" id="{alvo}" aria-labelledby="{alvo}-t">
+          <h3 class="yb-faq__title" id="{alvo}-t">{titulo}</h3>
           <div class="yb-accordion">{itens}
           </div>
         </section>"""
@@ -1680,12 +1630,12 @@ def faq(curto=False, cabecalho=True, titulo_pagina=None):
         <h2>Frequently asked questions</h2>
         <a class="yb-link" href="/pages/contactus">Talk to us {ico('chevron-right')}</a>
       </div>""" if cabecalho else ''
-    # `titulo_pagina` poe o titulo DENTRO do bloco, na `.yb-faq__cabeca`, em vez
+    # `titulo_pagina` poe o titulo DENTRO do bloco, na `.yb-faq__head`, em vez
     # de um `.yb-block` solto acima dele. O bloco passa a se titular sozinho, e
     # a doc — que nao carrega a folha dos templates — mostra a peca inteira em
     # vez de decapitada. Na tela ele e <h1>: e o titulo da pagina.
     cabeca_bloco = f"""
-        <div class="yb-faq__cabeca">
+        <div class="yb-faq__head">
           <h1>{titulo_pagina}</h1>
           <p class="yb-faq__lede">Shipping, returns and the products themselves. What
           is not here, our team answers by email.</p>
@@ -1694,7 +1644,7 @@ def faq(curto=False, cabecalho=True, titulo_pagina=None):
       <div class="yb-faq">{cabeca_bloco}
         <ul class="yb-faq__index" aria-label="FAQ topics">{indice}
         </ul>
-        <div class="yb-faq__grupos">{grupos}
+        <div class="yb-faq__groups">{grupos}
         </div>
       </div>
     </section>"""
@@ -1732,7 +1682,7 @@ def quiz():
     com quatro caixas iguais e nao ensina que sao excludentes; com uma marcada,
     a regra se le antes de clicar."""
     chips = "".join(f"""
-          <input type="radio" name="quiz-cabelo" id="quiz-{i}"{' checked' if i == 0 else ''}>
+          <input type="radio" name="quiz-hair" id="quiz-{i}"{' checked' if i == 0 else ''}>
           <label for="quiz-{i}">{o}</label>""" for i, o in enumerate(QUIZ['opcoes']))
     return f"""  <section class="yb-split">
     <div class="yb-split__media">
@@ -1745,7 +1695,7 @@ def quiz():
       <div class="yb-swatches yb-swatches--on-dark" role="radiogroup" aria-label="Hair condition">{chips}
       </div>
       <button class="yb-btn yb-btn--on-dark" type="button">Start analysis</button>
-      <p class="yb-split__nota">{QUIZ['perguntas']} quick questions</p>
+      <p class="yb-split__note">{QUIZ['perguntas']} quick questions</p>
     </div>
   </section>"""
 
@@ -1988,7 +1938,7 @@ def carrossel_reviews(topo=True):
                 + ico('shield-check', 'yb-icon yb-icon--sm')
                 + ' Verified purchase</span>') if r.get('verificado') else ''
         itens += f"""
-        <article class="yb-review" data-nota="{r['nota']}">
+        <article class="yb-review" data-rating="{r['nota']}">
           <div class="yb-review__media"><img src="img/{r['arquivo']}" alt="" loading="lazy"></div>
           <div class="yb-review__body">
             <span class="yb-stars" style="--yb-stars:{r['nota']}" role="img" aria-label="{r['nota']} of 5 stars"></span>
@@ -2029,13 +1979,13 @@ def carrossel_reviews(topo=True):
         q = AVALIACAO['dist'][n]
         pct = round(q * 100 / total) if total else 0
         barras += f"""
-          <li class="yb-reviews__linha">
-            <span class="yb-reviews__estrela">{n} {ico('star-filled', 'yb-icon yb-icon--sm')}</span>
+          <li class="yb-reviews__row">
+            <span class="yb-reviews__star">{n} {ico('star-filled', 'yb-icon yb-icon--sm')}</span>
             <span class="yb-progress yb-progress--sm" role="img"
                   aria-label="{q} of {total} reviews gave {n} stars">
               <span class="yb-progress__fill" style="inline-size:{pct}%"></span>
             </span>
-            <span class="yb-reviews__qtd">{q}</span>
+            <span class="yb-reviews__count">{q}</span>
           </li>"""
 
     # O filtro e o mesmo grupo de radio dos tamanhos (`.yb-swatches`): alvo de
@@ -2044,48 +1994,48 @@ def carrossel_reviews(topo=True):
     for v, rot in [('all', 'All')] + [(str(n), f'{n} ★') for n in (5, 4, 3, 2, 1)]:
         marcado = ' checked' if v == 'all' else ''
         filtros += f"""
-            <input type="radio" name="notafiltro" id="nf{v}" value="{v}"{marcado}>
+            <input type="radio" name="rating-filter" id="nf{v}" value="{v}"{marcado}>
             <label for="nf{v}">{rot}</label>"""
 
     if topo:
-        bloco_topo = f"""      <div class="yb-reviews__topo">
-        <div class="yb-reviews__nota">
+        bloco_topo = f"""      <div class="yb-reviews__top">
+        <div class="yb-reviews__score">
           <b class="yb-reviews__media">{AVALIACAO['nota']}</b>
           <span class="yb-stars" style="--yb-stars:{AVALIACAO['nota']}" role="img" aria-label="{AVALIACAO['nota']} of 5 stars"></span>
           <span class="yb-reviews__total">{total} reviews</span>
         </div>
         <ul class="yb-reviews__dist">{barras}
         </ul>
-        <div class="yb-reviews__acoes">
+        <div class="yb-reviews__actions">
           <div class="yb-swatches" role="radiogroup" aria-label="Filter by rating"
-               data-yb-review-filtro>{filtros}
+               data-yb-review-filter>{filtros}
           </div>
-          <button class="yb-btn yb-btn--secondary" type="button" data-yb-open="escrever">
+          <button class="yb-btn yb-btn--secondary" type="button" data-yb-open="write-review">
             Write a review</button>
         </div>
       </div>
 """
-        bloco_vazio = f"""      <div class="yb-empty yb-empty--inline" data-yb-review-vazio hidden>
-        <span class="yb-empty__icone">{ico('star')}</span>
-        <p class="yb-empty__title" data-yb-review-vazio-titulo>No reviews with this rating</p>
+        bloco_vazio = f"""      <div class="yb-empty yb-empty--inline" data-yb-review-empty hidden>
+        <span class="yb-empty__icon">{ico('star')}</span>
+        <p class="yb-empty__title" data-yb-review-empty-title>No reviews with this rating</p>
         <p class="yb-empty__text">Every review here so far is a five. Nothing is filtered out
         on purpose.</p>
-        <div class="yb-empty__acoes">
-          <button class="yb-btn yb-btn--secondary" type="button" data-yb-review-limpar>
+        <div class="yb-empty__actions">
+          <button class="yb-btn yb-btn--secondary" type="button" data-yb-review-clear>
             Show all reviews</button>
         </div>
       </div>
 """
-        bloco_dialogo = f"""      <dialog id="escrever" class="yb-dialog" aria-labelledby="escrever-t">
+        bloco_dialogo = f"""      <dialog id="write-review" class="yb-dialog" aria-labelledby="write-review-t">
         <div class="yb-dialog__head">
-          <h3 class="yb-dialog__title" id="escrever-t">Write a review</h3>
-          <button class="yb-dialog__close" data-yb-close aria-label="Close">{ico('close')}</button>
+          <h3 class="yb-dialog__title" id="write-review-t">Write a review</h3>
+          <button class="yb-iconbtn yb-iconbtn--square yb-dialog__close" data-yb-close aria-label="Close">{ico('close')}</button>
         </div>
         <form class="yb-dialog__body"
               onsubmit="Ybera.toast({{title:'Thanks — your review is in review',text:'We publish it once it is checked.',variant:'success'}}); this.closest('dialog').close(); return false">
           <div class="yb-field">
-            <label class="yb-field__label" for="rv-nota">Your rating</label>
-            <select class="yb-select" id="rv-nota" required>
+            <label class="yb-field__label" for="rv-rating">Your rating</label>
+            <select class="yb-select" id="rv-rating" required>
               <option value="5">5 — loved it</option>
               <option value="4">4 — good</option>
               <option value="3">3 — it is fine</option>
@@ -2094,8 +2044,8 @@ def carrossel_reviews(topo=True):
             </select>
           </div>
           <div class="yb-field">
-            <label class="yb-field__label" for="rv-texto">Your review</label>
-            <textarea class="yb-textarea" id="rv-texto" rows="4"
+            <label class="yb-field__label" for="rv-text">Your review</label>
+            <textarea class="yb-textarea" id="rv-text" rows="4"
                       placeholder="What changed in your hair, and how long it took." required></textarea>
           </div>
           <div class="yb-field">
@@ -2233,7 +2183,7 @@ def videos_creator(titulo='Hear Directly from our Ambassadors'):
     itens = "".join(f"""
         <div class="yb-video">
           <img src="img/{f}" alt="" loading="lazy">
-          <button class="yb-iconbtn yb-iconbtn--onmedia yb-video__play" type="button" aria-label="Play creator video {i+1}">{ico('play')}</button>
+          <button class="yb-iconbtn yb-iconbtn--onmedia yb-iconbtn--lg yb-video__play" type="button" aria-label="Play creator video {i+1}">{ico('play')}</button>
         </div>""" for i, f in enumerate(VIDEOS))
     # `--flush` e irma do .yb-page, nao filha: a pista corre de borda a borda
     # da tela. Cortada no contentor de 1200 ela ficava com um vao morto de cada
@@ -2548,7 +2498,7 @@ HERO_V2 = [
 # usuario: mesclar o banner com texto e o banner em imagem). Segundo e nao
 # primeiro: o primeiro carrega o h1 da pagina e a imagem prioritaria. O texto
 # da arte continua em portugues, como na v1 — o `alt` diz a promessa em
-# ingles para busca e leitor de tela. Ver `.yb-bannerhero--arte`.
+# ingles para busca e leitor de tela. Ver `.yb-bannerhero--art`.
 HERO_ARTE = {
     'href': '/collections/vello-1',
     'mb': 'Banner_20_24H_mb_b-61df813f.webp',
@@ -2559,8 +2509,8 @@ HERO_ARTE = {
 
 def slide_arte(a):
     return f"""
-      <a class="yb-bannerhero yb-bannerhero--arte" href="{a['href']}">
-        <img class="yb-bannerhero__fundo" src="img/{a['img']}" alt="" loading="lazy">
+      <a class="yb-bannerhero yb-bannerhero--art" href="{a['href']}">
+        <img class="yb-bannerhero__backdrop" src="img/{a['img']}" alt="" loading="lazy">
         <picture>
           <source media="(max-width: 767.98px)" srcset="img/{a['mb']}">
           <img src="img/{a['img']}" alt="{a['alt']}" loading="lazy">
@@ -2634,7 +2584,7 @@ def fim_de_pagina(prods):
     As tres andam sempre juntas porque o header as dispara em qualquer tela:
     uma pagina que traga o header sem elas tem dois botoes que nao fazem nada.
     """
-    return f"{rodape_v2()}\n{gaveta(prods)}\n{busca(prods)}"
+    return f"{rodape()}\n{gaveta(prods)}\n{busca(prods)}"
 
 
 def vitrine_best_sellers(em_oferta, vizinhos, destino):
@@ -2690,7 +2640,7 @@ def montar_home(destino):
     corpo = f"""{header(promo=heroi)}
 {faixa_parceiro()}
 
-<main id="conteudo" tabindex="-1">
+<main id="content" tabindex="-1">
   {banner()}
 
   <div class="yb-page">
@@ -2767,14 +2717,14 @@ def montar_404(destino):
     vitrine = um_por_linha(prods, 4)
     corpo = f"""{header(promo=vitrine[0])}
 
-<main id="conteudo" tabindex="-1" class="yb-page">
+<main id="content" tabindex="-1" class="yb-page">
   <div class="yb-block">
     <div class="yb-empty">
-      <span class="yb-empty__icone">{ico('search')}</span>
+      <span class="yb-empty__icon">{ico('search')}</span>
       <h1 class="yb-empty__title">This page is not here</h1>
       <p class="yb-empty__text">The address may be wrong, or what used to be here has
       since left the shelf. Neither is your fault.</p>
-      <div class="yb-empty__acoes">
+      <div class="yb-empty__actions">
         <a class="yb-btn yb-btn--primary" href="index.html">Back to home</a>
         <button class="yb-btn yb-btn--secondary" type="button" data-yb-open="site-search">
           {ico('search','yb-icon yb-icon--sm')} Search the store</button>
@@ -2866,7 +2816,7 @@ def pdp_historia():
            — escurecer mais so esconderia o texto DELES embaixo do nosso, o que
            parece disfarce. O `alt` carrega a mensagem, porque agora e a imagem
            que a carrega. Leva a colecao da linha: e um anuncio da Fashion Gold. -->
-      <a class="yb-bannermedia yb-bannermedia--arte" href="/collections/fashion-gold">
+      <a class="yb-bannermedia yb-bannermedia--art" href="/collections/fashion-gold">
         <img src="img/FG_Banner_01-61a3d2.webp" loading="lazy"
              alt="Authentic Brazilian keratin — treatment for salon-quality results, formaldehyde-free formula">
       </a>
@@ -2934,7 +2884,7 @@ def linha_do(titulo):
 
 
 def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=None,
-               compare=None, arranjo='padrao', parceiro=False):
+               compare=None, arranjo='default', parceiro=False):
     # `parceiro` e OPT-IN, e nao o contrario: o recado de quem indicou so existe
     # quando a pessoa chega por link patrocinado. Nasceu ligado no arranjo `v2`
     # porque esse arranjo tinha uma tela so, que era justamente a do link de
@@ -2989,8 +2939,8 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
         kit = CONTEUDO_KIT[handle]
         linhas = ''.join(f'''
             <li>
-              <span class="yb-buybox__kit-nome"><b>{nome}</b><small>{camada}</small></span>
-              <span class="yb-buybox__kit-peso">{peso}</span>
+              <span class="yb-buybox__kit-name"><b>{nome}</b><small>{camada}</small></span>
+              <span class="yb-buybox__kit-weight">{peso}</span>
             </li>''' for nome, camada, peso in kit['itens'])
         secoes.append(('What&rsquo;s included', f'''<ul class="yb-buybox__kit">{linhas}
           </ul>'''))
@@ -3005,7 +2955,7 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
         ('Shipping &amp; returns', 'Free standard shipping on orders over $50. Returns accepted within 30 days of delivery, unopened.')]]
 
     acordeao = "".join(f"""
-        <details name="pdp-detalhes"><summary>{t}</summary>
+        <details name="pdp-details"><summary>{t}</summary>
           <div class="yb-accordion__body">{c}</div></details>""" for t, c in secoes)
 
     # Related Products existe na PDP de producao (product-recommendations do
@@ -3025,8 +2975,9 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
     #   compare     -> "Save X%"  (ZERO produtos hoje: a loja nao preenche
     #                  compare_at_price em nenhum dos 115. O ramo existe para o
     #                  dia em que preencher, e nao para inventar desconto.)
-    selos_pdp = ['<span class="yb-badge yb-badge--success" data-yb-selo>In stock</span>' if disp_base
-                 else '<span class="yb-badge yb-badge--danger" data-yb-selo>Sold out</span>']
+    selos_pdp = ['<span class="yb-badge yb-badge--success" data-yb-seal>In stock</span>' if disp_base
+                 else '<span class="yb-badge yb-badge--danger" data-yb-seal>Sold out</span>']
+    selos_pdp.append(frete_selo(preco_base, disp_base))
     if p.get('brinde'):
         selos_pdp.append(f'<span class="yb-badge yb-badge--on-media">{p["brinde"]}</span>')
     estoque = "".join(selos_pdp)
@@ -3065,9 +3016,9 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
         # Selecionavel, ele mostra o proprio preco, o proprio "Sold out" e o
         # campo de aviso. E o que a loja da Shopify faz por padrao.
         cartoes = ''.join(f"""
-          <input type="radio" name="tam" id="tam{i}"{' checked' if i == 0 else ''}
-                 data-preco="{v['preco']}"{'' if v['disponivel'] else ' data-yb-esgotado'} data-foto="{v.get('foto', min(i, len(p['imagens'])-1))}">
-          <label for="tam{i}">
+          <input type="radio" name="size" id="size{i}"{' checked' if i == 0 else ''}
+                 data-price="{v['preco']}"{'' if v['disponivel'] else ' data-yb-soldout'} data-photo="{v.get('foto', min(i, len(p['imagens'])-1))}">
+          <label for="size{i}">
             <img src="img/{p['imagens'][v.get('foto', min(i, len(p['imagens'])-1))]}" alt="" loading="lazy">
             <span class="yb-swatches__name">{v['titulo']}</span>
             <span class="yb-swatches__price">{v['preco']}</span>
@@ -3075,8 +3026,8 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
           </label>""" for i, v in enumerate(p['variantes']))
         variantes = f"""
       <div class="yb-buybox__group">
-        <p class="yb-buybox__label" id="rot-tam">Size: <b data-yb-variante-eco>{p['variantes'][0]['titulo']}</b></p>
-        <div class="yb-swatches yb-swatches--cards" role="radiogroup" aria-labelledby="rot-tam" data-yb-variante>{cartoes}
+        <p class="yb-buybox__label" id="size-label">Size: <b data-yb-variant-echo>{p['variantes'][0]['titulo']}</b></p>
+        <div class="yb-swatches yb-swatches--cards" role="radiogroup" aria-labelledby="size-label" data-yb-variant>{cartoes}
         </div>
       </div>"""
 
@@ -3107,28 +3058,28 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
     # nao ha mais nada para clicar ali em cima — em qualquer dos estados.
     #
     # Composicao, nao peca nova: `.yb-field--row` ja e o campo-com-acao do
-    # cupom da sacola. Entrou uma classe de layout, `.yb-buybox__compra`, que
+    # cupom da sacola. Entrou uma classe de layout, `.yb-buybox__purchase`, que
     # so repete a coluna e o `gap` do proprio `.yb-buybox`: o embrulho que a
     # ancora estavel exige.
     nome_curto = p['titulo'][:40]
     oc = ' hidden'
-    compra = f"""      <div class="yb-buybox__compra" data-yb-compra data-yb-buybar-anchor>
+    compra = f"""      <div class="yb-buybox__purchase" data-yb-purchase data-yb-buybar-anchor>
         <div class="yb-buybox__actions">
           <div class="yb-stepper" data-yb-stepper{'' if disp_base else oc}>
             <button type="button" data-yb-step="down" aria-label="Decrease quantity">{ico('minus','yb-icon yb-icon--sm')}</button>
             <input type="number" value="1" min="1" max="{QTD_MAX}" aria-label="Quantity">
             <button type="button" data-yb-step="up" aria-label="Increase quantity">{ico('plus','yb-icon yb-icon--sm')}</button>
           </div>
-          <button class="yb-btn yb-btn--primary" type="button" data-yb-comprar{'' if disp_base else ' disabled'}
-                  data-rotulo="Add to cart — " data-rotulo-esgotado="Sold out"
-                  data-toast-titulo="Added to cart" data-toast-texto="{nome_curto}"
+          <button class="yb-btn yb-btn--primary" type="button" data-yb-buy{'' if disp_base else ' disabled'}
+                  data-label="Add to cart — " data-label-soldout="Sold out"
+                  data-toast-title="Added to cart" data-toast-text="{nome_curto}"
                   >{f'Add to cart — {preco_base}' if disp_base else 'Sold out'}</button>
         </div>
-        <form class="yb-field yb-field--row" data-yb-avisar{oc if disp_base else ''}
+        <form class="yb-field yb-field--row" data-yb-notify{oc if disp_base else ''}
               onsubmit="Ybera.toast({{title:'We will email you',text:'{nome_curto}',variant:'success'}}); return false">
           <div class="yb-field__box">
-            <input class="yb-input" id="avisar" type="email" placeholder=" " autocomplete="email" required>
-            <label class="yb-field__label" for="avisar">Your best email</label>
+            <input class="yb-input" id="notify-email" type="email" placeholder=" " autocomplete="email" required>
+            <label class="yb-field__label" for="notify-email">Your best email</label>
           </div>
           <button class="yb-btn yb-btn--primary" type="submit">Notify me</button>
           <p class="yb-field__hint">We email you once it is back in stock. Nothing else.</p>
@@ -3138,12 +3089,12 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
     barra = f"""<div class="yb-buybar" data-yb-buybar hidden>
   <span class="yb-buybar__info">
     <span class="yb-buybar__name">{p['titulo']}</span>
-    <span class="yb-buybar__price"><b class="yb-price__now" data-yb-preco>{preco_base}</b></span>
+    <span class="yb-buybar__price"><b class="yb-price__now" data-yb-price>{preco_base}</b></span>
   </span>
-  <button class="yb-btn yb-btn--primary" type="button" data-yb-barra-comprar data-yb-comprar{'' if disp_base else oc}
-          data-toast-titulo="Added to cart" data-toast-texto="{nome_curto}">
+  <button class="yb-btn yb-btn--primary" type="button" data-yb-bar-buy data-yb-buy{'' if disp_base else oc}
+          data-toast-title="Added to cart" data-toast-text="{nome_curto}">
     {ico('cart','yb-icon yb-icon--sm')} Add to cart</button>
-  <a class="yb-btn yb-btn--primary" href="#avisar" data-yb-barra-avisar{oc if disp_base else ''}>
+  <a class="yb-btn yb-btn--primary" href="#notify-email" data-yb-bar-notify{oc if disp_base else ''}>
     {ico('mail','yb-icon yb-icon--sm')} Notify me</a>
 </div>
 """
@@ -3216,12 +3167,12 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
            Ao lado do titulo ele fica junto do que favorita — a mesma anatomia
            da linha do carrinho, onde a lixeira acompanha o nome do item. -->
 {selo_oferta}
-      <div class="yb-buybox__topo">
+      <div class="yb-buybox__top">
         <h1 class="yb-buybox__title">{p['titulo']}</h1>
-        <span class="yb-buybox__acoes">
+        <span class="yb-buybox__tools">
           <button class="yb-iconbtn" type="button" data-yb-share
                   aria-label="Share this product"
-                  data-copiado="Link copied" data-erro="Could not copy the link">
+                  data-copied="Link copied" data-error="Could not copy the link">
             {ico('share')}
           </button>
           <button class="yb-iconbtn yb-iconbtn--fav yb-buybox__fav" type="button"
@@ -3247,10 +3198,11 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
            em cima eles respondiam "posso comprar?" antes de "o que e isto?";
            aqui respondem junto de "quanto custa", que e onde a decisao
            acontece. O selo de DESCONTO e a excecao e sobe: ver `selo_oferta`. -->
-      <div class="yb-buybox__precoLinha">
-        <span class="yb-price"><b class="yb-price__now" data-yb-preco>{preco_base}</b>{comp}</span>
-        <span class="yb-buybox__selos">{estoque}</span>
+      <div class="yb-buybox__priceline">
+        <span class="yb-price"><b class="yb-price__now" data-yb-price>{preco_base}</b>{comp}</span>
+        <span class="yb-buybox__flags">{estoque}</span>
       </div>
+      {frete_item(preco_base, disp_base)}
       <p class="yb-buybox__desc">{resumo_curto(p['descricao'])}</p>
 
       <!-- Beneficios. A loja mostra quatro; aqui sao DOIS, e a escolha nao e
@@ -3262,7 +3214,7 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
            (a mecanica de tres camadas que esta impressa na propria lata) e
            para quem ele e. Sao badges porque o componente para "rotulo curto
            com fundo suave" ja existe. -->
-      <ul class="yb-buybox__benef">
+      <ul class="yb-buybox__perks">
         <li><span class="yb-badge yb-badge--soft">{ico('refresh','yb-icon yb-icon--sm')} Multi-layer repair</span></li>
         <li><span class="yb-badge yb-badge--soft">{ico('shield-check','yb-icon yb-icon--sm')} For damaged hair</span></li>
       </ul>
@@ -3280,7 +3232,8 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
            saem daqui porque a secao "Shipping & returns" logo abaixo diz as
            duas com espaco para explicar ("Returns accepted within 30 days of
            delivery, unopened") — e frete gratis ainda era a terceira
-           aparicao na pagina, contando a faixa preta do topo.
+           aparicao na pagina, contando a faixa preta do topo. O frete DO
+           ITEM mora no selo do preco (`frete_selo`) e na linha sob ele.
            Sobram as duas afirmacoes que a secao NAO repete, e duas de peso
            igual se leem; quatro viram um bloco que o olho pula. -->
       <div class="yb-buybox__trust">
@@ -3325,7 +3278,7 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
 {header(promo=relacionados[0])}
 {faixa_parceiro(ancorada=False) if parceiro else ''}
 
-<main id="conteudo" tabindex="-1">
+<main id="content" tabindex="-1">
   <div class="yb-page">
   <div class="pdp">
     <div class="yb-gallery" data-yb-gallery>
@@ -3354,12 +3307,12 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
            Ao lado do titulo ele fica junto do que favorita — a mesma anatomia
            da linha do carrinho, onde a lixeira acompanha o nome do item. -->
 {selo_oferta}
-      <div class="yb-buybox__topo">
+      <div class="yb-buybox__top">
         <h1 class="yb-buybox__title">{p['titulo']}</h1>
-        <span class="yb-buybox__acoes">
+        <span class="yb-buybox__tools">
           <button class="yb-iconbtn" type="button" data-yb-share
                   aria-label="Share this product"
-                  data-copiado="Link copied" data-erro="Could not copy the link">
+                  data-copied="Link copied" data-error="Could not copy the link">
             {ico('share')}
           </button>
           <button class="yb-iconbtn yb-iconbtn--fav yb-buybox__fav" type="button"
@@ -3385,10 +3338,11 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
            em cima eles respondiam "posso comprar?" antes de "o que e isto?";
            aqui respondem junto de "quanto custa", que e onde a decisao
            acontece. O selo de DESCONTO e a excecao e sobe: ver `selo_oferta`. -->
-      <div class="yb-buybox__precoLinha">
-        <span class="yb-price"><b class="yb-price__now" data-yb-preco>{preco_base}</b>{comp}</span>
-        <span class="yb-buybox__selos">{estoque}</span>
+      <div class="yb-buybox__priceline">
+        <span class="yb-price"><b class="yb-price__now" data-yb-price>{preco_base}</b>{comp}</span>
+        <span class="yb-buybox__flags">{estoque}</span>
       </div>
+      {frete_item(preco_base, disp_base)}
       <p class="yb-buybox__desc">{resumo_curto(p['descricao'])}</p>
 
       <!-- Beneficios. A loja mostra quatro; aqui sao DOIS, e a escolha nao e
@@ -3400,7 +3354,7 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
            (a mecanica de tres camadas que esta impressa na propria lata) e
            para quem ele e. Sao badges porque o componente para "rotulo curto
            com fundo suave" ja existe. -->
-      <ul class="yb-buybox__benef">
+      <ul class="yb-buybox__perks">
         <li><span class="yb-badge yb-badge--soft">{ico('refresh','yb-icon yb-icon--sm')} Multi-layer repair</span></li>
         <li><span class="yb-badge yb-badge--soft">{ico('shield-check','yb-icon yb-icon--sm')} For damaged hair</span></li>
       </ul>
@@ -3418,7 +3372,8 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
            saem daqui porque a secao "Shipping & returns" logo abaixo diz as
            duas com espaco para explicar ("Returns accepted within 30 days of
            delivery, unopened") — e frete gratis ainda era a terceira
-           aparicao na pagina, contando a faixa preta do topo.
+           aparicao na pagina, contando a faixa preta do topo. O frete DO
+           ITEM mora no selo do preco (`frete_selo`) e na linha sob ele.
            Sobram as duas afirmacoes que a secao NAO repete, e duas de peso
            igual se leem; quatro viram um bloco que o olho pula. -->
       <div class="yb-buybox__trust">
@@ -3447,7 +3402,7 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
         corpo = f"""{ld}
 {header(promo=relacionados[0])}
 
-<main id="conteudo" tabindex="-1" class="yb-page">
+<main id="content" tabindex="-1" class="yb-page">
 {bloco_compra}
 
   <!-- As avaliacoes tambem vivem aqui, e nao so na home: e o destino da nota
@@ -3488,7 +3443,7 @@ def montar_faq(destino):
     corpo = f"""{header(promo=prods[2])}
 {faixa_parceiro()}
 
-<main id="conteudo" tabindex="-1" class="yb-page">
+<main id="content" tabindex="-1" class="yb-page">
   <!-- `--tight` e o que da o respiro do header: sem ela o breadcrumb encostava
        na barra (medido: 0px) enquanto a PDP, que ja usava a classe, guardava
        24. Duas telas com breadcrumb e dois espacamentos diferentes. -->
@@ -3564,7 +3519,7 @@ def montar_home_v2(destino, cliente=None):
     corpo = f"""{header(promo=prods[2], cliente=cliente)}
 {faixa_parceiro()}
 
-<main id="conteudo" tabindex="-1">
+<main id="content" tabindex="-1">
 {hero_v2()}
 
   <div class="yb-page">
@@ -3655,7 +3610,7 @@ def montar_home_v3(destino):
     dos dois, entao "banner + Partner" fica satisfeito de qualquer forma.
 
     Depois o usuario pediu as duas coisas juntas: a arte da v1 entrou como
-    segundo slide do mesmo trilho (HERO_ARTE, `.yb-bannerhero--arte`). O h1
+    segundo slide do mesmo trilho (HERO_ARTE, `.yb-bannerhero--art`). O h1
     continua no primeiro, que e texto em HTML.
     """
     prods = dados.catalogo(os.path.join(destino, 'img'), 8)
@@ -3671,7 +3626,7 @@ def montar_home_v3(destino):
     corpo = f"""{header(promo=prods[2])}
 {faixa_parceiro()}
 
-<main id="conteudo" tabindex="-1">
+<main id="content" tabindex="-1">
 {hero_v2(arte=HERO_ARTE)}
 
   <div class="yb-page">

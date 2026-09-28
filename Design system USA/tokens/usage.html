@@ -21,14 +21,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:var(--yb-type-caption-size)}
 </style>
 </head>
-<body class="ficha" data-moldura="centrada">
+<body class="ficha" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -165,8 +165,8 @@
 &lt;html data-market="us"&gt;
 
 .meu-botao {
-  background: var(--yb-action-bg);
-  color: var(--yb-action-text);
+  background: var(--yb-action-primary-bg);
+  color: var(--yb-action-primary-text);
   border-radius: var(--yb-radius-control);
   padding: var(--yb-space-4) var(--yb-space-6);
   font-size: var(--yb-type-body-size);

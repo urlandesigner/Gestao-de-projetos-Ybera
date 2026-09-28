@@ -24,14 +24,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="molecules" data-moldura="centrada">
+<body class="ficha" data-level="molecules" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -149,7 +149,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,43 +204,43 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <h3 class="row-label">Variant <code>--blur</code></h3>
     <div class="demo demo--oferta">
-      <article class="yb-offercard yb-offercard--blur">
+      <article class="yb-offercard yb-offercard--blur" data-yb-offercard>
         <img src="../pages/img/Off2_Set_18-20-9_1-081255.webp" alt="">
         <span class="yb-offerseal yb-offerseal--sale yb-offercard__off"><b class="yb-offerseal__value">20%</b><span class="yb-offerseal__label">off</span></span>
         <div class="yb-offercard__blur" aria-hidden="true"><i></i><i></i><i></i></div>
-        <a class="yb-offercard__link" href="#demos" aria-labelledby="oferta-demo-1"></a>
+        <a class="yb-offercard__link" href="#demos" aria-labelledby="offer-demo-1"></a>
         <div class="yb-offercard__body">
-          <h3 class="yb-offercard__title" id="oferta-demo-1">Myrrh hair repair oil 90 ml | Special price</h3>
-          <div class="yb-offercard__linha">
+          <h3 class="yb-offercard__title" id="offer-demo-1">Myrrh hair repair oil 90 ml | Special price</h3>
+          <div class="yb-offercard__row">
             <span class="yb-offercard__price">$47.92</span>
             <s class="yb-offercard__was">$59.90</s>
             <p class="yb-offercard__timer" data-yb-countdown="2026-09-30T23:59:59Z"><time datetime="2026-09-30">Sep 30</time></p>
           </div>
-          <p class="yb-offercard__fim" hidden>Offer ended</p>
+          <p class="yb-offercard__deadline" data-yb-offercard-end hidden>Offer ended</p>
           <button class="yb-btn yb-btn--on-dark yb-offercard__action" type="button"
                   data-yb-open="cart" aria-label="Add to cart: Myrrh hair repair oil">Add to cart</button>
         </div>
       </article>
     </div>
-    <h3 class="row-label">Sem modificador · prazo vencido <code>[data-encerrada]</code></h3>
+    <h3 class="row-label">Sem modificador · prazo vencido <code>[data-ended]</code></h3>
     <div class="demo demo--oferta">
-      <article class="yb-offercard">
+      <article class="yb-offercard" data-yb-offercard>
         <img src="../pages/img/Off2_Set_18-20-9_1-081255.webp" alt="">
         <span class="yb-offerseal yb-offerseal--sale yb-offercard__off"><b class="yb-offerseal__value">18%</b><span class="yb-offerseal__label">off</span></span>
-        <a class="yb-offercard__link" href="#demos" aria-labelledby="oferta-demo-2"></a>
+        <a class="yb-offercard__link" href="#demos" aria-labelledby="offer-demo-2"></a>
         <div class="yb-offercard__body">
-          <h3 class="yb-offercard__title" id="oferta-demo-2">Cronograma hair care system</h3>
-          <div class="yb-offercard__linha">
+          <h3 class="yb-offercard__title" id="offer-demo-2">Cronograma hair care system</h3>
+          <div class="yb-offercard__row">
             <span class="yb-offercard__price">$37.90</span>
             <s class="yb-offercard__was">$46.20</s>
             <p class="yb-offercard__timer" data-yb-countdown="2020-01-01T00:00:00Z"><time>Jan 1, 2020</time></p>
           </div>
-          <p class="yb-offercard__fim" hidden>Offer ended</p>
+          <p class="yb-offercard__deadline" data-yb-offercard-end hidden>Offer ended</p>
           <button class="yb-btn yb-btn--on-dark yb-offercard__action" type="button"
                   data-yb-open="cart" aria-label="Add to cart: Cronograma hair care system">Add to cart</button>
         </div>
@@ -329,20 +329,20 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
-      <pre><code>&lt;article class="yb-offercard yb-offercard--blur"&gt;
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+      <pre><code>&lt;article class="yb-offercard yb-offercard--blur" data-yb-offercard&gt;
   &lt;img src="../pages/img/Off2_Set_18-20-9_1-081255.webp" alt=""&gt;
   &lt;span class="yb-offerseal yb-offerseal--sale yb-offercard__off"&gt;&lt;b class="yb-offerseal__value"&gt;20%&lt;/b&gt;&lt;span class="yb-offerseal__label"&gt;off&lt;/span&gt;&lt;/span&gt;
   &lt;div class="yb-offercard__blur" aria-hidden="true"&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;/div&gt;
-  &lt;a class="yb-offercard__link" href="#demos" aria-labelledby="oferta-demo-1"&gt;&lt;/a&gt;
+  &lt;a class="yb-offercard__link" href="#demos" aria-labelledby="offer-demo-1"&gt;&lt;/a&gt;
   &lt;div class="yb-offercard__body"&gt;
-    &lt;h3 class="yb-offercard__title" id="oferta-demo-1"&gt;Myrrh hair repair oil 90 ml | Special price&lt;/h3&gt;
-    &lt;div class="yb-offercard__linha"&gt;
+    &lt;h3 class="yb-offercard__title" id="offer-demo-1"&gt;Myrrh hair repair oil 90 ml | Special price&lt;/h3&gt;
+    &lt;div class="yb-offercard__row"&gt;
       &lt;span class="yb-offercard__price"&gt;$47.92&lt;/span&gt;
       &lt;s class="yb-offercard__was"&gt;$59.90&lt;/s&gt;
       &lt;p class="yb-offercard__timer" data-yb-countdown="2026-09-30T23:59:59Z"&gt;&lt;time datetime="2026-09-30"&gt;Sep 30&lt;/time&gt;&lt;/p&gt;
     &lt;/div&gt;
-    &lt;p class="yb-offercard__fim" hidden&gt;Offer ended&lt;/p&gt;
+    &lt;p class="yb-offercard__deadline" data-yb-offercard-end hidden&gt;Offer ended&lt;/p&gt;
     &lt;button class="yb-btn yb-btn--on-dark yb-offercard__action" type="button"
             data-yb-open="cart" aria-label="Add to cart: Myrrh hair repair oil"&gt;Add to cart&lt;/button&gt;
   &lt;/div&gt;
@@ -350,39 +350,39 @@
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
-        <div class="anat__peca" style="max-inline-size:266px"><article class="yb-offercard yb-offercard--blur">
+        <div class="anat__peca" style="max-inline-size:266px"><article class="yb-offercard yb-offercard--blur" data-yb-offercard>
   <img src="../pages/img/Off2_Set_18-20-9_1-081255.webp" alt="">
   <span class="yb-offerseal yb-offerseal--sale yb-offercard__off"><b class="yb-offerseal__value">20%</b><span class="yb-offerseal__label">off</span></span>
   <div class="yb-offercard__blur" aria-hidden="true"><i></i><i></i><i></i></div>
-  <a class="yb-offercard__link" href="#anat-demos" aria-labelledby="anat-oferta-demo-1"></a>
+  <a class="yb-offercard__link" href="#anat-demos" aria-labelledby="anat-offer-demo-1"></a>
   <div class="yb-offercard__body">
-    <h3 class="yb-offercard__title" id="anat-oferta-demo-1">Myrrh hair repair oil 90 ml | Special price</h3>
-    <div class="yb-offercard__linha">
+    <h3 class="yb-offercard__title" id="anat-offer-demo-1">Myrrh hair repair oil 90 ml | Special price</h3>
+    <div class="yb-offercard__row">
       <span class="yb-offercard__price">$47.92</span>
       <s class="yb-offercard__was">$59.90</s>
       <p class="yb-offercard__timer" data-yb-countdown="2026-09-30T23:59:59Z"><time datetime="2026-09-30">Sep 30</time></p>
     </div>
-    <p class="yb-offercard__fim" hidden>Offer ended</p>
+    <p class="yb-offercard__deadline" data-yb-offercard-end hidden>Offer ended</p>
     <button class="yb-btn yb-btn--on-dark yb-offercard__action" type="button"
             data-yb-open="cart" aria-label="Add to cart: Myrrh hair repair oil">Add to cart</button>
   </div>
 </article></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-offercard"><span class="anat__texto"><b>Container</b> — Caixa de 266×416 com a foto sangrando até as bordas.</span></li>
-        <li data-alvo=".yb-offercard__off"><span class="anat__texto"><b>Selo</b> — O desconto em número. É o <code>.yb-offerseal</code>, outra peça, posicionado pelo cartão.</span></li>
-        <li data-alvo=".yb-offercard__blur"><span class="anat__texto"><b>Desfoque</b> — Três folhas sobre a foto. É o que sustenta o texto branco em qualquer imagem.</span></li>
-        <li data-alvo=".yb-offercard__title"><span class="anat__texto"><b>Título</b> — O nome do produto. O link invisível acima cobre o cartão e aponta para ele.</span></li>
-        <li data-alvo=".yb-offercard__price"><span class="anat__texto"><b>Preço</b> — O que se paga. O riscado ao lado é o preço anterior, e só aparece se houver.</span></li>
-        <li data-alvo=".yb-offercard__action"><span class="anat__texto"><b>Ação</b> — Opcional. Some no celular, onde o cartão inteiro já é o alvo.</span></li>
-        <li data-alvo=".yb-offercard__link"><span class="anat__texto"><b>Alvo</b> — Link invisível que cobre o cartão inteiro. É ele que leva à PDP, não o título.</span></li>
-        <li data-alvo=".yb-offercard__was"><span class="anat__texto"><b>Preço anterior</b> — Riscado, ao lado do que se paga. Só existe quando houve preço antes.</span></li>
-        <li data-alvo=".yb-offercard__timer"><span class="anat__texto"><b>Relógio</b> — O que resta da oferta. A data vem do HTML; quem conta é o comportamento.</span></li>
+        <li data-target=".yb-offercard"><span class="anat__texto"><b>Container</b> — Caixa de 266×416 com a foto sangrando até as bordas.</span></li>
+        <li data-target=".yb-offercard__off"><span class="anat__texto"><b>Selo</b> — O desconto em número. É o <code>.yb-offerseal</code>, outra peça, posicionado pelo cartão.</span></li>
+        <li data-target=".yb-offercard__blur"><span class="anat__texto"><b>Desfoque</b> — Três folhas sobre a foto. É o que sustenta o texto branco em qualquer imagem.</span></li>
+        <li data-target=".yb-offercard__title"><span class="anat__texto"><b>Título</b> — O nome do produto. O link invisível acima cobre o cartão e aponta para ele.</span></li>
+        <li data-target=".yb-offercard__price"><span class="anat__texto"><b>Preço</b> — O que se paga. O riscado ao lado é o preço anterior, e só aparece se houver.</span></li>
+        <li data-target=".yb-offercard__action"><span class="anat__texto"><b>Ação</b> — Opcional. Some no celular, onde o cartão inteiro já é o alvo.</span></li>
+        <li data-target=".yb-offercard__link"><span class="anat__texto"><b>Alvo</b> — Link invisível que cobre o cartão inteiro. É ele que leva à PDP, não o título.</span></li>
+        <li data-target=".yb-offercard__was"><span class="anat__texto"><b>Preço anterior</b> — Riscado, ao lado do que se paga. Só existe quando houve preço antes.</span></li>
+        <li data-target=".yb-offercard__timer"><span class="anat__texto"><b>Relógio</b> — O que resta da oferta. A data vem do HTML; quem conta é o comportamento.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -401,7 +401,7 @@
     <p class="usa-degrau">Átomos</p>
     <ul class="usa"><li><a href="../atoms/button.html">Button</a></li><li><a href="../atoms/offerseal.html">Offer seal</a></li></ul>
     <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-offercard--blur</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-offercard__action</code> <code>.yb-offercard__blur</code> <code>.yb-offercard__body</code> <code>.yb-offercard__chip</code> <code>.yb-offercard__fim</code> <code>.yb-offercard__linha</code> <code>.yb-offercard__link</code> <code>.yb-offercard__off</code> <code>.yb-offercard__price</code> <code>.yb-offercard__sep</code> <code>.yb-offercard__timer</code> <code>.yb-offercard__title</code> <code>.yb-offercard__was</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-offercard__action</code> <code>.yb-offercard__blur</code> <code>.yb-offercard__body</code> <code>.yb-offercard__chip</code> <code>.yb-offercard__deadline</code> <code>.yb-offercard__link</code> <code>.yb-offercard__off</code> <code>.yb-offercard__price</code> <code>.yb-offercard__row</code> <code>.yb-offercard__sep</code> <code>.yb-offercard__timer</code> <code>.yb-offercard__title</code> <code>.yb-offercard__was</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
     <p class="rotulo">Tokens <span class="rotulo-conta">47</span></p>
@@ -454,13 +454,13 @@
         <p class="tokens__familia"><a href="../tokens/elevation.html">Elevação</a> <span>17</span></p>
         <ul class="tokens__lista">
           <li><i class="tokens__cor" style="background:var(--yb-scrim-strong)" aria-hidden="true"></i><code>--yb-scrim-strong</code><span class="tokens__valor">rgba(30, 30, 31, .72)</span></li>
-          <li><code>--yb-blur-ate</code></li>
           <li><code>--yb-blur-band</code></li>
-          <li><code>--yb-blur-de</code></li>
           <li><code>--yb-blur-f</code></li>
           <li><code>--yb-blur-falloff</code></li>
+          <li><code>--yb-blur-from</code></li>
           <li><code>--yb-blur-radius</code></li>
           <li><code>--yb-blur-reach</code></li>
+          <li><code>--yb-blur-to</code></li>
           <li><i class="tokens__cor" style="background:var(--yb-scrim-curve-1)" aria-hidden="true"></i><code>--yb-scrim-curve-1</code><span class="tokens__valor">rgba(30, 30, 31, .12)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-scrim-curve-2)" aria-hidden="true"></i><code>--yb-scrim-curve-2</code><span class="tokens__valor">rgba(30, 30, 31, .385)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-scrim-curve-3)" aria-hidden="true"></i><code>--yb-scrim-curve-3</code><span class="tokens__valor">rgba(30, 30, 31, .65)</span></li>
@@ -477,28 +477,28 @@
         <ul class="tokens__lista">
           <li><code>--yb-transition-surface</code><span class="tokens__valor">180ms cubic-bezier(.2, 0, 0, 1)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
           <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/architecture.html">Componente</a> <span>2</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-veil-avanco</code></li>
+          <li><code>--yb-veil-advance</code></li>
           <li><code>--yb-veil-fall</code></li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso">
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
@@ -514,7 +514,7 @@
     </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade">
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
     <ul class="bloco-lede"><li>O desconto está escrito, não só colorido: “Save 16%” é a informação, o fundo é reforço.</li><li>Contagem regressiva precisa de <code>aria-live="polite"</code> — ou de nenhuma live region. Atualizar o segundo sem dizer nada engana; atualizar com <code>assertive</code> interrompe a leitura a cada segundo.</li><li>A arte é <code>alt=""</code> quando o preço e o nome já estão em texto ao lado.</li></ul>
   </section>
@@ -558,7 +558,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

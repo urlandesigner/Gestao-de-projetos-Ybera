@@ -24,14 +24,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="molecules" data-moldura="centrada">
+<body class="ficha" data-level="molecules" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -149,7 +149,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,26 +204,26 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <h3 class="row-label">Aberto · <code>__toggle</code> <code>[checked]</code></h3>
     <div class="stage stage--pad stage--overflow" style="padding-block-end:19rem">
       <div style="display:flex; justify-content:flex-end">
         <div class="yb-dropdown">
-          <input class="yb-dropdown__toggle" type="checkbox" id="conta-demo" checked>
-          <label class="yb-dropdown__gatilho" for="conta-demo" aria-label="Account menu for Urlan Dipre">
+          <input class="yb-dropdown__toggle" type="checkbox" id="account-demo" checked>
+          <label class="yb-dropdown__trigger" for="account-demo" aria-label="Account menu for Urlan Dipre">
             <span class="yb-avatar" aria-hidden="true">U</span></label>
-          <div class="yb-dropdown__painel">
-            <span class="yb-dropdown__cabeca">
+          <div class="yb-dropdown__panel">
+            <span class="yb-dropdown__head">
               <span class="yb-avatar yb-avatar--md" aria-hidden="true">U</span>
-              <b class="yb-dropdown__nome">Urlan Dipre</b>
+              <b class="yb-dropdown__name">Urlan Dipre</b>
               <span class="yb-dropdown__email">urlan.dipre@ybera.com</span>
             </span>
             <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg>Account</a>
             <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>Orders</a>
             <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg>Wishlist</a>
-            <span class="yb-dropdown__sair">
+            <span class="yb-dropdown__signout">
               <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-lock"/></svg>Log out</a>
             </span>
           </div>
@@ -271,22 +271,22 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;div style="display:flex; justify-content:flex-end"&gt;
   &lt;div class="yb-dropdown"&gt;
-    &lt;input class="yb-dropdown__toggle" type="checkbox" id="conta-demo" checked&gt;
-    &lt;label class="yb-dropdown__gatilho" for="conta-demo" aria-label="Account menu for Urlan Dipre"&gt;
+    &lt;input class="yb-dropdown__toggle" type="checkbox" id="account-demo" checked&gt;
+    &lt;label class="yb-dropdown__trigger" for="account-demo" aria-label="Account menu for Urlan Dipre"&gt;
       &lt;span class="yb-avatar" aria-hidden="true"&gt;U&lt;/span&gt;&lt;/label&gt;
-    &lt;div class="yb-dropdown__painel"&gt;
-      &lt;span class="yb-dropdown__cabeca"&gt;
+    &lt;div class="yb-dropdown__panel"&gt;
+      &lt;span class="yb-dropdown__head"&gt;
         &lt;span class="yb-avatar yb-avatar--md" aria-hidden="true"&gt;U&lt;/span&gt;
-        &lt;b class="yb-dropdown__nome"&gt;Urlan Dipre&lt;/b&gt;
+        &lt;b class="yb-dropdown__name"&gt;Urlan Dipre&lt;/b&gt;
         &lt;span class="yb-dropdown__email"&gt;urlan.dipre@ybera.com&lt;/span&gt;
       &lt;/span&gt;
       &lt;a href="#demos"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-user"/&gt;&lt;/svg&gt;Account&lt;/a&gt;
       &lt;a href="#demos"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-truck"/&gt;&lt;/svg&gt;Orders&lt;/a&gt;
       &lt;a href="#demos"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-heart"/&gt;&lt;/svg&gt;Wishlist&lt;/a&gt;
-      &lt;span class="yb-dropdown__sair"&gt;
+      &lt;span class="yb-dropdown__signout"&gt;
         &lt;a href="#demos"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-lock"/&gt;&lt;/svg&gt;Log out&lt;/a&gt;
       &lt;/span&gt;
     &lt;/div&gt;
@@ -295,26 +295,26 @@
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca"><div style="display:flex; justify-content:flex-end">
   <div class="yb-dropdown">
-    <input class="yb-dropdown__toggle" type="checkbox" id="anat-conta-demo" checked>
-    <label class="yb-dropdown__gatilho" for="anat-conta-demo" aria-label="Account menu for Urlan Dipre">
+    <input class="yb-dropdown__toggle" type="checkbox" id="anat-account-demo" checked>
+    <label class="yb-dropdown__trigger" for="anat-account-demo" aria-label="Account menu for Urlan Dipre">
       <span class="yb-avatar" aria-hidden="true">U</span></label>
-    <div class="yb-dropdown__painel">
-      <span class="yb-dropdown__cabeca">
+    <div class="yb-dropdown__panel">
+      <span class="yb-dropdown__head">
         <span class="yb-avatar yb-avatar--md" aria-hidden="true">U</span>
-        <b class="yb-dropdown__nome">Urlan Dipre</b>
+        <b class="yb-dropdown__name">Urlan Dipre</b>
         <span class="yb-dropdown__email">urlan.dipre@ybera.com</span>
       </span>
       <a href="#anat-demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg>Account</a>
       <a href="#anat-demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>Orders</a>
       <a href="#anat-demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg>Wishlist</a>
-      <span class="yb-dropdown__sair">
+      <span class="yb-dropdown__signout">
         <a href="#anat-demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-lock"/></svg>Log out</a>
       </span>
     </div>
@@ -322,12 +322,12 @@
 </div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-dropdown"><span class="anat__texto"><b>Container</b> — Gatilho e painel, ancorados juntos. Abre sem uma linha de JavaScript.</span></li>
-        <li data-alvo=".yb-dropdown__toggle"><span class="anat__texto"><b>Chave</b> — Checkbox escondido. É o <code>:checked</code> dele que abre o painel irmão.</span></li>
-        <li data-alvo=".yb-dropdown__gatilho"><span class="anat__texto"><b>Gatilho</b> — O <code>&lt;label&gt;</code> que abre. Precisa de <code>aria-label</code> quando é só o avatar.</span></li>
-        <li data-alvo=".yb-dropdown__painel"><span class="anat__texto"><b>Painel</b> — Os links. Fecha ao clicar fora pelo scrim, não por script.</span></li>
-        <li data-alvo=".yb-dropdown__cabeca"><span class="anat__texto"><b>Cabeça</b> — Quem está logado: avatar, nome e e-mail. Some quando o painel não é de conta.</span></li>
-        <li data-alvo=".yb-dropdown__sair"><span class="anat__texto"><b>Sair</b> — Separado do resto por fio. Ação destrutiva de sessão não fica junto dos links.</span></li>
+        <li data-target=".yb-dropdown"><span class="anat__texto"><b>Container</b> — Gatilho e painel, ancorados juntos. Abre sem uma linha de JavaScript.</span></li>
+        <li data-target=".yb-dropdown__toggle"><span class="anat__texto"><b>Chave</b> — Checkbox escondido. É o <code>:checked</code> dele que abre o painel irmão.</span></li>
+        <li data-target=".yb-dropdown__trigger"><span class="anat__texto"><b>Gatilho</b> — O <code>&lt;label&gt;</code> que abre. Precisa de <code>aria-label</code> quando é só o avatar.</span></li>
+        <li data-target=".yb-dropdown__panel"><span class="anat__texto"><b>Painel</b> — Os links. Fecha ao clicar fora pelo scrim, não por script.</span></li>
+        <li data-target=".yb-dropdown__head"><span class="anat__texto"><b>Cabeça</b> — Quem está logado: avatar, nome e e-mail. Some quando o painel não é de conta.</span></li>
+        <li data-target=".yb-dropdown__signout"><span class="anat__texto"><b>Sair</b> — Separado do resto por fio. Ação destrutiva de sessão não fica junto dos links.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -346,7 +346,7 @@
     <p class="usa-degrau">Átomos</p>
     <ul class="usa"><li><a href="../atoms/avatar.html">Avatar</a></li></ul>
     <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-dropdown__cabeca</code> <code>.yb-dropdown__email</code> <code>.yb-dropdown__gatilho</code> <code>.yb-dropdown__nome</code> <code>.yb-dropdown__painel</code> <code>.yb-dropdown__sair</code> <code>.yb-dropdown__toggle</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-dropdown__email</code> <code>.yb-dropdown__head</code> <code>.yb-dropdown__name</code> <code>.yb-dropdown__panel</code> <code>.yb-dropdown__signout</code> <code>.yb-dropdown__toggle</code> <code>.yb-dropdown__trigger</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:checked</code> · <code>:focus-visible</code> · <code>:hover</code></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
     <p class="rotulo">Tokens <span class="rotulo-conta">22</span></p>
@@ -358,8 +358,8 @@
           <li><i class="tokens__cor" style="background:var(--yb-bg-subtle)" aria-hidden="true"></i><code>--yb-bg-subtle</code><span class="tokens__valor">#FAFAFA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
         </ul>
@@ -399,30 +399,39 @@
         <ul class="tokens__lista">
           <li><code>--yb-transition-surface</code><span class="tokens__valor">180ms cubic-bezier(.2, 0, 0, 1)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
           <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso" data-pendente>
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
-    <p class="pendente">Faça / não faça ainda não escrito para esta molécula.
-      O bloco aparece vazio de propósito: seção que some da ficha é uma pergunta
-      que ninguém sabe que ficou sem resposta.</p>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><div class="yb-dropdown"><input class="yb-dropdown__toggle" type="checkbox" id="fn-dd"><label class="yb-dropdown__trigger" for="fn-dd" aria-label="Account menu for Urlan Dipre"><span class="yb-avatar" aria-hidden="true">U</span></label><div class="yb-dropdown__panel"><a href="#demos">Orders</a><a href="#demos">Addresses</a></div></div></div>
+        <p class="fn-legenda">Gatilho com nome próprio, painel de links reais.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><div class="yb-dropdown"><input class="yb-dropdown__toggle" type="checkbox" id="fn-dd2"><label class="yb-dropdown__trigger" for="fn-dd2"><span class="yb-avatar" aria-hidden="true">U</span></label><div class="yb-dropdown__panel"><a href="#demos">Orders</a></div></div></div>
+        <p class="fn-legenda">Gatilho sem rótulo: o leitor de tela anuncia “botão” e mais nada — não dá para saber o que abre.</p>
+      </div>
+    </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade" data-pendente>
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <p class="pendente">Acessibilidade ainda não escrita para esta molécula.</p>
+    <ul class="bloco-lede"><li>Abre por <code>&lt;input type=&quot;checkbox&quot;&gt;</code> escondido e <code>&lt;label&gt;</code>: o teclado abre e fecha sem uma linha de JavaScript.</li><li>O gatilho precisa de nome próprio. Quando ele é só o avatar, <code>aria-label</code> é obrigatório — “Account menu for Urlan Dipre”, não “Menu”.</li><li>Fecha ao clicar fora pelo scrim, que é um irmão e não um ouvinte global: sem JS, e sem prender o clique de quem só queria sair.</li><li>O painel é uma lista de links de verdade. Setas do teclado não navegam entre eles porque não é <code>menu</code> ARIA — é conteúdo, e Tab basta.</li></ul>
   </section>
   </div>
 
@@ -464,7 +473,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

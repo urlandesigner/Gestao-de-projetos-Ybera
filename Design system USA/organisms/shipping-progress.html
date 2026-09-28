@@ -25,14 +25,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="organisms" data-moldura="centrada">
+<body class="ficha" data-level="organisms" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -150,7 +150,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,8 +204,8 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <div class="split">
       <div class="stage stage--pad">
@@ -242,7 +242,7 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>  &lt;div class="yb-freeship"&gt;
     &lt;span class="yb-freeship__text"&gt;Add &lt;b&gt;$12.10&lt;/b&gt; more for free shipping&lt;/span&gt;
     &lt;div class="yb-progress" role="progressbar" aria-valuenow="76" aria-valuemin="0" aria-valuemax="100" aria-label="Progress to free shipping"&gt;
@@ -261,9 +261,9 @@
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca">  <div class="yb-freeship">
@@ -283,7 +283,7 @@
 </div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-progress"><span class="anat__texto"><b><a href="../atoms/progress.html">Progress bar</a></b> — Barra que mostra quanto de uma tarefa já passou. Espera com fim conhecido; sem número para anunciar, use a variante indeterminada.</span></li>
+        <li data-target=".yb-progress"><span class="anat__texto"><b><a href="../atoms/progress.html">Progress bar</a></b> — Barra que mostra quanto de uma tarefa já passou. Espera com fim conhecido; sem número para anunciar, use a variante indeterminada.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -333,23 +333,32 @@
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso" data-pendente>
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
-    <p class="pendente">Faça / não faça ainda não escrito para este bloco.
-      O bloco aparece vazio de propósito: seção que some da ficha é uma pergunta
-      que ninguém sabe que ficou sem resposta.</p>
+    <div class="fn">
+      <div class="fn-caso fn-caso--sim">
+        <p class="fn-cabeca">✓ Faça</p>
+        <div class="fn-palco"><div class="yb-freeship"><span class="yb-freeship__text">Add <b>$12.10</b> more for free shipping</span><div class="yb-progress" role="progressbar" aria-valuenow="76" aria-valuemin="0" aria-valuemax="100" aria-label="Progress to free shipping"><span class="yb-progress__fill" style="inline-size:76%"></span></div></div></div>
+        <p class="fn-legenda">Frase em dinheiro, barra com os três valores.</p>
+      </div>
+      <div class="fn-caso fn-caso--nao">
+        <p class="fn-cabeca">✕ Não faça</p>
+        <div class="fn-palco"><div class="yb-freeship"><div class="yb-progress"><span class="yb-progress__fill" style="inline-size:76%"></span></div></div></div>
+        <p class="fn-legenda">Só a barra, sem frase e sem valores ARIA: quem ouve não recebe nada, e quem vê não sabe quanto falta.</p>
+      </div>
+    </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade" data-pendente>
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <p class="pendente">Acessibilidade ainda não escrita para este bloco.</p>
+    <ul class="bloco-lede"><li>A barra é <code>role=&quot;progressbar&quot;</code> com <code>aria-valuenow</code>, <code>min</code> e <code>max</code>. Sem os três, é um retângulo que cresce.</li><li>O texto diz o que falta em dinheiro, não em porcentagem: “Add $12.10 more” é acionável; “76%” não.</li><li>O texto é o rótulo, e a barra repete a informação em forma. Quem não distingue a cor da barra lê a frase e sabe o mesmo.</li><li>Quando o frete é atingido, o texto muda antes da barra encher — a confirmação é a frase, não o preenchimento.</li></ul>
   </section>
   </div>
 
@@ -391,7 +400,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

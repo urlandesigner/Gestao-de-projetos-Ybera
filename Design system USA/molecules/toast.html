@@ -24,14 +24,14 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-nivel="molecules" data-moldura="centrada">
+<body class="ficha" data-level="molecules" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
   <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filtro">Buscar no design system</label>
-    <input id="ds-filtro" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filtro>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
@@ -149,7 +149,7 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-nesta" aria-labelledby="nesta-pagina">
+<aside class="ds-onpage" aria-labelledby="nesta-pagina">
   <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
   <ol>
     <li><a href="#demos">Como se parece</a></li>
@@ -204,29 +204,29 @@
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-abas>
-  <section class="bloco" id="demos" data-aba="Componente">
+  <div class="abas" data-yb-tabs>
+  <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     <h3 class="row-label">Variants</h3>
     <div class="demo demo--amostras">
       <span class="amostra">
         <button type="button" class="yb-btn yb-btn--primary"
-          data-yb-toast data-toast-titulo="Added to cart"
-          data-toast-texto="Kit Sealant Fashion Gold — 500 g"
-          data-toast-variante="success">Adicionar ao carrinho</button>
+          data-yb-toast data-toast-title="Added to cart"
+          data-toast-text="Kit Sealant Fashion Gold — 500 g"
+          data-toast-variant="success">Adicionar ao carrinho</button>
         <span class="amostra__rotulo"><code>--success</code></span>
       </span>
       <span class="amostra">
         <button type="button" class="yb-btn yb-btn--ghost"
-          data-yb-toast data-toast-titulo="Saved for later"
-          data-toast-texto="Find it in your wishlist">Salvar</button>
+          data-yb-toast data-toast-title="Saved for later"
+          data-toast-text="Find it in your wishlist">Salvar</button>
         <span class="amostra__rotulo"><code>sem modificador</code></span>
       </span>
       <span class="amostra">
         <button type="button" class="yb-btn yb-btn--ghost"
-          data-yb-toast data-toast-titulo="Payment declined"
-          data-toast-texto="Your bank rejected the charge. Try another card."
-          data-toast-variante="danger" data-toast-duracao="0">Erro (não some)</button>
+          data-yb-toast data-toast-title="Payment declined"
+          data-toast-text="Your bank rejected the charge. Try another card."
+          data-toast-variant="danger" data-toast-duration="0">Erro (não some)</button>
         <span class="amostra__rotulo"><code>--danger</code></span>
       </span>
     </div>
@@ -247,42 +247,42 @@
     <h3 class="rotulo">Marcação</h3>
     <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
     <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
+      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
       <pre><code>&lt;span class="amostra"&gt;
   &lt;button type="button" class="yb-btn yb-btn--primary"
-    data-yb-toast data-toast-titulo="Added to cart"
-    data-toast-texto="Kit Sealant Fashion Gold — 500 g"
-    data-toast-variante="success"&gt;Adicionar ao carrinho&lt;/button&gt;
+    data-yb-toast data-toast-title="Added to cart"
+    data-toast-text="Kit Sealant Fashion Gold — 500 g"
+    data-toast-variant="success"&gt;Adicionar ao carrinho&lt;/button&gt;
   &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--success&lt;/code&gt;&lt;/span&gt;
 &lt;/span&gt;
 &lt;span class="amostra"&gt;
   &lt;button type="button" class="yb-btn yb-btn--ghost"
-    data-yb-toast data-toast-titulo="Saved for later"
-    data-toast-texto="Find it in your wishlist"&gt;Salvar&lt;/button&gt;
+    data-yb-toast data-toast-title="Saved for later"
+    data-toast-text="Find it in your wishlist"&gt;Salvar&lt;/button&gt;
   &lt;span class="amostra__rotulo"&gt;&lt;code&gt;sem modificador&lt;/code&gt;&lt;/span&gt;
 &lt;/span&gt;
 &lt;span class="amostra"&gt;
   &lt;button type="button" class="yb-btn yb-btn--ghost"
-    data-yb-toast data-toast-titulo="Payment declined"
-    data-toast-texto="Your bank rejected the charge. Try another card."
-    data-toast-variante="danger" data-toast-duracao="0"&gt;Erro (não some)&lt;/button&gt;
+    data-yb-toast data-toast-title="Payment declined"
+    data-toast-text="Your bank rejected the charge. Try another card."
+    data-toast-variant="danger" data-toast-duration="0"&gt;Erro (não some)&lt;/button&gt;
   &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--danger&lt;/code&gt;&lt;/span&gt;
 &lt;/span&gt;</code></pre>
     </div>
   </section>
 
-  <section class="bloco" id="anatomia" data-aba="Anatomia">
+  <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
-    <div class="anat" data-yb-anatomia>
+    <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca"><button type="button" class="yb-btn yb-btn--primary"
-    data-yb-toast data-toast-titulo="Added to cart"
-    data-toast-texto="Kit Sealant Fashion Gold — 500 g"
-    data-toast-variante="success">Adicionar ao carrinho</button></div>
+    data-yb-toast data-toast-title="Added to cart"
+    data-toast-text="Kit Sealant Fashion Gold — 500 g"
+    data-toast-variant="success">Adicionar ao carrinho</button></div>
       </div>
       <ol class="anat__legenda">
-        <li data-alvo=".yb-btn"><span class="anat__texto"><b>Gatilho</b> — O aviso nasce de uma ação. Não há marcação dele em repouso: o JS cria e remove.</span></li>
+        <li data-target=".yb-btn"><span class="anat__texto"><b>Gatilho</b> — O aviso nasce de uma ação. Não há marcação dele em repouso: o JS cria e remove.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -302,23 +302,23 @@
     <ul class="usa"><li><a href="../atoms/button.html">Button</a></li></ul>
     <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-toast--danger</code> <code>.yb-toast--leaving</code> <code>.yb-toast--success</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-toast__body</code> <code>.yb-toast__close</code> <code>.yb-toast__text</code> <code>.yb-toast__title</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:hover</code></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
-    <p class="rotulo">Tokens <span class="rotulo-conta">32</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">28</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>12</span></p>
         <ul class="tokens__lista">
           <li><i class="tokens__cor" style="background:var(--yb-success-solid)" aria-hidden="true"></i><code>--yb-success-solid</code><span class="tokens__valor">#1F7A34</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-action-bg)" aria-hidden="true"></i><code>--yb-action-bg</code><span class="tokens__valor">#1E1E1F</span></li>
-          <li><code>--yb-border-emphasis</code><span class="tokens__valor">2px</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-primary-bg)" aria-hidden="true"></i><code>--yb-action-primary-bg</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-danger-solid)" aria-hidden="true"></i><code>--yb-danger-solid</code><span class="tokens__valor">#B3261E</span></li>
+          <li><code>--yb-border-emphasis</code><span class="tokens__valor">2px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-danger-text)" aria-hidden="true"></i><code>--yb-danger-text</code><span class="tokens__valor">#B3261E</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-success-text)" aria-hidden="true"></i><code>--yb-success-text</code><span class="tokens__valor">#1F7A34</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border)" aria-hidden="true"></i><code>--yb-border</code><span class="tokens__valor">#DADADB</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
         </ul>
@@ -334,10 +334,9 @@
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>5</span></p>
+        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>4</span></p>
         <ul class="tokens__lista">
           <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
-          <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
           <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
           <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>
           <li><code>--yb-space-3</code><span class="tokens__valor">0.75rem</span></li>
@@ -357,28 +356,25 @@
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>7</span></p>
+        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>4</span></p>
         <ul class="tokens__lista">
           <li><code>--yb-ease-exit</code><span class="tokens__valor">cubic-bezier(.3, 0, 1, 1)</span></li>
           <li><code>--yb-duration-slow</code><span class="tokens__valor">280ms</span></li>
           <li><code>--yb-ease-enter</code><span class="tokens__valor">cubic-bezier(0, 0, 0, 1)</span></li>
           <li><code>--yb-duration-base</code><span class="tokens__valor">180ms</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">2px</span></li>
-          <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- O atributo data-pendente acende um ponto na tira da aba. Sem ele, o
+  <!-- O atributo data-pending acende um ponto na tira da aba. Sem ele, o
        bloco por escrever passaria a estar atras de um clique, e a razao de ele
        existir vazio — "secao que some da ficha e uma pergunta que ninguem sabe
        que ficou sem resposta" — valeria pela metade: nao some, mas ninguem ve.
 
        (Crase aqui dentro nao pode: este HTML mora num template literal, e uma
        crase em comentario ja derrubou o build antes.) -->
-  <section class="bloco" id="faca" data-aba="Regras de uso">
+  <section class="bloco" id="faca" data-tab="Regras de uso">
     <h2 class="bloco-titulo">Faça / não faça</h2>
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
@@ -394,7 +390,7 @@
     </div>
   </section>
 
-  <section class="bloco" id="acessibilidade" data-aba="Acessibilidade">
+  <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
     <ul class="bloco-lede"><li>Erro usa <code>role="alert"</code> e interrompe o leitor de tela; sucesso e informação usam <code>role="status"</code> e esperam a pausa.</li><li>O toast não rouba o foco. Quem estava digitando continua digitando — e por isso ele nunca carrega a única saída de um fluxo.</li><li>O tempo em tela não é o único jeito de ler: o que o toast diz precisa estar disponível em outro lugar depois que ele some.</li></ul>
   </section>
@@ -438,7 +434,7 @@ addEventListener('message', function (e) {
 /* Copiar a marcacao. Sem confirmacao, copiar e indistinguivel de nao ter
    acontecido nada — o rotulo do botao vira a confirmacao e volta sozinho. */
 document.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-yb-copiar]');
+  var b = e.target.closest('[data-yb-copy]');
   if (!b) return;
   var codigo = b.parentElement.querySelector('code');
   if (!codigo || !navigator.clipboard) return;

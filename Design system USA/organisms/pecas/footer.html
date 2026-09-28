@@ -4,17 +4,17 @@
       <footer class="yb-footer yb-footer--dark">
         <div class="yb-footer__inner">
 
-          <div class="yb-footer__news-zona">
+          <div class="yb-footer__news-field">
             <div>
               <p class="yb-footer__newstitle">First to know</p>
-              <label class="yb-footer__newslabel" for="news-footer">New arrivals, routines and offers. No spam.</label>
+              <p class="yb-footer__newslabel" id="news-footer-sobre">New arrivals, routines and offers. No spam.</p>
             </div>
             <form class="yb-footer__news" onsubmit="return false">
-              <span class="yb-footer__newsfield">
+              <span class="yb-field__box yb-field__box--on-dark yb-footer__newsfield">
                 <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-mail"/></svg>
-                <input class="yb-input" id="news-footer" type="email" placeholder="Your best email" autocomplete="email" required>
+                                <input class="yb-input" id="news-footer" type="email" placeholder=" " autocomplete="email" aria-describedby="news-footer-sobre" required><label class="yb-field__label" for="news-footer">Your best email</label>
               </span>
-              <button class="yb-footer__newsbtn" type="submit" aria-label="Subscribe">
+              <button class="yb-iconbtn yb-iconbtn--on-dark yb-footer__newsbtn" type="submit" aria-label="Subscribe">
                 <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg>
               </button>
             </form>
@@ -23,7 +23,7 @@
           <div class="yb-footer__top">
             <div class="yb-footer__brand">
               <a class="yb-footer__logo" href="#demos"><span class="yb-logo yb-logo--lg"><img src="../brand/ybera-logo.webp" alt="Ybera" width="360" height="139"></span></a>
-              <p class="yb-footer__info">info.usa@ybera.com</p>
+              <p class="yb-footer__info">info@ybera.us</p>
               <p class="yb-footer__info">Mon&ndash;Fri, 8am&ndash;4pm EST</p>
               <div class="yb-footer__social">
                 <a href="#demos"><svg class="yb-icon" role="img" aria-label="Ybera on Instagram"><use href="../icons/ybera-icons.svg#yb-instagram"/></svg></a>
@@ -41,14 +41,28 @@
               </div>
               <div class="yb-footer__col">
                 <input class="yb-footer__toggle" type="checkbox" id="fcol1">
-                <label class="yb-footer__coltitle" for="fcol1">Help
+                <label class="yb-footer__coltitle" for="fcol1">Collection
+                  <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
+                </label>
+                <div class="yb-footer__collist"><ul><li><a href="#demos">Progressiva</a></li><li><a href="#demos">Cronograma</a></li><li><a href="#demos">Ybera Paris</a></li><li><a href="#demos">100Timetros</a></li><li><a href="#demos">Capulana</a></li><li><a href="#demos">Terra Coco</a></li><li><a href="#demos">Hair Mist</a></li></ul></div>
+              </div>
+              <div class="yb-footer__col">
+                <input class="yb-footer__toggle" type="checkbox" id="fcol2">
+                <label class="yb-footer__coltitle" for="fcol2">Hair Problems
+                  <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
+                </label>
+                <div class="yb-footer__collist"><ul><li><a href="#demos">Damaged Hair</a></li><li><a href="#demos">Frizz &amp; Dryness</a></li><li><a href="#demos">Thinning / Hair Loss</a></li><li><a href="#demos">Undefined Curls</a></li><li><a href="#demos">Hair Smoothing</a></li><li><a href="#demos">Hair Straightening</a></li></ul></div>
+              </div>
+              <div class="yb-footer__col">
+                <input class="yb-footer__toggle" type="checkbox" id="fcol3">
+                <label class="yb-footer__coltitle" for="fcol3">Help
                   <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
                 </label>
                 <div class="yb-footer__collist"><ul><li><a href="#demos">FAQ</a></li><li><a href="#demos">Contact Us</a></li><li><a href="#demos">Shipping Policy</a></li><li><a href="#demos">Refund Policy</a></li></ul></div>
               </div>
               <div class="yb-footer__col">
-                <input class="yb-footer__toggle" type="checkbox" id="fcol2">
-                <label class="yb-footer__coltitle" for="fcol2">Company
+                <input class="yb-footer__toggle" type="checkbox" id="fcol4">
+                <label class="yb-footer__coltitle" for="fcol4">Company
                   <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg>
                 </label>
                 <div class="yb-footer__collist"><ul><li><a href="#demos">Our Story</a></li><li><a href="#demos">Blog</a></li><li><a href="#demos">AI Hair Analysis</a></li></ul></div>
@@ -56,21 +70,19 @@
             </div>
           </div>
 
-          <div class="yb-footer__bottom"><span>&copy; 2026 Ybera Paris USA</span><a href="#demos">Terms of Service</a><a href="#demos">Privacy Policy</a><a href="#demos">SMS Terms</a></div>
+          <div class="yb-footer__bottom"><span>&copy; 2026 YBERA USA LLC</span><a href="#demos">Terms &amp; Conditions</a><a href="#demos">Privacy Policy</a><a href="#demos">Refund Policy</a><a href="#demos">Shipping Policy</a><a href="#demos">SMS Terms &amp; Conditions</a></div>
         </div>
       </footer>
     </div>
     <div class="note">
       <b>Esta é a versão que as onze telas publicam</b>
-      <p>A doc mostrava o rodapé anterior: claro, com as colunas em acordeão e
-      <b>28 destinos</b> &mdash; 15 links em três colunas, 4 no bloco de marca e 6 legais.
-      Era o padrão de 2010, quando o rodapé servia de mapa do site. Hoje quem procura
-      usa a busca, e a lista longa só dilui os três ou quatro links que alguém de fato
-      clica.</p>
-      <p>Aqui são <b>9 links em três colunas</b> mais 3 legais, e cada coluna responde
-      uma pergunta diferente: onde compro, quem me ajuda, quem são vocês. A lista legal
-      também perdeu uma duplicata que o rodapé antigo carregava &mdash; "Terms &amp;
-      Conditions" e "Terms of Service" apontavam para o mesmo destino com dois rótulos.</p>
+      <p>Aqui são <b>23 links em cinco colunas</b> mais 5 legais, e cada coluna
+      responde uma pergunta diferente: onde compro, que linha, que problema, quem me
+      ajuda, quem são vocês. <b>Collection</b> e <b>Hair Problems</b> seguem o rodapé
+      da loja: são as duas entradas pelas quais ela organiza o catálogo, por linha e
+      por problema. A lista legal perdeu uma duplicata que o rodapé antigo carregava
+      &mdash; "Terms &amp; Conditions" e "Terms of Service" apontavam para o mesmo
+      destino com dois rótulos.</p>
     </div>
     <div class="note">
       <b>Escuro é superfície, não tema</b>

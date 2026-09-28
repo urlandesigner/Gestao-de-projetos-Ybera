@@ -57,12 +57,22 @@ const js = ler('behavior/ybera-behavior.js');
 // "Comportamento: sim" para uma peca que o JS nunca toca.
 const jsCodigo = js.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
 // familias cujo gancho nao carrega o nome da classe (o modal abre por data-yb-open)
-const GANCHO_POR_FAMILIA = { 'yb-dialog': 'data-yb-open' };
+const GANCHO_POR_FAMILIA = { 'yb-dialog': 'data-yb-open', 'yb-alert': 'data-yb-dispensar' };
 
-// as telas-prova: home e PDP montadas só com o sistema. São a evidência de que
+// as telas-prova: TODAS elas, montadas só com o sistema. São a evidência de que
 // o componente sobrevive a conteúdo real, e não só ao demo que o autor escolheu.
-const provas = ['pages/index.html', 'pages/pdp.html']
-  .filter((p) => existsSync(join(raiz, p)));
+//
+// Eram duas, escritas a mão — e uma delas, `pages/index.html`, deixou de ser
+// tela quando virou a capa do grupo Exemplos. A matriz passou a medir o sistema
+// contra um índice de links e uma PDP: dezessete componentes que estão no ar
+// apareciam com "Tela real: —", e como `maturidade()` lê essa coluna, os mesmos
+// dezessete apareciam Beta sendo Estáveis.
+//
+// Lida do disco e não escrita: tela nova entra sozinha, e a capa fica de fora
+// pelo nome, que é o mesmo critério que o validador usa.
+const provas = readdirSync(join(raiz, 'pages'))
+  .filter((f) => f.endsWith('.html') && f !== 'index.html')
+  .map((f) => `pages/${f}`);
 const provaHtml = provas.map(talvez).join('\n');
 
 // blocos de regra global — não são componente
@@ -169,7 +179,18 @@ for (const { camada, css: caminho, doc } of FOLHAS) {
        versão procurava `/…|a\b/` no corpo inteiro e marcava o Skeleton — que
        não tem um único elemento focável — como interativo. */
     const FOCAVEL = /(?:^|[\s,>+~(])(?:a|button|input|select|textarea|summary|details|label)(?=[\s,.:#[{>+~)])/m;
-    const interativo = FOCAVEL.test(semComentario) || estados.size > 0 || temJs;
+    /* `temJs` SAIU da conta. Ele responde "o JS menciona esta classe", que nao e
+       a mesma pergunta: o comportamento escreve `yb-badge--success` ao montar um
+       toast, e isso faz do BADGE uma peca que o JS RENDERIZA, nao uma peca com
+       que se interage. Com ele na conta, a matriz cobrava foco visivel de um
+       rotulo estatico — e a coluna de foco existe justamente para acusar
+       controle sem foco, entao um falso positivo ali gasta a unica coluna que
+       tinha esse trabalho.
+
+       Ficam os dois sinais que vem da PROPRIA secao: elemento focavel no
+       seletor, ou estado declarado. Quem tem comportamento de verdade tem um
+       dos dois — o switch tem `[aria-checked]`, o dialogo tem `[open]`. */
+    const interativo = FOCAVEL.test(semComentario) || estados.size > 0;
 
     linhas.push({
       nome, base, camada,

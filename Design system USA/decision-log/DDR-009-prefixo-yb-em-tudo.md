@@ -56,6 +56,19 @@ atributo de comportamento, `id` de símbolo no sprite.
   o elemento direto, dentro do escopo de uma classe `yb-`. O escopo é o que
   impede o vazamento.
 
+- **Classes internas da documentação.** `.ficha`, `.abas`, `.amostra` e as
+  outras classes sem prefixo da doc ficam em português, como a própria doc. Não
+  são vocabulário do sistema: nenhuma folha da loja as carrega. Os atributos e
+  ids da doc, sim, passaram ao inglês em 0.13, porque quem copia um exemplo da
+  ficha copia junto o `data-*` e o `id`.
+
+Em 0.13 a regra ganhou uma checagem que olha todo pedaço do nome — classe,
+modificador, token, `@keyframes`, atributo `data-*` (inclusive lido por
+`dataset`), `id` e `name` nas telas e nas fichas. A versão anterior olhava só a
+primeira palavra do elemento, e 0.13 ainda tinha 69 nomes em português
+publicados: `--arte`, `__item-topo`, `data-yb-comprar`, `data-toast-titulo`,
+`--yb-buybar-altura`, entre outros.
+
 ## Evidência
 
 - O cabeçalho de `components/ybera-components.css` abre com a regra e com a

@@ -107,15 +107,15 @@
     <h3 class="row-label">O ciclo completo — clique, espera, resposta</h3>
     <div class="demo demo--amostras">
       <span class="amostra">
-        <button class="yb-btn yb-btn--primary" type="button" data-yb-comprar
-                data-toast-titulo="Added to cart" data-toast-texto="Deep care kit">Add to cart</button>
-        <span class="amostra__rotulo"><code>data-yb-comprar</code></span>
+        <button class="yb-btn yb-btn--primary" type="button" data-yb-buy
+                data-toast-title="Added to cart" data-toast-text="Deep care kit">Add to cart</button>
+        <span class="amostra__rotulo"><code>data-yb-buy</code></span>
       </span>
       <span class="amostra">
-        <button class="yb-btn yb-btn--secondary" type="button" data-yb-comprar data-yb-falhar
-                data-toast-erro="Could not add to cart"
-                data-toast-erro-texto="Check your connection and try again.">Add to cart (falha)</button>
-        <span class="amostra__rotulo"><code>data-yb-falhar</code></span>
+        <button class="yb-btn yb-btn--secondary" type="button" data-yb-buy data-yb-fail
+                data-toast-error="Could not add to cart"
+                data-toast-error-text="Check your connection and try again.">Add to cart (falha)</button>
+        <span class="amostra__rotulo"><code>data-yb-fail</code></span>
       </span>
     </div>
     <div class="note">
@@ -123,7 +123,7 @@
       <p>A PDP sempre consegue adicionar — protótipo que falha por sorteio ensina
       errado. Mas o caminho do erro precisa existir em algum lugar revisável, e
       esse lugar é a documentação de estado: o segundo botão declara
-      <code>data-yb-falhar</code> e mostra o toast <code>--danger</code>, que
+      <code>data-yb-fail</code> e mostra o toast <code>--danger</code>, que
       interrompe o leitor de tela com <code>role="alert"</code> em vez de esperar
       a pausa.</p>
     </div>

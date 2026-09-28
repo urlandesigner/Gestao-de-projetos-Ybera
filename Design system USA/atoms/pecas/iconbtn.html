@@ -33,8 +33,8 @@
       exato — e cada um reescreveu as mesmas duas linhas: o fechar da gaveta, do
       carrinho, do alerta, do toast, do diálogo, o remover e o limpar da busca.</p>
       <p><code>--square</code> é essa decisão, uma vez. <code>--lg</code> são os 56px
-      que o play sobre vídeo já fixava em pixel cru. Os sete de antes seguem como
-      estão: trocá-los mexe na marcação das telas e do tema.</p>
+      que o play sobre vídeo já fixava em pixel cru. Desde a 0.13 os sete usam o
+      modificador, e o CSS de cada um guarda só o que é dele: cor, margem e raio.</p>
     </div>
     <div class="note">
       <b>44px é o piso, e ele vem do token</b>
@@ -82,4 +82,26 @@
       branco esse disco é branco sobre branco — foi o que aconteceu com o
       favoritar sobre a foto do produto, que é recorte com fundo transparente. Se
       não há imagem atrás, a variante certa é a base.</p>
+    </div>
+    <h3 class="row-label">Inverso, sobre fundo escuro &mdash; <code>--on-dark</code></h3>
+    <div class="demo demo--amostras demo--dark">
+      <span class="amostra">
+        <button class="yb-iconbtn yb-iconbtn--on-dark yb-iconbtn--square" type="button" aria-label="Assinar"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></button>
+        <span class="amostra__rotulo"><code>--on-dark</code></span>
+      </span>
+      <span class="amostra">
+        <button class="yb-iconbtn yb-iconbtn--on-dark yb-iconbtn--square" type="button" aria-label="Assinar" disabled><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></button>
+        <span class="amostra__rotulo"><code>[disabled]</code></span>
+      </span>
+    </div>
+    <div class="note">
+      <b>O mesmo inverso do Button</b>
+      <p>Branco cheio com glifo grafite, para painel escuro, como o enviar do
+      rodapé. Com a primária preta, a cor de ação sobre o rodapé mede 1:1 contra o
+      fundo: o botão só aparecia no hover. O branco fica a 16,66:1 do painel, e o
+      hover afunda para <code>--yb-surface-sunken</code>, porque o branco não tem
+      para onde clarear. É a receita do <code>.yb-btn--on-dark</code>, com o
+      anel de foco branco pelo mesmo motivo.</p>
+      <p>Não confundir com <code>--onmedia</code>: aquele é translúcido e depende
+      de foto atrás. Este é para superfície escura sólida.</p>
     </div>

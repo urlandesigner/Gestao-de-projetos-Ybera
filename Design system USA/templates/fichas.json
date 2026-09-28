@@ -1,0 +1,18 @@
+{
+  "page-layout": {
+    "a11y": [
+      "O cabeçalho de seção leva <code>&lt;h2&gt;</code> de verdade, e a página um <code>&lt;h1&gt;</code> só.",
+      "O ritmo entre blocos é do template: peça que traz a própria margem some do contexto quando muda de lugar.",
+      "A largura máxima serve à leitura. Linha que atravessa um monitor largo não se lê — mede-se em caracteres.",
+      "Bloco que sangra sai do container de propósito, e não por margem negativa: negativa quebra quando o container muda."
+    ],
+    "faca": {
+      "legenda": "Cabeçalho de seção com nível e link ao lado.",
+      "html": "<div class=\"yb-section-head\"><h2>Best Sellers</h2><a class=\"yb-link\" href=\"#demos\">Shop all</a></div>"
+    },
+    "naoFaca": {
+      "legenda": "Texto grande sem nível: parece título e não entra na lista de cabeçalhos de quem navega por leitor de tela.",
+      "html": "<div class=\"yb-section-head\"><span style=\"font-size:1.75rem;font-weight:700\">Best Sellers</span></div>"
+    }
+  }
+}

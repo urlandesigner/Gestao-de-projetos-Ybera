@@ -375,6 +375,11 @@
           "texto": "Onde o rótulo flutua. O entalhe na borda é desenhado com o próprio fundo."
         },
         {
+          "alvo": ".yb-field__box > .yb-icon:first-child",
+          "nome": "Ícone antes",
+          "texto": "Opcional e decorativo. Diz o que o campo é — e ocupa o lugar onde o rótulo pousaria, por isso o rótulo desloca."
+        },
+        {
           "alvo": ".yb-input",
           "nome": "Controle",
           "texto": "Leva <code>placeholder</code> com um espaço — é o que dá à <code>:placeholder-shown</code> algo em que casar."
@@ -383,6 +388,11 @@
           "alvo": ".yb-field__label",
           "nome": "Rótulo",
           "texto": "Vem <b>depois</b> do input no HTML, senão o combinador <code>~</code> não alcança. Continua <code>&lt;label for&gt;</code>."
+        },
+        {
+          "alvo": ".yb-field__box > .yb-icon:last-child",
+          "nome": "Ícone depois",
+          "texto": "Opcional. É ação sobre o que foi digitado — limpar, revelar senha. Aqui o rótulo não desloca."
         },
         {
           "alvo": ".yb-field__hint",
@@ -526,7 +536,7 @@
     ],
     "faca": {
       "legenda": "Grupo nomeado, mesmo <code>name</code> nos dois e um padrão já marcado.",
-      "html": "<div role=\"radiogroup\" aria-label=\"Shipping\"><label class=\"yb-radio\"><input type=\"radio\" name=\"faca-ship\" checked><span>Standard — free</span></label><label class=\"yb-radio\"><input type=\"radio\" name=\"faca-ship\"><span>Express — $12.90</span></label></div>"
+      "html": "<div role=\"radiogroup\" aria-label=\"Shipping\"><label class=\"yb-radio\"><input type=\"radio\" name=\"do-ship\" checked><span>Standard — free</span></label><label class=\"yb-radio\"><input type=\"radio\" name=\"do-ship\"><span>Express — $12.90</span></label></div>"
     },
     "naoFaca": {
       "legenda": "Sem <code>name</code> em comum: viram dois controles independentes — dá para marcar os dois, as setas não andam, e não há grupo para o leitor de tela anunciar.",
@@ -582,6 +592,20 @@
         "nome": "Chip",
         "texto": "Filtro que liga e desliga. É <code>&lt;button&gt;</code> com <code>aria-pressed</code> — o estado é anunciado, não só pintado."
       }
-    ]
+    ],
+    "a11y": [
+      "É <code>&lt;button&gt;</code>, e não um <code>&lt;span&gt;</code> com clique: teclado, Enter e o anúncio de “botão” vêm do elemento.",
+      "O estado mora em <code>aria-pressed</code>, não numa classe. Classe pinta; <code>aria-pressed</code> é o que o leitor de tela lê como “pressionado”.",
+      "O × é decorativo — quem remove o filtro é o próprio botão, que já está pressionado. Um segundo alvo dentro do primeiro confunde teclado e dedo.",
+      "A fileira inteira precisa de nome: <code>&lt;nav&gt;</code> ou <code>role=&quot;group&quot;</code> com rótulo. Sete botões soltos não dizem do que são filtro."
+    ],
+    "faca": {
+      "legenda": "Botão com <code>aria-pressed</code>: o estado é anunciado, não só pintado.",
+      "html": "<button type=\"button\" class=\"yb-chip\" aria-pressed=\"true\">Keratin <span class=\"yb-chip__x\">×</span></button>"
+    },
+    "naoFaca": {
+      "legenda": "<code>&lt;span&gt;</code> com classe de ativo: não recebe foco, não responde a Enter e o leitor de tela lê só o texto.",
+      "html": "<span class=\"yb-chip\" style=\"background:var(--yb-gray-950);color:#fff\">Keratin ×</span>"
+    }
   }
 }

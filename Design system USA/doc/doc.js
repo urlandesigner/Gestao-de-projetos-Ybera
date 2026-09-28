@@ -33,8 +33,8 @@
      três rolagens abaixo da peça que ela descreve, e vale porque as três
      abas falam da MESMA coisa — quem procura o código de um botão está
      olhando o botão. */
-  for (const grupo of document.querySelectorAll('[data-yb-abas]')) {
-    const paineis = [...grupo.querySelectorAll(':scope > [data-aba]')];
+  for (const grupo of document.querySelectorAll('[data-yb-tabs]')) {
+    const paineis = [...grupo.querySelectorAll(':scope > [data-tab]')];
     if (paineis.length < 2) continue;
 
     const tiras = document.createElement('div');
@@ -46,14 +46,14 @@
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'abas__tira';
-      b.textContent = painel.dataset.aba;
+      b.textContent = painel.dataset.tab;
       /* PONTO NA ABA COM BLOCO POR ESCREVER. Treze fichas ainda nao tem Regras
          de uso ou Acessibilidade, e o bloco vazio existe de proposito: secao
          que some da ficha e uma pergunta que ninguem sabe que ficou sem
          resposta. Empilhados, esses blocos se viam de passagem; em aba, nao —
          por isso o buraco sobe para a tira. O texto escondido vai junto,
          senao o aviso seria so uma bolinha para quem enxerga. */
-      if (painel.dataset.pendente !== undefined) {
+      if (painel.dataset.pending !== undefined) {
         b.classList.add('abas__tira--pendente');
         const ponto = document.createElement('span');
         ponto.className = 'abas__ponto';
@@ -129,20 +129,20 @@
      Sem script, a legenda numerada continua legivel ao lado da peca — que e a
      mesma decisao das abas e do filtro: marcacao que depende de JS para fazer
      sentido e marcacao que some quando o JS nao carrega. */
-  for (const anat of document.querySelectorAll('[data-yb-anatomia]')) {
+  for (const anat of document.querySelectorAll('[data-yb-anatomy]')) {
     const palco = anat.querySelector('.anat__palco');
     const peca = anat.querySelector('.anat__peca');
     const fios = anat.querySelector('.anat__fios');
-    const itens = [...anat.querySelectorAll('.anat__legenda > li[data-alvo]')];
+    const itens = [...anat.querySelectorAll('.anat__legenda > li[data-target]')];
     if (!palco || !peca || !itens.length) continue;
 
     const pares = itens.map((li, i) => {
       /* `alvo` e um seletor CSS inteiro, e nao so um nome de classe: ha parte
          que nao tem classe nenhuma — o `summary` do acordeao e o `<img>` do
          cartao sao elementos nativos, e apontar para eles exige seletor. */
-      const alvo = peca.querySelector(li.dataset.alvo)
+      const alvo = peca.querySelector(li.dataset.target)
         // o container costuma ser a raiz do recorte, que querySelector nao ve
-        || (peca.firstElementChild?.matches(li.dataset.alvo) ? peca.firstElementChild : null);
+        || (peca.firstElementChild?.matches(li.dataset.target) ? peca.firstElementChild : null);
       if (!alvo) { li.classList.add('anat__item--perdido'); return null; }
       const selo = document.createElement('span');
       selo.className = 'anat__selo';
@@ -278,7 +278,7 @@
 
      `/` foca o campo, como em toda documentação — menos quando já se está
      digitando em algum lugar, que é o defeito clássico desse atalho. */
-  const caixa = document.querySelector('[data-yb-filtro]');
+  const caixa = document.querySelector('[data-yb-filter]');
   if (!caixa) return;
   /* UM campo, o do topo, e ele procura em tudo. O catalogo ja teve um segundo,
      e ele nunca apareceu: este `querySelector` pega o PRIMEIRO do documento,
