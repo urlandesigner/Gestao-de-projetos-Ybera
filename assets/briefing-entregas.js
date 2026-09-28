@@ -390,6 +390,7 @@
       resumo: [
         'Realizamos discovery para levantar as melhores opções de apps de reviews dentro do Shopify.',
         'Depois da pesquisa, fizemos um alinhamento com o Wendel e decidimos que não seria produtivo trocar o app atual, o Judge.me, por outro: não haveria ganho real, seria basicamente trocar um pelo outro, e demandaria muitas horas do time técnico. Preferimos manter o Judge.me e fazer alguns pequenos ajustes, que já foram concluídos.',
+        'Está planejada a construção de um app de reviews próprio, pelo time da Ybera, com início previsto para março de 2027 — ele já está no roadmap, mais abaixo.',
       ],
     },
   ];
