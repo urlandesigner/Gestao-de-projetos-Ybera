@@ -464,11 +464,11 @@
      pronta: a porcentagem sai da conta, então ela não tem como divergir dos
      números que o resumo escreve em texto.
 
-     Sem rótulo visível de propósito. No cartão do compliance o parágrafo logo
-     acima já diz "50% dos 18", e repetir isso embaixo da barra seria a mesma
-     informação duas vezes na mesma respiração. Quem lê por leitor de tela não
-     perde nada: os números vivem nos atributos aria, que é onde eles fazem
-     falta de verdade. */
+     Sem rótulo visível de propósito: o parágrafo do cartão já dá os números em
+     texto — hoje, no compliance, "faltam apenas 5 dos 18" — e repeti-los
+     embaixo da barra seria a mesma informação duas vezes na mesma respiração.
+     Quem lê por leitor de tela não perde nada: os números vivem nos atributos
+     aria, que é onde eles fazem falta de verdade. */
   function barra(pr) {
     const total = Number(pr.total) || 0;
     const feito = Math.min(Math.max(Number(pr.feito) || 0, 0), total);
