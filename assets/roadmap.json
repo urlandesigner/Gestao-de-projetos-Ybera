@@ -3,7 +3,7 @@
   "itens": [
     { "titulo": "Nova PDP USA", "inicio": "2026-07-01", "fim": "2026-08-31", "status": "concluido" },
     { "titulo": "Ajustes Loja USA Compliance Google", "inicio": "2026-07-01", "fim": "2026-09-30", "status": "andamento" },
-    { "titulo": "Tradução", "inicio": "2026-08-01", "fim": "2026-09-30", "status": "andamento" },
+    { "titulo": "Tradução", "inicio": "2026-08-01", "fim": "2026-09-30", "status": "teste" },
     { "titulo": "Nova Homepage USA", "inicio": "2026-08-15", "fim": "2026-09-30", "status": "concluido" },
     { "titulo": "Novo Design System Shopify", "inicio": "2026-09-01", "fim": "2026-09-30", "status": "andamento" },
     { "titulo": "App de Reviews", "inicio": "2026-09-01", "fim": "2026-09-30", "status": "concluido" },

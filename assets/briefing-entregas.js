@@ -570,9 +570,19 @@
       // já diz, numa coluna de título que é estreita. O title é pro que a cor
       // sozinha não conta — passar o mouse, e leitor de tela.
       const feito = it.status === 'concluido';
+      const testando = it.status === 'teste';
       const rodando = it.status === 'andamento';
-      const selo = feito ? '<span class="rl-rm-feito">concluído</span>' : '';
-      const modBarra = feito ? ' rl-rm-barra-feita' : rodando ? ' rl-rm-barra-andamento' : '';
+      /* "em andamento" continua falando só pela barra escura — um selo ali
+         repetiria o que a cor já diz, e são cinco linhas assim. "concluído" e
+         "em teste" ganham selo porque a cor sozinha não tem legenda: sem a
+         palavra, verde e âmbar viram enigma. As palavras são as mesmas dos
+         selos dos cartões, de propósito — o mesmo estado não pode ter dois
+         nomes no mesmo documento. */
+      const selo = feito ? '<span class="rl-rm-feito">concluído</span>'
+        : testando ? '<span class="rl-rm-teste">em teste</span>' : '';
+      const modBarra = feito ? ' rl-rm-barra-feita'
+        : testando ? ' rl-rm-barra-teste'
+        : rodando ? ' rl-rm-barra-andamento' : '';
       const tituloBarra = rodando ? ' title="Em andamento"' : '';
       return `<div class="rl-rm-item">
         <span class="rl-rm-titulo"><span class="rl-rm-nome">${esc(it.titulo)}</span>${selo}</span>

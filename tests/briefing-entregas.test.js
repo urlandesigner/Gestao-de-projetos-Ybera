@@ -179,6 +179,37 @@ test('Entregas: cada estado tem a sua classe, sem troca entre eles', () => {
   assert.ok(!h.includes('rl-selo-risco'), 'não há estado de risco neste documento');
 });
 
+test('roadmap: "em teste" ganha selo e barra próprios', () => {
+  const roadmap = [
+    { titulo: 'Feito', inicio: '2026-07-01', fim: '2026-08-31', status: 'concluido' },
+    { titulo: 'Testando', inicio: '2026-08-01', fim: '2026-09-30', status: 'teste' },
+    { titulo: 'Rodando', inicio: '2026-09-01', fim: '2026-09-30', status: 'andamento' },
+    { titulo: 'Previsto', inicio: '2026-10-01', fim: '2026-12-31' },
+  ];
+  const h = documento({ roadmap }).html;
+  assert.match(h, /<span class="rl-rm-teste">em teste<\/span>/);
+  assert.equal((h.match(/rl-rm-barra-teste/g) || []).length, 1);
+  // "em andamento" continua sem selo: a barra escura já diz, e repetir em cinco
+  // linhas seria ruído. É a decisão que faz o selo dos outros dois valer algo.
+  const linhaRodando = /Rodando[\s\S]*?<\/div>/.exec(h)[0];
+  assert.ok(!/rl-rm-feito|rl-rm-teste/.test(linhaRodando), 'em andamento fala pela barra');
+  assert.equal((h.match(/rl-rm-barra"/g) || []).length, 1, 'só o previsto fica na barra neutra');
+});
+
+test('roadmap e cartão não chamam o mesmo estado por dois nomes', () => {
+  // A tag do roadmap existe justamente pra fechar divergência entre os dois
+  // lugares. Se um disser "em teste" e o outro "em testes", o documento fica
+  // dizendo que são coisas diferentes.
+  const roadmap = [{ titulo: 'X', inicio: '2026-08-01', fim: '2026-09-30', status: 'teste' }];
+  const h = documento({ roadmap }).html;
+  const noCartao = [...h.matchAll(/<span class="rl-selo [^"]+">([^<]+)</g)].map((m) => m[1]);
+  const noRoadmap = [...h.matchAll(/<span class="rl-rm-(?:teste|feito)">([^<]+)</g)].map((m) => m[1]);
+  for (const t of noRoadmap) {
+    if (t === 'concluído') continue; // só existe no roadmap
+    assert.ok(noCartao.includes(t), `"${t}" no roadmap não existe como selo de cartão`);
+  }
+});
+
 test('Entregas ignora status fora do vocabulário em vez de inventar selo', () => {
   // A regra que existe desde o primeiro selo: palavra desconhecida não vira
   // pílula afirmando um estado que ninguém escreveu.

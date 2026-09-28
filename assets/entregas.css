@@ -39,6 +39,12 @@
   --positivo-fundo: #e7f8ef;
   --erro: #b91c1c;
   --erro-fundo: #fee2e2;
+  /* Âmbar do "em teste". Virou token quando passou a existir em dois lugares —
+     o selo do cartão e o selo do roadmap — que é o momento de promover cor
+     escrita à mão, antes que ela se espalhe e alguém atualize uma e esqueça a
+     outra. Mesma família dos vizinhos: verde-700, vermelho-700, âmbar-800. */
+  --atencao: #92400e;
+  --atencao-fundo: #fdf0d5;
   --sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --sombra-painel: 0 1px 2px rgba(28, 25, 23, 0.03), 0 16px 40px rgba(28, 25, 23, 0.06);
   --sombra-cartao: 0 1px 2px rgba(28, 25, 23, 0.05);
@@ -577,7 +583,7 @@ body.pagina-entregas {
    única família que sobra depois de verde (chegou) e âmbar (checando) — e
    vermelho está reservado. */
 .rl-selo-andamento { background: #e2e8f5; color: #1e40af; }
-.rl-selo-teste { background: #fdf0d5; color: #92400e; }
+.rl-selo-teste { background: var(--atencao-fundo); color: var(--atencao); }
 /* Retranca do cartão: diz a que projeto a frente pertence, antes do nome dela.
    Discreta de propósito — é endereço, não manchete. */
 .rl-frente-produto {
@@ -905,19 +911,23 @@ body.pagina-entregas {
   line-height: 1.35;
 }
 .rl-rm-nome { min-width: 0; }
-.rl-rm-feito {
+/* A geometria da pílula é compartilhada; só a cor distingue o estado.
+   `.rl-rm-feito` mantém o nome porque o report v2 emite a mesma classe — os
+   dois documentos têm folhas separadas, mas renomear aqui faria o nome divergir
+   entre eles sem ganho nenhum. */
+.rl-rm-feito, .rl-rm-teste {
   flex: none;
   margin-top: 0.1rem;   /* acerta o selo com a primeira linha do nome */
   padding: 0.1rem 0.45rem;
   border-radius: 999px;
-  background: var(--positivo);
-  color: #fff;
   font-size: 0.58rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
 }
+.rl-rm-feito { background: var(--positivo); color: #fff; }
+.rl-rm-teste { background: var(--atencao-fundo); color: var(--atencao); }
 /* z-index acima dos divisores de mês: grade é fundo, barra é dado. Sem isso a
    linha do mês corta a barra ao meio, porque vem depois no DOM. */
 .rl-rm-trilha { grid-column: 2; position: relative; z-index: 1; min-height: 1.5rem; padding: 0.5rem 0; }
@@ -936,6 +946,9 @@ body.pagina-entregas {
    Central. Antes toda barra era verde, inclusive a de item nem começado. */
 .rl-rm-barra-andamento { background: var(--tinta); }
 .rl-rm-barra-feita { background: var(--positivo); }
+/* A barra acompanha o selo, como a verde acompanha o "concluído": é a cor que
+   dá o estado de relance, e o selo é a legenda dela. */
+.rl-rm-barra-teste { background: var(--atencao); }
 /* O divisor precisa ir da escala até a última linha da grade. `grid-row: 1/-1`
    parecia dizer isso, mas não dizia: -1 é a última linha do grid EXPLÍCITO, e
    aqui só as colunas são explícitas — as linhas nascem implícitas, uma por
@@ -1148,7 +1161,7 @@ body.pagina-entregas {
      legíveis valem mais que uma linha alinhada. */
   .rl-rm-titulo { flex-wrap: wrap; justify-content: flex-start; gap: 0.25rem 0.45rem; }
   .rl-rm-nome { min-width: 100%; }
-  .rl-rm-feito { margin-top: 0; }
+  .rl-rm-feito, .rl-rm-teste { margin-top: 0; }
 
   .rl-rm-escala i { display: none; }
   /* O primeiro guarda o ano, senão a régua não diz de que ano ela parte. Ele
@@ -1190,7 +1203,8 @@ body.pagina-entregas {
   .rl-rodape-contato a { color: var(--tinta); }
   /* Barras são só fundo: sem isto o papel sai em branco */
   .rl-rumo-trilho i, .rl-esforco-regua i, .rl-comp-barra i, .rl-rm-barra,
-  .rl-selo-risco, .rl-selo-ok, .rl-selo-teste, .rl-selo-andamento, .rl-bloco-n, .rl-chip.ativo {
+  .rl-selo-risco, .rl-selo-ok, .rl-selo-teste, .rl-selo-andamento, .rl-rm-teste,
+  .rl-bloco-n, .rl-chip.ativo {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
