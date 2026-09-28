@@ -126,6 +126,26 @@ test('v2: roadmap distingue os três estados — plano, em andamento e concluíd
   assert.equal((h.match(/class="rl-rm-feito"/g) || []).length, 1);
   assert.ok(!h.includes('em andamento</span>'), 'em andamento não vira selo de texto');
   assert.equal((h.match(/title="Em andamento"/g) || []).length, 1);
+});
+
+/* Este documento não tem o estado "em teste" — quem o desenha separado é o
+   Entregas. Mas o portão de report.js é COMPARTILHADO, e quando ele passou a
+   deixar 'teste' atravessar, o estado chegou aqui sem ninguém esperá-lo: a
+   frente caía na barra neutra e lia como projeto que nem começou, pior que o
+   'andamento' que ela tinha antes. Agrupar com andamento é a verdade — uma
+   frente em teste está em andamento. */
+test('roadmap: "em teste" entra junto com "em andamento", e não na barra de plano', () => {
+  const roadmap = [
+    { titulo: 'Testando', inicio: '2026-01-01', fim: '2026-01-31', status: 'teste' },
+    { titulo: 'Só plano', inicio: '2026-02-01', fim: '2026-02-28' },
+  ];
+  const h = documento({ roadmap }).html;
+  const linha = [...h.matchAll(/<div class="rl-rm-item">[\s\S]*?<\/div>/g)]
+    .map((m) => m[0]).find((x) => x.includes('Testando'));
+  assert.match(linha, /rl-rm-barra-andamento/, 'em teste não pode cair na barra neutra');
+  assert.match(linha, /title="Em andamento"/);
+  assert.ok(!/rl-rm-feito/.test(linha), 'e não vira concluído');
+  assert.equal((h.match(/rl-rm-barra"/g) || []).length, 1, 'só o plano fica na neutra');
   // Sem status (ou com status que não existe) o documento não afirma nada.
   assert.ok(!h.includes('Só plano <span class="rl-rm-'));
   assert.ok(!h.includes('Status inventado <span class="rl-rm-'));

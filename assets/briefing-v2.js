@@ -555,7 +555,13 @@
       // já diz, numa coluna de título que é estreita. O title é pro que a cor
       // sozinha não conta — passar o mouse, e leitor de tela.
       const feito = it.status === 'concluido';
-      const rodando = it.status === 'andamento';
+      /* 'teste' entra aqui junto com 'andamento', e não como estado próprio: o
+         Entregas desenha os dois separados, este documento não — e uma frente
+         em teste É uma frente em andamento. Sem esta linha ela cairia na barra
+         neutra e leria como projeto que nem começou, que é pior que agrupar.
+         Foi o que aconteceu quando o portão de report.js passou a deixar
+         'teste' passar: o estado novo chegou aqui sem ninguém esperá-lo. */
+      const rodando = it.status === 'andamento' || it.status === 'teste';
       const selo = feito ? ' <span class="rl-rm-feito">concluído</span>' : '';
       const modBarra = feito ? ' rl-rm-barra-feita' : rodando ? ' rl-rm-barra-andamento' : '';
       const tituloBarra = rodando ? ' title="Em andamento"' : '';
