@@ -946,9 +946,14 @@ body.pagina-entregas {
    Central. Antes toda barra era verde, inclusive a de item nem começado. */
 .rl-rm-barra-andamento { background: var(--tinta); }
 .rl-rm-barra-feita { background: var(--positivo); }
-/* A barra usa o FUNDO do selo, não o texto dele: a pílula é o objeto colorido
-   e a barra é a mesma cor espalhada. */
-.rl-rm-barra-teste { background: var(--atencao-fundo); }
+/* A barra acompanha o selo, como a verde acompanha o "concluído": é a cor que
+   dá o estado de relance, e o selo é a legenda dela.
+
+   Usa --atencao (o tom do TEXTO do selo) e não --atencao-fundo: o fundo da
+   pílula foi tentado e saiu, porque sobre a superfície branca do gráfico ele dá
+   1,13:1 de contraste — menos que as barras de "planejado", com 2,10:1. O item
+   em teste lia como menos presente que projeto que nem começou. */
+.rl-rm-barra-teste { background: var(--atencao); }
 /* O divisor precisa ir da escala até a última linha da grade. `grid-row: 1/-1`
    parecia dizer isso, mas não dizia: -1 é a última linha do grid EXPLÍCITO, e
    aqui só as colunas são explícitas — as linhas nascem implícitas, uma por
