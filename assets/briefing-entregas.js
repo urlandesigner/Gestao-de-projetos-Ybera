@@ -363,7 +363,8 @@
       epicoId: 49300,
       resumo: [
         'Estamos realizando testes da automação do fluxo da Shipsmart para pedidos que têm estoque no Brasil e são entregues nos EUA.',
-        'Estamos avançando: a automação da Shipsmart já está acertada, e agora testamos a etapa seguinte do fluxo, depois dela.',
+        'A automação da Shipsmart já está acertada. Agora estamos validando a segunda parte do fluxo, o que acontece depois dela.',
+        'Estando tudo certo, faremos um novo teste com envio real do produto.',
       ],
     },
     {
@@ -466,9 +467,15 @@
     if (!total) return '';
     const pct = Math.round((feito / total) * 100);
     const rotulo = `${feito} de ${total} ${pr.rotulo || 'itens concluídos'}`;
-    return `<div class="rl-progresso" role="progressbar" aria-label="${esc(rotulo)}"
-      aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${feito}"
-      ><i style="width:${pct}%"></i></div>`;
+    /* O invólucro carrega o espaçamento e a barra carrega só a barra. Juntos
+       não funcionam: o `border-radius` é calculado sobre a caixa inteira, e uma
+       caixa de 26px (padding + 8px de trilho) curva muito acima da faixa que o
+       `background-clip` pinta — o trilho saía com as pontas retas. */
+    return `<div class="rl-progresso-area">
+      <div class="rl-progresso" role="progressbar" aria-label="${esc(rotulo)}"
+        aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${feito}"
+        ><i style="width:${pct}%"></i></div>
+    </div>`;
   }
 
   /* Chamada pro documento de fora — hoje a planilha de demandas do compliance.

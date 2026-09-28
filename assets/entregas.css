@@ -600,14 +600,25 @@ body.pagina-entregas {
    `margin-top: auto` empurra a barra (e o botão abaixo dela) pro pé do cartão:
    a fileira estica todos à mesma altura, e sem isso a barra de um cartão curto
    flutuaria no meio enquanto a do vizinho ficaria lá embaixo. */
+/* Espaçamento e barra em elementos separados, e não no mesmo.
+
+   Juntos davam um defeito de geometria: `border-radius` é resolvido sobre a
+   caixa de borda inteira, então uma caixa de 26px (17,6 de padding + 8 de
+   trilho) curvava com raio de 13px lá em cima, enquanto `background-clip:
+   content-box` pintava só a faixa de 8px embaixo. A curva ficava fora da parte
+   visível e o trilho aparecia com as pontas retas — e o `overflow: hidden`
+   recortava o preenchimento pela mesma curva errada.
+
+   Separados, o raio é resolvido sobre os 8px reais e vira cápsula de verdade.
+
+   `margin-top: auto` mora no invólucro: a fileira estica os cartões à mesma
+   altura, e sem isso a barra de um cartão curto flutuaria no meio enquanto a do
+   vizinho ficaria no pé. O padding é o vão mínimo pra quando não sobra espaço. */
+.rl-progresso-area { margin-top: auto; padding-top: 1.1rem; }
 .rl-progresso {
-  margin-top: auto;
-  padding-top: 1.1rem;
   height: 8px;
-  box-sizing: content-box;
   border-radius: 999px;
   background: var(--superficie-2);
-  background-clip: content-box;
   overflow: hidden;
 }
 .rl-progresso > i { display: block; height: 100%; border-radius: 999px; background: var(--positivo); }
