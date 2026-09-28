@@ -356,12 +356,34 @@ body.pagina-entregas {
 .rl-corpo { padding-bottom: clamp(2rem, 5vw, 3.5rem); }
 .rl-sec { padding: clamp(2rem, 4.5vw, 3.25rem) 0 0; scroll-margin-top: var(--nav-alt, 5rem); }
 .rl-sec-cab { margin-bottom: clamp(1rem, 2.4vw, 1.5rem); }
+/* O título encolheu e ganhou uma marca à esquerda. Ele vinha em 2.5rem, quase o
+   tamanho do título da capa, e num documento com sete seções isso competia com
+   a capa em vez de organizar a leitura. Menor, com um sinal fixo na frente, ele
+   marca começo de seção sem gritar.
+
+   A marca é da cor da tinta, e não do verde: aqui o verde significa concluído
+   ou positivo (barra de progresso, selo, roadmap), e uma barra verde ao lado de
+   "Nova Homepage USA" leria como seção concluída.
+
+   `align-self: stretch` faz a barra acompanhar a altura da linha, então ela
+   cresce junto com o clamp e com título que quebre em duas linhas. */
 .rl-sec-titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
   margin: 0;
-  font-size: clamp(1.6rem, 3.6vw, 2.5rem);
+  font-size: clamp(1.25rem, 2.4vw, 1.7rem);
   font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.035em;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+.rl-sec-titulo::before {
+  content: '';
+  flex: none;
+  align-self: stretch;
+  width: 4px;
+  border-radius: 999px;
+  background: var(--tinta);
 }
 .rl-sec-intro {
   max-width: 58ch;
@@ -559,7 +581,10 @@ body.pagina-entregas {
   text-transform: uppercase;
   color: var(--mudo);
 }
-.rl-frente-resumo { margin: 0.45rem 0 0; font-size: 0.86rem; line-height: 1.5; color: var(--mudo); }
+/* Subiu de 0.86rem: este é o texto que o stakeholder de fato lê, e era o menor
+   corpo da página depois das legendas. A entrelinha acompanha — corpo maior na
+   mesma entrelinha fecha o bloco. */
+.rl-frente-resumo { margin: 0.5rem 0 0; font-size: 0.95rem; line-height: 1.55; color: var(--mudo); }
 
 /* Barra de progresso do cartão. Sem rótulo: o resumo logo acima já escreve os
    números, e repeti-los aqui seria dizer a mesma coisa duas vezes. A leitura
