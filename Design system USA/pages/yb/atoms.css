@@ -105,7 +105,11 @@
    ele briga com o proprio fundo, enquanto o branco cheio nao tem como perder.
    Medido: grafite sobre branco 16.66:1, e o proprio botao contra o painel
    tambem 16.66:1, entao ele nao precisa de borda para existir.
-   Nao use isto sobre foto: ali o fundo nao e conhecido e o token e outro. */
+   SOBRE FOTO, so com o veu do sistema atras. Foto crua e fundo que ninguem
+   controla; o veu (Banner hero, Banner media, Card offer) e o que torna o
+   fundo conhecido. Medido no pior caso, pixel branco debaixo do veu: o botao
+   branco fica a 7.84:1 do veu cheio (.77) e a 5.19:1 do leve (.65), acima
+   dos 3:1 de fronteira de controle. O primario preto, ali, some no escuro. */
 .yb-btn--on-dark{background:var(--yb-text-inverse); color:var(--yb-bg-inverse)}
 
 /* O branco nao tem para onde clarear: o hover AFUNDA. Sao os dois degraus de
@@ -162,7 +166,9 @@
   padding:var(--yb-space-1) var(--yb-space-2);
   border-radius:var(--yb-radius-badge); white-space:nowrap;
 }
-.yb-badge--sale{background:var(--yb-action-bg); color:var(--yb-action-text)}
+/* MAGENTA, e nao o preto da acao: o desconto nao e um botao. Ver
+   --yb-accent-brand. */
+.yb-badge--sale{background:var(--yb-accent-brand); color:var(--yb-text-on-action)}
 /* O par do botao secundario, e de proposito os MESMOS tokens dele — nao uma
    copia dos valores. Quem afinar o botao secundario um dia move este selo
    junto, que e o que "mesmo padrao de cor do secundario" quer dizer; dois
@@ -174,8 +180,27 @@
    comportam: quem desenha a forma e o texto, nao a caixa. */
 .yb-badge--secondary{
   background:var(--yb-action-secondary-bg); color:var(--yb-action-secondary-text);
+  /* A BORDA VEIO JUNTO, e nao por estilo: quando o secundario virou contorno
+     (fundo branco, linha preta), o selo — que divide os tokens dele de
+     proposito — ficou branco sobre branco. Compartilhar a cor so funciona se
+     compartilhar tambem o que a torna visivel. */
+  border:var(--yb-border-width-hair) solid var(--yb-action-secondary-border);
 }
 .yb-badge--soft{background:var(--yb-bg-muted); color:var(--yb-text-secondary)}
+/* O SELO PRETO — a primaria da marca preenchida, texto branco, 16.66:1.
+
+   Ele existia sem nome ate 0.13: o `--sale` apontava para a cor de acao, e
+   enquanto a acao era magenta ninguem tinha o preto; quando a acao virou
+   preta, o `--sale` virou preto e o magenta e que sumiu. Os dois sao
+   necessarios, e por isso agora sao dois seletores com cor propria em vez de
+   um que muda de cor conforme o botao.
+
+   QUANDO CADA UM: `--sale` quando a informacao e comercial e disputa atencao
+   com o preco — desconto, brinde. `--dark` quando ela e de catalogo e so
+   precisa ser lida — "New", "Last units", "Limited edition". Dois selos
+   magenta na mesma foto anulam um ao outro; magenta com preto ao lado se
+   separam sozinhos. */
+.yb-badge--dark{background:var(--yb-bg-inverse); color:var(--yb-text-inverse)}
 /* O SELO QUE SOBREVIVE A UMA FOTO. Traz o proprio fundo grafite em vez de
    contar com o que estiver atras, e por isso e o unico da familia que pode ir
    sobre imagem: os claros (`--soft`, `--secondary`, `--success`, `--warning`,
@@ -268,7 +293,7 @@
    a escolha para cima de foto; `--sale` mede 3,3:1 nas mesmas fotos — passa o
    minimo de 3:1 de objeto grafico, mas raspando e variando com a imagem, e
    por isso e a roupa de superficie lisa. */
-.yb-offerseal--sale{background:var(--yb-action-bg); color:var(--yb-action-text)}
+.yb-offerseal--sale{background:var(--yb-accent-brand); color:var(--yb-text-on-action)}
 .yb-offerseal--accent{background:var(--yb-bg-inverse); color:var(--yb-accent-on-dark)}
 /* Nao ha `--gold`. Faltou token semantico para DOURADO DE FUNDO — o que
    existe e `--yb-accent-on-dark`, que e cor de TEXTO sobre escuro — e

@@ -2357,7 +2357,7 @@
   "action": {
     "bg": {
       "default": {
-        "$value": "{magenta.600}",
+        "$value": "{gray.950}",
         "$extensions": {
           "com.ybera.cssVariable": "--yb-action-bg",
           "com.ybera.layer": "semantic"
@@ -2365,7 +2365,7 @@
         "$type": "color"
       },
       "hover": {
-        "$value": "{magenta.700}",
+        "$value": "{gray.800}",
         "$extensions": {
           "com.ybera.cssVariable": "--yb-action-bg-hover",
           "com.ybera.layer": "semantic"
@@ -2373,7 +2373,7 @@
         "$type": "color"
       },
       "active": {
-        "$value": "{magenta.800}",
+        "$value": "{gray.700}",
         "$extensions": {
           "com.ybera.cssVariable": "--yb-action-bg-active",
           "com.ybera.layer": "semantic"
@@ -2410,7 +2410,7 @@
     "secondary": {
       "bg": {
         "default": {
-          "$value": "{magenta.100}",
+          "$value": "{surface.default}",
           "$extensions": {
             "com.ybera.cssVariable": "--yb-action-secondary-bg",
             "com.ybera.layer": "semantic"
@@ -2418,7 +2418,7 @@
           "$type": "color"
         },
         "hover": {
-          "$value": "{magenta.200}",
+          "$value": "{gray.100}",
           "$extensions": {
             "com.ybera.cssVariable": "--yb-action-secondary-bg-hover",
             "com.ybera.layer": "semantic"
@@ -2426,7 +2426,7 @@
           "$type": "color"
         },
         "active": {
-          "$value": "{magenta.300}",
+          "$value": "{gray.200}",
           "$extensions": {
             "com.ybera.cssVariable": "--yb-action-secondary-bg-active",
             "com.ybera.layer": "semantic"
@@ -2436,7 +2436,7 @@
       },
       "text": {
         "default": {
-          "$value": "{magenta.600}",
+          "$value": "{gray.950}",
           "$extensions": {
             "com.ybera.cssVariable": "--yb-action-secondary-text",
             "com.ybera.layer": "semantic"
@@ -2444,7 +2444,7 @@
           "$type": "color"
         },
         "hover": {
-          "$value": "{magenta.700}",
+          "$value": "{gray.950}",
           "$extensions": {
             "com.ybera.cssVariable": "--yb-action-secondary-text-hover",
             "com.ybera.layer": "semantic"
@@ -2454,20 +2454,20 @@
       },
       "border": {
         "default": {
-          "$value": "transparent",
+          "$value": "{gray.950}",
           "$extensions": {
             "com.ybera.cssVariable": "--yb-action-secondary-border",
             "com.ybera.layer": "semantic"
           },
-          "$type": "dimension"
+          "$type": "color"
         },
         "hover": {
-          "$value": "transparent",
+          "$value": "{gray.950}",
           "$extensions": {
             "com.ybera.cssVariable": "--yb-action-secondary-border-hover",
             "com.ybera.layer": "semantic"
           },
-          "$type": "dimension"
+          "$type": "color"
         }
       }
     },
@@ -2579,8 +2579,16 @@
         "$type": "color"
       }
     },
+    "brand": {
+      "$value": "{magenta.600}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-accent-brand",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
     "love": {
-      "$value": "{action.bg.default}",
+      "$value": "{accent.brand}",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-accent-love",
         "com.ybera.layer": "semantic"

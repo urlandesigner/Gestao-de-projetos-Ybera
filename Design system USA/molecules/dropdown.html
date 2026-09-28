@@ -35,6 +35,10 @@
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
+  <a class="ds-top__baixar" href="../dist/ybera-tokens.json" download="ybera-tokens.json">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8"/><path d="M4.5 7.5 8 11l3.5-3.5"/><path d="M2.5 13.5h11"/></svg>
+    <span>Baixar tokens <span class="ds-top__baixar-fmt">JSON</span></span>
+  </a>
 </header>
 <nav class="ds-nav" aria-label="Navegação do design system">
   <ul class="ds-nav__solta">
@@ -322,6 +326,8 @@
         <li data-alvo=".yb-dropdown__toggle"><span class="anat__texto"><b>Chave</b> — Checkbox escondido. É o <code>:checked</code> dele que abre o painel irmão.</span></li>
         <li data-alvo=".yb-dropdown__gatilho"><span class="anat__texto"><b>Gatilho</b> — O <code>&lt;label&gt;</code> que abre. Precisa de <code>aria-label</code> quando é só o avatar.</span></li>
         <li data-alvo=".yb-dropdown__painel"><span class="anat__texto"><b>Painel</b> — Os links. Fecha ao clicar fora pelo scrim, não por script.</span></li>
+        <li data-alvo=".yb-dropdown__cabeca"><span class="anat__texto"><b>Cabeça</b> — Quem está logado: avatar, nome e e-mail. Some quando o painel não é de conta.</span></li>
+        <li data-alvo=".yb-dropdown__sair"><span class="anat__texto"><b>Sair</b> — Separado do resto por fio. Ação destrutiva de sessão não fica junto dos links.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia

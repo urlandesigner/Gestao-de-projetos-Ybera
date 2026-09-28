@@ -35,6 +35,10 @@
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
+  <a class="ds-top__baixar" href="../dist/ybera-tokens.json" download="ybera-tokens.json">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8"/><path d="M4.5 7.5 8 11l3.5-3.5"/><path d="M2.5 13.5h11"/></svg>
+    <span>Baixar tokens <span class="ds-top__baixar-fmt">JSON</span></span>
+  </a>
 </header>
 <nav class="ds-nav" aria-label="Navegação do design system">
   <ul class="ds-nav__solta">
@@ -212,7 +216,7 @@
           <span class="yb-bannermedia__eyebrow">Cronograma system</span>
           <h3 class="yb-bannermedia__title">Deep repair &amp; shine</h3>
           <p class="yb-bannermedia__text">A three-step ritual for dry, dull, porous or chemically damaged hair.</p>
-          <span class="yb-btn yb-btn--primary">Shop the ritual</span>
+          <span class="yb-btn yb-btn--on-dark">Shop the ritual</span>
         </div>
       </a>
     </div>
@@ -272,7 +276,7 @@
     &lt;span class="yb-bannermedia__eyebrow"&gt;Cronograma system&lt;/span&gt;
     &lt;h3 class="yb-bannermedia__title"&gt;Deep repair &amp;amp; shine&lt;/h3&gt;
     &lt;p class="yb-bannermedia__text"&gt;A three-step ritual for dry, dull, porous or chemically damaged hair.&lt;/p&gt;
-    &lt;span class="yb-btn yb-btn--primary"&gt;Shop the ritual&lt;/span&gt;
+    &lt;span class="yb-btn yb-btn--on-dark"&gt;Shop the ritual&lt;/span&gt;
   &lt;/div&gt;
 &lt;/a&gt;</code></pre>
     </div>
@@ -290,7 +294,7 @@
     <span class="yb-bannermedia__eyebrow">Cronograma system</span>
     <h3 class="yb-bannermedia__title">Deep repair &amp; shine</h3>
     <p class="yb-bannermedia__text">A three-step ritual for dry, dull, porous or chemically damaged hair.</p>
-    <span class="yb-btn yb-btn--primary">Shop the ritual</span>
+    <span class="yb-btn yb-btn--on-dark">Shop the ritual</span>
   </div>
 </a></div>
       </div>
@@ -301,6 +305,8 @@
         <li data-alvo=".yb-bannermedia__eyebrow"><span class="anat__texto"><b>Sobretítulo</b> — Situa a peça na linha de produtos. Opcional.</span></li>
         <li data-alvo=".yb-bannermedia__title"><span class="anat__texto"><b>Título</b> — Uma frase. Se precisar de duas, é bloco de história, não banner.</span></li>
         <li data-alvo=".yb-bannermedia__text"><span class="anat__texto"><b>Texto</b> — Opcional. Some no celular, onde a foto já ocupa a tela.</span></li>
+        <li data-alvo=".yb-bannermedia__body"><span class="anat__texto"><b>Corpo</b> — O bloco de texto sobre o véu. Some no celular quando a foto já ocupa a tela.</span></li>
+        <li data-alvo=".yb-btn"><span class="anat__texto"><b>Ação</b> — Opcional. É o <code>.yb-btn</code>, outra peça, na variante para fundo escuro.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -322,13 +328,12 @@
     <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-bannermedia__blur</code> <code>.yb-bannermedia__body</code> <code>.yb-bannermedia__eyebrow</code> <code>.yb-bannermedia__text</code> <code>.yb-bannermedia__title</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
-    <p class="rotulo">Tokens <span class="rotulo-conta">43</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">42</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>6</span></p>
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>5</span></p>
         <ul class="tokens__lista">
           <li><i class="tokens__cor" style="background:var(--yb-accent-on-media)" aria-hidden="true"></i><code>--yb-accent-on-media</code><span class="tokens__valor">#ECE0CA</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-action-bg-hover)" aria-hidden="true"></i><code>--yb-action-bg-hover</code><span class="tokens__valor">#8A1E45</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary-inverse)" aria-hidden="true"></i><code>--yb-text-secondary-inverse</code><span class="tokens__valor">#DADADB</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface-sunken)" aria-hidden="true"></i><code>--yb-surface-sunken</code><span class="tokens__valor">#FAFAFA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>

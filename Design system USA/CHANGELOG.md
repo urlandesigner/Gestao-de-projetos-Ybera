@@ -9,6 +9,36 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 [GOVERNANCA.md](GOVERNANCA.md), componente novo pede versão **menor** (0.13.0).
 
 ### Adicionado
+- **"Baixar tokens (JSON)" no topo da documentação**, no canto direito, ao lado
+  da versão: baixa o `dist/ybera-tokens.json` (formato W3C Design Tokens, que o
+  build gera a partir do CSS). A busca foi para a esquerda, colada na marca, no
+  mesmo x em que o conteúdo começa. No celular o botão vira só o ícone (com
+  nome para leitor de tela) e a busca cede largura para a linha caber em 320.
+
+- **A ficha do Button passou a mostrar botão com ícone.** O `.yb-btn` sempre
+  aceitou um: é `inline-flex` com `gap` desde a primeira versão, e o ícone entra
+  como filho e se alinha sozinho — faltava a doc dizer isso, e nenhuma tela usa.
+  Sem classe nova: um modificador `--icon` seria uma classe para não fazer nada.
+  Documentado o que não se deduz da marcação: **antes** quando o ícone mostra o
+  que a ação faz com o objeto (carrinho, coração, lixeira), **depois** quando
+  mostra direção (seta de continuar) — ícone depois num botão de compra faz o
+  olho sair do rótulo para o nada. No `--sm` o ícone acompanha (`.yb-icon--sm`,
+  16px): com os 20px do padrão ele fica maior que a altura da linha do texto e o
+  botão parece inchado. E o ícone é sempre decorativo, com `aria-hidden` — quem
+  nomeia a ação é o texto ao lado; sem texto, o componente é outro
+  (`.yb-iconbtn`).
+- **A vitrine do menu Shop acompanha o item.** Passar o mouse ou chegar pelo
+  Tab num item (Best Sellers, Fashion Gold, Damaged Hair…) troca a vitrine da
+  direita pelo Collection card da linha e um produto em destaque, e o item
+  fica aceso. Sair do painel volta à vitrine padrão (produto + quiz), que é
+  também o estado sem JS. 14 dos 21 itens têm vitrine, só com dado real da
+  captura: arte de coleção onde existe, foto de produto da linha onde não
+  existe, e produto com nome e preço reais — sem produto, o quiz fica no
+  segundo cartão. Ybera Paris, 100Timetros, Capulana, Life´s Flower,
+  Universal, Genoma e Quarta Camada não têm imagem nenhuma e mostram a padrão.
+  Gerador (`VITRINES`), as 11 telas, a ficha do Header e `ligarVitrine` no JS.
+  A foto do produto na vitrine deixou de ditar a altura do cartão: o painel
+  mede o mesmo em todos os estados (457px em 1440).
 
 - **A aba Anatomia ganhou o desenho: a peça com um número em cada parte**, no
   formato do outro design system da casa. A lista de classes e tokens responde
@@ -71,6 +101,125 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   cantos, altura que cresce no celular, arte do tamanho da imagem.
 
 ### Alterado
+- **As anatomias foram conferidas contra o que as peças mostram hoje**, e onze
+  ganharam partes que faltavam. O desenho nasceu antes de várias mudanças desta
+  rodada e ficou para trás em silêncio — o caso que apareceu primeiro foi o
+  Button, que ganhou a fileira "com ícone" e continuou desenhado como um botão
+  sem ícone. A conferência foi por programa: para cada ficha, quais elementos
+  aparecem no palco e não têm número. Sobraram 146 partes em 40 peças, nenhum
+  alvo apontando para o vazio.
+  Para isso o **recorte passou a procurar no palco inteiro**, e não só na
+  primeira demo: a anatomia do Button precisa do botão COM ícone, e ele vive
+  três demos abaixo da fileira de variantes. A primeira demo é o que a peça
+  mostra primeiro, não necessariamente o que ela precisa explicar.
+  O que continua sem número é o que não deve ter: variante de uma parte já
+  numerada (`--line-short` do Skeleton), filho de um container numerado (o nome
+  e o e-mail dentro da cabeça do Dropdown) e peça vizinha que só está ali de
+  companhia (o trilho em volta do Review).
+- **O magenta voltou onde ele MARCA, e o preto ganhou selo próprio.** A troca de
+  0.13 arrastou quatro coisas que não são ação: o selo de desconto, o selo de
+  oferta, a contagem do carrinho e o ponto de não-lido do parceiro. Todos
+  apontavam para `--yb-action-bg`, então acompanharam a ação para o preto sem
+  que ninguém tivesse decidido isso — trocar o papel de um token arrasta quem o
+  consome. Agora apontam para `--yb-accent-brand`, com o motivo escrito: **preto
+  é onde se clica, magenta é marcação.** São marcas que aparecem por cima de
+  conteúdo e precisam ser vistas antes de serem lidas; em preto somem no meio do
+  grafite, que virou a cor de tudo o que é clicável.
+  E entrou `.yb-badge--dark` — o selo preto, que existia sem nome enquanto o
+  `--sale` seguia a cor de ação. Os dois são necessários: `--sale` quando a
+  informação é comercial e disputa com o preço; `--dark` quando é de catálogo e
+  só precisa ser lida. Dois selos magenta na mesma foto se anulam; magenta com
+  preto ao lado se separam sozinhos.
+  `.yb-badge--secondary` **ganhou borda**. Ele divide os tokens do botão
+  secundário de propósito, e quando o botão virou contorno — fundo branco, linha
+  preta — o selo ficou branco sobre branco. Compartilhar a cor só funciona se
+  compartilhar também o que a torna visível.
+- **O botão branco (`--on-dark`) é o CTA sobre foto.** A doc dizia "não use
+  sobre foto", escrito antes de todo banner com foto ter véu; o véu é o que
+  torna o fundo conhecido. Medido no pior caso (pixel branco debaixo do véu):
+  7,84:1 contra o véu cheio e 5,19:1 contra o leve. Com a ação em preto, o
+  primário ali sumia no escuro. Aplicado no Banner hero (homes v2, v3, logada e
+  a ficha do Hero), no Banner media e no Card offer; o hover do banner acende o
+  botão com `--yb-surface-sunken`. A ficha do Button ganhou a amostra sobre
+  foto e a nota corrigida.
+- **Button `--secondary` vira contorno preto** (fundo branco, borda e texto
+  `gray-950`; hover `gray-100`, pressionado `gray-200`). Depois da ação em preto,
+  o cinza claro com borda cinza parecia botão apagado e quase igual ao
+  `--ghost`. A escada agora é de peso: preenchido, contorno, só texto. O
+  contorno mede 16,66:1 e separa a secundária do desabilitado, que segue
+  preenchido em `gray-200`, sem aresta.
+- **A ação da loja virou preta; o magenta continua sendo a cor do design
+  system.** Não é troca de paleta, é troca de papel: o `gray-950` sempre foi a
+  primária da marca — está escrito assim na camada 0 — e o magenta era a cor de
+  **ação**, emprestada à marca em cada botão. Agora a loja fala em preto, e o
+  magenta recua para onde é sinal e não identidade: link, anel de foco e
+  favoritar. **Quatro consequências medidas:**
+  O **hover clareia** em vez de escurecer. Com o fundo em 950 não há degrau mais
+  escuro na rampa; clarear um move 16.66 → 11.35 e continua AAA com texto branco.
+  A **borda do secundário voltou**. Enquanto o rótulo era magenta saturado, ele
+  sozinho dizia "isto é um controle", e a fronteira transparente era decisão de
+  desenho com a conta assumida em comentário — o preenchimento mede 1.09:1
+  contra a página, abaixo do 3:1 da WCAG 1.4.11. Com o rótulo em grafite,
+  secundário e desabilitado passariam a diferir só pelo brilho do texto, que é a
+  pista mais fraca que existe. `gray-500` é o degrau mais claro da rampa neutra
+  que ainda cumpre 3:1.
+  `--yb-accent-love` **ganhou valor próprio** em vez de apontar para
+  `--yb-action-bg`. O dia em que os dois precisariam divergir, previsto no
+  comentário do token, chegou: coração preto não lê como favorito, lê como
+  desabilitado.
+  `--yb-action-on-dark` **continua magenta** — é o único token da família que não
+  acompanhou a troca. Sobre grafite o preto é invisível, então a escolha era
+  entre claro e magenta; o claro funciona e não diz nada, vira mais um texto
+  branco sobre mais uma faixa escura no meio de uma foto. Não é contradição:
+  aqui não há ação nenhuma. O selo não é clicável — ele informa, e informação
+  sobre foto é justamente o caso em que a cor carrega mais que a forma.
+  A doc ganhou `--ds-accent`. Ela pintava os próprios controles com
+  `--yb-action-bg`, o que funcionava enquanto a ação era magenta; agora o que é
+  cromo de documentação fala na cor do sistema e o que é componente fala na cor
+  da loja.
+- **Collection card `--card`: nome e "Shop Collection" sempre em linhas
+  próprias.** Lado a lado eles só desciam quando não cabiam, e a altura do
+  cartão dependia do tamanho do nome. Agora o cartão estica até a célula da
+  grade e o atalho fica na base do rodapé: numa fileira, todos com a mesma
+  altura e o atalho na mesma linha, mesmo com nome de duas linhas (PDP em
+  1024). A foto passou a ter `height:auto` — herdava 100% da base e, com o
+  cartão esticado, empurrava o rodapé para fora.
+- **O cartão de produto inteiro passou a responder ao ponteiro no desktop.** Ele
+  já reagia de duas formas, e as duas moram dentro da foto: a segunda imagem
+  entra no lugar da primeira e o botão de ação aparece. Nenhuma diz o que
+  precisa ser dito onde o cartão não tem caixa nenhuma — que o alvo do clique é
+  a peça toda. O `.yb-card__title a::after` estica o link por cima de tudo desde
+  sempre; faltava a tela mostrar isso. Agora a peça sobe 2px e a foto ganha
+  sombra: o deslocamento é do cartão, porque é ele que é o alvo; a sombra vai na
+  mídia porque, no desktop, é o único filho com caixa para projetar.
+  Com a peça sobe também um **anel cinza a 8px de distância**, que é o que diz
+  "este bloco todo" — é `outline`, e não `border`: borda entraria no cálculo da
+  caixa e ganhar 1px no hover empurraria foto, título e preço, fazendo a fileira
+  tremer quando o ponteiro atravessa. O afastamento evita que a linha encoste no
+  texto, e 8px cabe na calha de 24px da grade. O anel segue o raio da casa
+  (`--yb-radius-card`): sem isso saía de canto vivo em volta de uma peça cujos
+  filhos são todos arredondados. Cinza de borda, não a cor de
+  foco: o anel magenta de `:focus-visible` significa outra coisa — onde o
+  teclado está —, e dois anéis da mesma cor para dois estados seria pior que
+  nenhum.
+  2px e não 4: numa grade de quatro colunas o vizinho fica a 24px, e salto maior
+  faz a fileira parecer instável quando o ponteiro atravessa. Com o ponteiro
+  sobre "Add to cart" o cartão não sobe — quem responde ali é o botão, mesma
+  exclusão por `:has()` que o cartão de oferta já usa. E o esgotado não sobe: a
+  exclusão entra no próprio seletor, porque `:not(:has(…))` carrega a
+  especificidade do argumento e uma regra `.yb-card--sold-out:hover` escrita
+  depois perderia em silêncio.
+- **O mosaico do Collection card fica só com blur.** Saiu da ficha a versão com
+  véu sem desfoque (nenhuma tela a usava); `--overlay --blur` é o mosaico. De
+  quebra, o plano B passou a valer para ele: sem desfoque (motor sem suporte ou
+  menos transparência pedida) o mosaico escondia as folhas de blur e ficava só
+  com o véu leve, que sozinho reprova contraste. Agora volta ao véu cheio, como
+  os banners.
+- **Collection card perdeu o `--center`** (quebra de contrato: a classe saiu). No
+  meio da foto a pílula cobria o cabelo que a foto existe para mostrar. Os usos
+  passaram para o `--card` (v2, rodapé fora da foto): a grade de resultado das
+  cinco PDPs, com "Read the article", a demo do Track e o exemplo "Faça" da
+  ficha. O `--bottom` continua.
 - **O desenho de um bloco aponta as peças que ele monta**, e não elementos
   internos. Num átomo a pergunta é "de que pedaços ele é feito"; num bloco a
   resposta útil é outra — quais componentes do sistema ele usa, e onde cada um

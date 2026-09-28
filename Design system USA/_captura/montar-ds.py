@@ -321,6 +321,98 @@ MENU = [
 ]
 
 
+# VITRINE POR LINHA. Passar o mouse (ou chegar pelo teclado) num item do
+# "Shop" troca a vitrine da direita pelo cartao da colecao e um produto em
+# destaque dela. So dado que a captura tem: arte de colecao real onde existe
+# (as quatro pranchetas e as fotos de problema), foto de produto da propria
+# linha onde nao existe, e produto so com nome e preco reais. Linha sem
+# produto conhecido mantem o quiz no segundo cartao; linha sem nenhuma imagem
+# nao ganha vitrine e o menu mostra a padrao. Nada e inventado para preencher.
+_P = {
+    'terra-coco':  ('Off1_Set_22-23-10-33df4b.webp', 'Terra Coco hydrating hair care kit', '$89.90'),
+    'double-care': ('Off1_August_22-24-11-18aac2.webp', 'Double care — perfect smooth hair kit + free 150g keratin', '$129.80'),
+    'fg-300':      ('149-3070c3.webp', 'Fashion Gold 300g – brazilian keratin treatment', '$77.90'),
+    'deep-care':   ('Artboard_1_62a39a8d-9dfe-4cdc-9bfd-7626a-b29a2a.webp', 'Deep care kit – Ybera Fashion Gold', '$63.90'),
+    'myrrh-oil':   ('Off2_Set_18-20-10-ccb0ae.webp', 'Myrrh hair repair oil 90 ml', '$59.90'),
+    'pantanal':    ('105-d0e326.webp', 'Pantanal elixir conditioner 1l – essencia brasileira', '$63.90'),
+}
+VITRINES = {  # href do item: (arte da colecao, produto em destaque ou None)
+    '/collections/best-sellers':                ('44_831fc84e-57db-4d51-ba41-ed4ed02438f3-284281.webp', 'terra-coco'),
+    '/collections/collections':                 ('KitCuidadosProfundos-YberaFashionGold_ab-9c59c4.webp', 'double-care'),
+    '/collections/fashion-gold':                ('Prancheta_1-790aea3e.webp', 'fg-300'),
+    '/collections/cronograma-hair-care-system': ('Prancheta_2-188b6fea.webp', 'deep-care'),
+    '/collections/terra-coco':                  ('Off1_Set_22-23-9_1-4ebac5.webp', 'terra-coco'),
+    '/collections/hair-mist':                   ('HairMist-FLORALFUSION_d9d86917-8f6b-46c0-98ec-3b-4f903974.avif', None),
+    '/collections/vello-1':                     ('Prancheta_3-d098ed99.webp', None),
+    '/collections/mirra':                       ('Prancheta_4-26cbd0ec.webp', 'myrrh-oil'),
+    '/collections/detox':                       ('DetoxMobille_109e8d67-c2fd-4329-8ed3-0fa79ebfd5a-59326a33.webp', None),
+    '/collections/essencia-brasileira':         ('CondicionadorElixirdaFloresta1KG-d0dd1c.webp', 'pantanal'),
+    '/collections/dullness':                    ('02_hair-problem-f838107d.webp', 'myrrh-oil'),
+    '/collections/dryness-frizz':               ('01_hair-problem-2cb5a59f.jpg', 'fg-300'),
+    '/collections/hair-loss-thinning-hair':     ('04_hair-problem-e1fbbb33.webp', None),
+    '/collections/frizz-lack-of-volume':        ('03_hair-problem-b7e78041.jpg', None),
+}
+
+
+def vitrine_id(href):
+    return href.rstrip('/').split('/')[-1]
+
+
+def nav_pitch(img='img/', ico_href='yb/icons.svg'):
+    chk = f'<svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="{ico_href}#yb-check"/></svg>'
+    return f"""<a class="yb-nav__pitch" href="/pages/ai-hair-routine-quiz">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li>{chk}Your hair type</li>
+                <li>{chk}Your main concern</li>
+                <li>{chk}The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>"""
+
+
+def vitrines_html(img='img/', ico_href='yb/icons.svg', pdp='pdp.html'):
+    """Os paineis extras da vitrine, um por item que tem o que mostrar. Nascem
+    `hidden`; o JS (`data-yb-vitrine-alvo`) troca qual aparece."""
+    rotulo = {h: t for it in MENU if it.get('rotulo') == 'Shop'
+              for g in it['grupos'] for t, h in g['itens']}
+    seta = f'<svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="{ico_href}#yb-arrow-right"/></svg>'
+    out = []
+    for href, (arte, prod) in VITRINES.items():
+        nome = rotulo.get(href)
+        if not nome:
+            continue
+        colecao = f"""<a class="yb-collection yb-collection--card" href="{href}">
+              <img src="{img}{arte}" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">{nome}</span>
+                <span class="yb-collection__cta">Shop collection {seta}</span>
+              </span>
+            </a>"""
+        if prod:
+            pimg, ptit, ppre = _P[prod]
+            segundo = f"""<a class="yb-nav__promo" href="{pdp}">
+              <div class="yb-nav__promo-media">
+                <img src="{img}{pimg}" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">{ptit}</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">{ppre}</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>"""
+        else:
+            segundo = nav_pitch(img, ico_href)
+        out.append(f"""<div class="yb-nav__vitrine" data-yb-vitrine="{vitrine_id(href)}" hidden>
+            {colecao}
+            {segundo}
+          </div>""")
+    return "\n          ".join(out)
+
+
 # A vitrine dentro do mega-menu do "Shop": um produto real em destaque mais o
 # convite para o quiz. Existia so na home, colada a mao direto no HTML gerado
 # — sobrevivia por acidente, e a PDP nunca a ganhou porque nada aqui a gerava
@@ -328,7 +420,8 @@ MENU = [
 # ja tem em maos, e as duas passam a mostrar a mesma coisa por construcao,
 # nao por copia.
 def nav_rail(produto):
-    return f"""<div class="yb-nav__rail">
+    return f"""<div class="yb-nav__rail" data-yb-vitrines>
+          <div class="yb-nav__vitrine" data-yb-vitrine="padrao">
             <a class="yb-nav__promo" href="pdp.html">
               <div class="yb-nav__promo-media">
                 <div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div>
@@ -363,6 +456,8 @@ def nav_rail(produto):
                    analysis" aqui e "Start quiz" na home. -->
               <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
             </a>
+          </div>
+          {vitrines_html()}
           </div>"""
 
 
@@ -385,7 +480,10 @@ def menu(promo=None):
             continue
         grupos = []
         for g in it["grupos"]:
-            itens = "".join(f'<li><a href="{h}">{t}</a></li>' for t, h in g["itens"])
+            itens = "".join(
+                f'<li><a href="{h}" data-yb-vitrine-alvo="{vitrine_id(h)}">{t}</a></li>'
+                if (it["rotulo"] == "Shop" and h in VITRINES) else f'<li><a href="{h}">{t}</a></li>'
+                for t, h in g["itens"])
             lista = f'<ul class="yb-nav__sublist">{itens}</ul>' if itens else ""
             sale = " yb-nav__grouptitle--sale" if g.get("destaque") else ""
             grupos.append(f'<div class="yb-nav__group">'
@@ -885,7 +983,7 @@ def cartao_oferta(p, destino):
                comprar sem sair dele.
                O rotulo passou de "Buy now" para "Add to cart" porque e o que
                ele faz agora; "Buy now" com seta prometia ir a algum lugar. -->
-          <button class="yb-btn yb-btn--primary yb-offercard__action" type="button"
+          <button class="yb-btn yb-btn--on-dark yb-offercard__action" type="button"
                   data-yb-open="cart" aria-label="Add to cart: {p['titulo'][:80]}">Add to cart</button>
         </div>
       </article>"""
@@ -2493,7 +2591,7 @@ def hero_v2(arte=None):
           <span class="yb-bannerhero__eyebrow">{h['eyebrow']}</span>
           <{titulo} class="yb-bannerhero__title">{h['titulo']}</{titulo}>
           <p class="yb-bannerhero__text">{h['texto']}</p>
-          <span class="yb-btn yb-btn--primary">{rot}</span>
+          <span class="yb-btn yb-btn--on-dark">{rot}</span>
         </div>
       </a>"""
         if i == 0 and arte:
@@ -2795,9 +2893,13 @@ def pdp_historia():
            onde a foto veio. Dois cartoes honestos valem mais que quatro com um
            errado. -->
       <ul class="pdp__prova">""" + "".join(f"""
-        <li><a class="yb-collection yb-collection--center" href="{pst['href']}">
+        <li><a class="yb-collection yb-collection--card" href="{pst['href']}">
           <img src="img/{pst.get('arquivo','')}" alt="" loading="lazy">
-          <span class="yb-collection__label">{rotulo}</span></a></li>""" for pst, rotulo in zip(POSTS[:2], ('A smoother finish', 'Softness you can feel'))) + """
+          <span class="yb-collection__foot">
+            <span class="yb-collection__name">{rotulo}</span>
+            <span class="yb-collection__cta">Read the article
+              {ico('arrow-right', 'yb-icon yb-icon--sm')}</span>
+          </span></a></li>""" for pst, rotulo in zip(POSTS[:2], ('A smoother finish', 'Softness you can feel'))) + """
       </ul>
 """
 

@@ -35,6 +35,10 @@
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
+  <a class="ds-top__baixar" href="../dist/ybera-tokens.json" download="ybera-tokens.json">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8"/><path d="M4.5 7.5 8 11l3.5-3.5"/><path d="M2.5 13.5h11"/></svg>
+    <span>Baixar tokens <span class="ds-top__baixar-fmt">JSON</span></span>
+  </a>
 </header>
 <nav class="ds-nav" aria-label="Navegação do design system">
   <ul class="ds-nav__solta">
@@ -203,27 +207,6 @@
   <div class="abas" data-yb-abas>
   <section class="bloco" id="demos" data-aba="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
-    <h3 class="row-label">v1 · rótulo sobre a foto, centrado — <code>--center</code></h3>
-    <div class="demo demo--stack">
-      <ul class="yb-collections">
-        <li><a class="yb-collection yb-collection--center" href="#demos">
-          <img src="../pages/img/02_hair-problem-f838107d.webp" alt="" loading="lazy">
-          <span class="yb-collection__label">Damaged Hair</span>
-        </a></li>
-        <li><a class="yb-collection yb-collection--center" href="#demos">
-          <img src="../pages/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy">
-          <span class="yb-collection__label">Frizz &amp; Dryness</span>
-        </a></li>
-        <li><a class="yb-collection yb-collection--center" href="#demos">
-          <img src="../pages/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy">
-          <span class="yb-collection__label">Thinning / Hair Loss</span>
-        </a></li>
-        <li><a class="yb-collection yb-collection--center" href="#demos">
-          <img src="../pages/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy">
-          <span class="yb-collection__label">Undefined Curls</span>
-        </a></li>
-      </ul>
-    </div>
     <h3 class="row-label">v1 · rótulo sobre a foto, no pé — <code>--bottom</code></h3>
     <div class="demo demo--stack">
       <ul class="yb-collections">
@@ -245,60 +228,42 @@
         </a></li>
       </ul>
     </div>
-    <h3 class="row-label">Mosaico, rótulo sobre véu — <code>.yb-collections--mosaic</code> + <code>--overlay</code></h3>
+    <h3 class="row-label">Mosaico — <code>.yb-collections--mosaic</code> + <code>--overlay --blur</code></h3>
     <div class="demo demo--stack">
       <ul class="yb-collections yb-collections--mosaic">
-        <li><a class="yb-collection yb-collection--overlay" href="#demos">
+        <li><a class="yb-collection yb-collection--overlay yb-collection--blur" href="#demos">
           <img src="../pages/img/02sauana-2896ea7c.webp" alt="" loading="lazy">
+          <span class="yb-collection__blur" aria-hidden="true"><i></i><i></i><i></i></span>
           <span class="yb-collection__label">Ybera Paris</span>
         </a></li>
-        <li><a class="yb-collection yb-collection--overlay" href="#demos">
+        <li><a class="yb-collection yb-collection--overlay yb-collection--blur" href="#demos">
           <img src="../pages/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy">
+          <span class="yb-collection__blur" aria-hidden="true"><i></i><i></i><i></i></span>
           <span class="yb-collection__label">Capulana</span>
         </a></li>
-        <li><a class="yb-collection yb-collection--overlay" href="#demos">
+        <li><a class="yb-collection yb-collection--overlay yb-collection--blur" href="#demos">
           <img src="../pages/img/02_hair-problem-f838107d.webp" alt="" loading="lazy">
+          <span class="yb-collection__blur" aria-hidden="true"><i></i><i></i><i></i></span>
           <span class="yb-collection__label">Cronograma</span>
         </a></li>
-        <li><a class="yb-collection yb-collection--overlay" href="#demos">
+        <li><a class="yb-collection yb-collection--overlay yb-collection--blur" href="#demos">
           <img src="../pages/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy">
+          <span class="yb-collection__blur" aria-hidden="true"><i></i><i></i><i></i></span>
           <span class="yb-collection__label">Genoma</span>
         </a></li>
-        <li><a class="yb-collection yb-collection--overlay" href="#demos">
+        <li><a class="yb-collection yb-collection--overlay yb-collection--blur" href="#demos">
           <img src="../pages/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy">
+          <span class="yb-collection__blur" aria-hidden="true"><i></i><i></i><i></i></span>
           <span class="yb-collection__label">Fashion Gold</span>
         </a></li>
       </ul>
     </div>
-    <h3 class="row-label">Mosaico com blur — <code>--overlay --blur</code></h3>
-    <div class="demo demo--stack">
-      <ul class="yb-collections yb-collections--mosaic">
-        <li><a class="yb-collection yb-collection--overlay yb-collection--blur" href="#demos">
-          <img src="../pages/img/02sauana-2896ea7c.webp" alt="" loading="lazy">
-          <span class="yb-collection__blur" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="yb-collection__label">Ybera Paris</span>
-        </a></li>
-        <li><a class="yb-collection yb-collection--overlay yb-collection--blur" href="#demos">
-          <img src="../pages/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy">
-          <span class="yb-collection__blur" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="yb-collection__label">Capulana</span>
-        </a></li>
-        <li><a class="yb-collection yb-collection--overlay yb-collection--blur" href="#demos">
-          <img src="../pages/img/02_hair-problem-f838107d.webp" alt="" loading="lazy">
-          <span class="yb-collection__blur" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="yb-collection__label">Cronograma</span>
-        </a></li>
-        <li><a class="yb-collection yb-collection--overlay yb-collection--blur" href="#demos">
-          <img src="../pages/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy">
-          <span class="yb-collection__blur" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="yb-collection__label">Genoma</span>
-        </a></li>
-        <li><a class="yb-collection yb-collection--overlay yb-collection--blur" href="#demos">
-          <img src="../pages/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy">
-          <span class="yb-collection__blur" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="yb-collection__label">Fashion Gold</span>
-        </a></li>
-      </ul>
+    <div class="note">
+      <b>No mosaico, sempre com blur</b>
+      <p>O rótulo sobre véu tinha duas versões, com e sem desfoque; ficou só a com
+      blur, como no Banner hero. O véu sozinho continua existindo por baixo: é o
+      plano B que a folha aplica em navegador sem desfoque e para quem pediu menos
+      transparência.</p>
     </div>
     <div class="note">
       <b>Ladrilho pequeno, queda curta</b>
@@ -357,11 +322,12 @@
       banner paga.</p>
     </div>
     <div class="note">
-      <b>Duas posições de rótulo, um componente</b>
-      <p>Muda onde o rótulo pousa — <code>--center</code> ou <code>--bottom</code>.
-      Anatomia igual não vira componente novo, vira modificador. Na home as duas grades
-      usam <code>--bottom</code>: centrado, o rótulo cobria o cabelo que a foto
-      mostra.</p>
+      <b>O rótulo fica no pé, nunca no centro</b>
+      <p>A pílula pousa no rodapé da foto (<code>--bottom</code>). Existia também uma
+      versão centrada, <code>--center</code>, e ela saiu: no meio da imagem o rótulo
+      cobria justamente o cabelo que a foto existe para mostrar. Onde o nome
+      precisa de ação escrita ("Shop Collection"), o cartão é o
+      <code>--card</code>, com o rodapé fora da foto.</p>
       <p>A pill é superfície clara, não magenta. Magenta é função: existe onde há
       decisão a tomar, e navegar para uma coleção não é uma.</p>
     </div>
@@ -409,21 +375,21 @@
     <div class="snippet">
       <button class="snippet-copiar" type="button" data-yb-copiar>Copiar</button>
       <pre><code>&lt;ul class="yb-collections"&gt;
-  &lt;li&gt;&lt;a class="yb-collection yb-collection--center" href="#demos"&gt;
-    &lt;img src="../pages/img/02_hair-problem-f838107d.webp" alt="" loading="lazy"&gt;
-    &lt;span class="yb-collection__label"&gt;Damaged Hair&lt;/span&gt;
+  &lt;li&gt;&lt;a class="yb-collection yb-collection--bottom" href="#demos"&gt;
+    &lt;img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy"&gt;
+    &lt;span class="yb-collection__label"&gt;Fashion Gold&lt;/span&gt;
   &lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a class="yb-collection yb-collection--center" href="#demos"&gt;
-    &lt;img src="../pages/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy"&gt;
-    &lt;span class="yb-collection__label"&gt;Frizz &amp;amp; Dryness&lt;/span&gt;
+  &lt;li&gt;&lt;a class="yb-collection yb-collection--bottom" href="#demos"&gt;
+    &lt;img src="../pages/img/Prancheta_2-188b6fea.webp" alt="" loading="lazy"&gt;
+    &lt;span class="yb-collection__label"&gt;Cronograma&lt;/span&gt;
   &lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a class="yb-collection yb-collection--center" href="#demos"&gt;
-    &lt;img src="../pages/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy"&gt;
-    &lt;span class="yb-collection__label"&gt;Thinning / Hair Loss&lt;/span&gt;
+  &lt;li&gt;&lt;a class="yb-collection yb-collection--bottom" href="#demos"&gt;
+    &lt;img src="../pages/img/Prancheta_3-d098ed99.webp" alt="" loading="lazy"&gt;
+    &lt;span class="yb-collection__label"&gt;Vello&lt;/span&gt;
   &lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a class="yb-collection yb-collection--center" href="#demos"&gt;
-    &lt;img src="../pages/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy"&gt;
-    &lt;span class="yb-collection__label"&gt;Undefined Curls&lt;/span&gt;
+  &lt;li&gt;&lt;a class="yb-collection yb-collection--bottom" href="#demos"&gt;
+    &lt;img src="../pages/img/Prancheta_4-26cbd0ec.webp" alt="" loading="lazy"&gt;
+    &lt;span class="yb-collection__label"&gt;Mirra&lt;/span&gt;
   &lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</code></pre>
     </div>
@@ -435,25 +401,26 @@
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca" style="max-inline-size:260px"><ul class="yb-collections">
-  <li><a class="yb-collection yb-collection--center" href="#anat-demos">
-    <img src="../pages/img/02_hair-problem-f838107d.webp" alt="" loading="lazy">
-    <span class="yb-collection__label">Damaged Hair</span>
+  <li><a class="yb-collection yb-collection--bottom" href="#anat-demos">
+    <img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy">
+    <span class="yb-collection__label">Fashion Gold</span>
   </a></li>
-  <li><a class="yb-collection yb-collection--center" href="#anat-demos">
-    <img src="../pages/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy">
-    <span class="yb-collection__label">Frizz &amp; Dryness</span>
+  <li><a class="yb-collection yb-collection--bottom" href="#anat-demos">
+    <img src="../pages/img/Prancheta_2-188b6fea.webp" alt="" loading="lazy">
+    <span class="yb-collection__label">Cronograma</span>
   </a></li>
-  <li><a class="yb-collection yb-collection--center" href="#anat-demos">
-    <img src="../pages/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy">
-    <span class="yb-collection__label">Thinning / Hair Loss</span>
+  <li><a class="yb-collection yb-collection--bottom" href="#anat-demos">
+    <img src="../pages/img/Prancheta_3-d098ed99.webp" alt="" loading="lazy">
+    <span class="yb-collection__label">Vello</span>
   </a></li>
-  <li><a class="yb-collection yb-collection--center" href="#anat-demos">
-    <img src="../pages/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy">
-    <span class="yb-collection__label">Undefined Curls</span>
+  <li><a class="yb-collection yb-collection--bottom" href="#anat-demos">
+    <img src="../pages/img/Prancheta_4-26cbd0ec.webp" alt="" loading="lazy">
+    <span class="yb-collection__label">Mirra</span>
   </a></li>
 </ul></div>
       </div>
       <ol class="anat__legenda">
+        <li data-alvo=".yb-collections"><span class="anat__texto"><b>Fileira</b> — A lista em volta. É ela que decide quantos cabem por linha; o cartão só preenche.</span></li>
         <li data-alvo=".yb-collection"><span class="anat__texto"><b>Cartão</b> — Foto com o nome da coleção por cima. O link cobre a peça inteira.</span></li>
         <li data-alvo="img"><span class="anat__texto"><b>Foto</b> — <code>alt</code> vazio: o nome logo abaixo já diz para onde leva.</span></li>
         <li data-alvo=".yb-collection__label"><span class="anat__texto"><b>Nome</b> — O destino, em duas ou três palavras. É o que a pessoa procura na vitrine.</span></li>
@@ -472,11 +439,11 @@
     estiver errado aqui, o errado é o código.</p>
 
     <p class="api-linha"><span class="api-linha__rotulo">De que é feita</span><span class="api-linha__corpo">Nenhuma: não consome nenhum outro componente. O que ela desenha sai todo da folha dela.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-collection--blur</code> <code>.yb-collection--bottom</code> <code>.yb-collection--card</code> <code>.yb-collection--center</code> <code>.yb-collection--overlay</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-collection--blur</code> <code>.yb-collection--bottom</code> <code>.yb-collection--card</code> <code>.yb-collection--overlay</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-collection__blur</code> <code>.yb-collection__cta</code> <code>.yb-collection__foot</code> <code>.yb-collection__label</code> <code>.yb-collection__name</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
-    <p class="rotulo">Tokens <span class="rotulo-conta">48</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">46</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>8</span></p>
@@ -486,8 +453,8 @@
           <li><i class="tokens__cor" style="background:var(--yb-text-link-hover)" aria-hidden="true"></i><code>--yb-text-link-hover</code><span class="tokens__valor">#8A1E45</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface-sunken)" aria-hidden="true"></i><code>--yb-surface-sunken</code><span class="tokens__valor">#FAFAFA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
         </ul>
       </div>
@@ -504,14 +471,12 @@
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>6</span></p>
+        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>4</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-space-1</code><span class="tokens__valor">0.25rem</span></li>
           <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
           <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
           <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
           <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>
-          <li><code>--yb-space-3</code><span class="tokens__valor">0.75rem</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
@@ -576,7 +541,7 @@
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
         <p class="fn-cabeca">✓ Faça</p>
-        <div class="fn-palco"><a class="yb-collection yb-collection--center" href="#faca" style="inline-size:180px"><img src="../pages/img/Prancheta_1-790aea3e.webp" alt=""><span class="yb-collection__label">Fashion Gold</span></a></div>
+        <div class="fn-palco"><a class="yb-collection yb-collection--card" href="#faca" style="inline-size:180px"><img src="../pages/img/Prancheta_1-790aea3e.webp" alt=""><span class="yb-collection__foot"><span class="yb-collection__name">Fashion Gold</span><span class="yb-collection__cta">Shop Collection</span></span></a></div>
         <p class="fn-legenda">Um link por cartão, com o nome como texto do link.</p>
       </div>
       <div class="fn-caso fn-caso--nao">

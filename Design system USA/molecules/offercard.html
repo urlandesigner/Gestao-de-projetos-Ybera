@@ -35,6 +35,10 @@
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
+  <a class="ds-top__baixar" href="../dist/ybera-tokens.json" download="ybera-tokens.json">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8"/><path d="M4.5 7.5 8 11l3.5-3.5"/><path d="M2.5 13.5h11"/></svg>
+    <span>Baixar tokens <span class="ds-top__baixar-fmt">JSON</span></span>
+  </a>
 </header>
 <nav class="ds-nav" aria-label="Navegação do design system">
   <ul class="ds-nav__solta">
@@ -215,10 +219,10 @@
           <div class="yb-offercard__linha">
             <span class="yb-offercard__price">$47.92</span>
             <s class="yb-offercard__was">$59.90</s>
-            <p class="yb-offercard__timer" data-yb-countdown="2026-09-27T23:59:59Z"><time datetime="2026-09-27">Sep 27</time></p>
+            <p class="yb-offercard__timer" data-yb-countdown="2026-09-30T23:59:59Z"><time datetime="2026-09-30">Sep 30</time></p>
           </div>
           <p class="yb-offercard__fim" hidden>Offer ended</p>
-          <button class="yb-btn yb-btn--primary yb-offercard__action" type="button"
+          <button class="yb-btn yb-btn--on-dark yb-offercard__action" type="button"
                   data-yb-open="cart" aria-label="Add to cart: Myrrh hair repair oil">Add to cart</button>
         </div>
       </article>
@@ -237,7 +241,7 @@
             <p class="yb-offercard__timer" data-yb-countdown="2020-01-01T00:00:00Z"><time>Jan 1, 2020</time></p>
           </div>
           <p class="yb-offercard__fim" hidden>Offer ended</p>
-          <button class="yb-btn yb-btn--primary yb-offercard__action" type="button"
+          <button class="yb-btn yb-btn--on-dark yb-offercard__action" type="button"
                   data-yb-open="cart" aria-label="Add to cart: Cronograma hair care system">Add to cart</button>
         </div>
       </article>
@@ -336,10 +340,10 @@
     &lt;div class="yb-offercard__linha"&gt;
       &lt;span class="yb-offercard__price"&gt;$47.92&lt;/span&gt;
       &lt;s class="yb-offercard__was"&gt;$59.90&lt;/s&gt;
-      &lt;p class="yb-offercard__timer" data-yb-countdown="2026-09-27T23:59:59Z"&gt;&lt;time datetime="2026-09-27"&gt;Sep 27&lt;/time&gt;&lt;/p&gt;
+      &lt;p class="yb-offercard__timer" data-yb-countdown="2026-09-30T23:59:59Z"&gt;&lt;time datetime="2026-09-30"&gt;Sep 30&lt;/time&gt;&lt;/p&gt;
     &lt;/div&gt;
     &lt;p class="yb-offercard__fim" hidden&gt;Offer ended&lt;/p&gt;
-    &lt;button class="yb-btn yb-btn--primary yb-offercard__action" type="button"
+    &lt;button class="yb-btn yb-btn--on-dark yb-offercard__action" type="button"
             data-yb-open="cart" aria-label="Add to cart: Myrrh hair repair oil"&gt;Add to cart&lt;/button&gt;
   &lt;/div&gt;
 &lt;/article&gt;</code></pre>
@@ -361,10 +365,10 @@
     <div class="yb-offercard__linha">
       <span class="yb-offercard__price">$47.92</span>
       <s class="yb-offercard__was">$59.90</s>
-      <p class="yb-offercard__timer" data-yb-countdown="2026-09-27T23:59:59Z"><time datetime="2026-09-27">Sep 27</time></p>
+      <p class="yb-offercard__timer" data-yb-countdown="2026-09-30T23:59:59Z"><time datetime="2026-09-30">Sep 30</time></p>
     </div>
     <p class="yb-offercard__fim" hidden>Offer ended</p>
-    <button class="yb-btn yb-btn--primary yb-offercard__action" type="button"
+    <button class="yb-btn yb-btn--on-dark yb-offercard__action" type="button"
             data-yb-open="cart" aria-label="Add to cart: Myrrh hair repair oil">Add to cart</button>
   </div>
 </article></div>
@@ -376,6 +380,9 @@
         <li data-alvo=".yb-offercard__title"><span class="anat__texto"><b>Título</b> — O nome do produto. O link invisível acima cobre o cartão e aponta para ele.</span></li>
         <li data-alvo=".yb-offercard__price"><span class="anat__texto"><b>Preço</b> — O que se paga. O riscado ao lado é o preço anterior, e só aparece se houver.</span></li>
         <li data-alvo=".yb-offercard__action"><span class="anat__texto"><b>Ação</b> — Opcional. Some no celular, onde o cartão inteiro já é o alvo.</span></li>
+        <li data-alvo=".yb-offercard__link"><span class="anat__texto"><b>Alvo</b> — Link invisível que cobre o cartão inteiro. É ele que leva à PDP, não o título.</span></li>
+        <li data-alvo=".yb-offercard__was"><span class="anat__texto"><b>Preço anterior</b> — Riscado, ao lado do que se paga. Só existe quando houve preço antes.</span></li>
+        <li data-alvo=".yb-offercard__timer"><span class="anat__texto"><b>Relógio</b> — O que resta da oferta. A data vem do HTML; quem conta é o comportamento.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia

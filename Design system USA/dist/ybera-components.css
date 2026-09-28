@@ -361,7 +361,11 @@
    ele briga com o proprio fundo, enquanto o branco cheio nao tem como perder.
    Medido: grafite sobre branco 16.66:1, e o proprio botao contra o painel
    tambem 16.66:1, entao ele nao precisa de borda para existir.
-   Nao use isto sobre foto: ali o fundo nao e conhecido e o token e outro. */
+   SOBRE FOTO, so com o veu do sistema atras. Foto crua e fundo que ninguem
+   controla; o veu (Banner hero, Banner media, Card offer) e o que torna o
+   fundo conhecido. Medido no pior caso, pixel branco debaixo do veu: o botao
+   branco fica a 7.84:1 do veu cheio (.77) e a 5.19:1 do leve (.65), acima
+   dos 3:1 de fronteira de controle. O primario preto, ali, some no escuro. */
 .yb-btn--on-dark{background:var(--yb-text-inverse); color:var(--yb-bg-inverse)}
 
 /* O branco nao tem para onde clarear: o hover AFUNDA. Sao os dois degraus de
@@ -418,7 +422,9 @@
   padding:var(--yb-space-1) var(--yb-space-2);
   border-radius:var(--yb-radius-badge); white-space:nowrap;
 }
-.yb-badge--sale{background:var(--yb-action-bg); color:var(--yb-action-text)}
+/* MAGENTA, e nao o preto da acao: o desconto nao e um botao. Ver
+   --yb-accent-brand. */
+.yb-badge--sale{background:var(--yb-accent-brand); color:var(--yb-text-on-action)}
 /* O par do botao secundario, e de proposito os MESMOS tokens dele — nao uma
    copia dos valores. Quem afinar o botao secundario um dia move este selo
    junto, que e o que "mesmo padrao de cor do secundario" quer dizer; dois
@@ -430,8 +436,27 @@
    comportam: quem desenha a forma e o texto, nao a caixa. */
 .yb-badge--secondary{
   background:var(--yb-action-secondary-bg); color:var(--yb-action-secondary-text);
+  /* A BORDA VEIO JUNTO, e nao por estilo: quando o secundario virou contorno
+     (fundo branco, linha preta), o selo — que divide os tokens dele de
+     proposito — ficou branco sobre branco. Compartilhar a cor so funciona se
+     compartilhar tambem o que a torna visivel. */
+  border:var(--yb-border-width-hair) solid var(--yb-action-secondary-border);
 }
 .yb-badge--soft{background:var(--yb-bg-muted); color:var(--yb-text-secondary)}
+/* O SELO PRETO — a primaria da marca preenchida, texto branco, 16.66:1.
+
+   Ele existia sem nome ate 0.13: o `--sale` apontava para a cor de acao, e
+   enquanto a acao era magenta ninguem tinha o preto; quando a acao virou
+   preta, o `--sale` virou preto e o magenta e que sumiu. Os dois sao
+   necessarios, e por isso agora sao dois seletores com cor propria em vez de
+   um que muda de cor conforme o botao.
+
+   QUANDO CADA UM: `--sale` quando a informacao e comercial e disputa atencao
+   com o preco — desconto, brinde. `--dark` quando ela e de catalogo e so
+   precisa ser lida — "New", "Last units", "Limited edition". Dois selos
+   magenta na mesma foto anulam um ao outro; magenta com preto ao lado se
+   separam sozinhos. */
+.yb-badge--dark{background:var(--yb-bg-inverse); color:var(--yb-text-inverse)}
 /* O SELO QUE SOBREVIVE A UMA FOTO. Traz o proprio fundo grafite em vez de
    contar com o que estiver atras, e por isso e o unico da familia que pode ir
    sobre imagem: os claros (`--soft`, `--secondary`, `--success`, `--warning`,
@@ -524,7 +549,7 @@
    a escolha para cima de foto; `--sale` mede 3,3:1 nas mesmas fotos — passa o
    minimo de 3:1 de objeto grafico, mas raspando e variando com a imagem, e
    por isso e a roupa de superficie lisa. */
-.yb-offerseal--sale{background:var(--yb-action-bg); color:var(--yb-action-text)}
+.yb-offerseal--sale{background:var(--yb-accent-brand); color:var(--yb-text-on-action)}
 .yb-offerseal--accent{background:var(--yb-bg-inverse); color:var(--yb-accent-on-dark)}
 /* Nao ha `--gold`. Faltou token semantico para DOURADO DE FUNDO — o que
    existe e `--yb-accent-on-dark`, que e cor de TEXTO sobre escuro — e
@@ -1684,8 +1709,8 @@ button.yb-link{
    link seria interativo dentro de interativo. Sem esta regra o cartao inteiro
    e clicavel e nada nele reage ao mouse. Mesmo arranjo de `.yb-nav__promo`. */
 @media (hover:hover){
-  .yb-bannerhero:hover .yb-btn--primary,
-  .yb-bannermedia:hover .yb-btn--primary{ background:var(--yb-action-bg-hover); }
+  .yb-bannerhero:hover .yb-btn--on-dark,
+  .yb-bannermedia:hover .yb-btn--on-dark{ background:var(--yb-surface-sunken); }
 }
 /* 2) A faixa forte segue o CORPO, nao a imagem: assim ela tem exatamente a
       altura do texto, qualquer que seja o texto, em vez de uma porcentagem
@@ -1901,7 +1926,8 @@ button.yb-link{
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
   .yb-bannerhero__blur, .yb-bannermedia__blur, .yb-offercard__blur, .yb-collection__blur{ display:none; }
   .yb-bannerhero--blur .yb-bannerhero__body::before,
-  .yb-bannermedia--blur .yb-bannermedia__body::before{
+  .yb-bannermedia--blur .yb-bannermedia__body::before,
+  .yb-collection--blur.yb-collection--overlay::after{
     background:linear-gradient(to bottom,
       var(--yb-scrim-none)    0,
       var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
@@ -1913,7 +1939,8 @@ button.yb-link{
 @media (prefers-reduced-transparency:reduce){
   .yb-bannerhero__blur, .yb-bannermedia__blur, .yb-offercard__blur, .yb-collection__blur{ display:none; }
   .yb-bannerhero--blur .yb-bannerhero__body::before,
-  .yb-bannermedia--blur .yb-bannermedia__body::before{
+  .yb-bannermedia--blur .yb-bannermedia__body::before,
+  .yb-collection--blur.yb-collection--overlay::after{
     background:linear-gradient(to bottom,
       var(--yb-scrim-none)    0,
       var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
@@ -2064,6 +2091,81 @@ button.yb-link{
   transition:opacity var(--yb-transition-surface);
 }
 @media (hover:hover){ .yb-card:hover .yb-card__media img + img{opacity:1} }
+
+/* O CARTAO INTEIRO RESPONDE AO PONTEIRO — e nao so o que esta dentro da foto.
+
+   Ele ja reagia de duas formas, e as duas moram DENTRO da midia: a segunda
+   foto entra no lugar da primeira e o botao de acao aparece. Nenhuma das duas
+   diz o que precisa ser dito no desktop, onde o cartao nao tem caixa nenhuma:
+   que o alvo do clique e a peca toda, e nao o pedaco que se mexeu. O
+   `.yb-card__title a::after` estica o link por cima de tudo desde sempre —
+   faltava a tela mostrar isso.
+
+   Entao a peca sobe 2px e a foto ganha sombra. O deslocamento e do CARTAO,
+   porque e ele que e o alvo; a sombra vai na midia porque, no desktop, e o
+   unico filho com caixa para projetar — no celular o cartao inteiro ja tem
+   contorno e fundo, e la esta regra nem entra (`hover:hover`).
+
+   2px, e nao 4 ou 6: numa grade de quatro colunas o cartao vizinho fica a 24px,
+   e salto maior faz a fileira inteira parecer instavel quando o ponteiro
+   atravessa. O corte de movimento do sistema (base/ybera-base.css) ja zera a
+   transicao para quem pede menos animacao — o cartao continua subindo, so que
+   sem o caminho.
+
+   A EXCLUSAO E A MESMA DO CARTAO DE OFERTA: com o ponteiro sobre "Add to
+   cart", quem responde e o botao. `.yb-card:hover` continua verdadeiro ali,
+   porque o botao e filho — por isso o `:not(:has(...))`. Onde `:has()` nao
+   existir, o cartao so nao sobe; nada quebra. */
+@media (hover:hover){
+  .yb-card{
+    transition:transform var(--yb-transition-surface),
+               outline-color var(--yb-transition-surface);
+    outline:var(--yb-border-hairline) solid transparent;
+    outline-offset:var(--yb-space-2);
+    /* O RAIO E DO CARTAO, e o anel o segue. Sem ele o `outline` sai de canto
+       vivo em volta de uma peca cujos filhos sao todos arredondados — a foto
+       tem `--yb-radius-media` e o cartao no celular tem `--yb-radius-card`.
+       Aqui nao ha fundo nem borda para o raio recortar, entao ele so existe
+       para dar forma ao anel; o navegador soma o afastamento ao raio sozinho.
+       `--yb-radius-card` e nao `--yb-radius-media`: o que esta sendo contornado
+       e o cartao inteiro, nao a imagem. */
+    border-radius:var(--yb-radius-card);
+  }
+  .yb-card__media{
+    transition:box-shadow var(--yb-transition-surface);
+  }
+  /* ESGOTADO NAO SOBE, e a exclusao entra no proprio seletor em vez de uma
+     regra depois. `:not(:has(.yb-card__action:hover))` vale a especificidade
+     do argumento mais especifico que ele carrega — entao a regra de subir
+     pesa (0,4,0), e um `.yb-card--sold-out:hover` (0,2,0) escrito abaixo
+     perderia em silencio. O cartao esgotado continua navegavel; o que ele nao
+     faz e prometer resposta de compra que a propria tarja acabou de desmentir. */
+  .yb-card:not(.yb-card--sold-out):hover:not(:has(.yb-card__action:hover)),
+  .yb-card:not(.yb-card--sold-out):focus-within:not(:has(.yb-card__action:hover)){
+    transform:translateY(-2px);
+    /* A BORDA E `outline` COM AFASTAMENTO, e nao `border`.
+
+       `border` entraria no calculo da caixa: o cartao nao tem moldura no
+       desktop, entao ganhar 1px no hover empurraria foto, titulo e preco —
+       a fileira inteira treme quando o ponteiro atravessa. `outline` e
+       pintura, nao layout.
+
+       E o afastamento e o que faz o anel dizer "este bloco todo", em vez de
+       parecer uma caixa que cresceu em volta do texto: sem ele a linha
+       encosta no titulo e no preco. 8px cabe na calha de 24px da grade de
+       quatro colunas, entao dois cartoes vizinhos nunca encostam os aneis.
+
+       Cinza de borda, e nao a cor de foco: o anel de `:focus-visible` do
+       titulo e magenta e significa outra coisa — onde o teclado esta. Dois
+       aneis da mesma cor para dois estados diferentes seria pior que nenhum. */
+    outline:var(--yb-border-hairline) solid var(--yb-border);
+    outline-offset:var(--yb-space-2);
+  }
+  .yb-card:not(.yb-card--sold-out):hover:not(:has(.yb-card__action:hover)) .yb-card__media,
+  .yb-card:not(.yb-card--sold-out):focus-within:not(:has(.yb-card__action:hover)) .yb-card__media{
+    box-shadow:var(--yb-elevation-raised);
+  }
+}
 
 /* esgotado: estado de comercio, nao de interface — o card continua navegavel,
    mas diz o que aconteceu antes de a pessoa tentar comprar */
@@ -3166,7 +3268,7 @@ button.yb-link{
 .yb-partner[data-recolhido] .yb-partner__avatar::after{
   content:""; position:absolute; inset-block-start:2px; inset-inline-end:2px;
   inline-size:.5rem; block-size:.5rem; border-radius:var(--yb-radius-pill);
-  background:var(--yb-action-bg); border:var(--yb-border-hairline) solid var(--yb-surface);
+  background:var(--yb-accent-brand); border:var(--yb-border-hairline) solid var(--yb-surface);
 }
 
 /* -------------------------------------------------------------------------
@@ -3285,8 +3387,6 @@ body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 
   line-height:var(--yb-line-height-base);
 }
 
-/* rótulo no meio da imagem — usado em "What's Standing Between You…" */
-.yb-collection--center .yb-collection__label{ top:50%; transform:translateY(-50%); }
 /* rótulo no rodapé — usado em "Explore Our Collections" */
 .yb-collection--bottom .yb-collection__label{ inset-block-end:var(--yb-space-4); }
 
@@ -3392,16 +3492,26 @@ body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 
    O cartao passa de 300 para 511px de altura em 1440. E o preco de mostrar o
    produto inteiro, e o cartao com rodape existe justamente para quando a foto
    precisa convencer. */
-.yb-collection--card img{aspect-ratio:5/7; flex:none}
-/* `flex-wrap` porque a largura que importa aqui e a da COLUNA, nao a da tela.
-   O `@media (max-width:560px)` abaixo empilha quando a TELA e estreita — e nao
-   ajuda numa tela de 1440 em que o cartao mora numa coluna de 195px, que foi
-   onde "Shop Collection" empurrou a grade 227px para fora da pagina. Com wrap,
-   o atalho desce para a segunda linha quando nao cabe, seja qual for o motivo
-   de nao caber. */
+/* `height:auto`: a base pede 100% da caixa, e com o cartao esticado pela grade
+   a foto passava a ocupar o cartao inteiro e empurrava o rodape para fora. A
+   altura da foto vem so da razao. */
+.yb-collection--card img{aspect-ratio:5/7; height:auto; flex:none}
+/* Nome e atalho SEMPRE em linhas proprias. Lado a lado, eles so desciam para
+   a segunda linha quando nao cabiam, e a altura do cartao passava a depender
+   do tamanho do nome: numa fileira de quatro, "Mirra" ficava numa linha e
+   "Cronograma" em duas, e os cartoes saiam com alturas diferentes.
+   O cartao estica ate a altura da celula da grade (o `<li>` vira flex para o
+   cartao dentro dele esticar junto) e o rodape ocupa o que sobra, com o atalho
+   empurrado para a base: nome de uma ou de duas linhas, o atalho fica na
+   mesma altura em toda a fileira. `block-size:100%` nao serve: contra a altura
+   automatica da celula ele caia na razao 3/4 da base e cortava o atalho. */
+li:has(> .yb-collection--card){ display:flex; }
+li > .yb-collection--card{ flex:1; min-inline-size:0; }
+/* `flex-grow` e nao `flex:1`: o atalho `flex:1` zera a base, e numa coluna sem
+   altura fixa o cartao media a foto e cortava o rodape inteiro. */
 .yb-collection__foot{
-  display:flex; align-items:center; justify-content:space-between;
-  flex-wrap:wrap; gap:var(--yb-space-3); padding:var(--yb-space-4);
+  flex-grow:1; display:flex; flex-direction:column; align-items:flex-start;
+  gap:var(--yb-space-2); padding:var(--yb-space-4);
 }
 .yb-collection__name{
   font-size:var(--yb-type-body-lg-size); font-weight:var(--yb-font-weight-bold);
@@ -3412,18 +3522,13 @@ body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 
    iguais para quem ouve a pagina. */
 .yb-collection__cta{
   display:inline-flex; align-items:center; gap:var(--yb-space-2); flex:none;
+  margin-block-start:auto;
   font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
   color:var(--yb-text-link); white-space:nowrap;
 }
 
 @media (hover:hover){
   .yb-collection--card:hover .yb-collection__cta{color:var(--yb-text-link-hover)}
-}
-/* Em duas colunas o nome e o atalho nao cabem lado a lado — "Cronograma" mais
-   "Shop Collection" pedem 300px e a coluna tem 170. Empilha, e o atalho vira
-   a segunda linha em vez de sumir. */
-@media (max-width:560px){
-  .yb-collection__foot{flex-direction:column; align-items:flex-start; gap:var(--yb-space-1)}
 }
 
 /* a grade que as duas seções compartilham */
@@ -4693,6 +4798,9 @@ body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 
 @media (hover:hover){
   .yb-nav__sublist a:hover{color:var(--yb-text-primary)}
 }
+/* O item que esta mostrando a vitrine continua aceso quando o mouse vai ate
+   os cartoes — senao a vitrine parece solta, sem dizer de que item veio. */
+.yb-nav__sublist a[data-yb-vitrine-ativo]{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
 .yb-nav__sublist a:focus-visible,.yb-nav__grouptitle:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
@@ -4726,7 +4834,17 @@ body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 
   flex:1 1 18rem; min-width:0;
   display:flex; justify-content:flex-end; gap:var(--yb-space-6);
 }
-.yb-nav__rail > *{flex:1 1 0; min-width:0; max-width:18rem}
+/* A vitrine tem varios estados (`.yb-nav__vitrine`, um por item do painel;
+   so um aparece). O invólucro some da caixa com `display:contents`, entao os
+   dois cartoes de cada estado continuam sendo os itens do flex da vitrine —
+   a medida e a mesma com qualquer estado na tela. */
+.yb-nav__vitrine{display:contents}
+.yb-nav__vitrine > *{flex:1 1 0; min-width:0; max-width:18rem}
+/* O cartao de colecao, dentro da vitrine, divide a altura com o do produto:
+   a foto cresce ate onde o painel da, em vez de impor a razao 5/7 de vitrine
+   de colecao — que aqui esticaria o menu inteiro. */
+.yb-nav__vitrine > .yb-collection--card img{aspect-ratio:auto; flex:1 1 auto; min-height:8rem; height:0}
+.yb-nav__vitrine > .yb-collection--card .yb-collection__foot{flex-grow:0}
 
 /* Um unico <a>, como `.yb-search__item` — midia e botao separados dariam
    dois links pro mesmo produto, ruido extra pra teclado e leitor de tela.
@@ -4745,7 +4863,10 @@ body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 
   position:relative; flex:1; min-height:8rem; overflow:hidden;
   background:var(--yb-bg-muted); border-radius:var(--yb-radius-media);
 }
-.yb-nav__promo-media img{width:100%; height:100%; object-fit:cover; display:block}
+/* A foto preenche a caixa sem ditar a altura dela (absoluta). Em fluxo, a
+   foto quadrada carregada puxava o cartao para 409px e o painel crescia 17px
+   so quando a imagem chegava — e mudava de altura ao trocar de vitrine. */
+.yb-nav__promo-media img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block}
 .yb-nav__promo-info{display:flex; flex-direction:column; gap:var(--yb-space-2)}
 /* Mesmo peso do nome no cartao de catalogo, e nao por acaso: e a mesma coisa
    — o nome de um produto — em outro lugar da casa. Andou para 600 junto com
@@ -5096,7 +5217,8 @@ body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 
      o selo caia sobre a alca da sacola e a apagava. Deslocado para fora, ele
      encosta na quina e o desenho continua inteiro. */
   position:absolute; inset-block-start:1px; inset-inline-end:-4px;
-  background:var(--yb-action-bg); color:var(--yb-action-text);
+  /* A contagem e marcacao, nao acao — ver --yb-accent-brand. */
+  background:var(--yb-accent-brand); color:var(--yb-text-on-action);
   font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-bold);
   /* Circulo, nao pilula. Com `box-sizing:border-box` a borda de 2px entra na
      conta: o digito (8px) mais 10px de respiro mais 4px de borda davam 22 de

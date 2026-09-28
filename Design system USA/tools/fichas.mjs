@@ -551,9 +551,14 @@ const blocoAnatomia = (f, n) => {
       A lista de API abaixo continua valendo — o que falta é o nome e o porquê de cada parte.</p>`;
   if (!f.snippet)
     return '<p class="api-vazia">Sem demonstração de onde tirar o desenho.</p>';
+  /* O RECORTE PROCURA NO PALCO INTEIRO, e nao so na primeira demo. A anatomia
+     do Button precisa do botao COM icone, e ele vive na fileira "Com icone",
+     tres demos abaixo da de variantes — a primeira demo e so o que a peca
+     mostra primeiro, nao necessariamente o que ela precisa explicar. Sem
+     recorte, nada muda: continua a primeira demo. */
   let marcacao = primeiraAmostra(f.snippet);
   if (recorte) {
-    const m = marcacao.match(new RegExp(recorte, 's'));
+    const m = f.palco.match(new RegExp(recorte, 's'));
     if (!m) {
       console.error(`fichas.mjs: recorte da anatomia nao casa em ${f.id} — ${recorte}`);
       process.exit(1);

@@ -187,12 +187,23 @@
   --yb-text-link-hover: var(--yb-magenta-700);
 
   /* =====================================================================
-     AÇÃO — magenta é FUNÇÃO, não identidade.
-     Existe onde há uma decisão a tomar: comprar, enviar, confirmar.
-     ===================================================================== */
-  --yb-action-bg:         var(--yb-magenta-600);
-  --yb-action-bg-hover:   var(--yb-magenta-700);
-  --yb-action-bg-active:  var(--yb-magenta-800);
+     AÇÃO — o preto da marca. Existe onde há uma decisão a tomar: comprar,
+     enviar, confirmar.
+
+     ERA MAGENTA ATÉ 0.13, e a troca não é de paleta: é de papel. O gray-950
+     sempre foi a primária da marca (está escrito na camada 0); o magenta era
+     a cor de AÇÃO, emprestada à marca em cada botão. Agora a loja fala em
+     preto e o magenta recua para onde ele é sinal e não identidade — link,
+     anel de foco e favoritar — e para a documentação, que continua sendo a
+     casa dele.
+
+     O HOVER CLAREIA, e não escurece. Com o fundo em 950 não há degrau mais
+     escuro na rampa: o pressionado teria de ser preto puro, que o sistema não
+     tem, e o hover ficaria igual ao repouso. Clarear um degrau move 5 pontos
+     de contraste (16.66 → 11.35) e continua AAA com texto branco. */
+  --yb-action-bg:         var(--yb-gray-950);   /* 16.66:1 com texto branco */
+  --yb-action-bg-hover:   var(--yb-gray-800);   /* 11.35:1 */
+  --yb-action-bg-active:  var(--yb-gray-700);   /*  7.67:1 */
   --yb-action-bg-disabled: var(--yb-gray-200);
   --yb-action-text:        var(--yb-text-on-action);
   /* @deprecated desde 0.10 — use --yb-text-muted. Remocao em 1.0.
@@ -202,52 +213,34 @@
      sistema nao usa porque e ilegivel nao pode continuar oferecido. */
   --yb-action-text-disabled: var(--yb-text-muted);
 
-  /* AÇÃO SECUNDÁRIA — magenta tingido, não grafite sólido.
-     Era `gray-950`: um bloco de 16.66:1 ao lado de um primário de 5.36:1.
-     A secundária pesava 3,1x mais que a primária e virava o elemento mais
-     forte da tela — mais que o título do produto. Duas primárias, portanto.
+  /* AÇÃO SECUNDÁRIA — contorno, e não bloco.
+     Historico: foi grafite solido (pesava 3,1x a primaria magenta e virava
+     duas primarias), depois magenta tingido (a diferenca para o desabilitado
+     era de matiz). Com a acao em preto, o tingido perdeu o matiz que o
+     justificava.
 
-     Cinza claro foi tentado e descartado: a 1,09:1 o bloco some no branco, e
-     onde não some é confundido com desabilitado, que também é cinza.
-
-     Tingir com a própria cor de ação resolve as duas coisas de uma vez.
-     Desabilitado é cinza, secundária é magenta: a diferença é de MATIZ, não
-     de peso, e matiz não se confunde. O contorno dá a aresta que o tingido
-     sozinho não tem sobre fundo branco.
-
-     Limite conhecido: o tingido depende de fundo claro. Sobre a faixa
-     escura do header ou sobre foto ele não se sustenta — ali a secundária
-     teria de ser contorno claro, e essa variante ainda não existe porque
-     nenhuma tela pede. Ver a nota na ficha do Button. */
-  --yb-action-secondary-bg:        var(--yb-magenta-100);
-  --yb-action-secondary-bg-hover:  var(--yb-magenta-200);
-  --yb-action-secondary-bg-active: var(--yb-magenta-300);
-  /* O MESMO magenta do fundo do botao primario. Nao e capricho de paleta: o
-     secundario e o desabilitado tem fundos de clareza quase igual (1.10:1 e
-     1.20:1 contra a pagina), e sem borda quem separa "clicavel" de "apagado"
-     passa a ser so o texto. Magenta saturado contra cinza faz esse trabalho;
-     o magenta-700 de antes e escuro o bastante para ser lido como grafite. */
-  --yb-action-secondary-text:      var(--yb-magenta-600);   /* 4.86:1 sobre o fundo */
-  /* No hover o fundo escurece um degrau e o texto tem de escurecer junto:
-     magenta-600 sobre magenta-200 cai para 4.28:1 e reprova AA. O 700 sobe
-     para 7.12:1 no hover e 5.93:1 no pressionado. */
-  --yb-action-secondary-text-hover: var(--yb-magenta-700);  /* 7.12:1 no hover */
-  /* A borda era magenta-200: 1.25:1 contra a pagina branca. Fronteira de
-     controle pede 3:1 (WCAG 1.4.11), e o efeito de reprovar era pior do que a
-     conta sugere — o fundo do secundario (magenta-100, 1.10:1) e o do
-     DESABILITADO (gray-200, 1.20:1) tem praticamente a mesma clareza. Sem
-     borda que se veja, os dois so se distinguiam pelo matiz, e o secundario
-     era lido como botao apagado.
-     magenta-500 e o degrau mais CLARO da rampa que ainda passa (4.28:1);
-     magenta-400 da 2.57 e reprova. */
-  /* Sem borda, por decisao de desenho. A consequencia esta medida e assumida:
-     a fronteira do botao passa a ser o proprio preenchimento, que mede 1.10:1
-     contra a pagina — abaixo do 3:1 que a WCAG 1.4.11 pede para fronteira de
-     componente. Quem identifica o controle passa a ser o rotulo em magenta
-     saturado. `transparent` e nao `border:0` para a caixa nao encolher 2px em
-     relacao ao primario, que tem borda. */
-  --yb-action-secondary-border:        transparent;
-  --yb-action-secondary-border-hover:  transparent;
+     Limite conhecido: o contorno preto depende de fundo claro. Sobre a faixa
+     escura do header ou sobre foto ele some — ali a secundaria teria de ser
+     contorno claro, variante que ainda nao existe porque nenhuma tela pede.
+     Ver a nota na ficha do Button. */
+  /* CONTORNO PRETO desde 0.13. Com a acao em preto, a secundaria em cinza
+     claro com borda cinza media parecia botao apagado de formulario — e ficava
+     quase igual a fantasma, que tambem e clara com borda: a diferenca entre as
+     duas era um fundo de 1.09:1 contra a pagina. Agora a escada e de peso, e
+     se le de longe: preenchido preto (primaria), contorno preto (secundaria),
+     so texto (fantasma).
+     O contorno em gray-950 mede 16.66:1 contra o branco — muito acima do 3:1
+     de fronteira de controle (WCAG 1.4.11) — e e ele, nao o fundo, que separa
+     a secundaria do desabilitado (gray-200 preenchido, sem aresta escura).
+     O hover e o pressionado escurecem o FUNDO, nao a borda: a aresta ja esta
+     no degrau mais escuro da rampa. */
+  --yb-action-secondary-bg:        var(--yb-surface);
+  --yb-action-secondary-bg-hover:  var(--yb-gray-100);
+  --yb-action-secondary-bg-active: var(--yb-gray-200);
+  --yb-action-secondary-text:      var(--yb-gray-950);   /* 16.66:1 sobre o branco */
+  --yb-action-secondary-text-hover: var(--yb-gray-950);  /* 15.30:1 no hover, 13.90:1 pressionado */
+  --yb-action-secondary-border:        var(--yb-gray-950);
+  --yb-action-secondary-border-hover:  var(--yb-gray-950);
 
   /* ação terciária / fantasma */
   --yb-action-ghost-border: var(--yb-gray-300);
@@ -282,6 +275,23 @@
      familia da marca. Varri a rampa: o 500 para em 3.89:1, tambem reprova.
      O contexto esta no nome pelo mesmo motivo do --yb-accent-on-dark: usado
      sobre claro, este tom reprova. */
+  /* MAGENTA, e nao o preto da acao — este e o unico token da familia que NAO
+     acompanhou a troca de 0.13, e de proposito.
+
+     Sobre grafite o preto e invisivel, entao a pergunta era so entre claro e
+     magenta. O claro funciona e nao diz nada: vira mais um texto branco sobre
+     mais uma faixa escura, no meio de uma foto. O magenta-400 e o unico lugar
+     da loja onde a cor da marca aparece sobre imagem, e e o que faz o selo de
+     brinde ser visto antes de ser lido.
+
+     Nao e contradicao com "a acao virou preta": aqui nao ha acao nenhuma. O
+     selo nao e clicavel — ele informa, e informacao sobre foto e justamente o
+     caso em que a cor carrega mais que a forma. O nome do token continua
+     dizendo "action" por contrato com quem ja consome; o que ele significa
+     hoje e "a marca sobre escuro".
+
+     magenta-400 e nao o 600 canonico: o 600 da 3.11:1 sobre o grafite e
+     reprova. O 400 da 6.49:1. */
   --yb-action-on-dark:   var(--yb-magenta-400);  /* só sobre superfície escura */
   /* @reservado — superficie e borda de acento andam juntas; a doc ja usa a
      borda. Ver a nota de --yb-text-secondary-inverse. */
@@ -315,7 +325,28 @@
      que os dois precisarem divergir (accent-love vira estado, action-bg
      continua sendo estimulo a clicar) sem procurar hex em CSS de componente.
      5.36:1 sobre branco — passa o 3:1 de grafico com informacao (1.4.11). */
-  --yb-accent-love: var(--yb-action-bg);
+  /* A MARCA ONDE ELA INFORMA — e nao onde se clica.
+
+     A regra que a troca de 0.13 deixou no sistema cabe em uma linha: preto e
+     onde se CLICA, magenta e MARCACAO. Desconto, contagem do carrinho, ponto
+     de nao-lido e favorito nao sao acoes — sao marcas que aparecem POR CIMA de
+     conteudo e precisam ser vistas antes de serem lidas. Em preto elas somem
+     no meio do texto e do grafite da interface, que virou a cor de tudo o que
+     e clicavel.
+
+     Estes quatro apontavam para `--yb-action-bg` e acompanharam a acao para o
+     preto sem que ninguem tivesse decidido isso — a troca de papel de um token
+     arrasta quem o consome. Aqui eles ganham o motivo escrito e param de
+     depender de onde a acao for parar amanha.
+
+     magenta-600, o canonico: 5.36:1 com texto branco. */
+  --yb-accent-brand: var(--yb-magenta-600);
+
+  /* VALOR PROPRIO desde 0.13, e nao mais `var(--yb-action-bg)`. O dia em que
+     os dois precisariam divergir, previsto no comentario acima, chegou: a
+     acao virou preta e "favoritado" continua sendo o vermelho-rosa da marca.
+     Um coracao preto nao le como favorito — le como desabilitado. */
+  --yb-accent-love: var(--yb-accent-brand);
 
   /* =====================================================================
      ESTADO

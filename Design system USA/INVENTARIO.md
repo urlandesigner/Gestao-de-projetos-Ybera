@@ -24,7 +24,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | Componente | Classe base | Camada | Maturidade | Variantes | Estados | Tokens | Doc | Foco | Comportamento | Tela real |
 |---|---|---|---|---|---|---|---|---|---|---|
 | AVATAR | `.yb-avatar` | Átomo | Beta | 6 | — | 13 | sim | n/a | — | — |
-| BADGE | `.yb-badge` | Átomo | Beta | 9 | — | 22 | sim | — | sim | sim |
+| BADGE | `.yb-badge` | Átomo | Beta | 10 | — | 24 | sim | — | sim | sim |
 | BUTTON | `.yb-btn` | Átomo | Estável | 9 | 4 | 45 | sim | sim | sim | sim |
 | CERTIFICATION SEALS | `.yb-seal` | Átomo | Beta | — | — | 13 | sim | n/a | — | — |
 | CHECKBOX / RADIO | `.yb-check` | Átomo | Beta | — | 4 | 22 | sim | sim | — | — |
@@ -41,12 +41,12 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | SWITCH | `.yb-switch` | Átomo | Estável | — | 3 | 13 | sim | sim | sim | sim |
 | ACORDEÃO | `.yb-accordion` | Molécula | Estável | — | 2 | 19 | sim | sim | — | sim |
 | ALERT | `.yb-alert` | Molécula | Beta | 4 | 2 | 29 | sim | sim | sim | — |
-| BANNER HERO | `.yb-bannerhero` | Molécula | Beta | 4 | 2 | 46 | sim | sim | — | — |
+| BANNER HERO | `.yb-bannerhero` | Molécula | Beta | 6 | 2 | 45 | sim | sim | — | — |
 | BANNER MEDIA | `.yb-bannermedia` | Molécula | Estável | 3 | — | 9 | sim | n/a | — | sim |
 | BREADCRUMB | `.yb-crumb` | Molécula | Beta | — | 3 | 8 | sim | sim | — | — |
 | CARD OFFER | `.yb-offercard` | Molécula | Beta | 1 | 2 | 40 | sim | sim | sim | — |
-| CARD PRODUCT | `.yb-card` | Molécula | Estável | 1 | 2 | 28 | sim | sim | — | sim |
-| COLLECTION CARD | `.yb-collection` | Molécula | Estável | 6 | 2 | 41 | sim | sim | — | sim |
+| CARD PRODUCT | `.yb-card` | Molécula | Estável | 1 | 2 | 30 | sim | sim | — | sim |
+| COLLECTION CARD | `.yb-collection` | Molécula | Estável | 5 | 2 | 39 | sim | sim | — | sim |
 | DROPDOWN | `.yb-dropdown` | Molécula | Beta | — | 3 | 22 | sim | sim | — | — |
 | EMPTY STATE | `.yb-empty` | Molécula | Estável | 1 | — | 13 | sim | n/a | — | sim |
 | PAGINATION | `.yb-pagination` | Molécula | Beta | — | 3 | 18 | sim | sim | sim | — |
@@ -68,7 +68,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | FAQ | `.yb-faq` | Organismo | Beta | 1 | — | 14 | sim | n/a | — | — |
 | FOOTER | `.yb-footer` | Organismo | Estável | 1 | 3 | 39 | sim | sim | — | sim |
 | FREE SHIPPING PROGRESS | `.yb-freeship` | Organismo | Estável | 1 | — | 8 | sim | n/a | — | sim |
-| HEADER | `.yb-nav` | Organismo | Estável | 1 | 3 | 62 | sim | sim | sim | sim |
+| HEADER | `.yb-nav` | Organismo | Estável | 2 | 3 | 62 | sim | sim | sim | sim |
 | HERO | `.yb-hero` | Organismo | Beta | — | — | 4 | sim | n/a | — | — |
 | LOGO BAR | `.yb-logobar` | Organismo | Beta | — | — | 5 | sim | n/a | — | — |
 | MANIFESTO | `.yb-manifesto` | Organismo | Beta | — | — | 26 | sim | n/a | — | — |

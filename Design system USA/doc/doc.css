@@ -1,4 +1,15 @@
 /* ===========================================================================
+   A COR DA DOCUMENTAÇÃO — magenta, e não a cor de ação da loja.
+
+   Até a 0.13 a doc pintava seus próprios controles com `--yb-action-bg`, o que
+   funcionava porque a ação da loja era magenta. A ação virou preta; a doc não.
+   `--ds-accent` existe para essa separação: o que é cromo de documentação
+   (selo de anatomia, fio da chamada, número da legenda) fala na cor do design
+   system, e o que é componente continua falando na cor da loja.
+   =========================================================================== */
+:root{ --ds-accent: var(--yb-magenta-600); }
+
+/* ===========================================================================
    MOLDURA DAS FICHAS
 
    As fichas sao GERADAS (tools/fichas.mjs). Esta folha e a moldura delas:
@@ -780,23 +791,23 @@
 /* O fio agora corre sobre o cartão, então precisa de contraste próprio: a .5
    de opacidade sumia em cima do fundo da peça. */
 .anat__fios path{
-  stroke:var(--yb-action-bg); stroke-width:1; stroke-dasharray:4 3; opacity:.75;
+  stroke:var(--ds-accent); stroke-width:1; stroke-dasharray:4 3; opacity:.75;
 }
 .anat__selo{
   position:absolute; z-index:3;
   inline-size:1.75rem; block-size:1.75rem;
   display:grid; place-content:center;
   border-radius:var(--yb-radius-pill);
-  background:var(--yb-surface); color:var(--yb-action-bg);
-  border:1px solid var(--yb-action-bg);
+  background:var(--yb-surface); color:var(--ds-accent);
+  border:1px solid var(--ds-accent);
   font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-semibold);
   font-variant-numeric:tabular-nums;
   transition:background var(--yb-transition-control), color var(--yb-transition-control);
 }
-.anat__selo--aceso{background:var(--yb-action-bg); color:var(--yb-text-inverse)}
+.anat__selo--aceso{background:var(--ds-accent); color:var(--yb-text-inverse)}
 /* `outline` e não `border`: borda mudaria a caixa e a peça reflui debaixo do
    próprio destaque — o fio apontaria para onde o elemento estava. */
-.anat__alvo--aceso{outline:2px solid var(--yb-action-bg); outline-offset:2px}
+.anat__alvo--aceso{outline:2px solid var(--ds-accent); outline-offset:2px}
 
 .anat__legenda{
   list-style:none; margin:0; padding:0;
@@ -828,7 +839,7 @@
 .anat__num{
   inline-size:1.75rem; block-size:1.75rem; display:grid; place-content:center;
   border-radius:var(--yb-radius-pill);
-  border:1px solid var(--yb-action-bg); color:var(--yb-action-bg);
+  border:1px solid var(--ds-accent); color:var(--ds-accent);
   font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-semibold);
   font-variant-numeric:tabular-nums;
 }

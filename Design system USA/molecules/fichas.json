@@ -122,6 +122,16 @@
         "alvo": ".yb-bannerhero__text",
         "nome": "Texto",
         "texto": "Opcional, uma ou duas linhas. Explica a promessa sem repeti-la."
+      },
+      {
+        "alvo": ".yb-bannerhero__body",
+        "nome": "Corpo",
+        "texto": "O bloco de texto. Cresce de baixo para cima, que é onde o véu é mais forte."
+      },
+      {
+        "alvo": ".yb-btn",
+        "nome": "Ação",
+        "texto": "Opcional. É o <code>.yb-btn</code>, outra peça, na variante para fundo escuro."
       }
     ]
   },
@@ -169,6 +179,16 @@
         "alvo": ".yb-bannermedia__text",
         "nome": "Texto",
         "texto": "Opcional. Some no celular, onde a foto já ocupa a tela."
+      },
+      {
+        "alvo": ".yb-bannermedia__body",
+        "nome": "Corpo",
+        "texto": "O bloco de texto sobre o véu. Some no celular quando a foto já ocupa a tela."
+      },
+      {
+        "alvo": ".yb-btn",
+        "nome": "Ação",
+        "texto": "Opcional. É o <code>.yb-btn</code>, outra peça, na variante para fundo escuro."
       }
     ]
   },
@@ -220,7 +240,7 @@
     ],
     "faca": {
       "legenda": "Um link por cartão, com o nome como texto do link.",
-      "html": "<a class=\"yb-collection yb-collection--center\" href=\"#faca\" style=\"inline-size:180px\"><img src=\"../pages/img/Prancheta_1-790aea3e.webp\" alt=\"\"><span class=\"yb-collection__label\">Fashion Gold</span></a>"
+      "html": "<a class=\"yb-collection yb-collection--card\" href=\"#faca\" style=\"inline-size:180px\"><img src=\"../pages/img/Prancheta_1-790aea3e.webp\" alt=\"\"><span class=\"yb-collection__foot\"><span class=\"yb-collection__name\">Fashion Gold</span><span class=\"yb-collection__cta\">Shop Collection</span></span></a>"
     },
     "naoFaca": {
       "legenda": "Foto em um link e nome em outro dobram as paradas de teclado para o mesmo destino.",
@@ -229,6 +249,11 @@
     "anatomia": {
       "largura": "260px",
       "partes": [
+        {
+          "alvo": ".yb-collections",
+          "nome": "Fileira",
+          "texto": "A lista em volta. É ela que decide quantos cabem por linha; o cartão só preenche."
+        },
         {
           "alvo": ".yb-collection",
           "nome": "Cartão",
@@ -370,6 +395,21 @@
           "alvo": ".yb-offercard__action",
           "nome": "Ação",
           "texto": "Opcional. Some no celular, onde o cartão inteiro já é o alvo."
+        },
+        {
+          "alvo": ".yb-offercard__link",
+          "nome": "Alvo",
+          "texto": "Link invisível que cobre o cartão inteiro. É ele que leva à PDP, não o título."
+        },
+        {
+          "alvo": ".yb-offercard__was",
+          "nome": "Preço anterior",
+          "texto": "Riscado, ao lado do que se paga. Só existe quando houve preço antes."
+        },
+        {
+          "alvo": ".yb-offercard__timer",
+          "nome": "Relógio",
+          "texto": "O que resta da oferta. A data vem do HTML; quem conta é o comportamento."
         }
       ]
     }
@@ -403,6 +443,11 @@
         "alvo": ".yb-pagination__gap",
         "nome": "Reticências",
         "texto": "O salto de faixa. Não é botão — não há para onde ir a partir dele."
+      },
+      {
+        "alvo": ".yb-pagination__perto",
+        "nome": "Vizinha",
+        "texto": "A página imediatamente antes e depois. Some no celular, onde só cabem três destinos."
       }
     ]
   },
@@ -482,6 +527,11 @@
           "alvo": ".yb-post__excerpt",
           "nome": "Resumo",
           "texto": "Duas linhas. Só na variante em destaque; nas outras o título basta."
+        },
+        {
+          "alvo": ".yb-post__body",
+          "nome": "Corpo",
+          "texto": "Título e resumo. É o que sobra quando a foto não carrega."
         }
       ]
     }
@@ -601,6 +651,16 @@
           "alvo": ".yb-review__text",
           "nome": "Texto",
           "texto": "O corpo, cortado em três linhas para a fileira alinhar."
+        },
+        {
+          "alvo": ".yb-review__author",
+          "nome": "Autor",
+          "texto": "Quem escreveu. Primeiro nome e inicial, como o Judge.me entrega."
+        },
+        {
+          "alvo": ".yb-review__verified",
+          "nome": "Verificado",
+          "texto": "Diz que a compra existiu. Sem isso, a nota é só uma opinião na internet."
         }
       ]
     }
@@ -685,6 +745,11 @@
         "alvo": ".yb-collection",
         "nome": "Item",
         "texto": "Qualquer peça entra. O trilho não sabe o que carrega — aqui são cartões de coleção."
+      },
+      {
+        "alvo": ".yb-track__nav",
+        "nome": "Setas",
+        "texto": "Só no desktop. No celular o dedo arrasta, e seta seria enfeite que ocupa espaço."
       }
     ]
   },
@@ -779,6 +844,16 @@
         "alvo": ".yb-dropdown__painel",
         "nome": "Painel",
         "texto": "Os links. Fecha ao clicar fora pelo scrim, não por script."
+      },
+      {
+        "alvo": ".yb-dropdown__cabeca",
+        "nome": "Cabeça",
+        "texto": "Quem está logado: avatar, nome e e-mail. Some quando o painel não é de conta."
+      },
+      {
+        "alvo": ".yb-dropdown__sair",
+        "nome": "Sair",
+        "texto": "Separado do resto por fio. Ação destrutiva de sessão não fica junto dos links."
       }
     ]
   }

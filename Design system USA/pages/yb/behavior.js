@@ -906,6 +906,51 @@
   });
 
   /* ---------------------------------------------------------------------
+     VITRINE DO MENU — `data-yb-vitrines` na vitrine, `data-yb-vitrine-alvo`
+     nos itens do painel.
+     Passar o mouse (ou chegar pelo Tab) num item mostra a vitrine dele: o
+     cartao da colecao e um produto em destaque. Sair do item NAO volta a
+     padrao — a pessoa precisa conseguir levar o mouse ate o cartao sem ele
+     sumir no caminho. Volta quando o painel inteiro e deixado para tras
+     (o mouse sai do item do menu, ou o foco sai do painel).
+     Item sem vitrine propria mostra a padrao. Sem este arquivo a padrao fica,
+     que e o estado certo para ficar preso.
+     --------------------------------------------------------------------- */
+  function ligarVitrine(rail) {
+    if (rail.hasAttribute('data-yb-bound')) return;
+    rail.setAttribute('data-yb-bound', '');
+    var painel = rail.closest('.yb-nav__panel');
+    var item = rail.closest('.yb-nav__item');
+    if (!painel) return;
+    var vitrines = rail.querySelectorAll('[data-yb-vitrine]');
+
+    var links = painel.querySelectorAll('.yb-nav__groups a[data-yb-vitrine-alvo]');
+    function mostrar(id) {
+      links.forEach(function (a) {
+        if (a.getAttribute('data-yb-vitrine-alvo') === id) a.setAttribute('data-yb-vitrine-ativo', '');
+        else a.removeAttribute('data-yb-vitrine-ativo');
+      });
+      var achou = false;
+      vitrines.forEach(function (v) { if (v.getAttribute('data-yb-vitrine') === id) achou = true; });
+      if (!achou) id = 'padrao';
+      vitrines.forEach(function (v) {
+        v.hidden = v.getAttribute('data-yb-vitrine') !== id;
+      });
+    }
+
+    painel.querySelectorAll('.yb-nav__groups a').forEach(function (a) {
+      if (rail.contains(a)) return;
+      var id = a.getAttribute('data-yb-vitrine-alvo') || 'padrao';
+      a.addEventListener('mouseenter', function () { mostrar(id); });
+      a.addEventListener('focus', function () { mostrar(id); });
+    });
+    (item || painel).addEventListener('mouseleave', function () { mostrar('padrao'); });
+    painel.addEventListener('focusout', function (e) {
+      if (!painel.contains(e.relatedTarget)) mostrar('padrao');
+    });
+  }
+
+  /* ---------------------------------------------------------------------
      INICIALIZAÇÃO
      --------------------------------------------------------------------- */
   function init(raiz) {
@@ -916,6 +961,7 @@
     r.querySelectorAll('[data-yb-partner]').forEach(ligarPartner);
     r.querySelectorAll('[data-yb-partnerbar]').forEach(ligarPartnerbar);
     r.querySelectorAll('[data-yb-buybar]').forEach(ligarBuybar);
+    r.querySelectorAll('[data-yb-vitrines]').forEach(ligarVitrine);
     ligarTrilhos(r);
     // os blocos fora deste fechamento (navegacao, relogio) escutam este evento
     document.dispatchEvent(new CustomEvent('yb:init', { detail: { raiz: r } }));

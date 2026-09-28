@@ -36,13 +36,21 @@
       "legenda": "Dois primários lado a lado não são duas opções — são nenhuma escolha clara. E “Click here” não diz nada fora de contexto.",
       "html": "<button class=\"yb-btn yb-btn--primary\" type=\"button\">Click here</button><button class=\"yb-btn yb-btn--primary\" type=\"button\">Continue</button>"
     },
-    "anatomia": [
-      {
-        "alvo": ".yb-btn",
-        "nome": "Botão",
-        "texto": "Uma ação primária por tela. O rótulo é o que vai acontecer — “Add to cart”, não “Enviar”."
-      }
-    ]
+    "anatomia": {
+      "recorte": "<button type=\"button\" class=\"yb-btn yb-btn--primary\">\\s*<svg[\\s\\S]*?</button>",
+      "partes": [
+        {
+          "alvo": ".yb-btn",
+          "nome": "Botão",
+          "texto": "A caixa: altura mínima de 44px, o alvo que o dedo alcança. A variante dá a cor."
+        },
+        {
+          "alvo": ".yb-icon",
+          "nome": "Ícone",
+          "texto": "Opcional e decorativo (<code>aria-hidden</code>). Antes do rótulo quando mostra o que a ação faz; depois quando mostra direção."
+        }
+      ]
+    }
   },
   "iconbtn": {
     "a11y": [
@@ -197,6 +205,11 @@
     "anatomia": {
       "largura": "340px",
       "partes": [
+        {
+          "alvo": ".yb-field__label",
+          "nome": "Rótulo",
+          "texto": "O que falta, em palavras. A barra sozinha mostra proporção, não sentido."
+        },
         {
           "alvo": ".yb-progress",
           "nome": "Trilho",
@@ -410,6 +423,16 @@
           "alvo": ".yb-field__label",
           "nome": "Rótulo",
           "texto": "Não flutua como no Input: o select nunca está vazio, então o rótulo fica sempre em cima."
+        },
+        {
+          "alvo": ".yb-field__box",
+          "nome": "Moldura",
+          "texto": "A caixa do controle. No select ela não abre entalhe: o rótulo não flutua."
+        },
+        {
+          "alvo": ".yb-field__hint",
+          "nome": "Dica",
+          "texto": "Opcional. Diz o que a escolha implica, não repete as opções."
         }
       ]
     }
@@ -445,6 +468,16 @@
           "alvo": ".yb-field__label",
           "nome": "Rótulo",
           "texto": "Flutua como no Input, pela mesma mecânica de <code>placeholder</code> com um espaço."
+        },
+        {
+          "alvo": ".yb-field__box",
+          "nome": "Moldura",
+          "texto": "Onde o rótulo flutua, igual ao Input — e onde a alça de redimensionar aparece."
+        },
+        {
+          "alvo": ".yb-field__hint",
+          "nome": "Dica",
+          "texto": "Opcional. Bom lugar para o limite de caracteres, quando houver."
         }
       ]
     }

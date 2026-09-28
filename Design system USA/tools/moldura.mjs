@@ -260,6 +260,10 @@ ${n.itens.map(link).join('\n')}
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v${versao}</p>
+  <a class="ds-top__baixar" href="${raiz}dist/ybera-tokens.json" download="ybera-tokens.json">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8"/><path d="M4.5 7.5 8 11l3.5-3.5"/><path d="M2.5 13.5h11"/></svg>
+    <span>Baixar tokens <span class="ds-top__baixar-fmt">JSON</span></span>
+  </a>
 </header>
 <nav class="ds-nav" aria-label="Navegação do design system">
 ${arvore().map((n) => bloco(n, icone)).join('\n')}

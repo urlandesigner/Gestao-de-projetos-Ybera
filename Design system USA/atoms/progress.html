@@ -34,6 +34,10 @@
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
+  <a class="ds-top__baixar" href="../dist/ybera-tokens.json" download="ybera-tokens.json">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8"/><path d="M4.5 7.5 8 11l3.5-3.5"/><path d="M2.5 13.5h11"/></svg>
+    <span>Baixar tokens <span class="ds-top__baixar-fmt">JSON</span></span>
+  </a>
 </header>
 <nav class="ds-nav" aria-label="Navegação do design system">
   <ul class="ds-nav__solta">
@@ -345,6 +349,7 @@
 </div></div>
       </div>
       <ol class="anat__legenda">
+        <li data-alvo=".yb-field__label"><span class="anat__texto"><b>Rótulo</b> — O que falta, em palavras. A barra sozinha mostra proporção, não sentido.</span></li>
         <li data-alvo=".yb-progress"><span class="anat__texto"><b>Trilho</b> — Leva <code>role=&quot;progressbar&quot;</code> e os três <code>aria-value*</code> — sem eles é só um retângulo.</span></li>
         <li data-alvo=".yb-progress__fill"><span class="anat__texto"><b>Preenchimento</b> — A largura é escrita no <code>style</code>, porque o valor vem do dado e não do CSS.</span></li>
       </ol>
@@ -373,8 +378,8 @@
         <ul class="tokens__lista">
           <li><i class="tokens__cor" style="background:var(--yb-warning-solid)" aria-hidden="true"></i><code>--yb-warning-solid</code><span class="tokens__valor">#8A5A00</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-success-solid)" aria-hidden="true"></i><code>--yb-success-solid</code><span class="tokens__valor">#1F7A34</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-bg)" aria-hidden="true"></i><code>--yb-action-bg</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-danger-solid)" aria-hidden="true"></i><code>--yb-danger-solid</code><span class="tokens__valor">#B3261E</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-action-bg)" aria-hidden="true"></i><code>--yb-action-bg</code><span class="tokens__valor">#CA235F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
         </ul>
       </div>

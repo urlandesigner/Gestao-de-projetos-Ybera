@@ -34,6 +34,10 @@
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v0.12.1</p>
+  <a class="ds-top__baixar" href="../dist/ybera-tokens.json" download="ybera-tokens.json">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8"/><path d="M4.5 7.5 8 11l3.5-3.5"/><path d="M2.5 13.5h11"/></svg>
+    <span>Baixar tokens <span class="ds-top__baixar-fmt">JSON</span></span>
+  </a>
 </header>
 <nav class="ds-nav" aria-label="Navegação do design system">
   <ul class="ds-nav__solta">
@@ -209,6 +213,10 @@
         <span class="amostra__rotulo"><code>--sale</code></span>
       </span>
       <span class="amostra">
+        <span class="yb-badge yb-badge--dark">New</span>
+        <span class="amostra__rotulo"><code>--dark</code></span>
+      </span>
+      <span class="amostra">
         <span class="yb-badge yb-badge--secondary">Members only</span>
         <span class="amostra__rotulo"><code>--secondary</code></span>
       </span>
@@ -286,6 +294,10 @@
   &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--sale&lt;/code&gt;&lt;/span&gt;
 &lt;/span&gt;
 &lt;span class="amostra"&gt;
+  &lt;span class="yb-badge yb-badge--dark"&gt;New&lt;/span&gt;
+  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--dark&lt;/code&gt;&lt;/span&gt;
+&lt;/span&gt;
+&lt;span class="amostra"&gt;
   &lt;span class="yb-badge yb-badge--secondary"&gt;Members only&lt;/span&gt;
   &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--secondary&lt;/code&gt;&lt;/span&gt;
 &lt;/span&gt;
@@ -332,27 +344,28 @@
     estiver errado aqui, o errado é o código.</p>
 
     <p class="api-linha"><span class="api-linha__rotulo">De que é feita</span><span class="api-linha__corpo">Nenhuma. Um átomo não compõe outras peças — é isso que faz dele átomo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-badge--accent</code> <code>.yb-badge--danger</code> <code>.yb-badge--on-dark</code> <code>.yb-badge--on-media</code> <code>.yb-badge--sale</code> <code>.yb-badge--secondary</code> <code>.yb-badge--soft</code> <code>.yb-badge--success</code> <code>.yb-badge--warning</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-badge--accent</code> <code>.yb-badge--danger</code> <code>.yb-badge--dark</code> <code>.yb-badge--on-dark</code> <code>.yb-badge--on-media</code> <code>.yb-badge--sale</code> <code>.yb-badge--secondary</code> <code>.yb-badge--soft</code> <code>.yb-badge--success</code> <code>.yb-badge--warning</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo">Nenhum. A peça é um elemento só.</span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo">Nenhum. A peça não muda por interação.</span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
-    <p class="rotulo">Tokens <span class="rotulo-conta">22</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">24</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>16</span></p>
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>17</span></p>
         <ul class="tokens__lista">
           <li><i class="tokens__cor" style="background:var(--yb-action-on-dark)" aria-hidden="true"></i><code>--yb-action-on-dark</code><span class="tokens__valor">#DC89A7</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-secondary-border)" aria-hidden="true"></i><code>--yb-action-secondary-border</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-warning-surface)" aria-hidden="true"></i><code>--yb-warning-surface</code><span class="tokens__valor">#FBF3E3</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-action-secondary-bg)" aria-hidden="true"></i><code>--yb-action-secondary-bg</code><span class="tokens__valor">#F9F2F4</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-action-secondary-text)" aria-hidden="true"></i><code>--yb-action-secondary-text</code><span class="tokens__valor">#CA235F</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-secondary-bg)" aria-hidden="true"></i><code>--yb-action-secondary-bg</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-secondary-text)" aria-hidden="true"></i><code>--yb-action-secondary-text</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-success-surface)" aria-hidden="true"></i><code>--yb-success-surface</code><span class="tokens__valor">#EAF6EC</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-warning-text)" aria-hidden="true"></i><code>--yb-warning-text</code><span class="tokens__valor">#8A5A00</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-danger-surface)" aria-hidden="true"></i><code>--yb-danger-surface</code><span class="tokens__valor">#FBEAE9</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface-inverse-raised)" aria-hidden="true"></i><code>--yb-surface-inverse-raised</code><span class="tokens__valor">#3A3A3C</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-action-text)" aria-hidden="true"></i><code>--yb-action-text</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-accent-brand)" aria-hidden="true"></i><code>--yb-accent-brand</code><span class="tokens__valor">#CA235F</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-on-action)" aria-hidden="true"></i><code>--yb-text-on-action</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-danger-text)" aria-hidden="true"></i><code>--yb-danger-text</code><span class="tokens__valor">#B3261E</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-success-text)" aria-hidden="true"></i><code>--yb-success-text</code><span class="tokens__valor">#1F7A34</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-action-bg)" aria-hidden="true"></i><code>--yb-action-bg</code><span class="tokens__valor">#CA235F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
@@ -375,9 +388,10 @@
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>1</span></p>
+        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>2</span></p>
         <ul class="tokens__lista">
           <li><code>--yb-radius-badge</code><span class="tokens__valor">4px</span></li>
+          <li><code>--yb-border-width-hair</code><span class="tokens__valor">1px</span></li>
         </ul>
       </div>
     </div>

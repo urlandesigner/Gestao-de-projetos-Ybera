@@ -117,9 +117,10 @@ body{
 @media (forced-colors:active){
   .ds-top__usa{ background-image:none; color:CanvasText; }
 }
-.ds-top__busca{margin-inline-start:auto; position:relative}
+/* A busca fica colada na marca, no mesmo x em que o conteudo comeca (a marca
+   tem a largura da coluna); a direita da barra e da versao e do download. */
+.ds-top__busca{position:relative}
 .ds-top__busca[hidden]{display:none}
-.ds-top__busca[hidden] ~ .ds-top__versao{margin-inline-start:auto}
 .ds-top__busca input{
   inline-size:18rem; max-inline-size:40vw; min-block-size:var(--yb-target-min);
   padding:0 var(--yb-space-3);
@@ -139,14 +140,30 @@ body{
   color:var(--yb-text-muted);
 }
 .ds-top .nav-conta:empty{display:none}
-/* A versão fecha a barra à direita, colada na busca. O `auto` fica na busca —
-   com ele nos dois, o espaço livre era DIVIDIDO entre as duas e o campo
-   aparecia boiando no meio da barra. Quando a busca está escondida (a página
-   não carregou o script, ou ele ainda não rodou), o `auto` passa para cá pela
-   regra abaixo, senão a versão cola na marca. */
+/* A versão abre o grupo da direita: o `auto` dela empurra versão e download
+   para o canto, com a busca ou sem ela. */
 .ds-top__versao{
-  margin:0; flex:none; color:var(--yb-text-muted);
+  margin:0 0 0 auto; flex:none; color:var(--yb-text-muted);
   font-size:var(--yb-type-caption-size); font-variant-numeric:tabular-nums;
+}
+
+/* Download dos tokens em JSON (W3C Design Tokens), o arquivo que o build gera
+   a partir do CSS. Contorno, e nao bloco: e ferramenta da doc, nao acao da
+   loja, e nao deve competir com o conteudo da pagina. */
+.ds-top__baixar{
+  flex:none; display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  min-block-size:var(--yb-target-min); padding:0 var(--yb-space-4);
+  border:var(--yb-border-hairline) solid var(--yb-border-strong);
+  border-radius:var(--yb-radius-control);
+  color:var(--yb-text-primary); text-decoration:none;
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
+}
+.ds-top__baixar svg{inline-size:var(--yb-icon-sm); block-size:var(--yb-icon-sm)}
+.ds-top__baixar-fmt{color:var(--yb-text-muted); font-weight:var(--yb-font-weight-regular)}
+@media (hover:hover){ .ds-top__baixar:hover{background:var(--yb-bg-muted)} }
+.ds-top__baixar:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
 }
 
 .ds-nav{
@@ -302,7 +319,12 @@ body{
    quem está navegando com o polegar. */
 @media (max-width:560px){
   .ds-top__versao{display:none}
-  .ds-top__busca input{inline-size:9rem}
+  /* marca + busca + download numa linha de 320: a busca e quem cede */
+  .ds-top{gap:var(--yb-space-3); padding-inline:var(--yb-space-4)}
+  .ds-top__busca{flex:1; min-inline-size:0}
+  .ds-top__busca input{inline-size:100%; max-inline-size:none}
+  .ds-top__baixar{padding:0; inline-size:var(--yb-target-min); justify-content:center}
+  .ds-top__baixar > span{position:absolute; inline-size:1px; block-size:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap}
   .ds-nav{
     position:static; inline-size:auto; inset:auto;
     border-inline-end:0; border-block-end:1px solid var(--yb-border-subtle);

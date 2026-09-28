@@ -20,24 +20,25 @@
       </span>
     </div>
     <div class="note">
-      <b>Por que a secundária é magenta tingido e não grafite</b>
-      <p>Era um bloco de grafite sólido: <b>16,66:1</b> contra o primário de
-      <b>5,36:1</b> — pesava 3,1× mais e virava o elemento mais forte da tela,
-      mais que o título do produto. Cinza claro foi tentado e descartado: a
-      1,09:1 o bloco some no branco, e onde não some é confundido com
-      desabilitado, que também é cinza. Tingir com a própria cor de ação separa
-      por <b>matiz</b>, não por peso — e matiz não se confunde. O texto mede
-      8,09:1, mais legível que o branco do primário.</p>
+      <b>Por que a secundária é contorno</b>
+      <p>Com a ação em preto, a escada é de <b>peso</b>: preenchido preto é a
+      primária, contorno preto é a secundária, só texto é a fantasma — e se lê
+      de longe. Cinza claro com borda cinza foi a primeira tentativa depois da
+      troca e não serviu: parecia botão apagado de formulário e ficava quase
+      igual à fantasma, com um fundo de 1,09:1 contra a página como única
+      diferença. O contorno em <code>gray-950</code> mede <b>16,66:1</b>, bem acima
+      dos 3:1 de fronteira de controle, e é ele que separa a secundária do
+      desabilitado.</p>
     </div>
     <div class="note">
       <b>Limite conhecido: só funciona sobre fundo claro</b>
-      <p>O tingido some sobre a faixa escura do header ou sobre foto. Ali a
+      <p>O contorno preto some sobre a faixa escura do header ou sobre foto. Ali a
       secundária teria de ser contorno claro — variante que <b>ainda não
       existe</b>, porque nenhuma tela pede. Se alguma pedir, ela entra aqui
       antes de ser usada.</p>
     </div>
 
-    <h3 class="row-label">Sobre painel escuro</h3>
+    <h3 class="row-label">Inverso, sobre fundo escuro — <code>--on-dark</code></h3>
     <div class="demo demo--dark demo--amostras">
       <span class="amostra">
         <button class="yb-btn yb-btn--on-dark" type="button">Start quiz</button>
@@ -48,13 +49,25 @@
         <span class="amostra__rotulo"><code>--on-dark</code> <code>[disabled]</code></span>
       </span>
     </div>
+    <!-- Foto com o veu cheio do sistema, montada so com tokens: esta ficha e de
+         atomo e nao carrega a folha das moleculas, onde mora o Banner media. -->
+    <div class="demo demo--dark demo--amostras" style="background:linear-gradient(var(--yb-scrim-full), var(--yb-scrim-full)), url(../pages/img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp) center / cover">
+      <span class="amostra">
+        <span class="yb-btn yb-btn--on-dark">Shop the line</span>
+        <span class="amostra__rotulo"><code>--on-dark</code></span>
+      </span>
+    </div>
     <div class="note">
-      <b>Dentro de um bloco escuro a ação inverte</b>
-      <p>O magenta continua sendo a ação da <b>página</b>, mas sobre grafite ele briga
-      com o próprio fundo. Medido: o botão branco contra o painel dá 16,66:1, então ele
-      não precisa de borda para existir. O hover <b>afunda</b> em vez de clarear, e o
-      anel de foco vira branco.</p>
-      <p>Não use sobre foto: ali o fundo não é conhecido e o token é outro.</p>
+      <b>Sobre fundo escuro a ação inverte</b>
+      <p>O preto da marca é a ação da <b>página</b>, mas sobre fundo escuro ele some.
+      O inverso é branco: contra o painel grafite mede 16,66:1, então não precisa de
+      borda para existir. O hover <b>afunda</b> em vez de clarear, e o anel de foco
+      vira branco.</p>
+      <p><b>Sobre foto, só com o véu do sistema atrás</b> — é o que torna o fundo
+      conhecido. Por isso ele é o CTA do Banner hero, do Banner media e do Card
+      offer. Medido no pior caso, pixel branco debaixo do véu: 7,84:1 contra o véu
+      cheio e 5,19:1 contra o leve, acima dos 3:1 de fronteira de controle. Sobre
+      foto crua, sem véu, não use: ali o fundo não é de ninguém.</p>
     </div>
 
     <h3 class="row-label">Sizes</h3>
@@ -125,6 +138,61 @@
       Se o texto saísse, o botão encolheria e o layout saltaria embaixo do dedo —
       exatamente no momento em que a pessoa acabou de tocar para comprar.
       O <code>--sm</code> é o único que fica abaixo dos 44px: use só onde não há toque.</p>
+    </div>
+
+    <h3 class="row-label">Com &iacute;cone &mdash; o r&oacute;tulo continua obrigat&oacute;rio</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <button type="button" class="yb-btn yb-btn--primary">
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg>
+          Add to cart
+        </button>
+        <span class="amostra__rotulo"><code>ícone antes</code></span>
+      </span>
+      <span class="amostra">
+        <button type="button" class="yb-btn yb-btn--secondary">
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-share"/></svg>
+          Share
+        </button>
+        <span class="amostra__rotulo"><code>--secondary</code></span>
+      </span>
+      <span class="amostra">
+        <button type="button" class="yb-btn yb-btn--ghost">
+          Continue
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg>
+        </button>
+        <span class="amostra__rotulo"><code>ícone depois</code></span>
+      </span>
+      <span class="amostra">
+        <button type="button" class="yb-btn yb-btn--primary yb-btn--sm">
+          <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-plus"/></svg>
+          Add
+        </button>
+        <span class="amostra__rotulo"><code>--sm · ícone --sm</code></span>
+      </span>
+    </div>
+    <div class="note">
+      <b>Sem classe nova: o <code>gap</code> já estava lá</b>
+      <p>O <code>.yb-btn</code> é <code>inline-flex</code> com
+      <code>gap</code> desde sempre — o ícone entra como filho e se alinha
+      sozinho. Um modificador <code>--icon</code> seria uma classe para não
+      fazer nada.</p>
+    </div>
+    <div class="note">
+      <b>Antes ou depois, e por quê</b>
+      <p><b>Antes</b> quando o ícone mostra o que a ação faz com o objeto —
+      carrinho, coração, lixeira. <b>Depois</b> quando ele mostra direção:
+      seta de continuar, de abrir em nova aba. Ícone depois num botão de
+      compra faz o olho sair do rótulo para o nada.</p>
+      <p>No <code>--sm</code> o ícone acompanha: <code>.yb-icon--sm</code>,
+      16px. Com os 20px do padrão ele fica maior que a altura da linha do
+      texto e o botão parece inchado.</p>
+    </div>
+    <div class="note">
+      <b>O ícone é decorativo &mdash; sempre</b>
+      <p>Leva <code>aria-hidden="true"</code>, e quem nomeia a ação é o texto
+      ao lado. Ícone sem rótulo é outro componente: <code>.yb-iconbtn</code>,
+      logo abaixo, que por não ter texto exige <code>aria-label</code>.</p>
     </div>
 
     <h3 class="row-label">Icon button</h3>

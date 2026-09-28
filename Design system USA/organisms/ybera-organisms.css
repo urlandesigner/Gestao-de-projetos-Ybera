@@ -663,6 +663,9 @@
 @media (hover:hover){
   .yb-nav__sublist a:hover{color:var(--yb-text-primary)}
 }
+/* O item que esta mostrando a vitrine continua aceso quando o mouse vai ate
+   os cartoes — senao a vitrine parece solta, sem dizer de que item veio. */
+.yb-nav__sublist a[data-yb-vitrine-ativo]{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
 .yb-nav__sublist a:focus-visible,.yb-nav__grouptitle:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
@@ -696,7 +699,17 @@
   flex:1 1 18rem; min-width:0;
   display:flex; justify-content:flex-end; gap:var(--yb-space-6);
 }
-.yb-nav__rail > *{flex:1 1 0; min-width:0; max-width:18rem}
+/* A vitrine tem varios estados (`.yb-nav__vitrine`, um por item do painel;
+   so um aparece). O invólucro some da caixa com `display:contents`, entao os
+   dois cartoes de cada estado continuam sendo os itens do flex da vitrine —
+   a medida e a mesma com qualquer estado na tela. */
+.yb-nav__vitrine{display:contents}
+.yb-nav__vitrine > *{flex:1 1 0; min-width:0; max-width:18rem}
+/* O cartao de colecao, dentro da vitrine, divide a altura com o do produto:
+   a foto cresce ate onde o painel da, em vez de impor a razao 5/7 de vitrine
+   de colecao — que aqui esticaria o menu inteiro. */
+.yb-nav__vitrine > .yb-collection--card img{aspect-ratio:auto; flex:1 1 auto; min-height:8rem; height:0}
+.yb-nav__vitrine > .yb-collection--card .yb-collection__foot{flex-grow:0}
 
 /* Um unico <a>, como `.yb-search__item` — midia e botao separados dariam
    dois links pro mesmo produto, ruido extra pra teclado e leitor de tela.
@@ -715,7 +728,10 @@
   position:relative; flex:1; min-height:8rem; overflow:hidden;
   background:var(--yb-bg-muted); border-radius:var(--yb-radius-media);
 }
-.yb-nav__promo-media img{width:100%; height:100%; object-fit:cover; display:block}
+/* A foto preenche a caixa sem ditar a altura dela (absoluta). Em fluxo, a
+   foto quadrada carregada puxava o cartao para 409px e o painel crescia 17px
+   so quando a imagem chegava — e mudava de altura ao trocar de vitrine. */
+.yb-nav__promo-media img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block}
 .yb-nav__promo-info{display:flex; flex-direction:column; gap:var(--yb-space-2)}
 /* Mesmo peso do nome no cartao de catalogo, e nao por acaso: e a mesma coisa
    — o nome de um produto — em outro lugar da casa. Andou para 600 junto com
@@ -1066,7 +1082,8 @@
      o selo caia sobre a alca da sacola e a apagava. Deslocado para fora, ele
      encosta na quina e o desenho continua inteiro. */
   position:absolute; inset-block-start:1px; inset-inline-end:-4px;
-  background:var(--yb-action-bg); color:var(--yb-action-text);
+  /* A contagem e marcacao, nao acao — ver --yb-accent-brand. */
+  background:var(--yb-accent-brand); color:var(--yb-text-on-action);
   font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-bold);
   /* Circulo, nao pilula. Com `box-sizing:border-box` a borda de 2px entra na
      conta: o digito (8px) mais 10px de respiro mais 4px de borda davam 22 de
