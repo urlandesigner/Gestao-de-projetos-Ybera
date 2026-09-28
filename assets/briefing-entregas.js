@@ -245,7 +245,7 @@
     return `<section class="rl-sec" id="${s.id}">
       <div class="rl-sec-cab">
         <h2 class="rl-sec-titulo">${esc(s.titulo)}</h2>
-        <p class="rl-sec-intro">${esc(s.intro)}</p>
+        ${s.intro ? `<p class="rl-sec-intro">${esc(s.intro)}</p>` : ''}
       </div>
       ${s.corpo}
     </section>`;
@@ -643,8 +643,11 @@
     } else {
       for (const g of grupos) {
         secoes.push({
+          // Sem intro: a contagem ("3 entregas recentes.") não dizia nada que a
+          // seção não mostrasse — os cartões estão logo abaixo e dão pra contar
+          // no olho. O roadmap mantém a dele porque lá o texto explica o
+          // recorte, e não repete o que está à vista.
           id: (agrupar === 'epico' ? 'epico-' : 'ini-') + g.id, titulo: g.nome,
-          intro: g.cards.length === 1 ? '1 entrega recente.' : g.cards.length + ' entregas recentes.',
           corpo: corpoEntregasRecentes(g.cards, false),
         });
       }

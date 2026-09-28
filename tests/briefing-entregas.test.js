@@ -214,10 +214,19 @@ test('Entregas agrupado por épico: uma seção por épico, na ordem ditada', ()
   assert.ok(!h.includes('id="recentes"'));
 });
 
-test('Entregas agrupado: a seção diz quantas entregas traz, no singular certo', () => {
-  const h = documento({ agrupar: 'epico' }).html;
-  assert.ok(h.includes('5 entregas recentes.'), 'Loja Clube USA tem cinco');
-  assert.equal((h.match(/1 entrega recente\./g) || []).length, 3, 'os outros três têm uma cada');
+// A contagem saiu a pedido do Urlan: ela não dizia nada que a seção não
+// mostrasse. O que se guarda agora é que ela não volte — e que a ausência de
+// intro não deixe um <p> vazio ocupando espaço embaixo do título.
+test('Entregas agrupado: a seção não repete a contagem dos cartões', () => {
+  const roadmap = [{ titulo: 'Plano', inicio: '2026-10-01', fim: '2026-12-31' }];
+  for (const modo of ['epico', 'iniciativa']) {
+    const h = documento({ roadmap, agrupar: modo }).html;
+    assert.ok(!/\d+ entregas? recentes?\./.test(h), `contagem de volta em ${modo}`);
+    assert.ok(!/<p class="rl-sec-intro">\s*<\/p>/.test(h), `intro vazia em ${modo}`);
+    // O roadmap mantém a dele: lá o texto explica o recorte, não conta o óbvio.
+    assert.ok(h.includes('Todos os projetos previstos para os próximos meses.'),
+      `o roadmap perdeu a intro em ${modo}`);
+  }
 });
 
 test('Entregas agrupado esconde a retranca — o título da seção já diz a frente', () => {
