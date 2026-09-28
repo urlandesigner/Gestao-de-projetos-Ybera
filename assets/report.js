@@ -110,10 +110,17 @@ function saneRoadmapItens(lista) {
       titulo: String(x.titulo || '').slice(0, 200) || 'Sem título',
       inicio: x.inicio,
       fim: x.fim,
-      // Só dois status dizem alguma coisa; qualquer outro valor (ou nenhum)
-      // vira null — "não afirmo nada sobre esta iniciativa", que é o estado
-      // certo pra um item que ainda é só janela no calendário.
-      status: (x.status === 'concluido' || x.status === 'andamento') ? x.status : null,
+      /* Lista branca de status. Qualquer outro valor (ou nenhum) vira null —
+         "não afirmo nada sobre esta iniciativa", que é o estado certo pra um
+         item que ainda é só janela no calendário.
+
+         ESTA LISTA É O PORTÃO: um status novo em roadmap.json não chega ao
+         desenho sem passar por aqui, por mais que o briefing saiba desenhá-lo.
+         Foi o que aconteceu com 'teste': o dado dizia, o briefing sabia, e o
+         item saía sem selo e com barra neutra porque o saneamento o zerava no
+         meio do caminho. Quem acrescentar um status ali acrescenta aqui. */
+      status: (x.status === 'concluido' || x.status === 'andamento' || x.status === 'teste')
+        ? x.status : null,
     }));
 }
 
