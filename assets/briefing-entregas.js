@@ -89,24 +89,39 @@
     return new Date(v).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', timeZone: 'UTC' });
   }
 
-  function mesPorExtenso(chave) {
+  function nomeDoMes(chave) {
     const [ano, mes] = String(chave).split('-');
     const nome = new Date(Date.UTC(Number(ano), Number(mes) - 1, 1))
       .toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' });
-    return nome.charAt(0).toUpperCase() + nome.slice(1) + ' de ' + ano;
+    return nome.charAt(0).toUpperCase() + nome.slice(1);
+  }
+  function mesPorExtenso(chave) {
+    return nomeDoMes(chave) + ' de ' + String(chave).split('-')[0];
   }
 
-  /* Rótulo do período na capa.
+  /* Período que o documento cobre, em chaves AAAA-MM, do mais antigo pro mais
+     novo. Este documento é curado — os cartões são lista escrita à mão, não
+     recorte do DevOps — então o recorte de tempo também é declarado.
 
-     Este documento é curado — os cartões são lista escrita à mão, não recorte
-     do DevOps — então o período que ele cobre também é declarado aqui, e não
-     derivado do mês selecionado. Vazio faz a capa voltar a nomear o mês.
+     É lista de meses, e não um rótulo de texto, porque daqui sai TANTO o
+     título da capa QUANTO o número grande. Quando eram duas coisas separadas o
+     título dizia "Agosto e Setembro" e a contagem lia só setembro: a capa
+     afirmava um período e contava outro. Com uma fonte só, não há como
+     divergirem.
 
-     ATENÇÃO ao mexer: o número grande da capa e a variação ao lado dele NÃO
-     leem esta constante. Eles continuam vindo do mês do DevOps (`escolhido`),
-     ou seja, contam só setembro e comparam com agosto. Enquanto este rótulo
-     nomear dois meses, a capa afirma um período e conta outro. */
-  const PERIODO = 'Agosto e Setembro de 2026';
+     Lista vazia devolve o comportamento antigo — o mês escolhido, sozinho. */
+  const PERIODO_MESES = ['2026-08', '2026-09'];
+
+  /* "Agosto e Setembro de 2026" — o ano aparece uma vez quando é o mesmo pra
+     todos, e mês a mês quando o período cruza a virada do ano. */
+  function rotuloPeriodo(chaves) {
+    if (!chaves.length) return '';
+    if (chaves.length === 1) return mesPorExtenso(chaves[0]);
+    const anos = [...new Set(chaves.map((c) => String(c).split('-')[0]))];
+    const partes = anos.length === 1 ? chaves.map(nomeDoMes) : chaves.map(mesPorExtenso);
+    const lista = partes.slice(0, -1).join(', ') + ' e ' + partes[partes.length - 1];
+    return anos.length === 1 ? lista + ' de ' + anos[0] : lista;
+  }
 
   function plural(n, um, muitos) { return n + ' ' + (n === 1 ? um : muitos); }
 
@@ -170,29 +185,27 @@
     </article>`;
   }
 
-  // O bloco escuro é a âncora da capa: leva a frase do mês e a variação contra
-  // o mês anterior, com a seta fantasma ao fundo apontando pro lado que o
-  // número andou. Único lugar da capa com superfície escura — e por isso o
-  // único onde o dourado da marca pode aparecer.
-  // O número grande é a contagem de PBIs fechados no mês — o que o time
+  // O bloco escuro é a âncora da capa. Único lugar com superfície escura — e
+  // por isso o único onde o dourado da marca pode aparecer.
+  //
+  // O número grande é a contagem de PBIs fechados no PERÍODO — o que o time
   // efetivamente entregou. Antes era o total de itens, que somava épico e
   // Feature e inflava a conta com o mesmo trabalho contado duas vezes (o PBI e
-  // o pai que fechou junto). O delta compara com o mês anterior pela MESMA
-  // régua: comparar PBI com total daria uma variação que não existe.
-  function heroi(mesAlvo, mesAnterior) {
-    const total = contaPbis(mesAlvo);
-    const d = mesAnterior ? total - contaPbis(mesAnterior) : null;
-    const temDelta = d !== null && d !== undefined;
-    const sobe = temDelta && d > 0;
-    const desce = temDelta && d < 0;
-    // Sem recorte de tempo no rótulo: o título da capa já diz "Relatório de
-    // Setembro de 2026" três centímetros acima, e repetir o mês aqui e no bloco
-    // vizinho era dizer a mesma coisa três vezes na mesma tela. Sem ponto final
-    // também — rótulo não é frase, e o bloco ao lado nunca teve.
+  // o pai que fechou junto).
+  //
+  // A variação contra o mês anterior saiu. Ela nasceu quando o documento era
+  // mensal, e deixou de ter régua quando o recorte virou dois meses: comparar
+  // agosto+setembro com agosto é comparar o período com um pedaço de si mesmo.
+  // Comparar com junho+julho manteria a leitura, mas exige que esses meses
+  // existam no DevOps — e uma variação que some ou mente conforme o dado é
+  // pior que variação nenhuma.
+  function heroi(mesesDoPeriodo) {
+    const total = (mesesDoPeriodo || []).reduce((n, m) => n + contaPbis(m), 0);
+    // Sem recorte de tempo no rótulo: o título da capa já nomeia o período
+    // três centímetros acima, e repetir aqui e no bloco vizinho era dizer a
+    // mesma coisa três vezes na mesma tela. Sem ponto final também — rótulo
+    // não é frase, e o bloco ao lado nunca teve.
     const frase = total ? 'Itens entregues' : 'Nenhum item entregue';
-    const marca = temDelta && d !== 0
-      ? `<span class="rl-heroi-delta${sobe ? ' rl-sobe' : ' rl-desce'}"><span class="rl-heroi-seta" aria-hidden="true">${sobe ? '↗' : '↘'}</span>${sobe ? '+' : ''}${d}</span>`
-      : '';
     return `<article class="rl-tile rl-tile-escuro rl-heroi">
       <svg class="rl-heroi-fundo" viewBox="0 0 200 120" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
         <path d="M6 104 C40 104 44 62 74 62 C104 62 104 88 132 88 C162 88 166 24 194 24" fill="none" stroke="currentColor" stroke-width="13" stroke-linecap="round"/>
@@ -201,7 +214,6 @@
       <p class="rl-heroi-frase">${esc(frase)}</p>
       <div class="rl-heroi-base">
         <p class="rl-tile-num"><b class="rl-num">${total}</b></p>
-        ${marca}
       </div>
     </article>`;
   }
@@ -209,14 +221,14 @@
   // Sem o selo de "mês em curso / mês fechado": a pedido do Urlan, e sem perda
   // de informação — o título logo abaixo já nomeia o mês, e este documento não tem mais
   // seletor pra trocar de mês, então não havia estado ambíguo pra desfazer.
-  function masthead(escolhido, meta, tiles, hero) {
+  function masthead(periodo, meta, tiles, hero) {
     return `<header class="rl-capa">
       <div class="rl-capa-topo">
         <img class="rl-logo" src="assets/brand/ybera-logo.webp" alt="Ybera" width="360" height="139">
       </div>
       <h1 class="rl-titulo">
         <span class="rl-titulo-fraco">Relatório de</span>
-        <span class="rl-titulo-forte">${esc(PERIODO || mesPorExtenso(escolhido))}</span>
+        <span class="rl-titulo-forte">${esc(periodo)}</span>
       </h1>
       ${meta ? `<p class="rl-meta">${esc(meta)}</p>` : ''}
       <div class="rl-bento rl-bento-capa">${tiles}${hero}</div>
@@ -559,9 +571,16 @@
     const escolhido = /^\d{4}-(0[1-9]|1[0-2])$/.test(o.mes || '') ? o.mes : b.mes;
     const fechado = escolhido !== b.mes;
     const mesAlvo = meses.find((m) => m.mes === escolhido) || null;
-    // `meses` vem do mais novo pro mais velho: o anterior no tempo é o próximo índice.
-    const iAlvo = meses.findIndex((m) => m.mes === escolhido);
-    const mesAnterior = iAlvo >= 0 ? (meses[iAlvo + 1] || null) : null;
+    /* O período vem da constante declarada; `o.periodo` existe pros testes
+       poderem fixar um recorte sem depender do calendário real. Os meses que o
+       DevOps não tem são descartados — o título continua nomeando o período
+       inteiro, e a contagem soma o que existe. */
+    const chavesPeriodo = (Array.isArray(o.periodo) && o.periodo.length) ? o.periodo
+      : (PERIODO_MESES.length ? PERIODO_MESES : [escolhido]);
+    const mesesPeriodo = chavesPeriodo
+      .map((k) => meses.find((m) => m.mes === k))
+      .filter(Boolean);
+    const periodo = rotuloPeriodo(chavesPeriodo) || mesPorExtenso(escolhido);
     const dAgora = new Date(agora);
     const ano = String(dAgora.getUTCFullYear());
     const doAno = [];
@@ -677,7 +696,7 @@
     // delegado por seletor, então nunca casa. `listaMeses` continua no retorno:
     // é dela que a Central monta o link de leitura.
     const html = `<div class="report-doc rl-doc">
-      ${masthead(escolhido, meta.join(' · '), kpis, heroi(mesAlvo, mesAnterior))}
+      ${masthead(periodo, meta.join(' · '), kpis, heroi(mesesPeriodo))}
       <div class="rl-corpo">${secoes.map((x) => secaoHtml(x)).join('')}</div>
       ${rodape()}
     </div>`;

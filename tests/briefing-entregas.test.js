@@ -255,7 +255,7 @@ test('Entregas cai no agrupamento por iniciativa do roadmap por padrão', () => 
    frentes. Estes testes existem pra essa contradição não voltar sem avisar. */
 
 // Um mês com os três níveis fechados, e um mês anterior pra comparar.
-function mesComNiveis() {
+function mesComNiveis(extra) {
   const items = [
     { id: 1, fields: { 'System.WorkItemType': 'Epic', 'System.State': 'Done', 'System.Title': 'Frente', 'Microsoft.VSTS.Common.ClosedDate': iso(AGORA - 2 * dia), 'System.ChangedDate': iso(AGORA - dia) } },
     { id: 10, fields: { 'System.WorkItemType': 'Feature', 'System.State': 'Done', 'System.Title': 'Bloco', 'System.Parent': 1, 'Microsoft.VSTS.Common.ClosedDate': iso(AGORA - 3 * dia), 'System.ChangedDate': iso(AGORA - dia) } },
@@ -264,7 +264,7 @@ function mesComNiveis() {
     { id: 13, fields: { 'System.WorkItemType': 'Bug', 'System.State': 'Done', 'System.Title': 'B1', 'System.Parent': 10, 'Microsoft.VSTS.Common.ClosedDate': iso(AGORA - 6 * dia), 'System.ChangedDate': iso(AGORA - dia) } },
     { id: 20, fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.State': 'Done', 'System.Title': 'Mês passado', 'System.Parent': 10, 'Microsoft.VSTS.Common.ClosedDate': iso(AGORA - 35 * dia), 'System.ChangedDate': iso(AGORA - dia) } },
   ];
-  return BE.htmlReport({ items, todos: items, agora: AGORA }).html;
+  return BE.htmlReport(Object.assign({ items, todos: items, agora: AGORA }, extra || {})).html;
 }
 // As mesmas opções, cruas, pra quem precisa variar o modo de agrupamento.
 function mesNiveisOpcoes() {
@@ -277,7 +277,9 @@ function mesNiveisOpcoes() {
 const capaDe = (h) => h.slice(0, h.indexOf('rl-corpo'));
 
 test('capa: o bloco escuro conta PBI fechado no mês, não épico nem Feature', () => {
-  const capa = capaDe(mesComNiveis());
+  // Recorte de um mês só: aqui se mede a régua (o que conta como entrega), e
+  // não a soma do período — que tem teste próprio logo abaixo.
+  const capa = capaDe(mesComNiveis({ periodo: ['2026-09'] }));
   // Fecharam 5 itens: 1 épico, 1 Feature, 2 PBI e 1 Bug. Valem 3 (PBI + Bug).
   assert.match(capa, /rl-heroi-base[\s\S]*?rl-num">3</);
   // A frase é rótulo: nomeia o que o número mede, sem repetir o número e sem
@@ -288,12 +290,30 @@ test('capa: o bloco escuro conta PBI fechado no mês, não épico nem Feature', 
   assert.ok(!/3 itens/.test(capa), 'a contagem mora no numeral, não na frase');
 });
 
-test('capa: o delta compara PBI com PBI, não com o total de itens', () => {
+test('capa: o número soma todos os meses do período, não só o último', () => {
+  // Setembro tem 3 que valem (2 PBI + 1 Bug; o épico não conta) e agosto tem 1.
+  // Num período de dois meses o bloco escuro precisa dizer 4 — foi contar só
+  // setembro debaixo de um título que dizia "Agosto e Setembro" que motivou
+  // trazer título e contagem pra mesma fonte.
+  const capa = capaDe(mesComNiveis({ periodo: ['2026-08', '2026-09'] }));
+  assert.match(capa, /rl-heroi-base[\s\S]*?rl-num">4</);
+});
+
+test('capa: o título nomeia exatamente os meses que o número contou', () => {
+  const capa = capaDe(mesComNiveis({ periodo: ['2026-08', '2026-09'] }));
+  assert.ok(capa.includes('Agosto e Setembro de 2026'), 'o ano aparece uma vez só');
+  const umMes = capaDe(mesComNiveis({ periodo: ['2026-09'] }));
+  assert.ok(umMes.includes('Setembro de 2026'));
+  assert.ok(!umMes.includes(' e '), 'um mês sozinho não vira lista');
+});
+
+test('capa: a variação contra o mês anterior saiu', () => {
+  // Ela não tinha régua num recorte de dois meses: comparar agosto+setembro
+  // com agosto é comparar o período com um pedaço de si mesmo.
   const capa = capaDe(mesComNiveis());
-  // Mês anterior teve 1 PBI; este teve 3. A variação é +2, e ela vive na
-  // pílula — a frase não a repete mais.
-  assert.match(capa, /rl-heroi-delta[\s\S]*?\+2</);
-  assert.ok(!capa.includes('a mais que no mês anterior'), 'a comparação saiu do texto');
+  assert.ok(!capa.includes('rl-heroi-delta'), 'a pílula da variação saiu');
+  assert.ok(!/[↗↘]/.test(capa), 'a seta da variação saiu junto');
+  assert.ok(!capa.includes('a mais que no mês anterior'), 'e não voltou como texto');
 });
 
 test('capa: o único número conta a lista curada, não os épicos do DevOps', () => {

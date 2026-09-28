@@ -263,21 +263,6 @@ body.pagina-entregas {
   gap: 1rem;
 }
 .rl-heroi .rl-tile-num { margin: 0; }
-.rl-heroi-delta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.3rem 0.6rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
-  font-size: 0.85rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: #fff;
-}
-.rl-heroi-delta.rl-sobe { color: var(--positivo-fundo); }
-.rl-heroi-delta.rl-desce { color: #ffb4ad; }
-.rl-heroi-seta { font-size: 0.95rem; line-height: 1; }
 
 /* ---------- Navegação ---------- */
 /* A pílula de vidro do v1, trazida pra cá. NÃO tem fundo atrás dela de
@@ -1138,7 +1123,6 @@ body.pagina-entregas {
   .rl-tile-escuro { background: #fff !important; color: var(--tinta); }
   .rl-tile-escuro .rl-tile-rot, .rl-heroi-frase { color: var(--tinta) !important; }
   .rl-heroi-fundo { display: none; }
-  .rl-heroi-delta { background: var(--superficie-2); color: var(--tinta) !important; }
   .rl-logo-inv { filter: none; }
   .rl-rodape-sub, .rl-rodape-contato { color: var(--mudo) !important; }
   .rl-rodape-contato a { color: var(--tinta); }
