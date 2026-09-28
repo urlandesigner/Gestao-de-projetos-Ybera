@@ -383,11 +383,16 @@
       // = 5. Porcentagem no texto já foi tentada e saiu — "50%" era exato em 9
       // de 18 e mentia em 10.
       progresso: { feito: 13, total: 18, rotulo: 'itens concluídos' },
-      // O #gid=0 no fim é da própria planilha (a aba), não do report: como o
-      // link abre em outra aba, ele não toca no hash desta página — que é onde
-      // viaja o conteúdo do link de leitura.
+      /* `/view` e não `/edit`: a planilha é pública para LEITURA, e o /edit faz o
+         Google avaliar se a identidade de quem abre pode editar — quem está
+         logado numa conta sem permissão de edição cai no pedido de acesso em
+         vez da planilha. Quem lê este report é leitor, não editor.
+
+         O #gid=0 é a aba da planilha, não o hash desta página: o link abre em
+         outra aba, então não toca no hash daqui — que é por onde viaja o
+         conteúdo do link de leitura. */
       link: {
-        href: 'https://docs.google.com/spreadsheets/d/1kC8iL2vZGl0aAy7xWdn5e6IrN2BYqe-6dYQYjKKWj6E/edit?gid=0#gid=0',
+        href: 'https://docs.google.com/spreadsheets/d/1kC8iL2vZGl0aAy7xWdn5e6IrN2BYqe-6dYQYjKKWj6E/view?gid=0#gid=0',
         rotulo: 'Abrir a planilha de demandas',
       },
     },
