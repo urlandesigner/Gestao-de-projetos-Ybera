@@ -338,14 +338,15 @@
       epicoId: 49290,
       status: 'andamento',
       resumo: [
-        'Avançamos nos itens que recebemos da agência: 10 dos 18 já estão concluídos, e os demais seguem em andamento com previsão de término ainda este mês.',
+        'Avançamos nos itens que recebemos da agência: faltam apenas 5 dos 18 para finalizar, com previsão de término ainda este mês.',
         'O que não for finalizado dentro desse prazo será tratado como nova demanda, a partir de outubro.',
       ],
-      // Os mesmos 10 de 18 que o resumo diz em texto. O texto agora dá a
-      // contagem, e não mais a porcentagem: "50%" era exato com 9 de 18 e
-      // passou a mentir assim que virou 10 — a frase e a barra só ficam
-      // presas uma na outra enquanto as duas falam na mesma unidade.
-      progresso: { feito: 10, total: 18, rotulo: 'itens concluídos' },
+      // 13 concluídos é o complemento dos 5 que faltam, ditos no texto. A barra
+      // guarda o total e o feito; o texto conta pelo que sobra, que é o que
+      // interessa a esta altura. Ao mexer num, refaça a conta no outro: 18 - 13
+      // = 5. Porcentagem no texto já foi tentada e saiu — "50%" era exato em 9
+      // de 18 e mentia em 10.
+      progresso: { feito: 13, total: 18, rotulo: 'itens concluídos' },
       // TODO(urlan): endereço da planilha de demandas. Sem href http(s) válido o
       // botão simplesmente não é desenhado — é melhor não ter botão do que ter
       // um que não leva a lugar nenhum.

@@ -450,19 +450,24 @@ test('barra: o cartão do compliance mostra o progresso que o texto afirma', () 
   assert.ok(card, 'o cartão existe');
   const barra = /<div class="rl-progresso"[\s\S]*?<\/div>/.exec(card);
   assert.ok(barra, 'tem barra');
-  // 10 de 18 é o mesmo número que o resumo escreve em texto: a barra não pode
-  // contar uma história diferente do parágrafo acima dela. O texto dá a
-  // contagem, não a porcentagem — "50%" só era exato em 9 de 18.
-  assert.match(barra[0], /aria-valuenow="10"/);
-  assert.match(barra[0], /aria-valuemax="18"/);
-  assert.match(barra[0], /width:56%/);
-  assert.ok(card.includes('10 dos 18'), 'o texto e a barra dizem o mesmo');
+  // O número muda toda vez que a frente anda, então aqui não se fixa literal
+  // nenhum: lê-se o que a barra afirma e o que o texto afirma, e exige-se que
+  // fechem a conta. Assim o teste sobrevive à próxima atualização e continua
+  // pegando o que importa — barra e parágrafo contando histórias diferentes.
+  const feito = Number(/aria-valuenow="(\d+)"/.exec(barra[0])[1]);
+  const total = Number(/aria-valuemax="(\d+)"/.exec(barra[0])[1]);
+  const largura = Number(/width:(\d+)%/.exec(barra[0])[1]);
+  const noTexto = /faltam apenas (\d+) dos (\d+)/.exec(card);
+  assert.ok(noTexto, 'o resumo diz quantos faltam de quantos');
+  assert.equal(Number(noTexto[2]), total, 'o total do texto é o total da barra');
+  assert.equal(total - feito, Number(noTexto[1]), 'o que falta no texto é o que falta na barra');
+  assert.equal(largura, Math.round((feito / total) * 100), 'a largura é a fração real');
 });
 
 test('barra: sem rótulo visível, mas legível por leitor de tela', () => {
   const h = documento().html;
   const barra = /<div class="rl-progresso"[\s\S]*?<\/div>/.exec(h)[0];
-  assert.match(barra, /aria-label="10 de 18 itens concluídos"/);
+  assert.match(barra, /aria-label="\d+ de \d+ itens concluídos"/);
   // O único filho é a faixa preenchida — nenhum texto desenhado, porque o
   // resumo logo acima já diz os números.
   assert.equal(barra.replace(/<[^>]+>/g, '').trim(), '');
