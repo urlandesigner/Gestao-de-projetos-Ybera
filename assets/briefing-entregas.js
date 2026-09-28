@@ -571,11 +571,11 @@
       // sozinha não conta — passar o mouse, e leitor de tela.
       const feito = it.status === 'concluido';
       const rodando = it.status === 'andamento';
-      const selo = feito ? ' <span class="rl-rm-feito">concluído</span>' : '';
+      const selo = feito ? '<span class="rl-rm-feito">concluído</span>' : '';
       const modBarra = feito ? ' rl-rm-barra-feita' : rodando ? ' rl-rm-barra-andamento' : '';
       const tituloBarra = rodando ? ' title="Em andamento"' : '';
       return `<div class="rl-rm-item">
-        <span class="rl-rm-titulo">${esc(it.titulo)}${selo}</span>
+        <span class="rl-rm-titulo"><span class="rl-rm-nome">${esc(it.titulo)}</span>${selo}</span>
         <span class="rl-rm-trilha"><span class="rl-rm-barra${modBarra}"${tituloBarra} style="left:${esquerda.toFixed(2)}%;width:${largura.toFixed(2)}%"></span></span>
       </div>`;
     }).join('');

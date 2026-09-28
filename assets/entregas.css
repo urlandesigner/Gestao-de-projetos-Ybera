@@ -858,7 +858,13 @@ body.pagina-entregas {
 .rl-rm-grade {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(150px, 15rem) 1fr;
+  /* 21rem e não 15: medido, o nome mais longo do roadmap ("Ajustes Loja USA
+     Compliance Google") tem 240px e a coluna tinha 240px — ele sozinho já a
+     enchia, e o selo de 80px caía numa segunda linha. Com o selo embaixo a
+     raia ia de 35px pra 56px e a régua do tempo perdia o ritmo. Em 21rem cabem
+     os treze nomes com selo na mesma linha; custa ~10% da largura da régua, o
+     que em treze meses é menos de sete pixels por mês. */
+  grid-template-columns: minmax(150px, 21rem) 1fr;
   column-gap: 1.25rem;
   min-width: 600px;
 }
@@ -883,18 +889,25 @@ body.pagina-entregas {
    divisor de mês (--borda) porque separa, não mede — quem conta a passagem do
    tempo é a linha vertical. */
 .rl-rm-titulo, .rl-rm-trilha { border-top: 1px solid var(--superficie-2); }
+/* O selo é fixado à direita e o nome encolhe, em vez de os dois disputarem a
+   linha. Hoje todos cabem; num nome futuro maior, o nome quebra em duas linhas
+   e o selo continua no alto à direita, alinhado com os outros — em vez de
+   ocupar uma linha sozinho. `min-width: 0` é o que permite o nome encolher:
+   sem ele um item flex se recusa a ficar menor que o próprio conteúdo. */
 .rl-rm-titulo {
   grid-column: 1;
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.3rem 0.45rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.45rem;
   padding: 0.5rem 0;
   font-size: 0.85rem;
   line-height: 1.35;
 }
+.rl-rm-nome { min-width: 0; }
 .rl-rm-feito {
   flex: none;
+  margin-top: 0.1rem;   /* acerta o selo com a primeira linha do nome */
   padding: 0.1rem 0.45rem;
   border-radius: 999px;
   background: var(--positivo);
@@ -1129,6 +1142,13 @@ body.pagina-entregas {
      régua mais curta deixam quase metade do gráfico à vista de saída. */
   .rl-rm-grade { grid-template-columns: minmax(96px, 8rem) 1fr; min-width: 520px; }
   .rl-rm-titulo { font-size: 0.78rem; }
+  /* No telefone a coluna tem 128px e não cabem nome e selo lado a lado: fixar o
+     selo à direita espremia o nome numa tira de 50px, e "Nova PDP USA" saía em
+     três linhas. Aqui o nome toma a linha inteira e o selo desce — duas linhas
+     legíveis valem mais que uma linha alinhada. */
+  .rl-rm-titulo { flex-wrap: wrap; justify-content: flex-start; gap: 0.25rem 0.45rem; }
+  .rl-rm-nome { min-width: 100%; }
+  .rl-rm-feito { margin-top: 0; }
 
   .rl-rm-escala i { display: none; }
   /* O primeiro guarda o ano, senão a régua não diz de que ano ela parte. Ele
