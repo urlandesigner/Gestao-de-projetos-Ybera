@@ -148,12 +148,51 @@ test('Entregas diz a que épico cada frente pertence — sem cartão órfão', (
   ]);
 });
 
-test('Entregas só marca selo em quem tem status, e "em andamento" é o único aceito', () => {
+// Antes só um cartão tinha selo, e o teste guardava esse "só um". Agora TODOS
+// têm, e o que se guarda é o contrário: nenhum cartão pode ficar sem: a
+// ausência de selo voltaria a ser ambígua — concluído, ou ninguém disse?
+test('Entregas põe selo em todo cartão, sem exceção', () => {
   const h = documento().html;
-  assert.equal((h.match(/rl-selo-andamento/g) || []).length, 1, 'só Google compliance está em andamento');
+  const cartoes = [...h.matchAll(/<article class="rl-frente">[\s\S]*?<\/article>/g)].map((m) => m[0]);
+  assert.ok(cartoes.length >= 8);
+  for (const c of cartoes) {
+    const nome = (/<h3[^>]*>([\s\S]*?)<\/h3>/.exec(c) || [])[1];
+    assert.match(c, /<span class="rl-selo /, `sem selo: ${nome}`);
+  }
   assert.ok(h.includes('Tratativas do Google compliance</h3>'), 'o status não pode virar parte do título');
-  assert.ok(!h.includes('rl-selo-ok'), 'nenhum tópico foi declarado concluído');
-  assert.ok(!h.includes('rl-selo-risco'));
+});
+
+test('Entregas: cada estado tem a sua classe, sem troca entre eles', () => {
+  // A escada é em andamento → em teste → entregue, e cada degrau tem cor
+  // própria. Trocar duas classes de lugar não quebraria nada visível num teste
+  // que só contasse pílulas — por isso aqui se guarda o par texto↔classe.
+  const esperado = {
+    'em andamento': 'rl-selo-andamento',
+    'em teste': 'rl-selo-teste',
+    'entregue': 'rl-selo-ok',
+  };
+  const h = documento().html;
+  const selos = [...h.matchAll(/<span class="rl-selo ([^"]+)">([^<]+)</g)].map((m) => ({ classe: m[1], texto: m[2] }));
+  assert.ok(selos.length >= 8);
+  for (const s of selos) assert.equal(s.classe, esperado[s.texto], `classe errada em "${s.texto}"`);
+  assert.ok(selos.some((s) => s.texto === 'entregue'), 'alguém entregou');
+  assert.ok(!h.includes('rl-selo-risco'), 'não há estado de risco neste documento');
+});
+
+test('Entregas ignora status fora do vocabulário em vez de inventar selo', () => {
+  // A regra que existe desde o primeiro selo: palavra desconhecida não vira
+  // pílula afirmando um estado que ninguém escreveu.
+  const h = documento().html;
+  const textos = [...h.matchAll(/<span class="rl-selo [^"]+">([^<]+)</g)].map((m) => m[1]);
+  const conhecidos = new Set(['entregue', 'em teste', 'em andamento']);
+  for (const t of textos) assert.ok(conhecidos.has(t), `selo fora do vocabulário: ${t}`);
+});
+
+test('Entregas: o selo não repete o que o parágrafo já diz', () => {
+  const h = documento().html;
+  const traducao = [...h.matchAll(/<article class="rl-frente">[\s\S]*?<\/article>/g)]
+    .map((m) => m[0]).find((c) => /Tradução do site/.test(c));
+  assert.ok(!/em validação/i.test(traducao), 'o estado mora no selo, não na frase');
 });
 
 test('Entregas não emite os ganchos de busca de Entregas — report.js aguenta a ausência', () => {

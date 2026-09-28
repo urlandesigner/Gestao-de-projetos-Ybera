@@ -568,9 +568,16 @@ body.pagina-entregas {
 }
 .rl-selo-risco { background: var(--erro); color: #fff; }
 .rl-selo-ok { background: var(--positivo); color: #fff; }
-/* "em andamento" repete o tratamento da pílula do roadmap: neutra e com
-   contorno, pra o mesmo estado ter a mesma cara nas duas seções. */
-.rl-selo-andamento { border: 1px solid var(--borda); }
+/* A escada tem três degraus — em andamento, em teste, entregue — e o peso
+   visual sobe com ela: azul tingido, âmbar tingido, verde sólido. Os dois
+   primeiros são fases do caminho e dividem o mesmo peso; só a chegada é sólida.
+
+   Âmbar e não vermelho em "em teste": vermelho aqui é erro (--erro, no selo de
+   risco), e estar em teste não é problema. Azul em "em andamento" porque é a
+   única família que sobra depois de verde (chegou) e âmbar (checando) — e
+   vermelho está reservado. */
+.rl-selo-andamento { background: #e2e8f5; color: #1e40af; }
+.rl-selo-teste { background: #fdf0d5; color: #92400e; }
 /* Retranca do cartão: diz a que projeto a frente pertence, antes do nome dela.
    Discreta de propósito — é endereço, não manchete. */
 .rl-frente-produto {
@@ -1152,7 +1159,7 @@ body.pagina-entregas {
   .rl-rodape-contato a { color: var(--tinta); }
   /* Barras são só fundo: sem isto o papel sai em branco */
   .rl-rumo-trilho i, .rl-esforco-regua i, .rl-comp-barra i, .rl-rm-barra,
-  .rl-selo-risco, .rl-selo-ok, .rl-bloco-n, .rl-chip.ativo {
+  .rl-selo-risco, .rl-selo-ok, .rl-selo-teste, .rl-selo-andamento, .rl-bloco-n, .rl-chip.ativo {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }

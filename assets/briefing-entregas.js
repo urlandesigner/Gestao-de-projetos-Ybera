@@ -273,14 +273,32 @@
      aqui é a forma de incluir, remover ou reescrever cartão — não há tela
      pra isso.
 
-     `titulo` é obrigatório. `status` é opcional e só aceita 'andamento' (o
-     único estado que apareceu até agora); qualquer outra coisa é ignorada, em
-     vez de virar um selo que afirma algo que ninguém escreveu. `resumo` é o
-     texto do Urlan — string para um parágrafo, lista de strings quando ele
-     separou ideias que não cabem na mesma respiração. */
+     `titulo` e `status` são obrigatórios. `resumo` é o texto do Urlan — string
+     para um parágrafo, lista de strings quando ele separou ideias que não
+     cabem na mesma respiração. */
+
+  /* Vocabulário fechado de status. As palavras são as do Urlan: quem escreve o
+     estado de uma frente é quem a conhece, e um status fora desta tabela é
+     ignorado em vez de virar selo afirmando algo que ninguém escreveu.
+
+     Antes só existia 'andamento', e sete dos oito cartões ficavam sem selo — o
+     que tornava a AUSÊNCIA ambígua: não dava pra saber se era concluído ou se
+     ninguém tinha dito. Com todos marcados, a varredura de três segundos
+     substitui a leitura dos oito parágrafos.
+
+     A ordem da tabela É a escada do estado, e o peso visual sobe com ela: azul
+     tingido, âmbar tingido, verde sólido. Os dois primeiros são fases do
+     caminho e dividem o mesmo peso; só a chegada é sólida — se todos
+     gritassem, nenhum marcaria nada. */
+  const SELOS = {
+    andamento: { texto: 'em andamento', classe: 'rl-selo-andamento' },
+    teste:     { texto: 'em teste',     classe: 'rl-selo-teste' },
+    entregue:  { texto: 'entregue',     classe: 'rl-selo-ok' },
+  };
   const ENTREGAS_RECENTES = [
     {
       titulo: 'Novos componentes visuais para HOME',
+      status: 'entregue',
       iniciativa: 'Nova Homepage USA',
       produto: 'Loja Clube USA',
       epicoId: 49290,
@@ -309,6 +327,7 @@
     },
     {
       titulo: 'Novo cart drawer',
+      status: 'entregue',
       produto: 'Loja Clube USA',
       epicoId: 49290,
       resumo: 'Melhoria geral da experiência do cart drawer, no desktop e no mobile.',
@@ -319,6 +338,7 @@
     },
     {
       titulo: 'Novos componentes visuais para PDP',
+      status: 'entregue',
       iniciativa: 'Nova PDP USA',
       produto: 'Loja Clube USA',
       epicoId: 49290,
@@ -338,6 +358,7 @@
     },
     {
       titulo: 'Testes Shipsmart',
+      status: 'andamento',
       produto: 'Shipsmart',
       epicoId: 49300,
       resumo: [
@@ -368,28 +389,32 @@
     },
     {
       titulo: 'Migração de ERP — ajustes gerais',
+      status: 'entregue',
       produto: 'ERP — Ordoro | Salesforce Rootstock',
       epicoId: 49282,
       resumo: 'Ajustes e configurações adicionais pós-migração para a Rootstock.',
     },
     {
       titulo: 'Tradução do site',
+      status: 'teste',
       iniciativa: 'Tradução',
       produto: 'Loja Clube USA',
       epicoId: 49290,
       resumo: [
-        'Desenvolvimento concluído: todo o site foi configurado para ser possível traduzir, tanto os textos quanto as imagens. A frente está em validação.',
+        'Desenvolvimento concluído: todo o site foi configurado para ser possível traduzir, tanto os textos quanto as imagens.',
         'No caso das imagens, elas deverão ser criadas em versões diferentes por idioma.',
       ],
     },
     {
       titulo: 'App Review — ajustes',
+      status: 'entregue',
       iniciativa: 'App de Reviews',
       produto: 'Ybera Reviews / API de Reviews',
       epicoId: 49302,
       resumo: [
         'Realizamos discovery para levantar as melhores opções de apps de reviews dentro do Shopify.',
-        'Depois da pesquisa, fizemos um alinhamento com o Wendel e decidimos que não seria produtivo trocar o app atual, o Judge.me, por outro: não haveria ganho real, seria basicamente trocar um pelo outro, e demandaria muitas horas do time técnico. Preferimos manter o Judge.me e fazer alguns pequenos ajustes, que já foram concluídos.',
+        'Depois da pesquisa, fizemos um alinhamento com o Wendel e decidimos que não seria produtivo trocar o app atual, o Judge.me, por outro: não haveria ganho real, seria basicamente trocar um pelo outro, e demandaria muitas horas do time técnico. Preferimos manter o Judge.me e fazer alguns pequenos ajustes.',
+        'A reunião de entrega ainda será agendada.',
         'Está planejada a construção de um app de reviews próprio, pelo time da Ybera, com início previsto para março de 2027 — ele já está no roadmap, mais abaixo.',
       ],
     },
@@ -468,8 +493,8 @@
   // vira ruído.
   function corpoEntregasRecentes(lista, mostrarProduto) {
     const cartoes = lista.map((f) => {
-      const selo = f.status === 'andamento'
-        ? '<span class="rl-selo rl-selo-andamento">em andamento</span>' : '';
+      const est = SELOS[f.status];
+      const selo = est ? `<span class="rl-selo ${est.classe}">${esc(est.texto)}</span>` : '';
       return `<article class="rl-frente">
         ${mostrarProduto && f.produto ? `<p class="rl-frente-produto">${esc(f.produto)}</p>` : ''}
         <div class="rl-frente-cab">
