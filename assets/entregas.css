@@ -620,14 +620,32 @@ body.pagina-entregas {
    `margin-top: auto` mora no invólucro: a fileira estica os cartões à mesma
    altura, e sem isso a barra de um cartão curto flutuaria no meio enquanto a do
    vizinho ficaria no pé. O padding é o vão mínimo pra quando não sobra espaço. */
-.rl-progresso-area { margin-top: auto; padding-top: 1.1rem; }
+.rl-progresso-area {
+  margin-top: auto;
+  padding-top: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
 .rl-progresso {
+  flex: 1;
+  min-width: 0;
   height: 8px;
   border-radius: 999px;
   background: var(--superficie-2);
   overflow: hidden;
 }
 .rl-progresso > i { display: block; height: 100%; border-radius: 999px; background: var(--positivo); }
+/* `tabular-nums` trava a largura dos dígitos: sem isso a contagem muda de
+   largura ao trocar de número e a barra ao lado dela encolhe junto. */
+.rl-progresso-conta {
+  flex: none;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--mudo);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
 
 /* Chamada pro documento de fora. Pílula da mesma família dos botões do topo da
    Central — mesmo raio, mesma borda — porque é a mesma natureza de gesto. */

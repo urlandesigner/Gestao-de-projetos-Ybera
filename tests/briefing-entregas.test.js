@@ -556,13 +556,22 @@ test('barra: o cartão do compliance mostra o progresso que o texto afirma', () 
   assert.equal(largura, Math.round((feito / total) * 100), 'a largura é a fração real');
 });
 
-test('barra: sem rótulo visível, mas legível por leitor de tela', () => {
+test('barra: a contagem fica ao lado, e o leitor de tela não a ouve duas vezes', () => {
   const h = documento().html;
   const barra = /<div class="rl-progresso"[\s\S]*?<\/div>/.exec(h)[0];
-  assert.match(barra, /aria-label="\d+ de \d+ itens concluídos"/);
-  // O único filho é a faixa preenchida — nenhum texto desenhado, porque o
-  // resumo logo acima já diz os números.
+  // A barra em si não tem texto: o único filho é a faixa preenchida.
   assert.equal(barra.replace(/<[^>]+>/g, '').trim(), '');
+  assert.match(barra, /aria-label="(\d+) de (\d+) itens concluídos"/);
+  const [, feito, total] = /aria-label="(\d+) de (\d+) itens concluídos"/.exec(barra);
+
+  // A contagem é irmã da barra, e diz o mesmo par de números.
+  const conta = /<span class="rl-progresso-conta"([^>]*)>([^<]+)<\/span>/.exec(h);
+  assert.ok(conta, 'a contagem existe ao lado da barra');
+  assert.equal(conta[2].trim(), `${feito}/${total}`, 'a contagem e o aria-label discordam');
+
+  // `aria-hidden` porque o progressbar já anuncia os mesmos números pelo
+  // aria-label; sem isso o leitor de tela diria tudo duas vezes seguidas.
+  assert.match(conta[1], /aria-hidden="true"/);
 });
 
 test('barra: cartão que não declara progresso não ganha barra', () => {

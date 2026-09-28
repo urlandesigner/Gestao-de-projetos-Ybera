@@ -464,11 +464,11 @@
      pronta: a porcentagem sai da conta, então ela não tem como divergir dos
      números que o resumo escreve em texto.
 
-     Sem rótulo visível de propósito: o parágrafo do cartão já dá os números em
-     texto — hoje, no compliance, "faltam apenas 5 dos 18" — e repeti-los
-     embaixo da barra seria a mesma informação duas vezes na mesma respiração.
-     Quem lê por leitor de tela não perde nada: os números vivem nos atributos
-     aria, que é onde eles fazem falta de verdade. */
+     Ao lado da barra vai a contagem do que já foi — "14/18". Ela não repete o
+     parágrafo: o texto conta pelo que FALTA ("faltam apenas 4 dos 18") e este
+     rótulo conta pelo que ANDOU, que é o que a barra desenha. Quando o texto
+     dava a porcentagem, o rótulo não existia justamente porque seria a mesma
+     coisa dita duas vezes. */
   function barra(pr) {
     const total = Number(pr.total) || 0;
     const feito = Math.min(Math.max(Number(pr.feito) || 0, 0), total);
@@ -479,10 +479,14 @@
        não funcionam: o `border-radius` é calculado sobre a caixa inteira, e uma
        caixa de 26px (padding + 8px de trilho) curva muito acima da faixa que o
        `background-clip` pinta — o trilho saía com as pontas retas. */
+    /* A contagem ao lado leva `aria-hidden`: o próprio progressbar já anuncia
+       "14 de 18 itens concluídos" pelo aria-label, e sem isso o leitor de tela
+       diria o número duas vezes seguidas. Ela é para o olho, não para o ouvido. */
     return `<div class="rl-progresso-area">
       <div class="rl-progresso" role="progressbar" aria-label="${esc(rotulo)}"
         aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${feito}"
         ><i style="width:${pct}%"></i></div>
+      <span class="rl-progresso-conta" aria-hidden="true">${feito}/${total}</span>
     </div>`;
   }
 
