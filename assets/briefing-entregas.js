@@ -383,10 +383,13 @@
       // = 5. Porcentagem no texto já foi tentada e saiu — "50%" era exato em 9
       // de 18 e mentia em 10.
       progresso: { feito: 13, total: 18, rotulo: 'itens concluídos' },
-      // TODO(urlan): endereço da planilha de demandas. Sem href http(s) válido o
-      // botão simplesmente não é desenhado — é melhor não ter botão do que ter
-      // um que não leva a lugar nenhum.
-      link: { href: '', rotulo: 'Abrir a planilha de demandas' },
+      // O #gid=0 no fim é da própria planilha (a aba), não do report: como o
+      // link abre em outra aba, ele não toca no hash desta página — que é onde
+      // viaja o conteúdo do link de leitura.
+      link: {
+        href: 'https://docs.google.com/spreadsheets/d/1kC8iL2vZGl0aAy7xWdn5e6IrN2BYqe-6dYQYjKKWj6E/edit?gid=0#gid=0',
+        rotulo: 'Abrir a planilha de demandas',
+      },
     },
     {
       titulo: 'Migração de ERP — ajustes gerais',
