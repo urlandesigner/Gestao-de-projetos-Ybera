@@ -171,8 +171,12 @@
       const pecaX = cp.left - base.left, pecaW = cp.width;
       const emCima = [], aEsquerda = [], aDireita = [];
       for (const par of pares) {
+        /* A caixa e cortada na largura da peca. No Track o item da borda
+           passa do trilho de proposito — e a fatia do proximo —, e sem o
+           corte o fio ia buscar a borda direita dele fora do quadro. */
         const r = par.alvo.getBoundingClientRect();
-        par.caixa = { x: r.left - base.left, y: r.top - base.top, w: r.width, h: r.height };
+        const esq = Math.max(r.left, cp.left), dir = Math.min(r.right, cp.right);
+        par.caixa = { x: esq - base.left, y: r.top - base.top, w: Math.max(dir - esq, 0), h: r.height };
         /* So o CONTAINER e ancorado em cima. A regra era "quem tem a largura
            toda", e no cartao de oferta tres filhos tem — desfoque, link e
            acao —, entao tres fios verticais desciam a foto inteira, o da acao

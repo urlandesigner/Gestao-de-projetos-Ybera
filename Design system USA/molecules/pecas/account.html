@@ -1,0 +1,83 @@
+<h2>Account menu</h2>
+    <p class="when">O menu da conta no cabeçalho. Logado, diz quem está na sessão e leva aos pedidos, aos dados e aos favoritos. Visitante, convida a entrar ou criar conta.</p>
+    <h3 class="row-label">Logado e visitante &middot; <code>__toggle</code> <code>[checked]</code></h3>
+    <!-- As duas lado a lado, cada uma com o painel aberto. O gatilho fica a
+         direita de cada coluna porque o painel abre alinhado a direita dele,
+         como no cabeçalho. -->
+    <!-- Cada coluna reserva embaixo a altura do proprio painel aberto: lado a
+         lado no desktop, e uma embaixo da outra quando a largura nao cabe duas
+         (o quadro de 375px), sem um painel cobrir o outro. -->
+    <div class="stage stage--pad stage--overflow">
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(18rem, 1fr)); gap:var(--yb-space-4) var(--yb-space-8)">
+        <span class="amostra" style="align-items:flex-end; padding-block-end:19rem">
+          <span class="amostra__rotulo"><code>logado</code></span>
+          <div class="yb-account">
+              <input class="yb-account__toggle" type="checkbox" id="account-demo" checked>
+              <label class="yb-account__trigger" for="account-demo"
+                     aria-label="Account menu for Urlan Dipre">
+                <span class="yb-avatar" aria-hidden="true">U</span></label>
+              <div class="yb-account__panel">
+                <span class="yb-account__head yb-account__head--who">
+                  <span class="yb-avatar yb-avatar--md" aria-hidden="true">U</span>
+                  <b class="yb-account__name">Urlan Dipre</b>
+                  <span class="yb-account__email">urlan.dipre@ybera.com</span>
+                </span>
+                <a class="yb-account__item" href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg> Account</a>
+                <a class="yb-account__item" href="#demos/orders"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg> Orders</a>
+                <a class="yb-account__item" href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg> Wishlist</a>
+                <div class="yb-account__foot">
+                  <a class="yb-account__item" href="#demos/logout"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-lock"/></svg> Log out</a>
+                </div>
+              </div>
+            </div>
+        </span>
+        <span class="amostra" style="align-items:flex-end; padding-block-end:15rem">
+          <span class="amostra__rotulo"><code>visitante</code></span>
+          <div class="yb-account">
+              <input class="yb-account__toggle" type="checkbox" id="account-demo-guest" checked>
+              <label class="yb-account__trigger" for="account-demo-guest" aria-label="Account menu">
+                <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg></label>
+              <div class="yb-account__panel">
+                <div class="yb-account__head">
+                  <b class="yb-account__title">Welcome to Ybera</b>
+                  <p class="yb-account__text">Sign in to see your orders and wishlist.</p>
+                  <a class="yb-btn yb-btn--primary" href="#demos/login">Sign in</a>
+                </div>
+                <div class="yb-account__foot">
+                  <a class="yb-account__item" href="#demos/register"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg> Create account</a>
+                </div>
+              </div>
+            </div>
+        </span>
+      </div>
+    </div>
+    <div class="note">
+      <b>Quem, antes do que fazer</b>
+      <p>Logado, o menu abre dizendo o nome e o e-mail da sessão. Sem isso ele abre
+      com três verbos e nenhuma confirmação de que a conta é a certa — e a dúvida faz
+      a pessoa clicar em <code>Account</code> só para conferir. Visitante, a cabeça diz <b>por que</b> entrar, e o botão é a ação do menu
+      inteiro; criar conta fica no pé, porque é o caminho de menos gente.</p>
+    </div>
+    <div class="note">
+      <b>Por que voltou a se chamar Account menu</b>
+      <p>Foi um organismo chamado Account menu, depois uma molécula chamada Dropdown.
+      O segundo nome prometia um painel genérico que ele nunca foi: saudação, pedidos
+      e sair não servem a nenhum outro gatilho. Continua molécula — sozinho numa tela
+      não é nada — e o Dropdown genérico só nasce quando uma tela pedir um.</p>
+    </div>
+    <div class="note">
+      <b>O palco desta demo não recorta</b>
+      <p>O painel é <code>position:absolute</code> e passa da altura da caixa. Com o
+      <code>overflow:hidden</code> que o palco usa por padrão, ele apareceria
+      cortado na metade — e a documentação mostraria um defeito que o componente
+      não tem.</p>
+    </div>
+    <div class="note">
+      <b>Sem JS, e o que isso custa</b>
+      <p>Mesma mecânica do menu principal, nos dois estados: <code>checkbox</code> escondido mais
+      painel irmão. Sobrevive com o JS fora do ar, que é o que o cabeçalho mais
+      precisa. Em troca, o leitor de tela anuncia &ldquo;caixa de seleção&rdquo;, não
+      &ldquo;menu&rdquo;. A casa já aceita isso no menu principal; quando entrar um
+      menu de verdade, com <code>aria-expanded</code> e setas, ele troca os dois
+      de uma vez.</p>
+    </div>

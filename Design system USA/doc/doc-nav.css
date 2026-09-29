@@ -34,7 +34,7 @@
   --ds-nav-label: calc(var(--ds-nav-gutter) + var(--ds-nav-chip) + var(--ds-nav-gap));
   /* o filete cai no centro do chip */
   --ds-nav-rule: calc(var(--ds-nav-gutter) + var(--ds-nav-chip) / 2);
-  --ds-top-h: 3.5rem;
+  --ds-top-h: 4.25rem;
   /* 1280, e não 940. A medida de 940 nasceu do `.main` das fichas, quando a
      doc era duas colunas e o conteúdo dividia a tela com a lista de peças. Com
      a coluna fixa e o índice à direita, ela passou a deixar tela vazia em

@@ -64,6 +64,7 @@
     <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Componentes</summary>
     <ul>
       <li><a href="../molecules/accordion.html">Accordion</a></li>
+      <li><a href="../molecules/account.html">Account menu</a></li>
       <li><a href="../molecules/alert.html">Alert</a></li>
       <li><a href="../atoms/avatar.html">Avatar</a></li>
       <li><a href="../atoms/badge.html">Badge</a></li>
@@ -509,7 +510,21 @@
           </nav>
           <div class="yb-header__actions">
             <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Search" data-yb-open="site-search"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></button>
-            <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Account"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg></button>
+            <div class="yb-account">
+            <input class="yb-account__toggle" type="checkbox" id="account-header-guest">
+            <label class="yb-account__trigger" for="account-header-guest" aria-label="Account menu">
+              <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg></label>
+            <div class="yb-account__panel">
+              <div class="yb-account__head">
+                <b class="yb-account__title">Welcome to Ybera</b>
+                <p class="yb-account__text">Sign in to see your orders and wishlist.</p>
+                <a class="yb-btn yb-btn--primary" href="#demos/login">Sign in</a>
+              </div>
+              <div class="yb-account__foot">
+                <a class="yb-account__item" href="#demos/register"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg> Create account</a>
+              </div>
+            </div>
+          </div>
             <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-header__count">2</span></button>
           </div>
         </div>
@@ -972,24 +987,25 @@
           </nav>
           <div class="yb-header__actions">
             <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Search" data-yb-open="site-search"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></button>
-            <div class="yb-dropdown">
-              <input class="yb-dropdown__toggle" type="checkbox" id="account-header" checked>
-              <label class="yb-dropdown__trigger" for="account-header" aria-label="Account menu for Urlan Dipre">
-                <span class="yb-avatar" aria-hidden="true">U</span></label>
-              <div class="yb-dropdown__panel">
-                <span class="yb-dropdown__head">
-                  <span class="yb-avatar yb-avatar--md" aria-hidden="true">U</span>
-                  <b class="yb-dropdown__name">Urlan Dipre</b>
-                  <span class="yb-dropdown__email">urlan.dipre@ybera.com</span>
-                </span>
-                <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg>Account</a>
-                <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>Orders</a>
-                <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg>Wishlist</a>
-                <span class="yb-dropdown__signout">
-                  <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-lock"/></svg>Log out</a>
-                </span>
+            <div class="yb-account">
+            <input class="yb-account__toggle" type="checkbox" id="account-header" checked>
+            <label class="yb-account__trigger" for="account-header"
+                   aria-label="Account menu for Urlan Dipre">
+              <span class="yb-avatar" aria-hidden="true">U</span></label>
+            <div class="yb-account__panel">
+              <span class="yb-account__head yb-account__head--who">
+                <span class="yb-avatar yb-avatar--md" aria-hidden="true">U</span>
+                <b class="yb-account__name">Urlan Dipre</b>
+                <span class="yb-account__email">urlan.dipre@ybera.com</span>
+              </span>
+              <a class="yb-account__item" href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg> Account</a>
+              <a class="yb-account__item" href="#demos/orders"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg> Orders</a>
+              <a class="yb-account__item" href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg> Wishlist</a>
+              <div class="yb-account__foot">
+                <a class="yb-account__item" href="#demos/logout"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-lock"/></svg> Log out</a>
               </div>
             </div>
+          </div>
             <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-header__count">2</span></button>
           </div>
         </div>
@@ -997,10 +1013,11 @@
       </header>
     </div>
     <details class="note"><summary>O ícone de conta vira a inicial</summary>
-      <p>Deslogado, o cabeçalho segue com o botão de ícone. Logado, ele troca pelo
-      <a href="../atoms/avatar.html">Avatar</a> dentro de um
-      <a href="../molecules/dropdown.html">Dropdown</a> — nenhuma peça nova, e por isso o
-      estado logado não tem CSS próprio além da regra de contexto abaixo.</p>
+      <p>Os dois estados são o <a href="../molecules/account.html">Account menu</a>.
+      Deslogado, o ícone de pessoa abre o convite para entrar. Logado, ele troca pelo
+      <a href="../atoms/avatar.html">Avatar</a> e abre saudação e destinos — nenhuma
+      peça nova, e por isso a conta não tem CSS próprio além da regra de contexto
+      abaixo.</p>
     </details>
     <details class="note"><summary>O piso de coluna só vale onde há coluna</summary>
       <p><code>.yb-nav__group</code> tem <code>min-inline-size:8rem</code> para as
@@ -1375,7 +1392,21 @@
     &lt;/nav&gt;
     &lt;div class="yb-header__actions"&gt;
       &lt;button type="button" class="yb-iconbtn yb-header__icon" aria-label="Search" data-yb-open="site-search"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;&lt;/button&gt;
-      &lt;button type="button" class="yb-iconbtn yb-header__icon" aria-label="Account"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-user"/&gt;&lt;/svg&gt;&lt;/button&gt;
+      &lt;div class="yb-account"&gt;
+      &lt;input class="yb-account__toggle" type="checkbox" id="account-header-guest"&gt;
+      &lt;label class="yb-account__trigger" for="account-header-guest" aria-label="Account menu"&gt;
+        &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-user"/&gt;&lt;/svg&gt;&lt;/label&gt;
+      &lt;div class="yb-account__panel"&gt;
+        &lt;div class="yb-account__head"&gt;
+          &lt;b class="yb-account__title"&gt;Welcome to Ybera&lt;/b&gt;
+          &lt;p class="yb-account__text"&gt;Sign in to see your orders and wishlist.&lt;/p&gt;
+          &lt;a class="yb-btn yb-btn--primary" href="#demos/login"&gt;Sign in&lt;/a&gt;
+        &lt;/div&gt;
+        &lt;div class="yb-account__foot"&gt;
+          &lt;a class="yb-account__item" href="#demos/register"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-user"/&gt;&lt;/svg&gt; Create account&lt;/a&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
       &lt;button type="button" class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-cart"/&gt;&lt;/svg&gt;&lt;span class="yb-header__count"&gt;2&lt;/span&gt;&lt;/button&gt;
     &lt;/div&gt;
   &lt;/div&gt;
@@ -1428,7 +1459,6 @@
   }
   .yb-header__burger{justify-self:start;}
   .yb-header__logo{justify-self:center;}
-  .yb-header__account{display:none;}
   .yb-header__nav{
     display:block;
     position:fixed; inset-block:0; inset-inline-start:0; z-index:var(--yb-z-modal);
@@ -1452,7 +1482,7 @@
 }
 .yb-header__actions{display:flex; align-items:center; gap:0; justify-self:end}
 @media (max-width:900px){
-  .yb-header__actions .yb-dropdown{display:none}
+  .yb-header__actions .yb-account{display:none}
 }
 .yb-header__icon{padding:0;}
 @media (hover:hover){
@@ -1853,7 +1883,21 @@
     </nav>
     <div class="yb-header__actions">
       <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Search" data-yb-open="site-search"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-search"/></svg></button>
-      <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Account"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg></button>
+      <div class="yb-account">
+      <input class="yb-account__toggle" type="checkbox" id="anat-account-header-guest">
+      <label class="yb-account__trigger" for="anat-account-header-guest" aria-label="Account menu">
+        <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg></label>
+      <div class="yb-account__panel">
+        <div class="yb-account__head">
+          <b class="yb-account__title">Welcome to Ybera</b>
+          <p class="yb-account__text">Sign in to see your orders and wishlist.</p>
+          <a class="yb-btn yb-btn--primary" href="#anat-demos/login">Sign in</a>
+        </div>
+        <div class="yb-account__foot">
+          <a class="yb-account__item" href="#anat-demos/register"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg> Create account</a>
+        </div>
+      </div>
+    </div>
       <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-header__count">2</span></button>
     </div>
   </div>
@@ -1995,11 +2039,12 @@
         <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
         <li data-target=".yb-nav"><span class="anat__texto"><b><a href="../organisms/nav.html">Nav</a></b> — O menu da loja: cinco itens de topo, dois com painel. Uma árvore só
     serve a barra do desktop e a gaveta do celular. Não confundir com
-    <a href="../molecules/dropdown.html">Dropdown</a>, que é painel ancorado num gatilho
-    qualquer &mdash; este é a navegação principal, e só há uma por tela.</span></li>
+    <a href="../molecules/account.html">Account menu</a>, que é o painel da conta
+    &mdash; este é a navegação principal, e só há uma por tela.</span></li>
         <li data-target=".yb-badge"><span class="anat__texto"><b><a href="../atoms/badge.html">Badge</a></b> — Etiqueta curta que classifica um item sem competir com ele. Nunca carrega ação — badge não é botão.</span></li>
         <li data-target=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço de um produto, com o valor anterior riscado e o desconto quando existem. Sempre tabular: em grid, dígitos precisam alinhar em coluna.</span></li>
         <li data-target=".yb-collection"><span class="anat__texto"><b><a href="../molecules/collection.html">Collection card</a></b> — Cartão de entrada para uma coleção: arte, nome e contagem. O cartão inteiro é o link — o rótulo sozinho seria um alvo pequeno dentro de uma imagem grande.</span></li>
+        <li data-target=".yb-account"><span class="anat__texto"><b><a href="../molecules/account.html">Account menu</a></b> — O menu da conta no cabeçalho. Logado, diz quem está na sessão e leva aos pedidos, aos dados e aos favoritos. Visitante, convida a entrar ou criar conta.</span></li>
         <li data-target=".yb-search"><span class="anat__texto"><b><a href="../organisms/search.html">Search overlay</a></b> — A busca como folha que cobre a página inteira. Busca é troca de contexto — não caixinha no header.</span></li>
         <li data-target=".yb-chip"><span class="anat__texto"><b><a href="../atoms/chip.html">Chip</a></b> — Filtro que liga e desliga, em fileira. O estado mora em <code>aria-pressed</code>, não numa classe — quem lê a tela ouve "pressionado" sem depender de cor.</span></li>
       </ol>
@@ -2020,11 +2065,11 @@
     <p class="usa-degrau">Átomos</p>
     <ul class="usa"><li><a href="../atoms/badge.html">Badge</a></li><li><a href="../atoms/button.html">Button</a></li><li><a href="../atoms/chip.html">Chip</a></li><li><a href="../atoms/iconbtn.html">Icon button</a></li><li><a href="../atoms/logo.html">Logo</a></li><li><a href="../atoms/notice.html">Notice</a></li></ul>
     <p class="usa-degrau">Moléculas</p>
-    <ul class="usa"><li><a href="../molecules/card.html">Card product</a></li><li><a href="../molecules/collection.html">Collection card</a></li><li><a href="../molecules/price.html">Price</a></li></ul>
+    <ul class="usa"><li><a href="../molecules/account.html">Account menu</a></li><li><a href="../molecules/card.html">Card product</a></li><li><a href="../molecules/collection.html">Collection card</a></li><li><a href="../molecules/price.html">Price</a></li></ul>
     <p class="usa-degrau">Blocos</p>
     <ul class="usa"><li><a href="../organisms/nav.html">Nav</a></li><li><a href="../organisms/search.html">Search overlay</a></li></ul>
     <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-header__account</code> <code>.yb-header__actions</code> <code>.yb-header__bar</code> <code>.yb-header__burger</code> <code>.yb-header__count</code> <code>.yb-header__drawer</code> <code>.yb-header__icon</code> <code>.yb-header__logo</code> <code>.yb-header__nav</code> <code>.yb-header__scrim</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-header__actions</code> <code>.yb-header__bar</code> <code>.yb-header__burger</code> <code>.yb-header__count</code> <code>.yb-header__drawer</code> <code>.yb-header__icon</code> <code>.yb-header__logo</code> <code>.yb-header__nav</code> <code>.yb-header__scrim</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:checked</code> · <code>:focus-visible</code> · <code>:hover</code></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
     <p class="rotulo">Tokens <span class="rotulo-conta">31</span></p>

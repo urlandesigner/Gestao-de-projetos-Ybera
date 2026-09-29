@@ -63,6 +63,7 @@
     <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Componentes</summary>
     <ul>
       <li><a href="../molecules/accordion.html">Accordion</a></li>
+      <li><a href="../molecules/account.html">Account menu</a></li>
       <li><a href="../molecules/alert.html">Alert</a></li>
       <li><a href="../atoms/avatar.html">Avatar</a></li>
       <li><a href="../atoms/badge.html">Badge</a></li>
@@ -216,7 +217,7 @@
       folha aplica sozinha em navegador sem desfoque e para quem pediu menos
       transparência.</p>
     </details>
-    <h3 class="row-label">Tipo arte — <code>--arte</code></h3>
+    <h3 class="row-label">Tipo arte — <code>--art</code></h3>
     <div class="stage">
       <a class="yb-bannerhero yb-bannerhero--art" href="#demos">
         <img class="yb-bannerhero__backdrop" src="../pages/img/Banner_20_24H_b-96b194d5.webp" alt="" loading="lazy">
@@ -507,29 +508,45 @@
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
+    <h3 class="rotulo">Com texto e CTA — <code>--blur</code></h3>
     <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca"><a class="yb-bannerhero yb-bannerhero--blur" href="#anat-demos">
-  <img src="../pages/img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp" alt="">
-  <div class="yb-bannerhero__blur" aria-hidden="true"><i></i><i></i><i></i></div>
-  <div class="yb-bannerhero__body">
-    <span class="yb-bannerhero__eyebrow">Salon keratin, at home</span>
-    <h3 class="yb-bannerhero__title">Straight, glossy hair that survives humidity.</h3>
-    <p class="yb-bannerhero__text">Brazilian keratin care, formaldehyde-free and safe on color-treated hair.</p>
-    <span class="yb-btn yb-btn--on-dark">Shop best sellers</span>
-  </div>
-</a></div>
+        <img src="../pages/img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp" alt="">
+        <div class="yb-bannerhero__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="yb-bannerhero__body">
+          <span class="yb-bannerhero__eyebrow">Salon keratin, at home</span>
+          <h3 class="yb-bannerhero__title">Straight, glossy hair that survives humidity.</h3>
+          <p class="yb-bannerhero__text">Brazilian keratin care, formaldehyde-free and safe on color-treated hair.</p>
+          <span class="yb-btn yb-btn--on-dark">Shop best sellers</span>
+        </div>
+      </a></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-bannerhero"><span class="anat__texto"><b>Container</b> — O topo da home, sangrando até as bordas. A altura é a proporção da arte: 16:5 no desktop, 2:3 no celular.</span></li>
-        <li data-target="img"><span class="anat__texto"><b>Foto</b> — Cobre a caixa inteira. O <code>alt</code> fica vazio quando a mensagem está no texto ao lado.</span></li>
+        <li data-target=".yb-bannerhero"><span class="anat__texto"><b>Container e foto</b> — O topo da home, sangrando até as bordas. A altura é a proporção da arte: 16:5 no desktop, 2:3 no celular. A foto cobre a caixa inteira, com <code>alt</code> vazio quando a mensagem está no texto.</span></li>
         <li data-target=".yb-bannerhero__blur"><span class="anat__texto"><b>Desfoque</b> — Três folhas sobre a foto. É o que sustenta o texto branco em qualquer imagem.</span></li>
-        <li data-target=".yb-bannerhero__eyebrow"><span class="anat__texto"><b>Sobretítulo</b> — Uma linha curta que situa. Opcional; sem ele o título fica sozinho e funciona.</span></li>
+        <li data-target=".yb-bannerhero__eyebrow"><span class="anat__texto"><b>Sobretítulo</b> — Uma linha curta que situa. Opcional; sem ele o título fica sozinho e funciona. Ele, o título, o texto e o botão formam o corpo, que cresce de baixo para cima — onde o véu é mais forte.</span></li>
         <li data-target=".yb-bannerhero__title"><span class="anat__texto"><b>Título</b> — A promessa da tela. Volta para a prumada do conteúdo, e não para a borda da janela.</span></li>
         <li data-target=".yb-bannerhero__text"><span class="anat__texto"><b>Texto</b> — Opcional, uma ou duas linhas. Explica a promessa sem repeti-la.</span></li>
-        <li data-target=".yb-bannerhero__body"><span class="anat__texto"><b>Corpo</b> — O bloco de texto. Cresce de baixo para cima, que é onde o véu é mais forte.</span></li>
         <li data-target=".yb-btn"><span class="anat__texto"><b>Ação</b> — Opcional. É o <code>.yb-btn</code>, outra peça, na variante para fundo escuro.</span></li>
+      </ol>
+    </div>
+    <h3 class="rotulo">Arte — <code>--art</code></h3>
+    <div class="anat" data-yb-anatomy>
+      <div class="anat__palco">
+        <svg class="anat__fios" aria-hidden="true"></svg>
+        <div class="anat__peca"><a class="yb-bannerhero yb-bannerhero--art" href="#anat-demos">
+        <img class="yb-bannerhero__backdrop" src="../pages/img/Banner_20_24H_b-96b194d5.webp" alt="" loading="lazy">
+        <picture>
+          <source media="(max-width: 767.98px)" srcset="../pages/img/Banner_20_24H_mb_b-61df813f.webp">
+          <img src="../pages/img/Banner_20_24H_b-96b194d5.webp" alt="20% off sitewide for the next 24 hours. Use code Ybera20.">
+        </picture>
+      </a></div>
+      </div>
+      <ol class="anat__legenda">
+        <li data-target=".yb-bannerhero"><span class="anat__texto"><b>Container</b> — O mesmo topo sangrando, mas a caixa segue a proporção da arte: nada corta o texto que está no pixel. Nas larguras em que a arte não cobre a faixa, um fundo com a mesma arte ampliada e desfocada (<code>__backdrop</code>, decorativo) preenche o que sobra.</span></li>
+        <li data-target="picture img"><span class="anat__texto"><b>Arte</b> — A peça do marketing, dentro de um <code>&lt;picture&gt;</code> que troca pela versão de celular abaixo de 768px — a de desktop encolhida não se lê. O <code>alt</code> repete a promessa do pixel ("20% off sitewide..."): é o único lugar em que o leitor de tela recebe a mensagem.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia

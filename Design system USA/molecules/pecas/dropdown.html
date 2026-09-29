@@ -1,56 +1,82 @@
 <h2>Dropdown</h2>
-    <p class="when">Painel de links que abre embaixo de um gatilho. No cabeçalho o gatilho é o avatar; em qualquer outro lugar é o que a marcação puser dentro.</p>
-    <h3 class="row-label">Aberto · <code>__toggle</code> <code>[checked]</code></h3>
-    <div class="stage stage--pad stage--overflow" style="padding-block-end:19rem">
-      <div style="display:flex; justify-content:flex-end">
+    <p class="when">Lista curta de opções que abre embaixo de um botão: escolher entre poucas (idioma, moeda, ordenação fora de formulário) ou disparar ações de um item. Dentro de formulário, a resposta continua sendo o <a href="../atoms/select.html">Select</a>.</p>
+    <h3 class="row-label">Aberto &middot; escolha e ações &middot; <code>__toggle</code> <code>[checked]</code></h3>
+    <div class="stage stage--pad stage--overflow">
+      <!-- Grade que empilha pela largura dos PAINEIS, e nao dos gatilhos: os dois
+           gatilhos cabem numa linha de 375, os dois paineis abertos nao. -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(13rem, 1fr)); gap:var(--yb-space-4) var(--yb-space-8)">
+        <span class="amostra" style="align-items:flex-start; padding-block-end:13rem">
+          <span class="amostra__rotulo"><code>escolha · [aria-current]</code></span>
         <div class="yb-dropdown">
-          <input class="yb-dropdown__toggle" type="checkbox" id="account-demo" checked>
-          <label class="yb-dropdown__trigger" for="account-demo" aria-label="Account menu for Urlan Dipre">
-            <span class="yb-avatar" aria-hidden="true">U</span></label>
-          <div class="yb-dropdown__panel">
-            <span class="yb-dropdown__head">
-              <span class="yb-avatar yb-avatar--md" aria-hidden="true">U</span>
-              <b class="yb-dropdown__name">Urlan Dipre</b>
-              <span class="yb-dropdown__email">urlan.dipre@ybera.com</span>
-            </span>
-            <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg>Account</a>
-            <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>Orders</a>
-            <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg>Wishlist</a>
-            <span class="yb-dropdown__signout">
-              <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-lock"/></svg>Log out</a>
-            </span>
-          </div>
+          <input class="yb-dropdown__toggle" type="checkbox" id="dd-sort" checked>
+          <label class="yb-btn yb-btn--secondary yb-btn--sm yb-dropdown__trigger" for="dd-sort">Sort: Best selling <svg class="yb-icon yb-icon--sm yb-dropdown__chevron" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+          <ul class="yb-dropdown__panel">
+            <li><a class="yb-dropdown__option" href="#demos" aria-current="true">Best selling <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+            <li><a class="yb-dropdown__option" href="#demos">Price, low to high <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+            <li><a class="yb-dropdown__option" href="#demos">Price, high to low <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+            <li><a class="yb-dropdown__option" href="#demos">Newest <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+          </ul>
         </div>
+        </span>
+        <span class="amostra" style="align-items:flex-end; padding-block-end:11rem">
+          <span class="amostra__rotulo"><code>ações · --end</code></span>
+        <div class="yb-dropdown yb-dropdown--end">
+          <input class="yb-dropdown__toggle" type="checkbox" id="dd-actions" checked>
+          <label class="yb-btn yb-btn--ghost yb-btn--sm yb-dropdown__trigger" for="dd-actions">More <svg class="yb-icon yb-icon--sm yb-dropdown__chevron" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+          <ul class="yb-dropdown__panel">
+            <li><a class="yb-dropdown__option" href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg> Move to wishlist</a></li>
+            <li><a class="yb-dropdown__option" href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-share"/></svg> Share</a></li>
+            <li class="yb-dropdown__sep" role="separator"></li>
+            <li><a class="yb-dropdown__option" href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-trash"/></svg> Remove</a></li>
+          </ul>
+        </div>
+        </span>
       </div>
     </div>
-    <div class="note">
-      <b>O palco desta demo não recorta</b>
-      <p>O painel é <code>position:absolute</code> e passa da altura da caixa. Com o
-      <code>overflow:hidden</code> que o palco usa por padrão, ele apareceria
-      cortado na metade — e a documentação mostraria um defeito que o componente
-      não tem.</p>
+    <h3 class="row-label">Fechado &mdash; o gatilho é qualquer Button</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <div class="yb-dropdown">
+          <input class="yb-dropdown__toggle" type="checkbox" id="dd-lang">
+          <label class="yb-btn yb-btn--secondary yb-btn--sm yb-dropdown__trigger" for="dd-lang">English (US) <svg class="yb-icon yb-icon--sm yb-dropdown__chevron" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+          <ul class="yb-dropdown__panel">
+            <li><a class="yb-dropdown__option" href="#demos" aria-current="true">English (US) <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+            <li><a class="yb-dropdown__option" href="#demos">Português <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+            <li><a class="yb-dropdown__option" href="#demos">Español <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+          </ul>
+        </div>
+        <span class="amostra__rotulo"><code>--secondary --sm</code></span>
+      </span>
+      <span class="amostra">
+        <div class="yb-dropdown">
+          <input class="yb-dropdown__toggle" type="checkbox" id="dd-moeda">
+          <label class="yb-btn yb-btn--ghost yb-btn--sm yb-dropdown__trigger" for="dd-moeda">USD <svg class="yb-icon yb-icon--sm yb-dropdown__chevron" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+          <ul class="yb-dropdown__panel">
+            <li><a class="yb-dropdown__option" href="#demos" aria-current="true">USD — US dollar <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+            <li><a class="yb-dropdown__option" href="#demos">BRL — Real <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+          </ul>
+        </div>
+        <span class="amostra__rotulo"><code>--ghost --sm</code></span>
+      </span>
     </div>
     <div class="note">
-      <b>Quem, antes do que fazer</b>
-      <p>O menu abre dizendo o nome e o e-mail da sessão. Sem isso ele abre com
-      quatro verbos e nenhuma confirmação de que a conta é a certa — e a dúvida
-      faz a pessoa clicar em <code>Account</code> só para conferir.</p>
+      <b>Quando é Dropdown, e quando não é</b>
+      <p>Dentro de formulário é o <a href="../atoms/select.html">Select</a>: o nativo abre a
+      roleta do celular, envia com o formulário e o leitor de tela já sabe o que é.
+      O Dropdown é para o que o select não faz: lista de <b>ações</b> (mover, compartilhar,
+      remover) e escolha que <b>navega</b> em vez de enviar, como idioma e moeda.
+      O menu da conta é outra peça, o <a href="account.html">Account menu</a>.</p>
+    </div>
+    <div class="note">
+      <b>A opção atual se diz de dois jeitos</b>
+      <p><code>aria-current="true"</code> para o leitor de tela, e peso mais o tique para
+      quem vê. O tique fica no <b>fim</b> da linha: no começo, as opções sem marca
+      começariam 28px mais à esquerda que a marcada, e a coluna de texto quebraria.</p>
     </div>
     <div class="note">
       <b>Sem JS, e o que isso custa</b>
-      <p>Mesma mecânica do menu principal: <code>checkbox</code> escondido mais
-      painel irmão. Sobrevive com o JS fora do ar, que é o que o cabeçalho mais
-      precisa. Em troca, o leitor de tela anuncia &ldquo;caixa de seleção&rdquo;, não
-      &ldquo;menu&rdquo;. A casa já aceita isso no menu principal; quando entrar um
-      menu de verdade, com <code>aria-expanded</code> e setas, ele troca os dois
-      de uma vez.</p>
-    </div>
-    <div class="note">
-      <b>Por que ele deixou de ser &ldquo;Account menu&rdquo;</b>
-      <p>Isto era um organismo chamado Account menu. Não era organismo: na loja ele
-      mora dentro de <code>.yb-header__actions</code>, e sozinho numa tela não é
-      nada — falhava a regra que o próprio sistema declara para o degrau. O que
-      havia ali de reaproveitável eram duas peças, e agora elas existem: o
-      <a href="../atoms/avatar.html">Avatar</a> e este dropdown. A conta logada virou
-      um <b>estado do</b> <a href="../organisms/header.html">Header</a>.</p>
+      <p>Mesma mecânica do Account menu e do menu principal: <code>checkbox</code>
+      escondido mais painel irmão. Funciona com o JS fora do ar. Em troca, fecha
+      clicando de novo no gatilho — não no clique fora nem no Esc — e o leitor de tela
+      anuncia &ldquo;caixa de seleção&rdquo;, não &ldquo;menu&rdquo;.</p>
     </div>

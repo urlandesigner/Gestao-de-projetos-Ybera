@@ -63,6 +63,7 @@
     <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Componentes</summary>
     <ul>
       <li><a href="../molecules/accordion.html">Accordion</a></li>
+      <li><a href="../molecules/account.html">Account menu</a></li>
       <li><a href="../molecules/alert.html">Alert</a></li>
       <li><a href="../atoms/avatar.html">Avatar</a></li>
       <li><a href="../atoms/badge.html">Badge</a></li>
@@ -386,6 +387,7 @@
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
+    <h3 class="rotulo">1 · Sobre a arte — o recado inteiro</h3>
     <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
@@ -406,6 +408,40 @@
         <li data-target=".yb-partner__dock"><span class="anat__texto"><b>Doca</b> — Ancora avatar e balão juntos. É ela que mantém os dois alinhados ao rolar.</span></li>
         <li data-target=".yb-partner__avatar"><span class="anat__texto"><b>Avatar</b> — Quem convidou. É o botão que abre e fecha o recado, com <code>aria-expanded</code>.</span></li>
         <li data-target=".yb-partner__bubble"><span class="anat__texto"><b>Balão</b> — O recado. O <code>@</code> e o benefício em negrito são o que se lê de relance.</span></li>
+      </ol>
+    </div>
+    <h3 class="rotulo">2 · Recolhido — <code>[data-collapsed]</code></h3>
+    <div class="anat" data-yb-anatomy>
+      <div class="anat__palco">
+        <svg class="anat__fios" aria-hidden="true"></svg>
+        <div class="anat__peca" style="max-inline-size:420px"><div class="yb-partner" data-collapsed style="inset-inline-start:var(--yb-space-5)">
+        <div class="yb-partner__dock">
+          <button class="yb-partner__avatar" type="button" aria-expanded="false" aria-controls="anat-doc-partner-msg2">
+            <img src="../pages/img/02sauana-2896ea7c.webp" alt="">
+            <span class="yb-sr-only">Recado de @naymazzeto</span>
+          </button>
+          <div class="yb-partner__bubble" id="anat-doc-partner-msg2">
+            <p>Hey, it&rsquo;s <b>@naymazzeto</b>! Enjoy my exclusive <b>partner discount</b>.</p>
+          </div>
+        </div>
+      </div></div>
+      </div>
+      <ol class="anat__legenda">
+        <li data-target=".yb-partner"><span class="anat__texto"><b>Container</b> — O mesmo, com <code>data-collapsed</code>: depois de 96px de rolagem o balão recolhe.</span></li>
+        <li data-target=".yb-partner__avatar"><span class="anat__texto"><b>Avatar com aviso</b> — Sobra o avatar, com um ponto de aviso. Continua o botão que reabre o recado, agora com <code>aria-expanded="false"</code>. O balão segue no HTML, escondido: reabrir não busca o recado de novo.</span></li>
+      </ol>
+    </div>
+    <h3 class="rotulo">3 · Depois da arte — <code>.yb-partnerbar</code></h3>
+    <div class="anat" data-yb-anatomy>
+      <div class="anat__palco">
+        <svg class="anat__fios" aria-hidden="true"></svg>
+        <div class="anat__peca"><div class="yb-partnerbar" style="position:static">
+        <p class="yb-partnerbar__text">Hey, it&rsquo;s <b>@naymazzeto</b>! Enjoy my exclusive <b>partner discount</b>.</p>
+      </div></div>
+      </div>
+      <ol class="anat__legenda">
+        <li data-target=".yb-partnerbar"><span class="anat__texto"><b>Faixa</b> — Presa abaixo do cabeçalho quando a arte sai da tela. Cinza, e não preta: preto colado no cabeçalho leria como parte dele.</span></li>
+        <li data-target=".yb-partnerbar__text"><span class="anat__texto"><b>Recado</b> — A mesma frase, sem a foto. O <code>@</code> e o benefício seguem em negrito.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia

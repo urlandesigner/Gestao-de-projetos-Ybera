@@ -23,6 +23,32 @@
         <span class="amostra__rotulo"><code>--danger</code></span>
       </span>
     </div>
+    <h3 class="row-label">Como ele aparece &mdash; a marcação que o script monta</h3>
+    <!-- Parado, só na doc: na loja o toast nasce do `Ybera.toast()` e some
+         sozinho. É a mesma árvore que o script cria, para a anatomia e o código
+         terem o que mostrar. -->
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <div class="yb-toast yb-toast--success" role="status">
+          <div class="yb-toast__body">
+            <b class="yb-toast__title">Added to cart</b>
+            <p class="yb-toast__text">Kit Sealant Fashion Gold — 500 g</p>
+          </div>
+          <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
+        </div>
+        <span class="amostra__rotulo"><code>--success</code></span>
+      </span>
+      <span class="amostra">
+        <div class="yb-toast yb-toast--danger" role="alert">
+          <div class="yb-toast__body">
+            <b class="yb-toast__title">Could not add to cart</b>
+            <p class="yb-toast__text">Check your connection and try again.</p>
+          </div>
+          <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
+        </div>
+        <span class="amostra__rotulo"><code>--danger</code></span>
+      </span>
+    </div>
     <div class="note">
       <b>Some sozinho — menos quando você está lendo</b>
       <p>Cinco segundos por padrão, mas o relógio para no <code>mouseenter</code> e

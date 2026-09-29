@@ -862,10 +862,6 @@
      escreve o menu duas vezes no HTML, 25 links repetidos, e o sistema existe
      em parte para nao fazer isso. */
   .yb-nav__rail{ display:none; }
-  /* Conta muda de casa: some da barra e vira a faixa `.yb-nav__account` no topo
-     da gaveta. Era um item de texto no meio da lista — o primeiro de 25 links
-     de mesmo peso, que ninguem achava. */
-  .yb-header__account{ display:none; }
   .yb-header__nav{
     /* de volta a bloco: na gaveta o botao de fechar e a lista empilham, e o
        display:flex do desktop os poria lado a lado */
@@ -1018,21 +1014,18 @@
 .yb-header__actions{display:flex; align-items:center; gap:0; justify-self:end}
 
 /* =========================================================================
-   HEADER / NAV · a conta logada, montada com Avatar e Dropdown
+   HEADER / NAV · a conta, montada com o Account menu
 
-   Não há CSS de conta aqui, e é esse o ponto: o avatar é `.yb-avatar` (átomo)
-   o painel é `.yb-dropdown` (molécula). O que sobra é a única regra que fala do
+   Não há CSS de conta aqui, e é esse o ponto: o menu é `.yb-account`
+   (molécula), logado ou visitante. O que sobra é a única regra que fala do
    CONTEXTO — e contexto é o que um organismo tem para dizer.
 
-   No toque o dropdown não existe: a gaveta já lista os mesmos destinos, e um
+   No toque o menu não existe: a gaveta já lista os mesmos destinos, e um
    painel de 256px ancorado na borda direita de uma tela de 375 nasce apertado
    contra o carrinho. Quem assume o papel lá é `.yb-nav__account`, no topo da
-   gaveta. A regra é escopada ao cabeçalho — um dropdown em outro lugar da página
-   não tem por que sumir junto.
+   gaveta, para logado e para visitante.
    ========================================================================= */
-/* Apontava para `.yb-menu`, o nome de antes do Dropdown: com a troca, a regra
-   parou de achar a conta e o avatar voltou a aparecer na barra do celular. */
-@media (max-width:900px){ .yb-header__actions .yb-dropdown{display:none} }
+@media (max-width:900px){ .yb-header__actions .yb-account{display:none} }
 
 /* Sem gap e sem respiro lateral: os tres icones ja tem 44px de alvo cada, e o
    alvo E o respiro. O gap de 8px mais 12px de padding de cada lado somavam

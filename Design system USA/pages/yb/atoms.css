@@ -69,10 +69,11 @@
   }
 }
 
-.yb-btn--ghost{
-  background:transparent; color:var(--yb-action-ghost-text);
-  border-color:var(--yb-action-ghost-border);
-}
+/* SO TEXTO, sem borda. Com a aresta em gray-300 ela era um contorno mais
+   fraco que o da secundaria, e a escada tinha dois contornos e nenhuma
+   fantasma. O contorno do sistema e a secundaria; a fantasma e o degrau
+   abaixo dela, e so ganha fundo no hover e no pressionado. */
+.yb-btn--ghost{background:transparent; color:var(--yb-action-ghost-text)}
 
 @media (hover:hover){
   .yb-btn--ghost:hover:not([disabled]){background:var(--yb-action-ghost-bg-hover)}

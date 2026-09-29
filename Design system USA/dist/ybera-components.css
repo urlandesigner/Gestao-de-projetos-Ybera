@@ -325,10 +325,11 @@
   }
 }
 
-.yb-btn--ghost{
-  background:transparent; color:var(--yb-action-ghost-text);
-  border-color:var(--yb-action-ghost-border);
-}
+/* SO TEXTO, sem borda. Com a aresta em gray-300 ela era um contorno mais
+   fraco que o da secundaria, e a escada tinha dois contornos e nenhuma
+   fantasma. O contorno do sistema e a secundaria; a fantasma e o degrau
+   abaixo dela, e so ganha fundo no hover e no pressionado. */
+.yb-btn--ghost{background:transparent; color:var(--yb-action-ghost-text)}
 
 @media (hover:hover){
   .yb-btn--ghost:hover:not([disabled]){background:var(--yb-action-ghost-bg-hover)}
@@ -3408,7 +3409,7 @@ body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 
 
 /* =========================================================================
    COLLECTION CARD
-   Imagem com um rótulo em pill sobreposto, levando a uma coleção.
+   Imagem com um rótulo sobreposto, levando a uma coleção.
 
    Nasceu da regra da governança, nao de preferencia: a home usa esta mesma
    anatomia duas vezes — em "What's Standing Between You and Great Hair?" e em
@@ -3437,49 +3438,46 @@ body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 
   outline-offset:var(--yb-focus-offset);
 }
 
-.yb-collection__label{
-  position:absolute; inset-inline:var(--yb-space-4);
-  display:flex; align-items:center; justify-content:center; text-align:center;
-  min-height:var(--yb-target-min);
-  padding:var(--yb-space-2) var(--yb-space-4);
-  border-radius:var(--yb-radius-full);
-  /* Era --yb-action-primary-bg: quatro rotulos de categoria com a mesma cor do "Add
-     to cart" e do contador do carrinho — botoes que nao compram nada. O
-     token e explicito: magenta e funcao, existe onde ha decisao a tomar. Um
-     link para colecao e navegacao; a pill vira superficie clara com texto
-     escuro (16.7:1) e uma sombra curta que a descola da foto onde a foto e
-     clara tambem. */
-  background:var(--yb-surface-raised); color:var(--yb-text-primary);
-  box-shadow:var(--yb-elevation-raised);
-  font-size:var(--yb-type-body-sm-size);
-  font-weight:var(--yb-font-weight-medium);
-  line-height:var(--yb-line-height-base);
+.yb-collection__label{ position:absolute; inset-inline:var(--yb-space-4); }
+
+/* ROTULO NO PE — usado em "Explore Our Collections". E o Button do sistema
+   (`.yb-btn--on-dark --sm` na marcacao), e nao mais uma pilula propria de raio
+   total que nenhum outro controle da loja tinha. Continua um <span> dentro do
+   link: o cartao inteiro e o alvo, e botao dentro de link e HTML invalido.
+   Do tamanho do nome e centrado, como botao, e nao uma faixa de ponta a ponta.
+   A sombra curta fica: e ela que descola o branco da foto onde a foto tambem e
+   clara. `white-space` volta ao normal porque o nome da colecao quebra em
+   cartao estreito, e o Button por padrao nao quebra. */
+.yb-collection--bottom .yb-collection__label{
+  inset-block-end:var(--yb-space-4); inline-size:fit-content;
+  max-inline-size:calc(100% - var(--yb-space-4) * 2); margin-inline:auto;
+  white-space:normal; box-shadow:var(--yb-elevation-raised);
+}
+/* o hover e do CARTAO, que e o link: parado sobre a foto o botao ja reage */
+@media (hover:hover){
+  .yb-collection--bottom:hover .yb-collection__label{ background:var(--yb-surface-sunken); }
 }
 
-/* rótulo no rodapé — usado em "Explore Our Collections" */
-.yb-collection--bottom .yb-collection__label{ inset-block-end:var(--yb-space-4); }
-
-/* --- rotulo sem pill, sobre veu -----------------------------------------
-   Terceiro tratamento do MESMO rotulo, nao cartao novo: a pill sai e o nome
+/* --- rotulo sem botao, sobre veu ---------------------------------------
+   Terceiro tratamento do MESMO rotulo, nao cartao novo: o botao sai e o nome
    vira texto branco no canto de baixo, sobre um veu.
 
-   Existe para o mosaico, onde o ladrilho e deitado e largo: a pill centrada
+   Existe para o mosaico, onde o ladrilho e deitado e largo: o botao centrado
    num retangulo de 445x242 fica perdida no meio de muita foto, e no ladrilho
    grande ela fica ridicula de pequena. Ancorado no canto, o nome tem o mesmo
    peso nos dois tamanhos.
 
-   Nao substitui a pill: onde a foto e clara e o cartao e estreito, a pill
+   Nao substitui o botao: onde a foto e clara e o cartao e estreito, o botao
    continua sendo a resposta certa — ela se descola do fundo sem escurecer a
    imagem inteira, que e o preco deste veu. */
 .yb-collection--overlay .yb-collection__label{
   inset-inline:var(--yb-space-5) auto;
   inset-block-end:var(--yb-space-4);
-  justify-content:flex-start; text-align:start;
-  min-height:0; padding:0;
-  background:none; box-shadow:none; border-radius:0;
+  text-align:start;
   color:var(--yb-text-inverse);
   font-size:var(--yb-type-body-lg-size);
   font-weight:var(--yb-font-weight-bold);
+  line-height:var(--yb-line-height-base);
 }
 /* A mesma curva do banner e do cartao de oferta. Aqui a queda e em
    PORCENTAGEM e nao em rem — o ladrilho tem razao fixa dada pelo mosaico, e
@@ -3512,13 +3510,12 @@ body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 
    deixava 70px de caixa a 14px — oito caracteres por linha, e "Frizz Control &
    Dry Hair" quebrando em quatro. O recuo cede antes da palavra. */
 @media (max-width:479.98px){
-  .yb-collection__label{
-    inset-inline:var(--yb-space-2);
-    padding:var(--yb-space-2);
+  .yb-collection--bottom .yb-collection__label{
+    inset-block-end:var(--yb-space-2);
+    max-inline-size:calc(100% - var(--yb-space-2) * 2);
+    padding-inline:var(--yb-space-3);
     font-size:var(--yb-type-caption-size);
-    border-radius:var(--yb-radius-md);
   }
-  .yb-collection--bottom .yb-collection__label{ inset-block-end:var(--yb-space-2); }
 }
 
 /* --- CARTAO: foto em cima, rodape branco com nome e atalho ---------------
@@ -3530,7 +3527,7 @@ body:has(.yb-partnerbar:not([hidden])){ --yb-chrome-h:calc(var(--yb-header-h) + 
    A troca entre os dois arranjos e editorial, e nao de gosto:
 
    - rotulo sobre a foto quando o NOME basta. "Damaged Hair" e um destino
-     obvio, e a pilula nao rouba a foto, que e quem convence.
+     obvio, e o botao nao rouba a foto, que e quem convence.
    - cartao com rodape quando o nome NAO basta. "Consumer" e "Profesional"
      nao dizem o que ha dentro, e um atalho escrito ("Shop Collection") faz o
      trabalho que o nome sozinho nao faz.
@@ -3595,6 +3592,10 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
   font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
   color:var(--yb-text-link); white-space:nowrap;
 }
+/* No celular o cartao tem ~140px e o recuo come 32: "Shop Collection" com a
+   seta nao cabe numa linha e passava da borda. Ali ele quebra; a seta vai
+   junto da ultima palavra. */
+@media (max-width:479.98px){ .yb-collection__cta{ white-space:normal; } }
 
 @media (hover:hover){
   .yb-collection--card:hover .yb-collection__cta{color:var(--yb-text-link-hover)}
@@ -3638,7 +3639,10 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
   .yb-collections--mosaic > :first-child{ grid-row:auto; grid-column:span 2; }
   .yb-collections--mosaic > :first-child > .yb-collection{ aspect-ratio:var(--yb-aspect-landscape); }
 }
-@media (max-width:767.98px){ .yb-collections{ grid-template-columns:repeat(2,1fr); } }
+/* `minmax(0,1fr)`, e nao `1fr`: o `1fr` puro nao encolhe abaixo do conteudo,
+   e o "Shop Collection" do `--card`, que nao quebra, alargava a coluna — a
+   grade passava 6px da tela de 375. */
+@media (max-width:767.98px){ .yb-collections{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
 
 @media (prefers-reduced-motion:reduce){
   .yb-collection img{ transition:none; }
@@ -4108,45 +4112,43 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 }
 
 /* =========================================================================
-   DROPDOWN — painel de links ancorado num gatilho
+   ACCOUNT MENU — o menu da conta, logado e visitante
 
-   Extraído de `.yb-usermenu`, que era um "organismo" chamado Account menu. Não
-   era: na loja ele mora DENTRO de `.yb-header__actions`, e sozinho numa tela
-   não é nada — falhava a própria regra que o sistema declara para organismo.
-   O que havia ali de reaproveitável eram duas peças: o avatar (átomo) e este
-   dropdown.
+   Voltou a se chamar pelo que e. Foi "Account menu" (organismo), depois
+   "Dropdown" (molecula) — e o segundo nome prometia um painel generico que
+   ele nunca foi: nome, conta, pedidos e sair nao servem a nenhum outro
+   gatilho. Continua MOLECULA: sozinho numa tela nao e nada, mora dentro de
+   `.yb-header__actions` e e feito de Avatar, Icon button e Button.
 
-   Mesma mecânica do menu principal: checkbox escondido + painel irmão, zero
-   JS. Não é escolha de estilo — é a única que sobrevive com o JS fora do ar, e
-   o cabeçalho é a parte da página que mais precisa continuar funcionando.
+   Dois estados, a mesma mecanica. Logado, quem esta na sessao (avatar, nome e
+   e-mail), os destinos e Log out separado no pe. Visitante, o convite: por que entrar,
+   o botao Sign in e, no pe, Create account.
 
-   O que ela custa está dito: o leitor de tela anuncia "caixa de seleção", não
-   "menu". O padrão da casa já aceita isso no menu principal; trocar aqui só
-   criaria duas mecânicas para a mesma coisa. Quando entrar um menu de verdade
-   (com `aria-expanded` e setas), ele troca os dois de uma vez.
+   Mesma mecanica do menu principal: checkbox escondido + painel irmao, zero
+   JS. E a unica que sobrevive com o JS fora do ar, e o cabecalho e a parte da
+   pagina que mais precisa continuar funcionando. O que ela custa esta dito: o
+   leitor de tela anuncia "caixa de selecao", nao "menu".
    ========================================================================= */
-.yb-dropdown{position:relative; display:flex; align-items:center}
-.yb-dropdown__toggle{position:absolute; opacity:0; pointer-events:none; width:1px; height:1px}
-.yb-dropdown__trigger{
+.yb-account{position:relative; display:flex; align-items:center}
+.yb-account__toggle{position:absolute; opacity:0; pointer-events:none; width:1px; height:1px}
+.yb-account__trigger{
   display:flex; align-items:center; justify-content:center;
   inline-size:var(--yb-target-min); block-size:var(--yb-target-min);
   cursor:pointer; border-radius:var(--yb-radius-pill);
   color:var(--yb-text-primary);
 }
 @media (hover:hover){
-  .yb-dropdown__trigger:hover .yb-avatar{background:var(--yb-bg-subtle)}
+  .yb-account__trigger:hover .yb-avatar{background:var(--yb-bg-subtle)}
+  .yb-account__trigger:hover{background:var(--yb-bg-muted)}
+  .yb-account__trigger:has(.yb-avatar):hover{background:none}
 }
-.yb-dropdown__toggle:focus-visible + .yb-dropdown__trigger{
+.yb-account__toggle:focus-visible + .yb-account__trigger{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
 }
-.yb-dropdown__panel{
+.yb-account__panel{
   position:absolute; inset-block-start:100%; inset-inline-end:0;
-  /* 16rem e nao 14: com o avatar de 40px na cabeca, a coluna do texto caia
-     para 138px e o e-mail — que precisa de 152 — passou a truncar. Truncar o
-     e-mail derrota o motivo da cabeca existir, que e confirmar de quem e a
-     sessao. Medido com o e-mail mais longo que a loja tem. */
-  z-index:var(--yb-z-dropdown); min-inline-size:16rem;
+  z-index:var(--yb-z-dropdown); inline-size:17rem;
   background:var(--yb-surface-raised);
   border:var(--yb-border-hairline) solid var(--yb-border-subtle);
   border-radius:var(--yb-radius-card);
@@ -4155,51 +4157,118 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
   opacity:0; visibility:hidden;
   transition:opacity var(--yb-transition-surface), visibility var(--yb-transition-surface);
 }
-.yb-dropdown__toggle:checked ~ .yb-dropdown__panel{opacity:1; visibility:visible}
-/* Quem e, antes do que fazer. Sem isto o menu abre com quatro verbos e nenhuma
-   confirmacao de que a sessao e da pessoa certa — a duvida que faz alguem
-   clicar em "Account" so para conferir. */
-/* Grade, e nao flex com um <div> no meio: o avatar ocupa a coluna da esquerda
-   nas duas linhas, e nome e e-mail seguem irmaos diretos — o mesmo DOM de
-   antes, com um elemento a mais. `minmax(0,1fr)` e o que preserva a reticencia
-   do e-mail: com `1fr` puro a coluna cresce com o conteudo e nada trunca.
-   Aqui o avatar aparece em 40px, que e o unico lugar onde ele nao divide a
-   linha com mais nada — no cabecalho ele mede 32 e concorre com busca e
-   sacola. */
-.yb-dropdown__head{
-  display:grid; grid-template-columns:auto minmax(0, 1fr);
-  gap:0 var(--yb-space-3); align-items:center;
-  padding:var(--yb-space-3) var(--yb-space-4);
+.yb-account__toggle:checked ~ .yb-account__panel{opacity:1; visibility:visible}
+/* A CABECA diz quem, antes do que fazer: sem ela o menu abre com tres verbos e
+   nenhuma confirmacao de que a sessao e da pessoa certa. Visitante, ela diz
+   por que entrar, e o botao e a acao do menu inteiro. */
+.yb-account__head{
+  display:flex; flex-direction:column; align-items:flex-start; gap:var(--yb-space-1);
+  padding:var(--yb-space-3) var(--yb-space-4) var(--yb-space-4);
   border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);
   margin-block-end:var(--yb-space-2);
 }
-.yb-dropdown__head .yb-avatar{grid-row:span 2}
-.yb-dropdown__name{display:block; font-weight:var(--yb-font-weight-semibold)}
-.yb-dropdown__email{
+/* Logado, a cabeca e grade: o avatar ocupa a coluna da esquerda nas duas
+   linhas, nome e e-mail seguem irmaos diretos. `minmax(0,1fr)` e o que
+   preserva a reticencia do e-mail — com `1fr` puro a coluna cresce com o
+   conteudo e nada trunca. O avatar aparece em 40px, o unico lugar onde ele nao
+   divide a linha com mais nada. */
+.yb-account__head--who{
+  display:grid; grid-template-columns:auto minmax(0, 1fr); gap:0 var(--yb-space-3);
+  align-items:center; padding-block-end:var(--yb-space-3);
+}
+.yb-account__head--who .yb-avatar{grid-row:span 2}
+.yb-account__name{display:block; font-weight:var(--yb-font-weight-semibold)}
+.yb-account__email{
   display:block; font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted);
   overflow:hidden; text-overflow:ellipsis;
 }
-.yb-dropdown__panel a{
+.yb-account__title{font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-primary)}
+.yb-account__text{margin:0; font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
+.yb-account__head .yb-btn{align-self:stretch; margin-block-start:var(--yb-space-3)}
+.yb-account__item{
   display:flex; align-items:center; min-block-size:var(--yb-target-min);
   padding-inline:var(--yb-space-4); gap:var(--yb-space-3);
   color:var(--yb-text-primary); text-decoration:none;
   font-size:var(--yb-type-body-sm-size);
 }
-@media (hover:hover){ .yb-dropdown__panel a:hover{background:var(--yb-bg-muted)} }
-.yb-dropdown__panel a:focus-visible{
+.yb-account__item .yb-icon{color:var(--yb-text-secondary)}
+@media (hover:hover){ .yb-account__item:hover{background:var(--yb-bg-muted)} }
+.yb-account__item:focus-visible,.yb-account__link:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:calc(var(--yb-focus-offset) * -1);
 }
-/* Sair fica separado e em tom de apoio: e a unica acao do menu que desfaz
-   alguma coisa, e emparelhada com as outras vira quinto item de lista. */
-.yb-dropdown__signout{
+/* O PE separa o que muda a sessao — Sair, Create account — do que so navega. */
+.yb-account__foot{
   margin-block-start:var(--yb-space-2);
   border-block-start:var(--yb-border-hairline) solid var(--yb-border-subtle);
   padding-block-start:var(--yb-space-2);
 }
-.yb-dropdown__signout a{color:var(--yb-text-secondary)}
-/* No toque o dropdown do cabecalho nao existe — a regra mora no HEADER, na
-   folha dos blocos, porque e o contexto que decide. */
+/* Visitante, o pe vem logo depois da cabeca, e os dois fios somavam dois
+   divisores colados embaixo do botao. O fio da cabeca basta. */
+.yb-account__head + .yb-account__foot{margin-block-start:0; border-block-start:0; padding-block-start:0}
+/* No toque o menu do cabecalho nao existe — a regra mora no HEADER, na folha
+   dos blocos, porque e o contexto que decide. */
+
+/* =========================================================================
+   DROPDOWN — lista de opções que abre embaixo de um botão
+
+   O genérico que o Account menu nunca foi. O gatilho é o Button do sistema
+   (qualquer variante e tamanho) com uma seta; o painel é uma lista de opções,
+   com separador e, quando a lista é uma escolha, a opção atual marcada.
+   Casos: idioma e moeda no rodapé, ações de um item, ordenação fora de
+   formulário. Dentro de formulário, a resposta continua sendo o <select>.
+
+   Mesma mecânica do Account menu e do menu principal: checkbox escondido +
+   painel irmão, zero JS. Abre para baixo, alinhado ao início do gatilho;
+   `--end` alinha ao fim, para gatilho encostado na borda direita.
+   ========================================================================= */
+.yb-dropdown{position:relative; display:inline-flex}
+.yb-dropdown__toggle{position:absolute; opacity:0; pointer-events:none; width:1px; height:1px}
+.yb-dropdown__trigger{cursor:pointer; user-select:none}
+.yb-dropdown__toggle:focus-visible + .yb-dropdown__trigger{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+/* A seta gira aberta: a mesma pergunta que o × do chip responde — o controle
+   diz em que estado está sem precisar abrir para conferir. */
+.yb-dropdown__chevron{transition:transform var(--yb-transition-control)}
+.yb-dropdown__toggle:checked + .yb-dropdown__trigger .yb-dropdown__chevron{transform:rotate(180deg)}
+.yb-dropdown__panel{
+  position:absolute; inset-block-start:calc(100% + var(--yb-space-1)); inset-inline-start:0;
+  z-index:var(--yb-z-dropdown); min-inline-size:100%; inline-size:max-content; max-inline-size:18rem;
+  margin:0; padding:var(--yb-space-2) 0; list-style:none;
+  background:var(--yb-surface-raised);
+  border:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-card);
+  box-shadow:var(--yb-elevation-dropdown);
+  opacity:0; visibility:hidden;
+  transition:opacity var(--yb-transition-surface), visibility var(--yb-transition-surface);
+}
+.yb-dropdown--end .yb-dropdown__panel{inset-inline:auto 0}
+.yb-dropdown__toggle:checked ~ .yb-dropdown__panel{opacity:1; visibility:visible}
+.yb-dropdown__option{
+  display:flex; align-items:center; gap:var(--yb-space-3);
+  min-block-size:var(--yb-target-min); padding-inline:var(--yb-space-4);
+  color:var(--yb-text-primary); text-decoration:none;
+  font-size:var(--yb-type-body-sm-size);
+}
+.yb-dropdown__option > .yb-icon{color:var(--yb-text-secondary)}
+@media (hover:hover){ .yb-dropdown__option:hover{background:var(--yb-bg-muted)} }
+.yb-dropdown__option:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:calc(var(--yb-focus-offset) * -1);
+}
+/* A OPCAO ATUAL, quando a lista e uma escolha. `aria-current` diz ao leitor
+   de tela, o peso e o tique dizem a quem ve — tique no FIM da linha, para o
+   texto das opcoes comecar todo na mesma prumada, com ou sem marca. */
+.yb-dropdown__check{margin-inline-start:auto; visibility:hidden; color:var(--yb-text-primary)}
+.yb-dropdown__option[aria-current="true"]{font-weight:var(--yb-font-weight-semibold)}
+.yb-dropdown__option[aria-current="true"] .yb-dropdown__check{visibility:visible}
+.yb-dropdown__sep{
+  block-size:0; margin-block:var(--yb-space-2);
+  border-block-start:var(--yb-border-hairline) solid var(--yb-border-subtle);
+}
+@media (prefers-reduced-motion:reduce){ .yb-dropdown__chevron{transition:none} }
 
 /* =========================================================================
    YBERA DESIGN SYSTEM · ORGANISMOS
@@ -5065,10 +5134,6 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
      escreve o menu duas vezes no HTML, 25 links repetidos, e o sistema existe
      em parte para nao fazer isso. */
   .yb-nav__rail{ display:none; }
-  /* Conta muda de casa: some da barra e vira a faixa `.yb-nav__account` no topo
-     da gaveta. Era um item de texto no meio da lista — o primeiro de 25 links
-     de mesmo peso, que ninguem achava. */
-  .yb-header__account{ display:none; }
   .yb-header__nav{
     /* de volta a bloco: na gaveta o botao de fechar e a lista empilham, e o
        display:flex do desktop os poria lado a lado */
@@ -5221,21 +5286,18 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 .yb-header__actions{display:flex; align-items:center; gap:0; justify-self:end}
 
 /* =========================================================================
-   HEADER / NAV · a conta logada, montada com Avatar e Dropdown
+   HEADER / NAV · a conta, montada com o Account menu
 
-   Não há CSS de conta aqui, e é esse o ponto: o avatar é `.yb-avatar` (átomo)
-   o painel é `.yb-dropdown` (molécula). O que sobra é a única regra que fala do
+   Não há CSS de conta aqui, e é esse o ponto: o menu é `.yb-account`
+   (molécula), logado ou visitante. O que sobra é a única regra que fala do
    CONTEXTO — e contexto é o que um organismo tem para dizer.
 
-   No toque o dropdown não existe: a gaveta já lista os mesmos destinos, e um
+   No toque o menu não existe: a gaveta já lista os mesmos destinos, e um
    painel de 256px ancorado na borda direita de uma tela de 375 nasce apertado
    contra o carrinho. Quem assume o papel lá é `.yb-nav__account`, no topo da
-   gaveta. A regra é escopada ao cabeçalho — um dropdown em outro lugar da página
-   não tem por que sumir junto.
+   gaveta, para logado e para visitante.
    ========================================================================= */
-/* Apontava para `.yb-menu`, o nome de antes do Dropdown: com a troca, a regra
-   parou de achar a conta e o avatar voltou a aparecer na barra do celular. */
-@media (max-width:900px){ .yb-header__actions .yb-dropdown{display:none} }
+@media (max-width:900px){ .yb-header__actions .yb-account{display:none} }
 
 /* Sem gap e sem respiro lateral: os tres icones ja tem 44px de alvo cada, e o
    alvo E o respiro. O gap de 8px mais 12px de padding de cada lado somavam

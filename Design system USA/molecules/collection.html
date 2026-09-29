@@ -63,6 +63,7 @@
     <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Componentes</summary>
     <ul>
       <li><a href="../molecules/accordion.html">Accordion</a></li>
+      <li><a href="../molecules/account.html">Account menu</a></li>
       <li><a href="../molecules/alert.html">Alert</a></li>
       <li><a href="../atoms/avatar.html">Avatar</a></li>
       <li><a href="../atoms/badge.html">Badge</a></li>
@@ -199,19 +200,19 @@
       <ul class="yb-collections">
         <li><a class="yb-collection yb-collection--bottom" href="#demos">
           <img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy">
-          <span class="yb-collection__label">Fashion Gold</span>
+          <span class="yb-btn yb-btn--on-dark yb-btn--sm yb-collection__label">Fashion Gold</span>
         </a></li>
         <li><a class="yb-collection yb-collection--bottom" href="#demos">
           <img src="../pages/img/Prancheta_2-188b6fea.webp" alt="" loading="lazy">
-          <span class="yb-collection__label">Cronograma</span>
+          <span class="yb-btn yb-btn--on-dark yb-btn--sm yb-collection__label">Cronograma</span>
         </a></li>
         <li><a class="yb-collection yb-collection--bottom" href="#demos">
           <img src="../pages/img/Prancheta_3-d098ed99.webp" alt="" loading="lazy">
-          <span class="yb-collection__label">Vello</span>
+          <span class="yb-btn yb-btn--on-dark yb-btn--sm yb-collection__label">Vello</span>
         </a></li>
         <li><a class="yb-collection yb-collection--bottom" href="#demos">
           <img src="../pages/img/Prancheta_4-26cbd0ec.webp" alt="" loading="lazy">
-          <span class="yb-collection__label">Mirra</span>
+          <span class="yb-btn yb-btn--on-dark yb-btn--sm yb-collection__label">Mirra</span>
         </a></li>
       </ul>
     </div>
@@ -299,20 +300,22 @@
     </div>
     <details class="note"><summary>A escolha entre os dois arranjos é editorial</summary>
       <p><b>Rótulo sobre a foto</b> quando o nome basta: "Damaged Hair" é destino
-      óbvio, e a pílula não rouba a foto, que é quem convence. <b>Cartão com rodapé</b>
+      óbvio, e o botão não rouba a foto, que é quem convence. <b>Cartão com rodapé</b>
       quando não basta: "Consumer" não diz o que há dentro.</p>
       <p>A faixa é <b>opaca, fora da foto</b>. Sobre a imagem precisaria de véu e de
       medir contraste contra pixel que ninguém controla — todo o custo que o media
       banner paga.</p>
     </details>
     <details class="note"><summary>O rótulo fica no pé, nunca no centro</summary>
-      <p>A pílula pousa no rodapé da foto (<code>--bottom</code>). Existia também uma
+      <p>O rótulo pousa no rodapé da foto (<code>--bottom</code>). Existia também uma
       versão centrada, <code>--center</code>, e ela saiu: no meio da imagem o rótulo
       cobria justamente o cabelo que a foto existe para mostrar. Onde o nome
       precisa de ação escrita ("Shop Collection"), o cartão é o
       <code>--card</code>, com o rodapé fora da foto.</p>
-      <p>A pill é superfície clara, não magenta. Magenta é função: existe onde há
-      decisão a tomar, e navegar para uma coleção não é uma.</p>
+      <p>O rótulo é o Button do sistema, <code>--on-dark --sm</code>: branco, com o
+      raio de todo controle da loja. Era uma pílula de raio total que nenhum outro
+      controle tinha. Continua um <code>&lt;span&gt;</code> dentro do link, porque o
+      cartão inteiro é o alvo, e reage ao hover do cartão.</p>
     </details>
     <details class="note"><summary>O mosaico é grade, não cartão</summary>
       <p>Os cinco ladrilhos são o mesmo <code>.yb-collection</code> das grades acima —
@@ -324,11 +327,11 @@
       Empilhado numa coluna, um ladrilho 16/9 vira uma tira fina.</p>
     </details>
     <details class="note"><summary>Quando usar o rótulo sobre véu, e quando não</summary>
-      <p><code>--overlay</code> existe para o ladrilho deitado e largo: a pill centrada
+      <p><code>--overlay</code> existe para o ladrilho deitado e largo: o botão centrado
       num retângulo de 445×242 se perde no meio da foto, e no ladrilho grande fica
-      pequena demais. Ancorado no canto, o nome tem o mesmo peso nos dois tamanhos.</p>
-      <p>Ele <b>não</b> aposenta a pill. O véu escurece a foto inteira para sustentar
-      o texto — é o preço dele. Onde o cartão é estreito e a foto é clara, a pill
+      pequeno demais. Ancorado no canto, o nome tem o mesmo peso nos dois tamanhos.</p>
+      <p>Ele <b>não</b> aposenta o botão. O véu escurece a foto inteira para sustentar
+      o texto — é o preço dele. Onde o cartão é estreito e a foto é clara, o botão
       resolve sem pagar esse preço.</p>
     </details>
     <details class="note"><summary>Por que o <code>alt</code> é vazio aqui</summary>
@@ -340,7 +343,7 @@
     <details class="note"><summary>O recuo cede antes da palavra</summary>
       <p>Em 320px o cartão mede 134, e o recuo fixo de 64 deixava 70px de caixa:
       "Frizz &amp; Dryness" quebrava em quatro linhas. Abaixo de 480 o recuo
-      e o corpo do rótulo encolhem — o texto continua legível, a pill não estoura.</p>
+      e o corpo do rótulo encolhem — o texto continua legível, o botão não estoura.</p>
     </details>
 
     <h3 class="rotulo">No celular</h3>
@@ -381,28 +384,28 @@
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
         <pre><code>&lt;a class="yb-collection yb-collection--bottom" href="#demos"&gt;
     &lt;img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy"&gt;
-    &lt;span class="yb-collection__label"&gt;Fashion Gold&lt;/span&gt;
+    &lt;span class="yb-btn yb-btn--on-dark yb-btn--sm yb-collection__label"&gt;Fashion Gold&lt;/span&gt;
   &lt;/a&gt;</code></pre>
       </div>
       <div class="snippet" data-code-variant-panel="1" hidden>
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
         <pre><code>&lt;a class="yb-collection yb-collection--bottom" href="#demos"&gt;
     &lt;img src="../pages/img/Prancheta_2-188b6fea.webp" alt="" loading="lazy"&gt;
-    &lt;span class="yb-collection__label"&gt;Cronograma&lt;/span&gt;
+    &lt;span class="yb-btn yb-btn--on-dark yb-btn--sm yb-collection__label"&gt;Cronograma&lt;/span&gt;
   &lt;/a&gt;</code></pre>
       </div>
       <div class="snippet" data-code-variant-panel="2" hidden>
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
         <pre><code>&lt;a class="yb-collection yb-collection--bottom" href="#demos"&gt;
     &lt;img src="../pages/img/Prancheta_3-d098ed99.webp" alt="" loading="lazy"&gt;
-    &lt;span class="yb-collection__label"&gt;Vello&lt;/span&gt;
+    &lt;span class="yb-btn yb-btn--on-dark yb-btn--sm yb-collection__label"&gt;Vello&lt;/span&gt;
   &lt;/a&gt;</code></pre>
       </div>
       <div class="snippet" data-code-variant-panel="3" hidden>
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
         <pre><code>&lt;a class="yb-collection yb-collection--bottom" href="#demos"&gt;
     &lt;img src="../pages/img/Prancheta_4-26cbd0ec.webp" alt="" loading="lazy"&gt;
-    &lt;span class="yb-collection__label"&gt;Mirra&lt;/span&gt;
+    &lt;span class="yb-btn yb-btn--on-dark yb-btn--sm yb-collection__label"&gt;Mirra&lt;/span&gt;
   &lt;/a&gt;</code></pre>
       </div>
     </div>
@@ -475,28 +478,23 @@
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
 }
-.yb-collection__label{
-  position:absolute; inset-inline:var(--yb-space-4);
-  display:flex; align-items:center; justify-content:center; text-align:center;
-  min-height:var(--yb-target-min);
-  padding:var(--yb-space-2) var(--yb-space-4);
-  border-radius:var(--yb-radius-full);
-  background:var(--yb-surface-raised); color:var(--yb-text-primary);
-  box-shadow:var(--yb-elevation-raised);
-  font-size:var(--yb-type-body-sm-size);
-  font-weight:var(--yb-font-weight-medium);
-  line-height:var(--yb-line-height-base);
+.yb-collection__label{position:absolute; inset-inline:var(--yb-space-4);}
+.yb-collection--bottom .yb-collection__label{
+  inset-block-end:var(--yb-space-4); inline-size:fit-content;
+  max-inline-size:calc(100% - var(--yb-space-4) * 2); margin-inline:auto;
+  white-space:normal; box-shadow:var(--yb-elevation-raised);
 }
-.yb-collection--bottom .yb-collection__label{inset-block-end:var(--yb-space-4);}
+@media (hover:hover){
+  .yb-collection--bottom:hover .yb-collection__label{background:var(--yb-surface-sunken);}
+}
 .yb-collection--overlay .yb-collection__label{
   inset-inline:var(--yb-space-5) auto;
   inset-block-end:var(--yb-space-4);
-  justify-content:flex-start; text-align:start;
-  min-height:0; padding:0;
-  background:none; box-shadow:none; border-radius:0;
+  text-align:start;
   color:var(--yb-text-inverse);
   font-size:var(--yb-type-body-lg-size);
   font-weight:var(--yb-font-weight-bold);
+  line-height:var(--yb-line-height-base);
 }
 .yb-collection--overlay{--yb-veil-fall:82%;}
 .yb-collection--overlay::after{
@@ -519,13 +517,12 @@
 }
 .yb-collection--overlay .yb-collection__label{z-index:1;}
 @media (max-width:479.98px){
-  .yb-collection__label{
-    inset-inline:var(--yb-space-2);
-    padding:var(--yb-space-2);
+  .yb-collection--bottom .yb-collection__label{
+    inset-block-end:var(--yb-space-2);
+    max-inline-size:calc(100% - var(--yb-space-2) * 2);
+    padding-inline:var(--yb-space-3);
     font-size:var(--yb-type-caption-size);
-    border-radius:var(--yb-radius-md);
   }
-  .yb-collection--bottom .yb-collection__label{inset-block-end:var(--yb-space-2);}
 }
 .yb-collection--card{
   aspect-ratio:auto; display:flex; flex-direction:column;
@@ -547,6 +544,9 @@ li &gt; .yb-collection--card{flex:1; min-inline-size:0;}
   margin-block-start:auto;
   font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
   color:var(--yb-text-link); white-space:nowrap;
+}
+@media (max-width:479.98px){
+  .yb-collection__cta{white-space:normal;}
 }
 @media (hover:hover){
   .yb-collection--card:hover .yb-collection__cta{color:var(--yb-text-link-hover)}
@@ -584,11 +584,8 @@ li &gt; .yb-collection--card{flex:1; min-inline-size:0;}
 --yb-focus-offset: 0;
 --yb-focus-width: 2px;
 --yb-font-weight-bold: 700;
---yb-font-weight-medium: 500;
 --yb-font-weight-semibold: 600;
 --yb-line-height-base: 1.35;
---yb-radius-full: 9999px;
---yb-radius-md: 8px;
 --yb-radius-media: 8px;
 --yb-scrim-curve-1: rgba(30, 30, 31, .12);
 --yb-scrim-curve-2: rgba(30, 30, 31, .385);
@@ -600,12 +597,11 @@ li &gt; .yb-collection--card{flex:1; min-inline-size:0;}
 --yb-scrim-lite-curve-3: rgba(30, 30, 31, .549);
 --yb-scrim-none: rgba(30, 30, 31, 0);
 --yb-space-2: 0.5rem;
+--yb-space-3: 0.75rem;
 --yb-space-4: 1rem;
 --yb-space-5: 1.25rem;
 --yb-surface: #FFFFFF;
---yb-surface-raised: #FFFFFF;
 --yb-surface-sunken: #FAFAFA;
---yb-target-min: 44px;
 --yb-text-inverse: #FFFFFF;
 --yb-text-link: #CA235F;
 --yb-text-link-hover: #8A1E45;
@@ -622,33 +618,57 @@ li &gt; .yb-collection--card{flex:1; min-inline-size:0;}
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
+    <h3 class="rotulo">v1 · rótulo sobre a foto — <code>--bottom</code></h3>
     <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
-        <div class="anat__peca" style="max-inline-size:260px"><ul class="yb-collections">
-  <li><a class="yb-collection yb-collection--bottom" href="#anat-demos">
-    <img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy">
-    <span class="yb-collection__label">Fashion Gold</span>
-  </a></li>
-  <li><a class="yb-collection yb-collection--bottom" href="#anat-demos">
-    <img src="../pages/img/Prancheta_2-188b6fea.webp" alt="" loading="lazy">
-    <span class="yb-collection__label">Cronograma</span>
-  </a></li>
-  <li><a class="yb-collection yb-collection--bottom" href="#anat-demos">
-    <img src="../pages/img/Prancheta_3-d098ed99.webp" alt="" loading="lazy">
-    <span class="yb-collection__label">Vello</span>
-  </a></li>
-  <li><a class="yb-collection yb-collection--bottom" href="#anat-demos">
-    <img src="../pages/img/Prancheta_4-26cbd0ec.webp" alt="" loading="lazy">
-    <span class="yb-collection__label">Mirra</span>
-  </a></li>
-</ul></div>
+        <div class="anat__peca" style="max-inline-size:260px"><a class="yb-collection yb-collection--bottom" href="#anat-demos">
+          <img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy">
+          <span class="yb-btn yb-btn--on-dark yb-btn--sm yb-collection__label">Fashion Gold</span>
+        </a></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-collections"><span class="anat__texto"><b>Fileira</b> — A lista em volta. É ela que decide quantos cabem por linha; o cartão só preenche.</span></li>
-        <li data-target=".yb-collection"><span class="anat__texto"><b>Cartão</b> — Foto com o nome da coleção por cima. O link cobre a peça inteira.</span></li>
-        <li data-target="img"><span class="anat__texto"><b>Foto</b> — <code>alt</code> vazio: o nome logo abaixo já diz para onde leva.</span></li>
-        <li data-target=".yb-collection__label"><span class="anat__texto"><b>Nome</b> — O destino, em duas ou três palavras. É o que a pessoa procura na vitrine.</span></li>
+        <li data-target=".yb-collection"><span class="anat__texto"><b>Cartão</b> — O link cobre a peça inteira: foto e rótulo são um alvo só.</span></li>
+        <li data-target="img"><span class="anat__texto"><b>Foto</b> — <code>alt</code> vazio: o nome no rótulo já diz para onde leva.</span></li>
+        <li data-target=".yb-collection__label"><span class="anat__texto"><b>Rótulo</b> — O Button <code>--on-dark --sm</code>, do tamanho do nome e centrado no pé. É um <code>&lt;span&gt;</code>: botão dentro de link é HTML inválido.</span></li>
+      </ol>
+    </div>
+    <h3 class="rotulo">Mosaico · nome sobre véu — <code>--overlay --blur</code></h3>
+    <div class="anat" data-yb-anatomy>
+      <div class="anat__palco">
+        <svg class="anat__fios" aria-hidden="true"></svg>
+        <div class="anat__peca" style="max-inline-size:360px"><a class="yb-collection yb-collection--overlay yb-collection--blur" href="#anat-demos">
+          <img src="../pages/img/02sauana-2896ea7c.webp" alt="" loading="lazy">
+          <span class="yb-collection__blur" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="yb-collection__label">Ybera Paris</span>
+        </a></div>
+      </div>
+      <ol class="anat__legenda">
+        <li data-target=".yb-collection"><span class="anat__texto"><b>Ladrilho</b> — O mesmo cartão; o tamanho vem da grade <code>--mosaic</code> em volta.</span></li>
+        <li data-target="img"><span class="anat__texto"><b>Foto</b> — Ocupa o ladrilho inteiro. <code>alt</code> vazio, pelo mesmo motivo do v1.</span></li>
+        <li data-target=".yb-collection__blur"><span class="anat__texto"><b>Véu com blur</b> — Três folhas de desfoque sob o nome, com o véu leve. Sem <code>backdrop-filter</code>, volta o véu cheio.</span></li>
+        <li data-target=".yb-collection__label"><span class="anat__texto"><b>Nome</b> — Texto branco no canto de baixo, sem botão: no ladrilho largo, o botão se perderia no meio da foto.</span></li>
+      </ol>
+    </div>
+    <h3 class="rotulo">v2 · cartão com rodapé — <code>--card</code></h3>
+    <div class="anat" data-yb-anatomy>
+      <div class="anat__palco">
+        <svg class="anat__fios" aria-hidden="true"></svg>
+        <div class="anat__peca" style="max-inline-size:260px"><a class="yb-collection yb-collection--card" href="#anat-demos">
+          <img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy">
+          <span class="yb-collection__foot">
+            <span class="yb-collection__name">Fashion Gold</span>
+            <span class="yb-collection__cta">Shop Collection
+              <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+          </span>
+        </a></div>
+      </div>
+      <ol class="anat__legenda">
+        <li data-target=".yb-collection"><span class="anat__texto"><b>Cartão</b> — Link inteiro. Na grade, todos ficam da mesma altura.</span></li>
+        <li data-target="img"><span class="anat__texto"><b>Foto</b> — Em cima, 5:7, fora do texto: nada a medir contra pixel.</span></li>
+        <li data-target=".yb-collection__foot"><span class="anat__texto"><b>Rodapé</b> — Faixa branca opaca: o contraste não depende da foto.</span></li>
+        <li data-target=".yb-collection__name"><span class="anat__texto"><b>Nome</b> — Sempre numa linha própria, acima do atalho.</span></li>
+        <li data-target=".yb-collection__cta"><span class="anat__texto"><b>Atalho</b> — "Shop Collection" com a seta, preso ao pé do cartão. Diz o que o clique faz quando o nome sozinho não diz.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -663,17 +683,18 @@ li &gt; .yb-collection--card{flex:1; min-inline-size:0;}
     resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
     estiver errado aqui, o errado é o código.</p>
 
-    <p class="api-linha"><span class="api-linha__rotulo">De que é feita</span><span class="api-linha__corpo">Nenhuma: não consome nenhum outro componente. O que ela desenha sai todo da folha dela.</span></p>
+    <p class="rotulo">De que é feita</p>
+    <p class="usa-degrau">Átomos</p>
+    <ul class="usa"><li><a href="../atoms/button.html">Button</a></li></ul>
     <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-collection--blur</code> <code>.yb-collection--bottom</code> <code>.yb-collection--card</code> <code>.yb-collection--overlay</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-collection__blur</code> <code>.yb-collection__cta</code> <code>.yb-collection__foot</code> <code>.yb-collection__label</code> <code>.yb-collection__name</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
-    <p class="rotulo">Tokens <span class="rotulo-conta">46</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">42</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>8</span></p>
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>7</span></p>
         <ul class="tokens__lista">
-          <li><i class="tokens__cor" style="background:var(--yb-surface-raised)" aria-hidden="true"></i><code>--yb-surface-raised</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-link)" aria-hidden="true"></i><code>--yb-text-link</code><span class="tokens__valor">#CA235F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-link-hover)" aria-hidden="true"></i><code>--yb-text-link-hover</code><span class="tokens__valor">#8A1E45</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface-sunken)" aria-hidden="true"></i><code>--yb-surface-sunken</code><span class="tokens__valor">#FAFAFA</span></li>
@@ -684,10 +705,9 @@ li &gt; .yb-collection--card{flex:1; min-inline-size:0;}
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>7</span></p>
+        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>6</span></p>
         <ul class="tokens__lista">
           <li><code>--yb-type-body-lg-size</code><span class="tokens__valor">1.125rem</span></li>
-          <li><code>--yb-font-weight-medium</code><span class="tokens__valor">500</span></li>
           <li><code>--yb-line-height-base</code><span class="tokens__valor">1.35</span></li>
           <li><code>--yb-font-weight-bold</code><span class="tokens__valor">700</span></li>
           <li><code>--yb-type-caption-size</code><span class="tokens__valor">0.8125rem</span></li>
@@ -698,19 +718,17 @@ li &gt; .yb-collection--card{flex:1; min-inline-size:0;}
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>4</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
           <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
           <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
           <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>
+          <li><code>--yb-space-3</code><span class="tokens__valor">0.75rem</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>4</span></p>
+        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>2</span></p>
         <ul class="tokens__lista">
           <li><code>--yb-aspect-landscape</code><span class="tokens__valor">16 / 9</span></li>
           <li><code>--yb-radius-media</code><span class="tokens__valor">8px</span></li>
-          <li><code>--yb-radius-full</code><span class="tokens__valor">9999px</span></li>
-          <li><code>--yb-radius-md</code><span class="tokens__valor">8px</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">

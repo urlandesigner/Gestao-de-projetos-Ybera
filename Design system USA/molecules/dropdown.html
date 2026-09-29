@@ -63,6 +63,7 @@
     <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Componentes</summary>
     <ul>
       <li><a href="../molecules/accordion.html">Accordion</a></li>
+      <li><a href="../molecules/account.html">Account menu</a></li>
       <li><a href="../molecules/alert.html">Alert</a></li>
       <li><a href="../atoms/avatar.html">Avatar</a></li>
       <li><a href="../atoms/badge.html">Badge</a></li>
@@ -164,7 +165,7 @@
     </nav>
   </div>
   <h1 class="ficha-titulo">Dropdown</h1>
-  <p class="ficha-quando">Painel de links que abre embaixo de um gatilho. No cabeçalho o gatilho é o avatar; em qualquer outro lugar é o que a marcação puser dentro.</p>
+  <p class="ficha-quando">Lista curta de opções que abre embaixo de um botão: escolher entre poucas (idioma, moeda, ordenação fora de formulário) ou disparar ações de um item. Dentro de formulário, a resposta continua sendo o <a href="../atoms/select.html">Select</a>.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
@@ -194,55 +195,82 @@
   <div class="abas" data-yb-tabs>
   <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
-    <h3 class="row-label">Aberto · <code>__toggle</code> <code>[checked]</code></h3>
-    <div class="stage stage--pad stage--overflow" style="padding-block-end:19rem">
-      <div style="display:flex; justify-content:flex-end">
+    <h3 class="row-label">Aberto &middot; escolha e ações &middot; <code>__toggle</code> <code>[checked]</code></h3>
+    <div class="stage stage--pad stage--overflow">
+      <!-- Grade que empilha pela largura dos PAINEIS, e nao dos gatilhos: os dois
+           gatilhos cabem numa linha de 375, os dois paineis abertos nao. -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(13rem, 1fr)); gap:var(--yb-space-4) var(--yb-space-8)">
+        <span class="amostra" style="align-items:flex-start; padding-block-end:13rem">
+          <span class="amostra__rotulo"><code>escolha · [aria-current]</code></span>
         <div class="yb-dropdown">
-          <input class="yb-dropdown__toggle" type="checkbox" id="account-demo" checked>
-          <label class="yb-dropdown__trigger" for="account-demo" aria-label="Account menu for Urlan Dipre">
-            <span class="yb-avatar" aria-hidden="true">U</span></label>
-          <div class="yb-dropdown__panel">
-            <span class="yb-dropdown__head">
-              <span class="yb-avatar yb-avatar--md" aria-hidden="true">U</span>
-              <b class="yb-dropdown__name">Urlan Dipre</b>
-              <span class="yb-dropdown__email">urlan.dipre@ybera.com</span>
-            </span>
-            <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg>Account</a>
-            <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>Orders</a>
-            <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg>Wishlist</a>
-            <span class="yb-dropdown__signout">
-              <a href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-lock"/></svg>Log out</a>
-            </span>
-          </div>
+          <input class="yb-dropdown__toggle" type="checkbox" id="dd-sort" checked>
+          <label class="yb-btn yb-btn--secondary yb-btn--sm yb-dropdown__trigger" for="dd-sort">Sort: Best selling <svg class="yb-icon yb-icon--sm yb-dropdown__chevron" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+          <ul class="yb-dropdown__panel">
+            <li><a class="yb-dropdown__option" href="#demos" aria-current="true">Best selling <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+            <li><a class="yb-dropdown__option" href="#demos">Price, low to high <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+            <li><a class="yb-dropdown__option" href="#demos">Price, high to low <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+            <li><a class="yb-dropdown__option" href="#demos">Newest <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+          </ul>
         </div>
+        </span>
+        <span class="amostra" style="align-items:flex-end; padding-block-end:11rem">
+          <span class="amostra__rotulo"><code>ações · --end</code></span>
+        <div class="yb-dropdown yb-dropdown--end">
+          <input class="yb-dropdown__toggle" type="checkbox" id="dd-actions" checked>
+          <label class="yb-btn yb-btn--ghost yb-btn--sm yb-dropdown__trigger" for="dd-actions">More <svg class="yb-icon yb-icon--sm yb-dropdown__chevron" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+          <ul class="yb-dropdown__panel">
+            <li><a class="yb-dropdown__option" href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg> Move to wishlist</a></li>
+            <li><a class="yb-dropdown__option" href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-share"/></svg> Share</a></li>
+            <li class="yb-dropdown__sep" role="separator"></li>
+            <li><a class="yb-dropdown__option" href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-trash"/></svg> Remove</a></li>
+          </ul>
+        </div>
+        </span>
       </div>
     </div>
-    <details class="note"><summary>O palco desta demo não recorta</summary>
-      <p>O painel é <code>position:absolute</code> e passa da altura da caixa. Com o
-      <code>overflow:hidden</code> que o palco usa por padrão, ele apareceria
-      cortado na metade — e a documentação mostraria um defeito que o componente
-      não tem.</p>
+    <h3 class="row-label">Fechado &mdash; o gatilho é qualquer Button</h3>
+    <div class="demo demo--amostras">
+      <span class="amostra">
+        <div class="yb-dropdown">
+          <input class="yb-dropdown__toggle" type="checkbox" id="dd-lang">
+          <label class="yb-btn yb-btn--secondary yb-btn--sm yb-dropdown__trigger" for="dd-lang">English (US) <svg class="yb-icon yb-icon--sm yb-dropdown__chevron" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+          <ul class="yb-dropdown__panel">
+            <li><a class="yb-dropdown__option" href="#demos" aria-current="true">English (US) <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+            <li><a class="yb-dropdown__option" href="#demos">Português <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+            <li><a class="yb-dropdown__option" href="#demos">Español <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+          </ul>
+        </div>
+        <span class="amostra__rotulo"><code>--secondary --sm</code></span>
+      </span>
+      <span class="amostra">
+        <div class="yb-dropdown">
+          <input class="yb-dropdown__toggle" type="checkbox" id="dd-moeda">
+          <label class="yb-btn yb-btn--ghost yb-btn--sm yb-dropdown__trigger" for="dd-moeda">USD <svg class="yb-icon yb-icon--sm yb-dropdown__chevron" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+          <ul class="yb-dropdown__panel">
+            <li><a class="yb-dropdown__option" href="#demos" aria-current="true">USD — US dollar <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+            <li><a class="yb-dropdown__option" href="#demos">BRL — Real <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+          </ul>
+        </div>
+        <span class="amostra__rotulo"><code>--ghost --sm</code></span>
+      </span>
+    </div>
+    <details class="note"><summary>Quando é Dropdown, e quando não é</summary>
+      <p>Dentro de formulário é o <a href="../atoms/select.html">Select</a>: o nativo abre a
+      roleta do celular, envia com o formulário e o leitor de tela já sabe o que é.
+      O Dropdown é para o que o select não faz: lista de <b>ações</b> (mover, compartilhar,
+      remover) e escolha que <b>navega</b> em vez de enviar, como idioma e moeda.
+      O menu da conta é outra peça, o <a href="account.html">Account menu</a>.</p>
     </details>
-    <details class="note"><summary>Quem, antes do que fazer</summary>
-      <p>O menu abre dizendo o nome e o e-mail da sessão. Sem isso ele abre com
-      quatro verbos e nenhuma confirmação de que a conta é a certa — e a dúvida
-      faz a pessoa clicar em <code>Account</code> só para conferir.</p>
+    <details class="note"><summary>A opção atual se diz de dois jeitos</summary>
+      <p><code>aria-current="true"</code> para o leitor de tela, e peso mais o tique para
+      quem vê. O tique fica no <b>fim</b> da linha: no começo, as opções sem marca
+      começariam 28px mais à esquerda que a marcada, e a coluna de texto quebraria.</p>
     </details>
     <details class="note"><summary>Sem JS, e o que isso custa</summary>
-      <p>Mesma mecânica do menu principal: <code>checkbox</code> escondido mais
-      painel irmão. Sobrevive com o JS fora do ar, que é o que o cabeçalho mais
-      precisa. Em troca, o leitor de tela anuncia &ldquo;caixa de seleção&rdquo;, não
-      &ldquo;menu&rdquo;. A casa já aceita isso no menu principal; quando entrar um
-      menu de verdade, com <code>aria-expanded</code> e setas, ele troca os dois
-      de uma vez.</p>
-    </details>
-    <details class="note"><summary>Por que ele deixou de ser &ldquo;Account menu&rdquo;</summary>
-      <p>Isto era um organismo chamado Account menu. Não era organismo: na loja ele
-      mora dentro de <code>.yb-header__actions</code>, e sozinho numa tela não é
-      nada — falhava a regra que o próprio sistema declara para o degrau. O que
-      havia ali de reaproveitável eram duas peças, e agora elas existem: o
-      <a href="../atoms/avatar.html">Avatar</a> e este dropdown. A conta logada virou
-      um <b>estado do</b> <a href="../organisms/header.html">Header</a>.</p>
+      <p>Mesma mecânica do Account menu e do menu principal: <code>checkbox</code>
+      escondido mais painel irmão. Funciona com o JS fora do ar. Em troca, fecha
+      clicando de novo no gatilho — não no clique fora nem no Esc — e o leitor de tela
+      anuncia &ldquo;caixa de seleção&rdquo;, não &ldquo;menu&rdquo;.</p>
     </details>
 
     <h3 class="rotulo">No celular</h3>
@@ -269,93 +297,115 @@
         <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
         <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
       </div>
-      
+      <label class="codigo__variante">Variante
+        <select data-code-variant>
+          <option value="0">escolha · [aria-current]</option>
+          <option value="1">ações · --end</option>
+          <option value="2">--secondary --sm</option>
+          <option value="3">--ghost --sm</option>
+        </select></label>
+      <span class="codigo__conta">4 variantes</span>
     </div>
     <div class="codigo__painel" data-code-panel="html">
       <div class="snippet" data-code-variant-panel="0">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
         <pre><code>&lt;div class="yb-dropdown"&gt;
-    &lt;input class="yb-dropdown__toggle" type="checkbox" id="account-demo" checked&gt;
-    &lt;label class="yb-dropdown__trigger" for="account-demo" aria-label="Account menu for Urlan Dipre"&gt;
-      &lt;span class="yb-avatar" aria-hidden="true"&gt;U&lt;/span&gt;&lt;/label&gt;
-    &lt;div class="yb-dropdown__panel"&gt;
-      &lt;span class="yb-dropdown__head"&gt;
-        &lt;span class="yb-avatar yb-avatar--md" aria-hidden="true"&gt;U&lt;/span&gt;
-        &lt;b class="yb-dropdown__name"&gt;Urlan Dipre&lt;/b&gt;
-        &lt;span class="yb-dropdown__email"&gt;urlan.dipre@ybera.com&lt;/span&gt;
-      &lt;/span&gt;
-      &lt;a href="#demos"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-user"/&gt;&lt;/svg&gt;Account&lt;/a&gt;
-      &lt;a href="#demos"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-truck"/&gt;&lt;/svg&gt;Orders&lt;/a&gt;
-      &lt;a href="#demos"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-heart"/&gt;&lt;/svg&gt;Wishlist&lt;/a&gt;
-      &lt;span class="yb-dropdown__signout"&gt;
-        &lt;a href="#demos"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-lock"/&gt;&lt;/svg&gt;Log out&lt;/a&gt;
-      &lt;/span&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;</code></pre>
+  &lt;input class="yb-dropdown__toggle" type="checkbox" id="dd-sort" checked&gt;
+  &lt;label class="yb-btn yb-btn--secondary yb-btn--sm yb-dropdown__trigger" for="dd-sort"&gt;Sort: Best selling &lt;svg class="yb-icon yb-icon--sm yb-dropdown__chevron" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;&lt;/label&gt;
+  &lt;ul class="yb-dropdown__panel"&gt;
+    &lt;li&gt;&lt;a class="yb-dropdown__option" href="#demos" aria-current="true"&gt;Best selling &lt;svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="yb-dropdown__option" href="#demos"&gt;Price, low to high &lt;svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="yb-dropdown__option" href="#demos"&gt;Price, high to low &lt;svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="yb-dropdown__option" href="#demos"&gt;Newest &lt;svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="1" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-dropdown yb-dropdown--end"&gt;
+  &lt;input class="yb-dropdown__toggle" type="checkbox" id="dd-actions" checked&gt;
+  &lt;label class="yb-btn yb-btn--ghost yb-btn--sm yb-dropdown__trigger" for="dd-actions"&gt;More &lt;svg class="yb-icon yb-icon--sm yb-dropdown__chevron" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;&lt;/label&gt;
+  &lt;ul class="yb-dropdown__panel"&gt;
+    &lt;li&gt;&lt;a class="yb-dropdown__option" href="#demos"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-heart"/&gt;&lt;/svg&gt; Move to wishlist&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="yb-dropdown__option" href="#demos"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-share"/&gt;&lt;/svg&gt; Share&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="yb-dropdown__sep" role="separator"&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="yb-dropdown__option" href="#demos"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-trash"/&gt;&lt;/svg&gt; Remove&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="2" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-dropdown"&gt;
+  &lt;input class="yb-dropdown__toggle" type="checkbox" id="dd-lang"&gt;
+  &lt;label class="yb-btn yb-btn--secondary yb-btn--sm yb-dropdown__trigger" for="dd-lang"&gt;English (US) &lt;svg class="yb-icon yb-icon--sm yb-dropdown__chevron" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;&lt;/label&gt;
+  &lt;ul class="yb-dropdown__panel"&gt;
+    &lt;li&gt;&lt;a class="yb-dropdown__option" href="#demos" aria-current="true"&gt;English (US) &lt;svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="yb-dropdown__option" href="#demos"&gt;Português &lt;svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="yb-dropdown__option" href="#demos"&gt;Español &lt;svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="3" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-dropdown"&gt;
+  &lt;input class="yb-dropdown__toggle" type="checkbox" id="dd-moeda"&gt;
+  &lt;label class="yb-btn yb-btn--ghost yb-btn--sm yb-dropdown__trigger" for="dd-moeda"&gt;USD &lt;svg class="yb-icon yb-icon--sm yb-dropdown__chevron" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;&lt;/label&gt;
+  &lt;ul class="yb-dropdown__panel"&gt;
+    &lt;li&gt;&lt;a class="yb-dropdown__option" href="#demos" aria-current="true"&gt;USD — US dollar &lt;svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="yb-dropdown__option" href="#demos"&gt;BRL — Real &lt;svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="css" hidden>
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>.yb-dropdown{position:relative; display:flex; align-items:center}
+        <pre><code>.yb-dropdown{position:relative; display:inline-flex}
 .yb-dropdown__toggle{position:absolute; opacity:0; pointer-events:none; width:1px; height:1px}
-.yb-dropdown__trigger{
-  display:flex; align-items:center; justify-content:center;
-  inline-size:var(--yb-target-min); block-size:var(--yb-target-min);
-  cursor:pointer; border-radius:var(--yb-radius-pill);
-  color:var(--yb-text-primary);
-}
-@media (hover:hover){
-  .yb-dropdown__trigger:hover .yb-avatar{background:var(--yb-bg-subtle)}
-}
+.yb-dropdown__trigger{cursor:pointer; user-select:none}
 .yb-dropdown__toggle:focus-visible + .yb-dropdown__trigger{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
 }
+.yb-dropdown__chevron{transition:transform var(--yb-transition-control)}
+.yb-dropdown__toggle:checked + .yb-dropdown__trigger .yb-dropdown__chevron{transform:rotate(180deg)}
 .yb-dropdown__panel{
-  position:absolute; inset-block-start:100%; inset-inline-end:0;
-  z-index:var(--yb-z-dropdown); min-inline-size:16rem;
+  position:absolute; inset-block-start:calc(100% + var(--yb-space-1)); inset-inline-start:0;
+  z-index:var(--yb-z-dropdown); min-inline-size:100%; inline-size:max-content; max-inline-size:18rem;
+  margin:0; padding:var(--yb-space-2) 0; list-style:none;
   background:var(--yb-surface-raised);
   border:var(--yb-border-hairline) solid var(--yb-border-subtle);
   border-radius:var(--yb-radius-card);
   box-shadow:var(--yb-elevation-dropdown);
-  padding-block:var(--yb-space-2);
   opacity:0; visibility:hidden;
   transition:opacity var(--yb-transition-surface), visibility var(--yb-transition-surface);
 }
+.yb-dropdown--end .yb-dropdown__panel{inset-inline:auto 0}
 .yb-dropdown__toggle:checked ~ .yb-dropdown__panel{opacity:1; visibility:visible}
-.yb-dropdown__head{
-  display:grid; grid-template-columns:auto minmax(0, 1fr);
-  gap:0 var(--yb-space-3); align-items:center;
-  padding:var(--yb-space-3) var(--yb-space-4);
-  border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);
-  margin-block-end:var(--yb-space-2);
-}
-.yb-dropdown__head .yb-avatar{grid-row:span 2}
-.yb-dropdown__name{display:block; font-weight:var(--yb-font-weight-semibold)}
-.yb-dropdown__email{
-  display:block; font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted);
-  overflow:hidden; text-overflow:ellipsis;
-}
-.yb-dropdown__panel a{
-  display:flex; align-items:center; min-block-size:var(--yb-target-min);
-  padding-inline:var(--yb-space-4); gap:var(--yb-space-3);
+.yb-dropdown__option{
+  display:flex; align-items:center; gap:var(--yb-space-3);
+  min-block-size:var(--yb-target-min); padding-inline:var(--yb-space-4);
   color:var(--yb-text-primary); text-decoration:none;
   font-size:var(--yb-type-body-sm-size);
 }
+.yb-dropdown__option &gt; .yb-icon{color:var(--yb-text-secondary)}
 @media (hover:hover){
-  .yb-dropdown__panel a:hover{background:var(--yb-bg-muted)}
+  .yb-dropdown__option:hover{background:var(--yb-bg-muted)}
 }
-.yb-dropdown__panel a:focus-visible{
+.yb-dropdown__option:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:calc(var(--yb-focus-offset) * -1);
 }
-.yb-dropdown__signout{
-  margin-block-start:var(--yb-space-2);
+.yb-dropdown__check{margin-inline-start:auto; visibility:hidden; color:var(--yb-text-primary)}
+.yb-dropdown__option[aria-current="true"]{font-weight:var(--yb-font-weight-semibold)}
+.yb-dropdown__option[aria-current="true"] .yb-dropdown__check{visibility:visible}
+.yb-dropdown__sep{
+  block-size:0; margin-block:var(--yb-space-2);
   border-block-start:var(--yb-border-hairline) solid var(--yb-border-subtle);
-  padding-block-start:var(--yb-space-2);
 }
-.yb-dropdown__signout a{color:var(--yb-text-secondary)}</code></pre>
+@media (prefers-reduced-motion:reduce){
+  .yb-dropdown__chevron{transition:none}
+}</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="js" hidden>
@@ -365,7 +415,6 @@
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
         <pre><code>--yb-bg-muted: #F5F5F5;
---yb-bg-subtle: #FAFAFA;
 --yb-border-hairline: 1px;
 --yb-border-subtle: #EAEAEA;
 --yb-elevation-dropdown: 0 4px 12px rgba(30,30,31,.08), 0 2px 4px rgba(30,30,31,.05);
@@ -374,15 +423,15 @@
 --yb-focus-width: 2px;
 --yb-font-weight-semibold: 600;
 --yb-radius-card: 8px;
---yb-radius-pill: 9999px;
+--yb-space-1: 0.25rem;
 --yb-space-2: 0.5rem;
 --yb-space-3: 0.75rem;
 --yb-space-4: 1rem;
 --yb-surface-raised: #FFFFFF;
 --yb-target-min: 44px;
---yb-text-muted: #6D6D71;
 --yb-text-primary: #1E1E1F;
 --yb-text-secondary: #535356;
+--yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
 --yb-transition-surface: 180ms cubic-bezier(.2, 0, 0, 1);
 --yb-type-body-sm-size: 0.875rem;
 --yb-z-dropdown: 1000;</code></pre>
@@ -393,37 +442,49 @@
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
+    <h3 class="rotulo">Escolha — a opção atual marcada</h3>
     <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
-        <div class="anat__peca"><div style="display:flex; justify-content:flex-end">
-  <div class="yb-dropdown">
-    <input class="yb-dropdown__toggle" type="checkbox" id="anat-account-demo" checked>
-    <label class="yb-dropdown__trigger" for="anat-account-demo" aria-label="Account menu for Urlan Dipre">
-      <span class="yb-avatar" aria-hidden="true">U</span></label>
-    <div class="yb-dropdown__panel">
-      <span class="yb-dropdown__head">
-        <span class="yb-avatar yb-avatar--md" aria-hidden="true">U</span>
-        <b class="yb-dropdown__name">Urlan Dipre</b>
-        <span class="yb-dropdown__email">urlan.dipre@ybera.com</span>
-      </span>
-      <a href="#anat-demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg>Account</a>
-      <a href="#anat-demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>Orders</a>
-      <a href="#anat-demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg>Wishlist</a>
-      <span class="yb-dropdown__signout">
-        <a href="#anat-demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-lock"/></svg>Log out</a>
-      </span>
-    </div>
-  </div>
-</div></div>
+        <div class="anat__peca" style="max-inline-size:260px"><div class="yb-dropdown">
+          <input class="yb-dropdown__toggle" type="checkbox" id="anat-dd-sort" checked>
+          <label class="yb-btn yb-btn--secondary yb-btn--sm yb-dropdown__trigger" for="anat-dd-sort">Sort: Best selling <svg class="yb-icon yb-icon--sm yb-dropdown__chevron" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+          <ul class="yb-dropdown__panel">
+            <li><a class="yb-dropdown__option" href="#anat-demos" aria-current="true">Best selling <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+            <li><a class="yb-dropdown__option" href="#anat-demos">Price, low to high <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+            <li><a class="yb-dropdown__option" href="#anat-demos">Price, high to low <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+            <li><a class="yb-dropdown__option" href="#anat-demos">Newest <svg class="yb-icon yb-icon--sm yb-dropdown__check" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg></a></li>
+          </ul>
+        </div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-dropdown"><span class="anat__texto"><b>Container</b> — Gatilho e painel, ancorados juntos. Abre sem uma linha de JavaScript.</span></li>
-        <li data-target=".yb-dropdown__toggle"><span class="anat__texto"><b>Chave</b> — Checkbox escondido. É o <code>:checked</code> dele que abre o painel irmão.</span></li>
-        <li data-target=".yb-dropdown__trigger"><span class="anat__texto"><b>Gatilho</b> — O <code>&lt;label&gt;</code> que abre. Precisa de <code>aria-label</code> quando é só o avatar.</span></li>
-        <li data-target=".yb-dropdown__panel"><span class="anat__texto"><b>Painel</b> — Os links. Fecha ao clicar fora pelo scrim, não por script.</span></li>
-        <li data-target=".yb-dropdown__head"><span class="anat__texto"><b>Cabeça</b> — Quem está logado: avatar, nome e e-mail. Some quando o painel não é de conta.</span></li>
-        <li data-target=".yb-dropdown__signout"><span class="anat__texto"><b>Sair</b> — Separado do resto por fio. Ação destrutiva de sessão não fica junto dos links.</span></li>
+        <li data-target=".yb-dropdown__trigger"><span class="anat__texto"><b>Gatilho</b> — Um Button do sistema, em qualquer variante, com o texto da escolha atual. É o <code>&lt;label&gt;</code> da chave escondida.</span></li>
+        <li data-target=".yb-dropdown__chevron"><span class="anat__texto"><b>Seta</b> — Gira quando abre: o estado aparece sem precisar abrir para conferir.</span></li>
+        <li data-target=".yb-dropdown__panel"><span class="anat__texto"><b>Painel</b> — A lista, embaixo do gatilho e alinhada ao início dele. Pelo menos da largura do gatilho, no máximo 18rem.</span></li>
+        <li data-target=".yb-dropdown__option"><span class="anat__texto"><b>Opção</b> — Link de 44px, o alvo inteiro clicável.</span></li>
+        <li data-target=".yb-dropdown__check"><span class="anat__texto"><b>Opção atual</b> — <code>aria-current="true"</code>, peso e o tique no fim da linha, para o texto de todas começar na mesma prumada.</span></li>
+      </ol>
+    </div>
+    <h3 class="rotulo">Ações — <code>--end</code></h3>
+    <div class="anat" data-yb-anatomy>
+      <div class="anat__palco">
+        <svg class="anat__fios" aria-hidden="true"></svg>
+        <div class="anat__peca" style="max-inline-size:260px"><div class="yb-dropdown yb-dropdown--end">
+          <input class="yb-dropdown__toggle" type="checkbox" id="anat-dd-actions" checked>
+          <label class="yb-btn yb-btn--ghost yb-btn--sm yb-dropdown__trigger" for="anat-dd-actions">More <svg class="yb-icon yb-icon--sm yb-dropdown__chevron" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+          <ul class="yb-dropdown__panel">
+            <li><a class="yb-dropdown__option" href="#anat-demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg> Move to wishlist</a></li>
+            <li><a class="yb-dropdown__option" href="#anat-demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-share"/></svg> Share</a></li>
+            <li class="yb-dropdown__sep" role="separator"></li>
+            <li><a class="yb-dropdown__option" href="#anat-demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-trash"/></svg> Remove</a></li>
+          </ul>
+        </div></div>
+      </div>
+      <ol class="anat__legenda">
+        <li data-target=".yb-dropdown__trigger"><span class="anat__texto"><b>Gatilho</b> — Ghost pequeno: ações de um item não competem com a ação principal da tela.</span></li>
+        <li data-target=".yb-dropdown__panel"><span class="anat__texto"><b>Painel alinhado ao fim</b> — <code>--end</code> encosta o painel na borda direita do gatilho, para ele não sair da tela quando o gatilho está na direita.</span></li>
+        <li data-target=".yb-dropdown__option .yb-icon"><span class="anat__texto"><b>Ícone</b> — Opcional. Numa lista de ações ele ajuda a achar; numa lista de escolhas, sobra.</span></li>
+        <li data-target=".yb-dropdown__sep"><span class="anat__texto"><b>Separador</b> — Separa o que desfaz (Remove) do que só move ou compartilha.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -440,22 +501,20 @@
 
     <p class="rotulo">De que é feita</p>
     <p class="usa-degrau">Átomos</p>
-    <ul class="usa"><li><a href="../atoms/avatar.html">Avatar</a></li></ul>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-dropdown__email</code> <code>.yb-dropdown__head</code> <code>.yb-dropdown__name</code> <code>.yb-dropdown__panel</code> <code>.yb-dropdown__signout</code> <code>.yb-dropdown__toggle</code> <code>.yb-dropdown__trigger</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:checked</code> · <code>:focus-visible</code> · <code>:hover</code></span></p>
+    <ul class="usa"><li><a href="../atoms/button.html">Button</a></li></ul>
+    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-dropdown--end</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-dropdown__check</code> <code>.yb-dropdown__chevron</code> <code>.yb-dropdown__option</code> <code>.yb-dropdown__panel</code> <code>.yb-dropdown__sep</code> <code>.yb-dropdown__toggle</code> <code>.yb-dropdown__trigger</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:checked</code> · <code>:focus-visible</code> · <code>:hover</code> · <code>[aria-current]</code></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
-    <p class="rotulo">Tokens <span class="rotulo-conta">22</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">21</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>8</span></p>
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>6</span></p>
         <ul class="tokens__lista">
           <li><i class="tokens__cor" style="background:var(--yb-surface-raised)" aria-hidden="true"></i><code>--yb-surface-raised</code><span class="tokens__valor">#FFFFFF</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-bg-subtle)" aria-hidden="true"></i><code>--yb-bg-subtle</code><span class="tokens__valor">#FAFAFA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
         </ul>
@@ -468,8 +527,9 @@
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>4</span></p>
+        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>5</span></p>
         <ul class="tokens__lista">
+          <li><code>--yb-space-1</code><span class="tokens__valor">0.25rem</span></li>
           <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
           <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
           <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>
@@ -477,9 +537,8 @@
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>2</span></p>
+        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>1</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-radius-pill</code><span class="tokens__valor">9999px</span></li>
           <li><code>--yb-radius-card</code><span class="tokens__valor">8px</span></li>
         </ul>
       </div>
@@ -491,9 +550,10 @@
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>4</span></p>
+        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>5</span></p>
         <ul class="tokens__lista">
           <li><code>--yb-transition-surface</code><span class="tokens__valor">180ms cubic-bezier(.2, 0, 0, 1)</span></li>
+          <li><code>--yb-transition-control</code><span class="tokens__valor">120ms cubic-bezier(.2, 0, 0, 1)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
           <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
           <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
@@ -514,20 +574,20 @@
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
         <p class="fn-cabeca">✓ Faça</p>
-        <div class="fn-palco"><div class="yb-dropdown"><input class="yb-dropdown__toggle" type="checkbox" id="fn-dd"><label class="yb-dropdown__trigger" for="fn-dd" aria-label="Account menu for Urlan Dipre"><span class="yb-avatar" aria-hidden="true">U</span></label><div class="yb-dropdown__panel"><a href="#demos">Orders</a><a href="#demos">Addresses</a></div></div></div>
-        <p class="fn-legenda">Gatilho com nome próprio, painel de links reais.</p>
+        <div class="fn-palco"><div class="yb-dropdown"><input class="yb-dropdown__toggle" type="checkbox" id="fn-dd"><label class="yb-btn yb-btn--secondary yb-btn--sm yb-dropdown__trigger" for="fn-dd">Sort: Best selling</label><ul class="yb-dropdown__panel"><li><a class="yb-dropdown__option" href="#demos" aria-current="true">Best selling</a></li><li><a class="yb-dropdown__option" href="#demos">Newest</a></li></ul></div></div>
+        <p class="fn-legenda">Gatilho que diz a escolha atual, e a opção atual marcada na lista.</p>
       </div>
       <div class="fn-caso fn-caso--nao">
         <p class="fn-cabeca">✕ Não faça</p>
-        <div class="fn-palco"><div class="yb-dropdown"><input class="yb-dropdown__toggle" type="checkbox" id="fn-dd2"><label class="yb-dropdown__trigger" for="fn-dd2"><span class="yb-avatar" aria-hidden="true">U</span></label><div class="yb-dropdown__panel"><a href="#demos">Orders</a></div></div></div>
-        <p class="fn-legenda">Gatilho sem rótulo: o leitor de tela anuncia “botão” e mais nada — não dá para saber o que abre.</p>
+        <div class="fn-palco"><div class="yb-dropdown"><input class="yb-dropdown__toggle" type="checkbox" id="fn-dd2"><label class="yb-btn yb-btn--secondary yb-btn--sm yb-dropdown__trigger" for="fn-dd2">State</label><ul class="yb-dropdown__panel"><li><a class="yb-dropdown__option" href="#demos">Florida</a></li></ul></div></div>
+        <p class="fn-legenda">Dropdown no lugar de um campo de formulário: o valor não vai junto no envio, e o celular perde a roleta nativa. Ali é o Select.</p>
       </div>
     </div>
   </section>
 
   <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <ul class="bloco-lede"><li>Abre por <code>&lt;input type=&quot;checkbox&quot;&gt;</code> escondido e <code>&lt;label&gt;</code>: o teclado abre e fecha sem uma linha de JavaScript.</li><li>O gatilho precisa de nome próprio. Quando ele é só o avatar, <code>aria-label</code> é obrigatório — “Account menu for Urlan Dipre”, não “Menu”.</li><li>Fecha ao clicar fora pelo scrim, que é um irmão e não um ouvinte global: sem JS, e sem prender o clique de quem só queria sair.</li><li>O painel é uma lista de links de verdade. Setas do teclado não navegam entre eles porque não é <code>menu</code> ARIA — é conteúdo, e Tab basta.</li></ul>
+    <ul class="bloco-lede"><li>O gatilho é um <code>&lt;label&gt;</code> com texto visível que já diz o que abre. Só ícone, precisa de <code>aria-label</code>.</li><li>Abre e fecha pelo teclado sem JS: Tab chega na chave escondida, Espaço marca, e o anel aparece no gatilho.</li><li>A opção atual leva <code>aria-current="true"</code>. Cor e tique sozinhos não chegam ao leitor de tela.</li><li>Fecha clicando de novo no gatilho. Sem JS não fecha no clique fora nem no Esc.</li><li>As opções são links de verdade, em lista. Setas não navegam entre elas porque não é <code>menu</code> ARIA: Tab basta.</li></ul>
   </section>
   </div>
 

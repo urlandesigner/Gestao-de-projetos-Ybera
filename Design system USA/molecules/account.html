@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Variant picker — Ybera Design System</title>
+<title>Account menu — Ybera Design System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
@@ -63,7 +63,7 @@
     <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Componentes</summary>
     <ul>
       <li><a href="../molecules/accordion.html">Accordion</a></li>
-      <li><a href="../molecules/account.html">Account menu</a></li>
+      <li><a href="../molecules/account.html" aria-current="page">Account menu</a></li>
       <li><a href="../molecules/alert.html">Alert</a></li>
       <li><a href="../atoms/avatar.html">Avatar</a></li>
       <li><a href="../atoms/badge.html">Badge</a></li>
@@ -101,7 +101,7 @@
       <li><a href="../atoms/textarea.html">Textarea</a></li>
       <li><a href="../molecules/toast.html">Toast</a></li>
       <li><a href="../molecules/track.html">Track</a></li>
-      <li><a href="../molecules/variant.html" aria-current="page">Variant picker</a></li>
+      <li><a href="../molecules/variant.html">Variant picker</a></li>
       <li><a href="../molecules/video.html">Vertical video carousel</a></li>
     </ul>
   </details>
@@ -155,24 +155,24 @@
     <nav class="ficha-trilha" aria-label="Você está aqui">
       <a href="../components/index.html">Componentes</a>
       <span aria-hidden="true">/</span>
-      <a href="index.html#variant">Moléculas</a>
+      <a href="index.html#account">Moléculas</a>
       <span aria-hidden="true">/</span>
-      <b aria-current="page">Variant picker</b>
+      <b aria-current="page">Account menu</b>
     </nav>
     <nav class="ficha-passo" aria-label="Peça anterior e próxima">
-      <a href="track.html" rel="prev"><span aria-hidden="true">←</span> Track</a>
-      <a href="video.html" rel="next">Vertical video carousel <span aria-hidden="true">→</span></a>
+      <a href="accordion.html" rel="prev"><span aria-hidden="true">←</span> Accordion</a>
+      <a href="alert.html" rel="next">Alert <span aria-hidden="true">→</span></a>
     </nav>
   </div>
-  <h1 class="ficha-titulo">Variant picker</h1>
-  <p class="ficha-quando">Seletor das opções de um produto: tamanho, volume, fragrância. Esgotado aparece riscado, não some — sumir esconde que o produto existe.</p>
+  <h1 class="ficha-titulo">Account menu</h1>
+  <p class="ficha-quando">O menu da conta no cabeçalho. Logado, diz quem está na sessão e leva aos pedidos, aos dados e aos favoritos. Visitante, convida a entrar ou criar conta.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
        aba mostra por extenso, com os nomes. Número sem o nome ao lado é um
        resumo de algo que está a um clique. -->
   <ul class="ficha-fatos">
-    <li>Classe base <b><code>.yb-swatches</code></b></li>
+    <li>Classe base <b><code>.yb-account</code></b></li>
   </ul>
 
   <!-- A FICHA INTEIRA EM ABAS, e nada solto embaixo delas.
@@ -195,105 +195,87 @@
   <div class="abas" data-yb-tabs>
   <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
-    <h3 class="row-label">Variant <code>sem modificador</code></h3>
-    <div class="demo">
-      <div class="yb-swatches">
-        <input type="radio" name="sz" id="z1" checked><label for="z1">500g / 17.6 fl.oz</label>
-        <input type="radio" name="sz" id="z2"><label for="z2">300g / 10.5 fl.oz</label>
-        <input type="radio" name="sz" id="z3"><label for="z3">1kg / 33 oz</label>
-        <input type="radio" name="sz" id="z4" disabled><label for="z4">250g</label>
+    <h3 class="row-label">Logado e visitante &middot; <code>__toggle</code> <code>[checked]</code></h3>
+    <!-- As duas lado a lado, cada uma com o painel aberto. O gatilho fica a
+         direita de cada coluna porque o painel abre alinhado a direita dele,
+         como no cabeçalho. -->
+    <!-- Cada coluna reserva embaixo a altura do proprio painel aberto: lado a
+         lado no desktop, e uma embaixo da outra quando a largura nao cabe duas
+         (o quadro de 375px), sem um painel cobrir o outro. -->
+    <div class="stage stage--pad stage--overflow">
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(18rem, 1fr)); gap:var(--yb-space-4) var(--yb-space-8)">
+        <span class="amostra" style="align-items:flex-end; padding-block-end:19rem">
+          <span class="amostra__rotulo"><code>logado</code></span>
+          <div class="yb-account">
+              <input class="yb-account__toggle" type="checkbox" id="account-demo" checked>
+              <label class="yb-account__trigger" for="account-demo"
+                     aria-label="Account menu for Urlan Dipre">
+                <span class="yb-avatar" aria-hidden="true">U</span></label>
+              <div class="yb-account__panel">
+                <span class="yb-account__head yb-account__head--who">
+                  <span class="yb-avatar yb-avatar--md" aria-hidden="true">U</span>
+                  <b class="yb-account__name">Urlan Dipre</b>
+                  <span class="yb-account__email">urlan.dipre@ybera.com</span>
+                </span>
+                <a class="yb-account__item" href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg> Account</a>
+                <a class="yb-account__item" href="#demos/orders"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg> Orders</a>
+                <a class="yb-account__item" href="#demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg> Wishlist</a>
+                <div class="yb-account__foot">
+                  <a class="yb-account__item" href="#demos/logout"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-lock"/></svg> Log out</a>
+                </div>
+              </div>
+            </div>
+        </span>
+        <span class="amostra" style="align-items:flex-end; padding-block-end:15rem">
+          <span class="amostra__rotulo"><code>visitante</code></span>
+          <div class="yb-account">
+              <input class="yb-account__toggle" type="checkbox" id="account-demo-guest" checked>
+              <label class="yb-account__trigger" for="account-demo-guest" aria-label="Account menu">
+                <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg></label>
+              <div class="yb-account__panel">
+                <div class="yb-account__head">
+                  <b class="yb-account__title">Welcome to Ybera</b>
+                  <p class="yb-account__text">Sign in to see your orders and wishlist.</p>
+                  <a class="yb-btn yb-btn--primary" href="#demos/login">Sign in</a>
+                </div>
+                <div class="yb-account__foot">
+                  <a class="yb-account__item" href="#demos/register"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg> Create account</a>
+                </div>
+              </div>
+            </div>
+        </span>
       </div>
     </div>
-    <h3 class="row-label">States</h3>
-    <div class="demo demo--amostras">
-      <span class="amostra">
-        <span class="yb-swatches">
-          <input type="radio" name="st1" id="st1"><label for="st1">500g</label>
-        </span>
-        <span class="amostra__rotulo"><code>padrão</code></span>
-      </span>
-      <span class="amostra">
-        <span class="yb-swatches">
-          <input type="radio" name="st2" id="st2" checked><label for="st2">500g</label>
-        </span>
-        <span class="amostra__rotulo"><code>:checked</code></span>
-      </span>
-      <span class="amostra">
-        <span class="yb-swatches">
-          <input type="radio" name="st3" id="st3" disabled><label for="st3">500g</label>
-        </span>
-        <span class="amostra__rotulo"><code>[disabled]</code></span>
-      </span>
-    </div>
-    <h3 class="row-label">Variant <code>--on-dark</code> — sobre painel escuro</h3>
-    <div class="demo demo--dark">
-      <div class="yb-swatches yb-swatches--on-dark">
-        <input type="radio" name="dk" id="dk1" checked><label for="dk1">Slightly Damaged</label>
-        <input type="radio" name="dk" id="dk2"><label for="dk2">Healthy</label>
-        <input type="radio" name="dk" id="dk3"><label for="dk3">Very Damaged</label>
-        <input type="radio" name="dk" id="dk4" disabled><label for="dk4">Chemically Treated</label>
-      </div>
-    </div>
-    <details class="note"><summary>A borda do chip escuro é medida</summary>
-      <p><code>--yb-border-inverse</code> mede <b>1.47:1</b> contra o painel: divide
-      bloco, não diz que algo é clicável — a WCAG 1.4.11 quer 3:1 na fronteira de um
-      controle. <code>--yb-border-inverse-strong</code> (<b>3.23:1</b>) é o degrau mais
-      escuro que ainda passa.</p>
-      <p>O escolhido <b>inverte para fundo claro</b> em vez de só trocar a borda: sobre
-      escuro, duas bordas cinzas não se distinguem de relance — e qual está escolhida é
-      a informação mais importante da fileira.</p>
+    <details class="note"><summary>Quem, antes do que fazer</summary>
+      <p>Logado, o menu abre dizendo o nome e o e-mail da sessão. Sem isso ele abre
+      com três verbos e nenhuma confirmação de que a conta é a certa — e a dúvida faz
+      a pessoa clicar em <code>Account</code> só para conferir. Visitante, a cabeça diz <b>por que</b> entrar, e o botão é a ação do menu
+      inteiro; criar conta fica no pé, porque é o caminho de menos gente.</p>
     </details>
-
-    <h3 class="row-label">Variant <code>--cards</code> — quando a escolha muda o frasco</h3>
-    <div class="demo demo--rail">
-      <p class="yb-field__label" id="rot-doc">Size: <b data-yb-variant-echo>750g</b></p>
-      <div class="yb-swatches yb-swatches--cards" role="radiogroup" aria-labelledby="rot-doc" data-yb-variant>
-        <input type="radio" name="szc" id="c1" checked>
-        <label for="c1">
-          <img src="../pages/img/KitCuidadosProfundos-YberaFashionGold_ab-9c59c4.webp" alt="" loading="lazy">
-          <span class="yb-swatches__name">750g</span>
-          <span class="yb-swatches__price">$89.90</span>
-          <span class="yb-swatches__stock">In stock</span>
-        </label>
-        <input type="radio" name="szc" id="c2">
-        <label for="c2">
-          <img src="../pages/img/90_mascara_nutricao_250g_cuidados_profun-704696.webp" alt="" loading="lazy">
-          <span class="yb-swatches__name">250g</span>
-          <span class="yb-swatches__price">$34.90</span>
-          <span class="yb-swatches__stock">In stock</span>
-        </label>
-        <input type="radio" name="szc" id="c3" data-yb-soldout>
-        <label for="c3">
-          <img src="../pages/img/90_mascara_reconstrucao_250g_cuidados_pr-2fb01d.webp" alt="" loading="lazy">
-          <span class="yb-swatches__name">1kg</span>
-          <span class="yb-swatches__price">$119.90</span>
-          <span class="yb-swatches__stock">Sold out</span>
-        </label>
-      </div>
-    </div>
-    <details class="note"><summary>Duas divergências deliberadas da loja</summary>
-      <p>Ela aplica <code>opacity:.6</code> no cartão esgotado inteiro, o que derruba o
-      texto abaixo do piso de contraste — aqui só a <b>foto</b> desbota, e quem diz
-      "esgotado" é a palavra. E ela pinta “Sold out” com o magenta, que neste
-      sistema é cor de <b>ação</b>; estado negativo usa cor de estado.</p>
+    <details class="note"><summary>Por que voltou a se chamar Account menu</summary>
+      <p>Foi um organismo chamado Account menu, depois uma molécula chamada Dropdown.
+      O segundo nome prometia um painel genérico que ele nunca foi: saudação, pedidos
+      e sair não servem a nenhum outro gatilho. Continua molécula — sozinho numa tela
+      não é nada — e o Dropdown genérico só nasce quando uma tela pedir um.</p>
     </details>
-    <details class="note"><summary>O esgotado continua clicável — <code>data-yb-soldout</code>, não <code>disabled</code></summary>
-      <p>Era <code>disabled</code>: o tamanho sem estoque aparecia e não podia ser
-      alcançado. Só que chegar nele é o único caminho para o aviso de volta ao
-      estoque — desabilitar tirava do cliente a única coisa que ele ainda podia
-      pedir. <code>disabled</code> segue valendo para o outro caso, o de opção que a
-      página de fato impede; os dois se parecem porque os dois estão fora de
-      alcance por motivo diferente.</p>
+    <details class="note"><summary>O palco desta demo não recorta</summary>
+      <p>O painel é <code>position:absolute</code> e passa da altura da caixa. Com o
+      <code>overflow:hidden</code> que o palco usa por padrão, ele apareceria
+      cortado na metade — e a documentação mostraria um defeito que o componente
+      não tem.</p>
     </details>
-    <details class="note"><summary>O rótulo ecoa a escolha sem depender de JavaScript</summary>
-      <p>“Size: <b>750g</b>” já nasce correto no HTML, com o valor de quem está
-      <code>checked</code>. O script só mantém o eco em dia quando a pessoa troca —
-      a página nunca mente, nem sem ele.</p>
+    <details class="note"><summary>Sem JS, e o que isso custa</summary>
+      <p>Mesma mecânica do menu principal, nos dois estados: <code>checkbox</code> escondido mais
+      painel irmão. Sobrevive com o JS fora do ar, que é o que o cabeçalho mais
+      precisa. Em troca, o leitor de tela anuncia &ldquo;caixa de seleção&rdquo;, não
+      &ldquo;menu&rdquo;. A casa já aceita isso no menu principal; quando entrar um
+      menu de verdade, com <code>aria-expanded</code> e setas, ele troca os dois
+      de uma vez.</p>
     </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
-      <iframe src="solo.html?c=variant" title="Variant picker em 375px"
+      <iframe src="solo.html?c=account" title="Account menu em 375px"
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
@@ -308,7 +290,7 @@
     tokens desta peça, lidos da folha a cada build.</p>
     <div class="codigo" data-yb-code>
     <div class="codigo__barra">
-      <div class="codigo__abas" role="tablist" aria-label="Código de Variant picker">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Account menu">
         <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
         <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
         <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
@@ -317,127 +299,124 @@
       </div>
       <label class="codigo__variante">Variante
         <select data-code-variant>
-          <option value="0">padrão</option>
-          <option value="1">:checked</option>
-          <option value="2">[disabled]</option>
+          <option value="0">logado</option>
+          <option value="1">visitante</option>
         </select></label>
-      <span class="codigo__conta">3 variantes</span>
+      <span class="codigo__conta">2 variantes</span>
     </div>
     <div class="codigo__painel" data-code-panel="html">
       <div class="snippet" data-code-variant-panel="0">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>&lt;span class="yb-swatches"&gt;
-  &lt;input type="radio" name="st1" id="st1"&gt;&lt;label for="st1"&gt;500g&lt;/label&gt;
-&lt;/span&gt;</code></pre>
+        <pre><code>&lt;div class="yb-account"&gt;
+    &lt;input class="yb-account__toggle" type="checkbox" id="account-demo" checked&gt;
+    &lt;label class="yb-account__trigger" for="account-demo"
+           aria-label="Account menu for Urlan Dipre"&gt;
+      &lt;span class="yb-avatar" aria-hidden="true"&gt;U&lt;/span&gt;&lt;/label&gt;
+    &lt;div class="yb-account__panel"&gt;
+      &lt;span class="yb-account__head yb-account__head--who"&gt;
+        &lt;span class="yb-avatar yb-avatar--md" aria-hidden="true"&gt;U&lt;/span&gt;
+        &lt;b class="yb-account__name"&gt;Urlan Dipre&lt;/b&gt;
+        &lt;span class="yb-account__email"&gt;urlan.dipre@ybera.com&lt;/span&gt;
+      &lt;/span&gt;
+      &lt;a class="yb-account__item" href="#demos"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-user"/&gt;&lt;/svg&gt; Account&lt;/a&gt;
+      &lt;a class="yb-account__item" href="#demos/orders"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-truck"/&gt;&lt;/svg&gt; Orders&lt;/a&gt;
+      &lt;a class="yb-account__item" href="#demos"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-heart"/&gt;&lt;/svg&gt; Wishlist&lt;/a&gt;
+      &lt;div class="yb-account__foot"&gt;
+        &lt;a class="yb-account__item" href="#demos/logout"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-lock"/&gt;&lt;/svg&gt; Log out&lt;/a&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;</code></pre>
       </div>
       <div class="snippet" data-code-variant-panel="1" hidden>
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>&lt;span class="yb-swatches"&gt;
-  &lt;input type="radio" name="st2" id="st2" checked&gt;&lt;label for="st2"&gt;500g&lt;/label&gt;
-&lt;/span&gt;</code></pre>
-      </div>
-      <div class="snippet" data-code-variant-panel="2" hidden>
-        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>&lt;span class="yb-swatches"&gt;
-  &lt;input type="radio" name="st3" id="st3" disabled&gt;&lt;label for="st3"&gt;500g&lt;/label&gt;
-&lt;/span&gt;</code></pre>
+        <pre><code>&lt;div class="yb-account"&gt;
+    &lt;input class="yb-account__toggle" type="checkbox" id="account-demo-guest" checked&gt;
+    &lt;label class="yb-account__trigger" for="account-demo-guest" aria-label="Account menu"&gt;
+      &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-user"/&gt;&lt;/svg&gt;&lt;/label&gt;
+    &lt;div class="yb-account__panel"&gt;
+      &lt;div class="yb-account__head"&gt;
+        &lt;b class="yb-account__title"&gt;Welcome to Ybera&lt;/b&gt;
+        &lt;p class="yb-account__text"&gt;Sign in to see your orders and wishlist.&lt;/p&gt;
+        &lt;a class="yb-btn yb-btn--primary" href="#demos/login"&gt;Sign in&lt;/a&gt;
+      &lt;/div&gt;
+      &lt;div class="yb-account__foot"&gt;
+        &lt;a class="yb-account__item" href="#demos/register"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-user"/&gt;&lt;/svg&gt; Create account&lt;/a&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="css" hidden>
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>.yb-swatches{display:flex; gap:var(--yb-space-2); flex-wrap:wrap}
-.yb-swatches input{position:absolute; opacity:0; pointer-events:none}
-.yb-swatches label{
-  box-sizing:border-box;
-  min-width:var(--yb-target-min);
+        <pre><code>.yb-account{position:relative; display:flex; align-items:center}
+.yb-account__toggle{position:absolute; opacity:0; pointer-events:none; width:1px; height:1px}
+.yb-account__trigger{
   display:flex; align-items:center; justify-content:center;
-  border:var(--yb-border-hairline) solid var(--yb-border); border-radius:var(--yb-radius-control);
-  padding:var(--yb-space-3) var(--yb-space-4); cursor:pointer;
-  font-size:var(--yb-type-body-sm-size); min-height:var(--yb-target-min);
-  background:var(--yb-surface); color:var(--yb-text-primary);
-  transition:border-color var(--yb-transition-control), background var(--yb-transition-control);
+  inline-size:var(--yb-target-min); block-size:var(--yb-target-min);
+  cursor:pointer; border-radius:var(--yb-radius-pill);
+  color:var(--yb-text-primary);
 }
 @media (hover:hover){
-  .yb-swatches label:hover{border-color:var(--yb-border-strong)}
+  .yb-account__trigger:hover .yb-avatar{background:var(--yb-bg-subtle)}
+  .yb-account__trigger:hover{background:var(--yb-bg-muted)}
+  .yb-account__trigger:has(.yb-avatar):hover{background:none}
 }
-.yb-swatches input:checked + label{
-  border-color:var(--yb-text-primary); background:var(--yb-bg-muted);
-  font-weight:var(--yb-font-weight-medium);
-}
-.yb-swatches input:focus-visible + label{
+.yb-account__toggle:focus-visible + .yb-account__trigger{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
 }
-.yb-swatches input:disabled + label{
-  color:var(--yb-text-muted); cursor:not-allowed;
-  background:var(--yb-bg-subtle); text-decoration:line-through;
-}
-.yb-swatches--on-dark label{
-  background:var(--yb-surface-inverse-raised);
-  color:var(--yb-text-inverse);
-  border-color:var(--yb-border-inverse-strong);
-  min-height:var(--yb-control-height-compact);
+.yb-account__panel{
+  position:absolute; inset-block-start:100%; inset-inline-end:0;
+  z-index:var(--yb-z-dropdown); inline-size:17rem;
+  background:var(--yb-surface-raised);
+  border:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-card);
+  box-shadow:var(--yb-elevation-dropdown);
   padding-block:var(--yb-space-2);
-  position:relative;
+  opacity:0; visibility:hidden;
+  transition:opacity var(--yb-transition-surface), visibility var(--yb-transition-surface);
 }
-.yb-swatches--on-dark label::after{
-  content:""; position:absolute; inset-inline:0;
-  block-size:var(--yb-target-min);
-  inset-block-start:50%; transform:translateY(-50%);
+.yb-account__toggle:checked ~ .yb-account__panel{opacity:1; visibility:visible}
+.yb-account__head{
+  display:flex; flex-direction:column; align-items:flex-start; gap:var(--yb-space-1);
+  padding:var(--yb-space-3) var(--yb-space-4) var(--yb-space-4);
+  border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  margin-block-end:var(--yb-space-2);
 }
+.yb-account__head--who{
+  display:grid; grid-template-columns:auto minmax(0, 1fr); gap:0 var(--yb-space-3);
+  align-items:center; padding-block-end:var(--yb-space-3);
+}
+.yb-account__head--who .yb-avatar{grid-row:span 2}
+.yb-account__name{display:block; font-weight:var(--yb-font-weight-semibold)}
+.yb-account__email{
+  display:block; font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted);
+  overflow:hidden; text-overflow:ellipsis;
+}
+.yb-account__title{font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-primary)}
+.yb-account__text{margin:0; font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
+.yb-account__head .yb-btn{align-self:stretch; margin-block-start:var(--yb-space-3)}
+.yb-account__item{
+  display:flex; align-items:center; min-block-size:var(--yb-target-min);
+  padding-inline:var(--yb-space-4); gap:var(--yb-space-3);
+  color:var(--yb-text-primary); text-decoration:none;
+  font-size:var(--yb-type-body-sm-size);
+}
+.yb-account__item .yb-icon{color:var(--yb-text-secondary)}
 @media (hover:hover){
-  .yb-swatches--on-dark label:hover{border-color:var(--yb-text-muted-inverse)}
+  .yb-account__item:hover{background:var(--yb-bg-muted)}
 }
-.yb-swatches--on-dark input:checked + label{
-  background:var(--yb-text-inverse);
-  color:var(--yb-bg-inverse);
-  border-color:var(--yb-text-inverse);
+.yb-account__item:focus-visible,.yb-account__link:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:calc(var(--yb-focus-offset) * -1);
 }
-.yb-swatches--on-dark input:focus-visible + label{outline-color:var(--yb-text-inverse)}
-.yb-swatches--on-dark input:disabled + label{
-  background:transparent; color:var(--yb-text-muted-inverse);
-  border-color:var(--yb-border-inverse);
+.yb-account__foot{
+  margin-block-start:var(--yb-space-2);
+  border-block-start:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  padding-block-start:var(--yb-space-2);
 }
-.yb-swatches--cards label{
-  flex-direction:column; align-items:stretch; justify-content:flex-start;
-  gap:var(--yb-space-1); text-align:start;
-  inline-size:8.25rem;
-  padding:var(--yb-space-3); min-height:0;
-}
-.yb-swatches--cards label img{
-  inline-size:100%; aspect-ratio:var(--yb-aspect-product); object-fit:cover; display:block;
-  border-radius:var(--yb-radius-sm); margin-block-end:var(--yb-space-1);
-  background:var(--yb-surface-sunken);
-  transition:opacity var(--yb-transition-control);
-}
-.yb-swatches__name{font-weight:var(--yb-font-weight-bold);}
-.yb-swatches__price{font-variant-numeric:tabular-nums;}
-.yb-swatches__stock{
-  font-size:var(--yb-type-caption-size);
-  font-weight:var(--yb-font-weight-semibold);
-  color:var(--yb-success-text);
-}
-.yb-swatches--cards input:checked + label{
-  border-width:var(--yb-border-emphasis);
-  padding:calc(var(--yb-space-3) - (var(--yb-border-emphasis) - var(--yb-border-hairline)));
-  background:var(--yb-surface);
-}
-.yb-swatches--cards input:is(:disabled,[data-yb-soldout]) + label{
-  text-decoration:none;
-  background:var(--yb-surface);
-}
-.yb-swatches--cards input:is(:disabled,[data-yb-soldout]) + label img{opacity:var(--yb-opacity-control-disabled);}
-.yb-swatches--cards input:is(:disabled,[data-yb-soldout]) + label .yb-swatches__name, .yb-swatches--cards input:is(:disabled,[data-yb-soldout]) + label .yb-swatches__price{text-decoration:line-through; color:var(--yb-text-muted);}
-.yb-swatches--cards input:is(:disabled,[data-yb-soldout]) + label .yb-swatches__stock{color:var(--yb-danger-text);}
-@media (max-width:520px){
-  .yb-swatches--cards{
-    flex-wrap:nowrap; overflow-x:auto; scroll-snap-type:x mandatory;
-    scrollbar-width:none; padding-block-end:var(--yb-space-1);
-  }
-  .yb-swatches--cards::-webkit-scrollbar{display:none;}
-  .yb-swatches--cards label{scroll-snap-align:start; flex:none;}
-}</code></pre>
+.yb-account__head + .yb-account__foot{margin-block-start:0; border-block-start:0; padding-block-start:0}</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="js" hidden>
@@ -446,43 +425,29 @@
     <div class="codigo__painel" data-code-panel="tokens" hidden>
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>--yb-aspect-product: 1 / 1;
---yb-bg-inverse: #1E1E1F;
---yb-bg-muted: #F5F5F5;
+        <pre><code>--yb-bg-muted: #F5F5F5;
 --yb-bg-subtle: #FAFAFA;
---yb-border: #DADADB;
---yb-border-emphasis: 2px;
 --yb-border-hairline: 1px;
---yb-border-inverse: #3A3A3C;
---yb-border-inverse-strong: #6D6D71;
---yb-border-strong: #B1B1B4;
---yb-control-height-compact: 36px;
---yb-danger-text: #B3261E;
+--yb-border-subtle: #EAEAEA;
+--yb-elevation-dropdown: 0 4px 12px rgba(30,30,31,.08), 0 2px 4px rgba(30,30,31,.05);
 --yb-focus-color: #CA235F;
 --yb-focus-offset: 0;
 --yb-focus-width: 2px;
---yb-font-weight-bold: 700;
---yb-font-weight-medium: 500;
 --yb-font-weight-semibold: 600;
---yb-opacity-control-disabled: .45;
---yb-radius-control: 8px;
---yb-radius-sm: 4px;
+--yb-radius-card: 8px;
+--yb-radius-pill: 9999px;
 --yb-space-1: 0.25rem;
 --yb-space-2: 0.5rem;
 --yb-space-3: 0.75rem;
 --yb-space-4: 1rem;
---yb-success-text: #1F7A34;
---yb-surface: #FFFFFF;
---yb-surface-inverse-raised: #3A3A3C;
---yb-surface-sunken: #FAFAFA;
+--yb-surface-raised: #FFFFFF;
 --yb-target-min: 44px;
---yb-text-inverse: #FFFFFF;
 --yb-text-muted: #6D6D71;
---yb-text-muted-inverse: #B1B1B4;
 --yb-text-primary: #1E1E1F;
---yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
+--yb-text-secondary: #535356;
+--yb-transition-surface: 180ms cubic-bezier(.2, 0, 0, 1);
 --yb-type-body-sm-size: 0.875rem;
---yb-type-caption-size: 0.8125rem;</code></pre>
+--yb-z-dropdown: 1000;</code></pre>
       </div>
     </div>
   </div>
@@ -490,20 +455,64 @@
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
+    <h3 class="rotulo">Logado</h3>
     <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
-        <div class="anat__peca" style="max-inline-size:420px"><div class="yb-swatches">
-  <input type="radio" name="anat-sz" id="anat-z1" checked><label for="anat-z1">500g / 17.6 fl.oz</label>
-  <input type="radio" name="anat-sz" id="anat-z2"><label for="anat-z2">300g / 10.5 fl.oz</label>
-  <input type="radio" name="anat-sz" id="anat-z3"><label for="anat-z3">1kg / 33 oz</label>
-  <input type="radio" name="anat-sz" id="anat-z4" disabled><label for="anat-z4">250g</label>
-</div></div>
+        <div class="anat__peca" style="max-inline-size:300px"><div class="yb-account">
+              <input class="yb-account__toggle" type="checkbox" id="anat-account-demo" checked>
+              <label class="yb-account__trigger" for="anat-account-demo"
+                     aria-label="Account menu for Urlan Dipre">
+                <span class="yb-avatar" aria-hidden="true">U</span></label>
+              <div class="yb-account__panel">
+                <span class="yb-account__head yb-account__head--who">
+                  <span class="yb-avatar yb-avatar--md" aria-hidden="true">U</span>
+                  <b class="yb-account__name">Urlan Dipre</b>
+                  <span class="yb-account__email">urlan.dipre@ybera.com</span>
+                </span>
+                <a class="yb-account__item" href="#anat-demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg> Account</a>
+                <a class="yb-account__item" href="#anat-demos/orders"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg> Orders</a>
+                <a class="yb-account__item" href="#anat-demos"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg> Wishlist</a>
+                <div class="yb-account__foot">
+                  <a class="yb-account__item" href="#anat-demos/logout"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-lock"/></svg> Log out</a>
+                </div>
+              </div>
+            </div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-swatches"><span class="anat__texto"><b>Grupo</b> — Rádios desenhados como pastilhas. As setas do teclado percorrem as opções.</span></li>
-        <li data-target="label"><span class="anat__texto"><b>Opção</b> — O rótulo é a pastilha. O tamanho por extenso, nas duas unidades.</span></li>
-        <li data-target="input[disabled] + label"><span class="anat__texto"><b>Indisponível</b> — Visível e fora de alcance. Sumir esconderia que o tamanho existe.</span></li>
+        <li data-target=".yb-account__trigger"><span class="anat__texto"><b>Gatilho</b> — O avatar com a inicial. É o <code>&lt;label&gt;</code> do checkbox escondido, com <code>aria-label</code> que diz de quem é a conta.</span></li>
+        <li data-target=".yb-account__panel"><span class="anat__texto"><b>Painel</b> — Abre embaixo do gatilho, alinhado à direita, com sombra de menu.</span></li>
+        <li data-target=".yb-account__head"><span class="anat__texto"><b>Cabeça</b> — Quem está logado: avatar, nome e e-mail. O e-mail trunca com reticência em vez de alargar o painel.</span></li>
+        <li data-target=".yb-account__item"><span class="anat__texto"><b>Destino</b> — Account, Orders, Wishlist. Linha de 44px com ícone, o alvo inteiro clicável.</span></li>
+        <li data-target=".yb-account__foot"><span class="anat__texto"><b>Sair</b> — Separado do resto por fio. Ação que desfaz a sessão não fica junto dos links.</span></li>
+      </ol>
+    </div>
+    <h3 class="rotulo">Visitante</h3>
+    <div class="anat" data-yb-anatomy>
+      <div class="anat__palco">
+        <svg class="anat__fios" aria-hidden="true"></svg>
+        <div class="anat__peca" style="max-inline-size:300px"><div class="yb-account">
+              <input class="yb-account__toggle" type="checkbox" id="anat-account-demo-guest" checked>
+              <label class="yb-account__trigger" for="anat-account-demo-guest" aria-label="Account menu">
+                <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg></label>
+              <div class="yb-account__panel">
+                <div class="yb-account__head">
+                  <b class="yb-account__title">Welcome to Ybera</b>
+                  <p class="yb-account__text">Sign in to see your orders and wishlist.</p>
+                  <a class="yb-btn yb-btn--primary" href="#anat-demos/login">Sign in</a>
+                </div>
+                <div class="yb-account__foot">
+                  <a class="yb-account__item" href="#anat-demos/register"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-user"/></svg> Create account</a>
+                </div>
+              </div>
+            </div></div>
+      </div>
+      <ol class="anat__legenda">
+        <li data-target=".yb-account__trigger"><span class="anat__texto"><b>Gatilho</b> — O ícone de pessoa no lugar do avatar, com <code>aria-label="Account menu"</code>.</span></li>
+        <li data-target=".yb-account__title"><span class="anat__texto"><b>Título</b> — Boas-vindas, sem nome: não há sessão.</span></li>
+        <li data-target=".yb-account__text"><span class="anat__texto"><b>Motivo</b> — Uma linha que diz o que entrar resolve — pedidos e favoritos.</span></li>
+        <li data-target=".yb-btn"><span class="anat__texto"><b>Entrar</b> — O Button primário, na largura do painel: é a ação do menu inteiro.</span></li>
+        <li data-target=".yb-account__foot"><span class="anat__texto"><b>Criar conta</b> — No pé, como item: o caminho de menos gente, a um clique sem competir com o botão.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -518,50 +527,38 @@
     resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
     estiver errado aqui, o errado é o código.</p>
 
-    <p class="api-linha"><span class="api-linha__rotulo">De que é feita</span><span class="api-linha__corpo">Nenhuma: não consome nenhum outro componente. O que ela desenha sai todo da folha dela.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-swatches--cards</code> <code>.yb-swatches--on-dark</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-swatches__name</code> <code>.yb-swatches__price</code> <code>.yb-swatches__stock</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:checked</code> · <code>:disabled</code> · <code>:focus-visible</code> · <code>:hover</code> · <code>[data-yb-soldout]</code></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
-    <p class="rotulo">Tokens <span class="rotulo-conta">37</span></p>
+    <p class="rotulo">De que é feita</p>
+    <p class="usa-degrau">Átomos</p>
+    <ul class="usa"><li><a href="../atoms/avatar.html">Avatar</a></li><li><a href="../atoms/button.html">Button</a></li></ul>
+    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-account__email</code> <code>.yb-account__foot</code> <code>.yb-account__head</code> <code>.yb-account__head--who</code> <code>.yb-account__item</code> <code>.yb-account__link</code> <code>.yb-account__name</code> <code>.yb-account__panel</code> <code>.yb-account__text</code> <code>.yb-account__title</code> <code>.yb-account__toggle</code> <code>.yb-account__trigger</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:checked</code> · <code>:focus-visible</code> · <code>:hover</code></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">23</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>18</span></p>
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>8</span></p>
         <ul class="tokens__lista">
-          <li><i class="tokens__cor" style="background:var(--yb-border-inverse)" aria-hidden="true"></i><code>--yb-border-inverse</code><span class="tokens__valor">#3A3A3C</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-border-inverse-strong)" aria-hidden="true"></i><code>--yb-border-inverse-strong</code><span class="tokens__valor">#6D6D71</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-surface-inverse-raised)" aria-hidden="true"></i><code>--yb-surface-inverse-raised</code><span class="tokens__valor">#3A3A3C</span></li>
-          <li><code>--yb-border-emphasis</code><span class="tokens__valor">2px</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-danger-text)" aria-hidden="true"></i><code>--yb-danger-text</code><span class="tokens__valor">#B3261E</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-success-text)" aria-hidden="true"></i><code>--yb-success-text</code><span class="tokens__valor">#1F7A34</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted-inverse)" aria-hidden="true"></i><code>--yb-text-muted-inverse</code><span class="tokens__valor">#B1B1B4</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-surface-raised)" aria-hidden="true"></i><code>--yb-surface-raised</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-subtle)" aria-hidden="true"></i><code>--yb-bg-subtle</code><span class="tokens__valor">#FAFAFA</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-border-strong)" aria-hidden="true"></i><code>--yb-border-strong</code><span class="tokens__valor">#B1B1B4</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-border)" aria-hidden="true"></i><code>--yb-border</code><span class="tokens__valor">#DADADB</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-surface-sunken)" aria-hidden="true"></i><code>--yb-surface-sunken</code><span class="tokens__valor">#FAFAFA</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>5</span></p>
+        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>2</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-font-weight-medium</code><span class="tokens__valor">500</span></li>
-          <li><code>--yb-font-weight-bold</code><span class="tokens__valor">700</span></li>
-          <li><code>--yb-type-caption-size</code><span class="tokens__valor">0.8125rem</span></li>
           <li><code>--yb-font-weight-semibold</code><span class="tokens__valor">600</span></li>
           <li><code>--yb-type-body-sm-size</code><span class="tokens__valor">0.875rem</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>6</span></p>
+        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>5</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-control-height-compact</code><span class="tokens__valor">36px</span></li>
           <li><code>--yb-space-1</code><span class="tokens__valor">0.25rem</span></li>
           <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
           <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
@@ -570,23 +567,23 @@
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>3</span></p>
+        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>2</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-aspect-product</code><span class="tokens__valor">1 / 1</span></li>
-          <li><code>--yb-radius-control</code><span class="tokens__valor">8px</span></li>
-          <li><code>--yb-radius-sm</code><span class="tokens__valor">4px</span></li>
+          <li><code>--yb-radius-pill</code><span class="tokens__valor">9999px</span></li>
+          <li><code>--yb-radius-card</code><span class="tokens__valor">8px</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/elevation.html">Elevação</a> <span>1</span></p>
+        <p class="tokens__familia"><a href="../tokens/elevation.html">Elevação</a> <span>2</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-opacity-control-disabled</code><span class="tokens__valor">.45</span></li>
+          <li><code>--yb-z-dropdown</code><span class="tokens__valor">1000</span></li>
+          <li><code>--yb-elevation-dropdown</code><span class="tokens__valor">0 4px 12px rgba(30,30,31,.08), 0 2px 4px rgba(30,30,31,.05)</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>4</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-transition-control</code><span class="tokens__valor">120ms cubic-bezier(.2, 0, 0, 1)</span></li>
+          <li><code>--yb-transition-surface</code><span class="tokens__valor">180ms cubic-bezier(.2, 0, 0, 1)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
           <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
           <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
@@ -607,24 +604,24 @@
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
         <p class="fn-cabeca">✓ Faça</p>
-        <div class="fn-palco"><div class="yb-swatches" role="radiogroup" aria-label="Size"><input type="radio" name="fx-v" id="fx-v1" checked><label for="fx-v1">250g</label><input type="radio" name="fx-v" id="fx-v2" data-yb-soldout><label for="fx-v2">1kg — Sold out</label></div></div>
-        <p class="fn-legenda">Esgotado alcançável, com o estado escrito no cartão.</p>
+        <div class="fn-palco"><div class="yb-account"><input class="yb-account__toggle" type="checkbox" id="fn-dd"><label class="yb-account__trigger" for="fn-dd" aria-label="Account menu for Urlan Dipre"><span class="yb-avatar" aria-hidden="true">U</span></label><div class="yb-account__panel"><a class="yb-account__item" href="#demos">Orders</a><a class="yb-account__item" href="#demos">Wishlist</a></div></div></div>
+        <p class="fn-legenda">Gatilho com nome próprio, painel de links reais.</p>
       </div>
       <div class="fn-caso fn-caso--nao">
         <p class="fn-cabeca">✕ Não faça</p>
-        <div class="fn-palco"><div class="yb-swatches" role="radiogroup" aria-label="Size"><input type="radio" name="fx-w" id="fx-w1" checked><label for="fx-w1">250g</label><input type="radio" name="fx-w" id="fx-w2" disabled><label for="fx-w2">1kg</label></div></div>
-        <p class="fn-legenda">Com <code>disabled</code>, o tamanho esgotado aparece e não pode ser alcançado — nem pelo mouse, nem pelo Tab.</p>
+        <div class="fn-palco"><div class="yb-account"><input class="yb-account__toggle" type="checkbox" id="fn-dd2"><label class="yb-account__trigger" for="fn-dd2"><span class="yb-avatar" aria-hidden="true">U</span></label><div class="yb-account__panel"><a class="yb-account__item" href="#demos">Orders</a></div></div></div>
+        <p class="fn-legenda">Gatilho sem rótulo: o leitor de tela anuncia “caixa de seleção” e mais nada — não dá para saber o que abre.</p>
       </div>
     </div>
   </section>
 
   <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <ul class="bloco-lede"><li>É um grupo de <code>radio</code> com <code>role="radiogroup"</code> e <code>aria-labelledby</code> apontando para o rótulo “Size:”. As setas do teclado percorrem as opções sem JavaScript.</li><li>A opção esgotada continua selecionável: <code>data-yb-soldout</code>, não <code>disabled</code>. Desabilitada, ela era visível e inalcançável — e chegar nela é o único caminho para o aviso de volta ao estoque.</li><li>O rótulo ecoa a escolha (“Size: <b>500g</b>”) e nasce correto no HTML: sem JavaScript a página não muda, mas também não mente.</li></ul>
+    <ul class="bloco-lede"><li>Abre por <code>&lt;input type=&quot;checkbox&quot;&gt;</code> escondido e <code>&lt;label&gt;</code>: o teclado abre e fecha sem uma linha de JavaScript.</li><li>O gatilho precisa de nome próprio. Logado ele é só o avatar, então <code>aria-label</code> é obrigatório — “Account menu for Urlan Dipre”, não “Menu”.</li><li>Fecha clicando de novo no gatilho. Sem JS ele não fecha no clique fora nem no Esc: é o limite da mecânica sem script, o mesmo do menu principal.</li><li>O painel é uma lista de links de verdade. Setas do teclado não navegam entre eles porque não é <code>menu</code> ARIA — é conteúdo, e Tab basta.</li></ul>
   </section>
   </div>
 
-  <p class="doc-credit">Gerada de <code>molecules/pecas/variant.html</code> e
+  <p class="doc-credit">Gerada de <code>molecules/pecas/account.html</code> e
   <code>molecules/ybera-molecules.css</code>. Não edite à mão: <code>./build.sh</code>.</p>
 </main>
 

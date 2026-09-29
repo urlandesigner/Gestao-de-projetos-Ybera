@@ -92,48 +92,62 @@
       "legenda": "Texto embutido no arquivo da imagem: não é lido, não é traduzido e vira borrão no zoom.",
       "html": "<span class=\"yb-field__label\" style=\"margin:0\">banner-com-texto-dentro.jpg</span>"
     },
-    "anatomia": [
-      {
-        "alvo": ".yb-bannerhero",
-        "nome": "Container",
-        "texto": "O topo da home, sangrando até as bordas. A altura é a proporção da arte: 16:5 no desktop, 2:3 no celular."
-      },
-      {
-        "alvo": "img",
-        "nome": "Foto",
-        "texto": "Cobre a caixa inteira. O <code>alt</code> fica vazio quando a mensagem está no texto ao lado."
-      },
-      {
-        "alvo": ".yb-bannerhero__blur",
-        "nome": "Desfoque",
-        "texto": "Três folhas sobre a foto. É o que sustenta o texto branco em qualquer imagem."
-      },
-      {
-        "alvo": ".yb-bannerhero__eyebrow",
-        "nome": "Sobretítulo",
-        "texto": "Uma linha curta que situa. Opcional; sem ele o título fica sozinho e funciona."
-      },
-      {
-        "alvo": ".yb-bannerhero__title",
-        "nome": "Título",
-        "texto": "A promessa da tela. Volta para a prumada do conteúdo, e não para a borda da janela."
-      },
-      {
-        "alvo": ".yb-bannerhero__text",
-        "nome": "Texto",
-        "texto": "Opcional, uma ou duas linhas. Explica a promessa sem repeti-la."
-      },
-      {
-        "alvo": ".yb-bannerhero__body",
-        "nome": "Corpo",
-        "texto": "O bloco de texto. Cresce de baixo para cima, que é onde o véu é mais forte."
-      },
-      {
-        "alvo": ".yb-btn",
-        "nome": "Ação",
-        "texto": "Opcional. É o <code>.yb-btn</code>, outra peça, na variante para fundo escuro."
-      }
-    ]
+    "anatomia": {
+      "variantes": [
+        {
+          "titulo": "Com texto e CTA — <code>--blur</code>",
+          "recorte": "<a class=\"yb-bannerhero yb-bannerhero--blur\"[^>]*>.*?</a>",
+          "partes": [
+            {
+              "alvo": ".yb-bannerhero",
+              "nome": "Container e foto",
+              "texto": "O topo da home, sangrando até as bordas. A altura é a proporção da arte: 16:5 no desktop, 2:3 no celular. A foto cobre a caixa inteira, com <code>alt</code> vazio quando a mensagem está no texto."
+            },
+            {
+              "alvo": ".yb-bannerhero__blur",
+              "nome": "Desfoque",
+              "texto": "Três folhas sobre a foto. É o que sustenta o texto branco em qualquer imagem."
+            },
+            {
+              "alvo": ".yb-bannerhero__eyebrow",
+              "nome": "Sobretítulo",
+              "texto": "Uma linha curta que situa. Opcional; sem ele o título fica sozinho e funciona. Ele, o título, o texto e o botão formam o corpo, que cresce de baixo para cima — onde o véu é mais forte."
+            },
+            {
+              "alvo": ".yb-bannerhero__title",
+              "nome": "Título",
+              "texto": "A promessa da tela. Volta para a prumada do conteúdo, e não para a borda da janela."
+            },
+            {
+              "alvo": ".yb-bannerhero__text",
+              "nome": "Texto",
+              "texto": "Opcional, uma ou duas linhas. Explica a promessa sem repeti-la."
+            },
+            {
+              "alvo": ".yb-btn",
+              "nome": "Ação",
+              "texto": "Opcional. É o <code>.yb-btn</code>, outra peça, na variante para fundo escuro."
+            }
+          ]
+        },
+        {
+          "titulo": "Arte — <code>--art</code>",
+          "recorte": "<a class=\"yb-bannerhero yb-bannerhero--art\"[^>]*>.*?</a>",
+          "partes": [
+            {
+              "alvo": ".yb-bannerhero",
+              "nome": "Container",
+              "texto": "O mesmo topo sangrando, mas a caixa segue a proporção da arte: nada corta o texto que está no pixel. Nas larguras em que a arte não cobre a faixa, um fundo com a mesma arte ampliada e desfocada (<code>__backdrop</code>, decorativo) preenche o que sobra."
+            },
+            {
+              "alvo": "picture img",
+              "nome": "Arte",
+              "texto": "A peça do marketing, dentro de um <code>&lt;picture&gt;</code> que troca pela versão de celular abaixo de 768px — a de desktop encolhida não se lê. O <code>alt</code> repete a promessa do pixel (\"20% off sitewide...\"): é o único lugar em que o leitor de tela recebe a mensagem."
+            }
+          ]
+        }
+      ]
+    }
   },
   "bannermedia": {
     "a11y": [
@@ -247,27 +261,87 @@
       "html": "<span style=\"display:flex;flex-direction:column;gap:8px;inline-size:180px\"><a href=\"#faca\"><img src=\"../pages/img/Prancheta_1-790aea3e.webp\" alt=\"Fashion Gold\" style=\"inline-size:100%;border-radius:8px\"></a><a class=\"yb-link\" href=\"#faca\">Fashion Gold</a></span>"
     },
     "anatomia": {
-      "largura": "260px",
-      "partes": [
+      "variantes": [
         {
-          "alvo": ".yb-collections",
-          "nome": "Fileira",
-          "texto": "A lista em volta. É ela que decide quantos cabem por linha; o cartão só preenche."
+          "titulo": "v1 · rótulo sobre a foto — <code>--bottom</code>",
+          "largura": "260px",
+          "recorte": "<a class=\"yb-collection yb-collection--bottom\"[^>]*>.*?</a>",
+          "partes": [
+            {
+              "alvo": ".yb-collection",
+              "nome": "Cartão",
+              "texto": "O link cobre a peça inteira: foto e rótulo são um alvo só."
+            },
+            {
+              "alvo": "img",
+              "nome": "Foto",
+              "texto": "<code>alt</code> vazio: o nome no rótulo já diz para onde leva."
+            },
+            {
+              "alvo": ".yb-collection__label",
+              "nome": "Rótulo",
+              "texto": "O Button <code>--on-dark --sm</code>, do tamanho do nome e centrado no pé. É um <code>&lt;span&gt;</code>: botão dentro de link é HTML inválido."
+            }
+          ]
         },
         {
-          "alvo": ".yb-collection",
-          "nome": "Cartão",
-          "texto": "Foto com o nome da coleção por cima. O link cobre a peça inteira."
+          "titulo": "Mosaico · nome sobre véu — <code>--overlay --blur</code>",
+          "largura": "360px",
+          "recorte": "<a class=\"yb-collection yb-collection--overlay yb-collection--blur\"[^>]*>.*?</a>",
+          "partes": [
+            {
+              "alvo": ".yb-collection",
+              "nome": "Ladrilho",
+              "texto": "O mesmo cartão; o tamanho vem da grade <code>--mosaic</code> em volta."
+            },
+            {
+              "alvo": "img",
+              "nome": "Foto",
+              "texto": "Ocupa o ladrilho inteiro. <code>alt</code> vazio, pelo mesmo motivo do v1."
+            },
+            {
+              "alvo": ".yb-collection__blur",
+              "nome": "Véu com blur",
+              "texto": "Três folhas de desfoque sob o nome, com o véu leve. Sem <code>backdrop-filter</code>, volta o véu cheio."
+            },
+            {
+              "alvo": ".yb-collection__label",
+              "nome": "Nome",
+              "texto": "Texto branco no canto de baixo, sem botão: no ladrilho largo, o botão se perderia no meio da foto."
+            }
+          ]
         },
         {
-          "alvo": "img",
-          "nome": "Foto",
-          "texto": "<code>alt</code> vazio: o nome logo abaixo já diz para onde leva."
-        },
-        {
-          "alvo": ".yb-collection__label",
-          "nome": "Nome",
-          "texto": "O destino, em duas ou três palavras. É o que a pessoa procura na vitrine."
+          "titulo": "v2 · cartão com rodapé — <code>--card</code>",
+          "largura": "260px",
+          "recorte": "<a class=\"yb-collection yb-collection--card\"[^>]*>.*?</a>",
+          "partes": [
+            {
+              "alvo": ".yb-collection",
+              "nome": "Cartão",
+              "texto": "Link inteiro. Na grade, todos ficam da mesma altura."
+            },
+            {
+              "alvo": "img",
+              "nome": "Foto",
+              "texto": "Em cima, 5:7, fora do texto: nada a medir contra pixel."
+            },
+            {
+              "alvo": ".yb-collection__foot",
+              "nome": "Rodapé",
+              "texto": "Faixa branca opaca: o contraste não depende da foto."
+            },
+            {
+              "alvo": ".yb-collection__name",
+              "nome": "Nome",
+              "texto": "Sempre numa linha própria, acima do atalho."
+            },
+            {
+              "alvo": ".yb-collection__cta",
+              "nome": "Atalho",
+              "texto": "\"Shop Collection\" com a seta, preso ao pé do cartão. Diz o que o clique faz quando o nome sozinho não diz."
+            }
+          ]
         }
       ]
     }
@@ -466,27 +540,65 @@
       "html": "<button class=\"yb-btn yb-btn--secondary\" type=\"button\">Bolha aberta <code>class=\"aberta\"</code></button>"
     },
     "anatomia": {
-      "largura": "420px",
-      "partes": [
+      "variantes": [
         {
-          "alvo": ".yb-partner",
-          "nome": "Container",
-          "texto": "Flutua sobre o topo da loja, e só existe quando há um parceiro na URL."
+          "titulo": "1 · Sobre a arte — o recado inteiro",
+          "largura": "420px",
+          "partes": [
+            {
+              "alvo": ".yb-partner",
+              "nome": "Container",
+              "texto": "Flutua sobre o topo da loja, e só existe quando há um parceiro na URL."
+            },
+            {
+              "alvo": ".yb-partner__dock",
+              "nome": "Doca",
+              "texto": "Ancora avatar e balão juntos. É ela que mantém os dois alinhados ao rolar."
+            },
+            {
+              "alvo": ".yb-partner__avatar",
+              "nome": "Avatar",
+              "texto": "Quem convidou. É o botão que abre e fecha o recado, com <code>aria-expanded</code>."
+            },
+            {
+              "alvo": ".yb-partner__bubble",
+              "nome": "Balão",
+              "texto": "O recado. O <code>@</code> e o benefício em negrito são o que se lê de relance."
+            }
+          ]
         },
         {
-          "alvo": ".yb-partner__dock",
-          "nome": "Doca",
-          "texto": "Ancora avatar e balão juntos. É ela que mantém os dois alinhados ao rolar."
+          "titulo": "2 · Recolhido — <code>[data-collapsed]</code>",
+          "largura": "420px",
+          "recorte": "<div class=\"yb-partner\" data-collapsed.*?</div>\\s*</div>\\s*</div>",
+          "partes": [
+            {
+              "alvo": ".yb-partner",
+              "nome": "Container",
+              "texto": "O mesmo, com <code>data-collapsed</code>: depois de 96px de rolagem o balão recolhe."
+            },
+            {
+              "alvo": ".yb-partner__avatar",
+              "nome": "Avatar com aviso",
+              "texto": "Sobra o avatar, com um ponto de aviso. Continua o botão que reabre o recado, agora com <code>aria-expanded=\"false\"</code>. O balão segue no HTML, escondido: reabrir não busca o recado de novo."
+            }
+          ]
         },
         {
-          "alvo": ".yb-partner__avatar",
-          "nome": "Avatar",
-          "texto": "Quem convidou. É o botão que abre e fecha o recado, com <code>aria-expanded</code>."
-        },
-        {
-          "alvo": ".yb-partner__bubble",
-          "nome": "Balão",
-          "texto": "O recado. O <code>@</code> e o benefício em negrito são o que se lê de relance."
+          "titulo": "3 · Depois da arte — <code>.yb-partnerbar</code>",
+          "recorte": "<div class=\"yb-partnerbar\"[^>]*>.*?</div>",
+          "partes": [
+            {
+              "alvo": ".yb-partnerbar",
+              "nome": "Faixa",
+              "texto": "Presa abaixo do cabeçalho quando a arte sai da tela. Cinza, e não preta: preto colado no cabeçalho leria como parte dele."
+            },
+            {
+              "alvo": ".yb-partnerbar__text",
+              "nome": "Recado",
+              "texto": "A mesma frase, sem a foto. O <code>@</code> e o benefício seguem em negrito."
+            }
+          ]
         }
       ]
     }
@@ -506,32 +618,92 @@
       "html": "<span style=\"display:flex;flex-direction:column;gap:6px;inline-size:220px\"><a class=\"yb-link\" href=\"#faca\">[foto]</a><a class=\"yb-link\" href=\"#faca\">How keratin survives humidity</a><a class=\"yb-link\" href=\"#faca\">Leia mais</a></span>"
     },
     "anatomia": {
-      "largura": "320px",
-      "partes": [
+      "variantes": [
         {
-          "alvo": ".yb-post",
-          "nome": "Cartão",
-          "texto": "Um artigo do blog. O link do título cobre o cartão."
+          "titulo": "Destaque — <code>--featured</code>",
+          "largura": "420px",
+          "recorte": "<article class=\"yb-post yb-post--featured\">.*?</article>",
+          "partes": [
+            {
+              "alvo": ".yb-post",
+              "nome": "Cartão",
+              "texto": "Um artigo do blog. O link do título cobre o cartão."
+            },
+            {
+              "alvo": ".yb-post__media",
+              "nome": "Foto",
+              "texto": "Caixa reservada na proporção deitada — é o que evita o salto quando a imagem chega."
+            },
+            {
+              "alvo": ".yb-post__title",
+              "nome": "Título",
+              "texto": "O título real do artigo, maior aqui: é o que puxa a leitura da seção."
+            },
+            {
+              "alvo": ".yb-post__excerpt",
+              "nome": "Resumo",
+              "texto": "Só no destaque ele pesa: duas linhas que dizem o que o artigo resolve."
+            },
+            {
+              "alvo": ".yb-post__body",
+              "nome": "Corpo",
+              "texto": "Título, resumo e chamada. É o que sobra quando a foto não carrega."
+            }
+          ]
         },
         {
-          "alvo": ".yb-post__media",
-          "nome": "Foto",
-          "texto": "Caixa reservada na proporção — é o que evita o salto quando a imagem chega."
+          "titulo": "Na lista ao lado — sem modificador",
+          "largura": "520px",
+          "recorte": "(?<=<div class=\"yb-posts__list\">\\s*)<article class=\"yb-post\">.*?</article>",
+          "partes": [
+            {
+              "alvo": ".yb-post",
+              "nome": "Cartão",
+              "texto": "Foto à esquerda e texto à direita: dois cabem na altura do destaque."
+            },
+            {
+              "alvo": ".yb-post__media",
+              "nome": "Foto",
+              "texto": "Coluna fixa e quadrada, para os títulos começarem todos na mesma prumada."
+            },
+            {
+              "alvo": ".yb-post__title",
+              "nome": "Título",
+              "texto": "No corpo normal. Quem manda na seção é o destaque."
+            },
+            {
+              "alvo": ".yb-post__excerpt",
+              "nome": "Resumo",
+              "texto": "Presente no HTML e cortado no espaço que houver."
+            }
+          ]
         },
         {
-          "alvo": ".yb-post__title",
-          "nome": "Título",
-          "texto": "O título real do artigo, não uma chamada inventada."
-        },
-        {
-          "alvo": ".yb-post__excerpt",
-          "nome": "Resumo",
-          "texto": "Duas linhas. Só na variante em destaque; nas outras o título basta."
-        },
-        {
-          "alvo": ".yb-post__body",
-          "nome": "Corpo",
-          "texto": "Título e resumo. É o que sobra quando a foto não carrega."
+          "titulo": "Trio de mesmo peso — <code>--stacked</code>",
+          "largura": "300px",
+          "recorte": "<article class=\"yb-post yb-post--stacked\">.*?</article>",
+          "partes": [
+            {
+              "alvo": ".yb-post",
+              "nome": "Cartão",
+              "texto": "Foto em cima e texto embaixo, para três lado a lado sem hierarquia."
+            },
+            {
+              "alvo": ".yb-post__media",
+              "nome": "Foto",
+              "texto": "16:10, a mesma nos três: a fileira alinha pela foto."
+            },
+            {
+              "alvo": ".yb-post__title",
+              "nome": "Título",
+              "texto": "Mesmo tamanho nos três. É a diferença para o destaque."
+            },
+            {
+              "alvo": ".yb-link",
+              "nome": "Chamada",
+              "texto": "\"Continue reading\". É <code>aria-hidden</code>: o link de verdade é o título, e a chamada só diz o que o clique faz."
+            }
+          ]
         }
       ]
     }
@@ -625,7 +797,7 @@
       "html": "<div style=\"inline-size:260px\"><span class=\"yb-stars\" style=\"--yb-stars:5\"></span><p class=\"yb-review__text\">It survived a Miami summer.</p></div>"
     },
     "anatomia": {
-      "largura": "320px",
+      "largura": "300px",
       "partes": [
         {
           "alvo": ".yb-review",
@@ -662,7 +834,8 @@
           "nome": "Verificado",
           "texto": "Diz que a compra existiu. Sem isso, a nota é só uma opinião na internet."
         }
-      ]
+      ],
+      "recorte": "<article class=\"yb-review\">.*?</article>"
     }
   },
   "stepper": {
@@ -712,13 +885,37 @@
       "legenda": "A única cópia de uma informação que a pessoa precisa guardar, num elemento que some em quatro segundos.",
       "html": "<div class=\"yb-toast yb-toast--success\" role=\"status\" style=\"position:static\"><div class=\"yb-toast__body\"><b class=\"yb-toast__title\">Seu código: A7F2-91KD</b><p class=\"yb-toast__text\">Use no checkout</p></div></div>"
     },
-    "anatomia": [
-      {
-        "alvo": ".yb-btn",
-        "nome": "Gatilho",
-        "texto": "O aviso nasce de uma ação. Não há marcação dele em repouso: o JS cria e remove."
-      }
-    ]
+    "anatomia": {
+      "largura": "380px",
+      "recorte": "<div class=\"yb-toast yb-toast--success\" role=\"status\">.*?</button>\\s*</div>",
+      "partes": [
+        {
+          "alvo": ".yb-toast",
+          "nome": "Toast",
+          "texto": "Criado pelo script e removido sozinho em 5s. <code>role=\"status\"</code> espera a pausa do leitor de tela; o <code>--danger</code> usa <code>alert</code>, que interrompe."
+        },
+        {
+          "alvo": ".yb-toast__body",
+          "nome": "Corpo",
+          "texto": "Título e texto. Ocupa o que sobra ao lado do fechar."
+        },
+        {
+          "alvo": ".yb-toast__title",
+          "nome": "Título",
+          "texto": "O que aconteceu. O glifo antes dele (✓ ou ⚠) repete a variante em forma, porque cor sozinha não basta."
+        },
+        {
+          "alvo": ".yb-toast__text",
+          "nome": "Texto",
+          "texto": "Opcional. O detalhe: qual produto, qual tamanho."
+        },
+        {
+          "alvo": ".yb-toast__close",
+          "nome": "Fechar",
+          "texto": "O Icon button <code>--square</code>, 44px de alvo. Fechar antes do tempo é direito de quem lê devagar."
+        }
+      ]
+    }
   },
   "track": {
     "a11y": [
@@ -735,23 +932,31 @@
       "legenda": "Largura dividida em número exato de itens: nada aparece cortado, e a fileira parece parada. Com a barra escondida, ninguém descobre que há mais.",
       "html": "<div style=\"display:flex;gap:12px;inline-size:260px\"><span class=\"yb-badge yb-badge--soft\">Fashion Gold</span><span class=\"yb-badge yb-badge--soft\">Mirra</span></div>"
     },
-    "anatomia": [
-      {
-        "alvo": ".yb-track",
-        "nome": "Trilho",
-        "texto": "Fileira que rola de lado com encaixe. No celular é o que substitui a grade."
-      },
-      {
-        "alvo": ".yb-collection",
-        "nome": "Item",
-        "texto": "Qualquer peça entra. O trilho não sabe o que carrega — aqui são cartões de coleção."
-      },
-      {
-        "alvo": ".yb-track__nav",
-        "nome": "Setas",
-        "texto": "Só no desktop. No celular o dedo arrasta, e seta seria enfeite que ocupa espaço."
-      }
-    ]
+    "anatomia": {
+      "html": "<div class=\"yb-track\" style=\"--yb-track-item:40%\"><div class=\"anat-slot\">Item</div><div class=\"anat-slot\">Item</div><div class=\"anat-slot anat-slot--peek\">Item</div><div class=\"anat-slot\">Item</div></div><div class=\"yb-track__nav\"><button type=\"button\" class=\"yb-iconbtn\" aria-label=\"Anteriores\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-chevron-left\"/></svg></button><button type=\"button\" class=\"yb-iconbtn\" aria-label=\"Próximos\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-chevron-right\"/></svg></button></div>",
+      "partes": [
+        {
+          "alvo": ".yb-track",
+          "nome": "Trilho",
+          "texto": "Fileira que rola de lado com encaixe, barra de rolagem escondida. No celular é o que substitui a grade."
+        },
+        {
+          "alvo": ".anat-slot",
+          "nome": "Item",
+          "texto": "Qualquer peça entra; o trilho só dá a largura (<code>--yb-track-item</code>, padrão <code>minmax(260px, 1fr)</code>) e o espaço entre eles (<code>--yb-track-gap</code>)."
+        },
+        {
+          "alvo": ".anat-slot--peek",
+          "nome": "Fatia do próximo",
+          "texto": "O pedaço cortado na borda. Com a barra escondida, é a única coisa que diz que dá para arrastar."
+        },
+        {
+          "alvo": ".yb-track__nav > :last-child",
+          "nome": "Setas",
+          "texto": "Só no desktop, e só quando há o que rolar. No celular o dedo arrasta."
+        }
+      ]
+    }
   },
   "variant": {
     "a11y": [
@@ -823,52 +1028,168 @@
       ]
     }
   },
-  "dropdown": {
-    "anatomia": [
-      {
-        "alvo": ".yb-dropdown",
-        "nome": "Container",
-        "texto": "Gatilho e painel, ancorados juntos. Abre sem uma linha de JavaScript."
-      },
-      {
-        "alvo": ".yb-dropdown__toggle",
-        "nome": "Chave",
-        "texto": "Checkbox escondido. É o <code>:checked</code> dele que abre o painel irmão."
-      },
-      {
-        "alvo": ".yb-dropdown__trigger",
-        "nome": "Gatilho",
-        "texto": "O <code>&lt;label&gt;</code> que abre. Precisa de <code>aria-label</code> quando é só o avatar."
-      },
-      {
-        "alvo": ".yb-dropdown__panel",
-        "nome": "Painel",
-        "texto": "Os links. Fecha ao clicar fora pelo scrim, não por script."
-      },
-      {
-        "alvo": ".yb-dropdown__head",
-        "nome": "Cabeça",
-        "texto": "Quem está logado: avatar, nome e e-mail. Some quando o painel não é de conta."
-      },
-      {
-        "alvo": ".yb-dropdown__signout",
-        "nome": "Sair",
-        "texto": "Separado do resto por fio. Ação destrutiva de sessão não fica junto dos links."
-      }
-    ],
+  "account": {
+    "anatomia": {
+      "variantes": [
+        {
+          "titulo": "Logado",
+          "largura": "300px",
+          "recorte": "<div class=\"yb-account\">\\s*<input class=\"yb-account__toggle\" type=\"checkbox\" id=\"account-demo\" checked>.*?</div>\\s*</div>\\s*</div>",
+          "partes": [
+            {
+              "alvo": ".yb-account__trigger",
+              "nome": "Gatilho",
+              "texto": "O avatar com a inicial. É o <code>&lt;label&gt;</code> do checkbox escondido, com <code>aria-label</code> que diz de quem é a conta."
+            },
+            {
+              "alvo": ".yb-account__panel",
+              "nome": "Painel",
+              "texto": "Abre embaixo do gatilho, alinhado à direita, com sombra de menu."
+            },
+            {
+              "alvo": ".yb-account__head",
+              "nome": "Cabeça",
+              "texto": "Quem está logado: avatar, nome e e-mail. O e-mail trunca com reticência em vez de alargar o painel."
+            },
+            {
+              "alvo": ".yb-account__item",
+              "nome": "Destino",
+              "texto": "Account, Orders, Wishlist. Linha de 44px com ícone, o alvo inteiro clicável."
+            },
+            {
+              "alvo": ".yb-account__foot",
+              "nome": "Sair",
+              "texto": "Separado do resto por fio. Ação que desfaz a sessão não fica junto dos links."
+            }
+          ]
+        },
+        {
+          "titulo": "Visitante",
+          "largura": "300px",
+          "recorte": "<div class=\"yb-account\">\\s*<input class=\"yb-account__toggle\" type=\"checkbox\" id=\"account-demo-guest\" checked>.*?</div>\\s*</div>\\s*</div>",
+          "partes": [
+            {
+              "alvo": ".yb-account__trigger",
+              "nome": "Gatilho",
+              "texto": "O ícone de pessoa no lugar do avatar, com <code>aria-label=\"Account menu\"</code>."
+            },
+            {
+              "alvo": ".yb-account__title",
+              "nome": "Título",
+              "texto": "Boas-vindas, sem nome: não há sessão."
+            },
+            {
+              "alvo": ".yb-account__text",
+              "nome": "Motivo",
+              "texto": "Uma linha que diz o que entrar resolve — pedidos e favoritos."
+            },
+            {
+              "alvo": ".yb-btn",
+              "nome": "Entrar",
+              "texto": "O Button primário, na largura do painel: é a ação do menu inteiro."
+            },
+            {
+              "alvo": ".yb-account__foot",
+              "nome": "Criar conta",
+              "texto": "No pé, como item: o caminho de menos gente, a um clique sem competir com o botão."
+            }
+          ]
+        }
+      ]
+    },
     "a11y": [
       "Abre por <code>&lt;input type=&quot;checkbox&quot;&gt;</code> escondido e <code>&lt;label&gt;</code>: o teclado abre e fecha sem uma linha de JavaScript.",
-      "O gatilho precisa de nome próprio. Quando ele é só o avatar, <code>aria-label</code> é obrigatório — “Account menu for Urlan Dipre”, não “Menu”.",
-      "Fecha ao clicar fora pelo scrim, que é um irmão e não um ouvinte global: sem JS, e sem prender o clique de quem só queria sair.",
+      "O gatilho precisa de nome próprio. Logado ele é só o avatar, então <code>aria-label</code> é obrigatório — “Account menu for Urlan Dipre”, não “Menu”.",
+      "Fecha clicando de novo no gatilho. Sem JS ele não fecha no clique fora nem no Esc: é o limite da mecânica sem script, o mesmo do menu principal.",
       "O painel é uma lista de links de verdade. Setas do teclado não navegam entre eles porque não é <code>menu</code> ARIA — é conteúdo, e Tab basta."
     ],
     "faca": {
       "legenda": "Gatilho com nome próprio, painel de links reais.",
-      "html": "<div class=\"yb-dropdown\"><input class=\"yb-dropdown__toggle\" type=\"checkbox\" id=\"fn-dd\"><label class=\"yb-dropdown__trigger\" for=\"fn-dd\" aria-label=\"Account menu for Urlan Dipre\"><span class=\"yb-avatar\" aria-hidden=\"true\">U</span></label><div class=\"yb-dropdown__panel\"><a href=\"#demos\">Orders</a><a href=\"#demos\">Addresses</a></div></div>"
+      "html": "<div class=\"yb-account\"><input class=\"yb-account__toggle\" type=\"checkbox\" id=\"fn-dd\"><label class=\"yb-account__trigger\" for=\"fn-dd\" aria-label=\"Account menu for Urlan Dipre\"><span class=\"yb-avatar\" aria-hidden=\"true\">U</span></label><div class=\"yb-account__panel\"><a class=\"yb-account__item\" href=\"#demos\">Orders</a><a class=\"yb-account__item\" href=\"#demos\">Wishlist</a></div></div>"
     },
     "naoFaca": {
-      "legenda": "Gatilho sem rótulo: o leitor de tela anuncia “botão” e mais nada — não dá para saber o que abre.",
-      "html": "<div class=\"yb-dropdown\"><input class=\"yb-dropdown__toggle\" type=\"checkbox\" id=\"fn-dd2\"><label class=\"yb-dropdown__trigger\" for=\"fn-dd2\"><span class=\"yb-avatar\" aria-hidden=\"true\">U</span></label><div class=\"yb-dropdown__panel\"><a href=\"#demos\">Orders</a></div></div>"
+      "legenda": "Gatilho sem rótulo: o leitor de tela anuncia “caixa de seleção” e mais nada — não dá para saber o que abre.",
+      "html": "<div class=\"yb-account\"><input class=\"yb-account__toggle\" type=\"checkbox\" id=\"fn-dd2\"><label class=\"yb-account__trigger\" for=\"fn-dd2\"><span class=\"yb-avatar\" aria-hidden=\"true\">U</span></label><div class=\"yb-account__panel\"><a class=\"yb-account__item\" href=\"#demos\">Orders</a></div></div>"
+    }
+  },
+  "dropdown": {
+    "a11y": [
+      "O gatilho é um <code>&lt;label&gt;</code> com texto visível que já diz o que abre. Só ícone, precisa de <code>aria-label</code>.",
+      "Abre e fecha pelo teclado sem JS: Tab chega na chave escondida, Espaço marca, e o anel aparece no gatilho.",
+      "A opção atual leva <code>aria-current=\"true\"</code>. Cor e tique sozinhos não chegam ao leitor de tela.",
+      "Fecha clicando de novo no gatilho. Sem JS não fecha no clique fora nem no Esc.",
+      "As opções são links de verdade, em lista. Setas não navegam entre elas porque não é <code>menu</code> ARIA: Tab basta."
+    ],
+    "faca": {
+      "legenda": "Gatilho que diz a escolha atual, e a opção atual marcada na lista.",
+      "html": "<div class=\"yb-dropdown\"><input class=\"yb-dropdown__toggle\" type=\"checkbox\" id=\"fn-dd\"><label class=\"yb-btn yb-btn--secondary yb-btn--sm yb-dropdown__trigger\" for=\"fn-dd\">Sort: Best selling</label><ul class=\"yb-dropdown__panel\"><li><a class=\"yb-dropdown__option\" href=\"#demos\" aria-current=\"true\">Best selling</a></li><li><a class=\"yb-dropdown__option\" href=\"#demos\">Newest</a></li></ul></div>"
+    },
+    "naoFaca": {
+      "legenda": "Dropdown no lugar de um campo de formulário: o valor não vai junto no envio, e o celular perde a roleta nativa. Ali é o Select.",
+      "html": "<div class=\"yb-dropdown\"><input class=\"yb-dropdown__toggle\" type=\"checkbox\" id=\"fn-dd2\"><label class=\"yb-btn yb-btn--secondary yb-btn--sm yb-dropdown__trigger\" for=\"fn-dd2\">State</label><ul class=\"yb-dropdown__panel\"><li><a class=\"yb-dropdown__option\" href=\"#demos\">Florida</a></li></ul></div>"
+    },
+    "anatomia": {
+      "variantes": [
+        {
+          "titulo": "Escolha — a opção atual marcada",
+          "largura": "260px",
+          "recorte": "<div class=\"yb-dropdown\">\\s*<input class=\"yb-dropdown__toggle\" type=\"checkbox\" id=\"dd-sort\" checked>.*?</ul>\\s*</div>",
+          "partes": [
+            {
+              "alvo": ".yb-dropdown__trigger",
+              "nome": "Gatilho",
+              "texto": "Um Button do sistema, em qualquer variante, com o texto da escolha atual. É o <code>&lt;label&gt;</code> da chave escondida."
+            },
+            {
+              "alvo": ".yb-dropdown__chevron",
+              "nome": "Seta",
+              "texto": "Gira quando abre: o estado aparece sem precisar abrir para conferir."
+            },
+            {
+              "alvo": ".yb-dropdown__panel",
+              "nome": "Painel",
+              "texto": "A lista, embaixo do gatilho e alinhada ao início dele. Pelo menos da largura do gatilho, no máximo 18rem."
+            },
+            {
+              "alvo": ".yb-dropdown__option",
+              "nome": "Opção",
+              "texto": "Link de 44px, o alvo inteiro clicável."
+            },
+            {
+              "alvo": ".yb-dropdown__check",
+              "nome": "Opção atual",
+              "texto": "<code>aria-current=\"true\"</code>, peso e o tique no fim da linha, para o texto de todas começar na mesma prumada."
+            }
+          ]
+        },
+        {
+          "titulo": "Ações — <code>--end</code>",
+          "largura": "260px",
+          "recorte": "<div class=\"yb-dropdown yb-dropdown--end\">\\s*<input class=\"yb-dropdown__toggle\" type=\"checkbox\" id=\"dd-actions\" checked>.*?</ul>\\s*</div>",
+          "partes": [
+            {
+              "alvo": ".yb-dropdown__trigger",
+              "nome": "Gatilho",
+              "texto": "Ghost pequeno: ações de um item não competem com a ação principal da tela."
+            },
+            {
+              "alvo": ".yb-dropdown__panel",
+              "nome": "Painel alinhado ao fim",
+              "texto": "<code>--end</code> encosta o painel na borda direita do gatilho, para ele não sair da tela quando o gatilho está na direita."
+            },
+            {
+              "alvo": ".yb-dropdown__option .yb-icon",
+              "nome": "Ícone",
+              "texto": "Opcional. Numa lista de ações ele ajuda a achar; numa lista de escolhas, sobra."
+            },
+            {
+              "alvo": ".yb-dropdown__sep",
+              "nome": "Separador",
+              "texto": "Separa o que desfaz (Remove) do que só move ou compartilha."
+            }
+          ]
+        }
+      ]
     }
   }
 }

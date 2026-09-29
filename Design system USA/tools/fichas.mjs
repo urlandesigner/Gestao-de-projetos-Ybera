@@ -397,7 +397,8 @@ const rotuloDe = (el, base) => {
 function variantesDe(f) {
   const html = f.palco, achadas = [];
   const temBase = !!f.base && new RegExp(`class="[^"]*\\b${f.base}\\b`).test(html);
-  const abre = /<span class="amostra">/g;
+  // `[^>]*`: a amostra pode trazer `style` (o alinhamento dos menus abertos)
+  const abre = /<span class="amostra"[^>]*>/g;
   for (let a; (a = abre.exec(html)); ) {
     let n = 0; const tags = /<(\/?)span\b[^>]*?(\/?)>/g; tags.lastIndex = a.index;
     for (let m; (m = tags.exec(html)); ) {
@@ -405,9 +406,13 @@ function variantesDe(f) {
       n += m[1] ? -1 : 1;
       if (n === 0) {
         const bloco = html.slice(a.index + a[0].length, m.index);
-        const rot = (bloco.match(/<span class="amostra__rotulo">([\s\S]*?)<\/span>\s*$/) || [, ''])[1]
-          .replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-        let limpo = recuar(bloco.replace(/<span class="amostra__rotulo">[\s\S]*?<\/span>\s*$/, ''));
+        /* O rotulo vem no fim da amostra, embaixo da peca — ou no COMECO, quando
+           a peca abre um painel para baixo e o rotulo embaixo ficaria atras
+           dele (Account menu, Dropdown). As duas posicoes sao cromo. */
+        const ROT = /^\s*<span class="amostra__rotulo">([\s\S]*?<\/code>)<\/span>|<span class="amostra__rotulo">([\s\S]*?)<\/span>\s*$/;
+        const achado = bloco.match(ROT) || [];
+        const rot = (achado[1] || achado[2] || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+        let limpo = recuar(bloco.replace(ROT, ''));
         // o quadro de foto da galeria (`amostra__foto`) tambem e cromo
         const foto = limpo.match(/^<span class="amostra__foto">\n?([\s\S]*)\n?<\/span>$/);
         if (foto) limpo = recuar(foto[1]);
@@ -723,7 +728,9 @@ function primeiraAmostra(html) {
    com duas leituras diferentes, o ponto de pendencia acendia em peca
    desenhada: `{largura, partes}` nao tem `.length`, entao o teste dava vazio
    para dezessete fichas que tinham desenho. */
-const partesDaAnatomia = (t) => (Array.isArray(t.anatomia) ? t.anatomia : t.anatomia?.partes) || [];
+const partesDaAnatomia = (t) => (Array.isArray(t.anatomia) ? t.anatomia
+  : t.anatomia?.variantes ? t.anatomia.variantes.flatMap((v) => v.partes || [])
+  : t.anatomia?.partes) || [];
 
 /* BLOCO SE DESENHA PELAS PECAS QUE O COMPOEM, e nao por elementos internos.
 
@@ -749,23 +756,26 @@ const anatomiaDeBloco = (f) => f.usa
   }));
 
 const blocoAnatomia = (f, n) => {
-  /* `anatomia` aceita a lista direta ou um objeto com `largura` e `partes`.
+  /* `anatomia` aceita a lista direta, um objeto com `largura` e `partes`, ou
+     `variantes` — uma lista desses objetos, cada um com `titulo`. A ultima
+     forma existe para a peca que tem mais de um VISUAL: o Collection card e
+     rotulo sobre a foto, mosaico com veu e cartao com rodape, e um desenho so
+     explicava o primeiro e deixava os outros dois sem anatomia.
+
      A largura existe porque o palco nao reproduz o contexto da demo: o cartao
      de oferta vive numa grade de colunas de 266px, e solto aqui ele esticava
      para os 560 do palco — o desenho passava a explicar uma peca que a loja
      nao tem. Quem nao declara continua ocupando a largura toda, que e o certo
      para alerta, acordeao e qualquer peca de bloco. */
   const bruto = f.texto.anatomia;
-  const partes = partesDaAnatomia(f.texto).length ? partesDaAnatomia(f.texto)
-    : (n.base === 'involucro' ? anatomiaDeBloco(f) : []);
-  const largura = Array.isArray(bruto) ? null : bruto?.largura;
-  /* `recorte` pega UMA instancia do snippet. A demo do Button e uma fileira de
-     quatro variantes com rotulo embaixo de cada — desenhar a fileira inteira
-     poe quatro copias da mesma peca no palco, e os fios apontam para a
-     primeira. O recorte continua sendo marcacao de verdade: e um pedaco do
-     mesmo HTML, nao um exemplo escrito a parte. */
-  const recorte = Array.isArray(bruto) ? null : bruto?.recorte;
-  if (!partes || !partes.length)
+  const desenhos = bruto?.variantes
+    ? bruto.variantes
+    : [{ partes: partesDaAnatomia(f.texto).length ? partesDaAnatomia(f.texto)
+        : (n.base === 'involucro' ? anatomiaDeBloco(f) : []),
+        largura: Array.isArray(bruto) ? null : bruto?.largura,
+        recorte: Array.isArray(bruto) ? null : bruto?.recorte,
+        html: Array.isArray(bruto) ? null : bruto?.html }];
+  if (!desenhos.some((d) => d.partes && d.partes.length))
     return n.base === 'involucro'
       ? `<p class="pendente">Este ${n.singular} não compõe nenhuma peça do sistema, então não há o que apontar.
          O desenho de um ${n.singular} é o mapa dos componentes que ele monta.</p>`
@@ -773,21 +783,33 @@ const blocoAnatomia = (f, n) => {
       A lista de API abaixo continua valendo — o que falta é o nome e o porquê de cada parte.</p>`;
   if (!f.snippet)
     return '<p class="api-vazia">Sem demonstração de onde tirar o desenho.</p>';
-  /* O RECORTE PROCURA NO PALCO INTEIRO, e nao so na primeira demo. A anatomia
+  /* `recorte` pega UMA instancia do snippet. A demo do Button e uma fileira de
+     quatro variantes com rotulo embaixo de cada — desenhar a fileira inteira
+     poe quatro copias da mesma peca no palco, e os fios apontam para a
+     primeira. O recorte continua sendo marcacao de verdade: e um pedaco do
+     mesmo HTML, nao um exemplo escrito a parte.
+
+     O RECORTE PROCURA NO PALCO INTEIRO, e nao so na primeira demo. A anatomia
      do Button precisa do botao COM icone, e ele vive na fileira "Com icone",
      tres demos abaixo da de variantes — a primeira demo e so o que a peca
      mostra primeiro, nao necessariamente o que ela precisa explicar. Sem
      recorte, nada muda: continua a primeira demo. */
-  let marcacao = primeiraAmostra(f.snippet);
-  if (recorte) {
-    const m = f.palco.match(new RegExp(recorte, 's'));
-    if (!m) {
-      console.error(`fichas.mjs: recorte da anatomia nao casa em ${f.id} — ${recorte}`);
-      process.exit(1);
+  /* `html` SO PARA CONTEINER. O Track nao tem visual proprio: desenhado com
+     cartoes de produto dentro, os fios apontavam para o cartao e o que e do
+     trilho — largura do item, fatia do proximo — sumia atras dele. Ali o
+     conteudo e de enfeite, entao a anatomia leva caixas neutras escritas a
+     parte, e a marcacao do trilho em volta delas continua sendo a da peca. */
+  const desenhar = ({ partes, largura, recorte, html }) => {
+    let marcacao = html || primeiraAmostra(f.snippet);
+    if (recorte && !html) {
+      const m = f.palco.match(new RegExp(recorte, 's'));
+      if (!m) {
+        console.error(`fichas.mjs: recorte da anatomia nao casa em ${f.id} — ${recorte}`);
+        process.exit(1);
+      }
+      marcacao = m[0];
     }
-    marcacao = m[0];
-  }
-  return `<div class="anat" data-yb-anatomy>
+    return `<div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca"${largura ? ` style="max-inline-size:${largura}"` : ''}>${prefixar(marcacao)}</div>
@@ -796,6 +818,10 @@ const blocoAnatomia = (f, n) => {
 ${partes.map((x) => `        <li data-target="${x.alvo}"><span class="anat__texto"><b>${x.nome}</b> — ${x.texto}</span></li>`).join('\n')}
       </ol>
     </div>`;
+  };
+  return desenhos.filter((d) => d.partes && d.partes.length)
+    .map((d) => (d.titulo ? `<h3 class="rotulo">${d.titulo}</h3>\n    ` : '') + desenhar(d))
+    .join('\n    ');
 };
 
 const blocoA11y = (t, n) =>
@@ -1167,10 +1193,20 @@ ${folhasAte(n)}
      elemento \`position:fixed\` dimensionado pela viewport — a gaveta do header
      tem inset-block:0, entao ela crescia junto com o iframe, que crescia junto
      com ela: o quadro do header foi de 157px reais para 1969. */
+  /* A altura conta o que TRANSBORDA da caixa, e nao so a caixa: o painel de
+     um menu e absoluto e fica fora dela. Medindo so a caixa, o quadro de 375
+     cortava o painel do Dropdown no meio quando alguem abria. Painel fechado
+     tambem conta (ele tem caixa, so esta invisivel): o quadro ja nasce com o
+     espaco de abrir. */
   function avisarAltura() {
     var r = caixa.getBoundingClientRect();
     var pad = parseFloat(getComputedStyle(caixa).paddingBottom) || 0;
-    var h = Math.max(120, Math.ceil(r.height + pad));
+    var fundo = r.bottom;
+    Array.prototype.forEach.call(caixa.querySelectorAll('*'), function (el) {
+      var b = el.getBoundingClientRect();
+      if (b.width && b.bottom > fundo) fundo = b.bottom;
+    });
+    var h = Math.max(120, Math.ceil(fundo - r.top + pad));
     try { parent.postMessage({ yb: 'altura', c: alvo, h: h }, '*'); } catch (e) {}
   }
 

@@ -256,9 +256,12 @@
   --yb-action-secondary-border-hover:  var(--yb-gray-950);
 
   /* ação terciária / fantasma */
-  --yb-action-ghost-border: var(--yb-gray-300);
   --yb-action-ghost-text:   var(--yb-gray-950);
   --yb-action-ghost-bg-hover: var(--yb-gray-100);
+  /* @deprecated desde 0.13 — sem consumidor. Remocao em 1.0.
+     A fantasma deixou de ter borda: com ela, era um contorno mais fraco que a
+     secundaria, e o sistema tinha dois contornos e nenhum botao so de texto. */
+  --yb-action-ghost-border: var(--yb-gray-300);
 
   /* =====================================================================
      ACENTO — dourado.

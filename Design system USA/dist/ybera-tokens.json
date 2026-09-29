@@ -2508,14 +2508,6 @@
       }
     },
     "ghost": {
-      "border": {
-        "$value": "{gray.300}",
-        "$extensions": {
-          "com.ybera.cssVariable": "--yb-action-ghost-border",
-          "com.ybera.layer": "semantic"
-        },
-        "$type": "color"
-      },
       "text": {
         "$value": "{gray.950}",
         "$extensions": {
@@ -2533,6 +2525,14 @@
           },
           "$type": "color"
         }
+      },
+      "border": {
+        "$value": "{gray.300}",
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-action-ghost-border",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "color"
       }
     },
     "on": {

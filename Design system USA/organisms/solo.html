@@ -63,10 +63,20 @@
      elemento `position:fixed` dimensionado pela viewport — a gaveta do header
      tem inset-block:0, entao ela crescia junto com o iframe, que crescia junto
      com ela: o quadro do header foi de 157px reais para 1969. */
+  /* A altura conta o que TRANSBORDA da caixa, e nao so a caixa: o painel de
+     um menu e absoluto e fica fora dela. Medindo so a caixa, o quadro de 375
+     cortava o painel do Dropdown no meio quando alguem abria. Painel fechado
+     tambem conta (ele tem caixa, so esta invisivel): o quadro ja nasce com o
+     espaco de abrir. */
   function avisarAltura() {
     var r = caixa.getBoundingClientRect();
     var pad = parseFloat(getComputedStyle(caixa).paddingBottom) || 0;
-    var h = Math.max(120, Math.ceil(r.height + pad));
+    var fundo = r.bottom;
+    Array.prototype.forEach.call(caixa.querySelectorAll('*'), function (el) {
+      var b = el.getBoundingClientRect();
+      if (b.width && b.bottom > fundo) fundo = b.bottom;
+    });
+    var h = Math.max(120, Math.ceil(fundo - r.top + pad));
     try { parent.postMessage({ yb: 'altura', c: alvo, h: h }, '*'); } catch (e) {}
   }
 

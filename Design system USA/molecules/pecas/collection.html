@@ -5,19 +5,19 @@
       <ul class="yb-collections">
         <li><a class="yb-collection yb-collection--bottom" href="#demos">
           <img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy">
-          <span class="yb-collection__label">Fashion Gold</span>
+          <span class="yb-btn yb-btn--on-dark yb-btn--sm yb-collection__label">Fashion Gold</span>
         </a></li>
         <li><a class="yb-collection yb-collection--bottom" href="#demos">
           <img src="../pages/img/Prancheta_2-188b6fea.webp" alt="" loading="lazy">
-          <span class="yb-collection__label">Cronograma</span>
+          <span class="yb-btn yb-btn--on-dark yb-btn--sm yb-collection__label">Cronograma</span>
         </a></li>
         <li><a class="yb-collection yb-collection--bottom" href="#demos">
           <img src="../pages/img/Prancheta_3-d098ed99.webp" alt="" loading="lazy">
-          <span class="yb-collection__label">Vello</span>
+          <span class="yb-btn yb-btn--on-dark yb-btn--sm yb-collection__label">Vello</span>
         </a></li>
         <li><a class="yb-collection yb-collection--bottom" href="#demos">
           <img src="../pages/img/Prancheta_4-26cbd0ec.webp" alt="" loading="lazy">
-          <span class="yb-collection__label">Mirra</span>
+          <span class="yb-btn yb-btn--on-dark yb-btn--sm yb-collection__label">Mirra</span>
         </a></li>
       </ul>
     </div>
@@ -108,7 +108,7 @@
     <div class="note">
       <b>A escolha entre os dois arranjos é editorial</b>
       <p><b>Rótulo sobre a foto</b> quando o nome basta: "Damaged Hair" é destino
-      óbvio, e a pílula não rouba a foto, que é quem convence. <b>Cartão com rodapé</b>
+      óbvio, e o botão não rouba a foto, que é quem convence. <b>Cartão com rodapé</b>
       quando não basta: "Consumer" não diz o que há dentro.</p>
       <p>A faixa é <b>opaca, fora da foto</b>. Sobre a imagem precisaria de véu e de
       medir contraste contra pixel que ninguém controla — todo o custo que o media
@@ -116,13 +116,15 @@
     </div>
     <div class="note">
       <b>O rótulo fica no pé, nunca no centro</b>
-      <p>A pílula pousa no rodapé da foto (<code>--bottom</code>). Existia também uma
+      <p>O rótulo pousa no rodapé da foto (<code>--bottom</code>). Existia também uma
       versão centrada, <code>--center</code>, e ela saiu: no meio da imagem o rótulo
       cobria justamente o cabelo que a foto existe para mostrar. Onde o nome
       precisa de ação escrita ("Shop Collection"), o cartão é o
       <code>--card</code>, com o rodapé fora da foto.</p>
-      <p>A pill é superfície clara, não magenta. Magenta é função: existe onde há
-      decisão a tomar, e navegar para uma coleção não é uma.</p>
+      <p>O rótulo é o Button do sistema, <code>--on-dark --sm</code>: branco, com o
+      raio de todo controle da loja. Era uma pílula de raio total que nenhum outro
+      controle tinha. Continua um <code>&lt;span&gt;</code> dentro do link, porque o
+      cartão inteiro é o alvo, e reage ao hover do cartão.</p>
     </div>
     <div class="note">
       <b>O mosaico é grade, não cartão</b>
@@ -136,11 +138,11 @@
     </div>
     <div class="note">
       <b>Quando usar o rótulo sobre véu, e quando não</b>
-      <p><code>--overlay</code> existe para o ladrilho deitado e largo: a pill centrada
+      <p><code>--overlay</code> existe para o ladrilho deitado e largo: o botão centrado
       num retângulo de 445×242 se perde no meio da foto, e no ladrilho grande fica
-      pequena demais. Ancorado no canto, o nome tem o mesmo peso nos dois tamanhos.</p>
-      <p>Ele <b>não</b> aposenta a pill. O véu escurece a foto inteira para sustentar
-      o texto — é o preço dele. Onde o cartão é estreito e a foto é clara, a pill
+      pequeno demais. Ancorado no canto, o nome tem o mesmo peso nos dois tamanhos.</p>
+      <p>Ele <b>não</b> aposenta o botão. O véu escurece a foto inteira para sustentar
+      o texto — é o preço dele. Onde o cartão é estreito e a foto é clara, o botão
       resolve sem pagar esse preço.</p>
     </div>
     <div class="note">
@@ -154,5 +156,5 @@
       <b>O recuo cede antes da palavra</b>
       <p>Em 320px o cartão mede 134, e o recuo fixo de 64 deixava 70px de caixa:
       "Frizz &amp; Dryness" quebrava em quatro linhas. Abaixo de 480 o recuo
-      e o corpo do rótulo encolhem — o texto continua legível, a pill não estoura.</p>
+      e o corpo do rótulo encolhem — o texto continua legível, o botão não estoura.</p>
     </div>

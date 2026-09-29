@@ -540,35 +540,63 @@ def menu(promo=None):
 CLIENTE = {'nome': 'Urlan Dipre', 'email': 'urlan.dipre@ybera.com'}
 
 
+def menu_conta(cliente=None, ident='account-open', ic=None):
+    """O Account menu (`.yb-account`) nos dois estados. `ic` monta o icone —
+    as telas usam `ico` (sprite em yb/), as fichas passam o delas.
+
+    Logado: avatar, nome e e-mail na cabeca, os destinos no meio, Log out no
+    pe. Visitante: por que entrar, o botao, e Create
+    account no pe. Os textos sao os da loja americana."""
+    ic = ic or ico
+    if cliente:
+        inicial = cliente['nome'].strip()[:1].upper()
+        return f"""<div class="yb-account">
+        <input class="yb-account__toggle" type="checkbox" id="{ident}">
+        <label class="yb-account__trigger" for="{ident}"
+               aria-label="Account menu for {cliente['nome']}">
+          <span class="yb-avatar" aria-hidden="true">{inicial}</span></label>
+        <div class="yb-account__panel">
+          <span class="yb-account__head yb-account__head--who">
+            <span class="yb-avatar yb-avatar--md" aria-hidden="true">{inicial}</span>
+            <b class="yb-account__name">{cliente['nome']}</b>
+            <span class="yb-account__email">{cliente['email']}</span>
+          </span>
+          <a class="yb-account__item" href="/account">{ic('user','yb-icon yb-icon--sm')} Account</a>
+          <a class="yb-account__item" href="/account/orders">{ic('truck','yb-icon yb-icon--sm')} Orders</a>
+          <a class="yb-account__item" href="/listadedesejos">{ic('heart','yb-icon yb-icon--sm')} Wishlist</a>
+          <div class="yb-account__foot">
+            <a class="yb-account__item" href="/account/logout">{ic('lock','yb-icon yb-icon--sm')} Log out</a>
+          </div>
+        </div>
+      </div>"""
+    return f"""<div class="yb-account">
+        <input class="yb-account__toggle" type="checkbox" id="{ident}">
+        <label class="yb-account__trigger" for="{ident}" aria-label="Account menu">
+          {ic('user')}</label>
+        <div class="yb-account__panel">
+          <div class="yb-account__head">
+            <b class="yb-account__title">Welcome to Ybera</b>
+            <p class="yb-account__text">Sign in to see your orders and wishlist.</p>
+            <a class="yb-btn yb-btn--primary" href="/account/login">Sign in</a>
+          </div>
+          <div class="yb-account__foot">
+            <a class="yb-account__item" href="/account/register">{ic('user','yb-icon yb-icon--sm')} Create account</a>
+          </div>
+        </div>
+      </div>"""
+
+
 def header(carrinho=2, promo=None, cliente=None):
-    """`cliente` liga o estado logado: o icone generico vira a inicial e abre o
-    menu da conta. Deslogado continua sendo um botao de icone so — e o que a
-    loja mostra hoje.
+    """`cliente` liga o estado logado: o icone generico vira a inicial e o menu
+    da conta mostra saudacao e destinos. Deslogado, o mesmo menu convida a
+    entrar — antes era um botao de icone que nao abria nada.
 
     A gaveta do celular tem a sua propria linha de conta (`.yb-nav__account`),
     porque la nao ha menu suspenso: a saudacao e o botao ficam a vista, no
     topo, antes dos links."""
     if cliente:
         inicial = cliente['nome'].strip()[:1].upper()
-        conta = f"""<div class="yb-dropdown">
-        <input class="yb-dropdown__toggle" type="checkbox" id="account-open">
-        <label class="yb-dropdown__trigger" for="account-open"
-               aria-label="Account menu for {cliente['nome']}">
-          <span class="yb-avatar" aria-hidden="true">{inicial}</span></label>
-        <div class="yb-dropdown__panel">
-          <span class="yb-dropdown__head">
-            <span class="yb-avatar yb-avatar--md" aria-hidden="true">{inicial}</span>
-            <b class="yb-dropdown__name">{cliente['nome']}</b>
-            <span class="yb-dropdown__email">{cliente['email']}</span>
-          </span>
-          <a href="/account">{ico('user','yb-icon yb-icon--sm')} Account</a>
-          <a href="/account/orders">{ico('truck','yb-icon yb-icon--sm')} Orders</a>
-          <a href="/listadedesejos">{ico('heart','yb-icon yb-icon--sm')} Wishlist</a>
-          <span class="yb-dropdown__signout">
-            <a href="/account/logout">{ico('lock','yb-icon yb-icon--sm')} Log out</a>
-          </span>
-        </div>
-      </div>"""
+        conta = menu_conta(cliente)
         primeiro = cliente['nome'].strip().split()[0]
         # Logado, a linha deixa de ser um convite e passa a ser uma porta: quem
         # ja entrou nao precisa de "Log in", precisa de onde ficam os pedidos.
@@ -587,8 +615,7 @@ def header(carrinho=2, promo=None, cliente=None):
         <a class="yb-btn yb-btn--primary yb-btn--sm" href="/account">Account</a>
       </div>"""
     else:
-        conta = (f'<button class="yb-iconbtn yb-header__icon yb-header__account" '
-                 f'aria-label="Account">{ico("user")}</button>')
+        conta = menu_conta()
         # A linha de conta no topo da gaveta. Substitui o antigo item de texto
         # "Account" no meio da lista: ali ele era o 1o de 25 links iguais e
         # ninguem o achava. Aqui e faixa propria, com o unico botao da gaveta.
@@ -2140,7 +2167,7 @@ def lista_colecoes(titulo, itens, posicao, flush=False, arranjo='rotulo',
             li += f"""
         <li><a class="yb-collection yb-collection--{posicao}" href="{href}">
           <img src="img/{img}" alt="" loading="lazy">
-          <span class="yb-collection__label">{rotulo}</span>
+          <span class="{'yb-btn yb-btn--on-dark yb-btn--sm ' if posicao == 'bottom' else ''}yb-collection__label">{rotulo}</span>
         </a></li>"""
     classe = "yb-block yb-block--flush" if flush else "yb-block"
     # Com eyebrow o cabecalho deixa de ser centrado: a categoria acima do

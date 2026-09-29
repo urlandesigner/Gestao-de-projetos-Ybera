@@ -37,7 +37,7 @@
 .main{
 /* O respiro do topo é MENOR que o de baixo, e isso é deliberado. Com 64px em
    cima, o primeiro elemento da página nascia abaixo do primeiro item da coluna
-   lateral — a barra fixa já come 56px, e os dois somados jogavam a trilha para
+   lateral — a barra fixa já come 68px, e os dois somados jogavam a trilha para
    120px da borda enquanto "Início" estava em 72. A página parecia começar
    depois do menu.
 
@@ -400,7 +400,10 @@
 
 /* O painel do mega menu é absoluto e passa da altura do palco; com o
    overflow:hidden acima ele aparecia cortado na documentação. */
-.stage--overflow{overflow:visible}
+.stage--overflow{overflow:visible; isolation:isolate}
+/* `isolation`: o painel aberto de um menu na demo tem z-index de menu, e sem
+   um contexto proprio no palco ele passava por cima da barra fixa da doc ao
+   rolar. Aqui ele continua transbordando o palco, mas empilha dentro dele. */
 
 /* A gaveta do carrinho entra pela direita: o palco a empurra para lá em vez
    de centralizá-la, senão o demo mostra uma gaveta que flutua no meio da tela.
@@ -859,11 +862,35 @@ details.note > :last-child{padding-block-end:var(--yb-space-4)}
   background:var(--yb-bg-subtle); border-radius:var(--yb-radius-card);
 }
 .anat__peca{position:relative; z-index:1}
+/* O Partner flutua sobre a arte da loja (`position:absolute`, largura zero,
+   o balao transbordando para o lado). No quadro da anatomia nao ha arte nem
+   topo de pagina para ancorar, e ele media 0px: os fios apontavam para o
+   nada. Aqui ele entra no fluxo com a altura do que mostra. So na doc. */
+.anat__peca > .yb-partner{position:relative; inset:auto; min-block-size:9rem}
+/* O Account menu abre um painel absoluto embaixo do gatilho: no quadro ele
+   passava por cima da legenda, e o quadro media so os 44px do gatilho. Aqui o
+   painel entra no fluxo, logo abaixo, com o gatilho alinhado a direita como
+   no cabecalho. */
+.anat__peca > .yb-account{flex-direction:column; align-items:flex-end; gap:var(--yb-space-2)}
+.anat__peca .yb-account__panel{position:static; transition:none}
+/* O Dropdown, pelo mesmo motivo: o painel entra no fluxo embaixo do gatilho,
+   alinhado ao inicio ou ao fim conforme a variante. */
+.anat__peca > .yb-dropdown{display:flex; flex-direction:column; align-items:flex-start; gap:var(--yb-space-1)}
+.anat__peca > .yb-dropdown--end{align-items:flex-end}
+.anat__peca .yb-dropdown__panel{position:static; transition:none}
 /* OS FIOS PASSAM POR CIMA DA PEÇA. Atrás dela, o tracejado sumia na borda do
    cartão e o número ficava apontando para o lado do componente em vez de para
    a parte — foi o que a primeira versão mostrou. Por cima não atrapalha,
    porque a perna vertical fica na calha e o que entra na peça é só uma reta
    na altura do elemento, terminando na borda dele. */
+/* Caixa neutra no lugar do item, na anatomia de conteiner (Track): o que se
+   aponta e o espaco que o item ocupa, e nao o que vai dentro dele. */
+.anat-slot{
+  display:grid; place-items:center; block-size:7rem;
+  background:var(--yb-surface); border:var(--yb-border-hairline) dashed var(--yb-border-strong);
+  border-radius:var(--yb-radius-card);
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-secondary);
+}
 .anat__fios{
   position:absolute; inset:0; z-index:2; pointer-events:none;
   overflow:visible;

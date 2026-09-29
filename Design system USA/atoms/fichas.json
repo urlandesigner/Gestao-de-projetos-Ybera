@@ -344,7 +344,8 @@
           "nome": "Disco",
           "texto": "Círculo de tamanho fixo. A cor de fundo é a mesma para todos — não codifica pessoa nem papel."
         }
-      ]
+      ],
+      "recorte": "<span class=\"yb-avatar\" aria-hidden=\"true\">U</span>"
     }
   },
   "input": {
@@ -417,32 +418,59 @@
       "html": "<select class=\"yb-select\"><option>Sort by</option><option>Price</option></select>"
     },
     "anatomia": {
-      "largura": "340px",
-      "partes": [
+      "variantes": [
         {
-          "alvo": ".yb-field",
-          "nome": "Campo",
-          "texto": "A mesma caixa do Input: rótulo, dica e erro em volta do controle."
+          "titulo": "Com rótulo e dica",
+          "largura": "340px",
+          "partes": [
+            {
+              "alvo": ".yb-field",
+              "nome": "Campo",
+              "texto": "A mesma caixa do Input: rótulo, dica e erro em volta do controle."
+            },
+            {
+              "alvo": ".yb-field__box",
+              "nome": "Moldura",
+              "texto": "A caixa do controle, com a borda e o anel de foco."
+            },
+            {
+              "alvo": ".yb-select",
+              "nome": "Controle",
+              "texto": "<code>&lt;select&gt;</code> nativo, com a seta do sistema. A lista que abre é do sistema operacional, e é isso que se quer no celular."
+            },
+            {
+              "alvo": ".yb-field__label",
+              "nome": "Rótulo",
+              "texto": "Dentro da caixa, sempre em cima: o select nunca está vazio, então o rótulo não precisa flutuar."
+            },
+            {
+              "alvo": ".yb-field__hint",
+              "nome": "Dica",
+              "texto": "Opcional. Diz o que a escolha implica, não repete as opções."
+            }
+          ]
         },
         {
-          "alvo": ".yb-select",
-          "nome": "Controle",
-          "texto": "<code>&lt;select&gt;</code> nativo. A lista que abre é do sistema operacional, e é isso que se quer no celular."
-        },
-        {
-          "alvo": ".yb-field__label",
-          "nome": "Rótulo",
-          "texto": "Não flutua como no Input: o select nunca está vazio, então o rótulo fica sempre em cima."
-        },
-        {
-          "alvo": ".yb-field__box",
-          "nome": "Moldura",
-          "texto": "A caixa do controle. No select ela não abre entalhe: o rótulo não flutua."
-        },
-        {
-          "alvo": ".yb-field__hint",
-          "nome": "Dica",
-          "texto": "Opcional. Diz o que a escolha implica, não repete as opções."
+          "titulo": "Obrigatório e com erro — <code>[aria-invalid]</code>",
+          "largura": "340px",
+          "recorte": "<div class=\"yb-field\">\\s*<div class=\"yb-field__box\">\\s*<select class=\"yb-select\" id=\"se3\".*?</span>\\s*</div>",
+          "partes": [
+            {
+              "alvo": ".yb-select",
+              "nome": "Controle inválido",
+              "texto": "<code>aria-invalid=\"true\"</code> pinta a borda de erro e <code>aria-describedby</code> liga o controle à mensagem."
+            },
+            {
+              "alvo": ".req",
+              "nome": "Obrigatório",
+              "texto": "O asterisco no rótulo. Obrigatório é regra, e regra se diz antes do erro, não só depois."
+            },
+            {
+              "alvo": ".yb-field__error",
+              "nome": "Erro",
+              "texto": "Toma o lugar da dica. Diz o que fazer (\"Choose the state for delivery\"), não só que está errado."
+            }
+          ]
         }
       ]
     }
@@ -586,13 +614,22 @@
     ]
   },
   "chip": {
-    "anatomia": [
-      {
-        "alvo": ".yb-chip",
-        "nome": "Chip",
-        "texto": "Filtro que liga e desliga. É <code>&lt;button&gt;</code> com <code>aria-pressed</code> — o estado é anunciado, não só pintado."
-      }
-    ],
+    "anatomia": {
+      "largura": "200px",
+      "recorte": "<button type=\"button\" class=\"yb-chip\" aria-pressed=\"true\">Keratin <span class=\"yb-chip__x\">×</span></button>",
+      "partes": [
+        {
+          "alvo": ".yb-chip",
+          "nome": "Chip",
+          "texto": "Filtro que liga e desliga. É <code>&lt;button&gt;</code> com <code>aria-pressed</code> — o estado é anunciado, não só pintado. Ligado, fica preenchido."
+        },
+        {
+          "alvo": ".yb-chip__x",
+          "nome": "Desligar",
+          "texto": "O × aparece só no ligado. É um <code>&lt;span&gt;</code> dentro do chip, não um segundo botão: clicar em qualquer ponto desliga."
+        }
+      ]
+    },
     "a11y": [
       "É <code>&lt;button&gt;</code>, e não um <code>&lt;span&gt;</code> com clique: teclado, Enter e o anúncio de “botão” vêm do elemento.",
       "O estado mora em <code>aria-pressed</code>, não numa classe. Classe pinta; <code>aria-pressed</code> é o que o leitor de tela lê como “pressionado”.",

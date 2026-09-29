@@ -63,6 +63,7 @@
     <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Componentes</summary>
     <ul>
       <li><a href="../molecules/accordion.html">Accordion</a></li>
+      <li><a href="../molecules/account.html">Account menu</a></li>
       <li><a href="../molecules/alert.html">Alert</a></li>
       <li><a href="../atoms/avatar.html">Avatar</a></li>
       <li><a href="../atoms/badge.html">Badge</a></li>
@@ -426,44 +427,64 @@
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
+    <h3 class="rotulo">Destaque — <code>--featured</code></h3>
     <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
-        <div class="anat__peca" style="max-inline-size:320px"><div class="yb-posts">
-  <article class="yb-post yb-post--featured">
-    <div class="yb-post__media"><img src="../pages/img/Is_Keratin_Good_For_Hair-b3d5999d.webp" alt="Cabelo preto longo e liso depois de um tratamento de queratina" loading="lazy"></div>
-    <div class="yb-post__body">
-      <h3 class="yb-post__title"><a href="#anat-demos">Is keratin good for hair? Pros, cons and myths</a></h3>
-      <p class="yb-post__excerpt">What makes the Ybera formula safe for color-treated hair, when a sealant is the wrong call, and the three myths that keep coming back to the salon chair.</p>
-      <span class="yb-link yb-link--reinforce" aria-hidden="true">Continue reading <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
-    </div>
-  </article>
-  <div class="yb-posts__list">
-    <article class="yb-post">
-      <div class="yb-post__media"><img src="../pages/img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp" alt="Cabelo loiro ondulado três meses depois da progressiva" loading="lazy"></div>
-      <div class="yb-post__body">
-        <h3 class="yb-post__title"><a href="#anat-demos">How long does a keratin treatment last?</a></h3>
-        <p class="yb-post__excerpt">Twelve to sixteen weeks, and what shortens it: chlorine, sulfate shampoo and washing on day two.</p>
-        <span class="yb-link yb-link--reinforce" aria-hidden="true">Continue reading <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
-      </div>
-    </article>
-    <article class="yb-post">
-      <div class="yb-post__media"><img src="../pages/img/Does_Keratin_Treatment_Damage_Hair-9540a201.webp" alt="Cabelo castanho embaraçado e arrepiado antes do tratamento" loading="lazy"></div>
-      <div class="yb-post__body">
-        <h3 class="yb-post__title"><a href="#anat-demos">Does keratin treatment damage hair?</a></h3>
-        <p class="yb-post__excerpt">The honest answer depends on the flat iron temperature and on what was in the bottle before it.</p>
-        <span class="yb-link yb-link--reinforce" aria-hidden="true">Continue reading <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
-      </div>
-    </article>
-  </div>
-</div></div>
+        <div class="anat__peca" style="max-inline-size:420px"><article class="yb-post yb-post--featured">
+          <div class="yb-post__media"><img src="../pages/img/Is_Keratin_Good_For_Hair-b3d5999d.webp" alt="Cabelo preto longo e liso depois de um tratamento de queratina" loading="lazy"></div>
+          <div class="yb-post__body">
+            <h3 class="yb-post__title"><a href="#anat-demos">Is keratin good for hair? Pros, cons and myths</a></h3>
+            <p class="yb-post__excerpt">What makes the Ybera formula safe for color-treated hair, when a sealant is the wrong call, and the three myths that keep coming back to the salon chair.</p>
+            <span class="yb-link yb-link--reinforce" aria-hidden="true">Continue reading <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+          </div>
+        </article></div>
       </div>
       <ol class="anat__legenda">
         <li data-target=".yb-post"><span class="anat__texto"><b>Cartão</b> — Um artigo do blog. O link do título cobre o cartão.</span></li>
-        <li data-target=".yb-post__media"><span class="anat__texto"><b>Foto</b> — Caixa reservada na proporção — é o que evita o salto quando a imagem chega.</span></li>
-        <li data-target=".yb-post__title"><span class="anat__texto"><b>Título</b> — O título real do artigo, não uma chamada inventada.</span></li>
-        <li data-target=".yb-post__excerpt"><span class="anat__texto"><b>Resumo</b> — Duas linhas. Só na variante em destaque; nas outras o título basta.</span></li>
-        <li data-target=".yb-post__body"><span class="anat__texto"><b>Corpo</b> — Título e resumo. É o que sobra quando a foto não carrega.</span></li>
+        <li data-target=".yb-post__media"><span class="anat__texto"><b>Foto</b> — Caixa reservada na proporção deitada — é o que evita o salto quando a imagem chega.</span></li>
+        <li data-target=".yb-post__title"><span class="anat__texto"><b>Título</b> — O título real do artigo, maior aqui: é o que puxa a leitura da seção.</span></li>
+        <li data-target=".yb-post__excerpt"><span class="anat__texto"><b>Resumo</b> — Só no destaque ele pesa: duas linhas que dizem o que o artigo resolve.</span></li>
+        <li data-target=".yb-post__body"><span class="anat__texto"><b>Corpo</b> — Título, resumo e chamada. É o que sobra quando a foto não carrega.</span></li>
+      </ol>
+    </div>
+    <h3 class="rotulo">Na lista ao lado — sem modificador</h3>
+    <div class="anat" data-yb-anatomy>
+      <div class="anat__palco">
+        <svg class="anat__fios" aria-hidden="true"></svg>
+        <div class="anat__peca" style="max-inline-size:520px"><article class="yb-post">
+            <div class="yb-post__media"><img src="../pages/img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp" alt="Cabelo loiro ondulado três meses depois da progressiva" loading="lazy"></div>
+            <div class="yb-post__body">
+              <h3 class="yb-post__title"><a href="#anat-demos">How long does a keratin treatment last?</a></h3>
+              <p class="yb-post__excerpt">Twelve to sixteen weeks, and what shortens it: chlorine, sulfate shampoo and washing on day two.</p>
+              <span class="yb-link yb-link--reinforce" aria-hidden="true">Continue reading <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+            </div>
+          </article></div>
+      </div>
+      <ol class="anat__legenda">
+        <li data-target=".yb-post"><span class="anat__texto"><b>Cartão</b> — Foto à esquerda e texto à direita: dois cabem na altura do destaque.</span></li>
+        <li data-target=".yb-post__media"><span class="anat__texto"><b>Foto</b> — Coluna fixa e quadrada, para os títulos começarem todos na mesma prumada.</span></li>
+        <li data-target=".yb-post__title"><span class="anat__texto"><b>Título</b> — No corpo normal. Quem manda na seção é o destaque.</span></li>
+        <li data-target=".yb-post__excerpt"><span class="anat__texto"><b>Resumo</b> — Presente no HTML e cortado no espaço que houver.</span></li>
+      </ol>
+    </div>
+    <h3 class="rotulo">Trio de mesmo peso — <code>--stacked</code></h3>
+    <div class="anat" data-yb-anatomy>
+      <div class="anat__palco">
+        <svg class="anat__fios" aria-hidden="true"></svg>
+        <div class="anat__peca" style="max-inline-size:300px"><article class="yb-post yb-post--stacked">
+          <div class="yb-post__media"><img src="../pages/img/Is_Keratin_Good_For_Hair-b3d5999d.webp" alt="Cabelo preto longo e liso depois de um tratamento de queratina" loading="lazy"></div>
+          <div class="yb-post__body">
+            <h3 class="yb-post__title"><a href="#anat-demos">Is keratin good for hair? Pros, cons and myths</a></h3>
+            <span class="yb-link yb-link--reinforce" aria-hidden="true">Read more <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+          </div>
+        </article></div>
+      </div>
+      <ol class="anat__legenda">
+        <li data-target=".yb-post"><span class="anat__texto"><b>Cartão</b> — Foto em cima e texto embaixo, para três lado a lado sem hierarquia.</span></li>
+        <li data-target=".yb-post__media"><span class="anat__texto"><b>Foto</b> — 16:10, a mesma nos três: a fileira alinha pela foto.</span></li>
+        <li data-target=".yb-post__title"><span class="anat__texto"><b>Título</b> — Mesmo tamanho nos três. É a diferença para o destaque.</span></li>
+        <li data-target=".yb-link"><span class="anat__texto"><b>Chamada</b> — "Continue reading". É <code>aria-hidden</code>: o link de verdade é o título, e a chamada só diz o que o clique faz.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia

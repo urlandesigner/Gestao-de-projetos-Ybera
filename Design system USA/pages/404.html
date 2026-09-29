@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Page not found – Ybera USA</title>
-<link rel="stylesheet" href="yb/fonte.css?v=5b606ee0">
-<link rel="stylesheet" href="yb/00-primitives.css?v=5b606ee0">
-<link rel="stylesheet" href="yb/01-semantic.css?v=5b606ee0">
-<link rel="stylesheet" href="yb/base.css?v=5b606ee0">
-<link rel="stylesheet" href="yb/atoms.css?v=5b606ee0">
-<link rel="stylesheet" href="yb/molecules.css?v=5b606ee0">
-<link rel="stylesheet" href="yb/organisms.css?v=5b606ee0">
-<link rel="stylesheet" href="yb/templates.css?v=5b606ee0">
-<link rel="stylesheet" href="yb/icons.css?v=5b606ee0">
+<link rel="stylesheet" href="yb/fonte.css?v=ea9a40de">
+<link rel="stylesheet" href="yb/00-primitives.css?v=ea9a40de">
+<link rel="stylesheet" href="yb/01-semantic.css?v=ea9a40de">
+<link rel="stylesheet" href="yb/base.css?v=ea9a40de">
+<link rel="stylesheet" href="yb/atoms.css?v=ea9a40de">
+<link rel="stylesheet" href="yb/molecules.css?v=ea9a40de">
+<link rel="stylesheet" href="yb/organisms.css?v=ea9a40de">
+<link rel="stylesheet" href="yb/templates.css?v=ea9a40de">
+<link rel="stylesheet" href="yb/icons.css?v=ea9a40de">
 <style>
   /* Só arranjo de página. Nenhum componente é redefinido aqui — se um botão
      precisasse de ajuste, o lugar seria a folha dele, não esta. */
@@ -386,7 +386,21 @@
     </nav>
     <div class="yb-header__actions">
       <button class="yb-iconbtn yb-header__icon" aria-label="Search" data-yb-open="site-search"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-search"/></svg></button>
-      <button class="yb-iconbtn yb-header__icon yb-header__account" aria-label="Account"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-user"/></svg></button>
+      <div class="yb-account">
+        <input class="yb-account__toggle" type="checkbox" id="account-open">
+        <label class="yb-account__trigger" for="account-open" aria-label="Account menu">
+          <svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-user"/></svg></label>
+        <div class="yb-account__panel">
+          <div class="yb-account__head">
+            <b class="yb-account__title">Welcome to Ybera</b>
+            <p class="yb-account__text">Sign in to see your orders and wishlist.</p>
+            <a class="yb-btn yb-btn--primary" href="/account/login">Sign in</a>
+          </div>
+          <div class="yb-account__foot">
+            <a class="yb-account__item" href="/account/register"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="yb/icons.svg#yb-user"/></svg> Create account</a>
+          </div>
+        </div>
+      </div>
       <button class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items" data-yb-open="cart">
         <svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-cart"/></svg><span class="yb-header__count">2</span></button>
     </div>
@@ -746,7 +760,7 @@
     </div>
   </div>
 </dialog>
-<script src="yb/behavior.js?v=5b606ee0"></script>
+<script src="yb/behavior.js?v=ea9a40de"></script>
 <script>
 // Setas do banner. Carrossel nao e componente do sistema — este JS vive na
 // pagina, nao em components.js, para nao dar a entender que existe.

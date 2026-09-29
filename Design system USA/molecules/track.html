@@ -63,6 +63,7 @@
     <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Componentes</summary>
     <ul>
       <li><a href="../molecules/accordion.html">Accordion</a></li>
+      <li><a href="../molecules/account.html">Account menu</a></li>
       <li><a href="../molecules/alert.html">Alert</a></li>
       <li><a href="../atoms/avatar.html">Avatar</a></li>
       <li><a href="../atoms/badge.html">Badge</a></li>
@@ -164,7 +165,7 @@
     </nav>
   </div>
   <h1 class="ficha-titulo">Track</h1>
-  <p class="ficha-quando">Trilho de rolagem horizontal que carrega uma fileira maior que a tela. Avaliações, vídeos, logos e banners do hero — sem quebrar em duas linhas nem empurrar a página de lado.</p>
+  <p class="ficha-quando">Contêiner, não cartão: não tem visual próprio. Põe numa linha só uma fileira maior que a tela, com rolagem de lado e setas, e carrega qualquer peça — cartões de produto, avaliações, vídeos, logos, banners do hero.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
@@ -194,44 +195,34 @@
   <div class="abas" data-yb-tabs>
   <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
-    <h3 class="row-label">Base — cartões que rolam</h3>
+    <h3 class="row-label">Base — vitrine de produtos que rola</h3>
     <div class="demo demo--rail">
       <div class="yb-track" id="doc-track">
-        <a class="yb-collection yb-collection--card" href="#demos">
-          <img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy">
-          <span class="yb-collection__foot">
-            <span class="yb-collection__name">Fashion Gold</span>
-            <span class="yb-collection__cta">Shop Collection
-              <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
-          </span></a>
-        <a class="yb-collection yb-collection--card" href="#demos">
-          <img src="../pages/img/02_hair-problem-f838107d.webp" alt="" loading="lazy">
-          <span class="yb-collection__foot">
-            <span class="yb-collection__name">Damaged Hair</span>
-            <span class="yb-collection__cta">Shop Collection
-              <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
-          </span></a>
-        <a class="yb-collection yb-collection--card" href="#demos">
-          <img src="../pages/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy">
-          <span class="yb-collection__foot">
-            <span class="yb-collection__name">Undefined Curls</span>
-            <span class="yb-collection__cta">Shop Collection
-              <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
-          </span></a>
-        <a class="yb-collection yb-collection--card" href="#demos">
-          <img src="../pages/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy">
-          <span class="yb-collection__foot">
-            <span class="yb-collection__name">Thinning</span>
-            <span class="yb-collection__cta">Shop Collection
-              <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
-          </span></a>
-        <a class="yb-collection yb-collection--card" href="#demos">
-          <img src="../pages/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy">
-          <span class="yb-collection__foot">
-            <span class="yb-collection__name">Frizz</span>
-            <span class="yb-collection__cta">Shop Collection
-              <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
-          </span></a>
+        <article class="yb-card">
+          <div class="yb-card__media"><img src="../pages/img/105-d0e326.webp" alt="Frasco branco de condicionador Pantanal elixir, 1 litro" loading="lazy"></div>
+          <h3 class="yb-card__title"><a href="#demos">Floral Fusion Hair Mist — 50ml / 1.69 fl.oz</a></h3>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$24.00</b></span>
+        </article>
+        <article class="yb-card">
+          <div class="yb-card__media"><img src="../pages/img/109_8f48e88f-e728-4b1e-b224-e3d3e29cf532-70f28f.webp" alt="Frasco branco de condicionador Forest elixir, 1 kg" loading="lazy"></div>
+          <h3 class="yb-card__title"><a href="#demos">Detox Shampoo 250ml</a></h3>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$39.90</b></span>
+        </article>
+        <article class="yb-card">
+          <div class="yb-card__media"><img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Kit Terra Coco: shampoo, máscara e elixir lado a lado" loading="lazy"></div>
+          <h3 class="yb-card__title"><a href="#demos">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</a></h3>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
+        </article>
+        <article class="yb-card">
+          <div class="yb-card__media"><img src="../pages/img/Off1_August_22-24-11-18aac2.webp" alt="Kit de cuidado capilar sobre fundo claro" loading="lazy"></div>
+          <h3 class="yb-card__title"><a href="#demos">Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask 1kg / 33oz + Coconut Elixir 60ml / 2oz</a></h3>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$169.70</b></span>
+        </article>
+        <article class="yb-card">
+          <div class="yb-card__media"><img src="../pages/img/153_160x160-e958dc19.avif" alt="Os quatro tubos do sistema Cronograma Capilar" loading="lazy"></div>
+          <h3 class="yb-card__title"><a href="#demos">CRONOGRAMA Hair Care System — 4 x 250g / 8.8 oz</a></h3>
+          <span class="yb-price yb-price--sm"><b class="yb-price__now">$119.90</b></span>
+        </article>
       </div>
       <div class="yb-track__nav" data-yb-track-nav="doc-track" hidden>
         <button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Anteriores">
@@ -242,6 +233,14 @@
         </button>
       </div>
     </div>
+    <details class="note"><summary>Onde ele já está</summary>
+      <p>Vitrine de produtos (a mesma marcação do <code>.yb-grid</code>, trocando a classe),
+      <a href="review.html">Review</a>, <a href="video.html">Video</a>,
+      <a href="../organisms/logobar.html">Logo bar</a> com <code>--row</code>,
+      <a href="../organisms/hero.html">Hero</a> com <code>--hero</code> e o
+      cross-sell do <a href="../organisms/cart-drawer.html">Cart drawer</a>.
+      Quem dá a cara é a peça de dentro; o trilho só decide largura, espaço e rolagem.</p>
+    </details>
     <details class="note"><summary>A fatia do próximo cartão é a única coisa que diz que o trilho anda</summary>
       <p>A barra de rolagem está escondida (<code>scrollbar-width:none</code>) porque
       no toque ela não existe e no desktop ela some sozinha. O que sobra para
@@ -308,41 +307,31 @@
       <div class="snippet" data-code-variant-panel="0">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
         <pre><code>&lt;div class="yb-track" id="doc-track"&gt;
-  &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
-    &lt;img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy"&gt;
-    &lt;span class="yb-collection__foot"&gt;
-      &lt;span class="yb-collection__name"&gt;Fashion Gold&lt;/span&gt;
-      &lt;span class="yb-collection__cta"&gt;Shop Collection
-        &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
-    &lt;/span&gt;&lt;/a&gt;
-  &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
-    &lt;img src="../pages/img/02_hair-problem-f838107d.webp" alt="" loading="lazy"&gt;
-    &lt;span class="yb-collection__foot"&gt;
-      &lt;span class="yb-collection__name"&gt;Damaged Hair&lt;/span&gt;
-      &lt;span class="yb-collection__cta"&gt;Shop Collection
-        &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
-    &lt;/span&gt;&lt;/a&gt;
-  &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
-    &lt;img src="../pages/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy"&gt;
-    &lt;span class="yb-collection__foot"&gt;
-      &lt;span class="yb-collection__name"&gt;Undefined Curls&lt;/span&gt;
-      &lt;span class="yb-collection__cta"&gt;Shop Collection
-        &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
-    &lt;/span&gt;&lt;/a&gt;
-  &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
-    &lt;img src="../pages/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy"&gt;
-    &lt;span class="yb-collection__foot"&gt;
-      &lt;span class="yb-collection__name"&gt;Thinning&lt;/span&gt;
-      &lt;span class="yb-collection__cta"&gt;Shop Collection
-        &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
-    &lt;/span&gt;&lt;/a&gt;
-  &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
-    &lt;img src="../pages/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy"&gt;
-    &lt;span class="yb-collection__foot"&gt;
-      &lt;span class="yb-collection__name"&gt;Frizz&lt;/span&gt;
-      &lt;span class="yb-collection__cta"&gt;Shop Collection
-        &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
-    &lt;/span&gt;&lt;/a&gt;
+  &lt;article class="yb-card"&gt;
+    &lt;div class="yb-card__media"&gt;&lt;img src="../pages/img/105-d0e326.webp" alt="Frasco branco de condicionador Pantanal elixir, 1 litro" loading="lazy"&gt;&lt;/div&gt;
+    &lt;h3 class="yb-card__title"&gt;&lt;a href="#demos"&gt;Floral Fusion Hair Mist — 50ml / 1.69 fl.oz&lt;/a&gt;&lt;/h3&gt;
+    &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$24.00&lt;/b&gt;&lt;/span&gt;
+  &lt;/article&gt;
+  &lt;article class="yb-card"&gt;
+    &lt;div class="yb-card__media"&gt;&lt;img src="../pages/img/109_8f48e88f-e728-4b1e-b224-e3d3e29cf532-70f28f.webp" alt="Frasco branco de condicionador Forest elixir, 1 kg" loading="lazy"&gt;&lt;/div&gt;
+    &lt;h3 class="yb-card__title"&gt;&lt;a href="#demos"&gt;Detox Shampoo 250ml&lt;/a&gt;&lt;/h3&gt;
+    &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$39.90&lt;/b&gt;&lt;/span&gt;
+  &lt;/article&gt;
+  &lt;article class="yb-card"&gt;
+    &lt;div class="yb-card__media"&gt;&lt;img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Kit Terra Coco: shampoo, máscara e elixir lado a lado" loading="lazy"&gt;&lt;/div&gt;
+    &lt;h3 class="yb-card__title"&gt;&lt;a href="#demos"&gt;Kit Sealant Fashion Gold — 500g / 17.6 fl.oz&lt;/a&gt;&lt;/h3&gt;
+    &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$168.90&lt;/b&gt;&lt;s class="yb-price__was"&gt;$199.90&lt;/s&gt;&lt;/span&gt;
+  &lt;/article&gt;
+  &lt;article class="yb-card"&gt;
+    &lt;div class="yb-card__media"&gt;&lt;img src="../pages/img/Off1_August_22-24-11-18aac2.webp" alt="Kit de cuidado capilar sobre fundo claro" loading="lazy"&gt;&lt;/div&gt;
+    &lt;h3 class="yb-card__title"&gt;&lt;a href="#demos"&gt;Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask 1kg / 33oz + Coconut Elixir 60ml / 2oz&lt;/a&gt;&lt;/h3&gt;
+    &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$169.70&lt;/b&gt;&lt;/span&gt;
+  &lt;/article&gt;
+  &lt;article class="yb-card"&gt;
+    &lt;div class="yb-card__media"&gt;&lt;img src="../pages/img/153_160x160-e958dc19.avif" alt="Os quatro tubos do sistema Cronograma Capilar" loading="lazy"&gt;&lt;/div&gt;
+    &lt;h3 class="yb-card__title"&gt;&lt;a href="#demos"&gt;CRONOGRAMA Hair Care System — 4 x 250g / 8.8 oz&lt;/a&gt;&lt;/h3&gt;
+    &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$119.90&lt;/b&gt;&lt;/span&gt;
+  &lt;/article&gt;
 &lt;/div&gt;</code></pre>
       </div>
     </div>
@@ -410,56 +399,13 @@
     <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
-        <div class="anat__peca"><div class="yb-track" id="anat-doc-track">
-  <a class="yb-collection yb-collection--card" href="#anat-demos">
-    <img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy">
-    <span class="yb-collection__foot">
-      <span class="yb-collection__name">Fashion Gold</span>
-      <span class="yb-collection__cta">Shop Collection
-        <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
-    </span></a>
-  <a class="yb-collection yb-collection--card" href="#anat-demos">
-    <img src="../pages/img/02_hair-problem-f838107d.webp" alt="" loading="lazy">
-    <span class="yb-collection__foot">
-      <span class="yb-collection__name">Damaged Hair</span>
-      <span class="yb-collection__cta">Shop Collection
-        <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
-    </span></a>
-  <a class="yb-collection yb-collection--card" href="#anat-demos">
-    <img src="../pages/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy">
-    <span class="yb-collection__foot">
-      <span class="yb-collection__name">Undefined Curls</span>
-      <span class="yb-collection__cta">Shop Collection
-        <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
-    </span></a>
-  <a class="yb-collection yb-collection--card" href="#anat-demos">
-    <img src="../pages/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy">
-    <span class="yb-collection__foot">
-      <span class="yb-collection__name">Thinning</span>
-      <span class="yb-collection__cta">Shop Collection
-        <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
-    </span></a>
-  <a class="yb-collection yb-collection--card" href="#anat-demos">
-    <img src="../pages/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy">
-    <span class="yb-collection__foot">
-      <span class="yb-collection__name">Frizz</span>
-      <span class="yb-collection__cta">Shop Collection
-        <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
-    </span></a>
-</div>
-<div class="yb-track__nav" data-yb-track-nav="doc-track" hidden>
-  <button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Anteriores">
-    <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-left"/></svg>
-  </button>
-  <button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Próximos">
-    <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg>
-  </button>
-</div></div>
+        <div class="anat__peca"><div class="yb-track" style="--yb-track-item:40%"><div class="anat-slot">Item</div><div class="anat-slot">Item</div><div class="anat-slot anat-slot--peek">Item</div><div class="anat-slot">Item</div></div><div class="yb-track__nav"><button type="button" class="yb-iconbtn" aria-label="Anteriores"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-left"/></svg></button><button type="button" class="yb-iconbtn" aria-label="Próximos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg></button></div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-track"><span class="anat__texto"><b>Trilho</b> — Fileira que rola de lado com encaixe. No celular é o que substitui a grade.</span></li>
-        <li data-target=".yb-collection"><span class="anat__texto"><b>Item</b> — Qualquer peça entra. O trilho não sabe o que carrega — aqui são cartões de coleção.</span></li>
-        <li data-target=".yb-track__nav"><span class="anat__texto"><b>Setas</b> — Só no desktop. No celular o dedo arrasta, e seta seria enfeite que ocupa espaço.</span></li>
+        <li data-target=".yb-track"><span class="anat__texto"><b>Trilho</b> — Fileira que rola de lado com encaixe, barra de rolagem escondida. No celular é o que substitui a grade.</span></li>
+        <li data-target=".anat-slot"><span class="anat__texto"><b>Item</b> — Qualquer peça entra; o trilho só dá a largura (<code>--yb-track-item</code>, padrão <code>minmax(260px, 1fr)</code>) e o espaço entre eles (<code>--yb-track-gap</code>).</span></li>
+        <li data-target=".anat-slot--peek"><span class="anat__texto"><b>Fatia do próximo</b> — O pedaço cortado na borda. Com a barra escondida, é a única coisa que diz que dá para arrastar.</span></li>
+        <li data-target=".yb-track__nav > :last-child"><span class="anat__texto"><b>Setas</b> — Só no desktop, e só quando há o que rolar. No celular o dedo arrasta.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -478,7 +424,7 @@
     <p class="usa-degrau">Átomos</p>
     <ul class="usa"><li><a href="../atoms/iconbtn.html">Icon button</a></li></ul>
     <p class="usa-degrau">Moléculas</p>
-    <ul class="usa"><li><a href="../molecules/collection.html">Collection card</a></li></ul>
+    <ul class="usa"><li><a href="../molecules/card.html">Card product</a></li><li><a href="../molecules/price.html">Price</a></li></ul>
     <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-track--hero</code> <code>.yb-track--row</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-track__nav</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>[disabled]</code></span></p>

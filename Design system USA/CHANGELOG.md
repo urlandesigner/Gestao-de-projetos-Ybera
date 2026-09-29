@@ -9,6 +9,44 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 [GOVERNANCA.md](GOVERNANCA.md), componente novo pede versão **menor** (0.13.0).
 
 ### Mudado
+- **Button `--ghost` sem borda.** Com a aresta em `gray-300` ela era um
+  contorno mais fraco que a secundária, e o sistema tinha dois contornos e
+  nenhum botão só de texto. Agora é texto, com fundo só no hover e no
+  pressionado; o contorno do sistema é a `--secondary`. `--yb-action-ghost-border`
+  fica obsoleto, sem consumidor, e sai em 1.0.
+- **Ficha do Track mostra que ele é contêiner.** O exemplo base era uma fileira
+  de Collection cards e parecia cópia daquele componente; agora é a vitrine de
+  cartões de produto, a descrição diz que o trilho não tem visual próprio, e uma
+  nota lista onde ele já está (Review, Video, Logo bar, Hero, Cart drawer).
+  A anatomia troca os cartões por caixas neutras e aponta o que é do trilho:
+  trilho, item (largura e espaço), fatia do próximo e setas. O gerador aceita
+  `html` na anatomia para peça contêiner, e o fio da anatomia passa a ser
+  cortado na largura da peça, para não buscar a borda de item fora do quadro.
+- **Topo da documentação mais alto**, de 56 para 68px. A busca e o "Baixar
+  tokens" (44px cada) tinham 6px de folga em cima e embaixo, e agora têm 12. A
+  coluna lateral e o conteúdo acompanham pelo mesmo token (`--ds-top-h`).
+- **Dropdown voltou a ser Account menu** (`.yb-dropdown` → `.yb-account`, ficha
+  `molecules/account.html`), sem apelido. O nome Dropdown prometia um painel
+  genérico que ele nunca foi. Continua molécula.
+  - **Estado logado:** o mesmo conteúdo de antes — avatar, nome e e-mail,
+    Account, Orders, Wishlist e Log out separado no pé.
+  - **Estado visitante (novo):** "Welcome to Ybera", o motivo para entrar, o
+    Button "Sign in" e Create account no pé, com um divisor só embaixo do botão.
+  - **Na ficha:** os dois estados lado a lado, numa fileira só. No quadro de 375px a fileira empilha, e o painel do logado não sai mais pela esquerda da tela. O mesmo vale para a fileira aberta do Dropdown.
+  - **Nas telas:** as dez de visitante trocaram o ícone de conta, que não abria
+    nada, pelo menu de visitante. A logada trocou para o menu novo.
+  - **Na ficha:** a anatomia ganhou os dois estados, e a acessibilidade deixou
+    de dizer que ele fecha pelo clique fora — sem JS, ele fecha no gatilho.
+- **Anatomia por variante.** `anatomia` nas fichas aceita `variantes`, uma
+  lista de desenhos com título, para peças com mais de um visual. O Collection
+  card ganhou os três: rótulo sobre a foto (`--bottom`), mosaico com véu
+  (`--overlay --blur`) e cartão com rodapé (`--card`). Antes, um desenho só pegava
+  a fileira inteira: quatro cartões de 47px espremidos em 260, com o rótulo
+  estourando para fora.
+- **Collection card v1 (`--bottom`) usa o Button do sistema** no rótulo:
+  `.yb-btn--on-dark --sm`, branco, com o raio de controle, do tamanho do nome e
+  centrado, no lugar da pílula de raio total que nenhum outro controle tinha. O
+  hover é do cartão, e o nome quebra em cartão estreito.
 - **Notas das fichas recolhidas.** As 197 caixas azuis de "por quê" viraram
   `<details>` fechado: uma faixa azul-clara de 44px, com o "i", o título no azul
   de informação e a seta no fim. O texto abre no clique, dentro da mesma faixa,
@@ -68,6 +106,12 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   destaque".
 
 ### Adicionado
+- **Dropdown genérico** (`.yb-dropdown`, molécula), para lista curta de ações ou
+  escolha que navega (idioma, moeda). O gatilho é qualquer Button com a seta,
+  que gira aberta. O painel é uma lista de opções, com separador e a opção
+  atual em `aria-current`, peso e tique no fim da linha. `--end` alinha o painel
+  ao fim do gatilho. Usa a mesma mecânica sem JS do Account menu. Dentro de
+  formulário continua o Select. Nenhuma tela usa ainda, por isso entra como Beta.
 - **Aba Código em toda ficha**, a segunda depois de Componente, com HTML · CSS ·
   JS · Tokens e copiar em cada uma, no lugar da antiga "Marcação" que ficava no
   fim da primeira aba. Abre direto por `#codigo`.
@@ -568,6 +612,35 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   nome novo ela vencia a altura de celular do componente.
 
 ### Corrigido
+- **Peças que não cabiam no quadro de celular das fichas.** Varri as 59 peças
+  num quadro de 375px.
+  - **Collection card:** a grade de celular usava `repeat(2, 1fr)`, e o `1fr`
+    não encolhe abaixo do conteúdo. O "Shop Collection" do `--card` alargava a
+    coluna, e a grade passava 6px da tela, também nas telas da loja. Virou
+    `minmax(0,1fr)`, e o atalho quebra em cartão estreito.
+  - **Dropdown:** os dois painéis abertos se sobrepunham, porque a fileira
+    quebrava pela largura dos gatilhos, e não dos painéis. Agora empilha.
+  - **Quadro de 375:** ele media só a caixa da peça, e cortava o painel do menu
+    aberto na parte de baixo. Agora conta o que transborda.
+- **Anatomia de oito fichas.**
+  - **Avatar:** um avatar, e não três.
+  - **Chip:** desenha o ligado (`aria-pressed="true"`), com o × mapeado.
+  - **Select:** passa a ter Moldura e Controle em ordem, e ganhou o desenho do
+    obrigatório com erro (`.req`, `.yb-field__error`).
+  - **Banner hero:** ganhou o tipo arte. No tipo texto, Foto e Corpo tinham a
+    mesma caixa do Container e do Desfoque: três fios se cruzavam na borda
+    direita. Foto foi para o Container, e Corpo para o Sobretítulo. No tipo
+    arte, o fundo desfocado (que some nessa largura) e o `<picture>` (0px)
+    saíram como parte, e ficaram no texto.
+  - **Partner:** ganhou as três visões: recado, recolhido e faixa. Mede de
+    verdade no quadro; antes tinha 0px de altura e os fios apontavam para o
+    vazio.
+  - **Post:** três desenhos (destaque, lista, trio), um cartão por vez, no
+    lugar do layout inteiro espremido em 320px.
+  - **Review:** uma avaliação, e não o carrossel.
+  - **Toast:** desenha o toast, e não o botão que o dispara. A ficha ganhou a
+    fileira "Como ele aparece", com a mesma marcação que o script monta.
+  - Os rótulos "Tipo arte" diziam `--arte`, e agora dizem `--art`.
 - **Sacola calculava frete grátis a partir de $200**, enquanto a faixa do topo,
   o FAQ e a PDP diziam $50: um carrinho de $127.80 via "Add $72.20 more for
   free shipping". A meta virou `FRETE_GRATIS = 50`, uma constante só no
