@@ -255,17 +255,26 @@
 
      A unidade sai da linha de meta porque subiu pra retranca — escrevê-la duas
      vezes na mesma tela é o tipo de repetição que este documento evita. */
-  function masthead(periodo, tiles, hero, retranca, situacao) {
+  /* A autoria é escrita DUAS vezes, e é de propósito. No telefone ela vira o
+     terceiro segmento da retranca, onde não custa altura nenhuma; no desktop
+     ela fica na linha própria de sempre, que é como o documento já era e o
+     Urlan pediu pra não mexer. Markup não muda com a largura da tela, então a
+     única forma de ter os dois desenhos é escrever os dois e deixar o CSS
+     decidir. Cada tamanho mostra exatamente um: o outro sai com `display:none`,
+     que também o tira da árvore de acessibilidade — ninguém lê duas vezes. */
+  function masthead(periodo, tiles, hero, retranca, situacao, autoria) {
+    const risca = autoria ? ` · ${esc(autoria)}` : '';
     return `<header class="rl-capa">
       <div class="rl-capa-topo">
         <img class="rl-logo" src="assets/brand/ybera-logo.webp" alt="Ybera" width="360" height="139">
       </div>
-      ${retranca ? `<p class="rl-rotulo rl-capa-retranca">${esc(retranca)}</p>` : ''}
+      ${retranca ? `<p class="rl-rotulo rl-capa-retranca">${esc(retranca)}<span class="rl-capa-autoria">${risca}</span></p>` : ''}
       <h1 class="rl-titulo">
         <span class="rl-titulo-fraco">Entregas de</span>
         <span class="rl-titulo-forte">${esc(periodo)}</span>
       </h1>
       ${situacao ? `<p class="rl-capa-situacao">${esc(situacao)}</p>` : ''}
+      ${autoria ? `<p class="rl-meta">${esc(autoria)}</p>` : ''}
       <div class="rl-bento rl-bento-capa">${tiles}${hero}</div>
     </header>`;
   }
@@ -947,13 +956,9 @@
     const html = `<div class="report-doc rl-doc">
       ${masthead(periodo, kpis,
         heroi(totalDeItens, apoioItens),
-        /* A autoria entra na RETRANCA, e não numa linha própria: sozinha ela
-           custava a linha mais a fronteira de 24px acima dela, no trecho em que
-           o leitor ainda está indo atrás dos números. Aqui ela não custa altura
-           nenhuma e continua no primeiro lugar em que se olha — que era o
-           requisito: informação que precisa ser vista não desce pro rodapé. */
-        [o.unidade, 'E-commerce'].concat(meta).filter(Boolean).join(' · '),
-        'O que o time entregou no período, e o planejamento dos próximos meses.')}
+        [o.unidade, 'E-commerce'].filter(Boolean).join(' · '),
+        'O que o time entregou no período, e o planejamento dos próximos meses.',
+        meta.join(' · '))}
       <div class="rl-corpo">${secoes.map((x) => secaoHtml(x)).join('')}</div>
       ${rodape()}
     </div>`;

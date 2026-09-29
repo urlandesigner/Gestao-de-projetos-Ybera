@@ -113,23 +113,22 @@ body.pagina-entregas {
 .rl-pill-vivo i { background: var(--positivo); }
 
 /* ---------- Capa ---------- */
-/* A CAPA é centrada; o resto do documento não. Ela é a única superfície do
-   relatório que não tem conteúdo pra ler em sequência — é marca, assunto e
-   período — e centrada ela lê como abertura em vez de como o primeiro
-   parágrafo. Do bento pra baixo tudo volta ao eixo esquerdo, que é o que
-   sustenta leitura corrida e listas. */
-.rl-capa { padding-top: clamp(1.25rem, 3vw, 2.25rem); text-align: center; }
-/* As caixas de largura limitada precisam do `auto` nas laterais: sem ele o
-   `text-align` centra o TEXTO mas a caixa continua colada à esquerda, e a
-   frase fica centrada dentro de um bloco torto. */
-.rl-capa-situacao { margin-left: auto; margin-right: auto; }
-.rl-bento-capa .rl-tile-rot, .rl-bento-capa .rl-tile-apoio,
-.rl-bento-capa .rl-heroi-frase { margin-left: auto; margin-right: auto; }
-.rl-bento-capa .rl-tile-num { justify-content: center; }
+/* O DESKTOP não muda: capa alinhada à esquerda, autoria em linha própria,
+   "Entregas de" na sua linha. Tudo que veio do refino de telefone vive no
+   @media lá embaixo — a pedido do Urlan, e é a regra que eu tinha quebrado
+   aplicando as mudanças nos dois tamanhos. */
+.rl-capa { padding-top: clamp(1.25rem, 3vw, 2.25rem); }
+/* A autoria na retranca é o desenho do telefone; aqui ela é a linha .rl-meta. */
+.rl-capa-autoria { display: none; }
+.rl-meta {
+  margin: 0.7rem 0 0;
+  font-size: 0.82rem;
+  color: var(--mudo);
+}
 .rl-capa-topo {
   display: flex;
   align-items: center;
-  justify-content: center; /* a marca é o eixo da capa centrada */
+  justify-content: space-between;
   gap: 1rem;
   /* Piso de 2rem e não 1.5rem: no telefone o clamp encostava no mínimo e o
      espaço depois da marca (24px) ficava IGUAL ao de dentro do texto
@@ -156,9 +155,7 @@ body.pagina-entregas {
    virava três linhas. Inline, a frase é uma só e o navegador quebra onde a
    largura manda. O contraste entre os dois continua inteiro: ele vem do peso e
    da cor, não da quebra. */
-.rl-titulo span { display: inline; }
 .rl-titulo-fraco {
-  margin-right: 0.22em; /* o espaço entre os dois pedaços */
   font-size: clamp(1.9rem, 5.4vw, 3.4rem);
   font-weight: 500;
   color: var(--mudo);
@@ -174,6 +171,7 @@ body.pagina-entregas {
    telefone: sem ele a quebra caía DENTRO do nome ("URLAN / DIPRE"). Balanceada,
    ela parte no separador, que é onde um leitor partiria. */
 .rl-capa-retranca { margin: 0 0 0.7rem; text-wrap: balance; }
+.rl-titulo span { display: block; }
 /* Linha de situação: diz o que o documento é. Largura de leitura curta de
    propósito — é uma frase, não um parágrafo. */
 .rl-capa-situacao {
@@ -188,7 +186,7 @@ body.pagina-entregas {
    linha dela quando a autoria subiu pra retranca. Sem esta regra o bento cairia
    no margin-top genérico de `.rl-bento` (20px no telefone) e o espaço até os
    números ficaria MENOR que o do título até a situação. */
-.rl-capa .rl-capa-situacao + .rl-bento-capa { margin-top: clamp(2rem, 4.5vw, 3rem); }
+.rl-capa .rl-meta + .rl-bento-capa { margin-top: clamp(2rem, 4.5vw, 3rem); }
 
 /* ---------- Bento ---------- */
 .rl-bento {
@@ -1296,14 +1294,44 @@ body.pagina-entregas {
      central que não diz que componente é aquele. 92px devolve o ~1,6:1 que o
      desktop tem, ou seja, o MESMO enquadramento — em miniatura. */
   .rl-fig-link img { height: 92px; }
-  .rl-bento-capa > .rl-tile { grid-column: span 6; min-height: 7rem; }
-  /* Bloco que fica sozinho na fileira toma a largura inteira: meia largura
-     deixa um buraco no fim da linha, que lê como conteúdo faltando. Vale pro
-     terceiro de uma fileira de três — e pro único, que é a capa de hoje (um
-     bloco claro + a âncora escura). Sem a segunda regra o bloco claro ficava
-     com 168px de 375 no celular, com metade da tela vazia ao lado. */
-  .rl-bento-capa > .rl-tile:nth-child(3) { grid-column: span 12; min-height: 0; }
-  .rl-bento-capa > .rl-tile:first-child:nth-last-child(2) { grid-column: span 12; min-height: 0; }
+  /* ---- A capa do telefone ----
+     Tudo aqui é refino de tela pequena e NÃO vale no desktop, que fica como
+     sempre foi. */
+
+  /* Centrada: a capa é a única superfície do relatório sem texto pra ler em
+     sequência — é marca, assunto e período. */
+  .rl-capa { text-align: center; }
+  .rl-capa-topo { justify-content: center; }
+  /* `text-align` centra o TEXTO, não a CAIXA: sem margem automática, a frase
+     sai centrada dentro de um bloco encostado à esquerda. */
+  .rl-capa-situacao { margin-left: auto; margin-right: auto; }
+  .rl-bento-capa .rl-tile-rot, .rl-bento-capa .rl-heroi-frase { margin-left: auto; margin-right: auto; }
+  .rl-bento-capa .rl-tile-num { justify-content: center; }
+
+  /* O título corre numa frase só: em bloco, "Entregas de" gastava uma linha
+     inteira de display type com duas palavras, e o título ia a três linhas. */
+  .rl-titulo span { display: inline; }
+  .rl-titulo-fraco { margin-right: 0.22em; }
+
+  /* A autoria vira o terceiro segmento da retranca: ali não custa altura
+     nenhuma e continua no primeiro lugar em que se olha. A linha própria
+     (.rl-meta) é o desenho do desktop e sai daqui — `display:none` também a
+     tira da árvore de acessibilidade, então ninguém lê a autoria duas vezes.
+     A adjacência `.rl-meta + .rl-bento-capa` continua valendo mesmo escondida,
+     e é ela que segura o degrau maior até os números. */
+  .rl-capa-autoria { display: inline; }
+  .rl-meta { display: none; }
+
+  /* Os dois blocos lado a lado, sem a linha de apoio. Empilhados em largura
+     inteira eles empurravam os números pra 297px de uma tela de 812; lado a
+     lado e sem o texto explicativo, a capa inteira cabe antes da dobra. A
+     explicação de cada número é o que sai — no telefone ela custa duas linhas
+     em cada bloco, e o rótulo já nomeia o que o número conta. */
+  .rl-bento-capa > .rl-tile, .rl-bento-capa > .rl-heroi { grid-column: span 6; min-height: 0; }
+  .rl-bento-capa .rl-tile-apoio { display: none; }
+  /* Bloco que sobra sozinho numa fileira toma a largura inteira: meia largura
+     deixa um buraco no fim da linha, que lê como conteúdo faltando. */
+  .rl-bento-capa > .rl-tile:nth-child(3) { grid-column: span 12; }
 
   /* A escala do roadmap tinha 12 rótulos "JUL/26" disputando uns 430px e eles
      se sobrepunham, virando uma linha ilegível. O que sobra ali é o ano: ele
@@ -1331,7 +1359,6 @@ body.pagina-entregas {
      divisórias nem o selo "hoje" precisam descer junto. */
   .rl-rm-escala span:first-child { line-height: 1.15; }
   .rl-rm-escala span:first-child i { display: block; }
-  .rl-bento-capa > .rl-heroi { grid-column: span 12; }
   /* Mesma decisão do v1: no celular a pílula estourava a largura e rolava com
      scrollbar invisível — o seletor de mês ficava fora da tela sem pista
      nenhuma de que existia. Quebra em linhas e vira retângulo arredondado. */
