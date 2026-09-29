@@ -676,18 +676,24 @@
       const feito = it.status === 'concluido';
       const testando = it.status === 'teste';
       const rodando = it.status === 'andamento';
-      /* "em andamento" continua falando só pela barra escura — um selo ali
-         repetiria o que a cor já diz, e são cinco linhas assim. "concluído" e
-         "em teste" ganham selo porque a cor sozinha não tem legenda: sem a
-         palavra, verde e âmbar viram enigma. As palavras são as mesmas dos
-         selos dos cartões, de propósito — o mesmo estado não pode ter dois
-         nomes no mesmo documento. */
+      /* Os três estados declarados levam selo; quem não tem status é janela no
+         calendário e não leva nada. "em andamento" ficou sem selo por um tempo,
+         com o argumento de que a barra escura já dizia — mas quando "em teste"
+         ganhou o dele, a ausência virou ambiguidade em vez de economia: cor sem
+         legenda é enigma, e ficava valendo pra um estado e não pro outro.
+
+         As palavras são as mesmas dos selos dos cartões, de propósito — o mesmo
+         estado não pode ter dois nomes no mesmo documento.
+
+         O `title` na barra saiu junto: ele existia porque a cor sozinha não
+         contava, e agora a palavra está escrita ao lado do nome. */
       const selo = feito ? '<span class="rl-rm-feito">concluído</span>'
-        : testando ? '<span class="rl-rm-teste">em teste</span>' : '';
+        : testando ? '<span class="rl-rm-teste">em teste</span>'
+        : rodando ? '<span class="rl-rm-andamento">em andamento</span>' : '';
       const modBarra = feito ? ' rl-rm-barra-feita'
         : testando ? ' rl-rm-barra-teste'
         : rodando ? ' rl-rm-barra-andamento' : '';
-      const tituloBarra = rodando ? ' title="Em andamento"' : '';
+      const tituloBarra = '';
       return `<div class="rl-rm-item">
         <span class="rl-rm-titulo"><span class="rl-rm-nome">${esc(it.titulo)}</span>${selo}</span>
         <span class="rl-rm-trilha"><span class="rl-rm-barra${modBarra}"${tituloBarra} style="left:${esquerda.toFixed(2)}%;width:${largura.toFixed(2)}%"></span></span>

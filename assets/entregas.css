@@ -969,7 +969,7 @@ body.pagina-entregas {
    `.rl-rm-feito` mantém o nome porque o report v2 emite a mesma classe — os
    dois documentos têm folhas separadas, mas renomear aqui faria o nome divergir
    entre eles sem ganho nenhum. */
-.rl-rm-feito, .rl-rm-teste {
+.rl-rm-feito, .rl-rm-teste, .rl-rm-andamento {
   flex: none;
   margin-top: 0.1rem;   /* acerta o selo com a primeira linha do nome */
   padding: 0.1rem 0.45rem;
@@ -982,6 +982,9 @@ body.pagina-entregas {
 }
 .rl-rm-feito { background: var(--positivo); color: #fff; }
 .rl-rm-teste { background: var(--atencao-fundo); color: var(--atencao); }
+/* Mesmo azul do selo do cartão: o estado tem de ter a mesma cara nas duas
+   seções, senão o leitor acha que são coisas diferentes. */
+.rl-rm-andamento { background: #e2e8f5; color: #1e40af; }
 /* z-index acima dos divisores de mês: grade é fundo, barra é dado. Sem isso a
    linha do mês corta a barra ao meio, porque vem depois no DOM. */
 .rl-rm-trilha { grid-column: 2; position: relative; z-index: 1; min-height: 1.5rem; padding: 0.5rem 0; }
@@ -1220,7 +1223,7 @@ body.pagina-entregas {
      legíveis valem mais que uma linha alinhada. */
   .rl-rm-titulo { flex-wrap: wrap; justify-content: flex-start; gap: 0.25rem 0.45rem; }
   .rl-rm-nome { min-width: 100%; }
-  .rl-rm-feito, .rl-rm-teste { margin-top: 0; }
+  .rl-rm-feito, .rl-rm-teste, .rl-rm-andamento { margin-top: 0; }
 
   .rl-rm-escala i { display: none; }
   /* O primeiro guarda o ano, senão a régua não diz de que ano ela parte. Ele
@@ -1262,8 +1265,8 @@ body.pagina-entregas {
   .rl-rodape-contato a { color: var(--tinta); }
   /* Barras são só fundo: sem isto o papel sai em branco */
   .rl-rumo-trilho i, .rl-esforco-regua i, .rl-comp-barra i, .rl-rm-barra,
-  .rl-selo-risco, .rl-selo-ok, .rl-selo-teste, .rl-selo-andamento, .rl-rm-teste,
-  .rl-bloco-n, .rl-chip.ativo {
+  .rl-selo-risco, .rl-selo-ok, .rl-selo-teste, .rl-selo-andamento,
+  .rl-rm-teste, .rl-rm-andamento, .rl-bloco-n, .rl-chip.ativo {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }

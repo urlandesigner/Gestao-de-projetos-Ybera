@@ -189,11 +189,15 @@ test('roadmap: "em teste" ganha selo e barra próprios', () => {
   const h = documento({ roadmap }).html;
   assert.match(h, /<span class="rl-rm-teste">em teste<\/span>/);
   assert.equal((h.match(/rl-rm-barra-teste/g) || []).length, 1);
-  // "em andamento" continua sem selo: a barra escura já diz, e repetir em cinco
-  // linhas seria ruído. É a decisão que faz o selo dos outros dois valer algo.
-  const linhaRodando = /Rodando[\s\S]*?<\/div>/.exec(h)[0];
-  assert.ok(!/rl-rm-feito|rl-rm-teste/.test(linhaRodando), 'em andamento fala pela barra');
+  // Os TRÊS estados declarados levam selo; quem não tem status é só janela no
+  // calendário e não leva nada. "em andamento" ficou sem selo por um tempo, com
+  // o argumento de que a barra escura bastava — mas cor sem legenda é enigma, e
+  // valia pra um estado e não pro outro.
+  assert.match(h, /<span class="rl-rm-andamento">em andamento<\/span>/);
+  assert.equal((h.match(/class="rl-rm-(?:feito|teste|andamento)"/g) || []).length, 3,
+    'concluído, em teste e em andamento — o previsto fica sem selo');
   assert.equal((h.match(/rl-rm-barra"/g) || []).length, 1, 'só o previsto fica na barra neutra');
+  assert.ok(!/title="Em andamento"/.test(h), 'o title saiu: a palavra agora está escrita');
 });
 
 test('roadmap e cartão não chamam o mesmo estado por dois nomes', () => {
