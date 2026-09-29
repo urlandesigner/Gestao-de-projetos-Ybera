@@ -369,6 +369,7 @@
       iniciativa: 'Nova PDP USA',
       produto: 'Loja Clube USA',
       epicoId: 49290,
+      featureIds: [44271],
       resumo: 'Foram criadas novas opções visuais dos componentes da PDP do site.',
       // Aqui o resumo não enumera os componentes como o da HOME, então as
       // legendas saíram da própria tela: quando a seção tem título no site, é
