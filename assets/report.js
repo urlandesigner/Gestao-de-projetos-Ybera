@@ -49,7 +49,24 @@ const NIVEIS_ACIMA = 4; // PBI → Feature → Épico usa 2; 4 é folga pra hier
 // chama esta página (report.html?po=1). O link que vai pro stakeholder é montado
 // sem query nenhuma, então ele nunca vê ferramenta — não por estar escondida,
 // mas por não ser montada. Abrindo a URL crua, esta é uma página de leitura.
-const FERRAMENTAS = /(?:^|[?&])po=1(?:&|$)/.test(location.search);
+// Uma página pode ainda exigir que as ferramentas existam SÓ em
+// desenvolvimento, declarando data-ferramentas="local" no <body>. É o caso do
+// entregas.html: ele é o documento que vai pro stakeholder, e a Central linka
+// pra ele com ?po=1 — então em produção o ?po=1 chegava junto e a barra
+// aparecia pra quem só devia ler. O recorte é por HOSPEDEIRO, não por página,
+// porque produção é uma cópia dos MESMOS arquivos: não dá pra publicar um
+// index.html diferente.
+const LOCAL = location.hostname === '' // aberto direto do disco (file://)
+  || /^(?:localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+const SO_LOCAL = document.body.dataset.ferramentas === 'local';
+// A porta de serviço: em produção a barra ainda abre com ?ferramentas=1, que
+// ninguém digita por acaso e nenhum link do site carrega. Existe porque o link
+// de leitura é montado com location.origin — gerá-lo no localhost produziria um
+// endereço que só abre na máquina do PO. Sem essa porta, a fixação quebraria a
+// única forma de produzir o link que vai pro stakeholder.
+const PORTA_DE_SERVICO = /(?:^|[?&])ferramentas=1(?:&|$)/.test(location.search);
+const FERRAMENTAS = /(?:^|[?&])po=1(?:&|$)/.test(location.search)
+  && (LOCAL || PORTA_DE_SERVICO || !SO_LOCAL);
 
 const st = {
   config: null,

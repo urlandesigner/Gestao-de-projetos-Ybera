@@ -7,14 +7,21 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/entregas.css?v=2026092922">
+<link rel="stylesheet" href="assets/entregas.css?v=2026092923">
 </head>
 <!-- ENTREGAS. Não é uma versão do report: é outro documento, com duas seções
      (entregas recentes e roadmap) e linguagem de negócio. Usa o MESMO
      report.js do report — quem muda o desenho é assets/briefing-entregas.js,
      que se registra no mesmo window.CentralBriefing, e a folha própria. Por
      isso report.html e report-v2.html seguem intocados.
-     O link de leitura (#r=...) gerado aqui abre aqui. --><body data-pagina="report" class="pagina-entregas">
+     O link de leitura (#r=...) gerado aqui abre aqui.
+
+     data-ferramentas="local": este é O documento que vai pro stakeholder, e a
+     Central linka pra cá com ?po=1 — em produção o ?po=1 chegava junto e a
+     barra do PO aparecia pra quem só devia ler. Com a declaração, report.js só
+     monta a barra em localhost. Em produção ela ainda abre de propósito com
+     &ferramentas=1, que é como se gera o link de leitura (ele usa
+     location.origin, então precisa nascer no endereço de produção). --><body data-pagina="report" data-ferramentas="local" class="pagina-entregas">
 <div class="app">
 <div class="corpo">
 <main>
@@ -46,10 +53,10 @@
   <p id="visor-legenda" class="rl-visor-legenda"></p>
 </dialog>
 
-<script src="assets/core.js?v=2026092922"></script>
-<script src="assets/api.js?v=2026092922"></script>
-<script src="assets/briefing-entregas.js?v=2026092922"></script>
-<script src="assets/report.js?v=2026092922"></script>
+<script src="assets/core.js?v=2026092923"></script>
+<script src="assets/api.js?v=2026092923"></script>
+<script src="assets/briefing-entregas.js?v=2026092923"></script>
+<script src="assets/report.js?v=2026092923"></script>
 <script>
 /* Visor da galeria — vive aqui, e não no report.js nem no briefing.
 
