@@ -257,7 +257,14 @@ body.pagina-entregas {
 .rl-bento-capa > .rl-heroi { grid-column: span 12; }
 
 /* Âncora: a seta fantasma ao fundo aponta pro lado que o número andou. */
-.rl-heroi { overflow: hidden; min-height: 13rem; justify-content: space-between; gap: 1.25rem; }
+/* Nem `space-between` nem gap próprio, e as duas coisas pelo mesmo motivo: o
+   bloco escuro passou a ter TRÊS filhos (frase, apoio, base) em vez de dois.
+   O space-between distribuía a sobra ENTRE os três, afastando o apoio da frase
+   por um tanto que dependia da altura do bloco; e o gap de 1.25rem era maior
+   que o 0.75rem dos outros blocos, então a mesma dupla rótulo+apoio ficava com
+   distâncias diferentes nos dois cartões da capa. Agora o gap é o mesmo de
+   `.rl-tile` e quem desce o número é o `margin-top: auto` da base. */
+.rl-heroi { overflow: hidden; min-height: 13rem; justify-content: flex-start; }
 /* No escuro o número ganha ar: o rótulo desce pra linha de baixo, senão ele
    encosta no numeral (que tem line-height apertado de propósito). */
 .rl-heroi .rl-tile-num { display: block; }
@@ -293,7 +300,7 @@ body.pagina-entregas {
    variação pro lado do número — com um filho só, não fazia mais nada.
    A regra gêmea em report-v2.css continua inteira: lá a pílula ainda é
    desenhada, e o container ainda tem dois filhos. */
-.rl-heroi-base { position: relative; }
+.rl-heroi-base { position: relative; margin-top: auto; }
 .rl-heroi .rl-tile-num { margin: 0; }
 
 /* ---------- Navegação ---------- */
