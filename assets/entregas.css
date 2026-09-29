@@ -151,11 +151,16 @@ body.pagina-entregas {
   line-height: 1.55;
   color: var(--mudo);
 }
+/* Mesmo tamanho e mesma cor de `.rl-tile-apoio`, e isso não vai mudar: são os
+   dois textos de apoio do documento. O que separa os dois é DISTÂNCIA — a meta
+   encostada no bento lia como legenda dos cartões, e é metadado do documento.
+   A margem extra abaixo a prende ao bloco do título, que é onde ela pertence. */
 .rl-meta {
   margin: 0.7rem 0 0;
   font-size: 0.82rem;
   color: var(--mudo);
 }
+.rl-capa .rl-meta + .rl-bento-capa { margin-top: clamp(2rem, 4.5vw, 3rem); }
 
 /* ---------- Bento ---------- */
 .rl-bento {
@@ -1219,10 +1224,13 @@ body.pagina-entregas {
   .rl-bento-capa > .rl-tile { grid-column: span 3; }
   .rl-bento-capa > .rl-tile:nth-child(3) { grid-column: span 6; min-height: 7rem; }
   .rl-bento-capa > .rl-heroi { grid-column: 7 / span 6; grid-row: 1 / span 2; }
-  /* Mês fechado: sobra um bloco pequeno só, então ele toma a esquerda inteira
-     e a âncora não precisa esticar por duas fileiras. */
-  .rl-bento-capa > .rl-tile:first-child:nth-last-child(2) { grid-column: span 6; }
-  .rl-bento-capa > .rl-tile:first-child:nth-last-child(2) ~ .rl-heroi { grid-row: 1 / span 1; }
+  /* Mês fechado: sobra um bloco pequeno só, e a âncora não precisa esticar por
+     duas fileiras. A divisão é 5/7 e não 6/6: com dois blocos de mesma largura,
+     mesma altura e mesma estrutura interna, o bento vira a grade de cartões
+     iguais que o comentário acima diz que ele não é — e os dois números passam
+     a pesar o mesmo, quando um é a âncora da capa. */
+  .rl-bento-capa > .rl-tile:first-child:nth-last-child(2) { grid-column: span 5; }
+  .rl-bento-capa > .rl-tile:first-child:nth-last-child(2) ~ .rl-heroi { grid-column: 6 / span 7; grid-row: 1 / span 1; }
 }
 
 @media (max-width: 719px) {

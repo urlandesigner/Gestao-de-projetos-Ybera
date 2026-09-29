@@ -372,10 +372,17 @@ test('capa: o bloco escuro conta PBI fechado no mês, não épico nem Feature', 
    que o número grande é a quantidade de cartões que ele vê logo abaixo. */
 test('capa: cada número diz o que conta, e sem jargão de sistema', () => {
   const capa = capaDe(documento().html);
-  assert.match(capa, /rl-tile-apoio">[^<]*[Ff]rentes de trabalho contempladas/,
-    'o bloco claro não explica o que é um "projeto atendido"');
-  assert.match(capa, /rl-tile-apoio">Soma dos itens concluídos dentro dessas frentes</,
-    'o bloco escuro não explica o que é um "item entregue"');
+  assert.equal((capa.match(/rl-tile-apoio">/g) || []).length, 2,
+    'os dois blocos da capa precisam de linha de apoio');
+  /* O que este teste guarda não é a frase, é a PALAVRA: o rótulo dizia
+     "Projetos atendidos" e o apoio logo abaixo dizia "frentes de trabalho" —
+     dois nomes pra mesma coisa, coladas, e o leitor parava pra decidir se eram
+     sinônimos. Vale pros dois blocos: o escuro diz "dentro desses <palavra>". */
+  const palavra = /Projetos atendidos|Projeto atendido/.test(capa) ? 'projeto' : 'frente';
+  for (const apoio of capa.match(/rl-tile-apoio">([^<]*)</g) || []) {
+    assert.match(apoio.toLowerCase(), new RegExp(palavra),
+      `o apoio "${apoio}" usa palavra diferente da do rótulo ("${palavra}")`);
+  }
   for (const jargao of ['Azure DevOps', 'PBI', 'backlog', 'Feature']) {
     assert.ok(!capa.includes(jargao), `"${jargao}" é jargão: a capa é pro stakeholder`);
   }

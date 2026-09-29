@@ -834,9 +834,18 @@
 
        Fica embaixo do rótulo e não do número por uma razão de forma; está
        explicada em `tile`. */
-    const apoioGrupo = nGrupos === 1
-      ? 'Frente de trabalho contemplada neste relatório'
-      : 'Frentes de trabalho contempladas neste relatório';
+    /* Uma palavra só, e ela sai do MESMO lugar que o rótulo. O apoio dizia
+       "frentes de trabalho" embaixo de um rótulo que diz "Projetos atendidos":
+       duas palavras pra mesma coisa, coladas, e o leitor parava pra decidir se
+       eram sinônimos. O bloco escuro herda a mesma palavra ("dentro desses
+       projetos"), senão a incoerência só atravessa a capa. */
+    const palavra = agrupar === 'epico' ? 'frentes' : 'projetos';
+    const apoioGrupo = agrupar === 'epico'
+      ? (nGrupos === 1 ? 'Frente de trabalho contemplada neste relatório'
+                       : 'Frentes de trabalho contempladas neste relatório')
+      : (nGrupos === 1 ? 'Projeto do roadmap contemplado neste relatório'
+                       : 'Projetos do roadmap contemplados neste relatório');
+    const apoioItens = 'Soma dos itens concluídos dentro desses ' + palavra;
     const kpis = tile(rotuloGrupo, nGrupos, '', '', apoioGrupo);
 
     const porIdTodos = new Map((o.todos || items).map((it) => [it.id, it]));
@@ -938,7 +947,7 @@
     // é dela que a Central monta o link de leitura.
     const html = `<div class="report-doc rl-doc">
       ${masthead(periodo, meta.join(' · '), kpis,
-        heroi(totalDeItens, 'Soma dos itens concluídos dentro dessas frentes'),
+        heroi(totalDeItens, apoioItens),
         [o.unidade, 'E-commerce'].filter(Boolean).join(' · '),
         'O que o time entregou no período, e o planejamento dos próximos meses.')}
       <div class="rl-corpo">${secoes.map((x) => secaoHtml(x)).join('')}</div>
