@@ -119,7 +119,12 @@ body.pagina-entregas {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: clamp(1.5rem, 4vw, 2.75rem);
+  /* Piso de 2rem e não 1.5rem: no telefone o clamp encostava no mínimo e o
+     espaço depois da marca (24px) ficava IGUAL ao de dentro do texto
+     (situação → metadado). A marca é outro assunto — identidade, não conteúdo —
+     e tem que se separar como fronteira maior, no mesmo degrau do espaço até os
+     números. No desktop o clamp já dava 44px e nada muda. */
+  margin-bottom: clamp(2rem, 4vw, 2.75rem);
 }
 .rl-logo { display: block; height: 36px; width: auto; }
 /* O arquivo da marca é raster e só existe em positivo: sobre superfície
@@ -127,7 +132,12 @@ body.pagina-entregas {
 .rl-logo-inv { filter: invert(1); }
 
 /* Título em duas vozes: a linha fraca situa, a forte é o assunto. */
-.rl-titulo { margin: 0; line-height: 0.98; letter-spacing: -0.04em; }
+/* `text-wrap: balance` porque no telefone o título quebra e a quebra padrão
+   deixava "2026" sozinho na terceira linha — viúva, e é ela que faz a capa
+   parecer desalinhada. Balanceado, sai "Agosto e Setembro / de 2026". Onde o
+   título cabe numa linha (desktop) a propriedade não faz nada, e onde não é
+   suportada a quebra volta a ser a de antes. */
+.rl-titulo { margin: 0; line-height: 0.98; letter-spacing: -0.04em; text-wrap: balance; }
 .rl-titulo span { display: block; }
 .rl-titulo-fraco {
   font-size: clamp(1.9rem, 5.4vw, 3.4rem);
@@ -147,6 +157,7 @@ body.pagina-entregas {
 .rl-capa-situacao {
   max-width: 54ch;
   margin: 1rem 0 0;
+  text-wrap: pretty; /* sem linha final órfã embaixo de duas cheias */
   font-size: clamp(1rem, 2.1vw, 1.15rem);
   line-height: 1.55;
   color: var(--mudo);
@@ -156,7 +167,14 @@ body.pagina-entregas {
    encostada no bento lia como legenda dos cartões, e é metadado do documento.
    A margem extra abaixo a prende ao bloco do título, que é onde ela pertence. */
 .rl-meta {
-  margin: 0.7rem 0 0;
+  /* 1.5rem e não 0.7rem: com 0.7 o espaço até a situação (11px) era MENOR que
+     o da situação até o título (16px), então a linha do Product Owner grudava
+     na frase que explica o documento em vez de ler como o metadado que é. A
+     capa passa a ter uma escada — 8px dentro do bloco do título, 16 até a
+     situação, 24 até o metadado, 32 até os números — e cada fronteira é um
+     degrau maior que a anterior. Era isso que faltava pra ela parecer
+     organizada, não menos conteúdo. */
+  margin: 1.5rem 0 0;
   font-size: 0.82rem;
   color: var(--mudo);
 }
