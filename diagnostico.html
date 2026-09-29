@@ -266,11 +266,30 @@
     caixa.innerHTML = '<p class="meta">buscando…</p>';
     const proj = (config.projects || []).filter((x) => !x.hidden)[0];
     if (!proj) { caixa.innerHTML = '<p class="meta">sem projeto configurado</p>'; return; }
+    /* Os filhos vêm pelos LINKS do próprio item, e não por consulta.
+
+       A consulta (WIQL) é presa a projeto e área: se o filho mora em outro
+       projeto ou em outra área, ela simplesmente não o devolve — e uma sonda
+       que usasse consulta teria o mesmo ponto cego que estamos investigando.
+       Os links do item de trabalho não têm esse recorte: quem é filho, é filho.
+
+       Também guardamos qual dos dois caminhos achou cada um: o filho que existe
+       no link e NÃO aparece na consulta é exatamente o que some do documento. */
     let filhos = [];
+    let idsPorConsulta = new Set();
     try {
-      const ids = await A.runWiql(ctx, proj.projectName, proj.teamName,
-        'SELECT [System.Id] FROM WorkItems WHERE [System.Parent] = ' + alvo);
+      const raiz = await A.adoFetch(ctx, '/_apis/wit/workitems/' + alvo +
+        '?$expand=relations&api-version=7.0');
+      const ids = (raiz.relations || [])
+        .filter((r) => r.rel === 'System.LinkTypes.Hierarchy-Forward')
+        .map((r) => Number(String(r.url).split('/').pop()))
+        .filter(Boolean);
       filhos = ids.length ? await A.getFields(ctx, ids, CAMPOS) : [];
+      try {
+        const viaWiql = await A.runWiql(ctx, proj.projectName, proj.teamName,
+          'SELECT [System.Id] FROM WorkItems WHERE [System.Parent] = ' + alvo);
+        idsPorConsulta = new Set(viaWiql);
+      } catch (e) { /* sem consulta, a coluna só perde um detalhe */ }
     } catch (e) {
       caixa.innerHTML = '<p class="meta">falhou: ' + esc(e && e.message ? e.message : String(e)) + '</p>';
       return;
@@ -281,22 +300,29 @@
       const f = it.fields || {};
       const r = f['System.AssignedTo'];
       const buscado = porIdBuscado.has(it.id);
+      const naConsulta = idsPorConsulta.has(it.id);
       const terminal = ['Done', 'Closed', 'Removed', 'Completed'].includes(f['System.State']);
       const meu = !alvoDoDocumento || (r && r.displayName === alvoDoDocumento);
+      const tipo = f['System.WorkItemType'] || '';
       const ok = buscado && terminal && meu;
       if (ok) chegam += 1;
-      const porque = !buscado ? 'FORA DA ÁREA do time — a consulta não traz'
+      const porque = ok ? 'sim'
+        : !naConsulta ? 'a CONSULTA não devolve este item'
+        : !buscado ? 'a consulta devolve, mas ele não entrou na lista do report'
         : !terminal ? 'não está concluído'
-        : !meu ? 'atribuído a outra pessoa' : 'sim';
+        : 'atribuído a outra pessoa';
       return '<tr><td class="id">#' + it.id + '</td><td>' + esc(f['System.Title']) + '</td>' +
+        '<td class="tipo">' + esc(tipo) + '</td>' +
         '<td class="estado">' + esc(r ? r.displayName : '—') + '</td>' +
         '<td class="estado">' + esc(f['System.State']) + '</td>' +
         '<td class="estado">' + esc(f['System.AreaPath'] || '—') + '</td>' +
         '<td class="' + (ok ? 'estado' : 'id') + '"><b>' + esc(porque) + '</b></td></tr>';
     }).join('');
+    const projetos = [...new Set(filhos.map((it) => String((it.fields || {})['System.AreaPath'] || '').split('\\')[0]))];
     caixa.innerHTML = '<p class="meta" style="margin-top:1rem"><b>' + chegam + ' de ' + filhos.length +
-      '</b> chegam ao documento.<br>Áreas que a consulta cobre — ' + esc(areasTexto) + '</p>' +
-      '<table><thead><tr><th>id</th><th>título</th><th>responsável</th><th>estado</th><th>área</th><th>chega ao documento?</th></tr></thead><tbody>' +
+      '</b> chegam ao documento.<br>Áreas que a consulta cobre — ' + esc(areasTexto) +
+      '<br>Projetos onde os filhos moram — ' + esc(projetos.join(' · ')) + '</p>' +
+      '<table><thead><tr><th>id</th><th>título</th><th>tipo</th><th>responsável</th><th>estado</th><th>área</th><th>chega ao documento?</th></tr></thead><tbody>' +
       linhas + '</tbody></table>';
   });
 
