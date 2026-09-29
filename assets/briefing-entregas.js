@@ -357,6 +357,7 @@
       status: 'entregue',
       produto: 'Loja Clube USA',
       epicoId: 49290,
+      featureIds: [45723],
       resumo: 'Melhoria geral da experiência do cart drawer, no desktop e no mobile.',
       pasta: 'assets/entregas/novo-cart-drawer',
       imagens: [
@@ -389,6 +390,8 @@
       status: 'andamento',
       produto: 'Shipsmart',
       epicoId: 49300,
+      // Sem Feature no board: a frente é um item de trabalho só.
+      contaFixa: 1,
       resumo: [
         'Estamos realizando testes da automação do fluxo da Shipsmart para pedidos que têm estoque no Brasil e são entregues nos EUA.',
         'A automação da Shipsmart já está acertada. Agora estamos validando a segunda parte do fluxo, o que acontece depois dela.',
@@ -431,6 +434,7 @@
       status: 'entregue',
       produto: 'ERP — Ordoro | Salesforce Rootstock',
       epicoId: 49282,
+      contaFixa: 1,
       resumo: 'Ajustes e configurações adicionais pós-migração para a Rootstock.',
     },
     {

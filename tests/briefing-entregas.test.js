@@ -637,6 +637,21 @@ test('contagem: item pendurado direto no épico não inventa dono', () => {
   assert.match(h, /<p class="rl-sec-conta">7 itens</, 'o item solto não entra na Feature');
 });
 
+test('contagem: todo cartão declara como quer ser contado', () => {
+  /* O fallback por épico existe pra migração não ter um passo sem número, mas
+     ele é o comportamento ERRADO em regime: um épico serve várias frentes e
+     infla a seção. Hoje nenhum cartão depende dele.
+
+     Este teste guarda o regime. Cartão novo sem chave não quebra a tela — cai no
+     épico e mostra um número inflado que ninguém desconfia, que é o defeito mais
+     caro que este documento teve. */
+  for (const c of BE.cartoesDoDocumento()) {
+    const temChave = (Array.isArray(c.featureIds) && c.featureIds.length) || typeof c.contaFixa === 'number';
+    assert.ok(temChave,
+      `"${c.titulo}" não declara featureIds nem contaFixa — vai contar o épico inteiro`);
+  }
+});
+
 test('contagem: contaFixa vale pra frente que não tem Feature no board', () => {
   // O compliance é uma planilha que no DevOps é UM item com subitens. Não há
   // Feature pra contar, e o épico traria a loja inteira — então o número é
