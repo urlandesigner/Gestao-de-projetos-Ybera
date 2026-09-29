@@ -598,21 +598,31 @@
     return null;
   }
 
-  // PBIs do período por Feature, e por épico. O épico fica como reserva pro
-  // cartão que ainda não declarou `featureIds` — assim a migração é cartão a
-  // cartão, sem um passo em que o documento fica sem número nenhum.
-  function pbisPorChave(mesesDoPeriodo, porId, mapa) {
+  /* PBIs CONCLUÍDOS da frente, sem recorte de tempo.
+
+     Decisão do Urlan pra este primeiro relatório: ele junta tudo que foi
+     entregue recentemente, e várias frentes começaram antes de agosto. A Nova
+     PDP USA, por exemplo, rodou de julho a agosto — contar só o que fechou
+     dentro do período mostrava uma fração do trabalho dela.
+
+     É de propósito que isto NÃO usa o mesmo recorte do número da capa: a capa
+     responde "quanto saiu no período" e a seção responde "quanto esta frente
+     entregou". Duas perguntas, duas contas — e é por isso que somar as seções
+     não tem que dar o número da capa.
+
+     O épico segue como reserva pro cartão que ainda não declarou `featureIds`,
+     pra migração ser cartão a cartão. Ele é doblemente impreciso enquanto
+     durar: grosso demais, e agora também sem recorte de tempo. */
+  function pbisPorChave(items, porId, mapa) {
     const porFeature = new Map();
     const porEpico = new Map();
-    for (const m of mesesDoPeriodo || []) {
-      for (const r of ((m || {}).itens || [])) {
-        const it = r.item || r;
-        if (!ehPbi(it)) continue;
-        const fid = featureDe(it.id, porId);
-        if (fid) porFeature.set(fid, (porFeature.get(fid) || 0) + 1);
-        const prod = mapa && mapa.get(it.id);
-        if (prod) porEpico.set(prod.id, (porEpico.get(prod.id) || 0) + 1);
-      }
+    for (const it of (items || [])) {
+      if (!ehPbi(it)) continue;
+      if (!C.isTerminalState(((it || {}).fields || {})['System.State'])) continue;
+      const fid = featureDe(it.id, porId);
+      if (fid) porFeature.set(fid, (porFeature.get(fid) || 0) + 1);
+      const prod = mapa && mapa.get(it.id);
+      if (prod) porEpico.set(prod.id, (porEpico.get(prod.id) || 0) + 1);
     }
     return { porFeature, porEpico };
   }
@@ -796,7 +806,7 @@
     const kpis = tile(rotuloGrupo, nGrupos);
 
     const porIdTodos = new Map((o.todos || items).map((it) => [it.id, it]));
-    const contagens = pbisPorChave(mesesPeriodo, porIdTodos, mapa);
+    const contagens = pbisPorChave(items, porIdTodos, mapa);
 
     /* A chave leva prefixo porque Feature e épico vivem no mesmo espaço de ids:
        sem ele, um épico 123 e uma Feature 123 se confundiriam no Set.

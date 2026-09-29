@@ -573,6 +573,38 @@ test('contagem: cada seção conta a SUA Feature, não o épico inteiro', () => 
   assert.equal(contas.reduce((n, c) => n + parseInt(c[1], 10), 0), 16);
 });
 
+test('contagem: a Feature conta o que fechou FORA do período também', () => {
+  /* Decisão do Urlan pro primeiro relatório: a seção junta tudo que a frente
+     entregou, porque várias começaram antes de agosto. A Nova PDP rodou de
+     julho a agosto — com recorte de período a seção mostrava uma fração.
+
+     Este é o teste que a versão anterior não tinha: as datas dos outros ficavam
+     todas dentro do período, então passavam com ou sem o recorte. */
+  const items = hierarquiaComFeatures();
+  // Dois itens da Feature 710 fechados em JULHO, fora de agosto/setembro.
+  items.push({ id: 7500, fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.State': 'Done',
+    'System.Title': 'julho A', 'System.Parent': 710,
+    'Microsoft.VSTS.Common.ClosedDate': '2026-07-10T12:00:00Z', 'System.ChangedDate': iso(AGORA - dia) } });
+  items.push({ id: 7501, fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.State': 'Done',
+    'System.Title': 'julho B', 'System.Parent': 710,
+    'Microsoft.VSTS.Common.ClosedDate': '2026-07-20T12:00:00Z', 'System.ChangedDate': iso(AGORA - dia) } });
+  const cartoes = [{ titulo: 'Home', iniciativa: 'Nova Homepage', epicoId: 700, featureIds: [710],
+    status: 'entregue', resumo: 'x' }];
+  const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
+  assert.match(h, /<p class="rl-sec-conta">9 itens</, '7 do período + 2 de julho');
+});
+
+test('contagem: item não concluído não entra, mesmo dentro da Feature', () => {
+  // "Tudo que a frente entregou" é sobre entrega, não sobre trabalho em aberto.
+  const items = hierarquiaComFeatures();
+  items.push({ id: 7600, fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.State': 'In Progress',
+    'System.Title': 'ainda rodando', 'System.Parent': 710, 'System.ChangedDate': iso(AGORA - dia) } });
+  const cartoes = [{ titulo: 'Home', iniciativa: 'Nova Homepage', epicoId: 700, featureIds: [710],
+    status: 'andamento', resumo: 'x' }];
+  const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
+  assert.match(h, /<p class="rl-sec-conta">7 itens</, 'o item em progresso fica de fora');
+});
+
 test('contagem: sem featureIds, o cartão ainda conta pelo épico', () => {
   // A migração é cartão a cartão; não pode existir um passo em que a seção fica
   // sem número nenhum porque a Feature ainda não foi declarada.
