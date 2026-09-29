@@ -326,7 +326,7 @@
     {
       titulo: 'Novos componentes visuais para HOME',
       status: 'entregue',
-      iniciativa: 'Nova Homepage USA',
+      iniciativa: 'Nova Homepage',
       produto: 'Loja Clube USA',
       epicoId: 49290,
       // A contagem da seção vem daqui, e não do épico: o 49290 é a loja inteira
@@ -370,7 +370,7 @@
     {
       titulo: 'Novos componentes visuais para PDP',
       status: 'entregue',
-      iniciativa: 'Nova PDP USA',
+      iniciativa: 'Nova PDP',
       produto: 'Loja Clube USA',
       epicoId: 49290,
       featureIds: [44271],
@@ -403,7 +403,7 @@
     },
     {
       titulo: 'Tratativas do Google compliance',
-      iniciativa: 'Ajustes Loja USA Compliance Google',
+      iniciativa: 'Compliance Google',
       produto: 'Loja Clube USA',
       epicoId: 49290,
       status: 'andamento',
@@ -443,7 +443,7 @@
     {
       titulo: 'Tradução do site',
       status: 'teste',
-      iniciativa: 'Tradução',
+      iniciativa: 'Translate loja',
       produto: 'Loja Clube USA',
       epicoId: 49290,
       featureIds: [49920],
@@ -455,7 +455,7 @@
     {
       titulo: 'App Review — ajustes',
       status: 'entregue',
-      iniciativa: 'App de Reviews',
+      iniciativa: 'Melhorias Review',
       produto: 'Ybera Reviews / API de Reviews',
       epicoId: 49302,
       featureIds: [50905],
