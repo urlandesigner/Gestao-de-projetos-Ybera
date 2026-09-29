@@ -113,11 +113,23 @@ body.pagina-entregas {
 .rl-pill-vivo i { background: var(--positivo); }
 
 /* ---------- Capa ---------- */
-.rl-capa { padding-top: clamp(1.25rem, 3vw, 2.25rem); }
+/* A CAPA é centrada; o resto do documento não. Ela é a única superfície do
+   relatório que não tem conteúdo pra ler em sequência — é marca, assunto e
+   período — e centrada ela lê como abertura em vez de como o primeiro
+   parágrafo. Do bento pra baixo tudo volta ao eixo esquerdo, que é o que
+   sustenta leitura corrida e listas. */
+.rl-capa { padding-top: clamp(1.25rem, 3vw, 2.25rem); text-align: center; }
+/* As caixas de largura limitada precisam do `auto` nas laterais: sem ele o
+   `text-align` centra o TEXTO mas a caixa continua colada à esquerda, e a
+   frase fica centrada dentro de um bloco torto. */
+.rl-capa-situacao { margin-left: auto; margin-right: auto; }
+.rl-bento-capa .rl-tile-rot, .rl-bento-capa .rl-tile-apoio,
+.rl-bento-capa .rl-heroi-frase { margin-left: auto; margin-right: auto; }
+.rl-bento-capa .rl-tile-num { justify-content: center; }
 .rl-capa-topo {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center; /* a marca é o eixo da capa centrada */
   gap: 1rem;
   /* Piso de 2rem e não 1.5rem: no telefone o clamp encostava no mínimo e o
      espaço depois da marca (24px) ficava IGUAL ao de dentro do texto
@@ -158,7 +170,10 @@ body.pagina-entregas {
 }
 /* Retranca da capa: a mesma pílula de texto miúdo do resto do documento
    (.rl-rotulo), só com o espaço acertado pro título grande que vem logo abaixo. */
-.rl-capa-retranca { margin: 0 0 0.7rem; }
+/* `balance` porque a retranca passou a carregar três segmentos e quebra no
+   telefone: sem ele a quebra caía DENTRO do nome ("URLAN / DIPRE"). Balanceada,
+   ela parte no separador, que é onde um leitor partiria. */
+.rl-capa-retranca { margin: 0 0 0.7rem; text-wrap: balance; }
 /* Linha de situação: diz o que o documento é. Largura de leitura curta de
    propósito — é uma frase, não um parágrafo. */
 .rl-capa-situacao {
@@ -169,23 +184,11 @@ body.pagina-entregas {
   line-height: 1.55;
   color: var(--mudo);
 }
-/* Mesmo tamanho e mesma cor de `.rl-tile-apoio`, e isso não vai mudar: são os
-   dois textos de apoio do documento. O que separa os dois é DISTÂNCIA — a meta
-   encostada no bento lia como legenda dos cartões, e é metadado do documento.
-   A margem extra abaixo a prende ao bloco do título, que é onde ela pertence. */
-.rl-meta {
-  /* 1.5rem e não 0.7rem: com 0.7 o espaço até a situação (11px) era MENOR que
-     o da situação até o título (16px), então a linha do Product Owner grudava
-     na frase que explica o documento em vez de ler como o metadado que é. A
-     capa passa a ter uma escada — 8px dentro do bloco do título, 16 até a
-     situação, 24 até o metadado, 32 até os números — e cada fronteira é um
-     degrau maior que a anterior. Era isso que faltava pra ela parecer
-     organizada, não menos conteúdo. */
-  margin: 1.5rem 0 0;
-  font-size: 0.82rem;
-  color: var(--mudo);
-}
-.rl-capa .rl-meta + .rl-bento-capa { margin-top: clamp(2rem, 4.5vw, 3rem); }
+/* O degrau mais alto da capa passou a pendurar na situação, que virou a última
+   linha dela quando a autoria subiu pra retranca. Sem esta regra o bento cairia
+   no margin-top genérico de `.rl-bento` (20px no telefone) e o espaço até os
+   números ficaria MENOR que o do título até a situação. */
+.rl-capa .rl-capa-situacao + .rl-bento-capa { margin-top: clamp(2rem, 4.5vw, 3rem); }
 
 /* ---------- Bento ---------- */
 .rl-bento {

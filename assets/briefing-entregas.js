@@ -255,7 +255,7 @@
 
      A unidade sai da linha de meta porque subiu pra retranca — escrevê-la duas
      vezes na mesma tela é o tipo de repetição que este documento evita. */
-  function masthead(periodo, meta, tiles, hero, retranca, situacao) {
+  function masthead(periodo, tiles, hero, retranca, situacao) {
     return `<header class="rl-capa">
       <div class="rl-capa-topo">
         <img class="rl-logo" src="assets/brand/ybera-logo.webp" alt="Ybera" width="360" height="139">
@@ -266,7 +266,6 @@
         <span class="rl-titulo-forte">${esc(periodo)}</span>
       </h1>
       ${situacao ? `<p class="rl-capa-situacao">${esc(situacao)}</p>` : ''}
-      ${meta ? `<p class="rl-meta">${esc(meta)}</p>` : ''}
       <div class="rl-bento rl-bento-capa">${tiles}${hero}</div>
     </header>`;
   }
@@ -946,9 +945,14 @@
     // delegado por seletor, então nunca casa. `listaMeses` continua no retorno:
     // é dela que a Central monta o link de leitura.
     const html = `<div class="report-doc rl-doc">
-      ${masthead(periodo, meta.join(' · '), kpis,
+      ${masthead(periodo, kpis,
         heroi(totalDeItens, apoioItens),
-        [o.unidade, 'E-commerce'].filter(Boolean).join(' · '),
+        /* A autoria entra na RETRANCA, e não numa linha própria: sozinha ela
+           custava a linha mais a fronteira de 24px acima dela, no trecho em que
+           o leitor ainda está indo atrás dos números. Aqui ela não custa altura
+           nenhuma e continua no primeiro lugar em que se olha — que era o
+           requisito: informação que precisa ser vista não desce pro rodapé. */
+        [o.unidade, 'E-commerce'].concat(meta).filter(Boolean).join(' · '),
         'O que o time entregou no período, e o planejamento dos próximos meses.')}
       <div class="rl-corpo">${secoes.map((x) => secaoHtml(x)).join('')}</div>
       ${rodape()}
