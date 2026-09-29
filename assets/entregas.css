@@ -373,7 +373,28 @@ body.pagina-entregas {
 /* ---------- Seções ---------- */
 .rl-corpo { padding-bottom: clamp(2rem, 5vw, 3.5rem); }
 .rl-sec { padding: clamp(2rem, 4.5vw, 3.25rem) 0 0; scroll-margin-top: var(--nav-alt, 5rem); }
-.rl-sec-cab { margin-bottom: clamp(1rem, 2.4vw, 1.5rem); }
+/* A marca vertical pertence ao CABEÇALHO, e não ao h2: assim ela cobre o título
+   E a linha de baixo (a contagem, ou a intro do roadmap), e o recuo que ela cria
+   vale pras duas — a contagem alinha com o texto do título em vez de começar
+   colada na margem.
+
+   Enquanto morava no h2 ela só media a altura do título, e a segunda linha
+   ficava fora dela e fora do alinhamento. */
+.rl-sec-cab {
+  position: relative;
+  padding-left: calc(4px + 0.65rem);
+  margin-bottom: clamp(1rem, 2.4vw, 1.5rem);
+}
+.rl-sec-cab::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 999px;
+  background: var(--tinta);
+}
 /* O título encolheu e ganhou uma marca à esquerda. Ele vinha em 2.5rem, quase o
    tamanho do título da capa, e num documento com sete seções isso competia com
    a capa em vez de organizar a leitura. Menor, com um sinal fixo na frente, ele
@@ -386,9 +407,6 @@ body.pagina-entregas {
    `align-self: stretch` faz a barra acompanhar a altura da linha, então ela
    cresce junto com o clamp e com título que quebre em duas linhas. */
 .rl-sec-titulo {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
   margin: 0;
   font-size: clamp(1.25rem, 2.4vw, 1.7rem);
   font-weight: 800;
@@ -408,14 +426,7 @@ body.pagina-entregas {
   color: var(--mudo);
   font-variant-numeric: tabular-nums;
 }
-.rl-sec-titulo::before {
-  content: '';
-  flex: none;
-  align-self: stretch;
-  width: 4px;
-  border-radius: 999px;
-  background: var(--tinta);
-}
+
 .rl-sec-intro {
   max-width: 58ch;
   margin: 0.55rem 0 0;
