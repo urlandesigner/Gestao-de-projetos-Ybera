@@ -637,6 +637,28 @@ test('contagem: item pendurado direto no épico não inventa dono', () => {
   assert.match(h, /<p class="rl-sec-conta">7 itens</, 'o item solto não entra na Feature');
 });
 
+test('contagem: contaFixa vale pra frente que não tem Feature no board', () => {
+  // O compliance é uma planilha que no DevOps é UM item com subitens. Não há
+  // Feature pra contar, e o épico traria a loja inteira — então o número é
+  // declarado. A barra do cartão segue contando as 18 linhas por dentro.
+  const items = hierarquiaComFeatures();
+  const cartoes = [{ titulo: 'Planilha', iniciativa: 'Compliance', epicoId: 700,
+    progresso: { feito: 14, total: 18 }, contaFixa: 1, status: 'andamento', resumo: 'x' }];
+  const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
+  assert.match(h, /<p class="rl-sec-conta">1 item</, 'no singular');
+  assert.match(h, /aria-valuenow="14"/, 'e a barra continua dizendo 14 de 18');
+});
+
+test('contagem: contaFixa soma junto com as Features da mesma seção', () => {
+  const items = hierarquiaComFeatures();
+  const cartoes = [
+    { titulo: 'Planilha', iniciativa: 'Mista', epicoId: 700, contaFixa: 1, status: 'andamento', resumo: 'x' },
+    { titulo: 'Normal', iniciativa: 'Mista', epicoId: 700, featureIds: [710], status: 'entregue', resumo: 'x' },
+  ];
+  const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
+  assert.match(h, /<p class="rl-sec-conta">8 itens</, '7 da Feature + 1 declarado');
+});
+
 test('contagem: cartão que tem barra de progresso não entra na conta da seção', () => {
   // O compliance é uma planilha de 18 itens que no board é UM item. A barra
   // ("faltam 4 dos 18") é a medida verdadeira; uma contagem por Feature diria

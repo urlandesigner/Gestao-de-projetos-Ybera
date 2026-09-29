@@ -411,6 +411,8 @@
       // = 5. Porcentagem no texto já foi tentada e saiu — "50%" era exato em 9
       // de 18 e mentia em 10.
       progresso: { feito: 14, total: 18, rotulo: 'itens concluídos' },
+      // Sem Feature no board: a planilha inteira é um item de trabalho só.
+      contaFixa: 1,
       /* `/view` e não `/edit`: a planilha é pública para LEITURA, e o /edit faz o
          Google avaliar se a identidade de quem abre pode editar — quem está
          logado numa conta sem permissão de edição cai no pedido de acesso em
@@ -816,21 +818,26 @@
        o mesmo trabalho duas vezes. */
     const contaDoGrupo = (g) => {
       const chaves = new Set();
+      let fixo = 0;
       for (const c of (g.cards || [])) {
-        /* Cartão com `progresso` mede a si mesmo e não entra na conta da seção.
-           O caso que trouxe isto: o compliance é uma planilha de 18 itens que no
-           board é UM item só. Contar por Feature ali diria "1 item" embaixo do
-           título enquanto o cartão diz "faltam 4 dos 18" — dois números sobre a
-           mesma coisa, e o menos verdadeiro em cima.
+        /* `contaFixa` é pra frente que não tem Feature no board. O compliance é
+           uma planilha de 18 linhas que no DevOps é UM item de trabalho com
+           subitens — não há Feature pra contar, e derivar do épico traria a loja
+           inteira. Então o número é declarado: 1 item, que é o que existe lá.
 
-           A regra sai do dado que já existe, sem campo novo pra manter em dia:
-           quem declarou progresso já disse como quer ser medido. */
+           A barra do cartão continua contando as 18 linhas por dentro. São
+           medidas de coisas diferentes: a seção conta itens de trabalho, a barra
+           conta o avanço dentro de um deles. */
+        if (typeof c.contaFixa === 'number') { fixo += c.contaFixa; continue; }
+        /* Sem contaFixa, cartão com `progresso` não entra na conta: já disse
+           como quer ser medido, e um segundo número embaixo do título brigaria
+           com o da barra. */
         if (c.progresso) continue;
         const fs = Array.isArray(c.featureIds) ? c.featureIds.filter(Boolean) : [];
         if (fs.length) fs.forEach((f) => chaves.add('f:' + f));
         else if (c.epicoId) chaves.add('e:' + c.epicoId);
       }
-      let n = 0;
+      let n = fixo;
       for (const k of chaves) {
         const id = Number(k.slice(2));
         n += (k[0] === 'f' ? contagens.porFeature.get(id) : contagens.porEpico.get(id)) || 0;
