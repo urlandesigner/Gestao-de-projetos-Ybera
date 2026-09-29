@@ -53,7 +53,10 @@
 <p class="sub">Lista, item a item, os PBIs e Bugs fechados no período, agrupados pela <b>Feature</b> dona de cada um. Serve pra descobrir qual Feature corresponde a cada cartão do documento — os itens moram nas Features, e o épico junta várias delas.</p>
 
 <div class="aviso">
-  <b>Como usar:</b> cada bloco é uma <b>Feature</b> com os itens que ela fechou no período. Ache a Feature que corresponde a cada cartão do documento e copie a linha <code>featureIds: [...]</code> pro cartão em <code>assets/briefing-entregas.js</code>. Cartão sem <code>featureIds</code> continua contando pelo épico — que é o número inflado que estamos corrigindo.
+  <b>Como usar:</b> cada bloco é uma <b>Feature</b>. Ache a que corresponde a cada cartão e copie a linha <code>featureIds: [...]</code> pro cartão em <code>assets/briefing-entregas.js</code>. Cartão sem <code>featureIds</code> conta pelo épico — o número inflado que estamos corrigindo.<br><br>
+  <b>Dois filtros cortam itens antes da contagem</b>, e cada bloco mostra quanto cada um tirou:
+  <b>o recorte por responsável</b> (o documento só conta itens atribuídos a <span id="quem">…</span>) e
+  <b>o período</b> (só agosto e setembro; o que fechou em julho fica de fora).
 </div>
 
 <div id="saida"></div>
@@ -110,6 +113,18 @@
 
   const B = window.CentralBriefing;
   const meses = (B.periodoDoDocumento ? B.periodoDoDocumento() : []) || [];
+  // Quem o documento considera "eu": é por este nome que ele filtra quando o
+  // seletor de responsável nunca foi tocado (e ele está escondido nas páginas).
+  let usuario = '';
+  try { usuario = await A.currentUser(ctx); } catch (e) { /* segue sem recorte */ }
+  let filtroSalvo = null;
+  try { const f = JSON.parse(localStorage.getItem('central.filtros')) || {}; filtroSalvo = f.resp === undefined ? null : f.resp; } catch (e) { /* nulo */ }
+  const alvoDoDocumento = filtroSalvo === null ? usuario : filtroSalvo;
+  const doAlvo = (it) => {
+    if (!alvoDoDocumento) return true;
+    const r = ((it || {}).fields || {})['System.AssignedTo'];
+    return !!r && r.displayName === alvoDoDocumento;
+  };
   const porId = new Map(todos.map((it) => [it.id, it]));
   const ehPbi = (it) => {
     const t = ((it || {}).fields || {})['System.WorkItemType'] || '';
@@ -143,17 +158,28 @@
     return null;
   };
 
-  // Itens fechados no período, repartidos pela Feature dona.
+  /* Três baldes por Feature, porque "some" tem três causas diferentes e o
+     Urlan precisa saber qual está agindo:
+       - `itens`  : conta no documento (no período E no recorte)
+       - `foraDoRecorte`: está no período mas é de outra pessoa
+       - `foraDoPeriodo`: é da Feature mas fechou fora de agosto/setembro */
   const porFeature = new Map();
   const soltos = [];
+  const balde = (feat) => {
+    if (!porFeature.has(feat.id)) porFeature.set(feat.id,
+      { feat, epico: epicoDe(feat), itens: [], foraDoRecorte: [], foraDoPeriodo: [] });
+    return porFeature.get(feat.id);
+  };
   for (const it of todos) {
     if (!ehPbi(it)) continue;
     const f = it.fields || {};
-    if (!meses.includes(mes(f['Microsoft.VSTS.Common.ClosedDate']))) continue;
+    const noPeriodo = meses.includes(mes(f['Microsoft.VSTS.Common.ClosedDate']));
     const feat = featureDe(it.id);
-    if (!feat) { soltos.push(it); continue; }
-    if (!porFeature.has(feat.id)) porFeature.set(feat.id, { feat, epico: epicoDe(feat), itens: [] });
-    porFeature.get(feat.id).itens.push(it);
+    if (!feat) { if (noPeriodo && doAlvo(it)) soltos.push(it); continue; }
+    const b = balde(feat);
+    if (!noPeriodo) b.foraDoPeriodo.push(it);
+    else if (!doAlvo(it)) b.foraDoRecorte.push(it);
+    else b.itens.push(it);
   }
 
   const cartoes = B.cartoesDoDocumento ? B.cartoesDoDocumento() : [];
@@ -163,7 +189,8 @@
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (ch) =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
 
-  const grupos = [...porFeature.values()].sort((a, b) => b.itens.length - a.itens.length);
+  const total = (g) => g.itens.length + g.foraDoRecorte.length + g.foraDoPeriodo.length;
+  const grupos = [...porFeature.values()].sort((a, b) => total(b) - total(a));
 
   const tabela = (itens) => {
     const linhas = itens
@@ -171,11 +198,13 @@
         .localeCompare(String((b.fields || {})['Microsoft.VSTS.Common.ClosedDate'])))
       .map((it) => {
         const f = it.fields || {};
+        const r = f['System.AssignedTo'];
         return `<tr><td class="id">#${it.id}</td><td class="tipo">${esc(f['System.WorkItemType'])}</td>` +
-          `<td>${esc(f['System.Title'])}</td><td class="estado">${esc(f['System.State'])}</td>` +
+          `<td>${esc(f['System.Title'])}</td><td class="estado">${esc(r ? r.displayName : '—')}</td>` +
+          `<td class="estado">${esc(f['System.State'])}</td>` +
           `<td class="data">${esc(String(f['Microsoft.VSTS.Common.ClosedDate'] || '').slice(0, 10))}</td></tr>`;
       }).join('');
-    return `<table><thead><tr><th>id</th><th>tipo</th><th>título</th><th>estado</th><th>fechado</th></tr></thead>
+    return `<table><thead><tr><th>id</th><th>tipo</th><th>título</th><th>responsável</th><th>estado</th><th>fechado</th></tr></thead>
       <tbody>${linhas}</tbody></table>`;
   };
 
@@ -183,13 +212,16 @@
     const secs = jaUsada(g.feat.id);
     return `<section class="grupo">
       <h2>Feature #${g.feat.id} — ${esc((g.feat.fields || {})['System.Title'])}</h2>
-      <p class="meta">${g.itens.length} ${g.itens.length === 1 ? 'item' : 'itens'} no período ·
+      <p class="meta"><b>${g.itens.length}</b> ${g.itens.length === 1 ? 'item conta' : 'itens contam'} no documento ·
+        ${g.foraDoRecorte.length} de outra pessoa · ${g.foraDoPeriodo.length} fora de agosto/setembro ·
         dentro do épico #${g.epico ? g.epico.id : '?'} ${g.epico ? esc((g.epico.fields || {})['System.Title']) : ''}</p>
       <div class="secoes">${secs.length
         ? secs.map((x) => `<span class="chip">já ligada a: ${esc(x)}</span>`).join('')
         : '<span class="chip varias">nenhum cartão declara esta Feature</span>'}</div>
       <p class="meta">pra usar no cartão: <code>featureIds: [${g.feat.id}],</code></p>
       ${tabela(g.itens)}
+      ${g.foraDoRecorte.length ? `<p class="meta" style="margin-top:1rem">Fora do recorte — atribuídos a outra pessoa:</p>${tabela(g.foraDoRecorte)}` : ''}
+      ${g.foraDoPeriodo.length ? `<p class="meta" style="margin-top:1rem">Fora do período — fecharam antes de agosto ou depois de setembro:</p>${tabela(g.foraDoPeriodo)}` : ''}
     </section>`;
   }).join('');
 
@@ -199,6 +231,8 @@
       contagem por Feature: não há frente dona deles.</p>
     ${tabela(soltos)}</section>` : '';
 
+  const quem = document.getElementById('quem');
+  if (quem) quem.textContent = alvoDoDocumento || 'qualquer pessoa (recorte "todos" salvo)';
   saida.innerHTML = html + extra + `<p class="total">Período: <b>${meses.join(', ') || '—'}</b> ·
     Features com itens: <b>${grupos.length}</b> ·
     itens em Feature: <b>${grupos.reduce((n, g) => n + g.itens.length, 0)}</b> ·
