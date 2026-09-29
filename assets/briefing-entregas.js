@@ -451,6 +451,7 @@
       iniciativa: 'App de Reviews',
       produto: 'Ybera Reviews / API de Reviews',
       epicoId: 49302,
+      featureIds: [50905],
       resumo: [
         'Realizamos discovery para levantar as melhores opções de apps de reviews dentro do Shopify.',
         'Depois da pesquisa, fizemos um alinhamento com o Wendel e decidimos que não seria produtivo trocar o app atual, o Judge.me, por outro: não haveria ganho real, seria basicamente trocar um pelo outro, e demandaria muitas horas do time técnico. Preferimos manter o Judge.me e fazer alguns pequenos ajustes.',
