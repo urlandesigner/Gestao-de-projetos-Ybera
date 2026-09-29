@@ -138,8 +138,15 @@ body.pagina-entregas {
    título cabe numa linha (desktop) a propriedade não faz nada, e onde não é
    suportada a quebra volta a ser a de antes. */
 .rl-titulo { margin: 0; line-height: 0.98; letter-spacing: -0.04em; text-wrap: balance; }
-.rl-titulo span { display: block; }
+/* Os dois pedaços correm na MESMA linha, e quebram onde couber. Em bloco,
+   "Entregas de" tomava uma linha inteira sozinho — no telefone isso era uma
+   linha de display type de 30px gasta com duas palavras, e o título inteiro
+   virava três linhas. Inline, a frase é uma só e o navegador quebra onde a
+   largura manda. O contraste entre os dois continua inteiro: ele vem do peso e
+   da cor, não da quebra. */
+.rl-titulo span { display: inline; }
 .rl-titulo-fraco {
+  margin-right: 0.22em; /* o espaço entre os dois pedaços */
   font-size: clamp(1.9rem, 5.4vw, 3.4rem);
   font-weight: 500;
   color: var(--mudo);
