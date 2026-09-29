@@ -326,6 +326,9 @@
       iniciativa: 'Nova Homepage USA',
       produto: 'Loja Clube USA',
       epicoId: 49290,
+      // A contagem da seção vem daqui, e não do épico: o 49290 é a loja inteira
+      // e junta as Features de PDP, compliance e tradução junto com esta.
+      featureIds: [45272],
       resumo: [
         'Foram criadas novas opções visuais de todas as seções da home do site.',
         'Ao todo, 12 componentes: Banner, Bundle, Quiz AI, Card de produto, Blog, Shop by concern, Autoridade, Antes e Depois, Reviews, Produto em destaque, Shop by collection e Listagem de produtos.',
