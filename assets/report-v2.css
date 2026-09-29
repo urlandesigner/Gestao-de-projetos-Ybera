@@ -816,6 +816,12 @@ body.pagina-report-v2 {
   box-shadow: var(--sombra-cartao);
   font-size: 0.78rem;
 }
+/* Parceira obrigatória do `display: flex` acima: regra de autor anula o
+   [hidden] do navegador, então sem esta linha o `ferramentas.hidden = true` do
+   report.js não chega à tela. Mesma falta que deixou a barra do PO visível em
+   produção no Entregas — esta folha, como a de lá, nasceu sem ela. */
+.ferramentas[hidden] { display: none; }
+.ferramentas select[hidden] { display: none; }
 .ferramentas select {
   appearance: none;
   -webkit-appearance: none;

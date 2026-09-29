@@ -86,6 +86,21 @@ test('report e v2 não mudam de comportamento: o recorte é só de quem declara'
   assert.equal(f('nivello-sistemas.github.io', '', REPORT), false);
 });
 
+/* O `hidden` do report.js só vale se a folha deixar. `.ferramentas` declara
+   `display: flex`, e regra de autor ganha da folha do navegador — o
+   `[hidden] { display: none }` nativo é anulado. A entregas.css nasceu sem a
+   regra parceira que a style.css tinha, e foi ASSIM que a barra do PO
+   apareceu em produção: o JS escondia, a tela mostrava. */
+test('toda folha que dá display à barra precisa da regra parceira [hidden]', () => {
+  for (const f of fs.readdirSync(path.join(raiz, 'assets')).filter((x) => x.endsWith('.css'))) {
+    const css = ler(path.join('assets', f));
+    const daDisplay = /\.ferramentas\s*\{[^}]*\bdisplay\s*:/.test(css);
+    if (!daDisplay) continue;
+    assert.match(css, /\.ferramentas\[hidden\]\s*\{[^}]*display\s*:\s*none/,
+      `assets/${f} dá display à .ferramentas e não a esconde: o hidden do JS não chega à tela`);
+  }
+});
+
 test('entregas.html declara data-ferramentas="local" — senão o portão é letra morta', () => {
   const html = ler('entregas.html');
   assert.match(html, /<body[^>]*data-ferramentas="local"/,

@@ -1094,6 +1094,14 @@ body.pagina-entregas {
   box-shadow: var(--sombra-cartao);
   font-size: 0.78rem;
 }
+/* O `display: flex` acima ANULA o [hidden] do navegador: regra de autor ganha
+   da folha do navegador mesmo com a mesma especificidade. Sem esta linha, o
+   report.js escondia a barra corretamente — `ferramentas.hidden = true` — e ela
+   continuava desenhada na tela. Foi assim que a barra do PO apareceu em
+   produção. A style.css já tinha estas duas regras; esta folha nasceu sem elas.
+   Quem escrever `display:` numa caixa que o JS esconde precisa da parceira. */
+.ferramentas[hidden] { display: none; }
+.ferramentas select[hidden] { display: none; }
 .ferramentas select {
   appearance: none;
   -webkit-appearance: none;
