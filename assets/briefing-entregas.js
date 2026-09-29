@@ -223,15 +223,33 @@
   // Sem o selo de "mês em curso / mês fechado": a pedido do Urlan, e sem perda
   // de informação — o título logo abaixo já nomeia o mês, e este documento não tem mais
   // seletor pra trocar de mês, então não havia estado ambíguo pra desfazer.
-  function masthead(periodo, meta, tiles, hero) {
+  /* A capa dizia QUANDO e nunca O QUÊ: "Relatório de Agosto e Setembro de 2026"
+     serviria pra financeiro, RH ou vendas. Três peças resolvem isso sem mexer
+     na régua tipográfica:
+
+     - a retranca diz de quem e de que domínio;
+     - "Entregas de" no lugar de "Relatório de" nomeia o assunto, e o período
+       segue na linha forte, do mesmo tamanho de antes — nada quebra;
+     - a linha de situação cobre o buraco que o título sozinho abria: o roadmap
+       vai até junho de 2027, ou seja, metade do documento é futuro, e um título
+       que só nomeia dois meses passados deixava isso sem explicação.
+
+     Retranca na capa não contradiz tê-la removido dos títulos de seção: lá ela
+     repetia o próprio título, aqui ela diz o que o título não diz.
+
+     A unidade sai da linha de meta porque subiu pra retranca — escrevê-la duas
+     vezes na mesma tela é o tipo de repetição que este documento evita. */
+  function masthead(periodo, meta, tiles, hero, retranca, situacao) {
     return `<header class="rl-capa">
       <div class="rl-capa-topo">
         <img class="rl-logo" src="assets/brand/ybera-logo.webp" alt="Ybera" width="360" height="139">
       </div>
+      ${retranca ? `<p class="rl-rotulo rl-capa-retranca">${esc(retranca)}</p>` : ''}
       <h1 class="rl-titulo">
-        <span class="rl-titulo-fraco">Relatório de</span>
+        <span class="rl-titulo-fraco">Entregas de</span>
         <span class="rl-titulo-forte">${esc(periodo)}</span>
       </h1>
+      ${situacao ? `<p class="rl-capa-situacao">${esc(situacao)}</p>` : ''}
       ${meta ? `<p class="rl-meta">${esc(meta)}</p>` : ''}
       <div class="rl-bento rl-bento-capa">${tiles}${hero}</div>
     </header>`;
@@ -674,7 +692,9 @@
     // da sigla não aparece em nenhum outro lugar do documento, e o nome do
     // papel já diz "responsável" — quem lê não precisa decodificar nada.
     if (escopo) meta.push('Product Owner: ' + escopo);
-    if (o.unidade) meta.push(o.unidade);
+    // A unidade não entra aqui: ela vive na retranca da capa desde que o título
+    // passou a dizer o assunto. Repetir "Ybera US" na linha de baixo seria dizer
+    // a mesma coisa duas vezes na mesma tela.
 
     // "Fora do prazo" conta o travado vencido de propósito: é pergunta de
     // prazo, não de fluxo. Sem isso a capa diz 0 e a seção Decisão mostra
@@ -755,7 +775,9 @@
     // delegado por seletor, então nunca casa. `listaMeses` continua no retorno:
     // é dela que a Central monta o link de leitura.
     const html = `<div class="report-doc rl-doc">
-      ${masthead(periodo, meta.join(' · '), kpis, heroi(mesesPeriodo))}
+      ${masthead(periodo, meta.join(' · '), kpis, heroi(mesesPeriodo),
+        [o.unidade, 'E-commerce'].filter(Boolean).join(' · '),
+        'O que o time entregou no período, e o planejamento dos próximos meses.')}
       <div class="rl-corpo">${secoes.map((x) => secaoHtml(x)).join('')}</div>
       ${rodape()}
     </div>`;

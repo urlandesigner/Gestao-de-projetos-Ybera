@@ -139,8 +139,20 @@ body.pagina-entregas {
   font-weight: 800;
   color: var(--tinta);
 }
+/* Retranca da capa: a mesma pílula de texto miúdo do resto do documento
+   (.rl-rotulo), só com o espaço acertado pro título grande que vem logo abaixo. */
+.rl-capa-retranca { margin: 0 0 0.7rem; }
+/* Linha de situação: diz o que o documento é. Largura de leitura curta de
+   propósito — é uma frase, não um parágrafo. */
+.rl-capa-situacao {
+  max-width: 54ch;
+  margin: 1rem 0 0;
+  font-size: clamp(1rem, 2.1vw, 1.15rem);
+  line-height: 1.55;
+  color: var(--mudo);
+}
 .rl-meta {
-  margin: 0.9rem 0 0;
+  margin: 0.7rem 0 0;
   font-size: 0.82rem;
   color: var(--mudo);
 }

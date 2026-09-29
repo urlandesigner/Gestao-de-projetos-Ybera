@@ -376,7 +376,11 @@ test('capa: o título nomeia exatamente os meses que o número contou', () => {
   assert.ok(capa.includes('Agosto e Setembro de 2026'), 'o ano aparece uma vez só');
   const umMes = capaDe(mesComNiveis({ periodo: ['2026-09'] }));
   assert.ok(umMes.includes('Setembro de 2026'));
-  assert.ok(!umMes.includes(' e '), 'um mês sozinho não vira lista');
+  // A verificação é dentro do TÍTULO, e não na capa inteira: a capa tem outras
+  // frases (a linha de situação, por exemplo) onde " e " é só conjunção.
+  const forte = (h) => /<span class="rl-titulo-forte">([^<]*)</.exec(h)[1];
+  assert.ok(!forte(umMes).includes(' e '), 'um mês sozinho não vira lista');
+  assert.ok(forte(capa).includes(' e '), 'dois meses viram lista');
 });
 
 test('capa: a variação contra o mês anterior saiu', () => {
