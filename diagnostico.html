@@ -80,8 +80,12 @@
   }
 
   const ctx = { base: config.org, pat, fetchImpl: window.fetch.bind(window) };
+  // System.AssignedTo é obrigatório aqui: sem ele, o teste de recorte veria
+  // responsável indefinido em tudo e classificaria o board inteiro como "de
+  // outra pessoa" — respondendo errado justamente a pergunta que a página existe
+  // pra responder.
   const CAMPOS = ['System.Title', 'System.State', 'System.WorkItemType', 'System.Parent',
-    'Microsoft.VSTS.Common.ClosedDate', 'System.ChangedDate'];
+    'System.AssignedTo', 'Microsoft.VSTS.Common.ClosedDate', 'System.ChangedDate'];
   const CAMPOS_PAI = ['System.WorkItemType', 'System.Title', 'System.Parent', 'System.State'];
 
   let todos = [];
