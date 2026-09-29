@@ -1028,16 +1028,20 @@ body.pagina-entregas {
    calendário, sem afirmação), tinta é o que está rodando agora — a única cor
    cheia entre iniciativas futuras — e verde é concluído, como em toda a
    Central. Antes toda barra era verde, inclusive a de item nem começado. */
-.rl-rm-barra-andamento { background: var(--tinta); }
 .rl-rm-barra-feita { background: var(--positivo); }
-/* A barra acompanha o selo, como a verde acompanha o "concluído": é a cor que
-   dá o estado de relance, e o selo é a legenda dela.
+/* "Em teste" divide a barra PRETA com "em andamento", por decisão do Urlan.
+   A leitura fica consistente com a régua acima: tinta é trabalho rodando agora,
+   e teste é trabalho rodando. Quem separa os dois estados é o selo, que continua
+   âmbar — ele passa a ser a legenda da barra em vez de ter cor própria nela.
 
-   Usa --atencao (o tom do TEXTO do selo) e não --atencao-fundo: o fundo da
-   pílula foi tentado e saiu, porque sobre a superfície branca do gráfico ele dá
-   1,13:1 de contraste — menos que as barras de "planejado", com 2,10:1. O item
-   em teste lia como menos presente que projeto que nem começou. */
-.rl-rm-barra-teste { background: var(--atencao); }
+   A classe segue existindo separada no HTML mesmo com a mesma cor: o estado é
+   distinto, e é nela que uma cor própria voltaria a pendurar sem mexer no JS.
+
+   Registrado o que NÃO fazer se alguém tentar de novo: --atencao-fundo (o fundo
+   da pílula) dá 1,13:1 sobre a superfície branca do gráfico — menos que as
+   barras de "planejado", com 2,10:1. O item em teste lia como menos presente
+   que projeto que nem começou. */
+.rl-rm-barra-andamento, .rl-rm-barra-teste { background: var(--tinta); }
 /* O divisor precisa ir da escala até a última linha da grade. `grid-row: 1/-1`
    parecia dizer isso, mas não dizia: -1 é a última linha do grid EXPLÍCITO, e
    aqui só as colunas são explícitas — as linhas nascem implícitas, uma por
