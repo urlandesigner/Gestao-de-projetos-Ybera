@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagnóstico da contagem — Central de Projetos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fundo: #fafaf9; --superficie: #fff; --superficie-2: #f3f3f1;
+    --tinta: #1c1c1a; --mudo: #78716c; --borda: #e9e7e4;
+    --positivo: #15803d; --erro: #b91c1c; --atencao: #92400e;
+    --sans: 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 2rem clamp(1rem,4vw,3rem) 4rem; background: var(--fundo); color: var(--tinta); font-family: var(--sans); }
+  h1 { margin: 0 0 .3rem; font-size: 1.6rem; letter-spacing: -.03em; }
+  .sub { margin: 0 0 2rem; color: var(--mudo); font-size: .92rem; max-width: 68ch; line-height: 1.55; }
+  .aviso { max-width: 68ch; margin: 0 0 2rem; padding: .9rem 1.1rem; border: 1px solid var(--borda); border-left: 4px solid var(--atencao); border-radius: 10px; background: var(--superficie); font-size: .86rem; line-height: 1.6; color: var(--mudo); }
+  .grupo { margin: 0 0 1.6rem; padding: 1.1rem 1.3rem; border: 1px solid var(--borda); border-radius: 16px; background: var(--superficie); }
+  .grupo h2 { margin: 0; font-size: 1.05rem; letter-spacing: -.02em; }
+  .grupo .meta { margin: .25rem 0 .9rem; font-size: .78rem; color: var(--mudo); }
+  .secoes { display: flex; flex-wrap: wrap; gap: .35rem; margin: .5rem 0 1rem; }
+  .chip { padding: .18rem .55rem; border-radius: 999px; background: var(--superficie-2); font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--mudo); }
+  .chip.varias { background: #fdf0d5; color: var(--atencao); }
+  table { width: 100%; border-collapse: collapse; font-size: .84rem; }
+  th, td { padding: .42rem .5rem; text-align: left; border-bottom: 1px solid var(--superficie-2); vertical-align: top; }
+  th { font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--mudo); font-weight: 700; }
+  td.id { font-variant-numeric: tabular-nums; color: var(--mudo); white-space: nowrap; }
+  td.tipo { color: var(--mudo); white-space: nowrap; }
+  td.data { font-variant-numeric: tabular-nums; color: var(--mudo); white-space: nowrap; }
+  .estado { color: var(--mudo); }
+  #saida:empty::before { content: 'carregando…'; color: var(--mudo); }
+  .erro { padding: 1rem; border-radius: 12px; background: #fee2e2; color: var(--erro); max-width: 68ch; }
+  .total { margin: 2rem 0 0; padding-top: 1rem; border-top: 1px solid var(--borda); font-size: .9rem; color: var(--mudo); }
+  .total b { color: var(--tinta); }
+</style>
+</head>
+<!-- FERRAMENTA LOCAL, fora do deploy (ver exclusão no rsync e no publicar).
+     Existe pra responder uma pergunta: quais itens do DevOps estão por trás da
+     contagem que cada seção do documento Entregas mostra.
+
+     Ela NÃO é o documento: não desenha capa, cartão nem roadmap. Só lê os
+     mesmos dados, agrupa por épico e lista item a item, pra revisão.
+
+     Usa a config e o PAT que já vivem no localStorage desta origem — não pede,
+     não grava e não mostra o token. -->
+<body>
+<h1>Diagnóstico da contagem por seção</h1>
+<p class="sub">Lista, item a item, os PBIs e Bugs fechados no período que alimentam o número de cada seção do documento Entregas. Serve pra conferir se o número diz o que o título promete.</p>
+
+<div class="aviso">
+  <b>Por que vários grupos repetem o mesmo número:</b> a contagem é por <b>épico</b>, e vários cartões apontam pro mesmo. Quando um épico serve mais de uma seção, ele aparece abaixo marcado em âmbar — e o número dele é exibido inteiro em cada uma dessas seções.
+</div>
+
+<div id="saida"></div>
+
+<script src="assets/core.js"></script>
+<script src="assets/api.js"></script>
+<script src="assets/briefing-entregas.js"></script>
+<script>
+(async function () {
+  'use strict';
+  const C = window.CentralCore, A = window.CentralApi;
+  const saida = document.getElementById('saida');
+  const erro = (t) => { saida.innerHTML = '<div class="erro">' + t + '</div>'; };
+
+  // Mesmas chaves da Central. O PAT é lido e usado, nunca exibido nem gravado.
+  let config = null, pat = '';
+  try { config = JSON.parse(localStorage.getItem('central.config')); } catch (e) { /* segue nulo */ }
+  try { pat = localStorage.getItem('central.pat') || ''; } catch (e) { /* segue vazio */ }
+  if (!config || !pat) {
+    return erro('Sem configuração nesta origem. Abra a Central nesta mesma porta, conecte o Azure DevOps, e recarregue esta página.');
+  }
+
+  const ctx = { base: config.org, pat, fetchImpl: window.fetch.bind(window) };
+  const CAMPOS = ['System.Title', 'System.State', 'System.WorkItemType', 'System.Parent',
+    'Microsoft.VSTS.Common.ClosedDate', 'System.ChangedDate'];
+  const CAMPOS_PAI = ['System.WorkItemType', 'System.Title', 'System.Parent', 'System.State'];
+
+  let todos = [];
+  try {
+    for (const p of (config.projects || []).filter((x) => !x.hidden)) {
+      let areas = [];
+      try { areas = await A.teamAreas(ctx, p.projectName, p.teamName); } catch (e) { /* projeto inteiro */ }
+      const ids = await A.runWiql(ctx, p.projectName, p.teamName, C.wiqlProdutos(areas));
+      const crus = ids.length ? await A.getFields(ctx, ids, CAMPOS) : [];
+      for (const it of crus) todos.push(Object.assign({ projeto: p.projectName }, it));
+    }
+    // Sobe a cadeia de pais, igual ao report: sem os pais, o épico não se resolve.
+    const porId = new Map(todos.map((it) => [it.id, it]));
+    const tentados = new Set();
+    for (let volta = 0; volta < 4; volta++) {
+      const faltando = [...new Set([...porId.values()]
+        .map((it) => (it.fields || {})['System.Parent'])
+        .filter((pai) => pai && !porId.has(pai) && !tentados.has(pai)))];
+      if (!faltando.length) break;
+      faltando.forEach((id) => tentados.add(id));
+      let crus = [];
+      try { crus = await A.getFields(ctx, faltando, CAMPOS_PAI); } catch (e) { break; }
+      if (!crus.length) break;
+      for (const it of crus) { porId.set(it.id, it); todos.push(it); }
+    }
+  } catch (e) {
+    return erro('Falhou ao buscar do DevOps: ' + (e && e.message ? e.message : e) + '<br>Se o PAT venceu, renove na Central.');
+  }
+
+  const B = window.CentralBriefing;
+  const PERIODO = B.periodoDoDocumento ? B.periodoDoDocumento() : null;
+  const mapa = C.mapaDeProdutos(todos);
+  const ehPbi = (it) => {
+    const t = ((it || {}).fields || {})['System.WorkItemType'] || '';
+    return t !== 'Epic' && t !== 'Feature';
+  };
+  const mes = (iso) => (iso ? String(iso).slice(0, 7) : null);
+  const meses = PERIODO || [];
+
+  // Itens fechados dentro do período, agrupados pelo épico que o mapa resolve.
+  const porEpico = new Map();
+  for (const it of todos) {
+    if (!ehPbi(it)) continue;
+    const f = it.fields || {};
+    if (!meses.includes(mes(f['Microsoft.VSTS.Common.ClosedDate']))) continue;
+    const prod = mapa.get(it.id);
+    if (!prod) continue;
+    if (!porEpico.has(prod.id)) porEpico.set(prod.id, { prod, itens: [] });
+    porEpico.get(prod.id).itens.push(it);
+  }
+
+  const cartoes = B.cartoesDoDocumento ? B.cartoesDoDocumento() : [];
+  const secoesDoEpico = (id) => [...new Set(cartoes.filter((c) => c.epicoId === id)
+    .map((c) => c.iniciativa || 'Outras entregas'))];
+
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (ch) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+
+  const usados = [...porEpico.values()].filter((g) => secoesDoEpico(g.prod.id).length);
+  usados.sort((a, b) => b.itens.length - a.itens.length);
+
+  saida.innerHTML = usados.map((g) => {
+    const secs = secoesDoEpico(g.prod.id);
+    const linhas = g.itens
+      .sort((a, b) => String((a.fields || {})['Microsoft.VSTS.Common.ClosedDate'])
+        .localeCompare(String((b.fields || {})['Microsoft.VSTS.Common.ClosedDate'])))
+      .map((it) => {
+        const f = it.fields || {};
+        return `<tr><td class="id">#${it.id}</td><td class="tipo">${esc(f['System.WorkItemType'])}</td>` +
+          `<td>${esc(f['System.Title'])}</td><td class="estado">${esc(f['System.State'])}</td>` +
+          `<td class="data">${esc(String(f['Microsoft.VSTS.Common.ClosedDate'] || '').slice(0, 10))}</td></tr>`;
+      }).join('');
+    return `<section class="grupo">
+      <h2>Épico #${g.prod.id} — ${esc(g.prod.titulo)}</h2>
+      <p class="meta">${g.itens.length} ${g.itens.length === 1 ? 'item' : 'itens'} no período</p>
+      <div class="secoes">${secs.map((s) =>
+        `<span class="chip${secs.length > 1 ? ' varias' : ''}">${esc(s)}</span>`).join('')}</div>
+      <table><thead><tr><th>id</th><th>tipo</th><th>título</th><th>estado</th><th>fechado</th></tr></thead>
+      <tbody>${linhas}</tbody></table>
+    </section>`;
+  }).join('') + `<p class="total">Período: <b>${meses.join(', ') || '—'}</b> · épicos usados pelos cartões: <b>${usados.length}</b> · itens somados: <b>${usados.reduce((n, g) => n + g.itens.length, 0)}</b></p>`;
+})();
+</script>
+</body>
+</html>

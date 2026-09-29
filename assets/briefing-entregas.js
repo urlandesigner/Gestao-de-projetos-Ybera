@@ -826,5 +826,16 @@
     return { vazio: false, meses: listaMeses, html };
   }
 
-  return { htmlReport, mesPorExtenso, dataCurta, esc };
+  /* Dois acessores de leitura, pra ferramenta de diagnóstico poder perguntar ao
+     módulo o que ele considera período e quais cartões existem — em vez de
+     reimplementar isso e sair do ar assim que a lista curada mudar aqui.
+
+     Devolvem cópias: quem lê não mexe no que o documento desenha. */
+  const periodoDoDocumento = () => PERIODO_MESES.slice();
+  const cartoesDoDocumento = () => ENTREGAS_RECENTES.map((c) => ({
+    titulo: c.titulo, iniciativa: c.iniciativa || null,
+    produto: c.produto || null, epicoId: c.epicoId || null, status: c.status || null,
+  }));
+
+  return { htmlReport, mesPorExtenso, dataCurta, esc, periodoDoDocumento, cartoesDoDocumento };
 });
