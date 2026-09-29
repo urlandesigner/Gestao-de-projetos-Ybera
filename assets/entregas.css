@@ -934,13 +934,29 @@ body.pagina-entregas {
 }
 
 /* ---------- 07 · Roadmap ---------- */
+/* O gráfico é mais largo que o telefone e rola na horizontal — isso é
+   inevitável num Gantt de 12 meses em 375px. O que NÃO era aceitável é o
+   gráfico não avisar: os quatro últimos projetos começam depois de dezembro, e
+   no telefone as linhas deles apareciam VAZIAS. Projeto sem barra lê como
+   projeto sem plano, não como "a barra está fora da tela".
+
+   A sombra é a técnica clássica de duas camadas: os gradientes brancos rolam
+   junto com o conteúdo (`local`) e tapam a sombra quando não há mais o que
+   rolar daquele lado; as sombras ficam presas ao quadro (`scroll`). Resultado:
+   sombra à direita só enquanto existe gráfico à direita, e ela some ao chegar
+   no fim. Sem JS e sem marcação nova. */
 .rl-rm-wrap {
   overflow-x: auto;
   padding: clamp(1.1rem, 2.2vw, 1.6rem);
   border: var(--fio);
   border-radius: var(--raio-painel);
-  background: var(--superficie);
   box-shadow: var(--sombra-painel);
+  background:
+    linear-gradient(to right, var(--superficie) 40%, rgba(255, 255, 255, 0)) left center / 48px 100% no-repeat local,
+    linear-gradient(to left, var(--superficie) 40%, rgba(255, 255, 255, 0)) right center / 48px 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, rgba(28, 28, 26, 0.16), rgba(28, 28, 26, 0)) left center / 16px 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, rgba(28, 28, 26, 0.16), rgba(28, 28, 26, 0)) right center / 16px 100% no-repeat scroll,
+    var(--superficie);
 }
 .rl-rm-grade {
   position: relative;
@@ -1239,6 +1255,19 @@ body.pagina-entregas {
 
 @media (max-width: 719px) {
   .rl-notas, .rl-frentes { grid-template-columns: minmax(0, 1fr); }
+  /* A galeria é `auto-fill, minmax(200px, 1fr)`: em 344px de conteúdo isso dá
+     UMA coluna, e o cartão da HOME virava nove blocos de largura inteira
+     empilhados. O documento inteiro passava de 7000px de altura no telefone, e
+     a maior parte era miniatura. Duas colunas fixas dão células de ~166px —
+     miniatura continua miniatura, e é toque pra abrir no visor de qualquer
+     jeito. */
+  .rl-galeria { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* A altura acompanha a largura, senão o recorte muda de assunto. As telas são
+     capturas largas e o `object-fit: cover` corta pelas laterais: em célula de
+     148px com os 124px do desktop a proporção vira 1,19:1 e sobra uma fatia
+     central que não diz que componente é aquele. 92px devolve o ~1,6:1 que o
+     desktop tem, ou seja, o MESMO enquadramento — em miniatura. */
+  .rl-fig-link img { height: 92px; }
   .rl-bento-capa > .rl-tile { grid-column: span 6; min-height: 7rem; }
   /* Bloco que fica sozinho na fileira toma a largura inteira: meia largura
      deixa um buraco no fim da linha, que lê como conteúdo faltando. Vale pro
