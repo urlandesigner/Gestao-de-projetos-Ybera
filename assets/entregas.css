@@ -142,7 +142,6 @@ body.pagina-entregas {
    escura entra invertido (mesma técnica do .yb-logo--inverse do DS). */
 .rl-logo-inv { filter: invert(1); }
 
-/* Título em duas vozes: a linha fraca situa, a forte é o assunto. */
 /* `text-wrap: balance` porque no telefone o título quebra e a quebra padrão
    deixava "2026" sozinho na terceira linha — viúva, e é ela que faz a capa
    parecer desalinhada. Balanceado, sai "Agosto e Setembro / de 2026". Onde o
@@ -155,15 +154,17 @@ body.pagina-entregas {
    virava três linhas. Inline, a frase é uma só e o navegador quebra onde a
    largura manda. O contraste entre os dois continua inteiro: ele vem do peso e
    da cor, não da quebra. */
-.rl-titulo-fraco {
+/* UMA voz só, a pedido do Urlan: a frase inteira usa o tratamento que era do
+   "Entregas de" — mesmo corpo, mesmo peso, mesma cor. O período deixa de ser
+   manchete e o título vira uma linha de abertura.
+
+   Os dois <span> continuam separados no HTML mesmo pintando igual: a distinção
+   é do conteúdo (o que situa e o que é o assunto), e é nela que um tratamento
+   diferente volta a pendurar sem mexer no JS. */
+.rl-titulo-fraco, .rl-titulo-forte {
   font-size: clamp(1.9rem, 5.4vw, 3.4rem);
   font-weight: 500;
   color: var(--mudo);
-}
-.rl-titulo-forte {
-  font-size: clamp(2.3rem, 6.8vw, 4.3rem);
-  font-weight: 800;
-  color: var(--tinta);
 }
 /* Retranca da capa: a mesma pílula de texto miúdo do resto do documento
    (.rl-rotulo), só com o espaço acertado pro título grande que vem logo abaixo. */
@@ -1311,7 +1312,10 @@ body.pagina-entregas {
   /* O título corre numa frase só: em bloco, "Entregas de" gastava uma linha
      inteira de display type com duas palavras, e o título ia a três linhas. */
   .rl-titulo span { display: inline; }
-  .rl-titulo-fraco { margin-right: 0.22em; }
+  /* Sem margem entre os dois pedaços: ela existia pra dar ar entre corpos e
+     pesos diferentes, e agora que a frase tem uma voz só ela virava espaço
+     duplo — o espaço em branco entre os <span> no HTML já dá a separação de
+     palavra. */
 
   /* A autoria vira o terceiro segmento da retranca: ali não custa altura
      nenhuma e continua no primeiro lugar em que se olha. A linha própria
