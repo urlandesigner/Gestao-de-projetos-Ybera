@@ -362,13 +362,37 @@ test('capa: o bloco escuro conta PBI fechado no mês, não épico nem Feature', 
   assert.ok(!/3 itens/.test(capa), 'a contagem mora no numeral, não na frase');
 });
 
-test('capa: o número soma todos os meses do período, não só o último', () => {
-  // Setembro tem 3 que valem (2 PBI + 1 Bug; o épico não conta) e agosto tem 1.
-  // Num período de dois meses o bloco escuro precisa dizer 4 — foi contar só
-  // setembro debaixo de um título que dizia "Agosto e Setembro" que motivou
-  // trazer título e contagem pra mesma fonte.
-  const capa = capaDe(mesComNiveis({ periodo: ['2026-08', '2026-09'] }));
-  assert.match(capa, /rl-heroi-base[\s\S]*?rl-num">4</);
+test('capa: o número grande é a SOMA das seções', () => {
+  /* Era a incoerência mais visível do documento: a capa contava PBIs fechados no
+     período e o corpo mostrava entregas curadas. O leitor lia 28 em cima,
+     contava 8 embaixo, e ou achava que faltava conteúdo ou desconfiava do
+     número. Agora é a mesma conta nos dois lugares. */
+  const items = hierarquiaComFeatures();
+  const cartoes = [
+    { titulo: 'A', iniciativa: 'Home', epicoId: 700, featureIds: [710], status: 'entregue', resumo: 'x' },
+    { titulo: 'B', iniciativa: 'PDP', epicoId: 700, featureIds: [711], status: 'entregue', resumo: 'x' },
+    { titulo: 'C', iniciativa: 'Planilha', epicoId: 700, contaFixa: 1, status: 'andamento', resumo: 'x' },
+  ];
+  const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
+  const secoes = [...h.matchAll(/<p class="rl-sec-conta">(\d+) /g)].map((m) => Number(m[1]));
+  assert.deepEqual(secoes, [7, 5, 1]);
+  const capa = Number(/rl-heroi[\s\S]*?rl-num">(\d+)</.exec(h)[1]);
+  assert.equal(capa, secoes.reduce((a, b) => a + b, 0), 'a capa tem de dar a soma das seções');
+});
+
+test('capa: Feature repetida em duas seções não conta duas vezes na capa', () => {
+  // A soma é sobre chaves distintas, não sobre os números das seções. Duas
+  // frentes que apontem pra mesma Feature mostram N cada uma, e a capa mostra N
+  // — contar 2N seria repetir o mesmo trabalho.
+  const items = hierarquiaComFeatures();
+  const cartoes = [
+    { titulo: 'A', iniciativa: 'Uma', epicoId: 700, featureIds: [710], status: 'entregue', resumo: 'x' },
+    { titulo: 'B', iniciativa: 'Outra', epicoId: 700, featureIds: [710], status: 'entregue', resumo: 'x' },
+  ];
+  const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
+  const secoes = [...h.matchAll(/<p class="rl-sec-conta">(\d+) /g)].map((m) => Number(m[1]));
+  assert.deepEqual(secoes, [7, 7], 'cada seção mostra a Feature inteira');
+  assert.match(h, /rl-heroi[\s\S]*?rl-num">7</, 'e a capa conta uma vez só');
 });
 
 test('capa: o título nomeia exatamente os meses que o número contou', () => {

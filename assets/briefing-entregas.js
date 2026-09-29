@@ -201,8 +201,11 @@
   // Comparar com junho+julho manteria a leitura, mas exige que esses meses
   // existam no DevOps — e uma variação que some ou mente conforme o dado é
   // pior que variação nenhuma.
-  function heroi(mesesDoPeriodo) {
-    const total = mesesDoPeriodo.reduce((n, m) => n + contaPbis(m), 0);
+  /* Recebe o total pronto, e não os meses: quem o calcula é contaDeCartoes, a
+     mesma função que dá o número de cada seção. Antes este bloco contava os PBIs
+     fechados no período — régua diferente da do corpo, e era a origem do "a capa
+     diz 28 e eu conto 8 entregas embaixo". */
+  function heroi(total) {
     // Sem recorte de tempo no rótulo: o título da capa já nomeia o período
     // três centímetros acima, e repetir aqui e no bloco vizinho era dizer a
     // mesma coisa três vezes na mesma tela. Sem ponto final também — rótulo
@@ -579,7 +582,6 @@
     const t = ((it || {}).fields || {})['System.WorkItemType'] || '';
     return t !== 'Epic' && t !== 'Feature';
   };
-  const contaPbis = (m) => (((m || {}).itens) || []).filter((r) => ehPbi(r.item || r)).length;
 
   /* Sobe do item até a FEATURE mais próxima acima dele.
 
@@ -727,14 +729,13 @@
     const fechado = escolhido !== b.mes;
     const mesAlvo = meses.find((m) => m.mes === escolhido) || null;
     /* O período vem da constante declarada; `o.periodo` existe pros testes
-       poderem fixar um recorte sem depender do calendário real. Os meses que o
-       DevOps não tem são descartados — o título continua nomeando o período
-       inteiro, e a contagem soma o que existe. */
+       poderem fixar um recorte sem depender do calendário real.
+
+       Hoje ele serve só ao TÍTULO. A contagem deixou de recortar por mês quando
+       o Urlan decidiu que este primeiro relatório junta tudo que foi entregue
+       recentemente — várias frentes começaram antes de agosto. */
     const chavesPeriodo = (Array.isArray(o.periodo) && o.periodo.length) ? o.periodo
       : (PERIODO_MESES.length ? PERIODO_MESES : [escolhido]);
-    const mesesPeriodo = chavesPeriodo
-      .map((k) => meses.find((m) => m.mes === k))
-      .filter(Boolean);
     // Sem `||` de reserva: `chavesPeriodo` tem sempre pelo menos um item pelos
     // três ramos acima, então rotuloPeriodo nunca devolve vazio aqui.
     const periodo = rotuloPeriodo(chavesPeriodo);
@@ -822,10 +823,16 @@
        O Set existe porque um grupo pode ter vários cartões, e dois deles podem
        apontar pra mesma Feature (ou pro mesmo épico) — sem ele a seção contaria
        o mesmo trabalho duas vezes. */
-    const contaDoGrupo = (g) => {
+    /* Conta os itens de um conjunto de cartões. Serve a seção (os cartões dela)
+       e a capa (todos), porque o número grande passou a ser a soma das frentes.
+
+       O Set é GLOBAL no conjunto: dois cartões que apontem pra mesma Feature
+       contam o trabalho uma vez, esteja na mesma seção ou em seções diferentes.
+       Era o defeito original em outra roupa — contar duas vezes o que é um. */
+    const contaDeCartoes = (cards) => {
       const chaves = new Set();
       let fixo = 0;
-      for (const c of (g.cards || [])) {
+      for (const c of (cards || [])) {
         /* `contaFixa` é pra frente que não tem Feature no board. O compliance é
            uma planilha de 18 linhas que no DevOps é UM item de trabalho com
            subitens — não há Feature pra contar, e derivar do épico traria a loja
@@ -848,8 +855,17 @@
         const id = Number(k.slice(2));
         n += (k[0] === 'f' ? contagens.porFeature.get(id) : contagens.porEpico.get(id)) || 0;
       }
+      return n;
+    };
+    const contaDoGrupo = (g) => {
+      const n = contaDeCartoes(g.cards);
       return n ? plural(n, 'item', 'itens') : '';
     };
+    // O número grande da capa é a soma das frentes. Antes ele contava os PBIs
+    // fechados no período, uma régua diferente da do corpo: a capa dizia 28 e o
+    // leitor contava 8 entregas embaixo. Agora é a mesma conta, e some as seções
+    // que dá a capa.
+    const totalDeItens = contaDeCartoes(cartoes);
 
     const secoes = [];
     if (cartoes.length && agrupar === 'plano') {
@@ -896,7 +912,7 @@
     // delegado por seletor, então nunca casa. `listaMeses` continua no retorno:
     // é dela que a Central monta o link de leitura.
     const html = `<div class="report-doc rl-doc">
-      ${masthead(periodo, meta.join(' · '), kpis, heroi(mesesPeriodo),
+      ${masthead(periodo, meta.join(' · '), kpis, heroi(totalDeItens),
         [o.unidade, 'E-commerce'].filter(Boolean).join(' · '),
         'O que o time entregou no período, e o planejamento dos próximos meses.')}
       <div class="rl-corpo">${secoes.map((x) => secaoHtml(x)).join('')}</div>
