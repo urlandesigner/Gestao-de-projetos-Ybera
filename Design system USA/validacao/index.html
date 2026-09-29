@@ -32,6 +32,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="../tokens/00-primitives.css">
 <link rel="stylesheet" href="../tokens/01-semantic.css">
+<link rel="stylesheet" href="../doc/doc-cartao.css">
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:var(--yb-bg-page);color:var(--yb-text-primary);
@@ -44,24 +45,12 @@ h1{font-size:var(--yb-type-display-2-size);line-height:var(--yb-type-display-2-l
   margin:0 0 var(--yb-space-3)}
 .sub{color:var(--yb-text-secondary);font-size:var(--yb-type-body-lg-size);
   margin:0 0 var(--yb-space-10);max-width:56ch}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:var(--yb-space-4)}
 .grupo{margin-bottom:var(--yb-space-10)}
 .grupo h2{font-size:var(--yb-type-overline-size);letter-spacing:var(--yb-tracking-wider);
   text-transform:uppercase;font-weight:var(--yb-font-weight-semibold);
   color:var(--yb-text-muted);margin:0 0 var(--yb-space-4)}
 .grupo > p{margin:calc(var(--yb-space-2) * -1) 0 var(--yb-space-4);
   font-size:var(--yb-type-body-sm-size);color:var(--yb-text-secondary);max-width:62ch}
-a.tile{display:flex;flex-direction:column;gap:var(--yb-space-2);text-decoration:none;
-  border:1px solid var(--yb-border);border-radius:var(--yb-radius-card);
-  padding:var(--yb-space-5);background:var(--yb-surface);
-  transition:border-color var(--yb-transition-control)}
-a.tile:hover{border-color:var(--yb-text-primary)}
-a.tile:focus-visible{outline:var(--yb-focus-width) solid var(--yb-focus-color);
-  outline-offset:var(--yb-focus-offset)}
-a.tile > b{font-size:var(--yb-type-h4-size);font-weight:var(--yb-font-weight-semibold);
-  letter-spacing:var(--yb-type-h4-track);color:var(--yb-text-primary)}
-a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
 .conta{font-size:var(--yb-type-caption-size);font-weight:var(--yb-font-weight-regular);
   color:var(--yb-text-muted);background:var(--yb-surface-sunken);
   border-radius:var(--yb-radius-badge);padding:0 var(--yb-space-2)}
@@ -84,12 +73,12 @@ a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
     <h2>Telas <span class="conta">5</span></h2>
     <p>A mesma biblioteca de componentes montando uma home e quatro estados de
     página de produto.</p>
-    <div class="grid">
-      <a class="tile" href="../pages/index-v3.html" target="_blank" rel="noopener"><b>Home v3</b><span>Exemplo de como deve ficar a home com os novos componentes do UI Kit.</span><span class="so-leitor"> (abre em nova aba)</span></a>
-      <a class="tile" href="../pages/pdp-influencer.html" target="_blank" rel="noopener"><b>PDP link influencer</b><span>Exemplo de como deve ficar a PDP com os novos componentes do UI Kit.</span><span class="so-leitor"> (abre em nova aba)</span></a>
-      <a class="tile" href="../pages/pdp-variante.html" target="_blank" rel="noopener"><b>PDP com variante</b><span>seletor de tamanho movendo preço, estoque e foto</span><span class="so-leitor"> (abre em nova aba)</span></a>
-      <a class="tile" href="../pages/pdp-oferta.html" target="_blank" rel="noopener"><b>PDP em promoção</b><span>preço anterior riscado e selo de desconto acima do nome</span><span class="so-leitor"> (abre em nova aba)</span></a>
-      <a class="tile" href="../pages/pdp-esgotado.html" target="_blank" rel="noopener"><b>PDP esgotada</b><span>o mesmo bloco de compra sem estoque</span><span class="so-leitor"> (abre em nova aba)</span></a>
+    <div class="grade">
+      <a class="peca" href="../pages/index-v3.html" target="_blank" rel="noopener"><b>Home v3</b><span>Exemplo de como deve ficar a home com os novos componentes do UI Kit.</span><span class="so-leitor"> (abre em nova aba)</span></a>
+      <a class="peca" href="../pages/pdp-influencer.html" target="_blank" rel="noopener"><b>PDP link influencer</b><span>Exemplo de como deve ficar a PDP com os novos componentes do UI Kit.</span><span class="so-leitor"> (abre em nova aba)</span></a>
+      <a class="peca" href="../pages/pdp-variante.html" target="_blank" rel="noopener"><b>PDP com variante</b><span>seletor de tamanho movendo preço, estoque e foto</span><span class="so-leitor"> (abre em nova aba)</span></a>
+      <a class="peca" href="../pages/pdp-oferta.html" target="_blank" rel="noopener"><b>PDP em promoção</b><span>preço anterior riscado e selo de desconto acima do nome</span><span class="so-leitor"> (abre em nova aba)</span></a>
+      <a class="peca" href="../pages/pdp-esgotado.html" target="_blank" rel="noopener"><b>PDP esgotada</b><span>o mesmo bloco de compra sem estoque</span><span class="so-leitor"> (abre em nova aba)</span></a>
     </div>
   </section>
 
@@ -97,8 +86,8 @@ a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
     <h2>Componentes</h2>
     <p>Cada peça numa ficha: o que ela faz, as variantes, os estados, e o que a
     acessibilidade exige. É daqui que as telas acima são montadas.</p>
-    <div class="grid">
-      <a class="tile" href="../atoms/" target="_blank" rel="noopener"><b>Catálogo de peças</b><span>49 peças na escada atômica — átomos, moléculas, organismos e template</span><span class="so-leitor"> (abre em nova aba)</span></a>
+    <div class="grade">
+      <a class="peca" href="../atoms/" target="_blank" rel="noopener"><b>Catálogo de peças</b><span>49 peças na escada atômica — átomos, moléculas, organismos e template</span><span class="so-leitor"> (abre em nova aba)</span></a>
     </div>
   </section>
 

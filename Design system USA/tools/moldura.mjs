@@ -502,6 +502,7 @@ export function paginaDeGrupo(g, extra) {
 <link rel="stylesheet" href="${raiz}tokens/01-semantic.css">
 <link rel="stylesheet" href="${raiz}base/ybera-base.css">
 <link rel="stylesheet" href="${raiz}doc/doc.css">
+<link rel="stylesheet" href="${raiz}doc/doc-cartao.css">
 <link rel="stylesheet" href="${raiz}doc/doc-nav.css">${extra || ''}
 <script src="${raiz}doc/doc.js" defer></script>
 <style>
@@ -565,6 +566,7 @@ export function paginaDeToken(s, ant, prox) {
 <link rel="stylesheet" href="${raiz}tokens/01-semantic.css">
 <link rel="stylesheet" href="${raiz}base/ybera-base.css">
 <link rel="stylesheet" href="${raiz}doc/doc.css">
+<link rel="stylesheet" href="${raiz}doc/doc-cartao.css">
 <link rel="stylesheet" href="${raiz}doc/doc-nav.css">
 <link rel="stylesheet" href="doc-tokens.css">
 <script src="${raiz}doc/doc.js" defer></script>

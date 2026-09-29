@@ -849,6 +849,7 @@ const CABECA = (titulo, n, atual) => `<!doctype html>
 ${folhasAte(n)}
 <link rel="stylesheet" href="../icons/ybera-icons.css">
 <link rel="stylesheet" href="../doc/doc.css">
+<link rel="stylesheet" href="../doc/doc-cartao.css">
 <link rel="stylesheet" href="../doc/doc-nav.css">
 <script src="../doc/doc.js" defer></script>
 <style>
@@ -1149,6 +1150,7 @@ ${n.planejadas.map(([nome, linha]) => `      <li><b>${nome}</b> — ${linha}</li
 ${folhasAte(n)}
 <link rel="stylesheet" href="../icons/ybera-icons.css">
 <link rel="stylesheet" href="../doc/doc.css">
+<link rel="stylesheet" href="../doc/doc-cartao.css">
 <style>
   html,body{margin:0;padding:0}
   body{font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);

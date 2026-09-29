@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="tokens/00-primitives.css">
 <link rel="stylesheet" href="tokens/01-semantic.css">
+<link rel="stylesheet" href="doc/doc-cartao.css">
 <style>
 *{box-sizing:border-box}
 /* Coluna, e nao linha centrada. O `body` era `display:flex` com
@@ -26,25 +27,10 @@ h1{font-size:var(--yb-type-display-2-size);line-height:var(--yb-type-display-2-l
   margin:0 0 var(--yb-space-3)}
 .sub{color:var(--yb-text-secondary);font-size:var(--yb-type-body-lg-size);
   margin:0 0 var(--yb-space-10);max-width:56ch}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:var(--yb-space-4)}
 .grupo{margin-bottom:var(--yb-space-10)}
 .grupo h2{font-size:var(--yb-type-overline-size);letter-spacing:var(--yb-tracking-wider);
   text-transform:uppercase;font-weight:var(--yb-font-weight-semibold);
   color:var(--yb-text-muted);margin:0 0 var(--yb-space-4)}
-a.tile{display:flex;flex-direction:column;gap:var(--yb-space-2);text-decoration:none;
-  border:1px solid var(--yb-border);border-radius:var(--yb-radius-card);
-  padding:var(--yb-space-5);background:var(--yb-surface);
-  transition:border-color var(--yb-transition-control)}
-a.tile:hover{border-color:var(--yb-text-primary)}
-a.tile:focus-visible{outline:var(--yb-focus-width) solid var(--yb-focus-color);
-  outline-offset:var(--yb-focus-offset)}
-/* `>` e nao descendente: o titulo e filho direto do cartao. Sem isso qualquer
-   <b> dentro do texto vira um segundo titulo — foi o que aconteceu no cartao
-   da PDP com variante. */
-a.tile > b{font-size:var(--yb-type-h4-size);font-weight:var(--yb-font-weight-semibold);
-  letter-spacing:var(--yb-type-h4-track);color:var(--yb-text-primary)}
-a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
 .ver{margin-top:var(--yb-space-10);font-size:var(--yb-type-caption-size);
   color:var(--yb-text-muted)}
 .voltar{display:inline-block;margin-bottom:var(--yb-space-6);
@@ -224,30 +210,30 @@ a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
   <section class="grupo" aria-label="Telas montadas com o sistema">
     <div class="subgrupo">
       <h2>Home <span class="conta">4</span></h2>
-      <div class="grid">
-        <a class="tile" href="pages/home.html" target="_blank" rel="noopener"><b>Home v1</b><span>construída com os componentes do sistema, conteúdo real</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
-        <a class="tile" href="pages/index-v2.html" target="_blank" rel="noopener"><b>Home v2</b><span>a mesma loja na gramática de e-commerce dos EUA — mesmas peças, outra ordem</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
-        <a class="tile" href="pages/index-v3.html" target="_blank" rel="noopener"><b>Home v3</b><span>catorze seções na ordem que o time pediu — a v2 sem o quiz, sem o bloco de autoridade e sem o FAQ curto</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
-        <a class="tile" href="pages/index-logado.html" target="_blank" rel="noopener"><b>Home · cliente logado</b><span>a v2 com sessão aberta — o ícone de conta vira a inicial e abre o menu da conta</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
+      <div class="grade">
+        <a class="peca" href="pages/home.html" target="_blank" rel="noopener"><b>Home v1</b><span>construída com os componentes do sistema, conteúdo real</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
+        <a class="peca" href="pages/index-v2.html" target="_blank" rel="noopener"><b>Home v2</b><span>a mesma loja na gramática de e-commerce dos EUA — mesmas peças, outra ordem</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
+        <a class="peca" href="pages/index-v3.html" target="_blank" rel="noopener"><b>Home v3</b><span>catorze seções na ordem que o time pediu — a v2 sem o quiz, sem o bloco de autoridade e sem o FAQ curto</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
+        <a class="peca" href="pages/index-logado.html" target="_blank" rel="noopener"><b>Home · cliente logado</b><span>a v2 com sessão aberta — o ícone de conta vira a inicial e abre o menu da conta</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
       </div>
     </div>
 
     <div class="subgrupo">
       <h2>Produto <span class="conta">5</span></h2>
-      <div class="grid">
-        <a class="tile" href="pages/pdp.html" target="_blank" rel="noopener"><b>PDP</b><span>compra, relacionados e avaliações — sem breadcrumb, sem acordeão de navegação e sem recado de parceiro</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
-        <a class="tile" href="pages/pdp-influencer.html" target="_blank" rel="noopener"><b>PDP link influencer</b><span>a mesma PDP de quem chega por link patrocinado — o recado do parceiro na faixa abaixo do cabeçalho</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
-        <a class="tile" href="pages/pdp-esgotado.html" target="_blank" rel="noopener"><b>PDP esgotada</b><span>o mesmo bloco de compra sem estoque — 41 dos 116 produtos da loja estão assim hoje</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
-        <a class="tile" href="pages/pdp-variante.html" target="_blank" rel="noopener"><b>PDP com variante</b><span>seletor de tamanho movendo preço, estoque e foto — tamanhos e preços forjados, nenhum produto da loja tem opção</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
-        <a class="tile" href="pages/pdp-oferta.html" target="_blank" rel="noopener"><b>PDP em promoção</b><span>preço anterior riscado e selo &ldquo;Save 28%&rdquo; — preço anterior forjado, a loja não preenche <code>compare_at_price</code> em nenhum produto</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
+      <div class="grade">
+        <a class="peca" href="pages/pdp.html" target="_blank" rel="noopener"><b>PDP</b><span>compra, relacionados e avaliações — sem breadcrumb, sem acordeão de navegação e sem recado de parceiro</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
+        <a class="peca" href="pages/pdp-influencer.html" target="_blank" rel="noopener"><b>PDP link influencer</b><span>a mesma PDP de quem chega por link patrocinado — o recado do parceiro na faixa abaixo do cabeçalho</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
+        <a class="peca" href="pages/pdp-esgotado.html" target="_blank" rel="noopener"><b>PDP esgotada</b><span>o mesmo bloco de compra sem estoque — 41 dos 116 produtos da loja estão assim hoje</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
+        <a class="peca" href="pages/pdp-variante.html" target="_blank" rel="noopener"><b>PDP com variante</b><span>seletor de tamanho movendo preço, estoque e foto — tamanhos e preços forjados, nenhum produto da loja tem opção</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
+        <a class="peca" href="pages/pdp-oferta.html" target="_blank" rel="noopener"><b>PDP em promoção</b><span>preço anterior riscado e selo &ldquo;Save 28%&rdquo; — preço anterior forjado, a loja não preenche <code>compare_at_price</code> em nenhum produto</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
       </div>
     </div>
 
     <div class="subgrupo">
       <h2>Apoio <span class="conta">2</span></h2>
-      <div class="grid">
-        <a class="tile" href="pages/faq.html" target="_blank" rel="noopener"><b>FAQ</b><span>perguntas em acordeão com índice lateral — o padrão de resposta que a loja não tinha</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
-        <a class="tile" href="pages/404.html" target="_blank" rel="noopener"><b>404</b><span>produto que saiu do catálogo — o único caminho que terminava numa tela que não era nossa</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
+      <div class="grade">
+        <a class="peca" href="pages/faq.html" target="_blank" rel="noopener"><b>FAQ</b><span>perguntas em acordeão com índice lateral — o padrão de resposta que a loja não tinha</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
+        <a class="peca" href="pages/404.html" target="_blank" rel="noopener"><b>404</b><span>produto que saiu do catálogo — o único caminho que terminava numa tela que não era nossa</span><span class="ds-sr-only"> (abre em nova aba)</span></a>
       </div>
     </div>
   </section>
@@ -262,50 +248,50 @@ a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
     <div class="subgrupo">
       <h3><a href="tokens/">Fundação</a> <span class="conta">2</span></h3>
       <p class="subgrupo-lede">Não aparece sozinha. Toda peça consome.</p>
-      <div class="grid">
-        <a class="tile" href="tokens/"><b>Tokens</b><span>371 tokens em três camadas — onde a cor, o espaço e o tipo ganham nome</span></a>
-        <a class="tile" href="icons/"><b>Ícones</b><span>42 símbolos SVG · 10,0 KB contra 380 KB de Font Awesome</span></a>
+      <div class="grade">
+        <a class="peca" href="tokens/"><b>Tokens</b><span>371 tokens em três camadas — onde a cor, o espaço e o tipo ganham nome</span></a>
+        <a class="peca" href="icons/"><b>Ícones</b><span>42 símbolos SVG · 10,0 KB contra 380 KB de Font Awesome</span></a>
       </div>
     </div>
 
     <div class="subgrupo">
       <h3><a href="components/">Componentes</a> <span class="conta">2</span></h3>
       <p class="subgrupo-lede">Reutilizável e sem contexto: serve a qualquer página porque não sabe em qual está.</p>
-      <div class="grid">
-        <a class="tile" href="atoms/"><b>Átomos</b><span>16 átomos indivisíveis — o que a pessoa aperta, lê ou preenche</span></a>
-        <a class="tile" href="molecules/"><b>Moléculas</b><span>22 moléculas: átomos reunidos para uma tarefa — cartão, preço, paginação</span></a>
+      <div class="grade">
+        <a class="peca" href="atoms/"><b>Átomos</b><span>16 átomos indivisíveis — o que a pessoa aperta, lê ou preenche</span></a>
+        <a class="peca" href="molecules/"><b>Moléculas</b><span>22 moléculas: átomos reunidos para uma tarefa — cartão, preço, paginação</span></a>
       </div>
     </div>
 
     <div class="subgrupo">
       <h3><a href="organisms/">Blocos</a> <span class="conta">16</span></h3>
       <p class="subgrupo-lede">As regiões da loja. Cada uma tem lugar e existe uma vez por tela — na escada atômica, os organismos.</p>
-      <div class="grid">
-        <a class="tile" href="organisms/"><b>Os 17 blocos</b><span>hero, cabeçalho, menu, gaveta do carrinho, bloco de compra, galeria, FAQ, rodapé</span></a>
+      <div class="grade">
+        <a class="peca" href="organisms/"><b>Os 17 blocos</b><span>hero, cabeçalho, menu, gaveta do carrinho, bloco de compra, galeria, FAQ, rodapé</span></a>
       </div>
     </div>
 
     <div class="subgrupo">
       <h3><a href="templates/">Templates</a> <span class="conta">1</span></h3>
       <p class="subgrupo-lede">O esqueleto da página, sem conteúdo.</p>
-      <div class="grid">
-        <a class="tile" href="templates/page-layout.html"><b>Page layout</b><span>largura máxima, ritmo entre blocos e cabeçalho de seção — o que toda página herda antes de escolher um organismo</span></a>
+      <div class="grade">
+        <a class="peca" href="templates/page-layout.html"><b>Page layout</b><span>largura máxima, ritmo entre blocos e cabeçalho de seção — o que toda página herda antes de escolher um organismo</span></a>
       </div>
     </div>
 
     <div class="subgrupo">
       <h3><a href="pages/">Exemplos</a> <span class="conta">11</span></h3>
       <p class="subgrupo-lede">A evidência: o esqueleto com catálogo, foto e preço de verdade dentro. É delas que sai a coluna de maturidade do inventário.</p>
-      <div class="grid">
-        <a class="tile" href="pages/index.html"><b>As 11 telas</b><span>catálogo, fotos e preços ao vivo — as mesmas listadas no topo desta página</span></a>
+      <div class="grade">
+        <a class="peca" href="pages/index.html"><b>As 11 telas</b><span>catálogo, fotos e preços ao vivo — as mesmas listadas no topo desta página</span></a>
       </div>
     </div>
 
     <div class="subgrupo">
       <h3>Ferramenta <span class="conta">1</span></h3>
       <p class="subgrupo-lede">Não se constrói com ela — se confere.</p>
-      <div class="grid">
-        <a class="tile" href="preview/"><b>Preview</b><span>as 11 páginas da loja em 320, 375, 414, 768 e 1280 — viewport de verdade</span></a>
+      <div class="grade">
+        <a class="peca" href="preview/"><b>Preview</b><span>as 11 páginas da loja em 320, 375, 414, 768 e 1280 — viewport de verdade</span></a>
       </div>
     </div>
   </section>
@@ -313,11 +299,11 @@ a.tile span{font-size:var(--yb-type-body-sm-size);color:var(--yb-text-muted)}
   <section class="grupo">
     <h2>Como o sistema decide</h2>
     <p>Por que ele é assim, e o que fazer quando duas regras se chocam.</p>
-    <div class="grid">
-      <a class="tile" href="PRINCIPIOS.md"><b>Princípios</b><span>cinco regras em ordem — o que ganha quando duas se chocam</span></a>
-      <a class="tile" href="decision-log/"><b>Decisões</b><span>dez DDR: por que o sistema é assim, com a evidência</span></a>
-      <a class="tile" href="INVENTARIO.md"><b>Inventário</b><span>55 peças com maturidade conferida a cada build</span></a>
-      <a class="tile" href="CONTRIBUINDO.md"><b>Contribuindo</b><span>o laço local e o que o CI reprova</span></a>
+    <div class="grade">
+      <a class="peca" href="PRINCIPIOS.md"><b>Princípios</b><span>cinco regras em ordem — o que ganha quando duas se chocam</span></a>
+      <a class="peca" href="decision-log/"><b>Decisões</b><span>dez DDR: por que o sistema é assim, com a evidência</span></a>
+      <a class="peca" href="INVENTARIO.md"><b>Inventário</b><span>55 peças com maturidade conferida a cada build</span></a>
+      <a class="peca" href="CONTRIBUINDO.md"><b>Contribuindo</b><span>o laço local e o que o CI reprova</span></a>
     </div>
   </section>
 

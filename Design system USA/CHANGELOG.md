@@ -9,6 +9,10 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 [GOVERNANCA.md](GOVERNANCA.md), componente novo pede versão **menor** (0.13.0).
 
 ### Mudado
+- **Um cartão de link só na documentação.** A capa e a validação tinham um
+  `.tile` próprio, com borda mais escura e grade de 220px; agora usam o
+  `.grade`/`.peca` da Fundação, que saiu de `doc/doc.css` para
+  `doc/doc-cartao.css`, carregado pelas fichas, galerias, capa e validação.
 - **Button `--ghost` sem borda.** Com a aresta em `gray-300` ela era um
   contorno mais fraco que a secundária, e o sistema tinha dois contornos e
   nenhum botão só de texto. Agora é texto, com fundo só no hover e no

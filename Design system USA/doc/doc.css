@@ -175,41 +175,6 @@
    ficou longa demais para ler. */
 .nav-conta{margin:0; font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
 .nav-conta:empty{display:none}
-.grade{
-  display:grid; gap:var(--yb-space-4);
-  grid-template-columns:repeat(auto-fill, minmax(15rem, 1fr));
-}
-.peca{
-  scroll-margin-block-start:var(--yb-space-8);
-  display:flex; flex-direction:column; gap:var(--yb-space-2);
-  padding:var(--yb-space-5);
-  border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card);
-  background:var(--yb-surface); text-decoration:none;
-}
-.peca:hover{border-color:var(--yb-text-primary)}
-.peca:focus-visible{
-  outline:var(--yb-focus-width) solid var(--yb-focus-color);
-  outline-offset:var(--yb-focus-offset);
-}
-/* `>` e nao descendente: o nome e filho direto. A capa do sistema ja tropecou
-   nisso — todo <b> dentro do texto virava um segundo titulo. */
-.peca > b{
-  font-size:var(--yb-type-h4-size); font-weight:var(--yb-font-weight-semibold);
-  color:var(--yb-text-primary);
-}
-.peca > span{font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted)}
-/* O DEGRAU ABRE O CARTÃO, e não o fecha. Ele era a última linha, em cinza,
-   depois da descrição inteira — e "que espécie de coisa é essa?" é a pergunta
-   que vem ANTES do nome: numa lista em ordem alfabética, o Button e o Buy box
-   liam como a mesma espécie até a última linha dizer que não eram.
-
-   Continua pequeno e mudo: sobretítulo, não etiqueta colorida. A cor aqui
-   dividiria a grade em três blocos visuais e desfaria a lista única. */
-.peca-nivel{
-  font-size:var(--yb-type-caption-size);
-  letter-spacing:var(--yb-tracking-wider);
-  text-transform:uppercase; color:var(--yb-text-muted);
-}
 /* ------------------------------------------------------- modal em fluxo
    `<dialog open>` é não-modal, e o navegador o posiciona `absolute` — três
    deles num palco ficariam um por cima do outro. Aqui eles entram no fluxo,
