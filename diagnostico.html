@@ -36,6 +36,7 @@
   .erro { padding: 1rem; border-radius: 12px; background: #fee2e2; color: var(--erro); max-width: 68ch; }
   .total { margin: 2rem 0 0; padding-top: 1rem; border-top: 1px solid var(--borda); font-size: .9rem; color: var(--mudo); }
   .total b { color: var(--tinta); }
+  code { padding: .1rem .35rem; border-radius: 5px; background: var(--superficie-2); font-size: .82em; }
 </style>
 </head>
 <!-- FERRAMENTA LOCAL, fora do deploy (ver exclusão no rsync e no publicar).
@@ -49,10 +50,10 @@
      não grava e não mostra o token. -->
 <body>
 <h1>Diagnóstico da contagem por seção</h1>
-<p class="sub">Lista, item a item, os PBIs e Bugs fechados no período que alimentam o número de cada seção do documento Entregas. Serve pra conferir se o número diz o que o título promete.</p>
+<p class="sub">Lista, item a item, os PBIs e Bugs fechados no período, agrupados pela <b>Feature</b> dona de cada um. Serve pra descobrir qual Feature corresponde a cada cartão do documento — os itens moram nas Features, e o épico junta várias delas.</p>
 
 <div class="aviso">
-  <b>Por que vários grupos repetem o mesmo número:</b> a contagem é por <b>épico</b>, e vários cartões apontam pro mesmo. Quando um épico serve mais de uma seção, ele aparece abaixo marcado em âmbar — e o número dele é exibido inteiro em cada uma dessas seções.
+  <b>Como usar:</b> cada bloco é uma <b>Feature</b> com os itens que ela fechou no período. Ache a Feature que corresponde a cada cartão do documento e copie a linha <code>featureIds: [...]</code> pro cartão em <code>assets/briefing-entregas.js</code>. Cartão sem <code>featureIds</code> continua contando pelo épico — que é o número inflado que estamos corrigindo.
 </div>
 
 <div id="saida"></div>
@@ -108,40 +109,64 @@
   }
 
   const B = window.CentralBriefing;
-  const PERIODO = B.periodoDoDocumento ? B.periodoDoDocumento() : null;
-  const mapa = C.mapaDeProdutos(todos);
+  const meses = (B.periodoDoDocumento ? B.periodoDoDocumento() : []) || [];
+  const porId = new Map(todos.map((it) => [it.id, it]));
   const ehPbi = (it) => {
     const t = ((it || {}).fields || {})['System.WorkItemType'] || '';
     return t !== 'Epic' && t !== 'Feature';
   };
   const mes = (iso) => (iso ? String(iso).slice(0, 7) : null);
-  const meses = PERIODO || [];
 
-  // Itens fechados dentro do período, agrupados pelo épico que o mapa resolve.
-  const porEpico = new Map();
+  // Mesma subida do briefing: para na Feature mais próxima, e devolve null se
+  // chegar no épico sem passar por uma.
+  const featureDe = (id) => {
+    const eu = porId.get(id);
+    if (!eu) return null;
+    const vistos = new Set([id]);
+    let atual = porId.get((eu.fields || {})['System.Parent']);
+    while (atual && !vistos.has(atual.id)) {
+      vistos.add(atual.id);
+      const t = (atual.fields || {})['System.WorkItemType'];
+      if (t === 'Feature') return atual;
+      if (t === 'Epic') return null;
+      atual = porId.get((atual.fields || {})['System.Parent']);
+    }
+    return null;
+  };
+  const epicoDe = (it) => {
+    let atual = it, vistos = new Set();
+    while (atual && !vistos.has(atual.id)) {
+      vistos.add(atual.id);
+      if ((atual.fields || {})['System.WorkItemType'] === 'Epic') return atual;
+      atual = porId.get((atual.fields || {})['System.Parent']);
+    }
+    return null;
+  };
+
+  // Itens fechados no período, repartidos pela Feature dona.
+  const porFeature = new Map();
+  const soltos = [];
   for (const it of todos) {
     if (!ehPbi(it)) continue;
     const f = it.fields || {};
     if (!meses.includes(mes(f['Microsoft.VSTS.Common.ClosedDate']))) continue;
-    const prod = mapa.get(it.id);
-    if (!prod) continue;
-    if (!porEpico.has(prod.id)) porEpico.set(prod.id, { prod, itens: [] });
-    porEpico.get(prod.id).itens.push(it);
+    const feat = featureDe(it.id);
+    if (!feat) { soltos.push(it); continue; }
+    if (!porFeature.has(feat.id)) porFeature.set(feat.id, { feat, epico: epicoDe(feat), itens: [] });
+    porFeature.get(feat.id).itens.push(it);
   }
 
   const cartoes = B.cartoesDoDocumento ? B.cartoesDoDocumento() : [];
-  const secoesDoEpico = (id) => [...new Set(cartoes.filter((c) => c.epicoId === id)
-    .map((c) => c.iniciativa || 'Outras entregas'))];
+  const jaUsada = (id) => cartoes.filter((c) => (c.featureIds || []).includes(id))
+    .map((c) => c.iniciativa || 'Outras entregas');
 
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (ch) =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
 
-  const usados = [...porEpico.values()].filter((g) => secoesDoEpico(g.prod.id).length);
-  usados.sort((a, b) => b.itens.length - a.itens.length);
+  const grupos = [...porFeature.values()].sort((a, b) => b.itens.length - a.itens.length);
 
-  saida.innerHTML = usados.map((g) => {
-    const secs = secoesDoEpico(g.prod.id);
-    const linhas = g.itens
+  const tabela = (itens) => {
+    const linhas = itens
       .sort((a, b) => String((a.fields || {})['Microsoft.VSTS.Common.ClosedDate'])
         .localeCompare(String((b.fields || {})['Microsoft.VSTS.Common.ClosedDate'])))
       .map((it) => {
@@ -150,15 +175,34 @@
           `<td>${esc(f['System.Title'])}</td><td class="estado">${esc(f['System.State'])}</td>` +
           `<td class="data">${esc(String(f['Microsoft.VSTS.Common.ClosedDate'] || '').slice(0, 10))}</td></tr>`;
       }).join('');
+    return `<table><thead><tr><th>id</th><th>tipo</th><th>título</th><th>estado</th><th>fechado</th></tr></thead>
+      <tbody>${linhas}</tbody></table>`;
+  };
+
+  const html = grupos.map((g) => {
+    const secs = jaUsada(g.feat.id);
     return `<section class="grupo">
-      <h2>Épico #${g.prod.id} — ${esc(g.prod.titulo)}</h2>
-      <p class="meta">${g.itens.length} ${g.itens.length === 1 ? 'item' : 'itens'} no período</p>
-      <div class="secoes">${secs.map((s) =>
-        `<span class="chip${secs.length > 1 ? ' varias' : ''}">${esc(s)}</span>`).join('')}</div>
-      <table><thead><tr><th>id</th><th>tipo</th><th>título</th><th>estado</th><th>fechado</th></tr></thead>
-      <tbody>${linhas}</tbody></table>
+      <h2>Feature #${g.feat.id} — ${esc((g.feat.fields || {})['System.Title'])}</h2>
+      <p class="meta">${g.itens.length} ${g.itens.length === 1 ? 'item' : 'itens'} no período ·
+        dentro do épico #${g.epico ? g.epico.id : '?'} ${g.epico ? esc((g.epico.fields || {})['System.Title']) : ''}</p>
+      <div class="secoes">${secs.length
+        ? secs.map((x) => `<span class="chip">já ligada a: ${esc(x)}</span>`).join('')
+        : '<span class="chip varias">nenhum cartão declara esta Feature</span>'}</div>
+      <p class="meta">pra usar no cartão: <code>featureIds: [${g.feat.id}],</code></p>
+      ${tabela(g.itens)}
     </section>`;
-  }).join('') + `<p class="total">Período: <b>${meses.join(', ') || '—'}</b> · épicos usados pelos cartões: <b>${usados.length}</b> · itens somados: <b>${usados.reduce((n, g) => n + g.itens.length, 0)}</b></p>`;
+  }).join('');
+
+  const extra = soltos.length ? `<section class="grupo">
+    <h2>Sem Feature — pendurados direto no épico</h2>
+    <p class="meta">${soltos.length} ${soltos.length === 1 ? 'item' : 'itens'}. Não entram em nenhuma
+      contagem por Feature: não há frente dona deles.</p>
+    ${tabela(soltos)}</section>` : '';
+
+  saida.innerHTML = html + extra + `<p class="total">Período: <b>${meses.join(', ') || '—'}</b> ·
+    Features com itens: <b>${grupos.length}</b> ·
+    itens em Feature: <b>${grupos.reduce((n, g) => n + g.itens.length, 0)}</b> ·
+    sem Feature: <b>${soltos.length}</b></p>`;
 })();
 </script>
 </body>

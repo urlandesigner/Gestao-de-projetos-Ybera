@@ -539,6 +539,72 @@ test('galeria: a legenda do alt é a mesma da figcaption — leitor de tela e vi
 // Urlan manda uma tela nova, e um teste que quebra em cada inclusão legítima
 // vira ruído, não guarda. O que se guarda é a relação — moldura só existe onde
 // há imagem declarada, e imagem nenhuma escapa pra fora de uma galeria.
+/* A contagem por seção nasceu contando pelo ÉPICO e estava errada: os itens
+   moram em Features, o épico tem várias, e cinco cartões apontavam pro mesmo
+   épico — quatro seções mostravam o mesmo número, e a Tradução exibia os itens
+   da loja inteira. Estes testes guardam a correção. */
+function hierarquiaComFeatures() {
+  const wi = (id, tipo, titulo, pai) => ({ id, fields: {
+    'System.WorkItemType': tipo, 'System.State': 'Done', 'System.Title': titulo, 'System.Parent': pai } });
+  const pbi = (id, pai, d) => ({ id, fields: {
+    'System.WorkItemType': 'Product Backlog Item', 'System.State': 'Done', 'System.Title': 'i' + id,
+    'System.Parent': pai, 'Microsoft.VSTS.Common.ClosedDate': iso(AGORA - d * dia),
+    'System.ChangedDate': iso(AGORA - dia) } });
+  // Um épico com três Features, que é a forma real do board.
+  const items = [wi(700, 'Epic', 'Loja', null),
+    wi(710, 'Feature', 'Home', 700), wi(711, 'Feature', 'PDP', 700), wi(712, 'Feature', 'Tradução', 700)];
+  const add = (f, n, base) => { for (let i = 0; i < n; i++) items.push(pbi(base + i, f, i % 2 ? 3 : 35)); };
+  add(710, 7, 7100); add(711, 5, 7110); add(712, 4, 7120);
+  return items;
+}
+
+test('contagem: cada seção conta a SUA Feature, não o épico inteiro', () => {
+  const items = hierarquiaComFeatures();
+  const cartoes = [
+    { titulo: 'Home', iniciativa: 'Nova Homepage', epicoId: 700, featureIds: [710], status: 'entregue', resumo: 'x' },
+    { titulo: 'PDP', iniciativa: 'Nova PDP', epicoId: 700, featureIds: [711], status: 'entregue', resumo: 'x' },
+    { titulo: 'Tradução', iniciativa: 'Tradução', epicoId: 700, featureIds: [712], status: 'teste', resumo: 'x' },
+  ];
+  const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
+  const contas = [...h.matchAll(/<h2 class="rl-sec-titulo">([^<]+)<\/h2>\s*<p class="rl-sec-conta">([^<]+)</g)]
+    .map((m) => [m[1], m[2]]);
+  assert.deepEqual(contas, [['Nova Homepage', '7 itens'], ['Nova PDP', '5 itens'], ['Tradução', '4 itens']]);
+  // O teste que importa: os três somam o épico inteiro, sem repetição.
+  assert.equal(contas.reduce((n, c) => n + parseInt(c[1], 10), 0), 16);
+});
+
+test('contagem: sem featureIds, o cartão ainda conta pelo épico', () => {
+  // A migração é cartão a cartão; não pode existir um passo em que a seção fica
+  // sem número nenhum porque a Feature ainda não foi declarada.
+  const items = hierarquiaComFeatures();
+  const cartoes = [{ titulo: 'Tudo', iniciativa: 'Loja', epicoId: 700, status: 'entregue', resumo: 'x' }];
+  const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
+  assert.match(h, /<p class="rl-sec-conta">16 itens</, 'cai no épico, que soma as três Features');
+});
+
+test('contagem: dois cartões na mesma seção apontando pra mesma Feature contam uma vez', () => {
+  const items = hierarquiaComFeatures();
+  const cartoes = [
+    { titulo: 'A', iniciativa: 'Home', epicoId: 700, featureIds: [710], status: 'entregue', resumo: 'x' },
+    { titulo: 'B', iniciativa: 'Home', epicoId: 700, featureIds: [710], status: 'entregue', resumo: 'x' },
+  ];
+  const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
+  assert.match(h, /<p class="rl-sec-conta">7 itens</, 'e não 14');
+});
+
+test('contagem: item pendurado direto no épico não inventa dono', () => {
+  // Sem Feature na cadeia, o item não pertence a frente nenhuma. Ele conta no
+  // fallback por épico, mas nunca é atribuído a uma Feature.
+  const items = hierarquiaComFeatures();
+  items.push({ id: 7999, fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.State': 'Done',
+    'System.Title': 'solto', 'System.Parent': 700,
+    'Microsoft.VSTS.Common.ClosedDate': iso(AGORA - 3 * dia), 'System.ChangedDate': iso(AGORA - dia) } });
+  const porFeature = [
+    { titulo: 'Home', iniciativa: 'Nova Homepage', epicoId: 700, featureIds: [710], status: 'entregue', resumo: 'x' }];
+  const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes: porFeature, periodo: ['2026-08', '2026-09'] }).html;
+  assert.match(h, /<p class="rl-sec-conta">7 itens</, 'o item solto não entra na Feature');
+});
+
 test('barra: o cartão do compliance mostra o progresso que o texto afirma', () => {
   const h = documento().html;
   const card = [...h.matchAll(/<article class="rl-frente">[\s\S]*?<\/article>/g)]

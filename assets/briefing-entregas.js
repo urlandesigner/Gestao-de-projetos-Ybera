@@ -534,6 +534,14 @@
   // retranca é o que diz a que frente o card pertence; agrupado por épico, o
   // título da seção já disse, e repetir o mesmo nome em cinco cards seguidos
   // vira ruído.
+  /* `o.cartoes` substitui a lista curada. Existe pros testes poderem exercitar a
+     contagem por Feature sem depender dos ids reais do board, do mesmo jeito que
+     `o.periodo` existe pra fixar o recorte sem depender do calendário. Em
+     produção ninguém passa isso: report.js não conhece a opção. */
+  function listaDeCartoes(o) {
+    return (Array.isArray(o.cartoes) && o.cartoes.length) ? o.cartoes : ENTREGAS_RECENTES;
+  }
+
   function corpoEntregasRecentes(lista, mostrarProduto) {
     const cartoes = lista.map((f) => {
       const est = SELOS[f.status];
@@ -561,27 +569,48 @@
   };
   const contaPbis = (m) => (((m || {}).itens) || []).filter((r) => ehPbi(r.item || r)).length;
 
-  /* PBIs do período repartidos por épico. `mapa` vem de C.mapaDeProdutos, que
-     sobe a cadeia de pais até o épico — atravessando Feature quando houver.
+  /* Sobe do item até a FEATURE mais próxima acima dele.
 
-     ATENÇÃO à soma: cartões diferentes podem apontar pro MESMO épico (hoje
-     cinco dos oito apontam pro 49290), e as seções agrupam por iniciativa. Logo
-     duas seções podem mostrar o mesmo número, e somar as seções não dá o total
-     da capa. O épico é grosso demais pra repartir por seção; enquanto for ele a
-     chave, esta contagem é "quanto andou o épico desta frente", não "quanto
-     esta frente entregou". */
-  function pbisPorEpico(mesesDoPeriodo, mapa) {
-    const conta = new Map();
+     C.mapaDeProdutos não serve aqui: ele sobe até o épico, que é o nível grosso
+     demais. Os itens moram dentro de Features, e um épico tem várias — contar
+     pelo épico fazia quatro seções mostrarem o mesmo número, porque cinco
+     cartões compartilham o 49290.
+
+     Devolve null quando a cadeia chega no épico sem passar por Feature: item
+     pendurado direto no épico não pertence a nenhuma frente, e inventar um dono
+     pra ele seria pior que não contá-lo. */
+  function featureDe(id, porId) {
+    const eu = porId.get(id);
+    if (!eu) return null;
+    const vistos = new Set([id]);
+    let atual = porId.get((eu.fields || {})['System.Parent']);
+    while (atual && !vistos.has(atual.id)) {
+      vistos.add(atual.id);
+      const t = (atual.fields || {})['System.WorkItemType'];
+      if (t === 'Feature') return atual.id;
+      if (t === 'Epic') return null;
+      atual = porId.get((atual.fields || {})['System.Parent']);
+    }
+    return null;
+  }
+
+  // PBIs do período por Feature, e por épico. O épico fica como reserva pro
+  // cartão que ainda não declarou `featureIds` — assim a migração é cartão a
+  // cartão, sem um passo em que o documento fica sem número nenhum.
+  function pbisPorChave(mesesDoPeriodo, porId, mapa) {
+    const porFeature = new Map();
+    const porEpico = new Map();
     for (const m of mesesDoPeriodo || []) {
       for (const r of ((m || {}).itens || [])) {
         const it = r.item || r;
         if (!ehPbi(it)) continue;
+        const fid = featureDe(it.id, porId);
+        if (fid) porFeature.set(fid, (porFeature.get(fid) || 0) + 1);
         const prod = mapa && mapa.get(it.id);
-        if (!prod) continue;
-        conta.set(prod.id, (conta.get(prod.id) || 0) + 1);
+        if (prod) porEpico.set(prod.id, (porEpico.get(prod.id) || 0) + 1);
       }
     }
-    return conta;
+    return { porFeature, porEpico };
   }
 
   // Roadmap: o único dado que não vem do DevOps (assets/roadmap.json). Datas em
@@ -741,7 +770,8 @@
     const naUrl = typeof location !== 'undefined'
       ? (/[?&]grupo=(plano|epico|iniciativa)\b/.exec(location.search) || [])[1] : null;
     const agrupar = o.agrupar || naUrl || 'iniciativa';
-    const grupos = agrupar === 'plano' ? [] : agruparEntregas(ENTREGAS_RECENTES, agrupar);
+    const cartoes = listaDeCartoes(o);
+    const grupos = agrupar === 'plano' ? [] : agruparEntregas(cartoes, agrupar);
 
     // Um número só na capa, a pedido do Urlan. Os outros dois saíram: "Em
     // execução agora" vinha do DevOps e o documento não tem seção que o
@@ -754,29 +784,43 @@
     // iniciativa a mais do que existe no roadmap.
     const gruposReais = grupos.filter((g) => !g.orfao);
     const nGrupos = agrupar === 'plano'
-      ? agruparEntregas(ENTREGAS_RECENTES, 'iniciativa').filter((g) => !g.orfao).length
+      ? agruparEntregas(cartoes, 'iniciativa').filter((g) => !g.orfao).length
       : gruposReais.length;
     const rotuloGrupo = agrupar === 'epico'
       ? (nGrupos === 1 ? 'Frente atendida' : 'Frentes atendidas')
       : (nGrupos === 1 ? 'Projeto atendido' : 'Projetos atendidos');
     const kpis = tile(rotuloGrupo, nGrupos);
 
-    const porEpico = pbisPorEpico(mesesPeriodo, mapa);
-    /* Um grupo pode ter cartões de épicos diferentes (é o caso de "Outras
-       entregas"), então soma os épicos DISTINTOS do grupo — sem o Set, um épico
-       repetido entre dois cartões da mesma seção contaria duas vezes ali. */
-    const contaDoGrupo = (g, conta) => {
-      const epicos = [...new Set((g.cards || []).map((c) => c.epicoId).filter(Boolean))];
-      const n = epicos.reduce((soma, id) => soma + (conta.get(id) || 0), 0);
+    const porIdTodos = new Map((o.todos || items).map((it) => [it.id, it]));
+    const contagens = pbisPorChave(mesesPeriodo, porIdTodos, mapa);
+
+    /* A chave leva prefixo porque Feature e épico vivem no mesmo espaço de ids:
+       sem ele, um épico 123 e uma Feature 123 se confundiriam no Set.
+
+       O Set existe porque um grupo pode ter vários cartões, e dois deles podem
+       apontar pra mesma Feature (ou pro mesmo épico) — sem ele a seção contaria
+       o mesmo trabalho duas vezes. */
+    const contaDoGrupo = (g) => {
+      const chaves = new Set();
+      for (const c of (g.cards || [])) {
+        const fs = Array.isArray(c.featureIds) ? c.featureIds.filter(Boolean) : [];
+        if (fs.length) fs.forEach((f) => chaves.add('f:' + f));
+        else if (c.epicoId) chaves.add('e:' + c.epicoId);
+      }
+      let n = 0;
+      for (const k of chaves) {
+        const id = Number(k.slice(2));
+        n += (k[0] === 'f' ? contagens.porFeature.get(id) : contagens.porEpico.get(id)) || 0;
+      }
       return n ? plural(n, 'item', 'itens') : '';
     };
 
     const secoes = [];
-    if (ENTREGAS_RECENTES.length && agrupar === 'plano') {
+    if (cartoes.length && agrupar === 'plano') {
       secoes.push({
         id: 'recentes', titulo: 'Entregas recentes',
         intro: 'As frentes de trabalho mais recentes do time.',
-        corpo: corpoEntregasRecentes(ENTREGAS_RECENTES, true),
+        corpo: corpoEntregasRecentes(cartoes, true),
       });
     } else {
       for (const g of grupos) {
@@ -787,7 +831,7 @@
           // PBIs do épico daquela frente fecharam no período, que é número que
           // não está à vista em lugar nenhum.
           id: (agrupar === 'epico' ? 'epico-' : 'ini-') + g.id, titulo: g.nome,
-          conta: contaDoGrupo(g, porEpico),
+          conta: contaDoGrupo(g),
           corpo: corpoEntregasRecentes(g.cards, false),
         });
       }
@@ -835,6 +879,7 @@
   const cartoesDoDocumento = () => ENTREGAS_RECENTES.map((c) => ({
     titulo: c.titulo, iniciativa: c.iniciativa || null,
     produto: c.produto || null, epicoId: c.epicoId || null, status: c.status || null,
+    featureIds: Array.isArray(c.featureIds) ? c.featureIds.slice() : null,
   }));
 
   return { htmlReport, mesPorExtenso, dataCurta, esc, periodoDoDocumento, cartoesDoDocumento };
