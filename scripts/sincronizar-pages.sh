@@ -21,14 +21,19 @@ DESTINO="${DESTINO_PAGES:-$HOME/ProjetosYbera/ideias-e-inovacao/Central de Proje
 
 [ -d "$DESTINO" ] || { echo "destino não existe: $DESTINO" >&2; exit 1; }
 
-SECO=()
-[ "${1:-}" = "--conferir" ] && SECO=(--dry-run)
+# String e não array de propósito: o bash do macOS é o 3.2, onde expandir um
+# array VAZIO sob `set -u` aborta o script ("SECO[@]: unbound variable"). O
+# --dry-run não tem espaço, então o word-splitting de $SECO sem aspas dá
+# exatamente zero ou um argumento. Foi um defeito real: a conferência passava
+# (array com um item) e a publicação de verdade morria na linha do rsync.
+SECO=""
+[ "${1:-}" = "--conferir" ] && SECO="--dry-run"
 
 # README.md é do repositório de destino, não daqui — nunca sobrescrever.
 # publicar.command e scripts/ são ferramenta de quem mantém, não do site.
 # As caixas de entrada de captura (mês/) já são git-ignored, e ficam fora aqui
 # também porque o rsync não lê .gitignore.
-rsync -a --delete --itemize-changes "${SECO[@]}" \
+rsync -a --delete --itemize-changes $SECO \
   --exclude='.git/' \
   --exclude='.claude/' \
   --exclude='.superpowers/' \
@@ -43,7 +48,7 @@ rsync -a --delete --itemize-changes "${SECO[@]}" \
   "$ORIGEM/" "$DESTINO/"
 
 echo
-if [ ${#SECO[@]} -gt 0 ]; then
+if [ -n "$SECO" ]; then
   echo "(conferência: nada foi escrito)"
 else
   echo "espelhado em: $DESTINO"
