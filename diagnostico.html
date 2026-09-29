@@ -59,6 +59,14 @@
   <b>o período</b> (só agosto e setembro; o que fechou em julho fica de fora).
 </div>
 
+<section class="grupo" style="margin-bottom:2rem">
+  <h2>Sondar uma Feature</h2>
+  <p class="meta">Busca <b>todos</b> os filhos dela no projeto — sem o recorte de área que a consulta do report aplica — e diz, item a item, se ele chega ou não ao documento e por quê.</p>
+  <p style="margin:.8rem 0 0"><input id="fid" type="number" placeholder="44271" style="padding:.5rem .7rem;border:1px solid var(--borda);border-radius:8px;font:inherit;width:11rem">
+  <button id="sondar" style="padding:.5rem 1rem;border:1px solid var(--borda);border-radius:999px;background:var(--superficie);font:inherit;font-weight:600;cursor:pointer">sondar</button></p>
+  <div id="sonda"></div>
+</section>
+
 <div id="saida"></div>
 
 <script src="assets/core.js"></script>
@@ -85,14 +93,16 @@
   // outra pessoa" — respondendo errado justamente a pergunta que a página existe
   // pra responder.
   const CAMPOS = ['System.Title', 'System.State', 'System.WorkItemType', 'System.Parent',
-    'System.AssignedTo', 'Microsoft.VSTS.Common.ClosedDate', 'System.ChangedDate'];
+    'System.AssignedTo', 'System.AreaPath', 'Microsoft.VSTS.Common.ClosedDate', 'System.ChangedDate'];
   const CAMPOS_PAI = ['System.WorkItemType', 'System.Title', 'System.Parent', 'System.State'];
 
   let todos = [];
+  const areasDoTime = [];
   try {
     for (const p of (config.projects || []).filter((x) => !x.hidden)) {
       let areas = [];
       try { areas = await A.teamAreas(ctx, p.projectName, p.teamName); } catch (e) { /* projeto inteiro */ }
+      areasDoTime.push({ projeto: p.projectName, time: p.teamName, areas });
       const ids = await A.runWiql(ctx, p.projectName, p.teamName, C.wiqlProdutos(areas));
       const crus = ids.length ? await A.getFields(ctx, ids, CAMPOS) : [];
       for (const it of crus) todos.push(Object.assign({ projeto: p.projectName }, it));
@@ -234,6 +244,61 @@
     <p class="meta">${soltos.length} ${soltos.length === 1 ? 'item' : 'itens'}. Não entram em nenhuma
       contagem por Feature: não há frente dona deles.</p>
     ${tabela(soltos)}</section>` : '';
+
+  /* A sonda existe porque as hipóteses estavam se esgotando sem medição: o
+     recorte por responsável foi descartado pelo próprio Urlan (a foto dele está
+     nas 9 PBIs), e sobrou a possibilidade de os itens nem serem buscados — a
+     consulta do report é presa à área do time via areaClause.
+
+     Ela pergunta ao DevOps pelos filhos da Feature SEM recorte de área, e
+     compara com o que o report de fato trouxe. A coluna "chega ao documento" é
+     a resposta. */
+  const porIdBuscado = new Map(todos.map((it) => [it.id, it]));
+  const areasTexto = areasDoTime.map((a) =>
+    a.projeto + ' / ' + a.time + ': ' + (a.areas.length
+      ? a.areas.map((x) => x.path + (x.children ? ' (e filhas)' : '')).join(' · ')
+      : '(sem recorte — projeto inteiro)')).join(' | ');
+
+  document.getElementById('sondar').addEventListener('click', async () => {
+    const alvo = Number(document.getElementById('fid').value);
+    const caixa = document.getElementById('sonda');
+    if (!alvo) { caixa.innerHTML = '<p class="meta">informe o id da Feature</p>'; return; }
+    caixa.innerHTML = '<p class="meta">buscando…</p>';
+    const proj = (config.projects || []).filter((x) => !x.hidden)[0];
+    if (!proj) { caixa.innerHTML = '<p class="meta">sem projeto configurado</p>'; return; }
+    let filhos = [];
+    try {
+      const ids = await A.runWiql(ctx, proj.projectName, proj.teamName,
+        'SELECT [System.Id] FROM WorkItems WHERE [System.Parent] = ' + alvo);
+      filhos = ids.length ? await A.getFields(ctx, ids, CAMPOS) : [];
+    } catch (e) {
+      caixa.innerHTML = '<p class="meta">falhou: ' + esc(e && e.message ? e.message : String(e)) + '</p>';
+      return;
+    }
+    if (!filhos.length) { caixa.innerHTML = '<p class="meta">a Feature #' + alvo + ' não tem filhos neste projeto.</p>'; return; }
+    let chegam = 0;
+    const linhas = filhos.map((it) => {
+      const f = it.fields || {};
+      const r = f['System.AssignedTo'];
+      const buscado = porIdBuscado.has(it.id);
+      const terminal = ['Done', 'Closed', 'Removed', 'Completed'].includes(f['System.State']);
+      const meu = !alvoDoDocumento || (r && r.displayName === alvoDoDocumento);
+      const ok = buscado && terminal && meu;
+      if (ok) chegam += 1;
+      const porque = !buscado ? 'FORA DA ÁREA do time — a consulta não traz'
+        : !terminal ? 'não está concluído'
+        : !meu ? 'atribuído a outra pessoa' : 'sim';
+      return '<tr><td class="id">#' + it.id + '</td><td>' + esc(f['System.Title']) + '</td>' +
+        '<td class="estado">' + esc(r ? r.displayName : '—') + '</td>' +
+        '<td class="estado">' + esc(f['System.State']) + '</td>' +
+        '<td class="estado">' + esc(f['System.AreaPath'] || '—') + '</td>' +
+        '<td class="' + (ok ? 'estado' : 'id') + '"><b>' + esc(porque) + '</b></td></tr>';
+    }).join('');
+    caixa.innerHTML = '<p class="meta" style="margin-top:1rem"><b>' + chegam + ' de ' + filhos.length +
+      '</b> chegam ao documento.<br>Áreas que a consulta cobre — ' + esc(areasTexto) + '</p>' +
+      '<table><thead><tr><th>id</th><th>título</th><th>responsável</th><th>estado</th><th>área</th><th>chega ao documento?</th></tr></thead><tbody>' +
+      linhas + '</tbody></table>';
+  });
 
   const quem = document.getElementById('quem');
   if (quem) quem.textContent = alvoDoDocumento || 'qualquer pessoa (recorte "todos" salvo)';
