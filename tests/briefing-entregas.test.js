@@ -605,6 +605,32 @@ test('contagem: item pendurado direto no épico não inventa dono', () => {
   assert.match(h, /<p class="rl-sec-conta">7 itens</, 'o item solto não entra na Feature');
 });
 
+test('contagem: cartão que tem barra de progresso não entra na conta da seção', () => {
+  // O compliance é uma planilha de 18 itens que no board é UM item. A barra
+  // ("faltam 4 dos 18") é a medida verdadeira; uma contagem por Feature diria
+  // "1 item" embaixo do título e contradiria o cartão logo abaixo.
+  const items = hierarquiaComFeatures();
+  const cartoes = [
+    { titulo: 'Planilha', iniciativa: 'Compliance', epicoId: 700, featureIds: [710],
+      progresso: { feito: 14, total: 18 }, status: 'andamento', resumo: 'x' },
+  ];
+  const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
+  assert.ok(!/rl-sec-conta/.test(h), 'a seção não mostra contagem');
+  assert.match(h, /aria-valuenow="14"/, 'e a barra do cartão continua lá');
+});
+
+test('contagem: numa seção mista, só os cartões sem barra contam', () => {
+  const items = hierarquiaComFeatures();
+  const cartoes = [
+    { titulo: 'Com barra', iniciativa: 'Mista', epicoId: 700, featureIds: [711],
+      progresso: { feito: 2, total: 9 }, status: 'andamento', resumo: 'x' },
+    { titulo: 'Sem barra', iniciativa: 'Mista', epicoId: 700, featureIds: [710], status: 'entregue', resumo: 'x' },
+  ];
+  const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
+  // A Feature 710 tem 7; a 711 tem 5 e fica de fora porque aquele cartão se mede.
+  assert.match(h, /<p class="rl-sec-conta">7 itens</);
+});
+
 test('barra: o cartão do compliance mostra o progresso que o texto afirma', () => {
   const h = documento().html;
   const card = [...h.matchAll(/<article class="rl-frente">[\s\S]*?<\/article>/g)]

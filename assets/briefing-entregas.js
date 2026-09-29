@@ -807,6 +807,15 @@
     const contaDoGrupo = (g) => {
       const chaves = new Set();
       for (const c of (g.cards || [])) {
+        /* Cartão com `progresso` mede a si mesmo e não entra na conta da seção.
+           O caso que trouxe isto: o compliance é uma planilha de 18 itens que no
+           board é UM item só. Contar por Feature ali diria "1 item" embaixo do
+           título enquanto o cartão diz "faltam 4 dos 18" — dois números sobre a
+           mesma coisa, e o menos verdadeiro em cima.
+
+           A regra sai do dado que já existe, sem campo novo pra manter em dia:
+           quem declarou progresso já disse como quer ser medido. */
+        if (c.progresso) continue;
         const fs = Array.isArray(c.featureIds) ? c.featureIds.filter(Boolean) : [];
         if (fs.length) fs.forEach((f) => chaves.add('f:' + f));
         else if (c.epicoId) chaves.add('e:' + c.epicoId);
