@@ -150,19 +150,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -281,8 +268,7 @@
         </div>
       </footer>
     </div>
-    <div class="note">
-      <b>Esta é a versão que as onze telas publicam</b>
+    <details class="note"><summary>Esta é a versão que as onze telas publicam</summary>
       <p>Aqui são <b>23 links em cinco colunas</b> mais 5 legais, e cada coluna
       responde uma pergunta diferente: onde compro, que linha, que problema, quem me
       ajuda, quem são vocês. <b>Collection</b> e <b>Hair Problems</b> seguem o rodapé
@@ -290,35 +276,31 @@
       por problema. A lista legal perdeu uma duplicata que o rodapé antigo carregava
       &mdash; "Terms &amp; Conditions" e "Terms of Service" apontavam para o mesmo
       destino com dois rótulos.</p>
-    </div>
-    <div class="note">
-      <b>Escuro é superfície, não tema</b>
+    </details>
+    <details class="note"><summary>Escuro é superfície, não tema</summary>
       <p><code>--dark</code> é superfície escura dentro de página clara, com os tokens
       <code>*-inverse</code> que a camada 1 já tinha medidos (ver
       <a href="../decision-log/DDR-007-o-sistema-e-claro-por-decisao.md">DDR-007</a>). O que <b>não</b>
       deu para reaproveitar foi o magenta: como texto sobre este fundo ele mede
       <b>3,11:1</b> e reprova em AA. Por isso o hover dos links é branco, e não a cor
       de ação.</p>
-    </div>
-    <div class="note">
-      <b>Acordeão no celular</b>
+    </details>
+    <details class="note"><summary>Acordeão no celular</summary>
       <p>Abaixo de 768 cada coluna fecha e o título vira o controle que a abre: o
       rodapé cabe numa tela em vez de virar uma pilha de doze linhas depois do
       formulário de assinatura. É um DOM só &mdash; o <code>&lt;input&gt;</code> governa
       o estado no celular e a media query o ignora no desktop, onde as listas ficam
       abertas e o título volta a ser rótulo. A loja hoje duplica o menu inteiro no HTML
       para fazer isso, e quem usa leitor de tela ouve tudo duas vezes.</p>
-    </div>
-    <div class="note">
-      <b>Centrado no mesmo eixo</b>
+    </details>
+    <details class="note"><summary>Centrado no mesmo eixo</summary>
       <p>No celular título e links ficam centrados, como a marca, os ícones sociais e a
       barra legal já eram. A seta anda junto do rótulo em vez de presa à borda direita:
       encostada ali, ela puxava o título para fora do eixo. O alvo de toque continua a
       linha inteira &mdash; mudou onde o texto senta, não o tamanho do que o dedo
       acerta.</p>
-    </div>
-    <div class="note">
-      <b>Só sanfona onde há sanfona</b>
+    </details>
+    <details class="note"><summary>Só sanfona onde há sanfona</summary>
       <p>A coluna sanfonada tem duas metades: a regra que <b>fecha</b> a lista e o
       checkbox que a <b>reabre</b>. Houve uma versão deste rodapé com a primeira metade
       e sem a segunda &mdash; medido em 375px, as três listas com
@@ -327,7 +309,7 @@
       <code>.yb-footer__col:has(.yb-footer__toggle)</code>. Onde <code>:has()</code>
       não existir as regras caem e a lista fica aberta: conteúdo a mais, nunca conteúdo
       inalcançável.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -335,11 +317,30 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;footer class="yb-footer yb-footer--dark"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Footer">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;footer class="yb-footer yb-footer--dark"&gt;
   &lt;div class="yb-footer__inner"&gt;
     &lt;div class="yb-footer__news-field"&gt;
       &lt;div&gt;
@@ -348,11 +349,11 @@
       &lt;/div&gt;
       &lt;form class="yb-footer__news" onsubmit="return false"&gt;
         &lt;span class="yb-field__box yb-field__box--on-dark yb-footer__newsfield"&gt;
-          &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-mail"/&gt;&lt;/svg&gt;
+          &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-mail"/&gt;&lt;/svg&gt;
                           &lt;input class="yb-input" id="news-footer" type="email" placeholder=" " autocomplete="email" aria-describedby="news-footer-sobre" required&gt;&lt;label class="yb-field__label" for="news-footer"&gt;Your best email&lt;/label&gt;
         &lt;/span&gt;
         &lt;button class="yb-iconbtn yb-iconbtn--on-dark yb-footer__newsbtn" type="submit" aria-label="Subscribe"&gt;
-          &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;
+          &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;
         &lt;/button&gt;
       &lt;/form&gt;
     &lt;/div&gt;
@@ -362,43 +363,43 @@
         &lt;p class="yb-footer__info"&gt;info@ybera.us&lt;/p&gt;
         &lt;p class="yb-footer__info"&gt;Mon&amp;ndash;Fri, 8am&amp;ndash;4pm EST&lt;/p&gt;
         &lt;div class="yb-footer__social"&gt;
-          &lt;a href="#demos"&gt;&lt;svg class="yb-icon" role="img" aria-label="Ybera on Instagram"&gt;&lt;use href="../icons/ybera-icons.svg#yb-instagram"/&gt;&lt;/svg&gt;&lt;/a&gt;
-          &lt;a href="#demos"&gt;&lt;svg class="yb-icon" role="img" aria-label="Ybera on TikTok"&gt;&lt;use href="../icons/ybera-icons.svg#yb-tiktok"/&gt;&lt;/svg&gt;&lt;/a&gt;
+          &lt;a href="#demos"&gt;&lt;svg class="yb-icon" role="img" aria-label="Ybera on Instagram"&gt;&lt;use href="ybera-icons.svg#yb-instagram"/&gt;&lt;/svg&gt;&lt;/a&gt;
+          &lt;a href="#demos"&gt;&lt;svg class="yb-icon" role="img" aria-label="Ybera on TikTok"&gt;&lt;use href="ybera-icons.svg#yb-tiktok"/&gt;&lt;/svg&gt;&lt;/a&gt;
         &lt;/div&gt;
       &lt;/div&gt;
       &lt;div class="yb-footer__menus"&gt;
         &lt;div class="yb-footer__col"&gt;
           &lt;input class="yb-footer__toggle" type="checkbox" id="fcol0"&gt;
           &lt;label class="yb-footer__coltitle" for="fcol0"&gt;Shop
-            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;
+            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;
           &lt;/label&gt;
           &lt;div class="yb-footer__collist"&gt;&lt;ul&gt;&lt;li&gt;&lt;a href="#demos"&gt;Best Sellers&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Kits&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;All Products&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;
         &lt;/div&gt;
         &lt;div class="yb-footer__col"&gt;
           &lt;input class="yb-footer__toggle" type="checkbox" id="fcol1"&gt;
           &lt;label class="yb-footer__coltitle" for="fcol1"&gt;Collection
-            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;
+            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;
           &lt;/label&gt;
           &lt;div class="yb-footer__collist"&gt;&lt;ul&gt;&lt;li&gt;&lt;a href="#demos"&gt;Progressiva&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Cronograma&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Ybera Paris&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;100Timetros&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Capulana&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Terra Coco&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Hair Mist&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;
         &lt;/div&gt;
         &lt;div class="yb-footer__col"&gt;
           &lt;input class="yb-footer__toggle" type="checkbox" id="fcol2"&gt;
           &lt;label class="yb-footer__coltitle" for="fcol2"&gt;Hair Problems
-            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;
+            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;
           &lt;/label&gt;
           &lt;div class="yb-footer__collist"&gt;&lt;ul&gt;&lt;li&gt;&lt;a href="#demos"&gt;Damaged Hair&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Frizz &amp;amp; Dryness&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Thinning / Hair Loss&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Undefined Curls&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Hair Smoothing&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Hair Straightening&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;
         &lt;/div&gt;
         &lt;div class="yb-footer__col"&gt;
           &lt;input class="yb-footer__toggle" type="checkbox" id="fcol3"&gt;
           &lt;label class="yb-footer__coltitle" for="fcol3"&gt;Help
-            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;
+            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;
           &lt;/label&gt;
           &lt;div class="yb-footer__collist"&gt;&lt;ul&gt;&lt;li&gt;&lt;a href="#demos"&gt;FAQ&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Contact Us&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Shipping Policy&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Refund Policy&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;
         &lt;/div&gt;
         &lt;div class="yb-footer__col"&gt;
           &lt;input class="yb-footer__toggle" type="checkbox" id="fcol4"&gt;
           &lt;label class="yb-footer__coltitle" for="fcol4"&gt;Company
-            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;
+            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;
           &lt;/label&gt;
           &lt;div class="yb-footer__collist"&gt;&lt;ul&gt;&lt;li&gt;&lt;a href="#demos"&gt;Our Story&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Blog&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;AI Hair Analysis&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;
         &lt;/div&gt;
@@ -407,7 +408,183 @@
     &lt;div class="yb-footer__bottom"&gt;&lt;span&gt;&amp;copy; 2026 YBERA USA LLC&lt;/span&gt;&lt;a href="#demos"&gt;Terms &amp;amp; Conditions&lt;/a&gt;&lt;a href="#demos"&gt;Privacy Policy&lt;/a&gt;&lt;a href="#demos"&gt;Refund Policy&lt;/a&gt;&lt;a href="#demos"&gt;Shipping Policy&lt;/a&gt;&lt;a href="#demos"&gt;SMS Terms &amp;amp; Conditions&lt;/a&gt;&lt;/div&gt;
   &lt;/div&gt;
 &lt;/footer&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-space-10) + var(--yb-buybar-height))}
+.yb-footer{
+  background:var(--yb-bg-muted); color:var(--yb-text-muted);
+  padding:var(--yb-space-12) var(--yb-page-gutter);
+  font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-base);
+}
+.yb-footer__inner{max-width:var(--yb-container-max); margin-inline:auto}
+.yb-footer__top{
+  display:flex; flex-wrap:wrap; justify-content:space-between;
+  gap:var(--yb-space-8); align-items:flex-start;
+}
+@media (max-width:767.98px){
+  .yb-footer__top{flex-direction:column; align-items:center; text-align:center}
+}
+.yb-footer__brand{
+  display:flex; flex-direction:column; gap:var(--yb-space-6);
+  min-width:0; flex:0 0 auto;
+}
+@media (max-width:767.98px){
+  .yb-footer__brand{align-items:center}
+}
+.yb-footer__logo{margin:0; display:block}
+.yb-footer__social{display:flex; gap:0; align-items:center}
+.yb-footer__social a{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:var(--yb-target-min); min-height:var(--yb-target-min);
+  margin-block:calc(var(--yb-space-3) * -1);
+  color:var(--yb-text-muted); border-radius:var(--yb-radius-control);
+  transition:color var(--yb-transition-control);
+}
+@media (hover:hover){
+  .yb-footer__social a:hover{color:var(--yb-text-link)}
+}
+.yb-footer__menus{
+  display:flex; flex-wrap:wrap; justify-content:space-evenly;
+  gap:var(--yb-space-8); flex:1 1 auto; min-width:0;
+}
+@media (max-width:767.98px){
+  .yb-footer__menus{flex-direction:column; gap:0; width:100%; max-width:20rem}
+}
+.yb-footer__col{flex:0 0 auto; min-width:0}
+.yb-footer__toggle{display:none}
+.yb-footer__coltitle{
+  display:flex; align-items:center; justify-content:flex-start;
+  gap:var(--yb-space-2); margin:0 0 var(--yb-space-2);
+  font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-muted); cursor:default;
+}
+.yb-footer__coltitle .yb-icon{display:none}
+.yb-footer__toggle:focus-visible + .yb-footer__coltitle{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-footer__collist &gt; ul{list-style:none; margin:0; padding:0}
+.yb-footer__collist li{padding-block:var(--yb-space-1)}
+.yb-footer__collist a{display:flex; align-items:center; min-height:var(--yb-space-6)}
+@media (max-width:767.98px){
+  .yb-footer__coltitle{justify-content:center}
+  .yb-footer__collist a{min-height:var(--yb-target-min); justify-content:center}
+  .yb-footer__bottom a{min-height:var(--yb-target-min)}
+}
+@media (max-width:767.98px){
+  .yb-footer__toggle{display:block; position:absolute; opacity:0; pointer-events:none}
+  .yb-footer__col:has(.yb-footer__toggle) .yb-footer__coltitle{
+    cursor:pointer;
+    margin-block-end:var(--yb-space-1); min-height:var(--yb-target-min);
+  }
+  .yb-footer__col:has(.yb-footer__toggle) .yb-footer__coltitle .yb-icon{display:inline-flex; transition:transform var(--yb-transition-control);}
+  .yb-footer__toggle:checked + .yb-footer__coltitle .yb-icon{transform:rotate(180deg)}
+  .yb-footer__col:has(.yb-footer__toggle) .yb-footer__collist{
+    max-height:0; overflow:hidden;
+    transition:max-height var(--yb-transition-surface);
+  }
+  .yb-footer__toggle:checked ~ .yb-footer__collist{max-height:30rem}
+  .yb-footer__col:has(.yb-footer__toggle) .yb-footer__collist li{text-align:center;}
+}
+.yb-footer__newslabel{
+  display:block; margin-block-end:var(--yb-space-1);
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+}
+.yb-footer__news{display:flex; align-items:stretch; gap:var(--yb-space-2)}
+.yb-footer__newsfield{flex:1 1 auto; min-width:0}
+.yb-footer__newsbtn{flex:none; padding:0 var(--yb-space-3)}
+.yb-footer__info{margin:0}
+.yb-footer__bottom{
+  display:flex; flex-wrap:wrap; align-items:center; gap:var(--yb-space-5);
+  margin-block-start:var(--yb-space-8); padding-block-start:var(--yb-space-12);
+  border-block-start:var(--yb-border-hairline) solid var(--yb-border-strong);
+}
+@media (max-width:767.98px){
+  .yb-footer__bottom{
+    justify-content:center; text-align:center;
+    padding-block-start:var(--yb-space-8)
+  }
+}
+.yb-footer a{color:inherit; text-decoration:none}
+.yb-footer__bottom a{display:inline-flex; align-items:center; min-height:var(--yb-space-6);}
+@media (hover:hover){
+  .yb-footer a:hover{color:var(--yb-text-link)}
+}
+.yb-footer a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+@media (prefers-reduced-motion:reduce){
+  .yb-footer__collist,.yb-footer__coltitle .yb-icon{transition:none}
+}
+.yb-footer--dark{background:var(--yb-bg-inverse); color:var(--yb-text-secondary-inverse);}
+@media (hover:hover){
+  .yb-footer--dark a:hover{color:var(--yb-text-inverse)}
+}
+.yb-footer--dark .yb-footer__coltitle, .yb-footer--dark .yb-footer__newstitle{color:var(--yb-text-inverse)}
+.yb-footer--dark .yb-footer__newslabel, .yb-footer--dark .yb-footer__info, .yb-footer--dark .yb-footer__bottom{color:var(--yb-text-muted-inverse)}
+.yb-footer--dark .yb-footer__bottom{border-block-start-color:var(--yb-border-inverse)}
+.yb-footer--dark .yb-footer__logo img{filter:invert(1)}
+.yb-footer__news-field{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:var(--yb-space-8); flex-wrap:wrap;
+  padding-block-end:var(--yb-space-8); margin-block-end:var(--yb-space-8);
+  border-block-end:var(--yb-border-hairline) solid var(--yb-border-inverse);
+}
+.yb-footer__news-field .yb-footer__news{flex:1 1 22rem; max-inline-size:30rem}
+.yb-footer__newstitle{
+  margin:0 0 var(--yb-space-1); font-size:var(--yb-type-h4-size);
+  font-weight:var(--yb-font-weight-bold);
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-bg-inverse: #1E1E1F;
+--yb-bg-muted: #F5F5F5;
+--yb-border-hairline: 1px;
+--yb-border-inverse: #3A3A3C;
+--yb-border-strong: #B1B1B4;
+--yb-buybar-height;
+--yb-container-max: 1200px;
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-font-weight-bold: 700;
+--yb-font-weight-semibold: 600;
+--yb-line-height-base: 1.35;
+--yb-page-gutter: 1rem;
+--yb-radius-control: 8px;
+--yb-space-1: 0.25rem;
+--yb-space-10: 2.5rem;
+--yb-space-12: 3rem;
+--yb-space-2: 0.5rem;
+--yb-space-3: 0.75rem;
+--yb-space-5: 1.25rem;
+--yb-space-6: 1.5rem;
+--yb-space-8: 2rem;
+--yb-target-min: 44px;
+--yb-text-inverse: #FFFFFF;
+--yb-text-link: #CA235F;
+--yb-text-muted: #6D6D71;
+--yb-text-muted-inverse: #B1B1B4;
+--yb-text-secondary-inverse: #DADADB;
+--yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
+--yb-transition-surface: 180ms cubic-bezier(.2, 0, 0, 1);
+--yb-type-body-sm-size: 0.875rem;
+--yb-type-caption-size: 0.8125rem;
+--yb-type-h4-size: 1.25rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

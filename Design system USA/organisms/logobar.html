@@ -150,19 +150,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -220,19 +207,17 @@
         </div>
       </div>
     </div>
-    <div class="note">
-      <b>O branco vem de filtro, não do arquivo</b>
+    <details class="note"><summary>O branco vem de filtro, não do arquivo</summary>
       <p><code>brightness(0) invert(1)</code> achata qualquer arte em branco puro, e
       é isso que mantém a faixa uniforme quando cada linha entrega um arquivo com
       peso e cor diferentes. Vale enquanto a arte for monocromática: linha com cor
       obrigatória pede um segundo arquivo, não um filtro.</p>
-    </div>
-    <div class="note">
-      <b>Sete logos que não cabem viram rolagem, não fila quebrada</b>
+    </details>
+    <details class="note"><summary>Sete logos que não cabem viram rolagem, não fila quebrada</summary>
       <p>O trilho é <code>overflow-x:auto</code> com a barra escondida. Empilhar as
       sublinhas em duas fileiras daria a elas o peso de uma seção — e aqui elas são
       assinatura, não conteúdo.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -240,11 +225,30 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="yb-logobar" role="group" aria-label="Ybera product lines"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Logo bar">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-logobar" role="group" aria-label="Ybera product lines"&gt;
   &lt;div class="yb-track yb-track--row yb-logobar__track"&gt;
     &lt;img src="../pages/img/06-4469d0ca.png" alt="Fashion Gold" loading="lazy"&gt;
     &lt;img src="../pages/img/05-cb480667.png" alt="Cronograma Capilar" loading="lazy"&gt;
@@ -255,7 +259,41 @@
     &lt;img src="../pages/img/10_94d094d5-65d1-4154-8d9b-125c04f30b63-22def8ab.png" alt="Fashion 100Timetros" loading="lazy"&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-logobar{
+  background:var(--yb-bg-inverse);
+  padding-block:var(--yb-space-6);
+  overflow:hidden;
+}
+.yb-logobar__track{
+  --yb-track-gap:var(--yb-space-12);
+  padding-inline:var(--yb-space-8);
+}
+.yb-logobar img{
+  height:44px; width:auto; flex:none; display:block;
+  filter:brightness(0) invert(1);
+  opacity:var(--yb-logobar-opacity);
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-bg-inverse: #1E1E1F;
+--yb-logobar-opacity: .85;
+--yb-space-12: 3rem;
+--yb-space-6: 1.5rem;
+--yb-space-8: 2rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

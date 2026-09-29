@@ -148,19 +148,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -236,8 +223,7 @@
         <span class="amostra__rotulo"><code>única · 32×20px</code></span>
       </span>
     </div>
-    <div class="note">
-      <b>Não é a caixa de seleção com outra roupa</b>
+    <details class="note"><summary>Não é a caixa de seleção com outra roupa</summary>
       <p>A caixa guarda uma intenção até alguém enviar o formulário; o switch
       <b>aplica na hora</b>. Trocar um pelo outro faz a pessoa procurar um botão de
       salvar que não existe — e por isso é
@@ -245,7 +231,7 @@
       tela anuncia "caixa de seleção", que promete esse formulário.</p>
       <p>O desenho tem 32&times;20, que é como um switch se lê; o <b>alvo</b> tem
       56&times;44, estendido por pseudo-elemento.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -253,29 +239,113 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;span class="amostra"&gt;
-  &lt;button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="false" aria-label="Seguro de entrega"&gt;
-    &lt;span class="yb-switch__knob"&gt;&lt;/span&gt;
-  &lt;/button&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;[aria-checked="false"]&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;
-&lt;span class="amostra"&gt;
-  &lt;button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="true" aria-label="Seguro de entrega, ligado"&gt;
-    &lt;span class="yb-switch__knob"&gt;&lt;/span&gt;
-  &lt;/button&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;[aria-checked="true"]&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;
-&lt;span class="amostra"&gt;
-  &lt;button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="false" aria-label="Indisponível" disabled&gt;
-    &lt;span class="yb-switch__knob"&gt;&lt;/span&gt;
-  &lt;/button&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;[disabled]&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;</code></pre>
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Switch">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      <label class="codigo__variante">Variante
+        <select data-code-variant>
+          <option value="0">[aria-checked="false"]</option>
+          <option value="1">[aria-checked="true"]</option>
+          <option value="2">[disabled]</option>
+        </select></label>
+      <span class="codigo__conta">3 variantes</span>
     </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="false" aria-label="Seguro de entrega"&gt;
+  &lt;span class="yb-switch__knob"&gt;&lt;/span&gt;
+&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="1" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="true" aria-label="Seguro de entrega, ligado"&gt;
+  &lt;span class="yb-switch__knob"&gt;&lt;/span&gt;
+&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="2" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button class="yb-switch" type="button" data-yb-switch role="switch" aria-checked="false" aria-label="Indisponível" disabled&gt;
+  &lt;span class="yb-switch__knob"&gt;&lt;/span&gt;
+&lt;/button&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-switch{
+  position:relative; flex:none;
+  display:inline-flex; align-items:center;
+  inline-size:2rem; block-size:1.25rem; padding:2px;
+  border:0; border-radius:var(--yb-radius-pill); cursor:pointer;
+  background:var(--yb-border);
+  transition:background-color var(--yb-transition-control);
+}
+.yb-switch::after{content:''; position:absolute; inset:-12px}
+.yb-switch[aria-checked="true"]{background:var(--yb-success-solid)}
+@media (hover:hover){
+  .yb-switch:not([aria-checked="true"]):not([disabled]):hover{background:var(--yb-border-strong)}
+}
+.yb-switch:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-switch[disabled]{cursor:not-allowed; opacity:var(--yb-opacity-control-disabled)}
+.yb-switch__knob{
+  inline-size:1rem; block-size:1rem; border-radius:var(--yb-radius-pill);
+  background:var(--yb-surface); box-shadow:var(--yb-elevation-raised);
+  transition:transform var(--yb-duration-base) var(--yb-ease-standard);
+}
+.yb-switch[aria-checked="true"] .yb-switch__knob{transform:translateX(.75rem)}
+[dir="rtl"] .yb-switch[aria-checked="true"] .yb-switch__knob{transform:translateX(-.75rem)}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;!-- uma vez por pagina, antes de &lt;/body&gt; --&gt;
+&lt;script src="ybera-components.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- esta peca liga por: data-yb-switch --&gt;
+
+&lt;!-- conteudo que chega depois (secao carregada por JS do tema): --&gt;
+&lt;script&gt;Ybera.init(secao);&lt;/script&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-border: #DADADB;
+--yb-border-strong: #B1B1B4;
+--yb-duration-base: 180ms;
+--yb-ease-standard: cubic-bezier(.2, 0, 0, 1);
+--yb-elevation-raised: 0 2px 4px rgba(30,30,31,.07), 0 1px 2px rgba(30,30,31,.05);
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-opacity-control-disabled: .45;
+--yb-radius-pill: 9999px;
+--yb-success-solid: #1F7A34;
+--yb-surface: #FFFFFF;
+--yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

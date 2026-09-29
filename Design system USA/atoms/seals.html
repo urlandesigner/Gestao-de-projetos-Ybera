@@ -148,19 +148,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -230,18 +217,16 @@
         </div>
       </div>
     </div>
-    <div class="note">
-      <b>Neutra de propósito</b>
+    <details class="note"><summary>Neutra de propósito</summary>
       <p>Se a faixa usasse a cor de ação, cinco selos disputariam a mesma atenção
       que o botão de compra. Garantia sossega; ela não precisa gritar.</p>
-    </div>
-    <div class="note">
-      <b>O ícone não é a informação</b>
+    </details>
+    <details class="note"><summary>O ícone não é a informação</summary>
       <p>Cada marca é <code>aria-hidden</code> e quem carrega o sentido é o rótulo
       ao lado — um leitor de tela ouve "Cruelty free", não "imagem". Abaixo de 768
       a fileira de cinco vira grade de três: em uma linha só, o texto começava a
       quebrar em duas.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -249,33 +234,106 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="yb-seals" role="group" aria-label="Product guarantees"&gt;
-  &lt;div class="yb-seal"&gt;
-    &lt;span class="yb-seal__mark"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-cruelty-free"/&gt;&lt;/svg&gt;&lt;/span&gt;
-    &lt;span class="yb-seal__label"&gt;Cruelty free&lt;/span&gt;
-  &lt;/div&gt;
-  &lt;div class="yb-seal"&gt;
-    &lt;span class="yb-seal__mark"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-vegan"/&gt;&lt;/svg&gt;&lt;/span&gt;
-    &lt;span class="yb-seal__label"&gt;Vegan&lt;/span&gt;
-  &lt;/div&gt;
-  &lt;div class="yb-seal"&gt;
-    &lt;span class="yb-seal__mark"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-paraben-free"/&gt;&lt;/svg&gt;&lt;/span&gt;
-    &lt;span class="yb-seal__label"&gt;Paraben free&lt;/span&gt;
-  &lt;/div&gt;
-  &lt;div class="yb-seal"&gt;
-    &lt;span class="yb-seal__mark"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-sulfate-free"/&gt;&lt;/svg&gt;&lt;/span&gt;
-    &lt;span class="yb-seal__label"&gt;Sulfate free&lt;/span&gt;
-  &lt;/div&gt;
-  &lt;div class="yb-seal"&gt;
-    &lt;span class="yb-seal__mark"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-formaldehyde-free"/&gt;&lt;/svg&gt;&lt;/span&gt;
-    &lt;span class="yb-seal__label"&gt;Formaldehyde free&lt;/span&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Certification seals">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      <label class="codigo__variante">Variante
+        <select data-code-variant>
+          <option value="0">Cruelty free</option>
+          <option value="1">Vegan</option>
+          <option value="2">Paraben free</option>
+          <option value="3">Sulfate free</option>
+          <option value="4">Formaldehyde free</option>
+        </select></label>
+      <span class="codigo__conta">5 variantes</span>
     </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-seal"&gt;
+    &lt;span class="yb-seal__mark"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-cruelty-free"/&gt;&lt;/svg&gt;&lt;/span&gt;
+    &lt;span class="yb-seal__label"&gt;Cruelty free&lt;/span&gt;
+  &lt;/div&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="1" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-seal"&gt;
+    &lt;span class="yb-seal__mark"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-vegan"/&gt;&lt;/svg&gt;&lt;/span&gt;
+    &lt;span class="yb-seal__label"&gt;Vegan&lt;/span&gt;
+  &lt;/div&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="2" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-seal"&gt;
+    &lt;span class="yb-seal__mark"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-paraben-free"/&gt;&lt;/svg&gt;&lt;/span&gt;
+    &lt;span class="yb-seal__label"&gt;Paraben free&lt;/span&gt;
+  &lt;/div&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="3" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-seal"&gt;
+    &lt;span class="yb-seal__mark"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-sulfate-free"/&gt;&lt;/svg&gt;&lt;/span&gt;
+    &lt;span class="yb-seal__label"&gt;Sulfate free&lt;/span&gt;
+  &lt;/div&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="4" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-seal"&gt;
+    &lt;span class="yb-seal__mark"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-formaldehyde-free"/&gt;&lt;/svg&gt;&lt;/span&gt;
+    &lt;span class="yb-seal__label"&gt;Formaldehyde free&lt;/span&gt;
+  &lt;/div&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-seal{
+  display:flex; flex-direction:column; align-items:center;
+  gap:var(--yb-space-3); text-align:center; min-width:0;
+}
+.yb-seal__mark{
+  width:64px; height:64px; border-radius:var(--yb-radius-full);
+  background:var(--yb-bg-muted); color:var(--yb-text-secondary);
+  display:flex; align-items:center; justify-content:center; flex:none;
+}
+.yb-seal__mark .yb-icon{--yb-icon-size:var(--yb-icon-xl);}
+.yb-seal__label{
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+  line-height:var(--yb-line-height-base);
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-bg-muted: #F5F5F5;
+--yb-icon-xl: 32px;
+--yb-line-height-base: 1.35;
+--yb-radius-full: 9999px;
+--yb-space-3: 0.75rem;
+--yb-text-secondary: #535356;
+--yb-type-body-sm-size: 0.875rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

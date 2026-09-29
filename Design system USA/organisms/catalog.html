@@ -150,19 +150,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -259,18 +246,37 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="yb-catalog"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Catalog">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-catalog"&gt;
 &lt;div class="yb-catalog__head"&gt;
   &lt;div class="yb-catalog__title"&gt;
     &lt;h2&gt;Treatments&lt;/h2&gt;
     &lt;span class="yb-catalog__count"&gt;24 products&lt;/span&gt;
   &lt;/div&gt;
   &lt;div class="yb-catalog__tools"&gt;
-    &lt;button type="button" class="yb-btn yb-btn--ghost yb-btn--sm"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-filter"/&gt;&lt;/svg&gt;Filters&lt;/button&gt;
+    &lt;button type="button" class="yb-btn yb-btn--ghost yb-btn--sm"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-filter"/&gt;&lt;/svg&gt;Filters&lt;/button&gt;
     &lt;select class="yb-select" aria-label="Sort by"&gt;
       &lt;option&gt;Best selling&lt;/option&gt;&lt;option&gt;Price: low to high&lt;/option&gt;
       &lt;option&gt;Price: high to low&lt;/option&gt;&lt;option&gt;Newest&lt;/option&gt;
@@ -306,7 +312,56 @@
   &lt;/article&gt;
 &lt;/div&gt;
 &lt;/div&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-catalog__head{
+  display:flex; align-items:flex-end; justify-content:space-between;
+  gap:var(--yb-space-6); flex-wrap:wrap; margin-block-end:var(--yb-space-6);
+  padding-block-end:var(--yb-space-5); border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);
+}
+.yb-catalog__title{display:flex; flex-direction:column; gap:var(--yb-space-2); min-width:0}
+.yb-catalog__title h1, .yb-catalog__title h2{
+  margin:0; font-size:var(--yb-type-h1-size); line-height:var(--yb-type-h1-line);
+  letter-spacing:var(--yb-type-h1-track); font-weight:var(--yb-type-h1-weight);
+}
+.yb-catalog__count{
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted);
+  font-variant-numeric:tabular-nums
+}
+.yb-catalog__tools{display:flex; gap:var(--yb-space-3); align-items:center; flex-wrap:wrap}
+.yb-catalog__tools .yb-select{
+  width:auto; min-height:var(--yb-control-height-compact);
+  padding:var(--yb-space-2) var(--yb-space-4);
+}
+.yb-catalog__filters{display:flex; gap:var(--yb-space-2); flex-wrap:wrap; margin-block-end:var(--yb-space-6);}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-border-hairline: 1px;
+--yb-border-subtle: #EAEAEA;
+--yb-control-height-compact: 36px;
+--yb-space-2: 0.5rem;
+--yb-space-3: 0.75rem;
+--yb-space-4: 1rem;
+--yb-space-5: 1.25rem;
+--yb-space-6: 1.5rem;
+--yb-text-muted: #6D6D71;
+--yb-type-body-sm-size: 0.875rem;
+--yb-type-h1-line: 1.15;
+--yb-type-h1-size: clamp(2rem, 1.60rem + 2.00vw, 2.5rem);
+--yb-type-h1-track: -0.025em;
+--yb-type-h1-weight: 700;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

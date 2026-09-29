@@ -534,6 +534,48 @@
 }
 .note p{margin:0; font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
 
+/* A NOTA RECOLHIDA (ver `recolherNotas` em tools/moldura.mjs): uma faixa
+   baixa no azul de informacao, com o "i" na frente e a seta no fim. Fechada
+   ela tem de ser VISTA — a primeira versao era texto cinza entre dois fios e
+   lia como rodape da fileira. Aberta, o texto entra na mesma faixa, e e ela
+   inteira que diz de quem ele e. */
+details.note{
+  margin-top:var(--yb-space-3); padding:0 var(--yb-space-4);
+  background:var(--yb-info-surface); border:0; border-radius:var(--yb-radius-sm);
+}
+details.note + details.note{margin-top:var(--yb-space-2)}
+details.note > summary{
+  display:flex; align-items:center; gap:var(--yb-space-3);
+  min-height:var(--yb-target-min); cursor:pointer; list-style:none;
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-info-text);
+}
+details.note > summary::-webkit-details-marker{display:none}
+/* o "i": letra num circulo de traco, na cor do titulo */
+details.note > summary::before{
+  content:"i"; flex:none; display:grid; place-items:center;
+  inline-size:.875rem; block-size:.875rem; border-radius:var(--yb-radius-full);
+  border:1px solid currentColor; font-size:.5625rem;
+  font-weight:var(--yb-font-weight-bold); font-family:var(--yb-font-family-mono);
+  line-height:var(--yb-line-height-none);
+}
+/* a seta: dois lados de uma caixa girada, a mesma receita do tique do checkbox */
+details.note > summary::after{
+  content:""; flex:none; margin-inline-start:auto; inline-size:.45rem; block-size:.45rem;
+  border-inline-end:1.5px solid currentColor; border-block-end:1.5px solid currentColor;
+  transform:translateY(-25%) rotate(45deg); transition:transform var(--yb-transition-control);
+}
+details.note[open] > summary::after{transform:translateY(25%) rotate(-135deg)}
+@media (hover:hover){ details.note > summary:hover{text-decoration:underline; text-underline-offset:3px} }
+details.note > summary:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color); outline-offset:var(--yb-focus-offset);
+  border-radius:var(--yb-radius-sm);
+}
+details.note > :not(summary){margin:0; padding-inline-start:calc(.875rem + var(--yb-space-3))}
+details.note > :not(summary) + :not(summary){padding-block-start:var(--yb-space-2)}
+details.note > :last-child{padding-block-end:var(--yb-space-4)}
+@media (prefers-reduced-motion:reduce){ details.note > summary::after{transition:none} }
+
 /* ------------------------------------------------------------------- API */
 .api{
   inline-size:100%; border-collapse:collapse;
@@ -694,6 +736,44 @@
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
 }
+
+/* ---------------------------------------------------------------- codigo
+   HTML, CSS, JS e Tokens numa caixa so, com o seletor de variante na mesma
+   barra. A caixa de codigo tem teto de altura: o CSS do Buy box tem centenas
+   de linhas, e sem teto ele empurrava Anatomia para fora de vista. */
+.codigo{border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card); overflow:hidden}
+.codigo__barra{
+  display:flex; flex-wrap:wrap; align-items:center; gap:var(--yb-space-3) var(--yb-space-4);
+  padding:var(--yb-space-2) var(--yb-space-3); background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+}
+.codigo__abas{display:flex; flex-wrap:wrap; align-items:center; gap:var(--yb-space-1); margin-inline-end:auto}
+.codigo__abas button,.codigo__baixar{
+  min-height:var(--yb-target-min); padding:0 var(--yb-space-4); border:0; border-radius:var(--yb-radius-pill);
+  background:transparent; color:var(--yb-text-secondary-inverse); font:inherit;
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-medium); cursor:pointer;
+  display:inline-flex; align-items:center; text-decoration:none;
+}
+.codigo__abas button[aria-selected="true"]{background:var(--yb-surface-inverse-raised); color:var(--yb-text-inverse)}
+@media (hover:hover){
+  .codigo__abas button:hover,.codigo__baixar:hover{color:var(--yb-text-inverse)}
+}
+.codigo__abas button:focus-visible,.codigo__baixar:focus-visible,.codigo__variante select:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-text-inverse); outline-offset:var(--yb-focus-offset);
+}
+.codigo__variante{
+  display:flex; align-items:center; gap:var(--yb-space-2);
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary-inverse);
+}
+.codigo__variante[hidden]{display:none}
+.codigo__variante select{
+  min-height:var(--yb-target-min); max-inline-size:16rem; padding:0 var(--yb-space-3);
+  border:1px solid var(--yb-border-inverse-strong); border-radius:var(--yb-radius-control);
+  background:var(--yb-surface-inverse-raised); color:var(--yb-text-inverse); font:inherit;
+}
+.codigo__conta{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted-inverse)}
+.codigo__painel{padding:var(--yb-space-4)}
+.codigo__painel .snippet pre{max-block-size:32rem; overflow:auto}
+.codigo__painel .api-vazia{margin:0}
 
 /* ------------------------------------------------------- faca / nao faca
    Cor NAO e o unico sinal: cada lado tem o rotulo escrito e um simbolo. Um

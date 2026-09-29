@@ -150,19 +150,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -254,30 +241,27 @@
         </div>
       </section>
     </div>
-    <div class="note">
-      <b>As setas, e por que no canto</b>
+    <details class="note"><summary>As setas, e por que no canto</summary>
       <p>Ficam juntas no canto de baixo à direita, o único lugar vazio em todo
       slide: o texto do banner fica à esquerda e termina em 42rem, e a arte tem ali
       só o fundo. No meio das laterais, a da esquerda caía sobre o título (768 e
       1024px) e a da direita sobre o cupom da arte. Com
       <code>data-yb-track-loop</code> o último slide volta ao primeiro, então elas
       nunca desabilitam. No toque (abaixo de 768px) somem: ali se arrasta.</p>
-    </div>
-    <div class="note">
-      <b>Um destino por slide</b>
+    </details>
+    <details class="note"><summary>Um destino por slide</summary>
       <p>Três variações da mesma promessa levando ao mesmo lugar são só tempo de
       espera: o segundo e o terceiro slide não existem para quem chega. Cada slide
       leva a um destino diferente. O primeiro carrega o <code>h1</code> da página e
       a única imagem com <code>fetchpriority="high"</code>; os outros são
       <code>loading="lazy"</code>.</p>
-    </div>
-    <div class="note">
-      <b>O invólucro ainda se chama <code>.yb-hero</code></b>
+    </details>
+    <details class="note"><summary>O invólucro ainda se chama <code>.yb-hero</code></summary>
       <p>A classe está no bundle, e o bundle é contrato com o tema da loja (ver
       <a href="../decision-log/DDR-010-escada-atomica.md">DDR-010</a>). Na home ele
       leva também <code>data-yb-partnerbar-anchor</code> e o balão do
       <a href="../molecules/partner.html">Partner</a>.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -285,11 +269,30 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;section class="yb-hero" aria-roledescription="carousel" aria-label="Highlights"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Hero">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;section class="yb-hero" aria-roledescription="carousel" aria-label="Highlights"&gt;
   &lt;div class="yb-track yb-track--hero" id="doc-hero" data-yb-track-loop&gt;
     &lt;a class="yb-bannerhero yb-bannerhero--blur" href="#demos"&gt;
       &lt;img src="../pages/img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp" alt=""&gt;
@@ -330,11 +333,50 @@
     &lt;/a&gt;
   &lt;/div&gt;
   &lt;div class="yb-track__nav" data-yb-track-nav="doc-hero" hidden&gt;
-    &lt;button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous highlight"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-left"/&gt;&lt;/svg&gt;&lt;/button&gt;
-    &lt;button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next highlight"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;&lt;/button&gt;
+    &lt;button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous highlight"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-left"/&gt;&lt;/svg&gt;&lt;/button&gt;
+    &lt;button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next highlight"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;&lt;/button&gt;
   &lt;/div&gt;
 &lt;/section&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-hero{position:relative}
+.yb-hero .yb-track__nav{
+  position:absolute;
+  inset-block-end:var(--yb-space-5); inset-inline-end:var(--yb-page-gutter);
+  margin:0; justify-content:flex-end; pointer-events:none;
+}
+.yb-hero .yb-track__nav .yb-iconbtn{
+  pointer-events:auto;
+  background:var(--yb-surface-on-media); border-color:transparent;
+  box-shadow:var(--yb-elevation-raised);
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;!-- uma vez por pagina, antes de &lt;/body&gt; --&gt;
+&lt;script src="ybera-components.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- esta peca liga por: data-yb-track-loop, data-yb-track-nav, data-yb-track-step --&gt;
+
+&lt;!-- conteudo que chega depois (secao carregada por JS do tema): --&gt;
+&lt;script&gt;Ybera.init(secao);&lt;/script&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-elevation-raised: 0 2px 4px rgba(30,30,31,.07), 0 1px 2px rgba(30,30,31,.05);
+--yb-page-gutter: 1rem;
+--yb-space-5: 1.25rem;
+--yb-surface-on-media: rgba(255, 255, 255, .92);</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

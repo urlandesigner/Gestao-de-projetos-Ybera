@@ -148,19 +148,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -269,17 +256,15 @@
         </div>
       </div>
     </div>
-    <div class="note">
-      <b>Indeterminada não tem <code>aria-valuenow</code></b>
+    <details class="note"><summary>Indeterminada não tem <code>aria-valuenow</code></summary>
       <p>Declarar um número que ninguém sabe é pior do que não declarar: o leitor
       de tela anuncia "12 por cento" de uma espera que pode ter acabado. Sem o
       atributo, ele anuncia "ocupado" — que é a verdade.</p>
-    </div>
-    <div class="note">
-      <b>Sem movimento, a faixa some</b>
+    </details>
+    <details class="note"><summary>Sem movimento, a faixa some</summary>
       <p>Em <code>prefers-reduced-motion</code> uma faixa parada em 40% mentiria
       sobre o progresso. Ela vira a pista inteira esmaecida: presença sem promessa.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -287,35 +272,103 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div&gt;
-  &lt;p class="yb-field__label"&gt;Free shipping — $12.10 to go&lt;/p&gt;
-  &lt;div class="yb-progress" role="progressbar" aria-label="Progress to free shipping"
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Progress bar">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      <label class="codigo__variante">Variante
+        <select data-code-variant>
+          <option value="0">Progress to free shipping</option>
+          <option value="1">Profile complete</option>
+          <option value="2">Stock left</option>
+        </select></label>
+      <span class="codigo__conta">3 variantes</span>
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-progress" role="progressbar" aria-label="Progress to free shipping"
        aria-valuemin="0" aria-valuemax="100" aria-valuenow="76"&gt;
     &lt;span class="yb-progress__fill" style="inline-size:76%"&gt;&lt;/span&gt;
-  &lt;/div&gt;
-  &lt;p class="amostra__rotulo"&gt;sem modificador&lt;/p&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;p class="yb-field__label"&gt;Profile complete&lt;/p&gt;
-  &lt;div class="yb-progress" role="progressbar" aria-label="Profile complete"
+  &lt;/div&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="1" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-progress" role="progressbar" aria-label="Profile complete"
        aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"&gt;
     &lt;span class="yb-progress__fill yb-progress__fill--success" style="inline-size:100%"&gt;&lt;/span&gt;
-  &lt;/div&gt;
-  &lt;p class="amostra__rotulo"&gt;&lt;code&gt;__fill--success&lt;/code&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;p class="yb-field__label"&gt;Only 4 kits left at this price&lt;/p&gt;
-  &lt;div class="yb-progress" role="progressbar" aria-label="Stock left"
+  &lt;/div&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="2" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-progress" role="progressbar" aria-label="Stock left"
        aria-valuemin="0" aria-valuemax="100" aria-valuenow="12"&gt;
     &lt;span class="yb-progress__fill yb-progress__fill--warning" style="inline-size:12%"&gt;&lt;/span&gt;
-  &lt;/div&gt;
-  &lt;p class="amostra__rotulo"&gt;&lt;code&gt;__fill--warning&lt;/code&gt;&lt;/p&gt;
-&lt;/div&gt;</code></pre>
+  &lt;/div&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-progress{
+  display:block; inline-size:100%; overflow:hidden;
+  block-size:var(--yb-progress-h, 8px);
+  background:var(--yb-bg-muted); border-radius:var(--yb-radius-pill);
+}
+.yb-progress--sm{--yb-progress-h:4px}
+.yb-progress--lg{--yb-progress-h:12px}
+.yb-progress__fill{
+  display:block; block-size:100%; inline-size:0;
+  background:var(--yb-action-primary-bg); border-radius:inherit;
+  transition:inline-size var(--yb-duration-slow) var(--yb-ease-standard);
+}
+.yb-progress__fill--success{background:var(--yb-success-solid)}
+.yb-progress__fill--warning{background:var(--yb-warning-solid)}
+.yb-progress--indeterminate .yb-progress__fill{
+  inline-size:40%; transition:none;
+  animation:yb-progress-slide var(--yb-rhythm-loop) linear infinite;
+}
+@media (prefers-reduced-motion:reduce){
+  .yb-progress--indeterminate .yb-progress__fill{inline-size:100%; animation:none; opacity:.35;}
+}
+@keyframes yb-progress-slide{
+  from{transform:translateX(calc(-100% * var(--yb-dir)))}
+  to{transform:translateX(calc(250% * var(--yb-dir)))}
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-action-primary-bg: #1E1E1F;
+--yb-bg-muted: #F5F5F5;
+--yb-duration-slow: 280ms;
+--yb-ease-standard: cubic-bezier(.2, 0, 0, 1);
+--yb-progress-h;
+--yb-radius-pill: 9999px;
+--yb-rhythm-loop: 1400ms;
+--yb-success-solid: #1F7A34;
+--yb-warning-solid: #8A5A00;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

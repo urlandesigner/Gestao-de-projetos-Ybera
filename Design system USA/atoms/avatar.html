@@ -148,19 +148,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -239,21 +226,18 @@
         <span class="amostra__rotulo"><code>--2xl · 64px</code></span>
       </span>
     </div>
-    <div class="note">
-      <b>A inicial, e não uma foto</b>
+    <details class="note"><summary>A inicial, e não uma foto</summary>
       <p>A loja não guarda foto de cliente, e círculo cinza vazio é pior do que uma
       letra. Enquanto não houver foto, a inicial é a informação disponível — e ela
       cabe sem rede, sem recorte e sem estado de carregamento.</p>
-    </div>
-    <div class="note">
-      <b>Ele é <code>aria-hidden</code>, sempre</b>
+    </details>
+    <details class="note"><summary>Ele é <code>aria-hidden</code>, sempre</summary>
       <p>Uma letra solta não é conteúdo: lida em voz alta, &ldquo;U&rdquo; não diz nada.
       Quem anuncia é o elemento que o envolve — no cabeçalho, o
       <code>aria-label</code> do gatilho do <a href="../molecules/dropdown.html">Dropdown</a>,
       com o nome inteiro.</p>
-    </div>
-    <div class="note">
-      <b>Três garantias contra o dado e contra o container</b>
+    </details>
+    <details class="note"><summary>Três garantias contra o dado e contra o container</summary>
       <p><b>Não achata.</b> Ele quase sempre nasce dentro de um flex &mdash; o gatilho
       do menu, a barra de ações. Com o <code>flex-shrink</code> de fábrica, container
       apertado fazia 32&times;32 virar <b>13&times;32</b> (medido numa faixa de 60px):
@@ -263,25 +247,22 @@
       <b>Falha para dentro.</b> Uma letra é o contrato, mas com "Marina" o conteúdo
       mede 40px numa caixa de 32 e vazava por cima dos vizinhos; cortado dentro do
       círculo, o erro fica visível e contido.</p>
-    </div>
-    <div class="note">
-      <b>Em alto contraste ele ganha contorno</b>
+    </details>
+    <details class="note"><summary>Em alto contraste ele ganha contorno</summary>
       <p>O fundo <code>--yb-bg-muted</code> vira <code>Canvas</code> em
       <code>forced-colors</code> e o círculo some &mdash; sobrava uma letra solta no
       meio da barra. A borda de 1px devolve a forma, mesma receita do
       <a href="iconbtn.html">Icon button</a>, que tem o problema pelo mesmo motivo.</p>
-    </div>
-    <div class="note">
-      <b>Rampa de 8 em 8, e dois em uso</b>
+    </details>
+    <details class="note"><summary>Rampa de 8 em 8, e dois em uso</summary>
       <p>Hoje a loja usa dois: <b>32</b> no gatilho do cabeçalho, disputando espaço
       com busca e sacola, e <b>40</b> na cabeça do painel da conta, ao lado do nome
       inteiro e do e-mail &mdash; ver <a href="../molecules/dropdown.html">Dropdown</a>. Os
       outros quatro são a rampa completa: rampa com buraco é mais estranha que rampa
       inteira, e quem precisar de 48 não deve inventar um valor cru para chegar lá.
       Sem modificador ele mede 32, o mesmo que <code>--sm</code>.</p>
-    </div>
-    <div class="note">
-      <b>A letra não é uma porcentagem do círculo</b>
+    </details>
+    <details class="note"><summary>A letra não é uma porcentagem do círculo</summary>
       <p>A proporção cai de <b>.54</b> no menor para <b>.38</b> no maior, de propósito:
       legibilidade tem <b>piso</b>, não proporção. Os 44% que servem o de 32 dariam
       10,5px no de 24 &mdash; ilegível; e a mesma conta no de 64 daria 28px, que nem
@@ -289,16 +270,14 @@
       pessoa. Cada diâmetro escolhe o degrau de tipo que lhe cabe, e todos são degraus
       de verdade: <code>caption</code>, <code>body-sm</code>, <code>body</code>,
       <code>body-lg</code>, <code>h4</code>, <code>h3</code>.</p>
-    </div>
-    <div class="note">
-      <b>Duas iniciais, de 32 para cima</b>
+    </details>
+    <details class="note"><summary>Duas iniciais, de 32 para cima</summary>
       <p>Medido com &ldquo;WM&rdquo;, o par mais largo: 26px no círculo de 32 e 45 no
       de 64. No de <b>24 não cabem</b> &mdash; são 25px numa caixa de 24, e o
       <code>overflow:hidden</code> corta. O menor leva uma letra, que é o que a loja
       manda de qualquer forma: ela guarda o nome, não as iniciais.</p>
-    </div>
-    <div class="note">
-      <b>Um fundo só, e a letra é quem carrega o contraste</b>
+    </details>
+    <details class="note"><summary>Um fundo só, e a letra é quem carrega o contraste</summary>
       <p>Cinza <code>--yb-bg-muted</code> com a inicial em <code>--yb-text-primary</code>:
       <b>15,28:1</b>, AAA. Folgado de propósito, porque a letra é pequena e é a única
       coisa que identifica a conta. O disco <em>não</em> carrega contraste contra a
@@ -308,19 +287,17 @@
       reconhecer exige uma cor que saia de um valor estável da pessoa e nunca mude. A
       loja mostra o avatar de uma pessoa só, a que está logada, e para uma pessoa só
       não há quem distinguir.</p>
-    </div>
-    <div class="note">
-      <b>A foto do parceiro não é este componente</b>
+    </details>
+    <details class="note"><summary>A foto do parceiro não é este componente</summary>
       <p>É <code>.yb-partner__avatar</code>, que carrega uma imagem real e é parte do
       <a href="../molecules/partner.html">Partner</a>. Aqui não há foto: a loja não
       guarda foto de cliente.</p>
-    </div>
-    <div class="note">
-      <b>32px pintados dentro de um alvo de 44</b>
+    </details>
+    <details class="note"><summary>32px pintados dentro de um alvo de 44</summary>
       <p>O alvo de toque é de quem envolve o avatar, não dele: a caixa cresce para
       fora, não para dentro. Por isso ele não declara <code>min-height</code> — se
       declarasse, empataria com o alvo e o círculo encostaria nas bordas.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -328,14 +305,109 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;span class="yb-avatar" aria-hidden="true"&gt;U&lt;/span&gt;
-&lt;span class="yb-avatar" aria-hidden="true"&gt;M&lt;/span&gt;
-&lt;span class="yb-avatar" aria-hidden="true"&gt;A&lt;/span&gt;</code></pre>
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Avatar">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      <label class="codigo__variante">Variante
+        <select data-code-variant>
+          <option value="0">--xs · 24px</option>
+          <option value="1">--sm · 32px</option>
+          <option value="2">--md · 40px</option>
+          <option value="3">--lg · 48px</option>
+          <option value="4">--xl · 56px</option>
+          <option value="5">--2xl · 64px</option>
+        </select></label>
+      <span class="codigo__conta">6 variantes</span>
     </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-avatar yb-avatar--xs" aria-hidden="true"&gt;M&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="1" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-avatar yb-avatar--sm" aria-hidden="true"&gt;M&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="2" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-avatar yb-avatar--md" aria-hidden="true"&gt;M&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="3" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-avatar yb-avatar--lg" aria-hidden="true"&gt;M&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="4" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-avatar yb-avatar--xl" aria-hidden="true"&gt;M&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="5" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-avatar yb-avatar--2xl" aria-hidden="true"&gt;M&lt;/span&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-avatar{
+  display:flex; align-items:center; justify-content:center;
+  inline-size:var(--yb-avatar-d); block-size:var(--yb-avatar-d); flex:none;
+  --yb-avatar-d:2rem;
+  border-radius:var(--yb-radius-pill);
+  background:var(--yb-bg-muted); color:var(--yb-text-primary);
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
+  line-height:var(--yb-line-height-none);
+  text-transform:uppercase;
+  overflow:hidden;
+}
+@media (forced-colors: active){
+  .yb-avatar{border:var(--yb-border-hairline) solid;}
+}
+.yb-avatar--xs{--yb-avatar-d:1.5rem;  font-size:var(--yb-type-caption-size)}
+.yb-avatar--sm{--yb-avatar-d:2rem;    font-size:var(--yb-type-body-sm-size)}
+.yb-avatar--md{--yb-avatar-d:2.5rem;  font-size:var(--yb-type-body-size)}
+.yb-avatar--lg{--yb-avatar-d:3rem;    font-size:var(--yb-type-body-lg-size)}
+.yb-avatar--xl{--yb-avatar-d:3.5rem;  font-size:var(--yb-type-h4-size)}
+.yb-avatar--2xl{--yb-avatar-d:4rem;    font-size:var(--yb-type-h3-size)}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-avatar-d;
+--yb-bg-muted: #F5F5F5;
+--yb-bg-subtle: #FAFAFA;
+--yb-border-hairline: 1px;
+--yb-font-weight-semibold: 600;
+--yb-line-height-none: 1;
+--yb-radius-pill: 9999px;
+--yb-text-primary: #1E1E1F;
+--yb-type-body-lg-size: 1.125rem;
+--yb-type-body-size: 1rem;
+--yb-type-body-sm-size: 0.875rem;
+--yb-type-caption-size: 0.8125rem;
+--yb-type-h3-size: 1.5rem;
+--yb-type-h4-size: 1.25rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

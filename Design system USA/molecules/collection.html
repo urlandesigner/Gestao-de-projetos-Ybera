@@ -149,19 +149,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -258,15 +245,13 @@
         </a></li>
       </ul>
     </div>
-    <div class="note">
-      <b>No mosaico, sempre com blur</b>
+    <details class="note"><summary>No mosaico, sempre com blur</summary>
       <p>O rótulo sobre véu tinha duas versões, com e sem desfoque; ficou só a com
       blur, como no Banner hero. O véu sozinho continua existindo por baixo: é o
       plano B que a folha aplica em navegador sem desfoque e para quem pediu menos
       transparência.</p>
-    </div>
-    <div class="note">
-      <b>Ladrilho pequeno, queda curta</b>
+    </details>
+    <details class="note"><summary>Ladrilho pequeno, queda curta</summary>
       <p>O ladrilho tem 107px de altura no mosaico, e a queda inteira do véu
       cabe em 88 deles. Não há como ser suave nessa distância: o pico fica em
       <b>12,6</b> milésimos de alfa por pixel, acima do teto de 5,5. O que a
@@ -274,7 +259,7 @@
       <b>18,5</b>, e era ela que desenhava a linha atravessando a foto.
       Inclinação alta e suave lê como sombra; inclinação que muda de golpe lê
       como emenda.</p>
-    </div>
+    </details>
     <h3 class="row-label">v2 · cartão com rodapé — <code>--card</code></h3>
     <div class="demo demo--rail">
       <ul class="yb-collections">
@@ -312,17 +297,15 @@
         </a></li>
       </ul>
     </div>
-    <div class="note">
-      <b>A escolha entre os dois arranjos é editorial</b>
+    <details class="note"><summary>A escolha entre os dois arranjos é editorial</summary>
       <p><b>Rótulo sobre a foto</b> quando o nome basta: "Damaged Hair" é destino
       óbvio, e a pílula não rouba a foto, que é quem convence. <b>Cartão com rodapé</b>
       quando não basta: "Consumer" não diz o que há dentro.</p>
       <p>A faixa é <b>opaca, fora da foto</b>. Sobre a imagem precisaria de véu e de
       medir contraste contra pixel que ninguém controla — todo o custo que o media
       banner paga.</p>
-    </div>
-    <div class="note">
-      <b>O rótulo fica no pé, nunca no centro</b>
+    </details>
+    <details class="note"><summary>O rótulo fica no pé, nunca no centro</summary>
       <p>A pílula pousa no rodapé da foto (<code>--bottom</code>). Existia também uma
       versão centrada, <code>--center</code>, e ela saiu: no meio da imagem o rótulo
       cobria justamente o cabelo que a foto existe para mostrar. Onde o nome
@@ -330,9 +313,8 @@
       <code>--card</code>, com o rodapé fora da foto.</p>
       <p>A pill é superfície clara, não magenta. Magenta é função: existe onde há
       decisão a tomar, e navegar para uma coleção não é uma.</p>
-    </div>
-    <div class="note">
-      <b>O mosaico é grade, não cartão</b>
+    </details>
+    <details class="note"><summary>O mosaico é grade, não cartão</summary>
       <p>Os cinco ladrilhos são o mesmo <code>.yb-collection</code> das grades acima —
       o que muda é a grade em volta (<code>--mosaic</code>) e o tratamento do rótulo
       (<code>--overlay</code>). O grande atravessa duas colunas e duas linhas, e por
@@ -340,29 +322,26 @@
       proporção é o que faz o conjunto parecer arrumado.</p>
       <p>Abaixo de 768px o grande passa a atravessar as duas colunas numa linha só.
       Empilhado numa coluna, um ladrilho 16/9 vira uma tira fina.</p>
-    </div>
-    <div class="note">
-      <b>Quando usar o rótulo sobre véu, e quando não</b>
+    </details>
+    <details class="note"><summary>Quando usar o rótulo sobre véu, e quando não</summary>
       <p><code>--overlay</code> existe para o ladrilho deitado e largo: a pill centrada
       num retângulo de 445×242 se perde no meio da foto, e no ladrilho grande fica
       pequena demais. Ancorado no canto, o nome tem o mesmo peso nos dois tamanhos.</p>
       <p>Ele <b>não</b> aposenta a pill. O véu escurece a foto inteira para sustentar
       o texto — é o preço dele. Onde o cartão é estreito e a foto é clara, a pill
       resolve sem pagar esse preço.</p>
-    </div>
-    <div class="note">
-      <b>Por que o <code>alt</code> é vazio aqui</b>
+    </details>
+    <details class="note"><summary>Por que o <code>alt</code> é vazio aqui</summary>
       <p>O nome do link já está no rótulo visível. Em produção o <code>alt</code>
       repete esse mesmo texto e o leitor de tela anuncia "Damaged Hair Damaged
       Hair". Imagem que só ilustra o rótulo ao lado é decorativa, e decoração se
       declara com <code>alt=""</code>.</p>
-    </div>
-    <div class="note">
-      <b>O recuo cede antes da palavra</b>
+    </details>
+    <details class="note"><summary>O recuo cede antes da palavra</summary>
       <p>Em 320px o cartão mede 134, e o recuo fixo de 64 deixava 70px de caixa:
       "Frizz &amp; Dryness" quebrava em quatro linhas. Abaixo de 480 o recuo
       e o corpo do rótulo encolhem — o texto continua legível, a pill não estoura.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -370,29 +349,275 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;ul class="yb-collections"&gt;
-  &lt;li&gt;&lt;a class="yb-collection yb-collection--bottom" href="#demos"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Collection card">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      <label class="codigo__variante">Variante
+        <select data-code-variant>
+          <option value="0">--bottom</option>
+          <option value="1">--bottom · Cronograma</option>
+          <option value="2">--bottom · Vello</option>
+          <option value="3">--bottom · Mirra</option>
+        </select></label>
+      <span class="codigo__conta">4 variantes</span>
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;a class="yb-collection yb-collection--bottom" href="#demos"&gt;
     &lt;img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy"&gt;
     &lt;span class="yb-collection__label"&gt;Fashion Gold&lt;/span&gt;
-  &lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a class="yb-collection yb-collection--bottom" href="#demos"&gt;
+  &lt;/a&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="1" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;a class="yb-collection yb-collection--bottom" href="#demos"&gt;
     &lt;img src="../pages/img/Prancheta_2-188b6fea.webp" alt="" loading="lazy"&gt;
     &lt;span class="yb-collection__label"&gt;Cronograma&lt;/span&gt;
-  &lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a class="yb-collection yb-collection--bottom" href="#demos"&gt;
+  &lt;/a&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="2" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;a class="yb-collection yb-collection--bottom" href="#demos"&gt;
     &lt;img src="../pages/img/Prancheta_3-d098ed99.webp" alt="" loading="lazy"&gt;
     &lt;span class="yb-collection__label"&gt;Vello&lt;/span&gt;
-  &lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a class="yb-collection yb-collection--bottom" href="#demos"&gt;
+  &lt;/a&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="3" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;a class="yb-collection yb-collection--bottom" href="#demos"&gt;
     &lt;img src="../pages/img/Prancheta_4-26cbd0ec.webp" alt="" loading="lazy"&gt;
     &lt;span class="yb-collection__label"&gt;Mirra&lt;/span&gt;
-  &lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
+  &lt;/a&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-bannerhero__blur, .yb-bannermedia__blur, .yb-offercard__blur, .yb-collection__blur{
+  position:absolute; inset-inline:0; inset-block-end:0; z-index:0;
+  block-size:var(--yb-blur-band); pointer-events:none;
+  color:var(--yb-bg-inverse);
+}
+.yb-bannerhero__blur &gt; i, .yb-bannermedia__blur &gt; i, .yb-offercard__blur &gt; i, .yb-collection__blur &gt; i{
+  position:absolute; inset:0; display:block;
+  -webkit-backdrop-filter:blur(calc(var(--yb-blur-radius) * var(--yb-blur-f)));
+  backdrop-filter:blur(calc(var(--yb-blur-radius) * var(--yb-blur-f)));
+  -webkit-mask-image:
+  linear-gradient(to top,
+  currentColor calc(var(--yb-blur-from) * 100% / 3), transparent calc(var(--yb-blur-to) * 100% / 3)),
+  linear-gradient(to right,
+  currentColor var(--yb-blur-reach, 100%),
+  transparent calc(var(--yb-blur-reach, 100%) + var(--yb-blur-falloff, 12rem)));
+  mask-image:
+  linear-gradient(to top,
+  currentColor calc(var(--yb-blur-from) * 100% / 3), transparent calc(var(--yb-blur-to) * 100% / 3)),
+  linear-gradient(to right,
+  currentColor var(--yb-blur-reach, 100%),
+  transparent calc(var(--yb-blur-reach, 100%) + var(--yb-blur-falloff, 12rem)));
+  -webkit-mask-composite:source-in;
+  mask-composite:intersect;
+}
+.yb-bannerhero__blur &gt; i:nth-child(1), .yb-bannermedia__blur &gt; i:nth-child(1), .yb-offercard__blur   &gt; i:nth-child(1), .yb-collection__blur  &gt; i:nth-child(1){--yb-blur-f:1;   --yb-blur-from:0; --yb-blur-to:1;}
+.yb-bannerhero__blur &gt; i:nth-child(2), .yb-bannermedia__blur &gt; i:nth-child(2), .yb-offercard__blur   &gt; i:nth-child(2), .yb-collection__blur  &gt; i:nth-child(2){--yb-blur-f:.5;  --yb-blur-from:1; --yb-blur-to:2;}
+.yb-bannerhero__blur &gt; i:nth-child(3), .yb-bannermedia__blur &gt; i:nth-child(3), .yb-offercard__blur   &gt; i:nth-child(3), .yb-collection__blur  &gt; i:nth-child(3){--yb-blur-f:.25; --yb-blur-from:2; --yb-blur-to:3;}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .yb-bannerhero__blur, .yb-bannermedia__blur, .yb-offercard__blur, .yb-collection__blur{display:none;}
+  .yb-bannerhero--blur .yb-bannerhero__body::before, .yb-bannermedia--blur .yb-bannermedia__body::before, .yb-collection--blur.yb-collection--overlay::after{
+    background:linear-gradient(to bottom,
+    var(--yb-scrim-none)    0,
+    var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
+    var(--yb-scrim-curve-2) calc(var(--yb-veil-fall) * .5),
+    var(--yb-scrim-curve-3) calc(var(--yb-veil-fall) * .75),
+    var(--yb-scrim-full)    var(--yb-veil-fall));
+  }
+}
+@media (prefers-reduced-transparency:reduce){
+  .yb-bannerhero__blur, .yb-bannermedia__blur, .yb-offercard__blur, .yb-collection__blur{display:none;}
+  .yb-bannerhero--blur .yb-bannerhero__body::before, .yb-bannermedia--blur .yb-bannermedia__body::before, .yb-collection--blur.yb-collection--overlay::after{
+    background:linear-gradient(to bottom,
+    var(--yb-scrim-none)    0,
+    var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
+    var(--yb-scrim-curve-2) calc(var(--yb-veil-fall) * .5),
+    var(--yb-scrim-curve-3) calc(var(--yb-veil-fall) * .75),
+    var(--yb-scrim-full)    var(--yb-veil-fall));
+  }
+}
+.yb-collection{
+  position:relative; display:block; overflow:hidden;
+  aspect-ratio:3/4; border-radius:var(--yb-radius-media);
+  background:var(--yb-surface-sunken);
+  text-decoration:none;
+}
+.yb-collection img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  transition:transform var(--yb-transition-surface);
+}
+@media (hover:hover){
+  .yb-collection:hover img{transform:scale(1.03);}
+}
+.yb-collection:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-collection__label{
+  position:absolute; inset-inline:var(--yb-space-4);
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  min-height:var(--yb-target-min);
+  padding:var(--yb-space-2) var(--yb-space-4);
+  border-radius:var(--yb-radius-full);
+  background:var(--yb-surface-raised); color:var(--yb-text-primary);
+  box-shadow:var(--yb-elevation-raised);
+  font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-medium);
+  line-height:var(--yb-line-height-base);
+}
+.yb-collection--bottom .yb-collection__label{inset-block-end:var(--yb-space-4);}
+.yb-collection--overlay .yb-collection__label{
+  inset-inline:var(--yb-space-5) auto;
+  inset-block-end:var(--yb-space-4);
+  justify-content:flex-start; text-align:start;
+  min-height:0; padding:0;
+  background:none; box-shadow:none; border-radius:0;
+  color:var(--yb-text-inverse);
+  font-size:var(--yb-type-body-lg-size);
+  font-weight:var(--yb-font-weight-bold);
+}
+.yb-collection--overlay{--yb-veil-fall:82%;}
+.yb-collection--overlay::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(to bottom,
+  var(--yb-scrim-none)    0,
+  var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
+  var(--yb-scrim-curve-2) calc(var(--yb-veil-fall) * .5),
+  var(--yb-scrim-curve-3) calc(var(--yb-veil-fall) * .75),
+  var(--yb-scrim-full)    var(--yb-veil-fall));
+}
+.yb-collection--blur{--yb-blur-band:45%; --yb-blur-radius:.75rem;}
+.yb-collection--blur.yb-collection--overlay::after{
+  background:linear-gradient(to bottom,
+  var(--yb-scrim-none)         0,
+  var(--yb-scrim-lite-curve-1) calc(var(--yb-veil-fall) * .25),
+  var(--yb-scrim-lite-curve-2) calc(var(--yb-veil-fall) * .5),
+  var(--yb-scrim-lite-curve-3) calc(var(--yb-veil-fall) * .75),
+  var(--yb-scrim-lite)         var(--yb-veil-fall));
+}
+.yb-collection--overlay .yb-collection__label{z-index:1;}
+@media (max-width:479.98px){
+  .yb-collection__label{
+    inset-inline:var(--yb-space-2);
+    padding:var(--yb-space-2);
+    font-size:var(--yb-type-caption-size);
+    border-radius:var(--yb-radius-md);
+  }
+  .yb-collection--bottom .yb-collection__label{inset-block-end:var(--yb-space-2);}
+}
+.yb-collection--card{
+  aspect-ratio:auto; display:flex; flex-direction:column;
+  background:var(--yb-surface); box-shadow:var(--yb-elevation-card);
+}
+.yb-collection--card img{aspect-ratio:5/7; height:auto; flex:none}
+li:has(&gt; .yb-collection--card){display:flex;}
+li &gt; .yb-collection--card{flex:1; min-inline-size:0;}
+.yb-collection__foot{
+  flex-grow:1; display:flex; flex-direction:column; align-items:flex-start;
+  gap:var(--yb-space-2); padding:var(--yb-space-4);
+}
+.yb-collection__name{
+  font-size:var(--yb-type-body-lg-size); font-weight:var(--yb-font-weight-bold);
+  color:var(--yb-text-primary); min-width:0;
+}
+.yb-collection__cta{
+  display:inline-flex; align-items:center; gap:var(--yb-space-2); flex:none;
+  margin-block-start:auto;
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-link); white-space:nowrap;
+}
+@media (hover:hover){
+  .yb-collection--card:hover .yb-collection__cta{color:var(--yb-text-link-hover)}
+}
+.yb-collections--mosaic &gt; * &gt; .yb-collection{aspect-ratio:var(--yb-aspect-landscape);}
+.yb-collections--mosaic &gt; :first-child &gt; .yb-collection{aspect-ratio:auto; block-size:100%;}
+.yb-collections--mosaic &gt; :first-child &gt; .yb-collection img{position:absolute; inset:0;}
+@media (max-width:767.98px){
+  .yb-collections--mosaic &gt; :first-child &gt; .yb-collection{aspect-ratio:var(--yb-aspect-landscape);}
+}
+@media (prefers-reduced-motion:reduce){
+  .yb-collection img{transition:none;}
+  .yb-collection:hover img{transform:none;}
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-aspect-landscape: 16 / 9;
+--yb-bg-inverse: #1E1E1F;
+--yb-blur-band;
+--yb-blur-f;
+--yb-blur-falloff;
+--yb-blur-from;
+--yb-blur-radius;
+--yb-blur-reach;
+--yb-blur-to;
+--yb-elevation-card: 0 1px 2px rgba(30,30,31,.06);
+--yb-elevation-raised: 0 2px 4px rgba(30,30,31,.07), 0 1px 2px rgba(30,30,31,.05);
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-font-weight-bold: 700;
+--yb-font-weight-medium: 500;
+--yb-font-weight-semibold: 600;
+--yb-line-height-base: 1.35;
+--yb-radius-full: 9999px;
+--yb-radius-md: 8px;
+--yb-radius-media: 8px;
+--yb-scrim-curve-1: rgba(30, 30, 31, .12);
+--yb-scrim-curve-2: rgba(30, 30, 31, .385);
+--yb-scrim-curve-3: rgba(30, 30, 31, .65);
+--yb-scrim-full: rgba(30, 30, 31, .77);
+--yb-scrim-lite: rgba(30, 30, 31, .65);
+--yb-scrim-lite-curve-1: rgba(30, 30, 31, .101);
+--yb-scrim-lite-curve-2: rgba(30, 30, 31, .325);
+--yb-scrim-lite-curve-3: rgba(30, 30, 31, .549);
+--yb-scrim-none: rgba(30, 30, 31, 0);
+--yb-space-2: 0.5rem;
+--yb-space-4: 1rem;
+--yb-space-5: 1.25rem;
+--yb-surface: #FFFFFF;
+--yb-surface-raised: #FFFFFF;
+--yb-surface-sunken: #FAFAFA;
+--yb-target-min: 44px;
+--yb-text-inverse: #FFFFFF;
+--yb-text-link: #CA235F;
+--yb-text-link-hover: #8A1E45;
+--yb-text-primary: #1E1E1F;
+--yb-transition-surface: 180ms cubic-bezier(.2, 0, 0, 1);
+--yb-type-body-lg-size: 1.125rem;
+--yb-type-body-sm-size: 0.875rem;
+--yb-type-caption-size: 0.8125rem;
+--yb-veil-fall;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

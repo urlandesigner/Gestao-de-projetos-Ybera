@@ -149,19 +149,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -219,21 +206,19 @@
         <span class="yb-rating__count">(56)</span>
       </span>
     </div>
-    <div class="note">
-      <b>É a média, não a nota de alguém</b>
+    <details class="note"><summary>É a média, não a nota de alguém</summary>
       <p>O Rating resume muitas avaliações — por isso a contagem é obrigatória. A nota
       de <em>uma</em> pessoa, dentro de uma avaliação, é só o
       <a href="../atoms/stars.html">Stars</a>, sem contagem: contar "1 avaliação" em
       cada cartão de review seria ruído. Antes as duas coisas usavam este componente,
       e a Review o usava quebrando a regra dele.</p>
-    </div>
-    <div class="note">
-      <b>As estrelas não são texto para o leitor de tela</b>
+    </details>
+    <details class="note"><summary>As estrelas não são texto para o leitor de tela</summary>
       <p>Elas são <code>aria-hidden</code> e o valor real vive no <code>aria-label</code>.
       Sem isso, um leitor de tela anuncia o desenho em vez da nota. O rótulo mora no
       Rating inteiro, com nota e contagem juntas, e o Stars dentro dele fica
       <code>aria-hidden</code>.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -241,21 +226,81 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;span class="yb-rating" role="img" aria-label="4.8 of 5 stars, 412 reviews"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Rating">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      <label class="codigo__variante">Variante
+        <select data-code-variant>
+          <option value="0">4.8 (412)</option>
+          <option value="1">4.1 (56)</option>
+        </select></label>
+      <span class="codigo__conta">2 variantes</span>
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-rating" role="img" aria-label="4.8 of 5 stars, 412 reviews"&gt;
   &lt;span class="yb-stars" style="--yb-stars:4.8" aria-hidden="true"&gt;&lt;/span&gt;
   &lt;span class="yb-rating__score"&gt;4.8&lt;/span&gt;
   &lt;span class="yb-rating__count"&gt;(412)&lt;/span&gt;
-&lt;/span&gt;
-&lt;span class="yb-rating" role="img" aria-label="4.1 of 5 stars, 56 reviews"&gt;
+&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="1" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-rating" role="img" aria-label="4.1 of 5 stars, 56 reviews"&gt;
   &lt;span class="yb-stars" style="--yb-stars:4.1" aria-hidden="true"&gt;&lt;/span&gt;
   &lt;span class="yb-rating__score"&gt;4.1&lt;/span&gt;
   &lt;span class="yb-rating__count"&gt;(56)&lt;/span&gt;
 &lt;/span&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-rating{display:inline-flex; align-items:center; gap:var(--yb-space-2)}
+.yb-rating__stars{
+  color:var(--yb-accent-star);
+  font-size:var(--yb-type-body-sm-size); letter-spacing:.08em;
+}
+.yb-rating__score{font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-medium); color:var(--yb-text-primary)}
+.yb-rating__count{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+@media (max-width:767.98px){
+  .yb-card &gt; .yb-card__title, .yb-card &gt; .yb-rating, .yb-card &gt; .yb-price{margin-inline:var(--yb-space-3);}
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-accent-star: #AE8330;
+--yb-font-weight-medium: 500;
+--yb-space-2: 0.5rem;
+--yb-space-3: 0.75rem;
+--yb-text-muted: #6D6D71;
+--yb-text-primary: #1E1E1F;
+--yb-type-body-sm-size: 0.875rem;
+--yb-type-caption-size: 0.8125rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

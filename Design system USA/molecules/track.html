@@ -149,19 +149,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -255,28 +242,25 @@
         </button>
       </div>
     </div>
-    <div class="note">
-      <b>A fatia do próximo cartão é a única coisa que diz que o trilho anda</b>
+    <details class="note"><summary>A fatia do próximo cartão é a única coisa que diz que o trilho anda</summary>
       <p>A barra de rolagem está escondida (<code>scrollbar-width:none</code>) porque
       no toque ela não existe e no desktop ela some sozinha. O que sobra para
       ensinar o gesto é ver um pedaço do que vem depois. Por isso a medida do item
       é <code>minmax</code> e não uma divisão exata da largura: um trilho em que
       cabem exatamente quatro cartões parece uma fileira parada.</p>
-    </div>
-    <div class="note">
-      <b>As setas somem abaixo de 768</b>
+    </details>
+    <details class="note"><summary>As setas somem abaixo de 768</summary>
       <p>No toque a pessoa arrasta, e um par de botões repetindo o gesto só ocupa
       espaço. Elas nascem <code>hidden</code> e o JS só as mostra quando há o que
       rolar — trilho que cabe inteiro não ganha seta desabilitada.</p>
-    </div>
-    <div class="note">
-      <b><code>data-yb-track-loop</code> — depois do último vem o primeiro</b>
+    </details>
+    <details class="note"><summary><code>data-yb-track-loop</code> — depois do último vem o primeiro</summary>
       <p>Opcional, e não o padrão. Serve um hero, onde parar no último é dizer "acabou"
       sobre conteúdo que não tem fim. Numa lista de produtos o fim é informação, e a
       seta apagada é quem a dá.</p>
       <p>Como a volta vive nas setas, e as setas somem no toque, <b>no celular o trilho
       não dá a volta</b>.</p>
-    </div>
+    </details>
     <h3 class="row-label"><code>--row</code> — fila, para o que não é cartão</h3>
     <div class="demo demo--rail">
       <div class="yb-track yb-track--row">
@@ -287,13 +271,12 @@
         <span class="yb-badge yb-badge--soft">Pro-Geno</span>
       </div>
     </div>
-    <div class="note">
-      <b><code>justify-content: safe center</code>, não <code>center</code></b>
+    <details class="note"><summary><code>justify-content: safe center</code>, não <code>center</code></summary>
       <p>Centralizar um trilho que ainda rola é uma cilada conhecida: quando o
       conteúdo excede a largura, o navegador empurra o início para fora da área
       rolável e o primeiro item fica preso, sem como chegar nele nem arrastando.
       <code>safe</code> volta ao alinhamento normal só quando precisa.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -301,56 +284,125 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="yb-track" id="doc-track"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Track">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-track" id="doc-track"&gt;
   &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
     &lt;img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy"&gt;
     &lt;span class="yb-collection__foot"&gt;
       &lt;span class="yb-collection__name"&gt;Fashion Gold&lt;/span&gt;
       &lt;span class="yb-collection__cta"&gt;Shop Collection
-        &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+        &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
     &lt;/span&gt;&lt;/a&gt;
   &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
     &lt;img src="../pages/img/02_hair-problem-f838107d.webp" alt="" loading="lazy"&gt;
     &lt;span class="yb-collection__foot"&gt;
       &lt;span class="yb-collection__name"&gt;Damaged Hair&lt;/span&gt;
       &lt;span class="yb-collection__cta"&gt;Shop Collection
-        &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+        &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
     &lt;/span&gt;&lt;/a&gt;
   &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
     &lt;img src="../pages/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy"&gt;
     &lt;span class="yb-collection__foot"&gt;
       &lt;span class="yb-collection__name"&gt;Undefined Curls&lt;/span&gt;
       &lt;span class="yb-collection__cta"&gt;Shop Collection
-        &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+        &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
     &lt;/span&gt;&lt;/a&gt;
   &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
     &lt;img src="../pages/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy"&gt;
     &lt;span class="yb-collection__foot"&gt;
       &lt;span class="yb-collection__name"&gt;Thinning&lt;/span&gt;
       &lt;span class="yb-collection__cta"&gt;Shop Collection
-        &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+        &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
     &lt;/span&gt;&lt;/a&gt;
   &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
     &lt;img src="../pages/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy"&gt;
     &lt;span class="yb-collection__foot"&gt;
       &lt;span class="yb-collection__name"&gt;Frizz&lt;/span&gt;
       &lt;span class="yb-collection__cta"&gt;Shop Collection
-        &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+        &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
     &lt;/span&gt;&lt;/a&gt;
-&lt;/div&gt;
-&lt;div class="yb-track__nav" data-yb-track-nav="doc-track" hidden&gt;
-  &lt;button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Anteriores"&gt;
-    &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-left"/&gt;&lt;/svg&gt;
-  &lt;/button&gt;
-  &lt;button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Próximos"&gt;
-    &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;
-  &lt;/button&gt;
 &lt;/div&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-track{
+  display:grid; grid-auto-flow:column;
+  grid-auto-columns:var(--yb-track-item, minmax(260px, 1fr));
+  gap:var(--yb-track-gap, var(--yb-space-4));
+  overflow-x:auto; scroll-snap-type:x proximity;
+  padding-block:var(--yb-space-2);
+  scrollbar-width:none;
+  overscroll-behavior-x:contain;
+}
+.yb-track::-webkit-scrollbar{display:none;}
+.yb-track &gt; *{scroll-snap-align:start;}
+@media (max-width:767.98px){
+  .yb-track &gt; .yb-offercard{grid-column:span 2; max-inline-size:85vw;}
+}
+.yb-track__nav{display:flex; gap:var(--yb-space-2); justify-content:center; margin-block-start:var(--yb-space-3)}
+.yb-track__nav .yb-iconbtn{border:var(--yb-border-hairline) solid var(--yb-border)}
+.yb-track__nav .yb-iconbtn[disabled]{opacity:var(--yb-opacity-control-disabled)}
+@media (max-width:767.98px){
+  .yb-track__nav{display:none}
+}
+.yb-track--hero{
+  --yb-track-item:100%;
+  --yb-track-gap:0;
+  padding-block:0;
+  scroll-snap-type:x mandatory;
+}
+.yb-track--row{
+  display:flex; align-items:center;
+  scroll-snap-type:none;
+  justify-content:safe center;
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-border: #DADADB;
+--yb-border-hairline: 1px;
+--yb-elevation-raised: 0 2px 4px rgba(30,30,31,.07), 0 1px 2px rgba(30,30,31,.05);
+--yb-opacity-control-disabled: .45;
+--yb-page-gutter: 1rem;
+--yb-space-2: 0.5rem;
+--yb-space-3: 0.75rem;
+--yb-space-4: 1rem;
+--yb-space-5: 1.25rem;
+--yb-surface-on-media: rgba(255, 255, 255, .92);
+--yb-track-gap;
+--yb-track-item;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

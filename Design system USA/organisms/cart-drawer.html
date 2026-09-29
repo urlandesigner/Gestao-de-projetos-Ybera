@@ -150,19 +150,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -365,44 +352,39 @@
         </div>
       </div>
     </div>
-    <div class="note">
-      <b>O cupom rola com a lista; o total não</b>
+    <details class="note"><summary>O cupom rola com a lista; o total não</summary>
       <p>Campo de digitação parado no pé é campo que o teclado do celular cobre.
       Rolando com os itens, o navegador o leva para cima do teclado sozinho. Fixos
       ficam só o total e o botão.</p>
       <p><b>Não é componente novo:</b> é <code>.yb-field--row</code> com um
       <code>.yb-btn--sm</code> do lado. O que nasce aqui é a posição.</p>
-    </div>
+    </details>
 
-    <div class="note">
-      <b>A oferta entra depois do cupom, não antes da lista</b>
+    <details class="note"><summary>A oferta entra depois do cupom, não antes da lista</summary>
       <p>Acima dos itens ela competiria com o que a pessoa acabou de escolher; depois
       do botão, ninguém a veria. Entre o cupom e o total é o único ponto do caminho em
       que a compra já está formada e ainda não foi fechada.</p>
       <p>A linha repete a anatomia da linha do carrinho &mdash; miniatura, corpo, ação
       &mdash; de propósito: é o que faz a oferta ler como "mais um item", que é
       exatamente o que ela quer virar.</p>
-    </div>
-    <div class="note">
-      <b>O preço cheio não leva risco</b>
+    </details>
+    <details class="note"><summary>O preço cheio não leva risco</summary>
       <p>Ele não foi cancelado: é a referência do que o item custa fora do combo. Risco
       prometeria um desconto que só existe se o item entrar <b>neste</b> carrinho, e
       quem vir o mesmo produto na PDP pelo preço normal vai achar que perdeu a oferta.</p>
-    </div>
-    <div class="note">
-      <b>Um cartão por tela, com encaixe obrigatório</b>
+    </details>
+    <details class="note"><summary>Um cartão por tela, com encaixe obrigatório</summary>
       <p><code>--yb-track-item:100%</code> e <code>scroll-snap-type:x mandatory</code>:
       meia oferta cortada na borda de uma gaveta de 420px não é prévia, é peça quebrada
       &mdash; a mesma razão do hero. As setas são <code>.yb-track__nav</code> e somem
       no toque, onde se arrasta: no print elas aparecem porque é uma simulação, mas um
       par de alvos de 44px dentro da gaveta custa mais do que ensina.</p>
-    </div>
-    <div class="note">
-      <b>Três blocos, três perguntas</b>
+    </details>
+    <details class="note"><summary>Três blocos, três perguntas</summary>
       <p>O topo diz quanto falta para o frete grátis, o meio lista o que já está no
       carrinho, o pé cobra a promessa de quem indicou. Cada um responde uma pergunta
       diferente — juntá-los num bloco só faz nenhuma das três ser lida.</p>
-    </div>
+    </details>
 
     <h3 class="row-label">Cupom aplicado</h3>
     <div class="stage stage--dim">
@@ -419,12 +401,11 @@
         </div>
       </div>
     </div>
-    <div class="note">
-      <b>Aplicado tira o campo</b>
+    <details class="note"><summary>Aplicado tira o campo</summary>
       <p>Deixar o input com o código digitado dentro não diz se o desconto pegou. A
       etiqueta com o código, o "Applied" em verde e o link de remover dizem as três
       coisas que a pessoa quer saber: qual código, se valeu, como desfazer.</p>
-    </div>
+    </details>
     <h3 class="row-label">Estados da linha</h3>
     <div class="stage stage--dim">
       <div class="yb-cart">
@@ -465,14 +446,13 @@
         </div>
       </div>
     </div>
-    <div class="note">
-      <b>Cada estado tira um controle, não acrescenta aviso</b>
+    <details class="note"><summary>Cada estado tira um controle, não acrescenta aviso</summary>
       <p>O brinde não tem quantidade a escolher, o esgotado não tem o que somar, e o
       que bateu o limite não tem para onde subir. Aviso ao lado de um controle que
       continua funcionando ensina a pessoa a tentar de novo &mdash; e falhar de novo.</p>
       <p>O aviso herda a cor do estado: esgotado bloqueia a compra e fala em vermelho;
       limite é só um teto e fala em âmbar.</p>
-    </div>
+    </details>
 
     <h3 class="row-label">Vazio e carregando</h3>
     <div class="split">
@@ -520,11 +500,10 @@
         </div>
       </div>
     </div>
-    <div class="note">
-      <b>A divisória do cabeçalho só existe quando não há lista</b>
+    <details class="note"><summary>A divisória do cabeçalho só existe quando não há lista</summary>
       <p>Com itens, a barra de frete já separa o cabeçalho do resto &mdash; duas linhas
       seguidas viram sujeira. Vazio ou carregando, a barra some e a divisória assume.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -532,24 +511,43 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="yb-cart"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Cart drawer">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-cart"&gt;
   &lt;div class="yb-cart__head"&gt;
     &lt;h2&gt;Your cart (2)&lt;/h2&gt;
     &lt;div class="yb-cart__head-actions"&gt;
       &lt;button type="button" class="yb-iconbtn yb-iconbtn--square yb-cart__share" aria-label="Share cart"&gt;
-        &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-share"/&gt;&lt;/svg&gt;&lt;/button&gt;
+        &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-share"/&gt;&lt;/svg&gt;&lt;/button&gt;
       &lt;button type="button" class="yb-iconbtn yb-iconbtn--square yb-cart__close" aria-label="Close cart"&gt;
-        &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;&lt;/button&gt;
+        &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;&lt;/button&gt;
     &lt;/div&gt;
   &lt;/div&gt;
   &lt;div class="yb-cart__ship yb-cart__ship--ok"&gt;
     &lt;div class="yb-freeship yb-freeship--done"&gt;
       &lt;span class="yb-freeship__text"&gt;
-        &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-truck"/&gt;&lt;/svg&gt;
+        &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-truck"/&gt;&lt;/svg&gt;
         Free shipping unlocked&lt;/span&gt;
       &lt;div class="yb-progress" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Progress to free shipping"&gt;
         &lt;span class="yb-progress__fill" style="inline-size:100%"&gt;&lt;/span&gt;
@@ -574,7 +572,7 @@
         &lt;div class="yb-cart__item-top"&gt;
           &lt;p class="yb-cart__item-title"&gt;Kit Sealant Fashion Gold&lt;/p&gt;
           &lt;button type="button" class="yb-iconbtn yb-iconbtn--square yb-cart__remove" aria-label="Remove Kit Sealant Fashion Gold"&gt;
-            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-trash"/&gt;&lt;/svg&gt;&lt;/button&gt;
+            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-trash"/&gt;&lt;/svg&gt;&lt;/button&gt;
         &lt;/div&gt;
         &lt;span class="yb-cart__item-variant"&gt;500g / 17.6 fl.oz&lt;/span&gt;
         &lt;div class="yb-cart__item-foot"&gt;
@@ -595,7 +593,7 @@
         &lt;div class="yb-cart__item-top"&gt;
           &lt;p class="yb-cart__item-title"&gt;Vello Alpha-Lactobaby® System&lt;/p&gt;
           &lt;button type="button" class="yb-iconbtn yb-iconbtn--square yb-cart__remove" aria-label="Remove Vello Alpha-Lactobaby® System"&gt;
-            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-trash"/&gt;&lt;/svg&gt;&lt;/button&gt;
+            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-trash"/&gt;&lt;/svg&gt;&lt;/button&gt;
         &lt;/div&gt;
         &lt;span class="yb-cart__item-variant"&gt;250ml + 200g&lt;/span&gt;
         &lt;div class="yb-cart__item-foot"&gt;
@@ -635,9 +633,9 @@
       &lt;h3 class="yb-cart__cross-title"&gt;Complete your routine&lt;/h3&gt;
       &lt;div class="yb-track__nav" data-yb-track-nav="cross-demo"&gt;
         &lt;button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous suggestion"&gt;
-          &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-left"/&gt;&lt;/svg&gt;&lt;/button&gt;
+          &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-left"/&gt;&lt;/svg&gt;&lt;/button&gt;
         &lt;button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next suggestion"&gt;
-          &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;&lt;/button&gt;
+          &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;&lt;/button&gt;
       &lt;/div&gt;
     &lt;/div&gt;
     &lt;div class="yb-track" id="cross-demo"&gt;
@@ -670,7 +668,7 @@
     &lt;/div&gt;
   &lt;/div&gt;
   &lt;p class="yb-cart__proof"&gt;
-    &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-trending-up"/&gt;&lt;/svg&gt;
+    &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-trending-up"/&gt;&lt;/svg&gt;
     &lt;span&gt;&lt;b&gt;247 people&lt;/b&gt; bought this kit this week&lt;/span&gt;
   &lt;/p&gt;
   &lt;div class="yb-cart__foot"&gt;
@@ -684,7 +682,7 @@
         &lt;div class="yb-cart__total-row"&gt;
           &lt;b class="yb-cart__total"&gt;$244.70&lt;/b&gt;
           &lt;span class="yb-cart__savings"&gt;
-            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-clock"/&gt;&lt;/svg&gt;
+            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-clock"/&gt;&lt;/svg&gt;
             save 18%&lt;/span&gt;
         &lt;/div&gt;
       &lt;/div&gt;
@@ -692,7 +690,325 @@
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-drawer &gt; .yb-cart{flex:1 1 auto; min-height:0}
+.yb-cart{
+  display:flex; flex-direction:column; height:100%;
+  background:var(--yb-surface); box-shadow:var(--yb-elevation-drawer);
+  width:100%; max-width:100%;
+}
+@media (min-width:768px){
+  .yb-cart{max-width:420px}
+}
+.yb-cart__head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:var(--yb-space-2) var(--yb-space-3);
+}
+.yb-cart--empty .yb-cart__head, .yb-cart--loading .yb-cart__head{border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);}
+.yb-cart__head h2{
+  margin:0; font-size:var(--yb-type-h4-size);
+  font-weight:var(--yb-type-h4-weight); letter-spacing:var(--yb-type-h4-track);
+}
+.yb-cart__head-actions{display:flex; align-items:center; gap:var(--yb-space-1)}
+.yb-cart__close, .yb-cart__share{
+  color:var(--yb-text-muted); font-size:var(--yb-type-h4-size);
+  border-radius:var(--yb-radius-pill); line-height:var(--yb-line-height-none);
+}
+@media (hover:hover){
+  .yb-cart__close:hover, .yb-cart__share:hover{color:var(--yb-text-primary)}
+}
+.yb-cart__ship{
+  padding:var(--yb-space-2) var(--yb-space-3);
+  border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle); background:var(--yb-bg-subtle)
+}
+.yb-cart__ship--ok{
+  background:var(--yb-success-surface);
+  border-block-end-color:var(--yb-success-surface);
+  text-align:center;
+}
+.yb-cart__ship--ok .yb-freeship{align-items:center}
+.yb-cart__ship--ok .yb-freeship__text{
+  display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  color:var(--yb-success-text); font-weight:var(--yb-font-weight-semibold);
+}
+.yb-cart__ship--ok .yb-progress{display:none}
+.yb-cart--empty .yb-cart__ship, .yb-cart--loading .yb-cart__ship{display:none;}
+.yb-cart__items{
+  flex:1; overflow-y:auto; padding:var(--yb-space-2) var(--yb-space-3);
+  display:flex; flex-direction:column; gap:var(--yb-space-2);
+}
+.yb-cart__item{
+  display:grid; grid-template-columns:var(--yb-thumb) 1fr;
+  gap:var(--yb-space-3); align-items:start;
+  padding-block:var(--yb-space-2);
+}
+.yb-cart__item .yb-card__media{aspect-ratio:var(--yb-aspect-product); border-radius:var(--yb-radius-sm)}
+.yb-cart__item-body{display:flex; flex-direction:column; gap:var(--yb-space-1); min-width:0}
+.yb-cart__item-top{display:flex; align-items:flex-start; gap:var(--yb-space-2)}
+.yb-cart__item-top .yb-cart__item-title{flex:1; min-width:0}
+.yb-cart__item-title{
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
+  margin:0; display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
+}
+.yb-cart__item-variant{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+.yb-cart__item-foot{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:var(--yb-space-2); flex-wrap:wrap; margin-block-start:var(--yb-space-1);
+}
+.yb-cart__item-prices{
+  display:flex; align-items:baseline; gap:var(--yb-space-2);
+  flex-wrap:wrap; min-width:0;
+}
+.yb-cart__item-foot .yb-price__now{
+  font-size:var(--yb-type-body-size);
+  font-variant-numeric:proportional-nums;
+}
+.yb-cart__item-foot .yb-price__was{font-size:var(--yb-type-caption-size)}
+.yb-cart__remove{
+  margin-block:calc(var(--yb-space-2) * -1);
+  margin-inline-end:calc((var(--yb-target-min) - var(--yb-icon-sm)) / -2);
+  color:var(--yb-text-muted);
+}
+@media (hover:hover){
+  .yb-cart__remove:hover{color:var(--yb-danger-text)}
+}
+.yb-cart__item .yb-stepper--sm input{inline-size:2rem}
+@media (max-width:479.98px){
+  .yb-cart__item{grid-template-columns:48px 1fr auto; gap:var(--yb-space-2)}
+}
+.yb-cart__gift-card{
+  margin:var(--yb-space-2) var(--yb-space-3);
+  display:flex; align-items:center; gap:var(--yb-space-3);
+  padding:var(--yb-space-3); border:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-card); background:var(--yb-bg-subtle);
+}
+.yb-cart__gift-body{display:flex; flex-direction:column; gap:var(--yb-space-3); flex:1; min-width:0}
+.yb-cart__gift-text{margin:0; font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);}
+.yb-cart__gift-text b{color:var(--yb-success-text); font-weight:var(--yb-font-weight-semibold)}
+.yb-cart__gift-track{display:flex; align-items:center; gap:var(--yb-space-1)}
+.yb-cart__gift-track .yb-progress{flex:1}
+.yb-cart__gift-prize{
+  inline-size:var(--yb-thumb); block-size:var(--yb-thumb); flex:none; overflow:hidden;
+  border-radius:var(--yb-radius-media); background:var(--yb-surface-sunken);
+}
+.yb-cart__gift-prize img{inline-size:100%; block-size:100%; object-fit:cover; display:block}
+.yb-cart__gift-card--done .yb-cart__gift-track{display:none}
+.yb-cart__gift-card--done .yb-cart__gift-text{color:var(--yb-success-text)}
+.yb-cart__shield{
+  display:flex; align-items:center; gap:var(--yb-space-3);
+  padding:var(--yb-space-2) var(--yb-space-3);
+}
+.yb-cart__shield-body{display:flex; flex-direction:column; gap:var(--yb-space-1); flex:1; min-width:0}
+.yb-cart__shield-body b{font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);}
+.yb-cart__shield-body p{margin:0; font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);}
+.yb-cart__coupon{
+  padding:var(--yb-space-2) var(--yb-space-3);
+  display:flex; flex-direction:column; gap:var(--yb-space-2);
+}
+.yb-cart__coupon-ok{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:var(--yb-space-3); padding:var(--yb-space-3);
+  border:var(--yb-border-hairline) solid var(--yb-border-subtle); border-radius:var(--yb-radius-card);
+  background:var(--yb-bg-subtle);
+}
+.yb-cart__coupon-ok &gt; div{display:flex; align-items:center; gap:var(--yb-space-2)}
+.yb-cart__coupon-code{
+  padding:var(--yb-space-1) var(--yb-space-2); border-radius:var(--yb-radius-badge);
+  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-bold);
+  letter-spacing:var(--yb-tracking-wide);
+}
+.yb-cart__foot{
+  padding:var(--yb-space-3) var(--yb-space-4) var(--yb-space-8);
+  border-block-start:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  display:flex; flex-direction:column; gap:var(--yb-space-3);
+  background:var(--yb-surface);
+}
+@media (max-height:700px){
+  .yb-cart__foot{padding:var(--yb-space-3) var(--yb-space-5) var(--yb-space-5)}
+}
+.yb-cart__partner{
+  display:flex; align-items:center; justify-content:center;
+  gap:var(--yb-space-2); padding:var(--yb-space-2) var(--yb-space-3);
+  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-medium);
+}
+.yb-cart__partner p{margin:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.yb-cart__partner b{font-weight:var(--yb-font-weight-semibold)}
+.yb-cart__partner-initial{
+  display:inline-flex; align-items:center; justify-content:center; flex:none;
+  inline-size:1.25rem; block-size:1.25rem; border-radius:var(--yb-radius-pill);
+  background:var(--yb-text-inverse); color:var(--yb-bg-inverse);
+  font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-bold);
+}
+.yb-cart__foot:has(.yb-cart__partner){padding-block-start:0}
+.yb-cart__partner{margin:0 calc(var(--yb-space-4) * -1) var(--yb-space-3)}
+.yb-cart__summary{display:flex; align-items:center; gap:var(--yb-space-3)}
+.yb-cart__totals{display:flex; flex-direction:column; min-width:0; flex:1}
+.yb-cart__table{
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted);
+  white-space:nowrap;
+}
+.yb-cart__total-row{display:flex; align-items:center; gap:var(--yb-space-2)}
+.yb-cart__total{
+  font-size:var(--yb-type-h4-size); font-weight:var(--yb-font-weight-bold);
+  color:var(--yb-text-primary); font-variant-numeric:proportional-nums;
+  white-space:nowrap;
+}
+.yb-cart__checkout{flex:1}
+.yb-cart__note{
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+  text-align:center; margin:0
+}
+.yb-cart__cross{padding:var(--yb-space-4) var(--yb-space-3) var(--yb-space-2);}
+.yb-cart__cross-head{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:var(--yb-space-3); margin-block-end:var(--yb-space-3);
+}
+.yb-cart__cross-title{
+  margin:0; font-size:var(--yb-type-h4-size); line-height:var(--yb-line-height-base);
+  letter-spacing:var(--yb-type-h4-track); font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-primary);
+}
+.yb-cart__cross-head .yb-track__nav{margin:0}
+.yb-cart__cross .yb-track{
+  --yb-track-item:100%; --yb-track-gap:var(--yb-space-3);
+  padding-block:0; scroll-snap-type:x mandatory;
+}
+.yb-cart__offer{
+  display:grid; grid-template-columns:auto 1fr auto;
+  gap:var(--yb-space-3); align-items:center; min-width:0;
+}
+.yb-cart__offer .yb-card__media{inline-size:4rem; block-size:4rem; flex:none; border-radius:var(--yb-radius-media);}
+.yb-cart__offer-body{display:flex; flex-direction:column; gap:var(--yb-space-1); min-width:0}
+.yb-cart__offer-name{
+  margin:0; font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-primary);
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
+}
+.yb-cart__offer-variant{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
+.yb-cart__offer-prices{
+  display:flex; align-items:baseline; gap:var(--yb-space-2); flex-wrap:wrap;
+  font-size:var(--yb-type-body-sm-size);
+}
+.yb-cart__offer-full{color:var(--yb-text-muted)}
+.yb-cart__offer-add{color:var(--yb-success-text); font-weight:var(--yb-font-weight-semibold);}
+.yb-cart__offer .yb-btn{flex:none}
+.yb-cart__proof{
+  display:flex; align-items:center; gap:var(--yb-space-2);
+  padding:0 var(--yb-space-3) var(--yb-space-3);
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+}
+.yb-cart__proof .yb-icon{color:var(--yb-success-text); flex:none}
+.yb-cart__proof b{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
+.yb-cart__item-title .yb-icon{
+  --yb-icon-size:var(--yb-icon-sm);
+  margin-inline-end:var(--yb-space-2); vertical-align:-2px;
+  color:var(--yb-success-text);
+}
+.yb-cart__item--gift{
+  grid-template-columns:1fr; justify-items:center; text-align:center;
+  padding:var(--yb-space-3); border-radius:var(--yb-radius-card);
+  background:var(--yb-bg-subtle);
+}
+.yb-cart__item--gift .yb-card__media{inline-size:72px}
+.yb-cart__item--soldout{
+  padding:var(--yb-space-2); border-radius:var(--yb-radius-card);
+  background:var(--yb-danger-surface);
+}
+.yb-cart__notice{
+  display:flex; align-items:center; gap:var(--yb-space-1);
+  font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-medium);
+  color:var(--yb-warning-text); margin:0;
+}
+.yb-cart__item--soldout .yb-cart__notice{color:var(--yb-danger-text)}
+.yb-cart__gift{
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-success-text);
+}
+.yb-cart__savings{
+  display:inline-flex; align-items:center; gap:var(--yb-space-1);
+  padding:var(--yb-space-1) var(--yb-space-2); border-radius:var(--yb-radius-badge);
+  background:var(--yb-success-surface); color:var(--yb-success-text);
+  font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-semibold);
+}
+.yb-cart__empty{
+  flex:1; display:flex; align-items:center; justify-content:center;
+  padding:var(--yb-space-8) var(--yb-space-4);
+}
+.yb-cart--loading .yb-cart__foot .yb-btn{pointer-events:none}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;!-- uma vez por pagina, antes de &lt;/body&gt; --&gt;
+&lt;script src="ybera-components.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- esta peca liga por: data-yb-step, data-yb-stepper, data-yb-switch, data-yb-track-nav, data-yb-track-step --&gt;
+
+&lt;!-- conteudo que chega depois (secao carregada por JS do tema): --&gt;
+&lt;script&gt;Ybera.init(secao);&lt;/script&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-aspect-product: 1 / 1;
+--yb-bg-inverse: #1E1E1F;
+--yb-bg-subtle: #FAFAFA;
+--yb-border-hairline: 1px;
+--yb-border-subtle: #EAEAEA;
+--yb-danger-surface: #FBEAE9;
+--yb-danger-text: #B3261E;
+--yb-elevation-drawer: 0 12px 28px rgba(30,30,31,.11), 0 4px 8px rgba(30,30,31,.06);
+--yb-font-weight-bold: 700;
+--yb-font-weight-medium: 500;
+--yb-font-weight-semibold: 600;
+--yb-icon-sm: 16px;
+--yb-line-height-base: 1.35;
+--yb-line-height-none: 1;
+--yb-radius-badge: 4px;
+--yb-radius-card: 8px;
+--yb-radius-media: 8px;
+--yb-radius-pill: 9999px;
+--yb-radius-sm: 4px;
+--yb-space-1: 0.25rem;
+--yb-space-2: 0.5rem;
+--yb-space-3: 0.75rem;
+--yb-space-4: 1rem;
+--yb-space-5: 1.25rem;
+--yb-space-8: 2rem;
+--yb-success-surface: #EAF6EC;
+--yb-success-text: #1F7A34;
+--yb-surface: #FFFFFF;
+--yb-surface-sunken: #FAFAFA;
+--yb-target-min: 44px;
+--yb-text-inverse: #FFFFFF;
+--yb-text-muted: #6D6D71;
+--yb-text-primary: #1E1E1F;
+--yb-text-secondary: #535356;
+--yb-thumb: 3.5rem;
+--yb-tracking-wide: 0.04em;
+--yb-tracking-wider: 0.12em;
+--yb-type-body-size: 1rem;
+--yb-type-body-sm-size: 0.875rem;
+--yb-type-caption-size: 0.8125rem;
+--yb-type-h4-size: 1.25rem;
+--yb-type-h4-track: -0.015em;
+--yb-type-h4-weight: 600;
+--yb-type-overline-size: 0.6875rem;
+--yb-warning-text: #8A5A00;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

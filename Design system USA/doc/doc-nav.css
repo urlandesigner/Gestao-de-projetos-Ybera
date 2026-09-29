@@ -35,7 +35,6 @@
   /* o filete cai no centro do chip */
   --ds-nav-rule: calc(var(--ds-nav-gutter) + var(--ds-nav-chip) / 2);
   --ds-top-h: 3.5rem;
-  --ds-onpage-w: 13rem;
   /* 1280, e não 940. A medida de 940 nasceu do `.main` das fichas, quando a
      doc era duas colunas e o conteúdo dividia a tela com a lista de peças. Com
      a coluna fixa e o índice à direita, ela passou a deixar tela vazia em
@@ -344,46 +343,6 @@ body{
        índice é uma caixa que rola, e a página começa logo depois dela. */
     max-block-size:50vh;
   }
-}
-
-/* ======================================================= NESTA PÁGINA
-   O índice da própria ficha, à direita. Só aparece quando há largura que
-   sobre: abaixo de 1280 ele roubaria da coluna de leitura, e a ficha tem sete
-   blocos — rolar até o sétimo é barato, ler numa coluna de 500px não é.
-
-   `position:fixed` pela mesma razão da coluna da esquerda: as páginas não
-   compartilham um invólucro comum, e uma grade exigiria reescrever cada uma.
-   Ele não marca a seção visível porque isso pede observador de rolagem, e um
-   índice que não se move é melhor que um que pisca. */
-.ds-onpage{display:none}
-@media (min-width:1280px){
-  body:has(.ds-onpage){padding-inline-end:var(--ds-onpage-w)}
-  .ds-onpage{
-    display:block; position:fixed;
-    inset-block-start:calc(var(--ds-top-h) + var(--yb-space-8));
-    inset-inline-end:0; inline-size:var(--ds-onpage-w);
-    max-block-size:calc(100vh - var(--ds-top-h) - var(--yb-space-8));
-    overflow-y:auto; padding-inline:var(--yb-space-5);
-    font-family:var(--yb-font-family-base);
-    font-size:var(--yb-type-body-sm-size);
-  }
-}
-.ds-nesta__titulo{
-  margin:0 0 var(--yb-space-3); font-size:var(--yb-type-overline-size);
-  letter-spacing:var(--yb-tracking-wider); text-transform:uppercase;
-  color:var(--yb-text-muted); font-weight:var(--yb-font-weight-semibold);
-}
-.ds-onpage ol{list-style:none; margin:0; padding:0;
-  border-inline-start:1px solid var(--yb-border-subtle)}
-.ds-onpage a{
-  display:block; padding:var(--yb-space-1) var(--yb-space-4);
-  margin-inline-start:-1px; border-inline-start:2px solid transparent;
-  color:var(--yb-text-secondary); text-decoration:none;
-}
-.ds-onpage a:hover{color:var(--yb-text-primary); border-inline-start-color:var(--yb-border-strong)}
-.ds-onpage a:focus-visible{
-  outline:var(--yb-focus-width) solid var(--yb-focus-color);
-  outline-offset:var(--yb-focus-offset);
 }
 
 /* Só para leitor de tela. `display:none` e `visibility:hidden` removeriam da

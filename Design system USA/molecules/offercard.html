@@ -149,19 +149,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -219,7 +206,7 @@
           <div class="yb-offercard__row">
             <span class="yb-offercard__price">$47.92</span>
             <s class="yb-offercard__was">$59.90</s>
-            <p class="yb-offercard__timer" data-yb-countdown="2026-09-30T23:59:59Z"><time datetime="2026-09-30">Sep 30</time></p>
+            <p class="yb-offercard__timer" data-yb-countdown="2026-10-01T23:59:59Z"><time datetime="2026-10-01">Oct 1</time></p>
           </div>
           <p class="yb-offercard__deadline" data-yb-offercard-end hidden>Offer ended</p>
           <button class="yb-btn yb-btn--on-dark yb-offercard__action" type="button"
@@ -246,8 +233,7 @@
         </div>
       </article>
     </div>
-    <div class="note">
-      <b>A doc estava atrás da loja em quatro pontos</b>
+    <details class="note"><summary>A doc estava atrás da loja em quatro pontos</summary>
       <p>O selo de desconto aqui era um <code>.yb-badge--sale</code> retangular; nas
       quatro homes é o <a href="../atoms/offerseal.html">selo estrelado</a>, e
       <code>.yb-offercard__off</code> já define <code>--yb-offerseal-size:3.5rem</code>
@@ -258,29 +244,25 @@
       <code>.yb-offercard__action</code>, um <code>&lt;button&gt;</code> que abre a
       sacola. E saiu o selo "Today's offer" do corpo, que repetia o que o desconto no
       canto já dizia.</p>
-    </div>
-    <div class="note">
-      <b>O blur aqui é mais forte que no hero</b>
+    </details>
+    <details class="note"><summary>O blur aqui é mais forte que no hero</summary>
       <p>A foto do produto é recorte em fundo claro, não fotografia de campanha: o véu
       sozinho não segura o texto. Três folhas de <code>backdrop-filter</code> em vez de
       uma, e o alcance vem do variante, que sabe onde o texto acaba.</p>
-    </div>
-    <div class="note">
-      <b>Mais de um dia vira dias</b>
+    </details>
+    <details class="note"><summary>Mais de um dia vira dias</summary>
       <p>O relógio troca de unidade sozinho: com mais de 24h pela frente conta
       dias/horas/minutos, e passa para horas/min/seg nas últimas 24h, quando o segundo
       começa a significar alguma coisa. "672 hrs" não é prazo, é número.</p>
-    </div>
-    <div class="note">
-      <b>A foto tem de sangrar</b>
+    </details>
+    <details class="note"><summary>A foto tem de sangrar</summary>
       <p>Foto fotográfica ocupando o cartão inteiro, como a da referência — não
       recorte de produto em fundo transparente. Com recorte, o que aparece em volta
       do frasco é o fundo de reserva do cartão, e o cartão inteiro fica escuro. Foto
       recortada é o material do <a href="#demos">cartão de catálogo</a>, que reserva
       um lugar próprio para ela.</p>
-    </div>
-    <div class="note">
-      <b>Sangrar não é o mesmo que preencher</b>
+    </details>
+    <details class="note"><summary>Sangrar não é o mesmo que preencher</summary>
       <p>O cartão é 2/3 e as fotos do catálogo são 1/1: com <code>cover</code> a foto
       entra inteira, chão de estúdio incluso. Como o desfoque é mais forte no pé, ele
       arrasta o frasco cortado para dentro do fundo liso — lê como defeito de
@@ -290,21 +272,18 @@
       margem morta vai de <b>0%</b> a <b>33%</b>. Então a medida sai da foto — o
       gerador recorta em volta do produto com folga em cima e nos lados e <b>zero
       embaixo</b>, porque o pé é do véu e do botão.</p>
-    </div>
-    <div class="note">
-      <b>Prazo vencido não vira 00:00:00</b>
+    </details>
+    <details class="note"><summary>Prazo vencido não vira 00:00:00</summary>
       <p>O segundo cartão tem prazo em 2020, de propósito: é o estado encerrado. Um
       relógio parado em zero não é contagem, é relógio quebrado prometendo urgência
       que já passou — o relógio sai e o cartão diz o que aconteceu.</p>
-    </div>
-    <div class="note">
-      <b>Sem JS, o prazo continua escrito</b>
+    </details>
+    <details class="note"><summary>Sem JS, o prazo continua escrito</summary>
       <p>O <code>&lt;time&gt;</code> por extenso é o que está no HTML; o script troca
       pelos quadradinhos e passa a contar. Uma oferta com prazo tem de dizer o prazo
       mesmo quando o script não roda.</p>
-    </div>
-    <div class="note">
-      <b>Dois destinos, dois alvos</b>
+    </details>
+    <details class="note"><summary>Dois destinos, dois alvos</summary>
       <p>O cartão inteiro leva à PDP; o botão põe na sacola e não leva a lugar
       nenhum. O alvo do cartão é um <code>&lt;a&gt;</code> <b>vazio</b> esticado por
       cima, com <code>aria-labelledby</code> apontando para o título — e não um
@@ -312,13 +291,12 @@
       e o recorte pararia nele, deixando a foto sem alvo.</p>
       <p>O botão fica acima do link esticado no empilhamento. Sem isso o clique nele
       cairia na PDP em vez de comprar.</p>
-    </div>
-    <div class="note">
-      <b>O CTA é magenta, não branco</b>
+    </details>
+    <details class="note"><summary>O CTA é magenta, não branco</summary>
       <p>Na referência ele é branco sobre a foto. Aqui segue a ação canônica do
       sistema — o mesmo magenta de todo "Add to cart". Botão de compra que muda de
       cor conforme o fundo ensina o cliente a procurar duas coisas diferentes.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -326,11 +304,30 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;article class="yb-offercard yb-offercard--blur" data-yb-offercard&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Card offer">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;article class="yb-offercard yb-offercard--blur" data-yb-offercard&gt;
   &lt;img src="../pages/img/Off2_Set_18-20-9_1-081255.webp" alt=""&gt;
   &lt;span class="yb-offerseal yb-offerseal--sale yb-offercard__off"&gt;&lt;b class="yb-offerseal__value"&gt;20%&lt;/b&gt;&lt;span class="yb-offerseal__label"&gt;off&lt;/span&gt;&lt;/span&gt;
   &lt;div class="yb-offercard__blur" aria-hidden="true"&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;/div&gt;
@@ -340,14 +337,237 @@
     &lt;div class="yb-offercard__row"&gt;
       &lt;span class="yb-offercard__price"&gt;$47.92&lt;/span&gt;
       &lt;s class="yb-offercard__was"&gt;$59.90&lt;/s&gt;
-      &lt;p class="yb-offercard__timer" data-yb-countdown="2026-09-30T23:59:59Z"&gt;&lt;time datetime="2026-09-30"&gt;Sep 30&lt;/time&gt;&lt;/p&gt;
+      &lt;p class="yb-offercard__timer" data-yb-countdown="2026-10-01T23:59:59Z"&gt;&lt;time datetime="2026-10-01"&gt;Oct 1&lt;/time&gt;&lt;/p&gt;
     &lt;/div&gt;
     &lt;p class="yb-offercard__deadline" data-yb-offercard-end hidden&gt;Offer ended&lt;/p&gt;
     &lt;button class="yb-btn yb-btn--on-dark yb-offercard__action" type="button"
             data-yb-open="cart" aria-label="Add to cart: Myrrh hair repair oil"&gt;Add to cart&lt;/button&gt;
   &lt;/div&gt;
 &lt;/article&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>@media (max-width:767.98px){
+  .yb-track &gt; .yb-offercard{grid-column:span 2; max-inline-size:85vw;}
+}
+.yb-bannerhero__blur, .yb-bannermedia__blur, .yb-offercard__blur, .yb-collection__blur{
+  position:absolute; inset-inline:0; inset-block-end:0; z-index:0;
+  block-size:var(--yb-blur-band); pointer-events:none;
+  color:var(--yb-bg-inverse);
+}
+.yb-bannerhero__blur &gt; i, .yb-bannermedia__blur &gt; i, .yb-offercard__blur &gt; i, .yb-collection__blur &gt; i{
+  position:absolute; inset:0; display:block;
+  -webkit-backdrop-filter:blur(calc(var(--yb-blur-radius) * var(--yb-blur-f)));
+  backdrop-filter:blur(calc(var(--yb-blur-radius) * var(--yb-blur-f)));
+  -webkit-mask-image:
+  linear-gradient(to top,
+  currentColor calc(var(--yb-blur-from) * 100% / 3), transparent calc(var(--yb-blur-to) * 100% / 3)),
+  linear-gradient(to right,
+  currentColor var(--yb-blur-reach, 100%),
+  transparent calc(var(--yb-blur-reach, 100%) + var(--yb-blur-falloff, 12rem)));
+  mask-image:
+  linear-gradient(to top,
+  currentColor calc(var(--yb-blur-from) * 100% / 3), transparent calc(var(--yb-blur-to) * 100% / 3)),
+  linear-gradient(to right,
+  currentColor var(--yb-blur-reach, 100%),
+  transparent calc(var(--yb-blur-reach, 100%) + var(--yb-blur-falloff, 12rem)));
+  -webkit-mask-composite:source-in;
+  mask-composite:intersect;
+}
+.yb-bannerhero__blur &gt; i:nth-child(1), .yb-bannermedia__blur &gt; i:nth-child(1), .yb-offercard__blur   &gt; i:nth-child(1), .yb-collection__blur  &gt; i:nth-child(1){--yb-blur-f:1;   --yb-blur-from:0; --yb-blur-to:1;}
+.yb-bannerhero__blur &gt; i:nth-child(2), .yb-bannermedia__blur &gt; i:nth-child(2), .yb-offercard__blur   &gt; i:nth-child(2), .yb-collection__blur  &gt; i:nth-child(2){--yb-blur-f:.5;  --yb-blur-from:1; --yb-blur-to:2;}
+.yb-bannerhero__blur &gt; i:nth-child(3), .yb-bannermedia__blur &gt; i:nth-child(3), .yb-offercard__blur   &gt; i:nth-child(3), .yb-collection__blur  &gt; i:nth-child(3){--yb-blur-f:.25; --yb-blur-from:2; --yb-blur-to:3;}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .yb-bannerhero__blur, .yb-bannermedia__blur, .yb-offercard__blur, .yb-collection__blur{display:none;}
+}
+@media (prefers-reduced-transparency:reduce){
+  .yb-bannerhero__blur, .yb-bannermedia__blur, .yb-offercard__blur, .yb-collection__blur{display:none;}
+}
+@media (max-width:767.98px){
+  .yb-grid &gt; .yb-offercard{grid-column:span 2}
+}
+.yb-offercard{
+  position:relative; display:flex; align-items:flex-end;
+  overflow:hidden; isolation:isolate;
+  inline-size:100%;
+  aspect-ratio:var(--yb-aspect-tall); min-block-size:26rem;
+  border-radius:var(--yb-radius-card);
+  background:var(--yb-bg-inverse);
+}
+.yb-offercard img{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; z-index:-1;
+  transition:transform var(--yb-transition-surface);
+}
+@media (hover:hover){
+  .yb-offercard:hover:not(:has(.yb-offercard__action:hover)) img{transform:scale(1.04)}
+}
+.yb-offercard__off{
+  position:absolute; inset-block-start:var(--yb-space-4);
+  inset-inline-start:var(--yb-space-4); z-index:1;
+  --yb-offerseal-size:3.5rem;
+}
+.yb-offercard__body{
+  position:relative; display:flex; flex-direction:column;
+  align-items:flex-start; gap:var(--yb-space-3);
+  inline-size:100%; padding:var(--yb-space-6);
+  color:var(--yb-text-inverse);
+}
+.yb-offercard{--yb-veil-fall:8.25rem; --yb-veil-advance:1.5rem;}
+.yb-offercard__body::before{
+  content:""; position:absolute; z-index:-1;
+  inset:calc(var(--yb-veil-fall) * -1) 0 0;
+  background:linear-gradient(to bottom,
+  var(--yb-scrim-none)    0,
+  var(--yb-scrim-curve-1) calc((var(--yb-veil-fall) + var(--yb-veil-advance, 0px)) * .25),
+  var(--yb-scrim-curve-2) calc((var(--yb-veil-fall) + var(--yb-veil-advance, 0px)) * .5),
+  var(--yb-scrim-curve-3) calc((var(--yb-veil-fall) + var(--yb-veil-advance, 0px)) * .75),
+  var(--yb-scrim-full)    calc(var(--yb-veil-fall) + var(--yb-veil-advance, 0px)));
+}
+.yb-offercard--blur{--yb-blur-band:55%; --yb-blur-radius:.5rem;}
+.yb-offercard--blur .yb-offercard__body::before{
+  background:linear-gradient(to bottom,
+  var(--yb-scrim-none)         0,
+  var(--yb-scrim-lite-curve-1) calc((var(--yb-veil-fall) + var(--yb-veil-advance, 0px)) * .25),
+  var(--yb-scrim-lite-curve-2) calc((var(--yb-veil-fall) + var(--yb-veil-advance, 0px)) * .5),
+  var(--yb-scrim-lite-curve-3) calc((var(--yb-veil-fall) + var(--yb-veil-advance, 0px)) * .75),
+  var(--yb-scrim-lite)         calc(var(--yb-veil-fall) + var(--yb-veil-advance, 0px)));
+}
+.yb-offercard__title{
+  margin:0; max-inline-size:20ch;
+  font-size:var(--yb-type-h3-size); line-height:var(--yb-type-h3-line);
+  font-weight:var(--yb-type-h3-weight); letter-spacing:var(--yb-type-h3-track);
+  text-wrap:balance;
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
+}
+.yb-offercard__link{
+  position:absolute; inset:0; z-index:1;
+  border-radius:inherit;
+}
+.yb-offercard__link:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:calc(var(--yb-focus-offset) * -1);
+}
+.yb-offercard__action{position:relative; z-index:2}
+.yb-offercard__row{
+  display:flex; align-items:center; flex-wrap:wrap;
+  gap:var(--yb-space-3) var(--yb-space-4); inline-size:100%;
+}
+.yb-offercard__price{
+  font-size:var(--yb-type-h2-size); line-height:var(--yb-line-height-none);
+  font-weight:var(--yb-font-weight-bold);
+  font-variant-numeric:tabular-nums;
+}
+.yb-offercard__was{
+  font-size:var(--yb-type-body-size);
+  color:var(--yb-text-secondary-inverse);
+  text-decoration:line-through;
+  font-variant-numeric:tabular-nums;
+}
+.yb-offercard__timer{
+  display:flex; align-items:center; gap:var(--yb-space-1);
+  margin:0; font-variant-numeric:tabular-nums;
+}
+.yb-offercard__timer time{
+  font-size:var(--yb-type-body-sm-size);
+  color:var(--yb-text-secondary-inverse);
+}
+.yb-offercard__chip{
+  display:flex; flex-direction:column; align-items:center;
+  min-inline-size:3rem; padding:var(--yb-space-2) var(--yb-space-1);
+  border-radius:var(--yb-radius-control);
+  background:var(--yb-scrim-strong);
+}
+.yb-offercard__chip b{
+  font-size:var(--yb-type-body-lg-size); line-height:1.1;
+  font-weight:var(--yb-font-weight-bold);
+}
+.yb-offercard__chip small{
+  font-size:var(--yb-type-caption-size);
+  color:var(--yb-text-secondary-inverse);
+}
+.yb-offercard__sep{color:var(--yb-text-secondary-inverse)}
+.yb-offercard__deadline{
+  margin:0; font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-medium);
+  color:var(--yb-text-secondary-inverse);
+}
+.yb-offercard[data-ended] .yb-offercard__timer{display:none}
+.yb-offercard .yb-btn{inline-size:100%}
+@media (max-width:520px){
+  .yb-offercard{aspect-ratio:auto; min-block-size:32rem}
+  .yb-offercard__body{padding:var(--yb-space-5)}
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;!-- uma vez por pagina, antes de &lt;/body&gt; --&gt;
+&lt;script src="ybera-components.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- esta peca liga por: data-yb-countdown, data-yb-offercard, data-yb-offercard-end, data-yb-open --&gt;
+
+&lt;!-- conteudo que chega depois (secao carregada por JS do tema): --&gt;
+&lt;script&gt;Ybera.init(secao);&lt;/script&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-aspect-tall: 2 / 3;
+--yb-bg-inverse: #1E1E1F;
+--yb-blur-band;
+--yb-blur-f;
+--yb-blur-falloff;
+--yb-blur-from;
+--yb-blur-radius;
+--yb-blur-reach;
+--yb-blur-to;
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-font-weight-bold: 700;
+--yb-font-weight-medium: 500;
+--yb-line-height-none: 1;
+--yb-radius-card: 8px;
+--yb-radius-control: 8px;
+--yb-scrim-curve-1: rgba(30, 30, 31, .12);
+--yb-scrim-curve-2: rgba(30, 30, 31, .385);
+--yb-scrim-curve-3: rgba(30, 30, 31, .65);
+--yb-scrim-full: rgba(30, 30, 31, .77);
+--yb-scrim-lite: rgba(30, 30, 31, .65);
+--yb-scrim-lite-curve-1: rgba(30, 30, 31, .101);
+--yb-scrim-lite-curve-2: rgba(30, 30, 31, .325);
+--yb-scrim-lite-curve-3: rgba(30, 30, 31, .549);
+--yb-scrim-none: rgba(30, 30, 31, 0);
+--yb-scrim-strong: rgba(30, 30, 31, .72);
+--yb-space-1: 0.25rem;
+--yb-space-2: 0.5rem;
+--yb-space-3: 0.75rem;
+--yb-space-4: 1rem;
+--yb-space-5: 1.25rem;
+--yb-space-6: 1.5rem;
+--yb-text-inverse: #FFFFFF;
+--yb-text-secondary-inverse: #DADADB;
+--yb-transition-surface: 180ms cubic-bezier(.2, 0, 0, 1);
+--yb-type-body-lg-size: 1.125rem;
+--yb-type-body-size: 1rem;
+--yb-type-body-sm-size: 0.875rem;
+--yb-type-caption-size: 0.8125rem;
+--yb-type-h2-size: 2rem;
+--yb-type-h3-line: 1.35;
+--yb-type-h3-size: 1.5rem;
+--yb-type-h3-track: -0.015em;
+--yb-type-h3-weight: 600;
+--yb-veil-advance;
+--yb-veil-fall;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">
@@ -365,7 +585,7 @@
     <div class="yb-offercard__row">
       <span class="yb-offercard__price">$47.92</span>
       <s class="yb-offercard__was">$59.90</s>
-      <p class="yb-offercard__timer" data-yb-countdown="2026-09-30T23:59:59Z"><time datetime="2026-09-30">Sep 30</time></p>
+      <p class="yb-offercard__timer" data-yb-countdown="2026-10-01T23:59:59Z"><time datetime="2026-10-01">Oct 1</time></p>
     </div>
     <p class="yb-offercard__deadline" data-yb-offercard-end hidden>Offer ended</p>
     <button class="yb-btn yb-btn--on-dark yb-offercard__action" type="button"

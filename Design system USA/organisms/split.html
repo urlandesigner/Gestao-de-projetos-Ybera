@@ -150,19 +150,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -231,12 +218,11 @@
         </div>
       </div>
     </div>
-    <div class="note">
-      <b>Não é o Banner media com outro nome</b>
+    <details class="note"><summary>Não é o Banner media com outro nome</summary>
       <p>O Banner media é foto com título por cima e o link cobrindo tudo: um alvo só.
       O split tem <b>controles</b> — seletor, preço, botão —, e controle não vive sob
       um link que cobre a caixa inteira.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -244,11 +230,30 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="yb-split"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Split">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-split"&gt;
   &lt;div class="yb-split__media"&gt;
     &lt;img src="../pages/img/02_hair-problem-f838107d.webp" alt="" loading="lazy"&gt;
   &lt;/div&gt;
@@ -270,7 +275,82 @@
     &lt;p class="yb-split__note"&gt;4 quick questions&lt;/p&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-split{
+  display:grid; grid-template-columns:1fr 1fr;
+  min-block-size:clamp(20rem, 38vw, 30rem);
+  isolation:isolate;
+}
+.yb-split__media{position:relative; overflow:hidden; background:var(--yb-surface-sunken)}
+.yb-split__media img{
+  position:absolute; inset:0; inline-size:100%; block-size:100%;
+  object-fit:cover; display:block;
+}
+.yb-split__panel{
+  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  display:flex; flex-direction:column; align-items:flex-start;
+  gap:var(--yb-space-5);
+  padding:var(--yb-space-10) var(--yb-space-8);
+  justify-content:center;
+}
+@media (min-width:1024px){
+  .yb-split__panel{
+    padding-inline:var(--yb-space-10)
+    max(var(--yb-space-8), calc((100% - var(--yb-container-max) / 2) ));
+  }
+}
+.yb-split__title{
+  margin:0; font-size:var(--yb-type-h2-size); line-height:var(--yb-type-h2-line);
+  letter-spacing:var(--yb-type-h2-track); font-weight:var(--yb-type-h2-weight);
+  text-wrap:balance;
+}
+.yb-split__sub{
+  margin:0; color:var(--yb-text-secondary-inverse);
+  font-size:var(--yb-type-body-size); line-height:var(--yb-line-height-relaxed);
+}
+.yb-split__note{
+  margin:0; color:var(--yb-text-muted-inverse);
+  font-size:var(--yb-type-body-sm-size); align-self:center;
+}
+.yb-split__panel &gt; .yb-btn{inline-size:100%}
+.yb-split__panel &gt; .yb-swatches{inline-size:100%}
+@media (max-width:860px){
+  .yb-split{grid-template-columns:1fr}
+  .yb-split__media{display:none}
+  .yb-split__panel{padding:var(--yb-space-10) var(--yb-page-gutter)}
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-bg-inverse: #1E1E1F;
+--yb-container-max: 1200px;
+--yb-line-height-relaxed: 1.55;
+--yb-page-gutter: 1rem;
+--yb-space-10: 2.5rem;
+--yb-space-5: 1.25rem;
+--yb-space-8: 2rem;
+--yb-surface-sunken: #FAFAFA;
+--yb-text-inverse: #FFFFFF;
+--yb-text-muted-inverse: #B1B1B4;
+--yb-text-secondary-inverse: #DADADB;
+--yb-type-body-size: 1rem;
+--yb-type-body-sm-size: 0.875rem;
+--yb-type-h2-line: 1.15;
+--yb-type-h2-size: 2rem;
+--yb-type-h2-track: -0.025em;
+--yb-type-h2-weight: 700;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

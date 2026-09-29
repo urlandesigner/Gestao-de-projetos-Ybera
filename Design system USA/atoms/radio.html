@@ -148,19 +148,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -221,40 +208,36 @@
         <label class="yb-radio"><input type="radio" name="gift" disabled><span>Handwritten card — unavailable for this destination</span></label>
       </div>
     </div>
-    <div class="note">
-      <b>Sempre nasce com uma marcada</b>
+    <details class="note"><summary>Sempre nasce com uma marcada</summary>
       <p>Rádio não desmarca: depois do primeiro clique o visitante consegue trocar,
       nunca voltar ao vazio. Um grupo que começa todo desmarcado cobra uma escolha
       que ele não pode desfazer. Ou o HTML já traz o <code>checked</code> do padrão,
       ou o grupo ganha uma opção explícita de recusa — o &ldquo;No gift message&rdquo;
       acima é ela.</p>
-    </div>
-    <div class="note">
-      <b><code>name</code> é o que faz o grupo, e <code>role="radiogroup"</code> é o que o anuncia</b>
+    </details>
+    <details class="note"><summary><code>name</code> é o que faz o grupo, e <code>role="radiogroup"</code> é o que o anuncia</summary>
       <p>O <code>name</code> repetido é o que dá a exclusão mútua e o que faz as setas
       do teclado percorrerem as opções — sem ele são caixas redondas independentes.
       O papel com <code>aria-label</code> (ou <code>aria-labelledby</code> apontando
       para o rótulo visível) é o que diz ao leitor de tela <b>de que</b> é a escolha:
       sem isso ele anuncia &ldquo;Standard shipping, 1 de 3&rdquo; sem nunca dizer
       &ldquo;Shipping&rdquo;.</p>
-    </div>
-    <div class="note">
-      <b>Mesmo desenho do <a href="checkbox.html">Checkbox</a>, de propósito</b>
+    </details>
+    <details class="note"><summary>Mesmo desenho do <a href="checkbox.html">Checkbox</a>, de propósito</summary>
       <p>Mesma caixa de 20px, mesma borda de <code>--yb-border-control</code>, mesmo
       alvo de 36px e mesmo foco — as duas classes dividem uma seção só na folha.
       Mudam duas linhas: o quadrado vira círculo e o tique vira ponto. A convenção é
       velha e vale aqui — redondo escolhe um, quadrado escolhe vários —, e ela só é
       lida se nada <b>mais</b> estiver diferente entre os dois.</p>
-    </div>
-    <div class="note">
-      <b>Quando ele não deve ser uma lista</b>
+    </details>
+    <details class="note"><summary>Quando ele não deve ser uma lista</summary>
       <p>Escolha de variante de produto é grupo de rádio, mas <b>não</b> nesta forma:
       tamanho e cor viram <a href="../molecules/variant.html">Variant selector</a>,
       que é o mesmo <code>input[type=radio]</code> desenhado como pastilha. E acima de
       cinco ou seis opções sem comparação entre elas, o certo é
       <a href="select.html">Select</a> — a lista longa de rádios ocupa a tela toda
       para dizer uma coisa só.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -262,16 +245,122 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div role="radiogroup" aria-label="Shipping"&gt;
-  &lt;label class="yb-radio"&gt;&lt;input type="radio" name="ship" checked&gt;&lt;span&gt;Standard shipping — free, arrives Sep 3–5&lt;/span&gt;&lt;/label&gt;
-  &lt;label class="yb-radio"&gt;&lt;input type="radio" name="ship"&gt;&lt;span&gt;Express shipping — $12.90, arrives Sep 1&lt;/span&gt;&lt;/label&gt;
-  &lt;label class="yb-radio"&gt;&lt;input type="radio" name="ship"&gt;&lt;span&gt;Pickup at the Miami store — free, ready today&lt;/span&gt;&lt;/label&gt;
-&lt;/div&gt;</code></pre>
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Radio">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      <label class="codigo__variante">Variante
+        <select data-code-variant>
+          <option value="0">Standard shipping — free, arriv…</option>
+          <option value="1">Express shipping — $12.90, arri…</option>
+          <option value="2">Pickup at the Miami store — fre…</option>
+        </select></label>
+      <span class="codigo__conta">3 variantes</span>
     </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;label class="yb-radio"&gt;&lt;input type="radio" name="ship" checked&gt;&lt;span&gt;Standard shipping — free, arrives Sep 3–5&lt;/span&gt;&lt;/label&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="1" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;label class="yb-radio"&gt;&lt;input type="radio" name="ship"&gt;&lt;span&gt;Express shipping — $12.90, arrives Sep 1&lt;/span&gt;&lt;/label&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="2" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;label class="yb-radio"&gt;&lt;input type="radio" name="ship"&gt;&lt;span&gt;Pickup at the Miami store — free, ready today&lt;/span&gt;&lt;/label&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-check,.yb-radio{
+  display:flex; align-items:flex-start; gap:var(--yb-space-3); cursor:pointer;
+  padding-block:var(--yb-space-2); min-height:var(--yb-control-height-compact)
+}
+.yb-check input,.yb-radio input{
+  appearance:none; -webkit-appearance:none;
+  inline-size:1.25rem; block-size:1.25rem; margin:0; flex:none; margin-block-start:1px;
+  display:grid; place-content:center;
+  background:var(--yb-surface);
+  border:var(--yb-border-hairline) solid var(--yb-border-control);
+  color:var(--yb-text-inverse);
+  cursor:pointer;
+  transition:background var(--yb-transition-control),
+  border-color var(--yb-transition-control);
+  accent-color:var(--yb-action-primary-bg);
+}
+@media (hover:hover){
+  .yb-check input:not(:checked):not(:disabled):hover, .yb-radio input:not(:checked):not(:disabled):hover{border-color:var(--yb-text-primary)}
+}
+.yb-check input:checked,.yb-radio input:checked{background:var(--yb-action-primary-bg); border-color:var(--yb-action-primary-bg);}
+.yb-radio input{border-radius:var(--yb-radius-pill)}
+.yb-radio input:checked::after{
+  content:""; inline-size:.5rem; block-size:.5rem;
+  border-radius:var(--yb-radius-pill); background:currentColor;
+}
+.yb-check input:disabled,.yb-radio input:disabled{
+  cursor:not-allowed; background:var(--yb-bg-subtle);
+  border-color:var(--yb-border-strong);
+}
+.yb-check input:disabled:checked, .yb-radio input:disabled:checked{background:var(--yb-text-muted); border-color:var(--yb-text-muted)}
+.yb-check input:focus-visible,.yb-radio input:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+@media (forced-colors: active){
+  .yb-check input,.yb-radio input{appearance:auto; -webkit-appearance:auto}
+  .yb-check input::after,.yb-radio input::after{content:none}
+}
+.yb-check span,.yb-radio span{
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+  line-height:var(--yb-line-height-relaxed)
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-action-primary-bg: #1E1E1F;
+--yb-bg-subtle: #FAFAFA;
+--yb-border-control: #8A8A8E;
+--yb-border-hairline: 1px;
+--yb-border-strong: #B1B1B4;
+--yb-control-height-compact: 36px;
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-line-height-relaxed: 1.55;
+--yb-radius-pill: 9999px;
+--yb-space-2: 0.5rem;
+--yb-space-3: 0.75rem;
+--yb-surface: #FFFFFF;
+--yb-text-inverse: #FFFFFF;
+--yb-text-muted: #6D6D71;
+--yb-text-primary: #1E1E1F;
+--yb-text-secondary: #535356;
+--yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
+--yb-type-body-sm-size: 0.875rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

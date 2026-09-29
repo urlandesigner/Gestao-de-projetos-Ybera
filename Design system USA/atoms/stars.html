@@ -148,19 +148,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -216,28 +203,25 @@
       <span style="display:flex; flex-direction:column; gap:var(--yb-space-2)"><span class="yb-stars" style="--yb-stars:3.2" role="img" aria-label="3.2 of 5 stars"></span><code>--yb-stars:3.2</code></span>
       <span style="display:flex; flex-direction:column; gap:var(--yb-space-2)"><span class="yb-stars" style="--yb-stars:1" role="img" aria-label="1 of 5 stars"></span><code>--yb-stars:1</code></span>
     </div>
-    <div class="note">
-      <b>A nota é um número, e o desenho sai dele</b>
+    <details class="note"><summary>A nota é um número, e o desenho sai dele</summary>
       <p>Quem monta escreve só <code>style="--yb-stars:4.8"</code>. Antes as estrelas
       eram texto digitado (<code>★★★★☆</code>): quem montava escolhia cheia ou vazia no
       teclado, nota quebrada não existia — 4,8 virava cinco cheias — e o gerador
       escrevia <code>★★★★★</code> fixo no cartão de produto, qualquer que fosse a
       nota. Meia nota agora é exatamente meia estrela.</p>
-    </div>
-    <div class="note">
-      <b>Cheia e vazia se distinguem pela forma</b>
+    </details>
+    <details class="note"><summary>Cheia e vazia se distinguem pela forma</summary>
       <p>As vazias são estrelas vazadas; as cheias, sólidas — na mesma cor
       <code>--yb-accent-star</code>, 3,45:1 sobre branco. Um cinza claro para as vazias
       reprovaria o contraste de grafismo e deixaria a diferença só na cor. No alto
       contraste as duas viram <code>CanvasText</code>, em vez de sumir com o fundo.</p>
-    </div>
-    <div class="note">
-      <b>Sozinha ou dentro do Rating</b>
+    </details>
+    <details class="note"><summary>Sozinha ou dentro do Rating</summary>
       <p>Sozinha, numa avaliação, ela leva <code>role="img"</code> e o
       <code>aria-label</code> com a nota. Dentro do <a href="../molecules/rating.html">Rating</a>,
       quem fala é o Rating (nota e contagem juntas), e ela fica
       <code>aria-hidden</code>.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -245,12 +229,73 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;span class="yb-stars" style="--yb-stars:4.8" role="img" aria-label="4.8 of 5 stars"&gt;&lt;/span&gt;</code></pre>
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Stars">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
     </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-stars" style="--yb-stars:4.8" role="img" aria-label="4.8 of 5 stars"&gt;&lt;/span&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-stars{
+  --yb-stars:5;
+  --yb-stars-gap:.085em;
+  position:relative; display:inline-block; flex:none; vertical-align:middle;
+  font-size:var(--yb-type-body-sm-size);
+  inline-size:calc(5 * (1em + var(--yb-stars-gap))); block-size:1.2em;
+}
+.yb-stars::before,.yb-stars::after{
+  content:""; position:absolute; inset-block:0; inset-inline-start:0;
+  background:var(--yb-accent-star);
+  -webkit-mask:var(--yb-stars-shape) 0 50% / calc(1em + var(--yb-stars-gap)) 1em repeat-x;
+  mask:var(--yb-stars-shape) 0 50% / calc(1em + var(--yb-stars-gap)) 1em repeat-x;
+}
+.yb-stars::before{--yb-stars-shape:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6l2.93 6.03 6.62.84-4.87 4.59 1.24 6.58L12 17.43l-5.92 3.21 1.24-6.58L2.45 9.47l6.62-.84z' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linejoin='round'/%3E%3C/svg%3E"); inline-size:100%;}
+.yb-stars::after{
+  --yb-stars-shape:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6l2.93 6.03 6.62.84-4.87 4.59 1.24 6.58L12 17.43l-5.92 3.21 1.24-6.58L2.45 9.47l6.62-.84z'/%3E%3C/svg%3E");
+  inline-size:calc(clamp(0, var(--yb-stars), 5) / 5 * 100%);
+}
+[dir="rtl"] .yb-stars::before,[dir="rtl"] .yb-stars::after{-webkit-mask-position:100% 50%; mask-position:100% 50%;}
+@media (forced-colors: active){
+  .yb-stars::before,.yb-stars::after{background:CanvasText; forced-color-adjust:none;}
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-accent-star: #AE8330;
+--yb-stars;
+--yb-stars-gap;
+--yb-stars-shape;
+--yb-type-body-sm-size: 0.875rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

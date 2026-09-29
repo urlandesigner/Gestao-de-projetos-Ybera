@@ -148,19 +148,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -227,12 +214,11 @@
         <span class="yb-skeleton yb-skeleton--title"></span>
       </div>
     </div>
-    <div class="note">
-      <b>O skeleton imita o layout, não o conteúdo</b>
+    <details class="note"><summary>O skeleton imita o layout, não o conteúdo</summary>
       <p>Duas linhas de texto e um preço, na mesma ordem e altura do card real —
       por isso não há salto quando o conteúdo chega. O brilho respeita
       <code>prefers-reduced-motion</code>.</p>
-    </div>
+    </details>
     <h3 class="row-label">Variants</h3>
     <div class="demo demo--grid demo--amostras">
       <div class="yb-skeleton-card">
@@ -267,29 +253,93 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="yb-skeleton-card"&gt;
-  &lt;span class="yb-skeleton yb-skeleton--media"&gt;&lt;/span&gt;
-  &lt;span class="yb-skeleton yb-skeleton--line"&gt;&lt;/span&gt;
-  &lt;span class="yb-skeleton yb-skeleton--line-short"&gt;&lt;/span&gt;
-  &lt;span class="yb-skeleton yb-skeleton--title"&gt;&lt;/span&gt;
-&lt;/div&gt;
-&lt;div class="yb-skeleton-card"&gt;
-  &lt;span class="yb-skeleton yb-skeleton--media"&gt;&lt;/span&gt;
-  &lt;span class="yb-skeleton yb-skeleton--line"&gt;&lt;/span&gt;
-  &lt;span class="yb-skeleton yb-skeleton--line-short"&gt;&lt;/span&gt;
-  &lt;span class="yb-skeleton yb-skeleton--title"&gt;&lt;/span&gt;
-&lt;/div&gt;
-&lt;div class="yb-skeleton-card"&gt;
-  &lt;span class="yb-skeleton yb-skeleton--media"&gt;&lt;/span&gt;
-  &lt;span class="yb-skeleton yb-skeleton--line"&gt;&lt;/span&gt;
-  &lt;span class="yb-skeleton yb-skeleton--line-short"&gt;&lt;/span&gt;
-  &lt;span class="yb-skeleton yb-skeleton--title"&gt;&lt;/span&gt;
-&lt;/div&gt;</code></pre>
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Skeleton">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      <label class="codigo__variante">Variante
+        <select data-code-variant>
+          <option value="0">--media</option>
+          <option value="1">--line</option>
+          <option value="2">--line-short</option>
+          <option value="3">--title</option>
+        </select></label>
+      <span class="codigo__conta">4 variantes</span>
     </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-skeleton yb-skeleton--media"&gt;&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="1" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-skeleton yb-skeleton--line"&gt;&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="2" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-skeleton yb-skeleton--line-short"&gt;&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="3" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-skeleton yb-skeleton--title"&gt;&lt;/span&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-skeleton{
+  display:block; background:var(--yb-bg-muted);
+  border-radius:var(--yb-radius-sm); position:relative; overflow:hidden;
+}
+.yb-skeleton::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(to right, transparent, var(--yb-surface), transparent);
+  transform:translateX(-100%);
+  animation:yb-shimmer var(--yb-rhythm-loop) infinite;
+}
+[dir="rtl"] .yb-skeleton::after{animation-direction:reverse;}
+.yb-skeleton--text{height:1em; margin-block:.25em}
+.yb-skeleton--title{height:1.4em; width:70%}
+.yb-skeleton--line{height:1em}
+.yb-skeleton--line-short{height:1em; width:45%}
+.yb-skeleton--media{aspect-ratio:var(--yb-aspect-product); border-radius:var(--yb-radius-media)}
+.yb-skeleton--btn{height:var(--yb-target-min); border-radius:var(--yb-radius-control)}
+.yb-skeleton-card{display:flex; flex-direction:column; gap:var(--yb-space-3)}
+@keyframes yb-shimmer{to{transform:translateX(100%)}}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-aspect-product: 1 / 1;
+--yb-bg-muted: #F5F5F5;
+--yb-radius-control: 8px;
+--yb-radius-media: 8px;
+--yb-radius-sm: 4px;
+--yb-rhythm-loop: 1400ms;
+--yb-space-3: 0.75rem;
+--yb-surface: #FFFFFF;
+--yb-target-min: 44px;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

@@ -150,19 +150,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -341,25 +328,22 @@
         </div>
       </dialog>
     </div>
-    <div class="note">
-      <b>A barra não muda de forma enquanto se digita</b>
+    <details class="note"><summary>A barra não muda de forma enquanto se digita</summary>
       <p>Só o conteúdo abaixo troca — zero, resultados, vazio. Campo que se mexe
       enquanto a pessoa digita nele é campo que perde o cursor. Digite
       <code>keratin</code>, <code>oil</code> e <code>xyz</code> para ver os três estados.</p>
-    </div>
-    <div class="note">
-      <b>Recentes só existe quando há recentes</b>
+    </details>
+    <details class="note"><summary>Recentes só existe quando há recentes</summary>
       <p>O bloco não é renderizado com a lista vazia. Um "Recent" com nada embaixo
       anuncia uma função que aquele cliente não tem, e ocupa o lugar do que ele
       poderia usar. Em ≤860px populares e categorias também saem: numa tela de mão
       o que importa é o campo e os produtos.</p>
-    </div>
-    <div class="note">
-      <b>Vazio não é beco sem saída</b>
+    </details>
+    <details class="note"><summary>Vazio não é beco sem saída</summary>
       <p>A tela sem resultado diz o termo que falhou, sugere como reformular e
       oferece três saídas. Sair de uma busca frustrada não pode exigir o botão
       voltar do navegador.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -367,22 +351,37 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;button class="yb-btn yb-btn--secondary" type="button" data-yb-open="site-search"&gt;
-  &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;
-  Open search
-&lt;/button&gt;
-&lt;dialog id="site-search" class="yb-search" aria-label="Search products"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Search overlay">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;dialog id="site-search" class="yb-search" aria-label="Search products"&gt;
   &lt;div class="yb-search__bar"&gt;
     &lt;form class="yb-search__form" role="search" action="#" data-yb-search&gt;
-      &lt;svg class="yb-icon yb-search__icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;
+      &lt;svg class="yb-icon yb-search__icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;
       &lt;input class="yb-search__input" type="search" name="q" autocomplete="off" autofocus
              placeholder="Search products, concerns, ingredients" aria-label="Search products"&gt;
       &lt;button class="yb-iconbtn yb-iconbtn--square yb-search__clear" type="reset" aria-label="Clear search" hidden&gt;
-        &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;
+        &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;
       &lt;/button&gt;
       &lt;button class="yb-search__close" type="button" data-yb-close&gt;Close&lt;/button&gt;
     &lt;/form&gt;
@@ -393,17 +392,17 @@
         &lt;div class="yb-search__group"&gt;
           &lt;h3 class="yb-search__title"&gt;Recent&lt;/h3&gt;
           &lt;ul class="yb-search__chips"&gt;
-            &lt;li&gt;&lt;button class="yb-chip" type="button"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-clock"/&gt;&lt;/svg&gt;keratin&lt;/button&gt;&lt;/li&gt;
-            &lt;li&gt;&lt;button class="yb-chip" type="button"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-clock"/&gt;&lt;/svg&gt;fashion gold&lt;/button&gt;&lt;/li&gt;
-            &lt;li&gt;&lt;button class="yb-chip" type="button"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-clock"/&gt;&lt;/svg&gt;frizz&lt;/button&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;button class="yb-chip" type="button"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-clock"/&gt;&lt;/svg&gt;keratin&lt;/button&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;button class="yb-chip" type="button"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-clock"/&gt;&lt;/svg&gt;fashion gold&lt;/button&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;button class="yb-chip" type="button"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-clock"/&gt;&lt;/svg&gt;frizz&lt;/button&gt;&lt;/li&gt;
           &lt;/ul&gt;
         &lt;/div&gt;
         &lt;div class="yb-search__group yb-search__group--secondary"&gt;
           &lt;h3 class="yb-search__title"&gt;Popular&lt;/h3&gt;
           &lt;ul class="yb-search__list"&gt;
-            &lt;li&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;hair botox&lt;/a&gt;&lt;/li&gt;
-            &lt;li&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;progressive brush&lt;/a&gt;&lt;/li&gt;
-            &lt;li&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;myrrh oil&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;hair botox&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;progressive brush&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;myrrh oil&lt;/a&gt;&lt;/li&gt;
           &lt;/ul&gt;
         &lt;/div&gt;
         &lt;div class="yb-search__group yb-search__group--secondary"&gt;
@@ -451,10 +450,10 @@
         &lt;div class="yb-search__group" data-yb-search-group&gt;
           &lt;h3 class="yb-search__title"&gt;Suggestions&lt;/h3&gt;
           &lt;ul class="yb-search__list"&gt;
-            &lt;li data-term="keratin"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;keratin treatment&lt;/a&gt;&lt;/li&gt;
-            &lt;li data-term="keratin"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;keratin for curly hair&lt;/a&gt;&lt;/li&gt;
-            &lt;li data-term="oil myrrh"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;myrrh repair oil&lt;/a&gt;&lt;/li&gt;
-            &lt;li data-term="kit vello shampoo"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;vello shampoo&lt;/a&gt;&lt;/li&gt;
+            &lt;li data-term="keratin"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;keratin treatment&lt;/a&gt;&lt;/li&gt;
+            &lt;li data-term="keratin"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;keratin for curly hair&lt;/a&gt;&lt;/li&gt;
+            &lt;li data-term="oil myrrh"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;myrrh repair oil&lt;/a&gt;&lt;/li&gt;
+            &lt;li data-term="kit vello shampoo"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;vello shampoo&lt;/a&gt;&lt;/li&gt;
           &lt;/ul&gt;
         &lt;/div&gt;
       &lt;/div&gt;
@@ -499,7 +498,202 @@
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/dialog&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-search{
+  border:none; padding:0; margin:0; max-width:none; width:100%;
+  max-height:100dvh; background:var(--yb-surface); color:var(--yb-text-primary);
+  border-radius:0; box-shadow:var(--yb-elevation-modal);
+}
+.yb-search::backdrop{background:var(--yb-surface-overlay)}
+.yb-search[open]{
+  display:flex; flex-direction:column;
+  animation:yb-search-drop var(--yb-duration-base) var(--yb-ease-enter);
+}
+.yb-search__bar{
+  display:flex; align-items:center; gap:var(--yb-space-3);
+  padding:var(--yb-space-4) var(--yb-page-gutter);
+  border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  background:var(--yb-surface); flex:0 0 auto;
+}
+.yb-search__form{
+  display:flex; align-items:center; gap:var(--yb-space-3);
+  flex:1; min-inline-size:0;
+  max-inline-size:var(--yb-container-max); margin-inline:auto;
+}
+.yb-search__icon{flex:none; color:var(--yb-text-muted)}
+.yb-search__input{
+  flex:1; min-inline-size:0;
+  font-family:inherit; font-size:var(--yb-type-h4-size);
+  font-weight:var(--yb-font-weight-medium);
+  color:var(--yb-text-primary); background:transparent;
+  border:none; padding:var(--yb-space-2) 0; min-height:var(--yb-target-min);
+}
+.yb-search__input::placeholder{color:var(--yb-text-muted); font-weight:var(--yb-font-weight-regular)}
+.yb-search__input:focus-visible{outline:0}
+.yb-search__clear[hidden]{display:none}
+.yb-search__close{
+  flex:none; font-family:inherit; font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-medium); color:var(--yb-text-secondary);
+  background:transparent; border:none; cursor:pointer;
+  padding:0 var(--yb-space-2); min-height:var(--yb-target-min);
+  border-radius:var(--yb-radius-control);
+}
+@media (hover:hover){
+  .yb-search__close:hover{color:var(--yb-text-primary)}
+}
+.yb-search__close:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-search__body{
+  flex:1 1 auto; min-block-size:0; overflow-y:auto;
+  padding:var(--yb-space-6) var(--yb-page-gutter) var(--yb-space-8);
+}
+.yb-search__panel[hidden],.yb-search__empty[hidden]{display:none}
+.yb-search__panel{
+  display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-10);
+  max-inline-size:var(--yb-container-max); margin-inline:auto;
+}
+.yb-search__col{display:flex; flex-direction:column; gap:var(--yb-space-5)}
+.yb-search__group{display:flex; flex-direction:column; gap:var(--yb-space-3)}
+.yb-search__title{
+  margin:0; font-size:var(--yb-type-overline-size);
+  letter-spacing:var(--yb-tracking-wider); text-transform:uppercase;
+  font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-muted);
+}
+.yb-search__chips{
+  list-style:none; margin:0; padding:0;
+  display:flex; flex-wrap:wrap; gap:var(--yb-space-2);
+}
+.yb-search__list{
+  list-style:none; margin:0; padding:0;
+  display:flex; flex-direction:column; gap:2px
+}
+.yb-search__link{
+  display:flex; align-items:center; gap:var(--yb-space-3);
+  padding:var(--yb-space-2) var(--yb-space-3);
+  margin-inline:calc(var(--yb-space-3) * -1);
+  min-height:var(--yb-control-height-compact);
+  color:var(--yb-text-secondary); text-decoration:none;
+  font-size:var(--yb-type-body-sm-size);
+  border-radius:var(--yb-radius-sm);
+}
+.yb-search__link .yb-icon{--yb-icon-size:var(--yb-icon-sm); color:var(--yb-text-muted); flex:none}
+.yb-search__link b{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
+@media (hover:hover){
+  .yb-search__link:hover{background:var(--yb-bg-muted); color:var(--yb-text-primary)}
+}
+.yb-search__link:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:calc(var(--yb-focus-offset) * -1);
+}
+.yb-search__item{
+  display:grid; grid-template-columns:var(--yb-thumb) 1fr auto; gap:var(--yb-space-3);
+  align-items:center; padding:var(--yb-space-2) var(--yb-space-3);
+  margin-inline:calc(var(--yb-space-3) * -1);
+  border-radius:var(--yb-radius-sm); text-decoration:none; color:inherit;
+}
+@media (hover:hover){
+  .yb-search__item:hover{background:var(--yb-bg-muted)}
+}
+.yb-search__item:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:calc(var(--yb-focus-offset) * -1);
+}
+.yb-search__thumb{
+  inline-size:var(--yb-thumb); aspect-ratio:var(--yb-aspect-product); object-fit:cover;
+  border-radius:var(--yb-radius-media); background:var(--yb-bg-muted);
+}
+.yb-search__name{
+  margin:0; font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-medium); color:var(--yb-text-primary);
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
+}
+.yb-search__meta{margin:0; font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);}
+.yb-search__item .yb-price{font-size:var(--yb-type-body-sm-size)}
+.yb-search__empty{
+  max-inline-size:52ch; margin-inline:auto; text-align:center;
+  display:flex; flex-direction:column; gap:var(--yb-space-4);
+  align-items:center; padding-block:var(--yb-space-8);
+}
+.yb-search__empty p{
+  margin:0; color:var(--yb-text-secondary);
+  font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-relaxed)
+}
+.yb-search__empty strong{color:var(--yb-text-primary)}
+@media (max-width:860px){
+  .yb-search__panel{grid-template-columns:1fr; gap:var(--yb-space-6)}
+  .yb-search__input{font-size:var(--yb-type-body-lg-size)}
+  .yb-search__bar{padding-inline:var(--yb-page-gutter)}
+  .yb-search__group--secondary{display:none}
+}
+@keyframes yb-search-drop{from{transform:translateY(-1rem); opacity:0}}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;!-- uma vez por pagina, antes de &lt;/body&gt; --&gt;
+&lt;script src="ybera-components.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- esta peca liga por: data-yb-close, data-yb-search, data-yb-search-echo, data-yb-search-empty, data-yb-search-group, data-yb-search-results, data-yb-search-zero --&gt;
+
+&lt;!-- conteudo que chega depois (secao carregada por JS do tema): --&gt;
+&lt;script&gt;Ybera.init(secao);&lt;/script&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-aspect-product: 1 / 1;
+--yb-bg-muted: #F5F5F5;
+--yb-border-hairline: 1px;
+--yb-border-subtle: #EAEAEA;
+--yb-container-max: 1200px;
+--yb-control-height-compact: 36px;
+--yb-duration-base: 180ms;
+--yb-ease-enter: cubic-bezier(0, 0, 0, 1);
+--yb-elevation-modal: 0 24px 56px rgba(30,30,31,.14);
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-font-weight-medium: 500;
+--yb-font-weight-regular: 400;
+--yb-font-weight-semibold: 600;
+--yb-icon-sm: 16px;
+--yb-line-height-relaxed: 1.55;
+--yb-page-gutter: 1rem;
+--yb-radius-control: 8px;
+--yb-radius-media: 8px;
+--yb-radius-sm: 4px;
+--yb-space-10: 2.5rem;
+--yb-space-2: 0.5rem;
+--yb-space-3: 0.75rem;
+--yb-space-4: 1rem;
+--yb-space-5: 1.25rem;
+--yb-space-6: 1.5rem;
+--yb-space-8: 2rem;
+--yb-surface: #FFFFFF;
+--yb-surface-overlay: rgba(30, 30, 31, .55);
+--yb-target-min: 44px;
+--yb-text-muted: #6D6D71;
+--yb-text-primary: #1E1E1F;
+--yb-text-secondary: #535356;
+--yb-thumb: 3.5rem;
+--yb-tracking-wider: 0.12em;
+--yb-type-body-lg-size: 1.125rem;
+--yb-type-body-sm-size: 0.875rem;
+--yb-type-caption-size: 0.8125rem;
+--yb-type-h4-size: 1.25rem;
+--yb-type-overline-size: 0.6875rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

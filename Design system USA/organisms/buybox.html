@@ -150,19 +150,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -207,7 +194,7 @@
   <div class="abas" data-yb-tabs>
   <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
-    <div class="note"><b>Nota de heading</b><p>Nesta galeria o nome do produto é <code>&lt;h2&gt;</code> porque a página já tem um <code>&lt;h1&gt;</code>. Numa PDP real ele é o <code>&lt;h1&gt;</code> — o CSS não depende do nível.</p></div>
+    <details class="note"><summary>Nota de heading</summary><p>Nesta galeria o nome do produto é <code>&lt;h2&gt;</code> porque a página já tem um <code>&lt;h1&gt;</code>. Numa PDP real ele é o <code>&lt;h1&gt;</code> — o CSS não depende do nível.</p></details>
     <!-- doc:vizinha yb-gallery — na PDP a galeria é IRMÃ do bloco de compra
          dentro de `.pdp`, não parte dele. Ela está aqui porque bloco de compra
          sem a foto ao lado não mostra a decisão que a pessoa toma. -->
@@ -279,8 +266,7 @@
         <span class="amostra__rotulo">abaixo de $50 · <code>.yb-buybox__ship</code></span>
       </span>
     </div>
-    <div class="note">
-      <b>Vantagem é selo, regra é texto</b>
+    <details class="note"><summary>Vantagem é selo, regra é texto</summary>
       <p>Passou da meta, o frete é vantagem e vira selo ao lado do estoque, com o
       caminhão para não se confundir com o &ldquo;In stock&rdquo;, do mesmo verde.
       Abaixo da meta, é regra, e fica em texto de apoio sob o preço: selo para o
@@ -288,22 +274,20 @@
       <p>Os dois seguem a variante (<code>data-price</code> contra
       <code>data-yb-ship-min</code>) e somem no esgotado. &ldquo;Free shipping over
       $50&rdquo; saiu das garantias, que agora seria repetição.</p>
-    </div>
-    <div class="note">
-      <b>Descrição curta aqui, inteira no acordeão</b>
+    </details>
+    <details class="note"><summary>Descrição curta aqui, inteira no acordeão</summary>
       <p>Na tela real a descrição completa (532 caracteres) entrava entre o preço e o
       botão e repetia no acordeão logo abaixo — o "Add to cart" caía fora da primeira
       tela em 1440×900. O bloco leva só o gancho, duas ou três frases; o texto
       inteiro mora em "Description".</p>
-    </div>
-    <div class="note">
-      <b>Só o que o dado sustenta</b>
+    </details>
+    <details class="note"><summary>Só o que o dado sustenta</summary>
       <p>"Best seller", "4.8 · 412 reviews" e "Made in Paris" saíram da tela real: o
       catálogo não tem nota nem selo, e origem é afirmação que precisa de fonte. O
       estoque vem do Shopify; o seletor de variante só aparece quando há mais de
       uma. A fileira de confiança diz o que a <em>loja</em> garante; a lista de
       benefício, o que o <em>produto</em> faz — uma de cada, não três.</p>
-    </div>
+    </details>
     <h3 class="row-label">Barra de compra fixa</h3>
     <div class="stage stage--pad">
       <!-- Congelada no palco: a barra real e fixa no rodape da tela. -->
@@ -316,41 +300,37 @@
         <a class="yb-btn yb-btn--primary" href="#demos" data-yb-bar-notify hidden><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-mail"/></svg> Notify me</a>
       </div>
     </div>
-    <div class="note">
-      <b>Aparece quando o botão real sai de vista</b>
+    <details class="note"><summary>Aparece quando o botão real sai de vista</summary>
       <p>O "Add to cart" de verdade fica a duas telas do topo. <code>.yb-buybar</code>
       é fixa no rodapé da tela e nasce <code>hidden</code>; o JS
       (<code>data-yb-buybar</code>) a revela quando o botão marcado com
       <code>data-yb-buybar-anchor</code> já passou para cima — nunca as duas ações
       ao mesmo tempo. Sem script, o botão real continua lá. Aqui ela está estática
       só para ser vista.</p>
-    </div>
-    <div class="note">
-      <b>O nome antes do preço</b>
+    </details>
+    <details class="note"><summary>O nome antes do preço</summary>
       <p>A barra mostrava <code>$168.90 · Add to cart</code> sem dizer de que produto.
       Quem chegou por link de anúncio, rolou e passou por duas fotos de produto no
       caminho não tem como conferir o que está comprando. O nome vai em cima, uma
       linha com reticência &mdash; em 320px o título tem 40 caracteres e quebraria
       em três, empurrando a barra para 110px sobre o conteúdo. O preço fica embaixo,
       no tamanho que tinha: é ele que a pessoa confere.</p>
-    </div>
-    <div class="note">
-      <b>Duas ações, uma de cada vez</b>
+    </details>
+    <details class="note"><summary>Duas ações, uma de cada vez</summary>
       <p>A barra carrega as duas: <code>data-yb-bar-buy</code> e
       <code>data-yb-bar-notify</code>, uma delas sempre <code>hidden</code>. Quem
       troca é o mesmo script da variante que troca o botão real &mdash; escolher um
       tamanho esgotado muda a página inteira, e a barra é parte dela. Copiar só o
       "Add to cart" deixa a tela de esgotado sem ação nenhuma no rodapé.</p>
-    </div>
-    <div class="note">
-      <b>Não é só de celular</b>
+    </details>
+    <details class="note"><summary>Não é só de celular</summary>
       <p>Era, até ficar claro que o problema não é de largura e sim de distância:
       em qualquer tela, depois que o bloco de compra sai por cima, não há como
       comprar sem voltar. O que muda acima de 1024px é a <b>forma</b>, não a regra
       &mdash; o conteúdo se prende à largura do container (o fundo continua
       sangrando) e o botão volta ao tamanho natural, senão viraria um retângulo
       magenta de 1.300px atravessando o rodapé.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -358,27 +338,30 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="split"&gt;
-  &lt;div class="yb-gallery" data-yb-gallery&gt;
-    &lt;div class="yb-gallery__stage"&gt;
-      &lt;div class="yb-gallery__slide" data-active="true"&gt;&lt;img src="../pages/img/Artboard_1_62a39a8d-9dfe-4cdc-9bfd-7626a-b29a2a.webp" alt="Kit Sealant Fashion Gold — image 1"&gt;&lt;/div&gt;
-      &lt;div class="yb-gallery__slide"&gt;&lt;img src="../pages/img/DSC09878-6f3656.webp" alt="Kit Sealant Fashion Gold — image 2"&gt;&lt;/div&gt;
-      &lt;div class="yb-gallery__slide"&gt;&lt;img src="../pages/img/DSC09857-45ff81.webp" alt="Kit Sealant Fashion Gold — image 3"&gt;&lt;/div&gt;
-      &lt;div class="yb-gallery__slide"&gt;&lt;img src="../pages/img/DSC09865-31f800.webp" alt="Kit Sealant Fashion Gold — image 4"&gt;&lt;/div&gt;
-      &lt;span class="yb-gallery__count"&gt;1 / 4&lt;/span&gt;
-    &lt;/div&gt;
-    &lt;div class="yb-gallery__thumbs"&gt;
-      &lt;input type="radio" name="bbgal" id="bbg1" checked&gt;&lt;label for="bbg1" title="Image 1"&gt;&lt;img src="../pages/img/Artboard_1_62a39a8d-9dfe-4cdc-9bfd-7626a-b29a2a.webp" alt=""&gt;&lt;/label&gt;
-      &lt;input type="radio" name="bbgal" id="bbg2"&gt;&lt;label for="bbg2" title="Image 2"&gt;&lt;img src="../pages/img/DSC09878-6f3656.webp" alt=""&gt;&lt;/label&gt;
-      &lt;input type="radio" name="bbgal" id="bbg3"&gt;&lt;label for="bbg3" title="Image 3"&gt;&lt;img src="../pages/img/DSC09857-45ff81.webp" alt=""&gt;&lt;/label&gt;
-      &lt;input type="radio" name="bbgal" id="bbg4"&gt;&lt;label for="bbg4" title="Image 4"&gt;&lt;img src="../pages/img/DSC09865-31f800.webp" alt=""&gt;&lt;/label&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-  &lt;div class="yb-buybox"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Buy box">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-buybox"&gt;
     &lt;div class="yb-buybox__flags"&gt;
       &lt;span class="yb-badge yb-badge--sale"&gt;Save 16%&lt;/span&gt;
       &lt;span class="yb-badge yb-badge--soft"&gt;Best seller&lt;/span&gt;
@@ -390,7 +373,7 @@
     &lt;/span&gt;
     &lt;div class="yb-buybox__priceline"&gt;
       &lt;span class="yb-price"&gt;&lt;b class="yb-price__now"&gt;$168.90&lt;/b&gt;&lt;s class="yb-price__was"&gt;$199.90&lt;/s&gt;&lt;/span&gt;
-      &lt;span class="yb-buybox__flags"&gt;&lt;span class="yb-badge yb-badge--success"&gt;In stock&lt;/span&gt;&lt;span class="yb-badge yb-badge--success" data-yb-ship-badge&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-truck"/&gt;&lt;/svg&gt;Free shipping&lt;/span&gt;&lt;/span&gt;
+      &lt;span class="yb-buybox__flags"&gt;&lt;span class="yb-badge yb-badge--success"&gt;In stock&lt;/span&gt;&lt;span class="yb-badge yb-badge--success" data-yb-ship-badge&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-truck"/&gt;&lt;/svg&gt;Free shipping&lt;/span&gt;&lt;/span&gt;
     &lt;/div&gt;
     &lt;p class="yb-buybox__desc"&gt;Professional keratin sealant for frizz-free,
     mirror-smooth hair. Formulated without formaldehyde and safe for
@@ -415,9 +398,156 @@
       &lt;span&gt;Formaldehyde-free&lt;/span&gt;&lt;span&gt;Color-safe&lt;/span&gt;
       &lt;span&gt;30-day returns&lt;/span&gt;
     &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+  &lt;/div&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-buybox{display:flex; flex-direction:column; gap:var(--yb-space-3); min-width:0}
+.yb-buybox &gt; .yb-buybox__priceline{margin-block-start:var(--yb-space-3)}
+.yb-buybox &gt; .yb-buybox__desc{margin-block-start:var(--yb-space-1)}
+.yb-buybox &gt; .yb-buybox__perks{margin-block-start:var(--yb-space-3)}
+.yb-buybox &gt; .yb-buybox__group, .yb-buybox &gt; .yb-buybox__purchase, .yb-buybox &gt; .yb-buybox__trust{margin-block-start:var(--yb-space-5)}
+.yb-buybox &gt; .yb-accordion{margin-block-start:var(--yb-space-6)}
+.yb-buybox__flags{display:flex; align-items:center; gap:var(--yb-space-2); flex-wrap:wrap}
+.yb-buybox__top{
+  display:flex; align-items:flex-start; justify-content:space-between;
+  gap:var(--yb-space-4);
+}
+.yb-buybox__top .yb-buybox__title{flex:1; min-inline-size:0}
+.yb-buybox__tools{display:flex; align-items:center; flex:none}
+.yb-buybox__priceline{
+  display:flex; align-items:center; justify-content:flex-start;
+  gap:var(--yb-space-4); flex-wrap:wrap;
+}
+.yb-buybox__ship{
+  display:flex; align-items:center; gap:var(--yb-space-2); margin:0;
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+}
+.yb-buybox &gt; .yb-buybox__ship{margin-block-start:calc(var(--yb-space-2) * -1)}
+.yb-buybox__fav{
+  flex:none;
+  margin-inline-end:calc((var(--yb-target-min) - var(--yb-icon-size, 1.25rem)) / -2);
+}
+.yb-buybox__rating{
+  display:inline-flex; align-self:flex-start;
+  text-decoration:none; color:inherit; border-radius:var(--yb-radius-badge);
+}
+@media (hover:hover){
+  .yb-buybox__rating:hover .yb-rating__count{color:var(--yb-text-primary)}
+}
+.yb-buybox__rating:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-buybox__title{
+  margin:0; font-size:var(--yb-type-h1-size); line-height:var(--yb-type-h1-line);
+  letter-spacing:var(--yb-type-h1-track); font-weight:var(--yb-type-h1-weight);
+  text-wrap:balance;
+}
+@media (max-width:860px){
+  .yb-buybox__title{font-size:var(--yb-type-h2-size)}
+}
+.yb-buybox__desc{
+  margin:0; font-size:var(--yb-type-body-size);
+  line-height:var(--yb-type-body-line); color:var(--yb-text-secondary); max-width:56ch;
+}
+.yb-buybox__group{display:flex; flex-direction:column; gap:var(--yb-space-3)}
+.yb-buybox__label{
+  margin:0; font-size:var(--yb-type-overline-size);
+  letter-spacing:var(--yb-tracking-wider); text-transform:uppercase;
+  font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-muted);
+}
+.yb-buybox__purchase{display:flex; flex-direction:column; gap:var(--yb-space-5);}
+.yb-buybox__actions{display:flex; flex-wrap:wrap; gap:var(--yb-space-3); align-items:stretch}
+.yb-buybox__actions .yb-btn{min-width:12rem; flex:1}
+.yb-buybox__kit{
+  list-style:none; margin:0; padding:0;
+  display:flex; flex-direction:column; gap:var(--yb-space-4);
+  font-size:var(--yb-type-body-sm-size);
+}
+.yb-buybox__kit li{
+  display:flex; align-items:baseline; justify-content:space-between;
+  gap:var(--yb-space-3);
+}
+.yb-buybox__kit-name{
+  display:flex; flex-direction:column; gap:var(--yb-space-1);
+  min-inline-size:0;
+}
+.yb-buybox__kit-name b{
+  font-weight:var(--yb-font-weight-semibold);
+  line-height:var(--yb-line-height-tight);
+}
+.yb-buybox__kit-name small{
+  color:var(--yb-text-muted); font-size:var(--yb-type-caption-size);
+  text-transform:uppercase; letter-spacing:var(--yb-tracking-wide);
+  line-height:var(--yb-line-height-tight);
+}
+.yb-buybox__kit-weight{
+  color:var(--yb-text-secondary);
+  font-variant-numeric:proportional-nums; flex:none;
+}
+.yb-buybox__perks{
+  display:flex; flex-wrap:wrap; gap:var(--yb-space-2);
+  list-style:none; margin:0; padding:0;
+}
+.yb-buybox__trust{
+  display:flex; gap:var(--yb-space-5); flex-wrap:wrap;
+  padding-block-start:var(--yb-space-4); border-block-start:var(--yb-border-hairline) solid var(--yb-border-subtle);
+}
+.yb-buybox__trust span{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;!-- uma vez por pagina, antes de &lt;/body&gt; --&gt;
+&lt;script src="ybera-components.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- esta peca liga por: data-yb-ship-badge --&gt;
+
+&lt;!-- conteudo que chega depois (secao carregada por JS do tema): --&gt;
+&lt;script&gt;Ybera.init(secao);&lt;/script&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-border-hairline: 1px;
+--yb-border-subtle: #EAEAEA;
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-font-weight-semibold: 600;
+--yb-icon-size: 20px;
+--yb-line-height-tight: 1.05;
+--yb-radius-badge: 4px;
+--yb-space-1: 0.25rem;
+--yb-space-2: 0.5rem;
+--yb-space-3: 0.75rem;
+--yb-space-4: 1rem;
+--yb-space-5: 1.25rem;
+--yb-space-6: 1.5rem;
+--yb-target-min: 44px;
+--yb-text-muted: #6D6D71;
+--yb-text-primary: #1E1E1F;
+--yb-text-secondary: #535356;
+--yb-tracking-wide: 0.04em;
+--yb-tracking-wider: 0.12em;
+--yb-type-body-line: 1.55;
+--yb-type-body-size: 1rem;
+--yb-type-body-sm-size: 0.875rem;
+--yb-type-caption-size: 0.8125rem;
+--yb-type-h1-line: 1.15;
+--yb-type-h1-size: clamp(2rem, 1.60rem + 2.00vw, 2.5rem);
+--yb-type-h1-track: -0.025em;
+--yb-type-h1-weight: 700;
+--yb-type-h2-size: 2rem;
+--yb-type-overline-size: 0.6875rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

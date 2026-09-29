@@ -148,19 +148,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -225,8 +212,7 @@
         <span class="amostra__rotulo"><code>--danger</code></span>
       </span>
     </div>
-    <div class="note">
-      <b>Por que a secundária é contorno</b>
+    <details class="note"><summary>Por que a secundária é contorno</summary>
       <p>Com a ação em preto, a escada é de <b>peso</b>: preenchido preto é a
       primária, contorno preto é a secundária, só texto é a fantasma — e se lê
       de longe. Cinza claro com borda cinza foi a primeira tentativa depois da
@@ -235,14 +221,13 @@
       diferença. O contorno em <code>gray-950</code> mede <b>16,66:1</b>, bem acima
       dos 3:1 de fronteira de controle, e é ele que separa a secundária do
       desabilitado.</p>
-    </div>
-    <div class="note">
-      <b>Limite conhecido: só funciona sobre fundo claro</b>
+    </details>
+    <details class="note"><summary>Limite conhecido: só funciona sobre fundo claro</summary>
       <p>O contorno preto some sobre a faixa escura do header ou sobre foto. Ali a
       secundária teria de ser contorno claro — variante que <b>ainda não
       existe</b>, porque nenhuma tela pede. Se alguma pedir, ela entra aqui
       antes de ser usada.</p>
-    </div>
+    </details>
 
     <h3 class="row-label">Inverso, sobre fundo escuro — <code>--on-dark</code></h3>
     <div class="demo demo--dark demo--amostras">
@@ -263,8 +248,7 @@
         <span class="amostra__rotulo"><code>--on-dark</code></span>
       </span>
     </div>
-    <div class="note">
-      <b>Sobre fundo escuro a ação inverte</b>
+    <details class="note"><summary>Sobre fundo escuro a ação inverte</summary>
       <p>O preto da marca é a ação da <b>página</b>, mas sobre fundo escuro ele some.
       O inverso é branco: contra o painel grafite mede 16,66:1, então não precisa de
       borda para existir. O hover <b>afunda</b> em vez de clarear, e o anel de foco
@@ -274,7 +258,7 @@
       offer. Medido no pior caso, pixel branco debaixo do véu: 7,84:1 contra o véu
       cheio e 5,19:1 contra o leve, acima dos 3:1 de fronteira de controle. Sobre
       foto crua, sem véu, não use: ali o fundo não é de ninguém.</p>
-    </div>
+    </details>
 
     <h3 class="row-label">Sizes</h3>
     <div class="demo demo--amostras">
@@ -324,27 +308,25 @@
         <span class="amostra__rotulo"><code>data-yb-fail</code></span>
       </span>
     </div>
-    <div class="note">
-      <b>O erro se prova aqui, não no protótipo</b>
+    <details class="note"><summary>O erro se prova aqui, não no protótipo</summary>
       <p>A PDP sempre consegue adicionar — protótipo que falha por sorteio ensina
       errado. Mas o caminho do erro precisa existir em algum lugar revisável, e
       esse lugar é a documentação de estado: o segundo botão declara
       <code>data-yb-fail</code> e mostra o toast <code>--danger</code>, que
       interrompe o leitor de tela com <code>role="alert"</code> em vez de esperar
       a pausa.</p>
-    </div>
+    </details>
     <h3 class="row-label">Full width</h3>
     <div class="demo demo--stack">
       <button type="button" class="yb-btn yb-btn--primary yb-btn--block">Add to cart — $168.90</button>
       <p class="amostra__rotulo"><code>--block</code></p>
     </div>
-    <div class="note">
-      <b>Por que o carregando mantém a largura</b>
+    <details class="note"><summary>Por que o carregando mantém a largura</summary>
       <p>No estado <code>--loading</code> o rótulo fica transparente em vez de sumir.
       Se o texto saísse, o botão encolheria e o layout saltaria embaixo do dedo —
       exatamente no momento em que a pessoa acabou de tocar para comprar.
       O <code>--sm</code> é o único que fica abaixo dos 44px: use só onde não há toque.</p>
-    </div>
+    </details>
 
     <h3 class="row-label">Com &iacute;cone &mdash; o r&oacute;tulo continua obrigat&oacute;rio</h3>
     <div class="demo demo--amostras">
@@ -377,15 +359,13 @@
         <span class="amostra__rotulo"><code>--sm · ícone --sm</code></span>
       </span>
     </div>
-    <div class="note">
-      <b>Sem classe nova: o <code>gap</code> já estava lá</b>
+    <details class="note"><summary>Sem classe nova: o <code>gap</code> já estava lá</summary>
       <p>O <code>.yb-btn</code> é <code>inline-flex</code> com
       <code>gap</code> desde sempre — o ícone entra como filho e se alinha
       sozinho. Um modificador <code>--icon</code> seria uma classe para não
       fazer nada.</p>
-    </div>
-    <div class="note">
-      <b>Antes ou depois, e por quê</b>
+    </details>
+    <details class="note"><summary>Antes ou depois, e por quê</summary>
       <p><b>Antes</b> quando o ícone mostra o que a ação faz com o objeto —
       carrinho, coração, lixeira. <b>Depois</b> quando ele mostra direção:
       seta de continuar, de abrir em nova aba. Ícone depois num botão de
@@ -393,13 +373,12 @@
       <p>No <code>--sm</code> o ícone acompanha: <code>.yb-icon--sm</code>,
       16px. Com os 20px do padrão ele fica maior que a altura da linha do
       texto e o botão parece inchado.</p>
-    </div>
-    <div class="note">
-      <b>O ícone é decorativo &mdash; sempre</b>
+    </details>
+    <details class="note"><summary>O ícone é decorativo &mdash; sempre</summary>
       <p>Leva <code>aria-hidden="true"</code>, e quem nomeia a ação é o texto
       ao lado. Ícone sem rótulo é outro componente: <code>.yb-iconbtn</code>,
       logo abaixo, que por não ter texto exige <code>aria-label</code>.</p>
-    </div>
+    </details>
 
     <h3 class="row-label">Icon button</h3>
     <div class="demo demo--amostras">
@@ -436,14 +415,13 @@
         <span class="amostra__rotulo"><code>--fav</code> <code>aria-pressed="true"</code></span>
       </span>
     </div>
-    <div class="note">
-      <b>Favoritar é este botão com um estado a mais</b>
+    <details class="note"><summary>Favoritar é este botão com um estado a mais</summary>
       <p>Mesmo <code>.yb-iconbtn</code>, mesmo alvo. O que muda é
       <code>aria-pressed</code>: a cor vira <code>--yb-accent-love</code> e o ícone
       troca de traço para preenchido. Cor sozinha reprovaria a WCAG 1.4.1, e falha
       primeiro para quem não distingue magenta de cinza. Sem JS o botão continua
       clicável, só não guarda nada.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -451,27 +429,298 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;span class="amostra"&gt;
-  &lt;button type="button" class="yb-btn yb-btn--primary"&gt;Add to cart&lt;/button&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--primary&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;
-&lt;span class="amostra"&gt;
-  &lt;button type="button" class="yb-btn yb-btn--secondary"&gt;Continue shopping&lt;/button&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--secondary&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;
-&lt;span class="amostra"&gt;
-  &lt;button type="button" class="yb-btn yb-btn--ghost"&gt;Size guide&lt;/button&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--ghost&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;
-&lt;span class="amostra"&gt;
-  &lt;button type="button" class="yb-btn yb-btn--danger"&gt;Remove item&lt;/button&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--danger&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;</code></pre>
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Button">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      <label class="codigo__variante">Variante
+        <select data-code-variant>
+          <option value="0">--primary</option>
+          <option value="1">--secondary</option>
+          <option value="2">--ghost</option>
+          <option value="3">--danger</option>
+          <option value="4">--on-dark</option>
+          <option value="5">--on-dark [disabled]</option>
+          <option value="6">--on-dark · Shop the line</option>
+          <option value="7">--sm · 36px</option>
+          <option value="8">sem modificador · 50px</option>
+          <option value="9">--lg · 60px</option>
+          <option value="10">repouso</option>
+          <option value="11">--loading</option>
+          <option value="12">[disabled]</option>
+          <option value="13">--ghost [disabled]</option>
+          <option value="14">data-yb-buy</option>
+          <option value="15">data-yb-fail</option>
+          <option value="16">ícone antes</option>
+          <option value="17">--secondary · Share</option>
+          <option value="18">ícone depois</option>
+          <option value="19">--sm · ícone --sm</option>
+        </select></label>
+      <span class="codigo__conta">20 variantes</span>
     </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button type="button" class="yb-btn yb-btn--primary"&gt;Add to cart&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="1" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button type="button" class="yb-btn yb-btn--secondary"&gt;Continue shopping&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="2" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button type="button" class="yb-btn yb-btn--ghost"&gt;Size guide&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="3" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button type="button" class="yb-btn yb-btn--danger"&gt;Remove item&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="4" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button class="yb-btn yb-btn--on-dark" type="button"&gt;Start quiz&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="5" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button class="yb-btn yb-btn--on-dark" type="button" disabled&gt;Start quiz&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="6" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-btn yb-btn--on-dark"&gt;Shop the line&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="7" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button type="button" class="yb-btn yb-btn--primary yb-btn--sm"&gt;Small&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="8" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button type="button" class="yb-btn yb-btn--primary"&gt;Medium&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="9" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button type="button" class="yb-btn yb-btn--primary yb-btn--lg"&gt;Large&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="10" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button type="button" class="yb-btn yb-btn--primary"&gt;Normal&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="11" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button type="button" class="yb-btn yb-btn--primary yb-btn--loading"&gt;Adding&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="12" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button type="button" class="yb-btn yb-btn--primary" disabled&gt;Sold out&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="13" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button type="button" class="yb-btn yb-btn--ghost" disabled&gt;Unavailable&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="14" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button class="yb-btn yb-btn--primary" type="button" data-yb-buy
+        data-toast-title="Added to cart" data-toast-text="Deep care kit"&gt;Add to cart&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="15" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button class="yb-btn yb-btn--secondary" type="button" data-yb-buy data-yb-fail
+        data-toast-error="Could not add to cart"
+        data-toast-error-text="Check your connection and try again."&gt;Add to cart (falha)&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="16" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button type="button" class="yb-btn yb-btn--primary"&gt;
+  &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-cart"/&gt;&lt;/svg&gt;
+  Add to cart
+&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="17" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button type="button" class="yb-btn yb-btn--secondary"&gt;
+  &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-share"/&gt;&lt;/svg&gt;
+  Share
+&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="18" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button type="button" class="yb-btn yb-btn--ghost"&gt;
+  Continue
+  &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;
+&lt;/button&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="19" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button type="button" class="yb-btn yb-btn--primary yb-btn--sm"&gt;
+  &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-plus"/&gt;&lt;/svg&gt;
+  Add
+&lt;/button&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:var(--yb-space-2); position:relative;
+  font-family:inherit; font-size:var(--yb-type-body-size);
+  font-weight:var(--yb-font-weight-semibold); line-height:var(--yb-line-height-none);
+  text-decoration:none; text-align:center; white-space:nowrap;
+  border:var(--yb-border-hairline) solid transparent; border-radius:var(--yb-radius-control);
+  padding:var(--yb-space-4) var(--yb-space-6);
+  min-height:var(--yb-target-min); cursor:pointer;
+  transition:background var(--yb-transition-control),
+  border-color var(--yb-transition-control),
+  color var(--yb-transition-control);
+}
+.yb-btn:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-btn[disabled],.yb-btn[aria-disabled="true"]{
+  cursor:not-allowed;
+  background:var(--yb-action-bg-disabled);
+  color:var(--yb-text-muted);
+  border-color:transparent;
+}
+.yb-btn--primary{background:var(--yb-action-primary-bg); color:var(--yb-action-primary-text)}
+@media (hover:hover){
+  .yb-btn--primary:hover:not([disabled]){background:var(--yb-action-primary-bg-hover)}
+}
+.yb-btn--primary:active:not([disabled]){background:var(--yb-action-primary-bg-active)}
+.yb-btn--secondary{
+  background:var(--yb-action-secondary-bg); color:var(--yb-action-secondary-text);
+  border-color:var(--yb-action-secondary-border);
+}
+@media (hover:hover){
+  .yb-btn--secondary:hover:not([disabled]){
+    background:var(--yb-action-secondary-bg-hover);
+    border-color:var(--yb-action-secondary-border-hover);
+    color:var(--yb-action-secondary-text-hover);
+  }
+}
+.yb-btn--ghost{
+  background:transparent; color:var(--yb-action-ghost-text);
+  border-color:var(--yb-action-ghost-border);
+}
+@media (hover:hover){
+  .yb-btn--ghost:hover:not([disabled]){background:var(--yb-action-ghost-bg-hover)}
+}
+.yb-btn--danger{background:var(--yb-danger-solid); color:var(--yb-text-inverse)}
+@media (hover:hover){
+  .yb-btn--danger:hover:not([disabled]){background:var(--yb-danger-text)}
+}
+.yb-btn--secondary:active:not([disabled]){
+  background:var(--yb-action-secondary-bg-active);
+  color:var(--yb-action-secondary-text-hover);
+}
+.yb-btn--ghost:active:not([disabled]){background:var(--yb-action-ghost-bg-hover)}
+.yb-btn--danger:active:not([disabled]){background:var(--yb-danger-text)}
+.yb-btn:active:not([disabled]){transform:translateY(1px)}
+@media (prefers-reduced-motion:reduce){
+  .yb-btn:active:not([disabled]){transform:none}
+}
+.yb-btn--on-dark{background:var(--yb-text-inverse); color:var(--yb-bg-inverse)}
+@media (hover:hover){
+  .yb-btn--on-dark:hover:not([disabled]){background:var(--yb-surface-sunken)}
+}
+.yb-btn--on-dark:active:not([disabled]){background:var(--yb-bg-muted)}
+.yb-btn--on-dark:focus-visible{outline-color:var(--yb-text-inverse); outline-offset:var(--yb-focus-offset);}
+.yb-btn--sm{
+  font-size:var(--yb-type-body-sm-size);
+  padding:var(--yb-space-2) var(--yb-space-4);
+  min-height:var(--yb-control-height-compact);
+}
+.yb-btn--lg{font-size:var(--yb-type-body-lg-size); padding:var(--yb-space-5) var(--yb-space-8)}
+.yb-btn--block{width:100%}
+.yb-btn--loading{color:transparent !important; pointer-events:none}
+.yb-btn--loading::after{
+  content:""; position:absolute; width:var(--yb-icon-sm); height:var(--yb-icon-sm);
+  border:var(--yb-border-emphasis) solid currentColor; border-block-start-color:transparent;
+  border-radius:var(--yb-radius-full);
+  animation:yb-spin var(--yb-duration-slower) linear infinite;
+}
+.yb-btn--primary.yb-btn--loading::after, .yb-btn--danger.yb-btn--loading::after{border-color:var(--yb-text-inverse); border-block-start-color:transparent}
+.yb-btn--secondary.yb-btn--loading::after{border-color:var(--yb-action-secondary-text); border-block-start-color:transparent}
+.yb-btn--ghost.yb-btn--loading::after{border-color:var(--yb-text-primary); border-block-start-color:transparent}
+.yb-btn--on-dark.yb-btn--loading::after{border-color:var(--yb-bg-inverse); border-block-start-color:transparent}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;!-- uma vez por pagina, antes de &lt;/body&gt; --&gt;
+&lt;script src="ybera-components.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- esta peca liga por: data-yb-buy, data-yb-fail --&gt;
+
+&lt;!-- conteudo que chega depois (secao carregada por JS do tema): --&gt;
+&lt;script&gt;Ybera.init(secao);&lt;/script&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-action-bg-disabled: #EAEAEA;
+--yb-action-ghost-bg-hover: #F5F5F5;
+--yb-action-ghost-border: #DADADB;
+--yb-action-ghost-text: #1E1E1F;
+--yb-action-primary-bg: #1E1E1F;
+--yb-action-primary-bg-active: #535356;
+--yb-action-primary-bg-hover: #3A3A3C;
+--yb-action-primary-text: #FFFFFF;
+--yb-action-secondary-bg: #FFFFFF;
+--yb-action-secondary-bg-active: #EAEAEA;
+--yb-action-secondary-bg-hover: #F5F5F5;
+--yb-action-secondary-border: #1E1E1F;
+--yb-action-secondary-border-hover: #1E1E1F;
+--yb-action-secondary-text: #1E1E1F;
+--yb-action-secondary-text-hover: #1E1E1F;
+--yb-bg-inverse: #1E1E1F;
+--yb-bg-muted: #F5F5F5;
+--yb-border-emphasis: 2px;
+--yb-border-hairline: 1px;
+--yb-control-height-compact: 36px;
+--yb-danger-solid: #B3261E;
+--yb-danger-text: #B3261E;
+--yb-duration-slower: 420ms;
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-font-weight-semibold: 600;
+--yb-icon-sm: 16px;
+--yb-line-height-none: 1;
+--yb-radius-control: 8px;
+--yb-radius-full: 9999px;
+--yb-space-2: 0.5rem;
+--yb-space-4: 1rem;
+--yb-space-5: 1.25rem;
+--yb-space-6: 1.5rem;
+--yb-space-8: 2rem;
+--yb-surface-sunken: #FAFAFA;
+--yb-target-min: 44px;
+--yb-text-inverse: #FFFFFF;
+--yb-text-muted: #6D6D71;
+--yb-text-primary: #1E1E1F;
+--yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
+--yb-type-body-lg-size: 1.125rem;
+--yb-type-body-size: 1rem;
+--yb-type-body-sm-size: 0.875rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

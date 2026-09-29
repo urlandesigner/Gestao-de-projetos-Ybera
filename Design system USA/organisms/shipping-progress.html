@@ -150,19 +150,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -225,13 +212,12 @@
         </div>
       </div>
     </div>
-    <div class="note">
-      <b>O número antes da barra</b>
+    <details class="note"><summary>O número antes da barra</summary>
       <p>"Add $12.10 more" diz exatamente quanto falta. Uma barra sozinha obriga a
       pessoa a estimar, e estimativa não gera compra. A barra tem
       <code>role="progressbar"</code> com valor real — para quem usa leitor de tela,
       ela é a única fonte da informação.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -239,26 +225,86 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>  &lt;div class="yb-freeship"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Free shipping progress">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      <label class="codigo__variante">Variante
+        <select data-code-variant>
+          <option value="0">Add $12.10 more for free shippi…</option>
+          <option value="1">--done</option>
+        </select></label>
+      <span class="codigo__conta">2 variantes</span>
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-freeship"&gt;
     &lt;span class="yb-freeship__text"&gt;Add &lt;b&gt;$12.10&lt;/b&gt; more for free shipping&lt;/span&gt;
     &lt;div class="yb-progress" role="progressbar" aria-valuenow="76" aria-valuemin="0" aria-valuemax="100" aria-label="Progress to free shipping"&gt;
       &lt;span class="yb-progress__fill" style="inline-size:76%"&gt;&lt;/span&gt;
     &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="stage stage--pad"&gt;
-  &lt;div class="yb-freeship yb-freeship--done"&gt;
+  &lt;/div&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="1" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-freeship yb-freeship--done"&gt;
     &lt;span class="yb-freeship__text"&gt;✓ You qualify for free shipping&lt;/span&gt;
     &lt;div class="yb-progress" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Free shipping unlocked"&gt;
       &lt;span class="yb-progress__fill" style="inline-size:100%"&gt;&lt;/span&gt;
     &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+  &lt;/div&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-freeship{display:flex; flex-direction:column; gap:var(--yb-space-2)}
+.yb-freeship__text{font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
+.yb-freeship__text b{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
+.yb-freeship--done .yb-progress__fill{background:var(--yb-success-solid)}
+.yb-freeship--done .yb-freeship__text{
+  color:var(--yb-success-text);
+  font-weight:var(--yb-font-weight-medium)
+}
+.yb-cart__ship--ok .yb-freeship{align-items:center}
+.yb-cart__ship--ok .yb-freeship__text{
+  display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  color:var(--yb-success-text); font-weight:var(--yb-font-weight-semibold);
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-font-weight-medium: 500;
+--yb-font-weight-semibold: 600;
+--yb-space-2: 0.5rem;
+--yb-success-solid: #1F7A34;
+--yb-success-text: #1F7A34;
+--yb-text-primary: #1E1E1F;
+--yb-text-secondary: #535356;
+--yb-type-body-sm-size: 0.875rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

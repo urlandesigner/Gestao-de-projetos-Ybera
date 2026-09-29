@@ -148,19 +148,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -252,8 +239,7 @@
         <span class="amostra__rotulo"><code>--on-dark</code></span>
       </span>
     </div>
-    <div class="note">
-      <b>Nenhum selo claro serve sobre foto</b>
+    <details class="note"><summary>Nenhum selo claro serve sobre foto</summary>
       <p>O <code>--secondary</code> foi testado nos selos de brinde do cartão de
       produto, que ficam sobre o packshot, e reprovou: medido nas fotos reais, o
       chip cai para <b>1,2:1</b> contra a foto e o texto para 3,78:1 — abaixo de
@@ -262,23 +248,21 @@
       (12,6:1 nas mesmas fotos) ou <code>--sale</code>. Os claros
       — <code>--secondary</code>, <code>--soft</code>, <code>--success</code>,
       <code>--warning</code>, <code>--danger</code> — são para superfície lisa.</p>
-    </div>
-    <div class="note">
-      <b><code>--sale</code> grita, <code>--secondary</code> rotula</b>
+    </details>
+    <details class="note"><summary><code>--sale</code> grita, <code>--secondary</code> rotula</summary>
       <p>O <code>--sale</code> é o magenta cheio do sinal
       (<code>--yb-accent-signal</code>): desconto é marca que precisa ser vista antes
       de ser lida. O <code>--secondary</code> usa os mesmos tokens do botão
       secundário, contorno preto, e rotula sem disputar com o preço ao lado. Um por
       contexto &mdash; dois selos cheios na mesma linha voltam a empatar a leitura.</p>
-    </div>
-    <div class="note">
-      <b>O magenta sobre escuro não é o magenta canônico</b>
+    </details>
+    <details class="note"><summary>O magenta sobre escuro não é o magenta canônico</summary>
       <p><code>--on-media</code> escreve em <code>--yb-accent-signal-on-dark</code>, que mede
       6,49:1 sobre o grafite. O magenta canônico foi escolhido para ler sobre
       <b>branco</b> e cai para 3,11:1 ali. Nenhuma cor é escura o bastante para o
       branco e clara o bastante para o grafite — por isso o contexto está no nome do
       token.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -286,39 +270,140 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;span class="amostra"&gt;
-  &lt;span class="yb-badge yb-badge--sale"&gt;Save 16%&lt;/span&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--sale&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;
-&lt;span class="amostra"&gt;
-  &lt;span class="yb-badge yb-badge--dark"&gt;New&lt;/span&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--dark&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;
-&lt;span class="amostra"&gt;
-  &lt;span class="yb-badge yb-badge--secondary"&gt;Members only&lt;/span&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--secondary&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;
-&lt;span class="amostra"&gt;
-  &lt;span class="yb-badge yb-badge--soft"&gt;Best seller&lt;/span&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--soft&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;
-&lt;span class="amostra"&gt;
-  &lt;span class="yb-badge yb-badge--success"&gt;In stock&lt;/span&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--success&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;
-&lt;span class="amostra"&gt;
-  &lt;span class="yb-badge yb-badge--warning"&gt;Low stock&lt;/span&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--warning&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;
-&lt;span class="amostra"&gt;
-  &lt;span class="yb-badge yb-badge--danger"&gt;Sold out&lt;/span&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--danger&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;</code></pre>
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Badge">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      <label class="codigo__variante">Variante
+        <select data-code-variant>
+          <option value="0">--sale</option>
+          <option value="1">--dark</option>
+          <option value="2">--secondary</option>
+          <option value="3">--soft</option>
+          <option value="4">--success</option>
+          <option value="5">--warning</option>
+          <option value="6">--danger</option>
+          <option value="7">--on-media</option>
+          <option value="8">--sale · Limited</option>
+          <option value="9">--on-dark</option>
+        </select></label>
+      <span class="codigo__conta">10 variantes</span>
     </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-badge yb-badge--sale"&gt;Save 16%&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="1" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-badge yb-badge--dark"&gt;New&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="2" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-badge yb-badge--secondary"&gt;Members only&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="3" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-badge yb-badge--soft"&gt;Best seller&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="4" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-badge yb-badge--success"&gt;In stock&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="5" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-badge yb-badge--warning"&gt;Low stock&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="6" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-badge yb-badge--danger"&gt;Sold out&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="7" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-badge yb-badge--on-media"&gt;New line&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="8" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-badge yb-badge--sale"&gt;Limited&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="9" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-badge yb-badge--on-dark"&gt;10k+ routines created&lt;/span&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-badge{
+  display:inline-flex; align-items:center; gap:var(--yb-space-1);
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; font-weight:var(--yb-font-weight-semibold);
+  padding:var(--yb-space-1) var(--yb-space-2);
+  border-radius:var(--yb-radius-badge); white-space:nowrap;
+}
+.yb-badge--sale{background:var(--yb-accent-signal); color:var(--yb-text-on-action)}
+.yb-badge--secondary{
+  background:var(--yb-action-secondary-bg); color:var(--yb-action-secondary-text);
+  border:var(--yb-border-width-hair) solid var(--yb-action-secondary-border);
+}
+.yb-badge--soft{background:var(--yb-bg-muted); color:var(--yb-text-secondary)}
+.yb-badge--dark{background:var(--yb-bg-inverse); color:var(--yb-text-inverse)}
+.yb-badge--on-media, .yb-badge--accent{background:var(--yb-bg-inverse); color:var(--yb-accent-signal-on-dark)}
+.yb-badge--success{background:var(--yb-success-surface); color:var(--yb-success-text)}
+.yb-badge .yb-icon{--yb-icon-size:var(--yb-icon-sm); margin-block:calc(var(--yb-space-1) * -1)}
+.yb-badge--warning{background:var(--yb-warning-surface); color:var(--yb-warning-text)}
+.yb-badge--danger{background:var(--yb-danger-surface); color:var(--yb-danger-text)}
+.yb-badge--on-dark{background:var(--yb-surface-inverse-raised); color:var(--yb-text-inverse)}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-accent-signal: #CA235F;
+--yb-accent-signal-on-dark: #DC89A7;
+--yb-action-secondary-bg: #FFFFFF;
+--yb-action-secondary-border: #1E1E1F;
+--yb-action-secondary-text: #1E1E1F;
+--yb-bg-inverse: #1E1E1F;
+--yb-bg-muted: #F5F5F5;
+--yb-border-width-hair: 1px;
+--yb-danger-surface: #FBEAE9;
+--yb-danger-text: #B3261E;
+--yb-font-weight-semibold: 600;
+--yb-icon-sm: 16px;
+--yb-radius-badge: 4px;
+--yb-space-1: 0.25rem;
+--yb-space-2: 0.5rem;
+--yb-success-surface: #EAF6EC;
+--yb-success-text: #1F7A34;
+--yb-surface-inverse-raised: #3A3A3C;
+--yb-text-inverse: #FFFFFF;
+--yb-text-on-action: #FFFFFF;
+--yb-text-secondary: #535356;
+--yb-tracking-wider: 0.12em;
+--yb-type-overline-size: 0.6875rem;
+--yb-warning-surface: #FBF3E3;
+--yb-warning-text: #8A5A00;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

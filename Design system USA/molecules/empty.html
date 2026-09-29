@@ -149,19 +149,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -230,21 +217,19 @@
         </div>
       </div>
     </div>
-    <div class="note">
-      <b>A saída não é enfeite — é o motivo do componente existir</b>
+    <details class="note"><summary>A saída não é enfeite — é o motivo do componente existir</summary>
       <p>Ausência sem próximo passo é beco: a pessoa chegou onde não há nada e a
       página não diz para onde ir. Por isso <code>__acoes</code> aparece nos dois
       exemplos. O ícone fica no tom silencioso do texto de apoio, porque quem
       precisa ser lido aqui é a saída, não o buraco.</p>
-    </div>
-    <div class="note">
-      <b>Por que não reaproveitamos o <code>.yb-search__empty</code></b>
+    </details>
+    <details class="note"><summary>Por que não reaproveitamos o <code>.yb-search__empty</code></summary>
       <p>Ele existe desde a busca e continua lá, com o eco do termo digitado
       dentro. É estado vazio de um componente específico; este é o genérico, que
       o 404 de produto e o filtro de avaliações usam. Migrar a busca para cá é
       possível, mas mexeria num fluxo que já funciona — ficou de fora de
       propósito.</p>
-    </div>
+    </details>
 
     <h3 class="row-label">Nos contextos em que aparece</h3>
     <div class="split">
@@ -265,12 +250,11 @@
         </div>
       </div>
     </div>
-    <div class="note">
-      <b>O vazio de busca sugere a correção</b>
+    <details class="note"><summary>O vazio de busca sugere a correção</summary>
       <p>"No results for 'keratine'" repete o que a pessoa digitou e oferece a
       grafia certa. Um vazio que só diz "nenhum resultado" transfere o problema
       de volta para quem já não achou.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -278,12 +262,31 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="yb-empty"&gt;
-  &lt;span class="yb-empty__icon"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;&lt;/span&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Empty state">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-empty"&gt;
+  &lt;span class="yb-empty__icon"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;&lt;/span&gt;
   &lt;p class="yb-empty__title"&gt;No results for “keratine”&lt;/p&gt;
   &lt;p class="yb-empty__text"&gt;Check the spelling, or browse the treatments — the shelf is smaller than the search box suggests.&lt;/p&gt;
   &lt;div class="yb-empty__actions"&gt;
@@ -291,7 +294,59 @@
     &lt;a class="yb-btn yb-btn--secondary" href="#demos"&gt;Talk to us&lt;/a&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-empty{
+  display:flex; flex-direction:column; align-items:center;
+  text-align:center; gap:var(--yb-space-3);
+  padding-block:var(--yb-space-10);
+  color:var(--yb-text-secondary);
+}
+.yb-empty__icon{
+  display:flex; align-items:center; justify-content:center;
+  inline-size:3.5rem; block-size:3.5rem; border-radius:var(--yb-radius-full);
+  background:var(--yb-bg-muted); color:var(--yb-text-muted);
+  margin-block-end:var(--yb-space-1);
+}
+.yb-empty__icon .yb-icon{--yb-icon-size:var(--yb-icon-lg)}
+.yb-empty__title{
+  margin:0; font-size:var(--yb-type-h3-size);
+  font-weight:var(--yb-font-weight-bold);
+  color:var(--yb-text-primary); text-wrap:balance;
+}
+.yb-empty__text{margin:0; max-inline-size:var(--yb-measure-lede)}
+.yb-empty__actions{
+  display:flex; flex-wrap:wrap; gap:var(--yb-space-3);
+  justify-content:center; margin-block-start:var(--yb-space-3);
+}
+.yb-empty--inline{padding-block:var(--yb-space-8)}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-bg-muted: #F5F5F5;
+--yb-font-weight-bold: 700;
+--yb-icon-lg: 24px;
+--yb-measure-lede: 45ch;
+--yb-radius-full: 9999px;
+--yb-space-1: 0.25rem;
+--yb-space-10: 2.5rem;
+--yb-space-3: 0.75rem;
+--yb-space-8: 2rem;
+--yb-text-muted: #6D6D71;
+--yb-text-primary: #1E1E1F;
+--yb-text-secondary: #535356;
+--yb-type-h3-size: 1.5rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

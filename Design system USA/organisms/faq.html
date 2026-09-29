@@ -150,19 +150,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -239,8 +226,7 @@
         </div>
       </div>
     </div>
-    <div class="note">
-      <b>O bloco se titula sozinho</b>
+    <details class="note"><summary>O bloco se titula sozinho</summary>
       <p><code>.yb-faq__head</code> atravessa as duas colunas e carrega título e lede.
       Antes o título vinha de um <code>.yb-block</code> da <b>página</b>, um degrau
       acima: funcionava na loja e quebrava aqui, porque ficha de bloco não carrega a
@@ -249,7 +235,7 @@
       <p>O <b>nível</b> do título continua sendo de quem monta: <code>&lt;h1&gt;</code>
       na tela de FAQ, <code>&lt;h2&gt;</code> aqui e em qualquer página que já tenha o
       seu. O bloco dá o lugar e o ritmo, não o nível.</p>
-    </div>
+    </details>
     <h3 class="row-label">Curto &mdash; o recorte da home</h3>
     <div class="stage stage--pad">
       <div class="yb-faq yb-faq--short">
@@ -267,17 +253,15 @@
         </div>
       </div>
     </div>
-    <div class="note">
-      <b>Dois recortes, uma fonte</b>
+    <details class="note"><summary>Dois recortes, uma fonte</summary>
       <p>A home leva <b>quatro</b> perguntas — prazo, frete, devolução e formol, as que
       travam a compra; a tela cheia leva as treze. As duas leem a mesma lista: a
       pergunta da home é marcada no dado, não copiada para uma segunda lista que
       envelheceria sozinha.</p>
       <p>No recorte curto a coluna deixa de ser índice e vira apoio — com quatro
       perguntas, o índice seria mais longo que a lista que indexa.</p>
-    </div>
-    <div class="note">
-      <b>O índice não é enfeite</b>
+    </details>
+    <details class="note"><summary>O índice não é enfeite</summary>
       <p>A resposta mora dentro de um acordeão <b>fechado</b>, e acordeão fechado não
       aparece no Ctrl+F. O índice é o único lugar em que os assuntos aparecem todos de
       uma vez.</p>
@@ -286,7 +270,7 @@
       sticky</b>: preso numa tela de 812px, comeria a primeira resposta.</p>
       <p><b>O conteúdo é transcrito das políticas publicadas pela loja.</b> FAQ
       inventado parece compromisso e vira reclamação no suporte.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -294,19 +278,38 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="yb-faq"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de FAQ">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-faq"&gt;
   &lt;div class="yb-faq__head"&gt;
     &lt;h2&gt;Frequently asked questions&lt;/h2&gt;
     &lt;p class="yb-faq__lede"&gt;Shipping, returns and the products themselves.
     What is not here, our team answers by email.&lt;/p&gt;
   &lt;/div&gt;
   &lt;ul class="yb-faq__index" aria-label="FAQ topics"&gt;
-    &lt;li&gt;&lt;a class="yb-link" href="#faq-demo-envio"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;Shipping &amp;amp; delivery&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a class="yb-link" href="#faq-demo-devolucao"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;Returns &amp;amp; refunds&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="yb-link" href="#faq-demo-envio"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;Shipping &amp;amp; delivery&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="yb-link" href="#faq-demo-devolucao"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;Returns &amp;amp; refunds&lt;/a&gt;&lt;/li&gt;
   &lt;/ul&gt;
   &lt;div class="yb-faq__groups"&gt;
     &lt;section class="yb-faq__group" id="faq-demo-envio"&gt;
@@ -327,7 +330,85 @@
     &lt;/section&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-faq{
+  display:grid; gap:var(--yb-space-10);
+  grid-template-columns:minmax(0, 14rem) minmax(0, 1fr);
+  align-items:start;
+}
+.yb-faq &gt; .yb-faq__head{grid-column:1 / -1}
+.yb-faq &gt; .yb-faq__head &gt; :first-child{margin-block-start:0}
+.yb-faq__head .yb-faq__lede{
+  margin-block:var(--yb-space-3) 0; max-inline-size:var(--yb-measure-lede);
+  font-size:var(--yb-type-body-lg-size); line-height:var(--yb-line-height-relaxed);
+  color:var(--yb-text-secondary);
+}
+.yb-faq--short{
+  grid-template-columns:minmax(0, 20rem) minmax(0, 1fr);
+  grid-template-areas:"titulo ." "apoio perguntas";
+  column-gap:var(--yb-space-10);
+  row-gap:var(--yb-space-4);
+}
+.yb-faq--short &gt; .yb-faq__head{grid-area:titulo; margin-block-end:0}
+.yb-faq__support{grid-area:apoio}
+.yb-faq--short &gt; .yb-accordion{grid-area:perguntas}
+.yb-faq__support .yb-btn{margin-block-start:var(--yb-space-6)}
+.yb-faq__support &gt; .yb-block__lede{margin-block-start:0}
+.yb-faq--short &gt; .yb-accordion{margin-block-start:calc(var(--yb-space-6) * -1)}
+.yb-faq__index{
+  position:sticky; inset-block-start:calc(var(--yb-chrome-h) + var(--yb-space-4));
+  margin:0; padding:0; list-style:none;
+}
+.yb-faq__index li{border-block-start:var(--yb-border-hairline) solid var(--yb-border-subtle)}
+.yb-faq__index li:last-child{border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle)}
+.yb-faq__index .yb-link{display:flex; inline-size:100%}
+.yb-faq__groups{min-inline-size:0}
+.yb-faq__group + .yb-faq__group{margin-block-start:var(--yb-space-10)}
+.yb-faq__title{
+  margin:0 0 var(--yb-space-3);
+  font-size:var(--yb-type-h4-size); font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-secondary);
+}
+.yb-faq__group{scroll-margin-block-start:calc(var(--yb-chrome-h) + var(--yb-space-6))}
+@media (max-width:860px){
+  .yb-faq{grid-template-columns:1fr; gap:var(--yb-space-6)}
+  .yb-faq--short{grid-template-areas:"titulo" "apoio" "perguntas"}
+  .yb-faq--short &gt; .yb-accordion{margin-block-start:0}
+  .yb-faq__index{
+    position:static; display:flex; flex-wrap:wrap;
+    gap:0 var(--yb-space-5);
+  }
+  .yb-faq__index li{border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle)}
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-border-hairline: 1px;
+--yb-border-subtle: #EAEAEA;
+--yb-chrome-h: calc(var(--yb-target-min) + var(--yb-space-4) * 2 + 1px);
+--yb-font-weight-semibold: 600;
+--yb-line-height-relaxed: 1.55;
+--yb-measure-lede: 45ch;
+--yb-space-10: 2.5rem;
+--yb-space-3: 0.75rem;
+--yb-space-4: 1rem;
+--yb-space-5: 1.25rem;
+--yb-space-6: 1.5rem;
+--yb-text-secondary: #535356;
+--yb-type-body-lg-size: 1.125rem;
+--yb-type-h4-size: 1.25rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

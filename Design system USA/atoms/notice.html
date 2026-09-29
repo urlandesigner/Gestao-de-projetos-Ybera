@@ -148,19 +148,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -218,12 +205,11 @@
     <div class="demo demo--rail">
       <div class="yb-notice yb-notice--soft">Orders placed after Dec 20 ship in <b>January</b></div>
     </div>
-    <div class="note">
-      <b>Por que não é parte do header</b>
+    <details class="note"><summary>Por que não é parte do header</summary>
       <p>Era <code>.yb-header__announce</code>, e o header trazia uma cópia da mesma
       receita. Enquanto a faixa for parte do header só cabe uma — e a loja usa duas.
       Solta, o header usa uma e a página usa outra; o padrão só a posiciona.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -231,12 +217,97 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="yb-notice"&gt;Free shipping on orders over &lt;b&gt;$50&lt;/b&gt;&lt;/div&gt;</code></pre>
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Notice">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
     </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-notice"&gt;Free shipping on orders over &lt;b&gt;$50&lt;/b&gt;&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-notice{
+  display:block;
+  padding:var(--yb-space-2) var(--yb-page-gutter);
+  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  font-size:var(--yb-type-caption-size); letter-spacing:var(--yb-tracking-wide);
+  text-align:center;
+}
+.yb-notice b{color:var(--yb-accent-on-dark); font-weight:var(--yb-font-weight-semibold)}
+.yb-notice a{
+  color:inherit; text-decoration:underline;
+  text-underline-offset:2px;
+  transition:text-decoration-thickness var(--yb-transition-control);
+}
+@media (hover:hover){
+  .yb-notice a:hover{text-decoration-thickness:2px;}
+}
+.yb-notice a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-text-inverse);
+  outline-offset:var(--yb-focus-offset); border-radius:var(--yb-radius-sm);
+}
+.yb-notice--soft a:focus-visible{outline-color:var(--yb-focus-color);}
+.yb-notice--action{background:var(--yb-action-primary-bg); color:var(--yb-action-primary-text)}
+.yb-notice--action b{color:var(--yb-action-primary-text)}
+.yb-notice--soft{
+  background:var(--yb-bg-muted); color:var(--yb-text-secondary);
+  border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);
+}
+.yb-notice--soft b{color:var(--yb-text-primary)}
+@media (forced-colors: active){
+  .yb-notice{border-block-end:var(--yb-border-hairline) solid;}
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-accent-on-dark: #D29F3E;
+--yb-action-primary-bg: #1E1E1F;
+--yb-action-primary-text: #FFFFFF;
+--yb-bg-inverse: #1E1E1F;
+--yb-bg-muted: #F5F5F5;
+--yb-border-hairline: 1px;
+--yb-border-subtle: #EAEAEA;
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-font-weight-semibold: 600;
+--yb-page-gutter: 1rem;
+--yb-radius-sm: 4px;
+--yb-space-2: 0.5rem;
+--yb-text-inverse: #FFFFFF;
+--yb-text-primary: #1E1E1F;
+--yb-text-secondary: #535356;
+--yb-tracking-wide: 0.04em;
+--yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
+--yb-type-caption-size: 0.8125rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

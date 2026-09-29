@@ -9,6 +9,16 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 [GOVERNANCA.md](GOVERNANCA.md), componente novo pede versão **menor** (0.13.0).
 
 ### Mudado
+- **Notas das fichas recolhidas.** As 197 caixas azuis de "por quê" viraram
+  `<details>` fechado: uma faixa azul-clara de 44px, com o "i", o título no azul
+  de informação e a seta no fim. O texto abre no clique, dentro da mesma faixa,
+  ao lado da variante de que fala. Na ficha do Button isso tira
+  800px de rolagem. A fonte continua escrevendo `<div class="note">`, e o
+  gerador converte (`recolherNotas`).
+- **Sem o índice "Nesta página"** nas fichas de componentes e blocos. Desde
+  que a ficha virou abas, ele apontava para seções que não existiam mais como
+  âncora ("Mobile", "De que é feita", "Marcação"). Saíram o `<aside>` e o CSS
+  dele, e a coluna que ele reservava à direita volta para o conteúdo.
 - **Nomes em inglês, sem exceção no que o sistema publica.** 69 nomes em
   português foram renomeados, sem apelido:
   - **Classes:** `--arte` → `--art`, `__topo` → `__top`, `--vazio` → `--empty`,
@@ -58,6 +68,22 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   destaque".
 
 ### Adicionado
+- **Aba Código em toda ficha**, a segunda depois de Componente, com HTML · CSS ·
+  JS · Tokens e copiar em cada uma, no lugar da antiga "Marcação" que ficava no
+  fim da primeira aba. Abre direto por `#codigo`.
+  - **HTML:** sai por variante, escolhida num seletor (o Button tem 20). Vem sem
+    o cromo da galeria (`amostra`, `amostra__rotulo`, o `split` da doc), e o
+    sprite aponta para `ybera-icons.svg`, como no pacote.
+  - **CSS:** é lido da folha regra por regra, com @media, @supports e as
+    @keyframes que a peça usa.
+  - **JS:** diz o que carregar e por quais `data-yb-*` a peça liga. Só aparece
+    quando ela precisa de script.
+  - **Tokens:** a lista em CSS, com o valor resolvido de cada um.
+  - A prévia continua mostrando todas as variantes lado a lado.
+- **Pacote para baixar** (`dist/ybera-design-system.zip`, 155 KB), gerado pelo
+  build: os CSS, o JS, o sprite e a folha de ícones, o JSON de tokens, a ponte
+  do tema e um README com a ordem de carregar. O link "Baixar pacote" fica na
+  barra do código. O zip só muda quando o conteúdo muda.
 
 - **`.yb-field__box--on-dark` — o campo sobre fundo escuro, agora como variante
   documentada.** Ela já existia na prática e estava escondida: o campo do rodapé

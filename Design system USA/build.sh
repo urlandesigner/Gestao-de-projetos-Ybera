@@ -30,6 +30,44 @@ cp behavior/ybera-behavior.js dist/ybera-components.js
 # derivado, para quem nao le CSS — Figma Variables, Style Dictionary, tema
 # nativo. Sem esta linha o JSON ficaria para tras do CSS sem ninguem ver.
 node tools/tokens-to-json.mjs > /dev/null || exit 1
+# O PACOTE — o que a loja precisa para usar o sistema, num arquivo so: os dois
+# CSS, o JS, o sprite e a folha de icones, os tokens em JSON e a ponte do tema.
+# E o "Baixar pacote" das fichas. Baixar o CSS de UM componente nao serviria:
+# ele nao funciona sem os tokens e a base. Data fixa nos membros para o zip so
+# mudar quando o conteudo mudar — sem isso cada build sujava o git.
+python3 - <<'PY' || exit 1
+import zipfile
+MEMBROS = [
+    ('dist/ybera-tokens.css', 'ybera-tokens.css'),
+    ('dist/ybera-components.css', 'ybera-components.css'),
+    ('dist/ybera-components.js', 'ybera-components.js'),
+    ('icons/ybera-icons.css', 'ybera-icons.css'),
+    ('icons/ybera-icons.svg', 'ybera-icons.svg'),
+    ('dist/ybera-tokens.json', 'ybera-tokens.json'),
+    ('dist/ybera-bridge.css', 'ybera-bridge.css'),
+]
+LEIA = b'''Ybera Design System
+
+Load, in this order:
+  <link rel="stylesheet" href="ybera-tokens.css">
+  <link rel="stylesheet" href="ybera-components.css">
+  <link rel="stylesheet" href="ybera-icons.css">
+  <script src="ybera-components.js" defer></script>
+
+Icons: <svg class="yb-icon"><use href="ybera-icons.svg#yb-cart"/></svg>
+ybera-tokens.json: the same tokens in W3C Design Tokens format.
+ybera-bridge.css: only for the current Shopify theme.
+'''
+with zipfile.ZipFile('dist/ybera-design-system.zip', 'w', zipfile.ZIP_DEFLATED) as z:
+    def por(nome, dados):
+        i = zipfile.ZipInfo(nome, (1980, 1, 1, 0, 0, 0))
+        i.compress_type = zipfile.ZIP_DEFLATED
+        i.external_attr = 0o644 << 16
+        z.writestr(i, dados)
+    por('README.txt', LEIA)
+    for origem, nome in MEMBROS:
+        por(nome, open(origem, 'rb').read())
+PY
 # A matriz de completude tambem e derivada. Escrita a mao ela vira o artefato
 # que mais apodrece num design system: a tabela continua dizendo "documentado"
 # depois que a doc parou de mostrar o componente.

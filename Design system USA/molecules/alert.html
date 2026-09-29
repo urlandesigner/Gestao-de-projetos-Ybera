@@ -149,19 +149,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -223,8 +210,7 @@
     <div class="demo demo--stack">
       <div class="yb-alert yb-alert--info" role="status"><svg class="yb-icon yb-alert__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-info"/></svg><div class="yb-alert__body"><b class="yb-alert__title">Free shipping</b><p>Add $12.10 more to qualify for free standard shipping.</p></div><button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss free shipping"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div>
     </div>
-    <div class="note">
-      <b>Um ícone por variante, e não um para todas</b>
+    <details class="note"><summary>Um ícone por variante, e não um para todas</summary>
       <p>A barra colorida da esquerda saiu e o ícone entrou no lugar. A barra dizia
       a severidade só pela cor, e cor sozinha não informa (WCAG 1.4.1): quem não
       distingue âmbar de vermelho via dois retângulos iguais.</p>
@@ -232,21 +218,19 @@
       diferentes — triângulo e círculo com X. São justamente os dois que se
       confundem; dar o mesmo ícone aos dois devolveria a cor como única
       diferença, que é de onde viemos.</p>
-    </div>
-    <div class="note">
-      <b>Fechar remove, não esconde</b>
+    </details>
+    <details class="note"><summary>Fechar remove, não esconde</summary>
       <p>O botão apaga o alerta do DOM. Um nó escondido que sobra continua sendo
       lido por quem navega por marcos — e o alerta some porque a pessoa leu e
       resolveu, não porque deixou de importar.</p>
       <p>O alvo tem os 44px da casa, entregues por margem negativa: o controle
       não infla a altura do alerta, a caixa cresce para fora.</p>
-    </div>
-    <div class="note">
-      <b>role="alert" só no que interrompe</b>
+    </details>
+    <details class="note"><summary>role="alert" só no que interrompe</summary>
       <p>O de erro usa <code>role="alert"</code> e interrompe o leitor de tela na hora.
       Os outros usam <code>role="status"</code> e esperam a pausa. Usar
       <code>alert</code> em tudo transforma o leitor de tela em ruído.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -254,12 +238,112 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="yb-alert yb-alert--success" role="status"&gt;&lt;svg class="yb-icon yb-alert__icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;&lt;div class="yb-alert__body"&gt;&lt;b class="yb-alert__title"&gt;Order confirmed&lt;/b&gt;&lt;p&gt;We sent the tracking number to you@example.com.&lt;/p&gt;&lt;/div&gt;&lt;button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss order confirmed"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;&lt;/button&gt;&lt;/div&gt;</code></pre>
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Alert">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
     </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-alert yb-alert--success" role="status"&gt;&lt;svg class="yb-icon yb-alert__icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;&lt;div class="yb-alert__body"&gt;&lt;b class="yb-alert__title"&gt;Order confirmed&lt;/b&gt;&lt;p&gt;We sent the tracking number to you@example.com.&lt;/p&gt;&lt;/div&gt;&lt;button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss order confirmed"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;&lt;/button&gt;&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-alert{
+  display:flex; gap:var(--yb-space-3); padding:var(--yb-space-4) var(--yb-space-5);
+  border-radius:var(--yb-radius-card);
+  font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-relaxed);
+}
+.yb-alert__icon{flex:none; margin-block-start:.1em}
+.yb-alert__body{flex:1; min-width:0}
+.yb-alert__title{
+  display:block; font-weight:var(--yb-font-weight-semibold);
+  margin-block-end:var(--yb-space-1);
+}
+.yb-alert__close{
+  color:inherit; border-radius:var(--yb-radius-sm); line-height:var(--yb-line-height-none);
+  margin:calc(var(--yb-space-3) * -1) calc(var(--yb-space-3) * -1)
+  calc(var(--yb-space-3) * -1) 0;
+  transition:color var(--yb-transition-control);
+}
+@media (hover:hover){
+  .yb-alert__close:hover:not([disabled]){color:var(--yb-text-primary); background:transparent}
+}
+.yb-alert__close:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:calc(var(--yb-focus-offset) * -1);
+}
+.yb-alert--success{background:var(--yb-success-surface); border-color:var(--yb-success-solid); color:var(--yb-success-text)}
+.yb-alert--warning{background:var(--yb-warning-surface); border-color:var(--yb-warning-solid); color:var(--yb-warning-text)}
+.yb-alert--danger{background:var(--yb-danger-surface);  border-color:var(--yb-danger-solid);  color:var(--yb-danger-text)}
+.yb-alert--info{background:var(--yb-info-surface);    border-color:var(--yb-info-solid);    color:var(--yb-info-text)}
+.yb-alert p{margin:0; color:var(--yb-text-secondary)}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;!-- uma vez por pagina, antes de &lt;/body&gt; --&gt;
+&lt;script src="ybera-components.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- esta peca liga por: data-yb-dispensar --&gt;
+
+&lt;!-- conteudo que chega depois (secao carregada por JS do tema): --&gt;
+&lt;script&gt;Ybera.init(secao);&lt;/script&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-danger-solid: #B3261E;
+--yb-danger-surface: #FBEAE9;
+--yb-danger-text: #B3261E;
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-font-weight-semibold: 600;
+--yb-info-solid: #1B5FA8;
+--yb-info-surface: #E9F1FA;
+--yb-info-text: #1B5FA8;
+--yb-line-height-none: 1;
+--yb-line-height-relaxed: 1.55;
+--yb-radius-card: 8px;
+--yb-radius-sm: 4px;
+--yb-space-1: 0.25rem;
+--yb-space-3: 0.75rem;
+--yb-space-4: 1rem;
+--yb-space-5: 1.25rem;
+--yb-success-solid: #1F7A34;
+--yb-success-surface: #EAF6EC;
+--yb-success-text: #1F7A34;
+--yb-text-primary: #1E1E1F;
+--yb-text-secondary: #535356;
+--yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
+--yb-type-body-sm-size: 0.875rem;
+--yb-warning-solid: #8A5A00;
+--yb-warning-surface: #FBF3E3;
+--yb-warning-text: #8A5A00;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">
@@ -295,7 +379,7 @@
     <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-alert--danger</code> <code>.yb-alert--info</code> <code>.yb-alert--success</code> <code>.yb-alert--warning</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-alert__body</code> <code>.yb-alert__close</code> <code>.yb-alert__icon</code> <code>.yb-alert__title</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
     <p class="rotulo">Tokens <span class="rotulo-conta">28</span></p>
     <div class="tokens">
       <div class="tokens__grupo">

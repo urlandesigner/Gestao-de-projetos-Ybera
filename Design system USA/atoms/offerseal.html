@@ -148,19 +148,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -250,25 +237,22 @@
         <span class="amostra__rotulo"><code>6rem · 96px</code></span>
       </span>
     </div>
-    <div class="note">
-      <b>Sobre foto, só o escuro se sustenta</b>
+    <details class="note"><summary>Sobre foto, só o escuro se sustenta</summary>
       <p>Medido nos packshots reais do catálogo, com o selo no canto onde ele
       moraria: <code>--accent</code> dá <b>14,0:1</b> contra a imagem,
       <code>--sale</code> dá <b>3,3:1</b> e o branco testado no estudo dava
       <b>1,2:1</b> — sumia. Fundo claro deixa de isolar o conteúdo e quem passa a
       decidir a leitura é uma foto que ninguém controla. Sobre superfície lisa
       qualquer uma das três serve.</p>
-    </div>
-    <div class="note">
-      <b>A estrela é <code>clip-path</code>, não imagem</b>
+    </details>
+    <details class="note"><summary>A estrela é <code>clip-path</code>, não imagem</summary>
       <p>Vinte pontas recortadas em porcentagem, então o mesmo selo serve 56px no
       cartão e 96px na PDP sem virar outro arquivo e sem custar uma requisição.
       Os 40 vértices são gerados por fórmula, não desenhados — há checagem que
       recusa vértice editado à mão. Onde <code>clip-path</code> não existir, o
       <code>border-radius</code> embaixo degrada para círculo em vez de quadrado.</p>
-    </div>
-    <div class="note">
-      <b>Por que não é uma variante do badge</b>
+    </details>
+    <details class="note"><summary>Por que não é uma variante do badge</summary>
       <p>Medido: de 10 declarações do <code>.yb-badge</code>, o selo <b>redeclara 7</b>
       &mdash; display, padding, raio, tamanho, peso, tracking e caixa &mdash; e
       acrescenta 8 que o badge não tem. Herdaria três: <code>align-items</code> e
@@ -276,23 +260,21 @@
       <code>white-space:nowrap</code>, irrelevante porque cada texto é um item de grid.
       Herança efetiva: <b>zero</b>. Variante que reescreve a base inteira não é
       variante.</p>
-    </div>
-    <div class="note">
-      <b>E ele tem anatomia própria</b>
+    </details>
+    <details class="note"><summary>E ele tem anatomia própria</summary>
       <p>É a régua da casa para separar componente de arranjo. O selo tem
       <code>__value</code> e <code>__label</code>; o badge é um elemento com texto
       dentro. Os dois fazem trabalhos diferentes &mdash; o badge rotula de lado, o selo
       interrompe sobre a foto &mdash; e o selo tem tamanho paramétrico: 56px no cartão,
       96px na PDP.</p>
-    </div>
-    <div class="note">
-      <b>Não empilha com o badge que diz a mesma coisa</b>
+    </details>
+    <details class="note"><summary>Não empilha com o badge que diz a mesma coisa</summary>
       <p>Se o cartão já traz <code>.yb-badge--sale</code> com “Save 28%”, o selo
       repete a informação e rouba a foto duas vezes. Escolha um. E cuidado com a
       arte de campanha: várias fotos do catálogo <b>já têm</b> um selo estrelado
       desenhado dentro delas — ali o nosso compete com o da imagem, não com o
       fundo.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -300,25 +282,127 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;span class="amostra"&gt;
-  &lt;span class="yb-offerseal yb-offerseal--sale"&gt;
-    &lt;b class="yb-offerseal__value"&gt;28%&lt;/b&gt;
-    &lt;span class="yb-offerseal__label"&gt;off&lt;/span&gt;
-  &lt;/span&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--sale&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;
-&lt;span class="amostra"&gt;
-  &lt;span class="yb-offerseal yb-offerseal--accent"&gt;
-    &lt;b class="yb-offerseal__value"&gt;Free&lt;/b&gt;
-    &lt;span class="yb-offerseal__label"&gt;gift&lt;/span&gt;
-  &lt;/span&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--accent&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;</code></pre>
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Offer seal">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      <label class="codigo__variante">Variante
+        <select data-code-variant>
+          <option value="0">--sale</option>
+          <option value="1">--accent</option>
+          <option value="2">3.5rem · 56px</option>
+          <option value="3">padrão · 64px</option>
+          <option value="4">5rem · 80px</option>
+          <option value="5">6rem · 96px</option>
+        </select></label>
+      <span class="codigo__conta">6 variantes</span>
     </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-offerseal yb-offerseal--sale"&gt;
+  &lt;b class="yb-offerseal__value"&gt;28%&lt;/b&gt;
+  &lt;span class="yb-offerseal__label"&gt;off&lt;/span&gt;
+&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="1" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-offerseal yb-offerseal--accent"&gt;
+  &lt;b class="yb-offerseal__value"&gt;Free&lt;/b&gt;
+  &lt;span class="yb-offerseal__label"&gt;gift&lt;/span&gt;
+&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="2" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-offerseal yb-offerseal--accent" style="--yb-offerseal-size:3.5rem"&gt;
+  &lt;b class="yb-offerseal__value"&gt;28%&lt;/b&gt;&lt;span class="yb-offerseal__label"&gt;off&lt;/span&gt;
+&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="3" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-offerseal yb-offerseal--accent"&gt;
+  &lt;b class="yb-offerseal__value"&gt;28%&lt;/b&gt;&lt;span class="yb-offerseal__label"&gt;off&lt;/span&gt;
+&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="4" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-offerseal yb-offerseal--accent" style="--yb-offerseal-size:5rem"&gt;
+  &lt;b class="yb-offerseal__value"&gt;28%&lt;/b&gt;&lt;span class="yb-offerseal__label"&gt;off&lt;/span&gt;
+&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="5" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-offerseal yb-offerseal--accent" style="--yb-offerseal-size:6rem"&gt;
+  &lt;b class="yb-offerseal__value"&gt;28%&lt;/b&gt;&lt;span class="yb-offerseal__label"&gt;off&lt;/span&gt;
+&lt;/span&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-offerseal{
+  --yb-offerseal-size:4rem;
+  inline-size:var(--yb-offerseal-size); block-size:var(--yb-offerseal-size);
+  display:grid; align-content:center; justify-items:center; text-align:center;
+  line-height:var(--yb-line-height-tight);
+  padding:calc(var(--yb-offerseal-size) / 10);
+  border-radius:50%;
+  clip-path:polygon(
+  50.00% 0.00%, 57.04% 5.55%, 65.45% 2.45%, 70.43% 9.90%, 79.39% 9.55%,
+  81.82% 18.18%, 90.45% 20.61%, 90.10% 29.57%, 97.55% 34.55%,
+  94.45% 42.96%, 100.00% 50.00%, 94.45% 57.04%, 97.55% 65.45%,
+  90.10% 70.43%, 90.45% 79.39%, 81.82% 81.82%, 79.39% 90.45%,
+  70.43% 90.10%, 65.45% 97.55%, 57.04% 94.45%, 50.00% 100.00%,
+  42.96% 94.45%, 34.55% 97.55%, 29.57% 90.10%, 20.61% 90.45%,
+  18.18% 81.82%, 9.55% 79.39%, 9.90% 70.43%, 2.45% 65.45%, 5.55% 57.04%,
+  0.00% 50.00%, 5.55% 42.96%, 2.45% 34.55%, 9.90% 29.57%, 9.55% 20.61%,
+  18.18% 18.18%, 20.61% 9.55%, 29.57% 9.90%, 34.55% 2.45%, 42.96% 5.55%);
+  font-size:var(--yb-type-caption-size);
+  font-weight:var(--yb-font-weight-bold);
+  text-transform:uppercase; letter-spacing:var(--yb-tracking-wide);
+}
+.yb-offerseal__value{
+  display:block; max-inline-size:100%; overflow:hidden; text-overflow:ellipsis;
+  font-size:calc(var(--yb-offerseal-size) / 4.2); line-height:var(--yb-line-height-none);
+}
+.yb-offerseal__label{display:block; max-inline-size:100%}
+.yb-offerseal--sale{background:var(--yb-accent-signal); color:var(--yb-text-on-action)}
+.yb-offerseal--accent{background:var(--yb-bg-inverse); color:var(--yb-accent-on-dark)}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-accent-on-dark: #D29F3E;
+--yb-accent-signal: #CA235F;
+--yb-bg-inverse: #1E1E1F;
+--yb-font-weight-bold: 700;
+--yb-line-height-none: 1;
+--yb-line-height-tight: 1.05;
+--yb-offerseal-size;
+--yb-text-on-action: #FFFFFF;
+--yb-tracking-wide: 0.04em;
+--yb-type-caption-size: 0.8125rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

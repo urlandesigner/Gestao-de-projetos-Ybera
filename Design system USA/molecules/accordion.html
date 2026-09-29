@@ -149,19 +149,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -214,12 +201,11 @@
         <details name="demo-accordion"><summary>Shipping &amp; returns</summary><div class="yb-accordion__body"><p>Free standard shipping over $50. Returns within 30 days, unopened.</p></div></details>
       </div>
     </div>
-    <div class="note">
-      <b>É <code>&lt;details&gt;</code> nativo</b>
+    <details class="note"><summary>É <code>&lt;details&gt;</code> nativo</summary>
       <p>Sem JavaScript. Teclado, leitor de tela e busca do navegador funcionam de
       graça — inclusive Ctrl+F encontrando texto dentro de seção fechada nos
       navegadores que suportam.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -227,16 +213,104 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="yb-accordion"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Accordion">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-accordion"&gt;
   &lt;details name="demo-accordion" open&gt;&lt;summary&gt;How to use&lt;/summary&gt;&lt;div class="yb-accordion__body"&gt;&lt;p&gt;Wash with a clarifying shampoo and towel-dry. Apply from mid-length to ends, avoiding the scalp. Leave for 20 minutes, then blow-dry and flat-iron in thin sections.&lt;/p&gt;&lt;/div&gt;&lt;/details&gt;
   &lt;details name="demo-accordion"&gt;&lt;summary&gt;Ingredients&lt;/summary&gt;&lt;div class="yb-accordion__body"&gt;&lt;p&gt;Aqua, Cetearyl Alcohol, Hydrolyzed Keratin, Behentrimonium Chloride, Glycerin, Argania Spinosa Kernel Oil, Panthenol.&lt;/p&gt;&lt;/div&gt;&lt;/details&gt;
   &lt;details name="demo-accordion"&gt;&lt;summary&gt;Shipping &amp;amp; returns&lt;/summary&gt;&lt;div class="yb-accordion__body"&gt;&lt;p&gt;Free standard shipping over $50. Returns within 30 days, unopened.&lt;/p&gt;&lt;/div&gt;&lt;/details&gt;
 &lt;/div&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-accordion details{border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle)}
+.yb-accordion summary{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:var(--yb-space-4) 0; cursor:pointer; list-style:none;
+  font-size:var(--yb-type-body-size); font-weight:var(--yb-font-weight-medium);
+  min-height:var(--yb-target-min); color:var(--yb-text-primary);
+}
+.yb-accordion summary::-webkit-details-marker{display:none}
+.yb-accordion summary::after{
+  content:"+"; color:var(--yb-text-muted); font-size:var(--yb-type-h4-size);
+  font-weight:var(--yb-font-weight-regular); line-height:var(--yb-line-height-none);
+}
+.yb-accordion details[open] summary::after{content:"–"}
+@media (hover:hover){
+  .yb-accordion summary:hover::after{color:var(--yb-text-primary)}
+}
+.yb-accordion summary:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-accordion{interpolate-size:allow-keywords;}
+.yb-accordion details::details-content{
+  block-size:0; overflow:hidden;
+  transition:block-size var(--yb-transition-surface),
+  content-visibility var(--yb-transition-surface);
+  transition-behavior:allow-discrete;
+}
+.yb-accordion details[open]::details-content{block-size:auto;}
+.yb-accordion__body{padding-block-end:var(--yb-space-4)}
+.yb-accordion__body p{
+  margin:0; font-size:var(--yb-type-body-sm-size);
+  line-height:var(--yb-line-height-relaxed);
+  color:var(--yb-text-secondary); max-width:var(--yb-measure-prose);
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-border-hairline: 1px;
+--yb-border-subtle: #EAEAEA;
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-font-weight-medium: 500;
+--yb-font-weight-regular: 400;
+--yb-line-height-none: 1;
+--yb-line-height-relaxed: 1.55;
+--yb-measure-prose: 65ch;
+--yb-space-4: 1rem;
+--yb-space-6: 1.5rem;
+--yb-target-min: 44px;
+--yb-text-muted: #6D6D71;
+--yb-text-primary: #1E1E1F;
+--yb-text-secondary: #535356;
+--yb-transition-surface: 180ms cubic-bezier(.2, 0, 0, 1);
+--yb-type-body-size: 1rem;
+--yb-type-body-sm-size: 0.875rem;
+--yb-type-h4-size: 1.25rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

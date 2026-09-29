@@ -149,19 +149,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -220,8 +207,7 @@
         </div>
       </a>
     </div>
-    <div class="note">
-      <b>Uma aparência só para o banner com texto</b>
+    <details class="note"><summary>Uma aparência só para o banner com texto</summary>
       <p>O texto branco precisa de fundo escuro atrás. O blur resolve desfocando a
       foto e escurecendo pouco (65%); o véu sozinho resolvia escurecendo muito
       (77%) e apagava a metade de baixo da foto. Por isso o banner com texto é
@@ -229,7 +215,7 @@
       <code>__blur</code>. O véu cheio não é opção: é o plano B automático, que a
       folha aplica sozinha em navegador sem desfoque e para quem pediu menos
       transparência.</p>
-    </div>
+    </details>
     <h3 class="row-label">Tipo arte — <code>--arte</code></h3>
     <div class="stage">
       <a class="yb-bannerhero yb-bannerhero--art" href="#demos">
@@ -240,8 +226,7 @@
         </picture>
       </a>
     </div>
-    <div class="note">
-      <b>Dois tipos: texto em HTML ou texto na imagem</b>
+    <details class="note"><summary>Dois tipos: texto em HTML ou texto na imagem</summary>
       <p><b>Com texto e CTA</b> é uma foto só: o texto é HTML, reflui em qualquer
       largura, e a foto aguenta o corte. <b>Arte</b> é a peça pronta do marketing,
       com o texto desenhado no pixel, e chega em <b>duas imagens</b> — 16:5 para a
@@ -251,9 +236,8 @@
       desfocada dela mesma (<code>__fundo</code>). Sem corpo e sem véu: o
       <code>alt</code> repete a promessa, porque é o único lugar em que busca e
       leitor de tela a alcançam.</p>
-    </div>
-    <div class="note">
-      <b>O blur é aparência, não legibilidade</b>
+    </details>
+    <details class="note"><summary>O blur é aparência, não legibilidade</summary>
       <p>Medido nas três fotos do hero: o véu de <b>.65</b> passa <b>com ou sem</b> o
       blur — 7,75:1 com, 6,98:1 sem. Baixá-lo para .45 contando com o desfoque
       reprovava em duas delas, porque borrar quase-branco continua quase-branco. Use
@@ -261,19 +245,17 @@
       <p>São três folhas empilhadas porque <code>backdrop-filter</code> não tem
       meio-termo: mascarar uma só dissolve o borrado sobre o nítido e deixa aresta —
       a nitidez caía 17,6 para 0,5 em um pixel; empilhadas, o degrau máximo é 0,64.</p>
-    </div>
-    <div class="note">
-      <b>O véu não é enfeite</b>
+    </details>
+    <details class="note"><summary>O véu não é enfeite</summary>
       <p>Contraste sobre foto não se mede — a foto muda. O gradiente
       <code>--yb-scrim-strong</code> garante o piso de leitura embaixo, onde o texto fica,
       sem escurecer a imagem inteira.</p>
-    </div>
-    <div class="note">
-      <b>Na home, em carrossel</b>
+    </details>
+    <details class="note"><summary>Na home, em carrossel</summary>
       <p>No topo da home os slides formam o bloco <a href="../organisms/hero.html">Hero</a>:
       vários Banners hero num <a href="track.html">Track</a>, um por tela, com as
       setas. As setas são do bloco, não do banner.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -281,11 +263,30 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;a class="yb-bannerhero yb-bannerhero--blur" href="#demos"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Banner hero">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;a class="yb-bannerhero yb-bannerhero--blur" href="#demos"&gt;
   &lt;img src="../pages/img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp" alt=""&gt;
   &lt;div class="yb-bannerhero__blur" aria-hidden="true"&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;/div&gt;
   &lt;div class="yb-bannerhero__body"&gt;
@@ -295,7 +296,213 @@
     &lt;span class="yb-btn yb-btn--on-dark"&gt;Shop best sellers&lt;/span&gt;
   &lt;/div&gt;
 &lt;/a&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-bannerhero{
+  position:relative; display:flex; align-items:flex-end;
+  overflow:hidden; isolation:isolate;
+  text-decoration:none;
+  background:var(--yb-bg-inverse);
+}
+.yb-bannerhero{
+  border-radius:0;
+  aspect-ratio:var(--yb-aspect-campaign);
+  min-block-size:20rem;
+  inline-size:100%;
+}
+@media (max-width:767.98px){
+  .yb-bannerhero{aspect-ratio:var(--yb-aspect-campaign-mobile);}
+}
+.yb-bannerhero .yb-bannerhero__body{padding-inline:calc(max(0px, (100% - var(--yb-container-max)) / 2) + var(--yb-page-gutter));}
+.yb-bannerhero img, .yb-bannermedia img{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; z-index:-1;
+}
+.yb-bannerhero--art{background:var(--yb-surface-sunken);}
+.yb-bannerhero--art img{object-fit:contain;}
+.yb-bannerhero--art .yb-bannerhero__backdrop{
+  object-fit:cover; z-index:-2;
+  filter:blur(var(--yb-blur-lg)); transform:scale(1.15);
+}
+@media (min-width:1366px){
+  .yb-bannerhero--art img{object-fit:cover;}
+  .yb-bannerhero--art .yb-bannerhero__backdrop{display:none;}
+}
+@media (max-width:767.98px){
+  .yb-bannerhero--art img{object-fit:cover;}
+  .yb-bannerhero--art .yb-bannerhero__backdrop{display:none;}
+}
+.yb-bannerhero::before, .yb-bannermedia::before{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:var(--yb-scrim-soft);
+}
+.yb-bannerhero:not(:has(.yb-bannerhero__body))::before, .yb-bannermedia:not(:has(.yb-bannermedia__body))::before{background:none;}
+@media (hover:hover){
+  .yb-bannerhero:hover .yb-btn--on-dark, .yb-bannermedia:hover .yb-btn--on-dark{background:var(--yb-surface-sunken);}
+}
+.yb-bannerhero__body, .yb-bannermedia__body{
+  position:relative; display:flex; flex-direction:column; gap:var(--yb-space-3);
+  align-items:flex-start;
+  inline-size:100%;
+  padding:var(--yb-space-8) var(--yb-space-8) var(--yb-space-10);
+  color:var(--yb-text-inverse);
+}
+.yb-bannerhero{--yb-veil-fall:clamp(3rem, 46vw - 16rem, 17rem);}
+@media (min-width:360px){
+  .yb-bannerhero{--yb-veil-fall:clamp(3.5rem, 46vw - 16rem, 17rem);}
+}
+.yb-bannerhero__body::before, .yb-bannermedia__body::before{
+  content:""; position:absolute; z-index:-1;
+  inset:calc(var(--yb-veil-fall) * -1) 0 0;
+  background:linear-gradient(to bottom,
+  var(--yb-scrim-none)    0,
+  var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
+  var(--yb-scrim-curve-2) calc(var(--yb-veil-fall) * .5),
+  var(--yb-scrim-curve-3) calc(var(--yb-veil-fall) * .75),
+  var(--yb-scrim-full)    var(--yb-veil-fall));
+}
+.yb-bannerhero__body &gt; *, .yb-bannermedia__body &gt; *{max-inline-size:var(--yb-measure-lede);}
+.yb-bannerhero--blur{
+  --yb-blur-band:clamp(8rem, 30vw, 16rem);
+  --yb-blur-radius:2rem;
+  --yb-blur-reach:calc(max(0px, (100% - var(--yb-container-max)) / 2)
+  + var(--yb-page-gutter) + 42rem);
+  --yb-blur-falloff:12rem;
+}
+.yb-bannerhero__blur, .yb-bannermedia__blur, .yb-offercard__blur, .yb-collection__blur{
+  position:absolute; inset-inline:0; inset-block-end:0; z-index:0;
+  block-size:var(--yb-blur-band); pointer-events:none;
+  color:var(--yb-bg-inverse);
+}
+.yb-bannerhero__blur &gt; i, .yb-bannermedia__blur &gt; i, .yb-offercard__blur &gt; i, .yb-collection__blur &gt; i{
+  position:absolute; inset:0; display:block;
+  -webkit-backdrop-filter:blur(calc(var(--yb-blur-radius) * var(--yb-blur-f)));
+  backdrop-filter:blur(calc(var(--yb-blur-radius) * var(--yb-blur-f)));
+  -webkit-mask-image:
+  linear-gradient(to top,
+  currentColor calc(var(--yb-blur-from) * 100% / 3), transparent calc(var(--yb-blur-to) * 100% / 3)),
+  linear-gradient(to right,
+  currentColor var(--yb-blur-reach, 100%),
+  transparent calc(var(--yb-blur-reach, 100%) + var(--yb-blur-falloff, 12rem)));
+  mask-image:
+  linear-gradient(to top,
+  currentColor calc(var(--yb-blur-from) * 100% / 3), transparent calc(var(--yb-blur-to) * 100% / 3)),
+  linear-gradient(to right,
+  currentColor var(--yb-blur-reach, 100%),
+  transparent calc(var(--yb-blur-reach, 100%) + var(--yb-blur-falloff, 12rem)));
+  -webkit-mask-composite:source-in;
+  mask-composite:intersect;
+}
+.yb-bannerhero__blur &gt; i:nth-child(1), .yb-bannermedia__blur &gt; i:nth-child(1), .yb-offercard__blur   &gt; i:nth-child(1), .yb-collection__blur  &gt; i:nth-child(1){--yb-blur-f:1;   --yb-blur-from:0; --yb-blur-to:1;}
+.yb-bannerhero__blur &gt; i:nth-child(2), .yb-bannermedia__blur &gt; i:nth-child(2), .yb-offercard__blur   &gt; i:nth-child(2), .yb-collection__blur  &gt; i:nth-child(2){--yb-blur-f:.5;  --yb-blur-from:1; --yb-blur-to:2;}
+.yb-bannerhero__blur &gt; i:nth-child(3), .yb-bannermedia__blur &gt; i:nth-child(3), .yb-offercard__blur   &gt; i:nth-child(3), .yb-collection__blur  &gt; i:nth-child(3){--yb-blur-f:.25; --yb-blur-from:2; --yb-blur-to:3;}
+.yb-bannerhero--blur .yb-bannerhero__body::before, .yb-bannermedia--blur .yb-bannermedia__body::before{
+  background:linear-gradient(to bottom,
+  var(--yb-scrim-none)         0,
+  var(--yb-scrim-lite-curve-1) calc(var(--yb-veil-fall) * .25),
+  var(--yb-scrim-lite-curve-2) calc(var(--yb-veil-fall) * .5),
+  var(--yb-scrim-lite-curve-3) calc(var(--yb-veil-fall) * .75),
+  var(--yb-scrim-lite)         var(--yb-veil-fall));
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .yb-bannerhero__blur, .yb-bannermedia__blur, .yb-offercard__blur, .yb-collection__blur{display:none;}
+  .yb-bannerhero--blur .yb-bannerhero__body::before, .yb-bannermedia--blur .yb-bannermedia__body::before, .yb-collection--blur.yb-collection--overlay::after{
+    background:linear-gradient(to bottom,
+    var(--yb-scrim-none)    0,
+    var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
+    var(--yb-scrim-curve-2) calc(var(--yb-veil-fall) * .5),
+    var(--yb-scrim-curve-3) calc(var(--yb-veil-fall) * .75),
+    var(--yb-scrim-full)    var(--yb-veil-fall));
+  }
+}
+@media (prefers-reduced-transparency:reduce){
+  .yb-bannerhero__blur, .yb-bannermedia__blur, .yb-offercard__blur, .yb-collection__blur{display:none;}
+  .yb-bannerhero--blur .yb-bannerhero__body::before, .yb-bannermedia--blur .yb-bannermedia__body::before, .yb-collection--blur.yb-collection--overlay::after{
+    background:linear-gradient(to bottom,
+    var(--yb-scrim-none)    0,
+    var(--yb-scrim-curve-1) calc(var(--yb-veil-fall) * .25),
+    var(--yb-scrim-curve-2) calc(var(--yb-veil-fall) * .5),
+    var(--yb-scrim-curve-3) calc(var(--yb-veil-fall) * .75),
+    var(--yb-scrim-full)    var(--yb-veil-fall));
+  }
+}
+.yb-bannerhero__eyebrow, .yb-bannermedia__eyebrow{
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; color:var(--yb-accent-on-media);
+  font-weight:var(--yb-font-weight-semibold);
+}
+.yb-bannerhero__title, .yb-bannermedia__title{
+  margin:0; font-size:var(--yb-type-h2-size); line-height:var(--yb-type-h2-line);
+  letter-spacing:var(--yb-type-h2-track); font-weight:var(--yb-type-h2-weight);
+  text-wrap:balance;
+}
+.yb-bannerhero__text, .yb-bannermedia__text{margin:0; font-size:var(--yb-type-body-size); color:var(--yb-text-secondary-inverse)}
+.yb-bannerhero:focus-visible, .yb-bannermedia:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+@media (max-width:520px){
+  .yb-bannerhero__body, .yb-bannermedia__body{padding:var(--yb-space-5) var(--yb-page-gutter) var(--yb-space-6)}
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-accent-on-media: #ECE0CA;
+--yb-aspect-campaign: 16 / 5;
+--yb-aspect-campaign-mobile: 2 / 3;
+--yb-bg-inverse: #1E1E1F;
+--yb-blur-band;
+--yb-blur-f;
+--yb-blur-falloff;
+--yb-blur-from;
+--yb-blur-lg: 24px;
+--yb-blur-radius;
+--yb-blur-reach;
+--yb-blur-to;
+--yb-container-max: 1200px;
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-font-weight-semibold: 600;
+--yb-measure-lede: 45ch;
+--yb-page-gutter: 1rem;
+--yb-scrim-curve-1: rgba(30, 30, 31, .12);
+--yb-scrim-curve-2: rgba(30, 30, 31, .385);
+--yb-scrim-curve-3: rgba(30, 30, 31, .65);
+--yb-scrim-full: rgba(30, 30, 31, .77);
+--yb-scrim-lite: rgba(30, 30, 31, .65);
+--yb-scrim-lite-curve-1: rgba(30, 30, 31, .101);
+--yb-scrim-lite-curve-2: rgba(30, 30, 31, .325);
+--yb-scrim-lite-curve-3: rgba(30, 30, 31, .549);
+--yb-scrim-none: rgba(30, 30, 31, 0);
+--yb-scrim-soft: rgba(30, 30, 31, .18);
+--yb-space-10: 2.5rem;
+--yb-space-3: 0.75rem;
+--yb-space-5: 1.25rem;
+--yb-space-6: 1.5rem;
+--yb-space-8: 2rem;
+--yb-surface-sunken: #FAFAFA;
+--yb-text-inverse: #FFFFFF;
+--yb-text-secondary-inverse: #DADADB;
+--yb-tracking-wider: 0.12em;
+--yb-type-body-size: 1rem;
+--yb-type-h2-line: 1.15;
+--yb-type-h2-size: 2rem;
+--yb-type-h2-track: -0.025em;
+--yb-type-h2-weight: 700;
+--yb-type-overline-size: 0.6875rem;
+--yb-veil-fall;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

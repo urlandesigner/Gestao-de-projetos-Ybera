@@ -149,19 +149,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -246,8 +233,7 @@
         <input type="radio" name="dk" id="dk4" disabled><label for="dk4">Chemically Treated</label>
       </div>
     </div>
-    <div class="note">
-      <b>A borda do chip escuro é medida</b>
+    <details class="note"><summary>A borda do chip escuro é medida</summary>
       <p><code>--yb-border-inverse</code> mede <b>1.47:1</b> contra o painel: divide
       bloco, não diz que algo é clicável — a WCAG 1.4.11 quer 3:1 na fronteira de um
       controle. <code>--yb-border-inverse-strong</code> (<b>3.23:1</b>) é o degrau mais
@@ -255,7 +241,7 @@
       <p>O escolhido <b>inverte para fundo claro</b> em vez de só trocar a borda: sobre
       escuro, duas bordas cinzas não se distinguem de relance — e qual está escolhida é
       a informação mais importante da fileira.</p>
-    </div>
+    </details>
 
     <h3 class="row-label">Variant <code>--cards</code> — quando a escolha muda o frasco</h3>
     <div class="demo demo--rail">
@@ -284,28 +270,25 @@
         </label>
       </div>
     </div>
-    <div class="note">
-      <b>Duas divergências deliberadas da loja</b>
+    <details class="note"><summary>Duas divergências deliberadas da loja</summary>
       <p>Ela aplica <code>opacity:.6</code> no cartão esgotado inteiro, o que derruba o
       texto abaixo do piso de contraste — aqui só a <b>foto</b> desbota, e quem diz
       "esgotado" é a palavra. E ela pinta “Sold out” com o magenta, que neste
       sistema é cor de <b>ação</b>; estado negativo usa cor de estado.</p>
-    </div>
-    <div class="note">
-      <b>O esgotado continua clicável — <code>data-yb-soldout</code>, não <code>disabled</code></b>
+    </details>
+    <details class="note"><summary>O esgotado continua clicável — <code>data-yb-soldout</code>, não <code>disabled</code></summary>
       <p>Era <code>disabled</code>: o tamanho sem estoque aparecia e não podia ser
       alcançado. Só que chegar nele é o único caminho para o aviso de volta ao
       estoque — desabilitar tirava do cliente a única coisa que ele ainda podia
       pedir. <code>disabled</code> segue valendo para o outro caso, o de opção que a
       página de fato impede; os dois se parecem porque os dois estão fora de
       alcance por motivo diferente.</p>
-    </div>
-    <div class="note">
-      <b>O rótulo ecoa a escolha sem depender de JavaScript</b>
+    </details>
+    <details class="note"><summary>O rótulo ecoa a escolha sem depender de JavaScript</summary>
       <p>“Size: <b>750g</b>” já nasce correto no HTML, com o valor de quem está
       <code>checked</code>. O script só mantém o eco em dia quando a pessoa troca —
       a página nunca mente, nem sem ele.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -313,17 +296,195 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="yb-swatches"&gt;
-  &lt;input type="radio" name="sz" id="z1" checked&gt;&lt;label for="z1"&gt;500g / 17.6 fl.oz&lt;/label&gt;
-  &lt;input type="radio" name="sz" id="z2"&gt;&lt;label for="z2"&gt;300g / 10.5 fl.oz&lt;/label&gt;
-  &lt;input type="radio" name="sz" id="z3"&gt;&lt;label for="z3"&gt;1kg / 33 oz&lt;/label&gt;
-  &lt;input type="radio" name="sz" id="z4" disabled&gt;&lt;label for="z4"&gt;250g&lt;/label&gt;
-&lt;/div&gt;</code></pre>
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Variant picker">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      <label class="codigo__variante">Variante
+        <select data-code-variant>
+          <option value="0">padrão</option>
+          <option value="1">:checked</option>
+          <option value="2">[disabled]</option>
+        </select></label>
+      <span class="codigo__conta">3 variantes</span>
     </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-swatches"&gt;
+  &lt;input type="radio" name="st1" id="st1"&gt;&lt;label for="st1"&gt;500g&lt;/label&gt;
+&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="1" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-swatches"&gt;
+  &lt;input type="radio" name="st2" id="st2" checked&gt;&lt;label for="st2"&gt;500g&lt;/label&gt;
+&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="2" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-swatches"&gt;
+  &lt;input type="radio" name="st3" id="st3" disabled&gt;&lt;label for="st3"&gt;500g&lt;/label&gt;
+&lt;/span&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-swatches{display:flex; gap:var(--yb-space-2); flex-wrap:wrap}
+.yb-swatches input{position:absolute; opacity:0; pointer-events:none}
+.yb-swatches label{
+  box-sizing:border-box;
+  min-width:var(--yb-target-min);
+  display:flex; align-items:center; justify-content:center;
+  border:var(--yb-border-hairline) solid var(--yb-border); border-radius:var(--yb-radius-control);
+  padding:var(--yb-space-3) var(--yb-space-4); cursor:pointer;
+  font-size:var(--yb-type-body-sm-size); min-height:var(--yb-target-min);
+  background:var(--yb-surface); color:var(--yb-text-primary);
+  transition:border-color var(--yb-transition-control), background var(--yb-transition-control);
+}
+@media (hover:hover){
+  .yb-swatches label:hover{border-color:var(--yb-border-strong)}
+}
+.yb-swatches input:checked + label{
+  border-color:var(--yb-text-primary); background:var(--yb-bg-muted);
+  font-weight:var(--yb-font-weight-medium);
+}
+.yb-swatches input:focus-visible + label{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-swatches input:disabled + label{
+  color:var(--yb-text-muted); cursor:not-allowed;
+  background:var(--yb-bg-subtle); text-decoration:line-through;
+}
+.yb-swatches--on-dark label{
+  background:var(--yb-surface-inverse-raised);
+  color:var(--yb-text-inverse);
+  border-color:var(--yb-border-inverse-strong);
+  min-height:var(--yb-control-height-compact);
+  padding-block:var(--yb-space-2);
+  position:relative;
+}
+.yb-swatches--on-dark label::after{
+  content:""; position:absolute; inset-inline:0;
+  block-size:var(--yb-target-min);
+  inset-block-start:50%; transform:translateY(-50%);
+}
+@media (hover:hover){
+  .yb-swatches--on-dark label:hover{border-color:var(--yb-text-muted-inverse)}
+}
+.yb-swatches--on-dark input:checked + label{
+  background:var(--yb-text-inverse);
+  color:var(--yb-bg-inverse);
+  border-color:var(--yb-text-inverse);
+}
+.yb-swatches--on-dark input:focus-visible + label{outline-color:var(--yb-text-inverse)}
+.yb-swatches--on-dark input:disabled + label{
+  background:transparent; color:var(--yb-text-muted-inverse);
+  border-color:var(--yb-border-inverse);
+}
+.yb-swatches--cards label{
+  flex-direction:column; align-items:stretch; justify-content:flex-start;
+  gap:var(--yb-space-1); text-align:start;
+  inline-size:8.25rem;
+  padding:var(--yb-space-3); min-height:0;
+}
+.yb-swatches--cards label img{
+  inline-size:100%; aspect-ratio:var(--yb-aspect-product); object-fit:cover; display:block;
+  border-radius:var(--yb-radius-sm); margin-block-end:var(--yb-space-1);
+  background:var(--yb-surface-sunken);
+  transition:opacity var(--yb-transition-control);
+}
+.yb-swatches__name{font-weight:var(--yb-font-weight-bold);}
+.yb-swatches__price{font-variant-numeric:tabular-nums;}
+.yb-swatches__stock{
+  font-size:var(--yb-type-caption-size);
+  font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-success-text);
+}
+.yb-swatches--cards input:checked + label{
+  border-width:var(--yb-border-emphasis);
+  padding:calc(var(--yb-space-3) - (var(--yb-border-emphasis) - var(--yb-border-hairline)));
+  background:var(--yb-surface);
+}
+.yb-swatches--cards input:is(:disabled,[data-yb-soldout]) + label{
+  text-decoration:none;
+  background:var(--yb-surface);
+}
+.yb-swatches--cards input:is(:disabled,[data-yb-soldout]) + label img{opacity:var(--yb-opacity-control-disabled);}
+.yb-swatches--cards input:is(:disabled,[data-yb-soldout]) + label .yb-swatches__name, .yb-swatches--cards input:is(:disabled,[data-yb-soldout]) + label .yb-swatches__price{text-decoration:line-through; color:var(--yb-text-muted);}
+.yb-swatches--cards input:is(:disabled,[data-yb-soldout]) + label .yb-swatches__stock{color:var(--yb-danger-text);}
+@media (max-width:520px){
+  .yb-swatches--cards{
+    flex-wrap:nowrap; overflow-x:auto; scroll-snap-type:x mandatory;
+    scrollbar-width:none; padding-block-end:var(--yb-space-1);
+  }
+  .yb-swatches--cards::-webkit-scrollbar{display:none;}
+  .yb-swatches--cards label{scroll-snap-align:start; flex:none;}
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-aspect-product: 1 / 1;
+--yb-bg-inverse: #1E1E1F;
+--yb-bg-muted: #F5F5F5;
+--yb-bg-subtle: #FAFAFA;
+--yb-border: #DADADB;
+--yb-border-emphasis: 2px;
+--yb-border-hairline: 1px;
+--yb-border-inverse: #3A3A3C;
+--yb-border-inverse-strong: #6D6D71;
+--yb-border-strong: #B1B1B4;
+--yb-control-height-compact: 36px;
+--yb-danger-text: #B3261E;
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-font-weight-bold: 700;
+--yb-font-weight-medium: 500;
+--yb-font-weight-semibold: 600;
+--yb-opacity-control-disabled: .45;
+--yb-radius-control: 8px;
+--yb-radius-sm: 4px;
+--yb-space-1: 0.25rem;
+--yb-space-2: 0.5rem;
+--yb-space-3: 0.75rem;
+--yb-space-4: 1rem;
+--yb-success-text: #1F7A34;
+--yb-surface: #FFFFFF;
+--yb-surface-inverse-raised: #3A3A3C;
+--yb-surface-sunken: #FAFAFA;
+--yb-target-min: 44px;
+--yb-text-inverse: #FFFFFF;
+--yb-text-muted: #6D6D71;
+--yb-text-muted-inverse: #B1B1B4;
+--yb-text-primary: #1E1E1F;
+--yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
+--yb-type-body-sm-size: 0.875rem;
+--yb-type-caption-size: 0.8125rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

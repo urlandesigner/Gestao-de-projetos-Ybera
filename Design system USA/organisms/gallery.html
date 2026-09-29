@@ -150,19 +150,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -232,12 +219,11 @@
         </div>
       </div>
     </div>
-    <div class="note">
-      <b>Sem JS ela ainda troca</b>
+    <details class="note"><summary>Sem JS ela ainda troca</summary>
       <p>O <code>:checked</code> do radio já muda o slide via CSS. O JS só
       sincroniza o contador e o estado <code>data-active</code>. Se o script falhar,
       a galeria continua navegável — inclusive por teclado.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -245,11 +231,30 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="yb-gallery" data-yb-gallery style="max-width:380px"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Gallery">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-gallery" data-yb-gallery style="max-width:380px"&gt;
   &lt;div class="yb-gallery__stage"&gt;
     &lt;div class="yb-gallery__slide" data-active="true" style="background:var(--yb-bg-muted)"&gt;&lt;/div&gt;
     &lt;div class="yb-gallery__slide" style="background:var(--yb-info-surface)"&gt;&lt;/div&gt;
@@ -266,7 +271,98 @@
     &lt;input type="radio" name="gal" id="g5"&gt;&lt;label for="g5" title="Image 5"&gt;&lt;/label&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-gallery{display:flex; flex-direction:column; gap:var(--yb-space-3); min-width:0}
+.yb-gallery__stage{
+  position:relative; aspect-ratio:var(--yb-aspect-product); overflow:hidden;
+  background:var(--yb-surface-sunken); border:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-media);
+}
+.yb-gallery__slide{
+  position:absolute; inset:0; display:flex; align-items:center;
+  justify-content:center; opacity:0; visibility:hidden;
+  transition:opacity var(--yb-transition-surface);
+}
+.yb-gallery__slide[data-active="true"]{opacity:1; visibility:visible}
+.yb-gallery__slide img{width:100%; height:100%; object-fit:cover}
+.yb-gallery__count{
+  position:absolute; inset-block-end:var(--yb-space-3);
+  inset-inline-end:var(--yb-space-3);
+  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wide);
+  padding:var(--yb-space-1) var(--yb-space-2); border-radius:var(--yb-radius-badge);
+  font-variant-numeric:tabular-nums;
+}
+@media (min-width:768px){
+  .yb-gallery__count{
+    position:absolute; inline-size:1px; block-size:1px;
+    overflow:hidden; clip-path:inset(50%); white-space:nowrap;
+    padding:0; margin:-1px;
+  }
+}
+.yb-gallery__thumbs{display:grid; grid-template-columns:repeat(5,1fr); gap:var(--yb-space-2)}
+.yb-gallery__thumbs input{position:absolute; opacity:0; pointer-events:none}
+.yb-gallery__thumbs label{
+  display:block; aspect-ratio:var(--yb-aspect-product); cursor:pointer; overflow:hidden;
+  background:var(--yb-surface-sunken); border:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-sm);
+  transition:border-color var(--yb-transition-control);
+}
+@media (hover:hover){
+  .yb-gallery__thumbs label:hover{border-color:var(--yb-border-strong)}
+}
+.yb-gallery__thumbs input:checked + label{border-color:var(--yb-text-primary); border-width:var(--yb-border-emphasis);}
+.yb-gallery__thumbs input:focus-visible + label{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-gallery__thumbs label img{width:100%; height:100%; object-fit:cover; display:block;}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;!-- uma vez por pagina, antes de &lt;/body&gt; --&gt;
+&lt;script src="ybera-components.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- esta peca liga por: data-yb-gallery --&gt;
+
+&lt;!-- conteudo que chega depois (secao carregada por JS do tema): --&gt;
+&lt;script&gt;Ybera.init(secao);&lt;/script&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-aspect-product: 1 / 1;
+--yb-bg-inverse: #1E1E1F;
+--yb-border-emphasis: 2px;
+--yb-border-hairline: 1px;
+--yb-border-strong: #B1B1B4;
+--yb-border-subtle: #EAEAEA;
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-radius-badge: 4px;
+--yb-radius-media: 8px;
+--yb-radius-sm: 4px;
+--yb-space-1: 0.25rem;
+--yb-space-2: 0.5rem;
+--yb-space-3: 0.75rem;
+--yb-surface-sunken: #FAFAFA;
+--yb-text-inverse: #FFFFFF;
+--yb-text-primary: #1E1E1F;
+--yb-tracking-wide: 0.04em;
+--yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
+--yb-transition-surface: 180ms cubic-bezier(.2, 0, 0, 1);
+--yb-type-overline-size: 0.6875rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

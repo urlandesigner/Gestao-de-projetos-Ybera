@@ -150,19 +150,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -221,18 +208,16 @@
         </div>
       </div>
     </div>
-    <div class="note">
-      <b>As aspas ficam no texto, não em <code>::before</code></b>
+    <details class="note"><summary>As aspas ficam no texto, não em <code>::before</code></summary>
       <p>Assim quem copia a frase leva a pontuação junto, e o leitor de tela lê a
       citação inteira — conteúdo gerado por CSS nem todo software anuncia. A frase
       usa display-2 porque aqui ela é o conteúdo, não apoio de outra coisa.</p>
-    </div>
-    <div class="note">
-      <b>A ação é secundária ao que foi dito</b>
+    </details>
+    <details class="note"><summary>A ação é secundária ao que foi dito</summary>
       <p><code>.yb-quote__action</code> vem depois de um filete, separada da
       assinatura. Colada no <code>cite</code>, a citação passa a parecer anúncio —
       e a frase perde a autoridade que justificava o espaço que ela ocupa.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -240,11 +225,30 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="yb-quote"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Brand quote">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-quote"&gt;
   &lt;div class="yb-quote__body"&gt;
     &lt;blockquote class="yb-quote__text"&gt;&amp;ldquo;I believe every woman deserves to transform her hair, her confidence and her future with the power of beauty in her own hands.&amp;rdquo;&lt;/blockquote&gt;
     &lt;cite class="yb-quote__author"&gt;Sauana Alves — Co-founder, Ybera Paris&lt;/cite&gt;
@@ -256,7 +260,75 @@
     &lt;img src="../pages/img/02sauana-2896ea7c.webp" alt="Sauana Alves, co-fundadora da Ybera Paris, de blazer branco" loading="lazy"&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-quote{
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:var(--yb-space-16); align-items:stretch;
+}
+.yb-quote__body{align-self:center; min-width:0;}
+@media (max-width:860px){
+  .yb-quote{grid-template-columns:1fr; gap:var(--yb-space-8);}
+  .yb-quote__media{aspect-ratio:var(--yb-aspect-portrait); block-size:auto; min-block-size:0;}
+}
+.yb-quote__text{
+  margin:0 0 var(--yb-space-6);
+  font-size:var(--yb-type-h1-size);
+  line-height:var(--yb-type-h1-line);
+  letter-spacing:var(--yb-type-h1-track);
+  font-weight:var(--yb-type-h1-weight);
+  color:var(--yb-text-primary);
+  text-wrap:balance;
+}
+@media (max-width:860px){
+  .yb-quote__text{font-size:var(--yb-type-h2-size);}
+}
+.yb-quote__author{
+  display:block; font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-primary);
+  font-style:normal;
+}
+.yb-quote__action{
+  margin-block-start:var(--yb-space-6); padding-block-start:var(--yb-space-6);
+  border-block-start:var(--yb-border-hairline) solid var(--yb-border-subtle);
+}
+.yb-quote__media{
+  aspect-ratio:auto; block-size:100%;
+  min-block-size:22rem;
+  overflow:hidden; border-radius:var(--yb-radius-media);
+  background:var(--yb-surface-sunken);
+}
+.yb-quote__media img{width:100%; height:100%; object-fit:cover; display:block;}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-aspect-portrait: 4 / 5;
+--yb-border-hairline: 1px;
+--yb-border-subtle: #EAEAEA;
+--yb-font-weight-semibold: 600;
+--yb-radius-media: 8px;
+--yb-space-16: 4rem;
+--yb-space-6: 1.5rem;
+--yb-space-8: 2rem;
+--yb-surface-sunken: #FAFAFA;
+--yb-text-primary: #1E1E1F;
+--yb-type-body-sm-size: 0.875rem;
+--yb-type-h1-line: 1.15;
+--yb-type-h1-size: clamp(2rem, 1.60rem + 2.00vw, 2.5rem);
+--yb-type-h1-track: -0.025em;
+--yb-type-h1-weight: 700;
+--yb-type-h2-size: 2rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

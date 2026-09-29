@@ -148,19 +148,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -231,18 +218,16 @@
         <span class="yb-field__error" id="ta3e">Tell us a little about how it worked for you.</span>
       </div>
     </div>
-    <div class="note">
-      <b>Redimensiona só na vertical</b>
+    <details class="note"><summary>Redimensiona só na vertical</summary>
       <p><code>resize:vertical</code>: a pessoa pode pedir mais linhas, mas não alarga o
       campo para fora da coluna. Dentro da caixa nasce com 72px, porque o rótulo já
       ocupa o topo; solto, com 96px.</p>
-    </div>
-    <div class="note">
-      <b>O rótulo sobe para o topo, não para o meio</b>
+    </details>
+    <details class="note"><summary>O rótulo sobe para o topo, não para o meio</summary>
       <p>No Input o rótulo descansa no centro da caixa; aqui ele descansa na primeira
       linha, que é onde a pessoa vai começar a escrever. Mesmo mecanismo, sem JS:
       <code>placeholder=" "</code> e <code>:placeholder-shown</code>.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -250,18 +235,110 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="yb-field"&gt;
-  &lt;div class="yb-field__box"&gt;
-    &lt;textarea class="yb-textarea" id="ta1" placeholder=" "&gt;&lt;/textarea&gt;
-    &lt;label class="yb-field__label" for="ta1"&gt;Gift note&lt;/label&gt;
-  &lt;/div&gt;
-  &lt;span class="yb-field__hint"&gt;Printed on the packing slip, up to 200 characters.&lt;/span&gt;
-&lt;/div&gt;</code></pre>
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Textarea">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
     </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;textarea class="yb-textarea" id="ta1" placeholder=" "&gt;&lt;/textarea&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-input,.yb-select,.yb-textarea{
+  width:100%; font-family:inherit; font-size:var(--yb-type-body-size);
+  color:var(--yb-text-primary); background:var(--yb-surface);
+  border:var(--yb-border-hairline) solid var(--yb-border); border-radius:var(--yb-radius-control);
+  padding:var(--yb-space-3) var(--yb-space-4); min-height:var(--yb-control-h);
+  transition:border-color var(--yb-transition-control);
+}
+.yb-textarea{min-height:96px; resize:vertical; line-height:var(--yb-line-height-relaxed)}
+.yb-input::placeholder,.yb-textarea::placeholder{color:var(--yb-text-muted)}
+@media (hover:hover){
+  .yb-input:hover,.yb-select:hover,.yb-textarea:hover{border-color:var(--yb-border-strong)}
+}
+.yb-input:focus-visible,.yb-select:focus-visible,.yb-textarea:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset); border-color:var(--yb-text-primary);
+}
+.yb-input[disabled],.yb-select[disabled],.yb-textarea[disabled]{background:var(--yb-bg-subtle); color:var(--yb-text-disabled); cursor:not-allowed;}
+.yb-input[aria-invalid="true"],.yb-select[aria-invalid="true"],.yb-textarea[aria-invalid="true"]{
+  border-color:var(--yb-danger-solid);
+  box-shadow:inset 0 0 0 var(--yb-border-hairline) var(--yb-danger-solid);
+  padding-inline-end:var(--yb-space-10);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B3261E' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4.2 2.8 20h18.4Z'/%3E%3Cpath d='M12 10v4'/%3E%3Cpath d='M12 17.2v.1' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right var(--yb-space-3) center;
+  background-size:var(--yb-icon-md) var(--yb-icon-md);
+}
+.yb-field__box &gt; :is(.yb-input,.yb-select,.yb-textarea){
+  border:0; background:transparent; padding:0; min-height:0;
+  border-radius:0; flex:1; min-inline-size:0;
+}
+.yb-field__box &gt; :is(.yb-input,.yb-select,.yb-textarea):focus-visible{outline:0}
+.yb-field__box:has(&gt; .yb-textarea){align-items:flex-start}
+.yb-field__box &gt; .yb-textarea:placeholder-shown:not(:focus) ~ .yb-field__label{inset-block-start:calc(var(--yb-space-3) + .55em);}
+.yb-field__box--on-dark &gt; :is(.yb-input,.yb-select,.yb-textarea){color:var(--yb-text-inverse)}
+.yb-field__box--on-dark &gt; :is(.yb-input,.yb-textarea)::placeholder{color:var(--yb-text-muted-inverse)}
+.yb-field__box &gt; .yb-textarea{min-height:72px}
+@media (hover:hover){
+  .yb-field__box &gt; :is(.yb-input,.yb-select,.yb-textarea):hover{border-color:transparent}
+}
+.yb-field__box &gt; :is(.yb-input,.yb-select,.yb-textarea)[disabled]{background:transparent}
+.yb-field__box &gt; :is(.yb-input,.yb-select,.yb-textarea)[aria-invalid="true"]{box-shadow:none; background-image:none; padding-inline-end:0;}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-bg-subtle: #FAFAFA;
+--yb-border: #DADADB;
+--yb-border-hairline: 1px;
+--yb-border-strong: #B1B1B4;
+--yb-control-h: calc(var(--yb-space-4) * 2 + 1rem + 2px);
+--yb-danger-solid: #B3261E;
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-icon-md: 20px;
+--yb-line-height-relaxed: 1.55;
+--yb-radius-control: 8px;
+--yb-space-10: 2.5rem;
+--yb-space-3: 0.75rem;
+--yb-space-4: 1rem;
+--yb-surface: #FFFFFF;
+--yb-text-disabled: #B1B1B4;
+--yb-text-inverse: #FFFFFF;
+--yb-text-muted: #6D6D71;
+--yb-text-muted-inverse: #B1B1B4;
+--yb-text-primary: #1E1E1F;
+--yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
+--yb-type-body-size: 1rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

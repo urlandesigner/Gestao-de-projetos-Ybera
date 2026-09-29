@@ -150,19 +150,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -412,8 +399,7 @@
             </ul>
     </div>
 
-    <div class="note">
-      <b>Uma árvore, dois aparelhos</b>
+    <details class="note"><summary>Uma árvore, dois aparelhos</summary>
       <p>A barra do desktop e a gaveta do celular são a <b>mesma</b> lista. A loja hoje
       escreve as duas, 25 links repetidos &mdash; no dia em que uma coleção for
       renomeada, só uma das cópias muda. Aqui o que troca é CSS: abaixo de 900px a
@@ -421,9 +407,8 @@
       <p>A gaveta em si não é desta peça. Quem desliza, quem escurece o fundo e quem
       guarda o estado aberto é <code>.yb-header__nav</code>: o gatilho mora na barra, e
       um menu não abre a si mesmo.</p>
-    </div>
-    <div class="note">
-      <b>A conta muda de casa, não de peça</b>
+    </details>
+    <details class="note"><summary>A conta muda de casa, não de peça</summary>
       <p>No desktop quem identifica é o <code>.yb-header__account</code>, com
       <a href="../atoms/avatar.html">Avatar</a> e <a href="../molecules/dropdown.html">Dropdown</a>.
       Na gaveta é a faixa <code>.yb-nav__account</code> &mdash; o único bloco com fundo e o
@@ -432,14 +417,13 @@
       <p>Deslogado ela traz ícone e <b>Welcome, Visitor</b>; logado, a inicial e o
       primeiro nome. As duas versões aparecem <b>abaixo de 900px</b>: no desktop a faixa
       é <code>display:none</code>, então é no quadro de 375px que se lê a diferença.</p>
-    </div>
-    <div class="note">
-      <b>O gatilho é <code>label</code>, não <code>span</code></b>
+    </details>
+    <details class="note"><summary>O gatilho é <code>label</code>, não <code>span</code></summary>
       <p>Na loja o item que abre o painel é um <code>&lt;span&gt;</code>, e
       <code>span</code> não recebe foco: hoje o menu Shop é inalcançável pelo teclado.
       Aqui é <code>checkbox</code> + <code>label</code> &mdash; abre no clique, no foco e,
       onde há mouse, no hover. Custa um input escondido por item e nenhum JS.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="duo">
@@ -455,17 +439,35 @@
       </figure>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;nav aria-label="Main"&gt;
-&lt;ul class="yb-nav"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Nav">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;ul class="yb-nav"&gt;
         &lt;li class="yb-nav__item"&gt;&lt;a class="yb-nav__link" href="#demos"&gt;Home&lt;/a&gt;&lt;/li&gt;
         &lt;li class="yb-nav__item"&gt;
           &lt;input class="yb-nav__toggle" type="checkbox" id="nva1"&gt;
           &lt;label class="yb-nav__link" for="nva1"&gt;Shop
-            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;&lt;/label&gt;
+            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;&lt;/label&gt;
           &lt;div class="yb-nav__panel"&gt;
             &lt;div class="yb-nav__groups"&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;All Products&lt;/a&gt;&lt;ul class="yb-nav__sublist"&gt;&lt;li&gt;&lt;a href="#demos"&gt;Best Sellers&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Collection&lt;/a&gt;&lt;ul class="yb-nav__sublist"&gt;&lt;li&gt;&lt;a href="#demos"&gt;Ybera Paris&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Fashion Gold&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Cronograma&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;100Timetros&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Capulana&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Terra Coco&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Hair Mist&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Vello&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Mirra&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Detox&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Life´s Flower&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Essência Brasileira&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Universal&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Genoma&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Quarta Camada&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Hair Problem&lt;/a&gt;&lt;ul class="yb-nav__sublist"&gt;&lt;li&gt;&lt;a href="#demos"&gt;Damaged Hair&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Frizz &amp;amp; Dryness&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Thinning / Hair Loss&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Undefined Curls&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div class="yb-nav__rail"&gt;
             &lt;a class="yb-nav__promo" href="../pages/pdp.html"&gt;
@@ -488,9 +490,9 @@
               &lt;p class="yb-nav__pitch-text"&gt;Six questions, and we match your hair to the right line —
               no guessing between fifteen collections.&lt;/p&gt;
               &lt;ul class="yb-nav__pitch-steps"&gt;
-                &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;
-                &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;
-                &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;
+                &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;
+                &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;
+                &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;
               &lt;/ul&gt;
               &lt;!-- `--secondary`, e nao o magenta da loja. Um mega-menu e superficie de
                    PASSAGEM: a pessoa abriu para escolher para onde ir, e ao lado destes
@@ -510,14 +512,301 @@
         &lt;li class="yb-nav__item"&gt;
           &lt;input class="yb-nav__toggle" type="checkbox" id="nva4"&gt;
           &lt;label class="yb-nav__link" for="nva4"&gt;About Us
-            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;&lt;/label&gt;
+            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;&lt;/label&gt;
           &lt;div class="yb-nav__panel"&gt;
             &lt;div class="yb-nav__groups"&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Our Story&lt;/a&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Blog&lt;/a&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;New chapter Ybera&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;
           &lt;/div&gt;
         &lt;/li&gt;
-      &lt;/ul&gt;
-&lt;/nav&gt;</code></pre>
+      &lt;/ul&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>@media (min-width:900.02px){
+  .yb-header__bar:has(.yb-nav__toggle:checked), .yb-header__bar:has(.yb-nav__item:focus-within), .yb-header__bar:has(.yb-nav__item:hover){z-index:var(--yb-z-overlay);}
+}
+.yb-nav{
+  display:flex; align-items:center; gap:var(--yb-space-5);
+  list-style:none; margin:0; padding:0;
+}
+@media (min-width:900.02px){
+  .yb-nav{justify-content:center}
+}
+.yb-nav__item{position:static}
+.yb-nav__toggle{position:absolute; opacity:0; pointer-events:none; width:1px; height:1px}
+.yb-nav__link{
+  display:inline-flex; align-items:center; gap:var(--yb-space-1);
+  min-height:var(--yb-target-min); cursor:pointer;
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-medium);
+  color:var(--yb-text-secondary);
+  text-decoration:none; white-space:nowrap;
+}
+@media (hover:hover){
+  .yb-nav__link:hover{color:var(--yb-text-primary)}
+}
+.yb-nav__link:focus-visible, .yb-nav__toggle:focus-visible + .yb-nav__link{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-nav__link .yb-icon{transition:transform var(--yb-transition-control)}
+.yb-nav__panel{
+  position:absolute; inset-inline:0; inset-block-start:100%; z-index:var(--yb-z-dropdown);
+  background:var(--yb-surface-raised);
+  border-block-start:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  box-shadow:var(--yb-elevation-dropdown);
+  opacity:0; visibility:hidden;
+  transition:opacity var(--yb-transition-surface), visibility var(--yb-transition-surface);
+}
+.yb-nav__item:focus-within &gt; .yb-nav__panel, .yb-nav__toggle:checked ~ .yb-nav__panel{opacity:1; visibility:visible}
+@media (hover:hover){
+  .yb-nav__item:hover &gt; .yb-nav__panel{opacity:1; visibility:visible}
+}
+.yb-nav__groups{
+  display:flex; flex-wrap:wrap; gap:var(--yb-space-6);
+  max-width:var(--yb-container-max); margin-inline:auto;
+  padding:var(--yb-space-8) var(--yb-page-gutter);
+  container-type:inline-size; container-name:yb-nav;
+}
+.yb-nav__group{min-inline-size:8rem}
+.yb-nav__groups:not(:has(.yb-nav__sublist)) .yb-nav__group{min-inline-size:0;}
+.yb-nav__grouptitle{
+  display:flex; align-items:center; min-height:var(--yb-space-6);
+  margin-block-end:var(--yb-space-2);
+  font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-primary); text-decoration:none;
+}
+@media (hover:hover){
+  .yb-nav__grouptitle:hover{color:var(--yb-text-link)}
+}
+.yb-nav .yb-nav__link--sale, .yb-nav__grouptitle--sale{color:var(--yb-text-link)}
+@media (hover:hover){
+  .yb-nav .yb-nav__link--sale:hover, .yb-nav__grouptitle--sale:hover{color:var(--yb-text-link-hover)}
+}
+.yb-nav__sublist{list-style:none; margin:0; padding:0}
+.yb-nav__sublist a{
+  display:flex; align-items:center; min-height:var(--yb-space-6);
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+  text-decoration:none;
+}
+@media (max-width:900px){
+  .yb-nav__sublist a{
+    min-height:var(--yb-target-min);
+    font-size:var(--yb-type-body-sm-size);
+    color:var(--yb-text-primary);
+  }
+  .yb-nav__grouptitle{min-height:var(--yb-target-min)}
+}
+@media (hover:hover){
+  .yb-nav__sublist a:hover{color:var(--yb-text-primary)}
+}
+.yb-nav__sublist a[data-yb-showcase-active]{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
+.yb-nav__sublist a:focus-visible,.yb-nav__grouptitle:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-nav__rail{
+  margin-inline-start:var(--yb-space-4);
+  flex:1 1 18rem; min-width:0;
+  display:flex; justify-content:flex-end; gap:var(--yb-space-6);
+}
+.yb-nav__showcase{display:contents}
+.yb-nav__showcase &gt; *{flex:1 1 0; min-width:0; max-width:18rem}
+.yb-nav__showcase &gt; .yb-collection--card img{aspect-ratio:auto; flex:1 1 auto; min-height:8rem; height:0}
+.yb-nav__showcase &gt; .yb-collection--card .yb-collection__foot{flex-grow:0}
+.yb-nav__promo{
+  display:flex; flex-direction:column; gap:var(--yb-space-3);
+  text-decoration:none; color:inherit;
+  border-radius:var(--yb-radius-sm);
+}
+.yb-nav__promo:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-nav__promo-media{
+  position:relative; flex:1; min-height:8rem; overflow:hidden;
+  background:var(--yb-bg-muted); border-radius:var(--yb-radius-media);
+}
+.yb-nav__promo-media img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block}
+.yb-nav__promo-info{display:flex; flex-direction:column; gap:var(--yb-space-2)}
+.yb-nav__promo-name{
+  margin:0; font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-primary);
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
+}
+@media (hover:hover){
+  .yb-nav__promo:hover .yb-btn--secondary{
+    background:var(--yb-action-secondary-bg-hover);
+    border-color:var(--yb-action-secondary-border-hover);
+    color:var(--yb-action-secondary-text-hover);
+  }
+}
+.yb-nav__pitch{
+  display:flex; flex-direction:column; gap:var(--yb-space-3);
+  padding:var(--yb-space-5);
+  background:var(--yb-surface-sunken);
+  border:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-media);
+  text-decoration:none; color:inherit;
+}
+.yb-nav__pitch:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+@media (hover:hover){
+  .yb-nav__pitch:hover{border-color:var(--yb-accent-border)}
+}
+.yb-nav__pitch-eyebrow{
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase; font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-accent-text);
+}
+.yb-nav__pitch-title{
+  margin:0; font-size:var(--yb-type-h4-size); line-height:var(--yb-type-h4-line);
+  font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-primary);
+}
+.yb-nav__pitch-text{
+  margin:0; font-size:var(--yb-type-body-sm-size);
+  line-height:var(--yb-type-body-sm-line); color:var(--yb-text-secondary);
+}
+.yb-nav__pitch-steps{
+  list-style:none; margin:0; padding:0; margin-block-start:auto;
+  display:flex; flex-direction:column; gap:var(--yb-space-2);
+}
+.yb-nav__pitch-steps li{
+  display:flex; align-items:center; gap:var(--yb-space-2);
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-secondary);
+}
+.yb-nav__pitch-steps .yb-icon{color:var(--yb-accent-text); flex:none}
+@container yb-nav (max-width:1023.98px){
+  .yb-nav__pitch{display:none}
+}
+.yb-nav__close{display:none}
+.yb-nav__head{display:none}
+.yb-nav__account{display:none}
+@media (max-width:900px){
+  .yb-nav__rail{display:none;}
+  .yb-nav__head{
+    display:flex; align-items:center; gap:var(--yb-space-4);
+    margin-block-end:var(--yb-space-5);
+  }
+  .yb-nav__head .yb-nav__close{margin-inline-end:calc(var(--yb-space-3) * -1);}
+  .yb-nav__account{
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:var(--yb-space-4);
+    padding:var(--yb-space-3) var(--yb-space-3) var(--yb-space-3) var(--yb-space-4);
+    margin-block-end:var(--yb-space-4);
+    background:var(--yb-bg-muted); border-radius:var(--yb-radius-card);
+  }
+  .yb-nav__account-who{
+    display:flex; align-items:center; gap:var(--yb-space-3);
+    flex:1 1 auto; min-width:10.5rem;
+  }
+  .yb-nav__account-who .yb-icon{color:var(--yb-accent-text); flex:none;}
+  .yb-nav__account-initial{
+    display:flex; align-items:center; justify-content:center; flex:none;
+    inline-size:1.75rem; block-size:1.75rem; border-radius:var(--yb-radius-pill);
+    background:var(--yb-surface-raised); color:var(--yb-text-primary);
+    font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
+    line-height:var(--yb-line-height-none);
+  }
+  .yb-nav__account-name{
+    min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-primary);
+  }
+  .yb-nav__account .yb-btn{
+    flex:none; min-height:var(--yb-target-min);
+    margin-inline-start:auto;
+  }
+  .yb-nav__close{display:inline-flex; margin-inline-start:auto}
+  .yb-nav{flex-direction:column; align-items:stretch; gap:var(--yb-space-3)}
+  .yb-nav__link{
+    justify-content:space-between; min-height:var(--yb-target-min);
+    font-size:var(--yb-type-body-lg-size); color:var(--yb-text-primary);
+  }
+  .yb-nav__toggle:checked + .yb-nav__link .yb-icon{transform:rotate(180deg)}
+  .yb-nav__panel{
+    position:static; opacity:1; visibility:visible; box-shadow:none;
+    border-block-start:0; max-height:0; overflow:hidden;
+    transition:max-height var(--yb-transition-surface);
+  }
+  .yb-nav__item:hover &gt; .yb-nav__panel{max-height:0}
+  .yb-nav__toggle:checked ~ .yb-nav__panel{max-height:110rem}
+  .yb-nav__groups{
+    flex-direction:column; gap:var(--yb-space-5);
+    padding:var(--yb-space-4) var(--yb-space-4) var(--yb-space-5);
+  }
+  .yb-nav__groups:not(:has(.yb-nav__sublist)){gap:var(--yb-space-1);}
+  .yb-nav__groups:not(:has(.yb-nav__sublist)) .yb-nav__grouptitle{margin-block-end:0;}
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;!-- uma vez por pagina, antes de &lt;/body&gt; --&gt;
+&lt;script src="ybera-components.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- conteudo que chega depois (secao carregada por JS do tema): --&gt;
+&lt;script&gt;Ybera.init(secao);&lt;/script&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-accent-border: #ECE0CA;
+--yb-accent-text: #806228;
+--yb-action-secondary-bg-hover: #F5F5F5;
+--yb-action-secondary-border-hover: #1E1E1F;
+--yb-action-secondary-text-hover: #1E1E1F;
+--yb-bg-muted: #F5F5F5;
+--yb-border-hairline: 1px;
+--yb-border-subtle: #EAEAEA;
+--yb-container-max: 1200px;
+--yb-elevation-dropdown: 0 4px 12px rgba(30,30,31,.08), 0 2px 4px rgba(30,30,31,.05);
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-font-weight-medium: 500;
+--yb-font-weight-semibold: 600;
+--yb-line-height-none: 1;
+--yb-page-gutter: 1rem;
+--yb-radius-card: 8px;
+--yb-radius-media: 8px;
+--yb-radius-pill: 9999px;
+--yb-radius-sm: 4px;
+--yb-space-1: 0.25rem;
+--yb-space-2: 0.5rem;
+--yb-space-3: 0.75rem;
+--yb-space-4: 1rem;
+--yb-space-5: 1.25rem;
+--yb-space-6: 1.5rem;
+--yb-space-8: 2rem;
+--yb-surface-raised: #FFFFFF;
+--yb-surface-sunken: #FAFAFA;
+--yb-target-min: 44px;
+--yb-text-link: #CA235F;
+--yb-text-link-hover: #8A1E45;
+--yb-text-muted: #6D6D71;
+--yb-text-primary: #1E1E1F;
+--yb-text-secondary: #535356;
+--yb-tracking-wider: 0.12em;
+--yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
+--yb-transition-surface: 180ms cubic-bezier(.2, 0, 0, 1);
+--yb-type-body-lg-size: 1.125rem;
+--yb-type-body-sm-line: 1.35;
+--yb-type-body-sm-size: 0.875rem;
+--yb-type-caption-size: 0.8125rem;
+--yb-type-h4-line: 1.35;
+--yb-type-h4-size: 1.25rem;
+--yb-type-overline-size: 0.6875rem;
+--yb-z-dropdown: 1000;
+--yb-z-overlay: 1200;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

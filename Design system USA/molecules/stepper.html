@@ -149,19 +149,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -253,14 +240,13 @@
         <span class="amostra__rotulo"><code>--sm · 36px</code></span>
       </span>
     </div>
-    <div class="note">
-      <b><code>--sm</code> é exceção, não escolha de gosto</b>
+    <details class="note"><summary><code>--sm</code> é exceção, não escolha de gosto</summary>
       <p>36px em vez de 44. Existe por causa da gaveta: lá o controle divide 420px
       com foto, título, preço e lixeira, e em 44+48+44 o preço ia para outra linha.
       O mínimo de alvo do WCAG 2.5.8 (AA) é 24px, então 36 ainda sobra folga &mdash;
       o que se perde é o conforto de 44, que é AAA. Na PDP use o grande: ali o
       controle antecede a compra.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -268,35 +254,143 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;span class="amostra"&gt;
-  &lt;div class="yb-stepper" data-yb-stepper&gt;
-    &lt;button type="button" data-yb-step="down" aria-label="Diminuir quantidade"&gt;−&lt;/button&gt;
-    &lt;input type="number" value="3" min="1" max="10" aria-label="Quantidade"&gt;
-    &lt;button type="button" data-yb-step="up" aria-label="Aumentar quantidade"&gt;+&lt;/button&gt;
-  &lt;/div&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;padrão&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;
-&lt;span class="amostra"&gt;
-  &lt;div class="yb-stepper" data-yb-stepper&gt;
-    &lt;button type="button" data-yb-step="down" aria-label="Diminuir quantidade"&gt;−&lt;/button&gt;
-    &lt;input type="number" value="1" min="1" max="10" aria-label="Quantidade"&gt;
-    &lt;button type="button" data-yb-step="up" aria-label="Aumentar quantidade"&gt;+&lt;/button&gt;
-  &lt;/div&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;no mínimo · 1&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;
-&lt;span class="amostra"&gt;
-  &lt;div class="yb-stepper" data-yb-stepper&gt;
-    &lt;button type="button" data-yb-step="down" aria-label="Diminuir quantidade"&gt;−&lt;/button&gt;
-    &lt;input type="number" value="10" min="1" max="10" aria-label="Quantidade"&gt;
-    &lt;button type="button" data-yb-step="up" aria-label="Aumentar quantidade"&gt;+&lt;/button&gt;
-  &lt;/div&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;no máximo · 10&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;</code></pre>
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Quantity stepper">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      <label class="codigo__variante">Variante
+        <select data-code-variant>
+          <option value="0">padrão</option>
+          <option value="1">no mínimo · 1</option>
+          <option value="2">no máximo · 10</option>
+          <option value="3">--sm · 36px</option>
+        </select></label>
+      <span class="codigo__conta">4 variantes</span>
     </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-stepper" data-yb-stepper&gt;
+  &lt;button type="button" data-yb-step="down" aria-label="Diminuir quantidade"&gt;−&lt;/button&gt;
+  &lt;input type="number" value="3" min="1" max="10" aria-label="Quantidade"&gt;
+  &lt;button type="button" data-yb-step="up" aria-label="Aumentar quantidade"&gt;+&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="1" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-stepper" data-yb-stepper&gt;
+  &lt;button type="button" data-yb-step="down" aria-label="Diminuir quantidade"&gt;−&lt;/button&gt;
+  &lt;input type="number" value="1" min="1" max="10" aria-label="Quantidade"&gt;
+  &lt;button type="button" data-yb-step="up" aria-label="Aumentar quantidade"&gt;+&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="2" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-stepper" data-yb-stepper&gt;
+  &lt;button type="button" data-yb-step="down" aria-label="Diminuir quantidade"&gt;−&lt;/button&gt;
+  &lt;input type="number" value="10" min="1" max="10" aria-label="Quantidade"&gt;
+  &lt;button type="button" data-yb-step="up" aria-label="Aumentar quantidade"&gt;+&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="3" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-stepper yb-stepper--sm" data-yb-stepper&gt;
+  &lt;button type="button" data-yb-step="down" aria-label="Diminuir quantidade"&gt;−&lt;/button&gt;
+  &lt;input type="number" value="1" min="1" max="10" aria-label="Quantidade"&gt;
+  &lt;button type="button" data-yb-step="up" aria-label="Aumentar quantidade"&gt;+&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-stepper{
+  display:inline-flex; align-items:center;
+  border:var(--yb-border-hairline) solid var(--yb-border); border-radius:var(--yb-radius-control);
+  overflow:hidden; background:var(--yb-surface);
+  flex:none;
+}
+.yb-stepper button{
+  width:var(--yb-target-min); height:var(--yb-target-min);
+  border:none; background:transparent; cursor:pointer;
+  color:var(--yb-text-primary); font-size:var(--yb-type-body-lg-size);
+  font-family:inherit; line-height:var(--yb-line-height-none);
+  transition:background var(--yb-transition-control);
+}
+@media (hover:hover){
+  .yb-stepper button:hover:not([disabled]){background:var(--yb-bg-muted)}
+}
+.yb-stepper button[disabled]{color:var(--yb-text-disabled); cursor:not-allowed}
+.yb-stepper button:focus-visible{outline:var(--yb-focus-width) solid var(--yb-focus-color); outline-offset:calc(var(--yb-focus-offset) * -1);}
+.yb-stepper input{
+  width:48px; height:var(--yb-target-min);
+  border:none; text-align:center; font-family:inherit;
+  font-size:var(--yb-type-body-size); font-variant-numeric:tabular-nums;
+  color:var(--yb-text-primary); background:transparent;
+  -moz-appearance:textfield;
+}
+.yb-stepper input::-webkit-outer-spin-button, .yb-stepper input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0}
+.yb-stepper input:focus-visible{outline:var(--yb-focus-width) solid var(--yb-focus-color); outline-offset:calc(var(--yb-focus-offset) * -1)}
+.yb-stepper--sm button{
+  inline-size:var(--yb-control-height-compact);
+  block-size:var(--yb-control-height-compact);
+  font-size:var(--yb-type-body-size);
+}
+.yb-stepper--sm input{
+  inline-size:2.5rem; block-size:var(--yb-control-height-compact);
+  font-size:var(--yb-type-body-sm-size);
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;!-- uma vez por pagina, antes de &lt;/body&gt; --&gt;
+&lt;script src="ybera-components.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- esta peca liga por: data-yb-step, data-yb-stepper --&gt;
+
+&lt;!-- conteudo que chega depois (secao carregada por JS do tema): --&gt;
+&lt;script&gt;Ybera.init(secao);&lt;/script&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-bg-muted: #F5F5F5;
+--yb-border: #DADADB;
+--yb-border-hairline: 1px;
+--yb-control-height-compact: 36px;
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-line-height-none: 1;
+--yb-radius-control: 8px;
+--yb-surface: #FFFFFF;
+--yb-target-min: 44px;
+--yb-text-disabled: #B1B1B4;
+--yb-text-primary: #1E1E1F;
+--yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
+--yb-type-body-lg-size: 1.125rem;
+--yb-type-body-size: 1rem;
+--yb-type-body-sm-size: 0.875rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

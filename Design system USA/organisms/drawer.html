@@ -150,19 +150,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -212,15 +199,13 @@
     <div class="demo">
       <button type="button" class="yb-btn yb-btn--primary" data-yb-open="drw-demo">Abrir gaveta</button>
     </div>
-    <div class="note">
-      <b>É o mesmo <code>&lt;dialog&gt;</code>, com outra ancoragem</b>
+    <details class="note"><summary>É o mesmo <code>&lt;dialog&gt;</code>, com outra ancoragem</summary>
       <p>Duas famílias no mesmo elemento: <code>class="yb-dialog yb-drawer"</code>.
       A primeira traz a janela, o foco preso e o backdrop do navegador; a segunda troca
       a largura, a altura e quem rola. Era <code>.yb-dialog--drawer</code>, e o nome
       dizia que gaveta era uma variação de modal &mdash; são duas decisões diferentes.</p>
-    </div>
-    <div class="note">
-      <b>O meio é de quem usa</b>
+    </details>
+    <details class="note"><summary>O meio é de quem usa</summary>
       <p>A gaveta entrega cabeça, pé e a rolagem entre os dois. O corpo fica vazio de
       propósito: ele é a única parte que muda de uso para uso, e enchê-lo aqui com um
       carrinho ensinava que gaveta é carrinho. O exemplo montado está em
@@ -229,7 +214,7 @@
       folha do navegador por origem, e um <code>flex</code> solto derruba o
       <code>dialog:not([open]){display:none}</code> da UA &mdash; a gaveta aparece
       fechada, grudada na lateral. Já aconteceu.</p>
-    </div>
+    </details>
 
     <dialog id="drw-demo" class="yb-dialog yb-drawer" aria-labelledby="drw-demo-t">
       <div class="yb-dialog__head">
@@ -250,12 +235,62 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;button type="button" class="yb-btn yb-btn--primary" data-yb-open="drw-demo"&gt;Abrir gaveta&lt;/button&gt;</code></pre>
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Drawer">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
     </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;button type="button" class="yb-btn yb-btn--primary" data-yb-open="drw-demo"&gt;Abrir gaveta&lt;/button&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-drawer{
+  max-width:420px; height:100dvh; max-height:100dvh;
+  margin:0 0 0 auto; border-radius:0;
+}
+.yb-drawer[open]{display:flex; flex-direction:column}
+.yb-drawer &gt; *{flex:0 0 auto}
+.yb-drawer &gt; .yb-dialog__body{flex:1 1 auto; min-height:0; overflow-y:auto}
+.yb-drawer &gt; .yb-dialog__foot{border-radius:0}
+.yb-drawer &gt; .yb-cart{flex:1 1 auto; min-height:0}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;!-- uma vez por pagina, antes de &lt;/body&gt; --&gt;
+&lt;script src="ybera-components.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- esta peca liga por: data-yb-open --&gt;
+
+&lt;!-- conteudo que chega depois (secao carregada por JS do tema): --&gt;
+&lt;script&gt;Ybera.init(secao);&lt;/script&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <p class="api-vazia">Nenhum: a folha não usa token nesta família.</p>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

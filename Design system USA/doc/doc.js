@@ -340,3 +340,44 @@
     caixa.focus();
   });
 })();
+
+/* CÓDIGO DA PEÇA — HTML · CSS · JS · Tokens, e o seletor de variante.
+
+   Sem script as quatro caixas ficam uma embaixo da outra e o HTML mostra só a
+   primeira variante: o código continua lá, legível e copiável. O seletor troca
+   só o HTML — a prévia acima segue com todas as variantes lado a lado, porque
+   comparar é o que a ficha tem de melhor. Setas movem entre as abas, como numa
+   tablist de verdade. */
+(() => {
+  'use strict';
+  for (const caixa of document.querySelectorAll('[data-yb-code]')) {
+    const abas = [...caixa.querySelectorAll('[data-code-tab]')];
+    const paineis = [...caixa.querySelectorAll('[data-code-panel]')];
+    const variante = caixa.querySelector('[data-code-variant]');
+    const abrir = (qual, focar) => {
+      abas.forEach((a) => {
+        const sim = a.dataset.codeTab === qual;
+        a.setAttribute('aria-selected', String(sim));
+        a.tabIndex = sim ? 0 : -1;
+        if (sim && focar) a.focus();
+      });
+      paineis.forEach((p) => { p.hidden = p.dataset.codePanel !== qual; });
+      if (variante) variante.closest('.codigo__variante').hidden = qual !== 'html';
+    };
+    abas.forEach((a, i) => {
+      a.addEventListener('click', () => abrir(a.dataset.codeTab));
+      a.addEventListener('keydown', (e) => {
+        const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!d) return;
+        e.preventDefault();
+        abrir(abas[(i + d + abas.length) % abas.length].dataset.codeTab, true);
+      });
+    });
+    if (variante) variante.addEventListener('change', () => {
+      caixa.querySelectorAll('[data-code-variant-panel]').forEach((p) => {
+        p.hidden = p.dataset.codeVariantPanel !== variante.value;
+      });
+    });
+    abrir('html');
+  }
+})();

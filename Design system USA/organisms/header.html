@@ -150,19 +150,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -1009,15 +996,13 @@
         <label class="yb-header__scrim" for="lnav-open" aria-hidden="true"></label>
       </header>
     </div>
-    <div class="note">
-      <b>O ícone de conta vira a inicial</b>
+    <details class="note"><summary>O ícone de conta vira a inicial</summary>
       <p>Deslogado, o cabeçalho segue com o botão de ícone. Logado, ele troca pelo
       <a href="../atoms/avatar.html">Avatar</a> dentro de um
       <a href="../molecules/dropdown.html">Dropdown</a> — nenhuma peça nova, e por isso o
       estado logado não tem CSS próprio além da regra de contexto abaixo.</p>
-    </div>
-    <div class="note">
-      <b>O piso de coluna só vale onde há coluna</b>
+    </details>
+    <details class="note"><summary>O piso de coluna só vale onde há coluna</summary>
       <p><code>.yb-nav__group</code> tem <code>min-inline-size:8rem</code> para as
       colunas do Shop começarem no mesmo compasso. Mas o painel do About Us não tem
       sublista — cada grupo é um link solto —, e o piso transformava "Blog" numa coluna
@@ -1025,9 +1010,8 @@
       <p>A condição é <code>:has()</code> e não uma classe porque a condição <b>é o
       conteúdo</b>: no dia em que esse painel ganhar sublista, a regra volta a valer
       sozinha.</p>
-    </div>
-    <div class="note">
-      <b>No toque ele não existe</b>
+    </details>
+    <details class="note"><summary>No toque ele não existe</summary>
       <p>Abaixo de 900 o menu some: a gaveta já lista os mesmos destinos, e um
       painel de 224px ancorado na borda direita de uma tela de 375 nasce apertado
       contra o carrinho. Quem assume o papel lá é a faixa
@@ -1036,9 +1020,8 @@
       nome e leva a <b>Account</b>. É o único bloco com fundo e o único botão da
       gaveta — era um item de texto no meio da lista, o primeiro de 25 links de
       mesmo peso, e ninguém o achava.</p>
-    </div>
-    <div class="note">
-      <b>A vitrine do Shop acompanha o item</b>
+    </details>
+    <details class="note"><summary>A vitrine do Shop acompanha o item</summary>
       <p>Passar o mouse (ou chegar pelo Tab) num item do painel troca a vitrine
       da direita pelo <a href="../molecules/collection.html">Collection card</a>
       da linha e um produto em destaque dela; o item fica aceso enquanto a
@@ -1047,7 +1030,7 @@
       mantém o quiz no segundo cartão; linha sem nenhuma imagem mostra a vitrine
       padrão. Sem JS, fica a padrão. A altura do painel é a mesma em todos os
       estados: as fotos preenchem a caixa sem ditar a altura dela.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -1055,24 +1038,43 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;header class="yb-header"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Header">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;header class="yb-header"&gt;
   &lt;div class="yb-notice"&gt;Free shipping on orders over &lt;b&gt;$50&lt;/b&gt;&lt;/div&gt;
   &lt;input class="yb-header__drawer" type="checkbox" id="dnav-open" aria-label="Menu"&gt;
   &lt;div class="yb-header__bar"&gt;
-    &lt;label class="yb-iconbtn yb-header__icon yb-header__burger" for="dnav-open" aria-hidden="true"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-dropdown"/&gt;&lt;/svg&gt;&lt;/label&gt;
+    &lt;label class="yb-iconbtn yb-header__icon yb-header__burger" for="dnav-open" aria-hidden="true"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-dropdown"/&gt;&lt;/svg&gt;&lt;/label&gt;
     &lt;a class="yb-header__logo" href="#demos"&gt;&lt;span class="yb-logo yb-logo--md"&gt;&lt;img src="../brand/ybera-logo.webp" alt="Ybera" width="360" height="139"&gt;&lt;/span&gt;&lt;/a&gt;
     &lt;nav class="yb-header__nav" aria-label="Main"&gt;
       &lt;div class="yb-nav__head"&gt;
         &lt;span class="yb-logo yb-logo--md" aria-hidden="true"&gt;&lt;img src="../brand/ybera-logo.webp" alt="" width="360" height="139"&gt;&lt;/span&gt;
-        &lt;label class="yb-iconbtn yb-iconbtn--square yb-nav__close" for="dnav-open" role="button" tabindex="0" aria-label="Close menu"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;&lt;/label&gt;
+        &lt;label class="yb-iconbtn yb-iconbtn--square yb-nav__close" for="dnav-open" role="button" tabindex="0" aria-label="Close menu"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;&lt;/label&gt;
       &lt;/div&gt;
       &lt;div class="yb-nav__account"&gt;
         &lt;span class="yb-nav__account-who"&gt;
-          &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-user"/&gt;&lt;/svg&gt;
+          &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-user"/&gt;&lt;/svg&gt;
           &lt;b class="yb-nav__account-name"&gt;Welcome, Visitor&lt;/b&gt;
         &lt;/span&gt;
         &lt;a class="yb-btn yb-btn--primary yb-btn--sm" href="#demos"&gt;Log in&lt;/a&gt;
@@ -1081,14 +1083,14 @@
       &lt;li class="yb-nav__item"&gt;&lt;a class="yb-nav__link" href="#demos"&gt;Home&lt;/a&gt;&lt;/li&gt;
       &lt;li class="yb-nav__item"&gt;
         &lt;input class="yb-nav__toggle" type="checkbox" id="dnav1"&gt;
-        &lt;label class="yb-nav__link" for="dnav1"&gt;Shop &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;&lt;/label&gt;
-        &lt;div class="yb-nav__panel"&gt;&lt;div class="yb-nav__groups"&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;All Products&lt;/a&gt;&lt;ul class="yb-nav__sublist"&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="best-sellers"&gt;Best Sellers&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="collections"&gt;Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Collection&lt;/a&gt;&lt;ul class="yb-nav__sublist"&gt;&lt;li&gt;&lt;a href="#demos"&gt;Ybera Paris&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="fashion-gold"&gt;Fashion Gold&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="cronograma-hair-care-system"&gt;Cronograma&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;100Timetros&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Capulana&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="terra-coco"&gt;Terra Coco&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="hair-mist"&gt;Hair Mist&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="vello-1"&gt;Vello&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="mirra"&gt;Mirra&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="detox"&gt;Detox&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Life´s Flower&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="essencia-brasileira"&gt;Essência Brasileira&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Universal&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Genoma&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Quarta Camada&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Hair Problem&lt;/a&gt;&lt;ul class="yb-nav__sublist"&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="dullness"&gt;Damaged Hair&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="dryness-frizz"&gt;Frizz &amp;amp; Dryness&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="hair-loss-thinning-hair"&gt;Thinning / Hair Loss&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="frizz-lack-of-volume"&gt;Undefined Curls&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle yb-nav__grouptitle--sale" href="#demos"&gt;Sales&lt;/a&gt;&lt;/div&gt;&lt;div class="yb-nav__rail" data-yb-showcases&gt;&lt;div class="yb-nav__showcase" data-yb-showcase="default"&gt;&lt;a class="yb-nav__promo" href="#demos"&gt;&lt;div class="yb-nav__promo-media"&gt;&lt;div class="yb-card__flags"&gt;&lt;span class="yb-badge yb-badge--soft"&gt;Best seller&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class="yb-nav__promo-info"&gt;&lt;p class="yb-nav__promo-name"&gt;Fashion Gold Keratin 300g + Protect &amp;amp; Control Shampoo &amp;amp; Mask&lt;/p&gt;&lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$89.90&lt;/b&gt;&lt;/span&gt;&lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;View product&lt;/span&gt;&lt;/div&gt;&lt;/a&gt;&lt;a class="yb-nav__pitch" href="#demos"&gt;&lt;span class="yb-nav__pitch-eyebrow"&gt;AI Hair Analysis&lt;/span&gt;&lt;p class="yb-nav__pitch-title"&gt;Not sure where to start?&lt;/p&gt;&lt;p class="yb-nav__pitch-text"&gt;Six questions, and we match your hair to the right line — no guessing between fifteen collections.&lt;/p&gt;&lt;ul class="yb-nav__pitch-steps"&gt;&lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;&lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;&lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;&lt;/ul&gt;&lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;Start analysis&lt;/span&gt;&lt;/a&gt;&lt;/div&gt;
+        &lt;label class="yb-nav__link" for="dnav1"&gt;Shop &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;&lt;/label&gt;
+        &lt;div class="yb-nav__panel"&gt;&lt;div class="yb-nav__groups"&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;All Products&lt;/a&gt;&lt;ul class="yb-nav__sublist"&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="best-sellers"&gt;Best Sellers&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="collections"&gt;Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Collection&lt;/a&gt;&lt;ul class="yb-nav__sublist"&gt;&lt;li&gt;&lt;a href="#demos"&gt;Ybera Paris&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="fashion-gold"&gt;Fashion Gold&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="cronograma-hair-care-system"&gt;Cronograma&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;100Timetros&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Capulana&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="terra-coco"&gt;Terra Coco&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="hair-mist"&gt;Hair Mist&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="vello-1"&gt;Vello&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="mirra"&gt;Mirra&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="detox"&gt;Detox&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Life´s Flower&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="essencia-brasileira"&gt;Essência Brasileira&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Universal&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Genoma&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Quarta Camada&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Hair Problem&lt;/a&gt;&lt;ul class="yb-nav__sublist"&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="dullness"&gt;Damaged Hair&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="dryness-frizz"&gt;Frizz &amp;amp; Dryness&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="hair-loss-thinning-hair"&gt;Thinning / Hair Loss&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="frizz-lack-of-volume"&gt;Undefined Curls&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle yb-nav__grouptitle--sale" href="#demos"&gt;Sales&lt;/a&gt;&lt;/div&gt;&lt;div class="yb-nav__rail" data-yb-showcases&gt;&lt;div class="yb-nav__showcase" data-yb-showcase="default"&gt;&lt;a class="yb-nav__promo" href="#demos"&gt;&lt;div class="yb-nav__promo-media"&gt;&lt;div class="yb-card__flags"&gt;&lt;span class="yb-badge yb-badge--soft"&gt;Best seller&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class="yb-nav__promo-info"&gt;&lt;p class="yb-nav__promo-name"&gt;Fashion Gold Keratin 300g + Protect &amp;amp; Control Shampoo &amp;amp; Mask&lt;/p&gt;&lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$89.90&lt;/b&gt;&lt;/span&gt;&lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;View product&lt;/span&gt;&lt;/div&gt;&lt;/a&gt;&lt;a class="yb-nav__pitch" href="#demos"&gt;&lt;span class="yb-nav__pitch-eyebrow"&gt;AI Hair Analysis&lt;/span&gt;&lt;p class="yb-nav__pitch-title"&gt;Not sure where to start?&lt;/p&gt;&lt;p class="yb-nav__pitch-text"&gt;Six questions, and we match your hair to the right line — no guessing between fifteen collections.&lt;/p&gt;&lt;ul class="yb-nav__pitch-steps"&gt;&lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;&lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;&lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;&lt;/ul&gt;&lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;Start analysis&lt;/span&gt;&lt;/a&gt;&lt;/div&gt;
           &lt;div class="yb-nav__showcase" data-yb-showcase="best-sellers" hidden&gt;
       &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
         &lt;img src="../pages/img/44_831fc84e-57db-4d51-ba41-ed4ed02438f3-284281.webp" alt="" loading="lazy"&gt;
         &lt;span class="yb-collection__foot"&gt;
           &lt;span class="yb-collection__name"&gt;Best Sellers&lt;/span&gt;
-          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
         &lt;/span&gt;
       &lt;/a&gt;
       &lt;a class="yb-nav__promo" href="#demos"&gt;
@@ -1107,7 +1109,7 @@
         &lt;img src="../pages/img/KitCuidadosProfundos-YberaFashionGold_ab-9c59c4.webp" alt="" loading="lazy"&gt;
         &lt;span class="yb-collection__foot"&gt;
           &lt;span class="yb-collection__name"&gt;Kit&lt;/span&gt;
-          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
         &lt;/span&gt;
       &lt;/a&gt;
       &lt;a class="yb-nav__promo" href="#demos"&gt;
@@ -1126,7 +1128,7 @@
         &lt;img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy"&gt;
         &lt;span class="yb-collection__foot"&gt;
           &lt;span class="yb-collection__name"&gt;Fashion Gold&lt;/span&gt;
-          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
         &lt;/span&gt;
       &lt;/a&gt;
       &lt;a class="yb-nav__promo" href="#demos"&gt;
@@ -1145,7 +1147,7 @@
         &lt;img src="../pages/img/Prancheta_2-188b6fea.webp" alt="" loading="lazy"&gt;
         &lt;span class="yb-collection__foot"&gt;
           &lt;span class="yb-collection__name"&gt;Cronograma&lt;/span&gt;
-          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
         &lt;/span&gt;
       &lt;/a&gt;
       &lt;a class="yb-nav__promo" href="#demos"&gt;
@@ -1164,7 +1166,7 @@
         &lt;img src="../pages/img/Off1_Set_22-23-9_1-4ebac5.webp" alt="" loading="lazy"&gt;
         &lt;span class="yb-collection__foot"&gt;
           &lt;span class="yb-collection__name"&gt;Terra Coco&lt;/span&gt;
-          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
         &lt;/span&gt;
       &lt;/a&gt;
       &lt;a class="yb-nav__promo" href="#demos"&gt;
@@ -1183,7 +1185,7 @@
         &lt;img src="../pages/img/HairMist-FLORALFUSION_d9d86917-8f6b-46c0-98ec-3b-4f903974.avif" alt="" loading="lazy"&gt;
         &lt;span class="yb-collection__foot"&gt;
           &lt;span class="yb-collection__name"&gt;Hair Mist&lt;/span&gt;
-          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
         &lt;/span&gt;
       &lt;/a&gt;
       &lt;a class="yb-nav__pitch" href="/pages/ai-hair-routine-quiz"&gt;
@@ -1192,9 +1194,9 @@
         &lt;p class="yb-nav__pitch-text"&gt;Six questions, and we match your hair to the right line —
         no guessing between fifteen collections.&lt;/p&gt;
         &lt;ul class="yb-nav__pitch-steps"&gt;
-          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;
-          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;
-          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;
         &lt;/ul&gt;
         &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;Start analysis&lt;/span&gt;
       &lt;/a&gt;
@@ -1204,7 +1206,7 @@
         &lt;img src="../pages/img/Prancheta_3-d098ed99.webp" alt="" loading="lazy"&gt;
         &lt;span class="yb-collection__foot"&gt;
           &lt;span class="yb-collection__name"&gt;Vello&lt;/span&gt;
-          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
         &lt;/span&gt;
       &lt;/a&gt;
       &lt;a class="yb-nav__pitch" href="/pages/ai-hair-routine-quiz"&gt;
@@ -1213,9 +1215,9 @@
         &lt;p class="yb-nav__pitch-text"&gt;Six questions, and we match your hair to the right line —
         no guessing between fifteen collections.&lt;/p&gt;
         &lt;ul class="yb-nav__pitch-steps"&gt;
-          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;
-          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;
-          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;
         &lt;/ul&gt;
         &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;Start analysis&lt;/span&gt;
       &lt;/a&gt;
@@ -1225,7 +1227,7 @@
         &lt;img src="../pages/img/Prancheta_4-26cbd0ec.webp" alt="" loading="lazy"&gt;
         &lt;span class="yb-collection__foot"&gt;
           &lt;span class="yb-collection__name"&gt;Mirra&lt;/span&gt;
-          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
         &lt;/span&gt;
       &lt;/a&gt;
       &lt;a class="yb-nav__promo" href="#demos"&gt;
@@ -1244,7 +1246,7 @@
         &lt;img src="../pages/img/DetoxMobille_109e8d67-c2fd-4329-8ed3-0fa79ebfd5a-59326a33.webp" alt="" loading="lazy"&gt;
         &lt;span class="yb-collection__foot"&gt;
           &lt;span class="yb-collection__name"&gt;Detox&lt;/span&gt;
-          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
         &lt;/span&gt;
       &lt;/a&gt;
       &lt;a class="yb-nav__pitch" href="/pages/ai-hair-routine-quiz"&gt;
@@ -1253,9 +1255,9 @@
         &lt;p class="yb-nav__pitch-text"&gt;Six questions, and we match your hair to the right line —
         no guessing between fifteen collections.&lt;/p&gt;
         &lt;ul class="yb-nav__pitch-steps"&gt;
-          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;
-          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;
-          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;
         &lt;/ul&gt;
         &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;Start analysis&lt;/span&gt;
       &lt;/a&gt;
@@ -1265,7 +1267,7 @@
         &lt;img src="../pages/img/CondicionadorElixirdaFloresta1KG-d0dd1c.webp" alt="" loading="lazy"&gt;
         &lt;span class="yb-collection__foot"&gt;
           &lt;span class="yb-collection__name"&gt;Essência Brasileira&lt;/span&gt;
-          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
         &lt;/span&gt;
       &lt;/a&gt;
       &lt;a class="yb-nav__promo" href="#demos"&gt;
@@ -1284,7 +1286,7 @@
         &lt;img src="../pages/img/02_hair-problem-f838107d.webp" alt="" loading="lazy"&gt;
         &lt;span class="yb-collection__foot"&gt;
           &lt;span class="yb-collection__name"&gt;Damaged Hair&lt;/span&gt;
-          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
         &lt;/span&gt;
       &lt;/a&gt;
       &lt;a class="yb-nav__promo" href="#demos"&gt;
@@ -1303,7 +1305,7 @@
         &lt;img src="../pages/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy"&gt;
         &lt;span class="yb-collection__foot"&gt;
           &lt;span class="yb-collection__name"&gt;Frizz &amp;amp; Dryness&lt;/span&gt;
-          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
         &lt;/span&gt;
       &lt;/a&gt;
       &lt;a class="yb-nav__promo" href="#demos"&gt;
@@ -1322,7 +1324,7 @@
         &lt;img src="../pages/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy"&gt;
         &lt;span class="yb-collection__foot"&gt;
           &lt;span class="yb-collection__name"&gt;Thinning / Hair Loss&lt;/span&gt;
-          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
         &lt;/span&gt;
       &lt;/a&gt;
       &lt;a class="yb-nav__pitch" href="/pages/ai-hair-routine-quiz"&gt;
@@ -1331,9 +1333,9 @@
         &lt;p class="yb-nav__pitch-text"&gt;Six questions, and we match your hair to the right line —
         no guessing between fifteen collections.&lt;/p&gt;
         &lt;ul class="yb-nav__pitch-steps"&gt;
-          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;
-          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;
-          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;
         &lt;/ul&gt;
         &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;Start analysis&lt;/span&gt;
       &lt;/a&gt;
@@ -1343,7 +1345,7 @@
         &lt;img src="../pages/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy"&gt;
         &lt;span class="yb-collection__foot"&gt;
           &lt;span class="yb-collection__name"&gt;Undefined Curls&lt;/span&gt;
-          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
         &lt;/span&gt;
       &lt;/a&gt;
       &lt;a class="yb-nav__pitch" href="/pages/ai-hair-routine-quiz"&gt;
@@ -1352,9 +1354,9 @@
         &lt;p class="yb-nav__pitch-text"&gt;Six questions, and we match your hair to the right line —
         no guessing between fifteen collections.&lt;/p&gt;
         &lt;ul class="yb-nav__pitch-steps"&gt;
-          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;
-          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;
-          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;
         &lt;/ul&gt;
         &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;Start analysis&lt;/span&gt;
       &lt;/a&gt;
@@ -1365,149 +1367,171 @@
       &lt;li class="yb-nav__item"&gt;&lt;a class="yb-nav__link" href="#demos"&gt;AI Hair Analysis&lt;/a&gt;&lt;/li&gt;
       &lt;li class="yb-nav__item"&gt;
         &lt;input class="yb-nav__toggle" type="checkbox" id="dnav4"&gt;
-        &lt;label class="yb-nav__link" for="dnav4"&gt;About Us &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;&lt;/label&gt;
+        &lt;label class="yb-nav__link" for="dnav4"&gt;About Us &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;&lt;/label&gt;
         &lt;div class="yb-nav__panel"&gt;&lt;div class="yb-nav__groups"&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Our Story&lt;/a&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Blog&lt;/a&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;New chapter Ybera&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
       &lt;/li&gt;
       &lt;li class="yb-nav__item"&gt;&lt;a class="yb-nav__link" href="#demos"&gt;Contact Us&lt;/a&gt;&lt;/li&gt;
       &lt;/ul&gt;
     &lt;/nav&gt;
     &lt;div class="yb-header__actions"&gt;
-      &lt;button type="button" class="yb-iconbtn yb-header__icon" aria-label="Search" data-yb-open="site-search"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;&lt;/button&gt;
-      &lt;button type="button" class="yb-iconbtn yb-header__icon" aria-label="Account"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-user"/&gt;&lt;/svg&gt;&lt;/button&gt;
-      &lt;button type="button" class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-cart"/&gt;&lt;/svg&gt;&lt;span class="yb-header__count"&gt;2&lt;/span&gt;&lt;/button&gt;
+      &lt;button type="button" class="yb-iconbtn yb-header__icon" aria-label="Search" data-yb-open="site-search"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;&lt;/button&gt;
+      &lt;button type="button" class="yb-iconbtn yb-header__icon" aria-label="Account"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-user"/&gt;&lt;/svg&gt;&lt;/button&gt;
+      &lt;button type="button" class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-cart"/&gt;&lt;/svg&gt;&lt;span class="yb-header__count"&gt;2&lt;/span&gt;&lt;/button&gt;
     &lt;/div&gt;
   &lt;/div&gt;
   &lt;label class="yb-header__scrim" for="dnav-open" aria-hidden="true"&gt;&lt;/label&gt;
-&lt;/header&gt;
-&lt;!-- A lupa do header abre o overlay de busca (componente `yb-search`).
-     Ele vive aqui, e não só na doc de componentes, porque é o header
-     quem o dispara: um gatilho sem destino é um botão que não faz nada,
-     e nenhum navegador avisa. --&gt;
-&lt;dialog id="site-search" class="yb-search" aria-label="Search products"&gt;
-&lt;div class="yb-search__bar"&gt;
-  &lt;form class="yb-search__form" role="search" action="#header" data-yb-search&gt;
-    &lt;svg class="yb-icon yb-search__icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;
-    &lt;input class="yb-search__input" type="search" name="q" autocomplete="off" autofocus
-           placeholder="Search products, concerns, ingredients" aria-label="Search products"&gt;
-    &lt;button class="yb-iconbtn yb-iconbtn--square yb-search__clear" type="reset" aria-label="Clear search" hidden&gt;
-      &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;
-    &lt;/button&gt;
-    &lt;button class="yb-search__close" type="button" data-yb-close&gt;Close&lt;/button&gt;
-  &lt;/form&gt;
-&lt;/div&gt;
-&lt;div class="yb-search__body"&gt;
-  &lt;div class="yb-search__panel" data-yb-search-zero&gt;
-    &lt;div class="yb-search__col"&gt;
-      &lt;div class="yb-search__group"&gt;
-        &lt;h3 class="yb-search__title"&gt;Recent&lt;/h3&gt;
-        &lt;ul class="yb-search__chips"&gt;
-          &lt;li&gt;&lt;button class="yb-chip" type="button"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-clock"/&gt;&lt;/svg&gt;keratin&lt;/button&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;button class="yb-chip" type="button"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-clock"/&gt;&lt;/svg&gt;fashion gold&lt;/button&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;button class="yb-chip" type="button"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-clock"/&gt;&lt;/svg&gt;frizz&lt;/button&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/div&gt;
-      &lt;div class="yb-search__group yb-search__group--secondary"&gt;
-        &lt;h3 class="yb-search__title"&gt;Popular&lt;/h3&gt;
-        &lt;ul class="yb-search__list"&gt;
-          &lt;li&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;hair botox&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;progressive brush&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;myrrh oil&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/div&gt;
-      &lt;div class="yb-search__group yb-search__group--secondary"&gt;
-        &lt;h3 class="yb-search__title"&gt;Categories&lt;/h3&gt;
-        &lt;ul class="yb-search__chips"&gt;
-          &lt;li&gt;&lt;a class="yb-chip" href="#demos"&gt;Smoothing&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a class="yb-chip" href="#demos"&gt;Home care&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a class="yb-chip" href="#demos"&gt;Kits&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a class="yb-chip" href="#demos"&gt;Hair oils&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-    &lt;div class="yb-search__col"&gt;
-      &lt;div class="yb-search__group"&gt;
-        &lt;h3 class="yb-search__title"&gt;Best sellers&lt;/h3&gt;
-        &lt;a class="yb-search__item" href="#demos"&gt;
-          &lt;span class="yb-search__thumb"&gt;&lt;/span&gt;
-          &lt;span&gt;
-            &lt;span class="yb-search__name"&gt;Kit Sealant Fashion Gold — 500g / 17.6 fl.oz&lt;/span&gt;
-            &lt;span class="yb-search__meta"&gt;Smoothing · 412 reviews&lt;/span&gt;
-          &lt;/span&gt;
-          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$168.90&lt;/b&gt;&lt;/span&gt;
-        &lt;/a&gt;
-        &lt;a class="yb-search__item" href="#demos"&gt;
-          &lt;span class="yb-search__thumb"&gt;&lt;/span&gt;
-          &lt;span&gt;
-            &lt;span class="yb-search__name"&gt;Myrrh Hair Repair Oil — 15ml / 0.5 fl.oz&lt;/span&gt;
-            &lt;span class="yb-search__meta"&gt;Hair oils · 203 reviews&lt;/span&gt;
-          &lt;/span&gt;
-          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$29.90&lt;/b&gt;&lt;/span&gt;
-        &lt;/a&gt;
-        &lt;a class="yb-search__item" href="#demos"&gt;
-          &lt;span class="yb-search__thumb"&gt;&lt;/span&gt;
-          &lt;span&gt;
-            &lt;span class="yb-search__name"&gt;KIT VELLO Shampoo 500ml + Hair Mask 500g&lt;/span&gt;
-            &lt;span class="yb-search__meta"&gt;Home care · 87 reviews&lt;/span&gt;
-          &lt;/span&gt;
-          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$133.90&lt;/b&gt;&lt;/span&gt;
-        &lt;/a&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-  &lt;div class="yb-search__panel" data-yb-search-results hidden&gt;
-    &lt;div class="yb-search__col"&gt;
-      &lt;div class="yb-search__group" data-yb-search-group&gt;
-        &lt;h3 class="yb-search__title"&gt;Suggestions&lt;/h3&gt;
-        &lt;ul class="yb-search__list"&gt;
-          &lt;li data-term="keratin"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;keratin treatment&lt;/a&gt;&lt;/li&gt;
-          &lt;li data-term="keratin"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;keratin for curly hair&lt;/a&gt;&lt;/li&gt;
-          &lt;li data-term="oil myrrh"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;myrrh repair oil&lt;/a&gt;&lt;/li&gt;
-          &lt;li data-term="kit vello shampoo"&gt;&lt;a class="yb-search__link" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-search"/&gt;&lt;/svg&gt;vello shampoo&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-    &lt;div class="yb-search__col"&gt;
-      &lt;div class="yb-search__group" data-yb-search-group&gt;
-        &lt;h3 class="yb-search__title"&gt;Products&lt;/h3&gt;
-        &lt;a class="yb-search__item" href="#demos" data-term="keratin kit sealant fashion gold"&gt;
-          &lt;span class="yb-search__thumb"&gt;&lt;/span&gt;
-          &lt;span&gt;
-            &lt;span class="yb-search__name"&gt;Kit Sealant Fashion Gold — 500g / 17.6 fl.oz&lt;/span&gt;
-            &lt;span class="yb-search__meta"&gt;Smoothing · in stock&lt;/span&gt;
-          &lt;/span&gt;
-          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$168.90&lt;/b&gt;&lt;/span&gt;
-        &lt;/a&gt;
-        &lt;a class="yb-search__item" href="#demos" data-term="oil myrrh repair"&gt;
-          &lt;span class="yb-search__thumb"&gt;&lt;/span&gt;
-          &lt;span&gt;
-            &lt;span class="yb-search__name"&gt;Myrrh Hair Repair Oil — 15ml / 0.5 fl.oz&lt;/span&gt;
-            &lt;span class="yb-search__meta"&gt;Hair oils · in stock&lt;/span&gt;
-          &lt;/span&gt;
-          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$29.90&lt;/b&gt;&lt;/span&gt;
-        &lt;/a&gt;
-        &lt;a class="yb-search__item" href="#demos" data-term="kit vello shampoo mask"&gt;
-          &lt;span class="yb-search__thumb"&gt;&lt;/span&gt;
-          &lt;span&gt;
-            &lt;span class="yb-search__name"&gt;KIT VELLO Shampoo 500ml + Hair Mask 500g&lt;/span&gt;
-            &lt;span class="yb-search__meta"&gt;Home care · in stock&lt;/span&gt;
-          &lt;/span&gt;
-          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$133.90&lt;/b&gt;&lt;/span&gt;
-        &lt;/a&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-  &lt;div class="yb-search__empty" data-yb-search-empty hidden&gt;
-    &lt;p&gt;Nothing found for &lt;strong data-yb-search-echo&gt;&lt;/strong&gt;.&lt;/p&gt;
-    &lt;p&gt;Try a shorter word, or the product line instead of the full name.&lt;/p&gt;
-    &lt;ul class="yb-search__chips"&gt;
-      &lt;li&gt;&lt;a class="yb-chip" href="#demos"&gt;Best sellers&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a class="yb-chip" href="#demos"&gt;New arrivals&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a class="yb-chip" href="#demos"&gt;Talk to a specialist&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-&lt;/dialog&gt;</code></pre>
+&lt;/header&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-header{display:contents}
+.yb-header__bar{
+  display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
+  gap:var(--yb-space-6);
+  padding-block:var(--yb-space-4);
+  position:sticky; inset-block-start:0; z-index:var(--yb-z-sticky);
+  min-height:var(--yb-header-h);
+  background:var(--yb-bg-page);
+  border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);
+}
+@media (min-width:900.02px){
+  .yb-header__bar:has(.yb-nav__toggle:checked), .yb-header__bar:has(.yb-nav__item:focus-within), .yb-header__bar:has(.yb-nav__item:hover){z-index:var(--yb-z-overlay);}
+}
+.yb-header__bar{
+  padding-inline:calc(
+  max(0px, 100% - var(--yb-container-max)) / 2 + var(--yb-page-gutter)
+  );
+}
+.yb-header__logo{
+  display:inline-flex; align-items:center; text-decoration:none;
+  min-height:var(--yb-target-min); flex:none; justify-self:start;
+}
+.yb-header__logo:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-header__nav{min-width:0; display:flex; justify-content:center}
+.yb-header__icon.yb-header__burger{display:none}
+.yb-header__scrim{display:none}
+.yb-header__drawer{display:none}
+@media (max-width:900px){
+  .yb-header__drawer{
+    display:block; position:absolute; opacity:0;
+    pointer-events:none; width:1px; height:1px
+  }
+  .yb-header__icon.yb-header__burger{display:inline-flex; order:-1}
+  .yb-header__drawer:focus-visible + .yb-header__bar .yb-header__burger{
+    outline:var(--yb-focus-width) solid var(--yb-focus-color);
+    outline-offset:var(--yb-focus-offset);
+  }
+  .yb-header__burger{justify-self:start;}
+  .yb-header__logo{justify-self:center;}
+  .yb-header__account{display:none;}
+  .yb-header__nav{
+    display:block;
+    position:fixed; inset-block:0; inset-inline-start:0; z-index:var(--yb-z-modal);
+    width:min(22rem, 86vw); background:var(--yb-surface-raised);
+    box-shadow:var(--yb-elevation-drawer); overflow-y:auto;
+    padding:var(--yb-space-6) var(--yb-page-gutter);
+    transform:translateX(calc(-100% * var(--yb-dir, 1)));
+    visibility:hidden;
+    transition:transform var(--yb-transition-surface),
+    visibility var(--yb-transition-surface);
+  }
+  .yb-header__drawer:checked ~ .yb-header__bar .yb-header__nav{transform:none; visibility:visible;}
+  .yb-header__scrim{
+    display:block; position:fixed; inset:0; z-index:var(--yb-z-overlay);
+    background:var(--yb-surface-overlay);
+    opacity:0; pointer-events:none;
+    transition:opacity var(--yb-transition-surface);
+  }
+  .yb-header__drawer:checked ~ .yb-header__scrim{opacity:1; pointer-events:auto}
+  .yb-header__drawer:checked ~ .yb-header__bar{z-index:var(--yb-z-modal);}
+}
+.yb-header__actions{display:flex; align-items:center; gap:0; justify-self:end}
+@media (max-width:900px){
+  .yb-header__actions .yb-dropdown{display:none}
+}
+.yb-header__icon{padding:0;}
+@media (hover:hover){
+  .yb-header__icon:hover{background:var(--yb-bg-muted)}
+}
+.yb-header__icon:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-header__icon:has(.yb-header__count){position:relative}
+.yb-header__count{
+  position:absolute; inset-block-start:1px; inset-inline-end:-4px;
+  background:var(--yb-accent-signal); color:var(--yb-text-on-action);
+  font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-bold);
+  min-inline-size:22px; block-size:22px; padding:0 3px;
+  border:var(--yb-border-emphasis) solid var(--yb-surface);
+  border-radius:var(--yb-radius-full);
+  display:inline-flex; align-items:center; justify-content:center;
+  font-variant-numeric:tabular-nums; line-height:var(--yb-line-height-none);
+}
+@media (max-width:767.98px){
+  .yb-header__bar{padding:var(--yb-space-3) var(--yb-page-gutter); gap:var(--yb-space-2)}
+  .yb-header__icon{padding:0}
+  .yb-header__actions{gap:0}
+}
+@media (max-width:479.98px){
+  .yb-header__logo .yb-logo{--yb-logo-height:22px}
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;!-- uma vez por pagina, antes de &lt;/body&gt; --&gt;
+&lt;script src="ybera-components.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- esta peca liga por: data-yb-open, data-yb-showcase, data-yb-showcase-target, data-yb-showcases --&gt;
+
+&lt;!-- conteudo que chega depois (secao carregada por JS do tema): --&gt;
+&lt;script&gt;Ybera.init(secao);&lt;/script&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-accent-signal: #CA235F;
+--yb-bg-muted: #F5F5F5;
+--yb-bg-page: #FFFFFF;
+--yb-border-emphasis: 2px;
+--yb-border-hairline: 1px;
+--yb-border-subtle: #EAEAEA;
+--yb-container-max: 1200px;
+--yb-dir: 1;
+--yb-elevation-drawer: 0 12px 28px rgba(30,30,31,.11), 0 4px 8px rgba(30,30,31,.06);
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-font-weight-bold: 700;
+--yb-header-h: calc(var(--yb-target-min) + var(--yb-space-4) * 2 + 1px);
+--yb-line-height-none: 1;
+--yb-page-gutter: 1rem;
+--yb-radius-full: 9999px;
+--yb-space-2: 0.5rem;
+--yb-space-3: 0.75rem;
+--yb-space-4: 1rem;
+--yb-space-6: 1.5rem;
+--yb-surface: #FFFFFF;
+--yb-surface-overlay: rgba(30, 30, 31, .55);
+--yb-surface-raised: #FFFFFF;
+--yb-target-min: 44px;
+--yb-text-on-action: #FFFFFF;
+--yb-transition-surface: 180ms cubic-bezier(.2, 0, 0, 1);
+--yb-type-caption-size: 0.8125rem;
+--yb-z-modal: 1300;
+--yb-z-overlay: 1200;
+--yb-z-sticky: 1100;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

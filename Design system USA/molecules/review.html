@@ -149,19 +149,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -256,37 +243,32 @@
         <button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next reviews"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg></button>
       </div>
     </div>
-    <div class="note">
-      <b>As setas nascem escondidas</b>
+    <details class="note"><summary>As setas nascem escondidas</summary>
       <p><code>.yb-track__nav</code> existia no CSS e ninguém a emitia. Vem com
       <code>hidden</code> no HTML e é o JS (<code>data-yb-track-nav</code>) que a revela:
       sem script, botão que não faz nada é pior que nenhum botão — o trilho rola
       nativo de qualquer jeito. Um cartão por clique, desligadas nas pontas,
       somem quando não há sobra para rolar. Abaixo de 768 não aparecem: no toque,
       arrasta.</p>
-    </div>
-    <div class="note">
-      <b>O texto é copy de amostra</b>
+    </details>
+    <details class="note"><summary>O texto é copy de amostra</summary>
       <p>As avaliações das telas-prova são escritas por nós. A loja tem avaliações
       reais no Judge.me, e elas entram quando a ponte for ligada.</p>
-    </div>
-    <div class="note">
-      <b>Três linhas sempre, não no máximo três</b>
+    </details>
+    <details class="note"><summary>Três linhas sempre, não no máximo três</summary>
       <p>O <code>line-clamp</code> impedia o cartão de crescer; faltava impedi-lo de
       <b>encolher</b>. O olho segue o fim do texto, não a borda do cartão — com a
       reserva, as seis caixas medem os mesmos <b>65px</b> e o texto termina no mesmo y.</p>
       <p>Caixa reservada, e não texto ajustado, porque <b>o conteúdo não é nosso</b>:
       amanhã o Judge.me entrega uma avaliação de uma linha e outra de sete.</p>
-    </div>
-    <div class="note">
-      <b>O trilho mostra que anda</b>
+    </details>
+    <details class="note"><summary>O trilho mostra que anda</summary>
       <p>Em 320px o cartão mede 248 e o respiro cai para 16: sobram 24px do próximo
       review à vista, e é essa fatia que ensina que dá para arrastar. Com 280 e
       respiro de 32, o segundo cartão nascia fora da tela e o carrossel virava um
       cartão solto.</p>
-    </div>
-    <div class="note">
-      <b>Acima de 1280 a fatia é bug, não pista</b>
+    </details>
+    <details class="note"><summary>Acima de 1280 a fatia é bug, não pista</summary>
       <p><code>minmax(320px, 1fr)</code> garante o mínimo do cartão, não um número
       inteiro deles. A partir de 1280px a página já bateu no
       <code>--yb-container-max</code> de 1200px — o trilho tem sempre os mesmos
@@ -295,20 +277,18 @@
       nesse espaço. A quarta review nasce fora, não pela metade — e nesses
       tamanhos a seta ao lado já avisa que dá para navegar, o cartão cortado não
       precisa fazer esse trabalho de novo.</p>
-    </div>
-    <div class="note">
-      <b>Quem desenha isso hoje é o Judge.me</b>
+    </details>
+    <details class="note"><summary>Quem desenha isso hoje é o Judge.me</summary>
       <p>Ele renderiza no DOM normal — sem shadow DOM —, e as variáveis dele já
       estão traduzidas em <code>bridge/ybera-bridge.css</code>: o app continua
       sendo o app, e a página para de ter duas tipografias.</p>
-    </div>
-      <div class="note">
-      <b>O selo verificado existe e a loja não mostra</b>
+    </details>
+      <details class="note"><summary>O selo verificado existe e a loja não mostra</summary>
       <p>O ramo está no gerador e não renderiza: as avaliações capturadas não
       trazem o campo, e o Judge.me só expõe a compra verificada pela API com
       token. Mesma regra do <code>Save X%</code> — o lugar fica pronto, e ninguém
       escreve “Verified” sem ter o que verificar.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -316,23 +296,51 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="yb-track yb-reviews" id="demo-reviews"&gt;
-  &lt;article class="yb-review"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Review">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      <label class="codigo__variante">Variante
+        <select data-code-variant>
+          <option value="0">Three months in and the sheddin…</option>
+          <option value="1">The elixir is what sold me Two…</option>
+          <option value="2">Finally a schedule I can actual…</option>
+          <option value="3">Salon result, no formaldehyde s…</option>
+        </select></label>
+      <span class="codigo__conta">4 variantes</span>
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;article class="yb-review"&gt;
     &lt;div class="yb-review__media"&gt;&lt;img src="../pages/img/YBERA_PARIS_-_vello_-_Soro_Vital_alfa-lactobaby_-ca2b7e86.webp" alt="Frasco branco do sérum Vello Alfa-Lactobaby" loading="lazy"&gt;&lt;/div&gt;
     &lt;div class="yb-review__body"&gt;
       &lt;span class="yb-stars" style="--yb-stars:5" role="img" aria-label="5 de 5 estrelas"&gt;&lt;/span&gt;
       &lt;p class="yb-review__title"&gt;Three months in and the shedding stopped&lt;/p&gt;
       &lt;p class="yb-review__text"&gt;I was losing hair after my second baby. Three months of the serum every other night and the shower drain is finally clean. New growth at the temples too.&lt;/p&gt;
       &lt;span class="yb-review__author"&gt;Rosana B.&lt;/span&gt;
-      &lt;span class="yb-review__verified"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-shield-check"/&gt;&lt;/svg&gt; Verified purchase&lt;/span&gt;
+      &lt;span class="yb-review__verified"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-shield-check"/&gt;&lt;/svg&gt; Verified purchase&lt;/span&gt;
       &lt;span class="yb-review__product"&gt;VELLO Hair Fertilization Therapy ALFA-LACTOBABY — 90ml / 3 fl.oz&lt;/span&gt;
     &lt;/div&gt;
-  &lt;/article&gt;
-  &lt;article class="yb-review"&gt;
+  &lt;/article&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="1" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;article class="yb-review"&gt;
     &lt;div class="yb-review__media"&gt;&lt;img src="../pages/img/kit_tratamento_terra_coco_elixir_160x160-26270456.webp" alt="Kit Terra Coco: shampoo, máscara e elixir de coco" loading="lazy"&gt;&lt;/div&gt;
     &lt;div class="yb-review__body"&gt;
       &lt;span class="yb-stars" style="--yb-stars:5" role="img" aria-label="5 de 5 estrelas"&gt;&lt;/span&gt;
@@ -341,8 +349,11 @@
       &lt;span class="yb-review__author"&gt;Marggi B.&lt;/span&gt;
       &lt;span class="yb-review__product"&gt;Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask 1kg / 33oz + Coconut Elixir 60ml / 2oz&lt;/span&gt;
     &lt;/div&gt;
-  &lt;/article&gt;
-  &lt;article class="yb-review"&gt;
+  &lt;/article&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="2" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;article class="yb-review"&gt;
     &lt;div class="yb-review__media"&gt;&lt;img src="../pages/img/153_160x160-e958dc19.avif" alt="Os quatro tubos do sistema Cronograma Capilar" loading="lazy"&gt;&lt;/div&gt;
     &lt;div class="yb-review__body"&gt;
       &lt;span class="yb-stars" style="--yb-stars:4" role="img" aria-label="4 de 5 estrelas"&gt;&lt;/span&gt;
@@ -351,8 +362,11 @@
       &lt;span class="yb-review__author"&gt;Daniela P.&lt;/span&gt;
       &lt;span class="yb-review__product"&gt;CRONOGRAMA Hair Care System — 4 x 250g / 8.8 oz&lt;/span&gt;
     &lt;/div&gt;
-  &lt;/article&gt;
-  &lt;article class="yb-review"&gt;
+  &lt;/article&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="3" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;article class="yb-review"&gt;
     &lt;div class="yb-review__media"&gt;&lt;img src="../pages/img/Prancheta_1-790aea3e.webp" alt="Frasco do tratamento de queratina Fashion Gold" loading="lazy"&gt;&lt;/div&gt;
     &lt;div class="yb-review__body"&gt;
       &lt;span class="yb-stars" style="--yb-stars:5" role="img" aria-label="5 de 5 estrelas"&gt;&lt;/span&gt;
@@ -361,13 +375,89 @@
       &lt;span class="yb-review__author"&gt;Nataniela R.&lt;/span&gt;
       &lt;span class="yb-review__product"&gt;FASHION GOLD Brazilian Keratin Treatment — 500g / 17.6 fl.oz&lt;/span&gt;
     &lt;/div&gt;
-  &lt;/article&gt;
-&lt;/div&gt;
-&lt;div class="yb-track__nav" data-yb-track-nav="demo-reviews" hidden&gt;
-  &lt;button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous reviews"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-left"/&gt;&lt;/svg&gt;&lt;/button&gt;
-  &lt;button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next reviews"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;&lt;/button&gt;
-&lt;/div&gt;</code></pre>
+  &lt;/article&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-review{
+  display:grid; grid-template-columns:88px 1fr; gap:var(--yb-space-4);
+  align-items:stretch; min-width:0;
+}
+.yb-review__verified{
+  display:inline-flex; align-items:center; gap:var(--yb-space-1);
+  color:var(--yb-success-text); font-size:var(--yb-type-caption-size);
+  font-weight:var(--yb-font-weight-semibold);
+}
+.yb-review__media{
+  align-self:start;
+  aspect-ratio:var(--yb-aspect-square); overflow:hidden; border-radius:var(--yb-radius-media);
+  background:var(--yb-surface-sunken); border:var(--yb-border-hairline) solid var(--yb-border-subtle);
+}
+.yb-review__media img{width:100%; height:100%; object-fit:cover; display:block;}
+.yb-review__body{display:flex; flex-direction:column; gap:var(--yb-space-2); min-width:0;}
+.yb-review__title{
+  margin:0; font-size:var(--yb-type-body-size);
+  font-weight:var(--yb-font-weight-semibold); line-height:var(--yb-line-height-base);
+  color:var(--yb-text-primary);
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; line-clamp:2; overflow:hidden;
+}
+.yb-review__text{
+  margin:0; font-size:var(--yb-type-body-sm-size);
+  line-height:var(--yb-line-height-relaxed); color:var(--yb-text-secondary);
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:3; line-clamp:3; overflow:hidden;
+  min-block-size:calc(var(--yb-type-body-sm-size) * var(--yb-line-height-relaxed) * 3);
+}
+.yb-review__author{
+  margin-block-start:auto;
+  font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-primary);
+}
+.yb-review__product{
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:1; line-clamp:1; overflow:hidden;
+}
+.yb-review__product a{color:inherit;}
+.yb-review__product a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-aspect-square: 1 / 1;
+--yb-border-hairline: 1px;
+--yb-border-subtle: #EAEAEA;
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-font-weight-semibold: 600;
+--yb-line-height-base: 1.35;
+--yb-line-height-relaxed: 1.55;
+--yb-radius-media: 8px;
+--yb-space-1: 0.25rem;
+--yb-space-2: 0.5rem;
+--yb-space-4: 1rem;
+--yb-success-text: #1F7A34;
+--yb-surface-sunken: #FAFAFA;
+--yb-text-muted: #6D6D71;
+--yb-text-primary: #1E1E1F;
+--yb-text-secondary: #535356;
+--yb-type-body-size: 1rem;
+--yb-type-body-sm-size: 0.875rem;
+--yb-type-caption-size: 0.8125rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

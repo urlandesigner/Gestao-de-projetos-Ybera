@@ -149,19 +149,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -247,8 +234,7 @@
         <p class="yb-partnerbar__text">Hey, it&rsquo;s <b>@naymazzeto</b>! Enjoy my exclusive <b>partner discount</b>.</p>
       </div>
     </div>
-    <div class="note">
-      <b>Encolhe, não some</b>
+    <details class="note"><summary>Encolhe, não some</summary>
       <p>O desconto vale a sessão inteira, então o recado não pode sumir: passados 96px
       de rolagem o balão recolhe e fica o avatar com um ponto de aviso, clicável para
       reabrir. Depois do primeiro clique a rolagem para de mandar.</p>
@@ -258,7 +244,7 @@
       <p>A âncora é o próprio banner, e não a janela: o bloco de cabeçalho mede 117px no
       desktop e 109 no celular, e somar altura que muda com quebra de linha é chute com
       cara de cálculo. O pai precisa de <code>position:relative</code>.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -266,11 +252,30 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="yb-partner" style="inset-inline-start:var(--yb-space-5)"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Partner">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-partner" style="inset-inline-start:var(--yb-space-5)"&gt;
   &lt;div class="yb-partner__dock"&gt;
     &lt;button class="yb-partner__avatar" type="button" aria-expanded="true" aria-controls="doc-partner-msg"&gt;
       &lt;img src="../pages/img/02sauana-2896ea7c.webp" alt=""&gt;
@@ -281,7 +286,102 @@
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-partner{
+  position:absolute; z-index:var(--yb-z-dropdown);
+  inset-block:var(--yb-space-5) var(--yb-space-5);
+  inset-inline-start:var(--yb-page-gutter);
+  inline-size:0;
+}
+.yb-partner__dock{
+  position:sticky;
+  inset-block-start:calc(var(--yb-header-h) + var(--yb-space-3));
+  display:flex; align-items:flex-start;
+}
+.yb-partner__avatar{
+  position:relative; flex:none; cursor:pointer;
+  inline-size:var(--yb-target-min); block-size:var(--yb-target-min);
+  padding:0; border-radius:var(--yb-radius-pill); overflow:hidden;
+  border:var(--yb-border-emphasis) solid var(--yb-surface);
+  box-shadow:var(--yb-elevation-raised);
+  background:var(--yb-surface-sunken);
+  transition:transform var(--yb-transition-control);
+}
+.yb-partner__avatar img{inline-size:100%; block-size:100%; object-fit:cover; display:block}
+@media (hover:hover){
+  .yb-partner__avatar:hover{transform:scale(1.06);}
+}
+.yb-partner__avatar:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-partner__bubble{
+  position:absolute; inset-inline-start:calc(var(--yb-target-min) + var(--yb-space-3));
+  inset-block-start:0;
+  inline-size:max-content; max-inline-size:min(22rem, calc(100vw - var(--yb-target-min) - var(--yb-space-10)));
+  background:var(--yb-surface); color:var(--yb-text-primary);
+  border-radius:var(--yb-radius-card); box-shadow:var(--yb-elevation-dropdown);
+  padding:var(--yb-space-3) var(--yb-space-4);
+  font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-relaxed);
+  transition:opacity var(--yb-transition-surface),
+  transform var(--yb-transition-surface),
+  visibility var(--yb-transition-surface);
+}
+.yb-partner__bubble p{margin:0}
+.yb-partner__bubble b{font-weight:var(--yb-font-weight-bold)}
+.yb-partner__bubble::before{
+  content:""; position:absolute; inline-size:.75rem; block-size:.75rem;
+  inset-inline-start:-.3rem; inset-block-start:var(--yb-space-5);
+  background:var(--yb-surface); transform:rotate(45deg);
+}
+.yb-partner[data-collapsed] .yb-partner__bubble{opacity:0; visibility:hidden; transform:translateX(-.5rem) scale(.98);}
+.yb-partner[data-collapsed] .yb-partner__avatar{transform:scale(.82)}
+.yb-partner[data-collapsed] .yb-partner__avatar::after{
+  content:""; position:absolute; inset-block-start:2px; inset-inline-end:2px;
+  inline-size:.5rem; block-size:.5rem; border-radius:var(--yb-radius-pill);
+  background:var(--yb-accent-signal); border:var(--yb-border-hairline) solid var(--yb-surface);
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-accent-signal: #CA235F;
+--yb-border-emphasis: 2px;
+--yb-border-hairline: 1px;
+--yb-elevation-dropdown: 0 4px 12px rgba(30,30,31,.08), 0 2px 4px rgba(30,30,31,.05);
+--yb-elevation-raised: 0 2px 4px rgba(30,30,31,.07), 0 1px 2px rgba(30,30,31,.05);
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-font-weight-bold: 700;
+--yb-header-h: calc(var(--yb-target-min) + var(--yb-space-4) * 2 + 1px);
+--yb-line-height-relaxed: 1.55;
+--yb-page-gutter: 1rem;
+--yb-radius-card: 8px;
+--yb-radius-pill: 9999px;
+--yb-space-10: 2.5rem;
+--yb-space-3: 0.75rem;
+--yb-space-4: 1rem;
+--yb-space-5: 1.25rem;
+--yb-surface: #FFFFFF;
+--yb-surface-sunken: #FAFAFA;
+--yb-target-min: 44px;
+--yb-text-primary: #1E1E1F;
+--yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
+--yb-transition-surface: 180ms cubic-bezier(.2, 0, 0, 1);
+--yb-type-body-sm-size: 0.875rem;
+--yb-z-dropdown: 1000;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

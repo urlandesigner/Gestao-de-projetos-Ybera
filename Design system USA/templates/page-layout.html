@@ -151,19 +151,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -253,8 +240,7 @@
         </div>
       </div>
     </div>
-    <div class="note">
-      <b>Três peças, e não uma folha de página</b>
+    <details class="note"><summary>Três peças, e não uma folha de página</summary>
       <p><code>.yb-page</code> centra e dá a goteira; <code>.yb-block</code> é o ritmo
       vertical entre seções; <code>.yb-section-head</code> é o par título mais atalho.
       Separadas porque uma seção que sangra usa <code>--flush</code> e continua no
@@ -262,19 +248,17 @@
       <p>O <b>eyebrow</b> é a categoria acima do título, não dentro dele, e vive em
       coluna própria: o cabeçalho é um flex de duas pontas, e solto ali ele virava um
       terceiro item disputando a linha.</p>
-    </div>
-    <div class="note">
-      <b>O ritmo encolhe no telefone</b>
+    </details>
+    <details class="note"><summary>O ritmo encolhe no telefone</summary>
       <p>64px de respiro entre blocos é um oitavo de uma tela de 568px — a PDP
       levava duas rolagens até o botão de comprar. Abaixo de 768 o respiro cai, e a
       hierarquia entre <code>--tight</code> e o padrão continua de pé.</p>
-    </div>
-    <div class="note">
-      <b>Por que isto virou sistema</b>
+    </details>
+    <details class="note"><summary>Por que isto virou sistema</summary>
       <p>Regra dos dois usos: home e PDP já pediam os três. Enquanto viviam na folha
       de cada gerador, toda página nova ia redefinir container e respiro do seu
       jeito — que é como um design system começa a divergir de si mesmo.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -282,15 +266,34 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;div class="yb-page"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Page layout">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;div class="yb-page"&gt;
   &lt;div class="yb-block"&gt;
     &lt;div class="yb-section-head"&gt;
       &lt;h2&gt;Best Sellers&lt;/h2&gt;
-      &lt;a class="yb-link" href="#demos"&gt;Shop all best sellers &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;&lt;/a&gt;
+      &lt;a class="yb-link" href="#demos"&gt;Shop all best sellers &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;&lt;/a&gt;
     &lt;/div&gt;
     &lt;div class="yb-grid"&gt;
       &lt;article class="yb-card"&gt;
@@ -324,12 +327,34 @@
         &lt;span class="yb-section-head__eyebrow"&gt;Expert Advice&lt;/span&gt;
         &lt;h2&gt;Professional Secrets&lt;/h2&gt;
       &lt;/div&gt;
-      &lt;a class="yb-link" href="#demos"&gt;See all &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="../icons/ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;&lt;/a&gt;
+      &lt;a class="yb-link" href="#demos"&gt;See all &lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-right"/&gt;&lt;/svg&gt;&lt;/a&gt;
     &lt;/div&gt;
     &lt;p class="yb-buybox__desc"&gt;Fashion Gold, Cronograma, Terra Coco, Vello and Mirra — one system per hair goal, not one product per shelf.&lt;/p&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-page{
+  max-width:var(--yb-container-max);
+  margin-inline:auto;
+  padding-inline:var(--yb-page-gutter);
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-container-max: 1200px;
+--yb-page-gutter: 1rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

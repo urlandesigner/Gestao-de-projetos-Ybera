@@ -149,19 +149,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -223,8 +210,7 @@
         </ol>
       </nav>
     </div>
-    <div class="note">
-      <b>No celular saem as vizinhas, não as setas</b>
+    <details class="note"><summary>No celular saem as vizinhas, não as setas</summary>
       <p>Nove alvos pedem 452px e uma tela de 375 oferece 343. Não podem sumir as duas
       setas, a primeira, a última e onde a pessoa está; podem as <b>vizinhas</b> da
       atual (<code>.yb-pagination__near</code>). Sobram sete itens e 288px, que cabem
@@ -235,7 +221,7 @@
       <p>A página atual usa o <b>botão secundário</b>: o magenta cheio é de quem decide,
       o suave diz "você está aqui". Emenda na
       <a href="../decision-log/DDR-001-primaria-e-grafite.md">DDR-001</a>.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -243,11 +229,30 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;nav class="yb-pagination" data-yb-pagination aria-label="Pagination"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Pagination">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;nav class="yb-pagination" data-yb-pagination aria-label="Pagination"&gt;
   &lt;ol&gt;
     &lt;li&gt;&lt;a href="#demos" aria-label="Previous page"&gt;←&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;&lt;a href="#demos"&gt;1&lt;/a&gt;&lt;/li&gt;
@@ -260,7 +265,88 @@
     &lt;li&gt;&lt;a href="#demos" aria-label="Next page"&gt;→&lt;/a&gt;&lt;/li&gt;
   &lt;/ol&gt;
 &lt;/nav&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-pagination{min-inline-size:0; max-inline-size:100%}
+.yb-pagination ol{
+  list-style:none; margin:0; padding:0; display:flex;
+  gap:var(--yb-space-2); align-items:center; flex-wrap:wrap;
+  justify-content:center;
+}
+.yb-pagination a, .yb-pagination span{
+  display:flex; align-items:center; justify-content:center;
+  min-width:var(--yb-target-min); min-height:var(--yb-target-min);
+  padding:0 var(--yb-space-3); border-radius:var(--yb-radius-control);
+  font-size:var(--yb-type-body-sm-size); text-decoration:none;
+  color:var(--yb-text-secondary); font-variant-numeric:tabular-nums;
+  transition:background var(--yb-transition-control);
+}
+@media (hover:hover){
+  .yb-pagination a:hover{background:var(--yb-bg-muted); color:var(--yb-text-primary)}
+}
+.yb-pagination a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-pagination [aria-current="page"]{
+  background:var(--yb-action-secondary-bg); color:var(--yb-action-secondary-text);
+  font-weight:var(--yb-font-weight-semibold);
+}
+.yb-pagination .yb-pagination__gap{color:var(--yb-text-muted); min-width:auto; padding:0}
+@media (max-width:767.98px){
+  .yb-pagination__near{display:none}
+  .yb-pagination a, .yb-pagination span{padding-inline:0}
+  .yb-pagination ol{
+    flex-wrap:nowrap; overflow-x:auto; overscroll-behavior-inline:contain;
+    max-inline-size:100%;
+    gap:var(--yb-space-1);
+    justify-content:flex-start;
+    justify-content:safe center;
+    scrollbar-width:none;
+  }
+  .yb-pagination ol::-webkit-scrollbar{display:none}
+  .yb-pagination li{flex:none}
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;!-- uma vez por pagina, antes de &lt;/body&gt; --&gt;
+&lt;script src="ybera-components.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- esta peca liga por: data-yb-pagination --&gt;
+
+&lt;!-- conteudo que chega depois (secao carregada por JS do tema): --&gt;
+&lt;script&gt;Ybera.init(secao);&lt;/script&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-action-secondary-bg: #FFFFFF;
+--yb-action-secondary-text: #1E1E1F;
+--yb-bg-muted: #F5F5F5;
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-font-weight-semibold: 600;
+--yb-radius-control: 8px;
+--yb-space-1: 0.25rem;
+--yb-space-2: 0.5rem;
+--yb-space-3: 0.75rem;
+--yb-target-min: 44px;
+--yb-text-muted: #6D6D71;
+--yb-text-primary: #1E1E1F;
+--yb-text-secondary: #535356;
+--yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
+--yb-type-body-sm-size: 0.875rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

@@ -25,7 +25,7 @@
    =========================================================================== */
 
 import { readFileSync, writeFileSync, existsSync, readdirSync, mkdirSync } from 'node:fs';
-import { cabecalho, chipsDeDegrau } from './moldura.mjs';
+import { cabecalho, chipsDeDegrau, recolherNotas } from './moldura.mjs';
 import { NIVEIS, folhaDo } from './escada.mjs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -344,11 +344,233 @@ ${nomes.map((n) => [n, quantosUsam(n)])
 
 const escapar = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+/* ------------------------------------------------------ 4c. aba de codigo
+   HTML, CSS, JS e Tokens da peca, cada um pronto para copiar. O HTML era o
+   da DEMO inteira, com o cromo da galeria dentro (`amostra`, `amostra__rotulo`):
+   quem copiava o Button levava tres classes da doc que a loja nao tem. Aqui
+   cada variante sai limpa, uma por vez, escolhida no seletor. */
+const recuar = (s) => {
+  const linhas = s.split('\n').filter((l) => l.trim());
+  if (!linhas.length) return '';
+  const menor = Math.min(...linhas.map((l) => l.match(/^\s*/)[0].length));
+  return linhas.map((l) => l.slice(menor)).join('\n');
+};
+/* Toda `.amostra` do palco, e nao so a da primeira demo: a fileira de tamanhos
+   e a de estados tambem sao variantes que alguem vai querer copiar. Tag
+   balanceada pela mesma razao de `primeiraAmostra`. */
+/* O elemento da peca, inteiro, e so ele: tag balanceada a partir de cada
+   abertura que tem a classe base EXATA (nao `base__x`). Tira o que a demo poe
+   em volta para exibir — o `.split` da doc, a galeria vizinha do Buy box. */
+function elementosDaBase(html, base) {
+  const saida = [];
+  const abre = new RegExp(`<([a-z][a-z0-9-]*)\\b[^>]*\\bclass="(?:[^"]*\\s)?${base}(?:\\s[^"]*)?"[^>]*>`, 'g');
+  let fimAnterior = -1;
+  for (let a; (a = abre.exec(html)); ) {
+    if (a.index < fimAnterior) continue;
+    const tag = a[1];
+    if (/^(img|input|br|hr|source|meta|link)$/.test(tag) || a[0].endsWith('/>')) { saida.push(a[0]); continue; }
+    const tags = new RegExp(`<(\\/?)${tag}\\b[^>]*>`, 'g'); tags.lastIndex = a.index;
+    let n = 0;
+    for (let m; (m = tags.exec(html)); ) {
+      n += m[1] ? -1 : 1;
+      if (n === 0) { fimAnterior = m.index + m[0].length; saida.push(html.slice(a.index, fimAnterior)); break; }
+    }
+  }
+  return saida;
+}
+const semCromo = (h) => recuar(h
+  .replace(/<(p|span) class="amostra__rotulo">[\s\S]*?<\/\1>\s*/g, '')
+  .replace(/<span class="amostra(?:__foto)?">|<\/span>(?=\s*(?:<span class="amostra|$))/g, ''));
+const textoDe = (el) => {
+  const txt = el.replace(/<(svg|style|script)[\s\S]*?<\/\1>/g, ' ').replace(/<[^>]+>/g, ' ')
+    .replace(/&[a-z]+;|&#\d+;/g, ' ').replace(/\s+/g, ' ').trim();
+  const aria = (el.match(/aria-label="([^"]+)"/) || [])[1];
+  const s = txt || aria || '';
+  return s.length > 32 ? s.slice(0, 31).trimEnd() + '…' : s;
+};
+const rotuloDe = (el, base) => {
+  const cls = (el.match(/class="([^"]*)"/) || [, ''])[1].split(/\s+/)
+    .filter((c) => c.startsWith(`${base}--`)).map((c) => c.slice(base.length));
+  return cls.length ? cls.join(' ') : (textoDe(el) || 'padrão');
+};
+
+function variantesDe(f) {
+  const html = f.palco, achadas = [];
+  const temBase = !!f.base && new RegExp(`class="[^"]*\\b${f.base}\\b`).test(html);
+  const abre = /<span class="amostra">/g;
+  for (let a; (a = abre.exec(html)); ) {
+    let n = 0; const tags = /<(\/?)span\b[^>]*?(\/?)>/g; tags.lastIndex = a.index;
+    for (let m; (m = tags.exec(html)); ) {
+      if (m[2]) continue;
+      n += m[1] ? -1 : 1;
+      if (n === 0) {
+        const bloco = html.slice(a.index + a[0].length, m.index);
+        const rot = (bloco.match(/<span class="amostra__rotulo">([\s\S]*?)<\/span>\s*$/) || [, ''])[1]
+          .replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+        let limpo = recuar(bloco.replace(/<span class="amostra__rotulo">[\s\S]*?<\/span>\s*$/, ''));
+        // o quadro de foto da galeria (`amostra__foto`) tambem e cromo
+        const foto = limpo.match(/^<span class="amostra__foto">\n?([\s\S]*)\n?<\/span>$/);
+        if (foto) limpo = recuar(foto[1]);
+        // so o que e DESTA peca: a ficha do Button tem uma fileira de Icon
+        // button para comparar, e ela nao e variante do Button
+        const daPeca = !f.base || !temBase || new RegExp(`class="[^"]*\\b${f.base}\\b`).test(limpo);
+        if (limpo && daPeca) achadas.push({ rotulo: rot || `Variante ${achadas.length + 1}`, html: caminhos(limpo) });
+        abre.lastIndex = m.index;
+        break;
+      }
+    }
+  }
+  if (!achadas.length && f.snippet) {
+    const els = temBase ? elementosDaBase(f.snippet, f.base) : [];
+    if (els.length) els.forEach((el) => achadas.push({ rotulo: rotuloDe(el, f.base), html: caminhos(recuar(el)) }));
+    else achadas.push({ rotulo: 'padrão', html: caminhos(semCromo(f.snippet)) });
+  }
+  // mesma marcacao, uma entrada so; mesmo rotulo com marcacao diferente ganha
+  // o numero da vez, para o seletor nao ter duas opcoes iguais
+  const vistas = new Set(), rotulos = new Map(), unicas = [];
+  for (const v of achadas) {
+    if (vistas.has(v.html)) continue;
+    vistas.add(v.html);
+    const vez = (rotulos.get(v.rotulo) || 0) + 1;
+    rotulos.set(v.rotulo, vez);
+    const texto = textoDe(v.html);
+    unicas.push(vez === 1 ? v
+      : { ...v, rotulo: texto && texto !== v.rotulo ? `${v.rotulo} · ${texto}` : `${v.rotulo} (${vez})` });
+  }
+  return unicas;
+}
+/* Caminho de quem USA, e nao da doc: no pacote o sprite fica ao lado do CSS. */
+const caminhos = (h) => h.replace(/(?:\.\.\/)+icons\/ybera-icons\.svg/g, 'ybera-icons.svg');
+
+/* O CSS da peca e LIDO da folha do degrau dela, regra por regra: fica tudo
+   que tem a familia no seletor, inclusive dentro de @media e @supports, e as
+   @keyframes que essas regras chamam. Sem comentario — o motivo de cada regra
+   mora na folha, e aqui a pessoa quer o que colar. */
+function regrasDe(css) {
+  const nos = []; let i = 0;
+  const pular = () => { while (i < css.length && /\s/.test(css[i])) i++; };
+  const ateFechar = (ini) => {
+    let d = 0;
+    for (let j = ini; j < css.length; j++) {
+      if (css[j] === '{') d++;
+      else if (css[j] === '}' && --d === 0) return j;
+    }
+    return css.length - 1;
+  };
+  while (i < css.length) {
+    pular(); if (i >= css.length) break;
+    const chave = css.indexOf('{', i);
+    const ponto = css.indexOf(';', i);
+    if (css[i] === '@' && ponto !== -1 && (chave === -1 || ponto < chave)) { i = ponto + 1; continue; }
+    if (chave === -1) break;
+    const fim = ateFechar(chave);
+    const cabeca = css.slice(i, chave).trim(), corpo = css.slice(chave + 1, fim);
+    if (/^@(media|supports|container|layer)\b/.test(cabeca)) nos.push({ at: cabeca, filhos: regrasDe(corpo) });
+    else nos.push({ sel: cabeca, corpo: corpo.trim(), keyframes: /^@keyframes\b/.test(cabeca) });
+    i = fim + 1;
+  }
+  return nos;
+}
+const formatarRegra = (r, pad = '') =>
+  `${pad}${r.sel.replace(/\s*\n\s*/g, ' ')}{${r.corpo.includes('\n') ? '\n' + r.corpo.split('\n').map((l) => `${pad}  ${l.trim()}`).filter((l) => l.trim()).join('\n') + `\n${pad}` : r.corpo}}`;
+function cssDe(f, n) {
+  if (!f.base) return '';
+  const nos = regrasDe(semComentario(folhas[n.dir]));
+  const da = new RegExp(`\\.${f.base}(?![a-z0-9])`);
+  const saida = [], animacoes = new Set();
+  const olhar = (r) => { for (const m of r.corpo.matchAll(/animation(?:-name)?\s*:\s*([\w-]+)/g)) animacoes.add(m[1]); };
+  for (const no of nos) {
+    if (no.at) {
+      const dentro = no.filhos.filter((r) => r.sel && !r.keyframes && da.test(r.sel));
+      dentro.forEach(olhar);
+      if (dentro.length) saida.push(`${no.at.replace(/\s+/g, ' ')}{\n${dentro.map((r) => formatarRegra(r, '  ')).join('\n')}\n}`);
+    } else if (!no.keyframes && da.test(no.sel)) { olhar(no); saida.push(formatarRegra(no)); }
+  }
+  for (const no of nos)
+    if (no.keyframes && animacoes.has(no.sel.replace(/^@keyframes\s+/, '').trim())) saida.push(formatarRegra(no));
+  return saida.join('\n');
+}
+
+const precisaDeJs = (f) => jsCodigo.includes(f.base) || jsCodigo.includes(GANCHO_POR_FAMILIA[f.base] || '\u0000');
+/* A aba JS responde "o que eu carrego para isto funcionar", e a resposta sai
+   dos GANCHOS que a marcacao da peca traz e o script le — e nao de o nome da
+   familia aparecer no script: o Badge e trocado pelo JS do estoque e nao
+   precisa de JS nenhum para funcionar. Ficam tambem as tres que o script acha
+   pela classe (DDR-008) e o Toast, que nasce de uma chamada. */
+function jsDe(f, variantes) {
+  const ganchos = [...new Set(variantes.flatMap((v) => [...v.html.matchAll(/\b(data-yb-[a-z0-9-]+)/g)].map((m) => m[1])))]
+    .filter((g) => jsCodigo.includes(g)).sort();
+  const pelaClasse = ['yb-video', 'yb-nav', 'yb-header'].includes(f.base);
+  if (f.base === 'yb-toast') return [
+    '<!-- uma vez por pagina, antes de </body> -->',
+    '<script src="ybera-components.js" defer></script>',
+    '',
+    '<script>',
+    "  Ybera.toast({ title: 'Added to cart', text: 'Kit Sealant', variant: 'success' });",
+    '</script>',
+    '',
+    '<!-- ou sem script proprio, direto no botao: -->',
+    '<button data-yb-toast data-toast-title="Added to cart" data-toast-variant="success">Add</button>',
+  ].join('\n');
+  if (!ganchos.length && !pelaClasse && !GANCHO_POR_FAMILIA[f.base]) return '';
+  return [
+    '<!-- uma vez por pagina, antes de </body> -->',
+    '<script src="ybera-components.js" defer></script>',
+    ganchos.length ? `\n<!-- esta peca liga por: ${ganchos.join(', ')} -->` : '',
+    '\n<!-- conteudo que chega depois (secao carregada por JS do tema): -->',
+    '<script>Ybera.init(secao);</script>',
+  ].filter(Boolean).join('\n');
+}
+/* Os tokens em forma de CSS, com o valor de cada um em comentario: a lista
+   visual fica na aba Anatomia, aqui e o que um dev cola ou procura. */
+const tokensDe = (f) => f.api.tokens.map((t) => {
+  const v = valorDoToken.get(t);
+  return `${t}${v ? `: ${v};` : ';'}`;
+}).join('\n');
+
+const painelDeCodigo = (f, n) => {
+  const variantes = variantesDe(f);
+  const css = cssDe(f, n), js = jsDe(f, variantes), tok = tokensDe(f);
+  const caixa = (codigo, extra = '') => `<div class="snippet"${extra}>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>${escapar(codigo)}</code></pre>
+      </div>`;
+  const vazio = (txt) => `<p class="api-vazia">${txt}</p>`;
+  return `<div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de ${f.titulo}">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      ${variantes.length > 1 ? `<label class="codigo__variante">Variante
+        <select data-code-variant>
+${variantes.map((v, i) => `          <option value="${i}">${escapar(v.rotulo)}</option>`).join('\n')}
+        </select></label>
+      <span class="codigo__conta">${variantes.length} variantes</span>` : ''}
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      ${variantes.length ? variantes.map((v, i) => caixa(v.html, ` data-code-variant-panel="${i}"${i ? ' hidden' : ''}`)).join('\n      ') : vazio('Sem demonstração de onde extrair.')}
+    </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      ${css ? caixa(css) : vazio('Nenhuma regra própria nesta folha.')}
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      ${js ? caixa(js) : vazio('Nenhum. Esta peça é só CSS: renderiza e funciona sem script.')}
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      ${tok ? caixa(tok) : vazio('Nenhum: a folha não usa token nesta família.')}
+    </div>
+  </div>`;
+};
+
 /* ------------------------------------------------------------ 5. montar */
 const js = ler('behavior/ybera-behavior.js');
 // so codigo, sem comentario — senao uma peca citada de passagem vira "JS"
 const jsCodigo = js.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
-const GANCHO_POR_FAMILIA = { 'yb-dialog': 'data-yb-open' };   // mesma leitura do inventario.mjs
+const GANCHO_POR_FAMILIA = { 'yb-dialog': 'data-yb-open', 'yb-alert': 'data-yb-dispensar' };   // mesma leitura do inventario.mjs
 
 const pecas = NIVEIS.flatMap(lerPecas);
 for (const p of pecas)
@@ -621,19 +843,6 @@ ${cabecalho({ raiz: '../', atual, grupo: n.grupo || n.dir })}
    agora vive em toda pagina, cobre as tres — e uma navegacao so responde
    "onde estou" uma vez. */
 
-/* Os blocos da ficha, na ordem em que aparecem. Uma lista só: ela gera o
-   índice lateral E é a ordem em que o corpo é montado, então não há como o
-   índice prometer uma seção que a página não tem. */
-const BLOCOS = [
-  { id: 'demos', rotulo: 'Como se parece' },
-  { id: 'mobile', rotulo: 'Mobile' },
-  { id: 'feita-de', rotulo: 'De que é feita' },
-  { id: 'anatomia', rotulo: 'Anatomia e API' },
-  { id: 'marcacao', rotulo: 'Marcação' },
-  { id: 'acessibilidade', rotulo: 'Acessibilidade' },
-  { id: 'faca', rotulo: 'Faça / não faça' },
-];
-
 let escritas = 0; const defasadas = [];
 const gravar = (destino, pagina) => {
   const atual = existsSync(join(raiz, destino)) ? ler(destino) : '';
@@ -648,13 +857,6 @@ for (const n of NIVEIS) {
   for (let i = 0; i < doNivel.length; i++) {
     const f = doNivel[i], ant = doNivel[i - 1], prox = doNivel[i + 1];
     const pagina = CABECA(f.titulo, n, `${n.dir}-${f.id}`) + `
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-${BLOCOS.map((b) => `    <li><a href="#${b.id}">${b.rotulo}</a></li>`).join('\n')}
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -700,7 +902,7 @@ ${BLOCOS.map((b) => `    <li><a href="#${b.id}">${b.rotulo}</a></li>`).join('\n'
   <div class="abas" data-yb-tabs>
   <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
-    ${f.palco}
+    ${recolherNotas(f.palco)}
 
     <h3 class="rotulo">No celular</h3>
     ${f.estados.length
@@ -716,14 +918,16 @@ ${f.estados.map((e) => `      <figure class="duo__col">
               width="375" height="420" loading="lazy"></iframe>
     </div>`}
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    ${f.snippet
-      ? `<div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>${escapar(f.snippet)}</code></pre>
-    </div>`
-      : '<p class="api-vazia">Sem demonstração de onde extrair.</p>'}
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    ${painelDeCodigo(f, n)}
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia"${
@@ -761,7 +965,7 @@ ${f.estados.map((e) => `      <figure class="duo__col">
     ${apiLinha('Estados que a folha trata', f.api.estados.length
       ? f.api.estados.map((e) => `<code>${escapar(e)}</code>`).join(' · ')
       : 'Nenhum. A peça não muda por interação.')}
-    ${apiLinha('Comportamento', jsCodigo.includes(f.base) || jsCodigo.includes(GANCHO_POR_FAMILIA[f.base] || '\u0000')
+    ${apiLinha('Comportamento', precisaDeJs(f)
       ? 'Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.'
       : 'Só CSS.')}
     <p class="rotulo">Tokens <span class="rotulo-conta">${f.api.tokens.length}</span></p>

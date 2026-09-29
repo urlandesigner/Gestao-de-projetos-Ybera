@@ -149,19 +149,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -277,8 +264,7 @@
         <span class="yb-price yb-price--sm"><b class="yb-price__now">$119.90</b></span>
       </article>
     </div>
-    <div class="note">
-      <b>No ponteiro ela some; no dedo, nunca</b>
+    <details class="note"><summary>No ponteiro ela some; no dedo, nunca</summary>
       <p><b>Desktop:</b> a ação nasce invisível e aparece no <code>:hover</code> e no
       <code>:focus-within</code> &mdash; a foto é o assunto, e o cartão é um entre
       quatro iguais. <b>Toque:</b> <code>@media (hover:none)</code> a deixa sempre
@@ -287,16 +273,14 @@
       do sistema. Sem isso a ação não apareceria em lugar nenhum da documentação: o
       quadro de 375px também roda num navegador de ponteiro, então nem ali o ramo do
       dedo se mostra sozinho.</p>
-    </div>
-    <div class="note">
-      <b>O botão precisa de <code>z-index</code> para ser clicável</b>
+    </details>
+    <details class="note"><summary>O botão precisa de <code>z-index</code> para ser clicável</summary>
       <p>O link do título estica um <code>::after</code> sobre o cartão inteiro e vem
       depois da mídia no DOM: sem <code>z-index:1</code> o botão aparece no hover e
       quem clica cai na PDP. E cada botão diz o produto no <code>aria-label</code>
       &mdash; quatro "Add to cart" iguais não dizem nada a quem ouve.</p>
-    </div>
-    <div class="note">
-      <b>Aqui não há fileira de catálogo, e é de propósito</b>
+    </details>
+    <details class="note"><summary>Aqui não há fileira de catálogo, e é de propósito</summary>
       <p>Os demos acima são <b>o cartão</b>, um estado por linha. Uma fileira de quatro
       cartões arrumados já não é o cartão &mdash; é o bloco de catálogo, e ele tem
       <a href="../organisms/catalog.html">ficha própria</a>, com título, contagem e
@@ -305,9 +289,8 @@
       trocando de quatro para três e duas colunas, o lugar é o
       <a href="../preview/">Preview</a>, que roda a página inteira em viewport de
       verdade.</p>
-    </div>
-    <div class="note">
-      <b>A grade não é um componente</b>
+    </details>
+    <details class="note"><summary>A grade não é um componente</summary>
       <p><code>.yb-grid</code> é o <b>arranjo</b> de um conjunto de cartões, e mora
       aqui por isso. Ela não tem anatomia &mdash; nenhum <code>__</code> &mdash;, nem
       variante, nem estado, nem marcação própria: quatro declarações de layout. Chegou
@@ -318,7 +301,7 @@
       <p>Em duas colunas o <a href="offercard.html">cartão de oferta</a> ocupa as duas:
       numa célula de 171px o relógio vaza pela borda e o título clampa em "Fashion
       Gold…". No desktop é uma célula só, com 266px, e tudo entra.</p>
-    </div>
+    </details>
     <!-- ARRANJO SO NO QUADRO DE CELULAR.
          Em largura de desktop os dois arranjos sao a mesma fileira: a grade
          nao quebrou ainda e o trilho nao precisa rolar. A diferenca entre
@@ -373,8 +356,7 @@
         </article>
       </div>
     </div>
-    <div class="note">
-      <b>Grade ou trilho é escolha da seção</b>
+    <details class="note"><summary>Grade ou trilho é escolha da seção</summary>
       <p>O mesmo cartão serve aos dois: troca-se <code>.yb-grid</code> por
       <code>.yb-track</code> no contêiner — sem classe nova, sem script, sem controle
       na tela.</p>
@@ -385,17 +367,15 @@
       <p><b>Os dois ao mesmo tempo:</b> <code>.yb-grid__rail</code> envolve os cartões e
       é trilho abaixo de 768; acima, <code>display:contents</code> o apaga e eles voltam
       a ser células da grade. O desktop fica byte a byte o que era.</p>
-    </div>
-    <div class="note">
-      <b>Selo que repete o título da seção não é selo</b>
+    </details>
+    <details class="note"><summary>Selo que repete o título da seção não é selo</summary>
       <p>"Best seller" dentro de uma grade chamada Best Sellers não informa nada — e
       quando só dois dos quatro cartões o têm, os outros dois parecem "não ser".
       O selo vale onde o contexto não diz a mesma coisa: relacionados, busca,
       coleção. O brinde que vem do título ("| FREE CRONOGRAMA") é informação de
       venda e vira <code>--accent</code>; nunca fica no título para o clamp engolir.</p>
-    </div>
-    <div class="note">
-      <b>A marca saiu do cartão</b>
+    </details>
+    <details class="note"><summary>A marca saiu do cartão</summary>
       <p><code>.yb-card__vendor</code> existia entre o título e o preço e <b>nunca teve
       consumidor</b>: as duas chamadas do gerador passavam <code>vendor=False</code>. O
       motivo é a loja &mdash; todo produto do catálogo é Ybera. Escrever "Ybera Paris"
@@ -404,24 +384,22 @@
       <p>A marca continua existindo como <b>dado</b>: a busca a usa na linha de apoio do
       resultado, e a PDP diz de que linha o produto é. O que saiu foi o lugar dela no
       cartão.</p>
-    </div>
-    <div class="note">
-      <b>De onde veio o truncamento</b>
+    </details>
+    <details class="note"><summary>De onde veio o truncamento</summary>
       <p>As telas-prova mostraram títulos reais ocupando 2, 5 e 4 linhas, e o preço
       desalinhava na fileira. O token <code>--yb-card-title-lines: 2</code> nasceu desse
       defeito observado.</p>
       <p>O clamp só limita; não reserva. O <code>min-height</code> do título reserva as
       mesmas linhas, pela mesma variável — sem ele, um título de uma linha subia o
       preço 19px.</p>
-    </div>
-    <div class="note">
-      <b>Sem rating: era nota inventada</b>
+    </details>
+    <details class="note"><summary>Sem rating: era nota inventada</summary>
       <p>O card mostrava "4.8 of 5" fixo em todo produto — só a contagem de
       avaliações variava, a nota nunca veio do dado. Review de verdade (texto,
       nota real, quem comprou) mora só na PDP, na seção de review — não num
       resumo que ninguém sustenta espremido num cartão de grid. No grid de
       duas colunas do celular, tirar essa linha também devolve altura.</p>
-    </div>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="duo">
@@ -437,16 +415,165 @@
       </figure>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;article class="yb-card"&gt;
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Card product">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      
+    </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;article class="yb-card"&gt;
   &lt;div class="yb-card__media"&gt;&lt;img src="../pages/img/105-d0e326.webp" alt="Frasco branco de condicionador Pantanal elixir, 1 litro" loading="lazy"&gt;&lt;/div&gt;
   &lt;h3 class="yb-card__title"&gt;&lt;a href="#demos"&gt;Floral Fusion Hair Mist — 50ml / 1.69 fl.oz&lt;/a&gt;&lt;/h3&gt;
   &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$24.00&lt;/b&gt;&lt;/span&gt;
 &lt;/article&gt;</code></pre>
+      </div>
     </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-card__action{
+  position:absolute; inset-inline:var(--yb-space-3);
+  inset-block-end:var(--yb-space-3);
+  z-index:1;
+  opacity:0; transform:translateY(var(--yb-space-2));
+  transition:opacity var(--yb-transition-control), transform var(--yb-transition-control);
+}
+@media (hover:none){
+  .yb-card__action{opacity:1; transform:none}
+}
+@media (hover:hover){
+  .yb-card:hover .yb-card__action, .yb-card:focus-within .yb-card__action{opacity:1; transform:none}
+}
+.yb-card__media img + img{
+  position:absolute; inset:0; opacity:0;
+  background:var(--yb-surface-sunken);
+  transition:opacity var(--yb-transition-surface);
+}
+@media (hover:hover){
+  .yb-card:hover .yb-card__media img + img{opacity:1}
+}
+@media (hover:hover){
+  .yb-card{
+    transition:transform var(--yb-transition-surface),
+    outline-color var(--yb-transition-surface);
+    outline:var(--yb-border-hairline) solid transparent;
+    outline-offset:var(--yb-space-2);
+    border-radius:var(--yb-radius-card);
+  }
+  .yb-card__media{transition:box-shadow var(--yb-transition-surface);}
+  .yb-card:not(.yb-card--sold-out):hover:not(:has(.yb-card__action:hover)), .yb-card:not(.yb-card--sold-out):focus-within:not(:has(.yb-card__action:hover)){
+    transform:translateY(-2px);
+    outline:var(--yb-border-hairline) solid var(--yb-border);
+    outline-offset:var(--yb-space-2);
+  }
+  .yb-card:not(.yb-card--sold-out):hover:not(:has(.yb-card__action:hover)) .yb-card__media, .yb-card:not(.yb-card--sold-out):focus-within:not(:has(.yb-card__action:hover)) .yb-card__media{box-shadow:var(--yb-elevation-raised);}
+}
+.yb-card--sold-out .yb-card__media{opacity:var(--yb-opacity-media-disabled);}
+.yb-card--sold-out .yb-card__media::after{
+  content:attr(data-soldout); position:absolute;
+  inset-inline:0; inset-block-end:0; padding:var(--yb-space-2);
+  text-align:center; background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
+  text-transform:uppercase;
+}
+.yb-card{
+  display:flex; flex-direction:column; gap:var(--yb-space-3); min-width:0;
+  position:relative
+}
+@media (max-width:767.98px){
+  .yb-card{
+    padding-block-end:var(--yb-space-3); border:var(--yb-border-hairline) solid var(--yb-border-subtle);
+    border-radius:var(--yb-radius-card); background:var(--yb-surface);
+    box-shadow:var(--yb-elevation-card);
+  }
+  .yb-card &gt; .yb-card__title, .yb-card &gt; .yb-rating, .yb-card &gt; .yb-price{margin-inline:var(--yb-space-3);}
+}
+.yb-card__title a::after{content:""; position:absolute; inset:0; border-radius:inherit}
+.yb-card__media{
+  position:relative; aspect-ratio:var(--yb-aspect-product); overflow:hidden;
+  background:var(--yb-surface-sunken);
+  border-radius:var(--yb-radius-media);
+}
+@media (max-width:767.98px){
+  .yb-card__media{border-radius:var(--yb-radius-card) var(--yb-radius-card) 0 0;}
+}
+.yb-card__media img{width:100%; height:100%; object-fit:cover; display:block}
+.yb-card__flags{
+  position:absolute; inset-block-start:var(--yb-space-2); inset-inline-start:var(--yb-space-2);
+  inset-inline-end:var(--yb-space-2);
+  display:flex; gap:var(--yb-space-1); flex-wrap:wrap;
+}
+.yb-card__flags .yb-badge{max-width:100%; min-width:0; overflow:hidden; text-overflow:ellipsis;}
+.yb-card__title{
+  font-size:var(--yb-type-body-size); line-height:var(--yb-type-body-sm-line);
+  font-weight:var(--yb-font-weight-semibold); margin:0;
+  display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:var(--yb-card-title-lines); line-clamp:var(--yb-card-title-lines);
+  overflow:hidden;
+  min-height:calc(var(--yb-card-title-lines) * var(--yb-type-body-sm-line) * 1em);
+}
+.yb-card__title a{color:var(--yb-text-primary); text-decoration:none}
+.yb-card__title a:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-aspect-product: 1 / 1;
+--yb-bg-inverse: #1E1E1F;
+--yb-border: #DADADB;
+--yb-border-hairline: 1px;
+--yb-border-subtle: #EAEAEA;
+--yb-card-title-lines: 2;
+--yb-elevation-card: 0 1px 2px rgba(30,30,31,.06);
+--yb-elevation-raised: 0 2px 4px rgba(30,30,31,.07), 0 1px 2px rgba(30,30,31,.05);
+--yb-focus-color: #CA235F;
+--yb-focus-offset: 0;
+--yb-focus-width: 2px;
+--yb-font-weight-semibold: 600;
+--yb-opacity-media-disabled: .55;
+--yb-radius-card: 8px;
+--yb-radius-media: 8px;
+--yb-radius-sm: 4px;
+--yb-space-1: 0.25rem;
+--yb-space-2: 0.5rem;
+--yb-space-3: 0.75rem;
+--yb-surface: #FFFFFF;
+--yb-surface-sunken: #FAFAFA;
+--yb-text-inverse: #FFFFFF;
+--yb-text-primary: #1E1E1F;
+--yb-tracking-wider: 0.12em;
+--yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
+--yb-transition-surface: 180ms cubic-bezier(.2, 0, 0, 1);
+--yb-type-body-size: 1rem;
+--yb-type-body-sm-line: 1.35;
+--yb-type-overline-size: 0.6875rem;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

@@ -149,19 +149,6 @@
 </nav>
 <!-- /@moldura -->
 
-<aside class="ds-onpage" aria-labelledby="nesta-pagina">
-  <p class="ds-nesta__titulo" id="nesta-pagina">Nesta página</p>
-  <ol>
-    <li><a href="#demos">Como se parece</a></li>
-    <li><a href="#mobile">Mobile</a></li>
-    <li><a href="#feita-de">De que é feita</a></li>
-    <li><a href="#anatomia">Anatomia e API</a></li>
-    <li><a href="#marcacao">Marcação</a></li>
-    <li><a href="#acessibilidade">Acessibilidade</a></li>
-    <li><a href="#faca">Faça / não faça</a></li>
-  </ol>
-</aside>
-
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
@@ -236,19 +223,92 @@
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
-    <h3 class="rotulo">Marcação</h3>
-    <p class="bloco-lede">O mesmo HTML que renderizou acima.</p>
-    <div class="snippet">
-      <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-      <pre><code>&lt;span class="amostra"&gt;
-  &lt;span class="yb-price"&gt;&lt;b class="yb-price__now"&gt;$168.90&lt;/b&gt;&lt;s class="yb-price__was"&gt;$199.90&lt;/s&gt;&lt;span class="yb-badge yb-badge--sale"&gt;Save $31&lt;/span&gt;&lt;/span&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;sem modificador&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;
-&lt;span class="amostra"&gt;
-  &lt;span class="yb-price yb-price--stack"&gt;&lt;b class="yb-price__now"&gt;$168.90&lt;/b&gt;&lt;s class="yb-price__was"&gt;$199.90&lt;/s&gt;&lt;/span&gt;
-  &lt;span class="amostra__rotulo"&gt;&lt;code&gt;--stack&lt;/code&gt;&lt;/span&gt;
-&lt;/span&gt;</code></pre>
+  </section>
+
+  <!-- CODIGO NA SEGUNDA ABA, e nao no fim da primeira: embaixo do palco e do
+       quadro de celular ele ficava a varias rolagens da peca, e e a primeira
+       coisa que um dev procura depois de ver como ela e. -->
+  <section class="bloco" id="codigo" data-tab="Código">
+    <h2 class="bloco-titulo">Código</h2>
+    <p class="bloco-lede">Cada variante sem o cromo da galeria, e o CSS, o JS e os
+    tokens desta peça, lidos da folha a cada build.</p>
+    <div class="codigo" data-yb-code>
+    <div class="codigo__barra">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Price">
+        <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
+        <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
+        <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
+      </div>
+      <label class="codigo__variante">Variante
+        <select data-code-variant>
+          <option value="0">sem modificador</option>
+          <option value="1">--stack</option>
+          <option value="2">sem modificador · 24px</option>
+          <option value="3">--sm · 20px</option>
+        </select></label>
+      <span class="codigo__conta">4 variantes</span>
     </div>
+    <div class="codigo__painel" data-code-panel="html">
+      <div class="snippet" data-code-variant-panel="0">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-price"&gt;&lt;b class="yb-price__now"&gt;$168.90&lt;/b&gt;&lt;s class="yb-price__was"&gt;$199.90&lt;/s&gt;&lt;span class="yb-badge yb-badge--sale"&gt;Save $31&lt;/span&gt;&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="1" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-price yb-price--stack"&gt;&lt;b class="yb-price__now"&gt;$168.90&lt;/b&gt;&lt;s class="yb-price__was"&gt;$199.90&lt;/s&gt;&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="2" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-price"&gt;&lt;b class="yb-price__now"&gt;$168.90&lt;/b&gt;&lt;s class="yb-price__was"&gt;$199.90&lt;/s&gt;&lt;/span&gt;</code></pre>
+      </div>
+      <div class="snippet" data-code-variant-panel="3" hidden>
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$168.90&lt;/b&gt;&lt;s class="yb-price__was"&gt;$199.90&lt;/s&gt;&lt;/span&gt;</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="css" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>.yb-price{display:flex; align-items:baseline; gap:var(--yb-space-3); flex-wrap:wrap}
+.yb-price__now{
+  font-size:var(--yb-type-price-size); line-height:var(--yb-type-price-line);
+  letter-spacing:var(--yb-type-price-track); font-weight:var(--yb-type-price-weight);
+  font-variant-numeric:tabular-nums; color:var(--yb-text-primary);
+}
+.yb-price__was{
+  font-size:var(--yb-type-body-size); color:var(--yb-text-muted);
+  text-decoration:line-through; font-variant-numeric:tabular-nums;
+}
+.yb-price--sm .yb-price__now{font-size:var(--yb-type-h4-size)}
+.yb-price--stack{flex-direction:column-reverse; align-items:flex-start; gap:var(--yb-space-1);}
+@media (max-width:767.98px){
+  .yb-card &gt; .yb-card__title, .yb-card &gt; .yb-rating, .yb-card &gt; .yb-price{margin-inline:var(--yb-space-3);}
+}</code></pre>
+      </div>
+    </div>
+    <div class="codigo__painel" data-code-panel="js" hidden>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+    </div>
+    <div class="codigo__painel" data-code-panel="tokens" hidden>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>--yb-space-1: 0.25rem;
+--yb-space-3: 0.75rem;
+--yb-text-muted: #6D6D71;
+--yb-text-primary: #1E1E1F;
+--yb-type-body-size: 1rem;
+--yb-type-body-sm-size: 0.875rem;
+--yb-type-caption-size: 0.8125rem;
+--yb-type-h4-size: 1.25rem;
+--yb-type-price-line: 1.15;
+--yb-type-price-size: 1.5rem;
+--yb-type-price-track: -0.015em;
+--yb-type-price-weight: 700;</code></pre>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">

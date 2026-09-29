@@ -92,6 +92,35 @@ export const UTEIS = [
 
 export const AREAS = [...GRUPOS, ...UTEIS];
 
+/* NOTA RECOLHIDA. A nota guarda o PORQUE de uma decisao, e isso tem de
+   continuar ao lado da variante de que ela fala — mas aberta, cada uma
+   ocupava ~160px, e a ficha do Button empilhava uma tela inteira de caixa azul
+   entre uma fileira e a seguinte. Vira <details> fechado: o titulo e a linha,
+   o texto abre no clique. A fonte (`pecas/*.html`) continua escrevendo
+   `<div class="note"><b>Titulo</b>...`, e o validador segue medindo ali.
+
+   Tag balanceada, e nao expressao: nota pode ter <div> dentro. */
+export function recolherNotas(html) {
+  let saida = '', i = 0;
+  const abre = /<div class="note">\s*<b>([\s\S]*?)<\/b>/g;
+  for (let a; (a = abre.exec(html)); ) {
+    if (a.index < i) continue;
+    const tags = /<(\/?)div\b[^>]*>/g; tags.lastIndex = a.index;
+    let n = 0, fim = -1;
+    for (let m; (m = tags.exec(html)); ) {
+      n += m[1] ? -1 : 1;
+      if (n === 0) { fim = m.index; break; }
+    }
+    if (fim === -1) break;
+    const corpo = html.slice(a.index + a[0].length, fim);
+    saida += html.slice(i, a.index)
+      + `<details class="note"><summary>${a[1].trim()}</summary>${corpo}</details>`;
+    i = fim + '</div>'.length;
+    abre.lastIndex = i;
+  }
+  return saida + html.slice(i);
+}
+
 export const MARCA_ABRE = '<!-- @moldura · gerada por tools/moldura.mjs · não edite -->';
 export const MARCA_FECHA = '<!-- /@moldura -->';
 
@@ -136,7 +165,7 @@ const secoesDeTokens = () => ORDEM_TOKENS
       id: `tokens-${id}`, arquivo: id, href: `tokens/${id}.html`,
       rotulo: (corpo.match(/<h2>([\s\S]*?)<\/h2>/) || [, id])[1].trim(),
       quando: (corpo.match(/<p class="when">([\s\S]*?)<\/p>/) || [, ''])[1].trim(),
-      palco: corpo.slice(corpo.indexOf('</p>', corpo.indexOf('class="when"')) + 4).trim(),
+      palco: recolherNotas(corpo.slice(corpo.indexOf('</p>', corpo.indexOf('class="when"')) + 4).trim()),
     };
   });
 
