@@ -208,6 +208,21 @@ body.pagina-entregas {
   color: var(--mudo);
   letter-spacing: -0.02em;
 }
+/* Linha de apoio dos blocos da capa: diz o que o número conta. Vive entre o
+   rótulo e o numeral, e por isso NÃO pode ganhar `margin: auto` — é o
+   `.rl-tile-num` que tem o auto, e é ele que encosta o número na base e alinha
+   os dois blocos na mesma linha ótica. Largura curta de propósito: é apoio, não
+   parágrafo. */
+.rl-tile-apoio {
+  position: relative; /* acima do SVG de fundo do bloco escuro */
+  margin: -0.35rem 0 0; /* encosta no rótulo: são uma unidade de leitura */
+  max-width: 34ch;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--mudo);
+}
+.rl-tile-escuro .rl-tile-apoio { color: rgba(255, 255, 255, 0.62); }
+
 /* Só o NÚMERO fica vermelho, nunca o bloco: pintar a superfície inteira faz
    o bloco parecer quebrado, e o que está errado é a contagem, não o card. */
 .rl-tile-alerta .rl-tile-num b { color: var(--erro); }

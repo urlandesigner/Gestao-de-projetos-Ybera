@@ -180,9 +180,15 @@
   // Bento: blocos de tamanhos diferentes num mesmo grid. Cada bloco carrega UM
   // número em corpo de manchete, com a unidade miúda colada — é o contraste de
   // escala que faz a leitura acontecer de relance, antes de qualquer texto.
-  function tile(rotulo, valor, sufixo, mod) {
+  /* O `apoio` vai logo ABAIXO do rótulo, e não abaixo do número, de propósito:
+     `.rl-tile-num` tem `margin: auto 0 0` pra encostar o numeral na base, que é
+     o que alinha os dois blocos da capa na mesma linha ótica. Texto depois dele
+     empurraria o número pra cima — e por alturas diferentes, cada bloco por um
+     tanto. Em cima, a explicação chega antes do número e não move nada. */
+  function tile(rotulo, valor, sufixo, mod, apoio) {
     return `<article class="rl-tile${mod ? ' ' + mod : ''}">
       <p class="rl-tile-rot">${esc(rotulo)}</p>
+      ${apoio ? `<p class="rl-tile-apoio">${esc(apoio)}</p>` : ''}
       <p class="rl-tile-num"><b class="rl-num">${esc(String(valor))}</b>${sufixo ? `<span>${esc(sufixo)}</span>` : ''}</p>
     </article>`;
   }
@@ -205,16 +211,17 @@
      mesma função que dá o número de cada seção. Antes este bloco contava os PBIs
      fechados no período — régua diferente da do corpo, e era a origem do "a capa
      diz 28 e eu conto 8 entregas embaixo". */
-  function heroi(total) {
+  function heroi(total, apoio) {
     // Sem recorte de tempo no rótulo: o título da capa já nomeia o período
     // três centímetros acima, e repetir aqui e no bloco vizinho era dizer a
     // mesma coisa três vezes na mesma tela. Sem ponto final também — rótulo
     // não é frase, e o bloco ao lado nunca teve.
-    /* Fica "Itens entregues", por decisão do Urlan. Registrado pra quem vier
-       depois: este bloco conta itens fechados no board e os cartões abaixo são
-       entregas de negócio escritas à mão — réguas diferentes. "Itens técnicos
-       concluídos" foi tentado pra separá-las e saiu; o rótulo não vai explicar
-       a diferença, então ela mora no contexto de quem apresenta o documento. */
+    /* Fica "Itens entregues", por decisão do Urlan. "Itens técnicos concluídos"
+       foi tentado e saiu. O que o rótulo não dá conta de dizer — que este bloco
+       conta itens fechados no board, enquanto os cartões abaixo são entregas de
+       negócio escritas à mão, réguas diferentes — passou a ser trabalho da
+       linha de apoio, que é o parâmetro abaixo. Antes isso morava só no
+       contexto de quem apresentava o documento; quem lesse sozinho ficava sem. */
     const frase = total ? 'Itens entregues' : 'Nenhum item entregue';
     return `<article class="rl-tile rl-tile-escuro rl-heroi">
       <svg class="rl-heroi-fundo" viewBox="0 0 200 120" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
@@ -222,6 +229,7 @@
         <path d="M168 24 H194 V50" fill="none" stroke="currentColor" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       <p class="rl-heroi-frase">${esc(frase)}</p>
+      ${apoio ? `<p class="rl-tile-apoio">${esc(apoio)}</p>` : ''}
       <div class="rl-heroi-base">
         <p class="rl-tile-num"><b class="rl-num">${total}</b></p>
       </div>
@@ -818,7 +826,18 @@
     const rotuloGrupo = agrupar === 'epico'
       ? (nGrupos === 1 ? 'Frente atendida' : 'Frentes atendidas')
       : (nGrupos === 1 ? 'Projeto atendido' : 'Projetos atendidos');
-    const kpis = tile(rotuloGrupo, nGrupos);
+    /* Os dois números da capa são de RÉGUAS DIFERENTES, e nenhum rótulo de duas
+       palavras dá conta disso: um conta frentes de trabalho (o que está no
+       roadmap), o outro conta itens fechados no board dentro dessas frentes.
+       Sem a linha de apoio o leitor tenta dividir um pelo outro, ou supõe que o
+       número grande é o de cartões que ele vê abaixo — e não é.
+
+       Fica embaixo do rótulo e não do número por uma razão de forma; está
+       explicada em `tile`. */
+    const apoioGrupo = nGrupos === 1
+      ? 'Frente de trabalho contemplada neste relatório'
+      : 'Frentes de trabalho contempladas neste relatório';
+    const kpis = tile(rotuloGrupo, nGrupos, '', '', apoioGrupo);
 
     const porIdTodos = new Map((o.todos || items).map((it) => [it.id, it]));
     const contagens = pbisPorChave(items, porIdTodos, mapa);
@@ -918,7 +937,8 @@
     // delegado por seletor, então nunca casa. `listaMeses` continua no retorno:
     // é dela que a Central monta o link de leitura.
     const html = `<div class="report-doc rl-doc">
-      ${masthead(periodo, meta.join(' · '), kpis, heroi(totalDeItens),
+      ${masthead(periodo, meta.join(' · '), kpis,
+        heroi(totalDeItens, 'Soma dos itens concluídos dentro dessas frentes'),
         [o.unidade, 'E-commerce'].filter(Boolean).join(' · '),
         'O que o time entregou no período, e o planejamento dos próximos meses.')}
       <div class="rl-corpo">${secoes.map((x) => secaoHtml(x)).join('')}</div>

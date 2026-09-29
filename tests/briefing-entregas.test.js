@@ -366,6 +366,35 @@ test('capa: o bloco escuro conta PBI fechado no mês, não épico nem Feature', 
   assert.ok(!/3 itens/.test(capa), 'a contagem mora no numeral, não na frase');
 });
 
+/* Os dois blocos da capa medem coisas diferentes — frentes de trabalho de um
+   lado, itens fechados do outro — e o Urlan pediu que isso ficasse explícito:
+   sem a linha de apoio o leitor tenta dividir um número pelo outro, ou supõe
+   que o número grande é a quantidade de cartões que ele vê logo abaixo. */
+test('capa: cada número diz o que conta, e sem jargão de sistema', () => {
+  const capa = capaDe(documento().html);
+  assert.match(capa, /rl-tile-apoio">[^<]*[Ff]rentes de trabalho contempladas/,
+    'o bloco claro não explica o que é um "projeto atendido"');
+  assert.match(capa, /rl-tile-apoio">Soma dos itens concluídos dentro dessas frentes</,
+    'o bloco escuro não explica o que é um "item entregue"');
+  for (const jargao of ['Azure DevOps', 'PBI', 'backlog', 'Feature']) {
+    assert.ok(!capa.includes(jargao), `"${jargao}" é jargão: a capa é pro stakeholder`);
+  }
+});
+
+/* A linha de apoio fica ACIMA do numeral por uma razão de forma, não de gosto:
+   `.rl-tile-num` tem `margin: auto 0 0` pra encostar o número na base do bloco,
+   e é isso que alinha os dois blocos da capa na mesma linha ótica. Texto entre
+   o número e a base empurraria cada bloco por uma altura diferente. */
+test('capa: a linha de apoio vem antes do numeral, senão o alinhamento quebra', () => {
+  const capa = capaDe(documento().html);
+  for (const bloco of capa.split('<article').slice(1)) {
+    const apoio = bloco.indexOf('rl-tile-apoio');
+    if (apoio < 0) continue;
+    assert.ok(apoio < bloco.indexOf('rl-tile-num'),
+      'apoio depois do número desalinha os blocos da capa');
+  }
+});
+
 test('capa: o número grande é a SOMA das seções', () => {
   /* Era a incoerência mais visível do documento: a capa contava PBIs fechados no
      período e o corpo mostrava entregas curadas. O leitor lia 28 em cima,
