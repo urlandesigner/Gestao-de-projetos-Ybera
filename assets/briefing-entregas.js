@@ -281,7 +281,7 @@
   function secaoHtml(s) {
     return `<section class="rl-sec" id="${s.id}">
       <div class="rl-sec-cab">
-        <h2 class="rl-sec-titulo">${esc(s.titulo)}</h2>
+        <h2 class="rl-sec-titulo">${esc(s.titulo)}${s.conta ? `<span class="rl-sec-conta">${esc(s.conta)}</span>` : ''}</h2>
         ${s.intro ? `<p class="rl-sec-intro">${esc(s.intro)}</p>` : ''}
       </div>
       ${s.corpo}
@@ -560,6 +560,29 @@
   };
   const contaPbis = (m) => (((m || {}).itens) || []).filter((r) => ehPbi(r.item || r)).length;
 
+  /* PBIs do período repartidos por épico. `mapa` vem de C.mapaDeProdutos, que
+     sobe a cadeia de pais até o épico — atravessando Feature quando houver.
+
+     ATENÇÃO à soma: cartões diferentes podem apontar pro MESMO épico (hoje
+     cinco dos oito apontam pro 49290), e as seções agrupam por iniciativa. Logo
+     duas seções podem mostrar o mesmo número, e somar as seções não dá o total
+     da capa. O épico é grosso demais pra repartir por seção; enquanto for ele a
+     chave, esta contagem é "quanto andou o épico desta frente", não "quanto
+     esta frente entregou". */
+  function pbisPorEpico(mesesDoPeriodo, mapa) {
+    const conta = new Map();
+    for (const m of mesesDoPeriodo || []) {
+      for (const r of ((m || {}).itens || [])) {
+        const it = r.item || r;
+        if (!ehPbi(it)) continue;
+        const prod = mapa && mapa.get(it.id);
+        if (!prod) continue;
+        conta.set(prod.id, (conta.get(prod.id) || 0) + 1);
+      }
+    }
+    return conta;
+  }
+
   // Roadmap: o único dado que não vem do DevOps (assets/roadmap.json). Datas em
   // dia UTC pra escala e barra baterem sem fuso torto.
   const MES_ABREV = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
@@ -737,6 +760,16 @@
       : (nGrupos === 1 ? 'Projeto atendido' : 'Projetos atendidos');
     const kpis = tile(rotuloGrupo, nGrupos);
 
+    const porEpico = pbisPorEpico(mesesPeriodo, mapa);
+    /* Um grupo pode ter cartões de épicos diferentes (é o caso de "Outras
+       entregas"), então soma os épicos DISTINTOS do grupo — sem o Set, um épico
+       repetido entre dois cartões da mesma seção contaria duas vezes ali. */
+    const contaDoGrupo = (g, conta) => {
+      const epicos = [...new Set((g.cards || []).map((c) => c.epicoId).filter(Boolean))];
+      const n = epicos.reduce((soma, id) => soma + (conta.get(id) || 0), 0);
+      return n ? plural(n, 'item', 'itens') : '';
+    };
+
     const secoes = [];
     if (ENTREGAS_RECENTES.length && agrupar === 'plano') {
       secoes.push({
@@ -747,11 +780,13 @@
     } else {
       for (const g of grupos) {
         secoes.push({
-          // Sem intro: a contagem ("3 entregas recentes.") não dizia nada que a
-          // seção não mostrasse — os cartões estão logo abaixo e dão pra contar
-          // no olho. O roadmap mantém a dele porque lá o texto explica o
-          // recorte, e não repete o que está à vista.
+          // Sem intro: a contagem de CARTÕES ("3 entregas recentes.") não dizia
+          // nada que a seção não mostrasse — eles estão logo abaixo e dão pra
+          // contar no olho. O que vai ao lado do título é outra coisa: quantos
+          // PBIs do épico daquela frente fecharam no período, que é número que
+          // não está à vista em lugar nenhum.
           id: (agrupar === 'epico' ? 'epico-' : 'ini-') + g.id, titulo: g.nome,
+          conta: contaDoGrupo(g, porEpico),
           corpo: corpoEntregasRecentes(g.cards, false),
         });
       }

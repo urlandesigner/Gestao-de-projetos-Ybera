@@ -395,6 +395,17 @@ body.pagina-entregas {
   line-height: 1.15;
   letter-spacing: -0.03em;
 }
+/* A conta é anotação, não parte do nome: menor, apagada e com o número de
+   largura fixa, pra não dançar quando mudar. */
+.rl-sec-conta {
+  flex: none;
+  align-self: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--mudo);
+  font-variant-numeric: tabular-nums;
+}
 .rl-sec-titulo::before {
   content: '';
   flex: none;
