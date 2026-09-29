@@ -911,6 +911,10 @@
     titulo: c.titulo, iniciativa: c.iniciativa || null,
     produto: c.produto || null, epicoId: c.epicoId || null, status: c.status || null,
     featureIds: Array.isArray(c.featureIds) ? c.featureIds.slice() : null,
+    // contaFixa precisa vir junto: sem ela, quem pergunta ao módulo vê o cartão
+    // do compliance como "ainda sem chave de contagem" e vai atrás de uma
+    // Feature que não existe.
+    contaFixa: typeof c.contaFixa === 'number' ? c.contaFixa : null,
   }));
 
   return { htmlReport, mesPorExtenso, dataCurta, esc, periodoDoDocumento, cartoesDoDocumento };
