@@ -395,14 +395,16 @@ body.pagina-entregas {
   line-height: 1.15;
   letter-spacing: -0.03em;
 }
-/* A conta é anotação, não parte do nome: menor, apagada e com o número de
-   largura fixa, pra não dançar quando mudar. */
+/* A conta é anotação, não parte do nome — fica embaixo do título, e não ao
+   lado dele. Ao lado ela disputava a linha com nomes longos e empurrava a marca
+   vertical pra longe do texto; embaixo ocupa o lugar que era da intro, que é
+   onde o olho já espera uma linha de apoio.
+
+   `tabular-nums` trava a largura do número, pra ele não dançar ao mudar. */
 .rl-sec-conta {
-  flex: none;
-  align-self: center;
-  font-size: 0.78rem;
+  margin: 0.3rem 0 0;
+  font-size: 0.82rem;
   font-weight: 600;
-  letter-spacing: 0;
   color: var(--mudo);
   font-variant-numeric: tabular-nums;
 }

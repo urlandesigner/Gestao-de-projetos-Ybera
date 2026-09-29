@@ -281,7 +281,8 @@
   function secaoHtml(s) {
     return `<section class="rl-sec" id="${s.id}">
       <div class="rl-sec-cab">
-        <h2 class="rl-sec-titulo">${esc(s.titulo)}${s.conta ? `<span class="rl-sec-conta">${esc(s.conta)}</span>` : ''}</h2>
+        <h2 class="rl-sec-titulo">${esc(s.titulo)}</h2>
+        ${s.conta ? `<p class="rl-sec-conta">${esc(s.conta)}</p>` : ''}
         ${s.intro ? `<p class="rl-sec-intro">${esc(s.intro)}</p>` : ''}
       </div>
       ${s.corpo}
