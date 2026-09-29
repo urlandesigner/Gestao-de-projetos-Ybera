@@ -562,10 +562,14 @@ test('capa: nenhum rótulo repete o mês nem termina em ponto', () => {
   }
 });
 
-test('capa: o papel do responsável aparece por extenso, sem sigla pontuada', () => {
-  const capa = capaDe(documento({ escopo: 'Urlan Dipre' }).html);
-  assert.ok(capa.includes('Product Owner: Urlan Dipre'));
-  assert.ok(!capa.includes('P.O'), 'a sigla pontuada não existe em nenhum outro lugar do documento');
+/* A autoria mora no RODAPÉ, não na capa. Na capa ela custava uma linha e uma
+   fronteira de 24px no trecho em que o leitor ainda está indo atrás dos
+   números — caro no telefone, onde espaço é rolagem. */
+test('a autoria fica no rodapé, por extenso e sem sigla pontuada', () => {
+  const html = documento({ escopo: 'Urlan Dipre' }).html;
+  assert.ok(html.includes('Product Owner: Urlan Dipre'), 'a autoria sumiu do documento');
+  assert.ok(!capaDe(html).includes('Product Owner'), 'a autoria voltou a ocupar a capa');
+  assert.ok(!html.includes('P.O'), 'a sigla pontuada não existe em nenhum outro lugar do documento');
 });
 
 /* ---- Galeria ----

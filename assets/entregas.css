@@ -162,23 +162,11 @@ body.pagina-entregas {
   line-height: 1.55;
   color: var(--mudo);
 }
-/* Mesmo tamanho e mesma cor de `.rl-tile-apoio`, e isso não vai mudar: são os
-   dois textos de apoio do documento. O que separa os dois é DISTÂNCIA — a meta
-   encostada no bento lia como legenda dos cartões, e é metadado do documento.
-   A margem extra abaixo a prende ao bloco do título, que é onde ela pertence. */
-.rl-meta {
-  /* 1.5rem e não 0.7rem: com 0.7 o espaço até a situação (11px) era MENOR que
-     o da situação até o título (16px), então a linha do Product Owner grudava
-     na frase que explica o documento em vez de ler como o metadado que é. A
-     capa passa a ter uma escada — 8px dentro do bloco do título, 16 até a
-     situação, 24 até o metadado, 32 até os números — e cada fronteira é um
-     degrau maior que a anterior. Era isso que faltava pra ela parecer
-     organizada, não menos conteúdo. */
-  margin: 1.5rem 0 0;
-  font-size: 0.82rem;
-  color: var(--mudo);
-}
-.rl-capa .rl-meta + .rl-bento-capa { margin-top: clamp(2rem, 4.5vw, 3rem); }
+/* A fronteira até os números é o degrau mais alto da capa, e passou a pendurar
+   na situação porque a linha de metadado desceu pro rodapé. Sem esta regra o
+   bento cairia no margin-top genérico de `.rl-bento` (20px no telefone) e o
+   espaço até os números ficaria MENOR que o do título até a situação. */
+.rl-capa .rl-capa-situacao + .rl-bento-capa { margin-top: clamp(2rem, 4.5vw, 3rem); }
 
 /* ---------- Bento ---------- */
 .rl-bento {
@@ -1131,8 +1119,16 @@ body.pagina-entregas {
 .rl-rodape .rl-logo { height: 28px; margin-bottom: 1.4rem; }
 .rl-rodape-titulo { margin: 0; font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; }
 .rl-rodape-sub { margin: 0.35rem 0 0; font-size: 0.85rem; color: rgba(255, 255, 255, 0.6); }
-.rl-rodape-contato {
+/* Autoria: veio da capa, onde custava uma linha e uma fronteira de 24px no
+   trecho em que o leitor ainda está indo atrás dos números. Aqui ela fica com
+   o contato, que é da mesma pessoa. */
+.rl-rodape-autoria {
   margin: 1.6rem 0 0;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+.rl-rodape-contato {
+  margin: 0.55rem 0 0;
   font-size: 0.8rem;
   line-height: 1.8;
   color: rgba(255, 255, 255, 0.6);
@@ -1350,7 +1346,7 @@ body.pagina-entregas {
   .rl-tile-escuro .rl-tile-rot, .rl-heroi-frase { color: var(--tinta) !important; }
   .rl-heroi-fundo { display: none; }
   .rl-logo-inv { filter: none; }
-  .rl-rodape-sub, .rl-rodape-contato { color: var(--mudo) !important; }
+  .rl-rodape-sub, .rl-rodape-contato, .rl-rodape-autoria { color: var(--mudo) !important; }
   .rl-rodape-contato a { color: var(--tinta); }
   /* Barras são só fundo: sem isto o papel sai em branco */
   .rl-rumo-trilho i, .rl-esforco-regua i, .rl-comp-barra i, .rl-rm-barra,
