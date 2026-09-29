@@ -356,7 +356,9 @@ test('capa: o bloco escuro conta PBI fechado no mês, não épico nem Feature', 
   assert.match(capa, /rl-heroi-base[\s\S]*?rl-num">3</);
   // A frase é rótulo: nomeia o que o número mede, sem repetir o número e sem
   // repetir o mês, que o título da capa já anuncia.
-  assert.ok(capa.includes('>Itens entregues<'));
+  // "técnicos" separa a régua deste número da dos cartões: aqui são itens do
+  // board, lá embaixo são entregas de negócio escritas à mão.
+  assert.ok(capa.includes('>Itens técnicos concluídos<'));
   assert.ok(!capa.includes('Azure DevOps'), 'o nome do sistema é jargão pra quem lê');
   assert.ok(!capa.includes('setembro'), 'o mês mora no título, não nos rótulos');
   assert.ok(!/3 itens/.test(capa), 'a contagem mora no numeral, não na frase');

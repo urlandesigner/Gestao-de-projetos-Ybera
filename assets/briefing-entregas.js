@@ -207,7 +207,16 @@
     // três centímetros acima, e repetir aqui e no bloco vizinho era dizer a
     // mesma coisa três vezes na mesma tela. Sem ponto final também — rótulo
     // não é frase, e o bloco ao lado nunca teve.
-    const frase = total ? 'Itens entregues' : 'Nenhum item entregue';
+    /* "técnicos" é a palavra que faz o número parar de competir com os cartões.
+       Este bloco conta itens fechados no board; os cartões abaixo são entregas
+       de negócio, escritas à mão. São réguas diferentes, e "Itens entregues"
+       fazia parecer a mesma: o leitor via 28 aqui, contava 8 embaixo, e ou
+       achava que faltava conteúdo ou desconfiava do número.
+
+       Sem nomear a ferramenta, de propósito: o nome do sistema é jargão pra
+       quem lê, e há teste guardando a capa contra ele. "Técnicos" entrega a
+       distinção sem cobrar do leitor que saiba o que é o board. */
+    const frase = total ? 'Itens técnicos concluídos' : 'Nenhum item técnico concluído';
     return `<article class="rl-tile rl-tile-escuro rl-heroi">
       <svg class="rl-heroi-fundo" viewBox="0 0 200 120" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
         <path d="M6 104 C40 104 44 62 74 62 C104 62 104 88 132 88 C162 88 166 24 194 24" fill="none" stroke="currentColor" stroke-width="13" stroke-linecap="round"/>
