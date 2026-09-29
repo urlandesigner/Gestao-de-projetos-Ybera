@@ -255,7 +255,7 @@
 
      A unidade sai da linha de meta porque subiu pra retranca — escrevê-la duas
      vezes na mesma tela é o tipo de repetição que este documento evita. */
-  function masthead(periodo, tiles, hero, retranca, situacao) {
+  function masthead(periodo, meta, tiles, hero, retranca, situacao) {
     return `<header class="rl-capa">
       <div class="rl-capa-topo">
         <img class="rl-logo" src="assets/brand/ybera-logo.webp" alt="Ybera" width="360" height="139">
@@ -266,6 +266,7 @@
         <span class="rl-titulo-forte">${esc(periodo)}</span>
       </h1>
       ${situacao ? `<p class="rl-capa-situacao">${esc(situacao)}</p>` : ''}
+      ${meta ? `<p class="rl-meta">${esc(meta)}</p>` : ''}
       <div class="rl-bento rl-bento-capa">${tiles}${hero}</div>
     </header>`;
   }
@@ -273,19 +274,12 @@
   // Rodapé: única superfície escura do documento — e é onde o dourado da marca
   // pode existir (regra do DS: gold-500 nunca é texto sobre claro).
   const EMAIL_CONTATO = 'urlan.dipre@ybera.com';
-  /* A autoria desceu da capa pra cá. No telefone ela custava caro no lugar
-     errado: uma linha de metadado, mais a fronteira de 24px acima dela, no
-     trecho em que o leitor ainda está tentando chegar aos números. E o rodapé
-     já era onde a autoria morava de fato — o contato daqui é do mesmo
-     Product Owner. Vale nos dois tamanhos: no desktop o espaço era ainda maior
-     (70px) pela mesma linha. */
-  function rodape(autoria) {
+  function rodape() {
     return `<footer class="rl-rodape">
       <div class="rl-tile rl-tile-escuro rl-rodape-int">
         <img class="rl-logo rl-logo-inv" src="assets/brand/ybera-logo.webp" alt="Ybera" width="360" height="139">
         <p class="rl-rodape-titulo">Time de Tecnologia</p>
         <p class="rl-rodape-sub">Comprometidos com transparência, inovação e colaboração</p>
-        ${autoria ? `<p class="rl-rodape-autoria">${esc(autoria)}</p>` : ''}
         <p class="rl-rodape-contato">Para dúvidas ou sugestões<br><a href="mailto:${esc(EMAIL_CONTATO)}">${esc(EMAIL_CONTATO)}</a></p>
       </div>
     </footer>`;
@@ -952,12 +946,12 @@
     // delegado por seletor, então nunca casa. `listaMeses` continua no retorno:
     // é dela que a Central monta o link de leitura.
     const html = `<div class="report-doc rl-doc">
-      ${masthead(periodo, kpis,
+      ${masthead(periodo, meta.join(' · '), kpis,
         heroi(totalDeItens, apoioItens),
         [o.unidade, 'E-commerce'].filter(Boolean).join(' · '),
         'O que o time entregou no período, e o planejamento dos próximos meses.')}
       <div class="rl-corpo">${secoes.map((x) => secaoHtml(x)).join('')}</div>
-      ${rodape(meta.join(' · '))}
+      ${rodape()}
     </div>`;
 
     return { vazio: false, meses: listaMeses, html };
