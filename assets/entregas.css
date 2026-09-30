@@ -1304,7 +1304,13 @@ body.pagina-entregas {
   .rl-capa-topo { justify-content: center; }
   /* `text-align` centra o TEXTO, não a CAIXA: sem margem automática, a frase
      sai centrada dentro de um bloco encostado à esquerda. */
-  .rl-capa-situacao { margin-left: auto; margin-right: auto; }
+  /* Título, situação e blocos andam mais juntos que no desktop: na tela larga
+     eles são três faixas com sobra dos lados, e o espaço vertical é o que os
+     separa; no telefone a largura já os isola, e o mesmo espaço vira buraco.
+     A escada continua ascendente — 8 dentro do bloco do título, 12 até a
+     situação, 20 até os números — só com os degraus mais curtos. */
+  .rl-capa-situacao { margin-top: 0.75rem; margin-left: auto; margin-right: auto; }
+  .rl-capa .rl-meta + .rl-bento-capa { margin-top: 1.25rem; }
   .rl-bento-capa .rl-tile-rot, .rl-bento-capa .rl-heroi-frase { margin-left: auto; margin-right: auto; }
   .rl-bento-capa .rl-tile-num { justify-content: center; }
 
