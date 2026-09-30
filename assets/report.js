@@ -455,6 +455,17 @@ const CAMPOS_LINK = [
   'System.WorkItemType', 'System.State', 'System.Title', 'System.Parent',
   'Microsoft.VSTS.Scheduling.TargetDate', 'Microsoft.VSTS.Common.ClosedDate', 'System.ChangedDate',
 ];
+/* Esta lista serve ao report e ao v2, que mostram título, prazo e data de
+   fechamento item a item. O Entregas não mostra NADA disso: os cartões são
+   texto curado, e do DevOps ele só lê tipo, estado e pai pra contar. Levar os
+   outros quatro campos era carregar o backlog inteiro dentro da URL — medido no
+   link real do Urlan, 5.208 caracteres, dos quais os títulos sozinhos eram o
+   maior pedaço.
+
+   Então o DOCUMENTO declara o que lê, em `camposDoLink`, e quem não declara
+   fica com a lista completa — report e v2 seguem intocados. */
+const camposDoLink = () => (Array.isArray(B.camposDoLink) && B.camposDoLink.length)
+  ? B.camposDoLink : CAMPOS_LINK;
 const LIMITE_LINK = 8000; // acima disso ferramentas de mensagem começam a cortar
 
 function b64url(bytes) {
@@ -494,7 +505,7 @@ function enxugar(items) {
   return items.map((it) => {
     const f = it.fields || {};
     const campos = {};
-    for (const c of CAMPOS_LINK) if (f[c] !== undefined) campos[c] = f[c];
+    for (const c of camposDoLink()) if (f[c] !== undefined) campos[c] = f[c];
     return { id: it.id, projeto: it.projeto, fields: campos };
   });
 }
@@ -507,6 +518,10 @@ function enxugar(items) {
 // report, e sem eles o leitor do link veria tudo em "Sem produto associado".
 const CAMPOS_CADEIA = ['System.WorkItemType', 'System.Title', 'System.Parent',
   'System.State', 'Microsoft.VSTS.Scheduling.TargetDate'];
+// O pai carrega o MENOR entre o que a cadeia precisa e o que o documento lê:
+// sem a interseção, podar os itens e deixar os ancestrais gordos devolveria
+// metade da economia — os pais são poucos, mas o título deles é texto longo.
+const camposDaCadeia = () => CAMPOS_CADEIA.filter((c) => camposDoLink().includes(c));
 function cadeiaDeProdutos(mostrados, todos) {
   const porId = new Map((todos || []).map((it) => [it.id, it]));
   const dentro = new Set(mostrados.map((it) => it.id));
@@ -518,7 +533,7 @@ function cadeiaDeProdutos(mostrados, todos) {
       if (!p) break; // pai fora da consulta: a cadeia para aqui, sem inventar
       const f = p.fields || {};
       const campos = {};
-      for (const c of CAMPOS_CADEIA) if (f[c] !== undefined) campos[c] = f[c];
+      for (const c of camposDaCadeia()) if (f[c] !== undefined) campos[c] = f[c];
       extras.set(pai, { id: p.id, fields: campos });
       pai = f['System.Parent'];
     }

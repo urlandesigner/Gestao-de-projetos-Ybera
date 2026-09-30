@@ -433,7 +433,7 @@
          não envelhece — "hoje" envelheceria no dia seguinte. */
       resumo: [
         'Avançamos nos itens que recebemos da agência: faltam apenas 4 dos 18 para finalizar. O prazo final deste projeto é 30 de setembro.',
-        'O que não for finalizado até essa data será tratado como nova demanda, a partir de outubro.',
+        'O que não for finalizado até essa data será tratado como nova demanda, a partir de outubro. Essas novas demandas serão avaliadas e priorizadas junto com as que já estão em andamento.',
       ],
       // 14 concluídos é o complemento dos 4 que faltam, ditos no texto. A barra
       // guarda o total e o feito; o texto conta pelo que sobra, que é o que
@@ -990,5 +990,17 @@
     contaFixa: typeof c.contaFixa === 'number' ? c.contaFixa : null,
   }));
 
-  return { htmlReport, mesPorExtenso, dataCurta, esc, periodoDoDocumento, cartoesDoDocumento };
+  /* Os ÚNICOS campos do DevOps que este documento lê. O report.js usa esta
+     lista pra podar o pacote do link de leitura: o que não está aqui não viaja.
+
+     Tipo e pai sobem a hierarquia até a Feature (featureDe), estado decide se a
+     PBI conta (isTerminalState). Título, data de fechamento e data de alteração
+     não aparecem em lugar nenhum do documento — os cartões são texto curado.
+
+     Medido num link real: 5.208 caracteres viraram 1.631, e o HTML desenhado
+     é byte a byte o mesmo. Se algum dia um cartão passar a mostrar dado vindo
+     do board, o campo entra AQUI antes. */
+  const camposDoLink = ['System.WorkItemType', 'System.State', 'System.Parent'];
+
+  return { htmlReport, mesPorExtenso, dataCurta, esc, periodoDoDocumento, cartoesDoDocumento, camposDoLink };
 });
