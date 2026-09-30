@@ -428,9 +428,12 @@
       produto: 'Loja Clube USA',
       epicoId: 49290,
       status: 'andamento',
+      /* A data por extenso, e não "ainda este mês": o documento é lido depois de
+         escrito, e em 30/09 "este mês" já queria dizer "hoje" sem dizer. Data
+         não envelhece — "hoje" envelheceria no dia seguinte. */
       resumo: [
-        'Avançamos nos itens que recebemos da agência: faltam apenas 4 dos 18 para finalizar, com previsão de término ainda este mês.',
-        'O que não for finalizado dentro desse prazo será tratado como nova demanda, a partir de outubro.',
+        'Avançamos nos itens que recebemos da agência: faltam apenas 4 dos 18 para finalizar. O prazo final deste projeto é 30 de setembro.',
+        'O que não for finalizado até essa data será tratado como nova demanda, a partir de outubro.',
       ],
       // 14 concluídos é o complemento dos 4 que faltam, ditos no texto. A barra
       // guarda o total e o feito; o texto conta pelo que sobra, que é o que
