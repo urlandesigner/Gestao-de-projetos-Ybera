@@ -1,10 +1,30 @@
 <h2>How to use</h2>
-    <p class="when">Um link, e os tokens ficam disponíveis em qualquer plataforma.</p>
-<div class="layer">
-        <pre>&lt;link rel="stylesheet" href="ybera-tokens.css"&gt;
-&lt;html data-market="us"&gt;
-
-.meu-botao {
+    <p class="when">Baixe o pacote no <b>Download</b> do topo e descompacte no projeto: tokens, componentes e ícones vêm juntos, e o HTML de cada peça está na aba Código da ficha.</p>
+<div class="layers">
+      <div class="layer">
+        <h3>1 · Ligue os arquivos, nesta ordem</h3>
+        <p>A fonte não vem no pacote; sem ela, a página cai na fonte do sistema.</p>
+        <pre>&lt;link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&amp;display=swap"&gt;
+&lt;link rel="stylesheet" href="ybera/ybera-tokens.css"&gt;
+&lt;link rel="stylesheet" href="ybera/ybera-components.css"&gt;
+&lt;link rel="stylesheet" href="ybera/ybera-icons.css"&gt;
+&lt;script src="ybera/ybera-components.js" defer&gt;&lt;/script&gt;</pre>
+      </div>
+      <div class="layer">
+        <h3>2 · Monte com o HTML das fichas</h3>
+        <p>Copie da aba Código. O comportamento (gaveta, modal, toast, galeria, trilho) liga sozinho pelos atributos <code>data-yb-*</code>; conteúdo que entra depois do carregamento pede <code>window.Ybera.init(elemento)</code>.</p>
+        <pre>&lt;button type="button" class="yb-btn yb-btn--primary"&gt;Add to cart&lt;/button&gt;
+&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera/ybera-icons.svg#yb-cart"/&gt;&lt;/svg&gt;</pre>
+      </div>
+      <div class="layer">
+        <h3>3 · Sirva por HTTP</h3>
+        <p>Aberta como arquivo (<code>file://</code>), a página perde os ícones: o navegador bloqueia o sprite externo.</p>
+        <pre>python3 -m http.server 8080</pre>
+      </div>
+      <div class="layer">
+        <h3>Peça própria, com os tokens</h3>
+        <p>Quando o sistema não tem a peça, use os tokens semânticos, nunca o valor.</p>
+        <pre>.meu-botao {
   background: var(--yb-action-primary-bg);
   color: var(--yb-action-primary-text);
   border-radius: var(--yb-radius-control);
@@ -13,6 +33,7 @@
   transition: background var(--yb-transition-control);
 }</pre>
       </div>
+</div>
       <div class="rule">
         <b>A regra que sustenta o sistema</b>
         <p>Componente nunca consome a camada 0. Se você escreveu

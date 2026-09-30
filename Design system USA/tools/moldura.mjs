@@ -54,16 +54,16 @@ const versao = (ler('package.json').match(/"version":\s*"([^"]+)"/) || [, '0.0.0
    `pages/` é a única área que NÃO recebe a moldura: ali dentro a página é a
    loja, e um cabeçalho nosso por cima competiria com o que está em teste. */
 export const GRUPOS = [
-  { id: 'foundation', rotulo: 'Fundação', href: 'tokens/index.html', hub: true,
+  { id: 'foundation', rotulo: 'Foundation', href: 'tokens/index.html', hub: true,
     lede: 'Não aparece sozinha na tela. Valor e símbolo: toda peça consome, ninguém vê isolado.',
     dentro: ['tokens', 'icons'] },
-  { id: 'components', rotulo: 'Componentes', href: 'components/index.html', hub: true,
+  { id: 'components', rotulo: 'Components', href: 'components/index.html', hub: true,
     lede: 'A peça reutilizável e sem contexto. Serve a qualquer página porque não sabe em qual está.',
     dentro: ['atoms', 'molecules'] },
   /* `hub: false`: abre a galeria que tools/fichas.mjs já escreve para o degrau.
      O grupo tem UM degrau, então uma página de grupo repetiria a mesma lista de
      quinze com outro título — e lista repetida é a que envelhece pela metade. */
-  { id: 'blocks', rotulo: 'Blocos', href: 'organisms/index.html', hub: false,
+  { id: 'blocks', rotulo: 'Blocks', href: 'organisms/index.html', hub: false,
     lede: 'As regiões da loja. Cada uma tem lugar e existe uma vez por tela.' },
   /* `hub: false` diz que o item do menu NÃO tem página própria gerada aqui —
      ele abre a galeria que tools/fichas.mjs já escreve para o degrau. Gerar
@@ -77,7 +77,7 @@ export const GRUPOS = [
      INVENTARIO.md, que só chama uma peça de estável depois que ela sobrevive a
      uma destas telas. A lede não repete isso: quem abre esta página quer saber
      o que há nela e o que acontece ao clicar. */
-  { id: 'pages', rotulo: 'Exemplos', href: 'pages/index.html', hub: true,
+  { id: 'pages', rotulo: 'Examples', href: 'pages/index.html', hub: true,
     lede: 'As telas da loja, montadas só com as peças do sistema e o catálogo ao vivo. Abrem em aba nova.',
     dentro: ['telas'] },
 ];
@@ -87,7 +87,7 @@ export const GRUPOS = [
    de um traço, soltos. */
 export const UTEIS = [
   { id: 'preview', rotulo: 'Preview', href: 'preview/index.html' },
-  { id: 'decision-log', rotulo: 'Decisões', href: 'decision-log/index.html' },
+  { id: 'decision-log', rotulo: 'Decision log', href: 'decision-log/index.html' },
 ];
 
 export const AREAS = [...GRUPOS, ...UTEIS];
@@ -184,11 +184,11 @@ const pecasDeComponente = () => pecasDoGrupo(COMPONENTES);
 
 export function arvore() {
   return [
-    { tipo: 'item', id: 'inicio', rotulo: 'Início', href: 'index.html' },
-    { tipo: 'grupo', id: 'foundation', rotulo: 'Fundação', itens: [
-      { href: 'tokens/index.html', rotulo: 'Visão geral', id: 'foundation' },
+    { tipo: 'item', id: 'inicio', rotulo: 'Home', href: 'index.html' },
+    { tipo: 'grupo', id: 'foundation', rotulo: 'Foundation', itens: [
+      { href: 'tokens/index.html', rotulo: 'Overview', id: 'foundation' },
       ...secoesDeTokens(),
-      { href: 'icons/index.html', rotulo: 'Ícones', id: 'icons' },
+      { href: 'icons/index.html', rotulo: 'Icons', id: 'icons' },
     ] },
     /* Sem "Visão geral" aqui, e só aqui. Nos outros grupos ela abre uma página
        que diz algo que a coluna não diz — o `base/` na Fundação, a lista de
@@ -199,18 +199,18 @@ export function arvore() {
        item da trilha de toda ficha (`Componentes / Átomos / Button`) e um
        azulejo da capa. O que sai é a linha que repetia o que estava logo
        abaixo dela. */
-    { tipo: 'grupo', id: 'components', rotulo: 'Componentes', itens: pecasDeComponente() },
+    { tipo: 'grupo', id: 'components', rotulo: 'Components', itens: pecasDeComponente() },
     /* Blocos vem DEPOIS de Componentes, e não antes: a ordem da coluna é a
        ordem em que se monta uma tela — a peça existe antes da região que a
        usa. É a mesma ordem da cascata. */
-    { tipo: 'grupo', id: 'blocks', rotulo: 'Blocos', itens: pecasDoGrupo(BLOCOS) },
+    { tipo: 'grupo', id: 'blocks', rotulo: 'Blocks', itens: pecasDoGrupo(BLOCOS) },
     /* Templates fica FORA da coluna por enquanto. O degrau existe — a folha
        `templates/ybera-templates.css` carrega na cascata e o Page layout tem
        ficha —, mas no menu ele seria uma promessa: um item com uma peça e uma
        lista de cinco esqueletos por escrever. Continua alcançável pela capa,
        que é onde a pendência segue declarada. */
-    { tipo: 'grupo', id: 'pages', rotulo: 'Exemplos', itens: [
-      { href: 'pages/index.html', rotulo: 'Visão geral', id: 'pages' },
+    { tipo: 'grupo', id: 'pages', rotulo: 'Examples', itens: [
+      { href: 'pages/index.html', rotulo: 'Overview', id: 'pages' },
       ...TELAS.map(([arq, nome]) => ({ href: `pages/${arq}`, rotulo: nome, id: `tela-${arq}`, externa: true })),
     ] },
     { tipo: 'item', id: 'preview', rotulo: 'Preview', href: 'preview/index.html' },
@@ -289,9 +289,9 @@ ${n.itens.map(link).join('\n')}
     <p class="nav-conta" role="status" aria-live="polite"></p>
   </div>
   <p class="ds-top__versao">v${versao}</p>
-  <a class="ds-top__baixar" href="${raiz}dist/ybera-tokens.json" download="ybera-tokens.json">
+  <a class="ds-top__baixar" href="${raiz}dist/ybera-design-system.zip" download="ybera-design-system.zip" aria-label="Download do pacote: tokens, componentes e ícones">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8"/><path d="M4.5 7.5 8 11l3.5-3.5"/><path d="M2.5 13.5h11"/></svg>
-    <span>Baixar tokens <span class="ds-top__baixar-fmt">JSON</span></span>
+    <span>Download</span>
   </a>
 </header>
 <nav class="ds-nav" aria-label="Navegação do design system">
@@ -347,7 +347,7 @@ export function chipsDeDegrau(atual, raiz = '../') {
   const chip = (id, href, rotulo, n) =>
     `    <a class="chip" href="${raiz}${href}"${id === atual ? ' aria-current="page"' : ''}>${rotulo} <span>${n}</span></a>`;
   return `  <nav class="chips" aria-label="Degraus do sistema">
-${chip('components', 'components/index.html', 'Todos', total)}
+${chip('components', 'components/index.html', 'All', total)}
 ${COMPONENTES.map((x) => chip(x.dir, `${x.dir}/index.html`, x.titulo, contar(`${x.dir}/pecas`))).join('\n')}
   </nav>`;
 }
@@ -356,12 +356,17 @@ ${COMPONENTES.map((x) => chip(x.dir, `${x.dir}/index.html`, x.titulo, contar(`${
    entrar nela — nome de arquivo não é nome de tela, e derivar do `<title>`
    traria o título de marketing da loja ("Ybera Paris USA | Keratin care…"). */
 const TELAS = [
-  ['home.html', 'Home v1'], ['index-v2.html', 'Home v2'], ['index-v3.html', 'Home v3'],
-  ['index-logado.html', 'Home · cliente logado'],
-  ['pdp.html', 'PDP'], ['pdp-influencer.html', 'PDP link influencer'],
-  ['pdp-esgotado.html', 'PDP esgotada'],
-  ['pdp-variante.html', 'PDP com variante'], ['pdp-oferta.html', 'PDP em promoção'],
-  ['faq.html', 'FAQ'], ['404.html', '404'],
+  ['home.html', 'Home v1', 'A home de hoje remontada com as peças do sistema: banner de promoção no topo e Best Sellers logo abaixo.'],
+  ['index-v2.html', 'Home v2', 'A v1 na ordem de e-commerce dos EUA: hero em carrossel, “Not sure where to start?”, Shop by Concern e FAQ curto antes do rodapé.'],
+  ['index-v3.html', 'Home v3', 'A v2 enxuta, na ordem que o time pediu: sem o quiz, sem o bloco de autoridade e sem o FAQ curto.'],
+  ['index-logado.html', 'Home · logged in', 'A v2 com sessão aberta: o ícone de conta vira a inicial e abre o menu da conta.'],
+  ['pdp.html', 'PDP', 'Compra, relacionados e avaliações.'],
+  ['pdp-influencer.html', 'PDP · influencer link', 'A mesma PDP de quem chega por link patrocinado: o recado do parceiro abaixo do cabeçalho.'],
+  ['pdp-esgotado.html', 'PDP · sold out', 'O bloco de compra sem estoque, com o aviso de volta.'],
+  ['pdp-variante.html', 'PDP · with variant', 'Seletor de tamanho movendo preço, estoque e foto.'],
+  ['pdp-oferta.html', 'PDP · on sale', 'Preço anterior riscado e selo de desconto.'],
+  ['faq.html', 'FAQ', 'Perguntas em acordeão com índice lateral.'],
+  ['404.html', '404', 'Página que não existe mais, com volta para a home, busca e Best Sellers.'],
 ];
 
 const cartao = (href, nome, conta, linha, externa) =>
@@ -401,7 +406,9 @@ function corpoDoGrupo(g) {
     <h2>Tokens <span class="grade-conta">${tokens}</span></h2>
     <p class="grade-lede">O vocabulário do sistema em três camadas: primitivo, semântico
     e de componente. ${secoes.length} seções, uma página cada — a ordem vai de
-    fundamento a estado, e é a ordem em que se aprende.</p>
+    fundamento a estado, e é a ordem em que se aprende. Os mesmos tokens em JSON,
+    no formato W3C Design Tokens, para Figma ou Style Dictionary:
+    <a href="../dist/ybera-tokens.json" download="ybera-tokens.json">ybera-tokens.json</a>.</p>
     <div class="grade">
 ${secoes.map((s) => cartao(`${s.arquivo}.html`, s.rotulo, null, s.frase)).join('\n')}
     </div>
@@ -462,10 +469,10 @@ ${cartao('../icons/index.html', 'A galeria', icones, 'Grade de 24×24, traço 1,
 
   <section class="grade-grupo">
     <h2>Todos os componentes <span class="grade-conta">${pecas.length}</span></h2>
-    <p class="grade-lede">Em ordem de nome, os dois degraus juntos — ${COMPONENTES.map((x) => `${n(x.dir)} ${x.titulo.toLowerCase()}`).join(' e ')}.
+    <p class="grade-lede">Em ordem de nome, os dois degraus juntos — ${COMPONENTES.map((x) => `${n(x.dir)} ${x.singular}s`).join(' e ')}.
     A proporção ${COMPONENTES.map((x) => n(x.dir)).join(' / ')} é o que diz se o sistema está
     saudável: base larga. Poucos átomos para muitas moléculas significa que alguém está
-    reescrevendo botão. As regiões da página estão em <a href="../organisms/index.html">Blocos</a>.</p>
+    reescrevendo botão. As regiões da página estão em <a href="../organisms/index.html">Blocks</a>.</p>
     <div class="grade">
 ${pecas.map((x) => `      <a class="peca" href="../${x.dir}/${x.id}.html">
         <span class="peca-nivel">${x.nivel}</span>
@@ -482,7 +489,7 @@ ${pecas.map((x) => `      <a class="peca" href="../${x.dir}/${x.id}.html">
   return `  <section class="grade-grupo">
     <h2>As telas <span class="grade-conta">${TELAS.length}</span></h2>
     <div class="grade">
-${TELAS.map(([a, nome]) => cartao(a, nome, null, a, true)).join('\n')}
+${TELAS.map(([a, nome, linha]) => cartao(a, nome, null, linha, true)).join('\n')}
     </div>
   </section>`;
 }
@@ -525,9 +532,7 @@ ${cabecalho({ raiz, atual: g.id })}
 
 ${corpoDoGrupo(g)}
 
-  <p class="doc-credit">Página gerada por <code>tools/moldura.mjs</code>. Os números
-  são contados do disco a cada build. Não edite este arquivo à mão — rode
-  <code>./build.sh</code>.</p>
+  <!-- Gerada por tools/moldura.mjs; os números são contados do disco a cada build. Não edite à mão: ./build.sh -->
 </main>
 </body>
 </html>
@@ -582,7 +587,7 @@ ${cabecalho({ raiz, atual: s.id })}
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
-      <a href="index.html">Fundação</a>
+      <a href="index.html">Foundation</a>
       <span aria-hidden="true">/</span>
       <b aria-current="page">${s.rotulo}</b>
     </nav>
@@ -596,9 +601,7 @@ ${cabecalho({ raiz, atual: s.id })}
 
 ${palco}
 
-  <p class="doc-credit">Página gerada por <code>tools/moldura.mjs</code> a partir de
-  <code>tokens/pecas/${s.arquivo}.html</code>. Não edite este arquivo à mão — rode
-  <code>./build.sh</code>.</p>
+  <!-- Gerada por tools/moldura.mjs a partir de tokens/pecas/${s.arquivo}.html. Não edite à mão: ./build.sh -->
 </main>
 </body>
 </html>

@@ -156,8 +156,10 @@ body{
   font-size:var(--yb-type-caption-size); font-variant-numeric:tabular-nums;
 }
 
-/* Download dos tokens em JSON (W3C Design Tokens), o arquivo que o build gera
-   a partir do CSS. Contorno, e nao bloco: e ferramenta da doc, nao acao da
+/* Download do pacote inteiro (tokens, componentes, ícones), o zip que o build
+   gera. Era só o JSON dos tokens, e quem queria testar o sistema em outro
+   projeto baixava um arquivo sem nenhum componente; o JSON foi para a
+   Fundação, onde está quem procura token. Contorno, e nao bloco: e ferramenta da doc, nao acao da
    loja, e nao deve competir com o conteudo da pagina. */
 .ds-top__baixar{
   flex:none; display:inline-flex; align-items:center; gap:var(--yb-space-2);
@@ -168,7 +170,6 @@ body{
   font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
 }
 .ds-top__baixar svg{inline-size:var(--yb-icon-sm); block-size:var(--yb-icon-sm)}
-.ds-top__baixar-fmt{color:var(--yb-text-muted); font-weight:var(--yb-font-weight-regular)}
 @media (hover:hover){ .ds-top__baixar:hover{background:var(--yb-bg-muted)} }
 .ds-top__baixar:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);

@@ -25,6 +25,7 @@ meses sem o contexto.
 | [009](DDR-009-prefixo-yb-em-tudo.md) | Prefixo `yb-` em tudo, nomenclatura em inglês | aceita | 0.2 |
 | [010](DDR-010-escada-atomica.md) | A escada atômica é a árvore de arquivos | aceita | 0.13 |
 | [011](DDR-011-blocos-no-menu-organismos-na-escada.md) | O menu separa Componentes de Blocos | aceita | 0.13 |
+| [012](DDR-012-icones-sao-sprite-svg.md) | Ícones são um sprite SVG, não uma fonte | aceita | 0.5 |
 
 Formato de cada registro: cabeçalho com estado, versão de origem, o que
 substitui e os arquivos que toca; depois **Decisão**, **Intenção**, **Quando se

@@ -793,10 +793,6 @@ details.note > :last-child{padding-block-end:var(--yb-space-4)}
   max-width:74ch;
 }
 
-.doc-credit{
-  border-top:1px solid var(--yb-border-subtle); padding-top:var(--yb-space-6);
-  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted); max-width:70ch;
-}
 @media (prefers-reduced-motion:reduce){
   .ficha *{transition:none !important}
 }

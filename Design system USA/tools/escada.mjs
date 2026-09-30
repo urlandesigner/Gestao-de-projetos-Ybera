@@ -16,13 +16,13 @@
    =========================================================================== */
 export const NIVEIS = [
   {
-    dir: 'atoms', titulo: 'Átomos', singular: 'átomo', artigo: 'o', base: 'especifica',
+    dir: 'atoms', titulo: 'Atoms', singular: 'átomo', artigo: 'o', base: 'especifica',
     grupo: 'components',
     regra: 'Não usa nenhuma outra peça do sistema. Perde a função se você tirar qualquer parte dele.',
     lede: 'A menor unidade com função própria: o que a pessoa aperta, lê ou preenche.',
   },
   {
-    dir: 'molecules', titulo: 'Moléculas', singular: 'molécula', artigo: 'a', base: 'especifica',
+    dir: 'molecules', titulo: 'Molecules', singular: 'molécula', artigo: 'a', base: 'especifica',
     grupo: 'components',
     regra: 'Reúne átomos para resolver UMA tarefa. Não tem lugar fixo na página — cabe onde a tarefa aparecer.',
     lede: 'Átomos reunidos para uma tarefa: um campo com rótulo e erro, um cartão de produto, uma paginação.',
@@ -39,8 +39,8 @@ export const NIVEIS = [
 
        O termo atômico não some: a página do degrau o declara embaixo do
        título, que é onde ele importa. */
-    dir: 'organisms', titulo: 'Blocos', singular: 'bloco', artigo: 'o', base: 'involucro',
-    grupo: 'blocks', atomico: 'Organismos',
+    dir: 'organisms', titulo: 'Blocks', singular: 'bloco', artigo: 'o', base: 'involucro',
+    grupo: 'blocks', atomico: 'Organisms',
     regra: 'É uma região da página: tem lugar, e sobrevive sozinho numa tela.',
     lede: 'As regiões da loja: o cabeçalho, a gaveta do carrinho, o bloco de compra, o rodapé. Montam-se com componentes, e trazem o que só existe nelas.',
   },

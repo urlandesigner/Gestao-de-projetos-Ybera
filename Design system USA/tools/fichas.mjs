@@ -887,7 +887,7 @@ for (const n of NIVEIS) {
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
-      ${n.grupo === 'components' ? `<a href="../components/index.html">Componentes</a>
+      ${n.grupo === 'components' ? `<a href="../components/index.html">Components</a>
       <span aria-hidden="true">/</span>` : ''}
       <a href="index.html#${f.id}">${n.titulo}</a>
       <span aria-hidden="true">/</span>
@@ -1019,8 +1019,7 @@ ${f.estados.map((e) => `      <figure class="duo__col">
   </section>
   </div>
 
-  <p class="doc-credit">Gerada de <code>${n.dir}/pecas/${f.id}.html</code> e
-  <code>${folhaDo(n)}</code>. Não edite à mão: <code>./build.sh</code>.</p>
+  <!-- Gerada de ${n.dir}/pecas/${f.id}.html e ${folhaDo(n)}. Não edite à mão: ./build.sh -->
 </main>
 
 <script src="../behavior/ybera-behavior.js"></script>
@@ -1117,8 +1116,7 @@ ${n.planejadas.map(([nome, linha]) => `      <li><b>${nome}</b> — ${linha}</li
     ${seguinte ? `<a href="../${seguinte.dir}/index.html" rel="next">${seguinte.titulo} <span aria-hidden="true">→</span></a>` : '<span></span>'}
   </nav>
 
-  <p class="doc-credit">Índice gerado por <code>tools/fichas.mjs</code> a partir de
-  <code>${n.dir}/pecas/</code>. Não edite este arquivo à mão — rode <code>./build.sh</code>.</p>
+  <!-- Índice gerado por tools/fichas.mjs a partir de ${n.dir}/pecas/. Não edite à mão: ./build.sh -->
 </main>
 
 </body>

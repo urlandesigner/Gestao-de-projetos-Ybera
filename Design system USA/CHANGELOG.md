@@ -9,6 +9,30 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 [GOVERNANCA.md](GOVERNANCA.md), componente novo pede versão **menor** (0.13.0).
 
 ### Mudado
+- **Cartões de Examples dizem o que muda.** Mostravam o nome do arquivo
+  (`index-v2.html`); agora cada tela tem uma linha, e as quatro homes dizem a
+  diferença entre si: v1 é a home de hoje com as peças do sistema, v2 a ordem de
+  e-commerce dos EUA, v3 a v2 enxuta, e a logada é a v2 com sessão aberta.
+- **Menu em inglês, como o resto da nomenclatura.** Grupos e itens da coluna,
+  trilhas, títulos de página e `<title>`: Home, Foundation, Overview, Icons,
+  Components, Atoms, Molecules, Blocks, Examples, Decision log. As telas de
+  exemplo também: Home · logged in, PDP · sold out, PDP · with variant,
+  PDP · on sale, PDP · influencer link. O texto corrido da doc segue em português.
+- **Texto de manutenção fora da tela.** O "Página gerada por… Não edite este
+  arquivo à mão" que fechava as ~70 páginas geradas era recado para quem mantém,
+  num site público; virou comentário no HTML. As introduções do Icon button e do
+  Logo contavam por que a peça nasceu em vez de dizer o que ela é. A Fundação ›
+  How to use falava num link de tokens; agora é o roteiro do pacote: fonte,
+  os quatro arquivos, o HTML das fichas e servir por HTTP.
+- **Galeria de ícones começa pelos ícones.** Os dois parágrafos e os dois
+  cartões de peso (380 KB da fonte contra 10 KB do sprite) saíram do topo: eram
+  o argumento de uma decisão já tomada, e empurravam a galeria para baixo da
+  dobra. A introdução ficou num parágrafo curto, e a comparação virou a
+  **DDR-012 · Ícones são um sprite SVG, não uma fonte**, com a medição.
+- **O topo baixa o pacote, e não só os tokens.** "Baixar tokens JSON" virou
+  "Download", que baixa o pacote: quem queria testar o sistema em outro projeto levava um
+  arquivo sem componente nenhum. O JSON continua no pacote e ganhou link na
+  Fundação › Visão geral.
 - **Um cartão de link só na documentação.** A capa e a validação tinham um
   `.tile` próprio, com borda mais escura e grade de 220px; agora usam o
   `.grade`/`.peca` da Fundação, que saiu de `doc/doc.css` para
