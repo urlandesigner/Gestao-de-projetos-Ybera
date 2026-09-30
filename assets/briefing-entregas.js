@@ -273,10 +273,12 @@
         <img class="rl-logo" src="assets/brand/ybera-logo.webp" alt="Ybera" width="360" height="139">
       </div>
       ${retranca ? `<p class="rl-rotulo rl-capa-retranca">${esc(retranca)}<span class="rl-capa-autoria">${risca}</span></p>` : ''}
-      <h1 class="rl-titulo">
-        <span class="rl-titulo-fraco">Entregas de</span>
-        <span class="rl-titulo-forte">${esc(periodo)}</span>
-      </h1>
+      <!-- Os dois <span> ficam COLADOS, sem espaço nem quebra entre eles: no
+           telefone o título corre inline, e a quebra de linha do código viraria
+           um espaço do tamanho do corpo do <h1> SOMADO à margem que separa os
+           dois pedaços — medido, o dobro de um espaço normal. Aqui o vão é
+           declarado inteiro no CSS. -->
+      <h1 class="rl-titulo"><span class="rl-titulo-fraco">Entregas de</span><span class="rl-titulo-forte">${esc(periodo)}</span></h1>
       ${situacao ? `<p class="rl-capa-situacao">${esc(situacao)}</p>` : ''}
       ${autoria ? `<p class="rl-meta">${esc(autoria)}</p>` : ''}
       <div class="rl-bento rl-bento-capa">${tiles}${hero}</div>

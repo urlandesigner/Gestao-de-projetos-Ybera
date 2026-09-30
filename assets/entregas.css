@@ -199,7 +199,7 @@ body.pagina-entregas {
 .rl-capa-situacao {
   max-width: 54ch;
   margin: 1rem 0 0;
-  text-wrap: pretty; /* sem linha final órfã embaixo de duas cheias */
+  text-wrap: balance; /* duas linhas centradas pedem larguras parecidas */
   font-size: clamp(1rem, 2.1vw, 1.15rem);
   line-height: 1.55;
   color: var(--mudo);
@@ -1339,7 +1339,13 @@ body.pagina-entregas {
   /* O título corre numa frase só: em bloco, "Entregas de" gastava uma linha
      inteira de display type com duas palavras, e o título ia a três linhas. */
   .rl-titulo span { display: inline; }
-  .rl-titulo-fraco { margin-right: 0.22em; }
+  /* Este é o ÚNICO espaço entre os dois pedaços: os <span> foram encostados no
+     HTML de propósito. Antes havia quebra de linha entre eles, que vira um
+     espaço do tamanho do corpo do <h1> (16px), e a margem SOMAVA a esse espaço
+     — medido, 11,1px contra 5,3px de um espaço normal do título, ou seja, o
+     dobro. Aqui o vão é declarado inteiro, e 0.175em do corpo fraco dá
+     exatamente um espaço de palavra. */
+  .rl-titulo-fraco { margin-right: 0.175em; }
 
   /* A autoria vira o terceiro segmento da retranca: ali não custa altura
      nenhuma e continua no primeiro lugar em que se olha. A linha própria
