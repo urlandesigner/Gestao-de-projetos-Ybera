@@ -263,7 +263,11 @@
      decidir. Cada tamanho mostra exatamente um: o outro sai com `display:none`,
      que também o tira da árvore de acessibilidade — ninguém lê duas vezes. */
   function masthead(periodo, tiles, hero, retranca, situacao, autoria) {
-    const risca = autoria ? ` · ${esc(autoria)}` : '';
+    // Sem o " · " aqui: o separador entre a unidade e a autoria virou um fio
+    // desenhado no CSS. São dois registros diferentes na mesma linha — onde e
+    // quem — e o mesmo ponto que separa "Ybera US" de "E-commerce" dizia que
+    // os três eram a mesma coisa.
+    const risca = autoria ? esc(autoria) : '';
     return `<header class="rl-capa">
       <div class="rl-capa-topo">
         <img class="rl-logo" src="assets/brand/ybera-logo.webp" alt="Ybera" width="360" height="139">

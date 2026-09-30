@@ -118,8 +118,30 @@ body.pagina-entregas {
    @media lá embaixo — a pedido do Urlan, e é a regra que eu tinha quebrado
    aplicando as mudanças nos dois tamanhos. */
 .rl-capa { padding-top: clamp(1.25rem, 3vw, 2.25rem); }
-/* A autoria na retranca é o desenho do telefone; aqui ela é a linha .rl-meta. */
+/* A autoria na retranca é o desenho do telefone; aqui ela é a linha .rl-meta.
+
+   Quando aparece, ela NÃO usa o mesmo tratamento dos outros dois segmentos: a
+   caixa alta com entreletras larga é rótulo de seção, e serve pra "YBERA US" e
+   "E-COMMERCE", que são categorias. Nome de pessoa em caixa alta perde a pista
+   que a maiúscula inicial dá e lê como grito; e o dois-pontos de
+   "PRODUCT OWNER:" no meio de uma linha espaçada empurra tudo pra longe.
+
+   Então: caixa normal, entreletras curta, e um fio no lugar do terceiro "·" —
+   o mesmo ponto que separa a unidade do domínio dizia que os três eram a mesma
+   coisa, e são dois assuntos (onde, e quem). */
 .rl-capa-autoria { display: none; }
+.rl-capa-autoria {
+  margin-left: 0.7em;
+  padding-left: 0.75em;
+  /* --neutro e não --borda: a borda é do mesmo tom das caixas (#e9e7e4) e
+     sobre o fundo da página some — fio que não se vê não separa nada. --neutro
+     é o próprio tom do texto a 30%, então o fio lê como parente da linha. */
+  border-left: 1px solid var(--neutro);
+  font-size: 1.08em; /* compensa a caixa normal, que lê menor que a alta */
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  text-transform: none;
+}
 .rl-meta {
   margin: 0.7rem 0 0;
   font-size: 0.82rem;
