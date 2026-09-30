@@ -323,7 +323,12 @@
 
      `titulo` e `status` são obrigatórios. `resumo` é o texto do Urlan — string
      para um parágrafo, lista de strings quando ele separou ideias que não
-     cabem na mesma respiração. */
+     cabem na mesma respiração.
+
+     Um item da lista pode ser `{ nota: '...' }` em vez de string: é o parágrafo
+     que NÃO conta a entrega, e sim algo ao lado dela — um plano futuro, uma
+     condição que sobra. Sai com desenho próprio, senão ele lê como se fosse
+     mais uma linha do que foi feito. */
 
   /* Vocabulário fechado de status. As palavras são as do Urlan: quem escreve o
      estado de uma frente é quem a conhece, e um status fora desta tabela é
@@ -485,8 +490,7 @@
       resumo: [
         'Realizamos discovery para levantar as melhores opções de apps de reviews dentro do Shopify.',
         'Depois da pesquisa, fizemos um alinhamento com o Wendel e decidimos que não seria produtivo trocar o app atual, o Judge.me, por outro: não haveria ganho real, seria basicamente trocar um pelo outro, e demandaria muitas horas do time técnico. Preferimos manter o Judge.me e fazer alguns pequenos ajustes.',
-        'A reunião de entrega ainda será agendada.',
-        'Está planejada a construção de um app de reviews próprio, pelo time da Ybera, com início previsto para março de 2027 — ele já está no roadmap, mais abaixo.',
+        { nota: 'Está planejada a construção de um app de reviews próprio, pelo time da Ybera, com início previsto para março de 2027 — ele já está no roadmap, mais abaixo.' },
       ],
     },
   ];
@@ -590,7 +594,9 @@
           <h3 class="rl-frente-nome">${esc(f.titulo)}</h3>
           <div class="rl-frente-meta">${selo}</div>
         </div>
-        ${[].concat(f.resumo || []).map((par) => `<p class="rl-frente-resumo">${esc(par)}</p>`).join('')}
+        ${[].concat(f.resumo || []).map((par) => (typeof par === 'string'
+          ? `<p class="rl-frente-resumo">${esc(par)}</p>`
+          : `<p class="rl-frente-nota">${esc(par.nota)}</p>`)).join('')}
         ${f.progresso ? barra(f.progresso) : ''}
         ${(f.imagens || []).length ? galeria(f) : ''}
         ${f.link ? cta(f.link) : ''}

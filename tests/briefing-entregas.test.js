@@ -611,6 +611,36 @@ test('o link não carrega título nem datas — o documento não os mostra', () 
   }
 });
 
+/* A OBSERVAÇÃO é o parágrafo que não conta a entrega, e sim algo ao lado dela.
+   Com o mesmo desenho do resumo ela lia como mais uma linha do que foi feito —
+   que é justamente o que ela não é. O contrato: string vira resumo, objeto com
+   `nota` vira observação, e as duas formas convivem no mesmo cartão. */
+test('resumo aceita observação com desenho próprio, sem perder o texto comum', () => {
+  const cartoes = [{
+    titulo: 'X', status: 'entregue', iniciativa: 'Nova PDP',
+    resumo: ['isto é entrega', { nota: 'isto é observação' }],
+  }];
+  const h = documento({ cartoes }).html;
+  assert.match(h, /<p class="rl-frente-resumo">isto é entrega<\/p>/);
+  assert.match(h, /<p class="rl-frente-nota">isto é observação<\/p>/);
+});
+
+test('a observação escapa HTML como qualquer outro texto do documento', () => {
+  const cartoes = [{ titulo: 'X', status: 'entregue', iniciativa: 'Nova PDP',
+    resumo: [{ nota: '<img src=x onerror=alert(1)>' }] }];
+  const h = documento({ cartoes }).html;
+  assert.ok(!h.includes('<img src=x'), 'a observação virou HTML');
+  assert.match(h, /&lt;img src=x/);
+});
+
+test('App Review não promete mais a reunião de entrega', () => {
+  const h = documento().html;
+  assert.ok(!h.includes('reunião de entrega'),
+    'a frase saiu do cartão a pedido do Urlan — a reunião já não está pendente');
+  assert.match(h, /rl-frente-nota">[^<]*app de reviews próprio/,
+    'o plano de 2027 é observação, não entrega: precisa do desenho próprio');
+});
+
 /* ---- Galeria ----
    A miniatura é <a> pro arquivo, não <button>: o visor de entregas.html é
    melhoria por cima, e sem script o clique ainda leva à imagem. E o link não

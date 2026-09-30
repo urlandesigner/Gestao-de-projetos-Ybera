@@ -709,6 +709,24 @@ body.pagina-entregas {
    corpo da página depois das legendas. A entrelinha acompanha — corpo maior na
    mesma entrelinha fecha o bloco. */
 .rl-frente-resumo { margin: 0.5rem 0 0; font-size: 0.95rem; line-height: 1.55; color: var(--mudo); }
+/* Observação: o parágrafo que não conta a entrega, e sim algo ao lado dela — um
+   plano futuro, uma condição que sobra. Com o mesmo desenho do resumo ele lia
+   como mais uma linha do que foi feito, que é justamente o que ele não é.
+
+   O que o separa é SUPERFÍCIE e não cor: um fio à esquerda e um fundo miúdo
+   bastam pra dizer "isto está ao lado". Corpo um pouco menor pela mesma razão;
+   mudar a cor do texto não serviria, porque o resumo já é --mudo e escurecer a
+   observação a faria parecer mais importante que o texto principal. */
+.rl-frente-nota {
+  margin: 0.7rem 0 0;
+  padding: 0.6rem 0.8rem;
+  border-left: 2px solid var(--neutro);
+  border-radius: 0 var(--raio-cartao) var(--raio-cartao) 0;
+  background: var(--superficie-2);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--mudo);
+}
 
 /* Barra de progresso do cartão. Sem rótulo: o resumo logo acima já escreve os
    números, e repeti-los aqui seria dizer a mesma coisa duas vezes. A leitura
