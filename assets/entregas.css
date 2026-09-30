@@ -721,7 +721,12 @@ body.pagina-entregas {
   margin: 0.7rem 0 0;
   padding: 0.6rem 0.8rem;
   border-left: 2px solid var(--neutro);
-  border-radius: 0 var(--raio-cartao) var(--raio-cartao) 0;
+  /* Raio nos QUATRO cantos. Era 0 à esquerda pra deixar o fio reto, colado como
+     uma marginália — só que o bloco tem fundo próprio, e fundo com dois cantos
+     retos de um lado e dois redondos do outro não lê como marginália, lê como
+     caixa mal cortada. O fio acompanha a curva e continua fazendo o trabalho
+     dele, que é dizer "isto está ao lado". */
+  border-radius: var(--raio-cartao);
   background: var(--superficie-2);
   font-size: 0.88rem;
   line-height: 1.55;
