@@ -127,7 +127,6 @@
 
   function plural(n, um, muitos) { return n + ' ' + (n === 1 ? um : muitos); }
 
-  const CAMPO_ALVO = 'Microsoft.VSTS.Scheduling.TargetDate';
   const MESES_COMPARATIVO = 12;
   const SEM_PRODUTO = 'Sem produto associado';
   const nomeProduto = (p) => (p ? p.titulo : SEM_PRODUTO);

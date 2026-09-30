@@ -583,6 +583,34 @@ test('capa: o papel do responsável aparece por extenso, sem sigla pontuada', ()
   assert.ok(!capa.includes('P.O'), 'a sigla pontuada não existe em nenhum outro lugar do documento');
 });
 
+/* ---- O que viaja no link de leitura ----
+   O link do stakeholder carrega o dado dentro da própria URL, e ela tem limite
+   prático: acima de ~8000 caracteres as ferramentas de mensagem cortam. O
+   documento declara em `camposDoLink` os campos do DevOps que lê, e o report.js
+   poda o pacote por essa lista.
+
+   O risco é silencioso nos dois sentidos: campo a mais engorda a URL sem que
+   nada quebre, campo a MENOS quebra só pro stakeholder — o PO, que busca ao
+   vivo, nunca vê. Por isso o teste compara a lista com o que o código de fato
+   referencia. */
+test('o link declara exatamente os campos que o documento lê', () => {
+  const fonte = fs.readFileSync(path.join(__dirname, '../assets/briefing-entregas.js'), 'utf8');
+  const lidos = new Set((fonte.match(/'(?:System|Microsoft\.VSTS)\.[A-Za-z.]+'/g) || [])
+    .map((x) => x.slice(1, -1)));
+  // A própria declaração aparece na varredura; ela não é uma leitura.
+  for (const c of BE.camposDoLink) lidos.delete(c);
+  assert.deepEqual([...lidos], [],
+    `o módulo lê ${[...lidos].join(', ')} e não declara em camposDoLink — no link de leitura esse campo chega vazio`);
+  assert.ok(BE.camposDoLink.length >= 3, 'a lista não pode estar vazia');
+});
+
+test('o link não carrega título nem datas — o documento não os mostra', () => {
+  for (const c of ['System.Title', 'Microsoft.VSTS.Common.ClosedDate', 'System.ChangedDate']) {
+    assert.ok(!BE.camposDoLink.includes(c),
+      `${c} voltou pro link: são os campos mais pesados, e os cartões são texto curado`);
+  }
+});
+
 /* ---- Galeria ----
    A miniatura é <a> pro arquivo, não <button>: o visor de entregas.html é
    melhoria por cima, e sem script o clique ainda leva à imagem. E o link não
