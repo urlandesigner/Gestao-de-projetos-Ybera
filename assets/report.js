@@ -375,6 +375,7 @@ function render() {
     // Roadmap não bifurca por modo: nos dois casos já chega pronto em
     // st.roadmap (do arquivo estático ou do link), nunca recalculado aqui.
     roadmap: st.roadmap,
+    contagens: st.contagens, // só no formato curto; ao vivo fica null e o documento conta
     nomes: st.nomes, // idem: do arquivo (PO) ou do link (leitura), já saneado
     agora: st.leitura ? st.agora : Date.now(),
     escopo: st.leitura ? st.escopo : respAtivo(),
@@ -636,18 +637,36 @@ async function gravarLink() {
   if (!st.items || st.vazio) { history.replaceState(null, '', location.pathname + location.search); return; }
   try {
     const mostrados = st.items.filter(noNome);
-    const pacote = {
+    /* Dois formatos de pacote, e o documento escolhe.
+
+       O report e o v2 LISTAM itens: título, estado e prazo de cada um vão pra
+       tela, então o link precisa levá-los. O Entregas não lista nada disso —
+       ele extrai do board cinco números, e só. Quando o documento sabe fazer
+       essa conta (`contagensDoLink`), ela é feita AQUI, no navegador de quem
+       gera, e o link leva o resultado em vez do material bruto.
+
+       O leitor aceita os dois: link novo traz `contagens`, link já
+       compartilhado traz `items` e continua contando como antes. É o que
+       impede que encurtar o link de hoje quebre o que já está no grupo de
+       alguém. */
+    const cabecalho = {
       v: 1,
       em: Date.now(),
       escopo: respAtivo(),
       mes: st.mes, // quem abrir o link cai no mês que eu estava vendo
-      items: enxugar(mostrados),
-      ancestrais: cadeiaDeProdutos(mostrados, st.items.concat(st.pais)),
-      produtos: produtosDoLink(mostrados), // objetivo + rumo, prontos
-      decisoes: decisoesDoLink(mostrados), // pedido de decisão por item travado
       roadmap: st.roadmap, // já veio saneado de assets/roadmap.json
-      nomes: nomesDoLink(mostrados), // nome de negócio só do que o leitor vê
     };
+    const pacote = typeof B.contagensDoLink === 'function'
+      ? Object.assign(cabecalho, {
+        contagens: B.contagensDoLink(mostrados, st.items.concat(st.pais)),
+      })
+      : Object.assign(cabecalho, {
+        items: enxugar(mostrados),
+        ancestrais: cadeiaDeProdutos(mostrados, st.items.concat(st.pais)),
+        produtos: produtosDoLink(mostrados), // objetivo + rumo, prontos
+        decisoes: decisoesDoLink(mostrados), // pedido de decisão por item travado
+        nomes: nomesDoLink(mostrados), // nome de negócio só do que o leitor vê
+      });
     const carga = '#r=' + await comprimir(JSON.stringify(pacote));
     if (minha !== geracaoLink) return; // outra gravação começou depois: ela manda
     // O link que ele copia é limpo. O que fica na barra de endereços preserva o
@@ -740,6 +759,8 @@ async function lerDoLink() {
     st.decisoes = saneMapaTexto(pacote.decisoes);
     st.roadmap = saneRoadmapItens(pacote.roadmap);
     st.nomes = saneNomes(pacote.nomes); // forjável como o resto: texto curto, id numérico
+    // Formato curto: vem saneado no briefing, que é quem sabe a forma dele.
+    st.contagens = pacote.contagens || null;
     st.escopo = pacote.escopo || '';
     st.agora = pacote.em || Date.now();
     st.mes = pacote.mes || null;

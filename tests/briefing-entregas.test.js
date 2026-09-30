@@ -278,10 +278,19 @@ test('Entregas não desenha navegação nenhuma, mas continua devolvendo os mese
   assert.ok(Array.isArray(r.meses) && r.meses.length > 0);
 });
 
-test('Entregas: mês sem nada registrado devolve vazio, sem quebrar', () => {
+/* Este teste dizia o contrário até 30/09/2026: board vazio devolvia
+   `vazio: true` e a frase "Nada registrado ainda". Era regra herdada do v2, onde
+   TUDO vem do board. Aqui os cartões são uma lista curada no código e o roadmap
+   vem de um arquivo — nenhum dos dois some porque o board está quieto, e o
+   documento dizia "nada registrado" com oito entregas escritas nele.
+
+   O defeito era latente: um board só de itens concluídos já disparava a saída.
+   Apareceu ao testar o link curto, em que `items` chega vazio de propósito. */
+test('Entregas: board vazio NÃO esvazia o documento — os cartões são curados', () => {
   const r = BE.htmlReport({ items: [], todos: [], agora: AGORA });
-  assert.equal(r.vazio, true);
-  assert.ok(r.html.includes('Nada registrado'));
+  assert.equal(r.vazio, false);
+  assert.ok(!r.html.includes('Nada registrado'));
+  for (const t of TOPICOS) assert.ok(r.html.includes(t), `"${t}" sumiu com o board vazio`);
 });
 
 /* ---- Os dois desenhos em teste ----
@@ -581,6 +590,57 @@ test('capa: o papel do responsável aparece por extenso, sem sigla pontuada', ()
   const capa = capaDe(documento({ escopo: 'Urlan Dipre' }).html);
   assert.ok(capa.includes('Product Owner: Urlan Dipre'));
   assert.ok(!capa.includes('P.O'), 'a sigla pontuada não existe em nenhum outro lugar do documento');
+});
+
+/* ---- O formato curto do link ----
+   O documento extrai do board cinco números. Mandar os itens pro leitor
+   descobrir isso de novo era carregar o board dentro da URL. Agora a conta é
+   feita no navegador de quem gera e o link leva só o resultado.
+
+   Os dois formatos precisam coexistir: link que já foi compartilhado não pode
+   parar de abrir porque o formato mudou. */
+function boardDeProva() {
+  const feats = { 45272: 13, 44271: 9, 45723: 2, 49920: 3, 50905: 5 };
+  const items = [];
+  const pais = [{ id: 49290, fields: { 'System.WorkItemType': 'Epic' } }];
+  let n = 400000;
+  for (const [f, q] of Object.entries(feats)) {
+    pais.push({ id: Number(f), fields: { 'System.WorkItemType': 'Feature', 'System.Parent': 49290 } });
+    for (let i = 0; i < q; i++) {
+      items.push({ id: n++, fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.State': 'Done', 'System.Parent': Number(f) } });
+    }
+  }
+  return { items, todos: items.concat(pais) };
+}
+
+test('link curto e link com itens desenham o MESMO documento', () => {
+  const { items, todos } = boardDeProva();
+  const comum = { agora: AGORA, escopo: 'Urlan Dipre', unidade: 'Ybera US' };
+  const comItens = BE.htmlReport(Object.assign({ items, todos }, comum));
+  const comContagens = BE.htmlReport(Object.assign(
+    { items: [], todos: [], contagens: BE.contagensDoLink(items, todos) }, comum));
+  assert.equal(comContagens.html, comItens.html,
+    'o formato curto mudou o desenho — ele só pode mudar o TAMANHO do link');
+});
+
+test('link antigo continua abrindo: itens sem contagens seguem contando', () => {
+  const { items, todos } = boardDeProva();
+  const r = BE.htmlReport({ items, todos, agora: AGORA, unidade: 'Ybera US' });
+  assert.equal(r.vazio, false);
+  // 32 das cinco Features somadas, mais os 3 cartões de contagem fixa.
+  assert.match(r.html, /rl-heroi-base[\s\S]*?rl-num">35</,
+    'sem contagens no pacote, o documento tem de contar dos itens como sempre');
+});
+
+/* O fragmento da URL é dado que qualquer um pode forjar. Número mentiroso é da
+   natureza de um link que carrega o próprio conteúdo; o que não pode é um valor
+   torto virar NaN na tela ou escapar como texto. */
+test('contagens forjadas viram número, ou não entram', () => {
+  const sujo = { f: { 45272: -5, 44271: 'muito', 50905: 7.9, naoNumero: 3 }, e: {} };
+  const r = BE.htmlReport({ items: [], todos: [], contagens: sujo, agora: AGORA, unidade: 'Ybera US' });
+  assert.ok(!/NaN|undefined|-\d/.test(r.html.match(/rl-heroi-base[\s\S]{0,200}/)[0]),
+    'valor torto chegou à tela');
+  assert.match(r.html, /rl-heroi-base[\s\S]*?rl-num">(\d+)</);
 });
 
 /* ---- O que viaja no link de leitura ----

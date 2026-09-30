@@ -666,6 +666,40 @@
     return { porFeature, porEpico };
   }
 
+  /* CONTAGENS PRONTAS — o formato curto do link de leitura.
+
+     O documento extrai do board exatamente cinco números: quantas PBIs
+     concluídas cada frente tem. Mandar os 74 itens pro leitor descobrir isso de
+     novo era carregar o board inteiro dentro da URL. `contagensDoLink` faz a
+     conta de uma vez, no navegador de quem gera, e o link leva só o resultado.
+
+     `sanearContagens` existe porque o fragmento da URL é dado que QUALQUER UM
+     pode forjar: id vira número, quantidade vira inteiro não-negativo. Um link
+     torto pode mentir no número — sempre pôde, é a natureza de um link que
+     carrega o próprio conteúdo — mas não pode injetar nada. */
+  function contagensDoLink(items, todos) {
+    const porId = new Map((todos || items || []).map((it) => [it.id, it]));
+    const c = pbisPorChave(items, porId, C.mapaDeProdutos(todos || items));
+    const obj = (m) => { const o = {}; for (const [k, v] of m) o[k] = v; return o; };
+    return { f: obj(c.porFeature), e: obj(c.porEpico) };
+  }
+
+  function sanearContagens(bruto) {
+    if (!bruto || typeof bruto !== 'object') return null;
+    const mapa = (o) => {
+      const m = new Map();
+      if (o && typeof o === 'object') {
+        for (const k of Object.keys(o)) {
+          const id = Number(k);
+          const n = Math.max(0, Math.floor(Number(o[k])) || 0);
+          if (Number.isFinite(id)) m.set(id, n);
+        }
+      }
+      return m;
+    };
+    return { porFeature: mapa(bruto.f), porEpico: mapa(bruto.e) };
+  }
+
   // Roadmap: o único dado que não vem do DevOps (assets/roadmap.json). Datas em
   // dia UTC pra escala e barra baterem sem fuso torto.
   const MES_ABREV = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
@@ -751,6 +785,7 @@
   function htmlReport(opcoes) {
     const o = opcoes || {};
     const items = o.items || [];
+    const prontas = sanearContagens(o.contagens);
     const agora = o.agora || Date.now();
     const escopo = o.escopo || '';
     nomesAtivos = o.nomes && typeof o.nomes === 'object' ? o.nomes : {};
@@ -784,9 +819,22 @@
     const mesesDoAno = meses.filter((m) => m.mes.slice(0, 4) === ano);
     const temPrazoVivo = b.prazos.atrasados.length + b.prazos.esteMes.length
       + b.prazos.proximoMes.length + b.prazos.depois.length > 0;
-    if (!mesAlvo && !fechado && !b.execucao.length && !b.travados.length && !meses.length && !temPrazoVivo) {
-      return { vazio: true, meses: listaMeses, html: '<p class="rl-vazio">Nada registrado ainda para este escopo.</p>' };
-    }
+    /* NÃO existe documento vazio aqui, e a saída antecipada que existia foi
+       removida por isso.
+
+       Ela era herdada do v2 e perguntava ao BOARD: sem item em execução, sem
+       travado, sem prazo e sem mês fechado, devolvia "Nada registrado ainda".
+       No v2 isso faz sentido — lá tudo que se desenha vem do board. Aqui não:
+       os cartões são uma lista curada no código e o roadmap vem de um arquivo.
+       Nenhum dos dois some porque o board está quieto.
+
+       O efeito era um documento com oito entregas escritas dizendo que não há
+       nada. Apareceu ao testar o formato curto do link, em que `items` chega
+       vazio de propósito — mas não era do formato novo: um board só de itens
+       concluídos já disparava a mesma saída, e ninguém tinha percebido.
+
+       `vazio` continua no retorno porque o report.js e a Central leem esse
+       campo; ele é só sempre falso, que é a verdade deste documento. */
 
     // Travado e atrasado responde às duas perguntas do core; no documento,
     // aparecer duas vezes lado a lado parece defeito. Fica em Decisão, com o
@@ -870,7 +918,10 @@
     const kpis = tile(rotuloGrupo, nGrupos, '', '', apoioGrupo);
 
     const porIdTodos = new Map((o.todos || items).map((it) => [it.id, it]));
-    const contagens = pbisPorChave(items, porIdTodos, mapa);
+    // Vindas do link (curto), ou calculadas do board (ao vivo, e nos links
+    // antigos, que trazem os itens). Os dois caminhos coexistem de propósito:
+    // link já compartilhado não pode parar de abrir.
+    const contagens = prontas || pbisPorChave(items, porIdTodos, mapa);
 
     /* A chave leva prefixo porque Feature e épico vivem no mesmo espaço de ids:
        sem ele, um épico 123 e uma Feature 123 se confundiriam no Set.
@@ -1007,5 +1058,5 @@
      do board, o campo entra AQUI antes. */
   const camposDoLink = ['System.WorkItemType', 'System.State', 'System.Parent'];
 
-  return { htmlReport, mesPorExtenso, dataCurta, esc, periodoDoDocumento, cartoesDoDocumento, camposDoLink };
+  return { htmlReport, mesPorExtenso, dataCurta, esc, periodoDoDocumento, cartoesDoDocumento, camposDoLink, contagensDoLink };
 });
