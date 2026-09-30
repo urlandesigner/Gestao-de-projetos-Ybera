@@ -464,13 +464,13 @@
     },
     {
       titulo: 'Tradução do site',
-      status: 'teste',
+      status: 'entregue',
       iniciativa: 'Translate loja',
       produto: 'Loja Clube USA',
       epicoId: 49290,
       featureIds: [49920],
       resumo: [
-        'Desenvolvimento concluído: todo o site foi configurado para ser possível traduzir, tanto os textos quanto as imagens.',
+        'Projeto concluído: todo o site foi configurado para ser traduzido, tanto os textos quanto as imagens, e a tradução está disponível para ativação no site.',
         'No caso das imagens, elas deverão ser criadas em versões diferentes por idioma.',
       ],
     },

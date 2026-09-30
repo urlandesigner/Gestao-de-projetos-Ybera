@@ -204,10 +204,25 @@ test('roadmap e cartão não chamam o mesmo estado por dois nomes', () => {
   // A tag do roadmap existe justamente pra fechar divergência entre os dois
   // lugares. Se um disser "em teste" e o outro "em testes", o documento fica
   // dizendo que são coisas diferentes.
-  const roadmap = [{ titulo: 'X', inicio: '2026-08-01', fim: '2026-09-30', status: 'teste' }];
-  const h = documento({ roadmap }).html;
+  /* Os cartões vêm de uma lista FIXA aqui, e não da lista curada do documento:
+     ela muda conforme o trabalho anda — quando a Tradução passou de "em teste"
+     pra "entregue", nenhum cartão ficava em teste e o teste quebrava sem que
+     nada de errado tivesse acontecido. O que se guarda é o VOCABULÁRIO dos dois
+     lugares, então os dois lados são montados de propósito com os três estados. */
+  const roadmap = [
+    { titulo: 'X', inicio: '2026-08-01', fim: '2026-09-30', status: 'teste' },
+    { titulo: 'Y', inicio: '2026-08-01', fim: '2026-09-30', status: 'andamento' },
+    { titulo: 'Z', inicio: '2026-08-01', fim: '2026-09-30', status: 'concluido' },
+  ];
+  const cartoes = [
+    { titulo: 'A', status: 'teste', iniciativa: 'X', resumo: '—' },
+    { titulo: 'B', status: 'andamento', iniciativa: 'Y', resumo: '—' },
+    { titulo: 'C', status: 'entregue', iniciativa: 'Z', resumo: '—' },
+  ];
+  const h = documento({ roadmap, cartoes }).html;
   const noCartao = [...h.matchAll(/<span class="rl-selo [^"]+">([^<]+)</g)].map((m) => m[1]);
-  const noRoadmap = [...h.matchAll(/<span class="rl-rm-(?:teste|feito)">([^<]+)</g)].map((m) => m[1]);
+  const noRoadmap = [...h.matchAll(/<span class="rl-rm-(?:teste|feito|andamento)">([^<]+)</g)].map((m) => m[1]);
+  assert.equal(noRoadmap.length, 3, 'os três estados precisam estar na tela pra comparação valer');
   for (const t of noRoadmap) {
     if (t === 'concluído') continue; // só existe no roadmap
     assert.ok(noCartao.includes(t), `"${t}" no roadmap não existe como selo de cartão`);

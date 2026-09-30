@@ -1,9 +1,9 @@
 {
-  "atualizadoEm": "2026-09-29",
+  "atualizadoEm": "2026-09-30",
   "itens": [
     { "titulo": "Nova PDP", "inicio": "2026-07-01", "fim": "2026-08-31", "status": "concluido" },
     { "titulo": "Compliance Google", "inicio": "2026-07-01", "fim": "2026-09-30", "status": "andamento" },
-    { "titulo": "Translate loja", "inicio": "2026-08-01", "fim": "2026-09-30", "status": "teste" },
+    { "titulo": "Translate loja", "inicio": "2026-08-01", "fim": "2026-09-30", "status": "concluido" },
     { "titulo": "Nova Homepage", "inicio": "2026-08-15", "fim": "2026-09-30", "status": "concluido" },
     { "titulo": "Novo Design System", "inicio": "2026-09-01", "fim": "2026-10-31", "status": "andamento" },
     { "titulo": "Melhorias Review", "inicio": "2026-09-01", "fim": "2026-09-30", "status": "concluido" },
