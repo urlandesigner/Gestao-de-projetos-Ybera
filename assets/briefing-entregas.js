@@ -418,9 +418,8 @@
       // Sem Feature no board: a frente é um item de trabalho só.
       contaFixa: 1,
       resumo: [
-        'Estamos realizando testes da automação do fluxo da Shipsmart para pedidos que têm estoque no Brasil e são entregues nos EUA.',
-        'A automação da Shipsmart já está acertada. Agora estamos validando a segunda parte do fluxo, o que acontece depois dela.',
-        'Estando tudo certo, faremos um novo teste com envio real do produto.',
+        'Concluímos os testes da automação do fluxo da Shipsmart para pedidos que têm estoque no Brasil e são entregues nos EUA.',
+        'Agora vamos fazer um teste de envio real do produto ao destinatário final, para validar se todo o fluxo está funcionando corretamente.',
       ],
     },
     {
