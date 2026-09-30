@@ -51,3 +51,32 @@
       receita do véu e das três folhas de blur é a mesma, e está documentada no
       <a href="bannerhero.html">Banner hero</a>.</p>
     </div>
+    <h3 class="row-label">Meia coluna &mdash; <code>--half</code>, dois lado a lado</h3>
+    <div class="demo demo--rail">
+      <!-- A grade é da página (o `__pair` do Product layout, que esta folha não carrega). -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-3); max-inline-size:34rem">
+        <div class="yb-bannermedia yb-bannermedia--blur yb-bannermedia--half">
+          <img src="../pages/img/22_1-d5c4b8.webp" alt="" loading="lazy">
+          <div class="yb-bannermedia__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="yb-bannermedia__body">
+            <span class="yb-bannermedia__eyebrow">Step 1 · Hydration</span>
+            <h3 class="yb-bannermedia__title">Water back into the fiber.</h3>
+          </div>
+        </div>
+        <div class="yb-bannermedia yb-bannermedia--blur yb-bannermedia--half">
+          <img src="../pages/img/29-527a32.webp" alt="" loading="lazy">
+          <div class="yb-bannermedia__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="yb-bannermedia__body">
+            <span class="yb-bannermedia__eyebrow">Damp or dry</span>
+            <h3 class="yb-bannermedia__title">Use it your way.</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Metade da largura, metade da folga</b>
+      <p>O par de destaques da PDP. Em meia coluna o texto sobra menos foto acima dele,
+      então o véu cai menos (<code>26vw</code> contra <code>34vw</code>) e a altura
+      segue a largura. A página redeclarava as duas medidas por fora; agora é variante.
+      O par em si é o <a href="../templates/product-layout.html">Product layout</a>.</p>
+    </div>

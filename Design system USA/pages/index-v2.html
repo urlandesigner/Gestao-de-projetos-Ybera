@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ybera Paris USA | Keratin care that survives humidity</title>
-<link rel="stylesheet" href="yb/fonte.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/00-primitives.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/01-semantic.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/base.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/atoms.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/molecules.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/organisms.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/templates.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/icons.css?v=ea9a40de">
+<link rel="stylesheet" href="yb/fonte.css?v=a7393edc">
+<link rel="stylesheet" href="yb/00-primitives.css?v=a7393edc">
+<link rel="stylesheet" href="yb/01-semantic.css?v=a7393edc">
+<link rel="stylesheet" href="yb/base.css?v=a7393edc">
+<link rel="stylesheet" href="yb/atoms.css?v=a7393edc">
+<link rel="stylesheet" href="yb/molecules.css?v=a7393edc">
+<link rel="stylesheet" href="yb/organisms.css?v=a7393edc">
+<link rel="stylesheet" href="yb/templates.css?v=a7393edc">
+<link rel="stylesheet" href="yb/icons.css?v=a7393edc">
 <style>
   /* Só arranjo de página. Nenhum componente é redefinido aqui — se um botão
      precisasse de ajuste, o lugar seria a folha dele, não esta. */
@@ -33,7 +33,7 @@
   .tolstoy nav[aria-label="Carousel navigation"] button {
     width:var(--yb-target-min); height:var(--yb-target-min);
     border-radius:var(--yb-radius-control);
-    border:var(--yb-border-width-hair) solid var(--yb-border);
+    border:var(--yb-border-hairline) solid var(--yb-border);
     color:var(--yb-text-primary); opacity:1;
     transition:background var(--yb-transition-control);
   }
@@ -48,7 +48,7 @@
     outline-offset:var(--yb-focus-offset);
   }
   .tolstoy nav[aria-label="Carousel navigation"] svg {
-    width:var(--yb-icon-size, 20px); height:var(--yb-icon-size, 20px);
+    width:var(--yb-icon-md); height:var(--yb-icon-md);
     stroke-width:1.5;
   }
   /* Mesma regra do .yb-track__nav: abaixo de 768 a seta some, no toque
@@ -1247,19 +1247,6 @@
     </div>
   </div>
 </dialog>
-<script src="yb/behavior.js?v=ea9a40de"></script>
-<script>
-// Setas do banner. Carrossel nao e componente do sistema — este JS vive na
-// pagina, nao em components.js, para nao dar a entender que existe.
-(function(){
-  var t = document.getElementById('banner-track');
-  if (!t) return;
-  function ir(d){ t.scrollBy({left: d * t.clientWidth, behavior: 'smooth'}); }
-  var a = document.querySelector('.banner__arrow--prev');
-  var p = document.querySelector('.banner__arrow--next');
-  if (a) a.addEventListener('click', function(){ ir(-1); });
-  if (p) p.addEventListener('click', function(){ ir(1); });
-})();
-</script>
+<script src="yb/behavior.js?v=a7393edc"></script>
 </body>
 </html>

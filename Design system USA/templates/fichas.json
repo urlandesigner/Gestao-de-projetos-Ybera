@@ -14,5 +14,21 @@
       "legenda": "Texto grande sem nível: parece título e não entra na lista de cabeçalhos de quem navega por leitor de tela.",
       "html": "<div class=\"yb-section-head\"><span style=\"font-size:1.75rem;font-weight:700\">Best Sellers</span></div>"
     }
+  },
+  "product-layout": {
+    "a11y": [
+      "A ordem do HTML é a ordem de leitura: galeria, depois compra. No celular é também a ordem na tela, sem <code>order</code> trocando o que o leitor de tela ouve do que a pessoa vê.",
+      "O título do produto é o <code>&lt;h1&gt;</code> da página, dentro do Buy box; os destaques do par e da prova descem para <code>&lt;h2&gt;</code>.",
+      "A galeria gruda com <code>sticky</code>, que não tira o conteúdo do fluxo: quem navega por teclado não perde a foto nem pula a coluna.",
+      "Os destaques sem destino são <code>&lt;div&gt;</code>, não link: cartão com cara e cursor de link que não vai a lugar nenhum é armadilha."
+    ],
+    "faca": {
+      "legenda": "A história do produto dentro da coluna de compra, depois do botão.",
+      "html": "<div class=\"yb-buybox\" style=\"max-width:260px\"><span class=\"yb-price\"><b class=\"yb-price__now\">$89.90</b></span><button type=\"button\" class=\"yb-btn yb-btn--primary\">Add to cart</button></div>"
+    },
+    "naoFaca": {
+      "legenda": "Destaque entre o preço e o botão: a pessoa que já decidiu rola por cima da história para achar onde comprar.",
+      "html": "<div class=\"yb-buybox\" style=\"max-width:260px\"><span class=\"yb-price\"><b class=\"yb-price__now\">$89.90</b></span><span class=\"yb-badge yb-badge--soft\">Step 1 · Hydration</span><button type=\"button\" class=\"yb-btn yb-btn--primary\">Add to cart</button></div>"
+    }
   }
 }

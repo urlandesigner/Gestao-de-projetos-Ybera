@@ -185,7 +185,7 @@
      (fundo branco, linha preta), o selo — que divide os tokens dele de
      proposito — ficou branco sobre branco. Compartilhar a cor so funciona se
      compartilhar tambem o que a torna visivel. */
-  border:var(--yb-border-width-hair) solid var(--yb-action-secondary-border);
+  border:var(--yb-border-hairline) solid var(--yb-action-secondary-border);
 }
 .yb-badge--soft{background:var(--yb-bg-muted); color:var(--yb-text-secondary)}
 /* O SELO PRETO — a primaria da marca preenchida, texto branco, 16.66:1.

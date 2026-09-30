@@ -143,3 +143,53 @@
 /* O atalho ao lado do titulo e o componente LINK (`.yb-link`, em
    components.css) — nao redeclare a receita aqui. Marcacao:
    <a class="yb-link" href="...">Texto {chevron}</a>. */
+
+/* =========================================================================
+   PRODUCT LAYOUT — o esqueleto da PDP
+   Galeria a esquerda, coluna de compra a direita, e a historia do produto
+   descendo DENTRO da coluna de compra.
+
+   Morava na folha do gerador das telas (`.pdp`, `.pdp__duo`, `.pdp__prova`),
+   com o comentario "o sistema nao deve saber que ela existe". Deve: as cinco
+   PDPs usam o mesmo arranjo, e ele e exatamente o que este degrau descreve —
+   ordem de blocos, e nao estilo de peca. Escrito numa pagina, cada PDP nova
+   copiaria o grid e as tres quebras, e a primeira correcao divergiria.
+   ========================================================================= */
+/* Sem breadcrumb acima, o produto encostaria no cabecalho: o respiro de cima
+   e do proprio bloco, e nao de modificador — valia para 100% das telas. */
+.yb-product{
+  display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-12);
+  align-items:start; padding-block:var(--yb-space-8);
+}
+/* A foto acompanha a leitura da coluna da direita e para quando o bloco
+   acaba: `sticky` ja e limitado pelo pai, entao nao ha JS nem conta de altura.
+   `align-items:start` e o que deixa a coluna deslizar — esticada ate a altura
+   da linha, ela nao teria para onde ir.
+   `--yb-chrome-h` e nao `--yb-header-h`: com a faixa do parceiro na tela o
+   topo fixo soma 3,5rem, e lendo so o cabecalho a foto grudava atras dela. */
+.yb-product > .yb-gallery{
+  position:sticky;
+  inset-block-start:calc(var(--yb-chrome-h) + var(--yb-space-5));
+  align-self:start;
+}
+/* A historia do produto e outro assunto — nao decisao de compra —, entao leva
+   o maior vao da coluna, e nao o `gap` curto do Buy box. */
+.yb-buybox > .yb-product__pair,
+.yb-buybox > .yb-bannermedia,
+.yb-buybox > .yb-product__proof{ margin-block-start:var(--yb-space-8); }
+/* Duas fotos altas lado a lado (Banner media `--half`), e a grade de prova. */
+.yb-product__pair{ display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-3); }
+.yb-product__proof{
+  display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-3);
+  list-style:none; margin:0; padding:0;
+}
+/* 520: abaixo disso cada foto do par teria menos de 240px e o titulo quebraria
+   em quatro linhas. */
+@media (max-width:520px){ .yb-product__pair{ grid-template-columns:1fr; } }
+/* 860 e nao 768: entre os dois a galeria e a coluna de compra teriam 380px
+   cada, e o botao de comprar quebrava em duas linhas. Numa coluna so nao ha o
+   que acompanhar, e grudar atrapalharia a rolagem. */
+@media (max-width:860px){
+  .yb-product{ grid-template-columns:1fr; gap:var(--yb-space-8); }
+  .yb-product > .yb-gallery{ position:static; }
+}

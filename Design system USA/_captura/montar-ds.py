@@ -6,7 +6,7 @@ MONTA HOME E PDP COM OS COMPONENTES DO DESIGN SYSTEM.
 
 Não é overlay: aqui as páginas são construídas do zero usando as classes
 `yb-*` exatamente como estão nas folhas do sistema. O CSS próprio de cada
-tela é só arranjo de página (CSS_BANNER_V1, CSS_TOLSTOY, CSS_PDP). Conteúdo, preços e imagens vêm da loja de verdade.
+tela é só arranjo de página (CSS_TOLSTOY, o adaptador do widget de vídeo). Conteúdo, preços e imagens vêm da loja de verdade.
 
 Se um componente não couber no conteúdo real, isso aparece — e é essa a
 utilidade de montar em vez de vestir.
@@ -77,39 +77,6 @@ def versao():
 # (CSS_HOME) que ia para toda tela que nao fosse PDP: o banner de imagem da v1
 # saia em 404, faq, v2, v3 e logada, que nao tem banner, e o Tolstoy em 404 e
 # faq, que nao tem o widget.
-CSS_BANNER_V1 = """  /* Banner: imagem com carrossel, igual producao. Nao e componente do sistema. */
-  .banner { position:relative; }
-  .banner__track { display:flex; list-style:none; margin:0; padding:0;
-    overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none;
-    scroll-behavior:smooth; }
-  .banner__track::-webkit-scrollbar { display:none; }
-  .banner__slide { flex:0 0 100%; scroll-snap-align:start; }
-  /* Era `height:75vh` — altura presa a VIEWPORT, sem relacao nenhuma com a
-     imagem de verdade. As quatro criacoes de desktop medem 1200x375 ou
-     1600x501 (16:5 nos dois casos); numa tela de 1440x900, 75vh vira 675px
-     de altura contra uma imagem de 375-501px de proporcao MUITO mais baixa —
-     o `cover` compensava ampliando e cortando os dois lados, entao metade da
-     arte (o "PISCOU, PERDEU", o preco) saia da tela em qualquer desktop
-     normal. `aspect-ratio` usa a proporcao real da peca: nada de cortar o
-     que o design pediu para caber. */
-  .banner__slide a { display:block; aspect-ratio:var(--yb-aspect-campaign); }
-  .banner__slide img { width:100%; height:100%; object-fit:cover; display:block; }
-  @media (max-width:767.98px) {
-    /* Mobile e outra peca, nao a mesma cortada: as quatro versoes verticais
-       medem entre 400x600 e 750x1095 — 2:3, retrato. */
-    .banner__slide a { aspect-ratio:var(--yb-aspect-campaign-mobile); }
-  }
-  .banner__arrow { position:absolute; top:50%; transform:translateY(-50%);
-    width:var(--yb-target-min); height:var(--yb-target-min);
-    display:flex; align-items:center; justify-content:center;
-    border:none; cursor:pointer; border-radius:var(--yb-radius-full);
-    background:var(--yb-surface); color:var(--yb-text-primary);
-    box-shadow:var(--yb-elevation-raised); }
-  .banner__arrow--prev { inset-inline-start:var(--yb-space-4); }
-  .banner__arrow--next { inset-inline-end:var(--yb-space-4); }
-  .banner__arrow:focus-visible { outline:var(--yb-focus-width) solid var(--yb-focus-color);
-    outline-offset:var(--yb-focus-offset); }"""
-
 CSS_TOLSTOY = """  /* O video shoppable sangra ate a borda da tela — em producao ele nao
      respeita o container de 1200px. Por isso a section vive FORA de .page,
      em vez de compensar largura com margem negativa. */
@@ -125,7 +92,7 @@ CSS_TOLSTOY = """  /* O video shoppable sangra ate a borda da tela — em produc
   .tolstoy nav[aria-label="Carousel navigation"] button {
     width:var(--yb-target-min); height:var(--yb-target-min);
     border-radius:var(--yb-radius-control);
-    border:var(--yb-border-width-hair) solid var(--yb-border);
+    border:var(--yb-border-hairline) solid var(--yb-border);
     color:var(--yb-text-primary); opacity:1;
     transition:background var(--yb-transition-control);
   }
@@ -140,7 +107,7 @@ CSS_TOLSTOY = """  /* O video shoppable sangra ate a borda da tela — em produc
     outline-offset:var(--yb-focus-offset);
   }
   .tolstoy nav[aria-label="Carousel navigation"] svg {
-    width:var(--yb-icon-size, 20px); height:var(--yb-icon-size, 20px);
+    width:var(--yb-icon-md); height:var(--yb-icon-md);
     stroke-width:1.5;
   }
   /* Mesma regra do .yb-track__nav: abaixo de 768 a seta some, no toque
@@ -149,69 +116,6 @@ CSS_TOLSTOY = """  /* O video shoppable sangra ate a borda da tela — em produc
      que ninguem decidiu. */
   @media (max-width:767.98px) {
     .tolstoy nav[aria-label="Carousel navigation"] { display:none; }
-  }"""
-
-CSS_PDP = """  /* O padding de cima nasceu como modificador (`.pdp--solto`) porque so uma
-     tela nao tinha breadcrumb. Agora nenhuma tem: sem a trilha acima, o
-     produto encostaria no cabecalho em todas, e o respiro que ela dava passa
-     a ser do proprio bloco. Modificador que vale para 100% dos casos nao e
-     modificador — e o padrao escrito no lugar errado. */
-  .pdp { display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-12);
-    align-items:start; padding-block:var(--yb-space-8); }
-
-  /* A historia do produto mora dentro da coluna de compra, e a coluna agora
-     tem ritmo: o `gap` dela e a distancia mais curta (ver .yb-buybox). Estes
-     blocos sao outro assunto — nao decisao de compra — e por isso levam o
-     maior vao da coluna. Fica aqui, e nao no padrao, porque `.pdp__*` e classe
-     desta pagina: o sistema nao deve saber que ela existe. */
-  .yb-buybox > .pdp__duo,
-  .yb-buybox > .yb-bannermedia,
-  .yb-buybox > .pdp__prova { margin-block-start: var(--yb-space-8); }
-
-  /* Duas fotos altas lado a lado, e a grade de prova em duas colunas. Sao
-     arranjos DESTA pagina, nao componentes: por isso ficam aqui. */
-  .pdp__duo { display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-3); }
-  /* Altura do par so onde ele e par de verdade, lado a lado. Abaixo de 768
-     vale a do componente, que cresce no celular para a foto aparecer. */
-  @media (min-width:768px) {
-    .pdp__duo .yb-bannermedia { min-height:clamp(18rem, 26vw, 24rem); }
-  }
-  .pdp__duo .yb-bannermedia {
-    /* Metade da largura, entao metade da folga: 80px em 1024 contra 161px do
-       banner inteiro. A queda do sistema (34vw) daria 140px ali e chegaria
-       cortada. Quem aperta o layout devolve a medida. */
-    --yb-veil-fall:clamp(2rem, 26vw - 13rem, 11rem);
-  }
-  @media (min-width:360px){
-    .pdp__duo .yb-bannermedia { --yb-veil-fall:clamp(3.5rem, 26vw - 13rem, 11rem); }
-  }
-  .pdp__prova { display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-3);
-    list-style:none; margin:0; padding:0; }
-  @media (max-width:520px) { .pdp__duo { grid-template-columns:1fr; } }
-
-  /* A imagem acompanha a leitura da coluna da direita e para quando o bloco
-     acaba — `sticky` ja e limitado pelo pai, entao nao precisa de JS nem de
-     conta de altura: quando o grid termina, a coluna volta a rolar sozinha.
-
-     `align-items:start` no grid e o que torna isto possivel: esticada ate a
-     altura da linha, a coluna nao teria para onde deslizar.
-
-     O deslocamento sai do token da barra fixa, senao a imagem gruda por baixo
-     dela. */
-
-  /* `--yb-chrome-h` e nao `--yb-header-h`: o token do cabecalho mede so a
-     barra, e quando a faixa do parceiro esta na tela ela soma 3,5rem. Lendo o
-     token errado, a foto grudava ATRAS da faixa — e a faixa e justamente o que
-     aparece quando a pessoa rola, que e quando o sticky comeca a valer. */
-  .pdp > .yb-gallery {
-    position:sticky;
-    inset-block-start:calc(var(--yb-chrome-h) + var(--yb-space-5));
-    align-self:start;
-  }
-  /* Numa coluna so nao ha o que acompanhar, e grudar atrapalharia a rolagem. */
-  @media (max-width:860px) {
-    .pdp { grid-template-columns:1fr; gap:var(--yb-space-8); }
-    .pdp > .yb-gallery { position:static; }
   }"""
 
 CABECA = """<!doctype html>
@@ -243,19 +147,6 @@ CABECA = """<!doctype html>
 
 RODAPE = """
 <script src="yb/behavior.js?v={v}"></script>
-<script>
-// Setas do banner. Carrossel nao e componente do sistema — este JS vive na
-// pagina, nao em components.js, para nao dar a entender que existe.
-(function(){
-  var t = document.getElementById('banner-track');
-  if (!t) return;
-  function ir(d){ t.scrollBy({left: d * t.clientWidth, behavior: 'smooth'}); }
-  var a = document.querySelector('.banner__arrow--prev');
-  var p = document.querySelector('.banner__arrow--next');
-  if (a) a.addEventListener('click', function(){ ir(-1); });
-  if (p) p.addEventListener('click', function(){ ir(1); });
-})();
-</script>
 </body>
 </html>
 """
@@ -1430,25 +1321,39 @@ def copiar_banners(destino):
 
 
 def banner():
+    """O topo da v1: o Hero do sistema com as artes de campanha.
+
+    Era um carrossel proprio da pagina (`.banner`, trilho, slides e setas
+    redondas flutuantes, com CSS e JS escritos aqui). O sistema ja tem o bloco:
+    o trilho `--hero`, um slide por tela, e o Banner hero `--art` para a peca
+    pronta do marketing, que e o que estes quatro slides sao. O primeiro leva
+    `fetchpriority` pelo mesmo motivo do hero da v2."""
     slides = ""
     for i, (mb, dk, href, alt) in enumerate(SLIDES):
+        prio = 'fetchpriority="high"' if i == 0 else 'loading="lazy"'
         slides += f"""
-        <li class="banner__slide">
-          <a href="{href}" aria-label="{alt}">
-            <picture>
-              <source media="(max-width: 767px)" srcset="img/{mb}">
-              <source media="(min-width: 768px)" srcset="img/{dk}">
-              <img src="img/{dk}" alt="{alt}"{' loading="lazy"' if i else ''}>
-            </picture>
-          </a>
-        </li>"""
-    return f"""<section class="banner" data-yb-partnerbar-anchor aria-roledescription="carousel" aria-label="Promotions">
+      <a class="yb-bannerhero yb-bannerhero--art" href="{href}">
+        <img class="yb-bannerhero__backdrop" src="img/{dk}" alt="" loading="lazy">
+        <picture>
+          <source media="(max-width: 767.98px)" srcset="img/{mb}">
+          <img src="img/{dk}" alt="{alt}" {prio}>
+        </picture>
+      </a>"""
+    return secao_hero(slides, 'Promotions', 'slide', 'banner-track')
+
+
+def secao_hero(slides, rotulo, item, ident):
+    """O bloco Hero: trilho de um slide por tela, com volta, e as setas do
+    trilho. A v1 e a v2 montam os slides; o invólucro é um só."""
+    return f"""  <section class="yb-hero" data-yb-partnerbar-anchor aria-roledescription="carousel" aria-label="{rotulo}">
 {parceiro()}
-  <ul class="banner__track" id="banner-track">{slides}
-  </ul>
-  <button class="banner__arrow banner__arrow--prev" aria-label="Previous slide">{ico('chevron-left','yb-icon yb-icon--lg')}</button>
-  <button class="banner__arrow banner__arrow--next" aria-label="Next slide">{ico('chevron-right','yb-icon yb-icon--lg')}</button>
-</section>"""
+    <div class="yb-track yb-track--hero" id="{ident}" data-yb-track-loop>{slides}
+    </div>
+    <div class="yb-track__nav" data-yb-track-nav="{ident}" hidden>
+      <button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous {item}">{ico('chevron-left')}</button>
+      <button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next {item}">{ico('chevron-right')}</button>
+    </div>
+  </section>"""
 
 
 # O recado do parceiro. So existe quando a pessoa chega por link patrocinado —
@@ -2573,15 +2478,7 @@ def hero_v2(arte=None):
       </a>"""
         if i == 0 and arte:
             slides += slide_arte(arte)
-    return f"""  <section class="yb-hero" data-yb-partnerbar-anchor aria-roledescription="carousel" aria-label="Highlights">
-{parceiro()}
-    <div class="yb-track yb-track--hero" id="hero-track" data-yb-track-loop>{slides}
-    </div>
-    <div class="yb-track__nav" data-yb-track-nav="hero-track" hidden>
-      <button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous highlight">{ico('chevron-left')}</button>
-      <button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next highlight">{ico('chevron-right')}</button>
-    </div>
-  </section>"""
+    return secao_hero(slides, 'Highlights', 'highlight', 'hero-track')
 
 
 # ============================================================ HOME
@@ -2596,8 +2493,6 @@ def pagina(titulo, corpo, css_pagina=None):
     v = versao()
     if css_pagina is None:
         partes = []
-        if 'class="banner"' in corpo:
-            partes.append(CSS_BANNER_V1)
         if 'tolstoy' in corpo:
             partes.append(CSS_TOLSTOY)
         css_pagina = '\n'.join(partes)
@@ -2817,8 +2712,8 @@ def pdp_historia():
            e cursor de link. E os olhos-de-texto eram numero inventado ("98%
            5-star reviews") e selo repetido ("Best seller", terceiro na pagina);
            agora dizem o que a foto mostra. -->
-      <div class="pdp__duo">
-        <div class="yb-bannermedia yb-bannermedia--blur">
+      <div class="yb-product__pair">
+        <div class="yb-bannermedia yb-bannermedia--blur yb-bannermedia--half">
           <img src="img/22_1-d5c4b8.webp" alt="" loading="lazy">
           <div class="yb-bannermedia__blur" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="yb-bannermedia__body">
@@ -2826,7 +2721,7 @@ def pdp_historia():
             <h2 class="yb-bannermedia__title">Water back into the fiber.</h2>
           </div>
         </div>
-        <div class="yb-bannermedia yb-bannermedia--blur">
+        <div class="yb-bannermedia yb-bannermedia--blur yb-bannermedia--half">
           <img src="img/29-527a32.webp" alt="" loading="lazy">
           <div class="yb-bannermedia__blur" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="yb-bannermedia__body">
@@ -2869,7 +2764,7 @@ def pdp_historia():
            que existem na captura (as do blog), e cada cartao leva ao artigo de
            onde a foto veio. Dois cartoes honestos valem mais que quatro com um
            errado. -->
-      <ul class="pdp__prova">""" + "".join(f"""
+      <ul class="yb-product__proof">""" + "".join(f"""
         <li><a class="yb-collection yb-collection--card" href="{pst['href']}">
           <img src="img/{pst.get('arquivo','')}" alt="" loading="lazy">
           <span class="yb-collection__foot">
@@ -3167,7 +3062,7 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
     # variaveis em vez de aparecerem duas vezes no arquivo: duplicar cem linhas
     # de galeria para trocar a ordem e garantir que as duas versoes divirjam na
     # primeira correcao que alguem fizer em uma delas.
-    bloco_compra = f"""  <div class="pdp">
+    bloco_compra = f"""  <div class="yb-product">
     <div class="yb-gallery" data-yb-gallery>
       <div class="yb-gallery__stage">{slides}
         <span class="yb-gallery__count">1 / {len(p['imagens'])}</span>
@@ -3307,7 +3202,7 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
 
 <main id="content" tabindex="-1">
   <div class="yb-page">
-  <div class="pdp">
+  <div class="yb-product">
     <div class="yb-gallery" data-yb-gallery>
       <div class="yb-gallery__stage">{slides}
         <span class="yb-gallery__count">1 / {len(p['imagens'])}</span>
@@ -3452,7 +3347,7 @@ def montar_pdp(destino, handle='deep-care-kit-ybera-fashion-gold', variantes=Non
 {barra}
 
 {fim_de_pagina(relacionados)}"""
-    return pagina(f"{p['titulo']} – Ybera USA", corpo, CSS_PDP)
+    return pagina(f"{p['titulo']} – Ybera USA", corpo)
 
 
 def montar_faq(destino):

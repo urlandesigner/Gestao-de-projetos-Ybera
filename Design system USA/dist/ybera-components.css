@@ -441,7 +441,7 @@
      (fundo branco, linha preta), o selo — que divide os tokens dele de
      proposito — ficou branco sobre branco. Compartilhar a cor so funciona se
      compartilhar tambem o que a torna visivel. */
-  border:var(--yb-border-width-hair) solid var(--yb-action-secondary-border);
+  border:var(--yb-border-hairline) solid var(--yb-action-secondary-border);
 }
 .yb-badge--soft{background:var(--yb-bg-muted); color:var(--yb-text-secondary)}
 /* O SELO PRETO — a primaria da marca preenchida, texto branco, 16.66:1.
@@ -1939,6 +1939,16 @@ button.yb-link{
      alcance: sem alcance declarado o padrao e 100% e nao ha o que desfazer. */
   --yb-blur-falloff:12rem;
 }
+/* NO CELULAR A FAIXA E DO TAMANHO DO TEXTO, e nao da largura. Com o clamp de
+   cima ela parava no piso de 8rem (128px) de 320 a 430, e o texto medido de
+   baixo ate o sobretitulo vai de 199 a 273px: o titulo inteiro ficava sobre
+   foto nitida, 108px acima do desfoque em 375, e o banner nao lia como blur.
+   20rem cobre os 273px do pior caso (320, titulo em tres linhas) com 47px de
+   queda antes da primeira linha. O 2:3 do celular tem 480px ou mais de altura,
+   entao a metade de cima continua nitida. */
+@media (max-width:767.98px){
+  .yb-bannerhero--blur{ --yb-blur-band:20rem; }
+}
 /* A caixa e as folhas sao as MESMAS nas tres familias que tem veu sobre foto.
    Cada uma diz so onde a banda comeca e quanto o raio mede, porque isso e
    escala e escala e do componente: 2rem num hero de 1440 e 1rem num cartao de
@@ -2107,9 +2117,8 @@ button.yb-link{
    com 4rem o veu chegava cortado ali, alfa .223 na primeira linha de pixel.
    Piso generoso onde ha espaco custa aresta onde nao ha.
 
-   Um banner espremido em coluna estreita tem folga menor que essa tabela, e
-   quem sabe disso e a PAGINA, nao o sistema: quem aperta o layout redeclara
-   `--yb-veil-fall`. E o que o par de destaques da PDP faz. */
+   Um banner espremido em meia coluna tem folga menor que essa tabela: e a
+   variante `--half`, logo abaixo, com a tabela dela. */
 .yb-bannermedia{ --yb-veil-fall:clamp(2rem, 34vw - 13rem, 11rem); }
 /* O piso de 2rem existe por causa de UMA largura: em 320 o titulo quebra em
    quatro linhas e sobram 40px de folga. De 360 para cima a folga menor passa
@@ -2123,6 +2132,25 @@ button.yb-link{
 .yb-bannermedia--blur{
   --yb-blur-band:clamp(6rem, 22vw, 12rem);
   --yb-blur-radius:1.5rem;
+}
+/* METADE DA COLUNA — `--half`, o par de destaques da PDP.
+   Metade da largura e metade da folga: 80px em 1024 contra 161px do banner
+   inteiro, e a queda padrao (34vw) daria 140px ali e chegaria cortada. A
+   altura so vale lado a lado; abaixo de 768 fica a do componente, que cresce
+   no celular para a foto aparecer. Era a pagina que redeclarava as duas
+   medidas por fora do componente; agora e uma variante dele. */
+.yb-bannermedia--half{ --yb-veil-fall:clamp(2rem, 26vw - 13rem, 11rem); }
+@media (min-width:360px){
+  .yb-bannermedia--half{ --yb-veil-fall:clamp(3.5rem, 26vw - 13rem, 11rem); }
+}
+@media (min-width:768px){
+  .yb-bannermedia--half{ min-height:clamp(18rem, 26vw, 24rem); }
+}
+/* Mesma conta do hero: abaixo de 768 o clamp parava em 96px, e o texto medido
+   vai de 86 a 194px (o destaque de tres linhas em 320). 14rem cobre o pior
+   caso com 30px de queda; o banner do celular tem de 400 a 480px. */
+@media (max-width:767.98px){
+  .yb-bannermedia--blur{ --yb-blur-band:14rem; }
 }
 /* No celular o banner cresce para a foto aparecer. Com 256px o corpo (~300px
    em 289 de largura) ocupava o banner inteiro e o veu cobria a foto toda:
@@ -2566,6 +2594,12 @@ button.yb-link{
    de razao numa foto com brilho especular e zero nas outras duas. Ele e
    acabamento, nao sustentacao. */
 .yb-offercard--blur{ --yb-blur-band:55%; --yb-blur-radius:.5rem; }
+/* No desktop o cartao e baixo (416px) e o texto medido sobe 226 a 290px:
+   55% dava 229px, e o titulo ficava ate 61px acima do desfoque. 75% cobre os
+   290 com 22px de queda. No celular o cartao e alto e 55% ja sobra. */
+@media (min-width:768px){
+  .yb-offercard--blur{ --yb-blur-band:75%; }
+}
 .yb-offercard--blur .yb-offercard__body::before{
   background:linear-gradient(to bottom,
     var(--yb-scrim-none)         0,
@@ -6830,3 +6864,53 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
 /* O atalho ao lado do titulo e o componente LINK (`.yb-link`, em
    components.css) — nao redeclare a receita aqui. Marcacao:
    <a class="yb-link" href="...">Texto {chevron}</a>. */
+
+/* =========================================================================
+   PRODUCT LAYOUT — o esqueleto da PDP
+   Galeria a esquerda, coluna de compra a direita, e a historia do produto
+   descendo DENTRO da coluna de compra.
+
+   Morava na folha do gerador das telas (`.pdp`, `.pdp__duo`, `.pdp__prova`),
+   com o comentario "o sistema nao deve saber que ela existe". Deve: as cinco
+   PDPs usam o mesmo arranjo, e ele e exatamente o que este degrau descreve —
+   ordem de blocos, e nao estilo de peca. Escrito numa pagina, cada PDP nova
+   copiaria o grid e as tres quebras, e a primeira correcao divergiria.
+   ========================================================================= */
+/* Sem breadcrumb acima, o produto encostaria no cabecalho: o respiro de cima
+   e do proprio bloco, e nao de modificador — valia para 100% das telas. */
+.yb-product{
+  display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-12);
+  align-items:start; padding-block:var(--yb-space-8);
+}
+/* A foto acompanha a leitura da coluna da direita e para quando o bloco
+   acaba: `sticky` ja e limitado pelo pai, entao nao ha JS nem conta de altura.
+   `align-items:start` e o que deixa a coluna deslizar — esticada ate a altura
+   da linha, ela nao teria para onde ir.
+   `--yb-chrome-h` e nao `--yb-header-h`: com a faixa do parceiro na tela o
+   topo fixo soma 3,5rem, e lendo so o cabecalho a foto grudava atras dela. */
+.yb-product > .yb-gallery{
+  position:sticky;
+  inset-block-start:calc(var(--yb-chrome-h) + var(--yb-space-5));
+  align-self:start;
+}
+/* A historia do produto e outro assunto — nao decisao de compra —, entao leva
+   o maior vao da coluna, e nao o `gap` curto do Buy box. */
+.yb-buybox > .yb-product__pair,
+.yb-buybox > .yb-bannermedia,
+.yb-buybox > .yb-product__proof{ margin-block-start:var(--yb-space-8); }
+/* Duas fotos altas lado a lado (Banner media `--half`), e a grade de prova. */
+.yb-product__pair{ display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-3); }
+.yb-product__proof{
+  display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-3);
+  list-style:none; margin:0; padding:0;
+}
+/* 520: abaixo disso cada foto do par teria menos de 240px e o titulo quebraria
+   em quatro linhas. */
+@media (max-width:520px){ .yb-product__pair{ grid-template-columns:1fr; } }
+/* 860 e nao 768: entre os dois a galeria e a coluna de compra teriam 380px
+   cada, e o botao de comprar quebrava em duas linhas. Numa coluna so nao ha o
+   que acompanhar, e grudar atrapalharia a rolagem. */
+@media (max-width:860px){
+  .yb-product{ grid-template-columns:1fr; gap:var(--yb-space-8); }
+  .yb-product > .yb-gallery{ position:static; }
+}

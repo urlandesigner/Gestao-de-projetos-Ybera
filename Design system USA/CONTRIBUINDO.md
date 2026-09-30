@@ -22,7 +22,7 @@ falha aqui e não vira surpresa no tema Shopify.
 
 Três perguntas, nesta ordem. A primeira que der "sim" encerra o assunto.
 
-1. **Já existe?** `INVENTARIO.md` lista as 55 peças que embarcam, com classe
+1. **Já existe?** `INVENTARIO.md` lista as 56 peças que embarcam, com classe
    base, degrau e maturidade. A doc em `/atoms/`, `/molecules/`, `/organisms/`
    e `/templates/` mostra cada uma.
 2. **Dá para compor com o que existe?** Se dá, ela **sobe um degrau**: o que

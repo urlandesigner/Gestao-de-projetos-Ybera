@@ -52,7 +52,9 @@ export const NIVEIS = [
 
        Este degrau foi montado a partir do CSS — as folhas foram cortadas por
        nível, e em `templates/` ficou o que tinha folha: `.yb-page`,
-       `.yb-block`, `.yb-section`. Só o Page layout tem.
+       `.yb-block`, `.yb-section`. O Page layout tem, e o Product layout, que
+       subiu das telas de PDP: é o grid de galeria e coluna de compra, e não a
+       ordem dos blocos da PDP inteira — essa continua planejada abaixo.
 
        Mas template é ARRANJO, não estilo: pela definição do próprio atomic
        design, os dois degraus de cima são ordem de blocos, e não CSS. Os

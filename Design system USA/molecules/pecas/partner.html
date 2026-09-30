@@ -40,6 +40,14 @@
         <p class="yb-partnerbar__text">Hey, it&rsquo;s <b>@naymazzeto</b>! Enjoy my exclusive <b>partner discount</b>.</p>
       </div>
     </div>
+    <h3 class="row-label">4 &middot; Página sem arte &mdash; a faixa no fluxo &middot; <code>.yb-partnerbar--inline</code></h3>
+    <div class="stage">
+      <!-- Na loja ela é `sticky`: ocupa o lugar logo abaixo do cabeçalho e gruda ali
+           quando a rolagem chega. Aqui, sem cabeçalho acima, ela só aparece no fluxo. -->
+      <div class="yb-partnerbar yb-partnerbar--inline" style="position:static">
+        <p class="yb-partnerbar__text">Hey, it&rsquo;s <b>@naymazzeto</b>! Enjoy my exclusive <b>partner discount</b>.</p>
+      </div>
+    </div>
     <div class="note">
       <b>Encolhe, não some</b>
       <p>O desconto vale a sessão inteira, então o recado não pode sumir: passados 96px
@@ -51,4 +59,11 @@
       <p>A âncora é o próprio banner, e não a janela: o bloco de cabeçalho mede 117px no
       desktop e 109 no celular, e somar altura que muda com quebra de linha é chute com
       cara de cálculo. O pai precisa de <code>position:relative</code>.</p>
+    </div>
+    <div class="note">
+      <b>Sem arte no topo, a faixa entra no fluxo</b>
+      <p>Na PDP de quem chega pelo link não há banner para ancorar o balão, e a faixa
+      nasce visível com <code>--inline</code>: <code>sticky</code> em vez de
+      <code>fixed</code>, porque ali a faixa preta de anúncio ainda está na tela e a
+      versão fixa nasceria atrás do cabeçalho.</p>
     </div>

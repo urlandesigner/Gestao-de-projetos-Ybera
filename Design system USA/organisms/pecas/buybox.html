@@ -2,7 +2,7 @@
     <p class="when">O bloco de compra da PDP: nome, prova, preço, escolha, ação e garantia. Sete níveis de informação acima da dobra, em ordem fixa.</p>
     <div class="note"><b>Nota de heading</b><p>Nesta galeria o nome do produto é <code>&lt;h2&gt;</code> porque a página já tem um <code>&lt;h1&gt;</code>. Numa PDP real ele é o <code>&lt;h1&gt;</code> — o CSS não depende do nível.</p></div>
     <!-- doc:vizinha yb-gallery — na PDP a galeria é IRMÃ do bloco de compra
-         dentro de `.pdp`, não parte dele. Ela está aqui porque bloco de compra
+         dentro de `.yb-product`, não parte dele. Ela está aqui porque bloco de compra
          sem a foto ao lado não mostra a decisão que a pessoa toma. -->
     <div class="stage stage--pad">
       <div class="split">
@@ -22,41 +22,110 @@
           </div>
         </div>
         <div class="yb-buybox">
-          <div class="yb-buybox__flags">
-            <span class="yb-badge yb-badge--sale">Save 16%</span>
-            <span class="yb-badge yb-badge--soft">Best seller</span>
+          <div class="yb-buybox__top">
+            <h2 class="yb-buybox__title">Deep care kit – Ybera Fashion Gold</h2>
+            <span class="yb-buybox__tools">
+              <button class="yb-iconbtn" type="button" data-yb-share
+                      aria-label="Share this product"
+                      data-copied="Link copied" data-error="Could not copy the link">
+                <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-share"/></svg>
+              </button>
+              <button class="yb-iconbtn yb-iconbtn--fav yb-buybox__fav" type="button"
+                      data-yb-fav aria-pressed="false" aria-label="Add to favorites"
+                      data-label-off="Add to favorites" data-label-on="Remove from favorites"
+                      data-icon-off="yb-heart" data-icon-on="yb-heart-filled">
+                <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg>
+              </button>
+            </span>
           </div>
-          <h2 class="yb-buybox__title">Kit Sealant Fashion Gold</h2>
-          <span class="yb-rating" role="img" aria-label="4.8 of 5, 412 reviews">
-            <span class="yb-stars" style="--yb-stars:4.8" aria-hidden="true"></span>
-            <span class="yb-rating__count">4.8 · 412 reviews</span>
-          </span>
+          <a class="yb-buybox__rating" href="#reviews">
+            <span class="yb-rating" role="img" aria-label="5.0 of 5, 6 reviews">
+              <span class="yb-stars" style="--yb-stars:5.0" aria-hidden="true"></span>
+              <span class="yb-rating__score">5.0</span>
+              <span class="yb-rating__count">(6 reviews)</span></span>
+          </a>
           <div class="yb-buybox__priceline">
-            <span class="yb-price"><b class="yb-price__now">$168.90</b><s class="yb-price__was">$199.90</s></span>
-            <span class="yb-buybox__flags"><span class="yb-badge yb-badge--success">In stock</span><span class="yb-badge yb-badge--success" data-yb-ship-badge><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>Free shipping</span></span>
+            <span class="yb-price"><b class="yb-price__now" data-yb-price>$34.90</b></span>
+            <span class="yb-buybox__flags"><span class="yb-badge yb-badge--success" data-yb-seal>In stock</span><span class="yb-badge yb-badge--success" data-yb-ship-badge hidden><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>Free shipping</span></span>
           </div>
-          <p class="yb-buybox__desc">Professional keratin sealant for frizz-free,
-          mirror-smooth hair. Formulated without formaldehyde and safe for
-          color-treated hair.</p>
+          <p class="yb-buybox__ship" data-yb-ship data-yb-ship-min="50"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-truck"/></svg>Free shipping on orders over $50</p>
+          <p class="yb-buybox__desc">The Deep Care Hair Treatment Kit by Ybera Fashion Gold delivers a full, multi-layer repair ritual for dry, dull, porous or chemically damaged hair.</p>
+          <ul class="yb-buybox__perks">
+            <li><span class="yb-badge yb-badge--soft"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-refresh"/></svg> Multi-layer repair</span></li>
+            <li><span class="yb-badge yb-badge--soft"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-shield-check"/></svg> For damaged hair</span></li>
+          </ul>
           <div class="yb-buybox__group">
-            <p class="yb-buybox__label">Size</p>
-            <div class="yb-swatches">
-              <input type="radio" name="bs" id="b1" checked><label for="b1">500g</label>
-              <input type="radio" name="bs" id="b2"><label for="b2">300g</label>
-              <input type="radio" name="bs" id="b3" disabled><label for="b3">1kg</label>
+            <p class="yb-buybox__label" id="bb-size-label">Size: <b data-yb-variant-echo>250g (8.8oz)</b></p>
+            <div class="yb-swatches yb-swatches--cards" role="radiogroup" aria-labelledby="bb-size-label" data-yb-variant>
+              <input type="radio" name="bb-size" id="bb-size0" checked
+                     data-price="$34.90" data-photo="0">
+              <label for="bb-size0">
+                <img src="../pages/img/Artboard_1_62a39a8d-9dfe-4cdc-9bfd-7626a-b29a2a.webp" alt="" loading="lazy">
+                <span class="yb-swatches__name">250g (8.8oz)</span>
+                <span class="yb-swatches__price">$34.90</span>
+                <span class="yb-swatches__stock">In stock</span>
+              </label>
+              <input type="radio" name="bb-size" id="bb-size1"
+                     data-price="$59.90" data-photo="1">
+              <label for="bb-size1">
+                <img src="../pages/img/DSC09878-6f3656.webp" alt="" loading="lazy">
+                <span class="yb-swatches__name">500g (17.6oz)</span>
+                <span class="yb-swatches__price">$59.90</span>
+                <span class="yb-swatches__stock">In stock</span>
+              </label>
+              <input type="radio" name="bb-size" id="bb-size2"
+                     data-price="$99.90" data-yb-soldout data-photo="2">
+              <label for="bb-size2">
+                <img src="../pages/img/DSC09857-45ff81.webp" alt="" loading="lazy">
+                <span class="yb-swatches__name">1kg (35.2oz)</span>
+                <span class="yb-swatches__price">$99.90</span>
+                <span class="yb-swatches__stock">Sold out</span>
+              </label>
             </div>
           </div>
-          <div class="yb-buybox__actions">
-            <div class="yb-stepper">
-              <button type="button" aria-label="Decrease" disabled>−</button>
-              <input type="number" value="1" aria-label="Quantity">
-              <button type="button" aria-label="Increase">+</button>
+          <div class="yb-buybox__purchase" data-yb-purchase data-yb-buybar-anchor>
+            <div class="yb-buybox__actions">
+              <div class="yb-stepper" data-yb-stepper>
+                <button type="button" data-yb-step="down" aria-label="Decrease quantity"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-minus"/></svg></button>
+                <input type="number" value="1" min="1" max="9" aria-label="Quantity">
+                <button type="button" data-yb-step="up" aria-label="Increase quantity"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-plus"/></svg></button>
+              </div>
+              <button class="yb-btn yb-btn--primary" type="button" data-yb-buy
+                      data-label="Add to cart — " data-label-soldout="Sold out"
+                      data-toast-title="Added to cart" data-toast-text="Deep care kit – Ybera Fashion Gold"
+                      >Add to cart — $34.90</button>
             </div>
-            <button type="button" class="yb-btn yb-btn--primary">Add to cart — $168.90</button>
+            <form class="yb-field yb-field--row" data-yb-notify hidden
+                  onsubmit="Ybera.toast({title:'We will email you',text:'Deep care kit – Ybera Fashion Gold',variant:'success'}); return false">
+              <div class="yb-field__box">
+                <input class="yb-input" id="bb-notify-email" type="email" placeholder=" " autocomplete="email" required>
+                <label class="yb-field__label" for="bb-notify-email">Your best email</label>
+              </div>
+              <button class="yb-btn yb-btn--primary" type="submit">Notify me</button>
+              <p class="yb-field__hint">We email you once it is back in stock. Nothing else.</p>
+            </form>
           </div>
           <div class="yb-buybox__trust">
             <span>Formaldehyde-free</span><span>Color-safe</span>
-            <span>30-day returns</span>
+          </div>
+          <div class="yb-accordion">
+            <details name="bb-details"><summary>What&rsquo;s included</summary>
+              <div class="yb-accordion__body"><ul class="yb-buybox__kit">
+                <li>
+                  <span class="yb-buybox__kit-name"><b>Intensive Reconstruction Mask</b><small>Medulla</small></span>
+                  <span class="yb-buybox__kit-weight">250g / 8.8oz</span>
+                </li>
+                <li>
+                  <span class="yb-buybox__kit-name"><b>Deep Nutrition Mask</b><small>Cortex</small></span>
+                  <span class="yb-buybox__kit-weight">250g / 8.8oz</span>
+                </li>
+                <li>
+                  <span class="yb-buybox__kit-name"><b>Long-Lasting Hydration Mask</b><small>Cuticle</small></span>
+                  <span class="yb-buybox__kit-weight">250g / 8.8oz</span>
+                </li>
+              </ul></div></details>
+            <details name="bb-details"><summary>Description</summary>
+              <div class="yb-accordion__body"><p>The Deep Care Hair Treatment Kit by Ybera Fashion Gold delivers a full, multi-layer repair ritual for dry, dull, porous or chemically damaged hair. Each mask targets a different internal layer of the hair fiber — cuticle, cortex and medulla — ensuring complete restoration and long-lasting softness. Powered by nutrient-rich lipids, vitamins, proteins and amino acids , this system hydrates deeply, replenishes essential nutrients and rebuilds the internal structure of the fiber, leaving hair stronger, smoother and more resilient.</p></div></details>
           </div>
         </div>
       </div>

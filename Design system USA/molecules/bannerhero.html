@@ -374,6 +374,9 @@
   + var(--yb-page-gutter) + 42rem);
   --yb-blur-falloff:12rem;
 }
+@media (max-width:767.98px){
+  .yb-bannerhero--blur{--yb-blur-band:20rem;}
+}
 .yb-bannerhero__blur, .yb-bannermedia__blur, .yb-offercard__blur, .yb-collection__blur{
   position:absolute; inset-inline:0; inset-block-end:0; z-index:0;
   block-size:var(--yb-blur-band); pointer-events:none;

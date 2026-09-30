@@ -3,7 +3,7 @@
 <!-- GERADO por tools/inventario.mjs. Não edite à mão: rode ./build.sh.
      A fonte é o CSS. Se uma linha aqui está errada, o errado é o código. -->
 
-55 peças no bundle — 44 estáveis, 11 em beta, 0 em alfa.
+56 peças no bundle — 45 estáveis, 11 em beta, 0 em alfa.
 
 ## Como ler a maturidade
 
@@ -43,7 +43,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | ACORDEÃO | `.yb-accordion` | Molécula | Estável | — | 2 | 19 | sim | sim | — | sim |
 | ALERT | `.yb-alert` | Molécula | Beta | 4 | 3 | 28 | sim | sim | sim | — |
 | BANNER HERO | `.yb-bannerhero` | Molécula | Estável | 6 | 2 | 45 | sim | sim | — | sim |
-| BANNER MEDIA | `.yb-bannermedia` | Molécula | Estável | 2 | — | 3 | sim | n/a | — | sim |
+| BANNER MEDIA | `.yb-bannermedia` | Molécula | Estável | 3 | — | 3 | sim | n/a | — | sim |
 | BREADCRUMB | `.yb-crumb` | Molécula | Estável | — | 3 | 8 | sim | sim | — | sim |
 | CARD OFFER | `.yb-offercard` | Molécula | Estável | 1 | 2 | 40 | sim | sim | sim | sim |
 | CARD PRODUCT | `.yb-card` | Molécula | Estável | 1 | 2 | 30 | sim | sim | — | sim |
@@ -78,6 +78,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | SEARCH OVERLAY | `.yb-search` | Organismo | Estável | — | 2 | 41 | sim | sim | sim | sim |
 | SPLIT | `.yb-split` | Organismo | Estável | — | — | 17 | sim | n/a | — | sim |
 | PAGE LAYOUT | `.yb-block` | Template | Estável | 2 | — | 20 | sim | n/a | — | sim |
+| PRODUCT LAYOUT | `.yb-product` | Template | Estável | — | — | 5 | sim | n/a | — | sim |
 
 ## O que cada coluna prova
 

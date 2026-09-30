@@ -12,7 +12,7 @@ automatizadas.
 | Onde olhar | O quê |
 |---|---|
 | [PRINCIPIOS.md](PRINCIPIOS.md) | os cinco princípios, **em ordem** — o que ganha quando dois se chocam |
-| [INVENTARIO.md](INVENTARIO.md) | as 55 peças com maturidade conferida a cada build |
+| [INVENTARIO.md](INVENTARIO.md) | as 56 peças com maturidade conferida a cada build |
 | [decision-log/](decision-log/) | por que o sistema é assim, decisão por decisão |
 | [CONTRIBUINDO.md](CONTRIBUINDO.md) | a mecânica: laço local, o que o CI reprova |
 | [GOVERNANCA.md](GOVERNANCA.md) · [PLANO.md](PLANO.md) | como muda · como entra na loja |

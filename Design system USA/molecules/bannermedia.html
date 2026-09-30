@@ -243,6 +243,34 @@
       receita do véu e das três folhas de blur é a mesma, e está documentada no
       <a href="bannerhero.html">Banner hero</a>.</p>
     </details>
+    <h3 class="row-label">Meia coluna &mdash; <code>--half</code>, dois lado a lado</h3>
+    <div class="demo demo--rail">
+      <!-- A grade é da página (o `__pair` do Product layout, que esta folha não carrega). -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-3); max-inline-size:34rem">
+        <div class="yb-bannermedia yb-bannermedia--blur yb-bannermedia--half">
+          <img src="../pages/img/22_1-d5c4b8.webp" alt="" loading="lazy">
+          <div class="yb-bannermedia__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="yb-bannermedia__body">
+            <span class="yb-bannermedia__eyebrow">Step 1 · Hydration</span>
+            <h3 class="yb-bannermedia__title">Water back into the fiber.</h3>
+          </div>
+        </div>
+        <div class="yb-bannermedia yb-bannermedia--blur yb-bannermedia--half">
+          <img src="../pages/img/29-527a32.webp" alt="" loading="lazy">
+          <div class="yb-bannermedia__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="yb-bannermedia__body">
+            <span class="yb-bannermedia__eyebrow">Damp or dry</span>
+            <h3 class="yb-bannermedia__title">Use it your way.</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <details class="note"><summary>Metade da largura, metade da folga</summary>
+      <p>O par de destaques da PDP. Em meia coluna o texto sobra menos foto acima dele,
+      então o véu cai menos (<code>26vw</code> contra <code>34vw</code>) e a altura
+      segue a largura. A página redeclarava as duas medidas por fora; agora é variante.
+      O par em si é o <a href="../templates/product-layout.html">Product layout</a>.</p>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
@@ -410,6 +438,16 @@
   --yb-blur-band:clamp(6rem, 22vw, 12rem);
   --yb-blur-radius:1.5rem;
 }
+.yb-bannermedia--half{--yb-veil-fall:clamp(2rem, 26vw - 13rem, 11rem);}
+@media (min-width:360px){
+  .yb-bannermedia--half{--yb-veil-fall:clamp(3.5rem, 26vw - 13rem, 11rem);}
+}
+@media (min-width:768px){
+  .yb-bannermedia--half{min-height:clamp(18rem, 26vw, 24rem);}
+}
+@media (max-width:767.98px){
+  .yb-bannermedia--blur{--yb-blur-band:14rem;}
+}
 @media (max-width:767.98px){
   .yb-bannermedia:not(.yb-bannermedia--art){min-height:clamp(16rem, 125vw, 30rem);}
 }</code></pre>
@@ -510,7 +548,7 @@
     <p class="rotulo">De que é feita</p>
     <p class="usa-degrau">Atoms</p>
     <ul class="usa"><li><a href="../atoms/button.html">Button</a></li></ul>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-bannermedia--art</code> <code>.yb-bannermedia--blur</code></span></span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-bannermedia--art</code> <code>.yb-bannermedia--blur</code> <code>.yb-bannermedia--half</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-bannermedia__blur</code> <code>.yb-bannermedia__body</code> <code>.yb-bannermedia__eyebrow</code> <code>.yb-bannermedia__text</code> <code>.yb-bannermedia__title</code></span></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>

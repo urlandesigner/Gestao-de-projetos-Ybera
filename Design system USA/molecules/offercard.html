@@ -429,6 +429,9 @@
   var(--yb-scrim-full)    calc(var(--yb-veil-fall) + var(--yb-veil-advance, 0px)));
 }
 .yb-offercard--blur{--yb-blur-band:55%; --yb-blur-radius:.5rem;}
+@media (min-width:768px){
+  .yb-offercard--blur{--yb-blur-band:75%;}
+}
 .yb-offercard--blur .yb-offercard__body::before{
   background:linear-gradient(to bottom,
   var(--yb-scrim-none)         0,

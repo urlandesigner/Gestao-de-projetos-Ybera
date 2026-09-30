@@ -163,7 +163,7 @@
     </nav>
     <nav class="ficha-passo" aria-label="Peça anterior e próxima">
       <span></span>
-      <span></span>
+      <a href="product-layout.html" rel="next">Product layout <span aria-hidden="true">→</span></a>
     </nav>
   </div>
   <h1 class="ficha-titulo">Page layout</h1>
@@ -255,6 +255,53 @@
       <p>64px de respiro entre blocos é um oitavo de uma tela de 568px — a PDP
       levava duas rolagens até o botão de comprar. Abaixo de 768 o respiro cai, e a
       hierarquia entre <code>--tight</code> e o padrão continua de pé.</p>
+    </details>
+    <h3 class="row-label">Bloco que sangra &mdash; <code>.yb-block--flush</code>, irmão do <code>.yb-page</code></h3>
+    <div class="stage">
+      <div class="yb-block yb-block--flush">
+        <div class="yb-section-head">
+          <h2>New arrivals</h2>
+          <a class="yb-link" href="#demos">Shop all <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-right"/></svg></a>
+        </div>
+        <div class="yb-track">
+          <article class="yb-card">
+            <div class="yb-card__media"><img src="../pages/img/105-d0e326.webp" alt="Frasco branco de condicionador Pantanal elixir, 1 litro" loading="lazy"></div>
+            <h3 class="yb-card__title"><a href="#demos">Floral Fusion Hair Mist — 50ml / 1.69 fl.oz</a></h3>
+            <span class="yb-price yb-price--sm"><b class="yb-price__now">$24.00</b></span>
+          </article>
+          <article class="yb-card">
+            <div class="yb-card__media"><img src="../pages/img/109_8f48e88f-e728-4b1e-b224-e3d3e29cf532-70f28f.webp" alt="Frasco branco de condicionador Forest elixir, 1 kg" loading="lazy"></div>
+            <h3 class="yb-card__title"><a href="#demos">Detox Shampoo 250ml</a></h3>
+            <span class="yb-price yb-price--sm"><b class="yb-price__now">$39.90</b></span>
+          </article>
+          <article class="yb-card">
+            <div class="yb-card__media"><img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Kit Terra Coco: shampoo, máscara e elixir lado a lado" loading="lazy"></div>
+            <h3 class="yb-card__title"><a href="#demos">Kit Sealant Fashion Gold — 500g / 17.6 fl.oz</a></h3>
+            <span class="yb-price yb-price--sm"><b class="yb-price__now">$168.90</b></span>
+          </article>
+          <article class="yb-card">
+            <div class="yb-card__media"><img src="../pages/img/Off1_August_22-24-11-18aac2.webp" alt="Kit de cuidado capilar sobre fundo claro" loading="lazy"></div>
+            <h3 class="yb-card__title"><a href="#demos">Kit TERRA COCO Isotonic Shampoo + Coconut-Based Mask</a></h3>
+            <span class="yb-price yb-price--sm"><b class="yb-price__now">$169.70</b></span>
+          </article>
+        </div>
+      </div>
+    </div>
+    <details class="note"><summary>Sangra por fora, e não por margem negativa</summary>
+      <p><code>--flush</code> tira o recuo do bloco, e o devolve só ao cabeçalho e ao
+      começo da pista: o título alinha com o resto da página e o trilho corre até a
+      borda. O bloco mora fora do <code>.yb-page</code>, e não dentro com
+      <code>50% - 50vw</code>, que erra pela largura da barra de rolagem.</p>
+    </details>
+    <h3 class="row-label">Atalho de teclado &mdash; <code>.yb-skip-link</code>, o primeiro elemento da página</h3>
+    <div class="stage stage--pad">
+      <!-- `position:static` só aqui: na página ele fica fora da tela e desce no foco. -->
+      <a class="yb-skip-link" href="#demos" style="position:static">Skip to main content</a>
+    </div>
+    <details class="note"><summary>Aparece quando o teclado chega nele</summary>
+      <p>O cabeçalho tem mais de 30 elementos focáveis antes do primeiro produto. O
+      atalho é o primeiro <code>Tab</code> de toda página e leva ao <code>&lt;main&gt;</code>;
+      fora de foco ele fica acima da tela. WCAG 2.4.1.</p>
     </details>
     <details class="note"><summary>Por que isto virou sistema</summary>
       <p>Regra dos dois usos: home e PDP já pediam os três. Enquanto viviam na folha
@@ -409,6 +456,7 @@
 </div></div>
       </div>
       <ol class="anat__legenda">
+        <li data-target=".yb-page"><span class="anat__texto"><b><a href="../templates/product-layout.html">Product layout</a></b> — O esqueleto da PDP: galeria à esquerda, que acompanha a rolagem, coluna de compra à direita, e a história do produto descendo dentro da coluna de compra.</span></li>
         <li data-target=".yb-link"><span class="anat__texto"><b><a href="../atoms/link.html">Link</a></b> — Texto que leva a outro lugar, com ícone atrás e alvo de toque de 44px. Fica ao lado de um título de seção ou reforça um link que já existe no mesmo cartão.</span></li>
         <li data-target=".yb-card"><span class="anat__texto"><b><a href="../molecules/card.html">Card product</a></b> — O cartão de produto do grid — foto, nome, nota, preço e ação. O título trunca em duas linhas por decisão de sistema.</span></li>
         <li data-target=".yb-badge"><span class="anat__texto"><b><a href="../atoms/badge.html">Badge</a></b> — Etiqueta curta que classifica um item sem competir com ele. Nunca carrega ação — badge não é botão.</span></li>
@@ -434,6 +482,8 @@
     <ul class="usa"><li><a href="../molecules/card.html">Card product</a></li><li><a href="../molecules/price.html">Price</a></li></ul>
     <p class="usa-degrau">Blocks</p>
     <ul class="usa"><li><a href="../organisms/buybox.html">Buy box</a></li></ul>
+    <p class="usa-degrau">Templates</p>
+    <ul class="usa"><li><a href="../templates/product-layout.html">Product layout</a></li></ul>
     <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo">Nenhum. A peça é um elemento só.</span></p>
     <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo">Nenhum. A peça não muda por interação.</span></p>

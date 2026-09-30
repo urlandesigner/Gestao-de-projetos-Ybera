@@ -9,6 +9,30 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 [GOVERNANCA.md](GOVERNANCA.md), componente novo pede versão **menor** (0.13.0).
 
 ### Mudado
+- **Telas de exemplo só com peças do sistema.** Auditoria das 11 telas: as folhas
+  eram cópias exatas do DS e não havia cor fixa nem token inexistente, mas duas
+  telas escreviam peça própria.
+  - **Home v1:** o carrossel `.banner` (trilho, slides, setas redondas, CSS e JS
+    na página) virou o Hero do sistema com slides `yb-bannerhero--art`.
+  - **As 5 PDPs:** o grid `.pdp`, `.pdp__duo` e `.pdp__prova`, com as quebras e
+    medidas escritas na página, virou o template **Product layout**
+    (`.yb-product`, `__pair`, `__proof`), com ficha própria. O ajuste de altura e
+    véu que a página fazia no Banner media virou a variante `--half`. Medido
+    contra a versão publicada em 375, 700, 1024 e 1440: layout idêntico.
+  - O adaptador do widget de vídeo usava o primitivo `--yb-border-width-hair` e um
+    `20px` fixo; agora `--yb-border-hairline` e `--yb-icon-md`. O mesmo primitivo
+    saiu do Badge `--secondary`.
+- **Blur que cobre o texto.** A faixa de desfoque parava no piso do `clamp`, e o
+  título ficava sobre foto nítida: no Banner hero em 375 ele estava inteiro 108px
+  acima da faixa. Abaixo de 768 o Banner hero passa a 20rem e o Banner media a
+  14rem; o Card offer sobe para 75% no desktop. Medido de 320 a 1440: o texto fica
+  dentro da faixa nas três peças.
+- **Fichas mostram o que as telas usam.** 22 classes em uso nas telas não
+  apareciam em ficha nenhuma. O Buy box mostra o bloco real da PDP (topo com
+  compartilhar e favoritar, nota, benefícios, compra, kit no acordeão) em vez de
+  uma versão antiga com "Best seller" e nota inventada; o Review ganhou o resumo
+  (`yb-reviews__top`); o Partner, a faixa `--inline`; o Card product, o
+  `yb-grid__rail`; o Page layout, o `--flush` e o `yb-skip-link`.
 - **Cartões de Examples dizem o que muda.** Mostravam o nome do arquivo
   (`index-v2.html`); agora cada tela tem uma linha, e as quatro homes dizem a
   diferença entre si: v1 é a home de hoje com as peças do sistema, v2 a ordem de

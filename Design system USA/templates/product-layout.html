@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Gallery — Ybera Design System</title>
+<title>Product layout — Ybera Design System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="../base/ybera-base.css">
 <link rel="stylesheet" href="../atoms/ybera-atoms.css">
 <link rel="stylesheet" href="../molecules/ybera-molecules.css">
-<link rel="stylesheet" href="ybera-organisms.css">
+<link rel="stylesheet" href="../organisms/ybera-organisms.css">
+<link rel="stylesheet" href="ybera-templates.css">
 <link rel="stylesheet" href="../icons/ybera-icons.css">
 <link rel="stylesheet" href="../doc/doc.css">
 <link rel="stylesheet" href="../doc/doc-cartao.css">
@@ -26,7 +27,7 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-level="organisms" data-frame="centered">
+<body class="ficha" data-level="templates" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
@@ -107,7 +108,7 @@
       <li><a href="../molecules/video.html">Vertical video carousel</a></li>
     </ul>
   </details>
-  <details class="ds-nav__grupo" open>
+  <details class="ds-nav__grupo">
     <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2.5" width="12" height="3" rx="1"/><rect x="2" y="6.8" width="12" height="3" rx="1"/><rect x="2" y="11.1" width="12" height="2.4" rx="1"/></svg>Blocks</summary>
     <ul>
       <li><a href="../organisms/quote.html">Brand quote</a></li>
@@ -118,7 +119,7 @@
       <li><a href="../organisms/faq.html">FAQ</a></li>
       <li><a href="../organisms/footer.html">Footer</a></li>
       <li><a href="../organisms/shipping-progress.html">Free shipping progress</a></li>
-      <li><a href="../organisms/gallery.html" aria-current="page">Gallery</a></li>
+      <li><a href="../organisms/gallery.html">Gallery</a></li>
       <li><a href="../organisms/header.html">Header</a></li>
       <li><a href="../organisms/hero.html">Hero</a></li>
       <li><a href="../organisms/logobar.html">Logo bar</a></li>
@@ -156,24 +157,24 @@
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
       
-      <a href="index.html#gallery">Blocks</a>
+      <a href="index.html#product-layout">Templates</a>
       <span aria-hidden="true">/</span>
-      <b aria-current="page">Gallery</b>
+      <b aria-current="page">Product layout</b>
     </nav>
     <nav class="ficha-passo" aria-label="Peça anterior e próxima">
-      <a href="shipping-progress.html" rel="prev"><span aria-hidden="true">←</span> Free shipping progress</a>
-      <a href="header.html" rel="next">Header <span aria-hidden="true">→</span></a>
+      <a href="page-layout.html" rel="prev"><span aria-hidden="true">←</span> Page layout</a>
+      <span></span>
     </nav>
   </div>
-  <h1 class="ficha-titulo">Gallery</h1>
-  <p class="ficha-quando">A galeria de fotos da PDP: foto grande com miniaturas ao lado. As miniaturas são radios nativos — seta do teclado navega, leitor de tela anuncia.</p>
+  <h1 class="ficha-titulo">Product layout</h1>
+  <p class="ficha-quando">O esqueleto da PDP: galeria à esquerda, que acompanha a rolagem, coluna de compra à direita, e a história do produto descendo dentro da coluna de compra.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
        aba mostra por extenso, com os nomes. Número sem o nome ao lado é um
        resumo de algo que está a um clique. -->
   <ul class="ficha-fatos">
-    <li>Classe base <b><code>.yb-gallery</code></b></li>
+    <li>Classe base <b><code>.yb-page</code></b></li>
   </ul>
 
   <!-- A FICHA INTEIRA EM ABAS, e nada solto embaixo delas.
@@ -196,40 +197,81 @@
   <div class="abas" data-yb-tabs>
   <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
-    <!-- doc:folha A galeria nao monta peca nenhuma do sistema, e continua sendo
-     bloco pela regra do degrau: tem lugar — a metade de cima da PDP — e nao
-     caberia em outro. O que ela usa nao sao componentes, sao elementos nativos:
-     `input[type=radio]` escondido e `label` com a miniatura, que e o que faz a
-     troca de foto funcionar sem uma linha de JavaScript. Descer para molecula
-     diria que ela cabe onde a tarefa aparecer, e ela nao cabe. -->
-    <div class="demo demo--stack">
-      <div class="yb-gallery" data-yb-gallery style="max-width:380px">
-        <div class="yb-gallery__stage">
-          <div class="yb-gallery__slide" data-active="true" style="background:var(--yb-bg-muted)"></div>
-          <div class="yb-gallery__slide" style="background:var(--yb-info-surface)"></div>
-          <div class="yb-gallery__slide" style="background:var(--yb-action-secondary-bg)"></div>
-          <div class="yb-gallery__slide" style="background:var(--yb-accent-surface)"></div>
-          <div class="yb-gallery__slide" style="background:var(--yb-bg-subtle)"></div>
-          <span class="yb-gallery__count">1 / 5</span>
-        </div>
-        <div class="yb-gallery__thumbs">
-          <input type="radio" name="gal" id="g1" checked><label for="g1" title="Image 1"></label>
-          <input type="radio" name="gal" id="g2"><label for="g2" title="Image 2"></label>
-          <input type="radio" name="gal" id="g3"><label for="g3" title="Image 3"></label>
-          <input type="radio" name="gal" id="g4"><label for="g4" title="Image 4"></label>
-          <input type="radio" name="gal" id="g5"><label for="g5" title="Image 5"></label>
+    <div class="stage">
+      <div class="yb-page">
+        <div class="yb-product">
+          <div class="yb-gallery" data-yb-gallery>
+            <div class="yb-gallery__stage">
+              <div class="yb-gallery__slide" data-active="true"><img src="../pages/img/Artboard_1_62a39a8d-9dfe-4cdc-9bfd-7626a-b29a2a.webp" alt="Deep care kit – Ybera Fashion Gold — image 1"></div>
+              <div class="yb-gallery__slide"><img src="../pages/img/DSC09878-6f3656.webp" alt="Deep care kit – Ybera Fashion Gold — image 2"></div>
+              <div class="yb-gallery__slide"><img src="../pages/img/DSC09857-45ff81.webp" alt="Deep care kit – Ybera Fashion Gold — image 3"></div>
+              <span class="yb-gallery__count">1 / 3</span>
+            </div>
+            <div class="yb-gallery__thumbs">
+              <input type="radio" name="doc-gal" id="doc-g0" checked><label for="doc-g0" title="Image 1"><img src="../pages/img/Artboard_1_62a39a8d-9dfe-4cdc-9bfd-7626a-b29a2a.webp" alt=""></label>
+              <input type="radio" name="doc-gal" id="doc-g1"><label for="doc-g1" title="Image 2"><img src="../pages/img/DSC09878-6f3656.webp" alt=""></label>
+              <input type="radio" name="doc-gal" id="doc-g2"><label for="doc-g2" title="Image 3"><img src="../pages/img/DSC09857-45ff81.webp" alt=""></label>
+            </div>
+          </div>
+          <div class="yb-buybox">
+            <div class="yb-buybox__top">
+              <h2 class="yb-buybox__title">Deep care kit – Ybera Fashion Gold</h2>
+            </div>
+            <span class="yb-price"><b class="yb-price__now">$89.90</b></span>
+            <button type="button" class="yb-btn yb-btn--primary">Add to cart</button>
+            <div class="yb-product__pair">
+              <div class="yb-bannermedia yb-bannermedia--blur yb-bannermedia--half">
+                <img src="../pages/img/22_1-d5c4b8.webp" alt="" loading="lazy">
+                <div class="yb-bannermedia__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+                <div class="yb-bannermedia__body">
+                  <span class="yb-bannermedia__eyebrow">Step 1 · Hydration</span>
+                  <h2 class="yb-bannermedia__title">Water back into the fiber.</h2>
+                </div>
+              </div>
+              <div class="yb-bannermedia yb-bannermedia--blur yb-bannermedia--half">
+                <img src="../pages/img/29-527a32.webp" alt="" loading="lazy">
+                <div class="yb-bannermedia__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+                <div class="yb-bannermedia__body">
+                  <span class="yb-bannermedia__eyebrow">Damp or dry</span>
+                  <h2 class="yb-bannermedia__title">Use it your way.</h2>
+                </div>
+              </div>
+            </div>
+            <ul class="yb-product__proof">
+              <li><a class="yb-collection yb-collection--card" href="#demos">
+                <img src="../pages/img/Is_Keratin_Good_For_Hair-b3d5999d.webp" alt="" loading="lazy">
+                <span class="yb-collection__foot">
+                  <span class="yb-collection__name">A smoother finish</span>
+                  <span class="yb-collection__cta">Read the article
+                    <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+                </span></a></li>
+              <li><a class="yb-collection yb-collection--card" href="#demos">
+                <img src="../pages/img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp" alt="" loading="lazy">
+                <span class="yb-collection__foot">
+                  <span class="yb-collection__name">Softness you can feel</span>
+                  <span class="yb-collection__cta">Read the article
+                    <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+                </span></a></li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
-    <details class="note"><summary>Sem JS ela ainda troca</summary>
-      <p>O <code>:checked</code> do radio já muda o slide via CSS. O JS só
-      sincroniza o contador e o estado <code>data-active</code>. Se o script falhar,
-      a galeria continua navegável — inclusive por teclado.</p>
+    <details class="note"><summary>Três partes, e a história mora na coluna de compra</summary>
+      <p><code>.yb-product</code> é o grid de duas colunas; <code>__pair</code> são
+      duas fotos altas lado a lado (Banner media <code>--half</code>) e
+      <code>__proof</code> a grade de prova. Os dois descem dentro do Buy box, com o
+      maior vão da coluna: são outro assunto, não decisão de compra.</p>
+    </details>
+    <details class="note"><summary>A galeria acompanha a leitura, e para sozinha</summary>
+      <p><code>sticky</code> já é limitado pelo pai: quando o grid acaba, a foto volta
+      a rolar, sem JS e sem conta de altura. Abaixo de 860 vira uma coluna só e a foto
+      deixa de grudar; abaixo de 520 o par empilha.</p>
     </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
-      <iframe src="solo.html?c=gallery" title="Gallery em 375px"
+      <iframe src="solo.html?c=product-layout" title="Product layout em 375px"
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
@@ -244,7 +286,7 @@
     tokens desta peça, lidos da folha a cada build.</p>
     <div class="codigo" data-yb-code>
     <div class="codigo__barra">
-      <div class="codigo__abas" role="tablist" aria-label="Código de Gallery">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Product layout">
         <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
         <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
         <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
@@ -256,21 +298,62 @@
     <div class="codigo__painel" data-code-panel="html">
       <div class="snippet" data-code-variant-panel="0">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>&lt;div class="yb-gallery" data-yb-gallery style="max-width:380px"&gt;
-  &lt;div class="yb-gallery__stage"&gt;
-    &lt;div class="yb-gallery__slide" data-active="true" style="background:var(--yb-bg-muted)"&gt;&lt;/div&gt;
-    &lt;div class="yb-gallery__slide" style="background:var(--yb-info-surface)"&gt;&lt;/div&gt;
-    &lt;div class="yb-gallery__slide" style="background:var(--yb-action-secondary-bg)"&gt;&lt;/div&gt;
-    &lt;div class="yb-gallery__slide" style="background:var(--yb-accent-surface)"&gt;&lt;/div&gt;
-    &lt;div class="yb-gallery__slide" style="background:var(--yb-bg-subtle)"&gt;&lt;/div&gt;
-    &lt;span class="yb-gallery__count"&gt;1 / 5&lt;/span&gt;
-  &lt;/div&gt;
-  &lt;div class="yb-gallery__thumbs"&gt;
-    &lt;input type="radio" name="gal" id="g1" checked&gt;&lt;label for="g1" title="Image 1"&gt;&lt;/label&gt;
-    &lt;input type="radio" name="gal" id="g2"&gt;&lt;label for="g2" title="Image 2"&gt;&lt;/label&gt;
-    &lt;input type="radio" name="gal" id="g3"&gt;&lt;label for="g3" title="Image 3"&gt;&lt;/label&gt;
-    &lt;input type="radio" name="gal" id="g4"&gt;&lt;label for="g4" title="Image 4"&gt;&lt;/label&gt;
-    &lt;input type="radio" name="gal" id="g5"&gt;&lt;label for="g5" title="Image 5"&gt;&lt;/label&gt;
+        <pre><code>&lt;div class="yb-page"&gt;
+  &lt;div class="yb-product"&gt;
+    &lt;div class="yb-gallery" data-yb-gallery&gt;
+      &lt;div class="yb-gallery__stage"&gt;
+        &lt;div class="yb-gallery__slide" data-active="true"&gt;&lt;img src="../pages/img/Artboard_1_62a39a8d-9dfe-4cdc-9bfd-7626a-b29a2a.webp" alt="Deep care kit – Ybera Fashion Gold — image 1"&gt;&lt;/div&gt;
+        &lt;div class="yb-gallery__slide"&gt;&lt;img src="../pages/img/DSC09878-6f3656.webp" alt="Deep care kit – Ybera Fashion Gold — image 2"&gt;&lt;/div&gt;
+        &lt;div class="yb-gallery__slide"&gt;&lt;img src="../pages/img/DSC09857-45ff81.webp" alt="Deep care kit – Ybera Fashion Gold — image 3"&gt;&lt;/div&gt;
+        &lt;span class="yb-gallery__count"&gt;1 / 3&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class="yb-gallery__thumbs"&gt;
+        &lt;input type="radio" name="doc-gal" id="doc-g0" checked&gt;&lt;label for="doc-g0" title="Image 1"&gt;&lt;img src="../pages/img/Artboard_1_62a39a8d-9dfe-4cdc-9bfd-7626a-b29a2a.webp" alt=""&gt;&lt;/label&gt;
+        &lt;input type="radio" name="doc-gal" id="doc-g1"&gt;&lt;label for="doc-g1" title="Image 2"&gt;&lt;img src="../pages/img/DSC09878-6f3656.webp" alt=""&gt;&lt;/label&gt;
+        &lt;input type="radio" name="doc-gal" id="doc-g2"&gt;&lt;label for="doc-g2" title="Image 3"&gt;&lt;img src="../pages/img/DSC09857-45ff81.webp" alt=""&gt;&lt;/label&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-buybox"&gt;
+      &lt;div class="yb-buybox__top"&gt;
+        &lt;h2 class="yb-buybox__title"&gt;Deep care kit – Ybera Fashion Gold&lt;/h2&gt;
+      &lt;/div&gt;
+      &lt;span class="yb-price"&gt;&lt;b class="yb-price__now"&gt;$89.90&lt;/b&gt;&lt;/span&gt;
+      &lt;button type="button" class="yb-btn yb-btn--primary"&gt;Add to cart&lt;/button&gt;
+      &lt;div class="yb-product__pair"&gt;
+        &lt;div class="yb-bannermedia yb-bannermedia--blur yb-bannermedia--half"&gt;
+          &lt;img src="../pages/img/22_1-d5c4b8.webp" alt="" loading="lazy"&gt;
+          &lt;div class="yb-bannermedia__blur" aria-hidden="true"&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;/div&gt;
+          &lt;div class="yb-bannermedia__body"&gt;
+            &lt;span class="yb-bannermedia__eyebrow"&gt;Step 1 · Hydration&lt;/span&gt;
+            &lt;h2 class="yb-bannermedia__title"&gt;Water back into the fiber.&lt;/h2&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="yb-bannermedia yb-bannermedia--blur yb-bannermedia--half"&gt;
+          &lt;img src="../pages/img/29-527a32.webp" alt="" loading="lazy"&gt;
+          &lt;div class="yb-bannermedia__blur" aria-hidden="true"&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;/div&gt;
+          &lt;div class="yb-bannermedia__body"&gt;
+            &lt;span class="yb-bannermedia__eyebrow"&gt;Damp or dry&lt;/span&gt;
+            &lt;h2 class="yb-bannermedia__title"&gt;Use it your way.&lt;/h2&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;ul class="yb-product__proof"&gt;
+        &lt;li&gt;&lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
+          &lt;img src="../pages/img/Is_Keratin_Good_For_Hair-b3d5999d.webp" alt="" loading="lazy"&gt;
+          &lt;span class="yb-collection__foot"&gt;
+            &lt;span class="yb-collection__name"&gt;A smoother finish&lt;/span&gt;
+            &lt;span class="yb-collection__cta"&gt;Read the article
+              &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+          &lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
+          &lt;img src="../pages/img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp" alt="" loading="lazy"&gt;
+          &lt;span class="yb-collection__foot"&gt;
+            &lt;span class="yb-collection__name"&gt;Softness you can feel&lt;/span&gt;
+            &lt;span class="yb-collection__cta"&gt;Read the article
+              &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+          &lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
       </div>
@@ -278,51 +361,11 @@
     <div class="codigo__painel" data-code-panel="css" hidden>
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>.yb-gallery{display:flex; flex-direction:column; gap:var(--yb-space-3); min-width:0}
-.yb-gallery__stage{
-  position:relative; aspect-ratio:var(--yb-aspect-product); overflow:hidden;
-  background:var(--yb-surface-sunken); border:var(--yb-border-hairline) solid var(--yb-border-subtle);
-  border-radius:var(--yb-radius-media);
-}
-.yb-gallery__slide{
-  position:absolute; inset:0; display:flex; align-items:center;
-  justify-content:center; opacity:0; visibility:hidden;
-  transition:opacity var(--yb-transition-surface);
-}
-.yb-gallery__slide[data-active="true"]{opacity:1; visibility:visible}
-.yb-gallery__slide img{width:100%; height:100%; object-fit:cover}
-.yb-gallery__count{
-  position:absolute; inset-block-end:var(--yb-space-3);
-  inset-inline-end:var(--yb-space-3);
-  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
-  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wide);
-  padding:var(--yb-space-1) var(--yb-space-2); border-radius:var(--yb-radius-badge);
-  font-variant-numeric:tabular-nums;
-}
-@media (min-width:768px){
-  .yb-gallery__count{
-    position:absolute; inline-size:1px; block-size:1px;
-    overflow:hidden; clip-path:inset(50%); white-space:nowrap;
-    padding:0; margin:-1px;
-  }
-}
-.yb-gallery__thumbs{display:grid; grid-template-columns:repeat(5,1fr); gap:var(--yb-space-2)}
-.yb-gallery__thumbs input{position:absolute; opacity:0; pointer-events:none}
-.yb-gallery__thumbs label{
-  display:block; aspect-ratio:var(--yb-aspect-product); cursor:pointer; overflow:hidden;
-  background:var(--yb-surface-sunken); border:var(--yb-border-hairline) solid var(--yb-border-subtle);
-  border-radius:var(--yb-radius-sm);
-  transition:border-color var(--yb-transition-control);
-}
-@media (hover:hover){
-  .yb-gallery__thumbs label:hover{border-color:var(--yb-border-strong)}
-}
-.yb-gallery__thumbs input:checked + label{border-color:var(--yb-text-primary); border-width:var(--yb-border-emphasis);}
-.yb-gallery__thumbs input:focus-visible + label{
-  outline:var(--yb-focus-width) solid var(--yb-focus-color);
-  outline-offset:var(--yb-focus-offset);
-}
-.yb-gallery__thumbs label img{width:100%; height:100%; object-fit:cover; display:block;}</code></pre>
+        <pre><code>.yb-page{
+  max-width:var(--yb-container-max);
+  margin-inline:auto;
+  padding-inline:var(--yb-page-gutter);
+}</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="js" hidden>
@@ -340,30 +383,8 @@
     <div class="codigo__painel" data-code-panel="tokens" hidden>
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>--yb-aspect-product: 1 / 1;
---yb-bg-inverse: #1E1E1F;
---yb-border-emphasis: 2px;
---yb-border-hairline: 1px;
---yb-border-strong: #B1B1B4;
---yb-border-subtle: #EAEAEA;
---yb-chrome-h: calc(var(--yb-target-min) + var(--yb-space-4) * 2 + 1px);
---yb-focus-color: #CA235F;
---yb-focus-offset: 0;
---yb-focus-width: 2px;
---yb-radius-badge: 4px;
---yb-radius-media: 8px;
---yb-radius-sm: 4px;
---yb-space-1: 0.25rem;
---yb-space-2: 0.5rem;
---yb-space-3: 0.75rem;
---yb-space-5: 1.25rem;
---yb-surface-sunken: #FAFAFA;
---yb-text-inverse: #FFFFFF;
---yb-text-primary: #1E1E1F;
---yb-tracking-wide: 0.04em;
---yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
---yb-transition-surface: 180ms cubic-bezier(.2, 0, 0, 1);
---yb-type-overline-size: 0.6875rem;</code></pre>
+        <pre><code>--yb-container-max: 1200px;
+--yb-page-gutter: 1rem;</code></pre>
       </div>
     </div>
   </div>
@@ -374,30 +395,72 @@
     <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
-        <div class="anat__peca" style="max-inline-size:380px"><div class="yb-gallery" data-yb-gallery style="max-width:380px">
-  <div class="yb-gallery__stage">
-    <div class="yb-gallery__slide" data-active="true" style="background:var(--yb-bg-muted)"></div>
-    <div class="yb-gallery__slide" style="background:var(--yb-info-surface)"></div>
-    <div class="yb-gallery__slide" style="background:var(--yb-action-secondary-bg)"></div>
-    <div class="yb-gallery__slide" style="background:var(--yb-accent-surface)"></div>
-    <div class="yb-gallery__slide" style="background:var(--yb-bg-subtle)"></div>
-    <span class="yb-gallery__count">1 / 5</span>
-  </div>
-  <div class="yb-gallery__thumbs">
-    <input type="radio" name="anat-gal" id="anat-g1" checked><label for="anat-g1" title="Image 1"></label>
-    <input type="radio" name="anat-gal" id="anat-g2"><label for="anat-g2" title="Image 2"></label>
-    <input type="radio" name="anat-gal" id="anat-g3"><label for="anat-g3" title="Image 3"></label>
-    <input type="radio" name="anat-gal" id="anat-g4"><label for="anat-g4" title="Image 4"></label>
-    <input type="radio" name="anat-gal" id="anat-g5"><label for="anat-g5" title="Image 5"></label>
+        <div class="anat__peca"><div class="yb-page">
+  <div class="yb-product">
+    <div class="yb-gallery" data-yb-gallery>
+      <div class="yb-gallery__stage">
+        <div class="yb-gallery__slide" data-active="true"><img src="../pages/img/Artboard_1_62a39a8d-9dfe-4cdc-9bfd-7626a-b29a2a.webp" alt="Deep care kit – Ybera Fashion Gold — image 1"></div>
+        <div class="yb-gallery__slide"><img src="../pages/img/DSC09878-6f3656.webp" alt="Deep care kit – Ybera Fashion Gold — image 2"></div>
+        <div class="yb-gallery__slide"><img src="../pages/img/DSC09857-45ff81.webp" alt="Deep care kit – Ybera Fashion Gold — image 3"></div>
+        <span class="yb-gallery__count">1 / 3</span>
+      </div>
+      <div class="yb-gallery__thumbs">
+        <input type="radio" name="anat-doc-gal" id="anat-doc-g0" checked><label for="anat-doc-g0" title="Image 1"><img src="../pages/img/Artboard_1_62a39a8d-9dfe-4cdc-9bfd-7626a-b29a2a.webp" alt=""></label>
+        <input type="radio" name="anat-doc-gal" id="anat-doc-g1"><label for="anat-doc-g1" title="Image 2"><img src="../pages/img/DSC09878-6f3656.webp" alt=""></label>
+        <input type="radio" name="anat-doc-gal" id="anat-doc-g2"><label for="anat-doc-g2" title="Image 3"><img src="../pages/img/DSC09857-45ff81.webp" alt=""></label>
+      </div>
+    </div>
+    <div class="yb-buybox">
+      <div class="yb-buybox__top">
+        <h2 class="yb-buybox__title">Deep care kit – Ybera Fashion Gold</h2>
+      </div>
+      <span class="yb-price"><b class="yb-price__now">$89.90</b></span>
+      <button type="button" class="yb-btn yb-btn--primary">Add to cart</button>
+      <div class="yb-product__pair">
+        <div class="yb-bannermedia yb-bannermedia--blur yb-bannermedia--half">
+          <img src="../pages/img/22_1-d5c4b8.webp" alt="" loading="lazy">
+          <div class="yb-bannermedia__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="yb-bannermedia__body">
+            <span class="yb-bannermedia__eyebrow">Step 1 · Hydration</span>
+            <h2 class="yb-bannermedia__title">Water back into the fiber.</h2>
+          </div>
+        </div>
+        <div class="yb-bannermedia yb-bannermedia--blur yb-bannermedia--half">
+          <img src="../pages/img/29-527a32.webp" alt="" loading="lazy">
+          <div class="yb-bannermedia__blur" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="yb-bannermedia__body">
+            <span class="yb-bannermedia__eyebrow">Damp or dry</span>
+            <h2 class="yb-bannermedia__title">Use it your way.</h2>
+          </div>
+        </div>
+      </div>
+      <ul class="yb-product__proof">
+        <li><a class="yb-collection yb-collection--card" href="#anat-demos">
+          <img src="../pages/img/Is_Keratin_Good_For_Hair-b3d5999d.webp" alt="" loading="lazy">
+          <span class="yb-collection__foot">
+            <span class="yb-collection__name">A smoother finish</span>
+            <span class="yb-collection__cta">Read the article
+              <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+          </span></a></li>
+        <li><a class="yb-collection yb-collection--card" href="#anat-demos">
+          <img src="../pages/img/How_Long_Does_Keratin_Treatment_Last-5b7be09e.webp" alt="" loading="lazy">
+          <span class="yb-collection__foot">
+            <span class="yb-collection__name">Softness you can feel</span>
+            <span class="yb-collection__cta">Read the article
+              <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+          </span></a></li>
+      </ul>
+    </div>
   </div>
 </div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-gallery"><span class="anat__texto"><b>Container</b> — Palco e miniaturas, ancorados juntos. A troca acontece em CSS, sem script.</span></li>
-        <li data-target=".yb-gallery__stage"><span class="anat__texto"><b>Palco</b> — A caixa da foto grande, com a proporção reservada — é o que evita o salto ao carregar.</span></li>
-        <li data-target=".yb-gallery__slide"><span class="anat__texto"><b>Foto</b> — Uma por imagem. A ativa leva <code>data-active</code>; as outras ficam no DOM, prontas.</span></li>
-        <li data-target=".yb-gallery__count"><span class="anat__texto"><b>Contagem</b> — “1 / 4”. Diz que há mais foto antes de a pessoa tentar descobrir sozinha.</span></li>
-        <li data-target=".yb-gallery__thumbs"><span class="anat__texto"><b>Miniaturas</b> — Rádios escondidos com <code>&lt;label&gt;</code> em cima: o teclado percorre com as setas.</span></li>
+        <li data-target=".yb-gallery"><span class="anat__texto"><b><a href="../organisms/gallery.html">Gallery</a></b> — A galeria de fotos da PDP: foto grande com miniaturas ao lado. As miniaturas são radios nativos — seta do teclado navega, leitor de tela anuncia.</span></li>
+        <li data-target=".yb-buybox"><span class="anat__texto"><b><a href="../organisms/buybox.html">Buy box</a></b> — O bloco de compra da PDP: nome, prova, preço, escolha, ação e garantia. Sete níveis de informação acima da dobra, em ordem fixa.</span></li>
+        <li data-target=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço de um produto, com o valor anterior riscado e o desconto quando existem. Sempre tabular: em grid, dígitos precisam alinhar em coluna.</span></li>
+        <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
+        <li data-target=".yb-bannermedia"><span class="anat__texto"><b><a href="../molecules/bannermedia.html">Banner media</a></b> — Foto com texto por cima, dentro da coluna da página, e o link cobrindo a peça inteira — o banner de conteúdo da PDP. Também recebe a arte pronta do marketing. No topo da home, na largura da tela, o banner é o <a href="../molecules/bannerhero.html">Banner hero</a>.</span></li>
+        <li data-target=".yb-collection"><span class="anat__texto"><b><a href="../molecules/collection.html">Collection card</a></b> — Cartão de entrada para uma coleção: arte, nome e contagem. O cartão inteiro é o link — o rótulo sozinho seria um alvo pequeno dentro de uma imagem grande.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -412,60 +475,24 @@
     resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
     estiver errado aqui, o errado é o código.</p>
 
-    <p class="api-linha"><span class="api-linha__rotulo">De que é feita</span><span class="api-linha__corpo">Nenhuma: não consome nenhum outro componente. O que ela desenha sai todo da folha dela.</span></p>
+    <p class="rotulo">De que é feita</p>
+    <p class="usa-degrau">Atoms</p>
+    <ul class="usa"><li><a href="../atoms/button.html">Button</a></li></ul>
+    <p class="usa-degrau">Molecules</p>
+    <ul class="usa"><li><a href="../molecules/bannermedia.html">Banner media</a></li><li><a href="../molecules/collection.html">Collection card</a></li><li><a href="../molecules/price.html">Price</a></li></ul>
+    <p class="usa-degrau">Blocks</p>
+    <ul class="usa"><li><a href="../organisms/buybox.html">Buy box</a></li><li><a href="../organisms/gallery.html">Gallery</a></li></ul>
     <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-gallery__count</code> <code>.yb-gallery__slide</code> <code>.yb-gallery__stage</code> <code>.yb-gallery__thumbs</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:checked</code> · <code>:focus-visible</code> · <code>:hover</code></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
-    <p class="rotulo">Tokens <span class="rotulo-conta">24</span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo">Nenhum. A peça é um elemento só.</span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo">Nenhum. A peça não muda por interação.</span></p>
+    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">2</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>8</span></p>
+        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>2</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-border-emphasis</code><span class="tokens__valor">2px</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-border-strong)" aria-hidden="true"></i><code>--yb-border-strong</code><span class="tokens__valor">#B1B1B4</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-surface-sunken)" aria-hidden="true"></i><code>--yb-surface-sunken</code><span class="tokens__valor">#FAFAFA</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
-          <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
-        </ul>
-      </div>
-      <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>2</span></p>
-        <ul class="tokens__lista">
-          <li><code>--yb-tracking-wide</code><span class="tokens__valor">0.04em</span></li>
-          <li><code>--yb-type-overline-size</code><span class="tokens__valor">0.6875rem</span></li>
-        </ul>
-      </div>
-      <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>5</span></p>
-        <ul class="tokens__lista">
-          <li><code>--yb-chrome-h</code><span class="tokens__valor">calc(var(--yb-target-min) + var(--yb-space-4) * 2 + 1px)</span></li>
-          <li><code>--yb-space-1</code><span class="tokens__valor">0.25rem</span></li>
-          <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
-          <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
-          <li><code>--yb-space-3</code><span class="tokens__valor">0.75rem</span></li>
-        </ul>
-      </div>
-      <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>4</span></p>
-        <ul class="tokens__lista">
-          <li><code>--yb-radius-badge</code><span class="tokens__valor">4px</span></li>
-          <li><code>--yb-aspect-product</code><span class="tokens__valor">1 / 1</span></li>
-          <li><code>--yb-radius-media</code><span class="tokens__valor">8px</span></li>
-          <li><code>--yb-radius-sm</code><span class="tokens__valor">4px</span></li>
-        </ul>
-      </div>
-      <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>5</span></p>
-        <ul class="tokens__lista">
-          <li><code>--yb-transition-surface</code><span class="tokens__valor">180ms cubic-bezier(.2, 0, 0, 1)</span></li>
-          <li><code>--yb-transition-control</code><span class="tokens__valor">120ms cubic-bezier(.2, 0, 0, 1)</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
-          <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-container-max</code><span class="tokens__valor">1200px</span></li>
+          <li><code>--yb-page-gutter</code><span class="tokens__valor">1rem</span></li>
         </ul>
       </div>
     </div>
@@ -483,24 +510,24 @@
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
         <p class="fn-cabeca">✓ Faça</p>
-        <div class="fn-palco"><p class="yb-field__label" style="margin:0">Miniaturas como <code>input type="radio"</code> + <code>label</code></p></div>
-        <p class="fn-legenda">Radios nativos: Tab entra no grupo, setas percorrem, e o CSS troca o slide.</p>
+        <div class="fn-palco"><div class="yb-buybox" style="max-width:260px"><span class="yb-price"><b class="yb-price__now">$89.90</b></span><button type="button" class="yb-btn yb-btn--primary">Add to cart</button></div></div>
+        <p class="fn-legenda">A história do produto dentro da coluna de compra, depois do botão.</p>
       </div>
       <div class="fn-caso fn-caso--nao">
         <p class="fn-cabeca">✕ Não faça</p>
-        <div class="fn-palco"><p class="yb-field__label" style="margin:0">Miniaturas como <code>&lt;div onclick&gt;</code></p></div>
-        <p class="fn-legenda">Div com <code>onclick</code> não recebe Tab, não anda com as setas e não diz qual imagem está ativa.</p>
+        <div class="fn-palco"><div class="yb-buybox" style="max-width:260px"><span class="yb-price"><b class="yb-price__now">$89.90</b></span><span class="yb-badge yb-badge--soft">Step 1 · Hydration</span><button type="button" class="yb-btn yb-btn--primary">Add to cart</button></div></div>
+        <p class="fn-legenda">Destaque entre o preço e o botão: a pessoa que já decidiu rola por cima da história para achar onde comprar.</p>
       </div>
     </div>
   </section>
 
   <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <ul class="bloco-lede"><li>As miniaturas são um grupo de <code>radio</code> nativo. As setas do teclado navegam entre elas de graça — não há <code>keydown</code> escrito para isso.</li><li>A foto grande troca por CSS com <code>:checked</code>. Sem JavaScript a galeria continua funcionando; o script só mantém o contador em dia.</li><li>Cada miniatura tem <code>title</code> e a foto grande tem <code>alt</code> com o nome do produto e o número da imagem — “image 3 de 5” diz onde a pessoa está.</li></ul>
+    <ul class="bloco-lede"><li>A ordem do HTML é a ordem de leitura: galeria, depois compra. No celular é também a ordem na tela, sem <code>order</code> trocando o que o leitor de tela ouve do que a pessoa vê.</li><li>O título do produto é o <code>&lt;h1&gt;</code> da página, dentro do Buy box; os destaques do par e da prova descem para <code>&lt;h2&gt;</code>.</li><li>A galeria gruda com <code>sticky</code>, que não tira o conteúdo do fluxo: quem navega por teclado não perde a foto nem pula a coluna.</li><li>Os destaques sem destino são <code>&lt;div&gt;</code>, não link: cartão com cara e cursor de link que não vai a lugar nenhum é armadilha.</li></ul>
   </section>
   </div>
 
-  <!-- Gerada de organisms/pecas/gallery.html e organisms/ybera-organisms.css. Não edite à mão: ./build.sh -->
+  <!-- Gerada de templates/pecas/product-layout.html e templates/ybera-templates.css. Não edite à mão: ./build.sh -->
 </main>
 
 <script src="../behavior/ybera-behavior.js"></script>

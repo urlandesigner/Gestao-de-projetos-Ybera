@@ -4,52 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ybera Paris USA | Keratin care that survives humidity</title>
-<link rel="stylesheet" href="yb/fonte.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/00-primitives.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/01-semantic.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/base.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/atoms.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/molecules.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/organisms.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/templates.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/icons.css?v=ea9a40de">
+<link rel="stylesheet" href="yb/fonte.css?v=a7393edc">
+<link rel="stylesheet" href="yb/00-primitives.css?v=a7393edc">
+<link rel="stylesheet" href="yb/01-semantic.css?v=a7393edc">
+<link rel="stylesheet" href="yb/base.css?v=a7393edc">
+<link rel="stylesheet" href="yb/atoms.css?v=a7393edc">
+<link rel="stylesheet" href="yb/molecules.css?v=a7393edc">
+<link rel="stylesheet" href="yb/organisms.css?v=a7393edc">
+<link rel="stylesheet" href="yb/templates.css?v=a7393edc">
+<link rel="stylesheet" href="yb/icons.css?v=a7393edc">
 <style>
   /* Só arranjo de página. Nenhum componente é redefinido aqui — se um botão
      precisasse de ajuste, o lugar seria a folha dele, não esta. */
   body { margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
          font-family:var(--yb-font-family-base); -webkit-font-smoothing:antialiased; }
-  /* Banner: imagem com carrossel, igual producao. Nao e componente do sistema. */
-  .banner { position:relative; }
-  .banner__track { display:flex; list-style:none; margin:0; padding:0;
-    overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none;
-    scroll-behavior:smooth; }
-  .banner__track::-webkit-scrollbar { display:none; }
-  .banner__slide { flex:0 0 100%; scroll-snap-align:start; }
-  /* Era `height:75vh` — altura presa a VIEWPORT, sem relacao nenhuma com a
-     imagem de verdade. As quatro criacoes de desktop medem 1200x375 ou
-     1600x501 (16:5 nos dois casos); numa tela de 1440x900, 75vh vira 675px
-     de altura contra uma imagem de 375-501px de proporcao MUITO mais baixa —
-     o `cover` compensava ampliando e cortando os dois lados, entao metade da
-     arte (o "PISCOU, PERDEU", o preco) saia da tela em qualquer desktop
-     normal. `aspect-ratio` usa a proporcao real da peca: nada de cortar o
-     que o design pediu para caber. */
-  .banner__slide a { display:block; aspect-ratio:var(--yb-aspect-campaign); }
-  .banner__slide img { width:100%; height:100%; object-fit:cover; display:block; }
-  @media (max-width:767.98px) {
-    /* Mobile e outra peca, nao a mesma cortada: as quatro versoes verticais
-       medem entre 400x600 e 750x1095 — 2:3, retrato. */
-    .banner__slide a { aspect-ratio:var(--yb-aspect-campaign-mobile); }
-  }
-  .banner__arrow { position:absolute; top:50%; transform:translateY(-50%);
-    width:var(--yb-target-min); height:var(--yb-target-min);
-    display:flex; align-items:center; justify-content:center;
-    border:none; cursor:pointer; border-radius:var(--yb-radius-full);
-    background:var(--yb-surface); color:var(--yb-text-primary);
-    box-shadow:var(--yb-elevation-raised); }
-  .banner__arrow--prev { inset-inline-start:var(--yb-space-4); }
-  .banner__arrow--next { inset-inline-end:var(--yb-space-4); }
-  .banner__arrow:focus-visible { outline:var(--yb-focus-width) solid var(--yb-focus-color);
-    outline-offset:var(--yb-focus-offset); }
   /* O video shoppable sangra ate a borda da tela — em producao ele nao
      respeita o container de 1200px. Por isso a section vive FORA de .page,
      em vez de compensar largura com margem negativa. */
@@ -65,7 +33,7 @@
   .tolstoy nav[aria-label="Carousel navigation"] button {
     width:var(--yb-target-min); height:var(--yb-target-min);
     border-radius:var(--yb-radius-control);
-    border:var(--yb-border-width-hair) solid var(--yb-border);
+    border:var(--yb-border-hairline) solid var(--yb-border);
     color:var(--yb-text-primary); opacity:1;
     transition:background var(--yb-transition-control);
   }
@@ -80,7 +48,7 @@
     outline-offset:var(--yb-focus-offset);
   }
   .tolstoy nav[aria-label="Carousel navigation"] svg {
-    width:var(--yb-icon-size, 20px); height:var(--yb-icon-size, 20px);
+    width:var(--yb-icon-md); height:var(--yb-icon-md);
     stroke-width:1.5;
   }
   /* Mesma regra do .yb-track__nav: abaixo de 768 a seta some, no toque
@@ -483,7 +451,7 @@
 </aside>
 
 <main id="content" tabindex="-1">
-  <section class="banner" data-yb-partnerbar-anchor aria-roledescription="carousel" aria-label="Promotions">
+    <section class="yb-hero" data-yb-partnerbar-anchor aria-roledescription="carousel" aria-label="Promotions">
 <aside class="yb-partner" data-yb-partner aria-label="Partner greeting">
   <div class="yb-partner__dock">
     <button class="yb-partner__avatar" type="button" aria-expanded="true" aria-controls="partner-msg">
@@ -495,47 +463,41 @@
     </div>
   </div>
 </aside>
-  <ul class="banner__track" id="banner-track">
-        <li class="banner__slide">
-          <a href="/collections/vello-1" aria-label="20% off sitewide for the next 24 hours">
-            <picture>
-              <source media="(max-width: 767px)" srcset="img/Banner_20_24H_mb_b-61df813f.webp">
-              <source media="(min-width: 768px)" srcset="img/Banner_20_24H_b-96b194d5.webp">
-              <img src="img/Banner_20_24H_b-96b194d5.webp" alt="20% off sitewide for the next 24 hours">
-            </picture>
-          </a>
-        </li>
-        <li class="banner__slide">
-          <a href="/collections/detox" aria-label="Vello Alpha-Lactobaby system">
-            <picture>
-              <source media="(max-width: 767px)" srcset="img/1-vertical_banner_Test03_8f834d71-8bd1-46a2-9c5d-7121769c.webp">
-              <source media="(min-width: 768px)" srcset="img/Vello00012-a284ea34.webp">
-              <img src="img/Vello00012-a284ea34.webp" alt="Vello Alpha-Lactobaby system" loading="lazy">
-            </picture>
-          </a>
-        </li>
-        <li class="banner__slide">
-          <a href="/collections/cronograma-hair-care-system" aria-label="Detox line">
-            <picture>
-              <source media="(max-width: 767px)" srcset="img/DetoxMobille_109e8d67-c2fd-4329-8ed3-0fa79ebfd5a-59326a33.webp">
-              <source media="(min-width: 768px)" srcset="img/Detox_2b43ace8-6814-4b56-9660-f7ad9b63169b-91da7dd2.webp">
-              <img src="img/Detox_2b43ace8-6814-4b56-9660-f7ad9b63169b-91da7dd2.webp" alt="Detox line" loading="lazy">
-            </picture>
-          </a>
-        </li>
-        <li class="banner__slide">
-          <a href="#" aria-label="Cronograma hair care system">
-            <picture>
-              <source media="(max-width: 767px)" srcset="img/banner-topo-cronograma-m-eee06cf9.webp">
-              <source media="(min-width: 768px)" srcset="img/Banner_novo_Site4_ed4992cb-c4a5-4753-80fe-83e47b-c65598d9.webp">
-              <img src="img/Banner_novo_Site4_ed4992cb-c4a5-4753-80fe-83e47b-c65598d9.webp" alt="Cronograma hair care system" loading="lazy">
-            </picture>
-          </a>
-        </li>
-  </ul>
-  <button class="banner__arrow banner__arrow--prev" aria-label="Previous slide"><svg class="yb-icon yb-icon--lg" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-left"/></svg></button>
-  <button class="banner__arrow banner__arrow--next" aria-label="Next slide"><svg class="yb-icon yb-icon--lg" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-right"/></svg></button>
-</section>
+    <div class="yb-track yb-track--hero" id="banner-track" data-yb-track-loop>
+      <a class="yb-bannerhero yb-bannerhero--art" href="/collections/vello-1">
+        <img class="yb-bannerhero__backdrop" src="img/Banner_20_24H_b-96b194d5.webp" alt="" loading="lazy">
+        <picture>
+          <source media="(max-width: 767.98px)" srcset="img/Banner_20_24H_mb_b-61df813f.webp">
+          <img src="img/Banner_20_24H_b-96b194d5.webp" alt="20% off sitewide for the next 24 hours" fetchpriority="high">
+        </picture>
+      </a>
+      <a class="yb-bannerhero yb-bannerhero--art" href="/collections/detox">
+        <img class="yb-bannerhero__backdrop" src="img/Vello00012-a284ea34.webp" alt="" loading="lazy">
+        <picture>
+          <source media="(max-width: 767.98px)" srcset="img/1-vertical_banner_Test03_8f834d71-8bd1-46a2-9c5d-7121769c.webp">
+          <img src="img/Vello00012-a284ea34.webp" alt="Vello Alpha-Lactobaby system" loading="lazy">
+        </picture>
+      </a>
+      <a class="yb-bannerhero yb-bannerhero--art" href="/collections/cronograma-hair-care-system">
+        <img class="yb-bannerhero__backdrop" src="img/Detox_2b43ace8-6814-4b56-9660-f7ad9b63169b-91da7dd2.webp" alt="" loading="lazy">
+        <picture>
+          <source media="(max-width: 767.98px)" srcset="img/DetoxMobille_109e8d67-c2fd-4329-8ed3-0fa79ebfd5a-59326a33.webp">
+          <img src="img/Detox_2b43ace8-6814-4b56-9660-f7ad9b63169b-91da7dd2.webp" alt="Detox line" loading="lazy">
+        </picture>
+      </a>
+      <a class="yb-bannerhero yb-bannerhero--art" href="#">
+        <img class="yb-bannerhero__backdrop" src="img/Banner_novo_Site4_ed4992cb-c4a5-4753-80fe-83e47b-c65598d9.webp" alt="" loading="lazy">
+        <picture>
+          <source media="(max-width: 767.98px)" srcset="img/banner-topo-cronograma-m-eee06cf9.webp">
+          <img src="img/Banner_novo_Site4_ed4992cb-c4a5-4753-80fe-83e47b-c65598d9.webp" alt="Cronograma hair care system" loading="lazy">
+        </picture>
+      </a>
+    </div>
+    <div class="yb-track__nav" data-yb-track-nav="banner-track" hidden>
+      <button type="button" class="yb-iconbtn" data-yb-track-step="prev" aria-label="Previous slide"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-left"/></svg></button>
+      <button type="button" class="yb-iconbtn" data-yb-track-step="next" aria-label="Next slide"><svg class="yb-icon" aria-hidden="true"><use href="yb/icons.svg#yb-chevron-right"/></svg></button>
+    </div>
+  </section>
 
   <div class="yb-page">
 
@@ -1253,19 +1215,6 @@
     </div>
   </div>
 </dialog>
-<script src="yb/behavior.js?v=ea9a40de"></script>
-<script>
-// Setas do banner. Carrossel nao e componente do sistema — este JS vive na
-// pagina, nao em components.js, para nao dar a entender que existe.
-(function(){
-  var t = document.getElementById('banner-track');
-  if (!t) return;
-  function ir(d){ t.scrollBy({left: d * t.clientWidth, behavior: 'smooth'}); }
-  var a = document.querySelector('.banner__arrow--prev');
-  var p = document.querySelector('.banner__arrow--next');
-  if (a) a.addEventListener('click', function(){ ir(-1); });
-  if (p) p.addEventListener('click', function(){ ir(1); });
-})();
-</script>
+<script src="yb/behavior.js?v=a7393edc"></script>
 </body>
 </html>

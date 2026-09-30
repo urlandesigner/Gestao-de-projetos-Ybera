@@ -4,82 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Deep care kit – Ybera Fashion Gold – Ybera USA</title>
-<link rel="stylesheet" href="yb/fonte.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/00-primitives.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/01-semantic.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/base.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/atoms.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/molecules.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/organisms.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/templates.css?v=ea9a40de">
-<link rel="stylesheet" href="yb/icons.css?v=ea9a40de">
+<link rel="stylesheet" href="yb/fonte.css?v=a7393edc">
+<link rel="stylesheet" href="yb/00-primitives.css?v=a7393edc">
+<link rel="stylesheet" href="yb/01-semantic.css?v=a7393edc">
+<link rel="stylesheet" href="yb/base.css?v=a7393edc">
+<link rel="stylesheet" href="yb/atoms.css?v=a7393edc">
+<link rel="stylesheet" href="yb/molecules.css?v=a7393edc">
+<link rel="stylesheet" href="yb/organisms.css?v=a7393edc">
+<link rel="stylesheet" href="yb/templates.css?v=a7393edc">
+<link rel="stylesheet" href="yb/icons.css?v=a7393edc">
 <style>
   /* Só arranjo de página. Nenhum componente é redefinido aqui — se um botão
      precisasse de ajuste, o lugar seria a folha dele, não esta. */
   body { margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
          font-family:var(--yb-font-family-base); -webkit-font-smoothing:antialiased; }
-  /* O padding de cima nasceu como modificador (`.pdp--solto`) porque so uma
-     tela nao tinha breadcrumb. Agora nenhuma tem: sem a trilha acima, o
-     produto encostaria no cabecalho em todas, e o respiro que ela dava passa
-     a ser do proprio bloco. Modificador que vale para 100% dos casos nao e
-     modificador — e o padrao escrito no lugar errado. */
-  .pdp { display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-12);
-    align-items:start; padding-block:var(--yb-space-8); }
 
-  /* A historia do produto mora dentro da coluna de compra, e a coluna agora
-     tem ritmo: o `gap` dela e a distancia mais curta (ver .yb-buybox). Estes
-     blocos sao outro assunto — nao decisao de compra — e por isso levam o
-     maior vao da coluna. Fica aqui, e nao no padrao, porque `.pdp__*` e classe
-     desta pagina: o sistema nao deve saber que ela existe. */
-  .yb-buybox > .pdp__duo,
-  .yb-buybox > .yb-bannermedia,
-  .yb-buybox > .pdp__prova { margin-block-start: var(--yb-space-8); }
-
-  /* Duas fotos altas lado a lado, e a grade de prova em duas colunas. Sao
-     arranjos DESTA pagina, nao componentes: por isso ficam aqui. */
-  .pdp__duo { display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-3); }
-  /* Altura do par so onde ele e par de verdade, lado a lado. Abaixo de 768
-     vale a do componente, que cresce no celular para a foto aparecer. */
-  @media (min-width:768px) {
-    .pdp__duo .yb-bannermedia { min-height:clamp(18rem, 26vw, 24rem); }
-  }
-  .pdp__duo .yb-bannermedia {
-    /* Metade da largura, entao metade da folga: 80px em 1024 contra 161px do
-       banner inteiro. A queda do sistema (34vw) daria 140px ali e chegaria
-       cortada. Quem aperta o layout devolve a medida. */
-    --yb-veil-fall:clamp(2rem, 26vw - 13rem, 11rem);
-  }
-  @media (min-width:360px){
-    .pdp__duo .yb-bannermedia { --yb-veil-fall:clamp(3.5rem, 26vw - 13rem, 11rem); }
-  }
-  .pdp__prova { display:grid; grid-template-columns:1fr 1fr; gap:var(--yb-space-3);
-    list-style:none; margin:0; padding:0; }
-  @media (max-width:520px) { .pdp__duo { grid-template-columns:1fr; } }
-
-  /* A imagem acompanha a leitura da coluna da direita e para quando o bloco
-     acaba — `sticky` ja e limitado pelo pai, entao nao precisa de JS nem de
-     conta de altura: quando o grid termina, a coluna volta a rolar sozinha.
-
-     `align-items:start` no grid e o que torna isto possivel: esticada ate a
-     altura da linha, a coluna nao teria para onde deslizar.
-
-     O deslocamento sai do token da barra fixa, senao a imagem gruda por baixo
-     dela. */
-
-  /* `--yb-chrome-h` e nao `--yb-header-h`: o token do cabecalho mede so a
-     barra, e quando a faixa do parceiro esta na tela ela soma 3,5rem. Lendo o
-     token errado, a foto grudava ATRAS da faixa — e a faixa e justamente o que
-     aparece quando a pessoa rola, que e quando o sticky comeca a valer. */
-  .pdp > .yb-gallery {
-    position:sticky;
-    inset-block-start:calc(var(--yb-chrome-h) + var(--yb-space-5));
-    align-self:start;
-  }
-  /* Numa coluna so nao ha o que acompanhar, e grudar atrapalharia a rolagem. */
-  @media (max-width:860px) {
-    .pdp { grid-template-columns:1fr; gap:var(--yb-space-8); }
-    .pdp > .yb-gallery { position:static; }
-  }
 </style>
 </head>
 <body>
@@ -473,7 +412,7 @@
 
 <main id="content" tabindex="-1">
   <div class="yb-page">
-  <div class="pdp">
+  <div class="yb-product">
     <div class="yb-gallery" data-yb-gallery>
       <div class="yb-gallery__stage">
         <div class="yb-gallery__slide" data-active="true"><img src="img/Artboard_1_62a39a8d-9dfe-4cdc-9bfd-7626a-b29a2a.webp" alt="Deep care kit – Ybera Fashion Gold — image 1"></div>
@@ -639,8 +578,8 @@
            e cursor de link. E os olhos-de-texto eram numero inventado ("98%
            5-star reviews") e selo repetido ("Best seller", terceiro na pagina);
            agora dizem o que a foto mostra. -->
-      <div class="pdp__duo">
-        <div class="yb-bannermedia yb-bannermedia--blur">
+      <div class="yb-product__pair">
+        <div class="yb-bannermedia yb-bannermedia--blur yb-bannermedia--half">
           <img src="img/22_1-d5c4b8.webp" alt="" loading="lazy">
           <div class="yb-bannermedia__blur" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="yb-bannermedia__body">
@@ -648,7 +587,7 @@
             <h2 class="yb-bannermedia__title">Water back into the fiber.</h2>
           </div>
         </div>
-        <div class="yb-bannermedia yb-bannermedia--blur">
+        <div class="yb-bannermedia yb-bannermedia--blur yb-bannermedia--half">
           <img src="img/29-527a32.webp" alt="" loading="lazy">
           <div class="yb-bannermedia__blur" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="yb-bannermedia__body">
@@ -691,7 +630,7 @@
            que existem na captura (as do blog), e cada cartao leva ao artigo de
            onde a foto veio. Dois cartoes honestos valem mais que quatro com um
            errado. -->
-      <ul class="pdp__prova">
+      <ul class="yb-product__proof">
         <li><a class="yb-collection yb-collection--card" href="/blogs/haircare/is-keratin-good-for-hair">
           <img src="img/Is_Keratin_Good_For_Hair-b3d5999d.webp" alt="" loading="lazy">
           <span class="yb-collection__foot">
@@ -1250,19 +1189,6 @@
     </div>
   </div>
 </dialog>
-<script src="yb/behavior.js?v=ea9a40de"></script>
-<script>
-// Setas do banner. Carrossel nao e componente do sistema — este JS vive na
-// pagina, nao em components.js, para nao dar a entender que existe.
-(function(){
-  var t = document.getElementById('banner-track');
-  if (!t) return;
-  function ir(d){ t.scrollBy({left: d * t.clientWidth, behavior: 'smooth'}); }
-  var a = document.querySelector('.banner__arrow--prev');
-  var p = document.querySelector('.banner__arrow--next');
-  if (a) a.addEventListener('click', function(){ ir(-1); });
-  if (p) p.addEventListener('click', function(){ ir(1); });
-})();
-</script>
+<script src="yb/behavior.js?v=a7393edc"></script>
 </body>
 </html>
