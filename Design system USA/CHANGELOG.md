@@ -9,6 +9,23 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 [GOVERNANCA.md](GOVERNANCA.md), componente novo pede versão **menor** (0.13.0).
 
 ### Adicionado
+- **Count.** O número que fica em cima de um controle e diz quantos. Existia
+  desde sempre como `.yb-header__count`, dentro do cabeçalho, e era a única
+  contagem do sistema sem ser peça de ninguém: quem quisesse o mesmo círculo
+  fora da barra tinha de copiá-lo. Virou átomo; o desenho, a medida e a borda
+  mudaram de lugar, não de valor — o cabeçalho continua com 44px de botão e
+  22px de círculo, no mesmo canto.
+  **Não virou variante do Badge, e o teste é simples:** um `.yb-badge--count`
+  teria de desfazer quatro coisas que o badge é — caixa alta, entreletra aberta,
+  raio de pílula, respiro no eixo inline — e acrescentar três que o badge não
+  tem razão de ter: medida de círculo, borda da cor do que está atrás, e
+  ancoragem fora do fluxo. Variante que desfaz mais do que aproveita é outra
+  peça usando o nome errado. O trabalho também é outro: o badge **rotula** o que
+  está ao lado, este **conta** o que está atrás de um controle.
+  `--pin` ancora no canto do glifo e pede um pai posicionado — no Icon button já
+  está. A borda sai de `--yb-count-ring`, para quem puser o círculo sobre fundo
+  que não seja o branco da superfície. O número leva `aria-hidden`: quem diz
+  quanto é o nome do controle.
 - **Popover.** Painel ancorado num gatilho, com conteúdo livre dentro: texto,
   link, botão. Abre no clique e fica. Onde ele para e os vizinhos começam, que é
   a única pergunta que importa com quatro peças que abrem alguma coisa: lista de

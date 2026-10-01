@@ -1,0 +1,52 @@
+<h2>Count</h2>
+    <p class="when">O número que fica em cima de um controle e diz quantos: itens na sacola, avisos por ler. Para rotular conteúdo ao lado, use o <a href="badge.html">Badge</a>.</p>
+    <!-- O CIRCULO SOZINHO VEM PRIMEIRO, e nao e so ordem de leitura: a peca e
+         este circulo, e so ele. Ancorado num botao ele continua sendo o mesmo
+         desenho — quem muda e o lugar, nao a peca. -->
+    <div class="demo" style="gap:var(--yb-space-4)">
+      <span class="yb-count">1</span>
+      <span class="yb-count">3</span>
+      <span class="yb-count">12</span>
+      <span class="yb-count">99</span>
+    </div>
+    <h3 class="row-label">Ancorado num controle — <code>--pin</code></h3>
+    <div class="demo" style="gap:var(--yb-space-8)">
+      <button class="yb-iconbtn" type="button" aria-label="Cart, 2 items">
+        <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg>
+        <span class="yb-count yb-count--pin" aria-hidden="true">2</span>
+      </button>
+      <button class="yb-iconbtn" type="button" aria-label="Notifications, 12 unread">
+        <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-info"/></svg>
+        <span class="yb-count yb-count--pin" aria-hidden="true">12</span>
+      </button>
+      <button class="yb-iconbtn" type="button" aria-label="Wishlist, 1 item">
+        <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg>
+        <span class="yb-count yb-count--pin" aria-hidden="true">1</span>
+      </button>
+    </div>
+    <div class="note">
+      <b>O número não se lê sozinho</b>
+      <p>Ele é desenho. Quem diz quanto é o nome do controle —
+      <code>aria-label="Cart, 2 items"</code> — e o círculo leva
+      <code>aria-hidden="true"</code>. Sem isso o leitor de tela anuncia um "2" sem dono,
+      ou repete a contagem duas vezes.</p>
+    </div>
+    <div class="note">
+      <b>Não é um Badge com outra roupa</b>
+      <p>O <a href="badge.html">Badge</a> rotula o que está ao lado dele, em linha e em
+      caixa alta. Este conta o que está atrás de um controle, e por isso flutua sobre ele.
+      Um fosse variante do outro, teria de desfazer a caixa alta, a entreletra, o raio de
+      pílula e o respiro antes de começar.</p>
+    </div>
+    <div class="note">
+      <b>A borda é da cor do que está atrás</b>
+      <p>É ela que separa o círculo do traço do ícone quando os dois se cruzam. O padrão é
+      o branco da superfície; sobre faixa escura, retune
+      <code>--yb-count-ring</code> para o fundo de lá, senão a borda abre um buraco claro
+      no lugar errado.</p>
+    </div>
+    <div class="note">
+      <b><code>--pin</code> pede um pai posicionado</b>
+      <p>No <a href="iconbtn.html">Icon button</a> já está, e é o uso previsto. Em qualquer
+      outro pai, quem monta declara <code>position:relative</code>.</p>
+    </div>

@@ -3,7 +3,7 @@
 <!-- GERADO por tools/inventario.mjs. Não edite à mão: rode ./build.sh.
      A fonte é o CSS. Se uma linha aqui está errada, o errado é o código. -->
 
-61 peças no bundle — 45 estáveis, 16 em beta, 0 em alfa.
+62 peças no bundle — 46 estáveis, 16 em beta, 0 em alfa.
 
 ## Como ler a maturidade
 
@@ -29,6 +29,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | CERTIFICATION SEALS | `.yb-seal` | Átomo | Estável | — | — | 15 | sim | n/a | sim | sim |
 | CHECKBOX / RADIO | `.yb-check` | Átomo | Beta | — | 4 | 22 | sim | sim | — | — |
 | CHIP | `.yb-chip` | Átomo | Estável | — | 3 | 25 | sim | sim | — | sim |
+| COUNT | `.yb-count` | Átomo | Estável | 1 | — | 9 | sim | n/a | sim | sim |
 | DIVIDER | `.yb-divider` | Átomo | Beta | 3 | — | 6 | sim | n/a | — | — |
 | ICONBTN | `.yb-iconbtn` | Átomo | Estável | 5 | 4 | 19 | sim | sim | sim | sim |
 | INPUT, SELECT, TEXTAREA | `.yb-field` | Átomo | Estável | 1 | 4 | 36 | sim | sim | — | sim |
@@ -74,7 +75,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | FAQ | `.yb-faq` | Organismo | Estável | 1 | — | 14 | sim | n/a | — | sim |
 | FOOTER | `.yb-footer` | Organismo | Estável | 1 | 3 | 32 | sim | sim | — | sim |
 | FREE SHIPPING PROGRESS | `.yb-freeship` | Organismo | Estável | 1 | — | 8 | sim | n/a | — | sim |
-| HEADER / NAV | `.yb-nav` | Organismo | Estável | 2 | 3 | 62 | sim | sim | sim | sim |
+| HEADER / NAV | `.yb-nav` | Organismo | Estável | 2 | 3 | 56 | sim | sim | sim | sim |
 | HERO | `.yb-hero` | Organismo | Estável | — | — | 4 | sim | n/a | — | sim |
 | LOGO BAR | `.yb-logobar` | Organismo | Estável | — | — | 5 | sim | n/a | — | sim |
 | MANIFESTO | `.yb-manifesto` | Organismo | Estável | — | — | 26 | sim | n/a | — | sim |

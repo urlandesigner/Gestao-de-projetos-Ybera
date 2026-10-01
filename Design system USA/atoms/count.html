@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Chip — Ybera Design System</title>
+<title>Count — Ybera Design System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
@@ -75,9 +75,9 @@
       <li><a href="../molecules/card.html">Card product</a></li>
       <li><a href="../atoms/seals.html">Certification seals</a></li>
       <li><a href="../atoms/checkbox.html">Checkbox</a></li>
-      <li><a href="../atoms/chip.html" aria-current="page">Chip</a></li>
+      <li><a href="../atoms/chip.html">Chip</a></li>
       <li><a href="../molecules/collection.html">Collection card</a></li>
-      <li><a href="../atoms/count.html">Count</a></li>
+      <li><a href="../atoms/count.html" aria-current="page">Count</a></li>
       <li><a href="../atoms/divider.html">Divider</a></li>
       <li><a href="../molecules/dropdown.html">Dropdown</a></li>
       <li><a href="../molecules/empty.html">Empty state</a></li>
@@ -161,24 +161,24 @@
     <nav class="ficha-trilha" aria-label="Você está aqui">
       <a href="../components/index.html">Components</a>
       <span aria-hidden="true">/</span>
-      <a href="index.html#chip">Atoms</a>
+      <a href="index.html#count">Atoms</a>
       <span aria-hidden="true">/</span>
-      <b aria-current="page">Chip</b>
+      <b aria-current="page">Count</b>
     </nav>
     <nav class="ficha-passo" aria-label="Peça anterior e próxima">
-      <a href="checkbox.html" rel="prev"><span aria-hidden="true">←</span> Checkbox</a>
-      <a href="count.html" rel="next">Count <span aria-hidden="true">→</span></a>
+      <a href="chip.html" rel="prev"><span aria-hidden="true">←</span> Chip</a>
+      <a href="divider.html" rel="next">Divider <span aria-hidden="true">→</span></a>
     </nav>
   </div>
-  <h1 class="ficha-titulo">Chip</h1>
-  <p class="ficha-quando">Botão pequeno de filtro, que liga e desliga, usado em fileira acima de uma lista. Quando está ativo, muda de aparência.</p>
+  <h1 class="ficha-titulo">Count</h1>
+  <p class="ficha-quando">O número que fica em cima de um controle e diz quantos: itens na sacola, avisos por ler. Para rotular conteúdo ao lado, use o <a href="badge.html">Badge</a>.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
        aba mostra por extenso, com os nomes. Número sem o nome ao lado é um
        resumo de algo que está a um clique. -->
   <ul class="ficha-fatos">
-    <li>Classe base <b><code>.yb-chip</code></b></li>
+    <li>Classe base <b><code>.yb-count</code></b></li>
   </ul>
 
   <!-- A FICHA INTEIRA EM ABAS, e nada solto embaixo delas.
@@ -201,76 +201,56 @@
   <div class="abas" data-doc-tabs>
   <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
-    <h3 class="row-label">States</h3>
-    <div class="demo demo--amostras">
-      <span class="amostra">
-        <button type="button" class="yb-chip">Color-safe</button>
-        <span class="amostra__rotulo"><code>padrão</code></span>
-      </span>
-      <span class="amostra">
-        <button type="button" class="yb-chip" aria-pressed="true">Keratin <span class="yb-chip__x">×</span></button>
-        <span class="amostra__rotulo"><code>[aria-pressed="true"]</code></span>
-      </span>
-      <span class="amostra">
-        <button type="button" class="yb-chip" disabled>Travel size</button>
-        <span class="amostra__rotulo"><code>[disabled]</code></span>
-      </span>
+    <!-- O CIRCULO SOZINHO VEM PRIMEIRO, e nao e so ordem de leitura: a peca e
+         este circulo, e so ele. Ancorado num botao ele continua sendo o mesmo
+         desenho — quem muda e o lugar, nao a peca. -->
+    <div class="demo" style="gap:var(--yb-space-4)">
+      <span class="yb-count">1</span>
+      <span class="yb-count">3</span>
+      <span class="yb-count">12</span>
+      <span class="yb-count">99</span>
     </div>
-    <h3 class="row-label">Sizes</h3>
-    <div class="demo demo--amostras">
-      <span class="amostra">
-        <button type="button" class="yb-chip">Kits</button>
-        <span class="amostra__rotulo"><code>única · 36px</code></span>
-      </span>
+    <h3 class="row-label">Ancorado num controle — <code>--pin</code></h3>
+    <div class="demo" style="gap:var(--yb-space-8)">
+      <button class="yb-iconbtn" type="button" aria-label="Cart, 2 items">
+        <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg>
+        <span class="yb-count yb-count--pin" aria-hidden="true">2</span>
+      </button>
+      <button class="yb-iconbtn" type="button" aria-label="Notifications, 12 unread">
+        <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-info"/></svg>
+        <span class="yb-count yb-count--pin" aria-hidden="true">12</span>
+      </button>
+      <button class="yb-iconbtn" type="button" aria-label="Wishlist, 1 item">
+        <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-heart"/></svg>
+        <span class="yb-count yb-count--pin" aria-hidden="true">1</span>
+      </button>
     </div>
-    <h3 class="row-label">Conteúdo</h3>
-    <div class="demo demo--amostras">
-      <span class="amostra">
-        <button type="button" class="yb-chip">Kits</button>
-        <span class="amostra__rotulo"><code>só texto</code></span>
-      </span>
-      <span class="amostra">
-        <button type="button" class="yb-chip" aria-pressed="true">Under $150 <span class="yb-chip__x">×</span></button>
-        <span class="amostra__rotulo"><code>__x</code></span>
-      </span>
-      <span class="amostra">
-        <a class="yb-chip" href="#demos"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-clock"/></svg>keratin</a>
-        <span class="amostra__rotulo"><code>.yb-icon</code></span>
-      </span>
-    </div>
-    <details class="note"><summary>O × não é um segundo botão</summary>
-      <p>É um <code>&lt;span&gt;</code> dentro do próprio chip: quem clica em qualquer
-      ponto da pílula desliga o filtro. Um <code>&lt;button&gt;</code> aninhado seria
-      marcação inválida, e dois alvos de 12px colados dentro de um alvo de 36 é pior
-      para o dedo do que um alvo só.</p>
-      <p>A cor do × é <code>--yb-text-muted</code>, que é medido. Era
-      <code>opacity:.7</code> sobre o texto secundário: 7,67:1 caía para ~4,3:1 e nada
-      media a queda.</p>
+    <details class="note"><summary>O número não se lê sozinho</summary>
+      <p>Ele é desenho. Quem diz quanto é o nome do controle —
+      <code>aria-label="Cart, 2 items"</code> — e o círculo leva
+      <code>aria-hidden="true"</code>. Sem isso o leitor de tela anuncia um "2" sem dono,
+      ou repete a contagem duas vezes.</p>
     </details>
-    <details class="note"><summary>Um tamanho só: 36px, e isso é decisão, não descuido</summary>
-      <p>O piso de toque do sistema é 44. O chip usa
-      <code>--yb-control-height-compact</code> porque vive em fileira que rola: em
-      44px, sete filtros empurram o primeiro produto para fora da primeira tela — e é
-      no celular que o alvo mais importa. O respiro da fileira dá a folga que a altura
-      não dá.</p>
+    <details class="note"><summary>Não é um Badge com outra roupa</summary>
+      <p>O <a href="badge.html">Badge</a> rotula o que está ao lado dele, em linha e em
+      caixa alta. Este conta o que está atrás de um controle, e por isso flutua sobre ele.
+      Um fosse variante do outro, teria de desfazer a caixa alta, a entreletra, o raio de
+      pílula e o respiro antes de começar.</p>
     </details>
-    <details class="note"><summary>A busca usa este chip</summary>
-      <p>O painel de busca tinha o seu, <code>.yb-search__chip</code>: mesma altura,
-      borda e padding, escritos de novo dentro do organismo. Virou
-      <code>.yb-chip</code>. O que só a cópia sabia fazer passou para cá — ser
-      <code>&lt;a&gt;</code> sem sublinhado e levar um ícone antes do texto, o
-      relógio da busca recente.</p>
+    <details class="note"><summary>A borda é da cor do que está atrás</summary>
+      <p>É ela que separa o círculo do traço do ícone quando os dois se cruzam. O padrão é
+      o branco da superfície; sobre faixa escura, retune
+      <code>--yb-count-ring</code> para o fundo de lá, senão a borda abre um buraco claro
+      no lugar errado.</p>
     </details>
-    <details class="note"><summary>Por que átomo</summary>
-      <p>Não usa nenhuma outra peça do sistema e não perde a função fora do catálogo:
-      serve a qualquer fileira de filtro. Morava na folha dos organismos, dentro do
-      bloco de catálogo, porque foi ali que nasceu — mas um bloco pode consumir um
-      átomo, e o contrário não.</p>
+    <details class="note"><summary><code>--pin</code> pede um pai posicionado</summary>
+      <p>No <a href="iconbtn.html">Icon button</a> já está, e é o uso previsto. Em qualquer
+      outro pai, quem monta declara <code>position:relative</code>.</p>
     </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
-      <iframe src="solo.html?c=chip" title="Chip em 375px"
+      <iframe src="solo.html?c=count" title="Count em 375px"
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
@@ -285,7 +265,7 @@
     tokens desta peça, lidos da folha a cada build.</p>
     <div class="codigo" data-yb-code>
     <div class="codigo__barra">
-      <div class="codigo__abas" role="tablist" aria-label="Código de Chip">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Count">
         <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
         <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
         <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
@@ -294,75 +274,45 @@
       </div>
       <label class="codigo__variante">Variante
         <select data-code-variant>
-          <option value="0">padrão</option>
-          <option value="1">[aria-pressed="true"]</option>
-          <option value="2">[disabled]</option>
-          <option value="3">única · 36px</option>
-          <option value="4">__x</option>
-          <option value="5">.yb-icon</option>
+          <option value="0">1</option>
+          <option value="1">3</option>
+          <option value="2">12</option>
+          <option value="3">99</option>
         </select></label>
-      <span class="codigo__conta">6 variantes</span>
+      <span class="codigo__conta">4 variantes</span>
     </div>
     <div class="codigo__painel" data-code-panel="html">
       <div class="snippet" data-code-variant-panel="0">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>&lt;button type="button" class="yb-chip"&gt;Color-safe&lt;/button&gt;</code></pre>
+        <pre><code>&lt;span class="yb-count"&gt;1&lt;/span&gt;</code></pre>
       </div>
       <div class="snippet" data-code-variant-panel="1" hidden>
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>&lt;button type="button" class="yb-chip" aria-pressed="true"&gt;Keratin &lt;span class="yb-chip__x"&gt;×&lt;/span&gt;&lt;/button&gt;</code></pre>
+        <pre><code>&lt;span class="yb-count"&gt;3&lt;/span&gt;</code></pre>
       </div>
       <div class="snippet" data-code-variant-panel="2" hidden>
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>&lt;button type="button" class="yb-chip" disabled&gt;Travel size&lt;/button&gt;</code></pre>
+        <pre><code>&lt;span class="yb-count"&gt;12&lt;/span&gt;</code></pre>
       </div>
       <div class="snippet" data-code-variant-panel="3" hidden>
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>&lt;button type="button" class="yb-chip"&gt;Kits&lt;/button&gt;</code></pre>
-      </div>
-      <div class="snippet" data-code-variant-panel="4" hidden>
-        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>&lt;button type="button" class="yb-chip" aria-pressed="true"&gt;Under $150 &lt;span class="yb-chip__x"&gt;×&lt;/span&gt;&lt;/button&gt;</code></pre>
-      </div>
-      <div class="snippet" data-code-variant-panel="5" hidden>
-        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>&lt;a class="yb-chip" href="#demos"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-clock"/&gt;&lt;/svg&gt;keratin&lt;/a&gt;</code></pre>
+        <pre><code>&lt;span class="yb-count"&gt;99&lt;/span&gt;</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="css" hidden>
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>.yb-chip{
-  display:inline-flex; align-items:center; gap:var(--yb-space-2);
-  border:var(--yb-border-hairline) solid var(--yb-border); border-radius:var(--yb-radius-pill);
-  padding:var(--yb-space-2) var(--yb-space-4); background:var(--yb-surface);
-  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
-  cursor:pointer; font-family:inherit; text-decoration:none;
-  line-height:var(--yb-line-height-snug);
-  transition:border-color var(--yb-transition-control),
-  color var(--yb-transition-control);
-  min-height:var(--yb-control-height-compact);
+        <pre><code>.yb-count{
+  --yb-count-ring:var(--yb-surface);
+  display:inline-flex; align-items:center; justify-content:center;
+  min-inline-size:22px; block-size:22px; padding:0 3px;
+  background:var(--yb-accent-signal); color:var(--yb-text-on-action);
+  font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-bold);
+  font-variant-numeric:tabular-nums; line-height:var(--yb-line-height-none);
+  border:var(--yb-border-emphasis) solid var(--yb-count-ring);
+  border-radius:var(--yb-radius-full);
 }
-@media (hover:hover){
-  .yb-chip:not([disabled]):hover{border-color:var(--yb-border-strong); color:var(--yb-text-primary)}
-}
-.yb-chip[aria-pressed="true"]{
-  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
-  border-color:var(--yb-bg-inverse);
-}
-.yb-chip[disabled]{
-  color:var(--yb-text-disabled); border-color:var(--yb-border-subtle);
-  cursor:not-allowed;
-}
-.yb-chip:focus-visible{
-  outline:var(--yb-focus-width) solid var(--yb-focus-color);
-  outline-offset:var(--yb-focus-offset);
-}
-.yb-chip__x{font-size:var(--yb-type-body-size); line-height:var(--yb-line-height-none); color:var(--yb-text-muted)}
-.yb-chip[aria-pressed="true"] .yb-chip__x{color:var(--yb-text-muted-inverse)}
-.yb-chip .yb-icon{--yb-icon-size:var(--yb-icon-sm); color:var(--yb-text-muted)}
-.yb-chip[aria-pressed="true"] .yb-icon{color:var(--yb-text-muted-inverse)}
-.yb-btn--primary:focus-visible, .yb-chip[aria-pressed="true"]:focus-visible, .yb-check input:checked:focus-visible, .yb-radio input:checked:focus-visible{outline-offset:var(--yb-focus-offset-on-solid);}</code></pre>
+.yb-count--pin{position:absolute; inset-block-start:1px; inset-inline-end:-4px}</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="js" hidden>
@@ -371,32 +321,15 @@
     <div class="codigo__painel" data-code-panel="tokens" hidden>
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>--yb-bg-inverse: #1E1E1F;
---yb-border: #DADADB;
---yb-border-hairline: 1px;
---yb-border-strong: #B1B1B4;
---yb-border-subtle: #EAEAEA;
---yb-control-height-compact: 36px;
---yb-focus-color: #1E1E1F;
---yb-focus-offset: 0;
---yb-focus-offset-on-solid: 2px;
---yb-focus-width: 2px;
---yb-icon-sm: 16px;
+        <pre><code>--yb-accent-signal: #CA235F;
+--yb-border-emphasis: 2px;
+--yb-count-ring;
+--yb-font-weight-bold: 700;
 --yb-line-height-none: 1;
---yb-line-height-snug: 1.15;
---yb-radius-pill: 9999px;
---yb-space-2: 0.5rem;
---yb-space-4: 1rem;
+--yb-radius-full: 9999px;
 --yb-surface: #FFFFFF;
---yb-text-disabled: #B1B1B4;
---yb-text-inverse: #FFFFFF;
---yb-text-muted: #6D6D71;
---yb-text-muted-inverse: #B1B1B4;
---yb-text-primary: #1E1E1F;
---yb-text-secondary: #535356;
---yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
---yb-type-body-size: 1rem;
---yb-type-body-sm-size: 0.875rem;</code></pre>
+--yb-text-on-action: #FFFFFF;
+--yb-type-caption-size: 0.8125rem;</code></pre>
       </div>
     </div>
   </div>
@@ -407,11 +340,14 @@
     <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
-        <div class="anat__peca" style="max-inline-size:200px"><button type="button" class="yb-chip" aria-pressed="true">Keratin <span class="yb-chip__x">×</span></button></div>
+        <div class="anat__peca" style="max-inline-size:120px"><button class="yb-iconbtn" type="button" aria-label="Cart, 2 items">
+        <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg>
+        <span class="yb-count yb-count--pin" aria-hidden="true">2</span>
+      </button></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-chip"><span class="anat__texto"><b>Chip</b> — Filtro que liga e desliga. É <code>&lt;button&gt;</code> com <code>aria-pressed</code> — o estado é anunciado, não só pintado. Ligado, fica preenchido.</span></li>
-        <li data-target=".yb-chip__x"><span class="anat__texto"><b>Desligar</b> — O × aparece só no ligado. É um <code>&lt;span&gt;</code> dentro do chip, não um segundo botão: clicar em qualquer ponto desliga.</span></li>
+        <li data-target=".yb-count"><span class="anat__texto"><b>Círculo</b> — 22px de lado, com 3px de respiro: um dígito não encosta e dois ainda cabem virando pílula, que aí é o certo.</span></li>
+        <li data-target=".yb-iconbtn"><span class="anat__texto"><b>Controle</b> — É dele o <code>position:relative</code> de que o <code>--pin</code> precisa, e é dele o nome que diz a contagem em voz alta.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -426,62 +362,40 @@
 
     <div class="api-ficha">
     <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo">Nenhuma outra peça. Um átomo não usa outros componentes — é isso que faz dele átomo.</div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-chip__x</code></span></div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:checked</code> · <code>:focus-visible</code> · <code>:hover</code> · <code>[aria-pressed]</code> · <code>[disabled]</code></div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Só CSS.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-count--pin</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo">Nenhum. A peça é um elemento só.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo">Nenhum. A peça não muda por interação.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele aparece, mas não responde.</div></div>
     </div>
-    <p class="rotulo">Tokens <span class="rotulo-conta">26</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">9</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>12</span></p>
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>4</span></p>
         <ul class="tokens__lista">
-          <li><i class="tokens__cor" style="background:var(--yb-text-disabled)" aria-hidden="true"></i><code>--yb-text-disabled</code><span class="tokens__valor">#B1B1B4</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted-inverse)" aria-hidden="true"></i><code>--yb-text-muted-inverse</code><span class="tokens__valor">#B1B1B4</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-border-strong)" aria-hidden="true"></i><code>--yb-border-strong</code><span class="tokens__valor">#B1B1B4</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-border)" aria-hidden="true"></i><code>--yb-border</code><span class="tokens__valor">#DADADB</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-accent-signal)" aria-hidden="true"></i><code>--yb-accent-signal</code><span class="tokens__valor">#CA235F</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-on-action)" aria-hidden="true"></i><code>--yb-text-on-action</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><code>--yb-border-emphasis</code><span class="tokens__valor">2px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
-          <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>4</span></p>
+        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>3</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-line-height-snug</code><span class="tokens__valor">1.15</span></li>
           <li><code>--yb-line-height-none</code><span class="tokens__valor">1</span></li>
-          <li><code>--yb-type-body-size</code><span class="tokens__valor">1rem</span></li>
-          <li><code>--yb-type-body-sm-size</code><span class="tokens__valor">0.875rem</span></li>
-        </ul>
-      </div>
-      <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>4</span></p>
-        <ul class="tokens__lista">
-          <li><code>--yb-icon-sm</code><span class="tokens__valor">16px</span></li>
-          <li><code>--yb-control-height-compact</code><span class="tokens__valor">36px</span></li>
-          <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
-          <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>
+          <li><code>--yb-font-weight-bold</code><span class="tokens__valor">700</span></li>
+          <li><code>--yb-type-caption-size</code><span class="tokens__valor">0.8125rem</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>1</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-radius-pill</code><span class="tokens__valor">9999px</span></li>
+          <li><code>--yb-radius-full</code><span class="tokens__valor">9999px</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>5</span></p>
+        <p class="tokens__familia"><a href="../tokens/architecture.html">Componente</a> <span>1</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-focus-offset-on-solid</code><span class="tokens__valor">2px</span></li>
-          <li><code>--yb-transition-control</code><span class="tokens__valor">120ms cubic-bezier(.2, 0, 0, 1)</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#1E1E1F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
-          <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-count-ring</code></li>
         </ul>
       </div>
     </div>
@@ -499,24 +413,24 @@
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
         <p class="fn-cabeca">✓ Faça</p>
-        <div class="fn-palco"><button type="button" class="yb-chip" aria-pressed="true">Keratin <span class="yb-chip__x">×</span></button></div>
-        <p class="fn-legenda">Botão com <code>aria-pressed</code>: o estado é anunciado, não só pintado.</p>
+        <div class="fn-palco"><button class="yb-iconbtn" type="button" aria-label="Cart, 2 items"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-count yb-count--pin" aria-hidden="true">2</span></button></div>
+        <p class="fn-legenda">A contagem está no nome do botão, e o círculo é só desenho.</p>
       </div>
       <div class="fn-caso fn-caso--nao">
         <p class="fn-cabeca">✕ Não faça</p>
-        <div class="fn-palco"><span class="yb-chip" style="background:var(--yb-gray-950);color:#fff">Keratin ×</span></div>
-        <p class="fn-legenda"><code>&lt;span&gt;</code> com classe de ativo: não recebe foco, não responde a Enter e o leitor de tela lê só o texto.</p>
+        <div class="fn-palco"><button class="yb-iconbtn" type="button"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-count yb-count--pin">2</span></button></div>
+        <p class="fn-legenda">Sem nome no botão e sem esconder o número: o leitor anuncia "botão, 2".</p>
       </div>
     </div>
   </section>
 
   <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <ul class="bloco-lede"><li>É <code>&lt;button&gt;</code>, e não um <code>&lt;span&gt;</code> com clique: teclado, Enter e o anúncio de “botão” vêm do elemento.</li><li>O estado mora em <code>aria-pressed</code>, não numa classe. Classe pinta; <code>aria-pressed</code> é o que o leitor de tela lê como “pressionado”.</li><li>O × é decorativo — quem remove o filtro é o próprio botão, que já está pressionado. Um segundo alvo dentro do primeiro confunde teclado e dedo.</li><li>A fileira inteira precisa de nome: <code>&lt;nav&gt;</code> ou <code>role=&quot;group&quot;</code> com rótulo. Sete botões soltos não dizem do que são filtro.</li></ul>
+    <ul class="bloco-lede"><li>O círculo leva <code>aria-hidden="true"</code> e quem diz quanto é o nome do controle: <code>aria-label="Cart, 2 items"</code>. Solto, o leitor anuncia um "2" sem dono.</li><li>Quando a contagem muda sozinha — chegou um aviso novo — quem precisa falar é uma região viva perto dela, não este número: o <code>aria-label</code> mudando calado não é anunciado.</li><li>Texto branco sobre o magenta de sinal mede 5.36:1. O dígito usa <code>tabular-nums</code>, então 1 e 7 ocupam a mesma largura e o círculo não dança ao trocar de número.</li><li>Não é alvo de toque: quem recebe o clique é o controle debaixo dele.</li></ul>
   </section>
   </div>
 
-  <!-- Gerada de atoms/pecas/chip.html e atoms/ybera-atoms.css. Não edite à mão: ./build.sh -->
+  <!-- Gerada de atoms/pecas/count.html e atoms/ybera-atoms.css. Não edite à mão: ./build.sh -->
 </main>
 
 <script src="../behavior/ybera-behavior.js"></script>

@@ -327,11 +327,11 @@
     ],
     "faca": {
       "legenda": "Ícone de ação com rótulo que inclui o estado.",
-      "html": "<button class=\"yb-iconbtn yb-header__icon\" type=\"button\" aria-label=\"Cart, 2 items\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-cart\"/></svg><span class=\"yb-header__count\">2</span></button>"
+      "html": "<button class=\"yb-iconbtn yb-header__icon\" type=\"button\" aria-label=\"Cart, 2 items\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-cart\"/></svg><span class=\"yb-count yb-count--pin\" aria-hidden=\"true\">2</span></button>"
     },
     "naoFaca": {
       "legenda": "Sem rótulo: o leitor de tela anuncia “botão, 2” — o número sem o nome do que ele conta.",
-      "html": "<button class=\"yb-iconbtn yb-header__icon\" type=\"button\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-cart\"/></svg><span class=\"yb-header__count\">2</span></button>"
+      "html": "<button class=\"yb-iconbtn yb-header__icon\" type=\"button\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-cart\"/></svg><span class=\"yb-count yb-count--pin\" aria-hidden=\"true\">2</span></button>"
     },
     "anatomia": {
       "recorte": "<header class=\"yb-header\">.*?</header>",
@@ -367,9 +367,9 @@
           "texto": "Abre o <a href=\"cart-drawer.html\">Cart drawer</a>."
         },
         {
-          "alvo": ".yb-header__count",
-          "nome": "Contador",
-          "texto": "Quantos itens há no carrinho. Some quando o carrinho está vazio."
+          "alvo": ".yb-count",
+          "nome": "Contagem",
+          "texto": "É o átomo <a href=\"../atoms/count.html\">Count</a>, ancorado pelo <code>--pin</code>. Fica sobre a sacola e não ao lado: ao lado ele empurrava o botão de 44 para 66px e virava um quarto item da fileira."
         }
       ]
     }

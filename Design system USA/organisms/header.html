@@ -79,6 +79,7 @@
       <li><a href="../atoms/checkbox.html">Checkbox</a></li>
       <li><a href="../atoms/chip.html">Chip</a></li>
       <li><a href="../molecules/collection.html">Collection card</a></li>
+      <li><a href="../atoms/count.html">Count</a></li>
       <li><a href="../atoms/divider.html">Divider</a></li>
       <li><a href="../molecules/dropdown.html">Dropdown</a></li>
       <li><a href="../molecules/empty.html">Empty state</a></li>
@@ -572,7 +573,7 @@
               </div>
             </div>
           </div>
-            <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-header__count">2</span></button>
+            <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-count yb-count--pin" aria-hidden="true">2</span></button>
           </div>
         </div>
         <label class="yb-header__scrim" for="dnav-open" aria-hidden="true"></label>
@@ -1094,7 +1095,7 @@
               </div>
             </div>
           </div>
-            <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-header__count">2</span></button>
+            <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-count yb-count--pin" aria-hidden="true">2</span></button>
           </div>
         </div>
         <label class="yb-header__scrim" for="lnav-open" aria-hidden="true"></label>
@@ -1536,7 +1537,7 @@
         &lt;/div&gt;
       &lt;/div&gt;
     &lt;/div&gt;
-      &lt;button type="button" class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-cart"/&gt;&lt;/svg&gt;&lt;span class="yb-header__count"&gt;2&lt;/span&gt;&lt;/button&gt;
+      &lt;button type="button" class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"&gt;&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-cart"/&gt;&lt;/svg&gt;&lt;span class="yb-count yb-count--pin" aria-hidden="true"&gt;2&lt;/span&gt;&lt;/button&gt;
     &lt;/div&gt;
   &lt;/div&gt;
   &lt;label class="yb-header__scrim" for="dnav-open" aria-hidden="true"&gt;&lt;/label&gt;
@@ -1621,17 +1622,6 @@
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
 }
-.yb-header__icon:has(.yb-header__count){position:relative}
-.yb-header__count{
-  position:absolute; inset-block-start:1px; inset-inline-end:-4px;
-  background:var(--yb-accent-signal); color:var(--yb-text-on-action);
-  font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-bold);
-  min-inline-size:22px; block-size:22px; padding:0 3px;
-  border:var(--yb-border-emphasis) solid var(--yb-surface);
-  border-radius:var(--yb-radius-full);
-  display:inline-flex; align-items:center; justify-content:center;
-  font-variant-numeric:tabular-nums; line-height:var(--yb-line-height-none);
-}
 @media (max-width:767.98px){
   .yb-header__bar{padding:var(--yb-space-3) var(--yb-page-gutter); gap:var(--yb-space-2)}
   .yb-header__icon{padding:0}
@@ -1657,10 +1647,8 @@
     <div class="codigo__painel" data-code-panel="tokens" hidden>
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>--yb-accent-signal: #CA235F;
---yb-bg-muted: #F5F5F5;
+        <pre><code>--yb-bg-muted: #F5F5F5;
 --yb-bg-page: #FFFFFF;
---yb-border-emphasis: 2px;
 --yb-border-hairline: 1px;
 --yb-border-subtle: #EAEAEA;
 --yb-container-max: 1200px;
@@ -1669,22 +1657,16 @@
 --yb-focus-color: #1E1E1F;
 --yb-focus-offset: 0;
 --yb-focus-width: 2px;
---yb-font-weight-bold: 700;
 --yb-header-h: calc(var(--yb-target-min) + var(--yb-space-4) * 2 + 1px);
---yb-line-height-none: 1;
 --yb-page-gutter: 1rem;
---yb-radius-full: 9999px;
 --yb-space-2: 0.5rem;
 --yb-space-3: 0.75rem;
 --yb-space-4: 1rem;
 --yb-space-6: 1.5rem;
---yb-surface: #FFFFFF;
 --yb-surface-overlay: rgba(30, 30, 31, .55);
 --yb-surface-raised: #FFFFFF;
 --yb-target-min: 44px;
---yb-text-on-action: #FFFFFF;
 --yb-transition-surface: 180ms cubic-bezier(.2, 0, 0, 1);
---yb-type-caption-size: 0.8125rem;
 --yb-z-modal: 1300;
 --yb-z-overlay: 1200;
 --yb-z-sticky: 1100;</code></pre>
@@ -2068,7 +2050,7 @@
               </div>
             </div>
           </div>
-            <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-header__count">2</span></button>
+            <button type="button" class="yb-iconbtn yb-header__icon" aria-label="Cart, 2 items"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-count yb-count--pin" aria-hidden="true">2</span></button>
           </div>
         </div>
         <label class="yb-header__scrim" for="anat-dnav-open" aria-hidden="true"></label>
@@ -2081,7 +2063,7 @@
         <li data-target=".yb-header__icon[aria-label=&quot;Search&quot;]"><span class="anat__texto"><b>Busca</b> — Abre o <a href="search.html">Search overlay</a>.</span></li>
         <li data-target=".yb-account__trigger"><span class="anat__texto"><b>Conta</b> — Abre o <a href="../molecules/account.html">Account menu</a>. Logada, mostra a inicial da pessoa.</span></li>
         <li data-target=".yb-header__icon[aria-label^=&quot;Cart&quot;]"><span class="anat__texto"><b>Carrinho</b> — Abre o <a href="cart-drawer.html">Cart drawer</a>.</span></li>
-        <li data-target=".yb-header__count"><span class="anat__texto"><b>Contador</b> — Quantos itens há no carrinho. Some quando o carrinho está vazio.</span></li>
+        <li data-target=".yb-count"><span class="anat__texto"><b>Contagem</b> — É o átomo <a href="../atoms/count.html">Count</a>, ancorado pelo <code>--pin</code>. Fica sobre a sacola e não ao lado: ao lado ele empurrava o botão de 44 para 66px e virava um quarto item da fileira.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -2095,35 +2077,23 @@
     e os tokens que ele usa. Tudo é lido direto do código, então está sempre atualizado.</p>
 
     <div class="api-ficha">
-    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo"><div class="usa-grupos"><div class="usa-grupo"><span class="usa-degrau">Atoms</span><ul class="usa"><li><a href="../atoms/badge.html">Badge</a></li><li><a href="../atoms/button.html">Button</a></li><li><a href="../atoms/chip.html">Chip</a></li><li><a href="../atoms/iconbtn.html">Icon button</a></li><li><a href="../atoms/logo.html">Logo</a></li><li><a href="../atoms/notice.html">Notice</a></li></ul></div><div class="usa-grupo"><span class="usa-degrau">Molecules</span><ul class="usa"><li><a href="../molecules/account.html">Account menu</a></li><li><a href="../molecules/card.html">Card product</a></li><li><a href="../molecules/collection.html">Collection card</a></li><li><a href="../molecules/price.html">Price</a></li></ul></div><div class="usa-grupo"><span class="usa-degrau">Blocks</span><ul class="usa"><li><a href="../organisms/nav.html">Nav</a></li><li><a href="../organisms/search.html">Search overlay</a></li></ul></div></div></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo"><div class="usa-grupos"><div class="usa-grupo"><span class="usa-degrau">Atoms</span><ul class="usa"><li><a href="../atoms/badge.html">Badge</a></li><li><a href="../atoms/button.html">Button</a></li><li><a href="../atoms/chip.html">Chip</a></li><li><a href="../atoms/count.html">Count</a></li><li><a href="../atoms/iconbtn.html">Icon button</a></li><li><a href="../atoms/logo.html">Logo</a></li><li><a href="../atoms/notice.html">Notice</a></li></ul></div><div class="usa-grupo"><span class="usa-degrau">Molecules</span><ul class="usa"><li><a href="../molecules/account.html">Account menu</a></li><li><a href="../molecules/card.html">Card product</a></li><li><a href="../molecules/collection.html">Collection card</a></li><li><a href="../molecules/price.html">Price</a></li></ul></div><div class="usa-grupo"><span class="usa-degrau">Blocks</span><ul class="usa"><li><a href="../organisms/nav.html">Nav</a></li><li><a href="../organisms/search.html">Search overlay</a></li></ul></div></div></div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-header__actions</code> <code>.yb-header__bar</code> <code>.yb-header__burger</code> <code>.yb-header__count</code> <code>.yb-header__drawer</code> <code>.yb-header__icon</code> <code>.yb-header__logo</code> <code>.yb-header__nav</code> <code>.yb-header__scrim</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-header__actions</code> <code>.yb-header__bar</code> <code>.yb-header__burger</code> <code>.yb-header__drawer</code> <code>.yb-header__icon</code> <code>.yb-header__logo</code> <code>.yb-header__nav</code> <code>.yb-header__scrim</code></span></div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:checked</code> · <code>:focus-visible</code> · <code>:hover</code></div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele aparece, mas não responde.</div></div>
     </div>
-    <p class="rotulo">Tokens <span class="rotulo-conta">31</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">23</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>10</span></p>
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>6</span></p>
         <ul class="tokens__lista">
           <li><i class="tokens__cor" style="background:var(--yb-bg-page)" aria-hidden="true"></i><code>--yb-bg-page</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface-overlay)" aria-hidden="true"></i><code>--yb-surface-overlay</code><span class="tokens__valor">rgba(30, 30, 31, .55)</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-accent-signal)" aria-hidden="true"></i><code>--yb-accent-signal</code><span class="tokens__valor">#CA235F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface-raised)" aria-hidden="true"></i><code>--yb-surface-raised</code><span class="tokens__valor">#FFFFFF</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-on-action)" aria-hidden="true"></i><code>--yb-text-on-action</code><span class="tokens__valor">#FFFFFF</span></li>
-          <li><code>--yb-border-emphasis</code><span class="tokens__valor">2px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
-        </ul>
-      </div>
-      <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>3</span></p>
-        <ul class="tokens__lista">
-          <li><code>--yb-line-height-none</code><span class="tokens__valor">1</span></li>
-          <li><code>--yb-font-weight-bold</code><span class="tokens__valor">700</span></li>
-          <li><code>--yb-type-caption-size</code><span class="tokens__valor">0.8125rem</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
@@ -2137,12 +2107,6 @@
           <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
           <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>
           <li><code>--yb-space-3</code><span class="tokens__valor">0.75rem</span></li>
-        </ul>
-      </div>
-      <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>1</span></p>
-        <ul class="tokens__lista">
-          <li><code>--yb-radius-full</code><span class="tokens__valor">9999px</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
@@ -2184,12 +2148,12 @@
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
         <p class="fn-cabeca">✓ Faça</p>
-        <div class="fn-palco"><button class="yb-iconbtn yb-header__icon" type="button" aria-label="Cart, 2 items"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-header__count">2</span></button></div>
+        <div class="fn-palco"><button class="yb-iconbtn yb-header__icon" type="button" aria-label="Cart, 2 items"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-count yb-count--pin" aria-hidden="true">2</span></button></div>
         <p class="fn-legenda">Ícone de ação com rótulo que inclui o estado.</p>
       </div>
       <div class="fn-caso fn-caso--nao">
         <p class="fn-cabeca">✕ Não faça</p>
-        <div class="fn-palco"><button class="yb-iconbtn yb-header__icon" type="button"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-header__count">2</span></button></div>
+        <div class="fn-palco"><button class="yb-iconbtn yb-header__icon" type="button"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-cart"/></svg><span class="yb-count yb-count--pin" aria-hidden="true">2</span></button></div>
         <p class="fn-legenda">Sem rótulo: o leitor de tela anuncia “botão, 2” — o número sem o nome do que ele conta.</p>
       </div>
     </div>

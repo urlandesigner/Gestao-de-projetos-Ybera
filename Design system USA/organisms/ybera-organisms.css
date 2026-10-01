@@ -1049,30 +1049,13 @@
    Ao lado ele empurrava a largura do botao para 66px e virava um quarto
    elemento na fileira; a leitura era "sacola, e tambem um 2", em vez de "duas
    coisas na sacola".
-   Menor (18px) porque em cima do icone ele nao precisa competir: o proprio
-   deslocamento ja diz que pertence aquele botao. A borda da cor do cabecalho
-   e o que o separa do traco da sacola quando os dois se cruzam. */
-.yb-header__icon:has(.yb-header__count){position:relative}
-.yb-header__count{
-  /* Ancorado no canto do GLIFO, nao no do botao. O glifo tem 20px centrados
-     num alvo de 44, entao o canto dele fica a 12px da borda — em `top:2 right:2`
-     o selo caia sobre a alca da sacola e a apagava. Deslocado para fora, ele
-     encosta na quina e o desenho continua inteiro. */
-  position:absolute; inset-block-start:1px; inset-inline-end:-4px;
-  /* A contagem e marcacao, nao acao — ver --yb-accent-signal. */
-  background:var(--yb-accent-signal); color:var(--yb-text-on-action);
-  font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-bold);
-  /* Circulo, nao pilula. Com `box-sizing:border-box` a borda de 2px entra na
-     conta: o digito (8px) mais 10px de respiro mais 4px de borda davam 22 de
-     largura contra 18 de altura. A largura minima passa a ser a MESMA medida
-     da altura, e o respiro cai para 3px de cada lado — um digito nao encosta,
-     e dois ("12") ainda cabem virando pilula, que ai e o certo. */
-  min-inline-size:22px; block-size:22px; padding:0 3px;
-  border:var(--yb-border-emphasis) solid var(--yb-surface);
-  border-radius:var(--yb-radius-full);
-  display:inline-flex; align-items:center; justify-content:center;
-  font-variant-numeric:tabular-nums; line-height:var(--yb-line-height-none);
-}
+
+   A PECA E O `.yb-count`, desde 0.13. Ela nasceu aqui, com nome de cabecalho,
+   e ficou meses sendo a unica contagem do sistema sem ser peca de ninguem:
+   quem quisesse o mesmo circulo fora da barra tinha de copia-lo. O desenho,
+   a medida e a borda mudaram de lugar, nao de valor. Aqui sobrou o que e
+   mesmo do cabecalho: so a ancoragem, e ela vem do `--pin` do proprio atomo.
+   O `.yb-iconbtn` ja nasce posicionado, entao nao ha o que declarar.
 
 /* Aperto do mobile. Fica no FIM da secao de proposito: `.yb-header__icon` e
    `.yb-header__actions` declaram display e gap acima, com a mesma

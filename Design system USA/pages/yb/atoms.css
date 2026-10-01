@@ -228,6 +228,63 @@
 .yb-badge--on-dark{background:var(--yb-surface-inverse-raised); color:var(--yb-text-inverse)}
 
 /* =========================================================================
+   COUNT — o número que fica EM CIMA de um controle e diz quantos
+   Depende de: --yb-accent-signal, --yb-radius-full
+
+   NÃO É UM BADGE COM OUTRA ROUPA, e o teste é simples: um `.yb-badge--count`
+   teria de DESFAZER quatro coisas que o badge é — caixa alta, entreletra
+   aberta, raio de pílula, respiro no eixo inline — e ACRESCENTAR três que o
+   badge não tem razão de ter: medida de círculo, borda da cor do que está
+   atrás, e ancoragem fora do fluxo. Variante que desfaz mais do que aproveita
+   é outra peça usando o nome errado.
+
+   O trabalho também é outro. O badge ROTULA conteúdo ao lado dele — `Sale`,
+   `Best seller`, uma palavra em linha. Este CONTA o que está atrás de um
+   controle, e por isso flutua sobre ele em vez de ocupar lugar na fileira.
+   Posto ao lado, ele empurrava o botão da sacola de 44 para 66px e virava um
+   quarto elemento do cabeçalho: lia-se "sacola, e também um 2", e não "duas
+   coisas na sacola".
+
+   A BORDA É DA COR DO QUE ESTÁ ATRÁS, e é ela que separa o círculo do traço
+   do ícone quando os dois se cruzam. Quem muda o fundo em volta retuna
+   `--yb-count-ring` — sobre faixa escura, por exemplo, o padrão branco
+   recortaria um buraco claro no lugar errado.
+
+   O NÚMERO NÃO SE LÊ SOZINHO. Ele é desenho; quem diz quanto é o nome do
+   controle (`aria-label="Cart, 2 items"`). Solto, o leitor de tela anuncia um
+   "2" sem dono. Ver a ficha.
+   ========================================================================= */
+.yb-count{
+  /* Declarado aqui e nao so usado com reserva: token local tem de existir para
+     o sistema poder conferir que ninguem aponta para o vazio. Quem muda o
+     fundo em volta sobrescreve com peso maior — `.yb-header .yb-count{...}`. */
+  --yb-count-ring:var(--yb-surface);
+  display:inline-flex; align-items:center; justify-content:center;
+  /* Círculo, não pílula. Com `box-sizing:border-box` a borda de 2px entra na
+     conta: o dígito (8px) mais 10px de respiro mais 4px de borda davam 22 de
+     largura contra 18 de altura. A largura mínima é a MESMA medida da altura,
+     e o respiro cai para 3px de cada lado — um dígito não encosta, e dois
+     ("12") ainda cabem virando pílula, que aí é o certo. */
+  min-inline-size:22px; block-size:22px; padding:0 3px;
+  /* Contagem é marcação, não ação — ver --yb-accent-signal. */
+  background:var(--yb-accent-signal); color:var(--yb-text-on-action);
+  font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-bold);
+  font-variant-numeric:tabular-nums; line-height:var(--yb-line-height-none);
+  border:var(--yb-border-emphasis) solid var(--yb-count-ring);
+  border-radius:var(--yb-radius-full);
+}
+/* ANCORADO NO CANTO DO GLIFO, não no do botão. O glifo tem 20px centrados num
+   alvo de 44, então o canto dele fica a 12px da borda — em `start:2 end:2` o
+   círculo caía sobre a alça da sacola e a apagava. Deslocado para fora, ele
+   encosta na quina e o desenho continua inteiro.
+
+   O pai precisa estar posicionado. No `.yb-iconbtn` já está, e é o uso
+   previsto; em qualquer outro, quem monta declara `position:relative`. Uma
+   regra `:has()` solta aqui acertaria qualquer elemento da página, que é caro
+   demais para economizar uma linha de quem usa. */
+.yb-count--pin{position:absolute; inset-block-start:1px; inset-inline-end:-4px}
+
+/* =========================================================================
    OFFER SEAL — o selo estrelado de oferta
 
    Para brinde e desconto, e so para isso. Nao e badge com outra roupa: o

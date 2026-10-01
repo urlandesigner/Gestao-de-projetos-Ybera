@@ -545,7 +545,7 @@ def header(carrinho=2, promo=None, cliente=None):
       <button class="yb-iconbtn yb-header__icon" aria-label="Search" data-yb-open="site-search">{ico('search')}</button>
       {conta}
       <button class="yb-iconbtn yb-header__icon" aria-label="Cart, {carrinho} items" data-yb-open="cart">
-        {ico('cart')}<span class="yb-header__count">{carrinho}</span></button>
+        {ico('cart')}<span class="yb-count yb-count--pin" aria-hidden="true">{carrinho}</span></button>
     </div>
   </div>
   <label class="yb-header__scrim" for="nav-open" aria-hidden="true"></label>

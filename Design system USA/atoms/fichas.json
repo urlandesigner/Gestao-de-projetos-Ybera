@@ -699,5 +699,37 @@
         }
       ]
     }
+  },
+  "count": {
+    "a11y": [
+      "O círculo leva <code>aria-hidden=\"true\"</code> e quem diz quanto é o nome do controle: <code>aria-label=\"Cart, 2 items\"</code>. Solto, o leitor anuncia um \"2\" sem dono.",
+      "Quando a contagem muda sozinha — chegou um aviso novo — quem precisa falar é uma região viva perto dela, não este número: o <code>aria-label</code> mudando calado não é anunciado.",
+      "Texto branco sobre o magenta de sinal mede 5.36:1. O dígito usa <code>tabular-nums</code>, então 1 e 7 ocupam a mesma largura e o círculo não dança ao trocar de número.",
+      "Não é alvo de toque: quem recebe o clique é o controle debaixo dele."
+    ],
+    "faca": {
+      "legenda": "A contagem está no nome do botão, e o círculo é só desenho.",
+      "html": "<button class=\"yb-iconbtn\" type=\"button\" aria-label=\"Cart, 2 items\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-cart\"/></svg><span class=\"yb-count yb-count--pin\" aria-hidden=\"true\">2</span></button>"
+    },
+    "naoFaca": {
+      "legenda": "Sem nome no botão e sem esconder o número: o leitor anuncia \"botão, 2\".",
+      "html": "<button class=\"yb-iconbtn\" type=\"button\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-cart\"/></svg><span class=\"yb-count yb-count--pin\">2</span></button>"
+    },
+    "anatomia": {
+      "largura": "120px",
+      "recorte": "<button class=\"yb-iconbtn\" type=\"button\" aria-label=\"Cart, 2 items\">.*?</button>",
+      "partes": [
+        {
+          "alvo": ".yb-count",
+          "nome": "Círculo",
+          "texto": "22px de lado, com 3px de respiro: um dígito não encosta e dois ainda cabem virando pílula, que aí é o certo."
+        },
+        {
+          "alvo": ".yb-iconbtn",
+          "nome": "Controle",
+          "texto": "É dele o <code>position:relative</code> de que o <code>--pin</code> precisa, e é dele o nome que diz a contagem em voz alta."
+        }
+      ]
+    }
   }
 }
