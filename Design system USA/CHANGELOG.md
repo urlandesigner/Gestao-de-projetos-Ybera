@@ -34,6 +34,27 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   [DDR-013](decision-log/DDR-013-o-painel-nasce-de-fora.md).
 
 ### Mudado
+- **O anel de foco é grafite, não mais magenta.** `--yb-focus-color` passa de
+  `--yb-magenta-600` para `--yb-gray-950`. O magenta é a cor de **sinal** do
+  sistema — link, preço, selo — e o foco era o único lugar em que ele aparecia
+  sem função nenhuma atrás: um campo em foco não vai fazer nada quando receber
+  o cursor. Pior, desde a 0.13 o anel nasce colado no controle, e colado ele não
+  lia como anel e sim como "a borda do campo ficou magenta" — que foi exatamente
+  a pergunta que chegou de quem usou o sistema num produto. Agora borda e anel
+  são a mesma cor e leem como um traço só: o estado do campo deixou de ser
+  mudança de cor e virou mudança de **espessura** (1px em repouso, 1px mais
+  escuro no hover, 3px no foco). A WCAG 1.4.11 aceita espessura como indicador,
+  e o grafite mede 16.66:1 sobre o branco. O erro segue sendo o único estado que
+  muda de cor. Razão inteira na
+  [DDR-014](decision-log/DDR-014-o-anel-de-foco-e-grafite.md).
+- **Novo `--yb-focus-offset-on-solid`, e o bloco `FOCO SOBRE CONTROLE GRAFITE`.**
+  Um anel da cor do controle some dentro de um controle da mesma cor. São cinco,
+  todos grafite cheio desde antes: `.yb-btn--primary`, o checkbox e o rádio
+  marcados, o chip ligado e o `.yb-skip-link`. Para esses o anel ganha 2px de
+  afastamento, e quem o desenha passa a ser o vão branco da página. O token é de
+  **afastamento** e não de cor de propósito: trocar a cor ali traria de volta o
+  sinal que saiu daqui. Os cinco moram num bloco só — espalhados por componente,
+  o sexto controle grafite nasceria sem ninguém lembrar.
 - **O gancho `data-yb-tabs` é do sistema; a doc passou a `data-doc-tabs`.** A
   doc usava o nome desde antes de a peça existir, e no dia em que o Tabs nasceu
   os dois colidiram: o comportamento do sistema ligava nas abas da própria

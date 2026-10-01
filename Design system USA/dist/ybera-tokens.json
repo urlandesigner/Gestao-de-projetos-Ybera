@@ -2654,7 +2654,7 @@
   },
   "focus": {
     "color": {
-      "$value": "{magenta.600}",
+      "$value": "{gray.950}",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-focus-color",
         "com.ybera.layer": "semantic"
@@ -2670,12 +2670,24 @@
       "$type": "dimension"
     },
     "offset": {
-      "$value": 0,
-      "$extensions": {
-        "com.ybera.cssVariable": "--yb-focus-offset",
-        "com.ybera.layer": "semantic"
+      "default": {
+        "$value": 0,
+        "$extensions": {
+          "com.ybera.cssVariable": "--yb-focus-offset",
+          "com.ybera.layer": "semantic"
+        },
+        "$type": "number"
       },
-      "$type": "number"
+      "on": {
+        "solid": {
+          "$value": "2px",
+          "$extensions": {
+            "com.ybera.cssVariable": "--yb-focus-offset-on-solid",
+            "com.ybera.layer": "semantic"
+          },
+          "$type": "dimension"
+        }
+      }
     }
   },
   "elevation": {

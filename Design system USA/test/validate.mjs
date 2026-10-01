@@ -1766,7 +1766,7 @@ secao('Páginas');
       return { html: arquivos.map(f => ler(`${p}/${f}`)).join('\n'), arquivos };
     };
     // não são componente: base, utilitário e blocos de regra global
-    const NAO_E_COMPONENTE = /^(YBERA|BASE|MOVIMENTO|UTILIT|ALVO COMPACTO|ALTO CONTRASTE|NAVEGACAO|CARREGANDO)/i;
+    const NAO_E_COMPONENTE = /^(YBERA|BASE|MOVIMENTO|UTILIT|ALVO COMPACTO|ALTO CONTRASTE|NAVEGACAO|CARREGANDO|FOCO)/i;
     const ausentes = [];
     for (const { css: chave, pagina } of PARES) {
       const doc = lerDoc(pagina);

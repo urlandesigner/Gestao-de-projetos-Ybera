@@ -132,9 +132,11 @@
   transition:inset-block-start var(--yb-transition-control);
 }
 .yb-skip-link:focus{ inset-block-start:var(--yb-space-4); }
+/* O atalho e grafite cheio, e o anel grafite encostado nele nao apareceria.
+   Ver FOCO SOBRE CONTROLE GRAFITE, em atoms. */
 .yb-skip-link:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
-  outline-offset:var(--yb-focus-offset);
+  outline-offset:var(--yb-focus-offset-on-solid);
 }
 
 /* =========================================================================

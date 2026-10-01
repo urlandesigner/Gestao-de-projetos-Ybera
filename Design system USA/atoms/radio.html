@@ -334,7 +334,8 @@
 .yb-check span,.yb-radio span{
   font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
   line-height:var(--yb-line-height-relaxed)
-}</code></pre>
+}
+.yb-btn--primary:focus-visible, .yb-chip[aria-pressed="true"]:focus-visible, .yb-check input:checked:focus-visible, .yb-radio input:checked:focus-visible{outline-offset:var(--yb-focus-offset-on-solid);}</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="js" hidden>
@@ -349,8 +350,9 @@
 --yb-border-hairline: 1px;
 --yb-border-strong: #B1B1B4;
 --yb-control-height-compact: 36px;
---yb-focus-color: #CA235F;
+--yb-focus-color: #1E1E1F;
 --yb-focus-offset: 0;
+--yb-focus-offset-on-solid: 2px;
 --yb-focus-width: 2px;
 --yb-line-height-relaxed: 1.55;
 --yb-radius-pill: 9999px;
@@ -399,10 +401,10 @@
     <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo">Nenhuma outra peça. Um átomo não usa outros componentes — é isso que faz dele átomo.</div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo">Nenhum. A peça é um elemento só.</div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:checked</code> · <code>:disabled</code> · <code>:focus-visible</code> · <code>:hover</code></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:checked</code> · <code>:disabled</code> · <code>:focus-visible</code> · <code>:hover</code> · <code>[aria-pressed]</code></div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Só CSS.</div></div>
     </div>
-    <p class="rotulo">Tokens <span class="rotulo-conta">20</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">21</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>10</span></p>
@@ -441,10 +443,11 @@
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>4</span></p>
+        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>5</span></p>
         <ul class="tokens__lista">
+          <li><code>--yb-focus-offset-on-solid</code><span class="tokens__valor">2px</span></li>
           <li><code>--yb-transition-control</code><span class="tokens__valor">120ms cubic-bezier(.2, 0, 0, 1)</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
           <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
         </ul>

@@ -395,7 +395,19 @@
   /* =====================================================================
      FOCO — obrigatório e visível. Nunca `outline: none` sem substituto.
      ===================================================================== */
-  --yb-focus-color:  var(--yb-magenta-600);
+  /* GRAFITE desde 0.18, e era magenta-600. O anel de foco e o unico lugar do
+     sistema onde a cor de SINAL aparecia sozinha, sem acao nenhuma por tras —
+     um campo em foco nao e um botao, e o magenta ali prometia uma acao que o
+     campo nao tem. Pior: encostado na borda (afastamento 0), ele nao lia como
+     anel e sim como "a borda do campo ficou magenta", que e exatamente a
+     pergunta que chegou de quem usa.
+
+     O grafite e a PRIMARIA DA MARCA (ver --yb-gray-950 em 00-primitives.css).
+     Com ele o foco passa a ser a propria identidade do sistema, nao um aviso.
+
+     Uma so cor para todo controle: botao, link, caixa, aba. Anel diferente por
+     componente seria a pergunta "por que este e diferente" outra vez. */
+  --yb-focus-color:  var(--yb-gray-950);
   --yb-focus-width:  2px;
   /* ZERO desde 0.13, e era 2px. O afastamento existe para o anel nao se fundir
      com a borda do controle — encostado, ele pode ler como uma borda que
@@ -403,15 +415,25 @@
      do pretendido: apareciam tres tracos, a borda do campo, o vao branco e o
      anel, e o vao lia como falha de desenho.
 
-     Zerado, o anel de 2px nasce na propria borda. A leitura continua se
-     sustentando porque ele nao depende do vao e sim do CONTRASTE: magenta sobre
-     a pagina branca mede 5.36:1, e sobre o grafite que a borda do campo assume
-     no foco, 3.11:1 — os dois acima do 3:1 que a WCAG 1.4.11 pede para
-     fronteira de componente.
+     Zerado, o anel de 2px nasce na propria borda. Com o anel grafite essa fusao
+     deixou de ser efeito colateral e virou o desenho: a borda do campo tambem
+     vira grafite no foco, e os dois juntos leem como UM traco de 3px. A
+     distincao nao e mais de cor e sim de ESPESSURA — 1px em repouso, 1px mais
+     escuro no hover, 3px no foco. A WCAG 1.4.11 aceita mudanca de espessura
+     como indicador, e o grafite mede 16.66:1 sobre a pagina branca, bem acima
+     do 3:1 que ela pede.
 
      Uma vez so, e nao por componente: anel com afastamento diferente em cada
      controle seria a pergunta "por que este e diferente" outra vez. */
   --yb-focus-offset: 0;
+  /* A EXCECAO, e so uma: controle que JA e grafite cheio — o botao primario, o
+     checkbox e o radio marcados, o chip ligado, o atalho de pular. Nesses o
+     anel grafite encostado nao aparece: ele e a mesma cor do proprio controle,
+     e o foco so engorda a peca em 2px sem dizer nada. Aqui o vao branco da
+     pagina e que desenha o anel — controle, 2px de pagina, 2px de grafite.
+     Mede 16.66:1 contra o branco e 1:1 contra o controle, que e justamente o
+     ponto: quem separa os dois e o vao, nao a cor. */
+  --yb-focus-offset-on-solid: 2px;
 
   /* =====================================================================
      FAMÍLIA

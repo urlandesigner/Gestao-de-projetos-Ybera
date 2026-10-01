@@ -1467,3 +1467,28 @@ button.yb-link{
   inline-size:var(--yb-border-hairline); block-size:auto; align-self:stretch;
   margin-block:0; margin-inline:var(--yb-space-4);
 }
+
+/* =========================================================================
+   FOCO SOBRE CONTROLE GRAFITE
+   Depende de: --yb-focus-offset-on-solid
+
+   O anel do sistema e grafite e nasce colado (`--yb-focus-offset: 0`). Isso
+   funciona em tudo que tem fundo claro: a borda do controle tambem vira
+   grafite no foco, e os dois leem como UM traco de 3px.
+
+   Num controle que JA e grafite cheio o mesmo anel desaparece — ele tem a cor
+   do proprio controle, e o foco vira so uma peca 2px maior. A correcao nao e
+   trocar a cor (voltaria o sinal que saiu daqui), e sim abrir o vao: a pagina
+   branca entra entre o controle e o anel e e ela que o desenha.
+
+   ESTAO TODOS AQUI, de proposito. Espalhado por componente, este seria o
+   quarto lugar a responder "por que o foco deste e diferente" — e o primeiro
+   a ficar para tras quando nascer o quinto controle grafite. O atalho de pular
+   (`.yb-skip-link`) e grafite tambem, mas mora na base e resolve la.
+   ========================================================================= */
+.yb-btn--primary:focus-visible,
+.yb-chip[aria-pressed="true"]:focus-visible,
+.yb-check input:checked:focus-visible,
+.yb-radio input:checked:focus-visible{
+  outline-offset:var(--yb-focus-offset-on-solid);
+}

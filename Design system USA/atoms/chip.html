@@ -358,7 +358,8 @@
 .yb-chip__x{font-size:var(--yb-type-body-size); line-height:var(--yb-line-height-none); color:var(--yb-text-muted)}
 .yb-chip[aria-pressed="true"] .yb-chip__x{color:var(--yb-text-muted-inverse)}
 .yb-chip .yb-icon{--yb-icon-size:var(--yb-icon-sm); color:var(--yb-text-muted)}
-.yb-chip[aria-pressed="true"] .yb-icon{color:var(--yb-text-muted-inverse)}</code></pre>
+.yb-chip[aria-pressed="true"] .yb-icon{color:var(--yb-text-muted-inverse)}
+.yb-btn--primary:focus-visible, .yb-chip[aria-pressed="true"]:focus-visible, .yb-check input:checked:focus-visible, .yb-radio input:checked:focus-visible{outline-offset:var(--yb-focus-offset-on-solid);}</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="js" hidden>
@@ -373,8 +374,9 @@
 --yb-border-strong: #B1B1B4;
 --yb-border-subtle: #EAEAEA;
 --yb-control-height-compact: 36px;
---yb-focus-color: #CA235F;
+--yb-focus-color: #1E1E1F;
 --yb-focus-offset: 0;
+--yb-focus-offset-on-solid: 2px;
 --yb-focus-width: 2px;
 --yb-icon-sm: 16px;
 --yb-line-height-none: 1;
@@ -423,10 +425,10 @@
     <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo">Nenhuma outra peça. Um átomo não usa outros componentes — é isso que faz dele átomo.</div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-chip__x</code></span></div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code> · <code>[aria-pressed]</code> · <code>[disabled]</code></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:checked</code> · <code>:focus-visible</code> · <code>:hover</code> · <code>[aria-pressed]</code> · <code>[disabled]</code></div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Só CSS.</div></div>
     </div>
-    <p class="rotulo">Tokens <span class="rotulo-conta">25</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">26</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>12</span></p>
@@ -470,10 +472,11 @@
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>4</span></p>
+        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>5</span></p>
         <ul class="tokens__lista">
+          <li><code>--yb-focus-offset-on-solid</code><span class="tokens__valor">2px</span></li>
           <li><code>--yb-transition-control</code><span class="tokens__valor">120ms cubic-bezier(.2, 0, 0, 1)</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
           <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
         </ul>

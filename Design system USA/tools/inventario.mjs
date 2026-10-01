@@ -76,7 +76,7 @@ const provas = readdirSync(join(raiz, 'pages'))
 const provaHtml = provas.map(talvez).join('\n');
 
 // blocos de regra global — não são componente
-const NAO_E_COMPONENTE = /^(YBERA|BASE|MOVIMENTO|UTILIT|ALVO COMPACTO|ALTO CONTRASTE|NAVEGACAO|CARREGANDO)/i;
+const NAO_E_COMPONENTE = /^(YBERA|BASE|MOVIMENTO|UTILIT|ALVO COMPACTO|ALTO CONTRASTE|NAVEGACAO|CARREGANDO|FOCO)/i;
 
 /* Mesma leitura que test/validate.mjs faz. Se as duas divergirem, a checagem
    de "componente sem demonstração na doc" e esta tabela contam histórias
