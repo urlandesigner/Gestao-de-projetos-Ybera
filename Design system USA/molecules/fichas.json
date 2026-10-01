@@ -1263,7 +1263,7 @@
     "a11y": [
       "O gatilho é <code>&lt;summary&gt;</code>: ele já é botão e já anuncia aberto ou fechado. Não escreva <code>aria-expanded</code> — duplicado, ele passa a brigar com o estado nativo.",
       "Esc fecha e devolve o foco ao gatilho. Sem a devolução o foco fica num painel que sumiu, e o próximo Tab recomeça do topo da página.",
-      "O painel não prende o foco, de propósito: quem precisa prender está pedindo um <a href=\"dialog.html\">Dialog</a>, não um painel ancorado.",
+      "O painel não prende o foco, de propósito: quem precisa prender está pedindo um <a href=\"../organisms/dialog.html\">Dialog</a>, não um painel ancorado.",
       "Clique fora fecha. Painel ancorado cobre o que está atrás, e quem clica longe dele espera que ele saia da frente."
     ],
     "faca": {

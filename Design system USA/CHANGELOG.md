@@ -42,7 +42,7 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 
 [Dropdown]: molecules/dropdown.html
 [Tooltip]: molecules/tooltip.html
-[Dialog]: molecules/dialog.html
+[Dialog]: organisms/dialog.html
 - **Tooltip.** A frase curta que explica um gatilho e some depois. É molécula e
   não átomo porque o gatilho é sempre outra peça — o balão sozinho não é nada.
   Abrir e fechar é do CSS (hover e `:has(:focus-visible)`); o comportamento
