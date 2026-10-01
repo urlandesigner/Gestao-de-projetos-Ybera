@@ -928,7 +928,7 @@ for (const n of NIVEIS) {
        pergunta que o palco: como a peca e. Aba propria para o celular ensinaria
        que telefone e assunto separado do desktop, que e o oposto do que um
        design system quer dizer. -->
-  <div class="abas" data-yb-tabs>
+  <div class="abas" data-doc-tabs>
   <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     ${recolherNotas(f.palco)}

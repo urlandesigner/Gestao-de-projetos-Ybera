@@ -3,7 +3,7 @@
 <!-- GERADO por tools/inventario.mjs. Não edite à mão: rode ./build.sh.
      A fonte é o CSS. Se uma linha aqui está errada, o errado é o código. -->
 
-57 peças no bundle — 45 estáveis, 12 em beta, 0 em alfa.
+59 peças no bundle — 45 estáveis, 14 em beta, 0 em alfa.
 
 ## Como ler a maturidade
 
@@ -29,6 +29,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | CERTIFICATION SEALS | `.yb-seal` | Átomo | Estável | — | — | 15 | sim | n/a | sim | sim |
 | CHECKBOX / RADIO | `.yb-check` | Átomo | Beta | — | 4 | 22 | sim | sim | — | — |
 | CHIP | `.yb-chip` | Átomo | Estável | — | 3 | 25 | sim | sim | — | sim |
+| DIVIDER | `.yb-divider` | Átomo | Beta | 3 | — | 6 | sim | n/a | — | — |
 | ICONBTN | `.yb-iconbtn` | Átomo | Estável | 5 | 4 | 19 | sim | sim | sim | sim |
 | INPUT, SELECT, TEXTAREA | `.yb-field` | Átomo | Estável | 1 | 4 | 36 | sim | sim | — | sim |
 | LINK | `.yb-link` | Átomo | Estável | 1 | 2 | 10 | sim | sim | — | sim |
@@ -58,6 +59,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | QUANTITY STEPPER | `.yb-stepper` | Molécula | Estável | 1 | 3 | 17 | sim | sim | sim | sim |
 | RATING | `.yb-rating` | Molécula | Estável | — | — | 7 | sim | n/a | — | sim |
 | REVIEW | `.yb-reviews` | Molécula | Estável | — | 1 | 28 | sim | sim | sim | sim |
+| TABS | `.yb-tabs` | Molécula | Beta | — | 3 | 17 | sim | sim | sim | — |
 | TOAST | `.yb-toast` | Molécula | Beta | 3 | 1 | 30 | sim | — | sim | — |
 | TRACK | `.yb-track` | Molécula | Beta | 2 | 1 | 8 | sim | — | sim | sim |
 | VARIANT PICKER | `.yb-swatches` | Molécula | Estável | 2 | 4 | 37 | sim | sim | sim | sim |

@@ -18,6 +18,7 @@
      <button data-yb-toast data-toast-title="Saved for later">
      <div class="yb-track__nav" data-yb-track-nav="<id do trilho>" hidden>
      <div class="yb-buybar" data-yb-buybar hidden>  +  <button data-yb-buybar-anchor>
+     <div class="yb-tabs" data-yb-tabs>  +  role="tab" com aria-controls
 
    API pública: window.Ybera.toast({...}), .openDialog(id, gatilho), .init(raiz)
    `init(raiz)` religa tudo o que este arquivo liga, num pedaço de DOM que
@@ -966,6 +967,78 @@
   /* ---------------------------------------------------------------------
      INICIALIZAÇÃO
      --------------------------------------------------------------------- */
+  /* ---------------------------------------------------------------------
+     TABS — a troca e a navegacao por seta
+       <div class="yb-tabs" data-yb-tabs>
+         <div class="yb-tabs__list" role="tablist">
+           <button class="yb-tabs__tab" role="tab" id="t1"
+                   aria-controls="p1" aria-selected="true">…</button>
+         </div>
+         <div class="yb-tabs__panel" role="tabpanel" id="p1" aria-labelledby="t1">…</div>
+
+     Sem este arquivo a primeira aba fica aberta e as outras ficam `hidden`,
+     que e o estado certo para ficar preso: a pessoa le um conteudo inteiro em
+     vez de ver tres titulos e nenhum texto.
+
+     TABINDEX -1 NAS NAO ESCOLHIDAS, de proposito. A fileira de abas e UMA
+     parada de tabulacao, nao uma por aba — e o padrao ARIA, e e o que faz a
+     seta ser o jeito de andar entre elas. Com todas tabulaveis, uma tela de
+     seis abas custa seis Tab antes de chegar ao conteudo.
+
+     A SETA JA TROCA o painel, e nao so move o foco. E a escolha automatica do
+     padrao ARIA, valida quando trocar e barato — aqui o painel ja esta no DOM.
+     Se um dia um painel carregar por rede, isto tem de virar manual (seta move,
+     Enter escolhe), senao passar o foco dispara requisicao a cada tecla.
+     --------------------------------------------------------------------- */
+  function ligarTabs(raiz) {
+    if (raiz.hasAttribute('data-yb-bound')) return;
+    raiz.setAttribute('data-yb-bound', '');
+    var abas = [].slice.call(raiz.querySelectorAll('[role="tab"]'));
+    if (!abas.length) return;
+
+    function painelDe(aba) {
+      var id = aba.getAttribute('aria-controls');
+      return id ? raiz.querySelector('#' + id) : null;
+    }
+    function escolher(aba, mover) {
+      abas.forEach(function (a) {
+        var ativa = a === aba;
+        a.setAttribute('aria-selected', ativa ? 'true' : 'false');
+        a.tabIndex = ativa ? 0 : -1;
+        var p = painelDe(a);
+        if (p) p.hidden = !ativa;
+      });
+      if (mover) aba.focus();
+    }
+
+    abas.forEach(function (aba, i) {
+      aba.tabIndex = aba.getAttribute('aria-selected') === 'true' ? 0 : -1;
+      aba.addEventListener('click', function () {
+        if (aba.disabled) return;
+        escolher(aba, false);
+      });
+      aba.addEventListener('keydown', function (e) {
+        var rtl = getComputedStyle(raiz).direction === 'rtl';
+        var passo = 0;
+        if (e.key === 'ArrowRight') passo = rtl ? -1 : 1;
+        else if (e.key === 'ArrowLeft') passo = rtl ? 1 : -1;
+        else if (e.key === 'Home') passo = -i;
+        else if (e.key === 'End') passo = abas.length - 1 - i;
+        else return;
+        e.preventDefault();
+        /* Da volta nas pontas: da ultima para a primeira. Beco sem saida na
+           ponta faz a pessoa achar que a tecla parou de funcionar. */
+        var j = (i + passo + abas.length) % abas.length;
+        var tentativas = 0;
+        while (abas[j].disabled && tentativas < abas.length) {
+          j = (j + (passo >= 0 ? 1 : -1) + abas.length) % abas.length;
+          tentativas++;
+        }
+        if (!abas[j].disabled) escolher(abas[j], true);
+      });
+    });
+  }
+
   function init(raiz) {
     var r = raiz || document;
     r.querySelectorAll('[data-yb-gallery]').forEach(sincronizarGaleria);
@@ -975,6 +1048,7 @@
     r.querySelectorAll('[data-yb-partnerbar]').forEach(ligarPartnerbar);
     r.querySelectorAll('[data-yb-buybar]').forEach(ligarBuybar);
     r.querySelectorAll('[data-yb-showcases]').forEach(ligarVitrine);
+    r.querySelectorAll('[data-yb-tabs]').forEach(ligarTabs);
     ligarTrilhos(r);
     // os blocos fora deste fechamento (navegacao, relogio) escutam este evento
     document.dispatchEvent(new CustomEvent('yb:init', { detail: { raiz: r } }));

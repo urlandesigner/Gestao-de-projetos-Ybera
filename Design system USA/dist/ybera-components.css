@@ -1689,6 +1689,42 @@ button.yb-link{
 }
 
 /* =========================================================================
+   DIVIDER — o filete entre dois assuntos
+
+   `<hr>`, e não um `<div>` com borda. O elemento já significa "mudança de
+   assunto" para quem ouve a página; desenhar a mesma linha num `<div>` dá o
+   risco visual e cala o leitor de tela. Quando a linha é só decoração — o fio
+   que separa duas colunas de uma mesma lista — use `aria-hidden="true"`.
+
+   A ESPESSURA É `block-size`, não `border`. `<hr>` nasce com borda de dois
+   lados em todo navegador, e zerar uma delas deixa a outra: o filete sai com
+   1px num motor e 2px no outro. Zerar as duas e pintar o fundo dá um valor só,
+   que é o `--yb-border-hairline`.
+
+   O filete do Manifesto não virou este átomo, e isso é de propósito: lá ele
+   tem 4rem, mora sobre faixa escura e separa a PROMESSA da ASSINATURA — duas
+   vozes, não dois assuntos. O desenho coincide; o trabalho não.
+   ========================================================================= */
+.yb-divider{
+  border:0; inline-size:100%; block-size:var(--yb-border-hairline);
+  margin-block:var(--yb-space-6);
+  background:var(--yb-border-subtle);
+}
+/* Dentro de um painel, onde o fio já está perto de outro fio, o tom sobe para
+   não sumir contra a borda da caixa. */
+.yb-divider--strong{background:var(--yb-border)}
+/* Sobre superfície escura o fio claro desaparece; é o mesmo token que a borda
+   inversa usa, e é o único que mede contra o grafite. */
+.yb-divider--on-dark{background:var(--yb-border-inverse-strong)}
+/* Vertical: entre dois itens de uma mesma linha, não entre dois blocos.
+   `align-self:stretch` porque a altura é a da fileira, e fixá-la em pixel
+   quebraria no primeiro item que crescesse. */
+.yb-divider--vertical{
+  inline-size:var(--yb-border-hairline); block-size:auto; align-self:stretch;
+  margin-block:0; margin-inline:var(--yb-space-4);
+}
+
+/* =========================================================================
    YBERA DESIGN SYSTEM · MOLÉCULAS
 
    Depende de: tokens/ + base/ + atoms/ybera-atoms.css
@@ -4462,6 +4498,72 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
   border-block-start:var(--yb-border-hairline) solid var(--yb-border-subtle);
 }
 @media (prefers-reduced-motion:reduce){ .yb-dropdown__chevron{transition:none} }
+
+/* =========================================================================
+   TABS — uma superfície, vários conteúdos, um de cada vez
+
+   QUANDO NÃO USAR, primeiro: aba esconde. Se a pessoa precisa comparar os dois
+   conteúdos, ou se o segundo é onde está a decisão de compra, aba é o pior
+   lugar — o que está atrás da aba é lido por uma minoria. Para texto longo que
+   só ocupa espaço, o Accordion é a peça: ele empilha e não esconde ordem.
+
+   POR QUE NÃO É `<details>` como o Accordion. Aba é escolha EXCLUSIVA: abrir
+   uma fecha a outra. `<details>` não tem esse laço — dois abertos ao mesmo
+   tempo é estado válido dele —, e forçá-lo a fechar o vizinho com CSS deixa o
+   `open` do DOM mentindo sobre o que a tela mostra.
+
+   POR QUE NÃO É O TRUQUE DO RADIO. `:checked` dá a troca sem JS, mas a ARIA de
+   aba pede `role="tab"`, `aria-selected` e navegação por SETA — e nada disso
+   sai de um `<input>`. Meia peça acessível é pior que uma que diz do que
+   precisa: aqui o comportamento está em `data-yb-tabs`, e sem o arquivo de
+   comportamento a primeira aba fica aberta, que é o estado certo para ficar
+   preso.
+
+   O SUBLINHADO É BORDA, e a fileira tem a sua: a aba ativa puxa a própria
+   borda 1px para baixo (`margin-block-end` negativo) e cobre a da lista. Sem
+   isso, as duas linhas aparecem empilhadas e o sublinhado fica grosso só na
+   aba escolhida.
+   ========================================================================= */
+.yb-tabs{display:block}
+.yb-tabs__list{
+  display:flex; gap:var(--yb-space-5); align-items:stretch;
+  border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  /* No celular a fileira rola em vez de quebrar: aba em duas linhas perde a
+     relação com o painel de baixo. A barra some porque o conteúdo cortado na
+     borda já avisa que continua. */
+  overflow-x:auto; scrollbar-width:none;
+}
+.yb-tabs__list::-webkit-scrollbar{display:none}
+.yb-tabs__tab{
+  appearance:none; background:none; border:0; cursor:pointer;
+  font-family:inherit; font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-medium); color:var(--yb-text-muted);
+  min-block-size:var(--yb-target-min);
+  padding-block:var(--yb-space-3); padding-inline:0;
+  white-space:nowrap;
+  border-block-end:var(--yb-border-emphasis) solid transparent;
+  margin-block-end:calc(var(--yb-border-hairline) * -1);
+  transition:color var(--yb-transition-control),
+             border-color var(--yb-transition-control);
+}
+@media (hover:hover){
+  .yb-tabs__tab:not([aria-selected="true"]):hover{color:var(--yb-text-primary)}
+}
+/* A aba escolhida ganha PESO além de cor e sublinhado. Cor sozinha reprova em
+   WCAG 1.4.1, e o sublinhado some em alto contraste junto com a borda do
+   autor; o peso sobrevive aos dois. */
+.yb-tabs__tab[aria-selected="true"]{
+  color:var(--yb-text-primary);
+  font-weight:var(--yb-font-weight-semibold);
+  border-block-end-color:var(--yb-text-primary);
+}
+.yb-tabs__tab:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.yb-tabs__tab[disabled]{color:var(--yb-text-disabled); cursor:not-allowed}
+.yb-tabs__panel{padding-block-start:var(--yb-space-6)}
+.yb-tabs__panel[hidden]{display:none}
 
 /* =========================================================================
    YBERA DESIGN SYSTEM · ORGANISMOS

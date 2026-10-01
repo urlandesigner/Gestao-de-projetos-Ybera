@@ -1431,3 +1431,39 @@ button.yb-link{
   font-size:var(--yb-type-h4-size); font-weight:var(--yb-type-h4-weight);
   letter-spacing:var(--yb-type-h4-track); color:var(--yb-text-primary);
 }
+
+/* =========================================================================
+   DIVIDER — o filete entre dois assuntos
+
+   `<hr>`, e não um `<div>` com borda. O elemento já significa "mudança de
+   assunto" para quem ouve a página; desenhar a mesma linha num `<div>` dá o
+   risco visual e cala o leitor de tela. Quando a linha é só decoração — o fio
+   que separa duas colunas de uma mesma lista — use `aria-hidden="true"`.
+
+   A ESPESSURA É `block-size`, não `border`. `<hr>` nasce com borda de dois
+   lados em todo navegador, e zerar uma delas deixa a outra: o filete sai com
+   1px num motor e 2px no outro. Zerar as duas e pintar o fundo dá um valor só,
+   que é o `--yb-border-hairline`.
+
+   O filete do Manifesto não virou este átomo, e isso é de propósito: lá ele
+   tem 4rem, mora sobre faixa escura e separa a PROMESSA da ASSINATURA — duas
+   vozes, não dois assuntos. O desenho coincide; o trabalho não.
+   ========================================================================= */
+.yb-divider{
+  border:0; inline-size:100%; block-size:var(--yb-border-hairline);
+  margin-block:var(--yb-space-6);
+  background:var(--yb-border-subtle);
+}
+/* Dentro de um painel, onde o fio já está perto de outro fio, o tom sobe para
+   não sumir contra a borda da caixa. */
+.yb-divider--strong{background:var(--yb-border)}
+/* Sobre superfície escura o fio claro desaparece; é o mesmo token que a borda
+   inversa usa, e é o único que mede contra o grafite. */
+.yb-divider--on-dark{background:var(--yb-border-inverse-strong)}
+/* Vertical: entre dois itens de uma mesma linha, não entre dois blocos.
+   `align-self:stretch` porque a altura é a da fileira, e fixá-la em pixel
+   quebraria no primeiro item que crescesse. */
+.yb-divider--vertical{
+  inline-size:var(--yb-border-hairline); block-size:auto; align-self:stretch;
+  margin-block:0; margin-inline:var(--yb-space-4);
+}

@@ -1191,5 +1191,41 @@
         }
       ]
     }
+  },
+  "tabs": {
+    "a11y": [
+      "A fileira é <code>role=\"tablist\"</code> com nome; cada aba é <code>role=\"tab\"</code> com <code>aria-controls</code>, e cada conteúdo é <code>role=\"tabpanel\"</code> com <code>aria-labelledby</code>.",
+      "A fileira é UMA parada de tabulação: só a aba escolhida tem <code>tabindex=\"0\"</code>. Seta troca, Home e End vão às pontas, e nas pontas dá a volta.",
+      "A escolhida muda de PESO, não só de cor e sublinhado. Cor sozinha reprova em WCAG 1.4.1, e a borda do autor some em alto contraste.",
+      "O painel leva <code>tabindex=\"0\"</code>: sem ele, conteúdo sem link não recebe foco e quem navega por teclado não consegue rolá-lo."
+    ],
+    "faca": {
+      "legenda": "Alternativas da mesma coisa, que ninguém precisa comparar lado a lado.",
+      "html": "<div class=\"yb-tabs\" style=\"max-inline-size:19rem\"><div class=\"yb-tabs__list\" role=\"tablist\" aria-label=\"Sobre\"><button class=\"yb-tabs__tab\" role=\"tab\" aria-selected=\"true\" type=\"button\">Description</button><button class=\"yb-tabs__tab\" role=\"tab\" aria-selected=\"false\" type=\"button\">Shipping</button></div></div>"
+    },
+    "naoFaca": {
+      "legenda": "Preço atrás de aba: o que decide a compra é lido por uma minoria.",
+      "html": "<div class=\"yb-tabs\" style=\"max-inline-size:19rem\"><div class=\"yb-tabs__list\" role=\"tablist\" aria-label=\"Produto\"><button class=\"yb-tabs__tab\" role=\"tab\" aria-selected=\"true\" type=\"button\">Description</button><button class=\"yb-tabs__tab\" role=\"tab\" aria-selected=\"false\" type=\"button\">Price</button></div></div>"
+    },
+    "anatomia": {
+      "largura": "360px",
+      "partes": [
+        {
+          "alvo": ".yb-tabs__list",
+          "nome": "Fileira",
+          "texto": "Rola na horizontal no celular em vez de quebrar: aba em duas linhas perde a relação com o conteúdo de baixo."
+        },
+        {
+          "alvo": ".yb-tabs__tab[aria-selected=\"true\"]",
+          "nome": "Aba escolhida",
+          "texto": "Puxa a própria borda 1px para baixo e cobre a da fileira — sem isso o sublinhado fica grosso só nela."
+        },
+        {
+          "alvo": ".yb-tabs__panel",
+          "nome": "Conteúdo",
+          "texto": "Um de cada vez. Os outros ficam com <code>hidden</code>, que é o estado certo quando o JavaScript não roda."
+        }
+      ]
+    }
   }
 }

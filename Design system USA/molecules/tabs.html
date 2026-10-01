@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Breadcrumb — Ybera Design System</title>
+<title>Tabs — Ybera Design System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
@@ -70,7 +70,7 @@
       <li><a href="../atoms/badge.html">Badge</a></li>
       <li><a href="../molecules/bannerhero.html">Banner hero</a></li>
       <li><a href="../molecules/bannermedia.html">Banner media</a></li>
-      <li><a href="../molecules/crumb.html" aria-current="page">Breadcrumb</a></li>
+      <li><a href="../molecules/crumb.html">Breadcrumb</a></li>
       <li><a href="../atoms/button.html">Button</a></li>
       <li><a href="../molecules/offercard.html">Card offer</a></li>
       <li><a href="../molecules/card.html">Card product</a></li>
@@ -101,7 +101,7 @@
       <li><a href="../atoms/skeleton.html">Skeleton</a></li>
       <li><a href="../atoms/stars.html">Stars</a></li>
       <li><a href="../atoms/switch.html">Switch</a></li>
-      <li><a href="../molecules/tabs.html">Tabs</a></li>
+      <li><a href="../molecules/tabs.html" aria-current="page">Tabs</a></li>
       <li><a href="../atoms/textarea.html">Textarea</a></li>
       <li><a href="../molecules/toast.html">Toast</a></li>
       <li><a href="../molecules/track.html">Track</a></li>
@@ -159,24 +159,24 @@
     <nav class="ficha-trilha" aria-label="Você está aqui">
       <a href="../components/index.html">Components</a>
       <span aria-hidden="true">/</span>
-      <a href="index.html#crumb">Molecules</a>
+      <a href="index.html#tabs">Molecules</a>
       <span aria-hidden="true">/</span>
-      <b aria-current="page">Breadcrumb</b>
+      <b aria-current="page">Tabs</b>
     </nav>
     <nav class="ficha-passo" aria-label="Peça anterior e próxima">
-      <a href="bannermedia.html" rel="prev"><span aria-hidden="true">←</span> Banner media</a>
-      <a href="offercard.html" rel="next">Card offer <span aria-hidden="true">→</span></a>
+      <a href="review.html" rel="prev"><span aria-hidden="true">←</span> Review</a>
+      <a href="toast.html" rel="next">Toast <span aria-hidden="true">→</span></a>
     </nav>
   </div>
-  <h1 class="ficha-titulo">Breadcrumb</h1>
-  <p class="ficha-quando">Mostra o caminho até a página atual, como Home / Coleção / Produto. Cada nível é um link, menos a página atual.</p>
+  <h1 class="ficha-titulo">Tabs</h1>
+  <p class="ficha-quando">Uma superfície com vários conteúdos, um de cada vez. Use quando os conteúdos são alternativas da mesma coisa e a pessoa não precisa ver dois ao mesmo tempo.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
        aba mostra por extenso, com os nomes. Número sem o nome ao lado é um
        resumo de algo que está a um clique. -->
   <ul class="ficha-fatos">
-    <li>Classe base <b><code>.yb-crumb</code></b></li>
+    <li>Classe base <b><code>.yb-tabs</code></b></li>
   </ul>
 
   <!-- A FICHA INTEIRA EM ABAS, e nada solto embaixo delas.
@@ -199,21 +199,43 @@
   <div class="abas" data-doc-tabs>
   <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
-    <h3 class="row-label">Sem modificador · página atual em <code>[aria-current="page"]</code></h3>
-    <div class="demo">
-      <nav class="yb-crumb" aria-label="Breadcrumb">
-        <ol>
-          <li><a href="#demos">Home</a></li>
-          <li><a href="#demos">Treatments</a></li>
-          <li><a href="#demos">Sealants</a></li>
-          <li><span aria-current="page">Fashion Gold</span></li>
-        </ol>
-      </nav>
+    <div class="demo demo--stack" style="max-inline-size:34rem">
+      <div class="yb-tabs" data-yb-tabs>
+        <div class="yb-tabs__list" role="tablist" aria-label="Sobre o produto">
+          <button class="yb-tabs__tab" role="tab" id="tb-desc" aria-controls="tp-desc" aria-selected="true" type="button">Description</button>
+          <button class="yb-tabs__tab" role="tab" id="tb-how" aria-controls="tp-how" aria-selected="false" type="button">How to use</button>
+          <button class="yb-tabs__tab" role="tab" id="tb-ship" aria-controls="tp-ship" aria-selected="false" type="button">Shipping</button>
+        </div>
+        <div class="yb-tabs__panel" role="tabpanel" id="tp-desc" aria-labelledby="tb-desc" tabindex="0">
+          <p>A deep repair treatment for dry, porous or chemically treated hair.</p>
+        </div>
+        <div class="yb-tabs__panel" role="tabpanel" id="tp-how" aria-labelledby="tb-how" tabindex="0" hidden>
+          <p>Apply to damp hair, leave for 10 minutes and rinse.</p>
+        </div>
+        <div class="yb-tabs__panel" role="tabpanel" id="tp-ship" aria-labelledby="tb-ship" tabindex="0" hidden>
+          <p>Free shipping on orders over $50. Delivery in 3 to 5 business days.</p>
+        </div>
+      </div>
     </div>
+    <details class="note"><summary>Aba esconde — pense duas vezes</summary>
+      <p>O que está atrás de uma aba é lido por uma minoria. Se a pessoa precisa comparar
+      os dois conteúdos, ou se a decisão de compra está no segundo, aba é o pior lugar.
+      Para texto longo que só ocupa espaço, a peça é o
+      <a href="accordion.html">Accordion</a>: ele empilha e não esconde ordem.</p>
+    </details>
+    <details class="note"><summary>A seta anda entre as abas, não o Tab</summary>
+      <p>A fileira inteira é uma parada de tabulação, não uma por aba — é o padrão ARIA.
+      Seta esquerda e direita trocam, Home e End vão às pontas, e nas pontas dá a volta.
+      Com todas tabuláveis, uma tela de seis abas custaria seis Tab antes do conteúdo.</p>
+    </details>
+    <details class="note"><summary>Sem JavaScript, a primeira fica aberta</summary>
+      <p>As outras nascem com <code>hidden</code>. É o estado certo para ficar preso: a
+      pessoa lê um conteúdo inteiro em vez de ver três títulos e nenhum texto.</p>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
-      <iframe src="solo.html?c=crumb" title="Breadcrumb em 375px"
+      <iframe src="solo.html?c=tabs" title="Tabs em 375px"
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
@@ -228,7 +250,7 @@
     tokens desta peça, lidos da folha a cada build.</p>
     <div class="codigo" data-yb-code>
     <div class="codigo__barra">
-      <div class="codigo__abas" role="tablist" aria-label="Código de Breadcrumb">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Tabs">
         <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
         <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
         <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
@@ -240,56 +262,95 @@
     <div class="codigo__painel" data-code-panel="html">
       <div class="snippet" data-code-variant-panel="0">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>&lt;nav class="yb-crumb" aria-label="Breadcrumb"&gt;
-  &lt;ol&gt;
-    &lt;li&gt;&lt;a href="#demos"&gt;Home&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="#demos"&gt;Treatments&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="#demos"&gt;Sealants&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;span aria-current="page"&gt;Fashion Gold&lt;/span&gt;&lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/nav&gt;</code></pre>
+        <pre><code>&lt;div class="yb-tabs" data-yb-tabs&gt;
+  &lt;div class="yb-tabs__list" role="tablist" aria-label="Sobre o produto"&gt;
+    &lt;button class="yb-tabs__tab" role="tab" id="tb-desc" aria-controls="tp-desc" aria-selected="true" type="button"&gt;Description&lt;/button&gt;
+    &lt;button class="yb-tabs__tab" role="tab" id="tb-how" aria-controls="tp-how" aria-selected="false" type="button"&gt;How to use&lt;/button&gt;
+    &lt;button class="yb-tabs__tab" role="tab" id="tb-ship" aria-controls="tp-ship" aria-selected="false" type="button"&gt;Shipping&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="yb-tabs__panel" role="tabpanel" id="tp-desc" aria-labelledby="tb-desc" tabindex="0"&gt;
+    &lt;p&gt;A deep repair treatment for dry, porous or chemically treated hair.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="yb-tabs__panel" role="tabpanel" id="tp-how" aria-labelledby="tb-how" tabindex="0" hidden&gt;
+    &lt;p&gt;Apply to damp hair, leave for 10 minutes and rinse.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="yb-tabs__panel" role="tabpanel" id="tp-ship" aria-labelledby="tb-ship" tabindex="0" hidden&gt;
+    &lt;p&gt;Free shipping on orders over $50. Delivery in 3 to 5 business days.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="css" hidden>
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>.yb-crumb{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
-.yb-crumb ol{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:var(--yb-space-2)}
-.yb-crumb li:not(:last-child)::after{content:"/"; margin-inline-start:var(--yb-space-2); color:var(--yb-text-muted)}
-.yb-crumb a{color:var(--yb-text-muted); text-decoration:none}
-@media (hover:hover){
-  .yb-crumb a:hover{color:var(--yb-text-primary)}
+        <pre><code>.yb-tabs{display:block}
+.yb-tabs__list{
+  display:flex; gap:var(--yb-space-5); align-items:stretch;
+  border-block-end:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  overflow-x:auto; scrollbar-width:none;
 }
-.yb-crumb a:focus-visible{
+.yb-tabs__list::-webkit-scrollbar{display:none}
+.yb-tabs__tab{
+  appearance:none; background:none; border:0; cursor:pointer;
+  font-family:inherit; font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-medium); color:var(--yb-text-muted);
+  min-block-size:var(--yb-target-min);
+  padding-block:var(--yb-space-3); padding-inline:0;
+  white-space:nowrap;
+  border-block-end:var(--yb-border-emphasis) solid transparent;
+  margin-block-end:calc(var(--yb-border-hairline) * -1);
+  transition:color var(--yb-transition-control),
+  border-color var(--yb-transition-control);
+}
+@media (hover:hover){
+  .yb-tabs__tab:not([aria-selected="true"]):hover{color:var(--yb-text-primary)}
+}
+.yb-tabs__tab[aria-selected="true"]{
+  color:var(--yb-text-primary);
+  font-weight:var(--yb-font-weight-semibold);
+  border-block-end-color:var(--yb-text-primary);
+}
+.yb-tabs__tab:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
 }
-.yb-crumb [aria-current="page"]{color:var(--yb-text-secondary)}
-@media (max-width:767.98px){
-  .yb-crumb ol{flex-wrap:nowrap}
-  .yb-crumb li{flex:none}
-  .yb-crumb li:last-child{
-    flex:0 1 auto; min-inline-size:0;
-    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-  }
-}</code></pre>
+.yb-tabs__tab[disabled]{color:var(--yb-text-disabled); cursor:not-allowed}
+.yb-tabs__panel{padding-block-start:var(--yb-space-6)}
+.yb-tabs__panel[hidden]{display:none}</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="js" hidden>
-      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
+      <div class="snippet">
+        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
+        <pre><code>&lt;!-- uma vez por pagina, antes de &lt;/body&gt; --&gt;
+&lt;script src="ybera-components.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- esta peca liga por: data-yb-tabs --&gt;
+
+&lt;!-- conteudo que chega depois (secao carregada por JS do tema): --&gt;
+&lt;script&gt;Ybera.init(secao);&lt;/script&gt;</code></pre>
+      </div>
     </div>
     <div class="codigo__painel" data-code-panel="tokens" hidden>
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>--yb-focus-color: #CA235F;
+        <pre><code>--yb-border-emphasis: 2px;
+--yb-border-hairline: 1px;
+--yb-border-subtle: #EAEAEA;
+--yb-focus-color: #CA235F;
 --yb-focus-offset: 0;
 --yb-focus-width: 2px;
---yb-space-2: 0.5rem;
+--yb-font-weight-medium: 500;
+--yb-font-weight-semibold: 600;
+--yb-space-3: 0.75rem;
+--yb-space-5: 1.25rem;
 --yb-space-6: 1.5rem;
+--yb-target-min: 44px;
+--yb-text-disabled: #B1B1B4;
 --yb-text-muted: #6D6D71;
 --yb-text-primary: #1E1E1F;
---yb-text-secondary: #535356;
---yb-type-caption-size: 0.8125rem;</code></pre>
+--yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
+--yb-type-body-sm-size: 0.875rem;</code></pre>
       </div>
     </div>
   </div>
@@ -300,19 +361,27 @@
     <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
-        <div class="anat__peca"><nav class="yb-crumb" aria-label="Breadcrumb">
-  <ol>
-    <li><a href="#anat-demos">Home</a></li>
-    <li><a href="#anat-demos">Treatments</a></li>
-    <li><a href="#anat-demos">Sealants</a></li>
-    <li><span aria-current="page">Fashion Gold</span></li>
-  </ol>
-</nav></div>
+        <div class="anat__peca" style="max-inline-size:360px"><div class="yb-tabs" data-yb-tabs>
+  <div class="yb-tabs__list" role="tablist" aria-label="Sobre o produto">
+    <button class="yb-tabs__tab" role="tab" id="anat-tb-desc" aria-controls="anat-tp-desc" aria-selected="true" type="button">Description</button>
+    <button class="yb-tabs__tab" role="tab" id="anat-tb-how" aria-controls="anat-tp-how" aria-selected="false" type="button">How to use</button>
+    <button class="yb-tabs__tab" role="tab" id="anat-tb-ship" aria-controls="anat-tp-ship" aria-selected="false" type="button">Shipping</button>
+  </div>
+  <div class="yb-tabs__panel" role="tabpanel" id="anat-tp-desc" aria-labelledby="anat-tb-desc" tabindex="0">
+    <p>A deep repair treatment for dry, porous or chemically treated hair.</p>
+  </div>
+  <div class="yb-tabs__panel" role="tabpanel" id="anat-tp-how" aria-labelledby="anat-tb-how" tabindex="0" hidden>
+    <p>Apply to damp hair, leave for 10 minutes and rinse.</p>
+  </div>
+  <div class="yb-tabs__panel" role="tabpanel" id="anat-tp-ship" aria-labelledby="anat-tb-ship" tabindex="0" hidden>
+    <p>Free shipping on orders over $50. Delivery in 3 to 5 business days.</p>
+  </div>
+</div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-crumb"><span class="anat__texto"><b>Trilha</b> — <code>&lt;nav&gt;</code> com <code>aria-label</code> próprio — sem ele são só links soltos.</span></li>
-        <li data-target="ol"><span class="anat__texto"><b>Lista</b> — Ordenada, porque a ordem é o caminho. O separador é desenhado pelo CSS, não digitado.</span></li>
-        <li data-target="[aria-current]"><span class="anat__texto"><b>Página atual</b> — Não é link: já se está nela. <code>aria-current</code> é o que anuncia isso.</span></li>
+        <li data-target=".yb-tabs__list"><span class="anat__texto"><b>Fileira</b> — Rola na horizontal no celular em vez de quebrar: aba em duas linhas perde a relação com o conteúdo de baixo.</span></li>
+        <li data-target=".yb-tabs__tab[aria-selected=&quot;true&quot;]"><span class="anat__texto"><b>Aba escolhida</b> — Puxa a própria borda 1px para baixo e cobre a da fileira — sem isso o sublinhado fica grosso só nela.</span></li>
+        <li data-target=".yb-tabs__panel"><span class="anat__texto"><b>Conteúdo</b> — Um de cada vez. Os outros ficam com <code>hidden</code>, que é o estado certo quando o JavaScript não roda.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -328,36 +397,44 @@
     <div class="api-ficha">
     <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo">Nenhuma outra peça: tudo o que ela desenha sai da folha de estilo dela.</div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo">Nenhum. A peça é um elemento só.</div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code> · <code>[aria-current]</code></div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Só CSS.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-tabs__list</code> <code>.yb-tabs__panel</code> <code>.yb-tabs__tab</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code> · <code>[aria-selected]</code> · <code>[disabled]</code> · <code>[hidden]</code></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele aparece, mas não responde.</div></div>
     </div>
-    <p class="rotulo">Tokens <span class="rotulo-conta">9</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">17</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>3</span></p>
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>6</span></p>
         <ul class="tokens__lista">
-          <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-text-disabled)" aria-hidden="true"></i><code>--yb-text-disabled</code><span class="tokens__valor">#B1B1B4</span></li>
+          <li><code>--yb-border-emphasis</code><span class="tokens__valor">2px</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
+          <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>1</span></p>
+        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>3</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-type-caption-size</code><span class="tokens__valor">0.8125rem</span></li>
+          <li><code>--yb-font-weight-medium</code><span class="tokens__valor">500</span></li>
+          <li><code>--yb-font-weight-semibold</code><span class="tokens__valor">600</span></li>
+          <li><code>--yb-type-body-sm-size</code><span class="tokens__valor">0.875rem</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>2</span></p>
+        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>4</span></p>
         <ul class="tokens__lista">
           <li><code>--yb-space-6</code><span class="tokens__valor">1.5rem</span></li>
-          <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
+          <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
+          <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
+          <li><code>--yb-space-3</code><span class="tokens__valor">0.75rem</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>3</span></p>
+        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>4</span></p>
         <ul class="tokens__lista">
+          <li><code>--yb-transition-control</code><span class="tokens__valor">120ms cubic-bezier(.2, 0, 0, 1)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
           <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
           <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
@@ -378,24 +455,24 @@
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
         <p class="fn-cabeca">✓ Faça</p>
-        <div class="fn-palco"><nav class="yb-crumb" aria-label="Breadcrumb"><ol><li><a href="#faca">Home</a></li><li><a href="#faca">Fashion Gold</a></li><li><span aria-current="page">Deep care kit</span></li></ol></nav></div>
-        <p class="fn-legenda">Último item sem link, marcado como página atual.</p>
+        <div class="fn-palco"><div class="yb-tabs" style="max-inline-size:19rem"><div class="yb-tabs__list" role="tablist" aria-label="Sobre"><button class="yb-tabs__tab" role="tab" aria-selected="true" type="button">Description</button><button class="yb-tabs__tab" role="tab" aria-selected="false" type="button">Shipping</button></div></div></div>
+        <p class="fn-legenda">Alternativas da mesma coisa, que ninguém precisa comparar lado a lado.</p>
       </div>
       <div class="fn-caso fn-caso--nao">
         <p class="fn-cabeca">✕ Não faça</p>
-        <div class="fn-palco"><nav class="yb-crumb" aria-label="Breadcrumb"><ol><li><a href="#faca">Home</a></li><li><a href="#faca">Fashion Gold</a></li><li><a href="#faca">Deep care kit</a></li></ol></nav></div>
-        <p class="fn-legenda">Último item como link leva a pessoa para onde ela já está — e o leitor de tela não tem como dizer onde ela está.</p>
+        <div class="fn-palco"><div class="yb-tabs" style="max-inline-size:19rem"><div class="yb-tabs__list" role="tablist" aria-label="Produto"><button class="yb-tabs__tab" role="tab" aria-selected="true" type="button">Description</button><button class="yb-tabs__tab" role="tab" aria-selected="false" type="button">Price</button></div></div></div>
+        <p class="fn-legenda">Preço atrás de aba: o que decide a compra é lido por uma minoria.</p>
       </div>
     </div>
   </section>
 
   <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <ul class="bloco-lede"><li>A trilha é um <code>&lt;nav aria-label="Breadcrumb"&gt;</code> com <code>&lt;ol&gt;</code> dentro: a ordem é informação, e a lista ordenada é o que a transmite.</li><li>O último item não é link — é <code>aria-current="page"</code>. Link para a página em que já se está é um destino que não leva a lugar nenhum.</li><li>Declara <code>:focus-visible</code> e respeita o alvo mínimo em cada link.</li></ul>
+    <ul class="bloco-lede"><li>A fileira é <code>role="tablist"</code> com nome; cada aba é <code>role="tab"</code> com <code>aria-controls</code>, e cada conteúdo é <code>role="tabpanel"</code> com <code>aria-labelledby</code>.</li><li>A fileira é UMA parada de tabulação: só a aba escolhida tem <code>tabindex="0"</code>. Seta troca, Home e End vão às pontas, e nas pontas dá a volta.</li><li>A escolhida muda de PESO, não só de cor e sublinhado. Cor sozinha reprova em WCAG 1.4.1, e a borda do autor some em alto contraste.</li><li>O painel leva <code>tabindex="0"</code>: sem ele, conteúdo sem link não recebe foco e quem navega por teclado não consegue rolá-lo.</li></ul>
   </section>
   </div>
 
-  <!-- Gerada de molecules/pecas/crumb.html e molecules/ybera-molecules.css. Não edite à mão: ./build.sh -->
+  <!-- Gerada de molecules/pecas/tabs.html e molecules/ybera-molecules.css. Não edite à mão: ./build.sh -->
 </main>
 
 <script src="../behavior/ybera-behavior.js"></script>

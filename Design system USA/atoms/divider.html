@@ -3,15 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Breadcrumb — Ybera Design System</title>
+<title>Divider — Ybera Design System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="../tokens/00-primitives.css">
 <link rel="stylesheet" href="../tokens/01-semantic.css">
 <link rel="stylesheet" href="../base/ybera-base.css">
-<link rel="stylesheet" href="../atoms/ybera-atoms.css">
-<link rel="stylesheet" href="ybera-molecules.css">
+<link rel="stylesheet" href="ybera-atoms.css">
 <link rel="stylesheet" href="../icons/ybera-icons.css">
 <link rel="stylesheet" href="../doc/doc.css">
 <link rel="stylesheet" href="../doc/doc-cartao.css">
@@ -25,7 +24,7 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-level="molecules" data-frame="centered">
+<body class="ficha" data-level="atoms" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
@@ -70,7 +69,7 @@
       <li><a href="../atoms/badge.html">Badge</a></li>
       <li><a href="../molecules/bannerhero.html">Banner hero</a></li>
       <li><a href="../molecules/bannermedia.html">Banner media</a></li>
-      <li><a href="../molecules/crumb.html" aria-current="page">Breadcrumb</a></li>
+      <li><a href="../molecules/crumb.html">Breadcrumb</a></li>
       <li><a href="../atoms/button.html">Button</a></li>
       <li><a href="../molecules/offercard.html">Card offer</a></li>
       <li><a href="../molecules/card.html">Card product</a></li>
@@ -78,7 +77,7 @@
       <li><a href="../atoms/checkbox.html">Checkbox</a></li>
       <li><a href="../atoms/chip.html">Chip</a></li>
       <li><a href="../molecules/collection.html">Collection card</a></li>
-      <li><a href="../atoms/divider.html">Divider</a></li>
+      <li><a href="../atoms/divider.html" aria-current="page">Divider</a></li>
       <li><a href="../molecules/dropdown.html">Dropdown</a></li>
       <li><a href="../molecules/empty.html">Empty state</a></li>
       <li><a href="../atoms/iconbtn.html">Icon button</a></li>
@@ -159,24 +158,24 @@
     <nav class="ficha-trilha" aria-label="Você está aqui">
       <a href="../components/index.html">Components</a>
       <span aria-hidden="true">/</span>
-      <a href="index.html#crumb">Molecules</a>
+      <a href="index.html#divider">Atoms</a>
       <span aria-hidden="true">/</span>
-      <b aria-current="page">Breadcrumb</b>
+      <b aria-current="page">Divider</b>
     </nav>
     <nav class="ficha-passo" aria-label="Peça anterior e próxima">
-      <a href="bannermedia.html" rel="prev"><span aria-hidden="true">←</span> Banner media</a>
-      <a href="offercard.html" rel="next">Card offer <span aria-hidden="true">→</span></a>
+      <a href="chip.html" rel="prev"><span aria-hidden="true">←</span> Chip</a>
+      <a href="iconbtn.html" rel="next">Icon button <span aria-hidden="true">→</span></a>
     </nav>
   </div>
-  <h1 class="ficha-titulo">Breadcrumb</h1>
-  <p class="ficha-quando">Mostra o caminho até a página atual, como Home / Coleção / Produto. Cada nível é um link, menos a página atual.</p>
+  <h1 class="ficha-titulo">Divider</h1>
+  <p class="ficha-quando">O filete que separa dois assuntos. Use quando a mudança de assunto não tem título próprio para marcá-la — com título, o título já separa.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
        aba mostra por extenso, com os nomes. Número sem o nome ao lado é um
        resumo de algo que está a um clique. -->
   <ul class="ficha-fatos">
-    <li>Classe base <b><code>.yb-crumb</code></b></li>
+    <li>Classe base <b><code>.yb-divider</code></b></li>
   </ul>
 
   <!-- A FICHA INTEIRA EM ABAS, e nada solto embaixo delas.
@@ -199,21 +198,42 @@
   <div class="abas" data-doc-tabs>
   <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
-    <h3 class="row-label">Sem modificador · página atual em <code>[aria-current="page"]</code></h3>
-    <div class="demo">
-      <nav class="yb-crumb" aria-label="Breadcrumb">
-        <ol>
-          <li><a href="#demos">Home</a></li>
-          <li><a href="#demos">Treatments</a></li>
-          <li><a href="#demos">Sealants</a></li>
-          <li><span aria-current="page">Fashion Gold</span></li>
-        </ol>
-      </nav>
+    <div class="demo demo--stack" style="max-inline-size:30rem">
+      <p>Entrega em até 5 dias úteis para todo o país.</p>
+      <hr class="yb-divider">
+      <p>Trocas e devoluções em até 30 dias, sem custo.</p>
     </div>
+    <h3 class="row-label">Mais forte — <code>--strong</code></h3>
+    <div class="demo demo--stack" style="max-inline-size:30rem">
+      <p>Dentro de uma caixa que já tem borda, o fio fraco some contra ela.</p>
+      <hr class="yb-divider yb-divider--strong">
+      <p>Este é um degrau acima, e volta a ser visto.</p>
+    </div>
+    <h3 class="row-label">Na vertical — <code>--vertical</code></h3>
+    <div class="demo" style="max-inline-size:30rem">
+      <div style="display:flex; align-items:center">
+        <span>Entrega grátis</span>
+        <span class="yb-divider yb-divider--vertical" aria-hidden="true"></span>
+        <span>Troca em 30 dias</span>
+        <span class="yb-divider yb-divider--vertical" aria-hidden="true"></span>
+        <span>Compra segura</span>
+      </div>
+    </div>
+    <details class="note"><summary>É <code>&lt;hr&gt;</code>, não um <code>&lt;div&gt;</code> com borda</summary>
+      <p>O elemento já significa "mudança de assunto" para quem ouve a página. A mesma
+      linha num <code>&lt;div&gt;</code> dá o risco e cala o leitor de tela. Quando a linha
+      é só decoração — como a vertical entre itens de uma mesma fileira — use
+      <code>aria-hidden="true"</code>.</p>
+    </details>
+    <details class="note"><summary>A espessura é altura, não borda</summary>
+      <p>O <code>&lt;hr&gt;</code> nasce com borda dos dois lados em todo navegador, e zerar
+      uma delas deixa a outra: o filete sai com 1px num motor e 2px no outro. Zerar as
+      duas e pintar o fundo dá um valor só.</p>
+    </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
-      <iframe src="solo.html?c=crumb" title="Breadcrumb em 375px"
+      <iframe src="solo.html?c=divider" title="Divider em 375px"
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
@@ -228,7 +248,7 @@
     tokens desta peça, lidos da folha a cada build.</p>
     <div class="codigo" data-yb-code>
     <div class="codigo__barra">
-      <div class="codigo__abas" role="tablist" aria-label="Código de Breadcrumb">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Divider">
         <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
         <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
         <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
@@ -240,38 +260,22 @@
     <div class="codigo__painel" data-code-panel="html">
       <div class="snippet" data-code-variant-panel="0">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>&lt;nav class="yb-crumb" aria-label="Breadcrumb"&gt;
-  &lt;ol&gt;
-    &lt;li&gt;&lt;a href="#demos"&gt;Home&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="#demos"&gt;Treatments&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="#demos"&gt;Sealants&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;span aria-current="page"&gt;Fashion Gold&lt;/span&gt;&lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/nav&gt;</code></pre>
+        <pre><code>&lt;hr class="yb-divider"&gt;</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="css" hidden>
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>.yb-crumb{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
-.yb-crumb ol{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:var(--yb-space-2)}
-.yb-crumb li:not(:last-child)::after{content:"/"; margin-inline-start:var(--yb-space-2); color:var(--yb-text-muted)}
-.yb-crumb a{color:var(--yb-text-muted); text-decoration:none}
-@media (hover:hover){
-  .yb-crumb a:hover{color:var(--yb-text-primary)}
+        <pre><code>.yb-divider{
+  border:0; inline-size:100%; block-size:var(--yb-border-hairline);
+  margin-block:var(--yb-space-6);
+  background:var(--yb-border-subtle);
 }
-.yb-crumb a:focus-visible{
-  outline:var(--yb-focus-width) solid var(--yb-focus-color);
-  outline-offset:var(--yb-focus-offset);
-}
-.yb-crumb [aria-current="page"]{color:var(--yb-text-secondary)}
-@media (max-width:767.98px){
-  .yb-crumb ol{flex-wrap:nowrap}
-  .yb-crumb li{flex:none}
-  .yb-crumb li:last-child{
-    flex:0 1 auto; min-inline-size:0;
-    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-  }
+.yb-divider--strong{background:var(--yb-border)}
+.yb-divider--on-dark{background:var(--yb-border-inverse-strong)}
+.yb-divider--vertical{
+  inline-size:var(--yb-border-hairline); block-size:auto; align-self:stretch;
+  margin-block:0; margin-inline:var(--yb-space-4);
 }</code></pre>
       </div>
     </div>
@@ -281,15 +285,12 @@
     <div class="codigo__painel" data-code-panel="tokens" hidden>
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>--yb-focus-color: #CA235F;
---yb-focus-offset: 0;
---yb-focus-width: 2px;
---yb-space-2: 0.5rem;
---yb-space-6: 1.5rem;
---yb-text-muted: #6D6D71;
---yb-text-primary: #1E1E1F;
---yb-text-secondary: #535356;
---yb-type-caption-size: 0.8125rem;</code></pre>
+        <pre><code>--yb-border: #DADADB;
+--yb-border-hairline: 1px;
+--yb-border-inverse-strong: #6D6D71;
+--yb-border-subtle: #EAEAEA;
+--yb-space-4: 1rem;
+--yb-space-6: 1.5rem;</code></pre>
       </div>
     </div>
   </div>
@@ -300,19 +301,12 @@
     <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
-        <div class="anat__peca"><nav class="yb-crumb" aria-label="Breadcrumb">
-  <ol>
-    <li><a href="#anat-demos">Home</a></li>
-    <li><a href="#anat-demos">Treatments</a></li>
-    <li><a href="#anat-demos">Sealants</a></li>
-    <li><span aria-current="page">Fashion Gold</span></li>
-  </ol>
-</nav></div>
+        <div class="anat__peca" style="max-inline-size:280px"><p>Entrega em até 5 dias úteis para todo o país.</p>
+<hr class="yb-divider">
+<p>Trocas e devoluções em até 30 dias, sem custo.</p></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-crumb"><span class="anat__texto"><b>Trilha</b> — <code>&lt;nav&gt;</code> com <code>aria-label</code> próprio — sem ele são só links soltos.</span></li>
-        <li data-target="ol"><span class="anat__texto"><b>Lista</b> — Ordenada, porque a ordem é o caminho. O separador é desenhado pelo CSS, não digitado.</span></li>
-        <li data-target="[aria-current]"><span class="anat__texto"><b>Página atual</b> — Não é link: já se está nela. <code>aria-current</code> é o que anuncia isso.</span></li>
+        <li data-target=".yb-divider"><span class="anat__texto"><b>Filete</b> — A espessura é <code>block-size</code>, não borda: <code>&lt;hr&gt;</code> nasce com borda dos dois lados e o valor divergia entre navegadores.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -326,41 +320,28 @@
     e os tokens que ele usa. Tudo é lido direto do código, então está sempre atualizado.</p>
 
     <div class="api-ficha">
-    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo">Nenhuma outra peça: tudo o que ela desenha sai da folha de estilo dela.</div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo">Nenhuma outra peça. Um átomo não usa outros componentes — é isso que faz dele átomo.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-divider--on-dark</code> <code>.yb-divider--strong</code> <code>.yb-divider--vertical</code></span></div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo">Nenhum. A peça é um elemento só.</div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code> · <code>[aria-current]</code></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo">Nenhum. A peça não muda por interação.</div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Só CSS.</div></div>
     </div>
-    <p class="rotulo">Tokens <span class="rotulo-conta">9</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">6</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>3</span></p>
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>4</span></p>
         <ul class="tokens__lista">
-          <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
-        </ul>
-      </div>
-      <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>1</span></p>
-        <ul class="tokens__lista">
-          <li><code>--yb-type-caption-size</code><span class="tokens__valor">0.8125rem</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-border-inverse-strong)" aria-hidden="true"></i><code>--yb-border-inverse-strong</code><span class="tokens__valor">#6D6D71</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-border)" aria-hidden="true"></i><code>--yb-border</code><span class="tokens__valor">#DADADB</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
+          <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>2</span></p>
         <ul class="tokens__lista">
           <li><code>--yb-space-6</code><span class="tokens__valor">1.5rem</span></li>
-          <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
-        </ul>
-      </div>
-      <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>3</span></p>
-        <ul class="tokens__lista">
-          <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
-          <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>
         </ul>
       </div>
     </div>
@@ -378,24 +359,24 @@
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
         <p class="fn-cabeca">✓ Faça</p>
-        <div class="fn-palco"><nav class="yb-crumb" aria-label="Breadcrumb"><ol><li><a href="#faca">Home</a></li><li><a href="#faca">Fashion Gold</a></li><li><span aria-current="page">Deep care kit</span></li></ol></nav></div>
-        <p class="fn-legenda">Último item sem link, marcado como página atual.</p>
+        <div class="fn-palco"><div style="max-inline-size:17rem"><p style="margin:0">Entrega em 5 dias.</p><hr class="yb-divider"><p style="margin:0">Troca em 30 dias.</p></div></div>
+        <p class="fn-legenda">Troca de assunto de verdade, no elemento que significa isso.</p>
       </div>
       <div class="fn-caso fn-caso--nao">
         <p class="fn-cabeca">✕ Não faça</p>
-        <div class="fn-palco"><nav class="yb-crumb" aria-label="Breadcrumb"><ol><li><a href="#faca">Home</a></li><li><a href="#faca">Fashion Gold</a></li><li><a href="#faca">Deep care kit</a></li></ol></nav></div>
-        <p class="fn-legenda">Último item como link leva a pessoa para onde ela já está — e o leitor de tela não tem como dizer onde ela está.</p>
+        <div class="fn-palco"><div style="max-inline-size:17rem"><p style="margin:0">Entrega em 5 dias.</p><div class="yb-divider"></div><p style="margin:0">Troca em 30 dias.</p></div></div>
+        <p class="fn-legenda">Risco desenhado num <code>&lt;div&gt;</code>: quem ouve a página não percebe a troca.</p>
       </div>
     </div>
   </section>
 
   <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <ul class="bloco-lede"><li>A trilha é um <code>&lt;nav aria-label="Breadcrumb"&gt;</code> com <code>&lt;ol&gt;</code> dentro: a ordem é informação, e a lista ordenada é o que a transmite.</li><li>O último item não é link — é <code>aria-current="page"</code>. Link para a página em que já se está é um destino que não leva a lugar nenhum.</li><li>Declara <code>:focus-visible</code> e respeita o alvo mínimo em cada link.</li></ul>
+    <ul class="bloco-lede"><li>É <code>&lt;hr&gt;</code>: o elemento já diz "mudou de assunto" para quem ouve. A mesma linha num <code>&lt;div&gt;</code> dá o risco e cala o leitor.</li><li>Filete decorativo — o vertical entre itens de uma fileira — leva <code>aria-hidden="true"</code>. Ele não separa assunto, só dá respiro.</li><li>O fio mede 1,25:1 e não carrega significado sozinho. O que precisa ser lido está no texto dos dois lados, nunca na linha.</li></ul>
   </section>
   </div>
 
-  <!-- Gerada de molecules/pecas/crumb.html e molecules/ybera-molecules.css. Não edite à mão: ./build.sh -->
+  <!-- Gerada de atoms/pecas/divider.html e atoms/ybera-atoms.css. Não edite à mão: ./build.sh -->
 </main>
 
 <script src="../behavior/ybera-behavior.js"></script>

@@ -1,0 +1,38 @@
+<h2>Tabs</h2>
+    <p class="when">Uma superfície com vários conteúdos, um de cada vez. Use quando os conteúdos são alternativas da mesma coisa e a pessoa não precisa ver dois ao mesmo tempo.</p>
+    <div class="demo demo--stack" style="max-inline-size:34rem">
+      <div class="yb-tabs" data-yb-tabs>
+        <div class="yb-tabs__list" role="tablist" aria-label="Sobre o produto">
+          <button class="yb-tabs__tab" role="tab" id="tb-desc" aria-controls="tp-desc" aria-selected="true" type="button">Description</button>
+          <button class="yb-tabs__tab" role="tab" id="tb-how" aria-controls="tp-how" aria-selected="false" type="button">How to use</button>
+          <button class="yb-tabs__tab" role="tab" id="tb-ship" aria-controls="tp-ship" aria-selected="false" type="button">Shipping</button>
+        </div>
+        <div class="yb-tabs__panel" role="tabpanel" id="tp-desc" aria-labelledby="tb-desc" tabindex="0">
+          <p>A deep repair treatment for dry, porous or chemically treated hair.</p>
+        </div>
+        <div class="yb-tabs__panel" role="tabpanel" id="tp-how" aria-labelledby="tb-how" tabindex="0" hidden>
+          <p>Apply to damp hair, leave for 10 minutes and rinse.</p>
+        </div>
+        <div class="yb-tabs__panel" role="tabpanel" id="tp-ship" aria-labelledby="tb-ship" tabindex="0" hidden>
+          <p>Free shipping on orders over $50. Delivery in 3 to 5 business days.</p>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Aba esconde — pense duas vezes</b>
+      <p>O que está atrás de uma aba é lido por uma minoria. Se a pessoa precisa comparar
+      os dois conteúdos, ou se a decisão de compra está no segundo, aba é o pior lugar.
+      Para texto longo que só ocupa espaço, a peça é o
+      <a href="accordion.html">Accordion</a>: ele empilha e não esconde ordem.</p>
+    </div>
+    <div class="note">
+      <b>A seta anda entre as abas, não o Tab</b>
+      <p>A fileira inteira é uma parada de tabulação, não uma por aba — é o padrão ARIA.
+      Seta esquerda e direita trocam, Home e End vão às pontas, e nas pontas dá a volta.
+      Com todas tabuláveis, uma tela de seis abas custaria seis Tab antes do conteúdo.</p>
+    </div>
+    <div class="note">
+      <b>Sem JavaScript, a primeira fica aberta</b>
+      <p>As outras nascem com <code>hidden</code>. É o estado certo para ficar preso: a
+      pessoa lê um conteúdo inteiro em vez de ver três títulos e nenhum texto.</p>
+    </div>

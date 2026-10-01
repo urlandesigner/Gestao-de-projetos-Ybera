@@ -674,5 +674,30 @@
         }
       ]
     }
+  },
+  "divider": {
+    "a11y": [
+      "É <code>&lt;hr&gt;</code>: o elemento já diz \"mudou de assunto\" para quem ouve. A mesma linha num <code>&lt;div&gt;</code> dá o risco e cala o leitor.",
+      "Filete decorativo — o vertical entre itens de uma fileira — leva <code>aria-hidden=\"true\"</code>. Ele não separa assunto, só dá respiro.",
+      "O fio mede 1,25:1 e não carrega significado sozinho. O que precisa ser lido está no texto dos dois lados, nunca na linha."
+    ],
+    "faca": {
+      "legenda": "Troca de assunto de verdade, no elemento que significa isso.",
+      "html": "<div style=\"max-inline-size:17rem\"><p style=\"margin:0\">Entrega em 5 dias.</p><hr class=\"yb-divider\"><p style=\"margin:0\">Troca em 30 dias.</p></div>"
+    },
+    "naoFaca": {
+      "legenda": "Risco desenhado num <code>&lt;div&gt;</code>: quem ouve a página não percebe a troca.",
+      "html": "<div style=\"max-inline-size:17rem\"><p style=\"margin:0\">Entrega em 5 dias.</p><div class=\"yb-divider\"></div><p style=\"margin:0\">Troca em 30 dias.</p></div>"
+    },
+    "anatomia": {
+      "largura": "280px",
+      "partes": [
+        {
+          "alvo": ".yb-divider",
+          "nome": "Filete",
+          "texto": "A espessura é <code>block-size</code>, não borda: <code>&lt;hr&gt;</code> nasce com borda dos dois lados e o valor divergia entre navegadores."
+        }
+      ]
+    }
   }
 }

@@ -33,7 +33,11 @@
      três rolagens abaixo da peça que ela descreve, e vale porque as três
      abas falam da MESMA coisa — quem procura o código de um botão está
      olhando o botão. */
-  for (const grupo of document.querySelectorAll('[data-yb-tabs]')) {
+  /* `data-doc-tabs`, e nao `data-yb-tabs`: o prefixo `yb-` e do sistema, e
+     desde que o Tabs nasceu como peca os dois colidiam — o comportamento do
+     sistema ligava nas abas da doc e escondia o painel inteiro da ficha.
+     Cromo da doc nao usa gancho do sistema. */
+  for (const grupo of document.querySelectorAll('[data-doc-tabs]')) {
     const paineis = [...grupo.querySelectorAll(':scope > [data-tab]')];
     if (paineis.length < 2) continue;
 

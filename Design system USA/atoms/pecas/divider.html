@@ -1,0 +1,36 @@
+<h2>Divider</h2>
+    <p class="when">O filete que separa dois assuntos. Use quando a mudança de assunto não tem título próprio para marcá-la — com título, o título já separa.</p>
+    <div class="demo demo--stack" style="max-inline-size:30rem">
+      <p>Entrega em até 5 dias úteis para todo o país.</p>
+      <hr class="yb-divider">
+      <p>Trocas e devoluções em até 30 dias, sem custo.</p>
+    </div>
+    <h3 class="row-label">Mais forte — <code>--strong</code></h3>
+    <div class="demo demo--stack" style="max-inline-size:30rem">
+      <p>Dentro de uma caixa que já tem borda, o fio fraco some contra ela.</p>
+      <hr class="yb-divider yb-divider--strong">
+      <p>Este é um degrau acima, e volta a ser visto.</p>
+    </div>
+    <h3 class="row-label">Na vertical — <code>--vertical</code></h3>
+    <div class="demo" style="max-inline-size:30rem">
+      <div style="display:flex; align-items:center">
+        <span>Entrega grátis</span>
+        <span class="yb-divider yb-divider--vertical" aria-hidden="true"></span>
+        <span>Troca em 30 dias</span>
+        <span class="yb-divider yb-divider--vertical" aria-hidden="true"></span>
+        <span>Compra segura</span>
+      </div>
+    </div>
+    <div class="note">
+      <b>É <code>&lt;hr&gt;</code>, não um <code>&lt;div&gt;</code> com borda</b>
+      <p>O elemento já significa "mudança de assunto" para quem ouve a página. A mesma
+      linha num <code>&lt;div&gt;</code> dá o risco e cala o leitor de tela. Quando a linha
+      é só decoração — como a vertical entre itens de uma mesma fileira — use
+      <code>aria-hidden="true"</code>.</p>
+    </div>
+    <div class="note">
+      <b>A espessura é altura, não borda</b>
+      <p>O <code>&lt;hr&gt;</code> nasce com borda dos dois lados em todo navegador, e zerar
+      uma delas deixa a outra: o filete sai com 1px num motor e 2px no outro. Zerar as
+      duas e pintar o fundo dá um valor só.</p>
+    </div>

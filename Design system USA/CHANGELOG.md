@@ -9,6 +9,18 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 [GOVERNANCA.md](GOVERNANCA.md), componente novo pede versão **menor** (0.13.0).
 
 ### Adicionado
+- **Divider.** O filete entre dois assuntos. É `<hr>`, não `<div>` com borda: o
+  elemento já significa "mudou de assunto" para quem ouve a página. A espessura
+  é `block-size` e não `border`, porque `<hr>` nasce com borda dos dois lados e
+  o filete saía com 1px num navegador e 2px no outro. Três variantes:
+  `--strong` para dentro de caixa que já tem borda, `--on-dark` e `--vertical`.
+- **Tabs.** Uma superfície, vários conteúdos, um de cada vez. Não é `<details>`
+  como o Accordion porque aba é escolha **exclusiva**, e `<details>` não tem
+  esse laço. Não é o truque do rádio porque a ARIA de aba pede navegação por
+  seta, e isso não sai de um `<input>`. Sem o arquivo de comportamento a
+  primeira aba fica aberta, que é o estado certo para ficar preso. A fileira é
+  **uma** parada de tabulação: seta troca, Home e End vão às pontas, e nas
+  pontas dá a volta.
 - **Panel, e a regra de chão na Fundação.** Nasceu de fora: a loja não precisa
   dele. Aqui `--yb-bg-page`, `--yb-surface` e `--yb-surface-raised` são os três
   brancos, e quem separa um cartão da página é a **foto** — o `.yb-card` no
@@ -22,6 +34,11 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   [DDR-013](decision-log/DDR-013-o-painel-nasce-de-fora.md).
 
 ### Mudado
+- **O gancho `data-yb-tabs` é do sistema; a doc passou a `data-doc-tabs`.** A
+  doc usava o nome desde antes de a peça existir, e no dia em que o Tabs nasceu
+  os dois colidiram: o comportamento do sistema ligava nas abas da própria
+  ficha e escondia o painel inteiro. O prefixo `yb-` é do sistema, e cromo de
+  documentação não é sistema.
 - **A nota deixou de encostar no que vem depois.** Ela tinha folga só em cima,
   o que bastava enquanto fechava uma seção. Quando aparece ANTES do palco — no
   Buy box, no Drawer, no Modal e na grade do Card — colava na borda do cartão e
