@@ -377,8 +377,8 @@
   .yb-btn--on-dark:hover:not([disabled]){background:var(--yb-surface-sunken)}
 }
 .yb-btn--on-dark:active:not([disabled]){background:var(--yb-bg-muted)}
-/* O anel de foco padrao e magenta e some contra o proprio botao branco;
-   sobre o painel escuro quem se ve e o branco. */
+/* O anel de foco padrao e grafite e some contra o painel escuro atras;
+   aqui quem se ve e o branco. */
 .yb-btn--on-dark:focus-visible{
   outline-color:var(--yb-text-inverse); outline-offset:var(--yb-focus-offset);
 }
@@ -621,7 +621,7 @@
    botao. Diferente do `--onmedia`, que e translucido e pede foto atras. */
 .yb-iconbtn--on-dark{ background:var(--yb-text-inverse); color:var(--yb-bg-inverse); }
 .yb-iconbtn--on-dark:active:not([disabled]){ background:var(--yb-bg-muted); }
-/* O anel magenta some contra o botao branco; sobre o escuro quem se ve e o branco. */
+/* O anel grafite some contra o painel escuro atras; aqui quem se ve e o branco. */
 .yb-iconbtn--on-dark:focus-visible{ outline-color:var(--yb-text-inverse); }
 @media (hover:hover){
   .yb-iconbtn:hover:not([disabled]){ background:var(--yb-bg-muted); }
