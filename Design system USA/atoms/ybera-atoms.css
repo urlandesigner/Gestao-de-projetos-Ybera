@@ -1389,3 +1389,45 @@ button.yb-link{
    o `text-decoration:none` (lá o chip é link) e este ícone. */
 .yb-chip .yb-icon{--yb-icon-size:var(--yb-icon-sm); color:var(--yb-text-muted)}
 .yb-chip[aria-pressed="true"] .yb-icon{color:var(--yb-text-muted-inverse)}
+
+/* =========================================================================
+   PANEL — a superfície onde um bloco de conteúdo se apoia
+
+   POR QUE ELE NASCEU, e nasceu de fora. A loja nunca precisou dele: aqui
+   `--yb-bg-page`, `--yb-surface` e `--yb-surface-raised` são os três brancos,
+   e quem separa um cartão da página é a FOTO. O `.yb-card` no desktop não tem
+   fundo, borda nem sombra — é uma coluna embaixo de uma imagem.
+
+   Em tela feita de painéis de TEXTO não há foto, e branco sobre branco some.
+   Quem levou o sistema para um projeto assim chegou ao mesmo lugar sozinho e
+   copiou à mão o tratamento que o `.yb-card` já tem abaixo de 768px, quando a
+   coluna vira cartão. Esta peça é esse tratamento com nome: o sistema para de
+   responder metade da pergunta "onde um painel se apoia".
+
+   O CHÃO É PARTE DA DECISÃO, e está escrito na Fundação, não aqui: página de
+   loja tem chão branco e o painel se destaca por fio e elevação; tela feita de
+   painéis tem chão `--yb-bg-subtle` e o painel usa `--flat`. Duas sombras
+   empilhadas sobre cinza viram sujeira, e por isso o modificador existe.
+
+   NÃO É CARTÃO DE PRODUTO. O `.yb-card` tem anatomia — mídia, título, preço,
+   ação — e ordem. Este aqui é só a caixa: o que entra dentro é de quem usa.
+   ========================================================================= */
+.yb-panel{
+  display:block;
+  background:var(--yb-surface);
+  border:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-card);
+  box-shadow:var(--yb-elevation-card);
+  padding:var(--yb-space-5) var(--yb-space-6);
+}
+/* Sobre chão cinza o fio já basta: a sombra que separava do branco vira borrão
+   na superfície escurecida, e duas delas lado a lado leem como sujeira. */
+.yb-panel--flat{box-shadow:var(--yb-elevation-flat)}
+/* O título do painel, quando ele tem um. Fica no degrau h4 — o mesmo do
+   diálogo —, porque painel e diálogo são a mesma pergunta em lugares
+   diferentes: uma caixa que se intitula. */
+.yb-panel__title{
+  margin:0 0 var(--yb-space-4);
+  font-size:var(--yb-type-h4-size); font-weight:var(--yb-type-h4-weight);
+  letter-spacing:var(--yb-type-h4-track); color:var(--yb-text-primary);
+}

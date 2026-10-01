@@ -84,6 +84,7 @@
       <li><a href="../atoms/notice.html">Notice</a></li>
       <li><a href="../atoms/offerseal.html">Offer seal</a></li>
       <li><a href="../molecules/pagination.html">Pagination</a></li>
+      <li><a href="../atoms/panel.html">Panel</a></li>
       <li><a href="../molecules/partner.html">Partner</a></li>
       <li><a href="../molecules/post.html">Post</a></li>
       <li><a href="../molecules/price.html">Price</a></li>
@@ -182,6 +183,21 @@
         <h3>3 · Sirva por HTTP</h3>
         <p>Aberta como arquivo (<code>file://</code>), a página perde os ícones: o navegador bloqueia o sprite externo.</p>
         <pre>python3 -m http.server 8080</pre>
+      </div>
+      <div class="layer">
+        <h3>O chão da tela</h3>
+        <p>Página de loja tem chão branco (<code>--yb-bg-page</code>), e ali quem
+        separa um cartão da página é a foto dentro dele.</p>
+        <p>Tela feita de <b>painéis de texto</b> não tem foto, e branco sobre branco
+        some. Nessa tela o chão é <code>--yb-bg-subtle</code> e o conteúdo vai dentro
+        do <a href="../atoms/panel.html">Panel</a> com <code>--flat</code>. Com chão
+        branco, o Panel sem modificador: ele traz fio e elevação, que é o que o faz
+        existir.</p>
+        <pre>&lt;!-- chão branco --&gt;
+&lt;div class="yb-panel"&gt;…&lt;/div&gt;
+
+&lt;!-- chão --yb-bg-subtle --&gt;
+&lt;div class="yb-panel yb-panel--flat"&gt;…&lt;/div&gt;</pre>
       </div>
       <div class="layer">
         <h3>Peça própria, com os tokens</h3>

@@ -8,6 +8,19 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 [GOVERNANCA.md](GOVERNANCA.md), componente novo pede versão **menor** (0.13.0).
 
+### Adicionado
+- **Panel, e a regra de chão na Fundação.** Nasceu de fora: a loja não precisa
+  dele. Aqui `--yb-bg-page`, `--yb-surface` e `--yb-surface-raised` são os três
+  brancos, e quem separa um cartão da página é a **foto** — o `.yb-card` no
+  desktop não tem fundo, borda nem sombra. Quando o sistema foi aplicado num
+  produto feito de painéis de **texto**, os painéis sumiram, e quem aplicou
+  copiou à mão o tratamento que o `.yb-card` já tem abaixo de 768px. O sistema
+  tinha todas as peças soltas e nunca disse qual combinação faz um painel nem
+  quando o chão deixa de ser branco. Agora diz: `.yb-panel` sobre chão branco,
+  `.yb-panel--flat` sobre `--yb-bg-subtle` — sobre cinza a sombra vira borrão.
+  Nenhum token novo. A régua para a próxima peça que vier de fora está na
+  [DDR-013](decision-log/DDR-013-o-painel-nasce-de-fora.md).
+
 ### Mudado
 - **A nota deixou de encostar no que vem depois.** Ela tinha folga só em cima,
   o que bastava enquanto fechava uma seção. Quando aparece ANTES do palco — no

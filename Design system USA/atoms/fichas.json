@@ -644,5 +644,35 @@
       "legenda": "<code>&lt;span&gt;</code> com classe de ativo: não recebe foco, não responde a Enter e o leitor de tela lê só o texto.",
       "html": "<span class=\"yb-chip\" style=\"background:var(--yb-gray-950);color:#fff\">Keratin ×</span>"
     }
+  },
+  "panel": {
+    "a11y": [
+      "Não é região por si: quem dá nome à área é o título dentro dele. Painel com <code>&lt;h2&gt;</code> ou <code>&lt;h3&gt;</code> já entra no índice de cabeçalhos do leitor de tela.",
+      "Sem título visível, use <code>role=\"region\"</code> com <code>aria-label</code>. Sem um dos dois a caixa é decoração, e o leitor passa reto.",
+      "O fio mede 1,25:1 e não carrega significado sozinho: ele agrupa, não informa. O que precisa ser lido está no texto dentro."
+    ],
+    "faca": {
+      "legenda": "O título dentro do painel nomeia a área.",
+      "html": "<div class=\"yb-panel\" style=\"max-inline-size:18rem\"><h3 class=\"yb-panel__title\">Avisos do RH</h3><p>Três recados desta semana.</p></div>"
+    },
+    "naoFaca": {
+      "legenda": "Caixa sem nome: para quem ouve a página, ela não existe.",
+      "html": "<div class=\"yb-panel\" style=\"max-inline-size:18rem\"><p>Três recados desta semana.</p></div>"
+    },
+    "anatomia": {
+      "largura": "320px",
+      "partes": [
+        {
+          "alvo": ".yb-panel",
+          "nome": "Caixa",
+          "texto": "Superfície branca, fio e elevação de cartão. É ela que diz onde a área começa e acaba."
+        },
+        {
+          "alvo": ".yb-panel__title",
+          "nome": "Título",
+          "texto": "No degrau h4, o mesmo do diálogo. É ele que nomeia a área para quem lê e para quem ouve."
+        }
+      ]
+    }
   }
 }

@@ -3,16 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Gallery — Ybera Design System</title>
+<title>Panel — Ybera Design System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="../tokens/00-primitives.css">
 <link rel="stylesheet" href="../tokens/01-semantic.css">
 <link rel="stylesheet" href="../base/ybera-base.css">
-<link rel="stylesheet" href="../atoms/ybera-atoms.css">
-<link rel="stylesheet" href="../molecules/ybera-molecules.css">
-<link rel="stylesheet" href="ybera-organisms.css">
+<link rel="stylesheet" href="ybera-atoms.css">
 <link rel="stylesheet" href="../icons/ybera-icons.css">
 <link rel="stylesheet" href="../doc/doc.css">
 <link rel="stylesheet" href="../doc/doc-cartao.css">
@@ -26,7 +24,7 @@
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}
 </style>
 </head>
-<body class="ficha" data-level="organisms" data-frame="centered">
+<body class="ficha" data-level="atoms" data-frame="centered">
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
@@ -61,7 +59,7 @@
       <li><a href="../icons/index.html">Icons</a></li>
     </ul>
   </details>
-  <details class="ds-nav__grupo">
+  <details class="ds-nav__grupo" open>
     <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Components</summary>
     <ul>
       <li><a href="../molecules/accordion.html">Accordion</a></li>
@@ -88,7 +86,7 @@
       <li><a href="../atoms/notice.html">Notice</a></li>
       <li><a href="../atoms/offerseal.html">Offer seal</a></li>
       <li><a href="../molecules/pagination.html">Pagination</a></li>
-      <li><a href="../atoms/panel.html">Panel</a></li>
+      <li><a href="../atoms/panel.html" aria-current="page">Panel</a></li>
       <li><a href="../molecules/partner.html">Partner</a></li>
       <li><a href="../molecules/post.html">Post</a></li>
       <li><a href="../molecules/price.html">Price</a></li>
@@ -108,7 +106,7 @@
       <li><a href="../molecules/video.html">Vertical video carousel</a></li>
     </ul>
   </details>
-  <details class="ds-nav__grupo" open>
+  <details class="ds-nav__grupo">
     <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2.5" width="12" height="3" rx="1"/><rect x="2" y="6.8" width="12" height="3" rx="1"/><rect x="2" y="11.1" width="12" height="2.4" rx="1"/></svg>Blocks</summary>
     <ul>
       <li><a href="../organisms/quote.html">Brand quote</a></li>
@@ -119,7 +117,7 @@
       <li><a href="../organisms/faq.html">FAQ</a></li>
       <li><a href="../organisms/footer.html">Footer</a></li>
       <li><a href="../organisms/shipping-progress.html">Free shipping progress</a></li>
-      <li><a href="../organisms/gallery.html" aria-current="page">Gallery</a></li>
+      <li><a href="../organisms/gallery.html">Gallery</a></li>
       <li><a href="../organisms/header.html">Header</a></li>
       <li><a href="../organisms/hero.html">Hero</a></li>
       <li><a href="../organisms/logobar.html">Logo bar</a></li>
@@ -156,25 +154,26 @@
 <main class="main">
   <div class="ficha-topo">
     <nav class="ficha-trilha" aria-label="Você está aqui">
-      
-      <a href="index.html#gallery">Blocks</a>
+      <a href="../components/index.html">Components</a>
       <span aria-hidden="true">/</span>
-      <b aria-current="page">Gallery</b>
+      <a href="index.html#panel">Atoms</a>
+      <span aria-hidden="true">/</span>
+      <b aria-current="page">Panel</b>
     </nav>
     <nav class="ficha-passo" aria-label="Peça anterior e próxima">
-      <a href="shipping-progress.html" rel="prev"><span aria-hidden="true">←</span> Free shipping progress</a>
-      <a href="header.html" rel="next">Header <span aria-hidden="true">→</span></a>
+      <a href="offerseal.html" rel="prev"><span aria-hidden="true">←</span> Offer seal</a>
+      <a href="progress.html" rel="next">Progress bar <span aria-hidden="true">→</span></a>
     </nav>
   </div>
-  <h1 class="ficha-titulo">Gallery</h1>
-  <p class="ficha-quando">As fotos do produto na PDP: uma foto grande e miniaturas para trocar. Funciona também com teclado e leitor de tela.</p>
+  <h1 class="ficha-titulo">Panel</h1>
+  <p class="ficha-quando">A caixa branca onde um bloco de conteúdo se apoia. Use quando a tela é feita de áreas de texto e nada mais mostra onde uma começa e a outra acaba.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
        aba mostra por extenso, com os nomes. Número sem o nome ao lado é um
        resumo de algo que está a um clique. -->
   <ul class="ficha-fatos">
-    <li>Classe base <b><code>.yb-gallery</code></b></li>
+    <li>Classe base <b><code>.yb-panel</code></b></li>
   </ul>
 
   <!-- A FICHA INTEIRA EM ABAS, e nada solto embaixo delas.
@@ -197,40 +196,38 @@
   <div class="abas" data-yb-tabs>
   <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
-    <!-- doc:folha A galeria nao monta peca nenhuma do sistema, e continua sendo
-     bloco pela regra do degrau: tem lugar — a metade de cima da PDP — e nao
-     caberia em outro. O que ela usa nao sao componentes, sao elementos nativos:
-     `input[type=radio]` escondido e `label` com a miniatura, que e o que faz a
-     troca de foto funcionar sem uma linha de JavaScript. Descer para molecula
-     diria que ela cabe onde a tarefa aparecer, e ela nao cabe. -->
-    <div class="demo demo--stack">
-      <div class="yb-gallery" data-yb-gallery style="max-width:380px">
-        <div class="yb-gallery__stage">
-          <div class="yb-gallery__slide" data-active="true" style="background:var(--yb-bg-muted)"></div>
-          <div class="yb-gallery__slide" style="background:var(--yb-info-surface)"></div>
-          <div class="yb-gallery__slide" style="background:var(--yb-action-secondary-bg)"></div>
-          <div class="yb-gallery__slide" style="background:var(--yb-accent-surface)"></div>
-          <div class="yb-gallery__slide" style="background:var(--yb-bg-subtle)"></div>
-          <span class="yb-gallery__count">1 / 5</span>
-        </div>
-        <div class="yb-gallery__thumbs">
-          <input type="radio" name="gal" id="g1" checked><label for="g1" title="Image 1"></label>
-          <input type="radio" name="gal" id="g2"><label for="g2" title="Image 2"></label>
-          <input type="radio" name="gal" id="g3"><label for="g3" title="Image 3"></label>
-          <input type="radio" name="gal" id="g4"><label for="g4" title="Image 4"></label>
-          <input type="radio" name="gal" id="g5"><label for="g5" title="Image 5"></label>
-        </div>
+    <div class="demo demo--stack" style="max-inline-size:34rem">
+      <div class="yb-panel">
+        <h3 class="yb-panel__title">Avisos do RH</h3>
+        <p>O conteúdo entra aqui. O painel não dita o que vem dentro — ele só desenha a caixa.</p>
       </div>
     </div>
-    <details class="note"><summary>Sem JS ela ainda troca</summary>
-      <p>O <code>:checked</code> do radio já muda o slide via CSS. O JS só
-      sincroniza o contador e o estado <code>data-active</code>. Se o script falhar,
-      a galeria continua navegável — inclusive por teclado.</p>
+    <h3 class="row-label">Sobre chão cinza — <code>--flat</code></h3>
+    <div class="demo demo--stack" style="max-inline-size:34rem; background:var(--yb-bg-subtle); padding:var(--yb-space-6)">
+      <div class="yb-panel yb-panel--flat">
+        <h3 class="yb-panel__title">Foco do ciclo</h3>
+        <p>Mesmo painel, sem a sombra. O chão cinza já separa.</p>
+      </div>
+      <div class="yb-panel yb-panel--flat">
+        <h3 class="yb-panel__title">Elogios de colegas</h3>
+        <p>Dois painéis lado a lado sobre cinza: só o fio, e eles continuam legíveis.</p>
+      </div>
+    </div>
+    <details class="note"><summary>Qual chão, e por quê</summary>
+      <p>Página de loja tem chão branco: ali o painel precisa do fio e da elevação para
+      existir. Tela feita de painéis tem chão <code>--yb-bg-subtle</code>, e aí o painel
+      usa <code>--flat</code> — sobre cinza a sombra vira borrão, e duas lado a lado
+      leem como sujeira.</p>
+    </details>
+    <details class="note"><summary>Não é o cartão de produto</summary>
+      <p>O <code>.yb-card</code> tem anatomia e ordem: mídia, título, preço, ação. Este
+      aqui é só a caixa, e o que entra dentro é de quem usa. Se o que você quer mostrar
+      é um produto, o cartão é a peça.</p>
     </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
-      <iframe src="solo.html?c=gallery" title="Gallery em 375px"
+      <iframe src="solo.html?c=panel" title="Panel em 375px"
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
@@ -245,7 +242,7 @@
     tokens desta peça, lidos da folha a cada build.</p>
     <div class="codigo" data-yb-code>
     <div class="codigo__barra">
-      <div class="codigo__abas" role="tablist" aria-label="Código de Gallery">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Panel">
         <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
         <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
         <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
@@ -257,114 +254,50 @@
     <div class="codigo__painel" data-code-panel="html">
       <div class="snippet" data-code-variant-panel="0">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>&lt;div class="yb-gallery" data-yb-gallery style="max-width:380px"&gt;
-  &lt;div class="yb-gallery__stage"&gt;
-    &lt;div class="yb-gallery__slide" data-active="true" style="background:var(--yb-bg-muted)"&gt;&lt;/div&gt;
-    &lt;div class="yb-gallery__slide" style="background:var(--yb-info-surface)"&gt;&lt;/div&gt;
-    &lt;div class="yb-gallery__slide" style="background:var(--yb-action-secondary-bg)"&gt;&lt;/div&gt;
-    &lt;div class="yb-gallery__slide" style="background:var(--yb-accent-surface)"&gt;&lt;/div&gt;
-    &lt;div class="yb-gallery__slide" style="background:var(--yb-bg-subtle)"&gt;&lt;/div&gt;
-    &lt;span class="yb-gallery__count"&gt;1 / 5&lt;/span&gt;
-  &lt;/div&gt;
-  &lt;div class="yb-gallery__thumbs"&gt;
-    &lt;input type="radio" name="gal" id="g1" checked&gt;&lt;label for="g1" title="Image 1"&gt;&lt;/label&gt;
-    &lt;input type="radio" name="gal" id="g2"&gt;&lt;label for="g2" title="Image 2"&gt;&lt;/label&gt;
-    &lt;input type="radio" name="gal" id="g3"&gt;&lt;label for="g3" title="Image 3"&gt;&lt;/label&gt;
-    &lt;input type="radio" name="gal" id="g4"&gt;&lt;label for="g4" title="Image 4"&gt;&lt;/label&gt;
-    &lt;input type="radio" name="gal" id="g5"&gt;&lt;label for="g5" title="Image 5"&gt;&lt;/label&gt;
-  &lt;/div&gt;
+        <pre><code>&lt;div class="yb-panel"&gt;
+  &lt;h3 class="yb-panel__title"&gt;Avisos do RH&lt;/h3&gt;
+  &lt;p&gt;O conteúdo entra aqui. O painel não dita o que vem dentro — ele só desenha a caixa.&lt;/p&gt;
 &lt;/div&gt;</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="css" hidden>
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>.yb-gallery{display:flex; flex-direction:column; gap:var(--yb-space-3); min-width:0}
-.yb-gallery__stage{
-  position:relative; aspect-ratio:var(--yb-aspect-product); overflow:hidden;
-  background:var(--yb-surface-sunken); border:var(--yb-border-hairline) solid var(--yb-border-subtle);
-  border-radius:var(--yb-radius-media);
+        <pre><code>.yb-panel{
+  display:block;
+  background:var(--yb-surface);
+  border:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-card);
+  box-shadow:var(--yb-elevation-card);
+  padding:var(--yb-space-5) var(--yb-space-6);
 }
-.yb-gallery__slide{
-  position:absolute; inset:0; display:flex; align-items:center;
-  justify-content:center; opacity:0; visibility:hidden;
-  transition:opacity var(--yb-transition-surface);
-}
-.yb-gallery__slide[data-active="true"]{opacity:1; visibility:visible}
-.yb-gallery__slide img{width:100%; height:100%; object-fit:cover}
-.yb-gallery__count{
-  position:absolute; inset-block-end:var(--yb-space-3);
-  inset-inline-end:var(--yb-space-3);
-  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
-  font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wide);
-  padding:var(--yb-space-1) var(--yb-space-2); border-radius:var(--yb-radius-badge);
-  font-variant-numeric:tabular-nums;
-}
-@media (min-width:768px){
-  .yb-gallery__count{
-    position:absolute; inline-size:1px; block-size:1px;
-    overflow:hidden; clip-path:inset(50%); white-space:nowrap;
-    padding:0; margin:-1px;
-  }
-}
-.yb-gallery__thumbs{display:grid; grid-template-columns:repeat(5,1fr); gap:var(--yb-space-2)}
-.yb-gallery__thumbs input{position:absolute; opacity:0; pointer-events:none}
-.yb-gallery__thumbs label{
-  display:block; aspect-ratio:var(--yb-aspect-product); cursor:pointer; overflow:hidden;
-  background:var(--yb-surface-sunken); border:var(--yb-border-hairline) solid var(--yb-border-subtle);
-  border-radius:var(--yb-radius-sm);
-  transition:border-color var(--yb-transition-control);
-}
-@media (hover:hover){
-  .yb-gallery__thumbs label:hover{border-color:var(--yb-border-strong)}
-}
-.yb-gallery__thumbs input:checked + label{border-color:var(--yb-text-primary); border-width:var(--yb-border-emphasis);}
-.yb-gallery__thumbs input:focus-visible + label{
-  outline:var(--yb-focus-width) solid var(--yb-focus-color);
-  outline-offset:var(--yb-focus-offset);
-}
-.yb-gallery__thumbs label img{width:100%; height:100%; object-fit:cover; display:block;}</code></pre>
+.yb-panel--flat{box-shadow:var(--yb-elevation-flat)}
+.yb-panel__title{
+  margin:0 0 var(--yb-space-4);
+  font-size:var(--yb-type-h4-size); font-weight:var(--yb-type-h4-weight);
+  letter-spacing:var(--yb-type-h4-track); color:var(--yb-text-primary);
+}</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="js" hidden>
-      <div class="snippet">
-        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>&lt;!-- uma vez por pagina, antes de &lt;/body&gt; --&gt;
-&lt;script src="ybera-components.js" defer&gt;&lt;/script&gt;
-
-&lt;!-- esta peca liga por: data-yb-gallery --&gt;
-
-&lt;!-- conteudo que chega depois (secao carregada por JS do tema): --&gt;
-&lt;script&gt;Ybera.init(secao);&lt;/script&gt;</code></pre>
-      </div>
+      <p class="api-vazia">Nenhum. Esta peça é só CSS: renderiza e funciona sem script.</p>
     </div>
     <div class="codigo__painel" data-code-panel="tokens" hidden>
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>--yb-aspect-product: 1 / 1;
---yb-bg-inverse: #1E1E1F;
---yb-border-emphasis: 2px;
---yb-border-hairline: 1px;
---yb-border-strong: #B1B1B4;
+        <pre><code>--yb-border-hairline: 1px;
 --yb-border-subtle: #EAEAEA;
---yb-chrome-h: calc(var(--yb-target-min) + var(--yb-space-4) * 2 + 1px);
---yb-focus-color: #CA235F;
---yb-focus-offset: 0;
---yb-focus-width: 2px;
---yb-radius-badge: 4px;
---yb-radius-media: 8px;
---yb-radius-sm: 4px;
---yb-space-1: 0.25rem;
---yb-space-2: 0.5rem;
---yb-space-3: 0.75rem;
+--yb-elevation-card: 0 1px 2px rgba(30,30,31,.06);
+--yb-elevation-flat: none;
+--yb-radius-card: 8px;
+--yb-space-4: 1rem;
 --yb-space-5: 1.25rem;
---yb-surface-sunken: #FAFAFA;
---yb-text-inverse: #FFFFFF;
+--yb-space-6: 1.5rem;
+--yb-surface: #FFFFFF;
 --yb-text-primary: #1E1E1F;
---yb-tracking-wide: 0.04em;
---yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
---yb-transition-surface: 180ms cubic-bezier(.2, 0, 0, 1);
---yb-type-overline-size: 0.6875rem;</code></pre>
+--yb-type-h4-size: 1.25rem;
+--yb-type-h4-track: -0.015em;
+--yb-type-h4-weight: 600;</code></pre>
       </div>
     </div>
   </div>
@@ -375,30 +308,14 @@
     <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
-        <div class="anat__peca" style="max-inline-size:380px"><div class="yb-gallery" data-yb-gallery style="max-width:380px">
-  <div class="yb-gallery__stage">
-    <div class="yb-gallery__slide" data-active="true" style="background:var(--yb-bg-muted)"></div>
-    <div class="yb-gallery__slide" style="background:var(--yb-info-surface)"></div>
-    <div class="yb-gallery__slide" style="background:var(--yb-action-secondary-bg)"></div>
-    <div class="yb-gallery__slide" style="background:var(--yb-accent-surface)"></div>
-    <div class="yb-gallery__slide" style="background:var(--yb-bg-subtle)"></div>
-    <span class="yb-gallery__count">1 / 5</span>
-  </div>
-  <div class="yb-gallery__thumbs">
-    <input type="radio" name="anat-gal" id="anat-g1" checked><label for="anat-g1" title="Image 1"></label>
-    <input type="radio" name="anat-gal" id="anat-g2"><label for="anat-g2" title="Image 2"></label>
-    <input type="radio" name="anat-gal" id="anat-g3"><label for="anat-g3" title="Image 3"></label>
-    <input type="radio" name="anat-gal" id="anat-g4"><label for="anat-g4" title="Image 4"></label>
-    <input type="radio" name="anat-gal" id="anat-g5"><label for="anat-g5" title="Image 5"></label>
-  </div>
+        <div class="anat__peca" style="max-inline-size:320px"><div class="yb-panel">
+  <h3 class="yb-panel__title">Avisos do RH</h3>
+  <p>O conteúdo entra aqui. O painel não dita o que vem dentro — ele só desenha a caixa.</p>
 </div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-gallery"><span class="anat__texto"><b>Container</b> — Palco e miniaturas, ancorados juntos. A troca acontece em CSS, sem script.</span></li>
-        <li data-target=".yb-gallery__stage"><span class="anat__texto"><b>Palco</b> — A caixa da foto grande, com a proporção reservada — é o que evita o salto ao carregar.</span></li>
-        <li data-target=".yb-gallery__slide"><span class="anat__texto"><b>Foto</b> — Uma por imagem. A ativa leva <code>data-active</code>; as outras ficam no DOM, prontas.</span></li>
-        <li data-target=".yb-gallery__count"><span class="anat__texto"><b>Contagem</b> — “1 / 4”. Diz que há mais foto antes de a pessoa tentar descobrir sozinha.</span></li>
-        <li data-target=".yb-gallery__thumbs"><span class="anat__texto"><b>Miniaturas</b> — Rádios escondidos com <code>&lt;label&gt;</code> em cima: o teclado percorre com as setas.</span></li>
+        <li data-target=".yb-panel"><span class="anat__texto"><b>Caixa</b> — Superfície branca, fio e elevação de cartão. É ela que diz onde a área começa e acaba.</span></li>
+        <li data-target=".yb-panel__title"><span class="anat__texto"><b>Título</b> — No degrau h4, o mesmo do diálogo. É ele que nomeia a área para quem lê e para quem ouve.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -412,61 +329,50 @@
     e os tokens que ele usa. Tudo é lido direto do código, então está sempre atualizado.</p>
 
     <div class="api-ficha">
-    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo">Nenhuma outra peça: tudo o que ela desenha sai da folha de estilo dela.</div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-gallery__count</code> <code>.yb-gallery__slide</code> <code>.yb-gallery__stage</code> <code>.yb-gallery__thumbs</code></span></div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:checked</code> · <code>:focus-visible</code> · <code>:hover</code></div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele aparece, mas não responde.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo">Nenhuma outra peça. Um átomo não usa outros componentes — é isso que faz dele átomo.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-panel--flat</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-panel__title</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo">Nenhum. A peça não muda por interação.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Só CSS.</div></div>
     </div>
-    <p class="rotulo">Tokens <span class="rotulo-conta">24</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">13</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>8</span></p>
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>4</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-border-emphasis</code><span class="tokens__valor">2px</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-border-strong)" aria-hidden="true"></i><code>--yb-border-strong</code><span class="tokens__valor">#B1B1B4</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-surface-sunken)" aria-hidden="true"></i><code>--yb-surface-sunken</code><span class="tokens__valor">#FAFAFA</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>2</span></p>
+        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>3</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-tracking-wide</code><span class="tokens__valor">0.04em</span></li>
-          <li><code>--yb-type-overline-size</code><span class="tokens__valor">0.6875rem</span></li>
+          <li><code>--yb-type-h4-weight</code><span class="tokens__valor">600</span></li>
+          <li><code>--yb-type-h4-track</code><span class="tokens__valor">-0.015em</span></li>
+          <li><code>--yb-type-h4-size</code><span class="tokens__valor">1.25rem</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>5</span></p>
+        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>3</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-chrome-h</code><span class="tokens__valor">calc(var(--yb-target-min) + var(--yb-space-4) * 2 + 1px)</span></li>
-          <li><code>--yb-space-1</code><span class="tokens__valor">0.25rem</span></li>
+          <li><code>--yb-space-6</code><span class="tokens__valor">1.5rem</span></li>
           <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
-          <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
-          <li><code>--yb-space-3</code><span class="tokens__valor">0.75rem</span></li>
+          <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>4</span></p>
+        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>1</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-radius-badge</code><span class="tokens__valor">4px</span></li>
-          <li><code>--yb-aspect-product</code><span class="tokens__valor">1 / 1</span></li>
-          <li><code>--yb-radius-media</code><span class="tokens__valor">8px</span></li>
-          <li><code>--yb-radius-sm</code><span class="tokens__valor">4px</span></li>
+          <li><code>--yb-radius-card</code><span class="tokens__valor">8px</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>5</span></p>
+        <p class="tokens__familia"><a href="../tokens/elevation.html">Elevação</a> <span>2</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-transition-surface</code><span class="tokens__valor">180ms cubic-bezier(.2, 0, 0, 1)</span></li>
-          <li><code>--yb-transition-control</code><span class="tokens__valor">120ms cubic-bezier(.2, 0, 0, 1)</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#CA235F</span></li>
-          <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>
-          <li><code>--yb-focus-width</code><span class="tokens__valor">2px</span></li>
+          <li><code>--yb-elevation-flat</code><span class="tokens__valor">none</span></li>
+          <li><code>--yb-elevation-card</code><span class="tokens__valor">0 1px 2px rgba(30,30,31,.06)</span></li>
         </ul>
       </div>
     </div>
@@ -484,24 +390,24 @@
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
         <p class="fn-cabeca">✓ Faça</p>
-        <div class="fn-palco"><p class="yb-field__label" style="margin:0">Miniaturas como <code>input type="radio"</code> + <code>label</code></p></div>
-        <p class="fn-legenda">Radios nativos: Tab entra no grupo, setas percorrem, e o CSS troca o slide.</p>
+        <div class="fn-palco"><div class="yb-panel" style="max-inline-size:18rem"><h3 class="yb-panel__title">Avisos do RH</h3><p>Três recados desta semana.</p></div></div>
+        <p class="fn-legenda">O título dentro do painel nomeia a área.</p>
       </div>
       <div class="fn-caso fn-caso--nao">
         <p class="fn-cabeca">✕ Não faça</p>
-        <div class="fn-palco"><p class="yb-field__label" style="margin:0">Miniaturas como <code>&lt;div onclick&gt;</code></p></div>
-        <p class="fn-legenda">Div com <code>onclick</code> não recebe Tab, não anda com as setas e não diz qual imagem está ativa.</p>
+        <div class="fn-palco"><div class="yb-panel" style="max-inline-size:18rem"><p>Três recados desta semana.</p></div></div>
+        <p class="fn-legenda">Caixa sem nome: para quem ouve a página, ela não existe.</p>
       </div>
     </div>
   </section>
 
   <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <ul class="bloco-lede"><li>As miniaturas são um grupo de <code>radio</code> nativo. As setas do teclado navegam entre elas de graça — não há <code>keydown</code> escrito para isso.</li><li>A foto grande troca por CSS com <code>:checked</code>. Sem JavaScript a galeria continua funcionando; o script só mantém o contador em dia.</li><li>Cada miniatura tem <code>title</code> e a foto grande tem <code>alt</code> com o nome do produto e o número da imagem — “image 3 de 5” diz onde a pessoa está.</li></ul>
+    <ul class="bloco-lede"><li>Não é região por si: quem dá nome à área é o título dentro dele. Painel com <code>&lt;h2&gt;</code> ou <code>&lt;h3&gt;</code> já entra no índice de cabeçalhos do leitor de tela.</li><li>Sem título visível, use <code>role="region"</code> com <code>aria-label</code>. Sem um dos dois a caixa é decoração, e o leitor passa reto.</li><li>O fio mede 1,25:1 e não carrega significado sozinho: ele agrupa, não informa. O que precisa ser lido está no texto dentro.</li></ul>
   </section>
   </div>
 
-  <!-- Gerada de organisms/pecas/gallery.html e organisms/ybera-organisms.css. Não edite à mão: ./build.sh -->
+  <!-- Gerada de atoms/pecas/panel.html e atoms/ybera-atoms.css. Não edite à mão: ./build.sh -->
 </main>
 
 <script src="../behavior/ybera-behavior.js"></script>
