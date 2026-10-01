@@ -2838,3 +2838,103 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 .yb-tabs__tab[disabled]{color:var(--yb-text-disabled); cursor:not-allowed}
 .yb-tabs__panel{padding-block-start:var(--yb-space-6)}
 .yb-tabs__panel[hidden]{display:none}
+
+/* =========================================================================
+   TOOLTIP — a frase curta que explica o gatilho, e só aparece quando pedida
+   Depende de: --yb-bg-inverse, --yb-text-inverse, --yb-z-tooltip
+
+   O QUE ELE NÃO É. Tooltip não é lugar de informação necessária, e isso é
+   limite do dispositivo, não gosto: num celular NÃO HÁ hover, e o balão nunca
+   abre. Quem só tem toque fica sem o conteúdo. Prazo de entrega, política de
+   troca, preço — tudo isso mora na tela. O tooltip explica o que já está
+   visível; ele não guarda o que falta.
+
+   É MOLÉCULA E NÃO ÁTOMO porque o gatilho é sempre outra peça — um Icon
+   button, um Button, um Link. O balão sozinho não é nada: ele existe preso a
+   alguma coisa que já existia.
+
+   SEM SETA, de propósito. O balão é escuro e nasce a 8px do gatilho: o vão
+   curto já amarra os dois, e quem olha não procura de onde ele saiu. A seta
+   custaria um pseudo-elemento que teria de virar de lado em `--below`, correr
+   atrás do canto em `--start` e `--end`, e que some em alto contraste —
+   quatro regras para dizer o que a distância já diz. O Dropdown chegou à
+   mesma conclusão e também não tem.
+
+   ELE NÃO SE VIRA SOZINHO. Perto do topo da tela o balão de cima sai do
+   quadro, e CSS não sabe onde a tela acaba. Quem monta escolhe: `--below`
+   quando o gatilho está no alto, `--start` e `--end` quando ele está na
+   beirada. Explícito e errado uma vez é melhor que automático e errado
+   sempre — a mesma régua do `.yb-dropdown--end`.
+   ========================================================================= */
+.yb-tooltip{position:relative; display:inline-flex}
+
+.yb-tooltip__bubble{
+  position:absolute; z-index:var(--yb-z-tooltip);
+  inset-block-end:calc(100% + var(--yb-space-2));
+  inset-inline-start:50%; transform:translateX(-50%);
+  inline-size:max-content; max-inline-size:16rem;
+  padding:var(--yb-space-2) var(--yb-space-3);
+  background:var(--yb-bg-inverse); color:var(--yb-text-inverse);
+  border-radius:var(--yb-radius-control);
+  box-shadow:var(--yb-elevation-dropdown);
+  font-size:var(--yb-type-body-sm-size);
+  line-height:var(--yb-line-height-base);
+  font-weight:var(--yb-font-weight-regular);
+  text-align:start;
+  opacity:0; visibility:hidden; pointer-events:none;
+  transition:opacity var(--yb-transition-control),
+             visibility var(--yb-transition-control);
+}
+/* `transform` não tem versão lógica: o `translateX` negativo puxa para a
+   esquerda da TELA, e em RTL o ponto de partida já é o outro lado. Sem este
+   par o balão sairia centrado em português e deslocado em árabe. Mesmo
+   remendo que o botão do Switch usa, pelo mesmo motivo.
+   Vem antes dos modificadores de canto porque empata em peso com eles, e
+   `--start` e `--end` precisam poder zerar o deslocamento. */
+[dir="rtl"] .yb-tooltip__bubble{transform:translateX(50%)}
+
+/* Embaixo — para gatilho colado no topo da tela. */
+.yb-tooltip--below > .yb-tooltip__bubble{
+  inset-block:calc(100% + var(--yb-space-2)) auto;
+}
+/* Pelos cantos — para gatilho na beirada. Aqui não há o que centrar, então o
+   deslocamento sai de cena e sobra a propriedade lógica, que vira sozinha. */
+.yb-tooltip--start > .yb-tooltip__bubble{
+  inset-inline:0 auto; transform:none;
+}
+.yb-tooltip--end > .yb-tooltip__bubble{
+  inset-inline:auto 0; transform:none;
+}
+
+/* ABRE NO PONTEIRO E NO TECLADO, e os dois são obrigatórios (WCAG 1.4.13).
+   `:has(:focus-visible)` e não `:focus-within`: quem clica com o mouse já
+   recebeu o balão pelo hover, e abrir de novo no clique faria o balão piscar
+   embaixo do próprio cursor.
+
+   `pointer-events` volta a `auto` junto com a abertura — sem isso o balão é
+   intocável, e a 1.4.13 exige que dê para levar o ponteiro ATÉ ele (texto
+   longo que a pessoa quer ler com calma, ou selecionar). Como ele mora dentro
+   do `.yb-tooltip`, o hover do conjunto continua valendo enquanto o ponteiro
+   estiver sobre o balão. */
+.yb-tooltip:hover > .yb-tooltip__bubble,
+.yb-tooltip:has(:focus-visible) > .yb-tooltip__bubble{
+  opacity:1; visibility:visible; pointer-events:auto;
+}
+
+/* ESC FECHA, e é a terceira exigência da 1.4.13 — sem mexer o foco de lugar.
+   Quem marca é o comportamento (`data-yb-tooltip`); aqui só se obedece. Vem
+   DEPOIS das regras de abrir porque empata em peso com elas, e num empate
+   quem vem por último ganha.
+
+   Sem o arquivo de comportamento o balão continua abrindo e fechando no
+   ponteiro e no teclado — só o Esc não responde. É o degrau certo para ficar
+   preso: a peça perde um atalho, não o conteúdo. */
+.yb-tooltip[data-yb-dismissed] > .yb-tooltip__bubble{
+  opacity:0; visibility:hidden; pointer-events:none;
+}
+
+/* Em alto contraste a sombra some e o fundo vira cor de sistema; sem borda, o
+   balão encosta no que está atrás e vira uma mancha sem fim definido. */
+@media (forced-colors: active){
+  .yb-tooltip__bubble{border:var(--yb-border-hairline) solid}
+}

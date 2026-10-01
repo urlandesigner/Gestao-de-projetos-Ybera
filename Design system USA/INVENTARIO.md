@@ -3,7 +3,7 @@
 <!-- GERADO por tools/inventario.mjs. Não edite à mão: rode ./build.sh.
      A fonte é o CSS. Se uma linha aqui está errada, o errado é o código. -->
 
-59 peças no bundle — 45 estáveis, 14 em beta, 0 em alfa.
+60 peças no bundle — 45 estáveis, 15 em beta, 0 em alfa.
 
 ## Como ler a maturidade
 
@@ -61,6 +61,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | REVIEW | `.yb-reviews` | Molécula | Estável | — | 1 | 28 | sim | sim | sim | sim |
 | TABS | `.yb-tabs` | Molécula | Beta | — | 3 | 17 | sim | sim | sim | — |
 | TOAST | `.yb-toast` | Molécula | Beta | 3 | 1 | 30 | sim | — | sim | — |
+| TOOLTIP | `.yb-tooltip` | Molécula | Beta | 3 | 2 | 12 | sim | sim | sim | — |
 | TRACK | `.yb-track` | Molécula | Beta | 2 | 1 | 8 | sim | — | sim | sim |
 | VARIANT PICKER | `.yb-swatches` | Molécula | Estável | 2 | 4 | 37 | sim | sim | sim | sim |
 | VERTICAL VIDEO CAROUSEL | `.yb-video` | Molécula | Beta | — | 1 | 12 | sim | — | sim | sim |

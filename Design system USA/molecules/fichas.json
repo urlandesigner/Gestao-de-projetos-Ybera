@@ -1227,5 +1227,36 @@
         }
       ]
     }
+  },
+  "tooltip": {
+    "a11y": [
+      "O gatilho aponta para o balão com <code>aria-describedby</code>, e o balão leva <code>role=\"tooltip\"</code>. É assim que quem ouve a página recebe a frase junto com o nome do botão.",
+      "Abre no ponteiro <b>e</b> no teclado. Fecha com Esc sem tirar o foco do lugar — as três exigências da WCAG 1.4.13 para conteúdo que aparece no hover.",
+      "Dá para levar o ponteiro até o balão sem ele sumir: ele mora dentro do gatilho, então o hover do conjunto continua valendo.",
+      "Texto branco sobre grafite mede 16.66:1. Em alto contraste o balão ganha borda, senão vira mancha sem fim definido."
+    ],
+    "faca": {
+      "legenda": "Explica o que já está na tela: o preço aparece, o tooltip diz o que ele inclui.",
+      "html": "<span class=\"yb-tooltip\" data-yb-tooltip><button class=\"yb-iconbtn yb-iconbtn--square\" type=\"button\" aria-label=\"About this price\" aria-describedby=\"tip-faca\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-info\"/></svg></button><span class=\"yb-tooltip__bubble\" id=\"tip-faca\" role=\"tooltip\">Price before taxes.</span></span>"
+    },
+    "naoFaca": {
+      "legenda": "Prazo de entrega escondido no balão: no celular não há hover, e ninguém lê.",
+      "html": "<span class=\"yb-tooltip\" data-yb-tooltip><button class=\"yb-iconbtn yb-iconbtn--square\" type=\"button\" aria-label=\"Shipping\" aria-describedby=\"tip-naofaca\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-truck\"/></svg></button><span class=\"yb-tooltip__bubble\" id=\"tip-naofaca\" role=\"tooltip\">Arrives in 5 to 7 business days.</span></span>"
+    },
+    "anatomia": {
+      "largura": "320px",
+      "partes": [
+        {
+          "alvo": ".yb-tooltip",
+          "nome": "Conjunto",
+          "texto": "Segura o gatilho e o balão. É dele o <code>position:relative</code> e é nele que o Esc marca o fechamento."
+        },
+        {
+          "alvo": ".yb-tooltip__bubble",
+          "nome": "Balão",
+          "texto": "Nasce 8px acima do gatilho, com largura máxima de 16rem. Sem seta: o vão curto já amarra os dois."
+        }
+      ]
+    }
   }
 }

@@ -1,0 +1,57 @@
+<h2>Tooltip</h2>
+    <p class="when">A frase curta que explica um gatilho e some depois. Use para esclarecer o que já está na tela — nunca para guardar o que falta nela.</p>
+    <div class="demo" style="min-block-size:7rem; display:flex; align-items:center; justify-content:center">
+      <span class="yb-tooltip" data-yb-tooltip>
+        <button class="yb-iconbtn yb-iconbtn--square" type="button" aria-label="About this price" aria-describedby="tip-price">
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-info"/></svg>
+        </button>
+        <span class="yb-tooltip__bubble" id="tip-price" role="tooltip">Price before taxes. Taxes are shown at checkout.</span>
+      </span>
+    </div>
+    <h3 class="row-label">Embaixo — <code>--below</code></h3>
+    <div class="demo" style="min-block-size:7rem; display:flex; align-items:center; justify-content:center">
+      <span class="yb-tooltip yb-tooltip--below" data-yb-tooltip>
+        <button class="yb-btn yb-btn--secondary yb-btn--sm" type="button" aria-describedby="tip-below">Free shipping</button>
+        <span class="yb-tooltip__bubble" id="tip-below" role="tooltip">On orders over $99, within the US.</span>
+      </span>
+    </div>
+    <h3 class="row-label">Pelos cantos — <code>--start</code> e <code>--end</code></h3>
+    <div class="demo" style="display:flex; justify-content:space-between; min-block-size:7rem; align-items:flex-end">
+      <span class="yb-tooltip yb-tooltip--start" data-yb-tooltip>
+        <button class="yb-iconbtn yb-iconbtn--square" type="button" aria-label="Left edge" aria-describedby="tip-start">
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-info"/></svg>
+        </button>
+        <span class="yb-tooltip__bubble" id="tip-start" role="tooltip">Na beirada esquerda o balão centrado sairia do quadro.</span>
+      </span>
+      <span class="yb-tooltip yb-tooltip--end" data-yb-tooltip>
+        <button class="yb-iconbtn yb-iconbtn--square" type="button" aria-label="Right edge" aria-describedby="tip-end">
+          <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-info"/></svg>
+        </button>
+        <span class="yb-tooltip__bubble" id="tip-end" role="tooltip">Na beirada direita vale o mesmo, para o outro lado.</span>
+      </span>
+    </div>
+    <div class="note">
+      <b>Nada essencial mora aqui</b>
+      <p>No celular não existe hover, e o balão nunca abre: quem só tem toque fica sem
+      o que estiver dentro dele. Prazo, política de troca e preço ficam na tela. O
+      tooltip explica o que já está visível.</p>
+    </div>
+    <div class="note">
+      <b>Ele não se vira sozinho</b>
+      <p>Perto do topo da tela o balão de cima sai do quadro, e o CSS não sabe onde a
+      tela acaba. Quem monta escolhe: <code>--below</code> para gatilho no alto,
+      <code>--start</code> e <code>--end</code> para gatilho na beirada.</p>
+    </div>
+    <div class="note">
+      <b>Sem seta, de propósito</b>
+      <p>O balão é escuro e nasce a 8px do gatilho — o vão curto já amarra os dois. A
+      seta custaria um desenho que vira de lado em <code>--below</code>, corre atrás do
+      canto em <code>--start</code> e some em alto contraste. O Dropdown chegou à mesma
+      conclusão.</p>
+    </div>
+    <div class="note">
+      <b>Sem o arquivo de comportamento, só o Esc falta</b>
+      <p>Abrir e fechar é do CSS. O comportamento (<code>data-yb-tooltip</code>) acrescenta
+      uma coisa só: fechar com Esc, sem tirar o foco do lugar. A peça perde um atalho,
+      não o conteúdo.</p>
+    </div>

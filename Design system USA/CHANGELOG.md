@@ -9,6 +9,18 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 [GOVERNANCA.md](GOVERNANCA.md), componente novo pede versão **menor** (0.13.0).
 
 ### Adicionado
+- **Tooltip.** A frase curta que explica um gatilho e some depois. É molécula e
+  não átomo porque o gatilho é sempre outra peça — o balão sozinho não é nada.
+  Abrir e fechar é do CSS (hover e `:has(:focus-visible)`); o comportamento
+  (`data-yb-tooltip`) acrescenta uma coisa só, o Esc, que é a terceira exigência
+  da WCAG 1.4.13 e a única que o CSS não alcança. Sem o arquivo de comportamento
+  a peça perde o atalho, não o conteúdo. **Nada essencial mora aqui:** no celular
+  não existe hover e o balão nunca abre — prazo, troca e preço ficam na tela.
+  Três variantes de posição, porque CSS não sabe onde a tela acaba: `--below`
+  para gatilho no alto, `--start` e `--end` para gatilho na beirada. Sem seta,
+  pela mesma razão do Dropdown: o vão de 8px já amarra o balão ao gatilho, e a
+  seta custaria quatro regras para dizer o que a distância diz. Nenhum token
+  novo — o `--yb-z-tooltip` existia desde sempre e só o `.yb-skip-link` usava.
 - **Divider.** O filete entre dois assuntos. É `<hr>`, não `<div>` com borda: o
   elemento já significa "mudou de assunto" para quem ouve a página. A espessura
   é `block-size` e não `border`, porque `<hr>` nasce com borda dos dois lados e

@@ -1039,6 +1039,47 @@
     });
   }
 
+  /* =======================================================================
+     TOOLTIP — so o Esc
+     O abrir e fechar e do CSS: hover e `:has(:focus-visible)` dao conta, e
+     dois caminhos para o mesmo estado e um para desencontrar. O que o CSS nao
+     tem e tecla.
+
+     A WCAG 1.4.13 pede tres coisas de conteudo que aparece no hover ou no
+     foco: que de para levar o ponteiro ate ele, que ele fique enquanto o
+     gatilho estiver ativo, e que de para FECHAR sem tirar o foco do lugar. As
+     duas primeiras o CSS resolve. A terceira e esta funcao.
+
+     A marca e no conjunto, nao no balao: o seletor que esconde e
+     `.yb-tooltip[data-yb-dismissed]`, e ele precisa empatar em peso com os de
+     abrir para o "ultimo ganha" valer.
+
+     A marca sai quando o ponteiro ou o foco SAEM — senao o balao ficaria mudo
+     para sempre depois do primeiro Esc, e a pessoa concluiria que ele quebrou.
+     ===================================================================== */
+  function ligarTooltip(raiz) {
+    if (raiz.hasAttribute('data-yb-bound')) return;
+    raiz.setAttribute('data-yb-bound', '');
+
+    function soltar() { raiz.removeAttribute('data-yb-dismissed'); }
+
+    /* No conjunto e nao no gatilho: o foco pode estar dentro do proprio balao
+       (link no texto), e dali o Esc tem de fechar do mesmo jeito. */
+    raiz.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      /* So engole a tecla se havia o que fechar. Dentro de um dialogo, um Esc
+         comido aqui seria um dialogo que nao fecha na primeira tentativa. */
+      if (raiz.hasAttribute('data-yb-dismissed')) return;
+      e.stopPropagation();
+      raiz.setAttribute('data-yb-dismissed', '');
+    });
+
+    raiz.addEventListener('mouseleave', soltar);
+    raiz.addEventListener('focusout', function (e) {
+      if (!raiz.contains(e.relatedTarget)) soltar();
+    });
+  }
+
   function init(raiz) {
     var r = raiz || document;
     r.querySelectorAll('[data-yb-gallery]').forEach(sincronizarGaleria);
@@ -1049,6 +1090,7 @@
     r.querySelectorAll('[data-yb-buybar]').forEach(ligarBuybar);
     r.querySelectorAll('[data-yb-showcases]').forEach(ligarVitrine);
     r.querySelectorAll('[data-yb-tabs]').forEach(ligarTabs);
+    r.querySelectorAll('[data-yb-tooltip]').forEach(ligarTooltip);
     ligarTrilhos(r);
     // os blocos fora deste fechamento (navegacao, relogio) escutam este evento
     document.dispatchEvent(new CustomEvent('yb:init', { detail: { raiz: r } }));

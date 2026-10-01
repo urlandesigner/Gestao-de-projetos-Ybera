@@ -5,14 +5,14 @@ projeto**: a loja US roda Shopify e a BR roda Wake Commerce — CSS custom prope
 é o único denominador comum entre as duas.
 
 Versão **0.12.1** — fundação de 372 tokens e uma escada atômica de 18 átomos,
-23 moléculas, 16 organismos e 1 template, com
+24 moléculas, 16 organismos e 1 template, com
 comportamento, 42 ícones, governança, decisões registradas e 141 checagens
 automatizadas.
 
 | Onde olhar | O quê |
 |---|---|
 | [PRINCIPIOS.md](PRINCIPIOS.md) | os cinco princípios, **em ordem** — o que ganha quando dois se chocam |
-| [INVENTARIO.md](INVENTARIO.md) | as 59 peças com maturidade conferida a cada build |
+| [INVENTARIO.md](INVENTARIO.md) | as 60 peças com maturidade conferida a cada build |
 | [decision-log/](decision-log/) | por que o sistema é assim, decisão por decisão |
 | [CONTRIBUINDO.md](CONTRIBUINDO.md) | a mecânica: laço local, o que o CI reprova |
 | [GOVERNANCA.md](GOVERNANCA.md) · [PLANO.md](PLANO.md) | como muda · como entra na loja |

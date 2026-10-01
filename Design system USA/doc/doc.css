@@ -902,6 +902,20 @@ details.note > :last-child{padding-block-end:var(--yb-space-4)}
 .anat__peca > .yb-dropdown{display:flex; flex-direction:column; align-items:flex-start; gap:var(--yb-space-1)}
 .anat__peca > .yb-dropdown--end{align-items:flex-end}
 .anat__peca > .yb-dropdown .yb-dropdown__panel{position:static; transition:none}
+/* O Tooltip, pelo mesmo motivo dos dois acima, e com um agravante: ele nasce
+   FECHADO, e so abre no hover ou no foco. No quadro da anatomia o balao media
+   0px e o fio apontava para o nada — o desenho explicava um balao que ninguem
+   via. Aqui ele entra no fluxo, acima do gatilho, que e onde ele abre de
+   verdade. `column-reverse` porque na marcacao o gatilho vem primeiro. */
+.anat__peca > .yb-tooltip{flex-direction:column-reverse; align-items:center; gap:var(--yb-space-2)}
+.anat__peca > .yb-tooltip .yb-tooltip__bubble{
+  position:static; transform:none; opacity:1; visibility:visible; transition:none;
+}
+/* Dentro de OUTRA peca o balao continua fechado: passar o mouse na legenda da
+   anatomia do Buy box abriria um balao por cima dela, e o desenho passaria a
+   mostrar a anatomia de outra ficha. Mesma regra do painel do Nav e da conta. */
+.anat__peca > :not(.yb-tooltip) .yb-tooltip__bubble{display:none}
+
 /* DENTRO DE OUTRA PECA, o painel fica fechado — e fechado mesmo no hover. Na
    anatomia do Header e na da barra do Nav, passar o mouse abria o submenu ou
    a conta por cima da legenda, e o desenho passava a mostrar a anatomia de
