@@ -1080,6 +1080,52 @@
     });
   }
 
+  /* =======================================================================
+     POPOVER — Esc e clique fora
+     O abrir e fechar e do <details>: ele ja faz isso no clique, no Enter e na
+     barra de espaco, e ja anuncia aberto ou fechado sem aria escrito a mao.
+     O que o elemento nativo NAO faz sao estas duas, e sao as duas que
+     diferenciam um painel ancorado de um acordeao:
+
+     ESC FECHA E DEVOLVE O FOCO ao gatilho. Sem a devolucao o foco fica num
+     painel que acabou de sumir, e o proximo Tab recomeca do topo da pagina —
+     quem navega por teclado perde o lugar.
+
+     CLIQUE FORA FECHA. Painel ancorado nao e secao de pagina: ele cobre o que
+     esta atras, e a expectativa de quem clica longe dele e que ele saia da
+     frente. O ouvinte e no documento e nasce UMA vez por peca, mas so faz
+     conta quando o <details> esta aberto.
+     ===================================================================== */
+  function ligarPopover(raiz) {
+    if (raiz.hasAttribute('data-yb-bound')) return;
+    raiz.setAttribute('data-yb-bound', '');
+    var gatilho = raiz.querySelector('summary');
+    if (!gatilho) return;
+
+    function fechar(devolverFoco) {
+      if (!raiz.open) return;
+      raiz.open = false;
+      if (devolverFoco) gatilho.focus();
+    }
+
+    raiz.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape' || !raiz.open) return;
+      /* Engole a tecla so quando havia painel aberto: dentro de um dialogo,
+         um Esc comido a toa seria um dialogo que nao fecha na primeira vez. */
+      e.stopPropagation();
+      e.preventDefault();
+      fechar(true);
+    });
+
+    /* `pointerdown` e nao `click`: no clique, um botao que some entre o
+       mousedown e o mouseup nunca recebe o evento, e o painel ficaria aberto.
+       Sem devolver o foco — quem clicou longe daqui ja escolheu para onde ir. */
+    document.addEventListener('pointerdown', function (e) {
+      if (!raiz.open || raiz.contains(e.target)) return;
+      fechar(false);
+    });
+  }
+
   function init(raiz) {
     var r = raiz || document;
     r.querySelectorAll('[data-yb-gallery]').forEach(sincronizarGaleria);
@@ -1091,6 +1137,7 @@
     r.querySelectorAll('[data-yb-showcases]').forEach(ligarVitrine);
     r.querySelectorAll('[data-yb-tabs]').forEach(ligarTabs);
     r.querySelectorAll('[data-yb-tooltip]').forEach(ligarTooltip);
+    r.querySelectorAll('[data-yb-popover]').forEach(ligarPopover);
     ligarTrilhos(r);
     // os blocos fora deste fechamento (navegacao, relogio) escutam este evento
     document.dispatchEvent(new CustomEvent('yb:init', { detail: { raiz: r } }));

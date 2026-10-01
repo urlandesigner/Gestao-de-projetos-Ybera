@@ -1258,5 +1258,46 @@
         }
       ]
     }
+  },
+  "popover": {
+    "a11y": [
+      "O gatilho é <code>&lt;summary&gt;</code>: ele já é botão e já anuncia aberto ou fechado. Não escreva <code>aria-expanded</code> — duplicado, ele passa a brigar com o estado nativo.",
+      "Esc fecha e devolve o foco ao gatilho. Sem a devolução o foco fica num painel que sumiu, e o próximo Tab recomeça do topo da página.",
+      "O painel não prende o foco, de propósito: quem precisa prender está pedindo um <a href=\"dialog.html\">Dialog</a>, não um painel ancorado.",
+      "Clique fora fecha. Painel ancorado cobre o que está atrás, e quem clica longe dele espera que ele saia da frente."
+    ],
+    "faca": {
+      "legenda": "Conteúdo livre: um título, uma explicação e um link para a página inteira.",
+      "html": "<details class=\"yb-popover\" data-yb-popover open><summary class=\"yb-btn yb-btn--secondary yb-btn--sm yb-popover__trigger\">Size guide <svg class=\"yb-icon yb-icon--sm yb-popover__chevron\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-chevron-down\"/></svg></summary><div class=\"yb-popover__panel\"><h3 class=\"yb-popover__title\">How to measure</h3><p>Keep the tape level and snug.</p><a class=\"yb-link\" href=\"#demos\">Full size chart</a></div></details>"
+    },
+    "naoFaca": {
+      "legenda": "Lista de escolhas dentro do Popover: isso é Dropdown, e ele já fecha ao escolher.",
+      "html": "<details class=\"yb-popover\" data-yb-popover open><summary class=\"yb-btn yb-btn--secondary yb-btn--sm yb-popover__trigger\">Sort <svg class=\"yb-icon yb-icon--sm yb-popover__chevron\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-chevron-down\"/></svg></summary><div class=\"yb-popover__panel\"><p><a class=\"yb-link\" href=\"#demos\">Best selling</a></p><p><a class=\"yb-link\" href=\"#demos\">Price, low to high</a></p><p><a class=\"yb-link\" href=\"#demos\">Newest</a></p></div></details>"
+    },
+    "anatomia": {
+      "largura": "320px",
+      "partes": [
+        {
+          "alvo": ".yb-popover__trigger",
+          "nome": "Gatilho",
+          "texto": "É o <code>&lt;summary&gt;</code>, vestido com as classes do Button. O marcador nativo sai e o <code>display</code> vira <code>inline-flex</code>, senão o ícone desalinha do rótulo."
+        },
+        {
+          "alvo": ".yb-popover__panel",
+          "nome": "Painel",
+          "texto": "Abre 8px abaixo do gatilho, nunca mais estreito que ele e no máximo 20rem. Conteúdo livre: texto, link, botão."
+        },
+        {
+          "alvo": ".yb-popover__title",
+          "nome": "Título",
+          "texto": "Opcional. Quando o painel tem mais de uma frase, é ele que diz do que se trata antes da leitura começar."
+        },
+        {
+          "alvo": ".yb-popover__chevron",
+          "nome": "Seta",
+          "texto": "Opcional, e o único sinal no próprio gatilho de que há um painel preso nele. Dá meia-volta ao abrir, igual à do <a href=\"dropdown.html\">Dropdown</a>."
+        }
+      ]
+    }
   }
 }

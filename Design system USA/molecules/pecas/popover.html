@@ -1,0 +1,57 @@
+<h2>Popover</h2>
+    <p class="when">Painel ancorado num gatilho, com conteúdo livre dentro: texto, link, botão. Abre no clique e fica. Para uma lista de opções use o <a href="dropdown.html">Dropdown</a>; para uma frase que ninguém clica, o <a href="tooltip.html">Tooltip</a>.</p>
+    <div class="demo demo--popover">
+      <details class="yb-popover" data-yb-popover open>
+        <summary class="yb-btn yb-btn--secondary yb-btn--sm yb-popover__trigger">Size guide <svg class="yb-icon yb-icon--sm yb-popover__chevron" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></summary>
+        <div class="yb-popover__panel">
+          <h3 class="yb-popover__title">How to measure</h3>
+          <p>Measure around the fullest part of the bust, keeping the tape level and snug.</p>
+          <a class="yb-link" href="#demos">Full size chart</a>
+        </div>
+      </details>
+    </div>
+    <h3 class="row-label">Pelo fim — <code>--end</code></h3>
+    <div class="demo demo--popover demo--popover-fim">
+      <details class="yb-popover yb-popover--end" data-yb-popover open>
+        <summary class="yb-btn yb-btn--ghost yb-btn--sm yb-popover__trigger">Shipping <svg class="yb-icon yb-icon--sm yb-popover__chevron" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></summary>
+        <div class="yb-popover__panel">
+          <h3 class="yb-popover__title">Free over $99</h3>
+          <p>Orders ship within one business day. Tracking arrives by email.</p>
+        </div>
+      </details>
+    </div>
+    <h3 class="row-label">Pelo alto — <code>--above</code></h3>
+    <div class="demo demo--popover-cima">
+      <details class="yb-popover yb-popover--above" data-yb-popover open>
+        <summary class="yb-btn yb-btn--secondary yb-btn--sm yb-popover__trigger">Why this price <svg class="yb-icon yb-icon--sm yb-popover__chevron" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></summary>
+        <div class="yb-popover__panel">
+          <p>The price already includes the professional discount. Taxes are added at checkout.</p>
+        </div>
+      </details>
+    </div>
+    <div class="note">
+      <b>Qual dos quatro usar</b>
+      <p>Lista de opções, e escolher uma fecha o painel: <a href="dropdown.html">Dropdown</a>.
+      Frase curta que ninguém clica: <a href="tooltip.html">Tooltip</a>. Decisão que não
+      pode esperar, com a tela travada atrás: <a href="dialog.html">Dialog</a>. O resto é
+      Popover.</p>
+    </div>
+    <div class="note">
+      <b>É <code>&lt;details&gt;</code>, e isso não é economia de script</b>
+      <p>O elemento já anuncia aberto ou fechado para quem ouve a página, sem
+      <code>aria-expanded</code> escrito à mão; já abre no Enter e na barra de espaço; e já
+      é achado pela busca da própria página. Com <code>&lt;div&gt;</code> e script, as três
+      viram código — e a primeira que quebrasse quebraria calada.</p>
+    </div>
+    <div class="note">
+      <b>Sem o arquivo de comportamento, faltam dois atalhos</b>
+      <p>Abrir e fechar no gatilho é do <code>&lt;details&gt;</code>. O comportamento
+      (<code>data-yb-popover</code>) acrescenta Esc, devolvendo o foco ao gatilho, e clique
+      fora. A peça perde os atalhos, não o conteúdo.</p>
+    </div>
+    <div class="note">
+      <b>Ele não se vira sozinho</b>
+      <p>O painel abre embaixo e pelo começo. Perto da beirada ou do pé da tela quem monta
+      escolhe: <code>--end</code> e <code>--above</code>. CSS não sabe onde a tela acaba, e
+      um palpite errado sempre é pior que uma escolha explícita.</p>
+    </div>

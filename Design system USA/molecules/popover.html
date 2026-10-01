@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Alert — Ybera Design System</title>
+<title>Popover — Ybera Design System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
@@ -65,7 +65,7 @@
     <ul>
       <li><a href="../molecules/accordion.html">Accordion</a></li>
       <li><a href="../molecules/account.html">Account menu</a></li>
-      <li><a href="../molecules/alert.html" aria-current="page">Alert</a></li>
+      <li><a href="../molecules/alert.html">Alert</a></li>
       <li><a href="../atoms/avatar.html">Avatar</a></li>
       <li><a href="../atoms/badge.html">Badge</a></li>
       <li><a href="../molecules/bannerhero.html">Banner hero</a></li>
@@ -90,7 +90,7 @@
       <li><a href="../molecules/pagination.html">Pagination</a></li>
       <li><a href="../atoms/panel.html">Panel</a></li>
       <li><a href="../molecules/partner.html">Partner</a></li>
-      <li><a href="../molecules/popover.html">Popover</a></li>
+      <li><a href="../molecules/popover.html" aria-current="page">Popover</a></li>
       <li><a href="../molecules/post.html">Post</a></li>
       <li><a href="../molecules/price.html">Price</a></li>
       <li><a href="../atoms/progress.html">Progress bar</a></li>
@@ -161,24 +161,24 @@
     <nav class="ficha-trilha" aria-label="Você está aqui">
       <a href="../components/index.html">Components</a>
       <span aria-hidden="true">/</span>
-      <a href="index.html#alert">Molecules</a>
+      <a href="index.html#popover">Molecules</a>
       <span aria-hidden="true">/</span>
-      <b aria-current="page">Alert</b>
+      <b aria-current="page">Popover</b>
     </nav>
     <nav class="ficha-passo" aria-label="Peça anterior e próxima">
-      <a href="account.html" rel="prev"><span aria-hidden="true">←</span> Account menu</a>
-      <a href="bannerhero.html" rel="next">Banner hero <span aria-hidden="true">→</span></a>
+      <a href="partner.html" rel="prev"><span aria-hidden="true">←</span> Partner</a>
+      <a href="post.html" rel="next">Post <span aria-hidden="true">→</span></a>
     </nav>
   </div>
-  <h1 class="ficha-titulo">Alert</h1>
-  <p class="ficha-quando">Mensagem que fica na página para avisar algo importante, como erro ou sucesso, e pode ter uma ação. Mostre uma de cada vez.</p>
+  <h1 class="ficha-titulo">Popover</h1>
+  <p class="ficha-quando">Painel ancorado num gatilho, com conteúdo livre dentro: texto, link, botão. Abre no clique e fica. Para uma lista de opções use o <a href="dropdown.html">Dropdown</a>; para uma frase que ninguém clica, o <a href="tooltip.html">Tooltip</a>.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
        aba mostra por extenso, com os nomes. Número sem o nome ao lado é um
        resumo de algo que está a um clique. -->
   <ul class="ficha-fatos">
-    <li>Classe base <b><code>.yb-alert</code></b></li>
+    <li>Classe base <b><code>.yb-popover</code></b></li>
   </ul>
 
   <!-- A FICHA INTEIRA EM ABAS, e nada solto embaixo delas.
@@ -201,47 +201,61 @@
   <div class="abas" data-doc-tabs>
   <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
-    <h3 class="row-label">Variant <code>--success</code></h3>
-    <div class="demo demo--stack">
-      <div class="yb-alert yb-alert--success" role="status"><svg class="yb-icon yb-alert__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg><div class="yb-alert__body"><b class="yb-alert__title">Order confirmed</b><p>We sent the tracking number to you@example.com.</p></div><button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss order confirmed"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div>
+    <div class="demo demo--popover">
+      <details class="yb-popover" data-yb-popover open>
+        <summary class="yb-btn yb-btn--secondary yb-btn--sm yb-popover__trigger">Size guide <svg class="yb-icon yb-icon--sm yb-popover__chevron" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></summary>
+        <div class="yb-popover__panel">
+          <h3 class="yb-popover__title">How to measure</h3>
+          <p>Measure around the fullest part of the bust, keeping the tape level and snug.</p>
+          <a class="yb-link" href="#demos">Full size chart</a>
+        </div>
+      </details>
     </div>
-    <h3 class="row-label">Variant <code>--warning</code></h3>
-    <div class="demo demo--stack">
-      <div class="yb-alert yb-alert--warning" role="status"><svg class="yb-icon yb-alert__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-alert"/></svg><div class="yb-alert__body"><b class="yb-alert__title">Only 3 left</b><p>This size is running low.</p></div><button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss only 3 left"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div>
+    <h3 class="row-label">Pelo fim — <code>--end</code></h3>
+    <div class="demo demo--popover demo--popover-fim">
+      <details class="yb-popover yb-popover--end" data-yb-popover open>
+        <summary class="yb-btn yb-btn--ghost yb-btn--sm yb-popover__trigger">Shipping <svg class="yb-icon yb-icon--sm yb-popover__chevron" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></summary>
+        <div class="yb-popover__panel">
+          <h3 class="yb-popover__title">Free over $99</h3>
+          <p>Orders ship within one business day. Tracking arrives by email.</p>
+        </div>
+      </details>
     </div>
-    <h3 class="row-label">Variant <code>--danger</code></h3>
-    <div class="demo demo--stack">
-      <div class="yb-alert yb-alert--danger" role="alert"><svg class="yb-icon yb-alert__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg><div class="yb-alert__body"><b class="yb-alert__title">Payment declined</b><p>Your bank rejected the charge. Try another card or contact your bank.</p></div><button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss payment declined"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div>
+    <h3 class="row-label">Pelo alto — <code>--above</code></h3>
+    <div class="demo demo--popover-cima">
+      <details class="yb-popover yb-popover--above" data-yb-popover open>
+        <summary class="yb-btn yb-btn--secondary yb-btn--sm yb-popover__trigger">Why this price <svg class="yb-icon yb-icon--sm yb-popover__chevron" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></summary>
+        <div class="yb-popover__panel">
+          <p>The price already includes the professional discount. Taxes are added at checkout.</p>
+        </div>
+      </details>
     </div>
-    <h3 class="row-label">Variant <code>--info</code></h3>
-    <div class="demo demo--stack">
-      <div class="yb-alert yb-alert--info" role="status"><svg class="yb-icon yb-alert__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-info"/></svg><div class="yb-alert__body"><b class="yb-alert__title">Free shipping</b><p>Add $12.10 more to qualify for free standard shipping.</p></div><button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss free shipping"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div>
-    </div>
-    <details class="note"><summary>Um ícone por variante, e não um para todas</summary>
-      <p>A barra colorida da esquerda saiu e o ícone entrou no lugar. A barra dizia
-      a severidade só pela cor, e cor sozinha não informa (WCAG 1.4.1): quem não
-      distingue âmbar de vermelho via dois retângulos iguais.</p>
-      <p>Por isso <code>--warning</code> e <code>--danger</code> têm glifos
-      diferentes — triângulo e círculo com X. São justamente os dois que se
-      confundem; dar o mesmo ícone aos dois devolveria a cor como única
-      diferença, que é de onde viemos.</p>
+    <details class="note"><summary>Qual dos quatro usar</summary>
+      <p>Lista de opções, e escolher uma fecha o painel: <a href="dropdown.html">Dropdown</a>.
+      Frase curta que ninguém clica: <a href="tooltip.html">Tooltip</a>. Decisão que não
+      pode esperar, com a tela travada atrás: <a href="dialog.html">Dialog</a>. O resto é
+      Popover.</p>
     </details>
-    <details class="note"><summary>Fechar remove, não esconde</summary>
-      <p>O botão apaga o alerta do DOM. Um nó escondido que sobra continua sendo
-      lido por quem navega por marcos — e o alerta some porque a pessoa leu e
-      resolveu, não porque deixou de importar.</p>
-      <p>O alvo tem os 44px da casa, entregues por margem negativa: o controle
-      não infla a altura do alerta, a caixa cresce para fora.</p>
+    <details class="note"><summary>É <code>&lt;details&gt;</code>, e isso não é economia de script</summary>
+      <p>O elemento já anuncia aberto ou fechado para quem ouve a página, sem
+      <code>aria-expanded</code> escrito à mão; já abre no Enter e na barra de espaço; e já
+      é achado pela busca da própria página. Com <code>&lt;div&gt;</code> e script, as três
+      viram código — e a primeira que quebrasse quebraria calada.</p>
     </details>
-    <details class="note"><summary>role="alert" só no que interrompe</summary>
-      <p>O de erro usa <code>role="alert"</code> e interrompe o leitor de tela na hora.
-      Os outros usam <code>role="status"</code> e esperam a pausa. Usar
-      <code>alert</code> em tudo transforma o leitor de tela em ruído.</p>
+    <details class="note"><summary>Sem o arquivo de comportamento, faltam dois atalhos</summary>
+      <p>Abrir e fechar no gatilho é do <code>&lt;details&gt;</code>. O comportamento
+      (<code>data-yb-popover</code>) acrescenta Esc, devolvendo o foco ao gatilho, e clique
+      fora. A peça perde os atalhos, não o conteúdo.</p>
+    </details>
+    <details class="note"><summary>Ele não se vira sozinho</summary>
+      <p>O painel abre embaixo e pelo começo. Perto da beirada ou do pé da tela quem monta
+      escolhe: <code>--end</code> e <code>--above</code>. CSS não sabe onde a tela acaba, e
+      um palpite errado sempre é pior que uma escolha explícita.</p>
     </details>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">
-      <iframe src="solo.html?c=alert" title="Alert em 375px"
+      <iframe src="solo.html?c=popover" title="Popover em 375px"
               width="375" height="420" loading="lazy"></iframe>
     </div>
 
@@ -256,7 +270,7 @@
     tokens desta peça, lidos da folha a cada build.</p>
     <div class="codigo" data-yb-code>
     <div class="codigo__barra">
-      <div class="codigo__abas" role="tablist" aria-label="Código de Alert">
+      <div class="codigo__abas" role="tablist" aria-label="Código de Popover">
         <button type="button" role="tab" aria-selected="true" data-code-tab="html">HTML</button>
         <button type="button" role="tab" aria-selected="false" data-code-tab="css">CSS</button>
         <button type="button" role="tab" aria-selected="false" data-code-tab="js">JS</button>
@@ -268,41 +282,55 @@
     <div class="codigo__painel" data-code-panel="html">
       <div class="snippet" data-code-variant-panel="0">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>&lt;div class="yb-alert yb-alert--success" role="status"&gt;&lt;svg class="yb-icon yb-alert__icon" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;&lt;div class="yb-alert__body"&gt;&lt;b class="yb-alert__title"&gt;Order confirmed&lt;/b&gt;&lt;p&gt;We sent the tracking number to you@example.com.&lt;/p&gt;&lt;/div&gt;&lt;button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss order confirmed"&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-close"/&gt;&lt;/svg&gt;&lt;/button&gt;&lt;/div&gt;</code></pre>
+        <pre><code>&lt;details class="yb-popover" data-yb-popover open&gt;
+  &lt;summary class="yb-btn yb-btn--secondary yb-btn--sm yb-popover__trigger"&gt;Size guide &lt;svg class="yb-icon yb-icon--sm yb-popover__chevron" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;&lt;/summary&gt;
+  &lt;div class="yb-popover__panel"&gt;
+    &lt;h3 class="yb-popover__title"&gt;How to measure&lt;/h3&gt;
+    &lt;p&gt;Measure around the fullest part of the bust, keeping the tape level and snug.&lt;/p&gt;
+    &lt;a class="yb-link" href="#demos"&gt;Full size chart&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/details&gt;</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="css" hidden>
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>.yb-alert{
-  display:flex; gap:var(--yb-space-3); padding:var(--yb-space-4) var(--yb-space-5);
-  border-radius:var(--yb-radius-card);
-  font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-relaxed);
-}
-.yb-alert__icon{flex:none; margin-block-start:.1em}
-.yb-alert__body{flex:1; min-width:0}
-.yb-alert__title{
-  display:block; font-weight:var(--yb-font-weight-semibold);
-  margin-block-end:var(--yb-space-1);
-}
-.yb-alert__close{
-  color:inherit; border-radius:var(--yb-radius-sm); line-height:var(--yb-line-height-none);
-  margin:calc(var(--yb-space-3) * -1) calc(var(--yb-space-3) * -1)
-  calc(var(--yb-space-3) * -1) 0;
-  transition:color var(--yb-transition-control);
-}
-@media (hover:hover){
-  .yb-alert__close:hover:not([disabled]){color:var(--yb-text-primary); background:transparent}
-}
-.yb-alert__close:focus-visible{
+        <pre><code>.yb-popover{position:relative; display:inline-block}
+.yb-popover__trigger{cursor:pointer; list-style:none; display:inline-flex}
+.yb-popover__trigger::-webkit-details-marker{display:none}
+.yb-popover__trigger:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
-  outline-offset:calc(var(--yb-focus-offset) * -1);
+  outline-offset:var(--yb-focus-offset);
 }
-.yb-alert--success{background:var(--yb-success-surface); border-color:var(--yb-success-solid); color:var(--yb-success-text)}
-.yb-alert--warning{background:var(--yb-warning-surface); border-color:var(--yb-warning-solid); color:var(--yb-warning-text)}
-.yb-alert--danger{background:var(--yb-danger-surface);  border-color:var(--yb-danger-solid);  color:var(--yb-danger-text)}
-.yb-alert--info{background:var(--yb-info-surface);    border-color:var(--yb-info-solid);    color:var(--yb-info-text)}
-.yb-alert p{margin:0; color:var(--yb-text-secondary)}</code></pre>
+.yb-popover__chevron{transition:transform var(--yb-transition-control)}
+.yb-popover[open] &gt; .yb-popover__trigger .yb-popover__chevron{transform:rotate(180deg)}
+.yb-popover__panel{
+  position:absolute; z-index:var(--yb-z-dropdown);
+  inset-block-start:calc(100% + var(--yb-space-2));
+  inset-inline-start:0;
+  inline-size:max-content; min-inline-size:100%; max-inline-size:20rem;
+  padding:var(--yb-space-4) var(--yb-space-5);
+  background:var(--yb-surface-raised); color:var(--yb-text-primary);
+  border:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-card);
+  box-shadow:var(--yb-elevation-dropdown);
+  font-size:var(--yb-type-body-sm-size);
+  line-height:var(--yb-line-height-relaxed);
+  text-align:start;
+}
+.yb-popover__title{
+  margin:0 0 var(--yb-space-2);
+  font-size:var(--yb-type-body-size);
+  font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-primary);
+}
+.yb-popover__panel p{margin:0 0 var(--yb-space-3); color:var(--yb-text-secondary)}
+.yb-popover__panel &gt; :last-child{margin-block-end:0}
+.yb-popover--end &gt; .yb-popover__panel{inset-inline:auto 0}
+.yb-popover--above &gt; .yb-popover__panel{inset-block:auto calc(100% + var(--yb-space-2));}
+@media (forced-colors: active){
+  .yb-popover__panel{border-color:CanvasText}
+}</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="js" hidden>
@@ -311,7 +339,7 @@
         <pre><code>&lt;!-- uma vez por pagina, antes de &lt;/body&gt; --&gt;
 &lt;script src="ybera-components.js" defer&gt;&lt;/script&gt;
 
-&lt;!-- esta peca liga por: data-yb-dispensar --&gt;
+&lt;!-- esta peca liga por: data-yb-popover --&gt;
 
 &lt;!-- conteudo que chega depois (secao carregada por JS do tema): --&gt;
 &lt;script&gt;Ybera.init(secao);&lt;/script&gt;</code></pre>
@@ -320,34 +348,26 @@
     <div class="codigo__painel" data-code-panel="tokens" hidden>
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>--yb-danger-solid: #B3261E;
---yb-danger-surface: #FBEAE9;
---yb-danger-text: #B3261E;
+        <pre><code>--yb-border-hairline: 1px;
+--yb-border-subtle: #EAEAEA;
+--yb-elevation-dropdown: 0 4px 12px rgba(30,30,31,.08), 0 2px 4px rgba(30,30,31,.05);
 --yb-focus-color: #1E1E1F;
 --yb-focus-offset: 0;
 --yb-focus-width: 2px;
 --yb-font-weight-semibold: 600;
---yb-info-solid: #1B5FA8;
---yb-info-surface: #E9F1FA;
---yb-info-text: #1B5FA8;
---yb-line-height-none: 1;
 --yb-line-height-relaxed: 1.55;
 --yb-radius-card: 8px;
---yb-radius-sm: 4px;
---yb-space-1: 0.25rem;
+--yb-space-2: 0.5rem;
 --yb-space-3: 0.75rem;
 --yb-space-4: 1rem;
 --yb-space-5: 1.25rem;
---yb-success-solid: #1F7A34;
---yb-success-surface: #EAF6EC;
---yb-success-text: #1F7A34;
+--yb-surface-raised: #FFFFFF;
 --yb-text-primary: #1E1E1F;
 --yb-text-secondary: #535356;
 --yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
+--yb-type-body-size: 1rem;
 --yb-type-body-sm-size: 0.875rem;
---yb-warning-solid: #8A5A00;
---yb-warning-surface: #FBF3E3;
---yb-warning-text: #8A5A00;</code></pre>
+--yb-z-dropdown: 1000;</code></pre>
       </div>
     </div>
   </div>
@@ -358,14 +378,20 @@
     <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
-        <div class="anat__peca"><div class="yb-alert yb-alert--success" role="status"><svg class="yb-icon yb-alert__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg><div class="yb-alert__body"><b class="yb-alert__title">Order confirmed</b><p>We sent the tracking number to you@example.com.</p></div><button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss order confirmed"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div></div>
+        <div class="anat__peca" style="max-inline-size:320px"><details class="yb-popover" data-yb-popover open>
+  <summary class="yb-btn yb-btn--secondary yb-btn--sm yb-popover__trigger">Size guide <svg class="yb-icon yb-icon--sm yb-popover__chevron" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></summary>
+  <div class="yb-popover__panel">
+    <h3 class="yb-popover__title">How to measure</h3>
+    <p>Measure around the fullest part of the bust, keeping the tape level and snug.</p>
+    <a class="yb-link" href="#anat-demos">Full size chart</a>
+  </div>
+</details></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-alert"><span class="anat__texto"><b>Container</b> — Leva a variante, que dá a cor, e o <code>role</code> — <code>status</code> para confirmação, <code>alert</code> para erro.</span></li>
-        <li data-target=".yb-alert__icon"><span class="anat__texto"><b>Ícone</b> — Decorativo. Repete em desenho o que a cor e o texto já dizem; nunca é a única pista.</span></li>
-        <li data-target=".yb-alert__body"><span class="anat__texto"><b>Corpo</b> — Título e descrição. A descrição é opcional; o título não.</span></li>
-        <li data-target=".yb-alert__title"><span class="anat__texto"><b>Título</b> — Uma linha, no passado: diz o que aconteceu, não o que o sistema fez.</span></li>
-        <li data-target=".yb-alert__close"><span class="anat__texto"><b>Fechar</b> — Opcional. Precisa de <code>aria-label</code> próprio — “Dispensar” sozinho não diz o quê.</span></li>
+        <li data-target=".yb-popover__trigger"><span class="anat__texto"><b>Gatilho</b> — É o <code>&lt;summary&gt;</code>, vestido com as classes do Button. O marcador nativo sai e o <code>display</code> vira <code>inline-flex</code>, senão o ícone desalinha do rótulo.</span></li>
+        <li data-target=".yb-popover__panel"><span class="anat__texto"><b>Painel</b> — Abre 8px abaixo do gatilho, nunca mais estreito que ele e no máximo 20rem. Conteúdo livre: texto, link, botão.</span></li>
+        <li data-target=".yb-popover__title"><span class="anat__texto"><b>Título</b> — Opcional. Quando o painel tem mais de uma frase, é ele que diz do que se trata antes da leitura começar.</span></li>
+        <li data-target=".yb-popover__chevron"><span class="anat__texto"><b>Seta</b> — Opcional, e o único sinal no próprio gatilho de que há um painel preso nele. Dá meia-volta ao abrir, igual à do <a href="dropdown.html">Dropdown</a>.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -379,38 +405,29 @@
     e os tokens que ele usa. Tudo é lido direto do código, então está sempre atualizado.</p>
 
     <div class="api-ficha">
-    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo"><div class="usa-grupos"><div class="usa-grupo"><span class="usa-degrau">Atoms</span><ul class="usa"><li><a href="../atoms/iconbtn.html">Icon button</a></li></ul></div></div></div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-alert--danger</code> <code>.yb-alert--info</code> <code>.yb-alert--success</code> <code>.yb-alert--warning</code></span></div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-alert__body</code> <code>.yb-alert__close</code> <code>.yb-alert__icon</code> <code>.yb-alert__title</code></span></div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo"><div class="usa-grupos"><div class="usa-grupo"><span class="usa-degrau">Atoms</span><ul class="usa"><li><a href="../atoms/button.html">Button</a></li><li><a href="../atoms/link.html">Link</a></li></ul></div></div></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-popover--above</code> <code>.yb-popover--end</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-popover__chevron</code> <code>.yb-popover__panel</code> <code>.yb-popover__title</code> <code>.yb-popover__trigger</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:focus-visible</code> · <code>[open]</code></div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele aparece, mas não responde.</div></div>
     </div>
-    <p class="rotulo">Tokens <span class="rotulo-conta">28</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">20</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>14</span></p>
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>5</span></p>
         <ul class="tokens__lista">
-          <li><i class="tokens__cor" style="background:var(--yb-info-solid)" aria-hidden="true"></i><code>--yb-info-solid</code><span class="tokens__valor">#1B5FA8</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-info-surface)" aria-hidden="true"></i><code>--yb-info-surface</code><span class="tokens__valor">#E9F1FA</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-info-text)" aria-hidden="true"></i><code>--yb-info-text</code><span class="tokens__valor">#1B5FA8</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-warning-solid)" aria-hidden="true"></i><code>--yb-warning-solid</code><span class="tokens__valor">#8A5A00</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-warning-surface)" aria-hidden="true"></i><code>--yb-warning-surface</code><span class="tokens__valor">#FBF3E3</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-success-surface)" aria-hidden="true"></i><code>--yb-success-surface</code><span class="tokens__valor">#EAF6EC</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-warning-text)" aria-hidden="true"></i><code>--yb-warning-text</code><span class="tokens__valor">#8A5A00</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-danger-surface)" aria-hidden="true"></i><code>--yb-danger-surface</code><span class="tokens__valor">#FBEAE9</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-success-solid)" aria-hidden="true"></i><code>--yb-success-solid</code><span class="tokens__valor">#1F7A34</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-danger-solid)" aria-hidden="true"></i><code>--yb-danger-solid</code><span class="tokens__valor">#B3261E</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-danger-text)" aria-hidden="true"></i><code>--yb-danger-text</code><span class="tokens__valor">#B3261E</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-success-text)" aria-hidden="true"></i><code>--yb-success-text</code><span class="tokens__valor">#1F7A34</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-surface-raised)" aria-hidden="true"></i><code>--yb-surface-raised</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
+          <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>4</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-line-height-none</code><span class="tokens__valor">1</span></li>
           <li><code>--yb-line-height-relaxed</code><span class="tokens__valor">1.55</span></li>
+          <li><code>--yb-type-body-size</code><span class="tokens__valor">1rem</span></li>
           <li><code>--yb-font-weight-semibold</code><span class="tokens__valor">600</span></li>
           <li><code>--yb-type-body-sm-size</code><span class="tokens__valor">0.875rem</span></li>
         </ul>
@@ -418,17 +435,23 @@
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>4</span></p>
         <ul class="tokens__lista">
-          <li><code>--yb-space-1</code><span class="tokens__valor">0.25rem</span></li>
           <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
+          <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
           <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>
           <li><code>--yb-space-3</code><span class="tokens__valor">0.75rem</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>2</span></p>
+        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>1</span></p>
         <ul class="tokens__lista">
           <li><code>--yb-radius-card</code><span class="tokens__valor">8px</span></li>
-          <li><code>--yb-radius-sm</code><span class="tokens__valor">4px</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/elevation.html">Elevação</a> <span>2</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-z-dropdown</code><span class="tokens__valor">1000</span></li>
+          <li><code>--yb-elevation-dropdown</code><span class="tokens__valor">0 4px 12px rgba(30,30,31,.08), 0 2px 4px rgba(30,30,31,.05)</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
@@ -455,24 +478,24 @@
     <div class="fn">
       <div class="fn-caso fn-caso--sim">
         <p class="fn-cabeca">✓ Faça</p>
-        <div class="fn-palco"><div class="yb-alert yb-alert--danger" role="alert" style="inline-size:100%"><svg class="yb-icon yb-alert__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg><div class="yb-alert__body"><b class="yb-alert__title">Payment declined</b><p>Your bank rejected the charge. Try another card.</p></div><button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss payment declined"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div></div>
-        <p class="fn-legenda">Um alerta, com o papel certo para o que ele é.</p>
+        <div class="fn-palco"><details class="yb-popover" data-yb-popover open><summary class="yb-btn yb-btn--secondary yb-btn--sm yb-popover__trigger">Size guide <svg class="yb-icon yb-icon--sm yb-popover__chevron" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></summary><div class="yb-popover__panel"><h3 class="yb-popover__title">How to measure</h3><p>Keep the tape level and snug.</p><a class="yb-link" href="#demos">Full size chart</a></div></details></div>
+        <p class="fn-legenda">Conteúdo livre: um título, uma explicação e um link para a página inteira.</p>
       </div>
       <div class="fn-caso fn-caso--nao">
         <p class="fn-cabeca">✕ Não faça</p>
-        <div class="fn-palco"><div style="inline-size:100%;display:flex;flex-direction:column;gap:8px"><div class="yb-alert yb-alert--info" role="alert"><svg class="yb-icon yb-alert__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-info"/></svg><div class="yb-alert__body"><b class="yb-alert__title">Free shipping</b><p>Add $12 more.</p></div><button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss free shipping"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div><div class="yb-alert yb-alert--warning" role="alert"><svg class="yb-icon yb-alert__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-alert"/></svg><div class="yb-alert__body"><b class="yb-alert__title">Only 3 left</b><p>Running low.</p></div><button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss only 3 left"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div><div class="yb-alert yb-alert--danger" role="alert"><svg class="yb-icon yb-alert__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg><div class="yb-alert__body"><b class="yb-alert__title">Payment declined</b><p>Try another card.</p></div><button class="yb-iconbtn yb-iconbtn--square yb-alert__close" type="button" data-yb-dispensar aria-label="Dismiss payment declined"><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button></div></div></div>
-        <p class="fn-legenda">Três empilhados é garantir que nenhum seja lido — e três <code>role="alert"</code> transformam o leitor de tela em ruído.</p>
+        <div class="fn-palco"><details class="yb-popover" data-yb-popover open><summary class="yb-btn yb-btn--secondary yb-btn--sm yb-popover__trigger">Sort <svg class="yb-icon yb-icon--sm yb-popover__chevron" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></summary><div class="yb-popover__panel"><p><a class="yb-link" href="#demos">Best selling</a></p><p><a class="yb-link" href="#demos">Price, low to high</a></p><p><a class="yb-link" href="#demos">Newest</a></p></div></details></div>
+        <p class="fn-legenda">Lista de escolhas dentro do Popover: isso é Dropdown, e ele já fecha ao escolher.</p>
       </div>
     </div>
   </section>
 
   <section class="bloco" id="acessibilidade" data-tab="Acessibilidade">
     <h2 class="bloco-titulo">Acessibilidade</h2>
-    <ul class="bloco-lede"><li><code>role="alert"</code> interrompe o leitor de tela na hora e é só para o que precisa interromper — erro que impede a compra. Todo o resto usa <code>role="status"</code>, que espera a pausa.</li><li>A cor não é o único sinal: cada alerta carrega título escrito. Um retângulo vermelho sem palavra não existe para quem não distingue vermelho de verde.</li><li>Não é focável e não deve ser: alerta que rouba o foco tira a pessoa de onde ela estava digitando.</li></ul>
+    <ul class="bloco-lede"><li>O gatilho é <code>&lt;summary&gt;</code>: ele já é botão e já anuncia aberto ou fechado. Não escreva <code>aria-expanded</code> — duplicado, ele passa a brigar com o estado nativo.</li><li>Esc fecha e devolve o foco ao gatilho. Sem a devolução o foco fica num painel que sumiu, e o próximo Tab recomeça do topo da página.</li><li>O painel não prende o foco, de propósito: quem precisa prender está pedindo um <a href="dialog.html">Dialog</a>, não um painel ancorado.</li><li>Clique fora fecha. Painel ancorado cobre o que está atrás, e quem clica longe dele espera que ele saia da frente.</li></ul>
   </section>
   </div>
 
-  <!-- Gerada de molecules/pecas/alert.html e molecules/ybera-molecules.css. Não edite à mão: ./build.sh -->
+  <!-- Gerada de molecules/pecas/popover.html e molecules/ybera-molecules.css. Não edite à mão: ./build.sh -->
 </main>
 
 <script src="../behavior/ybera-behavior.js"></script>

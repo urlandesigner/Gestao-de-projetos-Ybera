@@ -4693,6 +4693,95 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 }
 
 /* =========================================================================
+   POPOVER — painel ancorado num gatilho, com conteúdo livre dentro
+   Depende de: --yb-surface-raised, --yb-z-dropdown
+
+   ONDE ELE PARA E OS VIZINHOS COMEÇAM. O sistema já tinha três peças que
+   abrem alguma coisa, e a diferença entre elas é o CONTEÚDO, não o desenho:
+
+     Tooltip   frase curta, abre no ponteiro, nada dentro é clicável.
+     Dropdown  lista de opções — escolher uma fecha o painel.
+     Dialog    trava a tela inteira: a decisão não pode esperar.
+     Popover   texto, link, botão, imagem. Abre no clique e fica.
+
+   Se o que vai dentro é uma lista de escolhas, é Dropdown. Se é uma frase
+   que ninguém clica, é Tooltip. O Popover é o que sobra, e é onde cabe a
+   tabela de medidas, o resumo do frete, a explicação com um link no fim.
+
+   É `<details>`, e isso não é economia de script. O elemento já carrega o
+   estado para quem ouve a página (`<summary>` vira um botão que anuncia
+   aberto ou fechado, sem `aria-expanded` escrito à mão), já abre e fecha no
+   Enter e na barra de espaço, e já é alvo de busca da própria página. Com
+   `<div>` + script, as quatro coisas viram código — e a primeira que
+   quebrasse quebraria calada.
+
+   O COMPORTAMENTO ACRESCENTA DUAS, e nenhuma existe em CSS: Esc fecha
+   devolvendo o foco ao gatilho, e clique fora fecha. Sem o arquivo de
+   comportamento o painel abre e fecha no gatilho, como qualquer `<details>`.
+   A peça perde os atalhos, não o conteúdo.
+   ========================================================================= */
+.yb-popover{position:relative; display:inline-block}
+
+/* O marcador nativo sai nos dois dialetos, e o `display` precisa ser trocado
+   junto: `summary` nasce `list-item`, e um `.yb-btn` em `list-item` perde o
+   alinhamento do ícone com o rótulo. */
+.yb-popover__trigger{cursor:pointer; list-style:none; display:inline-flex}
+.yb-popover__trigger::-webkit-details-marker{display:none}
+/* O anel e da peca e nao do que a veste. Na doc o gatilho leva as classes do
+   Button e herdaria o anel dele, mas `.yb-popover__trigger` sozinho — num
+   `<summary>` cru, que e uso legitimo — ficaria com o anel do navegador.
+   Mesma linha que o Accordion escreve no `summary` dele. */
+.yb-popover__trigger:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+
+/* A SETA QUE VIRA. Opcional, e e o unico sinal no proprio gatilho de que ha um
+   painel preso nele — antes de abrir, o painel nao existe para quem olha.
+   Mesma convencao e mesma meia-volta do `.yb-dropdown__chevron`: o sistema ja
+   ensinou esse giro uma vez, e um segundo desenho para a mesma ideia seria a
+   pergunta "qual dos dois quer dizer o que". */
+.yb-popover__chevron{transition:transform var(--yb-transition-control)}
+.yb-popover[open] > .yb-popover__trigger .yb-popover__chevron{transform:rotate(180deg)}
+
+.yb-popover__panel{
+  position:absolute; z-index:var(--yb-z-dropdown);
+  inset-block-start:calc(100% + var(--yb-space-2));
+  inset-inline-start:0;
+  inline-size:max-content; min-inline-size:100%; max-inline-size:20rem;
+  padding:var(--yb-space-4) var(--yb-space-5);
+  background:var(--yb-surface-raised); color:var(--yb-text-primary);
+  border:var(--yb-border-hairline) solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-card);
+  box-shadow:var(--yb-elevation-dropdown);
+  font-size:var(--yb-type-body-sm-size);
+  line-height:var(--yb-line-height-relaxed);
+  text-align:start;
+}
+.yb-popover__title{
+  margin:0 0 var(--yb-space-2);
+  font-size:var(--yb-type-body-size);
+  font-weight:var(--yb-font-weight-semibold);
+  color:var(--yb-text-primary);
+}
+.yb-popover__panel p{margin:0 0 var(--yb-space-3); color:var(--yb-text-secondary)}
+.yb-popover__panel > :last-child{margin-block-end:0}
+
+/* Pelo fim e pelo alto — para gatilho na beirada ou no pé da tela. CSS não
+   sabe onde a tela acaba, então quem monta escolhe. Mesma régua do
+   `.yb-dropdown--end` e do `.yb-tooltip--below`. */
+.yb-popover--end > .yb-popover__panel{inset-inline:auto 0}
+.yb-popover--above > .yb-popover__panel{
+  inset-block:auto calc(100% + var(--yb-space-2));
+}
+
+/* Em alto contraste a sombra some e o painel encosta no que está atrás; a
+   borda vira cor de sistema e continua separando os dois. */
+@media (forced-colors: active){
+  .yb-popover__panel{border-color:CanvasText}
+}
+
+/* =========================================================================
    YBERA DESIGN SYSTEM · ORGANISMOS
 
    Depende de: tokens/ + base/ + atoms/ + molecules/ybera-molecules.css

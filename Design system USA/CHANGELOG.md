@@ -9,6 +9,23 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 [GOVERNANCA.md](GOVERNANCA.md), componente novo pede versão **menor** (0.13.0).
 
 ### Adicionado
+- **Popover.** Painel ancorado num gatilho, com conteúdo livre dentro: texto,
+  link, botão. Abre no clique e fica. Onde ele para e os vizinhos começam, que é
+  a única pergunta que importa com quatro peças que abrem alguma coisa: lista de
+  opções é [Dropdown], frase que ninguém clica é [Tooltip], decisão que trava a
+  tela é [Dialog], o resto é Popover. É `<details>`, e isso não é economia de
+  script — o elemento já anuncia aberto ou fechado sem `aria-expanded` escrito à
+  mão, já abre no Enter e na barra de espaço, e já é achado pela busca da própria
+  página; com `<div>` e script as três viram código, e a primeira que quebrasse
+  quebraria calada. O comportamento (`data-yb-popover`) acrescenta duas que não
+  existem em CSS: Esc fecha devolvendo o foco ao gatilho, e clique fora fecha.
+  Três ancoragens, porque CSS não sabe onde a tela acaba — padrão, `--end` e
+  `--above`. A seta é opcional e dá a mesma meia-volta da do Dropdown: é o único
+  sinal no próprio gatilho de que há um painel preso nele. Nenhum token novo.
+
+[Dropdown]: molecules/dropdown.html
+[Tooltip]: molecules/tooltip.html
+[Dialog]: molecules/dialog.html
 - **Tooltip.** A frase curta que explica um gatilho e some depois. É molécula e
   não átomo porque o gatilho é sempre outra peça — o balão sozinho não é nada.
   Abrir e fechar é do CSS (hover e `:has(:focus-visible)`); o comportamento

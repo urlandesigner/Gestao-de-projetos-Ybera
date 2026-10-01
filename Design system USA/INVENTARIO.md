@@ -3,7 +3,7 @@
 <!-- GERADO por tools/inventario.mjs. Não edite à mão: rode ./build.sh.
      A fonte é o CSS. Se uma linha aqui está errada, o errado é o código. -->
 
-60 peças no bundle — 45 estáveis, 15 em beta, 0 em alfa.
+61 peças no bundle — 45 estáveis, 16 em beta, 0 em alfa.
 
 ## Como ler a maturidade
 
@@ -54,6 +54,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | EMPTY STATE | `.yb-empty` | Molécula | Estável | 1 | — | 13 | sim | n/a | — | sim |
 | PAGINATION | `.yb-pagination` | Molécula | Beta | — | 3 | 17 | sim | sim | sim | — |
 | PARTNER | `.yb-partner` | Molécula | Estável | 1 | 2 | 31 | sim | sim | sim | sim |
+| POPOVER | `.yb-popover` | Molécula | Beta | 2 | 1 | 20 | sim | sim | sim | — |
 | POST | `.yb-post` | Molécula | Estável | 3 | 2 | 23 | sim | sim | — | sim |
 | PRICE | `.yb-price` | Molécula | Estável | 2 | — | 10 | sim | n/a | sim | sim |
 | QUANTITY STEPPER | `.yb-stepper` | Molécula | Estável | 1 | 3 | 17 | sim | sim | sim | sim |

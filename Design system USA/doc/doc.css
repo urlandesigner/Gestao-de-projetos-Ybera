@@ -467,6 +467,29 @@
 }
 .demo--stack{flex-direction:column; align-items:stretch}
 
+/* PALCO DO POPOVER — cresce com o painel e encolhe quando ele fecha.
+   O painel e absoluto: o palco nao o mede, e sem altura minima ele vazava por
+   baixo da caixa. Com altura minima fixa acontecia o contrario — o Popover
+   fecha no clique fora, e UM clique em qualquer lugar da pagina deixava um
+   retangulo de 240px em volta de um botao de 36. O `:has` resolve os dois: a
+   altura so existe enquanto ha painel aberto.
+
+   `flex-start` porque o painel cresce para baixo, e o gatilho tem de nascer no
+   topo; centrado, metade da caixa ficava vazia por cima. A variante `--above`
+   inverte os dois, pelo mesmo motivo ao contrario. */
+.demo--popover{align-items:flex-start}
+/* A ancoragem pelo fim so se ve com o gatilho no fim: encostado a esquerda, o
+   painel alinhado a direita dele cai no mesmo lugar do painel da demo de cima,
+   e as duas variantes passam a desenhar a mesma coisa. */
+.demo--popover-fim{justify-content:flex-end}
+.demo--popover:has(.yb-popover[open]){min-block-size:17rem}
+/* Cada palco tem a altura do SEU painel: um minimo so para os tres deixava
+   sobra em dois e falta no terceiro. Vem depois porque `--fim` tambem e
+   `--popover`, e empata em peso com a linha de cima. */
+.demo--popover-fim:has(.yb-popover[open]){min-block-size:13rem}
+.demo--popover-cima{align-items:flex-end}
+.demo--popover-cima:has(.yb-popover[open]){min-block-size:12rem}
+
 /* ---------------------------------------------------------------- amostra
    O NOME DEBAIXO DA AMOSTRA. Uma fileira de quatro botões diz que há quatro
    variantes e não diz quais: para descobrir que o rosa claro é `--secondary`
@@ -902,6 +925,15 @@ details.note > :last-child{padding-block-end:var(--yb-space-4)}
 .anat__peca > .yb-dropdown{display:flex; flex-direction:column; align-items:flex-start; gap:var(--yb-space-1)}
 .anat__peca > .yb-dropdown--end{align-items:flex-end}
 .anat__peca > .yb-dropdown .yb-dropdown__panel{position:static; transition:none}
+/* O Popover, pelo mesmo motivo: o painel e absoluto e no quadro ele saia 60px
+   por baixo, passando por cima da legenda. Aqui entra no fluxo, embaixo do
+   gatilho, alinhado ao inicio ou ao fim conforme a variante. Ele e <details>,
+   entao dentro da anatomia de outra ficha ja nasce fechado — nao precisa da
+   regra de conter que o painel do Nav e o da conta precisam. */
+.anat__peca > .yb-popover{display:flex; flex-direction:column; align-items:flex-start; gap:var(--yb-space-2)}
+.anat__peca > .yb-popover--end{align-items:flex-end}
+.anat__peca > .yb-popover .yb-popover__panel{position:static}
+
 /* O Tooltip, pelo mesmo motivo dos dois acima, e com um agravante: ele nasce
    FECHADO, e so abre no hover ou no foco. No quadro da anatomia o balao media
    0px e o fio apontava para o nada — o desenho explicava um balao que ninguem
