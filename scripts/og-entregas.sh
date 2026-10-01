@@ -6,13 +6,17 @@
 # O molde é HTML pra herdar os tokens e a tipografia da capa; o que vai pro ar
 # é só o PNG (scripts/ não é publicado).
 #
-# QUANDO RODAR: sempre que o topo do relatório mudar de número ou de período.
-# A imagem é estática — o link de leitura é um retrato e ela também é. Se os
-# números divergirem, quem vê o preview lê um e abre outro.
+# QUANDO RODAR: quando o relatório mudar de período. É a única coisa que a
+# imagem afirma — os dois blocos de número da capa ficaram de fora justamente
+# porque número envelhece a cada PBI que muda de coluna, e preview fica preso
+# no cache dos apps por tempo indeterminado.
 #
-#   ./scripts/og-entregas.sh                       # usa os valores atuais
-#   ./scripts/og-entregas.sh 5 31                  # projetos, itens
-#   ./scripts/og-entregas.sh 5 31 "Outubro de 2026"
+#   ./scripts/og-entregas.sh                       # mantém o período atual
+#   ./scripts/og-entregas.sh "Outubro de 2026"
+#
+# Depois de rodar: o período também está escrito no <meta og:title> do
+# entregas.html, à mão. Os dois mudam na mesma rodada — a tests/og-entregas
+# confere que o título não virou genérico, mas não sabe qual mês é hoje.
 #
 set -euo pipefail
 
@@ -21,16 +25,14 @@ CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 MOLDE="$RAIZ/scripts/og/cartao-entregas.html"
 SAIDA="$RAIZ/assets/og-entregas.png"
 
-PROJETOS="${1:-5}"
-ITENS="${2:-31}"
-PERIODO="${3:-Agosto e Setembro de 2026}"
+PERIODO="${1:-Agosto e Setembro de 2026}"
 
 [ -x "$CHROME" ] || { echo "erro: Google Chrome não encontrado em $CHROME" >&2; exit 1; }
 [ -f "$MOLDE" ] || { echo "erro: molde não encontrado em $MOLDE" >&2; exit 1; }
 
 # A query string vai por URL: o molde lê os valores com URLSearchParams.
 codifica() { python3 -c 'import sys,urllib.parse; print(urllib.parse.quote(sys.argv[1]))' "$1"; }
-URL="file://$(codifica "$MOLDE" | sed 's|%2F|/|g')?projetos=$(codifica "$PROJETOS")&itens=$(codifica "$ITENS")&periodo=$(codifica "$PERIODO")"
+URL="file://$(codifica "$MOLDE" | sed 's|%2F|/|g')?periodo=$(codifica "$PERIODO")"
 
 PERFIL="$(mktemp -d)"
 trap 'rm -rf "$PERFIL"' EXIT

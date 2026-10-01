@@ -86,8 +86,9 @@ test('preview: o cartaz conta a mesma história da capa', () => {
   assert.ok(situacao.includes(desc), 'og:description não é a linha de situação da capa');
   assert.equal(desc, meta('description'), 'a descrição do preview e a da página divergiram');
 
-  // O alt descreve a imagem pra quem usa leitor de tela no card, então ele
-  // carrega os números — e números que não batem com o título são ruído.
+  // O alt descreve a imagem pra quem usa leitor de tela no card. O que a
+  // imagem mostra é o período — se ele divergir do título, um dos dois está
+  // velho.
   const alt = meta('og:image:alt');
   assert.ok(alt.includes(titulo.replace('Entregas de ', '')), 'og:image:alt não cita o período do título');
 });
@@ -95,6 +96,20 @@ test('preview: o cartaz conta a mesma história da capa', () => {
 test('preview: o cartão grande, não a miniatura quadrada', () => {
   assert.equal(meta('twitter:card'), 'summary_large_image',
     'sem summary_large_image o X/LinkedIn mostram um selo pequeno em vez do cartaz');
+});
+
+test('preview: o cartaz não carrega contagem', () => {
+  // Decisão do Urlan, e ela é o que mantém a imagem honesta: contagem
+  // envelhece a cada PBI que muda de coluna no board, e o preview fica preso
+  // no cache dos apps por tempo indeterminado — diria 31 num relatório que já
+  // abre em 40. O período não tem esse problema, e por isso é a ÚNICA coisa
+  // que a imagem afirma. Reintroduzir número aqui é reintroduzir a mentira.
+  const molde = fs.readFileSync(path.join(__dirname, '../scripts/og/cartao-entregas.html'), 'utf8');
+  for (const campo of ['projetos', 'itens']) {
+    assert.ok(!molde.includes(`'${campo}'`), `o molde voltou a ler "${campo}" — o cartaz não conta itens`);
+  }
+  assert.doesNotMatch(meta('og:image:alt'), /\b\d+ (itens|projetos)\b/,
+    'o alt voltou a afirmar contagem, que envelhece presa no cache dos apps');
 });
 
 test('preview: o molde do cartão não vai pro ar', () => {

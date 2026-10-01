@@ -15,10 +15,14 @@
      página vazia, não o relatório montado. O preview é um cartaz do documento,
      não um retrato do link.
 
-     Por isso o período e os números abaixo (e o assets/og-entregas.png) são
-     mantidos à mão, junto: quando o relatório virar outro mês, estas linhas e
-     a imagem mudam na mesma rodada, com ./scripts/og-entregas.sh. Preview que
-     diz 31 num relatório de 40 é pior que preview nenhum.
+     O que o cartaz afirma é só o PERÍODO, e isso é deliberado: contagem
+     envelhece a cada PBI que muda de coluna no board, e preview fica preso no
+     cache dos apps por tempo indeterminado — diria 31 enquanto o relatório já
+     abre em 40. Preview que mente é pior que preview nenhum. Período só muda
+     quando o documento vira outro documento.
+
+     Então quando o relatório virar outro mês, o og:title abaixo e a imagem
+     mudam na mesma rodada: ./scripts/og-entregas.sh "Outubro de 2026".
 
      A imagem leva o mesmo ?v= do resto: WhatsApp, Slack e LinkedIn guardam o
      preview por URL e não voltam pra conferir. Trocar o token é o que faz o
@@ -30,16 +34,16 @@
 <meta property="og:title" content="Entregas de Agosto e Setembro de 2026">
 <meta property="og:description" content="O que o time entregou no período, e o planejamento dos próximos meses.">
 <meta property="og:url" content="https://nivello-sistemas.github.io/ideias-e-inovacao/Central%20de%20Projetos/entregas.html">
-<meta property="og:image" content="https://nivello-sistemas.github.io/ideias-e-inovacao/Central%20de%20Projetos/assets/og-entregas.png?v=2026100101">
+<meta property="og:image" content="https://nivello-sistemas.github.io/ideias-e-inovacao/Central%20de%20Projetos/assets/og-entregas.png?v=2026100102">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Capa do relatório: Entregas de Agosto e Setembro de 2026 — 5 projetos atendidos, 31 itens entregues.">
+<meta property="og:image:alt" content="Capa do relatório Ybera US · E-commerce: Entregas de Agosto e Setembro de 2026.">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/entregas.css?v=2026100101">
+<link rel="stylesheet" href="assets/entregas.css?v=2026100102">
 </head>
 <!-- ENTREGAS. Não é uma versão do report: é outro documento, com duas seções
      (entregas recentes e roadmap) e linguagem de negócio. Usa o MESMO
@@ -85,10 +89,10 @@
   <p id="visor-legenda" class="rl-visor-legenda"></p>
 </dialog>
 
-<script src="assets/core.js?v=2026100101"></script>
-<script src="assets/api.js?v=2026100101"></script>
-<script src="assets/briefing-entregas.js?v=2026100101"></script>
-<script src="assets/report.js?v=2026100101"></script>
+<script src="assets/core.js?v=2026100102"></script>
+<script src="assets/api.js?v=2026100102"></script>
+<script src="assets/briefing-entregas.js?v=2026100102"></script>
+<script src="assets/report.js?v=2026100102"></script>
 <script>
 /* Visor da galeria — vive aqui, e não no report.js nem no briefing.
 

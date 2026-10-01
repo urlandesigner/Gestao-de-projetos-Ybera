@@ -15,14 +15,17 @@
      mesmo conteúdo do topo — marca, retranca, título, situação e os dois
      números — é remontado na proporção que WhatsApp, Slack e LinkedIn pedem.
 
-     COR, TIPO E FORMA SÃO COPIADOS de assets/entregas.css, não reinventados:
-     os tokens do :root, os dois pesos do título, o par de blocos (claro e
-     escuro) e a seta fantasma ao fundo do bloco escuro. Se a capa mudar de
-     desenho, este arquivo é o segundo lugar a mexer.
+     COR E TIPO SÃO COPIADOS de assets/entregas.css, não reinventados: os
+     tokens do :root e as duas vozes do título. Se a capa mudar de desenho,
+     este arquivo é o segundo lugar a mexer.
 
-     Os números NÃO são buscados: o link de leitura é um retrato, e a imagem
-     também. Entram por query string (?projetos=5&itens=31&periodo=...), que é
-     como o script passa os valores. -->
+     SEM os dois blocos de número da capa, por decisão do Urlan. E a ausência
+     deles é o que mantém esta imagem honesta: número envelhece a cada PBI que
+     muda de coluna no board, e um preview fica preso no cache dos apps por
+     tempo indeterminado — o cartaz diria 31 enquanto o relatório já abre em
+     40. Período não tem esse problema: ele só muda quando o documento vira
+     outro documento. É a única variável, e entra por query string
+     (?periodo=...), que é como o scripts/og-entregas.sh passa o valor. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=block" rel="stylesheet">
@@ -55,27 +58,27 @@ body {
 .cartao {
   display: flex;
   flex-direction: column;
-  /* O bloco inteiro fica centrado na vertical, e o vão entre a situação e os
-     números é declarado (margin do .bento). Com `margin-top:auto` no .bento
-     toda a sobra de 1.91:1 caía num buraco só, no meio do cartão — e o preview
-     aparece pequeno, onde buraco no meio lê como imagem cortada. */
+  /* Centrado na vertical: o que sobra de 1.91:1 vira margem em cima e embaixo,
+     em partes iguais. Ancorado no topo, o texto ficaria pendurado com um vão
+     morto embaixo — e o preview aparece pequeno, onde vão morto lê como
+     imagem cortada. */
   justify-content: center;
   width: 1200px;
   height: 630px;
-  padding: 52px 64px;
+  padding: 64px;
 }
 
 /* `align-self` porque o cartão é um flex column: sem ele a marca herda o
    `stretch` do eixo cruzado, a largura vira a do cartão inteiro e o PNG sai
    com o logotipo esticado de ponta a ponta. `width:auto` sozinho não segura. */
-.logo { align-self: flex-start; display: block; height: 40px; width: auto; }
+.logo { align-self: flex-start; display: block; height: 46px; width: auto; }
 
 /* Retranca: a mesma de .rl-rotulo + .rl-capa-autoria, já na versão de telefone
    (onde e quem na MESMA linha, separados por um fio). Numa imagem larga a
    autoria numa linha própria sobraria no vazio. */
 .retranca {
-  margin: 26px 0 0;
-  font-size: 13px;
+  margin: 30px 0 0;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -93,45 +96,22 @@ body {
 
 /* Título em duas vozes, como na capa: a linha fraca situa, a forte é o
    assunto. Em bloco e nos dois tamanhos do desktop (o topo do clamp). */
-.titulo { margin: 16px 0 0; line-height: 0.98; letter-spacing: -0.04em; }
+ /* Maior que na capa de propósito: o preview chega em miniatura na lista de
+    conversas, e é o período que faz alguém abrir. `balance` porque período
+    comprido ("Outubro e Novembro de 2026") quebra em duas linhas, e a quebra
+    padrão deixaria "de 2026" sozinho embaixo. */
+.titulo { margin: 20px 0 0; line-height: 0.98; letter-spacing: -0.04em; text-wrap: balance; }
 .titulo span { display: block; }
-.titulo-fraco { font-size: 50px; font-weight: 500; color: var(--mudo); }
-.titulo-forte { font-size: 66px; font-weight: 800; color: var(--tinta); }
+.titulo-fraco { font-size: 54px; font-weight: 500; color: var(--mudo); }
+.titulo-forte { font-size: 74px; font-weight: 800; color: var(--tinta); }
 
-.situacao { margin: 18px 0 0; max-width: 54ch; font-size: 20px; line-height: 1.5; color: var(--mudo); }
+/* Sem teto de largura, ao contrário da capa: lá a linha é curta de propósito
+   porque está numa coluna de leitura. Aqui ela é a legenda do cartaz e o
+   cartão tem 1072px úteis — segurá-la em 46ch quebrava a frase deixando
+   "meses." sozinho na segunda linha, que é a viúva clássica. `balance` cuida
+   do caso em que a legenda cresça e passe a quebrar de verdade. */
+.situacao { margin: 22px 0 0; font-size: 23px; line-height: 1.5; color: var(--mudo); text-wrap: balance; }
 
-/* Par de blocos da capa: o claro em 5 colunas, a âncora escura em 7. */
-.bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; margin-top: 44px; }
-.bloco {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-width: 0;
-  padding: 26px 28px;
-  border: var(--fio);
-  border-radius: var(--raio-painel);
-  background: var(--superficie);
-  box-shadow: var(--sombra-painel);
-}
-.bloco-claro { grid-column: span 5; }
-.bloco-escuro {
-  grid-column: span 7;
-  overflow: hidden;
-  border-color: transparent;
-  background: var(--tinta);
-  color: #fff;
-  box-shadow: var(--sombra-escura);
-}
-.rot { position: relative; margin: 0; max-width: 26ch; font-size: 20px; line-height: 1.45; letter-spacing: -0.015em; }
-.bloco-escuro .rot { color: #fff; }
-.apoio { position: relative; margin: -6px 0 0; max-width: 40ch; font-size: 14px; line-height: 1.45; color: var(--mudo); }
-.bloco-escuro .apoio { color: rgba(255, 255, 255, 0.62); }
-/* O número encosta na base: é o que alinha os dois blocos na mesma linha
-   ótica, do mesmo jeito que o margin-top:auto de .rl-tile-num na capa. */
-.num { position: relative; margin: auto 0 0; font-size: 76px; font-weight: 800; line-height: 0.85; letter-spacing: -0.05em; }
-/* A seta fantasma ao fundo do bloco escuro, igual à da capa. */
-.fundo { position: absolute; right: -6%; bottom: -12%; width: 62%; height: auto; color: rgba(255, 255, 255, 0.055); }
 </style>
 </head>
 <body>
@@ -140,35 +120,13 @@ body {
   <p class="retranca" id="retranca"></p>
   <h1 class="titulo"><span class="titulo-fraco">Entregas de</span><span class="titulo-forte" id="periodo"></span></h1>
   <p class="situacao" id="situacao"></p>
-  <div class="bento">
-    <article class="bloco bloco-claro">
-      <p class="rot">Projetos atendidos</p>
-      <p class="apoio" id="apoio-projetos"></p>
-      <p class="num" id="projetos"></p>
-    </article>
-    <article class="bloco bloco-escuro">
-      <svg class="fundo" viewBox="0 0 200 120" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
-        <path d="M6 104 C40 104 44 62 74 62 C104 62 104 88 132 88 C162 88 166 24 194 24" fill="none" stroke="currentColor" stroke-width="13" stroke-linecap="round"/>
-        <path d="M168 24 H194 V50" fill="none" stroke="currentColor" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <p class="rot">Itens entregues</p>
-      <p class="apoio">Soma dos itens concluídos dentro desses projetos</p>
-      <p class="num" id="itens"></p>
-    </article>
-  </div>
 </div>
 <script>
   var q = new URLSearchParams(location.search);
   var val = function (chave, padrao) { return q.get(chave) || padrao; };
-  var projetos = val('projetos', '5');
 
   document.getElementById('periodo').textContent = val('periodo', 'Agosto e Setembro de 2026');
   document.getElementById('situacao').textContent = val('situacao', 'O que o time entregou no período, e o planejamento dos próximos meses.');
-  document.getElementById('projetos').textContent = projetos;
-  document.getElementById('itens').textContent = val('itens', '31');
-  document.getElementById('apoio-projetos').textContent = projetos === '1'
-    ? 'Projeto do roadmap contemplado neste relatório'
-    : 'Projetos do roadmap contemplados neste relatório';
 
   var retranca = document.getElementById('retranca');
   retranca.textContent = val('retranca', 'Ybera US · E-commerce');
