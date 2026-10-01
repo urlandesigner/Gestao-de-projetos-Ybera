@@ -48,17 +48,21 @@
 
 /* =========================================================================
    PRICE
-   Sempre tabular: em grid, dígitos precisam alinhar em coluna.
+   Digitos PROPORCIONAIS, e nao tabulares. Na Schibsted Grotesk o `tnum` da ao
+   ponto e a virgula a largura de um digito (20px contra 10 em 32px), e o preco
+   saia "$79 . 90", com um vao em volta do ponto em toda vitrine. Preco nao
+   alinha em coluna com outro preco — fica solto no cartao —, entao a largura
+   fixa so custava. O carrinho ja tinha descoberto isso e corrigido so para ele.
    ========================================================================= */
 .yb-price{display:flex; align-items:baseline; gap:var(--yb-space-3); flex-wrap:wrap}
 .yb-price__now{
   font-size:var(--yb-type-price-size); line-height:var(--yb-type-price-line);
   letter-spacing:var(--yb-type-price-track); font-weight:var(--yb-type-price-weight);
-  font-variant-numeric:tabular-nums; color:var(--yb-text-primary);
+  color:var(--yb-text-primary);
 }
 .yb-price__was{
   font-size:var(--yb-type-body-size); color:var(--yb-text-muted);
-  text-decoration:line-through; font-variant-numeric:tabular-nums;
+  text-decoration:line-through;
 }
 .yb-price--sm .yb-price__now{font-size:var(--yb-type-h4-size)}
 /* Empilhado: riscado ACIMA do atual, nao ao lado. `column-reverse` inverte
@@ -1133,7 +1137,6 @@
 .yb-offercard__price{
   font-size:var(--yb-type-h2-size); line-height:var(--yb-line-height-none);
   font-weight:var(--yb-font-weight-bold);
-  font-variant-numeric:tabular-nums;
 }
 /* Preco de antes. Ao lado e nao empilhado como no cartao de catalogo: aqui
    o "de/por" e o argumento da peca, nao um detalhe do produto. */
@@ -1141,7 +1144,6 @@
   font-size:var(--yb-type-body-size);
   color:var(--yb-text-secondary-inverse);
   text-decoration:line-through;
-  font-variant-numeric:tabular-nums;
 }
 
 /* --- relogio ---------------------------------------------------------- */
@@ -1312,7 +1314,6 @@
   transition:opacity var(--yb-transition-control);
 }
 .yb-swatches__name{ font-weight:var(--yb-font-weight-bold); }
-.yb-swatches__price{ font-variant-numeric:tabular-nums; }
 .yb-swatches__stock{
   font-size:var(--yb-type-caption-size);
   font-weight:var(--yb-font-weight-semibold);

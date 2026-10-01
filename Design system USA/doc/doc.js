@@ -129,29 +129,64 @@
      Sem script, a legenda numerada continua legivel ao lado da peca — que e a
      mesma decisao das abas e do filtro: marcacao que depende de JS para fazer
      sentido e marcacao que some quando o JS nao carrega. */
-  for (const anat of document.querySelectorAll('[data-yb-anatomy]')) {
+  const montarAnatomia = (anat) => {
     const palco = anat.querySelector('.anat__palco');
     const peca = anat.querySelector('.anat__peca');
     const fios = anat.querySelector('.anat__fios');
     const itens = [...anat.querySelectorAll('.anat__legenda > li[data-target]')];
-    if (!palco || !peca || !itens.length) continue;
+    if (!palco || !peca || !itens.length) return;
 
+    /* O numero conta so o que esta desenhado: parte em painel fechado nao leva
+       numero, e a sequencia continua sem buraco (1, 2, 3, e nao 1, 2, 4). */
+    let numero = 0;
     const pares = itens.map((li, i) => {
       /* `alvo` e um seletor CSS inteiro, e nao so um nome de classe: ha parte
          que nao tem classe nenhuma — o `summary` do acordeao e o `<img>` do
          cartao sao elementos nativos, e apontar para eles exige seletor. */
-      const alvo = peca.querySelector(li.dataset.target)
-        // o container costuma ser a raiz do recorte, que querySelector nao ve
-        || (peca.firstElementChild?.matches(li.dataset.target) ? peca.firstElementChild : null);
-      if (!alvo) { li.classList.add('anat__item--perdido'); return null; }
+      /* A PRIMEIRA VISIVEL, e nao a primeira do HTML. No Header o primeiro
+         `.yb-badge` mora dentro do submenu fechado, e o numero apontava para
+         o vazio fora do quadro — o contador do carrinho, que se ve, vinha
+         depois. Visivel aqui e "nada entre ele e a peca esta escondido",
+         medido pelo CSS e nao pela caixa: a aba da anatomia pode estar fechada
+         quando isto roda, e ai toda caixa mede zero. */
+      const escondido = (el) => {
+        for (let n = el; n && n !== peca; n = n.parentElement) {
+          const cs = getComputedStyle(n);
+          /* Opacidade nao conta: o Toast entra com animacao que comeca em 0,
+             e e isso que esta checagem pegaria se medisse no primeiro quadro. */
+          if (cs.display === 'none' || cs.visibility === 'hidden') return true;
+        }
+        return false;
+      };
+      /* Seletor invalido marca SO esta parte como perdida. Lancado, o erro
+         parava o desenho no meio, e as partes seguintes ficavam com o numero
+         empilhado no canto — foi o que um par de aspas fez no Header. */
+      let todos;
+      try {
+        const raiz = peca.firstElementChild?.matches(li.dataset.target) ? [peca.firstElementChild] : [];
+        todos = [...raiz, ...peca.querySelectorAll(li.dataset.target)];
+      } catch { todos = []; }
+      if (!todos.length) { li.classList.add('anat__item--perdido'); return null; }
+      const alvo = todos.find((el) => !escondido(el));
+      /* Existe, mas so dentro de painel fechado (submenu, busca, gaveta): sem
+         numero no desenho, e a legenda diz por que. */
+      if (!alvo) {
+        li.classList.add('anat__item--oculto');
+        li.insertAdjacentHTML('afterbegin', '<span class="anat__num anat__num--vazio" aria-hidden="true"></span>');
+        return null;
+      }
+      numero += 1;
       const selo = document.createElement('span');
       selo.className = 'anat__selo';
-      selo.textContent = String(i + 1);
+      selo.textContent = String(numero);
       selo.setAttribute('aria-hidden', 'true');
       palco.appendChild(selo);
-      li.insertAdjacentHTML('afterbegin', `<span class="anat__num" aria-hidden="true">${i + 1}</span>`);
+      li.insertAdjacentHTML('afterbegin', `<span class="anat__num" aria-hidden="true">${numero}</span>`);
       return { li, alvo, selo, ordem: i };
     }).filter(Boolean);
+    /* As sem numero vao para o fim da legenda: no meio, quebravam a sequencia
+       que o olho segue (1, 2, 3, —, 4). */
+    for (const li of itens) if (li.classList.contains('anat__item--oculto')) li.parentElement.appendChild(li);
 
     /* O SELO SAI DE CIMA DA PECA E VAI PARA A MARGEM, ligado por um fio.
 
@@ -184,6 +219,40 @@
            qualquer outro; quem nao tem lado e so a raiz. */
         if (par.alvo === peca.firstElementChild) emCima.push(par);
         else (par.caixa.x + par.caixa.w / 2 < larg / 2 ? aEsquerda : aDireita).push(par);
+      }
+      /* FIO QUE ATRAVESSA OUTRA PARTE SOBE PARA O TOPO. Numa fileira — os itens
+         da barra do Nav —, o fio horizontal do terceiro item vinha da margem
+         passando por cima do primeiro e do segundo, e lia como sublinhado deles.
+         Quando a reta da margem ate a parte cruza outra parte, e a descida de
+         cima ate ela nao cruza nada, o numero vai para cima dela e o fio desce
+         reto. A raiz nao conta como obstaculo (contem todo mundo), nem quem
+         contem a parte ou esta dentro dela. */
+      const cruza = (par, r) => pares.some((o) => o !== par
+        && o.alvo !== peca.firstElementChild
+        && !o.alvo.contains(par.alvo) && !par.alvo.contains(o.alvo)
+        && o.caixa.w > 0 && o.caixa.h > 0
+        /* Faixa que atravessa a peca de ponta a ponta (o aviso no topo do
+           Header) e fundo, nao obstaculo: todo fio que desce cruzaria ela.
+           90% e nao menos: com 60%, o titulo do Post virava "faixa" e o resumo
+           subia para o topo atravessando ele. */
+        && o.caixa.w < pecaW * 0.9
+        && o.caixa.x < r.x2 && o.caixa.x + o.caixa.w > r.x1
+        && o.caixa.y < r.y2 && o.caixa.y + o.caixa.h > r.y1);
+      const doTopo = [];
+      for (const lado of [aEsquerda, aDireita]) {
+        for (const par of [...lado]) {
+          const { x: cx, y: cy, w, h } = par.caixa;
+          const meio = cy + h / 2;
+          const joelho = lado === aEsquerda ? pecaX - 8 : pecaX + pecaW + 8;
+          const borda = lado === aEsquerda ? cx : cx + w;
+          const horizontal = { x1: Math.min(joelho, borda), x2: Math.max(joelho, borda), y1: meio - 1, y2: meio + 1 };
+          const centro = cx + w / 2;
+          const vertical = { x1: centro - 1, x2: centro + 1, y1: 0, y2: cy };
+          if (cruza(par, horizontal) && !cruza(par, vertical)) {
+            lado.splice(lado.indexOf(par), 1);
+            doTopo.push(par);
+          }
+        }
       }
       /* Dentro de cada margem, os que disputam a MESMA altura se abrem em torno
          dela, e nao para baixo em fila. No alerta, icone, corpo e titulo
@@ -237,9 +306,20 @@
         par.ponto = { sx: x, sy: MARGEM + RAIO * 2, ax: x, ay: par.caixa.y, vertical: true };
         x += PASSO;
       }
-      fios.setAttribute('viewBox', `0 0 ${larg} ${base.height}`);
+      for (const par of doTopo) {
+        const cx = par.caixa.x + par.caixa.w / 2;
+        par.selo.style.insetBlockStart = MARGEM + 'px';
+        par.selo.style.insetInlineStart = (cx - RAIO) + 'px';
+        par.ponto = { sx: cx, sy: MARGEM + RAIO * 2, ax: cx, ay: par.caixa.y, vertical: true };
+      }
+      /* O QUADRO CRESCE SE OS NUMEROS NAO COUBEREM. Numa fileira de cinco
+         partes na mesma altura (Menu e os quatro botoes do Header), a pilha
+         da margem passava da borda de baixo. */
+      const fundo = Math.max(0, ...pares.map((p) => parseFloat(p.selo.style.insetBlockStart) || 0)) + RAIO * 2 + MARGEM;
+      if (fundo > base.height) palco.style.minBlockSize = Math.ceil(fundo) + 'px';
+      fios.setAttribute('viewBox', `0 0 ${larg} ${Math.max(base.height, fundo)}`);
       fios.setAttribute('width', larg);
-      fios.setAttribute('height', base.height);
+      fios.setAttribute('height', Math.max(base.height, fundo));
       fios.innerHTML = pares.filter((p) => p.ponto).map((p) => {
         const { sx, sy, jx, ax, ay, vertical } = p.ponto;
         // desce na calha e entra reto: le como chamada de desenho tecnico.
@@ -269,6 +349,22 @@
       selo.addEventListener('mouseenter', () => acender(true));
       selo.addEventListener('mouseleave', () => acender(false));
     }
+  };
+  /* SO MONTA QUANDO O QUADRO TEM LARGURA. A anatomia mora numa aba que nasce
+     fechada, e montada ali todo elemento mede zero: o Header, que troca de
+     layout pela largura do proprio container, estava no arranjo de celular,
+     os botoes de acao contavam como escondidos e tres numeros caiam no mesmo
+     ponto. Com a aba fechada, espera ela abrir. */
+  for (const anat of document.querySelectorAll('[data-yb-anatomy]')) {
+    const palco = anat.querySelector('.anat__palco');
+    if (!palco) continue;
+    if (palco.getBoundingClientRect().width > 0 || !window.ResizeObserver) { montarAnatomia(anat); continue; }
+    const espera = new ResizeObserver(() => {
+      if (palco.getBoundingClientRect().width === 0) return;
+      espera.disconnect();
+      montarAnatomia(anat);
+    });
+    espera.observe(palco);
   }
 
   /* FILTRO DA COLUNA (e da galeria, quando ela existe).

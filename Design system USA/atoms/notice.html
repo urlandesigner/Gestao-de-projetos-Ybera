@@ -165,7 +165,7 @@
     </nav>
   </div>
   <h1 class="ficha-titulo">Notice</h1>
-  <p class="ficha-quando">Faixa fina de aviso, largura inteira, acima do conteúdo. A loja empilha duas no topo de toda página — uma contextual e a de frete.</p>
+  <p class="ficha-quando">Faixa fina de aviso no topo da página, na largura toda. Use para recados da loja, como o frete grátis.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
@@ -330,16 +330,16 @@
          diz o que e. Aqui o que a pessoa precisa primeiro e a lista do que vai
          encontrar; a procedencia vem depois, e vale a frase inteira, porque e
          ela que autoriza confiar no que esta escrito. -->
-    <p class="bloco-lede">De que a peça é feita, o que ela aceita e os tokens que
-    consome — estes do mais específico desta peça para o mais compartilhado com o
-    resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
-    estiver errado aqui, o errado é o código.</p>
+    <p class="bloco-lede">As peças que formam este componente, o que dá para variar nele
+    e os tokens que ele usa. Tudo é lido direto do código, então está sempre atualizado.</p>
 
-    <p class="api-linha"><span class="api-linha__rotulo">De que é feita</span><span class="api-linha__corpo">Nenhuma. Um átomo não compõe outras peças — é isso que faz dele átomo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-notice--action</code> <code>.yb-notice--soft</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo">Nenhum. A peça é um elemento só.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
+    <div class="api-ficha">
+    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo">Nenhuma outra peça. Um átomo não usa outros componentes — é isso que faz dele átomo.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-notice--action</code> <code>.yb-notice--soft</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo">Nenhum. A peça é um elemento só.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Só CSS.</div></div>
+    </div>
     <p class="rotulo">Tokens <span class="rotulo-conta">20</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
@@ -348,9 +348,9 @@
           <li><i class="tokens__cor" style="background:var(--yb-accent-on-dark)" aria-hidden="true"></i><code>--yb-accent-on-dark</code><span class="tokens__valor">#D29F3E</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-action-primary-text)" aria-hidden="true"></i><code>--yb-action-primary-text</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-action-primary-bg)" aria-hidden="true"></i><code>--yb-action-primary-bg</code><span class="tokens__valor">#1E1E1F</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>

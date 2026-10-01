@@ -703,9 +703,7 @@
 .yb-nav__showcase > .yb-collection--card .yb-collection__foot{flex-grow:0}
 
 /* Um unico <a>, como `.yb-search__item` — midia e botao separados dariam
-   dois links pro mesmo produto, ruido extra pra teclado e leitor de tela.
-   A midia cresce com `flex:1`: o painel ja estica toda coluna pra altura
-   da mais alta, entao o que sobrar de altura vira imagem, nao vao. */
+   dois links pro mesmo produto, ruido extra pra teclado e leitor de tela. */
 .yb-nav__promo{
   display:flex; flex-direction:column; gap:var(--yb-space-3);
   text-decoration:none; color:inherit;
@@ -715,8 +713,14 @@
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
 }
+/* A MIDIA TEM A PROPORCAO DO CATALOGO, e nao a altura que sobra na coluna.
+   Ela crescia com `flex:1` ate a altura da coluna mais alta e a foto quadrada
+   entrava com `cover`: numa caixa de 224x283 sumiam 30px de cada lado, e a
+   arte de oferta da loja tem o preco e o prazo escritos na borda ("WAS $1…"
+   cortado). 1:1 e a proporcao em que o catalogo e fotografado, a mesma do
+   Card product; a sobra de altura da coluna fica embaixo do botao. */
 .yb-nav__promo-media{
-  position:relative; flex:1; min-height:8rem; overflow:hidden;
+  position:relative; aspect-ratio:var(--yb-aspect-product); overflow:hidden;
   background:var(--yb-bg-muted); border-radius:var(--yb-radius-media);
 }
 /* A foto preenche a caixa sem ditar a altura dela (absoluta). Em fluxo, a
@@ -1220,10 +1224,6 @@
    decidindo a compra. Em h4 ele ficava maior que o titulo do produto. */
 .yb-cart__item-foot .yb-price__now{
   font-size:var(--yb-type-body-size);
-  /* tabular-nums da ao ponto a largura de um digito. Isso serve pra coluna
-     que alinha (o rodape), nao pra um preco solto no meio da linha, onde o
-     buraco em volta do ponto e a unica coisa que se ve. */
-  font-variant-numeric:proportional-nums;
 }
 .yb-cart__item-foot .yb-price__was{font-size:var(--yb-type-caption-size)}
 /* A lixeira e icone, nao a palavra: "Remove" escrito ao lado do titulo
@@ -1266,7 +1266,9 @@
   margin:var(--yb-space-2) var(--yb-space-3);
   display:flex; align-items:center; gap:var(--yb-space-3);
   padding:var(--yb-space-3); border:var(--yb-border-hairline) solid var(--yb-border-subtle);
-  border-radius:var(--yb-radius-card); background:var(--yb-bg-subtle);
+  /* Branco, nao `bg-subtle`: o fio ja desenha o cartao, e no cinza a trilha
+     da barra (`bg-muted`) e a foto sem carregar sumiam — 1.04:1. */
+  border-radius:var(--yb-radius-card); background:var(--yb-surface);
 }
 .yb-cart__gift-body{display:flex; flex-direction:column; gap:var(--yb-space-3); flex:1; min-width:0}
 .yb-cart__gift-text{
@@ -1555,9 +1557,12 @@
 /* A ordenacao fica ao lado do "Filters" `--sm`, e os dois tem de ter a mesma
    altura. E o contexto que pede o select compacto, entao a regra mora aqui —
    estava escrita inline na marcacao da ficha. */
+/* So o padding de BLOCO, e nao o atalho `padding`: o atalho zerava o
+   `padding-inline-end` que reserva a seta do select, e o texto da opcao
+   passava por baixo dela. O padding lateral ja e o mesmo que estava aqui. */
 .yb-catalog__tools .yb-select{
   width:auto; min-height:var(--yb-control-height-compact);
-  padding:var(--yb-space-2) var(--yb-space-4);
+  padding-block:var(--yb-space-2);
 }
 .yb-catalog__filters{
   display:flex; gap:var(--yb-space-2); flex-wrap:wrap; margin-block-end:var(--yb-space-6);

@@ -646,8 +646,10 @@ for (const p of pecas) {
    por fio. A unica que continua precisando de area e a de tokens, que e uma
    grade — e "De que e feita" quando ha composicao, porque ali a lista vem
    agrupada por degrau. */
+/* `div` e nao `p`: a linha "Feita de" leva listas de links, e lista nao mora
+   dentro de paragrafo. */
 const apiLinha = (rotulo, corpo) =>
-  `<p class="api-linha"><span class="api-linha__rotulo">${rotulo}</span><span class="api-linha__corpo">${corpo}</span></p>`;
+  `<div class="api-linha"><span class="api-linha__rotulo">${rotulo}</span><div class="api-linha__corpo">${corpo}</div></div>`;
 
 const linhaApi = (itens, vazio) =>
   itens.length
@@ -815,7 +817,7 @@ const blocoAnatomia = (f, n) => {
         <div class="anat__peca"${largura ? ` style="max-inline-size:${largura}"` : ''}>${prefixar(marcacao)}</div>
       </div>
       <ol class="anat__legenda">
-${partes.map((x) => `        <li data-target="${x.alvo}"><span class="anat__texto"><b>${x.nome}</b> — ${x.texto}</span></li>`).join('\n')}
+${partes.map((x) => `        <li data-target="${x.alvo.replace(/"/g, '&quot;')}"><span class="anat__texto"><b>${x.nome}</b> — ${x.texto}</span></li>`).join('\n')}
       </ol>
     </div>`;
   };
@@ -968,33 +970,31 @@ ${f.estados.map((e) => `      <figure class="duo__col">
          diz o que e. Aqui o que a pessoa precisa primeiro e a lista do que vai
          encontrar; a procedencia vem depois, e vale a frase inteira, porque e
          ela que autoriza confiar no que esta escrito. -->
-    <p class="bloco-lede">De que a peça é feita, o que ela aceita e os tokens que
-    consome — estes do mais específico desta peça para o mais compartilhado com o
-    resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
-    estiver errado aqui, o errado é o código.</p>
+    <p class="bloco-lede">As peças que formam este componente, o que dá para variar nele
+    e os tokens que ele usa. Tudo é lido direto do código, então está sempre atualizado.</p>
 
-    ${f.usa.length
-      ? `<p class="rotulo">De que é feita</p>
-    ` + [...new Map(f.usa.map((c) => [c.nivel.dir, c.nivel])).values()].map((niv) => `<p class="usa-degrau">${niv.titulo}</p>
-    <ul class="usa">${f.usa.filter((c) => c.nivel === niv).map((c) => `<li><a href="../${c.nivel.dir}/${c.id}.html">${c.titulo}</a></li>`).join('')}</ul>`).join('\n    ')
+    <div class="api-ficha">
+    ${apiLinha('Feita de', f.usa.length
+      ? `<div class="usa-grupos">${[...new Map(f.usa.map((c) => [c.nivel.dir, c.nivel])).values()].map((niv) => `<div class="usa-grupo"><span class="usa-degrau">${niv.titulo}</span><ul class="usa">${f.usa.filter((c) => c.nivel === niv).map((c) => `<li><a href="../${c.nivel.dir}/${c.id}.html">${c.titulo}</a></li>`).join('')}</ul></div>`).join('')}</div>`
       /* "e so a propria folha" nao dizia nada para quem nao mora aqui: folha de
          quem, e o que isso implica. O fato e que a peca nao consome nenhum
          outro componente do sistema — e para o atomo esse fato tem nome. */
-      : apiLinha('De que é feita', n.dir === 'atoms'
-          ? 'Nenhuma. Um átomo não compõe outras peças — é isso que faz dele átomo.'
-          : 'Nenhuma: não consome nenhum outro componente. O que ela desenha sai todo da folha dela.')}
+      : n.dir === 'atoms'
+          ? 'Nenhuma outra peça. Um átomo não usa outros componentes — é isso que faz dele átomo.'
+          : 'Nenhuma outra peça: tudo o que ela desenha sai da folha de estilo dela.')}
     ${apiLinha('Modificadores', f.api.modificadores.length
       ? `<span class="lista-api">${f.api.modificadores.map((c) => `<code>.${c}</code>`).join(' ')}</span>`
       : 'Nenhum. O que muda nela vem do conteúdo.')}
     ${apiLinha('Elementos', f.api.elementos.length
       ? `<span class="lista-api">${f.api.elementos.map((c) => `<code>.${c}</code>`).join(' ')}</span>`
       : 'Nenhum. A peça é um elemento só.')}
-    ${apiLinha('Estados que a folha trata', f.api.estados.length
+    ${apiLinha('Estados', f.api.estados.length
       ? f.api.estados.map((e) => `<code>${escapar(e)}</code>`).join(' · ')
       : 'Nenhum. A peça não muda por interação.')}
     ${apiLinha('Comportamento', precisaDeJs(f)
-      ? 'Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.'
+      ? 'Precisa de <code>ybera-behavior.js</code>. Sem ele aparece, mas não responde.'
       : 'Só CSS.')}
+    </div>
     <p class="rotulo">Tokens <span class="rotulo-conta">${f.api.tokens.length}</span></p>
     ${blocoDeTokens(f.api.tokens)}
   </section>

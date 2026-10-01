@@ -166,7 +166,7 @@
     </nav>
   </div>
   <h1 class="ficha-titulo">Search overlay</h1>
-  <p class="ficha-quando">A busca como folha que cobre a página inteira. Busca é troca de contexto — não caixinha no header.</p>
+  <p class="ficha-quando">A busca em tela cheia, que abre por cima da página com buscas recentes, populares e categorias.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
@@ -833,10 +833,10 @@
 </dialog></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
-        <li data-target=".yb-iconbtn"><span class="anat__texto"><b><a href="../atoms/iconbtn.html">Icon button</a></b> — Botão de 44px que mostra só um ícone, sem rótulo visível.</span></li>
-        <li data-target=".yb-chip"><span class="anat__texto"><b><a href="../atoms/chip.html">Chip</a></b> — Filtro que liga e desliga, em fileira. O estado mora em <code>aria-pressed</code>, não numa classe — quem lê a tela ouve "pressionado" sem depender de cor.</span></li>
-        <li data-target=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço de um produto, com o valor anterior riscado e o desconto quando existem. Sempre tabular: em grid, dígitos precisam alinhar em coluna.</span></li>
+        <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — Botão que executa uma ação, como comprar ou continuar. Use só um botão primário por tela; as outras ações ficam no secundário ou no ghost.</span></li>
+        <li data-target=".yb-iconbtn"><span class="anat__texto"><b><a href="../atoms/iconbtn.html">Icon button</a></b> — Botão quadrado de 44px só com ícone, como fechar, buscar ou favoritar. Precisa de um nome para leitor de tela, porque não tem texto visível.</span></li>
+        <li data-target=".yb-chip"><span class="anat__texto"><b><a href="../atoms/chip.html">Chip</a></b> — Botão pequeno de filtro, que liga e desliga, usado em fileira acima de uma lista. Quando está ativo, muda de aparência.</span></li>
+        <li data-target=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço do produto, com o preço antigo riscado e o desconto quando houver.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -846,28 +846,24 @@
          diz o que e. Aqui o que a pessoa precisa primeiro e a lista do que vai
          encontrar; a procedencia vem depois, e vale a frase inteira, porque e
          ela que autoriza confiar no que esta escrito. -->
-    <p class="bloco-lede">De que a peça é feita, o que ela aceita e os tokens que
-    consome — estes do mais específico desta peça para o mais compartilhado com o
-    resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
-    estiver errado aqui, o errado é o código.</p>
+    <p class="bloco-lede">As peças que formam este componente, o que dá para variar nele
+    e os tokens que ele usa. Tudo é lido direto do código, então está sempre atualizado.</p>
 
-    <p class="rotulo">De que é feita</p>
-    <p class="usa-degrau">Atoms</p>
-    <ul class="usa"><li><a href="../atoms/button.html">Button</a></li><li><a href="../atoms/chip.html">Chip</a></li><li><a href="../atoms/iconbtn.html">Icon button</a></li></ul>
-    <p class="usa-degrau">Molecules</p>
-    <ul class="usa"><li><a href="../molecules/price.html">Price</a></li></ul>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-search__bar</code> <code>.yb-search__body</code> <code>.yb-search__chips</code> <code>.yb-search__clear</code> <code>.yb-search__close</code> <code>.yb-search__col</code> <code>.yb-search__empty</code> <code>.yb-search__form</code> <code>.yb-search__group</code> <code>.yb-search__group--secondary</code> <code>.yb-search__icon</code> <code>.yb-search__input</code> <code>.yb-search__item</code> <code>.yb-search__link</code> <code>.yb-search__list</code> <code>.yb-search__meta</code> <code>.yb-search__name</code> <code>.yb-search__panel</code> <code>.yb-search__thumb</code> <code>.yb-search__title</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code> · <code>[hidden]</code> · <code>[open]</code></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
+    <div class="api-ficha">
+    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo"><div class="usa-grupos"><div class="usa-grupo"><span class="usa-degrau">Atoms</span><ul class="usa"><li><a href="../atoms/button.html">Button</a></li><li><a href="../atoms/chip.html">Chip</a></li><li><a href="../atoms/iconbtn.html">Icon button</a></li></ul></div><div class="usa-grupo"><span class="usa-degrau">Molecules</span><ul class="usa"><li><a href="../molecules/price.html">Price</a></li></ul></div></div></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-search__bar</code> <code>.yb-search__body</code> <code>.yb-search__chips</code> <code>.yb-search__clear</code> <code>.yb-search__close</code> <code>.yb-search__col</code> <code>.yb-search__empty</code> <code>.yb-search__form</code> <code>.yb-search__group</code> <code>.yb-search__group--secondary</code> <code>.yb-search__icon</code> <code>.yb-search__input</code> <code>.yb-search__item</code> <code>.yb-search__link</code> <code>.yb-search__list</code> <code>.yb-search__meta</code> <code>.yb-search__name</code> <code>.yb-search__panel</code> <code>.yb-search__thumb</code> <code>.yb-search__title</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code> · <code>[hidden]</code> · <code>[open]</code></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele aparece, mas não responde.</div></div>
+    </div>
     <p class="rotulo">Tokens <span class="rotulo-conta">41</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>8</span></p>
         <ul class="tokens__lista">
           <li><i class="tokens__cor" style="background:var(--yb-surface-overlay)" aria-hidden="true"></i><code>--yb-surface-overlay</code><span class="tokens__valor">rgba(30, 30, 31, .55)</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>

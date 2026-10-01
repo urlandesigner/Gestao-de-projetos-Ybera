@@ -9,6 +9,89 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 [GOVERNANCA.md](GOVERNANCA.md), componente novo pede versão **menor** (0.13.0).
 
 ### Mudado
+- **O select passa a desenhar a própria seta.** Era o último controle da casa
+  que ainda chegava com o desenho do sistema operacional — e a seta nativa não
+  é conteúdo do campo: mora numa faixa que o navegador reserva por fora do
+  `padding-inline-end`. Dava para ver na mesma tela, porque ela encostava na
+  borda no select solto e caía noutro lugar dentro da moldura do campo, onde o
+  controle acaba antes do padding da caixa. Agora o campo usa `appearance:none`
+  e pinta o `yb-chevron-down` do sprite, no `--yb-icon-md` dos ícones vizinhos,
+  com o `padding-inline-end` reservando a largura dele. No erro a seta e o
+  alerta convivem lado a lado; desabilitado, a seta clareia junto; em alto
+  contraste a nativa volta, como já acontece no checkbox e no radio. **A lista
+  que abre continua nativa**, de propósito: no celular ela é a roleta do
+  sistema. De quebra, a barra do Catalog deixou de escrever `padding` em atalho
+  — era o atalho que apagava a reserva da seta.
+- **Legenda da anatomia lida de cima para baixo.** Nas duas colunas a ordem
+  ia por linha (1 2 / 3 4); agora desce a esquerda e continua na direita.
+- **Nada de cinza sobre cinza.** O quadro da Anatomia era `bg-subtle`, o mesmo
+  cinza da mídia vazia: no Catalog as fotos sumiam e o "Best seller" boiava.
+  O quadro agora é branco com fio, como o palco das demonstrações, e a mídia
+  sem foto fica `gray-200` só no desenho. Na peça: o disco dos Seals passou a
+  branco com fio (era `bg-muted` sobre a faixa `bg-subtle`, 1.04:1) e o cartão
+  do brinde no carrinho passou a branco (a trilha da barra sumia no cinza).
+- **Aba Anatomia mais legível.** "De que é feita" virou a primeira linha da
+  ficha técnica ("Feita de"), com o nome do degrau ao lado das peças, e as peças
+  viraram links com cara de link: texto principal, borda do sistema e seta, no
+  lugar da pílula cinza apagada. A ficha técnica é um bloco só, com fio entre as
+  linhas, e a aba ganhou ritmo fixo: 32px do desenho ao texto, 24 do texto à
+  ficha, 32 da ficha aos tokens. O texto de abertura ficou em linguagem simples,
+  e "Estados que a folha trata" virou "Estados".
+- **Submenu do Header por cima da demonstração de baixo.** Os dois Headers da
+  ficha (visitante e logado) empatavam na camada, e o de baixo, que nasce com o
+  menu da conta aberto, cobria o submenu do de cima. O palco com o submenu
+  aberto, ou onde a pessoa está com o mouse ou o teclado, agora fica acima.
+- **Um menu só, o da loja.** As fichas tinham cinco cópias do menu, todas
+  diferentes das telas: o Header com um grupo "Sales" que a loja não tem, o Nav
+  sem a vitrine que alterna produto e coleção. As cinco passam a ser a lista das
+  telas de exemplo, com caminhos e ids da ficha. Duas cópias do Nav dividiam os
+  mesmos ids, e abrir o menu da gaveta abria o submenu da demonstração de cima.
+- **Header e Nav, cada um com a própria anatomia.** O Header listava as peças
+  de dentro do menu e dos painéis (Button, Badge, Price, Collection, Chip), que
+  são do Nav, do Account menu e da Busca. Agora mostra só o que é dele: faixa de
+  aviso, logo, onde o menu entra (com link para o Nav), busca, conta, carrinho e
+  contador. O Nav fica com a barra e o painel aberto. Na anatomia, passar o mouse
+  na barra não abre mais o submenu nem a conta por cima da legenda.
+  - O menu da ficha do Header tinha um sexto item, "Contact Us", que a loja não
+    tem; saiu.
+  - Seletor com aspas (`[aria-label="Search"]`) cortava o atributo no HTML e
+    derrubava o desenho inteiro. O gerador escapa as aspas, e um seletor
+    inválido marca só a própria parte.
+  - O quadro cresce quando os números não cabem, e a faixa que atravessa a peça
+    de ponta a ponta deixa de contar como obstáculo para os fios.
+- **Anatomia do Nav e do Modal desenham o que se vê.** As duas eram geradas
+  pelas peças que usam, e essas peças moram em painéis fechados: os números
+  apontavam para fora do quadro. O Nav ganhou anatomia própria em duas partes
+  (a barra e o painel aberto) e o Modal, a janela aberta.
+  - O desenho passa a escolher a primeira ocorrência VISÍVEL de cada parte, e
+    não a primeira do HTML: no Header o Badge apontava para o submenu fechado.
+    Parte que só existe em painel fechado fica sem número, no fim da legenda,
+    com o motivo escrito.
+  - Fio que atravessaria outra parte sobe para o topo e desce reto até ela: na
+    barra do Nav, o fio do terceiro item sublinhava os dois primeiros.
+  - As setas do trilho, que nascem escondidas até o JS ligar, aparecem no
+    desenho do Hero.
+- **Preço sem vão em volta do ponto.** Na Schibsted Grotesk os dígitos de
+  largura fixa (`tabular-nums`) dão ao ponto e à vírgula a largura de um dígito,
+  e todo preço do sistema saía "$79 . 90". Price, Card offer e Variant picker
+  passam a dígitos proporcionais; o carrinho, que já corrigia isso só para ele,
+  perde a regra própria. Contadores sem ponto (paginação, quantidade, galeria)
+  continuam tabulares.
+- **Arte da promoção do Nav inteira.** A foto do produto no submenu Shop esticava
+  até a altura da coluna e era cortada nas laterais, levando parte do texto da
+  arte ("WAS $1…"). Agora tem a proporção do catálogo, 1:1. Na ficha, o painel
+  aberto também deixou de mostrar um fio da nota de baixo em cada lateral.
+- **Submenu do Nav por cima das notas.** Na ficha, com o painel aberto, a seta
+  das notas recolhidas logo abaixo atravessava o painel. O palco que deixa o menu
+  transbordar (`.stage--overflow`) agora fica acima do que vem depois dele, e
+  continua abaixo da barra fixa da doc. Vale também para Header, Account menu e
+  Dropdown.
+- **Textos de abertura em linguagem simples.** O texto embaixo do título de 66
+  fichas e páginas de token, das páginas de grupo, do índice, do Preview e do
+  Decision log usava frase de efeito e jargão ("Três camadas mais uma de
+  mercado", "Busca é troca de contexto", "a proporção diz se o sistema está
+  saudável"). Agora a primeira frase diz o que a peça é e a segunda quando usar;
+  o porquê continua nas notas. Os quatro cartões de camada da Architecture também.
 - **Telas de exemplo só com peças do sistema.** Auditoria das 11 telas: as folhas
   eram cópias exatas do DS e não havia cor fixa nem token inexistente, mas duas
   telas escreviam peça própria.

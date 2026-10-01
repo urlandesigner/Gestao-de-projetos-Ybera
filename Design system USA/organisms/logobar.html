@@ -166,7 +166,7 @@
     </nav>
   </div>
   <h1 class="ficha-titulo">Logo bar</h1>
-  <p class="ficha-quando">Faixa escura com as submarcas, entre o conteúdo e o rodapé. Só entra arte monocromática.</p>
+  <p class="ficha-quando">Faixa escura com os logos das linhas da marca, perto do rodapé.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
@@ -316,7 +316,7 @@
 </div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-track"><span class="anat__texto"><b><a href="../molecules/track.html">Track</a></b> — Contêiner, não cartão: não tem visual próprio. Põe numa linha só uma fileira maior que a tela, com rolagem de lado e setas, e carrega qualquer peça — cartões de produto, avaliações, vídeos, logos, banners do hero.</span></li>
+        <li data-target=".yb-track"><span class="anat__texto"><b><a href="../molecules/track.html">Track</a></b> — Fileira que rola para o lado quando há mais itens do que cabem na tela, com setas no desktop. Não tem visual próprio: recebe cartões, avaliações, vídeos ou banners.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -326,18 +326,16 @@
          diz o que e. Aqui o que a pessoa precisa primeiro e a lista do que vai
          encontrar; a procedencia vem depois, e vale a frase inteira, porque e
          ela que autoriza confiar no que esta escrito. -->
-    <p class="bloco-lede">De que a peça é feita, o que ela aceita e os tokens que
-    consome — estes do mais específico desta peça para o mais compartilhado com o
-    resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
-    estiver errado aqui, o errado é o código.</p>
+    <p class="bloco-lede">As peças que formam este componente, o que dá para variar nele
+    e os tokens que ele usa. Tudo é lido direto do código, então está sempre atualizado.</p>
 
-    <p class="rotulo">De que é feita</p>
-    <p class="usa-degrau">Molecules</p>
-    <ul class="usa"><li><a href="../molecules/track.html">Track</a></li></ul>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-logobar__track</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo">Nenhum. A peça não muda por interação.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
+    <div class="api-ficha">
+    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo"><div class="usa-grupos"><div class="usa-grupo"><span class="usa-degrau">Molecules</span><ul class="usa"><li><a href="../molecules/track.html">Track</a></li></ul></div></div></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-logobar__track</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo">Nenhum. A peça não muda por interação.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Só CSS.</div></div>
+    </div>
     <p class="rotulo">Tokens <span class="rotulo-conta">5</span></p>
     <div class="tokens">
       <div class="tokens__grupo">

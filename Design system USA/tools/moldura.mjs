@@ -55,22 +55,22 @@ const versao = (ler('package.json').match(/"version":\s*"([^"]+)"/) || [, '0.0.0
    loja, e um cabeçalho nosso por cima competiria com o que está em teste. */
 export const GRUPOS = [
   { id: 'foundation', rotulo: 'Foundation', href: 'tokens/index.html', hub: true,
-    lede: 'Não aparece sozinha na tela. Valor e símbolo: toda peça consome, ninguém vê isolado.',
+    lede: 'Cores, tipografia, espaçamentos, sombras e ícones: a base que todos os componentes usam.',
     dentro: ['tokens', 'icons'] },
   { id: 'components', rotulo: 'Components', href: 'components/index.html', hub: true,
-    lede: 'A peça reutilizável e sem contexto. Serve a qualquer página porque não sabe em qual está.',
+    lede: 'As peças reutilizáveis, como botões, campos e cartões. Servem em qualquer página.',
     dentro: ['atoms', 'molecules'] },
   /* `hub: false`: abre a galeria que tools/fichas.mjs já escreve para o degrau.
      O grupo tem UM degrau, então uma página de grupo repetiria a mesma lista de
      quinze com outro título — e lista repetida é a que envelhece pela metade. */
   { id: 'blocks', rotulo: 'Blocks', href: 'organisms/index.html', hub: false,
-    lede: 'As regiões da loja. Cada uma tem lugar e existe uma vez por tela.' },
+    lede: 'As grandes áreas da loja, como cabeçalho, carrinho e rodapé, montadas com os componentes.' },
   /* `hub: false` diz que o item do menu NÃO tem página própria gerada aqui —
      ele abre a galeria que tools/fichas.mjs já escreve para o degrau. Gerar
      uma segunda página para dizer "há 1 template, clique aqui" seria a parada
      que não informa nada. */
   { id: 'templates', rotulo: 'Templates', href: 'templates/index.html', hub: false,
-    lede: 'O esqueleto da página, sem conteúdo.' },
+    lede: 'A estrutura das páginas: largura, espaço entre seções e onde cada área fica.' },
   /* No menu elas se chamam "Exemplos"; no build, no validador e no inventário
      continuam "telas-prova". Não é descuido: a palavra interna diz o PAPEL, e o
      papel está escrito onde ele é EXERCIDO — a coluna de maturidade do
@@ -404,9 +404,8 @@ function corpoDoGrupo(g) {
 
   <section class="grade-grupo">
     <h2>Tokens <span class="grade-conta">${tokens}</span></h2>
-    <p class="grade-lede">O vocabulário do sistema em três camadas: primitivo, semântico
-    e de componente. ${secoes.length} seções, uma página cada — a ordem vai de
-    fundamento a estado, e é a ordem em que se aprende. Os mesmos tokens em JSON,
+    <p class="grade-lede">Todos os valores do sistema, em ${secoes.length} páginas: da organização
+    dos tokens às cores de estado. Os mesmos tokens em JSON,
     no formato W3C Design Tokens, para Figma ou Style Dictionary:
     <a href="../dist/ybera-tokens.json" download="ybera-tokens.json">ybera-tokens.json</a>.</p>
     <div class="grade">
@@ -416,10 +415,9 @@ ${secoes.map((s) => cartao(`${s.arquivo}.html`, s.rotulo, null, s.frase)).join('
 
   <section class="grade-grupo">
     <h2>Ícones <span class="grade-conta">${icones}</span></h2>
-    <p class="grade-lede">Não são token, e é por isso que estão do lado e não dentro:
-    token é <b>valor</b> — um número, uma cor, uma duração —, e ícone é <b>ativo</b>,
-    um traçado. O que os põe na mesma prateleira é só o fato de toda peça consumir
-    os dois sem que ninguém os veja isolados.</p>
+    <p class="grade-lede">Os ícones ficam aqui porque todos os componentes usam, como os
+    tokens. Mas não são token: token é um valor, como uma cor ou um tamanho, e ícone é
+    um desenho.</p>
     <div class="grade">
 ${cartao('../icons/index.html', 'A galeria', icones, 'Grade de 24×24, traço 1,5. Herdam a cor do texto — nenhum ícone tem token de cor próprio.')}
     </div>
@@ -469,10 +467,8 @@ ${cartao('../icons/index.html', 'A galeria', icones, 'Grade de 24×24, traço 1,
 
   <section class="grade-grupo">
     <h2>Todos os componentes <span class="grade-conta">${pecas.length}</span></h2>
-    <p class="grade-lede">Em ordem de nome, os dois degraus juntos — ${COMPONENTES.map((x) => `${n(x.dir)} ${x.singular}s`).join(' e ')}.
-    A proporção ${COMPONENTES.map((x) => n(x.dir)).join(' / ')} é o que diz se o sistema está
-    saudável: base larga. Poucos átomos para muitas moléculas significa que alguém está
-    reescrevendo botão. As regiões da página estão em <a href="../organisms/index.html">Blocks</a>.</p>
+    <p class="grade-lede">Todos em ordem alfabética: ${COMPONENTES.map((x) => `${n(x.dir)} ${x.singular}s`).join(' e ')}.
+    As áreas maiores da página, como cabeçalho e rodapé, ficam em <a href="../organisms/index.html">Blocks</a>.</p>
     <div class="grade">
 ${pecas.map((x) => `      <a class="peca" href="../${x.dir}/${x.id}.html">
         <span class="peca-nivel">${x.nivel}</span>

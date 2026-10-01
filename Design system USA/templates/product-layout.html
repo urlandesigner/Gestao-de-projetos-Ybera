@@ -167,7 +167,7 @@
     </nav>
   </div>
   <h1 class="ficha-titulo">Product layout</h1>
-  <p class="ficha-quando">O esqueleto da PDP: galeria à esquerda, que acompanha a rolagem, coluna de compra à direita, e a história do produto descendo dentro da coluna de compra.</p>
+  <p class="ficha-quando">A estrutura da PDP: fotos à esquerda, área de compra à direita e o conteúdo extra do produto abaixo do botão de comprar.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
@@ -455,12 +455,12 @@
 </div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-gallery"><span class="anat__texto"><b><a href="../organisms/gallery.html">Gallery</a></b> — A galeria de fotos da PDP: foto grande com miniaturas ao lado. As miniaturas são radios nativos — seta do teclado navega, leitor de tela anuncia.</span></li>
-        <li data-target=".yb-buybox"><span class="anat__texto"><b><a href="../organisms/buybox.html">Buy box</a></b> — O bloco de compra da PDP: nome, prova, preço, escolha, ação e garantia. Sete níveis de informação acima da dobra, em ordem fixa.</span></li>
-        <li data-target=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço de um produto, com o valor anterior riscado e o desconto quando existem. Sempre tabular: em grid, dígitos precisam alinhar em coluna.</span></li>
-        <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
-        <li data-target=".yb-bannermedia"><span class="anat__texto"><b><a href="../molecules/bannermedia.html">Banner media</a></b> — Foto com texto por cima, dentro da coluna da página, e o link cobrindo a peça inteira — o banner de conteúdo da PDP. Também recebe a arte pronta do marketing. No topo da home, na largura da tela, o banner é o <a href="../molecules/bannerhero.html">Banner hero</a>.</span></li>
-        <li data-target=".yb-collection"><span class="anat__texto"><b><a href="../molecules/collection.html">Collection card</a></b> — Cartão de entrada para uma coleção: arte, nome e contagem. O cartão inteiro é o link — o rótulo sozinho seria um alvo pequeno dentro de uma imagem grande.</span></li>
+        <li data-target=".yb-gallery"><span class="anat__texto"><b><a href="../organisms/gallery.html">Gallery</a></b> — As fotos do produto na PDP: uma foto grande e miniaturas para trocar. Funciona também com teclado e leitor de tela.</span></li>
+        <li data-target=".yb-buybox"><span class="anat__texto"><b><a href="../organisms/buybox.html">Buy box</a></b> — A área de compra da PDP: nome, nota, preço, opções, botão de comprar e garantias, sempre nessa ordem.</span></li>
+        <li data-target=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço do produto, com o preço antigo riscado e o desconto quando houver.</span></li>
+        <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — Botão que executa uma ação, como comprar ou continuar. Use só um botão primário por tela; as outras ações ficam no secundário ou no ghost.</span></li>
+        <li data-target=".yb-bannermedia"><span class="anat__texto"><b><a href="../molecules/bannermedia.html">Banner media</a></b> — Banner com foto e texto dentro da coluna da página, como na PDP. Também recebe arte pronta do marketing. No topo da home, use o <a href="../molecules/bannerhero.html">Banner hero</a>.</span></li>
+        <li data-target=".yb-collection"><span class="anat__texto"><b><a href="../molecules/collection.html">Collection card</a></b> — Cartão que leva para uma coleção, com imagem e nome. O cartão inteiro é clicável.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -470,22 +470,16 @@
          diz o que e. Aqui o que a pessoa precisa primeiro e a lista do que vai
          encontrar; a procedencia vem depois, e vale a frase inteira, porque e
          ela que autoriza confiar no que esta escrito. -->
-    <p class="bloco-lede">De que a peça é feita, o que ela aceita e os tokens que
-    consome — estes do mais específico desta peça para o mais compartilhado com o
-    resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
-    estiver errado aqui, o errado é o código.</p>
+    <p class="bloco-lede">As peças que formam este componente, o que dá para variar nele
+    e os tokens que ele usa. Tudo é lido direto do código, então está sempre atualizado.</p>
 
-    <p class="rotulo">De que é feita</p>
-    <p class="usa-degrau">Atoms</p>
-    <ul class="usa"><li><a href="../atoms/button.html">Button</a></li></ul>
-    <p class="usa-degrau">Molecules</p>
-    <ul class="usa"><li><a href="../molecules/bannermedia.html">Banner media</a></li><li><a href="../molecules/collection.html">Collection card</a></li><li><a href="../molecules/price.html">Price</a></li></ul>
-    <p class="usa-degrau">Blocks</p>
-    <ul class="usa"><li><a href="../organisms/buybox.html">Buy box</a></li><li><a href="../organisms/gallery.html">Gallery</a></li></ul>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo">Nenhum. A peça é um elemento só.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo">Nenhum. A peça não muda por interação.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
+    <div class="api-ficha">
+    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo"><div class="usa-grupos"><div class="usa-grupo"><span class="usa-degrau">Atoms</span><ul class="usa"><li><a href="../atoms/button.html">Button</a></li></ul></div><div class="usa-grupo"><span class="usa-degrau">Molecules</span><ul class="usa"><li><a href="../molecules/bannermedia.html">Banner media</a></li><li><a href="../molecules/collection.html">Collection card</a></li><li><a href="../molecules/price.html">Price</a></li></ul></div><div class="usa-grupo"><span class="usa-degrau">Blocks</span><ul class="usa"><li><a href="../organisms/buybox.html">Buy box</a></li><li><a href="../organisms/gallery.html">Gallery</a></li></ul></div></div></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo">Nenhum. A peça é um elemento só.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo">Nenhum. A peça não muda por interação.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Só CSS.</div></div>
+    </div>
     <p class="rotulo">Tokens <span class="rotulo-conta">2</span></p>
     <div class="tokens">
       <div class="tokens__grupo">

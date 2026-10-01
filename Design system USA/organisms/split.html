@@ -166,7 +166,7 @@
     </nav>
   </div>
   <h1 class="ficha-titulo">Split</h1>
-  <p class="ficha-quando">Bloco de duas colunas: foto de um lado, painel de conteúdo do outro. Para quando o bloco precisa de <b>controles</b> — e controle não vive sobre foto.</p>
+  <p class="ficha-quando">Bloco em duas colunas: foto de um lado, texto e botões do outro. Use quando o bloco tem botões ou campos, que não ficam legíveis sobre foto.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
@@ -384,9 +384,9 @@
 </div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-badge"><span class="anat__texto"><b><a href="../atoms/badge.html">Badge</a></b> — Etiqueta curta que classifica um item sem competir com ele. Nunca carrega ação — badge não é botão.</span></li>
-        <li data-target=".yb-swatches"><span class="anat__texto"><b><a href="../molecules/variant.html">Variant picker</a></b> — Seletor das opções de um produto: tamanho, volume, fragrância. Esgotado aparece riscado, não some — sumir esconde que o produto existe.</span></li>
-        <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
+        <li data-target=".yb-badge"><span class="anat__texto"><b><a href="../atoms/badge.html">Badge</a></b> — Etiqueta curta que informa algo sobre um item, como “In stock” ou “−16%”. Não é clicável: para uma ação, use o Button.</span></li>
+        <li data-target=".yb-swatches"><span class="anat__texto"><b><a href="../molecules/variant.html">Variant picker</a></b> — Seletor das opções de um produto, como tamanho ou volume. A opção esgotada aparece riscada, sem sumir.</span></li>
+        <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — Botão que executa uma ação, como comprar ou continuar. Use só um botão primário por tela; as outras ações ficam no secundário ou no ghost.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -396,20 +396,16 @@
          diz o que e. Aqui o que a pessoa precisa primeiro e a lista do que vai
          encontrar; a procedencia vem depois, e vale a frase inteira, porque e
          ela que autoriza confiar no que esta escrito. -->
-    <p class="bloco-lede">De que a peça é feita, o que ela aceita e os tokens que
-    consome — estes do mais específico desta peça para o mais compartilhado com o
-    resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
-    estiver errado aqui, o errado é o código.</p>
+    <p class="bloco-lede">As peças que formam este componente, o que dá para variar nele
+    e os tokens que ele usa. Tudo é lido direto do código, então está sempre atualizado.</p>
 
-    <p class="rotulo">De que é feita</p>
-    <p class="usa-degrau">Atoms</p>
-    <ul class="usa"><li><a href="../atoms/badge.html">Badge</a></li><li><a href="../atoms/button.html">Button</a></li></ul>
-    <p class="usa-degrau">Molecules</p>
-    <ul class="usa"><li><a href="../molecules/variant.html">Variant picker</a></li></ul>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-split__media</code> <code>.yb-split__note</code> <code>.yb-split__panel</code> <code>.yb-split__sub</code> <code>.yb-split__title</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo">Nenhum. A peça não muda por interação.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
+    <div class="api-ficha">
+    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo"><div class="usa-grupos"><div class="usa-grupo"><span class="usa-degrau">Atoms</span><ul class="usa"><li><a href="../atoms/badge.html">Badge</a></li><li><a href="../atoms/button.html">Button</a></li></ul></div><div class="usa-grupo"><span class="usa-degrau">Molecules</span><ul class="usa"><li><a href="../molecules/variant.html">Variant picker</a></li></ul></div></div></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-split__media</code> <code>.yb-split__note</code> <code>.yb-split__panel</code> <code>.yb-split__sub</code> <code>.yb-split__title</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo">Nenhum. A peça não muda por interação.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Só CSS.</div></div>
+    </div>
     <p class="rotulo">Tokens <span class="rotulo-conta">17</span></p>
     <div class="tokens">
       <div class="tokens__grupo">

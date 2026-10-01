@@ -166,7 +166,7 @@
     </nav>
   </div>
   <h1 class="ficha-titulo">Hero</h1>
-  <p class="ficha-quando">O topo da home: vários <a href="../molecules/bannerhero.html">Banners hero</a> num <a href="../molecules/track.html">Track</a>, um por tela, com as setas no canto de baixo à direita. As setas são do bloco, não do banner — um banner sozinho não tem para onde ir.</p>
+  <p class="ficha-quando">O topo da home: vários <a href="../molecules/bannerhero.html">Banners hero</a> que passam um de cada vez, com setas no canto.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
@@ -433,10 +433,10 @@
 </section></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-track"><span class="anat__texto"><b><a href="../molecules/track.html">Track</a></b> — Contêiner, não cartão: não tem visual próprio. Põe numa linha só uma fileira maior que a tela, com rolagem de lado e setas, e carrega qualquer peça — cartões de produto, avaliações, vídeos, logos, banners do hero.</span></li>
-        <li data-target=".yb-bannerhero"><span class="anat__texto"><b><a href="../molecules/bannerhero.html">Banner hero</a></b> — O banner do topo da home, na largura da tela. Em trilho, um slide por tela; cada slide é foto com texto e CTA, ou a arte pronta do marketing. Dentro da coluna da página, o banner é o <a href="../molecules/bannermedia.html">Banner media</a>.</span></li>
-        <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
-        <li data-target=".yb-iconbtn"><span class="anat__texto"><b><a href="../atoms/iconbtn.html">Icon button</a></b> — Botão de 44px que mostra só um ícone, sem rótulo visível.</span></li>
+        <li data-target=".yb-track"><span class="anat__texto"><b><a href="../molecules/track.html">Track</a></b> — Fileira que rola para o lado quando há mais itens do que cabem na tela, com setas no desktop. Não tem visual próprio: recebe cartões, avaliações, vídeos ou banners.</span></li>
+        <li data-target=".yb-bannerhero"><span class="anat__texto"><b><a href="../molecules/bannerhero.html">Banner hero</a></b> — Banner grande no topo da home, na largura toda da tela: foto com texto e botão, ou uma arte pronta do marketing. Dentro da coluna da página, use o <a href="../molecules/bannermedia.html">Banner media</a>.</span></li>
+        <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — Botão que executa uma ação, como comprar ou continuar. Use só um botão primário por tela; as outras ações ficam no secundário ou no ghost.</span></li>
+        <li data-target=".yb-iconbtn"><span class="anat__texto"><b><a href="../atoms/iconbtn.html">Icon button</a></b> — Botão quadrado de 44px só com ícone, como fechar, buscar ou favoritar. Precisa de um nome para leitor de tela, porque não tem texto visível.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -446,20 +446,16 @@
          diz o que e. Aqui o que a pessoa precisa primeiro e a lista do que vai
          encontrar; a procedencia vem depois, e vale a frase inteira, porque e
          ela que autoriza confiar no que esta escrito. -->
-    <p class="bloco-lede">De que a peça é feita, o que ela aceita e os tokens que
-    consome — estes do mais específico desta peça para o mais compartilhado com o
-    resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
-    estiver errado aqui, o errado é o código.</p>
+    <p class="bloco-lede">As peças que formam este componente, o que dá para variar nele
+    e os tokens que ele usa. Tudo é lido direto do código, então está sempre atualizado.</p>
 
-    <p class="rotulo">De que é feita</p>
-    <p class="usa-degrau">Atoms</p>
-    <ul class="usa"><li><a href="../atoms/button.html">Button</a></li><li><a href="../atoms/iconbtn.html">Icon button</a></li></ul>
-    <p class="usa-degrau">Molecules</p>
-    <ul class="usa"><li><a href="../molecules/bannerhero.html">Banner hero</a></li><li><a href="../molecules/track.html">Track</a></li></ul>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo">Nenhum. A peça é um elemento só.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo">Nenhum. A peça não muda por interação.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
+    <div class="api-ficha">
+    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo"><div class="usa-grupos"><div class="usa-grupo"><span class="usa-degrau">Atoms</span><ul class="usa"><li><a href="../atoms/button.html">Button</a></li><li><a href="../atoms/iconbtn.html">Icon button</a></li></ul></div><div class="usa-grupo"><span class="usa-degrau">Molecules</span><ul class="usa"><li><a href="../molecules/bannerhero.html">Banner hero</a></li><li><a href="../molecules/track.html">Track</a></li></ul></div></div></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo">Nenhum. A peça é um elemento só.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo">Nenhum. A peça não muda por interação.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Só CSS.</div></div>
+    </div>
     <p class="rotulo">Tokens <span class="rotulo-conta">4</span></p>
     <div class="tokens">
       <div class="tokens__grupo">

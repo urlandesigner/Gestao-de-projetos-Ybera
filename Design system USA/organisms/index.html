@@ -156,8 +156,8 @@
   <a class="ficha-volta" href="../index.html">← Design system</a>
   <p class="ficha-nivel">Degrau 3 de 4 · Organisms na escada atômica</p>
   <h1 class="ficha-titulo">Blocks</h1>
-  <p class="ficha-quando">As regiões da loja: o cabeçalho, a gaveta do carrinho, o bloco de compra, o rodapé. Montam-se com componentes, e trazem o que só existe nelas.</p>
-  <p class="bloco-lede"><b>A regra do degrau:</b> É uma região da página: tem lugar, e sobrevive sozinho numa tela.</p>
+  <p class="ficha-quando">As grandes áreas da loja: cabeçalho, carrinho, área de compra, rodapé. São montadas com os componentes.</p>
+  <p class="bloco-lede"><b>A regra do degrau:</b> É uma área inteira da página, com lugar certo, e faz sentido sozinha numa tela.</p>
 
 
   <section class="grade-grupo">
@@ -165,78 +165,71 @@
     <div class="grade">
       <a class="peca" id="quote" href="quote.html">
         <b>Brand quote</b>
-        <span>Citação assinada de quem representa a marca. Uma por página — repetida, vira slogan.</span>
+        <span>Uma frase de quem representa a marca, com nome e cargo. Use uma por página.</span>
       </a>
       <a class="peca" id="buybox" href="buybox.html">
         <b>Buy box</b>
-        <span>O bloco de compra da PDP: nome, prova, preço, escolha, ação e garantia. Sete níveis de informação acima da dobra, em ordem fixa.</span>
+        <span>A área de compra da PDP: nome, nota, preço, opções, botão de comprar e garantias, sempre nessa ordem.</span>
       </a>
       <a class="peca" id="cart-drawer" href="cart-drawer.html">
         <b>Cart drawer</b>
-        <span>O carrinho como gaveta lateral, sobre a página. Abre sobre, não substitui: interromper a navegação para mostrar o carrinho custa compras.</span>
+        <span>O carrinho em uma gaveta lateral, que abre por cima da página. A pessoa vê o carrinho sem sair do que estava vendo.</span>
       </a>
       <a class="peca" id="catalog" href="catalog.html">
         <b>Catalog</b>
-        <span>A região de listagem de uma coleção: título, contagem, filtros ativos e grade. A contagem é obrigatória — diz se vale filtrar mais.</span>
+        <span>A lista de produtos de uma coleção: título, quantidade de itens, filtros e a grade de produtos.</span>
       </a>
       <a class="peca" id="drawer" href="drawer.html">
         <b>Drawer</b>
-        <span>Segunda tela, ancorada na lateral e com a altura cheia. Serve ao que
-    a pessoa <b>percorre</b> — carrinho, filtros, menu. Para pedir uma decisão e sumir,
-    use <a href="dialog.html">Modal</a>.</span>
+        <span>Painel que abre na lateral, na altura toda da tela, para conteúdo que a pessoa percorre: carrinho, filtros ou menu. Para pedir uma decisão rápida, use <a href="dialog.html">Modal</a>.</span>
       </a>
       <a class="peca" id="faq" href="faq.html">
         <b>FAQ</b>
-        <span>A página de perguntas frequentes: respostas em acordeão com índice ao lado. Não há componente novo — as perguntas são <code>.yb-accordion</code> e o índice é <code>.yb-link</code>.</span>
+        <span>A página de perguntas frequentes: as respostas abrem e fecham, com um índice ao lado.</span>
       </a>
       <a class="peca" id="footer" href="footer.html">
         <b>Footer</b>
-        <span>O rodapé da loja: assinatura, três colunas de destino, marca e avisos legais. Superfície escura dentro de página clara — não é tema, são os tokens <code>*-inverse</code> da camada 1.</span>
+        <span>O rodapé da loja, em fundo escuro: cadastro de e-mail, colunas de links, marca e avisos legais.</span>
       </a>
       <a class="peca" id="shipping-progress" href="shipping-progress.html">
         <b>Free shipping progress</b>
-        <span>Barra que mostra quanto falta para o frete grátis, no carrinho e no topo. Move ticket médio como nenhum outro, e é o mais feito errado: barra sem número não diz nada.</span>
+        <span>Barra que mostra quanto falta para ganhar frete grátis, no carrinho e no topo da página. Mostre sempre o valor que falta.</span>
       </a>
       <a class="peca" id="gallery" href="gallery.html">
         <b>Gallery</b>
-        <span>A galeria de fotos da PDP: foto grande com miniaturas ao lado. As miniaturas são radios nativos — seta do teclado navega, leitor de tela anuncia.</span>
+        <span>As fotos do produto na PDP: uma foto grande e miniaturas para trocar. Funciona também com teclado e leitor de tela.</span>
       </a>
       <a class="peca" id="header" href="header.html">
         <b>Header</b>
-        <span>O topo da loja: anúncio, navegação e ações. Um DOM só serve a barra do desktop e a gaveta do mobile; a loja hoje escreve os 25 links duas vezes.</span>
+        <span>O topo da loja: faixa de aviso, logo, menu e os botões de busca, conta e carrinho. O mesmo bloco serve ao desktop e ao celular.</span>
       </a>
       <a class="peca" id="hero" href="hero.html">
         <b>Hero</b>
-        <span>O topo da home: vários <a href="../molecules/bannerhero.html">Banners hero</a> num <a href="../molecules/track.html">Track</a>, um por tela, com as setas no canto de baixo à direita. As setas são do bloco, não do banner — um banner sozinho não tem para onde ir.</span>
+        <span>O topo da home: vários <a href="../molecules/bannerhero.html">Banners hero</a> que passam um de cada vez, com setas no canto.</span>
       </a>
       <a class="peca" id="logobar" href="logobar.html">
         <b>Logo bar</b>
-        <span>Faixa escura com as submarcas, entre o conteúdo e o rodapé. Só entra arte monocromática.</span>
+        <span>Faixa escura com os logos das linhas da marca, perto do rodapé.</span>
       </a>
       <a class="peca" id="manifesto" href="manifesto.html">
         <b>Manifesto</b>
-        <span>Faixa de texto que afirma a autoridade da marca. O único bloco da home que não pede nada.</span>
+        <span>Faixa de texto que apresenta a marca e o que ela defende. Não tem botão nem pede nada.</span>
       </a>
       <a class="peca" id="dialog" href="dialog.html">
         <b>Modal</b>
-        <span>Janela que interrompe a página para pedir <b>uma</b> decisão, e some
-    com a resposta. Se não há decisão a tomar, use <a href="../molecules/toast.html">Toast</a>;
-    se o conteúdo é uma segunda tela para percorrer, use <a href="drawer.html">Drawer</a>.</span>
+        <span>Janela que aparece sobre a página para pedir uma decisão, como confirmar uma remoção. Para só avisar, use <a href="../molecules/toast.html">Toast</a>; para conteúdo longo, use <a href="drawer.html">Drawer</a>.</span>
       </a>
       <a class="peca" id="nav" href="nav.html">
         <b>Nav</b>
-        <span>O menu da loja: cinco itens de topo, dois com painel. Uma árvore só
-    serve a barra do desktop e a gaveta do celular. Não confundir com
-    <a href="../molecules/account.html">Account menu</a>, que é o painel da conta
-    &mdash; este é a navegação principal, e só há uma por tela.</span>
+        <span>O menu principal da loja, com cinco itens; dois abrem um painel com mais links. No celular vira uma gaveta. Não confundir com o <a href="../molecules/account.html">Account menu</a>.</span>
       </a>
       <a class="peca" id="search" href="search.html">
         <b>Search overlay</b>
-        <span>A busca como folha que cobre a página inteira. Busca é troca de contexto — não caixinha no header.</span>
+        <span>A busca em tela cheia, que abre por cima da página com buscas recentes, populares e categorias.</span>
       </a>
       <a class="peca" id="split" href="split.html">
         <b>Split</b>
-        <span>Bloco de duas colunas: foto de um lado, painel de conteúdo do outro. Para quando o bloco precisa de <b>controles</b> — e controle não vive sobre foto.</span>
+        <span>Bloco em duas colunas: foto de um lado, texto e botões do outro. Use quando o bloco tem botões ou campos, que não ficam legíveis sobre foto.</span>
       </a>
     </div>
   </section>

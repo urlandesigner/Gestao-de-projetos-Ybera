@@ -153,7 +153,7 @@
 <main class="grupo-main">
   <a class="ficha-volta" href="../index.html">← Design system</a>
   <h1 class="ficha-titulo">Components</h1>
-  <p class="ficha-quando">A peça reutilizável e sem contexto. Serve a qualquer página porque não sabe em qual está.</p>
+  <p class="ficha-quando">As peças reutilizáveis, como botões, campos e cartões. Servem em qualquer página.</p>
 
   <nav class="chips" aria-label="Degraus do sistema">
     <a class="chip" href="../components/index.html" aria-current="page">All <span>41</span></a>
@@ -163,15 +163,13 @@
 
   <section class="grade-grupo">
     <h2>Todos os componentes <span class="grade-conta">41</span></h2>
-    <p class="grade-lede">Em ordem de nome, os dois degraus juntos — 19 átomos e 22 moléculas.
-    A proporção 19 / 22 é o que diz se o sistema está
-    saudável: base larga. Poucos átomos para muitas moléculas significa que alguém está
-    reescrevendo botão. As regiões da página estão em <a href="../organisms/index.html">Blocks</a>.</p>
+    <p class="grade-lede">Todos em ordem alfabética: 19 átomos e 22 moléculas.
+    As áreas maiores da página, como cabeçalho e rodapé, ficam em <a href="../organisms/index.html">Blocks</a>.</p>
     <div class="grade">
       <a class="peca" href="../molecules/accordion.html">
         <span class="peca-nivel">molécula</span>
         <b>Accordion</b>
-        <span>Lista de seções que abrem e fecham sob um rótulo clicável, uma de cada vez. Na loja carrega o secundário da PDP: ingredientes, modo de uso, frete.</span>
+        <span>Lista de seções que abrem e fecham ao clicar no título. Na PDP guarda as informações extras: ingredientes, modo de uso e frete.</span>
       </a>
       <a class="peca" href="../molecules/account.html">
         <span class="peca-nivel">molécula</span>
@@ -181,197 +179,197 @@
       <a class="peca" href="../molecules/alert.html">
         <span class="peca-nivel">molécula</span>
         <b>Alert</b>
-        <span>Mensagem fixa no fluxo da página, com tom de estado e ação opcional. Uma por vez: empilhar três é garantir que nenhum seja lido.</span>
+        <span>Mensagem que fica na página para avisar algo importante, como erro ou sucesso, e pode ter uma ação. Mostre uma de cada vez.</span>
       </a>
       <a class="peca" href="../atoms/avatar.html">
         <span class="peca-nivel">átomo</span>
         <b>Avatar</b>
-        <span>Círculo com a inicial de quem está logado. Sozinho não diz de quem é a conta — quem carrega o nome é o rótulo de quem o embrulha.</span>
+        <span>Círculo com a inicial de quem está logado. Aparece no cabeçalho e no menu da conta, sempre junto do nome da pessoa.</span>
       </a>
       <a class="peca" href="../atoms/badge.html">
         <span class="peca-nivel">átomo</span>
         <b>Badge</b>
-        <span>Etiqueta curta que classifica um item sem competir com ele. Nunca carrega ação — badge não é botão.</span>
+        <span>Etiqueta curta que informa algo sobre um item, como “In stock” ou “−16%”. Não é clicável: para uma ação, use o Button.</span>
       </a>
       <a class="peca" href="../molecules/bannerhero.html">
         <span class="peca-nivel">molécula</span>
         <b>Banner hero</b>
-        <span>O banner do topo da home, na largura da tela. Em trilho, um slide por tela; cada slide é foto com texto e CTA, ou a arte pronta do marketing. Dentro da coluna da página, o banner é o Banner media.</span>
+        <span>Banner grande no topo da home, na largura toda da tela: foto com texto e botão, ou uma arte pronta do marketing. Dentro da coluna da página, use o Banner media.</span>
       </a>
       <a class="peca" href="../molecules/bannermedia.html">
         <span class="peca-nivel">molécula</span>
         <b>Banner media</b>
-        <span>Foto com texto por cima, dentro da coluna da página, e o link cobrindo a peça inteira — o banner de conteúdo da PDP. Também recebe a arte pronta do marketing. No topo da home, na largura da tela, o banner é o Banner hero.</span>
+        <span>Banner com foto e texto dentro da coluna da página, como na PDP. Também recebe arte pronta do marketing. No topo da home, use o Banner hero.</span>
       </a>
       <a class="peca" href="../molecules/crumb.html">
         <span class="peca-nivel">molécula</span>
         <b>Breadcrumb</b>
-        <span>Trilha dos níveis acima da página atual, do topo até ela. A página atual não é link.</span>
+        <span>Mostra o caminho até a página atual, como Home / Coleção / Produto. Cada nível é um link, menos a página atual.</span>
       </a>
       <a class="peca" href="../atoms/button.html">
         <span class="peca-nivel">átomo</span>
         <b>Button</b>
-        <span>O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span>
+        <span>Botão que executa uma ação, como comprar ou continuar. Use só um botão primário por tela; as outras ações ficam no secundário ou no ghost.</span>
       </a>
       <a class="peca" href="../molecules/offercard.html">
         <span class="peca-nivel">molécula</span>
         <b>Card offer</b>
-        <span>Cartão grande de uma oferta única: foto ao fundo, texto por cima e relógio de prazo. Não é o cartão de catálogo com outra roupa: ali cabem doze na grade, aqui cabe um.</span>
+        <span>Cartão grande para uma oferta especial, com foto de fundo, texto e contagem regressiva. Use um por vez, para destacar uma oferta só.</span>
       </a>
       <a class="peca" href="../molecules/card.html">
         <span class="peca-nivel">molécula</span>
         <b>Card product</b>
-        <span>O cartão de produto do grid — foto, nome, nota, preço e ação. O título trunca em duas linhas por decisão de sistema.</span>
+        <span>Cartão de produto usado em listas e vitrines: foto, nome, nota e preço. O nome ocupa no máximo duas linhas.</span>
       </a>
       <a class="peca" href="../atoms/seals.html">
         <span class="peca-nivel">átomo</span>
         <b>Certification seals</b>
-        <span>Selo de certificação: ícone e rótulo do que o produto não tem. Formam a faixa de garantia entre a prova social e o rodapé — não é peça de venda.</span>
+        <span>Ícones com o que o produto não contém, como “Formaldehyde-free”. Ficam numa faixa de garantias perto do rodapé.</span>
       </a>
       <a class="peca" href="../atoms/checkbox.html">
         <span class="peca-nivel">átomo</span>
         <b>Checkbox</b>
-        <span>Escolha independente: cada caixa decide sozinha. Numa lista, dá para marcar nenhuma, uma ou todas — é o que separa a caixa do rádio.</span>
+        <span>Caixa que a pessoa marca ou desmarca. Use quando cada opção vale sozinha e dá para marcar várias, nenhuma ou todas.</span>
       </a>
       <a class="peca" href="../atoms/chip.html">
         <span class="peca-nivel">átomo</span>
         <b>Chip</b>
-        <span>Filtro que liga e desliga, em fileira. O estado mora em aria-pressed, não numa classe — quem lê a tela ouve "pressionado" sem depender de cor.</span>
+        <span>Botão pequeno de filtro, que liga e desliga, usado em fileira acima de uma lista. Quando está ativo, muda de aparência.</span>
       </a>
       <a class="peca" href="../molecules/collection.html">
         <span class="peca-nivel">molécula</span>
         <b>Collection card</b>
-        <span>Cartão de entrada para uma coleção: arte, nome e contagem. O cartão inteiro é o link — o rótulo sozinho seria um alvo pequeno dentro de uma imagem grande.</span>
+        <span>Cartão que leva para uma coleção, com imagem e nome. O cartão inteiro é clicável.</span>
       </a>
       <a class="peca" href="../molecules/dropdown.html">
         <span class="peca-nivel">molécula</span>
         <b>Dropdown</b>
-        <span>Lista curta de opções que abre embaixo de um botão: escolher entre poucas (idioma, moeda, ordenação fora de formulário) ou disparar ações de um item. Dentro de formulário, a resposta continua sendo o Select.</span>
+        <span>Lista curta de opções que abre embaixo de um botão, como idioma, moeda ou ordenação. Dentro de formulário, use o Select.</span>
       </a>
       <a class="peca" href="../molecules/empty.html">
         <span class="peca-nivel">molécula</span>
         <b>Empty state</b>
-        <span>O que a tela mostra quando não há o que mostrar: ícone, motivo e o próximo passo. Busca sem resultado, filtro vazio, carrinho vazio, produto fora do catálogo.</span>
+        <span>O que aparece quando não há nada para mostrar, como busca sem resultado ou carrinho vazio: um ícone, o motivo e o que fazer a seguir.</span>
       </a>
       <a class="peca" href="../atoms/iconbtn.html">
         <span class="peca-nivel">átomo</span>
         <b>Icon button</b>
-        <span>Botão de 44px que mostra só um ícone, sem rótulo visível.</span>
+        <span>Botão quadrado de 44px só com ícone, como fechar, buscar ou favoritar. Precisa de um nome para leitor de tela, porque não tem texto visível.</span>
       </a>
       <a class="peca" href="../atoms/input.html">
         <span class="peca-nivel">átomo</span>
         <b>Input</b>
-        <span>Campo de uma linha com o rótulo dentro da caixa, que sobe quando a pessoa digita. Leva dica e erro em texto; serve para nome, e-mail, CEP, senha.</span>
+        <span>Campo de texto de uma linha, com o nome do campo dentro da caixa. Use para nome, e-mail, CEP ou senha; dica e erro aparecem embaixo.</span>
       </a>
       <a class="peca" href="../atoms/link.html">
         <span class="peca-nivel">átomo</span>
         <b>Link</b>
-        <span>Texto que leva a outro lugar, com ícone atrás e alvo de toque de 44px. Fica ao lado de um título de seção ou reforça um link que já existe no mesmo cartão.</span>
+        <span>Texto clicável que leva a outra página, com uma seta ao lado. Use ao lado do título de uma seção, como “Shop all”.</span>
       </a>
       <a class="peca" href="../atoms/logo.html">
         <span class="peca-nivel">átomo</span>
         <b>Logo</b>
-        <span>A marca da loja, em arquivo único, com altura controlada por modificador.</span>
+        <span>A marca Ybera, em um arquivo só, com alturas prontas para cabeçalho, rodapé e e-mail.</span>
       </a>
       <a class="peca" href="../atoms/notice.html">
         <span class="peca-nivel">átomo</span>
         <b>Notice</b>
-        <span>Faixa fina de aviso, largura inteira, acima do conteúdo. A loja empilha duas no topo de toda página — uma contextual e a de frete.</span>
+        <span>Faixa fina de aviso no topo da página, na largura toda. Use para recados da loja, como o frete grátis.</span>
       </a>
       <a class="peca" href="../atoms/offerseal.html">
         <span class="peca-nivel">átomo</span>
         <b>Offer seal</b>
-        <span>Selo estrelado que marca brinde ou desconto sobre a foto do produto. Interrompe — não rotula. Um por peça.</span>
+        <span>Selo em forma de estrela sobre a foto do produto, para destacar brinde ou desconto. Use no máximo um por produto.</span>
       </a>
       <a class="peca" href="../molecules/pagination.html">
         <span class="peca-nivel">molécula</span>
         <b>Pagination</b>
-        <span>Navegação numerada entre as páginas de uma listagem. A página atual não é link; primeira e última sempre visíveis.</span>
+        <span>Números para navegar entre as páginas de uma lista longa. A primeira e a última página aparecem sempre.</span>
       </a>
       <a class="peca" href="../molecules/partner.html">
         <span class="peca-nivel">molécula</span>
         <b>Partner</b>
-        <span>Recado de quem indicou o produto, com foto e nome. Aparece quando a pessoa chega por link patrocinado &mdash; e some do caminho assim que ela rola.</span>
+        <span>Mensagem de quem indicou a loja, com foto e nome. Aparece só para quem chegou por link de parceiro.</span>
       </a>
       <a class="peca" href="../molecules/post.html">
         <span class="peca-nivel">molécula</span>
         <b>Post</b>
-        <span>Cartão de artigo do blog: arte, título e chamada. Dois arranjos, e a escolha entre eles é editorial — não estética.</span>
+        <span>Cartão de artigo do blog, com imagem, título e link para ler. Tem dois arranjos: um destaque com dois menores, ou três do mesmo tamanho.</span>
       </a>
       <a class="peca" href="../molecules/price.html">
         <span class="peca-nivel">molécula</span>
         <b>Price</b>
-        <span>O preço de um produto, com o valor anterior riscado e o desconto quando existem. Sempre tabular: em grid, dígitos precisam alinhar em coluna.</span>
+        <span>O preço do produto, com o preço antigo riscado e o desconto quando houver.</span>
       </a>
       <a class="peca" href="../atoms/progress.html">
         <span class="peca-nivel">átomo</span>
         <b>Progress bar</b>
-        <span>Barra que mostra quanto de uma tarefa já passou. Espera com fim conhecido; sem número para anunciar, use a variante indeterminada.</span>
+        <span>Barra que mostra quanto de algo já foi concluído. Use quando dá para medir o andamento; quando não dá, use a versão sem número.</span>
       </a>
       <a class="peca" href="../molecules/stepper.html">
         <span class="peca-nivel">molécula</span>
         <b>Quantity stepper</b>
-        <span>Controle de quantidade — menos, número e mais. Botões de 44px que funcionam no clique; limites em 1 e 10, e o botão desabilita sozinho na ponta.</span>
+        <span>Controle para escolher a quantidade, com botões de menos e mais. O botão desativa sozinho quando chega no limite.</span>
       </a>
       <a class="peca" href="../atoms/radio.html">
         <span class="peca-nivel">átomo</span>
         <b>Radio</b>
-        <span>Escolha única dentro de um grupo: marcar uma desmarca a anterior. Serve quando as opções se excluem e todas precisam estar à vista.</span>
+        <span>Lista de opções em que só uma pode ser escolhida. Use quando são poucas opções e todas devem ficar visíveis; para muitas, use o Select.</span>
       </a>
       <a class="peca" href="../molecules/rating.html">
         <span class="peca-nivel">molécula</span>
         <b>Rating</b>
-        <span>A média de um produto: as estrelas, a nota e quantas avaliações ela resume. Sempre com a contagem — 5 estrelas de 3 avaliações não é prova de nada.</span>
+        <span>A nota média de um produto: estrelas, número e quantas avaliações. Mostre sempre a quantidade de avaliações.</span>
       </a>
       <a class="peca" href="../molecules/review.html">
         <span class="peca-nivel">molécula</span>
         <b>Review</b>
-        <span>A avaliação de uma pessoa: nota, texto, quem escreveu e o que comprou. Sem o produto ao lado, o elogio não prova nada.</span>
+        <span>A avaliação de um cliente: nota, texto, nome e o produto que comprou.</span>
       </a>
       <a class="peca" href="../atoms/select.html">
         <span class="peca-nivel">átomo</span>
         <b>Select</b>
-        <span>Campo de escolha com o rótulo dentro da caixa, que abre o seletor nativo do sistema. Mesmo campo do Input, para quando a resposta já está escrita.</span>
+        <span>Campo que abre uma lista para escolher uma opção. Use quando as respostas possíveis já são conhecidas, como estado ou país.</span>
       </a>
       <a class="peca" href="../atoms/skeleton.html">
         <span class="peca-nivel">átomo</span>
         <b>Skeleton</b>
-        <span>Bloco cinza que ocupa o lugar do conteúdo enquanto ele carrega. Só para carregamento real: skeleton eterno é pior que spinner — promete conteúdo que não chega.</span>
+        <span>Bloco cinza que ocupa o lugar do conteúdo enquanto ele carrega. Use só enquanto o conteúdo está de fato chegando.</span>
       </a>
       <a class="peca" href="../atoms/stars.html">
         <span class="peca-nivel">átomo</span>
         <b>Stars</b>
-        <span>A nota desenhada em cinco estrelas, com preenchimento parcial. Recebe um número de 0 a 5; sozinha é a nota de uma pessoa, dentro do Rating é a média.</span>
+        <span>As cinco estrelas da nota, preenchidas de acordo com um número de 0 a 5. Sozinhas mostram a nota de uma avaliação; dentro do Rating, a média.</span>
       </a>
       <a class="peca" href="../atoms/switch.html">
         <span class="peca-nivel">átomo</span>
         <b>Switch</b>
-        <span>Interruptor que liga e desliga na hora, sem confirmar. Se o efeito só acontece depois de um botão de salvar, o certo é a caixa de seleção.</span>
+        <span>Interruptor que liga ou desliga uma opção na hora. Se a mudança só vale depois de clicar em salvar, use o Checkbox.</span>
       </a>
       <a class="peca" href="../atoms/textarea.html">
         <span class="peca-nivel">átomo</span>
         <b>Textarea</b>
-        <span>Campo de várias linhas com o rótulo dentro da caixa, que cresce na vertical. Mesmo campo do Input, para mensagem, nota de presente ou avaliação.</span>
+        <span>Campo de texto de várias linhas, que cresce conforme a pessoa escreve. Use para mensagens, avaliações e notas de presente.</span>
       </a>
       <a class="peca" href="../molecules/toast.html">
         <span class="peca-nivel">molécula</span>
         <b>Toast</b>
-        <span>Aviso curto e temporário que confirma o que já aconteceu. Não pede nada e não bloqueia nada.</span>
+        <span>Mensagem curta que aparece por alguns segundos para confirmar algo que já aconteceu, como “Added to cart”. Não pede resposta.</span>
       </a>
       <a class="peca" href="../molecules/track.html">
         <span class="peca-nivel">molécula</span>
         <b>Track</b>
-        <span>Contêiner, não cartão: não tem visual próprio. Põe numa linha só uma fileira maior que a tela, com rolagem de lado e setas, e carrega qualquer peça — cartões de produto, avaliações, vídeos, logos, banners do hero.</span>
+        <span>Fileira que rola para o lado quando há mais itens do que cabem na tela, com setas no desktop. Não tem visual próprio: recebe cartões, avaliações, vídeos ou banners.</span>
       </a>
       <a class="peca" href="../molecules/variant.html">
         <span class="peca-nivel">molécula</span>
         <b>Variant picker</b>
-        <span>Seletor das opções de um produto: tamanho, volume, fragrância. Esgotado aparece riscado, não some — sumir esconde que o produto existe.</span>
+        <span>Seletor das opções de um produto, como tamanho ou volume. A opção esgotada aparece riscada, sem sumir.</span>
       </a>
       <a class="peca" href="../molecules/video.html">
         <span class="peca-nivel">molécula</span>
         <b>Vertical video carousel</b>
-        <span>Cartão de vídeo vertical em 9:16, como o TikTok serve. O cartão entra como pôster; o vídeo só nasce no primeiro clique.</span>
+        <span>Cartão de vídeo vertical, no formato de stories. Mostra uma imagem e só carrega o vídeo quando a pessoa clica.</span>
       </a>
     </div>
   </section>

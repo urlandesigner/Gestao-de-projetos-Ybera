@@ -26,7 +26,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | AVATAR | `.yb-avatar` | Átomo | Estável | 6 | — | 13 | sim | n/a | — | sim |
 | BADGE | `.yb-badge` | Átomo | Estável | 10 | — | 25 | sim | n/a | sim | sim |
 | BUTTON | `.yb-btn` | Átomo | Estável | 9 | 4 | 44 | sim | sim | sim | sim |
-| CERTIFICATION SEALS | `.yb-seal` | Átomo | Estável | — | — | 13 | sim | n/a | sim | sim |
+| CERTIFICATION SEALS | `.yb-seal` | Átomo | Estável | — | — | 15 | sim | n/a | sim | sim |
 | CHECKBOX / RADIO | `.yb-check` | Átomo | Beta | — | 4 | 22 | sim | sim | — | — |
 | CHIP | `.yb-chip` | Átomo | Estável | — | 3 | 25 | sim | sim | — | sim |
 | ICONBTN | `.yb-iconbtn` | Átomo | Estável | 5 | 4 | 19 | sim | sim | sim | sim |
@@ -64,12 +64,12 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | BLOCO DE COMPRA (PDP) | `.yb-buybox` | Organismo | Estável | — | 2 | 39 | sim | sim | — | sim |
 | BRAND QUOTE | `.yb-quote` | Organismo | Estável | — | — | 16 | sim | n/a | — | sim |
 | CART DRAWER | `.yb-cart` | Organismo | Beta | 3 | 1 | 45 | sim | — | — | sim |
-| CATÁLOGO | `.yb-catalog` | Organismo | Beta | — | — | 14 | sim | n/a | — | — |
+| CATÁLOGO | `.yb-catalog` | Organismo | Beta | — | — | 13 | sim | n/a | — | — |
 | DRAWER | `.yb-drawer` | Organismo | Estável | — | — | 0 | sim | n/a | — | sim |
 | FAQ | `.yb-faq` | Organismo | Estável | 1 | — | 14 | sim | n/a | — | sim |
 | FOOTER | `.yb-footer` | Organismo | Estável | 1 | 3 | 32 | sim | sim | — | sim |
 | FREE SHIPPING PROGRESS | `.yb-freeship` | Organismo | Estável | 1 | — | 8 | sim | n/a | — | sim |
-| HEADER / NAV | `.yb-nav` | Organismo | Estável | 2 | 3 | 61 | sim | sim | sim | sim |
+| HEADER / NAV | `.yb-nav` | Organismo | Estável | 2 | 3 | 62 | sim | sim | sim | sim |
 | HERO | `.yb-hero` | Organismo | Estável | — | — | 4 | sim | n/a | — | sim |
 | LOGO BAR | `.yb-logobar` | Organismo | Estável | — | — | 5 | sim | n/a | — | sim |
 | MANIFESTO | `.yb-manifesto` | Organismo | Estável | — | — | 26 | sim | n/a | — | sim |

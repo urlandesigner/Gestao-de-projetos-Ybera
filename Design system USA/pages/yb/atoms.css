@@ -710,9 +710,12 @@
   display:flex; flex-direction:column; align-items:center;
   gap:var(--yb-space-3); text-align:center; min-width:0;
 }
+/* Disco branco com fio, nao `bg-muted`: a faixa ja e cinza (`bg-subtle`), e
+   cinza sobre cinza media 1.04:1 — o disco sumia e o icone ficava solto. */
 .yb-seal__mark{
   width:64px; height:64px; border-radius:var(--yb-radius-full);
-  background:var(--yb-bg-muted); color:var(--yb-text-secondary);
+  background:var(--yb-surface); color:var(--yb-text-secondary);
+  border:var(--yb-border-hairline) solid var(--yb-border-subtle);
   display:flex; align-items:center; justify-content:center; flex:none;
 }
 .yb-seal__mark .yb-icon{ --yb-icon-size:var(--yb-icon-xl); }  /* 32 = metade do disco de 64 */
@@ -883,6 +886,89 @@ button.yb-link{
 }
 [dir="rtl"] .yb-input[aria-invalid="true"]{
   background-position:left var(--yb-space-3) center;
+}
+
+/* -------------------------------------------------------------------------
+   A SETA DO SELECT — desenhada pelo sistema, nao pelo sistema operacional
+
+   O <select> era o ultimo controle da casa que ainda chegava com o desenho do
+   SO. A seta nativa nao e conteudo do elemento: mora numa faixa que o
+   navegador reserva por fora do `padding-inline-end`. Dai os dois sintomas
+   que apareceram juntos — ela encostava na borda do select solto (ignorando
+   os 16px de padding) e caia noutro lugar dentro da caixa do Form field, onde
+   o controle acaba antes do padding da caixa. Mesma peca, duas setas
+   diferentes na mesma tela; e uma terceira no Windows.
+
+   `appearance:none` apaga a nativa e o chevron abaixo entra como fundo: e o
+   mesmo `yb-chevron-down` do sprite, grade 24 e traco 1.5, no mesmo
+   `--yb-icon-md` dos icones ao lado. O `padding-inline-end` reserva a largura
+   dele, entao o texto da opcao nunca passa por baixo.
+
+   A LISTA que abre continua nativa, de proposito: no celular ela e a roda do
+   sistema, e nada que a gente desenhasse aqui chegaria perto em acerto de
+   toque, busca por tecla e leitor de tela.
+
+   Data-URI nao le var(): `%236D6D71` e --yb-gray-600 (= --yb-text-muted) e
+   `%23B1B1B4` e --yb-gray-400 (= --yb-text-disabled). Ha checagem de paleta
+   para os dois hexes.
+   ------------------------------------------------------------------------- */
+.yb-select{
+  appearance:none; -webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236D6D71' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right var(--yb-space-4) center;
+  background-size:var(--yb-icon-md) var(--yb-icon-md);
+  padding-inline-end:calc(var(--yb-space-4) + var(--yb-icon-md) + var(--yb-space-2));
+}
+
+/* No erro os dois convivem: o alerta entra mais para dentro e a seta fica onde
+   sempre esteve. Trocar a seta pelo alerta deixaria o select sem o unico sinal
+   de que ele abre uma lista — justo no estado em que a pessoa precisa voltar
+   nele e escolher outra coisa. */
+.yb-select[aria-invalid="true"]{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236D6D71' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"),
+                   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B3261E' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4.2 2.8 20h18.4Z'/%3E%3Cpath d='M12 10v4'/%3E%3Cpath d='M12 17.2v.1' stroke-width='2'/%3E%3C/svg%3E");
+  background-position:right var(--yb-space-4) center,
+                      right calc(var(--yb-space-4) + var(--yb-icon-md) + var(--yb-space-2)) center;
+  background-size:var(--yb-icon-md) var(--yb-icon-md),
+                  var(--yb-icon-md) var(--yb-icon-md);
+  padding-inline-end:calc(var(--yb-space-4) + var(--yb-icon-md) * 2 + var(--yb-space-2) * 2);
+}
+
+/* Desabilitado e um caso de ATALHO, nao de cor: a regra de cima pinta o fundo
+   com `background:` curto, e o atalho leva imagem, posicao e tamanho junto.
+   Por isso os tres voltam aqui inteiros, e nao so a cor do traco. O mesmo vale
+   para o select dentro da moldura, mais abaixo. */
+.yb-select[disabled]{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B1B1B4' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right var(--yb-space-4) center;
+  background-size:var(--yb-icon-md) var(--yb-icon-md);
+}
+
+/* Depois dos estados, de proposito: estas regras tem a mesma especificidade
+   das de cima e so viram a posicao da seta, que nenhuma delas deve desfazer. */
+[dir="rtl"] .yb-select{
+  background-position:left var(--yb-space-4) center;
+  padding-inline-end:var(--yb-space-4);
+  padding-inline-start:calc(var(--yb-space-4) + var(--yb-icon-md) + var(--yb-space-2));
+}
+[dir="rtl"] .yb-select[aria-invalid="true"]{
+  background-position:left var(--yb-space-4) center,
+                      left calc(var(--yb-space-4) + var(--yb-icon-md) + var(--yb-space-2)) center;
+  padding-inline-start:calc(var(--yb-space-4) + var(--yb-icon-md) * 2 + var(--yb-space-2) * 2);
+}
+
+/* Em alto contraste o sistema descarta o fundo do autor e a seta sumiria
+   inteira — o select viraria um input de aparencia identica. Devolver o nativo
+   e o mesmo caminho ja usado no checkbox e no radio, pelo mesmo motivo. */
+@media (forced-colors: active){
+  .yb-select{
+    appearance:auto; -webkit-appearance:auto;
+    background-image:none;
+    padding-inline-end:var(--yb-space-4);
+  }
+}
 }
 
 /* =========================================================================
@@ -1090,6 +1176,36 @@ button.yb-link{
   background-position:left var(--yb-space-3) center;
 }
 .yb-field__box:has([aria-invalid="true"]) > .yb-field__label{color:var(--yb-danger-text)}
+
+/* A seta do select dentro da caixa. Fica aqui no fim de proposito: as regras
+   acima zeram `background` e `padding` do controle (a caixa e quem desenha), e
+   o atalho `background` leva a seta junto. Ancorada no `right 0` do proprio
+   select, que e onde o padding da caixa comeca — e por isso ela cai no mesmo
+   lugar do select solto, que era o defeito. O alerta de erro continua sendo da
+   caixa; aqui so a seta volta. */
+.yb-field__box > .yb-select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236D6D71' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 0 center;
+  background-size:var(--yb-icon-md) var(--yb-icon-md);
+  padding-inline-end:calc(var(--yb-icon-md) + var(--yb-space-2));
+}
+.yb-field__box > .yb-select[aria-invalid="true"]{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236D6D71' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  padding-inline-end:calc(var(--yb-icon-md) + var(--yb-space-2));
+}
+.yb-field__box > .yb-select[disabled],
+.yb-field__box--on-dark > .yb-select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B1B1B4' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 0 center;
+  background-size:var(--yb-icon-md) var(--yb-icon-md);
+}
+[dir="rtl"] .yb-field__box > .yb-select{
+  background-position:left 0 center;
+  padding-inline-end:0;
+  padding-inline-start:calc(var(--yb-icon-md) + var(--yb-space-2));
+}
 .yb-field__hint{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
 .yb-field__error{
   font-size:var(--yb-type-caption-size); color:var(--yb-danger-text);

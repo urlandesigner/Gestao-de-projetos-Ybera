@@ -166,10 +166,7 @@
     </nav>
   </div>
   <h1 class="ficha-titulo">Nav</h1>
-  <p class="ficha-quando">O menu da loja: cinco itens de topo, dois com painel. Uma árvore só
-    serve a barra do desktop e a gaveta do celular. Não confundir com
-    <a href="../molecules/account.html">Account menu</a>, que é o painel da conta
-    &mdash; este é a navegação principal, e só há uma por tela.</p>
+  <p class="ficha-quando">O menu principal da loja, com cinco itens; dois abrem um painel com mais links. No celular vira uma gaveta. Não confundir com o <a href="../molecules/account.html">Account menu</a>.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
@@ -202,61 +199,339 @@
     <div class="stage stage--overflow">
       <nav aria-label="Main">
       <ul class="yb-nav">
-              <li class="yb-nav__item"><a class="yb-nav__link" href="#demos">Home</a></li>
-              <li class="yb-nav__item">
-                <input class="yb-nav__toggle" type="checkbox" id="nva1">
-                <label class="yb-nav__link" for="nva1">Shop
-                  <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
-                <div class="yb-nav__panel">
-                  <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">All Products</a><ul class="yb-nav__sublist"><li><a href="#demos">Best Sellers</a></li><li><a href="#demos">Kit</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Collection</a><ul class="yb-nav__sublist"><li><a href="#demos">Ybera Paris</a></li><li><a href="#demos">Fashion Gold</a></li><li><a href="#demos">Cronograma</a></li><li><a href="#demos">100Timetros</a></li><li><a href="#demos">Capulana</a></li><li><a href="#demos">Terra Coco</a></li><li><a href="#demos">Hair Mist</a></li><li><a href="#demos">Vello</a></li><li><a href="#demos">Mirra</a></li><li><a href="#demos">Detox</a></li><li><a href="#demos">Life´s Flower</a></li><li><a href="#demos">Essência Brasileira</a></li><li><a href="#demos">Universal</a></li><li><a href="#demos">Genoma</a></li><li><a href="#demos">Quarta Camada</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Hair Problem</a><ul class="yb-nav__sublist"><li><a href="#demos">Damaged Hair</a></li><li><a href="#demos">Frizz &amp; Dryness</a></li><li><a href="#demos">Thinning / Hair Loss</a></li><li><a href="#demos">Undefined Curls</a></li></ul></div><div class="yb-nav__rail">
-                  <a class="yb-nav__promo" href="../pages/pdp.html">
-                    <div class="yb-nav__promo-media">
-                      <div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div>
-                      <img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Terra Coco hydrating hair care kit" loading="lazy">
-                    </div>
-                    <div class="yb-nav__promo-info">
-                      <p class="yb-nav__promo-name">Terra Coco hydrating hair care kit</p>
-                      <span class="yb-price yb-price--sm"><b class="yb-price__now">$79.90</b></span>
-                      <!-- "View product", nao "Shop now": o cartao e de UM produto e leva a
-                           PDP. "Shop now" e rotulo de colecao — promete uma vitrine e
-                           entrega uma ficha. -->
-                      <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
-                    </div>
-                  </a>
-                  <a class="yb-nav__pitch" href="#demos">
-                    <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
-                    <p class="yb-nav__pitch-title">Not sure where to start?</p>
-                    <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
-                    no guessing between fifteen collections.</p>
-                    <ul class="yb-nav__pitch-steps">
-                      <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
-                      <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
-                      <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
-                    </ul>
-                    <!-- `--secondary`, e nao o magenta da loja. Um mega-menu e superficie de
-                         PASSAGEM: a pessoa abriu para escolher para onde ir, e ao lado destes
-                         dois cartoes ha 24 links de navegacao. O acento que a loja reserva
-                         para "Add to cart" e "Checkout", gasto aqui, briga com a propria
-                         navegacao que o menu existe para oferecer.
-                         E "Start analysis", o mesmo nome do item do menu: eram tres nomes
-                         para um destino so — "AI Hair Analysis" no menu, "Start free
-                         analysis" aqui e "Start quiz" na home. -->
-                    <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
-                  </a>
-                </div></div>
-                </div>
-              </li>
-              <li class="yb-nav__item"><a class="yb-nav__link yb-nav__link--sale" href="#demos">Sales</a></li>
-              <li class="yb-nav__item"><a class="yb-nav__link" href="#demos">AI Hair Analysis</a></li>
-              <li class="yb-nav__item">
-                <input class="yb-nav__toggle" type="checkbox" id="nva4">
-                <label class="yb-nav__link" for="nva4">About Us
-                  <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
-                <div class="yb-nav__panel">
-                  <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Blog</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">New chapter Ybera</a></div></div>
-                </div>
-              </li>
-            </ul>
+        <li class="yb-nav__item"><a class="yb-nav__link" href="#demos">Home</a></li>
+        <li class="yb-nav__item">
+          <input class="yb-nav__toggle" type="checkbox" id="nva1">
+          <label class="yb-nav__link" for="nva1">Shop
+            <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+          <div class="yb-nav__panel">
+            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">All Products</a><ul class="yb-nav__sublist"><li><a href="#demos" data-yb-showcase-target="best-sellers">Best Sellers</a></li><li><a href="#demos" data-yb-showcase-target="collections">Kit</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Collection</a><ul class="yb-nav__sublist"><li><a href="#demos">Ybera Paris</a></li><li><a href="#demos" data-yb-showcase-target="fashion-gold">Fashion Gold</a></li><li><a href="#demos" data-yb-showcase-target="cronograma-hair-care-system">Cronograma</a></li><li><a href="#demos">100Timetros</a></li><li><a href="#demos">Capulana</a></li><li><a href="#demos" data-yb-showcase-target="terra-coco">Terra Coco</a></li><li><a href="#demos" data-yb-showcase-target="hair-mist">Hair Mist</a></li><li><a href="#demos" data-yb-showcase-target="vello-1">Vello</a></li><li><a href="#demos" data-yb-showcase-target="mirra">Mirra</a></li><li><a href="#demos" data-yb-showcase-target="detox">Detox</a></li><li><a href="#demos">Life´s Flower</a></li><li><a href="#demos" data-yb-showcase-target="essencia-brasileira">Essência Brasileira</a></li><li><a href="#demos">Universal</a></li><li><a href="#demos">Genoma</a></li><li><a href="#demos">Quarta Camada</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Hair Problem</a><ul class="yb-nav__sublist"><li><a href="#demos" data-yb-showcase-target="dullness">Damaged Hair</a></li><li><a href="#demos" data-yb-showcase-target="dryness-frizz">Frizz &amp; Dryness</a></li><li><a href="#demos" data-yb-showcase-target="hair-loss-thinning-hair">Thinning / Hair Loss</a></li><li><a href="#demos" data-yb-showcase-target="frizz-lack-of-volume">Undefined Curls</a></li></ul></div><div class="yb-nav__rail" data-yb-showcases>
+          <div class="yb-nav__showcase" data-yb-showcase="default">
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div>
+                <img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Terra Coco hydrating hair care kit | 1L shampoo + 1kg mask + elixir" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Terra Coco hydrating hair care kit | 1L shampoo + 1kg mask + elixir</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+                <!-- "View product", nao "Shop now": o cartao e de UM produto e leva a
+                     PDP. "Shop now" e rotulo de colecao — promete uma vitrine e
+                     entrega uma ficha. -->
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+            <a class="yb-nav__pitch" href="#demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <!-- `--secondary`, e nao o magenta da loja. Um mega-menu e superficie de
+                   PASSAGEM: a pessoa abriu para escolher para onde ir, e ao lado destes
+                   dois cartoes ha 24 links de navegacao. O acento que a loja reserva
+                   para "Add to cart" e "Checkout", gasto aqui, briga com a propria
+                   navegacao que o menu existe para oferecer.
+                   E "Start analysis", o mesmo nome do item do menu: eram tres nomes
+                   para um destino so — "AI Hair Analysis" no menu, "Start free
+                   analysis" aqui e "Start quiz" na home. -->
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="best-sellers" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/44_831fc84e-57db-4d51-ba41-ed4ed02438f3-284281.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Best Sellers</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Terra Coco hydrating hair care kit</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="collections" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/KitCuidadosProfundos-YberaFashionGold_ab-9c59c4.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Kit</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off1_August_22-24-11-18aac2.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Double care — perfect smooth hair kit + free 150g keratin</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$129.80</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="fashion-gold" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Fashion Gold</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/149-3070c3.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Fashion Gold 300g – brazilian keratin treatment</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$77.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="cronograma-hair-care-system" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/Prancheta_2-188b6fea.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Cronograma</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Artboard_1_62a39a8d-9dfe-4cdc-9bfd-7626a-b29a2a.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Deep care kit – Ybera Fashion Gold</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$63.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="terra-coco" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/Off1_Set_22-23-9_1-4ebac5.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Terra Coco</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Terra Coco hydrating hair care kit</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="hair-mist" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/HairMist-FLORALFUSION_d9d86917-8f6b-46c0-98ec-3b-4f903974.avif" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Hair Mist</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="vello-1" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/Prancheta_3-d098ed99.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Vello</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="mirra" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/Prancheta_4-26cbd0ec.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Mirra</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off2_Set_18-20-10-ccb0ae.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Myrrh hair repair oil 90 ml</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$59.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="detox" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/DetoxMobille_109e8d67-c2fd-4329-8ed3-0fa79ebfd5a-59326a33.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Detox</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="essencia-brasileira" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/CondicionadorElixirdaFloresta1KG-d0dd1c.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Essência Brasileira</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/105-d0e326.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Pantanal elixir conditioner 1l – essencia brasileira</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$63.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="dullness" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/02_hair-problem-f838107d.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Damaged Hair</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off2_Set_18-20-10-ccb0ae.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Myrrh hair repair oil 90 ml</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$59.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="dryness-frizz" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Frizz &amp; Dryness</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/149-3070c3.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Fashion Gold 300g – brazilian keratin treatment</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$77.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="hair-loss-thinning-hair" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Thinning / Hair Loss</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="frizz-lack-of-volume" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Undefined Curls</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          </div></div>
+          </div>
+        </li>
+        <li class="yb-nav__item"><a class="yb-nav__link yb-nav__link--sale" href="#demos">Sales</a></li>
+        <li class="yb-nav__item"><a class="yb-nav__link" href="#demos">AI Hair Analysis</a></li>
+        <li class="yb-nav__item">
+          <input class="yb-nav__toggle" type="checkbox" id="nva4">
+          <label class="yb-nav__link" for="nva4">About Us
+            <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+          <div class="yb-nav__panel">
+            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Blog</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">New chapter Ybera</a></div></div>
+          </div>
+        </li>
+      </ul>
       </nav>
     </div>
 
@@ -274,61 +549,339 @@
               <a class="yb-btn yb-btn--primary yb-btn--sm" href="#demos">Log in</a>
             </div>
             <ul class="yb-nav">
-              <li class="yb-nav__item"><a class="yb-nav__link" href="#demos">Home</a></li>
-              <li class="yb-nav__item">
-                <input class="yb-nav__toggle" type="checkbox" id="nva1">
-                <label class="yb-nav__link" for="nva1">Shop
-                  <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
-                <div class="yb-nav__panel">
-                  <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">All Products</a><ul class="yb-nav__sublist"><li><a href="#demos">Best Sellers</a></li><li><a href="#demos">Kit</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Collection</a><ul class="yb-nav__sublist"><li><a href="#demos">Ybera Paris</a></li><li><a href="#demos">Fashion Gold</a></li><li><a href="#demos">Cronograma</a></li><li><a href="#demos">100Timetros</a></li><li><a href="#demos">Capulana</a></li><li><a href="#demos">Terra Coco</a></li><li><a href="#demos">Hair Mist</a></li><li><a href="#demos">Vello</a></li><li><a href="#demos">Mirra</a></li><li><a href="#demos">Detox</a></li><li><a href="#demos">Life´s Flower</a></li><li><a href="#demos">Essência Brasileira</a></li><li><a href="#demos">Universal</a></li><li><a href="#demos">Genoma</a></li><li><a href="#demos">Quarta Camada</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Hair Problem</a><ul class="yb-nav__sublist"><li><a href="#demos">Damaged Hair</a></li><li><a href="#demos">Frizz &amp; Dryness</a></li><li><a href="#demos">Thinning / Hair Loss</a></li><li><a href="#demos">Undefined Curls</a></li></ul></div><div class="yb-nav__rail">
-                  <a class="yb-nav__promo" href="../pages/pdp.html">
-                    <div class="yb-nav__promo-media">
-                      <div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div>
-                      <img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Terra Coco hydrating hair care kit" loading="lazy">
-                    </div>
-                    <div class="yb-nav__promo-info">
-                      <p class="yb-nav__promo-name">Terra Coco hydrating hair care kit</p>
-                      <span class="yb-price yb-price--sm"><b class="yb-price__now">$79.90</b></span>
-                      <!-- "View product", nao "Shop now": o cartao e de UM produto e leva a
-                           PDP. "Shop now" e rotulo de colecao — promete uma vitrine e
-                           entrega uma ficha. -->
-                      <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
-                    </div>
-                  </a>
-                  <a class="yb-nav__pitch" href="#demos">
-                    <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
-                    <p class="yb-nav__pitch-title">Not sure where to start?</p>
-                    <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
-                    no guessing between fifteen collections.</p>
-                    <ul class="yb-nav__pitch-steps">
-                      <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
-                      <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
-                      <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
-                    </ul>
-                    <!-- `--secondary`, e nao o magenta da loja. Um mega-menu e superficie de
-                         PASSAGEM: a pessoa abriu para escolher para onde ir, e ao lado destes
-                         dois cartoes ha 24 links de navegacao. O acento que a loja reserva
-                         para "Add to cart" e "Checkout", gasto aqui, briga com a propria
-                         navegacao que o menu existe para oferecer.
-                         E "Start analysis", o mesmo nome do item do menu: eram tres nomes
-                         para um destino so — "AI Hair Analysis" no menu, "Start free
-                         analysis" aqui e "Start quiz" na home. -->
-                    <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
-                  </a>
-                </div></div>
-                </div>
-              </li>
-              <li class="yb-nav__item"><a class="yb-nav__link yb-nav__link--sale" href="#demos">Sales</a></li>
-              <li class="yb-nav__item"><a class="yb-nav__link" href="#demos">AI Hair Analysis</a></li>
-              <li class="yb-nav__item">
-                <input class="yb-nav__toggle" type="checkbox" id="nva4">
-                <label class="yb-nav__link" for="nva4">About Us
-                  <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
-                <div class="yb-nav__panel">
-                  <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Blog</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">New chapter Ybera</a></div></div>
-                </div>
-              </li>
-            </ul>
+        <li class="yb-nav__item"><a class="yb-nav__link" href="#demos">Home</a></li>
+        <li class="yb-nav__item">
+          <input class="yb-nav__toggle" type="checkbox" id="nvg1">
+          <label class="yb-nav__link" for="nvg1">Shop
+            <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+          <div class="yb-nav__panel">
+            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">All Products</a><ul class="yb-nav__sublist"><li><a href="#demos" data-yb-showcase-target="best-sellers">Best Sellers</a></li><li><a href="#demos" data-yb-showcase-target="collections">Kit</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Collection</a><ul class="yb-nav__sublist"><li><a href="#demos">Ybera Paris</a></li><li><a href="#demos" data-yb-showcase-target="fashion-gold">Fashion Gold</a></li><li><a href="#demos" data-yb-showcase-target="cronograma-hair-care-system">Cronograma</a></li><li><a href="#demos">100Timetros</a></li><li><a href="#demos">Capulana</a></li><li><a href="#demos" data-yb-showcase-target="terra-coco">Terra Coco</a></li><li><a href="#demos" data-yb-showcase-target="hair-mist">Hair Mist</a></li><li><a href="#demos" data-yb-showcase-target="vello-1">Vello</a></li><li><a href="#demos" data-yb-showcase-target="mirra">Mirra</a></li><li><a href="#demos" data-yb-showcase-target="detox">Detox</a></li><li><a href="#demos">Life´s Flower</a></li><li><a href="#demos" data-yb-showcase-target="essencia-brasileira">Essência Brasileira</a></li><li><a href="#demos">Universal</a></li><li><a href="#demos">Genoma</a></li><li><a href="#demos">Quarta Camada</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Hair Problem</a><ul class="yb-nav__sublist"><li><a href="#demos" data-yb-showcase-target="dullness">Damaged Hair</a></li><li><a href="#demos" data-yb-showcase-target="dryness-frizz">Frizz &amp; Dryness</a></li><li><a href="#demos" data-yb-showcase-target="hair-loss-thinning-hair">Thinning / Hair Loss</a></li><li><a href="#demos" data-yb-showcase-target="frizz-lack-of-volume">Undefined Curls</a></li></ul></div><div class="yb-nav__rail" data-yb-showcases>
+          <div class="yb-nav__showcase" data-yb-showcase="default">
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div>
+                <img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Terra Coco hydrating hair care kit | 1L shampoo + 1kg mask + elixir" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Terra Coco hydrating hair care kit | 1L shampoo + 1kg mask + elixir</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+                <!-- "View product", nao "Shop now": o cartao e de UM produto e leva a
+                     PDP. "Shop now" e rotulo de colecao — promete uma vitrine e
+                     entrega uma ficha. -->
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+            <a class="yb-nav__pitch" href="#demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <!-- `--secondary`, e nao o magenta da loja. Um mega-menu e superficie de
+                   PASSAGEM: a pessoa abriu para escolher para onde ir, e ao lado destes
+                   dois cartoes ha 24 links de navegacao. O acento que a loja reserva
+                   para "Add to cart" e "Checkout", gasto aqui, briga com a propria
+                   navegacao que o menu existe para oferecer.
+                   E "Start analysis", o mesmo nome do item do menu: eram tres nomes
+                   para um destino so — "AI Hair Analysis" no menu, "Start free
+                   analysis" aqui e "Start quiz" na home. -->
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="best-sellers" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/44_831fc84e-57db-4d51-ba41-ed4ed02438f3-284281.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Best Sellers</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Terra Coco hydrating hair care kit</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="collections" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/KitCuidadosProfundos-YberaFashionGold_ab-9c59c4.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Kit</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off1_August_22-24-11-18aac2.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Double care — perfect smooth hair kit + free 150g keratin</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$129.80</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="fashion-gold" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Fashion Gold</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/149-3070c3.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Fashion Gold 300g – brazilian keratin treatment</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$77.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="cronograma-hair-care-system" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/Prancheta_2-188b6fea.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Cronograma</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Artboard_1_62a39a8d-9dfe-4cdc-9bfd-7626a-b29a2a.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Deep care kit – Ybera Fashion Gold</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$63.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="terra-coco" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/Off1_Set_22-23-9_1-4ebac5.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Terra Coco</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Terra Coco hydrating hair care kit</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="hair-mist" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/HairMist-FLORALFUSION_d9d86917-8f6b-46c0-98ec-3b-4f903974.avif" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Hair Mist</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="vello-1" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/Prancheta_3-d098ed99.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Vello</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="mirra" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/Prancheta_4-26cbd0ec.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Mirra</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off2_Set_18-20-10-ccb0ae.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Myrrh hair repair oil 90 ml</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$59.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="detox" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/DetoxMobille_109e8d67-c2fd-4329-8ed3-0fa79ebfd5a-59326a33.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Detox</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="essencia-brasileira" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/CondicionadorElixirdaFloresta1KG-d0dd1c.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Essência Brasileira</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/105-d0e326.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Pantanal elixir conditioner 1l – essencia brasileira</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$63.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="dullness" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/02_hair-problem-f838107d.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Damaged Hair</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off2_Set_18-20-10-ccb0ae.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Myrrh hair repair oil 90 ml</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$59.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="dryness-frizz" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Frizz &amp; Dryness</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/149-3070c3.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Fashion Gold 300g – brazilian keratin treatment</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$77.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="hair-loss-thinning-hair" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Thinning / Hair Loss</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="frizz-lack-of-volume" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Undefined Curls</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          </div></div>
+          </div>
+        </li>
+        <li class="yb-nav__item"><a class="yb-nav__link yb-nav__link--sale" href="#demos">Sales</a></li>
+        <li class="yb-nav__item"><a class="yb-nav__link" href="#demos">AI Hair Analysis</a></li>
+        <li class="yb-nav__item">
+          <input class="yb-nav__toggle" type="checkbox" id="nvg4">
+          <label class="yb-nav__link" for="nvg4">About Us
+            <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+          <div class="yb-nav__panel">
+            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Blog</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">New chapter Ybera</a></div></div>
+          </div>
+        </li>
+      </ul>
     </div>
     <div data-state="signed-in" data-label="Conta logada" hidden>
       <div class="yb-nav__head">
@@ -344,61 +897,339 @@
               <a class="yb-btn yb-btn--primary yb-btn--sm" href="#demos">Account</a>
             </div>
             <ul class="yb-nav">
-              <li class="yb-nav__item"><a class="yb-nav__link" href="#demos">Home</a></li>
-              <li class="yb-nav__item">
-                <input class="yb-nav__toggle" type="checkbox" id="nvb1">
-                <label class="yb-nav__link" for="nvb1">Shop
-                  <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
-                <div class="yb-nav__panel">
-                  <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">All Products</a><ul class="yb-nav__sublist"><li><a href="#demos">Best Sellers</a></li><li><a href="#demos">Kit</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Collection</a><ul class="yb-nav__sublist"><li><a href="#demos">Ybera Paris</a></li><li><a href="#demos">Fashion Gold</a></li><li><a href="#demos">Cronograma</a></li><li><a href="#demos">100Timetros</a></li><li><a href="#demos">Capulana</a></li><li><a href="#demos">Terra Coco</a></li><li><a href="#demos">Hair Mist</a></li><li><a href="#demos">Vello</a></li><li><a href="#demos">Mirra</a></li><li><a href="#demos">Detox</a></li><li><a href="#demos">Life´s Flower</a></li><li><a href="#demos">Essência Brasileira</a></li><li><a href="#demos">Universal</a></li><li><a href="#demos">Genoma</a></li><li><a href="#demos">Quarta Camada</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Hair Problem</a><ul class="yb-nav__sublist"><li><a href="#demos">Damaged Hair</a></li><li><a href="#demos">Frizz &amp; Dryness</a></li><li><a href="#demos">Thinning / Hair Loss</a></li><li><a href="#demos">Undefined Curls</a></li></ul></div><div class="yb-nav__rail">
-                  <a class="yb-nav__promo" href="../pages/pdp.html">
-                    <div class="yb-nav__promo-media">
-                      <div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div>
-                      <img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Terra Coco hydrating hair care kit" loading="lazy">
-                    </div>
-                    <div class="yb-nav__promo-info">
-                      <p class="yb-nav__promo-name">Terra Coco hydrating hair care kit</p>
-                      <span class="yb-price yb-price--sm"><b class="yb-price__now">$79.90</b></span>
-                      <!-- "View product", nao "Shop now": o cartao e de UM produto e leva a
-                           PDP. "Shop now" e rotulo de colecao — promete uma vitrine e
-                           entrega uma ficha. -->
-                      <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
-                    </div>
-                  </a>
-                  <a class="yb-nav__pitch" href="#demos">
-                    <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
-                    <p class="yb-nav__pitch-title">Not sure where to start?</p>
-                    <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
-                    no guessing between fifteen collections.</p>
-                    <ul class="yb-nav__pitch-steps">
-                      <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
-                      <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
-                      <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
-                    </ul>
-                    <!-- `--secondary`, e nao o magenta da loja. Um mega-menu e superficie de
-                         PASSAGEM: a pessoa abriu para escolher para onde ir, e ao lado destes
-                         dois cartoes ha 24 links de navegacao. O acento que a loja reserva
-                         para "Add to cart" e "Checkout", gasto aqui, briga com a propria
-                         navegacao que o menu existe para oferecer.
-                         E "Start analysis", o mesmo nome do item do menu: eram tres nomes
-                         para um destino so — "AI Hair Analysis" no menu, "Start free
-                         analysis" aqui e "Start quiz" na home. -->
-                    <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
-                  </a>
-                </div></div>
-                </div>
-              </li>
-              <li class="yb-nav__item"><a class="yb-nav__link yb-nav__link--sale" href="#demos">Sales</a></li>
-              <li class="yb-nav__item"><a class="yb-nav__link" href="#demos">AI Hair Analysis</a></li>
-              <li class="yb-nav__item">
-                <input class="yb-nav__toggle" type="checkbox" id="nvb4">
-                <label class="yb-nav__link" for="nvb4">About Us
-                  <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
-                <div class="yb-nav__panel">
-                  <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Blog</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">New chapter Ybera</a></div></div>
-                </div>
-              </li>
-            </ul>
+        <li class="yb-nav__item"><a class="yb-nav__link" href="#demos">Home</a></li>
+        <li class="yb-nav__item">
+          <input class="yb-nav__toggle" type="checkbox" id="nvb1">
+          <label class="yb-nav__link" for="nvb1">Shop
+            <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+          <div class="yb-nav__panel">
+            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">All Products</a><ul class="yb-nav__sublist"><li><a href="#demos" data-yb-showcase-target="best-sellers">Best Sellers</a></li><li><a href="#demos" data-yb-showcase-target="collections">Kit</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Collection</a><ul class="yb-nav__sublist"><li><a href="#demos">Ybera Paris</a></li><li><a href="#demos" data-yb-showcase-target="fashion-gold">Fashion Gold</a></li><li><a href="#demos" data-yb-showcase-target="cronograma-hair-care-system">Cronograma</a></li><li><a href="#demos">100Timetros</a></li><li><a href="#demos">Capulana</a></li><li><a href="#demos" data-yb-showcase-target="terra-coco">Terra Coco</a></li><li><a href="#demos" data-yb-showcase-target="hair-mist">Hair Mist</a></li><li><a href="#demos" data-yb-showcase-target="vello-1">Vello</a></li><li><a href="#demos" data-yb-showcase-target="mirra">Mirra</a></li><li><a href="#demos" data-yb-showcase-target="detox">Detox</a></li><li><a href="#demos">Life´s Flower</a></li><li><a href="#demos" data-yb-showcase-target="essencia-brasileira">Essência Brasileira</a></li><li><a href="#demos">Universal</a></li><li><a href="#demos">Genoma</a></li><li><a href="#demos">Quarta Camada</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Hair Problem</a><ul class="yb-nav__sublist"><li><a href="#demos" data-yb-showcase-target="dullness">Damaged Hair</a></li><li><a href="#demos" data-yb-showcase-target="dryness-frizz">Frizz &amp; Dryness</a></li><li><a href="#demos" data-yb-showcase-target="hair-loss-thinning-hair">Thinning / Hair Loss</a></li><li><a href="#demos" data-yb-showcase-target="frizz-lack-of-volume">Undefined Curls</a></li></ul></div><div class="yb-nav__rail" data-yb-showcases>
+          <div class="yb-nav__showcase" data-yb-showcase="default">
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div>
+                <img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Terra Coco hydrating hair care kit | 1L shampoo + 1kg mask + elixir" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Terra Coco hydrating hair care kit | 1L shampoo + 1kg mask + elixir</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+                <!-- "View product", nao "Shop now": o cartao e de UM produto e leva a
+                     PDP. "Shop now" e rotulo de colecao — promete uma vitrine e
+                     entrega uma ficha. -->
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+            <a class="yb-nav__pitch" href="#demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <!-- `--secondary`, e nao o magenta da loja. Um mega-menu e superficie de
+                   PASSAGEM: a pessoa abriu para escolher para onde ir, e ao lado destes
+                   dois cartoes ha 24 links de navegacao. O acento que a loja reserva
+                   para "Add to cart" e "Checkout", gasto aqui, briga com a propria
+                   navegacao que o menu existe para oferecer.
+                   E "Start analysis", o mesmo nome do item do menu: eram tres nomes
+                   para um destino so — "AI Hair Analysis" no menu, "Start free
+                   analysis" aqui e "Start quiz" na home. -->
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="best-sellers" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/44_831fc84e-57db-4d51-ba41-ed4ed02438f3-284281.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Best Sellers</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Terra Coco hydrating hair care kit</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="collections" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/KitCuidadosProfundos-YberaFashionGold_ab-9c59c4.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Kit</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off1_August_22-24-11-18aac2.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Double care — perfect smooth hair kit + free 150g keratin</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$129.80</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="fashion-gold" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Fashion Gold</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/149-3070c3.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Fashion Gold 300g – brazilian keratin treatment</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$77.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="cronograma-hair-care-system" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/Prancheta_2-188b6fea.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Cronograma</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Artboard_1_62a39a8d-9dfe-4cdc-9bfd-7626a-b29a2a.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Deep care kit – Ybera Fashion Gold</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$63.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="terra-coco" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/Off1_Set_22-23-9_1-4ebac5.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Terra Coco</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Terra Coco hydrating hair care kit</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="hair-mist" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/HairMist-FLORALFUSION_d9d86917-8f6b-46c0-98ec-3b-4f903974.avif" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Hair Mist</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="vello-1" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/Prancheta_3-d098ed99.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Vello</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="mirra" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/Prancheta_4-26cbd0ec.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Mirra</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off2_Set_18-20-10-ccb0ae.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Myrrh hair repair oil 90 ml</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$59.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="detox" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/DetoxMobille_109e8d67-c2fd-4329-8ed3-0fa79ebfd5a-59326a33.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Detox</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="essencia-brasileira" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/CondicionadorElixirdaFloresta1KG-d0dd1c.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Essência Brasileira</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/105-d0e326.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Pantanal elixir conditioner 1l – essencia brasileira</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$63.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="dullness" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/02_hair-problem-f838107d.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Damaged Hair</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off2_Set_18-20-10-ccb0ae.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Myrrh hair repair oil 90 ml</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$59.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="dryness-frizz" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Frizz &amp; Dryness</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/149-3070c3.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Fashion Gold 300g – brazilian keratin treatment</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$77.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="hair-loss-thinning-hair" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Thinning / Hair Loss</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="frizz-lack-of-volume" hidden>
+            <a class="yb-collection yb-collection--card" href="#demos">
+              <img src="../pages/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Undefined Curls</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          </div></div>
+          </div>
+        </li>
+        <li class="yb-nav__item"><a class="yb-nav__link yb-nav__link--sale" href="#demos">Sales</a></li>
+        <li class="yb-nav__item"><a class="yb-nav__link" href="#demos">AI Hair Analysis</a></li>
+        <li class="yb-nav__item">
+          <input class="yb-nav__toggle" type="checkbox" id="nvb4">
+          <label class="yb-nav__link" for="nvb4">About Us
+            <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
+          <div class="yb-nav__panel">
+            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">Blog</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#demos">New chapter Ybera</a></div></div>
+          </div>
+        </li>
+      </ul>
     </div>
 
     <details class="note"><summary>Uma árvore, dois aparelhos</summary>
@@ -465,61 +1296,339 @@
       <div class="snippet" data-code-variant-panel="0">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
         <pre><code>&lt;ul class="yb-nav"&gt;
-        &lt;li class="yb-nav__item"&gt;&lt;a class="yb-nav__link" href="#demos"&gt;Home&lt;/a&gt;&lt;/li&gt;
-        &lt;li class="yb-nav__item"&gt;
-          &lt;input class="yb-nav__toggle" type="checkbox" id="nva1"&gt;
-          &lt;label class="yb-nav__link" for="nva1"&gt;Shop
-            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;&lt;/label&gt;
-          &lt;div class="yb-nav__panel"&gt;
-            &lt;div class="yb-nav__groups"&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;All Products&lt;/a&gt;&lt;ul class="yb-nav__sublist"&gt;&lt;li&gt;&lt;a href="#demos"&gt;Best Sellers&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Collection&lt;/a&gt;&lt;ul class="yb-nav__sublist"&gt;&lt;li&gt;&lt;a href="#demos"&gt;Ybera Paris&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Fashion Gold&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Cronograma&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;100Timetros&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Capulana&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Terra Coco&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Hair Mist&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Vello&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Mirra&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Detox&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Life´s Flower&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Essência Brasileira&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Universal&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Genoma&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Quarta Camada&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Hair Problem&lt;/a&gt;&lt;ul class="yb-nav__sublist"&gt;&lt;li&gt;&lt;a href="#demos"&gt;Damaged Hair&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Frizz &amp;amp; Dryness&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Thinning / Hair Loss&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Undefined Curls&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div class="yb-nav__rail"&gt;
-            &lt;a class="yb-nav__promo" href="../pages/pdp.html"&gt;
-              &lt;div class="yb-nav__promo-media"&gt;
-                &lt;div class="yb-card__flags"&gt;&lt;span class="yb-badge yb-badge--soft"&gt;Best seller&lt;/span&gt;&lt;/div&gt;
-                &lt;img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Terra Coco hydrating hair care kit" loading="lazy"&gt;
-              &lt;/div&gt;
-              &lt;div class="yb-nav__promo-info"&gt;
-                &lt;p class="yb-nav__promo-name"&gt;Terra Coco hydrating hair care kit&lt;/p&gt;
-                &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$79.90&lt;/b&gt;&lt;/span&gt;
-                &lt;!-- "View product", nao "Shop now": o cartao e de UM produto e leva a
-                     PDP. "Shop now" e rotulo de colecao — promete uma vitrine e
-                     entrega uma ficha. --&gt;
-                &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;View product&lt;/span&gt;
-              &lt;/div&gt;
-            &lt;/a&gt;
-            &lt;a class="yb-nav__pitch" href="#demos"&gt;
-              &lt;span class="yb-nav__pitch-eyebrow"&gt;AI Hair Analysis&lt;/span&gt;
-              &lt;p class="yb-nav__pitch-title"&gt;Not sure where to start?&lt;/p&gt;
-              &lt;p class="yb-nav__pitch-text"&gt;Six questions, and we match your hair to the right line —
-              no guessing between fifteen collections.&lt;/p&gt;
-              &lt;ul class="yb-nav__pitch-steps"&gt;
-                &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;
-                &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;
-                &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;
-              &lt;/ul&gt;
-              &lt;!-- `--secondary`, e nao o magenta da loja. Um mega-menu e superficie de
-                   PASSAGEM: a pessoa abriu para escolher para onde ir, e ao lado destes
-                   dois cartoes ha 24 links de navegacao. O acento que a loja reserva
-                   para "Add to cart" e "Checkout", gasto aqui, briga com a propria
-                   navegacao que o menu existe para oferecer.
-                   E "Start analysis", o mesmo nome do item do menu: eram tres nomes
-                   para um destino so — "AI Hair Analysis" no menu, "Start free
-                   analysis" aqui e "Start quiz" na home. --&gt;
-              &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;Start analysis&lt;/span&gt;
-            &lt;/a&gt;
-          &lt;/div&gt;&lt;/div&gt;
-          &lt;/div&gt;
-        &lt;/li&gt;
-        &lt;li class="yb-nav__item"&gt;&lt;a class="yb-nav__link yb-nav__link--sale" href="#demos"&gt;Sales&lt;/a&gt;&lt;/li&gt;
-        &lt;li class="yb-nav__item"&gt;&lt;a class="yb-nav__link" href="#demos"&gt;AI Hair Analysis&lt;/a&gt;&lt;/li&gt;
-        &lt;li class="yb-nav__item"&gt;
-          &lt;input class="yb-nav__toggle" type="checkbox" id="nva4"&gt;
-          &lt;label class="yb-nav__link" for="nva4"&gt;About Us
-            &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;&lt;/label&gt;
-          &lt;div class="yb-nav__panel"&gt;
-            &lt;div class="yb-nav__groups"&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Our Story&lt;/a&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Blog&lt;/a&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;New chapter Ybera&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;
-          &lt;/div&gt;
-        &lt;/li&gt;
-      &lt;/ul&gt;</code></pre>
+  &lt;li class="yb-nav__item"&gt;&lt;a class="yb-nav__link" href="#demos"&gt;Home&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="yb-nav__item"&gt;
+    &lt;input class="yb-nav__toggle" type="checkbox" id="nva1"&gt;
+    &lt;label class="yb-nav__link" for="nva1"&gt;Shop
+      &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;&lt;/label&gt;
+    &lt;div class="yb-nav__panel"&gt;
+      &lt;div class="yb-nav__groups"&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;All Products&lt;/a&gt;&lt;ul class="yb-nav__sublist"&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="best-sellers"&gt;Best Sellers&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="collections"&gt;Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Collection&lt;/a&gt;&lt;ul class="yb-nav__sublist"&gt;&lt;li&gt;&lt;a href="#demos"&gt;Ybera Paris&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="fashion-gold"&gt;Fashion Gold&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="cronograma-hair-care-system"&gt;Cronograma&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;100Timetros&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Capulana&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="terra-coco"&gt;Terra Coco&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="hair-mist"&gt;Hair Mist&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="vello-1"&gt;Vello&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="mirra"&gt;Mirra&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="detox"&gt;Detox&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Life´s Flower&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="essencia-brasileira"&gt;Essência Brasileira&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Universal&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Genoma&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos"&gt;Quarta Camada&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Hair Problem&lt;/a&gt;&lt;ul class="yb-nav__sublist"&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="dullness"&gt;Damaged Hair&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="dryness-frizz"&gt;Frizz &amp;amp; Dryness&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="hair-loss-thinning-hair"&gt;Thinning / Hair Loss&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#demos" data-yb-showcase-target="frizz-lack-of-volume"&gt;Undefined Curls&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div class="yb-nav__rail" data-yb-showcases&gt;
+    &lt;div class="yb-nav__showcase" data-yb-showcase="default"&gt;
+      &lt;a class="yb-nav__promo" href="#demos"&gt;
+        &lt;div class="yb-nav__promo-media"&gt;
+          &lt;div class="yb-card__flags"&gt;&lt;span class="yb-badge yb-badge--soft"&gt;Best seller&lt;/span&gt;&lt;/div&gt;
+          &lt;img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Terra Coco hydrating hair care kit | 1L shampoo + 1kg mask + elixir" loading="lazy"&gt;
+        &lt;/div&gt;
+        &lt;div class="yb-nav__promo-info"&gt;
+          &lt;p class="yb-nav__promo-name"&gt;Terra Coco hydrating hair care kit | 1L shampoo + 1kg mask + elixir&lt;/p&gt;
+          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$89.90&lt;/b&gt;&lt;/span&gt;
+          &lt;!-- "View product", nao "Shop now": o cartao e de UM produto e leva a
+               PDP. "Shop now" e rotulo de colecao — promete uma vitrine e
+               entrega uma ficha. --&gt;
+          &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;View product&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+      &lt;a class="yb-nav__pitch" href="#demos"&gt;
+        &lt;span class="yb-nav__pitch-eyebrow"&gt;AI Hair Analysis&lt;/span&gt;
+        &lt;p class="yb-nav__pitch-title"&gt;Not sure where to start?&lt;/p&gt;
+        &lt;p class="yb-nav__pitch-text"&gt;Six questions, and we match your hair to the right line —
+        no guessing between fifteen collections.&lt;/p&gt;
+        &lt;ul class="yb-nav__pitch-steps"&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;!-- `--secondary`, e nao o magenta da loja. Um mega-menu e superficie de
+             PASSAGEM: a pessoa abriu para escolher para onde ir, e ao lado destes
+             dois cartoes ha 24 links de navegacao. O acento que a loja reserva
+             para "Add to cart" e "Checkout", gasto aqui, briga com a propria
+             navegacao que o menu existe para oferecer.
+             E "Start analysis", o mesmo nome do item do menu: eram tres nomes
+             para um destino so — "AI Hair Analysis" no menu, "Start free
+             analysis" aqui e "Start quiz" na home. --&gt;
+        &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;Start analysis&lt;/span&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-nav__showcase" data-yb-showcase="best-sellers" hidden&gt;
+      &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
+        &lt;img src="../pages/img/44_831fc84e-57db-4d51-ba41-ed4ed02438f3-284281.webp" alt="" loading="lazy"&gt;
+        &lt;span class="yb-collection__foot"&gt;
+          &lt;span class="yb-collection__name"&gt;Best Sellers&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+        &lt;/span&gt;
+      &lt;/a&gt;
+      &lt;a class="yb-nav__promo" href="#demos"&gt;
+        &lt;div class="yb-nav__promo-media"&gt;
+          &lt;img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="" loading="lazy"&gt;
+        &lt;/div&gt;
+        &lt;div class="yb-nav__promo-info"&gt;
+          &lt;p class="yb-nav__promo-name"&gt;Terra Coco hydrating hair care kit&lt;/p&gt;
+          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$89.90&lt;/b&gt;&lt;/span&gt;
+          &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;View product&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-nav__showcase" data-yb-showcase="collections" hidden&gt;
+      &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
+        &lt;img src="../pages/img/KitCuidadosProfundos-YberaFashionGold_ab-9c59c4.webp" alt="" loading="lazy"&gt;
+        &lt;span class="yb-collection__foot"&gt;
+          &lt;span class="yb-collection__name"&gt;Kit&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+        &lt;/span&gt;
+      &lt;/a&gt;
+      &lt;a class="yb-nav__promo" href="#demos"&gt;
+        &lt;div class="yb-nav__promo-media"&gt;
+          &lt;img src="../pages/img/Off1_August_22-24-11-18aac2.webp" alt="" loading="lazy"&gt;
+        &lt;/div&gt;
+        &lt;div class="yb-nav__promo-info"&gt;
+          &lt;p class="yb-nav__promo-name"&gt;Double care — perfect smooth hair kit + free 150g keratin&lt;/p&gt;
+          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$129.80&lt;/b&gt;&lt;/span&gt;
+          &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;View product&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-nav__showcase" data-yb-showcase="fashion-gold" hidden&gt;
+      &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
+        &lt;img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy"&gt;
+        &lt;span class="yb-collection__foot"&gt;
+          &lt;span class="yb-collection__name"&gt;Fashion Gold&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+        &lt;/span&gt;
+      &lt;/a&gt;
+      &lt;a class="yb-nav__promo" href="#demos"&gt;
+        &lt;div class="yb-nav__promo-media"&gt;
+          &lt;img src="../pages/img/149-3070c3.webp" alt="" loading="lazy"&gt;
+        &lt;/div&gt;
+        &lt;div class="yb-nav__promo-info"&gt;
+          &lt;p class="yb-nav__promo-name"&gt;Fashion Gold 300g – brazilian keratin treatment&lt;/p&gt;
+          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$77.90&lt;/b&gt;&lt;/span&gt;
+          &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;View product&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-nav__showcase" data-yb-showcase="cronograma-hair-care-system" hidden&gt;
+      &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
+        &lt;img src="../pages/img/Prancheta_2-188b6fea.webp" alt="" loading="lazy"&gt;
+        &lt;span class="yb-collection__foot"&gt;
+          &lt;span class="yb-collection__name"&gt;Cronograma&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+        &lt;/span&gt;
+      &lt;/a&gt;
+      &lt;a class="yb-nav__promo" href="#demos"&gt;
+        &lt;div class="yb-nav__promo-media"&gt;
+          &lt;img src="../pages/img/Artboard_1_62a39a8d-9dfe-4cdc-9bfd-7626a-b29a2a.webp" alt="" loading="lazy"&gt;
+        &lt;/div&gt;
+        &lt;div class="yb-nav__promo-info"&gt;
+          &lt;p class="yb-nav__promo-name"&gt;Deep care kit – Ybera Fashion Gold&lt;/p&gt;
+          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$63.90&lt;/b&gt;&lt;/span&gt;
+          &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;View product&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-nav__showcase" data-yb-showcase="terra-coco" hidden&gt;
+      &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
+        &lt;img src="../pages/img/Off1_Set_22-23-9_1-4ebac5.webp" alt="" loading="lazy"&gt;
+        &lt;span class="yb-collection__foot"&gt;
+          &lt;span class="yb-collection__name"&gt;Terra Coco&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+        &lt;/span&gt;
+      &lt;/a&gt;
+      &lt;a class="yb-nav__promo" href="#demos"&gt;
+        &lt;div class="yb-nav__promo-media"&gt;
+          &lt;img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="" loading="lazy"&gt;
+        &lt;/div&gt;
+        &lt;div class="yb-nav__promo-info"&gt;
+          &lt;p class="yb-nav__promo-name"&gt;Terra Coco hydrating hair care kit&lt;/p&gt;
+          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$89.90&lt;/b&gt;&lt;/span&gt;
+          &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;View product&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-nav__showcase" data-yb-showcase="hair-mist" hidden&gt;
+      &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
+        &lt;img src="../pages/img/HairMist-FLORALFUSION_d9d86917-8f6b-46c0-98ec-3b-4f903974.avif" alt="" loading="lazy"&gt;
+        &lt;span class="yb-collection__foot"&gt;
+          &lt;span class="yb-collection__name"&gt;Hair Mist&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+        &lt;/span&gt;
+      &lt;/a&gt;
+      &lt;a class="yb-nav__pitch" href="#demos"&gt;
+        &lt;span class="yb-nav__pitch-eyebrow"&gt;AI Hair Analysis&lt;/span&gt;
+        &lt;p class="yb-nav__pitch-title"&gt;Not sure where to start?&lt;/p&gt;
+        &lt;p class="yb-nav__pitch-text"&gt;Six questions, and we match your hair to the right line —
+        no guessing between fifteen collections.&lt;/p&gt;
+        &lt;ul class="yb-nav__pitch-steps"&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;Start analysis&lt;/span&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-nav__showcase" data-yb-showcase="vello-1" hidden&gt;
+      &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
+        &lt;img src="../pages/img/Prancheta_3-d098ed99.webp" alt="" loading="lazy"&gt;
+        &lt;span class="yb-collection__foot"&gt;
+          &lt;span class="yb-collection__name"&gt;Vello&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+        &lt;/span&gt;
+      &lt;/a&gt;
+      &lt;a class="yb-nav__pitch" href="#demos"&gt;
+        &lt;span class="yb-nav__pitch-eyebrow"&gt;AI Hair Analysis&lt;/span&gt;
+        &lt;p class="yb-nav__pitch-title"&gt;Not sure where to start?&lt;/p&gt;
+        &lt;p class="yb-nav__pitch-text"&gt;Six questions, and we match your hair to the right line —
+        no guessing between fifteen collections.&lt;/p&gt;
+        &lt;ul class="yb-nav__pitch-steps"&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;Start analysis&lt;/span&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-nav__showcase" data-yb-showcase="mirra" hidden&gt;
+      &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
+        &lt;img src="../pages/img/Prancheta_4-26cbd0ec.webp" alt="" loading="lazy"&gt;
+        &lt;span class="yb-collection__foot"&gt;
+          &lt;span class="yb-collection__name"&gt;Mirra&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+        &lt;/span&gt;
+      &lt;/a&gt;
+      &lt;a class="yb-nav__promo" href="#demos"&gt;
+        &lt;div class="yb-nav__promo-media"&gt;
+          &lt;img src="../pages/img/Off2_Set_18-20-10-ccb0ae.webp" alt="" loading="lazy"&gt;
+        &lt;/div&gt;
+        &lt;div class="yb-nav__promo-info"&gt;
+          &lt;p class="yb-nav__promo-name"&gt;Myrrh hair repair oil 90 ml&lt;/p&gt;
+          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$59.90&lt;/b&gt;&lt;/span&gt;
+          &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;View product&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-nav__showcase" data-yb-showcase="detox" hidden&gt;
+      &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
+        &lt;img src="../pages/img/DetoxMobille_109e8d67-c2fd-4329-8ed3-0fa79ebfd5a-59326a33.webp" alt="" loading="lazy"&gt;
+        &lt;span class="yb-collection__foot"&gt;
+          &lt;span class="yb-collection__name"&gt;Detox&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+        &lt;/span&gt;
+      &lt;/a&gt;
+      &lt;a class="yb-nav__pitch" href="#demos"&gt;
+        &lt;span class="yb-nav__pitch-eyebrow"&gt;AI Hair Analysis&lt;/span&gt;
+        &lt;p class="yb-nav__pitch-title"&gt;Not sure where to start?&lt;/p&gt;
+        &lt;p class="yb-nav__pitch-text"&gt;Six questions, and we match your hair to the right line —
+        no guessing between fifteen collections.&lt;/p&gt;
+        &lt;ul class="yb-nav__pitch-steps"&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;Start analysis&lt;/span&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-nav__showcase" data-yb-showcase="essencia-brasileira" hidden&gt;
+      &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
+        &lt;img src="../pages/img/CondicionadorElixirdaFloresta1KG-d0dd1c.webp" alt="" loading="lazy"&gt;
+        &lt;span class="yb-collection__foot"&gt;
+          &lt;span class="yb-collection__name"&gt;Essência Brasileira&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+        &lt;/span&gt;
+      &lt;/a&gt;
+      &lt;a class="yb-nav__promo" href="#demos"&gt;
+        &lt;div class="yb-nav__promo-media"&gt;
+          &lt;img src="../pages/img/105-d0e326.webp" alt="" loading="lazy"&gt;
+        &lt;/div&gt;
+        &lt;div class="yb-nav__promo-info"&gt;
+          &lt;p class="yb-nav__promo-name"&gt;Pantanal elixir conditioner 1l – essencia brasileira&lt;/p&gt;
+          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$63.90&lt;/b&gt;&lt;/span&gt;
+          &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;View product&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-nav__showcase" data-yb-showcase="dullness" hidden&gt;
+      &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
+        &lt;img src="../pages/img/02_hair-problem-f838107d.webp" alt="" loading="lazy"&gt;
+        &lt;span class="yb-collection__foot"&gt;
+          &lt;span class="yb-collection__name"&gt;Damaged Hair&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+        &lt;/span&gt;
+      &lt;/a&gt;
+      &lt;a class="yb-nav__promo" href="#demos"&gt;
+        &lt;div class="yb-nav__promo-media"&gt;
+          &lt;img src="../pages/img/Off2_Set_18-20-10-ccb0ae.webp" alt="" loading="lazy"&gt;
+        &lt;/div&gt;
+        &lt;div class="yb-nav__promo-info"&gt;
+          &lt;p class="yb-nav__promo-name"&gt;Myrrh hair repair oil 90 ml&lt;/p&gt;
+          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$59.90&lt;/b&gt;&lt;/span&gt;
+          &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;View product&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-nav__showcase" data-yb-showcase="dryness-frizz" hidden&gt;
+      &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
+        &lt;img src="../pages/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy"&gt;
+        &lt;span class="yb-collection__foot"&gt;
+          &lt;span class="yb-collection__name"&gt;Frizz &amp;amp; Dryness&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+        &lt;/span&gt;
+      &lt;/a&gt;
+      &lt;a class="yb-nav__promo" href="#demos"&gt;
+        &lt;div class="yb-nav__promo-media"&gt;
+          &lt;img src="../pages/img/149-3070c3.webp" alt="" loading="lazy"&gt;
+        &lt;/div&gt;
+        &lt;div class="yb-nav__promo-info"&gt;
+          &lt;p class="yb-nav__promo-name"&gt;Fashion Gold 300g – brazilian keratin treatment&lt;/p&gt;
+          &lt;span class="yb-price yb-price--sm"&gt;&lt;b class="yb-price__now"&gt;$77.90&lt;/b&gt;&lt;/span&gt;
+          &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;View product&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-nav__showcase" data-yb-showcase="hair-loss-thinning-hair" hidden&gt;
+      &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
+        &lt;img src="../pages/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy"&gt;
+        &lt;span class="yb-collection__foot"&gt;
+          &lt;span class="yb-collection__name"&gt;Thinning / Hair Loss&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+        &lt;/span&gt;
+      &lt;/a&gt;
+      &lt;a class="yb-nav__pitch" href="#demos"&gt;
+        &lt;span class="yb-nav__pitch-eyebrow"&gt;AI Hair Analysis&lt;/span&gt;
+        &lt;p class="yb-nav__pitch-title"&gt;Not sure where to start?&lt;/p&gt;
+        &lt;p class="yb-nav__pitch-text"&gt;Six questions, and we match your hair to the right line —
+        no guessing between fifteen collections.&lt;/p&gt;
+        &lt;ul class="yb-nav__pitch-steps"&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;Start analysis&lt;/span&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class="yb-nav__showcase" data-yb-showcase="frizz-lack-of-volume" hidden&gt;
+      &lt;a class="yb-collection yb-collection--card" href="#demos"&gt;
+        &lt;img src="../pages/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy"&gt;
+        &lt;span class="yb-collection__foot"&gt;
+          &lt;span class="yb-collection__name"&gt;Undefined Curls&lt;/span&gt;
+          &lt;span class="yb-collection__cta"&gt;Shop collection &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-arrow-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+        &lt;/span&gt;
+      &lt;/a&gt;
+      &lt;a class="yb-nav__pitch" href="#demos"&gt;
+        &lt;span class="yb-nav__pitch-eyebrow"&gt;AI Hair Analysis&lt;/span&gt;
+        &lt;p class="yb-nav__pitch-title"&gt;Not sure where to start?&lt;/p&gt;
+        &lt;p class="yb-nav__pitch-text"&gt;Six questions, and we match your hair to the right line —
+        no guessing between fifteen collections.&lt;/p&gt;
+        &lt;ul class="yb-nav__pitch-steps"&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your hair type&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;Your main concern&lt;/li&gt;
+          &lt;li&gt;&lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-check"/&gt;&lt;/svg&gt;The kit that fits&lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;span class="yb-btn yb-btn--secondary yb-btn--sm"&gt;Start analysis&lt;/span&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;/div&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li class="yb-nav__item"&gt;&lt;a class="yb-nav__link yb-nav__link--sale" href="#demos"&gt;Sales&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="yb-nav__item"&gt;&lt;a class="yb-nav__link" href="#demos"&gt;AI Hair Analysis&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="yb-nav__item"&gt;
+    &lt;input class="yb-nav__toggle" type="checkbox" id="nva4"&gt;
+    &lt;label class="yb-nav__link" for="nva4"&gt;About Us
+      &lt;svg class="yb-icon yb-icon--sm" aria-hidden="true"&gt;&lt;use href="ybera-icons.svg#yb-chevron-down"/&gt;&lt;/svg&gt;&lt;/label&gt;
+    &lt;div class="yb-nav__panel"&gt;
+      &lt;div class="yb-nav__groups"&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Our Story&lt;/a&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;Blog&lt;/a&gt;&lt;/div&gt;&lt;div class="yb-nav__group"&gt;&lt;a class="yb-nav__grouptitle" href="#demos"&gt;New chapter Ybera&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="css" hidden>
@@ -627,7 +1736,7 @@
   outline-offset:var(--yb-focus-offset);
 }
 .yb-nav__promo-media{
-  position:relative; flex:1; min-height:8rem; overflow:hidden;
+  position:relative; aspect-ratio:var(--yb-aspect-product); overflow:hidden;
   background:var(--yb-bg-muted); border-radius:var(--yb-radius-media);
 }
 .yb-nav__promo-media img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block}
@@ -751,6 +1860,8 @@
         <pre><code>&lt;!-- uma vez por pagina, antes de &lt;/body&gt; --&gt;
 &lt;script src="ybera-components.js" defer&gt;&lt;/script&gt;
 
+&lt;!-- esta peca liga por: data-yb-showcase, data-yb-showcase-target, data-yb-showcases --&gt;
+
 &lt;!-- conteudo que chega depois (secao carregada por JS do tema): --&gt;
 &lt;script&gt;Ybera.init(secao);&lt;/script&gt;</code></pre>
       </div>
@@ -763,6 +1874,7 @@
 --yb-action-secondary-bg-hover: #F5F5F5;
 --yb-action-secondary-border-hover: #1E1E1F;
 --yb-action-secondary-text-hover: #1E1E1F;
+--yb-aspect-product: 1 / 1;
 --yb-bg-muted: #F5F5F5;
 --yb-border-hairline: 1px;
 --yb-border-subtle: #EAEAEA;
@@ -813,26 +1925,27 @@
 
   <section class="bloco" id="anatomia" data-tab="Anatomia">
     <h2 class="bloco-titulo">Anatomia e API</h2>
+    <h3 class="rotulo">A barra</h3>
     <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
-        <div class="anat__peca"><nav aria-label="Main">
-<ul class="yb-nav">
+        <div class="anat__peca" style="max-inline-size:34rem"><ul class="yb-nav">
         <li class="yb-nav__item"><a class="yb-nav__link" href="#anat-demos">Home</a></li>
         <li class="yb-nav__item">
           <input class="yb-nav__toggle" type="checkbox" id="anat-nva1">
           <label class="yb-nav__link" for="anat-nva1">Shop
             <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-chevron-down"/></svg></label>
           <div class="yb-nav__panel">
-            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#anat-demos">All Products</a><ul class="yb-nav__sublist"><li><a href="#anat-demos">Best Sellers</a></li><li><a href="#anat-demos">Kit</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#anat-demos">Collection</a><ul class="yb-nav__sublist"><li><a href="#anat-demos">Ybera Paris</a></li><li><a href="#anat-demos">Fashion Gold</a></li><li><a href="#anat-demos">Cronograma</a></li><li><a href="#anat-demos">100Timetros</a></li><li><a href="#anat-demos">Capulana</a></li><li><a href="#anat-demos">Terra Coco</a></li><li><a href="#anat-demos">Hair Mist</a></li><li><a href="#anat-demos">Vello</a></li><li><a href="#anat-demos">Mirra</a></li><li><a href="#anat-demos">Detox</a></li><li><a href="#anat-demos">Life´s Flower</a></li><li><a href="#anat-demos">Essência Brasileira</a></li><li><a href="#anat-demos">Universal</a></li><li><a href="#anat-demos">Genoma</a></li><li><a href="#anat-demos">Quarta Camada</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#anat-demos">Hair Problem</a><ul class="yb-nav__sublist"><li><a href="#anat-demos">Damaged Hair</a></li><li><a href="#anat-demos">Frizz &amp; Dryness</a></li><li><a href="#anat-demos">Thinning / Hair Loss</a></li><li><a href="#anat-demos">Undefined Curls</a></li></ul></div><div class="yb-nav__rail">
-            <a class="yb-nav__promo" href="../pages/pdp.html">
+            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#anat-demos">All Products</a><ul class="yb-nav__sublist"><li><a href="#anat-demos" data-yb-showcase-target="best-sellers">Best Sellers</a></li><li><a href="#anat-demos" data-yb-showcase-target="collections">Kit</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#anat-demos">Collection</a><ul class="yb-nav__sublist"><li><a href="#anat-demos">Ybera Paris</a></li><li><a href="#anat-demos" data-yb-showcase-target="fashion-gold">Fashion Gold</a></li><li><a href="#anat-demos" data-yb-showcase-target="cronograma-hair-care-system">Cronograma</a></li><li><a href="#anat-demos">100Timetros</a></li><li><a href="#anat-demos">Capulana</a></li><li><a href="#anat-demos" data-yb-showcase-target="terra-coco">Terra Coco</a></li><li><a href="#anat-demos" data-yb-showcase-target="hair-mist">Hair Mist</a></li><li><a href="#anat-demos" data-yb-showcase-target="vello-1">Vello</a></li><li><a href="#anat-demos" data-yb-showcase-target="mirra">Mirra</a></li><li><a href="#anat-demos" data-yb-showcase-target="detox">Detox</a></li><li><a href="#anat-demos">Life´s Flower</a></li><li><a href="#anat-demos" data-yb-showcase-target="essencia-brasileira">Essência Brasileira</a></li><li><a href="#anat-demos">Universal</a></li><li><a href="#anat-demos">Genoma</a></li><li><a href="#anat-demos">Quarta Camada</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#anat-demos">Hair Problem</a><ul class="yb-nav__sublist"><li><a href="#anat-demos" data-yb-showcase-target="dullness">Damaged Hair</a></li><li><a href="#anat-demos" data-yb-showcase-target="dryness-frizz">Frizz &amp; Dryness</a></li><li><a href="#anat-demos" data-yb-showcase-target="hair-loss-thinning-hair">Thinning / Hair Loss</a></li><li><a href="#anat-demos" data-yb-showcase-target="frizz-lack-of-volume">Undefined Curls</a></li></ul></div><div class="yb-nav__rail" data-yb-showcases>
+          <div class="yb-nav__showcase" data-yb-showcase="default">
+            <a class="yb-nav__promo" href="#anat-demos">
               <div class="yb-nav__promo-media">
                 <div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div>
-                <img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Terra Coco hydrating hair care kit" loading="lazy">
+                <img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Terra Coco hydrating hair care kit | 1L shampoo + 1kg mask + elixir" loading="lazy">
               </div>
               <div class="yb-nav__promo-info">
-                <p class="yb-nav__promo-name">Terra Coco hydrating hair care kit</p>
-                <span class="yb-price yb-price--sm"><b class="yb-price__now">$79.90</b></span>
+                <p class="yb-nav__promo-name">Terra Coco hydrating hair care kit | 1L shampoo + 1kg mask + elixir</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
                 <!-- "View product", nao "Shop now": o cartao e de UM produto e leva a
                      PDP. "Shop now" e rotulo de colecao — promete uma vitrine e
                      entrega uma ficha. -->
@@ -859,6 +1972,283 @@
                    analysis" aqui e "Start quiz" na home. -->
               <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
             </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="best-sellers" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/44_831fc84e-57db-4d51-ba41-ed4ed02438f3-284281.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Best Sellers</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#anat-demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Terra Coco hydrating hair care kit</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="collections" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/KitCuidadosProfundos-YberaFashionGold_ab-9c59c4.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Kit</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#anat-demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off1_August_22-24-11-18aac2.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Double care — perfect smooth hair kit + free 150g keratin</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$129.80</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="fashion-gold" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Fashion Gold</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#anat-demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/149-3070c3.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Fashion Gold 300g – brazilian keratin treatment</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$77.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="cronograma-hair-care-system" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/Prancheta_2-188b6fea.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Cronograma</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#anat-demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Artboard_1_62a39a8d-9dfe-4cdc-9bfd-7626a-b29a2a.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Deep care kit – Ybera Fashion Gold</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$63.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="terra-coco" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/Off1_Set_22-23-9_1-4ebac5.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Terra Coco</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#anat-demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Terra Coco hydrating hair care kit</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="hair-mist" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/HairMist-FLORALFUSION_d9d86917-8f6b-46c0-98ec-3b-4f903974.avif" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Hair Mist</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#anat-demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="vello-1" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/Prancheta_3-d098ed99.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Vello</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#anat-demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="mirra" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/Prancheta_4-26cbd0ec.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Mirra</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#anat-demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off2_Set_18-20-10-ccb0ae.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Myrrh hair repair oil 90 ml</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$59.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="detox" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/DetoxMobille_109e8d67-c2fd-4329-8ed3-0fa79ebfd5a-59326a33.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Detox</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#anat-demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="essencia-brasileira" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/CondicionadorElixirdaFloresta1KG-d0dd1c.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Essência Brasileira</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#anat-demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/105-d0e326.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Pantanal elixir conditioner 1l – essencia brasileira</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$63.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="dullness" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/02_hair-problem-f838107d.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Damaged Hair</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#anat-demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off2_Set_18-20-10-ccb0ae.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Myrrh hair repair oil 90 ml</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$59.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="dryness-frizz" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Frizz &amp; Dryness</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#anat-demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/149-3070c3.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Fashion Gold 300g – brazilian keratin treatment</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$77.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="hair-loss-thinning-hair" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Thinning / Hair Loss</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#anat-demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="frizz-lack-of-volume" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Undefined Curls</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#anat-demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
           </div></div>
           </div>
         </li>
@@ -872,13 +2262,341 @@
             <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#anat-demos">Our Story</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#anat-demos">Blog</a></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#anat-demos">New chapter Ybera</a></div></div>
           </div>
         </li>
-      </ul>
-</nav></div>
+      </ul></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-badge"><span class="anat__texto"><b><a href="../atoms/badge.html">Badge</a></b> — Etiqueta curta que classifica um item sem competir com ele. Nunca carrega ação — badge não é botão.</span></li>
-        <li data-target=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço de um produto, com o valor anterior riscado e o desconto quando existem. Sempre tabular: em grid, dígitos precisam alinhar em coluna.</span></li>
-        <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
+        <li data-target=".yb-nav"><span class="anat__texto"><b>Barra</b> — A lista dos cinco itens de topo, centrada sob o cabeçalho.</span></li>
+        <li data-target=".yb-nav__link"><span class="anat__texto"><b>Item</b> — Link direto para uma página, sem painel.</span></li>
+        <li data-target="label.yb-nav__link"><span class="anat__texto"><b>Item com painel</b> — Abre o painel no clique, no foco do teclado e, com mouse, ao passar por cima. A seta indica que há mais links.</span></li>
+        <li data-target=".yb-nav__link--sale"><span class="anat__texto"><b>Destaque</b> — O item de ofertas, na cor de destaque. Só um por menu.</span></li>
+      </ol>
+    </div>
+    <h3 class="rotulo">O painel aberto</h3>
+    <div class="anat" data-yb-anatomy>
+      <div class="anat__palco">
+        <svg class="anat__fios" aria-hidden="true"></svg>
+        <div class="anat__peca"><div class="yb-nav__panel">
+            <div class="yb-nav__groups"><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#anat-demos">All Products</a><ul class="yb-nav__sublist"><li><a href="#anat-demos" data-yb-showcase-target="best-sellers">Best Sellers</a></li><li><a href="#anat-demos" data-yb-showcase-target="collections">Kit</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#anat-demos">Collection</a><ul class="yb-nav__sublist"><li><a href="#anat-demos">Ybera Paris</a></li><li><a href="#anat-demos" data-yb-showcase-target="fashion-gold">Fashion Gold</a></li><li><a href="#anat-demos" data-yb-showcase-target="cronograma-hair-care-system">Cronograma</a></li><li><a href="#anat-demos">100Timetros</a></li><li><a href="#anat-demos">Capulana</a></li><li><a href="#anat-demos" data-yb-showcase-target="terra-coco">Terra Coco</a></li><li><a href="#anat-demos" data-yb-showcase-target="hair-mist">Hair Mist</a></li><li><a href="#anat-demos" data-yb-showcase-target="vello-1">Vello</a></li><li><a href="#anat-demos" data-yb-showcase-target="mirra">Mirra</a></li><li><a href="#anat-demos" data-yb-showcase-target="detox">Detox</a></li><li><a href="#anat-demos">Life´s Flower</a></li><li><a href="#anat-demos" data-yb-showcase-target="essencia-brasileira">Essência Brasileira</a></li><li><a href="#anat-demos">Universal</a></li><li><a href="#anat-demos">Genoma</a></li><li><a href="#anat-demos">Quarta Camada</a></li></ul></div><div class="yb-nav__group"><a class="yb-nav__grouptitle" href="#anat-demos">Hair Problem</a><ul class="yb-nav__sublist"><li><a href="#anat-demos" data-yb-showcase-target="dullness">Damaged Hair</a></li><li><a href="#anat-demos" data-yb-showcase-target="dryness-frizz">Frizz &amp; Dryness</a></li><li><a href="#anat-demos" data-yb-showcase-target="hair-loss-thinning-hair">Thinning / Hair Loss</a></li><li><a href="#anat-demos" data-yb-showcase-target="frizz-lack-of-volume">Undefined Curls</a></li></ul></div><div class="yb-nav__rail" data-yb-showcases>
+          <div class="yb-nav__showcase" data-yb-showcase="default">
+            <a class="yb-nav__promo" href="#anat-demos">
+              <div class="yb-nav__promo-media">
+                <div class="yb-card__flags"><span class="yb-badge yb-badge--soft">Best seller</span></div>
+                <img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="Terra Coco hydrating hair care kit | 1L shampoo + 1kg mask + elixir" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Terra Coco hydrating hair care kit | 1L shampoo + 1kg mask + elixir</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+                <!-- "View product", nao "Shop now": o cartao e de UM produto e leva a
+                     PDP. "Shop now" e rotulo de colecao — promete uma vitrine e
+                     entrega uma ficha. -->
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+            <a class="yb-nav__pitch" href="#anat-demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <!-- `--secondary`, e nao o magenta da loja. Um mega-menu e superficie de
+                   PASSAGEM: a pessoa abriu para escolher para onde ir, e ao lado destes
+                   dois cartoes ha 24 links de navegacao. O acento que a loja reserva
+                   para "Add to cart" e "Checkout", gasto aqui, briga com a propria
+                   navegacao que o menu existe para oferecer.
+                   E "Start analysis", o mesmo nome do item do menu: eram tres nomes
+                   para um destino so — "AI Hair Analysis" no menu, "Start free
+                   analysis" aqui e "Start quiz" na home. -->
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="best-sellers" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/44_831fc84e-57db-4d51-ba41-ed4ed02438f3-284281.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Best Sellers</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#anat-demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Terra Coco hydrating hair care kit</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="collections" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/KitCuidadosProfundos-YberaFashionGold_ab-9c59c4.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Kit</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#anat-demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off1_August_22-24-11-18aac2.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Double care — perfect smooth hair kit + free 150g keratin</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$129.80</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="fashion-gold" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/Prancheta_1-790aea3e.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Fashion Gold</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#anat-demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/149-3070c3.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Fashion Gold 300g – brazilian keratin treatment</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$77.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="cronograma-hair-care-system" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/Prancheta_2-188b6fea.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Cronograma</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#anat-demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Artboard_1_62a39a8d-9dfe-4cdc-9bfd-7626a-b29a2a.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Deep care kit – Ybera Fashion Gold</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$63.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="terra-coco" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/Off1_Set_22-23-9_1-4ebac5.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Terra Coco</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#anat-demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off1_Set_22-23-10-33df4b.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Terra Coco hydrating hair care kit</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$89.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="hair-mist" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/HairMist-FLORALFUSION_d9d86917-8f6b-46c0-98ec-3b-4f903974.avif" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Hair Mist</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#anat-demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="vello-1" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/Prancheta_3-d098ed99.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Vello</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#anat-demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="mirra" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/Prancheta_4-26cbd0ec.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Mirra</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#anat-demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off2_Set_18-20-10-ccb0ae.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Myrrh hair repair oil 90 ml</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$59.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="detox" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/DetoxMobille_109e8d67-c2fd-4329-8ed3-0fa79ebfd5a-59326a33.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Detox</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#anat-demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="essencia-brasileira" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/CondicionadorElixirdaFloresta1KG-d0dd1c.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Essência Brasileira</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#anat-demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/105-d0e326.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Pantanal elixir conditioner 1l – essencia brasileira</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$63.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="dullness" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/02_hair-problem-f838107d.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Damaged Hair</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#anat-demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/Off2_Set_18-20-10-ccb0ae.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Myrrh hair repair oil 90 ml</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$59.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="dryness-frizz" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/01_hair-problem-2cb5a59f.jpg" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Frizz &amp; Dryness</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__promo" href="#anat-demos">
+              <div class="yb-nav__promo-media">
+                <img src="../pages/img/149-3070c3.webp" alt="" loading="lazy">
+              </div>
+              <div class="yb-nav__promo-info">
+                <p class="yb-nav__promo-name">Fashion Gold 300g – brazilian keratin treatment</p>
+                <span class="yb-price yb-price--sm"><b class="yb-price__now">$77.90</b></span>
+                <span class="yb-btn yb-btn--secondary yb-btn--sm">View product</span>
+              </div>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="hair-loss-thinning-hair" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/04_hair-problem-e1fbbb33.webp" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Thinning / Hair Loss</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#anat-demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          <div class="yb-nav__showcase" data-yb-showcase="frizz-lack-of-volume" hidden>
+            <a class="yb-collection yb-collection--card" href="#anat-demos">
+              <img src="../pages/img/03_hair-problem-b7e78041.jpg" alt="" loading="lazy">
+              <span class="yb-collection__foot">
+                <span class="yb-collection__name">Undefined Curls</span>
+                <span class="yb-collection__cta">Shop collection <svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-arrow-right"/></svg></span>
+              </span>
+            </a>
+            <a class="yb-nav__pitch" href="#anat-demos">
+              <span class="yb-nav__pitch-eyebrow">AI Hair Analysis</span>
+              <p class="yb-nav__pitch-title">Not sure where to start?</p>
+              <p class="yb-nav__pitch-text">Six questions, and we match your hair to the right line —
+              no guessing between fifteen collections.</p>
+              <ul class="yb-nav__pitch-steps">
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your hair type</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>Your main concern</li>
+                <li><svg class="yb-icon yb-icon--sm" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>The kit that fits</li>
+              </ul>
+              <span class="yb-btn yb-btn--secondary yb-btn--sm">Start analysis</span>
+            </a>
+          </div>
+          </div></div>
+          </div></div>
+      </div>
+      <ol class="anat__legenda">
+        <li data-target=".yb-nav__panel"><span class="anat__texto"><b>Painel</b> — Abre embaixo da barra, na largura do cabeçalho, por cima da página. Com 1024px ou mais de painel, ganha ao lado a chamada do AI Hair Analysis.</span></li>
+        <li data-target=".yb-nav__grouptitle"><span class="anat__texto"><b>Título do grupo</b> — Também é link: leva para a lista completa daquele grupo.</span></li>
+        <li data-target=".yb-nav__sublist"><span class="anat__texto"><b>Links do grupo</b> — Os destinos do grupo, um por linha.</span></li>
+        <li data-target=".yb-nav__promo"><span class="anat__texto"><b>Produto em destaque</b> — Um produto com foto, nome, preço e botão. O cartão inteiro é um link só.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -888,21 +2606,17 @@
          diz o que e. Aqui o que a pessoa precisa primeiro e a lista do que vai
          encontrar; a procedencia vem depois, e vale a frase inteira, porque e
          ela que autoriza confiar no que esta escrito. -->
-    <p class="bloco-lede">De que a peça é feita, o que ela aceita e os tokens que
-    consome — estes do mais específico desta peça para o mais compartilhado com o
-    resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
-    estiver errado aqui, o errado é o código.</p>
+    <p class="bloco-lede">As peças que formam este componente, o que dá para variar nele
+    e os tokens que ele usa. Tudo é lido direto do código, então está sempre atualizado.</p>
 
-    <p class="rotulo">De que é feita</p>
-    <p class="usa-degrau">Atoms</p>
-    <ul class="usa"><li><a href="../atoms/badge.html">Badge</a></li><li><a href="../atoms/button.html">Button</a></li></ul>
-    <p class="usa-degrau">Molecules</p>
-    <ul class="usa"><li><a href="../molecules/card.html">Card product</a></li><li><a href="../molecules/price.html">Price</a></li></ul>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-nav__account</code> <code>.yb-nav__account-initial</code> <code>.yb-nav__account-name</code> <code>.yb-nav__account-who</code> <code>.yb-nav__close</code> <code>.yb-nav__group</code> <code>.yb-nav__groups</code> <code>.yb-nav__grouptitle</code> <code>.yb-nav__grouptitle--sale</code> <code>.yb-nav__head</code> <code>.yb-nav__item</code> <code>.yb-nav__link</code> <code>.yb-nav__link--sale</code> <code>.yb-nav__panel</code> <code>.yb-nav__pitch</code> <code>.yb-nav__pitch-eyebrow</code> <code>.yb-nav__pitch-steps</code> <code>.yb-nav__pitch-text</code> <code>.yb-nav__pitch-title</code> <code>.yb-nav__promo</code> <code>.yb-nav__promo-info</code> <code>.yb-nav__promo-media</code> <code>.yb-nav__promo-name</code> <code>.yb-nav__rail</code> <code>.yb-nav__showcase</code> <code>.yb-nav__sublist</code> <code>.yb-nav__toggle</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:checked</code> · <code>:focus-visible</code> · <code>:hover</code> · <code>[data-yb-showcase-active]</code></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
-    <p class="rotulo">Tokens <span class="rotulo-conta">48</span></p>
+    <div class="api-ficha">
+    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo"><div class="usa-grupos"><div class="usa-grupo"><span class="usa-degrau">Atoms</span><ul class="usa"><li><a href="../atoms/badge.html">Badge</a></li><li><a href="../atoms/button.html">Button</a></li></ul></div><div class="usa-grupo"><span class="usa-degrau">Molecules</span><ul class="usa"><li><a href="../molecules/card.html">Card product</a></li><li><a href="../molecules/collection.html">Collection card</a></li><li><a href="../molecules/price.html">Price</a></li></ul></div></div></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-nav__account</code> <code>.yb-nav__account-initial</code> <code>.yb-nav__account-name</code> <code>.yb-nav__account-who</code> <code>.yb-nav__close</code> <code>.yb-nav__group</code> <code>.yb-nav__groups</code> <code>.yb-nav__grouptitle</code> <code>.yb-nav__grouptitle--sale</code> <code>.yb-nav__head</code> <code>.yb-nav__item</code> <code>.yb-nav__link</code> <code>.yb-nav__link--sale</code> <code>.yb-nav__panel</code> <code>.yb-nav__pitch</code> <code>.yb-nav__pitch-eyebrow</code> <code>.yb-nav__pitch-steps</code> <code>.yb-nav__pitch-text</code> <code>.yb-nav__pitch-title</code> <code>.yb-nav__promo</code> <code>.yb-nav__promo-info</code> <code>.yb-nav__promo-media</code> <code>.yb-nav__promo-name</code> <code>.yb-nav__rail</code> <code>.yb-nav__showcase</code> <code>.yb-nav__sublist</code> <code>.yb-nav__toggle</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:checked</code> · <code>:focus-visible</code> · <code>:hover</code> · <code>[data-yb-showcase-active]</code></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele aparece, mas não responde.</div></div>
+    </div>
+    <p class="rotulo">Tokens <span class="rotulo-conta">49</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
         <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>15</span></p>
@@ -916,8 +2630,8 @@
           <li><i class="tokens__cor" style="background:var(--yb-text-link)" aria-hidden="true"></i><code>--yb-text-link</code><span class="tokens__valor">#CA235F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-link-hover)" aria-hidden="true"></i><code>--yb-text-link-hover</code><span class="tokens__valor">#8A1E45</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface-sunken)" aria-hidden="true"></i><code>--yb-surface-sunken</code><span class="tokens__valor">#FAFAFA</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
@@ -956,8 +2670,9 @@
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>4</span></p>
+        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>5</span></p>
         <ul class="tokens__lista">
+          <li><code>--yb-aspect-product</code><span class="tokens__valor">1 / 1</span></li>
           <li><code>--yb-radius-pill</code><span class="tokens__valor">9999px</span></li>
           <li><code>--yb-radius-media</code><span class="tokens__valor">8px</span></li>
           <li><code>--yb-radius-card</code><span class="tokens__valor">8px</span></li>

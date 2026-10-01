@@ -166,9 +166,7 @@
     </nav>
   </div>
   <h1 class="ficha-titulo">Modal</h1>
-  <p class="ficha-quando">Janela que interrompe a página para pedir <b>uma</b> decisão, e some
-    com a resposta. Se não há decisão a tomar, use <a href="../molecules/toast.html">Toast</a>;
-    se o conteúdo é uma segunda tela para percorrer, use <a href="drawer.html">Drawer</a>.</p>
+  <p class="ficha-quando">Janela que aparece sobre a página para pedir uma decisão, como confirmar uma remoção. Para só avisar, use <a href="../molecules/toast.html">Toast</a>; para conteúdo longo, use <a href="drawer.html">Drawer</a>.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
@@ -505,77 +503,27 @@
     <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
-        <div class="anat__peca"><p class="tipo-rotulo">1 · Destrutivo &mdash; a ação some algo</p>
-<dialog open class="yb-dialog" aria-labelledby="anat-t-destrutivo">
-  <div class="yb-dialog__head">
-    <h4 class="yb-dialog__title" id="anat-t-destrutivo">Remove from cart?</h4>
-    <button type="button" class="yb-iconbtn yb-iconbtn--square yb-dialog__close" aria-label="Close">
-      <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
-  </div>
-  <div class="yb-dialog__body">
-    <p>Kit Sealant Fashion Gold — 500g / 17.6 fl oz will be removed from your cart.</p>
-  </div>
-  <div class="yb-dialog__foot">
-    <button type="button" class="yb-btn yb-btn--ghost">Keep it</button>
-    <button type="button" class="yb-btn yb-btn--danger">Remove</button>
-  </div>
-</dialog>
-<p class="tipo-rotulo">2 · Confirmação &mdash; a ação segue em frente</p>
-<dialog open class="yb-dialog" aria-labelledby="anat-t-confirma">
-  <div class="yb-dialog__head">
-    <h4 class="yb-dialog__title" id="anat-t-confirma">Apply coupon SUMMER20?</h4>
-    <button type="button" class="yb-iconbtn yb-iconbtn--square yb-dialog__close" aria-label="Close">
-      <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
-  </div>
-  <div class="yb-dialog__body">
-    <p>It replaces WELCOME10, already on this order. Only one coupon per order.</p>
-  </div>
-  <div class="yb-dialog__foot">
-    <button type="button" class="yb-btn yb-btn--ghost">Cancel</button>
-    <button type="button" class="yb-btn yb-btn--primary">Apply</button>
-  </div>
-</dialog>
-<p class="tipo-rotulo">3 · Formulário &mdash; o corpo é o formulário</p>
-<dialog open id="anat-dlg-review" class="yb-dialog" aria-labelledby="anat-dlg-review-t">
-  <div class="yb-dialog__head">
-    <h3 class="yb-dialog__title" id="anat-dlg-review-t">Write a review</h3>
-    <button class="yb-iconbtn yb-iconbtn--square yb-dialog__close" aria-label="Close"><svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
-  </div>
-  <form class="yb-dialog__body"
-        onsubmit="Ybera.toast({title:'Thanks — your review is in review',text:'We publish it once it is checked.',variant:'success'}); this.closest('dialog').close(); return false">
-    <div class="yb-field">
-      <label class="yb-field__label" for="anat-rvd-rating">Your rating</label>
-      <select class="yb-select" id="anat-rvd-rating" required>
-        <option value="5">5 — loved it</option>
-        <option value="4">4 — good</option>
-        <option value="3">3 — it is fine</option>
-        <option value="2">2 — not for me</option>
-        <option value="1">1 — disappointed</option>
-      </select>
-    </div>
-    <div class="yb-field">
-      <label class="yb-field__label" for="anat-rvd-text">Your review</label>
-      <textarea class="yb-textarea" id="anat-rvd-text" rows="4"
-                placeholder="What changed in your hair, and how long it took." required></textarea>
-    </div>
-    <div class="yb-field">
-      <label class="yb-field__label" for="anat-rvd-email">Email</label>
-      <input class="yb-input" id="anat-rvd-email" type="email" autocomplete="email" required>
-      <p class="yb-field__hint">Only to confirm the purchase. It is never published.</p>
-    </div>
-    <div class="yb-dialog__foot">
-      <button class="yb-btn yb-btn--ghost" type="button">Cancel</button>
-      <button class="yb-btn yb-btn--primary" type="submit">Submit review</button>
-    </div>
-  </form>
-</dialog></div>
+        <div class="anat__peca" style="max-inline-size:28rem"><dialog open class="yb-dialog" aria-labelledby="anat-t-destrutivo">
+        <div class="yb-dialog__head">
+          <h4 class="yb-dialog__title" id="anat-t-destrutivo">Remove from cart?</h4>
+          <button type="button" class="yb-iconbtn yb-iconbtn--square yb-dialog__close" aria-label="Close">
+            <svg class="yb-icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-close"/></svg></button>
+        </div>
+        <div class="yb-dialog__body">
+          <p>Kit Sealant Fashion Gold — 500g / 17.6 fl oz will be removed from your cart.</p>
+        </div>
+        <div class="yb-dialog__foot">
+          <button type="button" class="yb-btn yb-btn--ghost">Keep it</button>
+          <button type="button" class="yb-btn yb-btn--danger">Remove</button>
+        </div>
+      </dialog></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-iconbtn"><span class="anat__texto"><b><a href="../atoms/iconbtn.html">Icon button</a></b> — Botão de 44px que mostra só um ícone, sem rótulo visível.</span></li>
-        <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
-        <li data-target=".yb-select"><span class="anat__texto"><b><a href="../atoms/select.html">Select</a></b> — Campo de escolha com o rótulo dentro da caixa, que abre o seletor nativo do sistema. Mesmo campo do Input, para quando a resposta já está escrita.</span></li>
-        <li data-target=".yb-textarea"><span class="anat__texto"><b><a href="../atoms/textarea.html">Textarea</a></b> — Campo de várias linhas com o rótulo dentro da caixa, que cresce na vertical. Mesmo campo do Input, para mensagem, nota de presente ou avaliação.</span></li>
-        <li data-target=".yb-input"><span class="anat__texto"><b><a href="../atoms/input.html">Input</a></b> — Campo de uma linha com o rótulo dentro da caixa, que sobe quando a pessoa digita. Leva dica e erro em texto; serve para nome, e-mail, CEP, senha.</span></li>
+        <li data-target=".yb-dialog"><span class="anat__texto"><b>Janela</b> — Centrada sobre a página, com o fundo escurecido atrás. Abre só depois de uma ação da pessoa.</span></li>
+        <li data-target=".yb-dialog__title"><span class="anat__texto"><b>Título</b> — A pergunta, em uma linha: “Remove from cart?”.</span></li>
+        <li data-target=".yb-dialog__close"><span class="anat__texto"><b>Fechar</b> — O mesmo que cancelar. Esc e o clique fora também fecham.</span></li>
+        <li data-target=".yb-dialog__body"><span class="anat__texto"><b>Conteúdo</b> — O que vai acontecer, com o nome do item. Pode levar campos, como no pedido de avaliação.</span></li>
+        <li data-target=".yb-dialog__foot"><span class="anat__texto"><b>Ações</b> — Duas no máximo: a que mantém tudo como está e a que segue em frente. A destrutiva vai à direita, em vermelho.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -585,18 +533,16 @@
          diz o que e. Aqui o que a pessoa precisa primeiro e a lista do que vai
          encontrar; a procedencia vem depois, e vale a frase inteira, porque e
          ela que autoriza confiar no que esta escrito. -->
-    <p class="bloco-lede">De que a peça é feita, o que ela aceita e os tokens que
-    consome — estes do mais específico desta peça para o mais compartilhado com o
-    resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
-    estiver errado aqui, o errado é o código.</p>
+    <p class="bloco-lede">As peças que formam este componente, o que dá para variar nele
+    e os tokens que ele usa. Tudo é lido direto do código, então está sempre atualizado.</p>
 
-    <p class="rotulo">De que é feita</p>
-    <p class="usa-degrau">Atoms</p>
-    <ul class="usa"><li><a href="../atoms/button.html">Button</a></li><li><a href="../atoms/iconbtn.html">Icon button</a></li><li><a href="../atoms/input.html">Input</a></li><li><a href="../atoms/select.html">Select</a></li><li><a href="../atoms/textarea.html">Textarea</a></li></ul>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-dialog__body</code> <code>.yb-dialog__close</code> <code>.yb-dialog__foot</code> <code>.yb-dialog__head</code> <code>.yb-dialog__title</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:hover</code></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
+    <div class="api-ficha">
+    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo"><div class="usa-grupos"><div class="usa-grupo"><span class="usa-degrau">Atoms</span><ul class="usa"><li><a href="../atoms/button.html">Button</a></li><li><a href="../atoms/iconbtn.html">Icon button</a></li><li><a href="../atoms/input.html">Input</a></li><li><a href="../atoms/select.html">Select</a></li><li><a href="../atoms/textarea.html">Textarea</a></li></ul></div></div></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-dialog__body</code> <code>.yb-dialog__close</code> <code>.yb-dialog__foot</code> <code>.yb-dialog__head</code> <code>.yb-dialog__title</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:hover</code></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele aparece, mas não responde.</div></div>
+    </div>
     <p class="rotulo">Tokens <span class="rotulo-conta">22</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
@@ -604,8 +550,8 @@
         <ul class="tokens__lista">
           <li><i class="tokens__cor" style="background:var(--yb-surface-overlay)" aria-hidden="true"></i><code>--yb-surface-overlay</code><span class="tokens__valor">rgba(30, 30, 31, .55)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-subtle)" aria-hidden="true"></i><code>--yb-bg-subtle</code><span class="tokens__valor">#FAFAFA</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>

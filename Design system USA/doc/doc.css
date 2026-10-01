@@ -365,10 +365,31 @@
 
 /* O painel do mega menu é absoluto e passa da altura do palco; com o
    overflow:hidden acima ele aparecia cortado na documentação. */
-.stage--overflow{overflow:visible; isolation:isolate}
-/* `isolation`: o painel aberto de um menu na demo tem z-index de menu, e sem
-   um contexto proprio no palco ele passava por cima da barra fixa da doc ao
-   rolar. Aqui ele continua transbordando o palco, mas empilha dentro dele. */
+.stage--overflow{overflow:visible; z-index:1}
+/* O palco com o painel ABERTO sobe mais um degrau. Dois palcos desses um
+   embaixo do outro (o Header visitante e o logado) empatavam em z-index 1, e
+   o de baixo, que vem depois no HTML, cobria o submenu aberto do de cima.
+   Aberto pelo clique (o checkbox), pelo mouse ou pelo teclado.
+   O submenu do Nav aberto, e o palco onde a pessoa ESTA mexendo, vencem o
+   menu da conta aberto: o Header logado ja nasce com ele aberto (e com
+   espaco reservado embaixo), e empatava com o visitante quando o submenu
+   deste abria. */
+.stage--overflow:has(:is(.yb-account__toggle, .yb-dropdown__toggle):checked){z-index:2}
+.stage--overflow:has(.yb-nav__toggle:checked),
+.stage--overflow:hover,
+.stage--overflow:focus-within{z-index:3}
+/* `z-index:1`, e nao `isolation`: o palco ja e `position:relative`, entao o
+   z-index cria o contexto proprio que segura o painel abaixo da barra fixa da
+   doc (z 10 e 20) — e ainda poe o palco ACIMA do que vem depois dele. So com
+   `isolation` o palco ficava no nivel zero, e a seta das notas recolhidas logo
+   abaixo (que tem `transform`, e por isso camada propria) atravessava o painel
+   aberto do Nav. */
+
+/* O painel do menu se mede pela caixa do palco, que tem 1px de borda: ele
+   abria 1px mais estreito de cada lado que as notas logo abaixo, e a borda
+   azul delas aparecia como um fio nas duas laterais do painel aberto. Na loja
+   o pai nao tem borda e a conta fecha sozinha. */
+.stage--overflow .yb-nav__panel{inset-inline:-1px}
 
 /* A gaveta do carrinho entra pela direita: o palco a empurra para lá em vez
    de centralizá-la, senão o demo mostra uma gaveta que flutua no meio da tela.
@@ -389,23 +410,37 @@
 /* O degrau acima da fileira: as peças de baixo vêm separadas por nível, e não
    numa lista só com o nível impresso em cada pílula — repetir "átomo" cinco
    vezes numa fileira de cinco é ruído onde cabia um rótulo. */
+/* Um grupo por degrau, com o nome do degrau na mesma linha das pecas: em
+   cima delas, como era, o rotulo cinza pequeno e a fileira de pilulas lidas
+   como duas coisas soltas, e a secao inteira sumia de tao apagada. */
+.usa-grupos{display:flex; flex-direction:column; gap:var(--yb-space-3)}
+.usa-grupo{display:flex; flex-wrap:wrap; align-items:center; gap:var(--yb-space-2) var(--yb-space-3)}
 .usa-degrau{
-  margin:var(--yb-space-4) 0 var(--yb-space-2);
+  min-inline-size:5.5rem;
   font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
 }
 .usa{display:flex; flex-wrap:wrap; gap:var(--yb-space-2); margin:0; padding:0; list-style:none}
+/* LINK COM CARA DE LINK, e nao etiqueta. A pilula de borda quase invisivel,
+   fundo branco e texto cinza parecia filtro desligado; cada uma abre a ficha
+   da peca, entao ganha o texto principal, a borda do sistema e a seta de ir. */
 .usa a{
-  display:inline-block; padding:var(--yb-space-1) var(--yb-space-3);
-  border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-pill);
-  background:var(--yb-surface); color:var(--yb-text-secondary);
-  font-size:var(--yb-type-body-sm-size); text-decoration:none;
+  display:inline-flex; align-items:center; gap:var(--yb-space-2);
+  padding:var(--yb-space-2) var(--yb-space-3);
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-control);
+  background:var(--yb-surface); color:var(--yb-text-primary);
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-medium);
+  text-decoration:none;
+  transition:border-color var(--yb-transition-control), background var(--yb-transition-control);
 }
-.usa a:hover{border-color:var(--yb-text-primary); color:var(--yb-text-primary)}
+.usa a::after{content:"→"; color:var(--yb-text-muted); font-weight:var(--yb-font-weight-regular)}
+@media (hover:hover){
+  .usa a:hover{border-color:var(--yb-text-primary); background:var(--yb-bg-subtle)}
+  .usa a:hover::after{color:var(--yb-text-primary)}
+}
 .usa a:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
 }
-.usa .nivel{color:var(--yb-text-muted)}
 
 /* ------------------------------------------------------------ o par de 375
    `content-box` para a borda ficar FORA dos 375 — com border-box ela comia dois
@@ -654,14 +689,24 @@ details.note > :last-child{padding-block-end:var(--yb-space-4)}
 .api-linha{
   display:grid; grid-template-columns:minmax(0, 11rem) 1fr;
   gap:var(--yb-space-2) var(--yb-space-5); align-items:baseline;
-  margin:0; padding-block:var(--yb-space-3);
-  border-block-start:1px solid var(--yb-border-subtle);
+  margin:0; padding-block:var(--yb-space-4);
   font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
 }
-/* A primeira linha vem logo depois do lede, que ja tem respiro embaixo: mais
-   um fio ali seria uma divisao de nada com nada. */
-.api-linha + .api-linha{margin-block-start:0}
-.api-linha:first-of-type{border-block-start:0}
+/* A ficha tecnica e UM bloco: fio em cima e embaixo dela, e entre as linhas.
+   Antes cada parte tinha o seu respiro — 32px antes de "De que e feita", 16
+   entre os degraus, as linhas coladas nos chips —, e a tela nao tinha ritmo. */
+.api-ficha{
+  margin-block:var(--yb-space-6) 0;
+  border-block:1px solid var(--yb-border-subtle);
+}
+/* Ritmo da aba: 32 do desenho ao texto, 24 do texto a ficha, 32 da ficha aos
+   tokens. O texto de abertura trazia 16 embaixo que se somavam aos 24. */
+.bloco-lede:has(+ .api-ficha){margin-block-end:0}
+.api-linha + .api-linha{border-block-start:1px solid var(--yb-border-subtle)}
+/* No "Feita de" o corpo comeca num chip de 36px: o rotulo desce ate o meio
+   da primeira fileira, e nao fica no meio das duas. */
+.api-linha:has(.usa-grupos){align-items:start}
+.api-linha:has(.usa-grupos) .api-linha__rotulo{padding-block-start:var(--yb-space-3)}
 .api-linha__rotulo{
   font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
   text-transform:uppercase; color:var(--yb-text-muted);
@@ -820,9 +865,17 @@ details.note > :last-child{padding-block-end:var(--yb-space-4)}
 .anat__palco{
   position:relative; isolation:isolate;
   padding:var(--yb-space-12) 52px var(--yb-space-8);
-  background:var(--yb-bg-subtle); border-radius:var(--yb-radius-card);
+  background:var(--yb-bg-page);
+  border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card);
 }
 .anat__peca{position:relative; z-index:1}
+/* O quadro era `bg-subtle` (gray-50), o mesmo cinza da mídia vazia do
+   cartão, e ali dentro a foto do Catalog virava um buraco e o selo "Best
+   seller" uma palavra solta. Agora o quadro é a página (branco, como o palco
+   das demonstrações), e a mídia sem foto desce um degrau só no desenho: na
+   loja ela sempre tem foto, aqui não. O selo cinza continua com o seu cinza
+   e passa a se ver sobre ela. */
+.anat__peca{--yb-surface-sunken: var(--yb-gray-200)}
 /* O Partner flutua sobre a arte da loja (`position:absolute`, largura zero,
    o balao transbordando para o lado). No quadro da anatomia nao ha arte nem
    topo de pagina para ancorar, e ele media 0px: os fios apontavam para o
@@ -833,12 +886,29 @@ details.note > :last-child{padding-block-end:var(--yb-space-4)}
    painel entra no fluxo, logo abaixo, com o gatilho alinhado a direita como
    no cabecalho. */
 .anat__peca > .yb-account{flex-direction:column; align-items:flex-end; gap:var(--yb-space-2)}
-.anat__peca .yb-account__panel{position:static; transition:none}
+.anat__peca > .yb-account .yb-account__panel{position:static; transition:none}
 /* O Dropdown, pelo mesmo motivo: o painel entra no fluxo embaixo do gatilho,
    alinhado ao inicio ou ao fim conforme a variante. */
 .anat__peca > .yb-dropdown{display:flex; flex-direction:column; align-items:flex-start; gap:var(--yb-space-1)}
 .anat__peca > .yb-dropdown--end{align-items:flex-end}
-.anat__peca .yb-dropdown__panel{position:static; transition:none}
+.anat__peca > .yb-dropdown .yb-dropdown__panel{position:static; transition:none}
+/* DENTRO DE OUTRA PECA, o painel fica fechado — e fechado mesmo no hover. Na
+   anatomia do Header e na da barra do Nav, passar o mouse abria o submenu ou
+   a conta por cima da legenda, e o desenho passava a mostrar a anatomia de
+   outra ficha. Quem quer ver o painel aberto vai a ficha dele. */
+.anat__peca > :not(.yb-nav__panel) .yb-nav__panel,
+.anat__peca > :not(.yb-account) .yb-account__panel{display:none}
+/* O painel do Nav desenhado aberto e no fluxo: fechado ele e invisivel, e
+   absoluto ele sairia do quadro da anatomia. A sombra e de quem flutua sobre a
+   pagina, e aqui nao ha pagina embaixo. */
+/* `<dialog open>` e absoluto por padrao: no quadro da anatomia ele sairia do
+   fluxo e o quadro teria a altura do nada. Mesma regra do palco dos modais. */
+/* As setas do trilho nascem `hidden` e o JS as mostra quando ha o que rolar.
+   Na copia do desenho o JS nao liga, e as setas sumiriam da anatomia do Hero.
+   `!important` porque o `[hidden]` da base tambem e. */
+.anat__peca .yb-track__nav[hidden]{display:flex !important}
+.anat__peca > .yb-dialog[open]{position:static; inset:auto; margin:0}
+.anat__peca > .yb-nav__panel{position:static; opacity:1; visibility:visible; box-shadow:none; transition:none}
 /* OS FIOS PASSAM POR CIMA DA PEÇA. Atrás dela, o tracejado sumia na borda do
    cartão e o número ficava apontando para o lado do componente em vez de para
    a parte — foi o que a primeira versão mostrou. Por cima não atrapalha,
@@ -883,10 +953,13 @@ details.note > :last-child{padding-block-end:var(--yb-space-4)}
   font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
 }
 /* Com a largura inteira, a legenda em uma coluna só deixaria meia tela vazia
-   ao lado de linhas curtas. Duas colunas, e a ordem continua a de leitura
-   porque a grade preenche por linha. */
+   ao lado de linhas curtas. Duas colunas — mas em COLUNAS de texto, não grade:
+   a grade preenchia por linha (1 2 / 3 4), e quem lê desce a coluna esperando
+   o 2 embaixo do 1. Com `columns` a ordem desce a esquerda e continua na
+   direita, como numa página. */
 @media (min-width:760px){
-  .anat__legenda{grid-template-columns:repeat(2, minmax(0,1fr)); gap:var(--yb-space-1) var(--yb-space-6)}
+  .anat__legenda{display:block; columns:2; column-gap:var(--yb-space-6)}
+  .anat__legenda > li{break-inside:avoid; margin-block-end:var(--yb-space-1)}
 }
 /* Exatamente DOIS filhos: o número e o texto inteiro dentro de um <span>.
    Com o texto solto, cada trecho entre tags virava um item de grade por conta
@@ -914,5 +987,8 @@ details.note > :last-child{padding-block-end:var(--yb-space-4)}
 .anat__legenda b{color:var(--yb-text-primary)}
 /* PARTE DECLARADA QUE NÃO EXISTE NA MARCAÇÃO. Some o número e fica o aviso: a
    legenda estaria apontando para o nada, e nada na tela diria isso. */
+/* Peca que o bloco usa, mas so dentro de um painel fechado no desenho. */
+.anat__num--vazio{border-style:dashed; color:transparent}
+.anat__item--oculto .anat__texto::after{content:" Fica dentro de um painel fechado, por isso não está numerada no desenho."; color:var(--yb-text-muted)}
 .anat__item--perdido{color:var(--yb-danger-text)}
 .anat__item--perdido::after{content:" — classe não encontrada na demonstração"}

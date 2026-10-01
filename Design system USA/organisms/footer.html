@@ -166,7 +166,7 @@
     </nav>
   </div>
   <h1 class="ficha-titulo">Footer</h1>
-  <p class="ficha-quando">O rodapé da loja: assinatura, três colunas de destino, marca e avisos legais. Superfície escura dentro de página clara — não é tema, são os tokens <code>*-inverse</code> da camada 1.</p>
+  <p class="ficha-quando">O rodapé da loja, em fundo escuro: cadastro de e-mail, colunas de links, marca e avisos legais.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
@@ -664,9 +664,9 @@
 </footer></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-input"><span class="anat__texto"><b><a href="../atoms/input.html">Input</a></b> — Campo de uma linha com o rótulo dentro da caixa, que sobe quando a pessoa digita. Leva dica e erro em texto; serve para nome, e-mail, CEP, senha.</span></li>
-        <li data-target=".yb-iconbtn"><span class="anat__texto"><b><a href="../atoms/iconbtn.html">Icon button</a></b> — Botão de 44px que mostra só um ícone, sem rótulo visível.</span></li>
-        <li data-target=".yb-logo"><span class="anat__texto"><b><a href="../atoms/logo.html">Logo</a></b> — A marca da loja, em arquivo único, com altura controlada por modificador.</span></li>
+        <li data-target=".yb-input"><span class="anat__texto"><b><a href="../atoms/input.html">Input</a></b> — Campo de texto de uma linha, com o nome do campo dentro da caixa. Use para nome, e-mail, CEP ou senha; dica e erro aparecem embaixo.</span></li>
+        <li data-target=".yb-iconbtn"><span class="anat__texto"><b><a href="../atoms/iconbtn.html">Icon button</a></b> — Botão quadrado de 44px só com ícone, como fechar, buscar ou favoritar. Precisa de um nome para leitor de tela, porque não tem texto visível.</span></li>
+        <li data-target=".yb-logo"><span class="anat__texto"><b><a href="../atoms/logo.html">Logo</a></b> — A marca Ybera, em um arquivo só, com alturas prontas para cabeçalho, rodapé e e-mail.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -676,18 +676,16 @@
          diz o que e. Aqui o que a pessoa precisa primeiro e a lista do que vai
          encontrar; a procedencia vem depois, e vale a frase inteira, porque e
          ela que autoriza confiar no que esta escrito. -->
-    <p class="bloco-lede">De que a peça é feita, o que ela aceita e os tokens que
-    consome — estes do mais específico desta peça para o mais compartilhado com o
-    resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
-    estiver errado aqui, o errado é o código.</p>
+    <p class="bloco-lede">As peças que formam este componente, o que dá para variar nele
+    e os tokens que ele usa. Tudo é lido direto do código, então está sempre atualizado.</p>
 
-    <p class="rotulo">De que é feita</p>
-    <p class="usa-degrau">Atoms</p>
-    <ul class="usa"><li><a href="../atoms/iconbtn.html">Icon button</a></li><li><a href="../atoms/input.html">Input</a></li><li><a href="../atoms/logo.html">Logo</a></li></ul>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-footer--dark</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-footer__bottom</code> <code>.yb-footer__brand</code> <code>.yb-footer__col</code> <code>.yb-footer__collist</code> <code>.yb-footer__coltitle</code> <code>.yb-footer__info</code> <code>.yb-footer__inner</code> <code>.yb-footer__logo</code> <code>.yb-footer__menus</code> <code>.yb-footer__news</code> <code>.yb-footer__news-field</code> <code>.yb-footer__newsbtn</code> <code>.yb-footer__newsfield</code> <code>.yb-footer__newslabel</code> <code>.yb-footer__newstitle</code> <code>.yb-footer__social</code> <code>.yb-footer__toggle</code> <code>.yb-footer__top</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:checked</code> · <code>:focus-visible</code> · <code>:hover</code> · <code>[hidden]</code></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
+    <div class="api-ficha">
+    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo"><div class="usa-grupos"><div class="usa-grupo"><span class="usa-degrau">Atoms</span><ul class="usa"><li><a href="../atoms/iconbtn.html">Icon button</a></li><li><a href="../atoms/input.html">Input</a></li><li><a href="../atoms/logo.html">Logo</a></li></ul></div></div></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-footer--dark</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-footer__bottom</code> <code>.yb-footer__brand</code> <code>.yb-footer__col</code> <code>.yb-footer__collist</code> <code>.yb-footer__coltitle</code> <code>.yb-footer__info</code> <code>.yb-footer__inner</code> <code>.yb-footer__logo</code> <code>.yb-footer__menus</code> <code>.yb-footer__news</code> <code>.yb-footer__news-field</code> <code>.yb-footer__newsbtn</code> <code>.yb-footer__newsfield</code> <code>.yb-footer__newslabel</code> <code>.yb-footer__newstitle</code> <code>.yb-footer__social</code> <code>.yb-footer__toggle</code> <code>.yb-footer__top</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:checked</code> · <code>:focus-visible</code> · <code>:hover</code> · <code>[hidden]</code></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Só CSS.</div></div>
+    </div>
     <p class="rotulo">Tokens <span class="rotulo-conta">34</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
@@ -698,8 +696,8 @@
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary-inverse)" aria-hidden="true"></i><code>--yb-text-secondary-inverse</code><span class="tokens__valor">#DADADB</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-muted-inverse)" aria-hidden="true"></i><code>--yb-text-muted-inverse</code><span class="tokens__valor">#B1B1B4</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border-strong)" aria-hidden="true"></i><code>--yb-border-strong</code><span class="tokens__valor">#B1B1B4</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-bg-muted)" aria-hidden="true"></i><code>--yb-bg-muted</code><span class="tokens__valor">#F5F5F5</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-bg-inverse)" aria-hidden="true"></i><code>--yb-bg-inverse</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-inverse)" aria-hidden="true"></i><code>--yb-text-inverse</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>

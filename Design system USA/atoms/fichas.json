@@ -436,7 +436,7 @@
             {
               "alvo": ".yb-select",
               "nome": "Controle",
-              "texto": "<code>&lt;select&gt;</code> nativo, com a seta do sistema. A lista que abre é do sistema operacional, e é isso que se quer no celular."
+              "texto": "<code>&lt;select&gt;</code> nativo. A LISTA que abre é a do sistema operacional, e é isso que se quer no celular. A SETA, não: ela é desenhada por nós, com o mesmo <code>yb-chevron-down</code> do sprite — a nativa mora fora do padding do campo e muda de forma a cada sistema."
             },
             {
               "alvo": ".yb-field__label",

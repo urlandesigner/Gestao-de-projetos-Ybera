@@ -166,7 +166,7 @@
     </nav>
   </div>
   <h1 class="ficha-titulo">Cart drawer</h1>
-  <p class="ficha-quando">O carrinho como gaveta lateral, sobre a página. Abre sobre, não substitui: interromper a navegação para mostrar o carrinho custa compras.</p>
+  <p class="ficha-quando">O carrinho em uma gaveta lateral, que abre por cima da página. A pessoa vê o carrinho sem sair do que estava vendo.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
@@ -766,10 +766,7 @@
   display:flex; align-items:baseline; gap:var(--yb-space-2);
   flex-wrap:wrap; min-width:0;
 }
-.yb-cart__item-foot .yb-price__now{
-  font-size:var(--yb-type-body-size);
-  font-variant-numeric:proportional-nums;
-}
+.yb-cart__item-foot .yb-price__now{font-size:var(--yb-type-body-size);}
 .yb-cart__item-foot .yb-price__was{font-size:var(--yb-type-caption-size)}
 .yb-cart__remove{
   margin-block:calc(var(--yb-space-2) * -1);
@@ -787,7 +784,7 @@
   margin:var(--yb-space-2) var(--yb-space-3);
   display:flex; align-items:center; gap:var(--yb-space-3);
   padding:var(--yb-space-3); border:var(--yb-border-hairline) solid var(--yb-border-subtle);
-  border-radius:var(--yb-radius-card); background:var(--yb-bg-subtle);
+  border-radius:var(--yb-radius-card); background:var(--yb-surface);
 }
 .yb-cart__gift-body{display:flex; flex-direction:column; gap:var(--yb-space-3); flex:1; min-width:0}
 .yb-cart__gift-text{margin:0; font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);}
@@ -1176,15 +1173,15 @@
 </div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-iconbtn"><span class="anat__texto"><b><a href="../atoms/iconbtn.html">Icon button</a></b> — Botão de 44px que mostra só um ícone, sem rótulo visível.</span></li>
-        <li data-target=".yb-freeship"><span class="anat__texto"><b><a href="../organisms/shipping-progress.html">Free shipping progress</a></b> — Barra que mostra quanto falta para o frete grátis, no carrinho e no topo. Move ticket médio como nenhum outro, e é o mais feito errado: barra sem número não diz nada.</span></li>
-        <li data-target=".yb-progress"><span class="anat__texto"><b><a href="../atoms/progress.html">Progress bar</a></b> — Barra que mostra quanto de uma tarefa já passou. Espera com fim conhecido; sem número para anunciar, use a variante indeterminada.</span></li>
-        <li data-target=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço de um produto, com o valor anterior riscado e o desconto quando existem. Sempre tabular: em grid, dígitos precisam alinhar em coluna.</span></li>
-        <li data-target=".yb-stepper"><span class="anat__texto"><b><a href="../molecules/stepper.html">Quantity stepper</a></b> — Controle de quantidade — menos, número e mais. Botões de 44px que funcionam no clique; limites em 1 e 10, e o botão desabilita sozinho na ponta.</span></li>
-        <li data-target=".yb-switch"><span class="anat__texto"><b><a href="../atoms/switch.html">Switch</a></b> — Interruptor que liga e desliga na hora, sem confirmar. Se o efeito só acontece depois de um botão de salvar, o certo é a caixa de seleção.</span></li>
-        <li data-target=".yb-input"><span class="anat__texto"><b><a href="../atoms/input.html">Input</a></b> — Campo de uma linha com o rótulo dentro da caixa, que sobe quando a pessoa digita. Leva dica e erro em texto; serve para nome, e-mail, CEP, senha.</span></li>
-        <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — O controle que dispara uma ação. Uma ação primária por tela: se há duas, uma delas não é primária.</span></li>
-        <li data-target=".yb-track"><span class="anat__texto"><b><a href="../molecules/track.html">Track</a></b> — Contêiner, não cartão: não tem visual próprio. Põe numa linha só uma fileira maior que a tela, com rolagem de lado e setas, e carrega qualquer peça — cartões de produto, avaliações, vídeos, logos, banners do hero.</span></li>
+        <li data-target=".yb-iconbtn"><span class="anat__texto"><b><a href="../atoms/iconbtn.html">Icon button</a></b> — Botão quadrado de 44px só com ícone, como fechar, buscar ou favoritar. Precisa de um nome para leitor de tela, porque não tem texto visível.</span></li>
+        <li data-target=".yb-freeship"><span class="anat__texto"><b><a href="../organisms/shipping-progress.html">Free shipping progress</a></b> — Barra que mostra quanto falta para ganhar frete grátis, no carrinho e no topo da página. Mostre sempre o valor que falta.</span></li>
+        <li data-target=".yb-progress"><span class="anat__texto"><b><a href="../atoms/progress.html">Progress bar</a></b> — Barra que mostra quanto de algo já foi concluído. Use quando dá para medir o andamento; quando não dá, use a versão sem número.</span></li>
+        <li data-target=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço do produto, com o preço antigo riscado e o desconto quando houver.</span></li>
+        <li data-target=".yb-stepper"><span class="anat__texto"><b><a href="../molecules/stepper.html">Quantity stepper</a></b> — Controle para escolher a quantidade, com botões de menos e mais. O botão desativa sozinho quando chega no limite.</span></li>
+        <li data-target=".yb-switch"><span class="anat__texto"><b><a href="../atoms/switch.html">Switch</a></b> — Interruptor que liga ou desliga uma opção na hora. Se a mudança só vale depois de clicar em salvar, use o Checkbox.</span></li>
+        <li data-target=".yb-input"><span class="anat__texto"><b><a href="../atoms/input.html">Input</a></b> — Campo de texto de uma linha, com o nome do campo dentro da caixa. Use para nome, e-mail, CEP ou senha; dica e erro aparecem embaixo.</span></li>
+        <li data-target=".yb-btn"><span class="anat__texto"><b><a href="../atoms/button.html">Button</a></b> — Botão que executa uma ação, como comprar ou continuar. Use só um botão primário por tela; as outras ações ficam no secundário ou no ghost.</span></li>
+        <li data-target=".yb-track"><span class="anat__texto"><b><a href="../molecules/track.html">Track</a></b> — Fileira que rola para o lado quando há mais itens do que cabem na tela, com setas no desktop. Não tem visual próprio: recebe cartões, avaliações, vídeos ou banners.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -1194,22 +1191,16 @@
          diz o que e. Aqui o que a pessoa precisa primeiro e a lista do que vai
          encontrar; a procedencia vem depois, e vale a frase inteira, porque e
          ela que autoriza confiar no que esta escrito. -->
-    <p class="bloco-lede">De que a peça é feita, o que ela aceita e os tokens que
-    consome — estes do mais específico desta peça para o mais compartilhado com o
-    resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
-    estiver errado aqui, o errado é o código.</p>
+    <p class="bloco-lede">As peças que formam este componente, o que dá para variar nele
+    e os tokens que ele usa. Tudo é lido direto do código, então está sempre atualizado.</p>
 
-    <p class="rotulo">De que é feita</p>
-    <p class="usa-degrau">Atoms</p>
-    <ul class="usa"><li><a href="../atoms/button.html">Button</a></li><li><a href="../atoms/iconbtn.html">Icon button</a></li><li><a href="../atoms/input.html">Input</a></li><li><a href="../atoms/progress.html">Progress bar</a></li><li><a href="../atoms/switch.html">Switch</a></li></ul>
-    <p class="usa-degrau">Molecules</p>
-    <ul class="usa"><li><a href="../molecules/card.html">Card product</a></li><li><a href="../molecules/price.html">Price</a></li><li><a href="../molecules/stepper.html">Quantity stepper</a></li><li><a href="../molecules/track.html">Track</a></li></ul>
-    <p class="usa-degrau">Blocks</p>
-    <ul class="usa"><li><a href="../organisms/shipping-progress.html">Free shipping progress</a></li></ul>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-cart--empty</code> <code>.yb-cart--loading</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-cart__checkout</code> <code>.yb-cart__close</code> <code>.yb-cart__coupon</code> <code>.yb-cart__coupon-code</code> <code>.yb-cart__coupon-ok</code> <code>.yb-cart__cross</code> <code>.yb-cart__cross-head</code> <code>.yb-cart__cross-title</code> <code>.yb-cart__empty</code> <code>.yb-cart__foot</code> <code>.yb-cart__gift</code> <code>.yb-cart__gift-body</code> <code>.yb-cart__gift-card</code> <code>.yb-cart__gift-card--done</code> <code>.yb-cart__gift-prize</code> <code>.yb-cart__gift-text</code> <code>.yb-cart__gift-track</code> <code>.yb-cart__head</code> <code>.yb-cart__head-actions</code> <code>.yb-cart__item</code> <code>.yb-cart__item--gift</code> <code>.yb-cart__item--soldout</code> <code>.yb-cart__item-body</code> <code>.yb-cart__item-foot</code> <code>.yb-cart__item-prices</code> <code>.yb-cart__item-title</code> <code>.yb-cart__item-top</code> <code>.yb-cart__item-variant</code> <code>.yb-cart__items</code> <code>.yb-cart__note</code> <code>.yb-cart__notice</code> <code>.yb-cart__offer</code> <code>.yb-cart__offer-add</code> <code>.yb-cart__offer-body</code> <code>.yb-cart__offer-full</code> <code>.yb-cart__offer-name</code> <code>.yb-cart__offer-prices</code> <code>.yb-cart__offer-variant</code> <code>.yb-cart__partner</code> <code>.yb-cart__partner-initial</code> <code>.yb-cart__proof</code> <code>.yb-cart__remove</code> <code>.yb-cart__savings</code> <code>.yb-cart__share</code> <code>.yb-cart__shield</code> <code>.yb-cart__shield-body</code> <code>.yb-cart__ship</code> <code>.yb-cart__ship--ok</code> <code>.yb-cart__summary</code> <code>.yb-cart__table</code> <code>.yb-cart__total</code> <code>.yb-cart__total-row</code> <code>.yb-cart__totals</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:hover</code></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
+    <div class="api-ficha">
+    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo"><div class="usa-grupos"><div class="usa-grupo"><span class="usa-degrau">Atoms</span><ul class="usa"><li><a href="../atoms/button.html">Button</a></li><li><a href="../atoms/iconbtn.html">Icon button</a></li><li><a href="../atoms/input.html">Input</a></li><li><a href="../atoms/progress.html">Progress bar</a></li><li><a href="../atoms/switch.html">Switch</a></li></ul></div><div class="usa-grupo"><span class="usa-degrau">Molecules</span><ul class="usa"><li><a href="../molecules/card.html">Card product</a></li><li><a href="../molecules/price.html">Price</a></li><li><a href="../molecules/stepper.html">Quantity stepper</a></li><li><a href="../molecules/track.html">Track</a></li></ul></div><div class="usa-grupo"><span class="usa-degrau">Blocks</span><ul class="usa"><li><a href="../organisms/shipping-progress.html">Free shipping progress</a></li></ul></div></div></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-cart--empty</code> <code>.yb-cart--loading</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-cart__checkout</code> <code>.yb-cart__close</code> <code>.yb-cart__coupon</code> <code>.yb-cart__coupon-code</code> <code>.yb-cart__coupon-ok</code> <code>.yb-cart__cross</code> <code>.yb-cart__cross-head</code> <code>.yb-cart__cross-title</code> <code>.yb-cart__empty</code> <code>.yb-cart__foot</code> <code>.yb-cart__gift</code> <code>.yb-cart__gift-body</code> <code>.yb-cart__gift-card</code> <code>.yb-cart__gift-card--done</code> <code>.yb-cart__gift-prize</code> <code>.yb-cart__gift-text</code> <code>.yb-cart__gift-track</code> <code>.yb-cart__head</code> <code>.yb-cart__head-actions</code> <code>.yb-cart__item</code> <code>.yb-cart__item--gift</code> <code>.yb-cart__item--soldout</code> <code>.yb-cart__item-body</code> <code>.yb-cart__item-foot</code> <code>.yb-cart__item-prices</code> <code>.yb-cart__item-title</code> <code>.yb-cart__item-top</code> <code>.yb-cart__item-variant</code> <code>.yb-cart__items</code> <code>.yb-cart__note</code> <code>.yb-cart__notice</code> <code>.yb-cart__offer</code> <code>.yb-cart__offer-add</code> <code>.yb-cart__offer-body</code> <code>.yb-cart__offer-full</code> <code>.yb-cart__offer-name</code> <code>.yb-cart__offer-prices</code> <code>.yb-cart__offer-variant</code> <code>.yb-cart__partner</code> <code>.yb-cart__partner-initial</code> <code>.yb-cart__proof</code> <code>.yb-cart__remove</code> <code>.yb-cart__savings</code> <code>.yb-cart__share</code> <code>.yb-cart__shield</code> <code>.yb-cart__shield-body</code> <code>.yb-cart__ship</code> <code>.yb-cart__ship--ok</code> <code>.yb-cart__summary</code> <code>.yb-cart__table</code> <code>.yb-cart__total</code> <code>.yb-cart__total-row</code> <code>.yb-cart__totals</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:hover</code></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Só CSS.</div></div>
+    </div>
     <p class="rotulo">Tokens <span class="rotulo-conta">45</span></p>
     <div class="tokens">
       <div class="tokens__grupo">

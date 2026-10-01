@@ -12,6 +12,37 @@
     "naoFaca": {
       "legenda": "Div com overlay: o foco continua correndo pela página atrás, Esc não fecha e o leitor de tela lê o conteúdo escondido.",
       "html": "<button class=\"yb-btn yb-btn--secondary\" type=\"button\">Abre &lt;div class=\"modal\"&gt;</button>"
+    },
+    "anatomia": {
+      "largura": "28rem",
+      "recorte": "<dialog open class=\"yb-dialog\" aria-labelledby=\"t-destrutivo\">.*?</dialog>",
+      "partes": [
+        {
+          "alvo": ".yb-dialog",
+          "nome": "Janela",
+          "texto": "Centrada sobre a página, com o fundo escurecido atrás. Abre só depois de uma ação da pessoa."
+        },
+        {
+          "alvo": ".yb-dialog__title",
+          "nome": "Título",
+          "texto": "A pergunta, em uma linha: “Remove from cart?”."
+        },
+        {
+          "alvo": ".yb-dialog__close",
+          "nome": "Fechar",
+          "texto": "O mesmo que cancelar. Esc e o clique fora também fecham."
+        },
+        {
+          "alvo": ".yb-dialog__body",
+          "nome": "Conteúdo",
+          "texto": "O que vai acontecer, com o nome do item. Pode levar campos, como no pedido de avaliação."
+        },
+        {
+          "alvo": ".yb-dialog__foot",
+          "nome": "Ações",
+          "texto": "Duas no máximo: a que mantém tudo como está e a que segue em frente. A destrutiva vai à direita, em vermelho."
+        }
+      ]
     }
   },
   "gallery": {
@@ -101,6 +132,63 @@
     "naoFaca": {
       "legenda": "Idêntico na tela, e é esse o problema: <code>span</code> não recebe foco.",
       "html": "<ul class=\"yb-nav\"><li class=\"yb-nav__item\"><span class=\"yb-nav__link\">Shop <svg class=\"yb-icon yb-icon--sm\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-chevron-down\"/></svg></span></li></ul>"
+    },
+    "anatomia": {
+      "variantes": [
+        {
+          "titulo": "A barra",
+          "recorte": "<ul class=\"yb-nav\">.*?</ul>(?=\\s*</nav>)",
+          "partes": [
+            {
+              "alvo": ".yb-nav",
+              "nome": "Barra",
+              "texto": "A lista dos cinco itens de topo, centrada sob o cabeçalho."
+            },
+            {
+              "alvo": ".yb-nav__link",
+              "nome": "Item",
+              "texto": "Link direto para uma página, sem painel."
+            },
+            {
+              "alvo": "label.yb-nav__link",
+              "nome": "Item com painel",
+              "texto": "Abre o painel no clique, no foco do teclado e, com mouse, ao passar por cima. A seta indica que há mais links."
+            },
+            {
+              "alvo": ".yb-nav__link--sale",
+              "nome": "Destaque",
+              "texto": "O item de ofertas, na cor de destaque. Só um por menu."
+            }
+          ],
+          "largura": "34rem"
+        },
+        {
+          "titulo": "O painel aberto",
+          "recorte": "<div class=\"yb-nav__panel\">.*?</div>(?=\\s*</li>)",
+          "partes": [
+            {
+              "alvo": ".yb-nav__panel",
+              "nome": "Painel",
+              "texto": "Abre embaixo da barra, na largura do cabeçalho, por cima da página. Com 1024px ou mais de painel, ganha ao lado a chamada do AI Hair Analysis."
+            },
+            {
+              "alvo": ".yb-nav__grouptitle",
+              "nome": "Título do grupo",
+              "texto": "Também é link: leva para a lista completa daquele grupo."
+            },
+            {
+              "alvo": ".yb-nav__sublist",
+              "nome": "Links do grupo",
+              "texto": "Os destinos do grupo, um por linha."
+            },
+            {
+              "alvo": ".yb-nav__promo",
+              "nome": "Produto em destaque",
+              "texto": "Um produto com foto, nome, preço e botão. O cartão inteiro é um link só."
+            }
+          ]
+        }
+      ]
     }
   },
   "quote": {
@@ -244,6 +332,46 @@
     "naoFaca": {
       "legenda": "Sem rótulo: o leitor de tela anuncia “botão, 2” — o número sem o nome do que ele conta.",
       "html": "<button class=\"yb-iconbtn yb-header__icon\" type=\"button\"><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-cart\"/></svg><span class=\"yb-header__count\">2</span></button>"
+    },
+    "anatomia": {
+      "recorte": "<header class=\"yb-header\">.*?</header>",
+      "partes": [
+        {
+          "alvo": ".yb-notice",
+          "nome": "Faixa de aviso",
+          "texto": "O <a href=\"../atoms/notice.html\">Notice</a> no topo, com o recado da loja."
+        },
+        {
+          "alvo": ".yb-header__logo",
+          "nome": "Logo",
+          "texto": "Leva para a home."
+        },
+        {
+          "alvo": ".yb-header__nav",
+          "nome": "Menu",
+          "texto": "O <a href=\"nav.html\">Nav</a> entra aqui inteiro; as partes dele estão na ficha do Nav. No celular ele sai da barra e vai para a gaveta do botão de menu."
+        },
+        {
+          "alvo": ".yb-header__icon[aria-label=\"Search\"]",
+          "nome": "Busca",
+          "texto": "Abre o <a href=\"search.html\">Search overlay</a>."
+        },
+        {
+          "alvo": ".yb-account__trigger",
+          "nome": "Conta",
+          "texto": "Abre o <a href=\"../molecules/account.html\">Account menu</a>. Logada, mostra a inicial da pessoa."
+        },
+        {
+          "alvo": ".yb-header__icon[aria-label^=\"Cart\"]",
+          "nome": "Carrinho",
+          "texto": "Abre o <a href=\"cart-drawer.html\">Cart drawer</a>."
+        },
+        {
+          "alvo": ".yb-header__count",
+          "nome": "Contador",
+          "texto": "Quantos itens há no carrinho. Some quando o carrinho está vazio."
+        }
+      ]
     }
   },
   "manifesto": {

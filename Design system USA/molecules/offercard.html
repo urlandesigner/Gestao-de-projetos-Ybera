@@ -166,7 +166,7 @@
     </nav>
   </div>
   <h1 class="ficha-titulo">Card offer</h1>
-  <p class="ficha-quando">Cartão grande de uma oferta única: foto ao fundo, texto por cima e relógio de prazo. Não é o cartão de catálogo com outra roupa: ali cabem doze na grade, aqui cabe <b>um</b>.</p>
+  <p class="ficha-quando">Cartão grande para uma oferta especial, com foto de fundo, texto e contagem regressiva. Use um por vez, para destacar uma oferta só.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
@@ -208,7 +208,7 @@
           <div class="yb-offercard__row">
             <span class="yb-offercard__price">$47.92</span>
             <s class="yb-offercard__was">$59.90</s>
-            <p class="yb-offercard__timer" data-yb-countdown="2026-10-02T23:59:59Z"><time datetime="2026-10-02">Oct 2</time></p>
+            <p class="yb-offercard__timer" data-yb-countdown="2026-10-03T23:59:59Z"><time datetime="2026-10-03">Oct 3</time></p>
           </div>
           <p class="yb-offercard__deadline" data-yb-offercard-end hidden>Offer ended</p>
           <button class="yb-btn yb-btn--on-dark yb-offercard__action" type="button"
@@ -339,7 +339,7 @@
     &lt;div class="yb-offercard__row"&gt;
       &lt;span class="yb-offercard__price"&gt;$47.92&lt;/span&gt;
       &lt;s class="yb-offercard__was"&gt;$59.90&lt;/s&gt;
-      &lt;p class="yb-offercard__timer" data-yb-countdown="2026-10-02T23:59:59Z"&gt;&lt;time datetime="2026-10-02"&gt;Oct 2&lt;/time&gt;&lt;/p&gt;
+      &lt;p class="yb-offercard__timer" data-yb-countdown="2026-10-03T23:59:59Z"&gt;&lt;time datetime="2026-10-03"&gt;Oct 3&lt;/time&gt;&lt;/p&gt;
     &lt;/div&gt;
     &lt;p class="yb-offercard__deadline" data-yb-offercard-end hidden&gt;Offer ended&lt;/p&gt;
     &lt;button class="yb-btn yb-btn--on-dark yb-offercard__action" type="button"
@@ -464,13 +464,11 @@
 .yb-offercard__price{
   font-size:var(--yb-type-h2-size); line-height:var(--yb-line-height-none);
   font-weight:var(--yb-font-weight-bold);
-  font-variant-numeric:tabular-nums;
 }
 .yb-offercard__was{
   font-size:var(--yb-type-body-size);
   color:var(--yb-text-secondary-inverse);
   text-decoration:line-through;
-  font-variant-numeric:tabular-nums;
 }
 .yb-offercard__timer{
   display:flex; align-items:center; gap:var(--yb-space-1);
@@ -590,7 +588,7 @@
     <div class="yb-offercard__row">
       <span class="yb-offercard__price">$47.92</span>
       <s class="yb-offercard__was">$59.90</s>
-      <p class="yb-offercard__timer" data-yb-countdown="2026-10-02T23:59:59Z"><time datetime="2026-10-02">Oct 2</time></p>
+      <p class="yb-offercard__timer" data-yb-countdown="2026-10-03T23:59:59Z"><time datetime="2026-10-03">Oct 3</time></p>
     </div>
     <p class="yb-offercard__deadline" data-yb-offercard-end hidden>Offer ended</p>
     <button class="yb-btn yb-btn--on-dark yb-offercard__action" type="button"
@@ -617,18 +615,16 @@
          diz o que e. Aqui o que a pessoa precisa primeiro e a lista do que vai
          encontrar; a procedencia vem depois, e vale a frase inteira, porque e
          ela que autoriza confiar no que esta escrito. -->
-    <p class="bloco-lede">De que a peça é feita, o que ela aceita e os tokens que
-    consome — estes do mais específico desta peça para o mais compartilhado com o
-    resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
-    estiver errado aqui, o errado é o código.</p>
+    <p class="bloco-lede">As peças que formam este componente, o que dá para variar nele
+    e os tokens que ele usa. Tudo é lido direto do código, então está sempre atualizado.</p>
 
-    <p class="rotulo">De que é feita</p>
-    <p class="usa-degrau">Atoms</p>
-    <ul class="usa"><li><a href="../atoms/button.html">Button</a></li><li><a href="../atoms/offerseal.html">Offer seal</a></li></ul>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-offercard--blur</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo"><span class="lista-api"><code>.yb-offercard__action</code> <code>.yb-offercard__blur</code> <code>.yb-offercard__body</code> <code>.yb-offercard__chip</code> <code>.yb-offercard__deadline</code> <code>.yb-offercard__link</code> <code>.yb-offercard__off</code> <code>.yb-offercard__price</code> <code>.yb-offercard__row</code> <code>.yb-offercard__sep</code> <code>.yb-offercard__timer</code> <code>.yb-offercard__title</code> <code>.yb-offercard__was</code></span></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele renderiza e não responde.</span></p>
+    <div class="api-ficha">
+    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo"><div class="usa-grupos"><div class="usa-grupo"><span class="usa-degrau">Atoms</span><ul class="usa"><li><a href="../atoms/button.html">Button</a></li><li><a href="../atoms/offerseal.html">Offer seal</a></li></ul></div></div></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-offercard--blur</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-offercard__action</code> <code>.yb-offercard__blur</code> <code>.yb-offercard__body</code> <code>.yb-offercard__chip</code> <code>.yb-offercard__deadline</code> <code>.yb-offercard__link</code> <code>.yb-offercard__off</code> <code>.yb-offercard__price</code> <code>.yb-offercard__row</code> <code>.yb-offercard__sep</code> <code>.yb-offercard__timer</code> <code>.yb-offercard__title</code> <code>.yb-offercard__was</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele aparece, mas não responde.</div></div>
+    </div>
     <p class="rotulo">Tokens <span class="rotulo-conta">47</span></p>
     <div class="tokens">
       <div class="tokens__grupo">

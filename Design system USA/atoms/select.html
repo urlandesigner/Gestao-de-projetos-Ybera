@@ -165,7 +165,7 @@
     </nav>
   </div>
   <h1 class="ficha-titulo">Select</h1>
-  <p class="ficha-quando">Campo de escolha com o rótulo dentro da caixa, que abre o seletor nativo do sistema. Mesmo campo do Input, para quando a resposta já está escrita.</p>
+  <p class="ficha-quando">Campo que abre uma lista para escolher uma opção. Use quando as respostas possíveis já são conhecidas, como estado ou país.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
@@ -228,11 +228,17 @@
         <option>Best selling</option><option>Price, low to high</option><option>Price, high to low</option><option>Newest</option>
       </select>
     </div>
-    <details class="note"><summary>O seletor é o do sistema, de propósito</summary>
+    <details class="note"><summary>A lista é do sistema operacional, de propósito</summary>
       <p>No celular o <code>&lt;select&gt;</code> nativo abre a roleta do iOS ou a lista
       do Android: alvo grande, leitor de tela, teclado e rolagem de graça. Uma lista
-      desenhada à mão teria de refazer tudo isso para ficar pior. O que o sistema
-      desenha é a caixa, o rótulo e o erro — os mesmos do Input.</p>
+      desenhada à mão teria de refazer tudo isso para ficar pior.</p>
+    </details>
+    <details class="note"><summary>A seta, não: ela é nossa</summary>
+      <p>A seta nativa não é conteúdo do campo — fica numa faixa que o navegador reserva
+      por fora do <code>padding</code>, então encosta na borda e muda de forma a cada
+      sistema. O campo usa <code>appearance:none</code> e desenha o
+      <code>yb-chevron-down</code> do sprite, no <code>--yb-icon-md</code> dos ícones
+      vizinhos. Em alto contraste a nativa volta.</p>
     </details>
     <details class="note"><summary>O rótulo já nasce em cima</summary>
       <p>Um select nunca está vazio: sempre mostra uma opção. Por isso o rótulo dele não
@@ -302,6 +308,46 @@
   background-position:right var(--yb-space-3) center;
   background-size:var(--yb-icon-md) var(--yb-icon-md);
 }
+.yb-select{
+  appearance:none; -webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236D6D71' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right var(--yb-space-4) center;
+  background-size:var(--yb-icon-md) var(--yb-icon-md);
+  padding-inline-end:calc(var(--yb-space-4) + var(--yb-icon-md) + var(--yb-space-2));
+}
+.yb-select[aria-invalid="true"]{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236D6D71' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"),
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B3261E' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4.2 2.8 20h18.4Z'/%3E%3Cpath d='M12 10v4'/%3E%3Cpath d='M12 17.2v.1' stroke-width='2'/%3E%3C/svg%3E");
+  background-position:right var(--yb-space-4) center,
+  right calc(var(--yb-space-4) + var(--yb-icon-md) + var(--yb-space-2)) center;
+  background-size:var(--yb-icon-md) var(--yb-icon-md),
+  var(--yb-icon-md) var(--yb-icon-md);
+  padding-inline-end:calc(var(--yb-space-4) + var(--yb-icon-md) * 2 + var(--yb-space-2) * 2);
+}
+.yb-select[disabled]{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B1B1B4' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right var(--yb-space-4) center;
+  background-size:var(--yb-icon-md) var(--yb-icon-md);
+}
+[dir="rtl"] .yb-select{
+  background-position:left var(--yb-space-4) center;
+  padding-inline-end:var(--yb-space-4);
+  padding-inline-start:calc(var(--yb-space-4) + var(--yb-icon-md) + var(--yb-space-2));
+}
+[dir="rtl"] .yb-select[aria-invalid="true"]{
+  background-position:left var(--yb-space-4) center,
+  left calc(var(--yb-space-4) + var(--yb-icon-md) + var(--yb-space-2)) center;
+  padding-inline-start:calc(var(--yb-space-4) + var(--yb-icon-md) * 2 + var(--yb-space-2) * 2);
+}
+@media (forced-colors: active){
+  .yb-select{
+    appearance:auto; -webkit-appearance:auto;
+    background-image:none;
+    padding-inline-end:var(--yb-space-4);
+  }
+}
 .yb-field__box &gt; :is(.yb-input,.yb-select,.yb-textarea){
   border:0; background:transparent; padding:0; min-height:0;
   border-radius:0; flex:1; min-inline-size:0;
@@ -312,7 +358,29 @@
   .yb-field__box &gt; :is(.yb-input,.yb-select,.yb-textarea):hover{border-color:transparent}
 }
 .yb-field__box &gt; :is(.yb-input,.yb-select,.yb-textarea)[disabled]{background:transparent}
-.yb-field__box &gt; :is(.yb-input,.yb-select,.yb-textarea)[aria-invalid="true"]{box-shadow:none; background-image:none; padding-inline-end:0;}</code></pre>
+.yb-field__box &gt; :is(.yb-input,.yb-select,.yb-textarea)[aria-invalid="true"]{box-shadow:none; background-image:none; padding-inline-end:0;}
+.yb-field__box &gt; .yb-select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236D6D71' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 0 center;
+  background-size:var(--yb-icon-md) var(--yb-icon-md);
+  padding-inline-end:calc(var(--yb-icon-md) + var(--yb-space-2));
+}
+.yb-field__box &gt; .yb-select[aria-invalid="true"]{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236D6D71' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  padding-inline-end:calc(var(--yb-icon-md) + var(--yb-space-2));
+}
+.yb-field__box &gt; .yb-select[disabled], .yb-field__box--on-dark &gt; .yb-select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B1B1B4' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 0 center;
+  background-size:var(--yb-icon-md) var(--yb-icon-md);
+}
+[dir="rtl"] .yb-field__box &gt; .yb-select{
+  background-position:left 0 center;
+  padding-inline-end:0;
+  padding-inline-start:calc(var(--yb-icon-md) + var(--yb-space-2));
+}</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="js" hidden>
@@ -367,7 +435,7 @@
       <ol class="anat__legenda">
         <li data-target=".yb-field"><span class="anat__texto"><b>Campo</b> — A mesma caixa do Input: rótulo, dica e erro em volta do controle.</span></li>
         <li data-target=".yb-field__box"><span class="anat__texto"><b>Moldura</b> — A caixa do controle, com a borda e o anel de foco.</span></li>
-        <li data-target=".yb-select"><span class="anat__texto"><b>Controle</b> — <code>&lt;select&gt;</code> nativo, com a seta do sistema. A lista que abre é do sistema operacional, e é isso que se quer no celular.</span></li>
+        <li data-target=".yb-select"><span class="anat__texto"><b>Controle</b> — <code>&lt;select&gt;</code> nativo. A LISTA que abre é a do sistema operacional, e é isso que se quer no celular. A SETA, não: ela é desenhada por nós, com o mesmo <code>yb-chevron-down</code> do sprite — a nativa mora fora do padding do campo e muda de forma a cada sistema.</span></li>
         <li data-target=".yb-field__label"><span class="anat__texto"><b>Rótulo</b> — Dentro da caixa, sempre em cima: o select nunca está vazio, então o rótulo não precisa flutuar.</span></li>
         <li data-target=".yb-field__hint"><span class="anat__texto"><b>Dica</b> — Opcional. Diz o que a escolha implica, não repete as opções.</span></li>
       </ol>
@@ -397,16 +465,16 @@
          diz o que e. Aqui o que a pessoa precisa primeiro e a lista do que vai
          encontrar; a procedencia vem depois, e vale a frase inteira, porque e
          ela que autoriza confiar no que esta escrito. -->
-    <p class="bloco-lede">De que a peça é feita, o que ela aceita e os tokens que
-    consome — estes do mais específico desta peça para o mais compartilhado com o
-    resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
-    estiver errado aqui, o errado é o código.</p>
+    <p class="bloco-lede">As peças que formam este componente, o que dá para variar nele
+    e os tokens que ele usa. Tudo é lido direto do código, então está sempre atualizado.</p>
 
-    <p class="api-linha"><span class="api-linha__rotulo">De que é feita</span><span class="api-linha__corpo">Nenhuma. Um átomo não compõe outras peças — é isso que faz dele átomo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo">Nenhum. A peça é um elemento só.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code> · <code>[aria-invalid]</code> · <code>[disabled]</code></span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
+    <div class="api-ficha">
+    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo">Nenhuma outra peça. Um átomo não usa outros componentes — é isso que faz dele átomo.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo">Nenhum. A peça é um elemento só.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code> · <code>[aria-invalid]</code> · <code>[disabled]</code></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Só CSS.</div></div>
+    </div>
     <p class="rotulo">Tokens <span class="rotulo-conta">22</span></p>
     <div class="tokens">
       <div class="tokens__grupo">

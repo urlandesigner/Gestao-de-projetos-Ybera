@@ -18,14 +18,14 @@ export const NIVEIS = [
   {
     dir: 'atoms', titulo: 'Atoms', singular: 'átomo', artigo: 'o', base: 'especifica',
     grupo: 'components',
-    regra: 'Não usa nenhuma outra peça do sistema. Perde a função se você tirar qualquer parte dele.',
-    lede: 'A menor unidade com função própria: o que a pessoa aperta, lê ou preenche.',
+    regra: 'Não usa nenhuma outra peça do sistema. Se você tirar qualquer parte dele, ele deixa de funcionar.',
+    lede: 'As peças mais simples, que não usam nenhuma outra: botão, campo, selo, estrelas.',
   },
   {
     dir: 'molecules', titulo: 'Molecules', singular: 'molécula', artigo: 'a', base: 'especifica',
     grupo: 'components',
-    regra: 'Reúne átomos para resolver UMA tarefa. Não tem lugar fixo na página — cabe onde a tarefa aparecer.',
-    lede: 'Átomos reunidos para uma tarefa: um campo com rótulo e erro, um cartão de produto, uma paginação.',
+    regra: 'Junta átomos para resolver uma tarefa só. Não tem lugar fixo na página: entra onde a tarefa aparecer.',
+    lede: 'Peças formadas por átomos para resolver uma tarefa: um cartão de produto, um preço, uma paginação.',
   },
   {
     /* CHAMA-SE "BLOCOS" NA DOC, e "organismo" na escada.
@@ -41,13 +41,13 @@ export const NIVEIS = [
        título, que é onde ele importa. */
     dir: 'organisms', titulo: 'Blocks', singular: 'bloco', artigo: 'o', base: 'involucro',
     grupo: 'blocks', atomico: 'Organisms',
-    regra: 'É uma região da página: tem lugar, e sobrevive sozinho numa tela.',
-    lede: 'As regiões da loja: o cabeçalho, a gaveta do carrinho, o bloco de compra, o rodapé. Montam-se com componentes, e trazem o que só existe nelas.',
+    regra: 'É uma área inteira da página, com lugar certo, e faz sentido sozinha numa tela.',
+    lede: 'As grandes áreas da loja: cabeçalho, carrinho, área de compra, rodapé. São montadas com os componentes.',
   },
   {
     dir: 'templates', titulo: 'Templates', singular: 'template', artigo: 'o', base: 'involucro',
-    regra: 'O esqueleto da página, sem conteúdo: largura, ritmo e cabeçalho de seção.',
-    lede: 'O que toda página herda antes de escolher um organismo sequer.',
+    regra: 'Define a estrutura da página, sem conteúdo: largura, espaço entre seções e títulos de seção.',
+    lede: 'A estrutura que toda página segue antes de receber o conteúdo.',
     /* POR QUE SÓ HÁ UM AQUI, e por que isto está escrito em vez de calado.
 
        Este degrau foi montado a partir do CSS — as folhas foram cortadas por

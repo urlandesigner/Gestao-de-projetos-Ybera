@@ -167,7 +167,7 @@
     </nav>
   </div>
   <h1 class="ficha-titulo">Page layout</h1>
-  <p class="ficha-quando">O esqueleto de qualquer página: largura máxima, ritmo entre blocos e cabeçalho de seção. Toda página nova começa por estes três.</p>
+  <p class="ficha-quando">A estrutura básica de toda página: largura máxima, espaço entre seções e o título de cada seção.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
@@ -456,11 +456,11 @@
 </div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-page"><span class="anat__texto"><b><a href="../templates/product-layout.html">Product layout</a></b> — O esqueleto da PDP: galeria à esquerda, que acompanha a rolagem, coluna de compra à direita, e a história do produto descendo dentro da coluna de compra.</span></li>
-        <li data-target=".yb-link"><span class="anat__texto"><b><a href="../atoms/link.html">Link</a></b> — Texto que leva a outro lugar, com ícone atrás e alvo de toque de 44px. Fica ao lado de um título de seção ou reforça um link que já existe no mesmo cartão.</span></li>
-        <li data-target=".yb-card"><span class="anat__texto"><b><a href="../molecules/card.html">Card product</a></b> — O cartão de produto do grid — foto, nome, nota, preço e ação. O título trunca em duas linhas por decisão de sistema.</span></li>
-        <li data-target=".yb-badge"><span class="anat__texto"><b><a href="../atoms/badge.html">Badge</a></b> — Etiqueta curta que classifica um item sem competir com ele. Nunca carrega ação — badge não é botão.</span></li>
-        <li data-target=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço de um produto, com o valor anterior riscado e o desconto quando existem. Sempre tabular: em grid, dígitos precisam alinhar em coluna.</span></li>
+        <li data-target=".yb-page"><span class="anat__texto"><b><a href="../templates/product-layout.html">Product layout</a></b> — A estrutura da PDP: fotos à esquerda, área de compra à direita e o conteúdo extra do produto abaixo do botão de comprar.</span></li>
+        <li data-target=".yb-link"><span class="anat__texto"><b><a href="../atoms/link.html">Link</a></b> — Texto clicável que leva a outra página, com uma seta ao lado. Use ao lado do título de uma seção, como “Shop all”.</span></li>
+        <li data-target=".yb-card"><span class="anat__texto"><b><a href="../molecules/card.html">Card product</a></b> — Cartão de produto usado em listas e vitrines: foto, nome, nota e preço. O nome ocupa no máximo duas linhas.</span></li>
+        <li data-target=".yb-badge"><span class="anat__texto"><b><a href="../atoms/badge.html">Badge</a></b> — Etiqueta curta que informa algo sobre um item, como “In stock” ou “−16%”. Não é clicável: para uma ação, use o Button.</span></li>
+        <li data-target=".yb-price"><span class="anat__texto"><b><a href="../molecules/price.html">Price</a></b> — O preço do produto, com o preço antigo riscado e o desconto quando houver.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
@@ -470,24 +470,16 @@
          diz o que e. Aqui o que a pessoa precisa primeiro e a lista do que vai
          encontrar; a procedencia vem depois, e vale a frase inteira, porque e
          ela que autoriza confiar no que esta escrito. -->
-    <p class="bloco-lede">De que a peça é feita, o que ela aceita e os tokens que
-    consome — estes do mais específico desta peça para o mais compartilhado com o
-    resto do sistema. Tudo lido da folha de estilo e do HTML a cada build: se
-    estiver errado aqui, o errado é o código.</p>
+    <p class="bloco-lede">As peças que formam este componente, o que dá para variar nele
+    e os tokens que ele usa. Tudo é lido direto do código, então está sempre atualizado.</p>
 
-    <p class="rotulo">De que é feita</p>
-    <p class="usa-degrau">Atoms</p>
-    <ul class="usa"><li><a href="../atoms/badge.html">Badge</a></li><li><a href="../atoms/link.html">Link</a></li></ul>
-    <p class="usa-degrau">Molecules</p>
-    <ul class="usa"><li><a href="../molecules/card.html">Card product</a></li><li><a href="../molecules/price.html">Price</a></li></ul>
-    <p class="usa-degrau">Blocks</p>
-    <ul class="usa"><li><a href="../organisms/buybox.html">Buy box</a></li></ul>
-    <p class="usa-degrau">Templates</p>
-    <ul class="usa"><li><a href="../templates/product-layout.html">Product layout</a></li></ul>
-    <p class="api-linha"><span class="api-linha__rotulo">Modificadores</span><span class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Elementos</span><span class="api-linha__corpo">Nenhum. A peça é um elemento só.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Estados que a folha trata</span><span class="api-linha__corpo">Nenhum. A peça não muda por interação.</span></p>
-    <p class="api-linha"><span class="api-linha__rotulo">Comportamento</span><span class="api-linha__corpo">Só CSS.</span></p>
+    <div class="api-ficha">
+    <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo"><div class="usa-grupos"><div class="usa-grupo"><span class="usa-degrau">Atoms</span><ul class="usa"><li><a href="../atoms/badge.html">Badge</a></li><li><a href="../atoms/link.html">Link</a></li></ul></div><div class="usa-grupo"><span class="usa-degrau">Molecules</span><ul class="usa"><li><a href="../molecules/card.html">Card product</a></li><li><a href="../molecules/price.html">Price</a></li></ul></div><div class="usa-grupo"><span class="usa-degrau">Blocks</span><ul class="usa"><li><a href="../organisms/buybox.html">Buy box</a></li></ul></div><div class="usa-grupo"><span class="usa-degrau">Templates</span><ul class="usa"><li><a href="../templates/product-layout.html">Product layout</a></li></ul></div></div></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo">Nenhum. A peça é um elemento só.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo">Nenhum. A peça não muda por interação.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Só CSS.</div></div>
+    </div>
     <p class="rotulo">Tokens <span class="rotulo-conta">2</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
