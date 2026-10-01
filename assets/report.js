@@ -64,7 +64,14 @@ const SO_LOCAL = document.body.dataset.ferramentas === 'local';
 // de leitura é montado com location.origin — gerá-lo no localhost produziria um
 // endereço que só abre na máquina do PO. Sem essa porta, a fixação quebraria a
 // única forma de produzir o link que vai pro stakeholder.
-const PORTA_DE_SERVICO = /(?:^|[?&])ferramentas=1(?:&|$)/.test(location.search);
+// Mas a query VIAJA: o PO gera o link com ?po=1&ferramentas=1 na barra de
+// endereços e é de lá que ele copia. Com o #r= junto, o leitor cai em modo
+// leitura e a barra some — só que um link cortado no caminho chega SEM o #r=,
+// e aí a porta de serviço abria a barra na cara do stakeholder. O que separa o
+// PO de quem só lê não é a URL, é o token deste navegador: sem ele a barra não
+// teria o que fazer (tudo nela fala com o DevOps). Então a porta pede o token.
+const TEM_TOKEN = !!localStorage.getItem(LS.pat) && !!localStorage.getItem(LS.config);
+const PORTA_DE_SERVICO = /(?:^|[?&])ferramentas=1(?:&|$)/.test(location.search) && TEM_TOKEN;
 const FERRAMENTAS = /(?:^|[?&])po=1(?:&|$)/.test(location.search)
   && (LOCAL || PORTA_DE_SERVICO || !SO_LOCAL);
 

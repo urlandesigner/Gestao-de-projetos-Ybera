@@ -21,14 +21,18 @@ const raiz = path.join(__dirname, '..');
 const ler = (f) => fs.readFileSync(path.join(raiz, f), 'utf8');
 const fonteReport = ler('assets/report.js');
 
-/* Monta a decisão real do report.js como função de (hospedeiro, query, body). */
+/* Monta a decisão real do report.js como função de
+   (hospedeiro, query, body, token-neste-navegador). */
 function porta() {
   const m = /const LOCAL = [\s\S]*?const FERRAMENTAS = [\s\S]*?;\n/.exec(fonteReport);
   assert.ok(m, 'o cálculo de FERRAMENTAS mudou de forma — este teste precisa acompanhar');
   // eslint-disable-next-line no-eval
-  return eval(`(function (hostname, search, dataset) {
+  return eval(`(function (hostname, search, dataset, token) {
     const location = { hostname, search };
     const document = { body: { dataset } };
+    const LS = { config: 'central.config', pat: 'central.pat' };
+    const guardado = token ? { 'central.pat': 'x', 'central.config': '{}' } : {};
+    const localStorage = { getItem: (k) => (k in guardado ? guardado[k] : null) };
     ${m[0]}
     return FERRAMENTAS;
   })`);
@@ -58,10 +62,28 @@ test('entregas: sem ?po=1 não há barra em lugar nenhum', () => {
 
 test('entregas: em produção a porta de serviço abre a barra de propósito', () => {
   const f = porta();
-  assert.equal(f('nivello-sistemas.github.io', '?po=1&ferramentas=1', ENTREGAS), true,
+  assert.equal(f('nivello-sistemas.github.io', '?po=1&ferramentas=1', ENTREGAS, true), true,
     'sem esta porta o PO não consegue gerar o link de leitura, que usa location.origin');
-  assert.equal(f('nivello-sistemas.github.io', '?ferramentas=1', ENTREGAS), false,
+  assert.equal(f('nivello-sistemas.github.io', '?ferramentas=1', ENTREGAS, true), false,
     'a porta de serviço não substitui o ?po=1, soma-se a ele');
+});
+
+/* Defeito real, relatado com print: o PO gera o link com ?po=1&ferramentas=1 e
+   copia da BARRA DE ENDEREÇOS, que guarda a query. Com o #r= junto, quem abre
+   cai em modo leitura e a barra some. Mas o próprio report avisa que o link
+   pode ser CORTADO no caminho — e cortado ele chega sem o #r=, sai do modo
+   leitura, e a porta de serviço abria a barra pro stakeholder. */
+test('entregas: a porta de serviço não abre pra quem não tem token', () => {
+  const f = porta();
+  assert.equal(f('nivello-sistemas.github.io', '?po=1&ferramentas=1', ENTREGAS, false), false,
+    'link cortado chega sem o #r=: sem token, a barra não pode aparecer de jeito nenhum');
+  assert.equal(f('nivello-sistemas.github.io', '?po=1&ferramentas=1', ENTREGAS), false,
+    'navegador sem nada guardado é o do stakeholder');
+});
+
+test('entregas: local não depende de token — a máquina do PO já é o recorte', () => {
+  const f = porta();
+  assert.equal(f('localhost', '?po=1', ENTREGAS, false), true);
 });
 
 test('nenhum link do site carrega ferramentas=1 — a porta é só digitada à mão', () => {
@@ -81,9 +103,9 @@ test('o link copiado sai sem query — é o que mantém a porta de serviço fech
 
 test('report e v2 não mudam de comportamento: o recorte é só de quem declara', () => {
   const f = porta();
-  assert.equal(f('nivello-sistemas.github.io', '?po=1', REPORT), true,
+  assert.equal(f('nivello-sistemas.github.io', '?po=1', REPORT, false), true,
     'quem não declara data-ferramentas="local" segue só com o portão do ?po=1');
-  assert.equal(f('nivello-sistemas.github.io', '', REPORT), false);
+  assert.equal(f('nivello-sistemas.github.io', '', REPORT, false), false);
 });
 
 /* O `hidden` do report.js só vale se a folha deixar. `.ferramentas` declara
