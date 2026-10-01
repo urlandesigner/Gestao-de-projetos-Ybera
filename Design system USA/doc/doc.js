@@ -20,6 +20,35 @@
     coluna.scrollTop = Math.max(0, meio);
   }
 
+  /* UM GRUPO ABERTO POR VEZ.
+     A árvore tem sete grupos e setenta nomes. Abrindo o segundo sem fechar o
+     primeiro, a coluna vira o rolo que a árvore existe para evitar: o grupo
+     que a pessoa acabou de abrir nasce fora da tela, embaixo dos itens do
+     anterior, e ela rola para achar o que pediu.
+
+     NÃO DÁ PARA USAR O `name` DO <details>, que faz exatamente isto sem uma
+     linha de script. A busca abre TODOS os grupos que casam com o termo — é
+     ela que impede o resultado de ficar escondido dentro de um grupo fechado
+     — e com `name` o navegador fecharia seis dos sete na hora. A regra aqui é
+     "uma aberta por vez QUANDO é a pessoa que abre"; o filtro continua
+     mandando enquanto há o que filtrar, e é por isso que o guarda abaixo lê o
+     campo antes de fechar qualquer coisa. */
+  /* `gruposNav` e nao `grupos`: mais abaixo, no filtro, `grupos` ja e a lista
+     de secoes da GRADE. Dois `const` do mesmo nome no mesmo bloco nao e um
+     conflito de leitura, e sim um SyntaxError que apaga o arquivo inteiro —
+     a coluna, as abas e a busca juntas. */
+  const gruposNav = coluna ? [...coluna.querySelectorAll('.ds-nav__grupo')] : [];
+  if (gruposNav.length > 1) {
+    const busca = document.querySelector('[data-yb-filter]');
+    for (const g of gruposNav) {
+      g.addEventListener('toggle', () => {
+        if (!g.open) return;
+        if (busca && busca.value.trim()) return;
+        for (const outro of gruposNav) if (outro !== g) outro.open = false;
+      });
+    }
+  }
+
   /* ABAS — Componente · Anatomia · Regras de uso · Acessibilidade.
 
      As três seções nascem empilhadas no HTML, cada uma com o próprio <h2>.
@@ -416,6 +445,15 @@
       const vivos = d.querySelectorAll('li:not([hidden])').length;
       d.hidden = termo && !vivos;
       if (termo && vivos) d.open = true;
+    }
+    /* Campo vazio devolve a coluna a UMA aberta. Sem isto, limpar a busca
+       deixava os sete grupos escancarados — o estado que a busca criou de
+       proposito sobrevivia ao fim dela, e a regra de uma por vez so voltava a
+       valer no proximo clique. Quem fica aberto e o grupo da pagina. */
+    if (!termo && gruposNav.length > 1) {
+      const naPagina = coluna && coluna.querySelector('a[aria-current="page"]');
+      const meu = naPagina && naPagina.closest('.ds-nav__grupo');
+      for (const d of gruposNav) d.open = d === meu;
     }
     /* A CONTA SOMA AS DUAS LISTAS, sem contar a mesma peca duas vezes. Ela lia
        so a coluna quando havia coluna — e a coluna casa so por NOME. No
