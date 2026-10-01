@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Cartão de compartilhamento — Entregas</title>
+<!-- FONTE DA IMAGEM DE PREVIEW (og:image) do entregas.html.
+
+     Não é uma página do produto: é o molde de 1200×630 que o
+     scripts/og-entregas.sh fotografa com o Chrome headless pra gerar
+     assets/og-entregas.png. Por isso mora em scripts/ (que o
+     sincronizar-pages.sh não publica) — o que vai pro ar é só o PNG.
+
+     Por que um molde e não um print da capa real: a capa é responsiva e alta,
+     e 1200×630 é um recorte 1.91:1 que nenhuma largura de tela produz. Aqui o
+     mesmo conteúdo do topo — marca, retranca, título, situação e os dois
+     números — é remontado na proporção que WhatsApp, Slack e LinkedIn pedem.
+
+     COR, TIPO E FORMA SÃO COPIADOS de assets/entregas.css, não reinventados:
+     os tokens do :root, os dois pesos do título, o par de blocos (claro e
+     escuro) e a seta fantasma ao fundo do bloco escuro. Se a capa mudar de
+     desenho, este arquivo é o segundo lugar a mexer.
+
+     Os números NÃO são buscados: o link de leitura é um retrato, e a imagem
+     também. Entram por query string (?projetos=5&itens=31&periodo=...), que é
+     como o script passa os valores. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=block" rel="stylesheet">
+<style>
+:root {
+  /* cópia literal dos tokens de assets/entregas.css */
+  --fundo-pagina: #fafaf9;
+  --superficie: #ffffff;
+  --tinta: #1c1c1a;
+  --mudo: #78716c;
+  --borda: #e9e7e4;
+  --neutro: rgba(120, 113, 108, 0.3);
+  --sans: 'Plus Jakarta Sans', sans-serif;
+  --fio: 1px solid var(--borda);
+  --raio-painel: 24px;
+  --sombra-painel: 0 1px 2px rgba(28, 25, 23, 0.03), 0 16px 40px rgba(28, 25, 23, 0.06);
+  --sombra-escura: 0 2px 6px rgba(28, 25, 23, 0.16), 0 20px 40px -18px rgba(28, 25, 23, 0.4);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  width: 1200px;
+  height: 630px;
+  overflow: hidden;
+  background: var(--fundo-pagina);
+  color: var(--tinta);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+.cartao {
+  display: flex;
+  flex-direction: column;
+  /* O bloco inteiro fica centrado na vertical, e o vão entre a situação e os
+     números é declarado (margin do .bento). Com `margin-top:auto` no .bento
+     toda a sobra de 1.91:1 caía num buraco só, no meio do cartão — e o preview
+     aparece pequeno, onde buraco no meio lê como imagem cortada. */
+  justify-content: center;
+  width: 1200px;
+  height: 630px;
+  padding: 52px 64px;
+}
+
+/* `align-self` porque o cartão é um flex column: sem ele a marca herda o
+   `stretch` do eixo cruzado, a largura vira a do cartão inteiro e o PNG sai
+   com o logotipo esticado de ponta a ponta. `width:auto` sozinho não segura. */
+.logo { align-self: flex-start; display: block; height: 40px; width: auto; }
+
+/* Retranca: a mesma de .rl-rotulo + .rl-capa-autoria, já na versão de telefone
+   (onde e quem na MESMA linha, separados por um fio). Numa imagem larga a
+   autoria numa linha própria sobraria no vazio. */
+.retranca {
+  margin: 26px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mudo);
+}
+.autoria {
+  margin-left: 0.7em;
+  padding-left: 0.75em;
+  border-left: 1px solid var(--neutro);
+  font-size: 1.08em;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  text-transform: none;
+}
+
+/* Título em duas vozes, como na capa: a linha fraca situa, a forte é o
+   assunto. Em bloco e nos dois tamanhos do desktop (o topo do clamp). */
+.titulo { margin: 16px 0 0; line-height: 0.98; letter-spacing: -0.04em; }
+.titulo span { display: block; }
+.titulo-fraco { font-size: 50px; font-weight: 500; color: var(--mudo); }
+.titulo-forte { font-size: 66px; font-weight: 800; color: var(--tinta); }
+
+.situacao { margin: 18px 0 0; max-width: 54ch; font-size: 20px; line-height: 1.5; color: var(--mudo); }
+
+/* Par de blocos da capa: o claro em 5 colunas, a âncora escura em 7. */
+.bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; margin-top: 44px; }
+.bloco {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: 26px 28px;
+  border: var(--fio);
+  border-radius: var(--raio-painel);
+  background: var(--superficie);
+  box-shadow: var(--sombra-painel);
+}
+.bloco-claro { grid-column: span 5; }
+.bloco-escuro {
+  grid-column: span 7;
+  overflow: hidden;
+  border-color: transparent;
+  background: var(--tinta);
+  color: #fff;
+  box-shadow: var(--sombra-escura);
+}
+.rot { position: relative; margin: 0; max-width: 26ch; font-size: 20px; line-height: 1.45; letter-spacing: -0.015em; }
+.bloco-escuro .rot { color: #fff; }
+.apoio { position: relative; margin: -6px 0 0; max-width: 40ch; font-size: 14px; line-height: 1.45; color: var(--mudo); }
+.bloco-escuro .apoio { color: rgba(255, 255, 255, 0.62); }
+/* O número encosta na base: é o que alinha os dois blocos na mesma linha
+   ótica, do mesmo jeito que o margin-top:auto de .rl-tile-num na capa. */
+.num { position: relative; margin: auto 0 0; font-size: 76px; font-weight: 800; line-height: 0.85; letter-spacing: -0.05em; }
+/* A seta fantasma ao fundo do bloco escuro, igual à da capa. */
+.fundo { position: absolute; right: -6%; bottom: -12%; width: 62%; height: auto; color: rgba(255, 255, 255, 0.055); }
+</style>
+</head>
+<body>
+<div class="cartao">
+  <img class="logo" src="../../assets/brand/ybera-logo.webp" alt="Ybera" width="360" height="139">
+  <p class="retranca" id="retranca"></p>
+  <h1 class="titulo"><span class="titulo-fraco">Entregas de</span><span class="titulo-forte" id="periodo"></span></h1>
+  <p class="situacao" id="situacao"></p>
+  <div class="bento">
+    <article class="bloco bloco-claro">
+      <p class="rot">Projetos atendidos</p>
+      <p class="apoio" id="apoio-projetos"></p>
+      <p class="num" id="projetos"></p>
+    </article>
+    <article class="bloco bloco-escuro">
+      <svg class="fundo" viewBox="0 0 200 120" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+        <path d="M6 104 C40 104 44 62 74 62 C104 62 104 88 132 88 C162 88 166 24 194 24" fill="none" stroke="currentColor" stroke-width="13" stroke-linecap="round"/>
+        <path d="M168 24 H194 V50" fill="none" stroke="currentColor" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <p class="rot">Itens entregues</p>
+      <p class="apoio">Soma dos itens concluídos dentro desses projetos</p>
+      <p class="num" id="itens"></p>
+    </article>
+  </div>
+</div>
+<script>
+  var q = new URLSearchParams(location.search);
+  var val = function (chave, padrao) { return q.get(chave) || padrao; };
+  var projetos = val('projetos', '5');
+
+  document.getElementById('periodo').textContent = val('periodo', 'Agosto e Setembro de 2026');
+  document.getElementById('situacao').textContent = val('situacao', 'O que o time entregou no período, e o planejamento dos próximos meses.');
+  document.getElementById('projetos').textContent = projetos;
+  document.getElementById('itens').textContent = val('itens', '31');
+  document.getElementById('apoio-projetos').textContent = projetos === '1'
+    ? 'Projeto do roadmap contemplado neste relatório'
+    : 'Projetos do roadmap contemplados neste relatório';
+
+  var retranca = document.getElementById('retranca');
+  retranca.textContent = val('retranca', 'Ybera US · E-commerce');
+  var autoria = val('autoria', 'Product Owner: Urlan Dipre');
+  if (autoria) {
+    var s = document.createElement('span');
+    s.className = 'autoria';
+    s.textContent = autoria;
+    retranca.appendChild(s);
+  }
+
+  // Bandeira pro script: só fotografa depois que a Plus Jakarta Sans chegou.
+  // Sem isso o Chrome headless fotografa o fallback e a imagem sai com outra
+  // tipografia — o erro não dá erro nenhum, só uma imagem errada.
+  document.fonts.ready.then(function () { document.documentElement.dataset.pronto = '1'; });
+</script>
+</body>
+</html>
