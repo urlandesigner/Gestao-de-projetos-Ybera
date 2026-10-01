@@ -9,6 +9,13 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 [GOVERNANCA.md](GOVERNANCA.md), componente novo pede versão **menor** (0.13.0).
 
 ### Mudado
+- **A nota deixou de encostar no que vem depois.** Ela tinha folga só em cima,
+  o que bastava enquanto fechava uma seção. Quando aparece ANTES do palco — no
+  Buy box, no Drawer, no Modal e na grade do Card — colava na borda do cartão e
+  lia como cabeçalho dele. Agora tem folga embaixo também, exceto quando é a
+  última da seção ou quando o que vem a seguir é o título de uma fileira, que já
+  traz a própria. Varrido nas 60 fichas, nas páginas de token e nas telas: sem
+  nenhuma nota apertada.
 - **O select passa a desenhar a própria seta.** Era o último controle da casa
   que ainda chegava com o desenho do sistema operacional — e a seta nativa não
   é conteúdo do campo: mora numa faixa que o navegador reserva por fora do

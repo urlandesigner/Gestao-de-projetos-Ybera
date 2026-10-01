@@ -525,6 +525,16 @@
   background:var(--yb-info-surface); border-left:3px solid var(--yb-info-solid);
   border-radius:0 var(--yb-radius-sm) var(--yb-radius-sm) 0; max-width:74ch;
 }
+/* A folga de baixo, que faltava: a nota quase sempre fecha uma secao, entao
+   `margin-top` sozinho bastava — ate a nota aparecer ANTES do palco (Buy box),
+   onde ela encostava na borda do cartao e lia como cabecalho dele. O `.row-label`
+   ja trazia a propria folga; palco, demonstracao e <dialog> nao trazem nenhuma.
+   Fica no `:not(:last-child)` para a nota que fecha a secao nao somar espaco
+   com o fim da secao. */
+.note:not(:last-child){margin-bottom:var(--yb-space-6)}
+/* Entre uma nota e o titulo da fileira seguinte a folga ja e do titulo: somar
+   as duas abriria um buraco maior do que o que separa as proprias fileiras. */
+.note:not(:last-child):has(+ :is(.row-label,.rotulo)){margin-bottom:0}
 /* `>` e nao descendente: o titulo da nota e FILHO DIRETO. Sem isso, todo
    <b> dentro do paragrafo virava outro titulo — bloco, maiusculas e azul no
    meio da frase. A ficha do Button mostrava "16,66:1" e "MATIZ" como se
