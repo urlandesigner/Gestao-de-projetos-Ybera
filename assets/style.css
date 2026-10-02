@@ -620,7 +620,10 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
    card que já é --superficie (branco): a folga acima (linha divisória depois
    da barra de progresso) e o fundo da linha, senão ela desaparece dentro do
    próprio card (branco sobre branco). */
-.sprint-card .lista-linhas { margin-top: 0.55rem; padding-top: 0.5rem; border-top: 1px solid #e6e6e9; }
+/* O fio entre a barra de progresso e os cartões precisa de ar dos dois lados —
+   com 0.55/0.5rem ele encostava na barra em cima e no primeiro cartão embaixo,
+   e um divisor espremido lê como borda de caixa, não como separação. */
+.sprint-card .lista-linhas { margin-top: 0.95rem; padding-top: 0.9rem; border-top: 1px solid #e6e6e9; }
 .sprint-card .lista-linhas .item-linha { background: var(--superficie-2); box-shadow: none; }
 .sprint-card .lista-linhas .item-linha:hover { background: #ececea; }
 .sprint-pbis-mais { font-size: 0.75rem; color: var(--mudo); }
