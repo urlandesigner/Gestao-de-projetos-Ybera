@@ -16,7 +16,15 @@
   const aberto = coluna && coluna.querySelector('a[aria-current="page"]');
   // Abaixo de 900 a coluna vira faixa horizontal e não rola: nada a fazer.
   if (coluna && aberto && coluna.scrollHeight > coluna.clientHeight + 1) {
-    const meio = aberto.offsetTop - (coluna.clientHeight - aberto.offsetHeight) / 2;
+    /* O campo de busca é a cabeça GRUDADA da coluna: ele fica por cima da
+       lista que rola, então a área realmente visível começa abaixo dele.
+       Centralizar na altura cheia punha o item aberto exatamente atrás do
+       campo em telas baixas — o realce voltava a existir sem ninguém ver, que
+       é o defeito que esta rolagem conserta. */
+    const cabeca = coluna.querySelector('.ds-busca:not([hidden])');
+    const reserva = cabeca ? cabeca.offsetHeight : 0;
+    const vao = coluna.clientHeight - reserva;
+    const meio = aberto.offsetTop - reserva - (vao - aberto.offsetHeight) / 2;
     coluna.scrollTop = Math.max(0, meio);
   }
 
@@ -594,11 +602,12 @@
      digitando em algum lugar, que é o defeito clássico desse atalho. */
   const caixa = document.querySelector('[data-yb-filter]');
   if (!caixa) return;
-  /* UM campo, o do topo, e ele procura em tudo. O catalogo ja teve um segundo,
-     e ele nunca apareceu: este `querySelector` pega o PRIMEIRO do documento,
-     que e sempre o do topo, entao o do catalogo ficava `hidden` para sempre.
-     O corte por degrau que ele prometia virou os chips, que sao links. */
-  const painel = caixa.closest('.ds-top__busca');
+  /* UM campo, o da coluna, e ele procura em tudo. O catalogo ja teve um
+     segundo, e ele nunca apareceu: este `querySelector` pega o PRIMEIRO do
+     documento, que e sempre o da coluna, entao o do catalogo ficava `hidden`
+     para sempre. O corte por degrau que ele prometia virou os chips, que sao
+     links. */
+  const painel = caixa.closest('.ds-busca');
   const aviso = painel && painel.querySelector('.nav-conta');
   const itens = [...document.querySelectorAll('.ds-nav li')];
   const grupos = [...document.querySelectorAll('.grade-grupo')];

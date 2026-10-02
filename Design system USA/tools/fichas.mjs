@@ -883,7 +883,7 @@ ${folhasAte(n)}
 <script src="../doc/doc.js" defer></script>
 <style>
 /* Sem seletor de tipo: ver o cabecalho de doc/doc.css. */
-.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+.ficha{margin:0; background:var(--doc-canvas, var(--yb-bg-page)); color:var(--yb-text-primary);
   font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
   line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
 .ficha code{font-family:var(--yb-font-family-mono); font-size:.8125rem}

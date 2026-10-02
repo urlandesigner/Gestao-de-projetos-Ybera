@@ -35,6 +35,23 @@
   /* o filete cai no centro do chip */
   --ds-nav-rule: calc(var(--ds-nav-gutter) + var(--ds-nav-chip) / 2);
   --ds-top-h: 4.25rem;
+  /* O FUNDO DA DOCUMENTAÇÃO É CINZA, e o das peças é branco.
+
+     Era o contrário: página branca, palco branco, cartão branco — e o único
+     que separava os três era um fio de #EAEAEA. Um sistema inteiro
+     documentado em branco sobre branco não tem como mostrar onde a peça
+     começa, e era por isso que a doc parecia inacabada mesmo com tudo no
+     lugar.
+
+     Invertendo, cada coisa volta a ter o fundo que lhe cabe: o cromo (barra e
+     coluna) é branco e fica por cima, a tela de leitura é o cinza de baixo, e
+     o que flutua nela são os palcos e os cartões — brancos, porque é EM BRANCO
+     que a loja mostra a peça, e um palco cinza faria a doc mentir sobre o
+     componente.
+
+     `--yb-bg-subtle` e não `--yb-bg-muted`: 2% de cinza bastam quando há fio e
+     sombra junto; 4% já lê como caixa dentro de caixa. */
+  --doc-canvas: var(--yb-bg-subtle);
   /* 1280, e não 940. A medida de 940 nasceu do `.main` das fichas, quando a
      doc era duas colunas e o conteúdo dividia a tela com a lista de peças. Com
      a coluna fixa e o índice à direita, ela passou a deixar tela vazia em
@@ -58,27 +75,40 @@
 body{
   padding-inline-start:var(--ds-nav-w);
   padding-block-start:var(--ds-top-h);
+  background:var(--doc-canvas);
 }
 
 /* ------------------------------------------------------------------ o topo
-   A marca e a busca. A marca sai da coluna porque é do sistema inteiro, não da
-   navegação; a busca sobe junto porque procura em tudo, e não só no que o
-   grupo aberto mostra.
+   A marca, a versão e o download. A marca sai da coluna porque é do sistema
+   inteiro, não da navegação.
+
+   A BUSCA SAIU DAQUI. Ela filtra a árvore da coluna — e só ela —, e ficava a
+   meia tela de distância do que filtrava, num pedaço de barra que não era de
+   ninguém: entre o campo e a versão sobravam 650px de nada em 1440. Agora ela
+   é a cabeça da coluna, encostada na lista que encurta enquanto se digita.
+
+   A MARCA TEM A LARGURA DA COLUNA, e fecha com o mesmo fio que a coluna usa.
+   O que era um `padding` de 20 e uma largura de 240 (brand começando em x=20,
+   itens da coluna em x=16) virou uma espinha só: barra e coluna partem do
+   mesmo recuo, e o fio vertical da marca cai exatamente em cima do fio da
+   coluna, de 0 até o fim da página.
 
    Ele é fixo e a coluna começa abaixo dele: assim a marca não some quando a
    árvore rola, que é o único conteúdo que rola sozinho aqui. */
 .ds-top{
   position:fixed; inset-block-start:0; inset-inline:0; z-index:20;
   block-size:var(--ds-top-h);
-  display:flex; align-items:center; gap:var(--yb-space-5);
-  padding-inline:var(--yb-space-5);
+  display:flex; align-items:center;
+  padding-inline:var(--ds-nav-gutter) var(--yb-space-6);
   background:var(--yb-surface);
   border-block-end:1px solid var(--yb-border-subtle);
   font-family:var(--yb-font-family-base);
   font-size:var(--yb-type-body-sm-size);
 }
 .ds-top__marca{
-  inline-size:calc(var(--ds-nav-w) - var(--yb-space-5) * 2); flex:none;
+  inline-size:calc(var(--ds-nav-w) - var(--ds-nav-gutter)); flex:none;
+  align-self:stretch; display:flex; flex-direction:column; justify-content:center;
+  border-inline-end:1px solid var(--yb-border-subtle);
   color:var(--yb-text-primary); text-decoration:none; line-height:1.2;
   letter-spacing:var(--yb-tracking-tighter);
 }
@@ -126,34 +156,12 @@ body{
 @media (forced-colors:active){
   .ds-top__usa{ background-image:none; color:CanvasText; }
 }
-/* A busca fica colada na marca, no mesmo x em que o conteudo comeca (a marca
-   tem a largura da coluna); a direita da barra e da versao e do download. */
-.ds-top__busca{position:relative}
-.ds-top__busca[hidden]{display:none}
-.ds-top__busca input{
-  inline-size:18rem; max-inline-size:40vw; min-block-size:var(--yb-target-min);
-  padding:0 var(--yb-space-3);
-  border:1px solid var(--yb-border); border-radius:var(--yb-radius-control);
-  background:var(--yb-bg-subtle); color:var(--yb-text-primary);
-  font-family:inherit; font-size:var(--yb-type-body-sm-size);
-}
-.ds-top__busca input:focus-visible{
-  outline:var(--yb-focus-width) solid var(--yb-focus-color);
-  outline-offset:var(--yb-focus-offset);
-}
-/* A contagem flutua sob o campo: ocupar espaço na barra faria a marca saltar a
-   cada tecla digitada. */
-.ds-top .nav-conta{
-  position:absolute; inset-block-start:100%; inset-inline-end:0;
-  margin:var(--yb-space-1) 0 0; font-size:var(--yb-type-caption-size);
-  color:var(--yb-text-muted);
-}
-.ds-top .nav-conta:empty{display:none}
 /* A versão abre o grupo da direita: o `auto` dela empurra versão e download
-   para o canto, com a busca ou sem ela. */
+   para o canto. */
 .ds-top__versao{
   margin:0 0 0 auto; flex:none; color:var(--yb-text-muted);
   font-size:var(--yb-type-caption-size); font-variant-numeric:tabular-nums;
+  margin-inline-end:var(--yb-space-4);
 }
 
 /* Download do pacote inteiro (tokens, componentes, ícones), o zip que o build
@@ -180,14 +188,58 @@ body{
   position:fixed; inset-block:var(--ds-top-h) 0; inset-inline-start:0; z-index:10;
   inline-size:var(--ds-nav-w); overflow-y:auto; overscroll-behavior:contain;
   padding:var(--yb-space-4) 0 var(--yb-space-10);
-  background:var(--yb-bg-subtle);
+  /* BRANCA, e não mais o cinza de antes. O cinza era o que separava a coluna
+     da página quando a página era branca; agora a página é que é cinza, e
+     branco é o que junta a coluna à barra numa peça só de cromo em L. */
+  background:var(--yb-surface);
   border-inline-end:1px solid var(--yb-border-subtle);
   font-family:var(--yb-font-family-base);
   font-size:var(--yb-type-body-sm-size);
   line-height:var(--yb-type-body-line);
 }
+/* Com a busca visível, ela é que faz o respiro do topo; sem script ela nasce
+   `hidden` e a coluna volta a abrir o respiro sozinha. */
+.ds-nav:has(> .ds-busca:not([hidden])){padding-block-start:0}
 
 .ds-nav ul{list-style:none; margin:0; padding:0}
+
+/* ---------------------------------------------------------------- a busca
+   A CABEÇA DA COLUNA. Ela filtra a lista que está logo abaixo: estando no topo
+   dela, o que se digita e o que encurta ficam no mesmo olhar.
+
+   Gruda ao rolar porque a árvore tem 49 nomes e rola sozinha — descer até
+   "Toast" e ter de voltar ao topo para trocar o termo é a viagem que o campo
+   existia para evitar.
+
+   O campo nasce `hidden` no HTML e o script o revela: sem script ele seria uma
+   caixa que não filtra nada. */
+.ds-busca{
+  position:sticky; inset-block-start:0; z-index:1;
+  padding:var(--yb-space-4) var(--ds-nav-gutter);
+  margin-block-end:var(--yb-space-2);
+  background:var(--yb-surface);
+  border-block-end:1px solid var(--yb-border-subtle);
+}
+.ds-busca[hidden]{display:none}
+.ds-busca input{
+  inline-size:100%; min-block-size:var(--yb-target-min);
+  padding:0 var(--yb-space-3);
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-control);
+  background:var(--yb-bg-subtle); color:var(--yb-text-primary);
+  font-family:inherit; font-size:var(--yb-type-body-sm-size);
+}
+.ds-busca input:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+/* A contagem só aparece com termo digitado — e é nessa hora que a lista abaixo
+   está encolhendo de qualquer jeito, então o empurrão de uma linha não tira
+   nada do lugar que a pessoa estivesse lendo. */
+.ds-busca .nav-conta{
+  margin:var(--yb-space-2) 0 0;
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+}
+.ds-busca .nav-conta:empty{display:none}
 
 /* ----------------------------------------------------------- os grupos
    `<details>` nativo: abrir com Enter, o anúncio de expandido/recolhido e o
@@ -250,8 +302,16 @@ body{
 .ds-nav__grupo[open] > summary{
   color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold);
 }
+/* ONDE A PESSOA ESTÁ, na coluna branca: o chip enche de grafite e o ícone
+   vira branco. Sobre o cinza de antes bastava ESVAZIAR o chip — ele clareava
+   para #FAFAFA e sumia no fundo da coluna, o que já era a diferença. Numa
+   coluna branca esvaziar não diferencia nada, e encher é o gesto que sobra.
+
+   Continua não sendo um componente: é um chip de ícone de 32, sem rótulo
+   dentro e sem sombra — a forma que o sistema dá a botão tem alvo de 44, texto
+   e raio de controle, e nenhum dos três está aqui. */
 .ds-nav__grupo[open] > summary .ds-nav__icone{
-  color:var(--yb-text-primary); background:var(--yb-surface-sunken);
+  background:var(--yb-text-primary); color:var(--yb-bg-page);
 }
 
 .ds-nav__grupo > ul{
@@ -289,7 +349,7 @@ body{
 }
 .ds-nav__solta > li > a:hover .ds-nav__icone{color:var(--yb-text-primary)}
 .ds-nav__solta > li > a[aria-current="page"] .ds-nav__icone{
-  color:var(--yb-text-primary); background:var(--yb-surface-sunken);
+  background:var(--yb-text-primary); color:var(--yb-bg-page);
 }
 
 .ds-nav a{
@@ -317,33 +377,44 @@ body{
    Abaixo de 900 a coluna deixa de ser coluna: vira o topo da página, com os
    grupos fechados. Gaveta com sobreposição precisaria de JS e de um botão
    flutuante, e a doc não tem tela suficiente para pagar isso — aqui o índice
-   ser a primeira coisa da página é resposta honesta. */
+   ser a primeira coisa da página é resposta honesta.
+
+   ESTAS REGRAS ESTAVAM EM 560, E O RECUO DO CORPO EM 900. Entre as duas
+   larguras a coluna continuava `fixed` com 280px e o corpo já tinha devolvido
+   o recuo: em qualquer tablet deitado, ou numa janela de 820, o menu ficava
+   por cima do começo de toda página — o título do Button nascia atrás da
+   lista de peças. Os dois cortes agora são um só, que é o que a nota acima
+   sempre disse. */
 @media (max-width:900px){
-  body{padding-inline-start:0}
+  /* OS DOIS RECUOS SOMEM JUNTOS. A barra deixa de ser `fixed` e volta para o
+     fluxo, mas o `padding` que existia para compensá-la continuava reservando
+     68px — e o que se via no alto de toda página de telefone era uma faixa de
+     tela cinza vazia antes da marca. */
+  body{padding-inline-start:0; padding-block-start:0}
   .ds-top{position:sticky}
-  .ds-top__marca{inline-size:auto}
-  .ds-top__busca input{inline-size:10rem}
-}
-/* Abaixo de 560 não cabem marca, busca e versão na mesma linha, e a versão é
-   a que menos serve ali: é referência para quem vai citar o sistema, não para
-   quem está navegando com o polegar. */
-@media (max-width:560px){
-  .ds-top__versao{display:none}
-  /* marca + busca + download numa linha de 320: a busca e quem cede */
-  .ds-top{gap:var(--yb-space-3); padding-inline:var(--yb-space-4)}
-  .ds-top__busca{flex:1; min-inline-size:0}
-  .ds-top__busca input{inline-size:100%; max-inline-size:none}
-  .ds-top__baixar{padding:0; inline-size:var(--yb-target-min); justify-content:center}
-  .ds-top__baixar > span{position:absolute; inline-size:1px; block-size:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap}
+  .ds-top__marca{inline-size:auto; border-inline-end:0}
   .ds-nav{
     position:static; inline-size:auto; inset:auto;
     border-inline-end:0; border-block-end:1px solid var(--yb-border-subtle);
-    padding-block:var(--yb-space-4);
+    padding-block:0 var(--yb-space-4);
     /* Teto, e não altura livre: com o grupo de Componentes aberto, as 48 peças
        empurravam o conteúdo da página para 2.000px abaixo da dobra. Aqui o
        índice é uma caixa que rola, e a página começa logo depois dela. */
     max-block-size:50vh;
   }
+  /* Dentro de uma caixa que rola, o `sticky` da busca ainda vale e é
+     justamente aqui que ele mais serve — a caixa tem 50vh e a lista inteira
+     passa por dentro dela. */
+}
+/* Abaixo de 560 não cabem marca, versão e download na mesma linha, e a versão
+   é a que menos serve ali: é referência para quem vai citar o sistema, não
+   para quem está navegando com o polegar. */
+@media (max-width:560px){
+  .ds-top__versao{display:none}
+  .ds-top{padding-inline:var(--yb-space-4)}
+  .ds-top__marca{margin-inline-end:auto}
+  .ds-top__baixar{padding:0; inline-size:var(--yb-target-min); justify-content:center}
+  .ds-top__baixar > span{position:absolute; inline-size:1px; block-size:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap}
 }
 
 /* Só para leitor de tela. `display:none` e `visibility:hidden` removeriam da

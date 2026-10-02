@@ -4,9 +4,16 @@
    e ja diferente — borda mais escura, grade de 220px em vez de 15rem —, e
    ninguem via, porque cada pagina so se parece consigo mesma. Numa folha
    so, as duas nao tem mais como se afastar. */
+/* 17rem e não 15. Com 15 a grade abria QUATRO colunas de 250px numa coluna de
+   1080, e a descrição de cada tela — que tem uma ou duas linhas de prosa, não
+   um rótulo — caía em cinco linhas espremidas. Em 17 a mesma coluna abre três
+   de 350, e a mesma frase cabe em duas.
+
+   `auto-fill` continua: em monitor largo ela volta a abrir a quarta coluna
+   sozinha, que é quando quatro de fato cabem. */
 .grade{
   display:grid; gap:var(--yb-space-4);
-  grid-template-columns:repeat(auto-fill, minmax(15rem, 1fr));
+  grid-template-columns:repeat(auto-fill, minmax(17rem, 1fr));
 }
 .peca{
   scroll-margin-block-start:var(--yb-space-8);
@@ -15,6 +22,7 @@
   border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card);
   background:var(--yb-surface); text-decoration:none;
 }
+.peca{box-shadow:var(--yb-elevation-card)}
 .peca:hover{border-color:var(--yb-text-primary)}
 .peca:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);

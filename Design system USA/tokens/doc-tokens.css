@@ -210,7 +210,7 @@ h3.sub{
 .uso__lista{
   margin:var(--yb-space-1) 0 0; padding:var(--yb-space-2) var(--yb-space-3);
   list-style:none; display:flex; flex-direction:column; gap:var(--yb-space-1);
-  background:var(--yb-bg-subtle); border-radius:var(--yb-radius-sm);
+  background:var(--yb-bg-muted); border-radius:var(--yb-radius-sm);
   max-block-size:14rem; overflow-y:auto;
 }
 .uso__lista a{color:var(--yb-text-primary); text-decoration:none}
@@ -219,3 +219,44 @@ h3.sub{
 /* Nao e defeito, e informacao: degrau de rampa que ninguem consome continua
    sendo vocabulario. Por isso cinza, e nao vermelho. */
 .uso--zero{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted); font-style:italic}
+
+/* ===========================================================================
+   AS FILEIRAS DA FUNDAÇÃO SÃO PAINEL, e não lista solta sobre a tela.
+
+   Com a página cinza, branco passou a querer dizer "aqui está a coisa
+   documentada" — é o que o palco das fichas faz. As páginas de token ficaram
+   de fora: a rampa de cor, a escala de tipo e a de espaço eram fileiras
+   soltas no cinza, e a Fundação parecia outra doc, de outro sistema.
+
+   SÓ AS TRÊS QUE SÃO LISTA. Raio, elevação, proporção e estado já mostram
+   caixas desenhadas, e caixa branca dentro de painel branco é moldura em cima
+   de moldura — ali o cinza da página é justamente o que deixa a caixa aparecer
+   (a de elevação precisa dele: sombra sobre o próprio fundo não se vê).
+
+   Sem sombra: a corrida de fileiras é um painel feito de vizinhos, e sombra
+   em cada um desenharia o vinco entre elas em vez da borda do conjunto.
+   =========================================================================== */
+.ramp{
+  padding:var(--yb-space-4) var(--yb-space-5);
+  background:var(--yb-surface);
+  border:1px solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-card);
+  box-shadow:var(--yb-elevation-card);
+}
+:is(.ty, .sp){
+  background:var(--yb-surface);
+  padding-inline:var(--yb-space-5);
+  border-inline:1px solid var(--yb-border-subtle);
+  border-block-end:1px solid var(--yb-border-subtle);
+}
+/* A primeira de cada corrida: a que NÃO vem depois de uma igual. */
+:is(.ty, .sp):not(:is(.ty, .sp) + *){
+  border-block-start:1px solid var(--yb-border-subtle);
+  border-start-start-radius:var(--yb-radius-card);
+  border-start-end-radius:var(--yb-radius-card);
+}
+/* E a última: a que não tem uma igual logo depois. */
+:is(.ty, .sp):not(:has(+ :is(.ty, .sp))){
+  border-end-start-radius:var(--yb-radius-card);
+  border-end-end-radius:var(--yb-radius-card);
+}

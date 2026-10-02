@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="../tokens/01-semantic.css">
 <style>
   *{box-sizing:border-box}
-  body{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+  body{margin:0; background:var(--doc-canvas, var(--yb-bg-page)); color:var(--yb-text-primary);
     font-family:var(--yb-font-family-base); -webkit-font-smoothing:antialiased;
     padding:var(--yb-space-12) var(--yb-space-8)}
   main{max-width:var(--doc-medida); margin-inline:auto;
@@ -24,9 +24,16 @@
   .voltar{display:inline-block; margin-bottom:var(--yb-space-6);
     font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted); text-decoration:none}
   .voltar:hover{color:var(--yb-text-primary)}
-  table{width:100%; border-collapse:collapse; margin-top:var(--yb-space-8)}
+  /* A tabela e um painel branco sobre a tela cinza, como o palco das fichas:
+     sem isso ela era a unica pagina da doc em que o conteudo nao tinha onde
+     pousar. `overflow:hidden` para o canto valer com `border-collapse`. */
+  table{width:100%; border-collapse:collapse; margin-top:var(--yb-space-8);
+    background:var(--yb-surface); border:1px solid var(--yb-border-subtle);
+    border-radius:var(--yb-radius-card); overflow:hidden;
+    box-shadow:var(--yb-elevation-card)}
   th,td{text-align:start; padding:var(--yb-space-3) var(--yb-space-4);
     border-bottom:1px solid var(--yb-border-subtle); vertical-align:top}
+  tbody tr:last-child td{border-bottom:0}
   th{font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
     text-transform:uppercase; color:var(--yb-text-muted)}
   td{font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
@@ -40,12 +47,6 @@
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
-  <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
-    <input id="ds-filter" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filter>
-    <p class="nav-conta" role="status" aria-live="polite"></p>
-  </div>
   <p class="ds-top__versao">v0.12.1</p>
   <a class="ds-top__baixar" href="../dist/ybera-design-system.zip" download="ybera-design-system.zip" aria-label="Download do pacote: tokens, componentes e ícones">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8"/><path d="M4.5 7.5 8 11l3.5-3.5"/><path d="M2.5 13.5h11"/></svg>
@@ -53,6 +54,12 @@
   </a>
 </header>
 <nav class="ds-nav" aria-label="Navegação do design system">
+  <div class="ds-busca" hidden>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
+    <p class="nav-conta" role="status" aria-live="polite"></p>
+  </div>
   <ul class="ds-nav__solta">
     <li><a href="../index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 7 8 2.5 13.5 7"/><path d="M4 6.5V13h8V6.5"/><path d="M6.5 13V9.5h3V13"/></svg>Home</a></li>
   </ul>

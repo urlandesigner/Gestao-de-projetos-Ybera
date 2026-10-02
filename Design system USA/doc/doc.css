@@ -141,7 +141,7 @@
 .ficha-fatos li{
   display:inline-flex; align-items:center; gap:var(--yb-space-2);
   padding:var(--yb-space-2) var(--yb-space-3);
-  background:var(--yb-surface-sunken); border-radius:var(--yb-radius-badge);
+  background:var(--yb-surface); border-radius:var(--yb-radius-badge);
   font-size:var(--yb-type-caption-size); color:var(--yb-text-secondary);
 }
 .ficha-fatos b{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
@@ -162,7 +162,7 @@
    pergunta que a lista de 37 nomes obrigava a contar no dedo. */
 .grade-conta{
   font-size:var(--yb-type-caption-size); font-weight:var(--yb-font-weight-regular);
-  color:var(--yb-text-muted); background:var(--yb-surface-sunken);
+  color:var(--yb-text-muted); background:var(--yb-surface);
   border-radius:var(--yb-radius-badge); padding:0 var(--yb-space-2);
 }
 .grade-lede{
@@ -271,9 +271,24 @@
   scroll-margin-block-start:calc(var(--ds-top-h, 0px) + var(--yb-space-4));
 }
 .abas > .bloco{margin-bottom:0}
+/* A FITA GRUDA ABAIXO DA BARRA. Um painel de ficha tem 5.000px: no meio da
+   matriz de estados do Button já não se vê mais qual das cinco abas está
+   aberta, e voltar ao topo só para conferir é a viagem que a aba existia para
+   evitar.
+
+   O fundo é o da tela, e o respiro de cima vem como `padding` com margem
+   negativa do mesmo tamanho: sem isso o conteúdo que sobe aparece no vão entre
+   a barra fixa e a fita, que é 1px de nada mas pisca a cada rolagem.
+
+   z-index 5: acima do palco com menu aberto (que chega a 3) e abaixo da coluna
+   e da barra (10 e 20), que continuam por cima de tudo. */
 .abas__tiras{
+  position:sticky; inset-block-start:var(--ds-top-h); z-index:5;
   display:flex; gap:var(--yb-space-6);
+  background:var(--doc-canvas);
   border-bottom:1px solid var(--yb-border-subtle);
+  padding-block-start:var(--yb-space-4);
+  margin-block-start:calc(var(--yb-space-4) * -1);
   margin-bottom:var(--yb-space-6);
   overflow-x:auto; scrollbar-width:none;
 }
@@ -308,7 +323,15 @@
    aba. Some o anel do painel, não o da aba. */
 .abas > .bloco:focus{outline:none}
 
-.bloco{margin-bottom:var(--yb-space-16); scroll-margin-top:var(--yb-space-10)}
+/* O QUE A ÂNCORA TEM DE LIBERAR: a barra fixa E a fita de abas, que agora
+   também gruda. Eram 40px, reservados quando só a barra existia — com a fita
+   por cima, um `#id` dentro do painel punha o título do bloco exatamente
+   atrás dela. Em página sem fita a reserva sobra, e sobrar é o lado certo
+   para errar. */
+.bloco{
+  margin-bottom:var(--yb-space-16);
+  scroll-margin-top:calc(var(--ds-top-h) + 3.75rem + var(--yb-space-4));
+}
 .bloco-titulo{
   font-size:var(--yb-type-h3-size); line-height:var(--yb-type-h3-line);
   font-weight:var(--yb-font-weight-bold);
@@ -321,12 +344,31 @@
    que os blocos gerados usam. Dois nomes para a mesma coisa e feio, e resolver
    renomeando a galeria mexeria em todas as secoes escritas a mao — o alias custa uma
    linha e nao pode divergir. */
+/* O FIO QUE SEGUE O RÓTULO. Uma ficha tem dezenas destas fileiras — "variants",
+   "full width", "com ícone" — e elas eram a única coisa separando um palco do
+   seguinte: onze caracteres em cinza claro de 11px, sem nada em volta, numa
+   coluna de 1080. Rolando, a página virava uma pilha de caixas brancas sem
+   junta visível.
+
+   O fio não acrescenta informação nenhuma; ele dá ao rótulo a largura da
+   coluna, que é o que faz uma linha curta ler como divisão de seção. Sai do
+   `::after` e não de uma borda no elemento porque precisa começar DEPOIS do
+   texto, e o texto tem largura variável. */
 .rotulo,
 .row-label{
+  display:flex; align-items:center; gap:var(--yb-space-3);
   font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
   text-transform:uppercase; color:var(--yb-text-muted);
   font-weight:var(--yb-font-weight-semibold);
   margin:var(--yb-space-8) 0 var(--yb-space-3);
+}
+.rotulo::after,
+.row-label::after{
+  /* Nao encolhe: ha rotulos de duas linhas nas fichas, e com `shrink` o fio
+     sumia justamente nos mais compridos — que sao os que mais precisam de
+     um fim visivel. O texto quebra, o fio fica. */
+  content:""; flex:1 0 var(--yb-space-8);
+  block-size:1px; background:var(--yb-border-subtle);
 }
 /* A classe no título da fileira fica como se escreve: `--success`, não `--SUCCESS`. */
 .row-label code{text-transform:none; letter-spacing:0}
@@ -340,6 +382,7 @@
   padding:var(--yb-space-6);
   border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card);
   background:var(--yb-surface);
+  box-shadow:var(--yb-elevation-card);
 }
 .stage--dim{background:var(--yb-bg-muted)}
 
@@ -434,7 +477,7 @@
 }
 .usa a::after{content:"→"; color:var(--yb-text-muted); font-weight:var(--yb-font-weight-regular)}
 @media (hover:hover){
-  .usa a:hover{border-color:var(--yb-text-primary); background:var(--yb-bg-subtle)}
+  .usa a:hover{border-color:var(--yb-text-primary); background:var(--yb-bg-muted)}
   .usa a:hover::after{color:var(--yb-text-primary)}
 }
 .usa a:focus-visible{
@@ -464,6 +507,10 @@
   padding:var(--yb-space-6);
   border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card);
   background:var(--yb-surface);
+  /* O degrau mais raso do sistema, e de propósito: o palco tem de se destacar
+     da tela cinza SEM virar o objeto em destaque — quem tem de levantar da
+     página é a peça que está dentro dele. */
+  box-shadow:var(--yb-elevation-card);
 }
 .demo--stack{flex-direction:column; align-items:stretch}
 
@@ -723,11 +770,11 @@ details.note > :last-child{padding-block-end:var(--yb-space-4)}
 .tokens__grupo{
   break-inside:avoid; margin-block-end:var(--yb-space-4);
   padding:var(--yb-space-4);
-  /* Cinza e não branco: a página já é branca, então o cartão branco só existia
-     pelo fio de 1px — e fio de 1px não é fronteira suficiente entre dois
-     grupos encostados. Com o fundo afundado a caixa se vê sem precisar de
-     borda, e a borda sai junto. */
-  background:var(--yb-bg-subtle);
+  /* BRANCO, e não mais o cinza. A regra de antes era "a página já é branca,
+     então o cartão branco só existia pelo fio de 1px" — e ela continua certa,
+     só que a página deixou de ser branca. Com a tela cinza, é o branco que dá
+     a fronteira que o fio não dava, e a borda continua desnecessária. */
+  background:var(--yb-surface);
   border-radius:var(--yb-radius-card);
 }
 .tokens__familia{
@@ -796,7 +843,7 @@ details.note > :last-child{padding-block-end:var(--yb-space-4)}
 .lista-api{display:flex; flex-wrap:wrap; gap:var(--yb-space-2); margin:0}
 .lista-api code{
   padding:var(--yb-space-1) var(--yb-space-2);
-  background:var(--yb-surface-sunken); border-radius:var(--yb-radius-sm);
+  background:var(--yb-surface); border-radius:var(--yb-radius-sm);
   color:var(--yb-text-primary);
 }
 .api-vazia{color:var(--yb-text-muted); font-size:var(--yb-type-body-sm-size); margin:0}
@@ -854,7 +901,9 @@ details.note > :last-child{padding-block-end:var(--yb-space-4)}
 .snippet{position:relative}
 .snippet pre{
   margin:0; padding:var(--yb-space-5); padding-inline-end:var(--yb-space-16);
-  background:var(--yb-surface-sunken); border:1px solid var(--yb-border-subtle);
+  /* Um degrau ABAIXO da tela, e não branco como o palco: na página cinza o
+     branco passou a significar "peça do sistema", e marcação não é peça. */
+  background:var(--yb-bg-muted); border:1px solid var(--yb-border-subtle);
   border-radius:var(--yb-radius-card);
   overflow-x:auto; font-family:var(--yb-font-family-mono);
   font-size:.8125rem; line-height:var(--yb-line-height-relaxed);
@@ -989,8 +1038,9 @@ details.note > :last-child{padding-block-end:var(--yb-space-4)}
 .anat__palco{
   position:relative; isolation:isolate;
   padding:var(--yb-space-12) 52px var(--yb-space-8);
-  background:var(--yb-bg-page);
+  background:var(--yb-surface);
   border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card);
+  box-shadow:var(--yb-elevation-card);
 }
 .anat__peca{position:relative; z-index:1}
 /* O quadro era `bg-subtle` (gray-50), o mesmo cinza da mídia vazia do
@@ -1119,7 +1169,7 @@ details.note > :last-child{padding-block-end:var(--yb-space-4)}
   border-radius:var(--yb-radius-sm);
   transition:background var(--yb-transition-control);
 }
-.anat__item--aceso{background:var(--yb-bg-subtle)}
+.anat__item--aceso{background:var(--yb-bg-muted)}
 .anat__legenda > li:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);

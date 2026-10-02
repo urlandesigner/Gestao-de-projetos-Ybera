@@ -282,12 +282,6 @@ ${n.itens.map(link).join('\n')}
   return `${MARCA_ABRE}
 <header class="ds-top">
   <a class="ds-top__marca" href="${raiz}index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
-  <div class="ds-top__busca" hidden>
-    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
-    <input id="ds-filter" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filter>
-    <p class="nav-conta" role="status" aria-live="polite"></p>
-  </div>
   <p class="ds-top__versao">v${versao}</p>
   <a class="ds-top__baixar" href="${raiz}dist/ybera-design-system.zip" download="ybera-design-system.zip" aria-label="Download do pacote: tokens, componentes e ícones">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8"/><path d="M4.5 7.5 8 11l3.5-3.5"/><path d="M2.5 13.5h11"/></svg>
@@ -295,6 +289,12 @@ ${n.itens.map(link).join('\n')}
   </a>
 </header>
 <nav class="ds-nav" aria-label="Navegação do design system">
+  <div class="ds-busca" hidden>
+    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
+    <input id="ds-filter" type="search" placeholder="Buscar…"
+           autocomplete="off" data-yb-filter>
+    <p class="nav-conta" role="status" aria-live="polite"></p>
+  </div>
 ${arvore().map((n) => bloco(n, icone)).join('\n')}
 </nav>
 ${MARCA_FECHA}`;
@@ -509,7 +509,7 @@ export function paginaDeGrupo(g, extra) {
 <link rel="stylesheet" href="${raiz}doc/doc-nav.css">${extra || ''}
 <script src="${raiz}doc/doc.js" defer></script>
 <style>
-.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+.ficha{margin:0; background:var(--doc-canvas, var(--yb-bg-page)); color:var(--yb-text-primary);
   font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
   line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
 .ficha code{font-family:var(--yb-font-family-mono); font-size:var(--yb-type-caption-size)}
@@ -572,7 +572,7 @@ export function paginaDeToken(s, ant, prox) {
 <link rel="stylesheet" href="doc-tokens.css">
 <script src="${raiz}doc/doc.js" defer></script>
 <style>
-.ficha{margin:0; background:var(--yb-bg-page); color:var(--yb-text-primary);
+.ficha{margin:0; background:var(--doc-canvas, var(--yb-bg-page)); color:var(--yb-text-primary);
   font-family:var(--yb-font-family-base); font-size:var(--yb-type-body-size);
   line-height:var(--yb-type-body-line); -webkit-font-smoothing:antialiased}
 .ficha code{font-family:var(--yb-font-family-mono); font-size:var(--yb-type-caption-size)}
