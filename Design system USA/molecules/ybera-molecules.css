@@ -2839,6 +2839,71 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 .yb-tabs__panel{padding-block-start:var(--yb-space-6)}
 .yb-tabs__panel[hidden]{display:none}
 
+/* -------------------------------------------------------------------------
+   SEGMENTED — a mesma aba, desenhada como trilho
+
+   MESMA PEÇA, MESMA ARIA, MESMO COMPORTAMENTO. O que muda é onde a escolha
+   mora: no sublinhado ela é uma linha embaixo do rótulo; aqui ela é uma
+   PASTILHA cheia, dentro de um trilho que mostra de uma vez quantas opções
+   existem. Por isso o trilho abraça o conteúdo em vez de ocupar a largura
+   toda — uma barra esticada com três palavras no começo não diz "três
+   opções", diz "o resto está em branco".
+
+   QUANDO ESCOLHER UMA OU OUTRA. Sublinhado para a navegação de uma página —
+   ele mora na largura do conteúdo e não compete com o título acima. Trilho
+   para três ou quatro opções curtas e paralelas, do tipo que a pessoa troca
+   e volta: dia/semana/mês, grade/lista. Com rótulo longo, ou mais de cinco
+   opções, o trilho vira uma barra que não cabe, e aí o sublinhado é o certo.
+
+   A PASTILHA É GRAFITE, e não a cor de sinal. Aba escolhida não é ação: é
+   onde você está. O magenta ali prometeria um botão. Ver a DDR-001.
+
+   O PESO CONTINUA MUDANDO junto com o fundo, pelo mesmo motivo do sublinhado:
+   em alto contraste o fundo do autor some, e sem o peso a escolha sumiria
+   com ele (WCAG 1.4.1).
+   ------------------------------------------------------------------------- */
+.yb-tabs--segmented > .yb-tabs__list{
+  display:inline-flex; max-inline-size:100%;
+  gap:var(--yb-space-1);
+  /* O trilho não tem fio embaixo: quem separa a fileira do painel passa a ser
+     o respiro, e um fio sob uma caixa arredondada leria como sublinhado
+     cortado nas pontas. */
+  border-block-end:0;
+  background:var(--yb-bg-subtle);
+  border-radius:var(--yb-radius-full);
+  padding:var(--yb-space-1);
+}
+.yb-tabs--segmented .yb-tabs__tab{
+  /* Zera o que é do sublinhado: sem ele, a borda transparente de 2px deixava
+     a pastilha 2px mais alta que o trilho, e o negativo a empurrava para fora
+     da caixa embaixo. */
+  border-block-end:0; margin-block-end:0;
+  padding-inline:var(--yb-space-5);
+  border-radius:var(--yb-radius-full);
+  /* O alvo continua sendo 44px: o respiro do trilho SOMA, não substitui. */
+  min-block-size:var(--yb-target-min);
+  transition:color var(--yb-transition-control),
+             background var(--yb-transition-control);
+}
+@media (hover:hover){
+  .yb-tabs--segmented .yb-tabs__tab:not([aria-selected="true"]):hover{
+    background:var(--yb-surface);
+  }
+}
+.yb-tabs--segmented .yb-tabs__tab[aria-selected="true"]{
+  background:var(--yb-action-primary-bg);
+  color:var(--yb-action-primary-text);
+}
+/* A pastilha escolhida é grafite cheio, e o anel grafite encostado nela some.
+   É o quinto caso da família declarada em FOCO SOBRE CONTROLE GRAFITE, em
+   `atoms/` — ele não cabe lá porque o `.yb-tabs__tab:focus-visible` acima
+   reescreve o afastamento, e a regra de atoms viria antes. Aqui o vão que
+   desenha o anel é o respiro do trilho, e não a página. */
+.yb-tabs--segmented .yb-tabs__tab[aria-selected="true"]:focus-visible{
+  outline-offset:var(--yb-focus-offset-on-solid);
+}
+.yb-tabs--segmented .yb-tabs__panel{padding-block-start:var(--yb-space-5)}
+
 /* =========================================================================
    TOOLTIP — a frase curta que explica o gatilho, e só aparece quando pedida
    Depende de: --yb-bg-inverse, --yb-text-inverse, --yb-z-tooltip

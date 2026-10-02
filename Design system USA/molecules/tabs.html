@@ -220,6 +220,36 @@
         </div>
       </div>
     </div>
+    <h3 class="row-label">Em trilho — <code>--segmented</code></h3>
+    <div class="demo demo--stack" style="max-inline-size:34rem">
+      <div class="yb-tabs yb-tabs--segmented" data-yb-tabs>
+        <div class="yb-tabs__list" role="tablist" aria-label="Minha conta">
+          <button class="yb-tabs__tab" role="tab" id="sg-acc" aria-controls="sp-acc" aria-selected="true" type="button">Account</button>
+          <button class="yb-tabs__tab" role="tab" id="sg-set" aria-controls="sp-set" aria-selected="false" type="button">Settings</button>
+          <button class="yb-tabs__tab" role="tab" id="sg-not" aria-controls="sp-not" aria-selected="false" type="button">Notifications</button>
+        </div>
+        <div class="yb-tabs__panel" role="tabpanel" id="sp-acc" aria-labelledby="sg-acc" tabindex="0">
+          <p>Name, email and the address your orders ship to.</p>
+        </div>
+        <div class="yb-tabs__panel" role="tabpanel" id="sp-set" aria-labelledby="sg-set" tabindex="0" hidden>
+          <p>Language, currency and how you prefer to be contacted.</p>
+        </div>
+        <div class="yb-tabs__panel" role="tabpanel" id="sp-not" aria-labelledby="sg-not" tabindex="0" hidden>
+          <p>What we email you about, and how often.</p>
+        </div>
+      </div>
+    </div>
+    <details class="note"><summary>Sublinhado ou trilho</summary>
+      <p>Sublinhado para a navegação de uma página: ele mora na largura do conteúdo e não
+      compete com o título acima. Trilho para três ou quatro opções curtas e paralelas, do
+      tipo que a pessoa troca e volta — dia/semana/mês, grade/lista. Com rótulo longo, ou
+      mais de cinco opções, o trilho vira uma barra que não cabe.</p>
+    </details>
+    <details class="note"><summary>A pastilha é grafite, não magenta</summary>
+      <p>Aba escolhida não é ação: é onde você está. O magenta é a cor de sinal da casa e
+      ali prometeria um botão. E o peso da letra muda junto com o fundo — em alto contraste
+      o fundo some, e sem o peso a escolha sumiria com ele.</p>
+    </details>
     <details class="note"><summary>Aba esconde — pense duas vezes</summary>
       <p>O que está atrás de uma aba é lido por uma minoria. Se a pessoa precisa comparar
       os dois conteúdos, ou se a decisão de compra está no segundo, aba é o pior lugar.
@@ -319,7 +349,32 @@
 }
 .yb-tabs__tab[disabled]{color:var(--yb-text-disabled); cursor:not-allowed}
 .yb-tabs__panel{padding-block-start:var(--yb-space-6)}
-.yb-tabs__panel[hidden]{display:none}</code></pre>
+.yb-tabs__panel[hidden]{display:none}
+.yb-tabs--segmented &gt; .yb-tabs__list{
+  display:inline-flex; max-inline-size:100%;
+  gap:var(--yb-space-1);
+  border-block-end:0;
+  background:var(--yb-bg-subtle);
+  border-radius:var(--yb-radius-full);
+  padding:var(--yb-space-1);
+}
+.yb-tabs--segmented .yb-tabs__tab{
+  border-block-end:0; margin-block-end:0;
+  padding-inline:var(--yb-space-5);
+  border-radius:var(--yb-radius-full);
+  min-block-size:var(--yb-target-min);
+  transition:color var(--yb-transition-control),
+  background var(--yb-transition-control);
+}
+@media (hover:hover){
+  .yb-tabs--segmented .yb-tabs__tab:not([aria-selected="true"]):hover{background:var(--yb-surface);}
+}
+.yb-tabs--segmented .yb-tabs__tab[aria-selected="true"]{
+  background:var(--yb-action-primary-bg);
+  color:var(--yb-action-primary-text);
+}
+.yb-tabs--segmented .yb-tabs__tab[aria-selected="true"]:focus-visible{outline-offset:var(--yb-focus-offset-on-solid);}
+.yb-tabs--segmented .yb-tabs__panel{padding-block-start:var(--yb-space-5)}</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="js" hidden>
@@ -337,17 +392,24 @@
     <div class="codigo__painel" data-code-panel="tokens" hidden>
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>--yb-border-emphasis: 2px;
+        <pre><code>--yb-action-primary-bg: #1E1E1F;
+--yb-action-primary-text: #FFFFFF;
+--yb-bg-subtle: #FAFAFA;
+--yb-border-emphasis: 2px;
 --yb-border-hairline: 1px;
 --yb-border-subtle: #EAEAEA;
 --yb-focus-color: #1E1E1F;
 --yb-focus-offset: 0;
+--yb-focus-offset-on-solid: 2px;
 --yb-focus-width: 2px;
 --yb-font-weight-medium: 500;
 --yb-font-weight-semibold: 600;
+--yb-radius-full: 9999px;
+--yb-space-1: 0.25rem;
 --yb-space-3: 0.75rem;
 --yb-space-5: 1.25rem;
 --yb-space-6: 1.5rem;
+--yb-surface: #FFFFFF;
 --yb-target-min: 44px;
 --yb-text-disabled: #B1B1B4;
 --yb-text-muted: #6D6D71;
@@ -399,19 +461,23 @@
 
     <div class="api-ficha">
     <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo">Nenhuma outra peça: tudo o que ela desenha sai da folha de estilo dela.</div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo">Nenhum. O que muda nela vem do conteúdo.</div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-tabs--segmented</code></span></div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-tabs__list</code> <code>.yb-tabs__panel</code> <code>.yb-tabs__tab</code></span></div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code> · <code>[aria-selected]</code> · <code>[disabled]</code> · <code>[hidden]</code></div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele aparece, mas não responde.</div></div>
     </div>
-    <p class="rotulo">Tokens <span class="rotulo-conta">17</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">24</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>6</span></p>
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>10</span></p>
         <ul class="tokens__lista">
+          <li><i class="tokens__cor" style="background:var(--yb-action-primary-text)" aria-hidden="true"></i><code>--yb-action-primary-text</code><span class="tokens__valor">#FFFFFF</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-action-primary-bg)" aria-hidden="true"></i><code>--yb-action-primary-bg</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-disabled)" aria-hidden="true"></i><code>--yb-text-disabled</code><span class="tokens__valor">#B1B1B4</span></li>
           <li><code>--yb-border-emphasis</code><span class="tokens__valor">2px</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-bg-subtle)" aria-hidden="true"></i><code>--yb-bg-subtle</code><span class="tokens__valor">#FAFAFA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border-subtle)" aria-hidden="true"></i><code>--yb-border-subtle</code><span class="tokens__valor">#EAEAEA</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
@@ -426,8 +492,9 @@
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>4</span></p>
+        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>5</span></p>
         <ul class="tokens__lista">
+          <li><code>--yb-space-1</code><span class="tokens__valor">0.25rem</span></li>
           <li><code>--yb-space-6</code><span class="tokens__valor">1.5rem</span></li>
           <li><code>--yb-target-min</code><span class="tokens__valor">44px</span></li>
           <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
@@ -435,8 +502,15 @@
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>4</span></p>
+        <p class="tokens__familia"><a href="../tokens/shape.html">Forma</a> <span>1</span></p>
         <ul class="tokens__lista">
+          <li><code>--yb-radius-full</code><span class="tokens__valor">9999px</span></li>
+        </ul>
+      </div>
+      <div class="tokens__grupo">
+        <p class="tokens__familia"><a href="../tokens/state.html">Estado</a> <span>5</span></p>
+        <ul class="tokens__lista">
+          <li><code>--yb-focus-offset-on-solid</code><span class="tokens__valor">2px</span></li>
           <li><code>--yb-transition-control</code><span class="tokens__valor">120ms cubic-bezier(.2, 0, 0, 1)</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-focus-color)" aria-hidden="true"></i><code>--yb-focus-color</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><code>--yb-focus-offset</code><span class="tokens__valor">0</span></li>

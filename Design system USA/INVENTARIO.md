@@ -61,7 +61,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | QUANTITY STEPPER | `.yb-stepper` | Molécula | Estável | 1 | 3 | 17 | sim | sim | sim | sim |
 | RATING | `.yb-rating` | Molécula | Estável | — | — | 7 | sim | n/a | — | sim |
 | REVIEW | `.yb-reviews` | Molécula | Estável | — | 1 | 28 | sim | sim | sim | sim |
-| TABS | `.yb-tabs` | Molécula | Beta | — | 3 | 17 | sim | sim | sim | — |
+| TABS | `.yb-tabs` | Molécula | Beta | 1 | 3 | 24 | sim | sim | sim | — |
 | TOAST | `.yb-toast` | Molécula | Beta | 3 | 1 | 30 | sim | — | sim | — |
 | TOOLTIP | `.yb-tooltip` | Molécula | Beta | 3 | 2 | 12 | sim | sim | sim | — |
 | TRACK | `.yb-track` | Molécula | Beta | 2 | 1 | 8 | sim | — | sim | sim |

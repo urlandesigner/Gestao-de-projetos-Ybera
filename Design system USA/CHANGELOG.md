@@ -9,6 +9,18 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
 [GOVERNANCA.md](GOVERNANCA.md), componente novo pede versão **menor** (0.13.0).
 
 ### Adicionado
+- **Tabs em trilho — `--segmented`.** Mesma peça, mesma ARIA, mesmo
+  comportamento: o que muda é onde a escolha mora. No sublinhado ela é uma linha
+  embaixo do rótulo; aqui é uma pastilha cheia dentro de um trilho que mostra de
+  uma vez quantas opções existem. Por isso o trilho **abraça o conteúdo** — uma
+  barra esticada com três palavras no começo não diz "três opções", diz "o resto
+  está em branco". Sublinhado para a navegação de uma página; trilho para três ou
+  quatro opções curtas e paralelas, do tipo que a pessoa troca e volta. A
+  pastilha é **grafite e não magenta**: aba escolhida não é ação, é onde você
+  está. O peso da letra continua mudando junto com o fundo, porque em alto
+  contraste o fundo do autor some e sem o peso a escolha sumiria com ele. Nenhum
+  token novo. Medido: pastilha 16.66:1, aba solta 4.94:1 sobre o trilho, alvo de
+  44px mantido, e cabe em 375px sem rolagem lateral.
 - **Count.** O número que fica em cima de um controle e diz quantos. Existia
   desde sempre como `.yb-header__count`, dentro do cabeçalho, e era a única
   contagem do sistema sem ser peça de ninguém: quem quisesse o mesmo círculo

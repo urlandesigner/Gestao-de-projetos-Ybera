@@ -1538,10 +1538,14 @@ button.yb-link{
    trocar a cor (voltaria o sinal que saiu daqui), e sim abrir o vao: a pagina
    branca entra entre o controle e o anel e e ela que o desenha.
 
-   ESTAO TODOS AQUI, de proposito. Espalhado por componente, este seria o
+   ESTAO QUASE TODOS AQUI, de proposito. Espalhado por componente, este seria o
    quarto lugar a responder "por que o foco deste e diferente" — e o primeiro
-   a ficar para tras quando nascer o quinto controle grafite. O atalho de pular
-   (`.yb-skip-link`) e grafite tambem, mas mora na base e resolve la.
+   a ficar para tras quando nascer o proximo controle grafite.
+
+   Os dois que moram fora, e por que: o atalho de pular (`.yb-skip-link`) e
+   grafite tambem, mas e da base e resolve la; e a aba escolhida do
+   `.yb-tabs--segmented` fica em `molecules/`, porque o `.yb-tabs__tab` de la
+   reescreve o afastamento e esta folha vem antes dela na cascata.
    ========================================================================= */
 .yb-btn--primary:focus-visible,
 .yb-chip[aria-pressed="true"]:focus-visible,
