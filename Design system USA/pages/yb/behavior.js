@@ -190,11 +190,9 @@
       body.appendChild(p);
     }
 
-    var x = document.createElement('button');
-    x.className = 'yb-iconbtn yb-iconbtn--square yb-toast__close';
-    x.type = 'button';
-    x.setAttribute('aria-label', opts.closeLabel || 'Dismiss');
-    x.textContent = '×';
+    /* O PRAZO SOBE PARA CA porque e ele que decide se existe botao de fechar.
+       Ver o bloco do X, logo abaixo. */
+    var prazo = opts.duration === 0 ? 0 : (opts.duration || 5000);
 
     el.appendChild(body);
 
@@ -215,10 +213,30 @@
       el.appendChild(acao);
     }
 
-    el.appendChild(x);
+    /* O X SO EXISTE NO TOAST QUE NAO FECHA SOZINHO.
+       Com os 5s do padrao, o tempo ja faz o que o X faria: o botao vira um alvo
+       a mais e uma parada de teclado a mais para antecipar o que ia acontecer
+       de qualquer jeito. Com `duration: 0` — o erro — ele e a UNICA saida, e
+       sem ele quem navega por teclado fica com a mensagem presa na tela.
+
+       E e a mesma regra que resolve o caso dificil, o toast COM acao. "Desfazer"
+       e "X" sao duas saidas de sentidos opostos: uma volta atras, a outra mantem
+       o que foi feito e so esconde o aviso. Juntas, quem erra o alvo perde a
+       unica chance de desfazer, e perde calado. Entao: toast com acao que some
+       sozinho nao leva X (o proprio Desfazer ja fecha, e o tempo tambem); toast
+       com acao que NAO some precisa de uma saida que nao seja desfazer, e aí o X
+       volta — pela mesma linha, sem excecao escrita. */
+    var x = null;
+    if (prazo === 0) {
+      x = document.createElement('button');
+      x.className = 'yb-iconbtn yb-iconbtn--square yb-toast__close';
+      x.type = 'button';
+      x.setAttribute('aria-label', opts.closeLabel || 'Dismiss');
+      x.textContent = '×';
+      el.appendChild(x);
+    }
     containerToast().appendChild(el);
 
-    var prazo = opts.duration === 0 ? 0 : (opts.duration || 5000);
     var timer = null;
 
     function sair() {
@@ -230,7 +248,7 @@
     }
     function agendar() { clearTimeout(timer); if (prazo) timer = setTimeout(sair, prazo); }
 
-    x.addEventListener('click', sair);
+    if (x) x.addEventListener('click', sair);
     // não some enquanto a pessoa está lendo
     el.addEventListener('mouseenter', function () { clearTimeout(timer); });
     el.addEventListener('mouseleave', agendar);

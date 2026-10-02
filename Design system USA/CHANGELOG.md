@@ -92,6 +92,17 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   [DDR-013](decision-log/DDR-013-o-painel-nasce-de-fora.md).
 
 ### Mudado
+- **O X do toast só aparece quando ele não fecha sozinho.** Antes o script punha
+  sempre. Com os cinco segundos do padrão o tempo já faz o que o X faria: o botão
+  vira um alvo a mais e uma parada de teclado a mais para antecipar o que ia
+  acontecer de qualquer jeito. Com `duration: 0` — o erro — ele é a **única**
+  saída, e sem ele quem navega por teclado fica com a mensagem presa na tela.
+  **É a mesma regra que resolve o toast com ação**, e por isso ela é uma só, sem
+  exceção escrita: "Desfazer" e "X" são duas saídas de sentidos opostos — uma
+  volta atrás, a outra mantém o que foi feito e esconde o aviso —, e juntas quem
+  erra o alvo perde a única chance de desfazer, calado. Toast com ação que some
+  sozinho não leva X, porque o próprio "Desfazer" fecha; toast com ação que não
+  some leva, porque aí é preciso uma saída que não seja desfazer.
 - **O Toast passou a falar a mesma língua do Alert.** Superfície tingida, borda
   da mesma família e o ícone da variante — os mesmos quatro do Alert e os mesmos
   tokens, então afinar a tinta de sucesso move as duas peças juntas. Antes a

@@ -226,7 +226,7 @@
         <span class="amostra__rotulo"><code>--danger</code></span>
       </span>
     </div>
-    <h3 class="row-label">Parados — a mesma marcação que o script monta</h3>
+    <h3 class="row-label">Parados — a mesma marcação que o script monta. Só o erro tem X: ele é o único que não some sozinho</h3>
     <!-- Na loja o toast nasce do `Ybera.toast()` e some sozinho. Aqui ele está
          parado para a anatomia e o código terem o que mostrar. -->
     <div class="demo demo--stack" style="max-inline-size:26rem">
@@ -234,14 +234,12 @@
         <div class="yb-toast__body">
           <b class="yb-toast__title">Filters cleared</b>
         </div>
-        <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
       </div>
       <div class="yb-toast" role="status">
         <div class="yb-toast__body">
           <b class="yb-toast__title">Removed from cart</b>
         </div>
         <button class="yb-btn yb-btn--secondary yb-btn--sm yb-toast__action" type="button">Undo</button>
-        <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
       </div>
       <div class="yb-toast yb-toast--success" role="status">
         <svg class="yb-icon yb-toast__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>
@@ -249,14 +247,12 @@
           <b class="yb-toast__title">Added to cart</b>
           <p class="yb-toast__text">Kit Sealant Fashion Gold — 500 g</p>
         </div>
-        <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
       </div>
       <div class="yb-toast yb-toast--warning" role="status">
         <svg class="yb-icon yb-toast__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-alert"/></svg>
         <div class="yb-toast__body">
           <b class="yb-toast__title">Coupon expires in 10 minutes</b>
         </div>
-        <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
       </div>
       <div class="yb-toast yb-toast--danger" role="alert">
         <svg class="yb-icon yb-toast__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg>
@@ -271,7 +267,6 @@
         <div class="yb-toast__body">
           <b class="yb-toast__title">Shipping updated for your ZIP</b>
         </div>
-        <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
       </div>
     </div>
     <details class="note"><summary>Fala a mesma língua do Alert</summary>
@@ -285,6 +280,19 @@
       “Filtros limpos” e “Link copiado” são a maioria dos casos. Como ele flutua sobre
       conteúdo que não controla, a base já vem com superfície, borda e sombra próprias.</p>
     </details>
+    <details class="note"><summary>O X só aparece no toast que não fecha sozinho</summary>
+      <p>Com os cinco segundos do padrão, o tempo já faz o que o X faria: o botão vira um
+      alvo a mais e uma parada de teclado a mais para antecipar o que ia acontecer de
+      qualquer jeito. Com <code>duration: 0</code> — o erro — ele é a única saída, e sem
+      ele quem navega por teclado fica com a mensagem presa na tela.</p>
+    </details>
+    <details class="note"><summary>Nunca X e “Desfazer” juntos</summary>
+      <p>São duas saídas de sentidos opostos: uma volta atrás, a outra mantém o que foi
+      feito e só esconde o aviso. Juntas, quem erra o alvo perde a única chance de desfazer
+      — e perde calado. A regra acima já resolve: toast com ação que some sozinho não leva
+      X, porque o próprio “Desfazer” fecha. Se ele não somir sozinho, o X volta, porque aí
+      é preciso uma saída que não seja desfazer.</p>
+    </details>
     <details class="note"><summary>Com ação, dê mais tempo</summary>
       <p>Cinco segundos não bastam para ler, decidir e clicar em “Undo”. Passe
       <code>duration</code> maior, ou <code>0</code> para não sumir sozinho. Clicar na
@@ -292,9 +300,10 @@
     </details>
     <details class="note"><summary>Some sozinho — menos quando você está lendo</summary>
       <p>Cinco segundos por padrão, mas o relógio para no <code>mouseenter</code> e
-      no <code>focusin</code>. O de erro usa <code>duration:0</code> e
-      <code>role="alert"</code>: erro não desaparece antes de ser lido, e interrompe
-      o leitor de tela. Os outros usam <code>role="status"</code> e esperam a pausa.</p>
+      no <code>focusin</code>, e volta a andar quando você sai. O de erro usa
+      <code>duration:0</code> e <code>role="alert"</code>: erro não desaparece antes de ser
+      lido, e interrompe o leitor de tela. Os outros usam <code>role="status"</code> e
+      esperam a pausa.</p>
     </details>
     <details class="note"><summary>O ícone vem do sprite, e o caminho é lido da página</summary>
       <p>A doc mora em pastas diferentes e o tema serve o arquivo de outro lugar: nenhum
@@ -449,6 +458,19 @@
         <div class="yb-toast__body">
           <b class="yb-toast__title">Added to cart</b>
           <p class="yb-toast__text">Kit Sealant Fashion Gold — 500 g</p>
+        </div>
+      </div>
+      <div class="yb-toast yb-toast--warning" role="status">
+        <svg class="yb-icon yb-toast__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-alert"/></svg>
+        <div class="yb-toast__body">
+          <b class="yb-toast__title">Coupon expires in 10 minutes</b>
+        </div>
+      </div>
+      <div class="yb-toast yb-toast--danger" role="alert">
+        <svg class="yb-icon yb-toast__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg>
+        <div class="yb-toast__body">
+          <b class="yb-toast__title">Could not add to cart</b>
+          <p class="yb-toast__text">Check your connection and try again.</p>
         </div>
         <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
       </div></div>
