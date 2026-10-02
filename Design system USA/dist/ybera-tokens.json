@@ -1293,7 +1293,7 @@
       "$type": "dimension"
     },
     "control": {
-      "$value": "{radius.md}",
+      "$value": "{radius.lg}",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-radius-control",
         "com.ybera.layer": "semantic"
@@ -1301,7 +1301,7 @@
       "$type": "dimension"
     },
     "card": {
-      "$value": "{radius.md}",
+      "$value": "{radius.lg}",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-radius-card",
         "com.ybera.layer": "semantic"
@@ -1309,7 +1309,7 @@
       "$type": "dimension"
     },
     "badge": {
-      "$value": "{radius.sm}",
+      "$value": "{radius.md}",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-radius-badge",
         "com.ybera.layer": "semantic"
@@ -1325,7 +1325,7 @@
       "$type": "dimension"
     },
     "media": {
-      "$value": "{radius.md}",
+      "$value": "{radius.lg}",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-radius-media",
         "com.ybera.layer": "semantic"

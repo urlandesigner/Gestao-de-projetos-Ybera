@@ -597,12 +597,33 @@
 
   /* =====================================================================
      FORMA
+
+     O CANTO DO SISTEMA E 12px, e nao mais 8. Um degrau inteiro da escala para
+     cima, aplicado de uma vez nos tres papeis que sao CAIXA — o controle, o
+     cartao e a midia. Subir so o cartao deixaria o botao dentro dele mais
+     anguloso que a propria caixa, que e o jeito mais rapido de uma interface
+     parecer remendada.
+
+     A midia sobe junto porque na maioria dos cartoes ela encosta no canto de
+     cima: raio diferente ali aparece como um degrau de meio pixel entre a foto
+     e a borda do cartao.
+
+     O ALFINETE SOBE SO UM DEGRAU, para 8. Ele e o unico dos cinco que nao e
+     caixa: veste rotulo de 25px de altura, e 12 num retangulo de 25 da 48% da
+     altura — isso nao le como canto arredondado, le como pilula mal feita, e
+     pilula ja tem dono aqui (--yb-radius-pill). Em 8 ele fica nos mesmos 32%
+     que o stepper pequeno (12 de 36), que e a proporcao que o sistema ja
+     mostrava como certa. A relacao com o cartao continua sendo metade.
+
+     `--yb-radius-sm` cru, onde ele aparece nas folhas, NAO sobe junto: ali ele
+     veste caixa de checkbox, risco de esqueleto e item de menu — coisas de 16
+     a 20px, em que 4 ja e o canto certo.
      ===================================================================== */
-  --yb-radius-control: var(--yb-radius-md);
-  --yb-radius-card:    var(--yb-radius-md);
-  --yb-radius-badge:   var(--yb-radius-sm);
+  --yb-radius-control: var(--yb-radius-lg);
+  --yb-radius-card:    var(--yb-radius-lg);
+  --yb-radius-badge:   var(--yb-radius-md);
   --yb-radius-pill:    var(--yb-radius-full);
-  --yb-radius-media:   var(--yb-radius-md);
+  --yb-radius-media:   var(--yb-radius-lg);
 
   /* linha divisória: a espessura também é decisão de sistema, não de autor */
   --yb-border-hairline: var(--yb-border-width-hair);

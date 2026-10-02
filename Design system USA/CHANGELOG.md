@@ -92,6 +92,25 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   [DDR-013](decision-log/DDR-013-o-painel-nasce-de-fora.md).
 
 ### Mudado
+- **O canto do sistema é 12px.** Era 8. Subiu um degrau inteiro da escala, de
+  `--yb-radius-md` para `--yb-radius-lg`, e subiu de uma vez nos três papéis
+  que são caixa: o controle (botão, campo, select, textarea, stepper, modal),
+  o cartão e a mídia. Mexer só no cartão deixaria o botão de dentro mais
+  anguloso que a caixa que o contém, que é o jeito mais rápido de uma
+  interface parecer remendada. A mídia sobe junto porque na maioria dos
+  cartões ela encosta no canto de cima, e raio diferente ali aparece como um
+  degrau entre a foto e a borda. **O alfinete subiu só um degrau, para 8**: ele
+  é o único dos cinco que não é caixa — veste rótulo de 25px de altura, e 12
+  num retângulo de 25 dá 48% da altura, que não lê como canto arredondado e
+  sim como pílula mal feita; pílula já tem dono (`--yb-radius-pill`). Em 8 ele
+  fica nos mesmos 32% que o stepper pequeno (12 de 36), proporção que o
+  sistema já mostrava como certa, e continua sendo metade do cartão.
+  `--yb-radius-sm` cru, onde aparece nas folhas, **não** subiu: ali ele veste
+  caixa de checkbox, risco de esqueleto e item de menu, coisas de 16 a 20px em
+  que 4 já é o canto certo. Nenhum token novo — a escala 4/8/12/16 já existia
+  e o degrau de 12 estava sem consumidor. Varridas as onze telas-prova: nenhum
+  elemento passou a ter raio maior que metade da própria altura, fora o selo
+  de oferta, que é redondo de propósito.
 - **Toast tingido não leva fio.** A tinta já desenha a caixa, e um fio em volta
   dela eram duas bordas dizendo a mesma coisa — era também a única diferença que
   ainda separava o toast colorido do Alert colorido. Quem precisa do fio é o

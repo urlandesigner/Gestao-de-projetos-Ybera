@@ -190,8 +190,8 @@
      --------------------------------------------------------------------- */
   --yb-radius-none: 0;
   --yb-radius-sm:   4px;
-  --yb-radius-md:   8px;     /* padrão da direção escolhida */
-  --yb-radius-lg:   12px;
+  --yb-radius-md:   8px;
+  --yb-radius-lg:   12px;    /* padrão da direção escolhida */
   --yb-radius-xl:   16px;
   --yb-radius-full: 9999px;
 
