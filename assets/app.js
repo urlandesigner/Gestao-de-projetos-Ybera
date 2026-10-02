@@ -633,10 +633,18 @@ function renderPanorama() {
       // A anterior mostra o que ficou pra trás; as outras, o que ainda falta.
       // Na próxima isso é a lista inteira, porque nada dela está feito ainda.
       const abertos = col.itens.filter((x) => !x.feito);
+      /* Coluna sem nada a listar não fica em branco — cada vazio tem a sua
+         frase, e elas precisam ser VERDADE. A próxima vazia costuma ser sprint
+         ainda sem backlog, mas pode ser sprint cheia em que nada está no nome
+         de quem está filtrado: dizer "ainda sendo planejadas" nesse caso seria
+         mentira na tela, com sete itens planejados logo ali. */
+      const vazioDaProxima = col.itens.length
+        ? `<p class="sprint-limpa mudo">Nada no nome de ${escapeHtml(respSprint)} nesta sprint ainda.</p>`
+        : '<p class="sprint-limpa mudo">As PBIs desta sprint ainda estão sendo planejadas.</p>';
       const corpo = chave === 'atual'
         ? listaDeItens(abertos, link)
         : chave === 'proxima'
-          ? listaDeItens(col.itens, link)
+          ? (listaDeItens(col.itens, link) || vazioDaProxima)
           : (abertos.length ? listaDeItens(abertos, link) : '<p class="sprint-limpa mudo">Fechou inteira.</p>');
       const barra = chave === 'proxima' ? '' : `<span class="barra"><span class="barra-cheia" style="width:${pct}%"></span></span>`;
       const nProxima = doResponsavel(col.itens).length;
