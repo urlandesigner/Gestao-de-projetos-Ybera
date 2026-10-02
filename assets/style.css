@@ -22,6 +22,14 @@
      lista em vez de usar matiz aleatório — a frente que mais entrega fica mais
      forte, e a leitura funciona mesmo pra quem não distingue cor, porque a
      ordem da pilha e a legenda seguem a mesma sequência. */
+  /* Quatro tokens que a folha do roadmap (assets/roadmap.css) exige e que a
+     Central não tinha. Mesmos valores da entregas.css de propósito: é o mesmo
+     componente desenhado nas duas páginas, e divergir aqui faria o gráfico do
+     Panorama ter outra cor de "em teste" que a do relatório. */
+  --atencao: #92400e;
+  --atencao-fundo: #fdf0d5;
+  --neutro: rgba(120, 113, 108, 0.3);
+  --fio: 1px solid var(--borda);
   --serie-1: #1c1c1a;
   --serie-2: #44403c;
   --serie-3: #78716c;

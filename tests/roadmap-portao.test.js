@@ -23,7 +23,12 @@ const path = require('node:path');
 const raiz = path.join(__dirname, '..');
 const fonteReport = fs.readFileSync(path.join(raiz, 'assets/report.js'), 'utf8');
 const roadmap = JSON.parse(fs.readFileSync(path.join(raiz, 'assets/roadmap.json'), 'utf8'));
-const fonteBriefing = fs.readFileSync(path.join(raiz, 'assets/briefing-entregas.js'), 'utf8');
+/* O desenho do roadmap mudou de arquivo em 02/10/2026 (briefing-entregas.js →
+   roadmap-visao.js, pra Central poder usar o mesmo). Este teste olha os dois
+   juntos de propósito: o que ele guarda é que ALGUÉM saiba desenhar cada
+   status que o portão deixa passar, não em que arquivo esse alguém mora. */
+const fonteBriefing = fs.readFileSync(path.join(raiz, 'assets/briefing-entregas.js'), 'utf8')
+  + '\n' + fs.readFileSync(path.join(raiz, 'assets/roadmap-visao.js'), 'utf8');
 const C = require('../assets/core.js');
 
 const saneador = () => C.saneRoadmapItens;

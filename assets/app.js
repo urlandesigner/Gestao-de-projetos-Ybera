@@ -2,6 +2,7 @@
 (function () {
 'use strict';
 const C = window.CentralCore;
+const R = window.CentralRoadmapVisao; // linha do tempo do roadmap, a mesma do relatório
 const A = window.CentralApi;
 const LS = { config: 'central.config', pat: 'central.pat', cache: 'central.cache', filtros: 'central.filtros', ui: 'central.ui' };
 const $ = (id) => document.getElementById(id);
@@ -464,20 +465,23 @@ function htmlRoadmap() {
   const r = C.riscoDoRoadmap(roadmapState.itens || [], Date.now());
   if (!r.total) return '';
   const pct = Math.round((r.concluidos / r.total) * 100);
-  const prazo = (x) => (x.vencido
-    ? `${Math.abs(x.diasRestantes)} ${Math.abs(x.diasRestantes) === 1 ? 'dia' : 'dias'} de atraso`
-    : `vence em ${x.diasRestantes} ${x.diasRestantes === 1 ? 'dia' : 'dias'}`);
-  const linhas = r.lista.map((x) => `<li class="rm-linha${x.vencido ? ' rm-vencido' : ''}">
-    <span class="rm-nome">${escapeHtml(x.titulo)}</span>
-    <span class="rm-prazo">${prazo(x)}</span>
-  </li>`).join('');
+  /* O gráfico é o MESMO do relatório de Entregas — o Urlan pediu este desenho
+     aqui, e ele vem do assets/roadmap-visao.js, não de uma cópia. A lista
+     própria que havia antes saiu: a linha do tempo já mostra cada projeto, com
+     janela e selo, e repetir os vencidos embaixo era dizer duas vezes.
+
+     O que fica por cima é o que a linha do tempo NÃO diz num relance: quantos
+     fecharam do total, e quantos furaram o prazo. */
+  const alerta = r.vencidos
+    ? `<div class="rm-conta rm-alerta"><b>${r.vencidos}</b><span>${r.vencidos === 1 ? 'vencido' : 'vencidos'}</span></div>`
+    : '';
   return `<div class="rm-topo">
       <div class="rm-conta"><b>${r.concluidos}</b><span class="mudo">de ${r.total} concluídos</span></div>
-      ${r.vencidos ? `<div class="rm-conta rm-alerta"><b>${r.vencidos}</b><span>${r.vencidos === 1 ? 'vencido' : 'vencidos'}</span></div>` : ''}
+      ${alerta}
       <div class="rm-conta"><b>${r.emCurso}</b><span class="mudo">em curso</span></div>
     </div>
     <span class="barra rm-barra"><span class="barra-cheia" style="width:${pct}%"></span></span>
-    ${linhas ? `<ul class="rm-lista">${linhas}</ul>` : '<p class="mudo">Nada em curso nem vencido.</p>'}`;
+    ${R.corpoRoadmap(roadmapState.itens || [], Date.now())}`;
 }
 
 function renderPanorama() {

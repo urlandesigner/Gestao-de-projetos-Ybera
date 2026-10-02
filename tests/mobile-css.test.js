@@ -8,7 +8,12 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const css = fs.readFileSync(path.join(__dirname, '../assets/entregas.css'), 'utf8');
+/* Em 02/10/2026 a folha do gráfico do roadmap saiu pro assets/roadmap.css,
+   porque o Panorama da Central passou a desenhar o mesmo componente. Os dois
+   arquivos entram juntos aqui: o que estes testes guardam é o que a PÁGINA
+   serve, e ela carrega os dois. */
+const css = fs.readFileSync(path.join(__dirname, '../assets/entregas.css'), 'utf8')
+  + '\n' + fs.readFileSync(path.join(__dirname, '../assets/roadmap.css'), 'utf8');
 const telefone = /@media \(max-width: 719px\) \{[\s\S]*?\n\}/.exec(css);
 
 /* O REFINO DA CAPA É SÓ DO TELEFONE. Eu já apliquei essas regras nos dois
