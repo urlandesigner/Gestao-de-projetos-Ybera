@@ -524,7 +524,11 @@ function janela(inicio, fim) {
   if (i && f) return i + ' – ' + f;
   if (f) return 'até ' + f;
   if (i) return 'desde ' + i;
-  return 'sem janela';
+  /* "sem janela" dizia duas vezes o rótulo que está do lado ("Janela") e
+     nenhuma vez o que o leitor precisa saber: se a data não existe ou se ela
+     ainda não foi marcada. "A definir" responde isso — a frente existe, a
+     data é que ainda não foi decidida. */
+  return 'a definir';
 }
 
 function renderProdutos() {
