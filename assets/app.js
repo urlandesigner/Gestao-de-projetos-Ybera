@@ -630,29 +630,30 @@ function renderPanorama() {
         ? C.placarDeSprint(doResponsavel(col.itens))
         : (col.progress || { done: 0, total: 0 });
       const pct = prog.total ? Math.round((prog.done / prog.total) * 100) : 0;
-      // A anterior mostra o que ficou pra trás; as outras, o que ainda falta.
-      // Na próxima isso é a lista inteira, porque nada dela está feito ainda.
-      const abertos = col.itens.filter((x) => !x.feito);
-      /* O aviso de planejamento fica SEMPRE na coluna da próxima, com lista ou
-         sem ela — pedido do Urlan. E é verdade nos dois casos: sprint futura
-         não tem escopo fechado, então o que está ali ainda pode mudar e o que
-         falta ainda pode entrar. Mostrá-lo só no vazio diria o contrário por
-         omissão — que uma lista já existente é definitiva.
+      /* As três colunas listam TUDO que a sprint tem, feito ou não — é o que o
+         Urlan pediu, e corrige a leitura que eu tinha feito. O Panorama é a
+         composição da sprint; o recorte por status é trabalho da página do
+         board, onde se vê o quadro atualizado.
 
-         Acima dele, quando não há o que listar, a linha que explica o vazio. São
-         duas causas diferentes e cada uma tem a sua frase: sprint sem backlog
-         ainda, ou sprint cheia em que nada está no nome de quem está filtrado
-         no topo. Uma frase só mentiria num dos dois casos. */
+         A prévia é curta (CAP_PBIS_SPRINT) e por isso a ordem importa: o que
+         está em aberto vem primeiro. Não é recorte — nada some, e o "+N mais"
+         conta o resto —, é só não gastar as quatro linhas visíveis com itens
+         já entregues numa sprint que fechou 50 de 62.
+
+         O aviso de planejamento fica SEMPRE na próxima, com lista ou sem: sprint
+         futura não tem escopo fechado, então o que está ali ainda pode sair e o
+         que falta ainda pode entrar.
+
+         Quando não há o que listar, a linha que explica o vazio — e são duas
+         causas diferentes, cada uma com a sua frase. Uma frase só mentiria num
+         dos dois casos. */
       const NOTA_PLANEJAMENTO = '<p class="sprint-nota mudo">As PBIs desta sprint ainda estão sendo planejadas.</p>';
-      const listaDaProxima = listaDeItens(col.itens, link);
+      const emOrdem = [...col.itens].sort((a, b) => Number(a.feito) - Number(b.feito));
+      const lista = listaDeItens(emOrdem, link);
       const semLista = col.itens.length
-        ? `<p class="sprint-limpa mudo">Nada no nome de ${escapeHtml(respSprint)} por enquanto.</p>`
-        : '';
-      const corpo = chave === 'atual'
-        ? listaDeItens(abertos, link)
-        : chave === 'proxima'
-          ? (listaDaProxima || semLista) + NOTA_PLANEJAMENTO
-          : (abertos.length ? listaDeItens(abertos, link) : '<p class="sprint-limpa mudo">Fechou inteira.</p>');
+        ? `<p class="sprint-limpa mudo">Nada no nome de ${escapeHtml(respSprint)} nesta sprint.</p>`
+        : (chave === 'proxima' ? '' : '<p class="sprint-limpa mudo">Sprint sem itens.</p>');
+      const corpo = (lista || semLista) + (chave === 'proxima' ? NOTA_PLANEJAMENTO : '');
       const barra = chave === 'proxima' ? '' : `<span class="barra"><span class="barra-cheia" style="width:${pct}%"></span></span>`;
       const nProxima = doResponsavel(col.itens).length;
       const placar = chave === 'proxima'
