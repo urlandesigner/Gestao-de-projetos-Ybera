@@ -393,6 +393,17 @@ function dataCurta(iso) {
 /* Vêm antes dos operacionais porque a página tem dois leitores: o gestor, que
    para de ler depois do segundo bloco, e o PO, que rola até o Atenção. */
 
+/* O bloco de Ritmo existe inteiro, mas chega DESLIGADO.
+
+   Pedido do Urlan em 02/10/2026: ele quer melhorá-lo antes de deixar à vista.
+   Faz sentido mantê-lo fora enquanto isso — hoje só 2 dos 8 épicos têm filhos
+   cadastrados, então o gráfico mostra quase só uma frente.
+
+   Ligar é trocar este false por true. A bandeira também governa o
+   carregamento da base completa no Panorama: ela foi adicionada POR CAUSA
+   deste bloco, e deixá-la ligada com o bloco escondido seria uma consulta a
+   mais no DevOps, a cada abertura, pra desenhar algo que ninguém vê. */
+const RITMO_VISIVEL = false;
 const MESES_RITMO = 6;
 const MES_CURTO = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
 const rotuloMesCurto = (chave) => MES_CURTO[Number(chave.slice(5, 7)) - 1] || chave;
@@ -548,7 +559,7 @@ function renderPanorama() {
 
   const roadmapHtml = htmlRoadmap();
   box.innerHTML = erroHtml + `<div class="blocos">
-    <section class="bloco"><h3>Ritmo de entrega</h3>${htmlRitmo()}</section>
+    ${RITMO_VISIVEL ? `<section class="bloco"><h3>Ritmo de entrega</h3>${htmlRitmo()}</section>` : ''}
     ${roadmapHtml ? `<section class="bloco"><h3>Roadmap</h3>${roadmapHtml}</section>` : ''}
     <section class="bloco"><h3>Agora</h3><div class="tiles">${tiles}</div></section>
     ${sprints ? `<section class="bloco"><h3>Sprints em curso</h3><div class="sprints">${sprints}</div></section>` : ''}
@@ -985,7 +996,7 @@ function renderRoute() {
   // chega. Sendo a tela de entrada, ainda aquece o cache pro Produtos e pro
   // Report, que leem a mesma base.
   setPagina('panorama'); // abertura: visão geral antes do detalhe
-  carregarBase(false);
+  if (RITMO_VISIVEL) carregarBase(false);
 }
 
 function setPagina(pagina) {

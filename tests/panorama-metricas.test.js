@@ -193,3 +193,26 @@ test('roadmap vazio não quebra e não inventa risco', () => {
   assert.deepEqual({ t: r.total, c: r.concluidos, v: r.vencidos, e: r.emCurso, n: r.lista.length },
     { t: 0, c: 0, v: 0, e: 0, n: 0 });
 });
+
+/* ---------- a bandeira do bloco de Ritmo ---------- */
+/* O Urlan pediu o bloco escondido em 02/10/2026 pra melhorá-lo antes de
+   expor. O que estes testes guardam é que "escondido" seja escondido de
+   verdade: o bloco fora da tela E a consulta que existe só pra ele fora do
+   caminho. Deixar o carregamento ligado seria pagar uma consulta ao DevOps,
+   a cada abertura do Panorama, pra desenhar algo que ninguém vê. */
+const fs = require('node:fs');
+const path = require('node:path');
+const fonteApp = fs.readFileSync(path.join(__dirname, '..', 'assets', 'app.js'), 'utf8');
+
+test('o bloco de Ritmo está desligado, e as contas continuam de pé', () => {
+  assert.match(fonteApp, /const RITMO_VISIVEL = false;/,
+    'ligar de volta é trocar esta linha — se ela sumiu, o controle sumiu junto');
+  assert.match(fonteApp, /\$\{RITMO_VISIVEL \? `<section class="bloco"><h3>Ritmo de entrega<\/h3>/,
+    'a seção precisa ficar atrás da bandeira, não ser apagada');
+  assert.equal(typeof C.evolucaoMensal, 'function', 'a conta não some com o desenho');
+});
+
+test('com o Ritmo desligado, o Panorama não paga a consulta que era só dele', () => {
+  assert.match(fonteApp, /if \(RITMO_VISIVEL\) carregarBase\(false\);/,
+    'a base completa entrou por causa do Ritmo: escondido o bloco, ela sai junto');
+});
