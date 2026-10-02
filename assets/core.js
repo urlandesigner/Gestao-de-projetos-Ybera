@@ -544,6 +544,20 @@
     };
   }
 
+  /* Placar de uma sprint a partir da forma CURTA (a que o app.js guarda no
+     cache), e não dos itens crus do DevOps.
+
+     Existe porque o quadro de sprints precisa recontar depois de filtrar por
+     responsável: o Urlan viu "50/62" ao lado de dois itens e o número não
+     fechava — o placar era do time, a lista era dele. Agora as duas contas
+     saem da mesma lista, e há teste travando que esta função e o
+     sprintProgress deem o mesmo resultado sobre o mesmo material. Duas réguas
+     de "feito" na mesma linha é o defeito que isso impede. */
+  function placarDeSprint(itens) {
+    const lista = Array.isArray(itens) ? itens : [];
+    return { done: lista.filter((x) => x && x.feito).length, total: lista.length };
+  }
+
   /* ---------- Panorama: ritmo e risco ---------- */
 
   /* Entregas por mês, divididas por frente — o gráfico do Panorama.
@@ -1020,7 +1034,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, mapaDeProdutos, descricaoLimpa, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, placarDeSprint, mapaDeProdutos, descricaoLimpa, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };

@@ -590,14 +590,12 @@ function renderPanorama() {
      outras duas entram quando o dado novo chega. */
   const janela = doCard.janela
     || (doCard.sprint ? { anterior: null, proxima: null,
-      atual: { sprint: doCard.sprint, progress: doCard.progress,
+      atual: { sprint: doCard.sprint, progress: doCard.progress, parcial: true,
         itens: (doCard.itensSprintAbertos || []).map((x) => Object.assign({ feito: false }, x)) } } : null);
   const respSprint = respAtivo();
+  const doResponsavel = (itens) => itens.filter((it) => !respSprint || it.resp === respSprint);
   const listaDeItens = (itens, link) => {
-    // Mesma filtragem por responsável que a coluna da corrente sempre teve: a
-    // prévia é de quem está selecionado no topo, mas o placar continua sendo da
-    // sprint inteira, de propósito — é indicador de time, não de pessoa.
-    const lista = itens.filter((it) => !respSprint || it.resp === respSprint);
+    const lista = doResponsavel(itens);
     if (!lista.length) return '';
     return `<ul class="lista-linhas">${lista.slice(0, CAP_PBIS_SPRINT).map((it) =>
       `<li><a class="item-linha" href="${link.workItem(it.id)}" target="_blank" rel="noopener" title="${escapeHtml(it.titulo)}">
@@ -619,7 +617,18 @@ function renderPanorama() {
     sprints = COLUNAS.map(({ chave, rotulo }) => {
       const col = janela[chave];
       if (!col) return '';
-      const prog = col.progress || { done: 0, total: 0 };
+      /* Com filtro por responsável, o placar passa a contar o MESMO recorte que
+         a lista mostra. Antes a barra era da sprint inteira e a lista era de
+         uma pessoa: o Urlan viu "50/62" ao lado de dois itens e, com razão,
+         achou que faltava coisa. Quem decide é ele; a leitura de time continua
+         disponível trocando o seletor pra "todos".
+
+         `parcial` marca a coluna montada do cache antigo, que só guardava os
+         itens ABERTOS: recontar ali daria "0 de N", porque os concluídos nem
+         estão na lista. Nesse caso vale o placar que veio pronto. */
+      const prog = (respSprint && !col.parcial)
+        ? C.placarDeSprint(doResponsavel(col.itens))
+        : (col.progress || { done: 0, total: 0 });
       const pct = prog.total ? Math.round((prog.done / prog.total) * 100) : 0;
       // A anterior mostra o que ficou pra trás; as outras, o que ainda falta.
       // Na próxima isso é a lista inteira, porque nada dela está feito ainda.
@@ -630,7 +639,10 @@ function renderPanorama() {
           ? listaDeItens(col.itens, link)
           : (abertos.length ? listaDeItens(abertos, link) : '<p class="sprint-limpa mudo">Fechou inteira.</p>');
       const barra = chave === 'proxima' ? '' : `<span class="barra"><span class="barra-cheia" style="width:${pct}%"></span></span>`;
-      const placar = chave === 'proxima' ? `${col.itens.length} ${col.itens.length === 1 ? 'item' : 'itens'}` : `${prog.done}/${prog.total}`;
+      const nProxima = doResponsavel(col.itens).length;
+      const placar = chave === 'proxima'
+        ? `${nProxima} ${nProxima === 1 ? 'item' : 'itens'}`
+        : `${prog.done}/${prog.total}`;
       return `<div class="sprint-card sprint-${chave}">
         <span class="sprint-fase">${rotulo}</span>
         <a class="sprint-card-link" href="${rotaBoard(pr, true)}" title="Ver no board">

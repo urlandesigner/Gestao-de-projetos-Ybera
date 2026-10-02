@@ -106,3 +106,38 @@ test('a reserva marca os itens como não-feitos, que é o que o cache velho guar
   assert.match(bloco, /feito: false/,
     'sem isso a coluna em curso mostraria a sprint vazia');
 });
+
+/* ---------- o placar segue quem está filtrado ---------- */
+/* Defeito que o Urlan achou olhando a Sprint 19: o card dizia "50/62" e listava
+   2 itens. Não era bug de contagem — eram duas populações na mesma linha. O
+   placar vinha da sprint inteira e a lista já vinha filtrada pelo responsável
+   selecionado no topo da Central. Lado a lado, os números não fechavam.
+
+   Ele escolheu que o placar siga o filtro. Isso só é verdade se as duas contas
+   usarem a MESMA régua de "feito" e o MESMO corte de Task — e é isso que o
+   teste de equivalência abaixo trava. */
+test('placarDeSprint conta igual ao sprintProgress, na forma curta', () => {
+  const bruto = [
+    { id: 1, fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.State': 'Done' } },
+    { id: 2, fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.State': 'In Progress' } },
+    { id: 3, fields: { 'System.WorkItemType': 'Bug', 'System.State': 'Closed' } },
+    { id: 4, fields: { 'System.WorkItemType': 'Task', 'System.State': 'Done' } },
+    { id: 5, fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.State': 'Impediment' } },
+  ];
+  // mesma forma curta que o resumoDeSprint produz no app.js
+  const curto = bruto
+    .filter((it) => it.fields['System.WorkItemType'] !== 'Task')
+    .map((it) => ({ id: it.id, feito: C.stateBucket(it.fields['System.State']) === 'feito' }));
+  assert.deepEqual(C.placarDeSprint(curto), C.sprintProgress(bruto),
+    'as duas contas precisam concordar, senão o placar e a lista brigam na tela');
+  assert.deepEqual(C.placarDeSprint(curto), { done: 2, total: 4 }, 'Task fora, Impediment não é feito');
+});
+
+test('placarDeSprint num recorte devolve o recorte, não o todo', () => {
+  const meus = [{ id: 1, feito: true }, { id: 2, feito: true }, { id: 3, feito: false }];
+  assert.deepEqual(C.placarDeSprint(meus), { done: 2, total: 3 });
+});
+
+test('placarDeSprint aguenta lista vazia ou torta', () => {
+  for (const e of [[], null, undefined]) assert.deepEqual(C.placarDeSprint(e), { done: 0, total: 0 });
+});
