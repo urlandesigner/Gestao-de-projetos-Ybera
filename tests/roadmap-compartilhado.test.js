@@ -64,10 +64,16 @@ test('o entregas.html carrega o módulo ANTES do briefing que depende dele', () 
    um, a regra cai pro valor inicial e o selo de "em teste" fica sem fundo numa
    tela e com fundo na outra — mesmo componente, duas caras. */
 test('as duas folhas de página declaram os tokens que a do roadmap usa', () => {
-  // --x fica de fora: não é token de paleta, é a posição que a MARCAÇÃO escreve
-  // inline em cada divisor e na linha do hoje (style="--x:12.5%").
+  /* Nem toda custom property é token de paleta: o módulo escreve algumas inline
+     na própria marcação (--x, a posição de cada divisor; --meses, o tamanho da
+     régua). Essas a página não precisa declarar — e a lista das exceções sai do
+     próprio arquivo do desenho, não de uma lista à mão que eu teria que lembrar
+     de atualizar na próxima. */
+  const inline = new Set([...ler('assets/roadmap-visao.js').matchAll(/(--[a-z-]+):/g)]
+    .map((m) => m[1]));
   const usados = [...new Set((ler('assets/roadmap.css').match(/var\(--[a-z0-9-]+/g) || [])
-    .map((v) => v.slice(4)))].filter((t) => t !== '--x');
+    .map((v) => v.slice(4)))].filter((t) => !inline.has(t));
+  assert.ok(usados.length > 3, 'a folha usa tokens de paleta — se a lista zerou, o filtro comeu demais');
   for (const folha of ['assets/style.css', 'assets/entregas.css']) {
     const css = ler(folha);
     for (const token of usados) {

@@ -46,7 +46,16 @@
      que em treze meses é menos de sete pixels por mês. */
   grid-template-columns: minmax(150px, 21rem) 1fr;
   column-gap: 1.25rem;
-  min-width: 600px;
+  /* A largura mínima é a coluna de nomes mais 3rem POR MÊS — 48px, que é o
+     rótulo mais largo ("ago/26", 45px) com folga. O `--meses` vem da marcação,
+     que é quem sabe o tamanho da régua.
+
+     Era `min-width: 600px`, fixo, e o número não fechava: 336px iam pros nomes
+     e sobravam 264 pra doze meses, 22px cada. Os rótulos se empilhavam uns por
+     cima dos outros em qualquer container estreito. O quadro já rola na
+     horizontal (.rl-rm-wrap) — rolar é o comportamento certo aqui; ilegível
+     não era. */
+  min-width: calc(21rem + 1.25rem + var(--meses, 12) * 3rem);
 }
 .rl-rm-escala { grid-column: 2; position: relative; height: 1.6rem; }
 .rl-rm-escala span {
@@ -190,7 +199,12 @@
      em tela de 375 — rolagem horizontal é inevitável, mas 70% da largura presa
      no rótulo não é. Nome mais estreito (quebra em duas linhas, tudo bem) e
      régua mais curta deixam quase metade do gráfico à vista de saída. */
-  .rl-rm-grade { grid-template-columns: minmax(96px, 8rem) 1fr; min-width: 520px; }
+  /* No telefone a coluna de nomes encolhe e o rótulo perde o ano (ver
+     .rl-rm-escala i, abaixo), então cabe em 2rem por mês em vez de 3. */
+  .rl-rm-grade {
+    grid-template-columns: minmax(96px, 8rem) 1fr;
+    min-width: calc(8rem + 1.25rem + var(--meses, 12) * 2rem);
+  }
   .rl-rm-titulo { font-size: 0.78rem; }
   /* No telefone a coluna tem 128px e não cabem nome e selo lado a lado: fixar o
      selo à direita espremia o nome numa tira de 50px, e "Nova PDP USA" saía em

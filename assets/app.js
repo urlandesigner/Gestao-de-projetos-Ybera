@@ -340,7 +340,7 @@ async function refreshAll(force) {
 }
 
 /* ---------- Render ---------- */
-function renderAll() { renderBadge(); renderPanorama(); renderPendencias(); renderMyItems(); renderGrid(); }
+function renderAll() { renderBadge(); renderPanorama(); renderPendencias(); renderMyItems(); renderGrid(); renderRoadmap(); }
 
 // Contadores das linhas de navegação (eco do "Applicants 23" da referência)
 function renderNavContas() {
@@ -457,31 +457,28 @@ function htmlRitmo() {
     <p class="ritmo-nota mudo">Contagem de itens concluídos, mesma régua do relatório de Entregas · cobre as frentes com itens cadastrados no DevOps.</p>`;
 }
 
-/* O roadmap responde o que o DevOps não responde: se os projetos chegam na
-   data. Mostra número e só a lista do que exige leitura — vencido e em curso.
-   Os previstos ficam no número: a lista inteira já é seção do relatório, e
-   repeti-la aqui custaria a tela toda pra informar o que ninguém vai agir hoje. */
-function htmlRoadmap() {
-  const r = C.riscoDoRoadmap(roadmapState.itens || [], Date.now());
-  if (!r.total) return '';
-  const pct = Math.round((r.concluidos / r.total) * 100);
-  /* O gráfico é o MESMO do relatório de Entregas — o Urlan pediu este desenho
-     aqui, e ele vem do assets/roadmap-visao.js, não de uma cópia. A lista
-     própria que havia antes saiu: a linha do tempo já mostra cada projeto, com
-     janela e selo, e repetir os vencidos embaixo era dizer duas vezes.
+/* ---------- Roadmap: página própria ---------- */
+/* Começou como bloco do Panorama. Virou página a pedido do Urlan em
+   02/10/2026, e faz sentido: é um Gantt de 13 projetos por 12 meses, que rola
+   na horizontal — espremido entre os blocos operacionais ele disputava altura
+   com o que o PO abre a Central pra ver.
 
-     O que fica por cima é o que a linha do tempo NÃO diz num relance: quantos
-     fecharam do total, e quantos furaram o prazo. */
-  const alerta = r.vencidos
-    ? `<div class="rm-conta rm-alerta"><b>${r.vencidos}</b><span>${r.vencidos === 1 ? 'vencido' : 'vencidos'}</span></div>`
-    : '';
-  return `<div class="rm-topo">
-      <div class="rm-conta"><b>${r.concluidos}</b><span class="mudo">de ${r.total} concluídos</span></div>
-      ${alerta}
-      <div class="rm-conta"><b>${r.emCurso}</b><span class="mudo">em curso</span></div>
-    </div>
-    <span class="barra rm-barra"><span class="barra-cheia" style="width:${pct}%"></span></span>
-    ${R.corpoRoadmap(roadmapState.itens || [], Date.now())}`;
+   Os três números que havia por cima ("4 de 13 concluídos · 1 vencido · 2 em
+   curso") saíram no mesmo pedido. A conta que os produzia (C.riscoDoRoadmap)
+   fica: a regra de vencido é dela, está testada, e é o que uma futura faixa
+   de risco desta página vai usar. */
+function renderRoadmap() {
+  const box = $('roadmap');
+  if (!box) return;
+  const itens = roadmapState.itens;
+  if (!itens) { box.innerHTML = '<p class="mudo">carregando o roadmap…</p>'; return; }
+  if (!itens.length) {
+    box.innerHTML = '<p class="mudo">Nenhum projeto no roadmap. O arquivo é <b>assets/roadmap.json</b>, escrito à mão a partir do Notion.</p>';
+    return;
+  }
+  // O MESMO desenho do relatório de Entregas, pelo módulo compartilhado —
+  // nunca uma cópia: as duas telas leem o mesmo arquivo.
+  box.innerHTML = R.corpoRoadmap(itens, Date.now());
 }
 
 function renderPanorama() {
@@ -561,10 +558,8 @@ function renderPanorama() {
       }).join('')}</ul>`
     : '<p class="mudo">Nada bloqueado nem atrasado.</p>';
 
-  const roadmapHtml = htmlRoadmap();
   box.innerHTML = erroHtml + `<div class="blocos">
     ${RITMO_VISIVEL ? `<section class="bloco"><h3>Ritmo de entrega</h3>${htmlRitmo()}</section>` : ''}
-    ${roadmapHtml ? `<section class="bloco"><h3>Roadmap</h3>${roadmapHtml}</section>` : ''}
     <section class="bloco"><h3>Agora</h3><div class="tiles">${tiles}</div></section>
     ${sprints ? `<section class="bloco"><h3>Sprints em curso</h3><div class="sprints">${sprints}</div></section>` : ''}
     <section class="bloco"><h3>Por nível</h3>${htmlNiveis(C.aggregateCounts(todos))}</section>
@@ -585,7 +580,7 @@ async function carregarRoadmap() {
     if (!resp.ok) return; // arquivo ausente: o bloco some, o resto da página fica de pé
     const dado = await resp.json();
     roadmapState.itens = C.saneRoadmapItens(dado.itens);
-    renderPanorama();
+    renderRoadmap();
   } catch (e) { /* rede ou JSON torto: mesma degradação — sem bloco, sem erro na cara */ }
 }
 
@@ -992,6 +987,7 @@ function renderRoute() {
   fecharEpico();
   if (hash === '#pendencias') { setPagina('pendencias'); return; }
   if (hash === '#produtos') { setPagina('produtos'); carregarBase(false); return; }
+  if (hash === '#roadmap') { setPagina('roadmap'); return; }
   if (hash === '#projetos') { setPagina('projetos'); return; }
   if (hash === '#meus-itens') { setPagina('meus-itens'); return; }
   // O Panorama pede a base completa porque o bloco de Ritmo precisa de
@@ -1008,6 +1004,7 @@ function setPagina(pagina) {
   $('nav-panorama').classList.toggle('ativa', pagina === 'panorama');
   $('nav-pendencias').classList.toggle('ativa', pagina === 'pendencias');
   $('nav-produtos').classList.toggle('ativa', pagina === 'produtos' || pagina === 'epico');
+  $('nav-roadmap').classList.toggle('ativa', pagina === 'roadmap');
   $('nav-meus-itens').classList.toggle('ativa', pagina === 'meus-itens');
   $('nav-projetos').classList.toggle('ativa', pagina === 'projetos' || pagina === 'board');
 }

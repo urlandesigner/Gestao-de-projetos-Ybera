@@ -95,8 +95,16 @@
     const hoje = hojeT >= escalaIni && hojeT <= escalaFim
       ? `<div class="rl-rm-hoje" style="--x:${pct(hojeT).toFixed(2)}%"><span>hoje</span></div>` : '';
 
+    /* Quantos meses a régua tem: a folha usa isso pra calcular a largura mínima
+       da grade. Sem o número, o min-width tinha que ser um chute fixo — e era:
+       600px no total, dos quais 336 iam pra coluna de nomes, deixando 264px
+       pra doze meses. Os rótulos ("jul/26", 38 a 45px) se sobrepunham, e isso
+       aparecia em qualquer container estreito, inclusive no relatório numa
+       janela pequena. Vindo daqui, a conta acompanha o roadmap: se ele passar
+       a cobrir 18 meses, a largura mínima cresce junto. */
+    const nMeses = Math.max(1, limites.length - 1);
     return `<div class="rl-rm-wrap">
-      <div class="rl-rm-grade">
+      <div class="rl-rm-grade" style="--meses:${nMeses}">
         <div class="rl-rm-escala">${meses.join('')}</div>
         ${linhas}
         ${divisores}
