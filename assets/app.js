@@ -661,7 +661,7 @@ function renderPanorama() {
         : `${prog.done}/${prog.total}`;
       return `<div class="sprint-card sprint-${chave}">
         <span class="sprint-fase">${rotulo}</span>
-        <a class="sprint-card-link" href="${rotaBoard(pr, true)}" title="Ver no board">
+        <a class="sprint-card-link" href="${rotaBoard(pr, true, col.sprint.id)}" title="Abrir o board de ${escapeHtml(col.sprint.name)}">
           <span class="sprint-linha"><span class="sprint-nome"><b>${escapeHtml(col.sprint.name)}</b> <span class="mudo">${periodo(col.sprint.start, col.sprint.finish)}</span></span><span class="sprint-prog">${placar} <span class="seta">→</span></span></span>
           ${barra}
         </a>
@@ -1029,8 +1029,13 @@ function fillCardLive(card, p) {
   box.innerHTML = partes.join('');
 }
 
-function rotaBoard(p, comSprint) {
-  return `#board/${encodeURIComponent(p.projectName)}/${encodeURIComponent(p.teamName)}${comSprint ? '/sprint' : ''}`;
+/* `iteracaoId` entrou quando o Panorama ganhou as três colunas: sem ele, as
+   três apontavam pra mesma rota e clicar em "Anterior" abria o board da sprint
+   CORRENTE — a tela mostrava a Sprint 19 e o clique levava pra 20. */
+function rotaBoard(p, comSprint, iteracaoId) {
+  const base = `#board/${encodeURIComponent(p.projectName)}/${encodeURIComponent(p.teamName)}`;
+  if (!comSprint) return base;
+  return base + '/sprint' + (iteracaoId ? '/' + encodeURIComponent(iteracaoId) : '');
 }
 
 function renderMyItems() {
@@ -1101,16 +1106,17 @@ function cssId(s) { return s.replace(/[^a-z0-9]/gi, '-').toLowerCase(); }
 function escapeHtml(s) { const d = document.createElement('div'); d.textContent = String(s == null ? '' : s); return d.innerHTML.replace(/"/g, '&quot;'); }
 
 /* ---------- Board dedicado ---------- */
-const boardState = { p: null, chave: null, items: null, columns: null, sprint: null, soSprint: false, carregando: false, erro: null, filtro: { tipos: null, resp: '', busca: '' } };
+const boardState = { p: null, chave: null, items: null, columns: null, sprint: null, iteracaoId: null, soSprint: false, carregando: false, erro: null, filtro: { tipos: null, resp: '', busca: '' } };
 
 function renderRoute() {
   const hash = location.hash || '';
-  const m = hash.match(/^#board\/([^/]+)\/([^/]+)(\/sprint)?$/);
+  const m = hash.match(/^#board\/([^/]+)\/([^/]+)(?:\/sprint(?:\/([^/]+))?)?$/);
   if (m && state.config) {
     const projectName = decodeURIComponent(m[1]);
     const teamName = decodeURIComponent(m[2]);
     const p = state.config.projects.find((x) => x.projectName === projectName && x.teamName === teamName);
-    if (p) { abrirBoard(p, !!m[3]); setPagina('board'); return; }
+    const pedeSprint = /\/sprint(\/|$)/.test(hash);
+    if (p) { abrirBoard(p, pedeSprint, m[3] ? decodeURIComponent(m[3]) : null); setPagina('board'); return; }
   }
   fecharBoard();
   const me = hash.match(/^#epico\/([^/]+)\/([^/]+)\/(\d+)$/);
@@ -1145,11 +1151,17 @@ function setPagina(pagina) {
   $('nav-projetos').classList.toggle('ativa', pagina === 'projetos' || pagina === 'board');
 }
 
-function abrirBoard(p, comSprint) {
+function abrirBoard(p, comSprint, iteracaoId) {
   boardState.p = p;
   if (comSprint) boardState.soSprint = true;
+  // Trocar de sprint não troca o board no cache (a chave é o time), então o
+  // pedido de outra iteração força a recarga — senão clicar em "Anterior"
+  // depois de "Em curso" mostraria o quadro anterior, filtrado pela sprint
+  // velha.
+  const trocou = (boardState.iteracaoId || null) !== (iteracaoId || null);
+  boardState.iteracaoId = iteracaoId || null;
   $('board-view').hidden = false;
-  carregarBoard(p, false);
+  carregarBoard(p, trocou);
 }
 
 function fecharBoard() {
@@ -1243,6 +1255,32 @@ function htmlEpicoItem(it, p) {
   </a></li>`;
 }
 
+/* Qual sprint filtra o board: a pedida na rota, ou a corrente. Resolver a
+   pedida custa listar as iterações do time — a API não busca uma iteração
+   isolada por id. Por isso só acontece quando a rota pede mesmo. */
+async function resolverSprintDoBoard(p) {
+  try {
+    if (boardState.iteracaoId) {
+      const todas = await A.teamIterations(ctx(), p.projectName, p.teamName);
+      boardState.sprint = todas.find((x) => String(x.id) === String(boardState.iteracaoId)) || null;
+      if (boardState.sprint) return;
+    }
+    boardState.sprint = await A.currentSprint(ctx(), p.projectName, p.teamName);
+  } catch (e) { /* board segue sem filtro de sprint */ }
+}
+
+/* Quanto passado pedir ao DevOps. 30 dias serve o board corrente; pra uma
+   sprint que já fechou é preciso alcançar o fim dela, senão os itens
+   concluídos some da tela conforme envelhecem. A folga de 30 dias por cima
+   cobre o item que mudou de estado depois do encerramento. */
+const CORTE_BOARD_PADRAO = 30;
+function diasDeCorteDoBoard(sprint) {
+  const fim = sprint && sprint.finish ? Date.parse(sprint.finish) : NaN;
+  if (Number.isNaN(fim)) return CORTE_BOARD_PADRAO;
+  const dias = Math.ceil((Date.now() - fim) / 86400000);
+  return Math.max(CORTE_BOARD_PADRAO, dias + CORTE_BOARD_PADRAO);
+}
+
 async function carregarBoard(p, force) {
   const chave = cardKey(p);
   if (!force && boardState.chave === chave && boardState.items) { renderBoard(p); return; }
@@ -1258,14 +1296,21 @@ async function carregarBoard(p, force) {
   try {
     let areas = [];
     try { areas = await A.teamAreas(ctx(), p.projectName, p.teamName); } catch (e) { /* segue sem recorte de área */ }
-    const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlBoard(areas));
+    /* A sprint é resolvida ANTES da consulta, e não depois, porque ela decide
+       quanto passado pedir. O wiqlBoard descarta o que foi concluído há mais de
+       30 dias — regra boa pro board corrente, e furo garantido numa sprint
+       passada: a Sprint 19 fechou 50 itens que sumiriam da tela assim que
+       completassem 30 dias. A janela passa a ser o fim da sprint mais uma
+       folga. */
+    await resolverSprintDoBoard(p);
+    const corte = diasDeCorteDoBoard(boardState.sprint);
+    const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlBoard(areas, corte));
     boardState.items = ids.length ? await A.getFields(ctx(), ids, FIELDS_BOARD) : [];
     try {
       const boards = await A.listTeamBoards(ctx(), p.projectName, p.teamName);
       const nivelRequisito = boards.find((b) => !/^(epics|features)$/i.test(b.name)) || boards[boards.length - 1];
       if (nivelRequisito) boardState.columns = await A.boardColumns(ctx(), p.projectName, p.teamName, nivelRequisito.id);
     } catch (e) { /* sem colunas oficiais: ordenação por fallback */ }
-    try { boardState.sprint = await A.currentSprint(ctx(), p.projectName, p.teamName); } catch (e) { /* board segue sem filtro */ }
   } catch (e) {
     boardState.erro = mensagemDeErro(e);
     if (e instanceof A.AuthError) { state.auth = 'vencido'; renderBadge(); }

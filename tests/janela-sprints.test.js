@@ -141,3 +141,34 @@ test('placarDeSprint num recorte devolve o recorte, não o todo', () => {
 test('placarDeSprint aguenta lista vazia ou torta', () => {
   for (const e of [[], null, undefined]) assert.deepEqual(C.placarDeSprint(e), { done: 0, total: 0 });
 });
+
+/* ---------- o clique leva à sprint certa ---------- */
+/* As três colunas apontavam pra mesma rota (#board/proj/time/sprint), e essa
+   rota sempre filtrava pela sprint CORRENTE: a tela mostrava a Sprint 19 e o
+   clique abria a 20. Passou despercebido porque, com uma coluna só, a corrente
+   era a única que existia. */
+test('a rota do board carrega qual sprint abrir', () => {
+  assert.match(fonteApp, /function rotaBoard\(p, comSprint, iteracaoId\)/,
+    'sem a iteração na rota, as três colunas voltam a abrir a mesma sprint');
+  assert.match(fonteApp, /rotaBoard\(pr, true, col\.sprint\.id\)/,
+    'cada cartão precisa apontar pra PRÓPRIA sprint');
+  assert.match(fonteApp, /\^#board\\\/\(\[\^\/\]\+\)\\\/\(\[\^\/\]\+\)\(\?:\\\/sprint\(\?:\\\/\(\[\^\/\]\+\)\)\?\)\?\$/,
+    'a rota precisa aceitar o id da iteração depois de /sprint');
+});
+
+/* O board descarta o que foi concluído há mais de 30 dias. Regra boa pro
+   quadro corrente; numa sprint que já fechou é furo garantido — os 50 itens
+   entregues na Sprint 19 sumiriam da tela conforme envelhecessem. */
+test('o board alarga a janela de consulta pra alcançar uma sprint passada', () => {
+  assert.match(fonteApp, /function diasDeCorteDoBoard\(sprint\)/);
+  assert.match(fonteApp, /C\.wiqlBoard\(areas, corte\)/,
+    'de nada adianta calcular o corte e não passá-lo pra consulta');
+  const fn = eval('(' + /function diasDeCorteDoBoard\(sprint\) \{[\s\S]*?\n\}/.exec(fonteApp)[0]
+    .replace('function diasDeCorteDoBoard', 'function')
+    .replace('CORTE_BOARD_PADRAO', '30').replace(/CORTE_BOARD_PADRAO/g, '30') + ')');
+  assert.equal(fn(null), 30, 'sem sprint, vale o corte de sempre');
+  assert.equal(fn({ finish: new Date(Date.now() + 5 * 86400000).toISOString() }), 30,
+    'sprint em curso ou futura não precisa de passado extra');
+  const fechouHa60 = fn({ finish: new Date(Date.now() - 60 * 86400000).toISOString() });
+  assert.ok(fechouHa60 >= 90, 'sprint fechada há 60 dias precisa alcançar além dela, não 30');
+});
