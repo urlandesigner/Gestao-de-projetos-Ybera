@@ -317,6 +317,10 @@
         <li data-target="ol"><span class="anat__texto"><b>Lista</b> — Ordenada, porque a ordem é o caminho. O separador é desenhado pelo CSS, não digitado.</span></li>
         <li data-target="[aria-current]"><span class="anat__texto"><b>Página atual</b> — Não é link: já se está nela. <code>aria-current</code> é o que anuncia isso.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-crumb"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

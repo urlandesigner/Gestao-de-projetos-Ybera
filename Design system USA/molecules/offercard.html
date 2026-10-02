@@ -613,6 +613,10 @@
         <li data-target=".yb-offercard__was"><span class="anat__texto"><b>Preço anterior</b> — Riscado, ao lado do que se paga. Só existe quando houve preço antes.</span></li>
         <li data-target=".yb-offercard__timer"><span class="anat__texto"><b>Relógio</b> — O que resta da oferta. A data vem do HTML; quem conta é o comportamento.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-offercard"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

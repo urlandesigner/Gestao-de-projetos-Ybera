@@ -485,6 +485,10 @@
         <li data-target=".yb-iconbtn"><span class="anat__texto"><b>Botão</b> — Alvo de 44px. Sem texto visível, então <code>aria-label</code> é obrigatório.</span></li>
         <li data-target=".yb-icon"><span class="anat__texto"><b>Ícone</b> — Vem do sprite e herda a cor do botão. Decorativo: quem nomeia a ação é o rótulo acessível.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-iconbtn"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

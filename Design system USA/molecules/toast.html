@@ -472,6 +472,10 @@
         <li data-target=".yb-toast__action"><span class="anat__texto"><b>Ação</b> — Opcional, e é o Button secundário de verdade. Clicar executa e fecha. Toast com ação precisa de mais tempo que os 5s do padrão.</span></li>
         <li data-target=".yb-toast__close"><span class="anat__texto"><b>Fechar</b> — Só existe quando o toast NÃO fecha sozinho — aqui, porque este é <code>duration: 0</code>. Com prazo, o tempo já faz o que ele faria.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-toast"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

@@ -413,6 +413,10 @@
         <li data-target=".yb-chip"><span class="anat__texto"><b>Chip</b> — Filtro que liga e desliga. É <code>&lt;button&gt;</code> com <code>aria-pressed</code> — o estado é anunciado, não só pintado. Ligado, fica preenchido.</span></li>
         <li data-target=".yb-chip__x"><span class="anat__texto"><b>Desligar</b> — O × aparece só no ligado. É um <code>&lt;span&gt;</code> dentro do chip, não um segundo botão: clicar em qualquer ponto desliga.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-chip"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

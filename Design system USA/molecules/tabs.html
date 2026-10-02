@@ -448,6 +448,10 @@
         <li data-target=".yb-tabs__tab[aria-selected=&quot;true&quot;]"><span class="anat__texto"><b>Aba escolhida</b> — Puxa a própria borda 1px para baixo e cobre a da fileira — sem isso o sublinhado fica grosso só nela.</span></li>
         <li data-target=".yb-tabs__panel"><span class="anat__texto"><b>Conteúdo</b> — Um de cada vez. Os outros ficam com <code>hidden</code>, que é o estado certo quando o JavaScript não roda.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-tabs"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

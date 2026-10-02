@@ -471,6 +471,10 @@
         <li data-target=".yb-dropdown__option"><span class="anat__texto"><b>Opção</b> — Link de 44px, o alvo inteiro clicável.</span></li>
         <li data-target=".yb-dropdown__check"><span class="anat__texto"><b>Opção atual</b> — <code>aria-current="true"</code>, peso e o tique no fim da linha, para o texto de todas começar na mesma prumada.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-dropdown"></dl>
     </div>
     <h3 class="rotulo">Ações — <code>--end</code></h3>
     <div class="anat" data-yb-anatomy>
@@ -493,6 +497,10 @@
         <li data-target=".yb-dropdown__option .yb-icon"><span class="anat__texto"><b>Ícone</b> — Opcional. Numa lista de ações ele ajuda a achar; numa lista de escolhas, sobra.</span></li>
         <li data-target=".yb-dropdown__sep"><span class="anat__texto"><b>Separador</b> — Separa o que desfaz (Remove) do que só move ou compartilha.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-dropdown"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

@@ -333,6 +333,10 @@
         <li data-target=".yb-rating__score"><span class="anat__texto"><b>Número</b> — A nota escrita. Cor não é a única pista, e número não depende de enxergar.</span></li>
         <li data-target=".yb-rating__count"><span class="anat__texto"><b>Quantidade</b> — Quantas avaliações. Nota sem volume não diz nada — 5,0 de uma pessoa não é 5,0.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-rating"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

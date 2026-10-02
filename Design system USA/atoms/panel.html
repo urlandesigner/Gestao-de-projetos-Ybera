@@ -322,6 +322,10 @@
         <li data-target=".yb-panel"><span class="anat__texto"><b>Caixa</b> — Superfície branca, fio e elevação de cartão. É ela que diz onde a área começa e acaba.</span></li>
         <li data-target=".yb-panel__title"><span class="anat__texto"><b>Título</b> — No degrau h4, o mesmo do diálogo. É ele que nomeia a área para quem lê e para quem ouve.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-panel"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

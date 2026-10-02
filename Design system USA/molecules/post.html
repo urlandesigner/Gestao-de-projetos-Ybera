@@ -454,6 +454,10 @@
         <li data-target=".yb-post__excerpt"><span class="anat__texto"><b>Resumo</b> — Só no destaque ele pesa: duas linhas que dizem o que o artigo resolve.</span></li>
         <li data-target=".yb-post__body"><span class="anat__texto"><b>Corpo</b> — Título, resumo e chamada. É o que sobra quando a foto não carrega.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-post"></dl>
     </div>
     <h3 class="rotulo">Na lista ao lado — sem modificador</h3>
     <div class="anat" data-yb-anatomy>
@@ -474,6 +478,10 @@
         <li data-target=".yb-post__title"><span class="anat__texto"><b>Título</b> — No corpo normal. Quem manda na seção é o destaque.</span></li>
         <li data-target=".yb-post__excerpt"><span class="anat__texto"><b>Resumo</b> — Presente no HTML e cortado no espaço que houver.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-post"></dl>
     </div>
     <h3 class="rotulo">Trio de mesmo peso — <code>--stacked</code></h3>
     <div class="anat" data-yb-anatomy>
@@ -493,6 +501,10 @@
         <li data-target=".yb-post__title"><span class="anat__texto"><b>Título</b> — Mesmo tamanho nos três. É a diferença para o destaque.</span></li>
         <li data-target=".yb-link"><span class="anat__texto"><b>Chamada</b> — "Continue reading". É <code>aria-hidden</code>: o link de verdade é o título, e a chamada só diz o que o clique faz.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-post"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

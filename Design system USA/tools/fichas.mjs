@@ -757,6 +757,9 @@ const anatomiaDeBloco = (f) => f.usa
     texto: c.quando,
   }));
 
+/* So atomo e molecula levam a fileira de medidas: ver a nota no `desenhos`. */
+const MEDE_GEOMETRIA = new Set(['atoms', 'molecules']);
+
 const blocoAnatomia = (f, n) => {
   /* `anatomia` aceita a lista direta, um objeto com `largura` e `partes`, ou
      `variantes` — uma lista desses objetos, cada um com `titulo`. A ultima
@@ -770,14 +773,33 @@ const blocoAnatomia = (f, n) => {
      nao tem. Quem nao declara continua ocupando a largura toda, que e o certo
      para alerta, acordeao e qualquer peca de bloco. */
   const bruto = f.texto.anatomia;
-  const desenhos = bruto?.variantes
+  /* A MEDIDA NASCE LIGADA nos dois degraus de baixo, e o alvo padrao e a CLASSE
+     BASE que a peca ja anuncia — nao ha nada a escrever na ficha para a peca
+     nova ganhar a fileira. Bloco e template ficam de fora: la o desenho e um
+     mapa de quais pecas entram na regiao, e "altura 612px" mediria o palco da
+     doc, nao a peca.
+
+     APLICADO DEPOIS, sobre TODAS as formas de `anatomia`. A primeira versao
+     calculava isto dentro do objeto unico, e 24 das 47 fichas ficaram de fora
+     sem nada acusar: as que escrevem a anatomia como LISTA de partes (badge,
+     iconbtn, alert...) ou como VARIANTES (select, dropdown...) nem passam por
+     ali. Fora do `desenhos`, a regra alcanca as tres formas.
+
+     `"medidas": false` desliga numa peca; uma string troca o alvo, para quando
+     o que interessa medir nao e o elemento de fora. */
+  const medidaPadrao = MEDE_GEOMETRIA.has(n.dir) && f.base ? `.${f.base}` : null;
+  const desenhosCrus = bruto?.variantes
     ? bruto.variantes
     : [{ partes: partesDaAnatomia(f.texto).length ? partesDaAnatomia(f.texto)
         : (n.base === 'involucro' ? anatomiaDeBloco(f) : []),
         largura: Array.isArray(bruto) ? null : bruto?.largura,
         recorte: Array.isArray(bruto) ? null : bruto?.recorte,
-        medidas: Array.isArray(bruto) ? null : bruto?.medidas,
+        medidas: Array.isArray(bruto) ? undefined : bruto?.medidas,
         html: Array.isArray(bruto) ? null : bruto?.html }];
+  const desenhos = desenhosCrus.map((d) => ({
+    ...d,
+    medidas: d.medidas === false ? null : (d.medidas || medidaPadrao),
+  }));
   if (!desenhos.some((d) => d.partes && d.partes.length))
     return n.base === 'involucro'
       ? `<p class="pendente">Este ${n.singular} não compõe nenhuma peça do sistema, então não há o que apontar.

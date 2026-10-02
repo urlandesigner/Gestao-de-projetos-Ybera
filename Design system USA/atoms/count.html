@@ -349,6 +349,10 @@
         <li data-target=".yb-count"><span class="anat__texto"><b>Círculo</b> — 22px de lado, com 3px de respiro: um dígito não encosta e dois ainda cabem virando pílula, que aí é o certo.</span></li>
         <li data-target=".yb-iconbtn"><span class="anat__texto"><b>Controle</b> — É dele o <code>position:relative</code> de que o <code>--pin</code> precisa, e é dele o nome que diz a contagem em voz alta.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-count"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

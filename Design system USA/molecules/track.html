@@ -414,6 +414,10 @@
         <li data-target=".anat-slot--peek"><span class="anat__texto"><b>Fatia do próximo</b> — O pedaço cortado na borda. Com a barra escondida, é a única coisa que diz que dá para arrastar.</span></li>
         <li data-target=".yb-track__nav > :last-child"><span class="anat__texto"><b>Setas</b> — Só no desktop, e só quando há o que rolar. No celular o dedo arrasta.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-track"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

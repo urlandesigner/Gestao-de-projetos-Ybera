@@ -394,6 +394,10 @@
         <li data-target=".yb-popover__title"><span class="anat__texto"><b>Título</b> — Opcional. Quando o painel tem mais de uma frase, é ele que diz do que se trata antes da leitura começar.</span></li>
         <li data-target=".yb-popover__chevron"><span class="anat__texto"><b>Seta</b> — Opcional, e o único sinal no próprio gatilho de que há um painel preso nele. Dá meia-volta ao abrir, igual à do <a href="dropdown.html">Dropdown</a>.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-popover"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

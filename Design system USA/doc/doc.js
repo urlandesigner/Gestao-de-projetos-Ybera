@@ -68,6 +68,42 @@
      O valor sai arredondado a duas casas e sem `.00`: `50px` e o que a pessoa
      vai escrever, e `50.00px` so adiciona ruido. Quando a medida for fracionaria
      de verdade, as casas aparecem — e aí elas querem dizer alguma coisa. */
+  /* TODAS AS REGRAS DAS FOLHAS, numa lista so, na ordem em que o navegador as
+     aplica. Serve a dois blocos daqui: as medidas (para saber se a altura foi
+     DECLARADA) e a matriz de estados (para copiar a cara de cada estado).
+     Em `@media`, so entra o que casa agora — regra de celular nao descreve esta
+     tela. Folha de outra origem lanca ao ser lida, e e ignorada. */
+  let _regras = null;
+  function TODAS_AS_REGRAS() {
+    if (_regras) return _regras;
+    const saida = [];
+    const andar = (folha) => {
+      let regras;
+      try { regras = folha.cssRules; } catch (e) { return; }
+      for (const r of regras) {
+        if (r.media) { if (matchMedia(r.media.mediaText).matches) andar(r); }
+        else if (r.selectorText && r.style) saida.push(r);
+      }
+    };
+    for (const ss of document.styleSheets) andar(ss);
+    _regras = saida;
+    return saida;
+  }
+
+  /* O elemento DECLARA alguma destas propriedades em alguma regra que o acerta?
+     Nao serve o valor computado: `height` computado existe sempre, porque todo
+     elemento renderizado tem altura. O que se quer saber e se ALGUEM ESCREVEU
+     uma altura — e isso so a folha responde. */
+  function declara(el, props) {
+    for (const r of TODAS_AS_REGRAS()) {
+      let casa = false;
+      try { casa = el.matches(r.selectorText); } catch (e) { continue; }
+      if (!casa) continue;
+      for (const prop of props) if (r.style.getPropertyValue(prop)) return true;
+    }
+    return false;
+  }
+
   const px = (v) => {
     const n = Math.round(parseFloat(v) * 100) / 100;
     return Number.isFinite(n) ? n + 'px' : v;
@@ -76,7 +112,9 @@
     const sel = lista.getAttribute('data-doc-measure');
     const anat = lista.closest('.anat');
     const alvo = anat && anat.querySelector(sel && sel !== 'true' ? sel : '.anat__peca > *');
-    if (!alvo) continue;
+    /* Sem alvo no desenho — variante que nao mostra o elemento de fora — a
+       fileira sai de cena em vez de ficar uma faixa vazia com respiro. */
+    if (!alvo) { lista.remove(); continue; }
     const cs = getComputedStyle(alvo);
     const icone = alvo.querySelector('.yb-icon');
     /* OS ROTULOS SAO EM PALAVRA DE TODO DIA, e isto e correcao: a primeira
@@ -84,17 +122,40 @@
        comentarios. Quem leu a ficha perguntou o que eram os dois — e a pergunta
        e a medida certa de um rotulo. Medida que precisa de legenda nao esta
        medindo nada. */
+    /* ALTURA SO QUANDO ELA FOI ESCRITA, e esta e a mesma regra que ja deixa a
+       largura de fora: medida que vem do conteudo descreve a DEMO, nao a peca.
+       O botao tem `min-height` — 50px e dele, e vale para todo botao da loja. O
+       cartao nao tem: os 350px que ele mede aqui sao o tamanho desta foto mais
+       este titulo, e mudariam sozinhos no dia em que a demo trocasse a imagem.
+       Numero que muda sem a peca mudar nao e medida, e coincidencia.
+
+       ZERO NAO E MEDIDA, e some: "espaco interno 0px" e "canto 0px" ocupavam
+       duas pastilhas para dizer que nao ha o que dizer. Onde a peca nao tem
+       respiro nem arredondamento, a fileira simplesmente nao os cita. */
+    const alturaEscrita = declara(alvo,
+      ['height', 'block-size', 'min-height', 'min-block-size']);
+    /* O LADO QUE E ZERO NAO ENTRA. O Count tem respiro so nos lados, e a frase
+       saía "0px em cima · 3px dos lados" — metade dela para dizer que nao ha
+       nada em cima. Igual nos dois eixos, um numero so e nao a palavra repetida. */
+    const pb = parseFloat(cs.paddingBlockStart), pi = parseFloat(cs.paddingInlineStart);
+    const respiro = pb === pi ? px(cs.paddingBlockStart)
+      : [pb ? px(cs.paddingBlockStart) + ' em cima' : null,
+         pi ? px(cs.paddingInlineStart) + ' dos lados' : null].filter(Boolean).join(' · ');
     const linhas = [
-      ['altura', px(alvo.getBoundingClientRect().height)],
-      ['espaço interno', cs.paddingBlockStart === cs.paddingInlineStart
-        ? px(cs.paddingBlockStart)
-        : px(cs.paddingBlockStart) + ' em cima · ' + px(cs.paddingInlineStart) + ' dos lados'],
-      ['canto', cs.borderStartStartRadius],
+      ['altura', alturaEscrita ? px(alvo.getBoundingClientRect().height) : null],
+      ['espaço interno', parseFloat(cs.paddingBlockStart) || parseFloat(cs.paddingInlineStart)
+        ? respiro : null],
+      ['canto', parseFloat(cs.borderStartStartRadius) ? cs.borderStartStartRadius : null],
       ['borda', parseFloat(cs.borderTopWidth) ? px(cs.borderTopWidth) : null],
       ['espaço entre ícone e texto', parseFloat(cs.columnGap) ? px(cs.columnGap) : null],
       ['ícone', icone ? px(icone.getBoundingClientRect().width) : null],
     ];
-    lista.innerHTML = linhas.filter(([, v]) => v).map(([k, v]) =>
+    /* Sem nenhuma medida que valha, a fileira some em vez de virar uma faixa
+       vazia com respiro em cima — o Tabs nao tem altura escrita, nem respiro,
+       nem canto, nem borda: o `<dl>` dele saía com zero pastilhas e um vao. */
+    const uteis = linhas.filter(([, v]) => v);
+    if (!uteis.length) { lista.remove(); continue; }
+    lista.innerHTML = uteis.map(([k, v]) =>
       `<div class="medidas__par"><dt>${k}</dt><dd>${v}</dd></div>`).join('');
   }
 
@@ -129,19 +190,9 @@
     hover: ':hover', pressed: ':active', focus: ':focus-visible',
   };
 
-  function regrasDe(folha, saida) {
-    let regras;
-    try { regras = folha.cssRules; } catch (e) { return; }   // folha de outra origem
-    for (const r of regras) {
-      if (r.media) { if (matchMedia(r.media.mediaText).matches) regrasDe(r, saida); }
-      else if (r.selectorText && r.style) saida.push(r);
-    }
-  }
-
   const matrizes = document.querySelectorAll('[data-doc-states]');
   if (matrizes.length) {
-    const folhas = [];
-    for (const ss of document.styleSheets) regrasDe(ss, folhas);
+    const folhas = TODAS_AS_REGRAS();
 
     for (const matriz of matrizes) {
       for (const cel of matriz.querySelectorAll('[data-doc-state]')) {

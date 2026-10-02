@@ -382,6 +382,10 @@
         <li data-target=".yb-pagination__gap"><span class="anat__texto"><b>Reticências</b> — O salto de faixa. Não é botão — não há para onde ir a partir dele.</span></li>
         <li data-target=".yb-pagination__near"><span class="anat__texto"><b>Vizinha</b> — A página imediatamente antes e depois. Some no celular, onde só cabem três destinos.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-pagination"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

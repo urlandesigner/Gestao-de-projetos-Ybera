@@ -371,6 +371,10 @@
         <li data-target=".yb-tooltip"><span class="anat__texto"><b>Conjunto</b> — Segura o gatilho e o balão. É dele o <code>position:relative</code> e é nele que o Esc marca o fechamento.</span></li>
         <li data-target=".yb-tooltip__bubble"><span class="anat__texto"><b>Balão</b> — Nasce 8px acima do gatilho, com largura máxima de 16rem. Sem seta: o vão curto já amarra os dois.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-tooltip"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

@@ -328,6 +328,10 @@
       <ol class="anat__legenda">
         <li data-target=".yb-notice"><span class="anat__texto"><b>Faixa</b> — Uma linha no topo da loja. Diz uma promessa da casa, não um alerta de sistema.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-notice"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

@@ -541,6 +541,10 @@
         <li data-target=".yb-bannerhero__text"><span class="anat__texto"><b>Texto</b> — Opcional, uma ou duas linhas. Explica a promessa sem repeti-la.</span></li>
         <li data-target=".yb-btn"><span class="anat__texto"><b>Ação</b> — Opcional. É o <code>.yb-btn</code>, outra peça, na variante para fundo escuro.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-bannerhero"></dl>
     </div>
     <h3 class="rotulo">Arte — <code>--art</code></h3>
     <div class="anat" data-yb-anatomy>
@@ -558,6 +562,10 @@
         <li data-target=".yb-bannerhero"><span class="anat__texto"><b>Container</b> — O mesmo topo sangrando, mas a caixa segue a proporção da arte: nada corta o texto que está no pixel. Nas larguras em que a arte não cobre a faixa, um fundo com a mesma arte ampliada e desfocada (<code>__backdrop</code>, decorativo) preenche o que sobra.</span></li>
         <li data-target="picture img"><span class="anat__texto"><b>Arte</b> — A peça do marketing, dentro de um <code>&lt;picture&gt;</code> que troca pela versão de celular abaixo de 768px — a de desktop encolhida não se lê. O <code>alt</code> repete a promessa do pixel ("20% off sitewide..."): é o único lugar em que o leitor de tela recebe a mensagem.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-bannerhero"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

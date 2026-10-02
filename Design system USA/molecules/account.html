@@ -493,6 +493,10 @@
         <li data-target=".yb-account__item"><span class="anat__texto"><b>Destino</b> — Account, Orders, Wishlist. Linha de 44px com ícone, o alvo inteiro clicável.</span></li>
         <li data-target=".yb-account__foot"><span class="anat__texto"><b>Sair</b> — Separado do resto por fio. Ação que desfaz a sessão não fica junto dos links.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-account"></dl>
     </div>
     <h3 class="rotulo">Visitante</h3>
     <div class="anat" data-yb-anatomy>
@@ -521,6 +525,10 @@
         <li data-target=".yb-btn"><span class="anat__texto"><b>Entrar</b> — O Button primário, na largura do painel: é a ação do menu inteiro.</span></li>
         <li data-target=".yb-account__foot"><span class="anat__texto"><b>Criar conta</b> — No pé, como item: o caminho de menos gente, a um clique sem competir com o botão.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-account"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

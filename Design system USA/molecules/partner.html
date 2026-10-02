@@ -430,6 +430,10 @@
         <li data-target=".yb-partner__avatar"><span class="anat__texto"><b>Avatar</b> — Quem convidou. É o botão que abre e fecha o recado, com <code>aria-expanded</code>.</span></li>
         <li data-target=".yb-partner__bubble"><span class="anat__texto"><b>Balão</b> — O recado. O <code>@</code> e o benefício em negrito são o que se lê de relance.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-partner"></dl>
     </div>
     <h3 class="rotulo">2 · Recolhido — <code>[data-collapsed]</code></h3>
     <div class="anat" data-yb-anatomy>
@@ -451,6 +455,10 @@
         <li data-target=".yb-partner"><span class="anat__texto"><b>Container</b> — O mesmo, com <code>data-collapsed</code>: depois de 96px de rolagem o balão recolhe.</span></li>
         <li data-target=".yb-partner__avatar"><span class="anat__texto"><b>Avatar com aviso</b> — Sobra o avatar, com um ponto de aviso. Continua o botão que reabre o recado, agora com <code>aria-expanded="false"</code>. O balão segue no HTML, escondido: reabrir não busca o recado de novo.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-partner"></dl>
     </div>
     <h3 class="rotulo">3 · Depois da arte — <code>.yb-partnerbar</code></h3>
     <div class="anat" data-yb-anatomy>
@@ -464,6 +472,10 @@
         <li data-target=".yb-partnerbar"><span class="anat__texto"><b>Faixa</b> — Presa abaixo do cabeçalho quando a arte sai da tela. Cinza, e não preta: preto colado no cabeçalho leria como parte dele.</span></li>
         <li data-target=".yb-partnerbar__text"><span class="anat__texto"><b>Recado</b> — A mesma frase, sem a foto. O <code>@</code> e o benefício seguem em negrito.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-partner"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

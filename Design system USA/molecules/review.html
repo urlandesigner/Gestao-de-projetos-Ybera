@@ -565,6 +565,10 @@
         <li data-target=".yb-review__author"><span class="anat__texto"><b>Autor</b> — Quem escreveu. Primeiro nome e inicial, como o Judge.me entrega.</span></li>
         <li data-target=".yb-review__verified"><span class="anat__texto"><b>Verificado</b> — Diz que a compra existiu. Sem isso, a nota é só uma opinião na internet.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-review"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

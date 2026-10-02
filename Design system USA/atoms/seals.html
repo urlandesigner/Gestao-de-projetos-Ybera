@@ -381,6 +381,10 @@
         <li data-target=".yb-seal__mark"><span class="anat__texto"><b>Marca</b> — O disco com o ícone. Decorativo: quem informa é o rótulo ao lado.</span></li>
         <li data-target=".yb-seal__label"><span class="anat__texto"><b>Rótulo</b> — A garantia escrita. Duas palavras, sem promessa que a loja não cumpre.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-seal"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

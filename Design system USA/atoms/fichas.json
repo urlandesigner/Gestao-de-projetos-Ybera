@@ -49,8 +49,7 @@
           "nome": "Ícone",
           "texto": "Opcional e decorativo (<code>aria-hidden</code>). Antes do rótulo quando mostra o que a ação faz; depois quando mostra direção."
         }
-      ],
-      "medidas": ".yb-btn"
+      ]
     }
   },
   "iconbtn": {
@@ -401,7 +400,8 @@
           "nome": "Dica",
           "texto": "Opcional. Explica o porquê do campo, não repete o rótulo."
         }
-      ]
+      ],
+      "medidas": ".yb-field__box"
     }
   },
   "select": {
@@ -449,7 +449,8 @@
               "nome": "Dica",
               "texto": "Opcional. Diz o que a escolha implica, não repete as opções."
             }
-          ]
+          ],
+          "medidas": ".yb-field__box"
         },
         {
           "titulo": "Obrigatório e com erro — <code>[aria-invalid]</code>",
@@ -471,7 +472,8 @@
               "nome": "Erro",
               "texto": "Toma o lugar da dica. Diz o que fazer (\"Choose the state for delivery\"), não só que está errado."
             }
-          ]
+          ],
+          "medidas": ".yb-field__box"
         }
       ]
     }
@@ -518,7 +520,8 @@
           "nome": "Dica",
           "texto": "Opcional. Bom lugar para o limite de caracteres, quando houver."
         }
-      ]
+      ],
+      "medidas": ".yb-field__box"
     }
   },
   "checkbox": {
@@ -553,7 +556,8 @@
           "nome": "Texto",
           "texto": "A frase. Diz o que acontece ao marcar, no afirmativo."
         }
-      ]
+      ],
+      "medidas": ".yb-check input"
     }
   },
   "radio": {
@@ -589,7 +593,8 @@
           "nome": "Círculo",
           "texto": "Mesma caixa do checkbox, redonda. Redondo escolhe um; quadrado escolhe vários."
         }
-      ]
+      ],
+      "medidas": ".yb-radio input"
     }
   },
   "stars": {

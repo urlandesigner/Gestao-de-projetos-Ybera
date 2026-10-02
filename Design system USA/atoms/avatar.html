@@ -428,6 +428,10 @@
       <ol class="anat__legenda">
         <li data-target=".yb-avatar"><span class="anat__texto"><b>Disco</b> — Círculo de tamanho fixo. A cor de fundo é a mesma para todos — não codifica pessoa nem papel.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-avatar"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

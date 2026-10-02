@@ -372,6 +372,10 @@
         <li data-target="input"><span class="anat__texto"><b>Caixa</b> — <code>&lt;input&gt;</code> nativo repintado. Desmarcada, a borda <b>é</b> o controle, e por isso usa o token de 3:1.</span></li>
         <li data-target=".yb-check span"><span class="anat__texto"><b>Texto</b> — A frase. Diz o que acontece ao marcar, no afirmativo.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-check input"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

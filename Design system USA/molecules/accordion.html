@@ -338,6 +338,10 @@
         <li data-target="summary"><span class="anat__texto"><b>Rótulo</b> — O alvo clicável, e a linha inteira. Diz o assunto, não “clique aqui”.</span></li>
         <li data-target=".yb-accordion__body"><span class="anat__texto"><b>Corpo</b> — Aparece ao abrir. Vai dentro do <code>&lt;details&gt;</code>, depois do <code>&lt;summary&gt;</code>.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-accordion"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

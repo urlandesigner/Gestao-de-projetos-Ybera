@@ -369,6 +369,10 @@
         <li data-target=".yb-field__box"><span class="anat__texto"><b>Moldura</b> — Onde o rótulo flutua, igual ao Input — e onde a alça de redimensionar aparece.</span></li>
         <li data-target=".yb-field__hint"><span class="anat__texto"><b>Dica</b> — Opcional. Bom lugar para o limite de caracteres, quando houver.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-field__box"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

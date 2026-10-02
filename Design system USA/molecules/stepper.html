@@ -417,6 +417,10 @@
         <li data-target="input"><span class="anat__texto"><b>Campo</b> — <code>type=&quot;number&quot;</code>: dá para digitar 12 sem clicar onze vezes.</span></li>
         <li data-target="[data-yb-step=down]"><span class="anat__texto"><b>Menos</b> — Desabilita no mínimo. Precisa de <code>aria-label</code> — o sinal sozinho não se anuncia.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-stepper"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

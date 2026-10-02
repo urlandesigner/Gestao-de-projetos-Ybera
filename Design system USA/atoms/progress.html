@@ -414,6 +414,10 @@
         <li data-target=".yb-progress"><span class="anat__texto"><b>Trilho</b> — Leva <code>role=&quot;progressbar&quot;</code> e os três <code>aria-value*</code> — sem eles é só um retângulo.</span></li>
         <li data-target=".yb-progress__fill"><span class="anat__texto"><b>Preenchimento</b> — A largura é escrita no <code>style</code>, porque o valor vem do dado e não do CSS.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-progress"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

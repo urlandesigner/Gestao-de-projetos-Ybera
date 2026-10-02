@@ -418,6 +418,10 @@
         <li data-target="img"><span class="anat__texto"><b>Capa</b> — O quadro de abertura. É o que se vê antes de qualquer byte de vídeo.</span></li>
         <li data-target=".yb-video__play"><span class="anat__texto"><b>Play</b> — É o <code>.yb-iconbtn</code> com a variante sobre mídia, e leva o rótulo do vídeo.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-video"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

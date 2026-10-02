@@ -369,6 +369,10 @@
         <li data-target=".yb-switch"><span class="anat__texto"><b>Chave</b> — <code>role=&quot;switch&quot;</code> com <code>aria-checked</code>. Vale para ligar algo agora; para escolher no formulário, é checkbox.</span></li>
         <li data-target=".yb-switch__knob"><span class="anat__texto"><b>Botão</b> — Desliza de um lado ao outro. A posição é o estado — e a cor do trilho é a segunda pista.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-switch"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres

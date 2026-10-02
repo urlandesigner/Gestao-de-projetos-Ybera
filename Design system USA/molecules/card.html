@@ -628,6 +628,10 @@
         <li data-target=".yb-card__title"><span class="anat__texto"><b>Título</b> — O link mora aqui e cobre o cartão inteiro. Corta na terceira linha, por decisão de sistema.</span></li>
         <li data-target=".yb-price"><span class="anat__texto"><b>Preço</b> — É outra peça, não parte do cartão: a mesma <code>.yb-price</code> da PDP e da sacola.</span></li>
       </ol>
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure=".yb-card"></dl>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia
          COMO a aba foi feita, para quem ainda nao sabe O QUE ela tem, e em tres
