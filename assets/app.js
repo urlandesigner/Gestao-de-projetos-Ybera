@@ -287,9 +287,26 @@ async function refreshCard(p) {
        corrente e nada mais, e triplicar requisição pra todo mundo pagaria por
        dado que nenhuma tela mostra. */
     if (p.teamName === TIME_COM_SPRINT) {
+      /* O catch aqui era mudo, e isso custou uma rodada de diagnóstico: quando a
+         chamada falha, o resultado na tela é IDÊNTICO ao do time que só tem a
+         sprint corrente selecionada no DevOps — uma coluna, sem aviso. Duas
+         causas opostas, um sintoma. Agora a falha fala, e o número de iterações
+         encontradas também: zero vizinhas com a chamada OK é informação sobre o
+         DevOps, não sobre o código. */
       let iteracoes = [];
-      try { iteracoes = await A.teamIterations(ctx(), p.projectName, p.teamName); } catch (e) { /* cai no caminho de uma sprint só */ }
+      try {
+        iteracoes = await A.teamIterations(ctx(), p.projectName, p.teamName);
+      } catch (e) {
+        console.warn('[Central] não deu pra listar as iterações de ' + p.teamName
+          + ' — o quadro de sprints fica só com a corrente. Motivo: ' + mensagemDeErro(e));
+      }
       const janela = C.janelaDeSprints(iteracoes, Date.now());
+      if (!janela.anterior && !janela.proxima) {
+        console.info('[Central] ' + p.teamName + ': ' + iteracoes.length
+          + ' iteração(ões) com data visíveis ao time, e nenhuma antes ou depois da corrente.'
+          + ' Se esperava ver as três colunas, confira em Project Settings → Team Configuration'
+          + ' → Iterations quais sprints o time tem selecionadas.');
+      }
       if (janela.atual || janela.anterior || janela.proxima) {
         entry.janela = {};
         for (const qual of ['anterior', 'atual', 'proxima']) {
