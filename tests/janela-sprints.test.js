@@ -75,3 +75,34 @@ test('lista vazia ou torta devolve as três null', () => {
     assert.deepEqual(C.janelaDeSprints(entrada, HOJE), { anterior: null, atual: null, proxima: null });
   }
 });
+
+/* ---------- a reserva pro cache antigo ---------- */
+/* Defeito real: o quadro de três colunas lê `entry.janela`, campo que só
+   existe depois de uma busca nova. O refreshAll não rebusca com cache de menos
+   de 10 minutos — então, pra quem já tinha a Central aberta, o bloco de
+   sprints simplesmente SUMIU da tela em vez de virar quadro. O Urlan abriu e
+   não achou.
+
+   A lição não é sobre sprint: todo campo novo no cache tem esse intervalo em
+   que o dado velho ainda manda, e tela que depende só do campo novo fica em
+   branco nele. */
+const fs = require('node:fs');
+const path = require('node:path');
+const fonteApp = fs.readFileSync(path.join(__dirname, '..', 'assets', 'app.js'), 'utf8');
+
+test('o quadro tem reserva pro cache que ainda não tem a janela', () => {
+  const bloco = /const janela = doCard\.janela[\s\S]*?: null\);/.exec(fonteApp);
+  assert.ok(bloco, 'a reserva sumiu: cache antigo volta a deixar o bloco em branco');
+  assert.match(bloco[0], /doCard\.sprint/,
+    'a reserva precisa nascer da sprint corrente, que o cache antigo já tinha');
+  assert.match(bloco[0], /anterior: null, proxima: null/,
+    'sem a janela só dá pra afirmar a corrente — as vizinhas não estavam no cache velho');
+});
+
+test('a reserva marca os itens como não-feitos, que é o que o cache velho guardava', () => {
+  // itensSprintAbertos já vinha filtrado; sem o campo `feito`, o desenho da
+  // coluna atual (que filtra por !feito) descartaria todos eles.
+  const bloco = /const janela = doCard\.janela[\s\S]*?: null\);/.exec(fonteApp)[0];
+  assert.match(bloco, /feito: false/,
+    'sem isso a coluna em curso mostraria a sprint vazia');
+});

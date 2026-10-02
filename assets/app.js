@@ -565,7 +565,16 @@ function renderPanorama() {
      ou a próxima no DevOps vê o quadro com o que tem, e não um buraco rotulado. */
   const CAP_PBIS_SPRINT = 4;
   const pr = visiveis.find((x) => x.teamName === TIME_COM_SPRINT);
-  const janela = pr ? (state.cache.byCard[cardKey(pr)] || {}).janela : null;
+  const doCard = pr ? (state.cache.byCard[cardKey(pr)] || {}) : {};
+  /* Cache de antes desta mudança não tem `janela` — e o refreshAll só rebusca
+     depois de 10 minutos. Sem esta reserva o bloco INTEIRO sumia da tela até a
+     próxima busca, que foi o que aconteceu: o Urlan abriu e não achou o quadro.
+     Com ela, o cache velho ainda desenha a coluna do meio como antes, e as
+     outras duas entram quando o dado novo chega. */
+  const janela = doCard.janela
+    || (doCard.sprint ? { anterior: null, proxima: null,
+      atual: { sprint: doCard.sprint, progress: doCard.progress,
+        itens: (doCard.itensSprintAbertos || []).map((x) => Object.assign({ feito: false }, x)) } } : null);
   const respSprint = respAtivo();
   const listaDeItens = (itens, link) => {
     // Mesma filtragem por responsável que a coluna da corrente sempre teve: a
