@@ -1596,43 +1596,92 @@
 @media (max-width:520px){
   .yb-toasts{inset-inline:var(--yb-space-4); max-width:none}
 }
+/* A MESMA LÍNGUA DO ALERT, desde 0.13 — e isso é correção, não maquiagem.
+
+   O toast dizia a severidade por uma TARJA de 3px na borda esquerda, e só por
+   ela. Cor sozinha não informa (WCAG 1.4.1): quem não distingue verde de
+   vermelho via dois retângulos brancos iguais. Havia um glifo de texto no
+   `::before` do título — "✓" e "⚠" escritos como caractere —, que é meia
+   solução: ele não existe em `--warning` nem em `--info`, porque essas duas
+   variantes nem existiam, e um caractere de texto não acompanha o tamanho nem
+   a cor como um ícone do sistema acompanha.
+
+   Agora as duas peças que avisam avisam igual: superfície tingida, borda da
+   mesma família, e o ÍCONE da variante. Quem aprendeu a ler um Alert lê um
+   toast sem reaprender — e é o mesmo par de tokens nos dois, então afinar a
+   tinta de sucesso move os dois juntos.
+
+   O QUE CONTINUA SENDO DO TOAST, e não vira Alert: ele flutua (sombra e
+   `position:fixed` no contêiner), entra e sai com animação, e some sozinho
+   depois de um prazo. Alerta fica na página até alguém tirar.
+
+   O NEUTRO É A BASE, e não um modificador. O Alert sem variante não tem fundo
+   nem borda — ele EXIGE uma tinta, porque alerta sem severidade não é alerta.
+   O toast sem variante é a maioria dos casos ("Filtros limpos", "Link
+   copiado"): ele flutua sobre conteúdo que não controla, então precisa de
+   superfície e borda próprias para existir. Daí a base já ser a caixa branca.
+   ========================================================================= */
 .yb-toast{
   pointer-events:auto; display:flex; gap:var(--yb-space-3);
   align-items:flex-start; padding:var(--yb-space-4) var(--yb-space-5);
   background:var(--yb-surface); color:var(--yb-text-primary);
-  border:var(--yb-border-hairline) solid var(--yb-border); border-inline-start:var(--yb-border-emphasis) solid var(--yb-action-primary-bg);
+  border:var(--yb-border-hairline) solid var(--yb-border);
   border-radius:var(--yb-radius-card); box-shadow:var(--yb-elevation-dropdown);
+  font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-relaxed);
   animation:yb-toast-in var(--yb-duration-slow) var(--yb-ease-enter);
 }
-/* A tarja de 3px era a UNICA diferenca entre sucesso e erro — cor sozinha,
-   e as duas viram a mesma cor de sistema em alto contraste. O glifo antes do
-   titulo carrega a mesma informacao em forma. */
-.yb-toast--success{border-inline-start-color:var(--yb-success-solid)}
-.yb-toast--danger{border-inline-start-color:var(--yb-danger-solid)}
-.yb-toast--success .yb-toast__title::before,
-.yb-toast--danger .yb-toast__title::before{
-  margin-inline-end:var(--yb-space-2); font-weight:var(--yb-font-weight-bold);
-}
-.yb-toast--success .yb-toast__title::before{content:"\2713"; color:var(--yb-success-text)}
-.yb-toast--danger .yb-toast__title::before{content:"\26A0"; color:var(--yb-danger-text)}
+/* Herda a `color` da variante, como no Alert, então não tem regra de cor
+   própria. `flex:none` para não encolher com texto longo, e alinhado ao topo
+   porque a mensagem pode ter duas linhas e o ícone acompanha a primeira. */
+.yb-toast__icon{flex:none; margin-block-start:.1em}
+
+/* Os quatro pares são os MESMOS do Alert, de propósito: um `var()` por tinta,
+   não um valor copiado. Quem afinar `--yb-success-surface` move as duas peças
+   no mesmo passo. */
+.yb-toast--success{background:var(--yb-success-surface); border-color:var(--yb-success-solid); color:var(--yb-success-text)}
+.yb-toast--warning{background:var(--yb-warning-surface); border-color:var(--yb-warning-solid); color:var(--yb-warning-text)}
+.yb-toast--danger {background:var(--yb-danger-surface);  border-color:var(--yb-danger-solid);  color:var(--yb-danger-text)}
+.yb-toast--info   {background:var(--yb-info-surface);    border-color:var(--yb-info-solid);    color:var(--yb-info-text)}
+
 .yb-toast--leaving{animation:yb-toast-out var(--yb-duration-base) var(--yb-ease-exit) forwards}
 .yb-toast__body{flex:1; min-width:0}
 .yb-toast__title{
-  display:block; font-size:var(--yb-type-body-sm-size);
-  font-weight:var(--yb-font-weight-semibold); margin-block-end:2px;
+  display:block; font-weight:var(--yb-font-weight-semibold);
+  margin-block-end:var(--yb-space-1);
 }
-.yb-toast__text{margin:0; font-size:var(--yb-type-caption-size);
-  color:var(--yb-text-secondary)}
+/* Última linha sem respiro embaixo: o título sozinho é o caso comum, e o
+   `margin` dele empurrava a caixa quando não havia texto depois. */
+.yb-toast__title:last-child{margin-block-end:0}
+.yb-toast__text{margin:0; color:var(--yb-text-secondary)}
+
+/* A AÇÃO INLINE — "Desfazer", "Ver pedido".
+   É o Button secundário de verdade, com as classes dele: um botão desenhado só
+   para o toast seria o terceiro desenho de botão da casa, e o primeiro a ficar
+   para trás quando o secundário mudasse. Aqui só se diz ONDE ele fica.
+
+   `align-self:center` e não `flex-start`: o botão tem 36px e a linha de texto
+   tem uma, então alinhado ao topo ele subia 2px acima do próprio rótulo.
+
+   O PRAZO. Toast com ação precisa de tempo para ser lido, decidido e clicado,
+   e os 5s do padrão não dão — quem oferece "Desfazer" passa `duration` maior,
+   ou 0 para não sumir sozinho. Está escrito na ficha, e é a única regra desta
+   variante que não cabe em CSS. */
+.yb-toast__action{flex:none; align-self:center}
+
 .yb-toast__close{
-  color:var(--yb-text-muted);
+  /* Herda a cor da variante em vez de ser cinza: um X cinza dentro de uma
+     caixa âmbar lê como elemento de outro lugar. Mesma decisão do Alert. */
+  color:inherit;
   border-radius:var(--yb-radius-sm); line-height:var(--yb-line-height-none);
   /* O alvo de 44 vem do `.yb-iconbtn--square`; a margem negativa o devolve
      sem inflar a altura do toast. */
   margin:calc(var(--yb-space-3) * -1) calc(var(--yb-space-2) * -1);
 }
-
+/* `:not([disabled])` e `background:transparent` para empatar com o hover do
+   `.yb-iconbtn`, que põe fundo cinza — cinza dentro de uma caixa âmbar é o
+   mesmo erro do X cinza. */
 @media (hover:hover){
-  .yb-toast__close:hover{color:var(--yb-text-primary)}
+  .yb-toast__close:hover:not([disabled]){color:var(--yb-text-primary); background:transparent}
 }
 @keyframes yb-toast-in{from{opacity:0; transform:translateY(8px)}to{opacity:1; transform:none}}
 @keyframes yb-toast-out{to{opacity:0; transform:translateY(8px)}}

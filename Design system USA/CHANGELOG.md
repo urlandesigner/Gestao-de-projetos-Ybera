@@ -92,6 +92,34 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   [DDR-013](decision-log/DDR-013-o-painel-nasce-de-fora.md).
 
 ### Mudado
+- **O Toast passou a falar a mesma língua do Alert.** Superfície tingida, borda
+  da mesma família e o ícone da variante — os mesmos quatro do Alert e os mesmos
+  tokens, então afinar a tinta de sucesso move as duas peças juntas. Antes a
+  severidade vinha de uma **tarja de 3px** na borda esquerda, e cor sozinha não
+  informa (WCAG 1.4.1): quem não distingue verde de vermelho via dois retângulos
+  brancos iguais. Havia um glifo de texto no `::before` do título, que é meia
+  solução — ele não existia em `--warning` nem em `--info`, porque essas duas
+  variantes nem existiam.
+  Entram `--warning` e `--info`, e o **neutro é a base**, sem modificador: o
+  Alert exige uma tinta (alerta sem severidade não é alerta), mas "Filtros
+  limpos" é a maioria dos toasts, e como ele flutua sobre conteúdo que não
+  controla a base já vem com superfície, borda e sombra próprias.
+  Continua sendo do Toast o que não é do Alert: ele flutua, entra e sai com
+  animação, e some sozinho.
+  Medido: título 4.85 a 5.67:1 em cada tinta, corpo 6.59 a 6.9:1, e cabe em
+  375px sem rolagem lateral.
+- **Toast com ação inline.** `action: {label, onClick}` no `Ybera.toast()`, ou
+  `data-toast-action` no gancho. É o Button secundário de verdade, com as classes
+  dele — um botão desenhado só para o toast seria o terceiro desenho de botão da
+  casa, e o primeiro a ficar para trás quando o secundário mudasse. Clicar
+  executa e fecha. **Dê mais tempo:** cinco segundos não bastam para ler, decidir
+  e clicar em "Undo".
+- **O ícone do toast resolve o sprite lendo a página.** A doc mora em pastas
+  diferentes e as telas-prova servem o mesmo arquivo com outro nome
+  (`yb/icons.svg`): nenhum caminho fixo serviria aos dois. O script procura o
+  primeiro `<use>` com `#yb-` — o nome do arquivo é de quem publica, o prefixo do
+  símbolo é do sistema. Sem nenhum ícone na página o toast sai sem glifo, e a
+  tinta, a borda e o `role` continuam dizendo a severidade.
 - **O anel de foco é grafite, não mais magenta.** `--yb-focus-color` passa de
   `--yb-magenta-600` para `--yb-gray-950`. O magenta é a cor de **sinal** do
   sistema — link, preço, selo — e o foco era o único lugar em que ele aparecia

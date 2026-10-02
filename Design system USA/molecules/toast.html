@@ -172,7 +172,7 @@
     </nav>
   </div>
   <h1 class="ficha-titulo">Toast</h1>
-  <p class="ficha-quando">Mensagem curta que aparece por alguns segundos para confirmar algo que já aconteceu, como “Added to cart”. Não pede resposta.</p>
+  <p class="ficha-quando">Mensagem curta que aparece por alguns segundos para confirmar algo que já aconteceu, como “Added to cart”. Não pede resposta. Quando a mensagem tem de ficar na página até alguém tirar, a peça é o <a href="alert.html">Alert</a>.</p>
   <!-- Só a classe base. A fileira trazia também as contagens de modificador,
        elemento, estado e token — cinco números que ninguém usa para decidir
        nada e que, desde que a aba Anatomia existe, repetem em placar o que a
@@ -202,20 +202,21 @@
   <div class="abas" data-doc-tabs>
   <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
-    <h3 class="row-label">Variants</h3>
+    <h3 class="row-label">Clique e veja no canto da tela</h3>
     <div class="demo demo--amostras">
       <span class="amostra">
         <button type="button" class="yb-btn yb-btn--primary"
           data-yb-toast data-toast-title="Added to cart"
           data-toast-text="Kit Sealant Fashion Gold — 500 g"
-          data-toast-variant="success">Adicionar ao carrinho</button>
+          data-toast-variant="success">Adicionar</button>
         <span class="amostra__rotulo"><code>--success</code></span>
       </span>
       <span class="amostra">
         <button type="button" class="yb-btn yb-btn--ghost"
-          data-yb-toast data-toast-title="Saved for later"
-          data-toast-text="Find it in your wishlist">Salvar</button>
-        <span class="amostra__rotulo"><code>sem modificador</code></span>
+          data-yb-toast data-toast-title="Removed from cart"
+          data-toast-action="Undo"
+          data-toast-duration="10000">Remover</button>
+        <span class="amostra__rotulo"><code>com ação</code></span>
       </span>
       <span class="amostra">
         <button type="button" class="yb-btn yb-btn--ghost"
@@ -225,37 +226,81 @@
         <span class="amostra__rotulo"><code>--danger</code></span>
       </span>
     </div>
-    <h3 class="row-label">Como ele aparece &mdash; a marcação que o script monta</h3>
-    <!-- Parado, só na doc: na loja o toast nasce do `Ybera.toast()` e some
-         sozinho. É a mesma árvore que o script cria, para a anatomia e o código
-         terem o que mostrar. -->
-    <div class="demo demo--amostras">
-      <span class="amostra">
-        <div class="yb-toast yb-toast--success" role="status">
-          <div class="yb-toast__body">
-            <b class="yb-toast__title">Added to cart</b>
-            <p class="yb-toast__text">Kit Sealant Fashion Gold — 500 g</p>
-          </div>
-          <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
+    <h3 class="row-label">Parados — a mesma marcação que o script monta</h3>
+    <!-- Na loja o toast nasce do `Ybera.toast()` e some sozinho. Aqui ele está
+         parado para a anatomia e o código terem o que mostrar. -->
+    <div class="demo demo--stack" style="max-inline-size:26rem">
+      <div class="yb-toast" role="status">
+        <div class="yb-toast__body">
+          <b class="yb-toast__title">Filters cleared</b>
         </div>
-        <span class="amostra__rotulo"><code>--success</code></span>
-      </span>
-      <span class="amostra">
-        <div class="yb-toast yb-toast--danger" role="alert">
-          <div class="yb-toast__body">
-            <b class="yb-toast__title">Could not add to cart</b>
-            <p class="yb-toast__text">Check your connection and try again.</p>
-          </div>
-          <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
+        <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
+      </div>
+      <div class="yb-toast" role="status">
+        <div class="yb-toast__body">
+          <b class="yb-toast__title">Removed from cart</b>
         </div>
-        <span class="amostra__rotulo"><code>--danger</code></span>
-      </span>
+        <button class="yb-btn yb-btn--secondary yb-btn--sm yb-toast__action" type="button">Undo</button>
+        <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
+      </div>
+      <div class="yb-toast yb-toast--success" role="status">
+        <svg class="yb-icon yb-toast__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>
+        <div class="yb-toast__body">
+          <b class="yb-toast__title">Added to cart</b>
+          <p class="yb-toast__text">Kit Sealant Fashion Gold — 500 g</p>
+        </div>
+        <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
+      </div>
+      <div class="yb-toast yb-toast--warning" role="status">
+        <svg class="yb-icon yb-toast__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-alert"/></svg>
+        <div class="yb-toast__body">
+          <b class="yb-toast__title">Coupon expires in 10 minutes</b>
+        </div>
+        <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
+      </div>
+      <div class="yb-toast yb-toast--danger" role="alert">
+        <svg class="yb-icon yb-toast__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg>
+        <div class="yb-toast__body">
+          <b class="yb-toast__title">Could not add to cart</b>
+          <p class="yb-toast__text">Check your connection and try again.</p>
+        </div>
+        <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
+      </div>
+      <div class="yb-toast yb-toast--info" role="status">
+        <svg class="yb-icon yb-toast__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-info"/></svg>
+        <div class="yb-toast__body">
+          <b class="yb-toast__title">Shipping updated for your ZIP</b>
+        </div>
+        <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
+      </div>
     </div>
+    <details class="note"><summary>Fala a mesma língua do Alert</summary>
+      <p>Superfície tingida, borda da mesma família e o ícone da variante — os mesmos
+      quatro do <a href="alert.html">Alert</a>, e os mesmos tokens. Antes a severidade
+      vinha de uma tarja de 3px, e cor sozinha não informa: quem não distingue verde de
+      vermelho via dois retângulos brancos iguais.</p>
+    </details>
+    <details class="note"><summary>O neutro é a base, sem modificador</summary>
+      <p>O Alert exige uma tinta — alerta sem severidade não é alerta. O toast, não:
+      “Filtros limpos” e “Link copiado” são a maioria dos casos. Como ele flutua sobre
+      conteúdo que não controla, a base já vem com superfície, borda e sombra próprias.</p>
+    </details>
+    <details class="note"><summary>Com ação, dê mais tempo</summary>
+      <p>Cinco segundos não bastam para ler, decidir e clicar em “Undo”. Passe
+      <code>duration</code> maior, ou <code>0</code> para não sumir sozinho. Clicar na
+      ação executa e fecha: a mensagem existia para oferecer a escolha.</p>
+    </details>
     <details class="note"><summary>Some sozinho — menos quando você está lendo</summary>
       <p>Cinco segundos por padrão, mas o relógio para no <code>mouseenter</code> e
       no <code>focusin</code>. O de erro usa <code>duration:0</code> e
       <code>role="alert"</code>: erro não desaparece antes de ser lido, e interrompe
       o leitor de tela. Os outros usam <code>role="status"</code> e esperam a pausa.</p>
+    </details>
+    <details class="note"><summary>O ícone vem do sprite, e o caminho é lido da página</summary>
+      <p>A doc mora em pastas diferentes e o tema serve o arquivo de outro lugar: nenhum
+      caminho fixo serviria aos três. O script lê o primeiro <code>&lt;use&gt;</code> da
+      página. Sem nenhum ícone nela, o toast sai sem glifo — a tinta, a borda e o
+      <code>role</code> continuam dizendo a severidade.</p>
     </details>
 
     <h3 class="rotulo">No celular</h3>
@@ -282,33 +327,23 @@
         <button type="button" role="tab" aria-selected="false" data-code-tab="tokens">Tokens</button>
         <a class="codigo__baixar" href="../dist/ybera-design-system.zip" download>Baixar pacote</a>
       </div>
-      <label class="codigo__variante">Variante
-        <select data-code-variant>
-          <option value="0">--success</option>
-          <option value="1">--danger</option>
-        </select></label>
-      <span class="codigo__conta">2 variantes</span>
+      
     </div>
     <div class="codigo__painel" data-code-panel="html">
       <div class="snippet" data-code-variant-panel="0">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>&lt;div class="yb-toast yb-toast--success" role="status"&gt;
-  &lt;div class="yb-toast__body"&gt;
-    &lt;b class="yb-toast__title"&gt;Added to cart&lt;/b&gt;
-    &lt;p class="yb-toast__text"&gt;Kit Sealant Fashion Gold — 500 g&lt;/p&gt;
-  &lt;/div&gt;
-  &lt;button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss"&gt;×&lt;/button&gt;
-&lt;/div&gt;</code></pre>
-      </div>
-      <div class="snippet" data-code-variant-panel="1" hidden>
-        <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>&lt;div class="yb-toast yb-toast--danger" role="alert"&gt;
-  &lt;div class="yb-toast__body"&gt;
-    &lt;b class="yb-toast__title"&gt;Could not add to cart&lt;/b&gt;
-    &lt;p class="yb-toast__text"&gt;Check your connection and try again.&lt;/p&gt;
-  &lt;/div&gt;
-  &lt;button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss"&gt;×&lt;/button&gt;
-&lt;/div&gt;</code></pre>
+        <pre><code>&lt;button type="button" class="yb-btn yb-btn--primary"
+  data-yb-toast data-toast-title="Added to cart"
+  data-toast-text="Kit Sealant Fashion Gold — 500 g"
+  data-toast-variant="success"&gt;Adicionar&lt;/button&gt;
+&lt;button type="button" class="yb-btn yb-btn--ghost"
+  data-yb-toast data-toast-title="Removed from cart"
+  data-toast-action="Undo"
+  data-toast-duration="10000"&gt;Remover&lt;/button&gt;
+&lt;button type="button" class="yb-btn yb-btn--ghost"
+  data-yb-toast data-toast-title="Payment declined"
+  data-toast-text="Your bank rejected the charge. Try another card."
+  data-toast-variant="danger" data-toast-duration="0"&gt;Erro (não some)&lt;/button&gt;</code></pre>
       </div>
     </div>
     <div class="codigo__painel" data-code-panel="css" hidden>
@@ -318,32 +353,32 @@
   pointer-events:auto; display:flex; gap:var(--yb-space-3);
   align-items:flex-start; padding:var(--yb-space-4) var(--yb-space-5);
   background:var(--yb-surface); color:var(--yb-text-primary);
-  border:var(--yb-border-hairline) solid var(--yb-border); border-inline-start:var(--yb-border-emphasis) solid var(--yb-action-primary-bg);
+  border:var(--yb-border-hairline) solid var(--yb-border);
   border-radius:var(--yb-radius-card); box-shadow:var(--yb-elevation-dropdown);
+  font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-relaxed);
   animation:yb-toast-in var(--yb-duration-slow) var(--yb-ease-enter);
 }
-.yb-toast--success{border-inline-start-color:var(--yb-success-solid)}
-.yb-toast--danger{border-inline-start-color:var(--yb-danger-solid)}
-.yb-toast--success .yb-toast__title::before, .yb-toast--danger .yb-toast__title::before{margin-inline-end:var(--yb-space-2); font-weight:var(--yb-font-weight-bold);}
-.yb-toast--success .yb-toast__title::before{content:"\2713"; color:var(--yb-success-text)}
-.yb-toast--danger .yb-toast__title::before{content:"\26A0"; color:var(--yb-danger-text)}
+.yb-toast__icon{flex:none; margin-block-start:.1em}
+.yb-toast--success{background:var(--yb-success-surface); border-color:var(--yb-success-solid); color:var(--yb-success-text)}
+.yb-toast--warning{background:var(--yb-warning-surface); border-color:var(--yb-warning-solid); color:var(--yb-warning-text)}
+.yb-toast--danger{background:var(--yb-danger-surface);  border-color:var(--yb-danger-solid);  color:var(--yb-danger-text)}
+.yb-toast--info{background:var(--yb-info-surface);    border-color:var(--yb-info-solid);    color:var(--yb-info-text)}
 .yb-toast--leaving{animation:yb-toast-out var(--yb-duration-base) var(--yb-ease-exit) forwards}
 .yb-toast__body{flex:1; min-width:0}
 .yb-toast__title{
-  display:block; font-size:var(--yb-type-body-sm-size);
-  font-weight:var(--yb-font-weight-semibold); margin-block-end:2px;
+  display:block; font-weight:var(--yb-font-weight-semibold);
+  margin-block-end:var(--yb-space-1);
 }
-.yb-toast__text{
-  margin:0; font-size:var(--yb-type-caption-size);
-  color:var(--yb-text-secondary)
-}
+.yb-toast__title:last-child{margin-block-end:0}
+.yb-toast__text{margin:0; color:var(--yb-text-secondary)}
+.yb-toast__action{flex:none; align-self:center}
 .yb-toast__close{
-  color:var(--yb-text-muted);
+  color:inherit;
   border-radius:var(--yb-radius-sm); line-height:var(--yb-line-height-none);
   margin:calc(var(--yb-space-3) * -1) calc(var(--yb-space-2) * -1);
 }
 @media (hover:hover){
-  .yb-toast__close:hover{color:var(--yb-text-primary)}
+  .yb-toast__close:hover:not([disabled]){color:var(--yb-text-primary); background:transparent}
 }
 @keyframes yb-toast-in{from{opacity:0; transform:translateY(8px)}to{opacity:1; transform:none}}
 @keyframes yb-toast-out{to{opacity:0; transform:translateY(8px)}}</code></pre>
@@ -366,34 +401,39 @@
     <div class="codigo__painel" data-code-panel="tokens" hidden>
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>--yb-action-primary-bg: #1E1E1F;
---yb-border: #DADADB;
---yb-border-emphasis: 2px;
+        <pre><code>--yb-border: #DADADB;
 --yb-border-hairline: 1px;
 --yb-danger-solid: #B3261E;
+--yb-danger-surface: #FBEAE9;
 --yb-danger-text: #B3261E;
 --yb-duration-base: 180ms;
 --yb-duration-slow: 280ms;
 --yb-ease-enter: cubic-bezier(0, 0, 0, 1);
 --yb-ease-exit: cubic-bezier(.3, 0, 1, 1);
 --yb-elevation-dropdown: 0 4px 12px rgba(30,30,31,.08), 0 2px 4px rgba(30,30,31,.05);
---yb-font-weight-bold: 700;
 --yb-font-weight-semibold: 600;
+--yb-info-solid: #1B5FA8;
+--yb-info-surface: #E9F1FA;
+--yb-info-text: #1B5FA8;
 --yb-line-height-none: 1;
+--yb-line-height-relaxed: 1.55;
 --yb-radius-card: 8px;
 --yb-radius-sm: 4px;
+--yb-space-1: 0.25rem;
 --yb-space-2: 0.5rem;
 --yb-space-3: 0.75rem;
 --yb-space-4: 1rem;
 --yb-space-5: 1.25rem;
 --yb-success-solid: #1F7A34;
+--yb-success-surface: #EAF6EC;
 --yb-success-text: #1F7A34;
 --yb-surface: #FFFFFF;
---yb-text-muted: #6D6D71;
 --yb-text-primary: #1E1E1F;
 --yb-text-secondary: #535356;
 --yb-type-body-sm-size: 0.875rem;
---yb-type-caption-size: 0.8125rem;</code></pre>
+--yb-warning-solid: #8A5A00;
+--yb-warning-surface: #FBF3E3;
+--yb-warning-text: #8A5A00;</code></pre>
       </div>
     </div>
   </div>
@@ -405,12 +445,13 @@
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
         <div class="anat__peca" style="max-inline-size:380px"><div class="yb-toast yb-toast--success" role="status">
-          <div class="yb-toast__body">
-            <b class="yb-toast__title">Added to cart</b>
-            <p class="yb-toast__text">Kit Sealant Fashion Gold — 500 g</p>
-          </div>
-          <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
-        </div></div>
+        <svg class="yb-icon yb-toast__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>
+        <div class="yb-toast__body">
+          <b class="yb-toast__title">Added to cart</b>
+          <p class="yb-toast__text">Kit Sealant Fashion Gold — 500 g</p>
+        </div>
+        <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
+      </div></div>
       </div>
       <ol class="anat__legenda">
         <li data-target=".yb-toast"><span class="anat__texto"><b>Toast</b> — Criado pelo script e removido sozinho em 5s. <code>role="status"</code> espera a pausa do leitor de tela; o <code>--danger</code> usa <code>alert</code>, que interrompe.</span></li>
@@ -432,43 +473,48 @@
 
     <div class="api-ficha">
     <div class="api-linha"><span class="api-linha__rotulo">Feita de</span><div class="api-linha__corpo"><div class="usa-grupos"><div class="usa-grupo"><span class="usa-degrau">Atoms</span><ul class="usa"><li><a href="../atoms/button.html">Button</a></li></ul></div></div></div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-toast--danger</code> <code>.yb-toast--leaving</code> <code>.yb-toast--success</code></span></div></div>
-    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-toast__body</code> <code>.yb-toast__close</code> <code>.yb-toast__text</code> <code>.yb-toast__title</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Modificadores</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-toast--danger</code> <code>.yb-toast--info</code> <code>.yb-toast--leaving</code> <code>.yb-toast--success</code> <code>.yb-toast--warning</code></span></div></div>
+    <div class="api-linha"><span class="api-linha__rotulo">Elementos</span><div class="api-linha__corpo"><span class="lista-api"><code>.yb-toast__action</code> <code>.yb-toast__body</code> <code>.yb-toast__close</code> <code>.yb-toast__icon</code> <code>.yb-toast__text</code> <code>.yb-toast__title</code></span></div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:hover</code></div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele aparece, mas não responde.</div></div>
     </div>
-    <p class="rotulo">Tokens <span class="rotulo-conta">28</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">33</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>12</span></p>
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>17</span></p>
         <ul class="tokens__lista">
+          <li><i class="tokens__cor" style="background:var(--yb-info-solid)" aria-hidden="true"></i><code>--yb-info-solid</code><span class="tokens__valor">#1B5FA8</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-info-surface)" aria-hidden="true"></i><code>--yb-info-surface</code><span class="tokens__valor">#E9F1FA</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-info-text)" aria-hidden="true"></i><code>--yb-info-text</code><span class="tokens__valor">#1B5FA8</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-warning-solid)" aria-hidden="true"></i><code>--yb-warning-solid</code><span class="tokens__valor">#8A5A00</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-warning-surface)" aria-hidden="true"></i><code>--yb-warning-surface</code><span class="tokens__valor">#FBF3E3</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-success-surface)" aria-hidden="true"></i><code>--yb-success-surface</code><span class="tokens__valor">#EAF6EC</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-warning-text)" aria-hidden="true"></i><code>--yb-warning-text</code><span class="tokens__valor">#8A5A00</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-danger-surface)" aria-hidden="true"></i><code>--yb-danger-surface</code><span class="tokens__valor">#FBEAE9</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-success-solid)" aria-hidden="true"></i><code>--yb-success-solid</code><span class="tokens__valor">#1F7A34</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-danger-solid)" aria-hidden="true"></i><code>--yb-danger-solid</code><span class="tokens__valor">#B3261E</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-action-primary-bg)" aria-hidden="true"></i><code>--yb-action-primary-bg</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-danger-text)" aria-hidden="true"></i><code>--yb-danger-text</code><span class="tokens__valor">#B3261E</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-success-text)" aria-hidden="true"></i><code>--yb-success-text</code><span class="tokens__valor">#1F7A34</span></li>
-          <li><code>--yb-border-emphasis</code><span class="tokens__valor">2px</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border)" aria-hidden="true"></i><code>--yb-border</code><span class="tokens__valor">#DADADB</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-surface)" aria-hidden="true"></i><code>--yb-surface</code><span class="tokens__valor">#FFFFFF</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-text-muted)" aria-hidden="true"></i><code>--yb-text-muted</code><span class="tokens__valor">#6D6D71</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
           <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>5</span></p>
+        <p class="tokens__familia"><a href="../tokens/typography.html">Tipografia</a> <span>4</span></p>
         <ul class="tokens__lista">
           <li><code>--yb-line-height-none</code><span class="tokens__valor">1</span></li>
-          <li><code>--yb-font-weight-bold</code><span class="tokens__valor">700</span></li>
-          <li><code>--yb-type-caption-size</code><span class="tokens__valor">0.8125rem</span></li>
+          <li><code>--yb-line-height-relaxed</code><span class="tokens__valor">1.55</span></li>
           <li><code>--yb-font-weight-semibold</code><span class="tokens__valor">600</span></li>
           <li><code>--yb-type-body-sm-size</code><span class="tokens__valor">0.875rem</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>4</span></p>
+        <p class="tokens__familia"><a href="../tokens/space.html">Espaço</a> <span>5</span></p>
         <ul class="tokens__lista">
+          <li><code>--yb-space-1</code><span class="tokens__valor">0.25rem</span></li>
           <li><code>--yb-space-5</code><span class="tokens__valor">1.25rem</span></li>
           <li><code>--yb-space-2</code><span class="tokens__valor">0.5rem</span></li>
           <li><code>--yb-space-4</code><span class="tokens__valor">1rem</span></li>

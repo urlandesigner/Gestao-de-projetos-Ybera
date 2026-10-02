@@ -1,19 +1,20 @@
 <h2>Toast</h2>
-    <p class="when">Mensagem curta que aparece por alguns segundos para confirmar algo que já aconteceu, como “Added to cart”. Não pede resposta.</p>
-    <h3 class="row-label">Variants</h3>
+    <p class="when">Mensagem curta que aparece por alguns segundos para confirmar algo que já aconteceu, como “Added to cart”. Não pede resposta. Quando a mensagem tem de ficar na página até alguém tirar, a peça é o <a href="alert.html">Alert</a>.</p>
+    <h3 class="row-label">Clique e veja no canto da tela</h3>
     <div class="demo demo--amostras">
       <span class="amostra">
         <button type="button" class="yb-btn yb-btn--primary"
           data-yb-toast data-toast-title="Added to cart"
           data-toast-text="Kit Sealant Fashion Gold — 500 g"
-          data-toast-variant="success">Adicionar ao carrinho</button>
+          data-toast-variant="success">Adicionar</button>
         <span class="amostra__rotulo"><code>--success</code></span>
       </span>
       <span class="amostra">
         <button type="button" class="yb-btn yb-btn--ghost"
-          data-yb-toast data-toast-title="Saved for later"
-          data-toast-text="Find it in your wishlist">Salvar</button>
-        <span class="amostra__rotulo"><code>sem modificador</code></span>
+          data-yb-toast data-toast-title="Removed from cart"
+          data-toast-action="Undo"
+          data-toast-duration="10000">Remover</button>
+        <span class="amostra__rotulo"><code>com ação</code></span>
       </span>
       <span class="amostra">
         <button type="button" class="yb-btn yb-btn--ghost"
@@ -23,31 +24,72 @@
         <span class="amostra__rotulo"><code>--danger</code></span>
       </span>
     </div>
-    <h3 class="row-label">Como ele aparece &mdash; a marcação que o script monta</h3>
-    <!-- Parado, só na doc: na loja o toast nasce do `Ybera.toast()` e some
-         sozinho. É a mesma árvore que o script cria, para a anatomia e o código
-         terem o que mostrar. -->
-    <div class="demo demo--amostras">
-      <span class="amostra">
-        <div class="yb-toast yb-toast--success" role="status">
-          <div class="yb-toast__body">
-            <b class="yb-toast__title">Added to cart</b>
-            <p class="yb-toast__text">Kit Sealant Fashion Gold — 500 g</p>
-          </div>
-          <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
+    <h3 class="row-label">Parados — a mesma marcação que o script monta</h3>
+    <!-- Na loja o toast nasce do `Ybera.toast()` e some sozinho. Aqui ele está
+         parado para a anatomia e o código terem o que mostrar. -->
+    <div class="demo demo--stack" style="max-inline-size:26rem">
+      <div class="yb-toast" role="status">
+        <div class="yb-toast__body">
+          <b class="yb-toast__title">Filters cleared</b>
         </div>
-        <span class="amostra__rotulo"><code>--success</code></span>
-      </span>
-      <span class="amostra">
-        <div class="yb-toast yb-toast--danger" role="alert">
-          <div class="yb-toast__body">
-            <b class="yb-toast__title">Could not add to cart</b>
-            <p class="yb-toast__text">Check your connection and try again.</p>
-          </div>
-          <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
+        <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
+      </div>
+      <div class="yb-toast" role="status">
+        <div class="yb-toast__body">
+          <b class="yb-toast__title">Removed from cart</b>
         </div>
-        <span class="amostra__rotulo"><code>--danger</code></span>
-      </span>
+        <button class="yb-btn yb-btn--secondary yb-btn--sm yb-toast__action" type="button">Undo</button>
+        <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
+      </div>
+      <div class="yb-toast yb-toast--success" role="status">
+        <svg class="yb-icon yb-toast__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>
+        <div class="yb-toast__body">
+          <b class="yb-toast__title">Added to cart</b>
+          <p class="yb-toast__text">Kit Sealant Fashion Gold — 500 g</p>
+        </div>
+        <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
+      </div>
+      <div class="yb-toast yb-toast--warning" role="status">
+        <svg class="yb-icon yb-toast__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-alert"/></svg>
+        <div class="yb-toast__body">
+          <b class="yb-toast__title">Coupon expires in 10 minutes</b>
+        </div>
+        <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
+      </div>
+      <div class="yb-toast yb-toast--danger" role="alert">
+        <svg class="yb-icon yb-toast__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg>
+        <div class="yb-toast__body">
+          <b class="yb-toast__title">Could not add to cart</b>
+          <p class="yb-toast__text">Check your connection and try again.</p>
+        </div>
+        <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
+      </div>
+      <div class="yb-toast yb-toast--info" role="status">
+        <svg class="yb-icon yb-toast__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-info"/></svg>
+        <div class="yb-toast__body">
+          <b class="yb-toast__title">Shipping updated for your ZIP</b>
+        </div>
+        <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
+      </div>
+    </div>
+    <div class="note">
+      <b>Fala a mesma língua do Alert</b>
+      <p>Superfície tingida, borda da mesma família e o ícone da variante — os mesmos
+      quatro do <a href="alert.html">Alert</a>, e os mesmos tokens. Antes a severidade
+      vinha de uma tarja de 3px, e cor sozinha não informa: quem não distingue verde de
+      vermelho via dois retângulos brancos iguais.</p>
+    </div>
+    <div class="note">
+      <b>O neutro é a base, sem modificador</b>
+      <p>O Alert exige uma tinta — alerta sem severidade não é alerta. O toast, não:
+      “Filtros limpos” e “Link copiado” são a maioria dos casos. Como ele flutua sobre
+      conteúdo que não controla, a base já vem com superfície, borda e sombra próprias.</p>
+    </div>
+    <div class="note">
+      <b>Com ação, dê mais tempo</b>
+      <p>Cinco segundos não bastam para ler, decidir e clicar em “Undo”. Passe
+      <code>duration</code> maior, ou <code>0</code> para não sumir sozinho. Clicar na
+      ação executa e fecha: a mensagem existia para oferecer a escolha.</p>
     </div>
     <div class="note">
       <b>Some sozinho — menos quando você está lendo</b>
@@ -55,4 +97,11 @@
       no <code>focusin</code>. O de erro usa <code>duration:0</code> e
       <code>role="alert"</code>: erro não desaparece antes de ser lido, e interrompe
       o leitor de tela. Os outros usam <code>role="status"</code> e esperam a pausa.</p>
+    </div>
+    <div class="note">
+      <b>O ícone vem do sprite, e o caminho é lido da página</b>
+      <p>A doc mora em pastas diferentes e o tema serve o arquivo de outro lugar: nenhum
+      caminho fixo serviria aos três. O script lê o primeiro <code>&lt;use&gt;</code> da
+      página. Sem nenhum ícone nela, o toast sai sem glifo — a tinta, a borda e o
+      <code>role</code> continuam dizendo a severidade.</p>
     </div>

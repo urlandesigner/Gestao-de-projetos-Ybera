@@ -15,7 +15,7 @@
      <button data-yb-fav aria-pressed="false" data-label-off="…" data-label-on="…">
      <button class="yb-switch" role="switch" aria-checked="false" data-yb-switch>
      <aside class="yb-partner" data-yb-partner>  +  <button class="yb-partner__avatar">
-     <button data-yb-toast data-toast-title="Saved for later">
+     <button data-yb-toast data-toast-title="Saved for later" data-toast-action="Undo">
      <div class="yb-track__nav" data-yb-track-nav="<id do trilho>" hidden>
      <div class="yb-buybar" data-yb-buybar hidden>  +  <button data-yb-buybar-anchor>
      <div class="yb-tabs" data-yb-tabs>  +  role="tab" com aria-controls
@@ -121,12 +121,59 @@
     return c;
   }
 
+  /* O GLIFO DE CADA VARIANTE, e sao os mesmos quatro do Alert. Warning e danger
+     sao os que mais se confundem, e dar o mesmo triangulo aos dois devolveria a
+     cor como unica diferenca — que e de onde o toast veio. */
+  var GLIFO_TOAST = {
+    success: 'yb-check', warning: 'yb-alert',
+    danger: 'yb-x-circle', info: 'yb-info',
+  };
+
+  /* O CAMINHO DO SPRITE NAO E FIXO. A doc mora em `atoms/`, `molecules/` e na
+     raiz, e o tema Shopify serve o arquivo de outro lugar ainda — nenhum
+     caminho escrito aqui serviria aos tres. Entao ele e LIDO da pagina: o
+     primeiro `<use>` que ja aponta para o sprite diz onde ele esta.
+
+     Sem nenhum icone na pagina nao ha de onde ler, e o toast sai sem glifo. E
+     degradacao aceitavel e nao silenciosa pela metade: a superficie tingida, a
+     borda e o `role` continuam dizendo a severidade. O que nao da e inventar um
+     caminho e servir um quadrado quebrado.
+
+     A BUSCA E PELO `#yb-`, e nao pelo nome do arquivo. A primeira versao
+     procurava `ybera-icons.svg` e voltava vazia nas telas-prova, que servem o
+     MESMO sprite com outro nome (`yb/icons.svg`) — pasta autocontida. O nome do
+     arquivo e de quem publica; o prefixo do simbolo e do sistema, e e por isso
+     que ele e o ponto fixo. */
+  function baseDoSprite() {
+    var u = document.querySelector('use[href*="#yb-"]');
+    var h = u && u.getAttribute('href');
+    var i = h ? h.indexOf('#') : -1;
+    return i > 0 ? h.slice(0, i) : null;
+  }
+
+  function iconeToast(variante) {
+    var nome = GLIFO_TOAST[variante];
+    var base = nome && baseDoSprite();
+    if (!base) return null;
+    var NS = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('class', 'yb-icon yb-toast__icon');
+    svg.setAttribute('aria-hidden', 'true');
+    var use = document.createElementNS(NS, 'use');
+    use.setAttribute('href', base + '#' + nome);
+    svg.appendChild(use);
+    return svg;
+  }
+
   function toast(opts) {
     opts = opts || {};
     var el = document.createElement('div');
     el.className = 'yb-toast' + (opts.variant ? ' yb-toast--' + opts.variant : '');
     // erro interrompe o leitor de tela; o resto espera a pausa
     el.setAttribute('role', opts.variant === 'danger' ? 'alert' : 'status');
+
+    var icone = iconeToast(opts.variant);
+    if (icone) el.appendChild(icone);
 
     var body = document.createElement('div');
     body.className = 'yb-toast__body';
@@ -150,6 +197,24 @@
     x.textContent = '×';
 
     el.appendChild(body);
+
+    /* ACAO INLINE. E o Button secundario de verdade, com as classes dele — um
+       botao proprio do toast seria o terceiro desenho de botao da casa.
+       Clicar executa e FECHA: a mensagem existia para oferecer esta escolha, e
+       deixa-la na tela depois da escolha feita e pedir um segundo clique para
+       dizer a mesma coisa. */
+    if (opts.action && opts.action.label) {
+      var acao = document.createElement('button');
+      acao.type = 'button';
+      acao.className = 'yb-btn yb-btn--secondary yb-btn--sm yb-toast__action';
+      acao.textContent = opts.action.label;
+      acao.addEventListener('click', function () {
+        if (typeof opts.action.onClick === 'function') opts.action.onClick();
+        sair();
+      });
+      el.appendChild(acao);
+    }
+
     el.appendChild(x);
     containerToast().appendChild(el);
 
@@ -726,10 +791,16 @@
     var b = e.target.closest('[data-yb-toast]');
     if (!b) return;
     var prazo = b.getAttribute('data-toast-duration');
+    /* `data-toast-action` so monta o botao; o que ele FAZ nao cabe num
+       atributo. Sem `onClick` ele fecha o toast e mais nada — e isso e o
+       honesto para um gancho declarativo: quem precisa desfazer de verdade
+       chama `Ybera.toast()` e passa a funcao. */
+    var rotuloAcao = b.getAttribute('data-toast-action');
     toast({
       title: b.getAttribute('data-toast-title') || '',
       text: b.getAttribute('data-toast-text') || '',
       variant: b.getAttribute('data-toast-variant') || '',
+      action: rotuloAcao ? { label: rotuloAcao } : null,
       duration: prazo === null ? undefined : +prazo
     });
   });
