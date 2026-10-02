@@ -3282,10 +3282,16 @@ button.yb-link{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:calc(var(--yb-focus-offset) * -1);
 }
-.yb-alert--success{background:var(--yb-success-surface); border-color:var(--yb-success-solid); color:var(--yb-success-text)}
-.yb-alert--warning{background:var(--yb-warning-surface); border-color:var(--yb-warning-solid); color:var(--yb-warning-text)}
-.yb-alert--danger {background:var(--yb-danger-surface);  border-color:var(--yb-danger-solid);  color:var(--yb-danger-text)}
-.yb-alert--info   {background:var(--yb-info-surface);    border-color:var(--yb-info-solid);    color:var(--yb-info-text)}
+/* SEM `border-color` AQUI, e isso e remocao e nao esquecimento: as quatro
+   variantes declaravam uma cor de borda que nunca desenhou, porque o
+   `.yb-alert` nao tem `border-style`. Codigo morto que PARECE intencao e o que
+   faz a proxima pessoa "consertar" acrescentando o estilo que falta — e mudar
+   a cara do alerta sem saber que mudou. O alerta e tingido e sem fio por
+   decisao; o toast segue a mesma, e quem leva fio la e so o neutro. */
+.yb-alert--success{background:var(--yb-success-surface); color:var(--yb-success-text)}
+.yb-alert--warning{background:var(--yb-warning-surface); color:var(--yb-warning-text)}
+.yb-alert--danger {background:var(--yb-danger-surface);  color:var(--yb-danger-text)}
+.yb-alert--info   {background:var(--yb-info-surface);    color:var(--yb-info-text)}
 .yb-alert p{margin:0; color:var(--yb-text-secondary)}
 
 /* =========================================================================
@@ -3451,11 +3457,27 @@ button.yb-link{
 
 /* Os quatro pares são os MESMOS do Alert, de propósito: um `var()` por tinta,
    não um valor copiado. Quem afinar `--yb-success-surface` move as duas peças
-   no mesmo passo. */
-.yb-toast--success{background:var(--yb-success-surface); border-color:var(--yb-success-solid); color:var(--yb-success-text)}
-.yb-toast--warning{background:var(--yb-warning-surface); border-color:var(--yb-warning-solid); color:var(--yb-warning-text)}
-.yb-toast--danger {background:var(--yb-danger-surface);  border-color:var(--yb-danger-solid);  color:var(--yb-danger-text)}
-.yb-toast--info   {background:var(--yb-info-surface);    border-color:var(--yb-info-solid);    color:var(--yb-info-text)}
+   no mesmo passo.
+
+   TINGIDO NÃO LEVA FIO, e é aqui que o toast e o Alert voltam a se encontrar: a
+   tinta já desenha a caixa, e um fio em volta dela faz duas bordas dizendo a
+   mesma coisa. Quem precisa do fio é o NEUTRO, que é branco sobre conteúdo
+   branco — sem ele não há caixa nenhuma.
+
+   `transparent` e não `border:0`: o fio continua ocupando o lugar dele na
+   caixa, então as cinco variações têm a mesma medida e o mesmo respiro, e
+   trocar a tinta não move o texto 1px. Em alto contraste o navegador devolve
+   uma cor de sistema a esse fio, e a caixa volta a existir sozinha — que é
+   justamente onde a tinta some. */
+.yb-toast--success{background:var(--yb-success-surface); border-color:transparent; color:var(--yb-success-text)}
+.yb-toast--warning{background:var(--yb-warning-surface); border-color:transparent; color:var(--yb-warning-text)}
+.yb-toast--danger {background:var(--yb-danger-surface);  border-color:transparent; color:var(--yb-danger-text)}
+.yb-toast--info   {background:var(--yb-info-surface);    border-color:transparent; color:var(--yb-info-text)}
+/* A sombra some em alto contraste junto com a tinta; sem isto o toast encosta
+   no que estiver atrás e vira uma mancha sem fim definido. */
+@media (forced-colors: active){
+  .yb-toast{border-color:CanvasText}
+}
 
 .yb-toast--leaving{animation:yb-toast-out var(--yb-duration-base) var(--yb-ease-exit) forwards}
 .yb-toast__body{flex:1; min-width:0}

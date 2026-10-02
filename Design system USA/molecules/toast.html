@@ -368,10 +368,13 @@
   animation:yb-toast-in var(--yb-duration-slow) var(--yb-ease-enter);
 }
 .yb-toast__icon{flex:none; margin-block-start:.1em}
-.yb-toast--success{background:var(--yb-success-surface); border-color:var(--yb-success-solid); color:var(--yb-success-text)}
-.yb-toast--warning{background:var(--yb-warning-surface); border-color:var(--yb-warning-solid); color:var(--yb-warning-text)}
-.yb-toast--danger{background:var(--yb-danger-surface);  border-color:var(--yb-danger-solid);  color:var(--yb-danger-text)}
-.yb-toast--info{background:var(--yb-info-surface);    border-color:var(--yb-info-solid);    color:var(--yb-info-text)}
+.yb-toast--success{background:var(--yb-success-surface); border-color:transparent; color:var(--yb-success-text)}
+.yb-toast--warning{background:var(--yb-warning-surface); border-color:transparent; color:var(--yb-warning-text)}
+.yb-toast--danger{background:var(--yb-danger-surface);  border-color:transparent; color:var(--yb-danger-text)}
+.yb-toast--info{background:var(--yb-info-surface);    border-color:transparent; color:var(--yb-info-text)}
+@media (forced-colors: active){
+  .yb-toast{border-color:CanvasText}
+}
 .yb-toast--leaving{animation:yb-toast-out var(--yb-duration-base) var(--yb-ease-exit) forwards}
 .yb-toast__body{flex:1; min-width:0}
 .yb-toast__title{
@@ -412,7 +415,6 @@
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
         <pre><code>--yb-border: #DADADB;
 --yb-border-hairline: 1px;
---yb-danger-solid: #B3261E;
 --yb-danger-surface: #FBEAE9;
 --yb-danger-text: #B3261E;
 --yb-duration-base: 180ms;
@@ -421,7 +423,6 @@
 --yb-ease-exit: cubic-bezier(.3, 0, 1, 1);
 --yb-elevation-dropdown: 0 4px 12px rgba(30,30,31,.08), 0 2px 4px rgba(30,30,31,.05);
 --yb-font-weight-semibold: 600;
---yb-info-solid: #1B5FA8;
 --yb-info-surface: #E9F1FA;
 --yb-info-text: #1B5FA8;
 --yb-line-height-none: 1;
@@ -433,14 +434,12 @@
 --yb-space-3: 0.75rem;
 --yb-space-4: 1rem;
 --yb-space-5: 1.25rem;
---yb-success-solid: #1F7A34;
 --yb-success-surface: #EAF6EC;
 --yb-success-text: #1F7A34;
 --yb-surface: #FFFFFF;
 --yb-text-primary: #1E1E1F;
 --yb-text-secondary: #535356;
 --yb-type-body-sm-size: 0.875rem;
---yb-warning-solid: #8A5A00;
 --yb-warning-surface: #FBF3E3;
 --yb-warning-text: #8A5A00;</code></pre>
       </div>
@@ -500,21 +499,17 @@
     <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:hover</code></div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele aparece, mas não responde.</div></div>
     </div>
-    <p class="rotulo">Tokens <span class="rotulo-conta">33</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">29</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>17</span></p>
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>13</span></p>
         <ul class="tokens__lista">
-          <li><i class="tokens__cor" style="background:var(--yb-info-solid)" aria-hidden="true"></i><code>--yb-info-solid</code><span class="tokens__valor">#1B5FA8</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-info-surface)" aria-hidden="true"></i><code>--yb-info-surface</code><span class="tokens__valor">#E9F1FA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-info-text)" aria-hidden="true"></i><code>--yb-info-text</code><span class="tokens__valor">#1B5FA8</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-warning-solid)" aria-hidden="true"></i><code>--yb-warning-solid</code><span class="tokens__valor">#8A5A00</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-warning-surface)" aria-hidden="true"></i><code>--yb-warning-surface</code><span class="tokens__valor">#FBF3E3</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-success-surface)" aria-hidden="true"></i><code>--yb-success-surface</code><span class="tokens__valor">#EAF6EC</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-warning-text)" aria-hidden="true"></i><code>--yb-warning-text</code><span class="tokens__valor">#8A5A00</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-danger-surface)" aria-hidden="true"></i><code>--yb-danger-surface</code><span class="tokens__valor">#FBEAE9</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-success-solid)" aria-hidden="true"></i><code>--yb-success-solid</code><span class="tokens__valor">#1F7A34</span></li>
-          <li><i class="tokens__cor" style="background:var(--yb-danger-solid)" aria-hidden="true"></i><code>--yb-danger-solid</code><span class="tokens__valor">#B3261E</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-danger-text)" aria-hidden="true"></i><code>--yb-danger-text</code><span class="tokens__valor">#B3261E</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-success-text)" aria-hidden="true"></i><code>--yb-success-text</code><span class="tokens__valor">#1F7A34</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-border)" aria-hidden="true"></i><code>--yb-border</code><span class="tokens__valor">#DADADB</span></li>

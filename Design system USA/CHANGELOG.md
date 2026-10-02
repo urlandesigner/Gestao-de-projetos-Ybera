@@ -92,6 +92,19 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   [DDR-013](decision-log/DDR-013-o-painel-nasce-de-fora.md).
 
 ### Mudado
+- **Toast tingido não leva fio.** A tinta já desenha a caixa, e um fio em volta
+  dela eram duas bordas dizendo a mesma coisa — era também a única diferença que
+  ainda separava o toast colorido do Alert colorido. Quem precisa do fio é o
+  **neutro**, que é branco sobre conteúdo branco: sem ele não há caixa nenhuma.
+  É `border-color:transparent` e não `border:0`, para o fio continuar ocupando o
+  lugar dele: as cinco variações mantêm a mesma medida, e em alto contraste o
+  navegador devolve uma cor de sistema a ele — que é justamente onde a tinta
+  some.
+- **O Alert perdeu quatro `border-color` que nunca desenharam.** As variantes
+  declaravam cor de borda e o `.yb-alert` não tem `border-style`: a linha não
+  fazia nada. Nada muda na tela — medido antes e depois. Código morto que
+  **parece** intenção é o que faz a próxima pessoa "consertar" acrescentando o
+  estilo que falta, e mudar a cara do alerta sem saber que mudou.
 - **O X do toast só aparece quando ele não fecha sozinho.** Antes o script punha
   sempre. Com os cinco segundos do padrão o tempo já faz o que o X faria: o botão
   vira um alvo a mais e uma parada de teclado a mais para antecipar o que ia
