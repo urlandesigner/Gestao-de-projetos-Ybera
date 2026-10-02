@@ -697,9 +697,23 @@ details.note > :last-child{padding-block-end:var(--yb-space-4)}
 
    O VALOR ao lado do nome é o que faz a lista valer: `--yb-space-4` não diz
    nada, `--yb-space-4 · 16px` responde a pergunta que levou alguém ali. */
+/* COLUNAS DE TEXTO, E NAO GRADE — e a diferenca e medida, nao gosto.
+   Numa grade, toda celula da MESMA FILEIRA tem a altura da mais alta. Os grupos
+   aqui sao de tamanhos muito diferentes — Cor tem 24 tokens, Forma tem 2 —, e o
+   resultado era um cartao de 842px ao lado de outro de 842px que precisava de
+   190: seiscentos pixels de nada, e a pessoa rolando por eles.
+
+   `columns` empilha os cartoes e EQUILIBRA a altura das colunas sozinho, sem
+   esticar ninguem. `break-inside:avoid` e o que impede um grupo de ser cortado
+   ao meio na virada da coluna, que e o unico jeito de `columns` estragar uma
+   lista.
+
+   320px de base e o tamanho de um nome inteiro na linha: o maior token da casa
+   (`--yb-action-secondary-border-hover`) mede 266px, mais a amostra de cor, os
+   vaos e o respiro do cartao. Com os 260px de antes cabia uma coluna a mais, e
+   o nome partia em duas linhas em oito das quarenta e seis. */
 .tokens{
-  display:grid; gap:var(--yb-space-4);
-  grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+  columns:320px; column-gap:var(--yb-space-4);
   margin:var(--yb-space-2) 0 0;
 }
 /* CADA TÓPICO NUM CARTÃO. Solto na grade, um grupo de catorze linhas e outro
@@ -707,6 +721,7 @@ details.note > :last-child{padding-block-end:var(--yb-space-4)}
    parecia continuação da primeira. A caixa dá a fronteira; o fio embaixo do
    título continua separando o nome do grupo da lista dele. */
 .tokens__grupo{
+  break-inside:avoid; margin-block-end:var(--yb-space-4);
   padding:var(--yb-space-4);
   /* Cinza e não branco: a página já é branca, então o cartão branco só existia
      pelo fio de 1px — e fio de 1px não é fronteira suficiente entre dois
@@ -738,20 +753,40 @@ details.note > :last-child{padding-block-end:var(--yb-space-4)}
   display:flex; align-items:baseline; gap:var(--yb-space-2); flex-wrap:wrap;
   font-size:var(--yb-type-caption-size); line-height:var(--yb-type-body-line);
 }
-/* O NOME nunca quebra; o valor sim. `--yb-elevation-card` tem 28 caracteres de
-   sombra ao lado, e com os dois quebrando o nome saía partido em três linhas —
-   nome de token partido não se lê nem se copia. Sem espaço, o valor desce para
-   a linha de baixo e continua alinhado à direita pelo `margin auto`. */
+/* O NOME nunca quebra. `--yb-elevation-card` tem 28 caracteres de sombra ao
+   lado, e com os dois quebrando o nome saía partido em três linhas — nome de
+   token partido não se lê nem se copia. */
 .tokens__lista code{color:var(--yb-text-primary); white-space:nowrap}
+/* O VALOR VEM LOGO DEPOIS DO NOME, e não grudado na borda direita. Com
+   `margin-inline-start:auto` ele era empurrado para a ponta; quando o nome era
+   longo e não sobrava espaço, o valor descia sozinho para a linha de baixo E
+   continuava na direita — um número órfão, a meia tela de distância do nome que
+   ele mede. Logo depois, quando desce, ele desce ALINHADO com o nome e lê como
+   continuação da mesma linha. */
 .tokens__valor{
-  margin-inline-start:auto; color:var(--yb-text-muted);
+  color:var(--yb-text-muted);
   font-family:var(--yb-font-family-mono); font-variant-numeric:tabular-nums;
+}
+/* RECUO PENDURADO na linha que tem amostra. Com a amostra no fluxo, o valor que
+   desce para a segunda linha caía 20px à ESQUERDA do nome — ele voltava para a
+   margem da amostra, e o número ficava pendurado debaixo do quadradinho de cor
+   em vez de debaixo do nome que ele mede. Tirando a amostra do fluxo, tudo o
+   que é texto começa no mesmo x, e o que desce desce alinhado.
+
+   `:has()` para o recuo existir só onde há amostra: Espaço, Tipografia e Forma
+   não têm quadradinho, e 20px de calha vazia neles seria largura jogada fora
+   justamente no bloco que estava sem largura. */
+.tokens__lista li:has(.tokens__cor){
+  position:relative; padding-inline-start:calc(.75rem + var(--yb-space-2));
 }
 /* A amostra tem borda porque metade da rampa é quase-branca: sem ela, seis
    quadradinhos claros viram seis buracos na lista. */
 .tokens__cor{
   inline-size:.75rem; block-size:.75rem; flex:none; align-self:center;
   border:1px solid var(--yb-border); border-radius:var(--yb-radius-xs, 2px);
+}
+.tokens__lista li:has(.tokens__cor) > .tokens__cor{
+  position:absolute; inset-inline-start:0; inset-block-start:.3em;
 }
 .rotulo-conta{
   color:var(--yb-text-muted); font-weight:var(--yb-font-weight-regular);
