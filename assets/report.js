@@ -124,29 +124,12 @@ function mensagemDeErro(e) {
 // st.roadmap: o arquivo (carregarRoadmap, abaixo) e o link (em lerDoLink).
 // O arquivo é meu, mas tratar os dois como dado que pode vir torto é grátis
 // e evita NaN se algum dia eu editar a mão e errar uma data.
-function saneRoadmapItens(lista) {
-  const dataValida = (s) => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s)
-    && !Number.isNaN(Date.parse(s + 'T00:00:00Z'));
-  return (Array.isArray(lista) ? lista : [])
-    .filter((x) => x && dataValida(x.inicio) && dataValida(x.fim)
-      && Date.parse(x.inicio + 'T00:00:00Z') <= Date.parse(x.fim + 'T00:00:00Z'))
-    .map((x) => ({
-      titulo: String(x.titulo || '').slice(0, 200) || 'Sem título',
-      inicio: x.inicio,
-      fim: x.fim,
-      /* Lista branca de status. Qualquer outro valor (ou nenhum) vira null —
-         "não afirmo nada sobre esta iniciativa", que é o estado certo pra um
-         item que ainda é só janela no calendário.
-
-         ESTA LISTA É O PORTÃO: um status novo em roadmap.json não chega ao
-         desenho sem passar por aqui, por mais que o briefing saiba desenhá-lo.
-         Foi o que aconteceu com 'teste': o dado dizia, o briefing sabia, e o
-         item saía sem selo e com barra neutra porque o saneamento o zerava no
-         meio do caminho. Quem acrescentar um status ali acrescenta aqui. */
-      status: (x.status === 'concluido' || x.status === 'andamento' || x.status === 'teste')
-        ? x.status : null,
-    }));
-}
+// Mudou de casa em 02/10/2026: o saneamento vive em core.js porque a Central
+// passou a ler o mesmo roadmap.json (bloco Roadmap do Panorama). Duplicar a
+// lista branca de status era repetir, de olhos abertos, o defeito que o
+// tests/roadmap-portao.test.js existe pra impedir: status novo entra num
+// arquivo, não entra no outro, e o item sai da tela sem selo e sem erro.
+const saneRoadmapItens = C.saneRoadmapItens;
 
 // Independente do DevOps: busca uma vez, no boot, e não repete a cada render
 // nem a cada troca de mês — o roadmap não muda com o seletor de mês.

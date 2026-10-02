@@ -389,6 +389,86 @@ function dataCurta(iso) {
 /* ---------- Panorama ---------- */
 // Tudo aqui é derivado dos itens que os cartões já buscaram — nenhuma chamada
 // própria à API. Junta os times num só conjunto e conta.
+/* ---------- Panorama: os dois blocos de leitura ---------- */
+/* Vêm antes dos operacionais porque a página tem dois leitores: o gestor, que
+   para de ler depois do segundo bloco, e o PO, que rola até o Atenção. */
+
+const MESES_RITMO = 6;
+const MES_CURTO = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+const rotuloMesCurto = (chave) => MES_CURTO[Number(chave.slice(5, 7)) - 1] || chave;
+
+/* Barras em CSS, sem SVG e sem biblioteca: o projeto não tem build e já desenha
+   barra de progresso assim no relatório. Cada coluna é um mês; dentro dela, uma
+   fatia por frente, com altura proporcional ao maior mês da série. */
+function htmlRitmo() {
+  if (baseState.erro) return `<p class="erro">${escapeHtml(baseState.erro)}</p>`;
+  if (!baseState.porTime) return '<p class="mudo">carregando o histórico…</p>';
+  // Dedupe por id antes de contar: as consultas são por área de time e, se duas
+  // áreas se sobrepuserem, o mesmo item entraria duas vezes. Contagem dobrada
+  // aqui quebraria a régua única com o relatório, que é o ponto do bloco.
+  const porId = new Map();
+  for (const t of baseState.porTime) for (const it of (t.items || [])) porId.set(it.id, it);
+  const items = [...porId.values()].filter(noNome);
+  const evo = C.evolucaoMensal(items, Date.now(), MESES_RITMO);
+  const pico = Math.max(...evo.meses.map((m) => m.total));
+  // Série toda zerada não vira gráfico: seis colunas vazias afirmam "medimos e
+  // deu zero" com a mesma cara de "ainda não temos dado".
+  if (!pico) return `<p class="mudo">Nenhuma entrega registrada nos últimos ${MESES_RITMO} meses.</p>`;
+  const cor = (i) => `var(--serie-${(i % 6) + 1})`;
+  const indice = new Map(evo.frentes.map((f, i) => [f.id, i]));
+  /* Duas escalas aninhadas, e a distinção importa: a BARRA mede contra o mês de
+     pico (é o que compara meses), e cada FATIA mede contra o total do próprio
+     mês (é o que divide a barra). Medir a fatia contra o pico faria a soma das
+     fatias não fechar a barra nos meses baixos. */
+  const colunas = evo.meses.map((m) => {
+    const fatias = m.porFrente.map((f) =>
+      `<span class="ritmo-fatia" style="height:${(f.n / m.total) * 100}%;background:${cor(indice.get(f.id))}" title="${escapeHtml(f.nome)}: ${f.n}"></span>`
+    ).join('');
+    // O número mora preso ao topo da própria barra (bottom: 100%), não no alto
+    // da coluna: solto lá em cima, num mês baixo ele ficava a meia tela da
+    // barra que descreve e parava de parecer dela.
+    return `<div class="ritmo-col">
+      <span class="ritmo-area">
+        <span class="ritmo-barra" style="height:${(m.total / pico) * 100}%">
+          <span class="ritmo-valor">${m.total || ''}</span>
+          <span class="ritmo-pilha">${fatias}</span>
+        </span>
+      </span>
+      <span class="ritmo-mes">${rotuloMesCurto(m.mes)}</span>
+    </div>`;
+  }).join('');
+  const legenda = evo.frentes.map((f) =>
+    `<span class="ritmo-chave"><i style="background:${cor(indice.get(f.id))}"></i>${escapeHtml(f.nome)}</span>`
+  ).join('');
+  return `<div class="ritmo">${colunas}</div>
+    <div class="ritmo-legenda">${legenda}</div>
+    <p class="ritmo-nota mudo">Contagem de itens concluídos, mesma régua do relatório de Entregas · cobre as frentes com itens cadastrados no DevOps.</p>`;
+}
+
+/* O roadmap responde o que o DevOps não responde: se os projetos chegam na
+   data. Mostra número e só a lista do que exige leitura — vencido e em curso.
+   Os previstos ficam no número: a lista inteira já é seção do relatório, e
+   repeti-la aqui custaria a tela toda pra informar o que ninguém vai agir hoje. */
+function htmlRoadmap() {
+  const r = C.riscoDoRoadmap(roadmapState.itens || [], Date.now());
+  if (!r.total) return '';
+  const pct = Math.round((r.concluidos / r.total) * 100);
+  const prazo = (x) => (x.vencido
+    ? `${Math.abs(x.diasRestantes)} ${Math.abs(x.diasRestantes) === 1 ? 'dia' : 'dias'} de atraso`
+    : `vence em ${x.diasRestantes} ${x.diasRestantes === 1 ? 'dia' : 'dias'}`);
+  const linhas = r.lista.map((x) => `<li class="rm-linha${x.vencido ? ' rm-vencido' : ''}">
+    <span class="rm-nome">${escapeHtml(x.titulo)}</span>
+    <span class="rm-prazo">${prazo(x)}</span>
+  </li>`).join('');
+  return `<div class="rm-topo">
+      <div class="rm-conta"><b>${r.concluidos}</b><span class="mudo">de ${r.total} concluídos</span></div>
+      ${r.vencidos ? `<div class="rm-conta rm-alerta"><b>${r.vencidos}</b><span>${r.vencidos === 1 ? 'vencido' : 'vencidos'}</span></div>` : ''}
+      <div class="rm-conta"><b>${r.emCurso}</b><span class="mudo">em curso</span></div>
+    </div>
+    <span class="barra rm-barra"><span class="barra-cheia" style="width:${pct}%"></span></span>
+    ${linhas ? `<ul class="rm-lista">${linhas}</ul>` : '<p class="mudo">Nada em curso nem vencido.</p>'}`;
+}
+
 function renderPanorama() {
   const box = $('panorama');
   if (!box || !state.config) return;
@@ -466,12 +546,32 @@ function renderPanorama() {
       }).join('')}</ul>`
     : '<p class="mudo">Nada bloqueado nem atrasado.</p>';
 
+  const roadmapHtml = htmlRoadmap();
   box.innerHTML = erroHtml + `<div class="blocos">
+    <section class="bloco"><h3>Ritmo de entrega</h3>${htmlRitmo()}</section>
+    ${roadmapHtml ? `<section class="bloco"><h3>Roadmap</h3>${roadmapHtml}</section>` : ''}
     <section class="bloco"><h3>Agora</h3><div class="tiles">${tiles}</div></section>
     ${sprints ? `<section class="bloco"><h3>Sprints em curso</h3><div class="sprints">${sprints}</div></section>` : ''}
     <section class="bloco"><h3>Por nível</h3>${htmlNiveis(C.aggregateCounts(todos))}</section>
     <section class="bloco"><h3>Atenção agora${verTodas}</h3>${listaAtencao}</section>
   </div>`;
+}
+
+/* ---------- Roadmap: a única peça da Central que não vem do DevOps ---------- */
+// Vive em assets/roadmap.json, escrito à parte do Notion. Era exclusivo do
+// report; entrou aqui em 02/10/2026 pro bloco Roadmap do Panorama, que é o
+// único lugar com dado pra responder "os projetos vão chegar na data" — os
+// épicos do DevOps estão quase todos sem filho e sem data de fim.
+const roadmapState = { itens: null };
+
+async function carregarRoadmap() {
+  try {
+    const resp = await fetch('assets/roadmap.json', { cache: 'no-store' });
+    if (!resp.ok) return; // arquivo ausente: o bloco some, o resto da página fica de pé
+    const dado = await resp.json();
+    roadmapState.itens = C.saneRoadmapItens(dado.itens);
+    renderPanorama();
+  } catch (e) { /* rede ou JSON torto: mesma degradação — sem bloco, sem erro na cara */ }
 }
 
 /* ---------- Produtos ---------- */
@@ -879,7 +979,13 @@ function renderRoute() {
   if (hash === '#produtos') { setPagina('produtos'); carregarBase(false); return; }
   if (hash === '#projetos') { setPagina('projetos'); return; }
   if (hash === '#meus-itens') { setPagina('meus-itens'); return; }
+  // O Panorama pede a base completa porque o bloco de Ritmo precisa de
+  // história, e a consulta dele (wiqlCounts 30) só tem 30 dias. Não bloqueia:
+  // a página desenha na hora com o que já tem e o gráfico preenche quando
+  // chega. Sendo a tela de entrada, ainda aquece o cache pro Produtos e pro
+  // Report, que leem a mesma base.
   setPagina('panorama'); // abertura: visão geral antes do detalhe
+  carregarBase(false);
 }
 
 function setPagina(pagina) {
@@ -1207,6 +1313,10 @@ function boot() {
   }
   renderAll();
   refreshAll(false);
+  // Arquivo local, pequeno e sem token: chega antes do DevOps e redesenha o
+  // Panorama sozinho quando chega. Não entra no refreshAll porque não é
+  // consulta — não tem o que ficar obsoleto a cada F5 do board.
+  carregarRoadmap();
   renderRoute(); // abre o board direto se a URL já apontar pra um (#board/...)
 }
 

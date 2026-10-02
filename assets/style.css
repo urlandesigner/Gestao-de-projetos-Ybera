@@ -18,6 +18,16 @@
   --sombra-cartao: 0 1px 2px rgba(28, 25, 23, 0.05);
   --raio-painel: 24px;
   --raio-cartao: 16px;
+  /* Série do gráfico de ritmo: uma cor por frente. Escurece do topo pro fim da
+     lista em vez de usar matiz aleatório — a frente que mais entrega fica mais
+     forte, e a leitura funciona mesmo pra quem não distingue cor, porque a
+     ordem da pilha e a legenda seguem a mesma sequência. */
+  --serie-1: #1c1c1a;
+  --serie-2: #44403c;
+  --serie-3: #78716c;
+  --serie-4: #a8a29e;
+  --serie-5: #d6d3d1;
+  --serie-6: #e9e7e4;
 }
 * { box-sizing: border-box; }
 body {
@@ -497,6 +507,89 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
 .sprint-nome { min-width: 0; }
 .sprint-prog { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--mudo); font-weight: 600; }
 .sprint-link .seta { color: var(--mudo); }
+/* ---------- Panorama: ritmo (gráfico) e roadmap ---------- */
+/* Colunas de altura proporcional, empilhadas por frente. Sem SVG e sem
+   biblioteca: o projeto não tem build, e barra em CSS já é o vocabulário da
+   casa (a de progresso, logo abaixo, é a mesma ideia deitada). */
+.ritmo {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  height: 150px;
+  margin-top: 0.25rem;
+}
+.ritmo-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  gap: 0.3rem;
+}
+/* O padding-top reserva a linha do número do mês mais alto — sem ele a barra
+   de pico encosta no teto e o número sai do bloco. */
+.ritmo-area {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-top: 1.1rem;
+}
+/* A barra tem a altura da PROPORÇÃO contra o mês de pico; o número se pendura
+   nela por bottom: 100%, então acompanha o topo da barra em qualquer altura. */
+.ritmo-barra { position: relative; width: 100%; max-width: 44px; }
+.ritmo-valor {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  margin-bottom: 0.25rem;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--tinta);
+  line-height: 1;
+}
+/* column-reverse: a primeira fatia (a frente que mais entregou) fica embaixo,
+   na mesma ordem da legenda. */
+.ritmo-pilha {
+  display: flex;
+  flex-direction: column-reverse;
+  height: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.ritmo-fatia { display: block; width: 100%; }
+.ritmo-mes { font-size: 0.72rem; color: var(--mudo); line-height: 1; }
+.ritmo-legenda { display: flex; flex-wrap: wrap; gap: 0.3rem 0.9rem; margin-top: 0.9rem; }
+.ritmo-chave { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.76rem; color: var(--mudo); }
+.ritmo-chave i { width: 9px; height: 9px; border-radius: 3px; flex: none; }
+.ritmo-nota { margin: 0.7rem 0 0; font-size: 0.72rem; line-height: 1.5; }
+
+/* Roadmap: três números, a barra do todo, e só o que exige leitura hoje. */
+.rm-topo { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: baseline; }
+.rm-conta { display: flex; align-items: baseline; gap: 0.4rem; font-size: 0.82rem; }
+.rm-conta b { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
+.rm-alerta, .rm-alerta b { color: var(--erro); }
+.rm-barra { margin-top: 0.8rem; }
+.rm-lista { list-style: none; margin: 1rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.35rem; }
+.rm-linha {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  background: var(--superficie-2);
+  font-size: 0.85rem;
+}
+.rm-nome { font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rm-prazo { flex: none; font-size: 0.78rem; color: var(--mudo); }
+.rm-vencido { background: var(--erro-fundo); }
+.rm-vencido .rm-prazo { color: var(--erro); font-weight: 600; }
+
 .barra { display: block; height: 5px; border-radius: 999px; background: #e4e4e7; margin-top: 0.5rem; overflow: hidden; }
 .barra-cheia { display: block; height: 100%; border-radius: 999px; background: var(--positivo); }
 /* Variante do card de sprint com prévia dos PBIs — mesma folha visual do

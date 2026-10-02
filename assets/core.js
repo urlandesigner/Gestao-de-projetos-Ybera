@@ -513,6 +513,144 @@
   // aproximação disponível, mas erra se alguém editar o item meses depois. Por
   // isso o item volta marcado (`aproximada`) e o mês conta quantos foram assim:
   // a tela avisa em vez de afirmar uma data que não tem.
+  /* ---------- Panorama: ritmo e risco ---------- */
+
+  /* Entregas por mês, divididas por frente — o gráfico do Panorama.
+
+     A régua é a MESMA do reportPorMes, e isso não é coincidência de
+     implementação, é requisito: o gestor lê "31 itens entregues" no relatório
+     de Entregas e abre o Panorama. Se os dois contarem diferente, os dois
+     perdem credibilidade. Por isso esta função delega a contagem ao
+     reportPorMes em vez de reimplementar o "o que conta como entregue" — há
+     teste travando a igualdade.
+
+     Ordem inversa à do reportPorMes (que devolve o mês novo primeiro): gráfico
+     se lê da esquerda pra direita, do passado pro presente.
+
+     Mês sem entrega entra com zero. Buraco na série é informação; pular o mês
+     encostaria agosto em outubro e mentiria sobre a forma da curva. */
+  function evolucaoMensal(items, agora, n = 6) {
+    const quantos = Math.max(1, Math.floor(n) || 1);
+    const d = new Date(agora);
+    // Chaves dos N meses até o corrente, do mais antigo pro mais novo.
+    const chaves = [];
+    for (let i = quantos - 1; i >= 0; i -= 1) {
+      const m = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() - i, 1));
+      chaves.push(m.getUTCFullYear() + '-' + String(m.getUTCMonth() + 1).padStart(2, '0'));
+    }
+    const mapa = mapaDeProdutos(items || []);
+    const porMes = new Map(reportPorMes(items).map((m) => [m.mes, m]));
+    // Frente de um item: o épico ancestral. Sem épico na cadeia o item NÃO
+    // some — ele divergiria o total do gráfico do total do relatório, que é o
+    // que a régua única existe pra impedir. Vai pra uma frente visível.
+    const SEM_FRENTE = { id: null, nome: 'Sem frente' };
+    const frentes = new Map();
+    const meses = chaves.map((chave) => {
+      const reg = porMes.get(chave);
+      const conta = new Map();
+      for (const r of (reg ? reg.itens : [])) {
+        const pai = mapa.get(r.item.id);
+        const f = pai ? { id: pai.id, nome: pai.titulo } : SEM_FRENTE;
+        if (!frentes.has(f.id)) frentes.set(f.id, f);
+        conta.set(f.id, (conta.get(f.id) || 0) + 1);
+      }
+      const porFrente = [...conta.entries()]
+        .map(([id, qtd]) => ({ id, nome: frentes.get(id).nome, n: qtd }))
+        .sort((a, b) => b.n - a.n);
+      return { mes: chave, total: reg ? reg.total : 0, porFrente };
+    });
+    return { meses, frentes: [...frentes.values()] };
+  }
+
+  /* Retrato de risco do roadmap — a resposta a "os projetos vão chegar na data".
+
+     Vem daqui e não do DevOps por um motivo medido em 02/10/2026: dos 8 épicos
+     do time, 5 não tinham nenhum filho e 4 não tinham data de fim. Gráfico de
+     previsibilidade em cima disso pareceria confiante e estaria mentindo. O
+     roadmap é curado à mão e tem início, fim e status nos 13 projetos.
+
+     Devolve números e lista; NÃO escreve texto. Quem desenha escolhe a palavra
+     — "vence em 12 dias" ou "12 dias de atraso" é decisão de tela. */
+  function riscoDoRoadmap(itens, agora) {
+    const dia = 86400000;
+    const hoje = Date.UTC(new Date(agora).getUTCFullYear(),
+      new Date(agora).getUTCMonth(), new Date(agora).getUTCDate());
+    const t = (s) => Date.parse(s + 'T00:00:00Z');
+    let total = 0; // projetos com janela válida — o denominador do "X de Y"
+    let concluidos = 0;
+    let vencidos = 0;
+    let emCurso = 0;
+    const lista = [];
+    for (const it of (Array.isArray(itens) ? itens : [])) {
+      if (!it || typeof it.inicio !== 'string' || typeof it.fim !== 'string') continue;
+      const inicio = t(it.inicio);
+      const fim = t(it.fim);
+      if (Number.isNaN(inicio) || Number.isNaN(fim)) continue;
+      total += 1;
+      // "concluido" é o único status que diz entregue. "teste" e "andamento"
+      // ainda não entregaram, e com prazo estourado viram risco — tratá-los
+      // como entrega apagaria justamente o que o painel existe pra mostrar.
+      const feito = it.status === 'concluido';
+      const vencido = !feito && fim < hoje;
+      // Sem status, janela aberta hoje já conta como em curso: é o caso do
+      // Subscription, que começou em 01/10/2026 e seguia marcado "previsto".
+      // Deixá-lo de fora esconderia o item cujo cadastro está atrasado.
+      const curso = !feito && !vencido && inicio <= hoje && hoje <= fim;
+      if (feito) concluidos += 1;
+      if (vencido) vencidos += 1;
+      if (curso) emCurso += 1;
+      if (vencido || curso) {
+        lista.push({
+          titulo: it.titulo,
+          inicio: it.inicio,
+          fim: it.fim,
+          status: it.status || null,
+          vencido,
+          diasRestantes: Math.round((fim - hoje) / dia),
+        });
+      }
+    }
+    // Vencido primeiro: é o que exige ação. Dentro do grupo, o prazo mais
+    // apertado na frente.
+    lista.sort((a, b) => (Number(b.vencido) - Number(a.vencido)) || (a.diasRestantes - b.diasRestantes));
+    return { total, concluidos, emCurso, vencidos, lista };
+  }
+
+  /* ---------- Roadmap ---------- */
+  /* O roadmap é a única peça que não vem do DevOps: vive em assets/roadmap.json,
+     escrito à parte, porque o Notion não pode ser chamado do navegador.
+
+     Mora aqui, e não no report.js onde nasceu, desde 02/10/2026: a Central
+     passou a ler o mesmo arquivo (bloco Roadmap do Panorama) e a lista branca
+     de status abaixo é um portão — duplicá-la seria repetir de propósito o
+     defeito que tests/roadmap-portao.test.js existe pra impedir.
+
+     O arquivo é nosso, mas tratar o dado como se pudesse vir torto é grátis e
+     evita NaN se algum dia alguém editar à mão e errar uma data. */
+  function saneRoadmapItens(lista) {
+    const dataValida = (s) => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s)
+      && !Number.isNaN(Date.parse(s + 'T00:00:00Z'));
+    return (Array.isArray(lista) ? lista : [])
+      .filter((x) => x && dataValida(x.inicio) && dataValida(x.fim)
+        && Date.parse(x.inicio + 'T00:00:00Z') <= Date.parse(x.fim + 'T00:00:00Z'))
+      .map((x) => ({
+        titulo: String(x.titulo || '').slice(0, 200) || 'Sem título',
+        inicio: x.inicio,
+        fim: x.fim,
+        /* Lista branca de status. Qualquer outro valor (ou nenhum) vira null —
+           "não afirmo nada sobre esta iniciativa", que é o estado certo pra um
+           item que ainda é só janela no calendário.
+
+           ESTA LISTA É O PORTÃO: um status novo em roadmap.json não chega ao
+           desenho sem passar por aqui, por mais que o briefing saiba desenhá-lo.
+           Foi o que aconteceu com 'teste': o dado dizia, o briefing sabia, e o
+           item saía sem selo e com barra neutra porque o saneamento o zerava no
+           meio do caminho. Quem acrescentar um status ali acrescenta aqui. */
+        status: (x.status === 'concluido' || x.status === 'andamento' || x.status === 'teste')
+          ? x.status : null,
+      }));
+  }
+
   function reportPorMes(items) {
     const meses = new Map();
     for (const it of items || []) {
@@ -851,7 +989,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, mapaDeProdutos, descricaoLimpa, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, mapaDeProdutos, descricaoLimpa, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };
