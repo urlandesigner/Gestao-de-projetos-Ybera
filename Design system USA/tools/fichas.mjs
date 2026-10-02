@@ -776,6 +776,7 @@ const blocoAnatomia = (f, n) => {
         : (n.base === 'involucro' ? anatomiaDeBloco(f) : []),
         largura: Array.isArray(bruto) ? null : bruto?.largura,
         recorte: Array.isArray(bruto) ? null : bruto?.recorte,
+        medidas: Array.isArray(bruto) ? null : bruto?.medidas,
         html: Array.isArray(bruto) ? null : bruto?.html }];
   if (!desenhos.some((d) => d.partes && d.partes.length))
     return n.base === 'involucro'
@@ -801,7 +802,7 @@ const blocoAnatomia = (f, n) => {
      trilho — largura do item, fatia do proximo — sumia atras dele. Ali o
      conteudo e de enfeite, entao a anatomia leva caixas neutras escritas a
      parte, e a marcacao do trilho em volta delas continua sendo a da peca. */
-  const desenhar = ({ partes, largura, recorte, html }) => {
+  const desenhar = ({ partes, largura, recorte, html, medidas }) => {
     let marcacao = html || primeiraAmostra(f.snippet);
     if (recorte && !html) {
       const m = f.palco.match(new RegExp(recorte, 's'));
@@ -818,7 +819,11 @@ const blocoAnatomia = (f, n) => {
       </div>
       <ol class="anat__legenda">
 ${partes.map((x) => `        <li data-target="${x.alvo.replace(/"/g, '&quot;')}"><span class="anat__texto"><b>${x.nome}</b> — ${x.texto}</span></li>`).join('\n')}
-      </ol>
+      </ol>${medidas ? `
+      <!-- As medidas sao LIDAS do elemento que esta logo acima, pelo doc.js.
+           Numero de medida escrito a mao e o primeiro a mentir: ele nao muda
+           quando o token muda. Aqui, se o raio virar 12px, isto vira 12px. -->
+      <dl class="medidas" data-doc-measure="${String(medidas).replace(/"/g, '&quot;')}"></dl>` : ''}
     </div>`;
   };
   return desenhos.filter((d) => d.partes && d.partes.length)

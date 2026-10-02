@@ -467,6 +467,25 @@
 }
 .demo--stack{flex-direction:column; align-items:stretch}
 
+/* MEDIDAS DA ANATOMIA — a fileira de numeros embaixo do desenho.
+   Vem do doc.js, lida do elemento. Nao ha valor escrito aqui nem na ficha. */
+.medidas{
+  display:flex; flex-wrap:wrap; gap:var(--yb-space-2) var(--yb-space-3);
+  margin:var(--yb-space-4) 0 0;
+}
+.medidas__par{
+  display:flex; align-items:baseline; gap:var(--yb-space-2);
+  padding:var(--yb-space-1) var(--yb-space-3);
+  background:var(--yb-bg-subtle); border-radius:var(--yb-radius-pill);
+  font-size:var(--yb-type-caption-size);
+}
+.medidas dt{color:var(--yb-text-muted)}
+.medidas dd{
+  margin:0; color:var(--yb-text-primary);
+  font-family:var(--yb-font-family-mono);
+  font-variant-numeric:tabular-nums;
+}
+
 /* MATRIZ DE ESTADOS — variante na linha, estado na coluna.
    Grade e nao tabela: nao ha dado tabular aqui, e sim a MESMA peca repetida
    em cinco condicoes. Quem le isto le com os olhos; quem usa leitor de tela

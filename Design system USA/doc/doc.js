@@ -49,6 +49,50 @@
     }
   }
 
+  /* MEDIDAS DA ANATOMIA — lidas do elemento, nunca digitadas.
+     Um desenho anotado com "padding 24 · raio 12" e util e e, ao mesmo tempo,
+     o artefato que mais apodrece numa doc: o numero foi escrito uma vez, o
+     token mudou depois, e a anotacao continua ali dizendo o antigo com toda a
+     confianca de quem esta impresso. Aqui nao ha numero escrito em lugar
+     nenhum — o `<dl>` nasce vazio e e preenchido com o que o navegador ACABOU
+     de calcular para aquele elemento. Mudou o token, mudou a medida.
+
+     SO O QUE E GEOMETRIA, e nao toda a folha de estilo: altura, respiro, raio,
+     fio, vao e icone. Cor ja tem o bloco de tokens logo abaixo, e repetir
+     "#1E1E1F" aqui seria uma segunda tabela para conferir.
+
+     Largura fica de FORA de proposito: ela e do texto que estiver dentro, nao
+     da peca. "largura 193px" descreveria a palavra "Button", e mudaria sozinha
+     no dia em que a demo trocasse o rotulo.
+
+     O valor sai arredondado a duas casas e sem `.00`: `50px` e o que a pessoa
+     vai escrever, e `50.00px` so adiciona ruido. Quando a medida for fracionaria
+     de verdade, as casas aparecem — e aí elas querem dizer alguma coisa. */
+  const px = (v) => {
+    const n = Math.round(parseFloat(v) * 100) / 100;
+    return Number.isFinite(n) ? n + 'px' : v;
+  };
+  for (const lista of document.querySelectorAll('[data-doc-measure]')) {
+    const sel = lista.getAttribute('data-doc-measure');
+    const anat = lista.closest('.anat');
+    const alvo = anat && anat.querySelector(sel && sel !== 'true' ? sel : '.anat__peca > *');
+    if (!alvo) continue;
+    const cs = getComputedStyle(alvo);
+    const icone = alvo.querySelector('.yb-icon');
+    const linhas = [
+      ['altura', px(alvo.getBoundingClientRect().height)],
+      ['respiro', cs.paddingBlockStart === cs.paddingInlineStart
+        ? px(cs.paddingBlockStart)
+        : px(cs.paddingBlockStart) + ' · ' + px(cs.paddingInlineStart)],
+      ['raio', cs.borderStartStartRadius],
+      ['fio', parseFloat(cs.borderTopWidth) ? px(cs.borderTopWidth) : null],
+      ['vão', parseFloat(cs.columnGap) ? px(cs.columnGap) : null],
+      ['ícone', icone ? px(icone.getBoundingClientRect().width) : null],
+    ];
+    lista.innerHTML = linhas.filter(([, v]) => v).map(([k, v]) =>
+      `<div class="medidas__par"><dt>${k}</dt><dd>${v}</dd></div>`).join('');
+  }
+
   /* MATRIZ DE ESTADOS — variante no eixo Y, estado no eixo X.
      A ficha ja listava os estados em TEXTO (`:hover`, `:active`, `[disabled]`),
      e lista de seletor nao mostra o que a pessoa precisa ver: se o pressionado
