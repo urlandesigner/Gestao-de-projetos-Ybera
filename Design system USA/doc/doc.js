@@ -79,14 +79,19 @@
     if (!alvo) continue;
     const cs = getComputedStyle(alvo);
     const icone = alvo.querySelector('.yb-icon');
+    /* OS ROTULOS SAO EM PALAVRA DE TODO DIA, e isto e correcao: a primeira
+       versao dizia "fio" e "vao", que e como o CSS desta casa fala nos
+       comentarios. Quem leu a ficha perguntou o que eram os dois — e a pergunta
+       e a medida certa de um rotulo. Medida que precisa de legenda nao esta
+       medindo nada. */
     const linhas = [
       ['altura', px(alvo.getBoundingClientRect().height)],
-      ['respiro', cs.paddingBlockStart === cs.paddingInlineStart
+      ['espaço interno', cs.paddingBlockStart === cs.paddingInlineStart
         ? px(cs.paddingBlockStart)
-        : px(cs.paddingBlockStart) + ' · ' + px(cs.paddingInlineStart)],
-      ['raio', cs.borderStartStartRadius],
-      ['fio', parseFloat(cs.borderTopWidth) ? px(cs.borderTopWidth) : null],
-      ['vão', parseFloat(cs.columnGap) ? px(cs.columnGap) : null],
+        : px(cs.paddingBlockStart) + ' em cima · ' + px(cs.paddingInlineStart) + ' dos lados'],
+      ['canto', cs.borderStartStartRadius],
+      ['borda', parseFloat(cs.borderTopWidth) ? px(cs.borderTopWidth) : null],
+      ['espaço entre ícone e texto', parseFloat(cs.columnGap) ? px(cs.columnGap) : null],
       ['ícone', icone ? px(icone.getBoundingClientRect().width) : null],
     ];
     lista.innerHTML = linhas.filter(([, v]) => v).map(([k, v]) =>
