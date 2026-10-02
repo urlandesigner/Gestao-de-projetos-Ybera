@@ -513,6 +513,37 @@
   // aproximação disponível, mas erra se alguém editar o item meses depois. Por
   // isso o item volta marcado (`aproximada`) e o mês conta quantos foram assim:
   // a tela avisa em vez de afirmar uma data que não tem.
+  /* ---------- Sprints: anterior, atual e próxima ---------- */
+  /* O DevOps devolve a sprint corrente sozinho (?$timeframe=current), mas não
+     as vizinhas. Pra elas é preciso listar as iterações do time e situá-las no
+     tempo — é o que esta função faz, e por isso ela recebe a lista inteira.
+
+     As bordas que ela resolve, e que não se vê olhando a tela: o dia exato da
+     virada (o primeiro e o último dia AINDA são da sprint, senão o board diz
+     "nenhuma sprint" justo no dia em que mais se olha pra ele), a iteração sem
+     data cadastrada (fica de fora: não dá pra situar no tempo), e o time entre
+     sprints (atual é null, e inventar uma mentiria sobre o que está em curso). */
+  function janelaDeSprints(iteracoes, agora) {
+    const t = (v) => {
+      const n = v ? Date.parse(v) : NaN;
+      return Number.isNaN(n) ? null : n;
+    };
+    const comData = (Array.isArray(iteracoes) ? iteracoes : [])
+      .map((s) => (s ? { s, ini: t(s.start), fim: t(s.finish) } : null))
+      .filter((x) => x && x.ini !== null && x.fim !== null)
+      .sort((a, b) => a.ini - b.ini);
+    const atual = comData.find((x) => x.ini <= agora && agora <= x.fim) || null;
+    // A anterior é a que fechou MAIS PERTO de hoje, não a primeira da lista:
+    // com a lista ordenada por início, é a última que já terminou.
+    const passadas = comData.filter((x) => x.fim < agora);
+    const futuras = comData.filter((x) => x.ini > agora);
+    return {
+      anterior: passadas.length ? passadas[passadas.length - 1].s : null,
+      atual: atual ? atual.s : null,
+      proxima: futuras.length ? futuras[0].s : null,
+    };
+  }
+
   /* ---------- Panorama: ritmo e risco ---------- */
 
   /* Entregas por mês, divididas por frente — o gráfico do Panorama.
@@ -989,7 +1020,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, mapaDeProdutos, descricaoLimpa, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, mapaDeProdutos, descricaoLimpa, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };

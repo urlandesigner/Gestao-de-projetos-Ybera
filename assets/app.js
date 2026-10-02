@@ -101,6 +101,13 @@ function respAtivo() {
 }
 
 // Item está no nome de quem está filtrado? Sem filtro, tudo passa.
+/* Só este time roda sprint de verdade. Os outros caem na iteração anual do
+   DevOps, um "sprint" fantasma que não representa nada em curso. Era literal
+   solta dentro do renderPanorama; virou constante porque agora a busca das três
+   sprints também precisa saber, e duas cópias do nome do time divergem na
+   primeira renomeação lá no DevOps. */
+const TIME_COM_SPRINT = 'Squad Ecommerce';
+
 function noNome(it) {
   const alvo = respAtivo();
   if (!alvo) return true;
@@ -226,6 +233,31 @@ const FIELDS_ITEMS = [
   'System.AssignedTo',
 ];
 
+/* Itens de uma sprint, na forma curta que as telas usam.
+
+   Task fica de fora — mesmo corte que o C.sprintProgress já faz: é sub-item de
+   outro item, não uma entrega em si, e contá-la inflaria o placar.
+
+   Guarda `feito` em vez de devolver só os abertos: a coluna da sprint ANTERIOR
+   precisa do placar (de todos) e da lista do que não fechou (dos abertos), e
+   quem filtra é quem desenha. */
+function resumoDeSprint(itens) {
+  return (itens || [])
+    .filter((it) => ((it.fields || {})['System.WorkItemType']) !== 'Task')
+    .map((it) => {
+      const f = it.fields || {};
+      const at = f['System.AssignedTo'];
+      return {
+        id: it.id,
+        titulo: f['System.Title'] || ('item #' + it.id),
+        resp: at && at.displayName ? at.displayName : null,
+        tipo: C.typeSlug(f['System.WorkItemType']),
+        estado: f['System.State'] || '',
+        feito: C.stateBucket(f['System.State']) === 'feito',
+      };
+    });
+}
+
 async function refreshCard(p) {
   const anterior = state.cache.byCard[cardKey(p)] || {};
   const entry = { items: null, counts: null, sprint: null, progress: null, error: null };
@@ -249,32 +281,42 @@ async function refreshCard(p) {
         'System.ChangedDate': f['System.ChangedDate'],
       } };
     });
-    const sprint = await A.currentSprint(ctx(), p.projectName, p.teamName);
-    if (sprint) {
+    /* Quem roda sprint de verdade recebe a janela inteira — anterior, atual e
+       próxima, que o Panorama põe lado a lado. Os outros times continuam com a
+       chamada barata de uma iteração só: o card deles no Projetos usa a
+       corrente e nada mais, e triplicar requisição pra todo mundo pagaria por
+       dado que nenhuma tela mostra. */
+    if (p.teamName === TIME_COM_SPRINT) {
+      let iteracoes = [];
+      try { iteracoes = await A.teamIterations(ctx(), p.projectName, p.teamName); } catch (e) { /* cai no caminho de uma sprint só */ }
+      const janela = C.janelaDeSprints(iteracoes, Date.now());
+      if (janela.atual || janela.anterior || janela.proxima) {
+        entry.janela = {};
+        for (const qual of ['anterior', 'atual', 'proxima']) {
+          const sp = janela[qual];
+          if (!sp) { entry.janela[qual] = null; continue; }
+          const ids = await A.sprintItemIds(ctx(), p.projectName, p.teamName, sp.id);
+          const itens = ids.length ? await A.getFields(ctx(), ids, FIELDS_COUNTS) : [];
+          entry.janela[qual] = { sprint: sp, progress: C.sprintProgress(itens), itens: resumoDeSprint(itens) };
+        }
+        // A corrente segue nos campos antigos: o card do Projetos lê de lá, e
+        // mudá-lo não fazia parte do pedido.
+        const atual = entry.janela.atual;
+        if (atual) {
+          entry.sprint = atual.sprint;
+          entry.progress = atual.progress;
+          entry.itensSprintAbertos = atual.itens.filter((x) => !x.feito);
+        }
+      }
+    }
+    const sprint = entry.sprint || await A.currentSprint(ctx(), p.projectName, p.teamName);
+    if (sprint && !entry.progress) {
       entry.sprint = sprint;
       const sids = await A.sprintItemIds(ctx(), p.projectName, p.teamName, sprint.id);
       const sitems = sids.length ? await A.getFields(ctx(), sids, FIELDS_COUNTS) : [];
       entry.progress = C.sprintProgress(sitems);
-      // Prévia do card do Panorama: tudo que ainda falta fazer na sprint,
-      // pra pessoa filtrada — qualquer tipo, qualquer estado não concluído.
-      // Task fica de fora (mesmo corte que sprintProgress já usa: é
-      // sub-item de outro item, não uma entrega em si).
-      entry.itensSprintAbertos = sitems
-        .filter((it) => {
-          const f = it.fields || {};
-          return f['System.WorkItemType'] !== 'Task' && C.stateBucket(f['System.State']) !== 'feito';
-        })
-        .map((it) => {
-          const f = it.fields || {};
-          const at = f['System.AssignedTo'];
-          return {
-            id: it.id,
-            titulo: f['System.Title'] || ('item #' + it.id),
-            resp: at && at.displayName ? at.displayName : null,
-            tipo: C.typeSlug(f['System.WorkItemType']),
-            estado: f['System.State'] || '',
-          };
-        });
+      // Prévia do card: o que ainda falta fazer na sprint corrente.
+      entry.itensSprintAbertos = resumoDeSprint(sitems).filter((x) => !x.feito);
     }
   } catch (e) {
     entry.items = entry.items || anterior.items || null;
@@ -282,6 +324,7 @@ async function refreshCard(p) {
     entry.sprint = entry.sprint || anterior.sprint || null;
     entry.progress = entry.progress || anterior.progress || null;
     entry.itensSprintAbertos = entry.itensSprintAbertos || anterior.itensSprintAbertos || null;
+    entry.janela = entry.janela || anterior.janela || null;
     entry.error = mensagemDeErro(e);
     if (e instanceof A.AuthError) state.auth = 'vencido';
   }
@@ -506,38 +549,72 @@ function renderPanorama() {
     tile('Meus itens', meus == null ? '—' : meus, false),
   ].join('');
 
-  // Só a Squad Ecommerce roda em sprint de verdade; os outros times
-  // configurados caem num "sprint" fantasma (a iteração anual do DevOps),
-  // que não representa nada em curso — some daqui.
+  /* QUADRO DE SPRINTS: anterior, atual e próxima, lado a lado.
+
+     Era só "sprints em curso" — uma coluna, a corrente. O Urlan pediu as três,
+     e cada uma responde uma pergunta diferente, então elas NÃO têm a mesma
+     anatomia:
+
+     - anterior: o placar fechado e a lista do que NÃO terminou. É o que
+       escorregou pra sprint de agora, e é por isso que ela existe aqui;
+       repetir o que foi entregue seria arquivo, não leitura.
+     - atual: o progresso e o que falta — o que já existia.
+     - próxima: o que está planejado, pra saber o que vem.
+
+     Coluna sem sprint não aparece. Time que não selecionou a iteração anterior
+     ou a próxima no DevOps vê o quadro com o que tem, e não um buraco rotulado. */
   const CAP_PBIS_SPRINT = 4;
-  const sprints = visiveis.filter((pr) => pr.teamName === 'Squad Ecommerce').map((pr) => {
-    const e = state.cache.byCard[cardKey(pr)] || {};
-    if (!e.sprint) return '';
-    const prog = e.progress || { done: 0, total: 0 };
-    const pct = prog.total ? Math.round((prog.done / prog.total) * 100) : 0;
-    // Prévia sem detalhe: só o título, pra reconhecer o que falta fazer sem
-    // precisar abrir o board. Filtra por quem está selecionado no dropdown
-    // de responsável do topo — a barra de progresso continua sendo da
-    // sprint inteira, de propósito (é indicador de time, não de pessoa).
-    const respSprint = respAtivo();
-    const pbis = (e.itensSprintAbertos || []).filter((it) => !respSprint || it.resp === respSprint);
-    const link = C.deepLinks(state.config.org, pr.projectName, '');
-    const listaPbis = pbis.length ? `<ul class="lista-linhas">${pbis.slice(0, CAP_PBIS_SPRINT).map((it) =>
+  const pr = visiveis.find((x) => x.teamName === TIME_COM_SPRINT);
+  const janela = pr ? (state.cache.byCard[cardKey(pr)] || {}).janela : null;
+  const respSprint = respAtivo();
+  const listaDeItens = (itens, link) => {
+    // Mesma filtragem por responsável que a coluna da corrente sempre teve: a
+    // prévia é de quem está selecionado no topo, mas o placar continua sendo da
+    // sprint inteira, de propósito — é indicador de time, não de pessoa.
+    const lista = itens.filter((it) => !respSprint || it.resp === respSprint);
+    if (!lista.length) return '';
+    return `<ul class="lista-linhas">${lista.slice(0, CAP_PBIS_SPRINT).map((it) =>
       `<li><a class="item-linha" href="${link.workItem(it.id)}" target="_blank" rel="noopener" title="${escapeHtml(it.titulo)}">
         <span class="badge-tipo tipo-${it.tipo}">${ROTULO_TIPO_CURTO[it.tipo]}</span>
         <span class="titulo">${escapeHtml(it.titulo)}</span>
         <span class="quando">${escapeHtml(it.estado)}</span>
         <span class="id">#${it.id}</span>
       </a></li>`
-    ).join('')}${pbis.length > CAP_PBIS_SPRINT ? `<li class="sprint-pbis-mais">+${pbis.length - CAP_PBIS_SPRINT} mais</li>` : ''}</ul>` : '';
-    return `<div class="sprint-card">
-      <a class="sprint-card-link" href="${rotaBoard(pr, true)}" title="Ver a sprint no board">
-        <span class="sprint-linha"><span class="sprint-nome"><b>${escapeHtml(e.sprint.name)}</b> <span class="mudo">${escapeHtml(pr.teamName)}</span></span><span class="sprint-prog">${prog.done}/${prog.total} <span class="seta">→</span></span></span>
-        <span class="barra"><span class="barra-cheia" style="width:${pct}%"></span></span>
-      </a>
-      ${listaPbis}
-    </div>`;
-  }).filter(Boolean).join('');
+    ).join('')}${lista.length > CAP_PBIS_SPRINT ? `<li class="sprint-pbis-mais">+${lista.length - CAP_PBIS_SPRINT} mais</li>` : ''}</ul>`;
+  };
+  let sprints = '';
+  if (pr && janela) {
+    const link = C.deepLinks(state.config.org, pr.projectName, '');
+    const COLUNAS = [
+      { chave: 'anterior', rotulo: 'Anterior' },
+      { chave: 'atual', rotulo: 'Em curso' },
+      { chave: 'proxima', rotulo: 'Próxima' },
+    ];
+    sprints = COLUNAS.map(({ chave, rotulo }) => {
+      const col = janela[chave];
+      if (!col) return '';
+      const prog = col.progress || { done: 0, total: 0 };
+      const pct = prog.total ? Math.round((prog.done / prog.total) * 100) : 0;
+      // A anterior mostra o que ficou pra trás; as outras, o que ainda falta.
+      // Na próxima isso é a lista inteira, porque nada dela está feito ainda.
+      const abertos = col.itens.filter((x) => !x.feito);
+      const corpo = chave === 'atual'
+        ? listaDeItens(abertos, link)
+        : chave === 'proxima'
+          ? listaDeItens(col.itens, link)
+          : (abertos.length ? listaDeItens(abertos, link) : '<p class="sprint-limpa mudo">Fechou inteira.</p>');
+      const barra = chave === 'proxima' ? '' : `<span class="barra"><span class="barra-cheia" style="width:${pct}%"></span></span>`;
+      const placar = chave === 'proxima' ? `${col.itens.length} ${col.itens.length === 1 ? 'item' : 'itens'}` : `${prog.done}/${prog.total}`;
+      return `<div class="sprint-card sprint-${chave}">
+        <span class="sprint-fase">${rotulo}</span>
+        <a class="sprint-card-link" href="${rotaBoard(pr, true)}" title="Ver no board">
+          <span class="sprint-linha"><span class="sprint-nome"><b>${escapeHtml(col.sprint.name)}</b> <span class="mudo">${periodo(col.sprint.start, col.sprint.finish)}</span></span><span class="sprint-prog">${placar} <span class="seta">→</span></span></span>
+          ${barra}
+        </a>
+        ${corpo}
+      </div>`;
+    }).filter(Boolean).join('');
+  }
 
   const todaAtencao = C.itensAtencao(todos, agora, 9999);
   const atencao = todaAtencao.slice(0, 6);
@@ -561,7 +638,7 @@ function renderPanorama() {
   box.innerHTML = erroHtml + `<div class="blocos">
     ${RITMO_VISIVEL ? `<section class="bloco"><h3>Ritmo de entrega</h3>${htmlRitmo()}</section>` : ''}
     <section class="bloco"><h3>Agora</h3><div class="tiles">${tiles}</div></section>
-    ${sprints ? `<section class="bloco"><h3>Sprints em curso</h3><div class="sprints">${sprints}</div></section>` : ''}
+    ${sprints ? `<section class="bloco"><h3>Sprints</h3><div class="sprints sprints-quadro">${sprints}</div></section>` : ''}
     <section class="bloco"><h3>Por nível</h3>${htmlNiveis(C.aggregateCounts(todos))}</section>
     <section class="bloco"><h3>Atenção agora${verTodas}</h3>${listaAtencao}</section>
   </div>`;
@@ -957,7 +1034,12 @@ function renderMyItems() {
 
 function periodo(start, finish) {
   if (!start || !finish) return '';
-  const fmt = (iso) => new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+  /* timeZone UTC, e não o do navegador: a iteração do DevOps chega como
+     meia-noite UTC ("2026-09-15T00:00:00Z"), e formatada no fuso de São Paulo
+     (UTC-3) ela recuava um dia — a sprint que começa dia 15 aparecia como 14.
+     Passou despercebido enquanto era uma data só num card; com o quadro de três
+     sprints são seis datas erradas lado a lado. */
+  const fmt = (iso) => new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', timeZone: 'UTC' });
   return `${fmt(start)}–${fmt(finish)}`;
 }
 

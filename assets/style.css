@@ -676,6 +676,52 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
 .tile-num.alerta { color: var(--erro); }
 .tile-nota { display: block; margin-top: 0.15rem; font-size: 0.68rem; line-height: 1.35; color: var(--mudo); }
 .sprints { display: flex; flex-direction: column; gap: 0.5rem; }
+/* Quadro de sprints: anterior, em curso e próxima lado a lado. `auto-fit` com
+   piso de 230px porque o número de colunas VARIA — time que não selecionou a
+   iteração anterior no DevOps vê duas, e duas colunas devem ocupar a largura
+   toda em vez de deixar um vão do tamanho da que não existe. */
+.sprints-quadro {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0.6rem;
+  align-items: start;
+}
+/* A retranca de fase é o que diferencia as três colunas num relance — sem ela
+   o leitor teria que ler o nome da sprint e saber de cabeça qual é qual. */
+.sprint-fase {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mudo);
+}
+/* A coluna em curso é a que o time olha todo dia: ganha a tinta cheia na
+   retranca e uma régua à esquerda. As vizinhas ficam em voz baixa. */
+.sprint-atual .sprint-fase { color: var(--tinta); }
+.sprint-atual { box-shadow: inset 2px 0 0 var(--tinta); }
+/* Sprint anterior que não deixou nada pra trás é notícia boa e merece uma
+   linha, não uma lista vazia. */
+.sprint-limpa { margin: 0.5rem 0 0; font-size: 0.8rem; }
+.sprint-anterior .sprint-prog, .sprint-proxima .sprint-prog { color: var(--mudo); }
+/* A linha de item foi desenhada pra uma coluna larga: tipo, título, estado e
+   #id lado a lado. Em três colunas de 230px sobravam ~90px pro título e ele
+   saía cortado em duas palavras ("Integrar cu…"), que é o mesmo que não ter
+   título. Duas medidas, nesta ordem de importância: o #id sai (é o dado menos
+   útil dos quatro, e o link já leva a ele) e o título passa a quebrar em até
+   duas linhas em vez de truncar. Linhas de alturas diferentes custam menos que
+   títulos ilegíveis. */
+.sprints-quadro .lista-linhas .id { display: none; }
+.sprints-quadro .lista-linhas .item-linha { align-items: flex-start; }
+.sprints-quadro .lista-linhas .badge-tipo, .sprints-quadro .lista-linhas .quando { margin-top: 0.1rem; }
+.sprints-quadro .lista-linhas .titulo {
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.3;
+}
 .pan-atencao {
   list-style: none;
   margin: 0;

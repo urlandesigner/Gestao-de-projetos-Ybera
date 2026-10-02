@@ -97,6 +97,23 @@
     };
   }
 
+  /* Todas as iterações que o TIME selecionou — não as do projeto inteiro.
+     O currentSprint acima pede ?$timeframe=current e recebe só a corrente;
+     daqui saem também a anterior e a próxima, que o Panorama mostra lado a
+     lado. Quem escolhe qual é qual é o C.janelaDeSprints, pelas datas: a API
+     devolve na ordem do backlog, que não é garantia de ordem cronológica. */
+  async function teamIterations(ctx, project, team) {
+    const p = encodeURIComponent(project), t = encodeURIComponent(team);
+    const data = await adoFetch(ctx, `/${p}/${t}/_apis/work/teamsettings/iterations?${API}`);
+    return (data.value || []).map((it) => ({
+      id: it.id,
+      name: it.name,
+      path: it.path || null,
+      start: it.attributes ? it.attributes.startDate : null,
+      finish: it.attributes ? it.attributes.finishDate : null,
+    }));
+  }
+
   async function sprintItemIds(ctx, project, team, iterationId) {
     const p = encodeURIComponent(project), t = encodeURIComponent(team);
     const data = await adoFetch(ctx, `/${p}/${t}/_apis/work/teamsettings/iterations/${iterationId}/workitems?${API}`);
@@ -125,7 +142,7 @@
   }
 
   return {
-    adoFetch, currentUser, listProjects, listTeams, runWiql, getFields, currentSprint, sprintItemIds,
+    adoFetch, currentUser, listProjects, listTeams, runWiql, getFields, currentSprint, teamIterations, sprintItemIds,
     teamAreas, listTeamBoards, boardColumns,
     AuthError, NetworkError,
   };
