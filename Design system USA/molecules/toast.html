@@ -226,10 +226,10 @@
         <span class="amostra__rotulo"><code>--danger</code></span>
       </span>
     </div>
-    <h3 class="row-label">Parados — a mesma marcação que o script monta. Só o erro tem X: ele é o único que não some sozinho</h3>
+    <h3 class="row-label">Parados — a mesma marcação que o script monta. Só o erro tem X e ação: ele é o único que não some sozinho, e aí a saída não pode ser só “tentar de novo”</h3>
     <!-- Na loja o toast nasce do `Ybera.toast()` e some sozinho. Aqui ele está
          parado para a anatomia e o código terem o que mostrar. -->
-    <div class="demo demo--stack" style="max-inline-size:26rem">
+    <div class="demo demo--stack" style="max-inline-size:28rem">
       <div class="yb-toast" role="status">
         <div class="yb-toast__body">
           <b class="yb-toast__title">Filters cleared</b>
@@ -258,8 +258,9 @@
         <svg class="yb-icon yb-toast__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg>
         <div class="yb-toast__body">
           <b class="yb-toast__title">Could not add to cart</b>
-          <p class="yb-toast__text">Check your connection and try again.</p>
+          <p class="yb-toast__text">Check your connection.</p>
         </div>
+        <button class="yb-btn yb-btn--secondary yb-btn--sm yb-toast__action" type="button">Try again</button>
         <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
       </div>
       <div class="yb-toast yb-toast--info" role="status">
@@ -452,34 +453,24 @@
     <div class="anat" data-yb-anatomy>
       <div class="anat__palco">
         <svg class="anat__fios" aria-hidden="true"></svg>
-        <div class="anat__peca" style="max-inline-size:380px"><div class="yb-toast yb-toast--success" role="status">
-        <svg class="yb-icon yb-toast__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-check"/></svg>
-        <div class="yb-toast__body">
-          <b class="yb-toast__title">Added to cart</b>
-          <p class="yb-toast__text">Kit Sealant Fashion Gold — 500 g</p>
-        </div>
-      </div>
-      <div class="yb-toast yb-toast--warning" role="status">
-        <svg class="yb-icon yb-toast__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-alert"/></svg>
-        <div class="yb-toast__body">
-          <b class="yb-toast__title">Coupon expires in 10 minutes</b>
-        </div>
-      </div>
-      <div class="yb-toast yb-toast--danger" role="alert">
+        <div class="anat__peca" style="max-inline-size:380px"><div class="yb-toast yb-toast--danger" role="alert">
         <svg class="yb-icon yb-toast__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg>
         <div class="yb-toast__body">
           <b class="yb-toast__title">Could not add to cart</b>
-          <p class="yb-toast__text">Check your connection and try again.</p>
+          <p class="yb-toast__text">Check your connection.</p>
         </div>
+        <button class="yb-btn yb-btn--secondary yb-btn--sm yb-toast__action" type="button">Try again</button>
         <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
       </div></div>
       </div>
       <ol class="anat__legenda">
-        <li data-target=".yb-toast"><span class="anat__texto"><b>Toast</b> — Criado pelo script e removido sozinho em 5s. <code>role="status"</code> espera a pausa do leitor de tela; o <code>--danger</code> usa <code>alert</code>, que interrompe.</span></li>
-        <li data-target=".yb-toast__body"><span class="anat__texto"><b>Corpo</b> — Título e texto. Ocupa o que sobra ao lado do fechar.</span></li>
-        <li data-target=".yb-toast__title"><span class="anat__texto"><b>Título</b> — O que aconteceu. O glifo antes dele (✓ ou ⚠) repete a variante em forma, porque cor sozinha não basta.</span></li>
-        <li data-target=".yb-toast__text"><span class="anat__texto"><b>Texto</b> — Opcional. O detalhe: qual produto, qual tamanho.</span></li>
-        <li data-target=".yb-toast__close"><span class="anat__texto"><b>Fechar</b> — O Icon button <code>--square</code>, 44px de alvo. Fechar antes do tempo é direito de quem lê devagar.</span></li>
+        <li data-target=".yb-toast"><span class="anat__texto"><b>Toast</b> — Criado pelo script e removido sozinho em 5s. <code>role="status"</code> espera a pausa do leitor de tela; o <code>--danger</code> usa <code>alert</code>, que interrompe. Tingido não leva fio — quem leva é o neutro, que é branco sobre fundo branco.</span></li>
+        <li data-target=".yb-toast__icon"><span class="anat__texto"><b>Ícone</b> — O glifo da variante, do sprite: diz a gravidade em FORMA, porque cor sozinha não informa. São os mesmos quatro do <a href="alert.html">Alert</a>, e ele herda a cor da caixa.</span></li>
+        <li data-target=".yb-toast__body"><span class="anat__texto"><b>Corpo</b> — Título e texto. Ocupa o que sobra entre o ícone e o que vem depois dele.</span></li>
+        <li data-target=".yb-toast__title"><span class="anat__texto"><b>Título</b> — O que aconteceu, em uma linha. Sozinho é o caso comum — aí ele não leva respiro embaixo.</span></li>
+        <li data-target=".yb-toast__text"><span class="anat__texto"><b>Texto</b> — Opcional. O detalhe: qual produto, por que falhou.</span></li>
+        <li data-target=".yb-toast__action"><span class="anat__texto"><b>Ação</b> — Opcional, e é o Button secundário de verdade. Clicar executa e fecha. Toast com ação precisa de mais tempo que os 5s do padrão.</span></li>
+        <li data-target=".yb-toast__close"><span class="anat__texto"><b>Fechar</b> — Só existe quando o toast NÃO fecha sozinho — aqui, porque este é <code>duration: 0</code>. Com prazo, o tempo já faz o que ele faria.</span></li>
       </ol>
     </div>
     <!-- O lede dizia so "Lido da folha e da marcacao a cada build": respondia

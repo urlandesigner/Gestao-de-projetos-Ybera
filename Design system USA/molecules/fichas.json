@@ -887,32 +887,42 @@
     },
     "anatomia": {
       "largura": "380px",
-      "recorte": "<div class=\"yb-toast yb-toast--success\" role=\"status\">.*?</button>\\s*</div>",
+      "recorte": "<div class=\"yb-toast yb-toast--danger\".*?aria-label=\"Dismiss\">×</button>\\s*</div>",
       "partes": [
         {
           "alvo": ".yb-toast",
           "nome": "Toast",
-          "texto": "Criado pelo script e removido sozinho em 5s. <code>role=\"status\"</code> espera a pausa do leitor de tela; o <code>--danger</code> usa <code>alert</code>, que interrompe."
+          "texto": "Criado pelo script e removido sozinho em 5s. <code>role=\"status\"</code> espera a pausa do leitor de tela; o <code>--danger</code> usa <code>alert</code>, que interrompe. Tingido não leva fio — quem leva é o neutro, que é branco sobre fundo branco."
+        },
+        {
+          "alvo": ".yb-toast__icon",
+          "nome": "Ícone",
+          "texto": "O glifo da variante, do sprite: diz a gravidade em FORMA, porque cor sozinha não informa. São os mesmos quatro do <a href=\"alert.html\">Alert</a>, e ele herda a cor da caixa."
         },
         {
           "alvo": ".yb-toast__body",
           "nome": "Corpo",
-          "texto": "Título e texto. Ocupa o que sobra ao lado do fechar."
+          "texto": "Título e texto. Ocupa o que sobra entre o ícone e o que vem depois dele."
         },
         {
           "alvo": ".yb-toast__title",
           "nome": "Título",
-          "texto": "O que aconteceu. O glifo antes dele (✓ ou ⚠) repete a variante em forma, porque cor sozinha não basta."
+          "texto": "O que aconteceu, em uma linha. Sozinho é o caso comum — aí ele não leva respiro embaixo."
         },
         {
           "alvo": ".yb-toast__text",
           "nome": "Texto",
-          "texto": "Opcional. O detalhe: qual produto, qual tamanho."
+          "texto": "Opcional. O detalhe: qual produto, por que falhou."
+        },
+        {
+          "alvo": ".yb-toast__action",
+          "nome": "Ação",
+          "texto": "Opcional, e é o Button secundário de verdade. Clicar executa e fecha. Toast com ação precisa de mais tempo que os 5s do padrão."
         },
         {
           "alvo": ".yb-toast__close",
           "nome": "Fechar",
-          "texto": "O Icon button <code>--square</code>, 44px de alvo. Fechar antes do tempo é direito de quem lê devagar."
+          "texto": "Só existe quando o toast NÃO fecha sozinho — aqui, porque este é <code>duration: 0</code>. Com prazo, o tempo já faz o que ele faria."
         }
       ]
     }

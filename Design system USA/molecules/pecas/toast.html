@@ -24,10 +24,10 @@
         <span class="amostra__rotulo"><code>--danger</code></span>
       </span>
     </div>
-    <h3 class="row-label">Parados — a mesma marcação que o script monta. Só o erro tem X: ele é o único que não some sozinho</h3>
+    <h3 class="row-label">Parados — a mesma marcação que o script monta. Só o erro tem X e ação: ele é o único que não some sozinho, e aí a saída não pode ser só “tentar de novo”</h3>
     <!-- Na loja o toast nasce do `Ybera.toast()` e some sozinho. Aqui ele está
          parado para a anatomia e o código terem o que mostrar. -->
-    <div class="demo demo--stack" style="max-inline-size:26rem">
+    <div class="demo demo--stack" style="max-inline-size:28rem">
       <div class="yb-toast" role="status">
         <div class="yb-toast__body">
           <b class="yb-toast__title">Filters cleared</b>
@@ -56,8 +56,9 @@
         <svg class="yb-icon yb-toast__icon" aria-hidden="true"><use href="../icons/ybera-icons.svg#yb-x-circle"/></svg>
         <div class="yb-toast__body">
           <b class="yb-toast__title">Could not add to cart</b>
-          <p class="yb-toast__text">Check your connection and try again.</p>
+          <p class="yb-toast__text">Check your connection.</p>
         </div>
+        <button class="yb-btn yb-btn--secondary yb-btn--sm yb-toast__action" type="button">Try again</button>
         <button class="yb-iconbtn yb-iconbtn--square yb-toast__close" type="button" aria-label="Dismiss">×</button>
       </div>
       <div class="yb-toast yb-toast--info" role="status">
