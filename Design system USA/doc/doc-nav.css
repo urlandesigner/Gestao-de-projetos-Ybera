@@ -28,12 +28,12 @@
      descartado em silêncio, o atalho de padding assumiu, e os sub-itens
      nasceram 11px à esquerda de onde deviam. */
   --ds-nav-gutter: var(--yb-space-4);            /* 16 — a margem da coluna   */
-  --ds-nav-chip:   var(--yb-space-8);            /* 32 — a caixa do ícone     */
-  --ds-nav-gap:    var(--yb-space-3);            /* 12 — do chip ao rótulo    */
+  --ds-nav-glifo:  var(--yb-icon-sm);            /* 16 — o ícone, sem caixa   */
+  --ds-nav-gap:    var(--yb-space-2);            /* 8 — do ícone ao rótulo    */
   /* onde o rótulo do grupo começa, e onde o sub-item tem de começar também */
-  --ds-nav-label: calc(var(--ds-nav-gutter) + var(--ds-nav-chip) + var(--ds-nav-gap));
-  /* o filete cai no centro do chip */
-  --ds-nav-rule: calc(var(--ds-nav-gutter) + var(--ds-nav-chip) / 2);
+  --ds-nav-label: calc(var(--ds-nav-gutter) + var(--ds-nav-glifo) + var(--ds-nav-gap));
+  /* o filete cai no centro do ícone */
+  --ds-nav-rule: calc(var(--ds-nav-gutter) + var(--ds-nav-glifo) / 2);
   --ds-top-h: 4.25rem;
   /* O FUNDO DA DOCUMENTAÇÃO É CINZA, e o das peças é branco.
 
@@ -194,7 +194,11 @@ body{
   background:var(--yb-surface);
   border-inline-end:1px solid var(--yb-border-subtle);
   font-family:var(--yb-font-family-base);
-  font-size:var(--yb-type-body-sm-size);
+  /* 13 NO NOME DA PEÇA, 14 no nome do grupo. A coluna lista 49 peças e nenhuma
+     delas é o conteúdo da página — ela é o sumário. Em 14 e 16 ela competia em
+     peso com a prosa da ficha ao lado, que está em 16: índice e texto no mesmo
+     corpo fazem a página parecer ter dois começos. */
+  font-size:var(--yb-type-caption-size);
   line-height:var(--yb-type-body-line);
 }
 /* Com a busca visível, ela é que faz o respiro do topo; sem script ela nasce
@@ -262,7 +266,7 @@ body{
   display:flex; align-items:center; gap:var(--ds-nav-gap);
   min-block-size:var(--yb-target-min);
   padding:var(--yb-space-2) var(--ds-nav-gutter);
-  color:var(--yb-text-muted); font-size:var(--yb-type-body-size);
+  color:var(--yb-text-muted); font-size:var(--yb-type-body-sm-size);
   cursor:pointer; list-style:none;
 }
 .ds-nav__grupo > summary::-webkit-details-marker{display:none}
@@ -279,17 +283,17 @@ body{
 }
 .ds-nav__grupo[open] > summary::after{transform:translateY(2px) rotate(-135deg)}
 
-/* O chip do ícone: caixa de 32 com fundo próprio, e não o ícone solto. Solto
-   ele flutua e a linha perde a coluna da esquerda — é o chip que constrói o
-   eixo que o filete da sublista continua. */
+/* O ÍCONE É PARTE DO RÓTULO, e não uma peça ao lado dele. Ele morava numa
+   caixa de 32 com fundo próprio, e a caixa custava mais do que entregava: ela
+   dobrava a largura do ícone, empurrava o nome do grupo para 60px da borda e
+   punha oito retângulos cinza numa coluna cujo trabalho é listar nomes. Lia
+   como oito botões apagados.
+
+   O eixo que o filete da sublista continua não precisava do chip para existir:
+   ele sai do centro do ícone, e o ícone tem centro com ou sem caixa. */
 .ds-nav__icone{
-  inline-size:var(--ds-nav-chip); block-size:var(--ds-nav-chip); flex:none;
-  padding:var(--yb-space-2);
-  border-radius:var(--yb-radius-sm);
-  /* Preenchimento, e não contorno: sobre o cinza da coluna, um chip branco com
-     borda lê como caixa de entrada — algo em que se clica e se digita. O que
-     ele precisa ser é uma marca d'água que segura a coluna da esquerda. */
-  background:var(--yb-bg-muted); color:var(--yb-text-muted);
+  inline-size:var(--ds-nav-glifo); block-size:var(--ds-nav-glifo); flex:none;
+  color:var(--yb-text-muted);
 }
 .ds-nav__grupo > summary:hover{color:var(--yb-text-primary)}
 .ds-nav__grupo > summary:hover .ds-nav__icone{color:var(--yb-text-primary)}
@@ -302,16 +306,12 @@ body{
 .ds-nav__grupo[open] > summary{
   color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold);
 }
-/* ONDE A PESSOA ESTÁ, na coluna branca: o chip enche de grafite e o ícone
-   vira branco. Sobre o cinza de antes bastava ESVAZIAR o chip — ele clareava
-   para #FAFAFA e sumia no fundo da coluna, o que já era a diferença. Numa
-   coluna branca esvaziar não diferencia nada, e encher é o gesto que sobra.
-
-   Continua não sendo um componente: é um chip de ícone de 32, sem rótulo
-   dentro e sem sombra — a forma que o sistema dá a botão tem alvo de 44, texto
-   e raio de controle, e nenhum dos três está aqui. */
+/* ONDE A PESSOA ESTÁ: o ícone escurece junto com o rótulo. Sem a caixa não há
+   o que preencher, e também não é preciso — o nome do grupo já ganha grafite e
+   peso na mesma linha, e o ícone só precisa acompanhar para a linha inteira
+   mudar de uma vez em vez de pela metade. */
 .ds-nav__grupo[open] > summary .ds-nav__icone{
-  background:var(--yb-text-primary); color:var(--yb-bg-page);
+  color:var(--yb-text-primary);
 }
 
 .ds-nav__grupo > ul{
@@ -345,11 +345,11 @@ body{
   display:flex; align-items:center; gap:var(--ds-nav-gap);
   min-block-size:var(--yb-target-min);
   padding:var(--yb-space-2) var(--ds-nav-gutter);
-  font-size:var(--yb-type-body-size); color:var(--yb-text-muted);
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-muted);
 }
 .ds-nav__solta > li > a:hover .ds-nav__icone{color:var(--yb-text-primary)}
 .ds-nav__solta > li > a[aria-current="page"] .ds-nav__icone{
-  background:var(--yb-text-primary); color:var(--yb-bg-page);
+  color:var(--yb-text-primary);
 }
 
 .ds-nav a{
