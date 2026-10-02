@@ -19,6 +19,42 @@
         <span class="amostra__rotulo"><code>--danger</code></span>
       </span>
     </div>
+    <h3 class="row-label">Matriz de estados — o que o CSS diz, lido do próprio CSS</h3>
+    <!-- As células não têm cor escrita aqui nem no doc.css: o doc.js copia as
+         regras da folha do sistema. Se o hover do botão mudar de token, esta
+         grade muda junto. Ver a nota em doc/doc.js. -->
+    <div class="matriz" data-doc-states inert>
+      <span></span>
+      <span class="matriz__col">Default</span>
+      <span class="matriz__col">Hover</span>
+      <span class="matriz__col">Pressed</span>
+      <span class="matriz__col">Focus</span>
+      <span class="matriz__col">Disabled</span>
+      <span class="matriz__linha">Primary</span>
+      <span class="matriz__cel" data-doc-state="default"><button class="yb-btn yb-btn--primary" type="button" tabindex="-1">Button</button></span>
+      <span class="matriz__cel" data-doc-state="hover"><button class="yb-btn yb-btn--primary" type="button" tabindex="-1">Button</button></span>
+      <span class="matriz__cel" data-doc-state="pressed"><button class="yb-btn yb-btn--primary" type="button" tabindex="-1">Button</button></span>
+      <span class="matriz__cel" data-doc-state="focus"><button class="yb-btn yb-btn--primary" type="button" tabindex="-1">Button</button></span>
+      <span class="matriz__cel" data-doc-state="disabled"><button class="yb-btn yb-btn--primary" type="button" tabindex="-1">Button</button></span>
+      <span class="matriz__linha">Secondary</span>
+      <span class="matriz__cel" data-doc-state="default"><button class="yb-btn yb-btn--secondary" type="button" tabindex="-1">Button</button></span>
+      <span class="matriz__cel" data-doc-state="hover"><button class="yb-btn yb-btn--secondary" type="button" tabindex="-1">Button</button></span>
+      <span class="matriz__cel" data-doc-state="pressed"><button class="yb-btn yb-btn--secondary" type="button" tabindex="-1">Button</button></span>
+      <span class="matriz__cel" data-doc-state="focus"><button class="yb-btn yb-btn--secondary" type="button" tabindex="-1">Button</button></span>
+      <span class="matriz__cel" data-doc-state="disabled"><button class="yb-btn yb-btn--secondary" type="button" tabindex="-1">Button</button></span>
+      <span class="matriz__linha">Ghost</span>
+      <span class="matriz__cel" data-doc-state="default"><button class="yb-btn yb-btn--ghost" type="button" tabindex="-1">Button</button></span>
+      <span class="matriz__cel" data-doc-state="hover"><button class="yb-btn yb-btn--ghost" type="button" tabindex="-1">Button</button></span>
+      <span class="matriz__cel" data-doc-state="pressed"><button class="yb-btn yb-btn--ghost" type="button" tabindex="-1">Button</button></span>
+      <span class="matriz__cel" data-doc-state="focus"><button class="yb-btn yb-btn--ghost" type="button" tabindex="-1">Button</button></span>
+      <span class="matriz__cel" data-doc-state="disabled"><button class="yb-btn yb-btn--ghost" type="button" tabindex="-1">Button</button></span>
+      <span class="matriz__linha">Danger</span>
+      <span class="matriz__cel" data-doc-state="default"><button class="yb-btn yb-btn--danger" type="button" tabindex="-1">Button</button></span>
+      <span class="matriz__cel" data-doc-state="hover"><button class="yb-btn yb-btn--danger" type="button" tabindex="-1">Button</button></span>
+      <span class="matriz__cel" data-doc-state="pressed"><button class="yb-btn yb-btn--danger" type="button" tabindex="-1">Button</button></span>
+      <span class="matriz__cel" data-doc-state="focus"><button class="yb-btn yb-btn--danger" type="button" tabindex="-1">Button</button></span>
+      <span class="matriz__cel" data-doc-state="disabled"><button class="yb-btn yb-btn--danger" type="button" tabindex="-1">Button</button></span>
+    </div>
     <div class="note">
       <b>Por que a secundária é contorno</b>
       <p>Com a ação em preto, a escada é de <b>peso</b>: preenchido preto é a

@@ -49,6 +49,87 @@
     }
   }
 
+  /* MATRIZ DE ESTADOS — variante no eixo Y, estado no eixo X.
+     A ficha ja listava os estados em TEXTO (`:hover`, `:active`, `[disabled]`),
+     e lista de seletor nao mostra o que a pessoa precisa ver: se o pressionado
+     escurece o bastante, se o desabilitado ainda da para ler, se duas variantes
+     ficaram iguais em algum estado. A matriz mostra os cinco de uma vez.
+
+     E E DERIVADA, nao escrita. O caminho obvio seria o doc declarar a cara de
+     cada celula — `.matriz [data-doc-state=hover] .yb-btn--primary{background:...}`
+     — e esse e exatamente o artefato que apodrece: no dia em que o hover do
+     botao mudar de token, a matriz continua mostrando o antigo, com confianca.
+
+     Entao as celulas nao tem estilo proprio. Para cada uma, o script procura
+     nas folhas do sistema as regras que casariam com aquele elemento SE ele
+     estivesse naquele estado, e copia as declaracoes para o `style` inline. O
+     que a matriz mostra e o que o CSS diz, sempre — se amanha alguem apagar o
+     `:active` do ghost, a coluna Pressionado dele fica igual a Default, que e a
+     verdade.
+
+     `[disabled]` nao e fingido: e atributo, entao a celula o recebe de verdade.
+     So os pseudo-estados (`:hover`, `:active`, `:focus-visible`) precisam da
+     copia, porque nao ha como liga-los sem o ponteiro ou o teclado.
+
+     `data-doc-state`, e nao `data-state`: o gerador de fichas ja le `data-state`
+     para montar os quadros de 375px do "No celular", um por estado declarado.
+     Com o nome cru, as vinte celulas desta matriz viraram vinte iframes na
+     secao errada. Cromo da doc leva `doc` no nome — mesma licao do
+     `data-doc-tabs`, que foi a vez anterior em que isto doeu. */
+  const ESTADO_PSEUDO = {
+    hover: ':hover', pressed: ':active', focus: ':focus-visible',
+  };
+
+  function regrasDe(folha, saida) {
+    let regras;
+    try { regras = folha.cssRules; } catch (e) { return; }   // folha de outra origem
+    for (const r of regras) {
+      if (r.media) { if (matchMedia(r.media.mediaText).matches) regrasDe(r, saida); }
+      else if (r.selectorText && r.style) saida.push(r);
+    }
+  }
+
+  const matrizes = document.querySelectorAll('[data-doc-states]');
+  if (matrizes.length) {
+    const folhas = [];
+    for (const ss of document.styleSheets) regrasDe(ss, folhas);
+
+    for (const matriz of matrizes) {
+      for (const cel of matriz.querySelectorAll('[data-doc-state]')) {
+        const estado = cel.getAttribute("data-doc-state");
+        const alvo = cel.querySelector('.yb-btn, .yb-input, .yb-chip, [class*="yb-"]');
+        if (!alvo) continue;
+        if (estado === 'disabled') { alvo.disabled = true; continue; }
+        const pseudo = ESTADO_PSEUDO[estado];
+        if (!pseudo) continue;
+        /* Na ORDEM DA FOLHA, para o empate se resolver como no navegador:
+           quem vem depois ganha, e e por isso que isto nao e um `find`. */
+        for (const r of folhas) {
+          if (!r.selectorText.includes(pseudo)) continue;
+          /* Tira o pseudo e pergunta se o elemento casa com o resto. Um
+             seletor que sobra invalido (`::after`, `:has()` de outra peca) cai
+             no catch e e ignorado — e o certo: ele nao era desta celula. */
+          const semPseudo = r.selectorText.split(',')
+            .map((s) => s.trim().split(pseudo).join(''))
+            .filter(Boolean);
+          let casa = false;
+          for (const sel of semPseudo) {
+            try { if (alvo.matches(sel)) { casa = true; break; } } catch (e) { /* seletor nao avaliavel */ }
+          }
+          if (!casa) continue;
+          /* `cssText` e nao propriedade a propriedade: no CSSOM, um atalho com
+             `var()` dentro — `background: var(--yb-action-primary-bg-hover)` —
+             fica com valor PENDENTE, e `getPropertyValue('background')` devolve
+             string vazia. Lendo assim, as celulas de hover e pressionado saiam
+             sem cor nenhuma e so o `transform` chegava, porque ele e longhand e
+             sem var. Com `cssText` o atalho vai inteiro, e o `+=` preserva a
+             ordem da folha: quem vem depois ganha, como no navegador. */
+          alvo.style.cssText += r.style.cssText;
+        }
+      }
+    }
+  }
+
   /* ABAS — Componente · Anatomia · Regras de uso · Acessibilidade.
 
      As três seções nascem empilhadas no HTML, cada uma com o próprio <h2>.

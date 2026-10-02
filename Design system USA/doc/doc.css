@@ -467,6 +467,43 @@
 }
 .demo--stack{flex-direction:column; align-items:stretch}
 
+/* MATRIZ DE ESTADOS — variante na linha, estado na coluna.
+   Grade e nao tabela: nao ha dado tabular aqui, e sim a MESMA peca repetida
+   em cinco condicoes. Quem le isto le com os olhos; quem usa leitor de tela
+   tem a lista de estados em texto no bloco de API, que diz a mesma coisa sem
+   depender de ver. Por isso a grade inteira e `inert`: ela sai da ordem de
+   tabulacao e da arvore de acessibilidade, em vez de virar quinze paradas de
+   Tab para botoes que nao fazem nada.
+
+   As celulas NAO TEM COR AQUI. Quem as pinta e o doc.js, copiando as regras
+   da propria folha do sistema — ver a nota la. Uma cor escrita neste arquivo
+   seria uma segunda verdade sobre o botao. */
+.matriz{
+  display:grid; gap:var(--yb-space-3) var(--yb-space-4);
+  grid-template-columns:auto repeat(5, minmax(0, 1fr));
+  align-items:center;
+  padding:var(--yb-space-6);
+  border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card);
+  background:var(--yb-surface);
+  overflow-x:auto;
+}
+.matriz__col, .matriz__linha{
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+  font-family:var(--yb-font-family-mono);
+}
+/* O nome da linha e o unico texto que fica na vertical da grade, entao ele
+   alinha a direita: colado na celula que descreve, e nao solto na calha. */
+.matriz__linha{text-align:end; color:var(--yb-text-secondary); font-family:inherit;
+  font-weight:var(--yb-font-weight-medium)}
+.matriz__col{text-align:center}
+.matriz__cel{display:flex; justify-content:center; min-inline-size:0}
+/* A peca dentro da celula nao estica: a matriz compara COR e contorno, e um
+   botao esticado faria a largura virar a diferenca mais visivel entre linhas. */
+.matriz__cel > *{inline-size:auto}
+@media (max-width:767.98px){
+  .matriz{grid-template-columns:auto repeat(5, max-content)}
+}
+
 /* PALCO DO POPOVER — cresce com o painel e encolhe quando ele fecha.
    O painel e absoluto: o palco nao o mede, e sem altura minima ele vazava por
    baixo da caixa. Com altura minima fixa acontecia o contrario — o Popover
