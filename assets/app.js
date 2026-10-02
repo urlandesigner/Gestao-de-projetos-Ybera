@@ -1106,7 +1106,7 @@ function cssId(s) { return s.replace(/[^a-z0-9]/gi, '-').toLowerCase(); }
 function escapeHtml(s) { const d = document.createElement('div'); d.textContent = String(s == null ? '' : s); return d.innerHTML.replace(/"/g, '&quot;'); }
 
 /* ---------- Board dedicado ---------- */
-const boardState = { p: null, chave: null, items: null, columns: null, sprint: null, iteracaoId: null, soSprint: false, carregando: false, erro: null, filtro: { tipos: null, resp: '', busca: '' } };
+const boardState = { p: null, chave: null, items: null, columns: null, sprint: null, iteracaoId: null, voltarPara: null, soSprint: false, carregando: false, erro: null, filtro: { tipos: null, resp: '', busca: '' } };
 
 function renderRoute() {
   const hash = location.hash || '';
@@ -1151,7 +1151,20 @@ function setPagina(pagina) {
   $('nav-projetos').classList.toggle('ativa', pagina === 'projetos' || pagina === 'board');
 }
 
+/* Pra onde o "voltar" do board leva. O botão tinha '#projetos' fixo, de quando
+   o board só era alcançável por lá; desde que o Panorama ganhou o quadro de
+   sprints, clicar numa sprint e voltar jogava o Urlan numa tela em que ele
+   nunca esteve.
+
+   Guardado em memória, e não lido do histórico do navegador: history.back()
+   acerta quando houve navegação de verdade, mas abandona a página inteira se o
+   board foi a PRIMEIRA tela (link colado, F5 em cima dele). */
+const VOLTA_PADRAO = '#projetos';
 function abrirBoard(p, comSprint, iteracaoId) {
+  // Board → board (trocar de sprint) não é origem: senão o voltar passaria a
+  // apontar pro próprio board e o botão não sairia do lugar.
+  const de = document.body.dataset.pagina;
+  if (de && de !== 'board') boardState.voltarPara = '#' + de;
   boardState.p = p;
   if (comSprint) boardState.soSprint = true;
   // Trocar de sprint não troca o board no cache (a chave é o time), então o
@@ -1523,7 +1536,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.body.dataset.pagina === 'produtos') carregarBase(true);
   });
   $('abrir-config').addEventListener('click', openSettings);
-  $('board-voltar').addEventListener('click', () => { location.hash = '#projetos'; });
+  $('board-voltar').addEventListener('click', () => { location.hash = boardState.voltarPara || VOLTA_PADRAO; });
   $('epico-voltar').addEventListener('click', () => { location.hash = '#produtos'; });
   $('board-atualizar').addEventListener('click', () => { if (boardState.p) carregarBoard(boardState.p, true); });
   $('board-filtro-sprint').addEventListener('click', () => {

@@ -172,3 +172,28 @@ test('o board alarga a janela de consulta pra alcançar uma sprint passada', () 
   const fechouHa60 = fn({ finish: new Date(Date.now() - 60 * 86400000).toISOString() });
   assert.ok(fechouHa60 >= 90, 'sprint fechada há 60 dias precisa alcançar além dela, não 30');
 });
+
+/* ---------- o voltar do board ---------- */
+/* O botão tinha '#projetos' fixo, de quando o board só era alcançável por lá.
+   Desde que o Panorama ganhou o quadro de sprints, entrar numa sprint e voltar
+   despejava o usuário numa tela em que ele nunca esteve. */
+test('o voltar do board usa a origem guardada, não um destino fixo', () => {
+  assert.match(fonteApp, /location\.hash = boardState\.voltarPara \|\| VOLTA_PADRAO;/,
+    'o destino fixo voltou: quem entrar pelo Panorama sai no Projetos');
+  assert.match(fonteApp, /if \(de && de !== 'board'\) boardState\.voltarPara = '#' \+ de;/,
+    'board → board (trocar de sprint) não pode virar origem, senão o voltar não sai do lugar');
+  assert.match(fonteApp, /const VOLTA_PADRAO = '#projetos';/,
+    'sem origem guardada (link colado, F5 no board) ainda precisa ter pra onde ir');
+});
+
+/* Os destinos que o voltar pode produzir são '#' + o nome da página, e todos
+   precisam ser rota de verdade — senão o botão leva a lugar nenhum. O
+   '#panorama' não tem `if` próprio: cai no fim do renderRoute, que é o padrão. */
+test('toda página que pode virar origem tem rota que a reconhece', () => {
+  const rota = /function renderRoute\(\)[\s\S]*?\n\}/.exec(fonteApp)[0];
+  for (const pagina of ['pendencias', 'produtos', 'roadmap', 'projetos', 'meus-itens']) {
+    assert.ok(rota.includes(`hash === '#${pagina}'`), `#${pagina} não é rota: o voltar morreria nela`);
+  }
+  assert.match(rota, /setPagina\('panorama'\); \/\/ abertura/,
+    '#panorama depende do caminho padrão do renderRoute — se ele sumir, o voltar do Panorama quebra');
+});
