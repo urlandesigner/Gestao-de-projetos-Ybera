@@ -826,10 +826,17 @@ body.modo-leitura .caixa-link { display: none !important; }
   flex-wrap: wrap;
   margin: 0 0 1rem;
 }
-#board-voltar {
+/* A seta de voltar, dos dois cabeçalhos que usam .board-topo.
+
+   Era regra de ID (#board-voltar) e valia só pro board: a seta do épico, com
+   a mesma marcação no mesmo cabeçalho, caía sem estilo nenhum e saía desenhada
+   pelo navegador — quadrada, com borda fina e fora do eixo dos outros botões.
+   Por classe, a próxima tela que reaproveitar .board-topo já nasce certa. */
+.board-topo .voltar {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex: none;
   width: 36px;
   height: 36px;
   font-size: 1rem;
@@ -839,7 +846,8 @@ body.modo-leitura .caixa-link { display: none !important; }
   cursor: pointer;
   color: var(--tinta);
 }
-#board-voltar:hover { background: #e9e9eb; }
+.board-topo .voltar:hover { background: #e9e9eb; }
+.board-topo .voltar:focus-visible { outline: 2px solid var(--tinta); outline-offset: 2px; }
 .board-titulos h2 { margin: 0; font-size: 1.15rem; }
 #board-sub { margin: 0.05rem 0 0; font-size: 0.8rem; }
 .board-acoes { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
