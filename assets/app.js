@@ -633,18 +633,25 @@ function renderPanorama() {
       // A anterior mostra o que ficou pra trás; as outras, o que ainda falta.
       // Na próxima isso é a lista inteira, porque nada dela está feito ainda.
       const abertos = col.itens.filter((x) => !x.feito);
-      /* Coluna sem nada a listar não fica em branco — cada vazio tem a sua
-         frase, e elas precisam ser VERDADE. A próxima vazia costuma ser sprint
-         ainda sem backlog, mas pode ser sprint cheia em que nada está no nome
-         de quem está filtrado: dizer "ainda sendo planejadas" nesse caso seria
-         mentira na tela, com sete itens planejados logo ali. */
-      const vazioDaProxima = col.itens.length
-        ? `<p class="sprint-limpa mudo">Nada no nome de ${escapeHtml(respSprint)} nesta sprint ainda.</p>`
-        : '<p class="sprint-limpa mudo">As PBIs desta sprint ainda estão sendo planejadas.</p>';
+      /* O aviso de planejamento fica SEMPRE na coluna da próxima, com lista ou
+         sem ela — pedido do Urlan. E é verdade nos dois casos: sprint futura
+         não tem escopo fechado, então o que está ali ainda pode mudar e o que
+         falta ainda pode entrar. Mostrá-lo só no vazio diria o contrário por
+         omissão — que uma lista já existente é definitiva.
+
+         Acima dele, quando não há o que listar, a linha que explica o vazio. São
+         duas causas diferentes e cada uma tem a sua frase: sprint sem backlog
+         ainda, ou sprint cheia em que nada está no nome de quem está filtrado
+         no topo. Uma frase só mentiria num dos dois casos. */
+      const NOTA_PLANEJAMENTO = '<p class="sprint-nota mudo">As PBIs desta sprint ainda estão sendo planejadas.</p>';
+      const listaDaProxima = listaDeItens(col.itens, link);
+      const semLista = col.itens.length
+        ? `<p class="sprint-limpa mudo">Nada no nome de ${escapeHtml(respSprint)} por enquanto.</p>`
+        : '';
       const corpo = chave === 'atual'
         ? listaDeItens(abertos, link)
         : chave === 'proxima'
-          ? (listaDeItens(col.itens, link) || vazioDaProxima)
+          ? (listaDaProxima || semLista) + NOTA_PLANEJAMENTO
           : (abertos.length ? listaDeItens(abertos, link) : '<p class="sprint-limpa mudo">Fechou inteira.</p>');
       const barra = chave === 'proxima' ? '' : `<span class="barra"><span class="barra-cheia" style="width:${pct}%"></span></span>`;
       const nProxima = doResponsavel(col.itens).length;

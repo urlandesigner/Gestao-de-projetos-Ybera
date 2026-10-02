@@ -704,6 +704,9 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
 /* Sprint anterior que não deixou nada pra trás é notícia boa e merece uma
    linha, não uma lista vazia. */
 .sprint-limpa { margin: 0.5rem 0 0; font-size: 0.8rem; }
+/* Aviso permanente da coluna da próxima: vem abaixo da lista e em voz mais
+   baixa que ela — é contexto do que está acima, não um item a mais. */
+.sprint-nota { margin: 0.55rem 0 0; font-size: 0.72rem; line-height: 1.45; }
 .sprint-anterior .sprint-prog, .sprint-proxima .sprint-prog { color: var(--mudo); }
 /* A linha de item foi desenhada pra uma coluna larga: tipo, título, estado e
    #id lado a lado. Em três colunas de 230px sobravam ~90px pro título e ele
