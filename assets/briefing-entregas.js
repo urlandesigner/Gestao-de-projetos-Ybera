@@ -60,11 +60,11 @@
    o v1, report-v2.html o v2, entregas.html este).
 
    Contrato de DOM com report.js (não mexer sem mexer lá):
-   .report-doc · seções com id próprio. Os ganchos de busca (#busca-entregas,
-   #lista-entregas, .chip-doc, #limpar-entregas, #conta-entregas), a navegação
-   (.doc-nav) e o seletor de mês (#mes-global) não existem aqui — report.js
-   aguenta a ausência dos três: cada um sai cedo ou é delegado por seletor que
-   nunca casa.
+   .report-doc · #mes-global · seções com id próprio. Os ganchos de busca
+   (#busca-entregas, #lista-entregas, .chip-doc, #limpar-entregas,
+   #conta-entregas) e a navegação (.doc-nav) não existem aqui — report.js
+   aguenta a ausência dos dois: cada um sai cedo ou é delegado por seletor que
+   nunca casa. O #mes-global existe, mas chega escondido (SELETOR_MES_VISIVEL).
 
    UMD: window.CentralBriefing no navegador, module.exports no Node. */
 (function (root, factory) {
@@ -113,6 +113,14 @@
      faz esse desvio é o ternário da montagem, lá embaixo, e não este arquivo
      aqui em cima. */
   const PERIODO_MESES = ['2026-08', '2026-09'];
+
+  /* O seletor de período da capa existe no DOM, mas chega DESLIGADO.
+
+     Pedido do Urlan: hoje só há este relatório, e um seletor com uma opção só
+     é decoração que promete navegação inexistente. Ligar é trocar este false
+     por true — e aí vale ler o aviso do `seletorMes`, porque a lista de meses
+     que ele monta ainda não é a lista de RELATÓRIOS. */
+  const SELETOR_MES_VISIVEL = false;
 
   /* "Agosto e Setembro de 2026" — o ano aparece uma vez quando é o mesmo pra
      todos, e mês a mês quando o período cruza a virada do ano. */
@@ -261,7 +269,23 @@
      única forma de ter os dois desenhos é escrever os dois e deixar o CSS
      decidir. Cada tamanho mostra exatamente um: o outro sai com `display:none`,
      que também o tira da árvore de acessibilidade — ninguém lê duas vezes. */
-  function masthead(periodo, tiles, hero, retranca, situacao, autoria) {
+  /* Seletor de período, no alto à direita da capa — o mesmo gancho de DOM que
+     o v2 usa (#mes-global), então o report.js já sabe ouvi-lo: ele delega o
+     `change` pela caixa do documento e repinta com o mês novo.
+
+     ATENÇÃO pra quando for ligado: aqui o período da capa vem de
+     PERIODO_MESES, uma constante, e a contagem não recorta por mês nenhum.
+     Então trocar o mês neste select hoje não mudaria uma linha da tela. Ligar
+     o seletor é meio caminho; o outro meio é o período deixar de ser constante
+     e passar a dizer QUAL relatório está aberto. */
+  function seletorMes(lista, escolhido) {
+    const opcoes = lista.map((m) => `<option value="${esc(m)}"${m === escolhido ? ' selected' : ''}>${esc(mesPorExtenso(m))}</option>`).join('');
+    return `<div class="rl-capa-mes"${SELETOR_MES_VISIVEL ? '' : ' hidden'}>
+        <select id="mes-global" class="rl-mes" aria-label="Período do relatório">${opcoes}</select>
+      </div>`;
+  }
+
+  function masthead(periodo, tiles, hero, retranca, situacao, autoria, mes) {
     // Sem o " · " aqui: o separador entre a unidade e a autoria virou um fio
     // desenhado no CSS. São dois registros diferentes na mesma linha — onde e
     // quem — e o mesmo ponto que separa "Ybera US" de "E-commerce" dizia que
@@ -270,6 +294,7 @@
     return `<header class="rl-capa">
       <div class="rl-capa-topo">
         <img class="rl-logo" src="assets/brand/ybera-logo.webp" alt="Ybera" width="360" height="139">
+        ${mes || ''}
       </div>
       ${retranca ? `<p class="rl-rotulo rl-capa-retranca">${esc(retranca)}<span class="rl-capa-autoria">${risca}</span></p>` : ''}
       <!-- Os dois <span> ficam COLADOS, sem espaço nem quebra entre eles: no
@@ -1022,7 +1047,8 @@
         heroi(totalDeItens, apoioItens),
         [o.unidade, 'E-commerce'].filter(Boolean).join(' · '),
         'O que o time entregou no período, e o planejamento dos próximos meses.',
-        meta.join(' · '))}
+        meta.join(' · '),
+        seletorMes(listaMeses, escolhido))}
       <div class="rl-corpo">${secoes.map((x) => secaoHtml(x)).join('')}</div>
       ${rodape()}
     </div>`;

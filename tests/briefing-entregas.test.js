@@ -269,13 +269,52 @@ test('Entregas: mês fechado não ressuscita seção nenhuma', () => {
 
 test('Entregas não desenha navegação nenhuma, mas continua devolvendo os meses', () => {
   const r = documento();
-  // A barra inteira saiu: menu, âncoras e seletor de mês.
+  // A barra saiu inteira: menu e âncoras. O seletor de mês voltou depois, na
+  // capa, e tem teste próprio logo abaixo.
   assert.ok(!r.html.includes('doc-nav'), 'report.js mede a nav — precisa não achar nada');
   assert.ok(!r.html.includes('rl-nav'));
-  assert.ok(!r.html.includes('mes-global'));
   assert.ok(!r.html.includes('<a href="#'), 'sem âncora de seção sobrando');
   // `meses` alimenta a Central e o link de leitura: some da tela, não do retorno.
   assert.ok(Array.isArray(r.meses) && r.meses.length > 0);
+});
+
+/* SELETOR DE PERÍODO — existe, mas chega desligado.
+
+   Pedido do Urlan em 02/10/2026: hoje só há um relatório, e um seletor com uma
+   opção só promete navegação que não existe. Ele liga no próximo. O que estes
+   testes guardam é o estado intermediário: a peça montada e invisível, com os
+   dois jeitos de ela vazar pra tela cobertos — o atributo no HTML e a regra
+   parceira na folha. Sem a segunda, basta o select declarar `appearance` que a
+   regra de autor passa por cima do [hidden] do navegador; foi assim que a
+   barra do PO apareceu em produção. */
+test('Entregas: o seletor de período existe na capa, no alto à direita', () => {
+  const h = documento().html;
+  const topo = h.slice(h.indexOf('rl-capa-topo'), h.indexOf('rl-titulo'));
+  assert.match(topo, /id="mes-global"/, 'o gancho que o report.js escuta mora na capa');
+  assert.ok(topo.indexOf('rl-logo') < topo.indexOf('mes-global'),
+    'a marca vem primeiro: é o space-between que joga o seletor pra direita');
+});
+
+test('Entregas: o seletor chega escondido — some da tela, não do DOM', () => {
+  const h = documento().html;
+  assert.match(h, /<div class="rl-capa-mes" hidden>/,
+    'ligar é trocar SELETOR_MES_VISIVEL por true; até lá o documento não o mostra');
+});
+
+test('Entregas: o seletor lista os meses, não uma opção vazia', () => {
+  const r = documento();
+  const bloco = r.html.slice(r.html.indexOf('id="mes-global"'), r.html.indexOf('</select>'));
+  const opcoes = bloco.match(/<option /g) || [];
+  assert.equal(opcoes.length, r.meses.length,
+    'a lista desenhada é a mesma que o módulo devolve em `meses`');
+  assert.match(bloco, /selected/, 'o mês corrente vem marcado, senão abre no primeiro da lista');
+});
+
+test('Entregas: a folha tem a regra parceira do [hidden] no seletor', () => {
+  const css = require('node:fs').readFileSync(
+    require('node:path').join(__dirname, '..', 'assets', 'entregas.css'), 'utf8');
+  assert.match(css, /\.rl-capa-mes\[hidden\]\s*\{[^}]*display\s*:\s*none/,
+    'sem ela o [hidden] do JS não chega à tela — foi o defeito da barra do PO');
 });
 
 /* Este teste dizia o contrário até 30/09/2026: board vazio devolvia

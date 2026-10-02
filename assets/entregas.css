@@ -160,6 +160,37 @@ body.pagina-entregas {
   margin-bottom: clamp(2rem, 4vw, 2.75rem);
 }
 .rl-logo { display: block; height: 36px; width: auto; }
+
+/* Seletor de período, no alto à direita da capa. O `space-between` do
+   .rl-capa-topo já o encosta na direita: a marca de um lado, ele do outro.
+
+   Hoje chega com [hidden] (SELETOR_MES_VISIVEL, no briefing-entregas.js). A
+   regra parceira abaixo não é zelo à toa: foi exatamente assim que a barra do
+   PO vazou pra produção — o JS escondia, a folha mostrava, porque regra de
+   autor ganha do [hidden] do navegador. Aqui o pai não declara display, mas
+   quem declara é o filho, e a regra deixa isso trancado de qualquer jeito. */
+.rl-capa-mes { flex: none; }
+.rl-capa-mes[hidden] { display: none; }
+.rl-capa-mes .rl-mes {
+  appearance: none;
+  -webkit-appearance: none;
+  max-width: 14rem;
+  padding: 0.45rem 2.2rem 0.45rem 1rem;
+  border: 1px solid var(--borda);
+  border-radius: 9999px;
+  background-color: var(--superficie);
+  color: var(--tinta);
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%231c1c1a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+}
+.rl-capa-mes .rl-mes:focus-visible { outline: 2px solid var(--tinta); outline-offset: 2px; }
 /* O arquivo da marca é raster e só existe em positivo: sobre superfície
    escura entra invertido (mesma técnica do .yb-logo--inverse do DS). */
 .rl-logo-inv { filter: invert(1); }
