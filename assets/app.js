@@ -661,19 +661,41 @@ function cardTemResp(p, resp) {
   });
 }
 
+/* Quem pode ser escolhido no filtro de responsável.
+
+   O seletor nascia da lista inteira de quem tem item atribuído — todo mundo,
+   de todos os times do DevOps — e o uso real é comparar as três POs. Os demais
+   ficam de fora.
+
+   A lista é por PRIMEIRO NOME de propósito. O DevOps devolve o nome de
+   exibição completo, e esse nome muda sem avisar: sobrenome que entra ou sai,
+   nome social, grafia diferente entre contas. Casar pela string inteira faria
+   a pessoa sumir do seletor calada; casar pelo primeiro nome sobrevive a isso.
+   Se alguma PO não aparecer, é aqui que se mexe. */
+const POS = ['Urlan', 'Isadora', 'Daniele'];
+const primeiroNome = (n) => String(n || '').trim().split(/\s+/)[0]
+  .normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const ehPO = (n) => POS.some((p) => primeiroNome(p) === primeiroNome(n));
+
 // Seletor de responsável dos cartões — opções vêm dos itens em cache de todos os times
 function renderFiltroGlobal() {
   const barra = $('filtro-global');
   const sel = $('resp-global');
   const todos = Object.values(state.cache.byCard).flatMap((e) => (e && e.items) || []);
-  if (!todos.length && !respAtivo()) { barra.hidden = true; return; }
-  barra.hidden = false;
   const nomes = new Set(todos
     .map((it) => (it.fields || {})['System.AssignedTo'])
     .filter((r) => r && r.displayName)
-    .map((r) => r.displayName));
-  if (respAtivo()) nomes.add(respAtivo()); // seleção sobrevive mesmo sem itens no momento
-  if (state.cache.usuario) nomes.add(state.cache.usuario);
+    .map((r) => r.displayName)
+    .filter(ehPO));
+  // A escolha salva sobrevive mesmo fora da lista: se o filtro guardado for de
+  // alguém que saiu das POs, esconder o nome deixaria o seletor dizendo "todos"
+  // enquanto filtrava por uma pessoa. Some quando ele escolher outro.
+  if (respAtivo()) nomes.add(respAtivo());
+  if (state.cache.usuario && ehPO(state.cache.usuario)) nomes.add(state.cache.usuario);
+  // Nada pra escolher não é barra vazia, é barra fora: antes a checagem era
+  // pelos itens em cache, que agora não dizem mais se sobrou opção.
+  if (!nomes.size) { barra.hidden = true; return; }
+  barra.hidden = false;
   const lista = [...nomes].sort((a, b) => a.localeCompare(b, 'pt-BR'));
   sel.innerHTML = '<option value="">todos os responsáveis</option>' +
     lista.map((n) => `<option value="${escapeHtml(n)}"${n === respAtivo() ? ' selected' : ''}>${escapeHtml(n)}</option>`).join('');
