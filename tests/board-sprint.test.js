@@ -83,7 +83,98 @@ test('o botão nomeia a sprint que está aberta', () => {
 /* O que o botão FAZ não mudou, e é bom que não mude: recorte por IterationPath
    exato, o mesmo critério do Panorama desde a correção do transbordo. */
 test('o filtro continua sendo por iteração exata', () => {
-  assert.match(fonteApp, /if \(boardState\.soSprint && boardState\.sprint\) base = base\.filter\(\(it\) => C\.inSprint\(it, boardState\.sprint\.path\)\);/);
+  assert.match(fonteApp, /base = base\.filter\(\(it\) => C\.inSprint\(it, boardState\.sprint\.path\)\)/);
   assert.equal(C.inSprint(mk(1, 'Bug', S19), S19), true);
   assert.equal(C.inSprint(mk(1, 'Bug', S20), S19), false);
+});
+
+/* ---------- 3. a coluna dos que saíram ---------- */
+/* Pedido do Urlan em 05/10/2026, depois de confirmar os números: o board da
+   Sprint 19 mostrava só "Feito" com 2 cartões. A sprint teve 5 PBIs no nome
+   dele — os outros 3 foram pra Sprint 20 e sumiram da tela sem deixar rastro.
+
+   O que estes testes guardam são as três decisões que fazem a coluna dizer a
+   verdade, e que não se vê olhando a tela pronta. */
+
+test('a coluna dos que saíram só existe com o recorte da sprint ligado', () => {
+  /* Com o recorte desligado o board é o backlog inteiro do time, e os que
+     saíram já estão lá — na sprint pra onde foram. Somá-los de novo mostraria
+     o mesmo cartão duas vezes. */
+  assert.match(fonteApp, /if \(boardState\.soSprint && boardState\.sprint\) \{[\s\S]*?\.concat\(boardState\.transbordados \|\| \[\]\);/,
+    'os transbordados têm que entrar DENTRO do ramo do recorte por sprint');
+});
+
+test('quem saiu vai pra coluna própria, não pra do estado dele', () => {
+  /* O estado dele é de OUTRA sprint agora. Vê-lo em "Em Desenvolvimento" aqui
+     afirmaria que ele está em curso NESTA — o oposto do que aconteceu. */
+  assert.match(fonteApp, /const col = it\.transbordou \? COLUNA_TRANSBORDO : \(f\['System\.BoardColumn'\] \|\| f\['System\.State'\] \|\| '—'\)/);
+});
+
+test('a coluna fecha o board, nos dois caminhos de ordenação', () => {
+  /* Um caminho usa as colunas oficiais do DevOps, o outro o fallback por
+     estado. A coluna dos que saíram não existe em nenhum dos dois, então a
+     ordem é imposta depois — senão ela cairia no meio do fluxo. */
+  assert.match(fonteApp, /nomes = nomes\.filter\(\(n\) => n !== COLUNA_TRANSBORDO\)\.concat\(COLUNA_TRANSBORDO\);/);
+  const ondeOrdena = fonteApp.indexOf('nomes.filter((n) => n !== COLUNA_TRANSBORDO)');
+  const ondeFallback = fonteApp.indexOf('C.orderColumnsFallback(');
+  assert.ok(ondeOrdena > ondeFallback, 'a imposição tem que vir depois dos dois caminhos');
+});
+
+/* A marca é propriedade do objeto, nunca campo de `fields`: ali só entra o que
+   veio do DevOps. Misturar marca própria com campo do servidor é como um filtro
+   passa a responder por dado que ninguém escreveu. */
+test('a marca de transbordo não se disfarça de campo do DevOps', () => {
+  assert.match(fonteApp, /Object\.assign\(\{\}, it, \{ transbordou: true \}\)/);
+  assert.ok(!/fields\['transbordou'\]|'System\.Transbordou'/.test(fonteApp));
+});
+
+/* Na sprint corrente ninguém transbordou ainda: perguntar ali seria pagar duas
+   consultas por sprint aberta pra receber lista vazia, sempre. */
+test('só sprint encerrada é consultada', () => {
+  const corpo = /async function buscarTransbordoDoBoard[\s\S]*?\n\}/.exec(fonteApp)[0];
+  assert.match(corpo, /if \(Number\.isNaN\(fim\) \|\| fim > Date\.now\(\)\) return \[\];/);
+  assert.match(corpo, /FIELDS_BOARD/, 'o cartão do board lê outros campos que o do Panorama');
+});
+
+/* Âmbar, a mesma cor do selo no Panorama: o mesmo fato não pode ter duas cores
+   em duas telas. E não é vermelho — transbordo é decisão de planejamento, não
+   defeito. */
+test('o ponto da coluna tem cor própria, igual à do selo do Panorama', () => {
+  assert.match(fonteApp, /if \(bucket === 'transbordo'\) return '#d97706';/);
+  assert.match(fonteApp, /if \(nome === COLUNA_TRANSBORDO\) bucket = 'transbordo';/);
+});
+
+/* O cartão de quem saiu precisa dizer PRA ONDE: a coluna já informa que ele
+   saiu, e o id sozinho não conta a história. */
+test('o cartão de quem saiu mostra o destino', () => {
+  assert.match(fonteApp, /const destino = it\.transbordou/);
+  assert.match(fonteApp, /<span class="rot">Foi pra<\/span><span class="val">\$\{escapeHtml\(C\.iterationLabel\(f\['System\.IterationPath'\]\)\)\}/);
+});
+
+/* ---------- 4. o botão não aparece onde não faz sentido ---------- */
+/* Pergunta do Urlan, dentro do board da Sprint 20: "pra que esse filtro se eu
+   já estou dentro da sprint?". Resposta: não serve. O botão nasceu pro board do
+   TIME — o que abre sem sprint na rota e mostra o quadro inteiro; ali ele é o
+   atalho pra estreitar na corrente. Quando a rota nomeia a sprint, desligá-lo
+   mostraria o backlog inteiro sob um cabeçalho que diz "Sprint 20". */
+test('entrando por uma sprint, o botão de recorte some', () => {
+  assert.match(fonteApp, /const sprintNaRota = !!boardState\.iteracaoId;/);
+  assert.match(fonteApp, /filtro\.hidden = sprintNaRota \|\| !\(boardState\.sprint && boardState\.sprint\.path\);/);
+});
+
+/* Esconder o controle sem fixar o estado deixaria o recorte desligado e sem
+   jeito de religar — board do time inteiro, com título de sprint, e nenhum
+   botão na tela pra desfazer. */
+test('com o botão escondido, o recorte fica ligado', () => {
+  assert.match(fonteApp, /if \(sprintNaRota\) boardState\.soSprint = true;/);
+  const ondeForca = fonteApp.indexOf('if (sprintNaRota) boardState.soSprint = true;');
+  const ondeEsconde = fonteApp.indexOf('filtro.hidden = sprintNaRota');
+  assert.ok(ondeForca < ondeEsconde, 'o estado precisa ser fixado antes de esconder o controle');
+});
+
+/* A frase de board vazio dizia "nada na sprint corrente" mesmo dentro da
+   Sprint 19 — mesma mentira que o rótulo do botão tinha. */
+test('a frase de vazio nomeia a sprint, não diz "corrente"', () => {
+  assert.match(fonteApp, /'nada na ' \+ boardState\.sprint\.name/);
+  assert.ok(!/nada na sprint corrente/.test(semComentarios(fonteApp)));
 });

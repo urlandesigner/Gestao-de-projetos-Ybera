@@ -245,15 +245,17 @@ test('as três retrancas de sprint têm a mesma caixa', () => {
   assert.match(atual[0], /background:/, 'o que distingue a coluna em curso é a cor do selo');
 });
 
-/* Mesmo motivo, uma linha abaixo: a coluna da próxima não tem progresso, e sem
-   nada no lugar da barra a lista de PBIs dela subia ~13px. */
-test('a coluna da próxima reserva o espaço da barra de progresso', () => {
+/* Mesmo motivo, uma linha abaixo: as três colunas precisam da barra pra que as
+   listas de PBIs comecem na mesma altura. A da próxima fica vazia.
+
+   Ela já foi reservada-e-invisível, pelo argumento de que um trilho zerado ao
+   lado de "1 item" leria como "nenhum feito". O Urlan pediu visível em
+   05/10/2026, e o padrão repetido venceu: três cartões com a mesma anatomia se
+   comparam melhor que dois com barra e um com um vão. */
+test('a barra de progresso aparece nas três colunas', () => {
   const app = fs.readFileSync(path.join(raiz, 'assets', 'app.js'), 'utf8');
-  assert.match(app, /chave === 'proxima'\s*\?\s*'<span class="barra barra-reservada"/,
-    'sem o espaço reservado, a lista da próxima sobe e desalinha das vizinhas');
-  const css = ler('assets/style.css');
-  assert.match(css, /\.barra-reservada \{[^}]*visibility:\s*hidden/,
-    'tem que ocupar o espaço sem desenhar: display:none não reserva nada');
-  assert.ok(!/\.barra-reservada \{[^}]*display:\s*none/.test(css),
-    'display:none devolve o desalinho que a reserva existe pra resolver');
+  assert.match(app, /const barra = `<span class="barra"><span class="barra-cheia" style="width:\$\{pct\}%"><\/span><\/span>`;/,
+    'uma marcação só pras três: ramo por coluna é como a anatomia volta a divergir');
+  assert.ok(!/barra-reservada/.test(app) && !/barra-reservada/.test(ler('assets/style.css')),
+    'a barra reservada saiu — classe órfã vira dúvida pra quem lê depois');
 });

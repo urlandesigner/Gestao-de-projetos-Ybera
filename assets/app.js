@@ -43,6 +43,9 @@ const ORDEM_TIPO = ['epic', 'feature', 'pbi', 'bug', 'task', 'outro'];
 function corColunaPorBucket(bucket) {
   if (bucket === 'atencao') return '#ef4444';
   if (bucket === 'feito') return '#22c55e';
+  // Transbordo não é defeito nem entrega: é decisão de planejamento. Âmbar, a
+  // mesma cor do selo no Panorama — o mesmo fato não pode ter duas cores.
+  if (bucket === 'transbordo') return '#d97706';
   return '#a1a1aa';
 }
 
@@ -261,6 +264,90 @@ function resumoDeSprint(itens) {
     });
 }
 
+/* O QUE SAIU DA SPRINT DEPOIS QUE ELA FECHOU.
+
+   Só pra coluna "Anterior": na corrente a pergunta não existe (a sprint não
+   fechou) e na próxima também não (não começou).
+
+   `finish` do DevOps vem como data sem hora útil — a sprint vale até o fim
+   daquele dia, então a pergunta é pelo último instante dele. Perguntar pela
+   meia-noite devolveria a véspera e perderia o que foi mexido no último dia.
+
+   Falhar aqui NÃO pode derrubar a coluna: sem o transbordo ela volta a ser o
+   que era até hoje — a sprint como está agora —, que é informação correta,
+   só menos completa. Mas avisa, senão "não houve transbordo" e "o ASOF não
+   funciona nesta organização" ficam idênticos na tela. */
+const FIM_DO_DIA = 86399000; // 23:59:59 em ms, somado à data de `finish`
+
+async function buscarTransbordo(p, sp, areas) {
+  const fim = sp && sp.finish ? Date.parse(sp.finish) : NaN;
+  if (Number.isNaN(fim)) return [];
+  /* As duas pontas saem do MESMO construtor, variando só o instante — é o que
+     garante que a diferença entre elas seja transbordo, e não desencontro de
+     definição. Comparar contra a lista da API da iteração dava 141 de um lado
+     e 147 do outro, e itens que nunca saíram apareciam como se tivessem. */
+  const qAgora = C.wiqlIteracao(sp.path, areas);
+  const qNoFim = C.wiqlIteracao(sp.path, areas, fim + FIM_DO_DIA);
+  if (!qAgora || !qNoFim) return [];
+  try {
+    const [agora, noFim] = await Promise.all([
+      A.runWiql(ctx(), p.projectName, p.teamName, qAgora),
+      A.runWiql(ctx(), p.projectName, p.teamName, qNoFim),
+    ]);
+    const sairam = C.transbordados(noFim, agora.map((id) => ({ id })));
+    if (!sairam.length) return [];
+    const extras = await A.getFields(ctx(), sairam, FIELDS_COUNTS);
+    /* Casa por id, não por índice: `resumoDeSprint` tira as Tasks, então as
+       duas listas têm tamanhos diferentes e parear pela posição penduraria o
+       destino errado em cada item — um erro que a tela mostraria com cara de
+       certo. */
+    const destinoDe = new Map(extras.map((it) => [
+      it.id, C.iterationLabel((it.fields || {})['System.IterationPath']),
+    ]));
+    return resumoDeSprint(extras).map((x) => Object.assign({}, x, {
+      transbordou: true,
+      destino: destinoDe.get(x.id) || '',
+    }));
+  } catch (e) {
+    console.warn('[Central] não deu pra saber o que transbordou da ' + (sp && sp.name)
+      + ' — a coluna mostra a sprint como ela está hoje, sem os que saíram.'
+      + ' Motivo: ' + mensagemDeErro(e));
+    return [];
+  }
+}
+
+/* Os que saíram DESTA sprint, pro board dela.
+
+   Mesma conta do Panorama, outro recorte de campos: o board mostra coluna,
+   responsável e estado, e o cartão dele lê FIELDS_BOARD.
+
+   Só pra sprint já encerrada: na corrente ninguém transbordou ainda, e
+   perguntar ali gastaria duas consultas pra devolver lista vazia sempre. */
+async function buscarTransbordoDoBoard(p, sp, areas) {
+  const fim = sp && sp.finish ? Date.parse(sp.finish) : NaN;
+  if (Number.isNaN(fim) || fim > Date.now()) return [];
+  const qAgora = C.wiqlIteracao(sp.path, areas);
+  const qNoFim = C.wiqlIteracao(sp.path, areas, fim + FIM_DO_DIA);
+  if (!qAgora || !qNoFim) return [];
+  try {
+    const [agora, noFim] = await Promise.all([
+      A.runWiql(ctx(), p.projectName, p.teamName, qAgora),
+      A.runWiql(ctx(), p.projectName, p.teamName, qNoFim),
+    ]);
+    const sairam = C.transbordados(noFim, agora.map((id) => ({ id })));
+    if (!sairam.length) return [];
+    const extras = await A.getFields(ctx(), sairam, FIELDS_BOARD);
+    /* `transbordou` mora FORA de `fields`: ali só entra o que veio do DevOps.
+       Misturar marca própria com campo do servidor é como um filtro passa a
+       responder por dado que ninguém escreveu. */
+    return extras.map((it) => Object.assign({}, it, { transbordou: true }));
+  } catch (e) {
+    console.warn('[Central] não deu pra saber o que saiu da ' + (sp && sp.name)
+      + ' — o board mostra a sprint como ela está hoje. Motivo: ' + mensagemDeErro(e));
+    return [];
+  }
+}
+
 async function refreshCard(p) {
   const anterior = state.cache.byCard[cardKey(p)] || {};
   const entry = { items: null, counts: null, sprint: null, progress: null, error: null };
@@ -326,7 +413,12 @@ async function refreshCard(p) {
           const ids = await A.sprintItemIds(ctx(), p.projectName, p.teamName, sp.id);
           const brutos = ids.length ? await A.getFields(ctx(), ids, FIELDS_COUNTS) : [];
           const itens = C.itensDaIteracao(brutos, sp.path);
-          entry.janela[qual] = { sprint: sp, progress: C.sprintProgress(itens), itens: resumoDeSprint(itens) };
+          entry.janela[qual] = {
+            sprint: sp,
+            progress: C.sprintProgress(itens),
+            itens: resumoDeSprint(itens),
+            transbordados: qual === 'anterior' ? await buscarTransbordo(p, sp, areas) : [],
+          };
         }
         // A corrente segue nos campos antigos: o card do Projetos lê de lá, e
         // mudá-lo não fazia parte do pedido.
@@ -603,7 +695,7 @@ function renderPanorama() {
      outras duas entram quando o dado novo chega. */
   const janela = doCard.janela
     || (doCard.sprint ? { anterior: null, proxima: null,
-      atual: { sprint: doCard.sprint, progress: doCard.progress, parcial: true,
+      atual: { sprint: doCard.sprint, progress: doCard.progress, parcial: true, transbordados: [],
         itens: (doCard.itensSprintAbertos || []).map((x) => Object.assign({ feito: false }, x)) } } : null);
   const respSprint = respAtivo();
   const doResponsavel = (itens) => itens.filter((it) => !respSprint || it.resp === respSprint);
@@ -614,7 +706,9 @@ function renderPanorama() {
       `<li><a class="item-linha" href="${link.workItem(it.id)}" target="_blank" rel="noopener" title="${escapeHtml(it.titulo)}">
         <span class="badge-tipo tipo-${it.tipo}">${ROTULO_TIPO_CURTO[it.tipo]}</span>
         <span class="titulo">${escapeHtml(it.titulo)}</span>
-        <span class="quando">${escapeHtml(it.estado)}</span>
+        <span class="quando">${it.transbordou
+          ? `<span class="selo-transbordo" title="Saiu desta sprint e foi pra ${escapeHtml(it.destino || 'outra')}">→ ${escapeHtml(it.destino || 'outra sprint')}</span>`
+          : escapeHtml(it.estado)}</span>
         <span class="id">#${it.id}</span>
       </a></li>`
     ).join('')}${lista.length > CAP_PBIS_SPRINT ? `<li class="sprint-pbis-mais">+${lista.length - CAP_PBIS_SPRINT} mais</li>` : ''}</ul>`;
@@ -661,20 +755,32 @@ function renderPanorama() {
          causas diferentes, cada uma com a sua frase. Uma frase só mentiria num
          dos dois casos. */
       const NOTA_PLANEJAMENTO = '<p class="sprint-nota mudo">As PBIs desta sprint ainda estão sendo planejadas.</p>';
-      const emOrdem = [...col.itens].sort((a, b) => Number(a.feito) - Number(b.feito));
+      /* Os que transbordaram vão no FIM da lista, depois dos que ficaram: a
+         coluna continua respondendo "o que esta sprint tem" primeiro, e só
+         depois "o que ela teve e saiu". Eles não entram no placar — o que a
+         sprint entregou não muda por ela ter tido mais escopo —, então a
+         contagem deles vira uma linha própria embaixo.
+
+         A linha existe porque a prévia corta em CAP_PBIS_SPRINT: sem ela, o
+         transbordo podia nunca aparecer na tela. */
+      const saiu = doResponsavel(col.transbordados || []);
+      const emOrdem = [...col.itens].sort((a, b) => Number(a.feito) - Number(b.feito)).concat(saiu);
       const lista = listaDeItens(emOrdem, link);
-      const semLista = col.itens.length
+      const destinos = [...new Set(saiu.map((x) => x.destino).filter(Boolean))];
+      const NOTA_TRANSBORDO = saiu.length
+        ? `<p class="sprint-nota mudo">${saiu.length === 1 ? '1 item transbordou' : saiu.length + ' itens transbordaram'}`
+          + `${destinos.length === 1 ? ' para a ' + escapeHtml(destinos[0]) : ''}.</p>`
+        : '';
+      const semLista = (col.itens.length || saiu.length)
         ? `<p class="sprint-limpa mudo">Nada no nome de ${escapeHtml(respSprint)} nesta sprint.</p>`
         : (chave === 'proxima' ? '' : '<p class="sprint-limpa mudo">Sprint sem itens.</p>');
-      const corpo = (lista || semLista) + (chave === 'proxima' ? NOTA_PLANEJAMENTO : '');
-      /* A próxima não tem progresso pra mostrar — mas o espaço da barra fica
-         reservado, senão a lista de PBIs dela sobe uns 13px e desalinha das
-         vizinhas. Reservado e invisível, não uma barra vazia: trilho zerado ao
-         lado de "1 item" (sem denominador) leria como "nenhum dos itens feito",
-         que é afirmação sobre uma sprint que nem começou. */
-      const barra = chave === 'proxima'
-        ? '<span class="barra barra-reservada" aria-hidden="true"></span>'
-        : `<span class="barra"><span class="barra-cheia" style="width:${pct}%"></span></span>`;
+      const corpo = (lista || semLista) + NOTA_TRANSBORDO + (chave === 'proxima' ? NOTA_PLANEJAMENTO : '');
+      /* A barra aparece nas TRÊS colunas, a da próxima vazia (pedido do Urlan em
+         05/10/2026). Antes ela ficava reservada e invisível, pelo argumento de
+         que trilho zerado ao lado de "1 item" leria como "nenhum feito". O
+         padrão repetido venceu o argumento: três cartões com a mesma anatomia
+         se comparam melhor que dois com barra e um com um vão. */
+      const barra = `<span class="barra"><span class="barra-cheia" style="width:${pct}%"></span></span>`;
       const nProxima = doResponsavel(col.itens).length;
       const placar = chave === 'proxima'
         ? `${nProxima} ${nProxima === 1 ? 'item' : 'itens'}`
@@ -1141,7 +1247,10 @@ function cssId(s) { return s.replace(/[^a-z0-9]/gi, '-').toLowerCase(); }
 function escapeHtml(s) { const d = document.createElement('div'); d.textContent = String(s == null ? '' : s); return d.innerHTML.replace(/"/g, '&quot;'); }
 
 /* ---------- Board dedicado ---------- */
-const boardState = { p: null, chave: null, items: null, columns: null, sprint: null, iteracaoId: null, voltarPara: null, soSprint: false, carregando: false, erro: null, filtro: { tipos: null, resp: '', busca: '' } };
+const boardState = { p: null, chave: null, items: null, columns: null, sprint: null, iteracaoId: null, voltarPara: null, soSprint: false, carregando: false, erro: null, transbordados: [], filtro: { tipos: null, resp: '', busca: '' } };
+// Rótulo da coluna dos que saíram. Constante porque dois lugares a usam: o
+// agrupamento e a ordenação que a empurra pro fim.
+const COLUNA_TRANSBORDO = 'Transbordou';
 
 function renderRoute() {
   const hash = location.hash || '';
@@ -1369,6 +1478,7 @@ async function carregarBoard(p, force) {
     const corte = diasDeCorteDoBoard(boardState.sprint);
     const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlBoard(areas, corte));
     boardState.items = ids.length ? await A.getFields(ctx(), ids, FIELDS_BOARD) : [];
+    boardState.transbordados = await buscarTransbordoDoBoard(p, boardState.sprint, areas);
     try {
       const boards = await A.listTeamBoards(ctx(), p.projectName, p.teamName);
       const nivelRequisito = boards.find((b) => !/^(epics|features)$/i.test(b.name)) || boards[boards.length - 1];
@@ -1389,7 +1499,18 @@ function renderBoard(p) {
   const st = $('board-status');
   const cols = $('board-colunas');
   const filtro = $('board-filtro-sprint');
-  filtro.hidden = !(boardState.sprint && boardState.sprint.path);
+  /* O botão existe pro board do TIME — aquele que abre sem sprint na rota e
+     mostra o quadro inteiro; ali ele é o atalho pra estreitar na sprint
+     corrente. Quando a rota nomeia a sprint, a página É o board dela: o
+     cabeçalho diz "Sprint 20" e desligar o recorte mostraria o backlog inteiro
+     do time sob aquele título. O botão oferecia um estado em que a própria
+     página se contradiz, então nessa entrada ele não aparece.
+
+     `soSprint` é forçado junto: esconder um controle sem garantir o estado dele
+     deixaria o recorte desligado e sem jeito de religar. */
+  const sprintNaRota = !!boardState.iteracaoId;
+  if (sprintNaRota) boardState.soSprint = true;
+  filtro.hidden = sprintNaRota || !(boardState.sprint && boardState.sprint.path);
   /* "Só sprint corrente" era verdade quando o board só abria na sprint atual.
      Desde que a rota carrega o id da iteração, dá pra entrar numa sprint
      passada — e aí o rótulo afirmava "corrente" sobre a Sprint 19. O botão
@@ -1415,14 +1536,23 @@ function renderBoard(p) {
      comportamento normal de filtro facetado. */
   const semTipo = Object.assign({}, boardState.filtro, { tipos: null, resp: respAtivo() });
   let base = todos;
-  if (boardState.soSprint && boardState.sprint) base = base.filter((it) => C.inSprint(it, boardState.sprint.path));
+  if (boardState.soSprint && boardState.sprint) {
+    /* Os que saíram entram SÓ com o recorte da sprint ligado. Desligado, o
+       board é o backlog inteiro do time e eles já estão lá, na sprint pra onde
+       foram — somá-los de novo mostraria o mesmo cartão duas vezes. */
+    base = base.filter((it) => C.inSprint(it, boardState.sprint.path))
+      .concat(boardState.transbordados || []);
+  }
   base = C.filterItems(base, semTipo);
   renderChipsTipo($('board-tipos'), base, boardState.filtro, () => renderBoard(p));
   const items = C.filterItems(base, { tipos: boardState.filtro.tipos });
   const porColuna = new Map();
   for (const it of items) {
     const f = it.fields || {};
-    const col = f['System.BoardColumn'] || f['System.State'] || '—';
+    /* Quem saiu vai pra coluna própria, não pra do estado dele: o estado é de
+       OUTRA sprint agora, e vê-lo em "Em Desenvolvimento" aqui diria que ele
+       está em curso NESTA — que é justamente o que não é verdade. */
+    const col = it.transbordou ? COLUNA_TRANSBORDO : (f['System.BoardColumn'] || f['System.State'] || '—');
     if (!porColuna.has(col)) porColuna.set(col, []);
     porColuna.get(col).push(it);
   }
@@ -1435,9 +1565,18 @@ function renderBoard(p) {
     for (const [n, lista] of porColuna) statesByColumn[n] = lista.map((it) => (it.fields || {})['System.State']);
     nomes = C.orderColumnsFallback([...porColuna.keys()], statesByColumn);
   }
+  /* Fecha o board, sempre: o fluxo da sprint termina em "Feito", e o que saiu
+     vem depois — não é etapa do caminho, é o que não chegou ao fim dele. Vale
+     pros dois caminhos de ordenação, o oficial do DevOps e o de reserva. */
+  if (porColuna.has(COLUNA_TRANSBORDO)) {
+    nomes = nomes.filter((n) => n !== COLUNA_TRANSBORDO).concat(COLUNA_TRANSBORDO);
+  }
   if (!nomes.length) {
     const temFiltro = boardState.filtro.busca || respAtivo() || boardState.filtro.tipos;
-    st.textContent = temFiltro ? 'nada com esses filtros' : (boardState.soSprint ? 'nada na sprint corrente' : 'board vazio');
+    const naSprint = boardState.soSprint && boardState.sprint && boardState.sprint.name
+      ? 'nada na ' + boardState.sprint.name
+      : 'board vazio';
+    st.textContent = temFiltro ? 'nada com esses filtros' : naSprint;
     st.hidden = false;
     cols.innerHTML = '';
     return;
@@ -1449,7 +1588,8 @@ function renderBoard(p) {
     const atencao = C.isAttentionState(nome) || lista.some((it) => C.isAttentionState((it.fields || {})['System.State']));
     // Bucket da coluna: tipo oficial do board quando existe; senão, pelos estados dos itens
     let bucket = 'andamento';
-    if (atencao) bucket = 'atencao';
+    if (nome === COLUNA_TRANSBORDO) bucket = 'transbordo';
+    else if (atencao) bucket = 'atencao';
     else if (tipoOficial.get(nome) === 'outgoing') bucket = 'feito';
     else if (lista.length && lista.every((it) => C.isTerminalState((it.fields || {})['System.State']))) bucket = 'feito';
     return `<section class="coluna${bucket === 'atencao' ? ' atencao' : ''}">
@@ -1460,10 +1600,18 @@ function renderBoard(p) {
         const resp = f['System.AssignedTo'] && f['System.AssignedTo'].displayName ? f['System.AssignedTo'].displayName : '';
         const link = C.deepLinks(state.config.org, p.projectName, '').workItem(it.id);
         const dica = escapeHtml(f['System.WorkItemType']) + (resp ? ' · ' + escapeHtml(resp) : '');
+        /* No cartão de quem saiu, a informação que falta é PRA ONDE — a coluna
+           já disse que ele saiu, e "#49931" sozinho não conta a história. O
+           estado dele fica de fora de propósito: é estado de outra sprint, e
+           lido aqui sugeriria que ele anda dentro desta. */
+        const destino = it.transbordou
+          ? `<span class="linha"><span class="rot">Foi pra</span><span class="val">${escapeHtml(C.iterationLabel(f['System.IterationPath']))}</span></span>`
+          : '';
         return `<li><a class="item" href="${link}" target="_blank" rel="noopener" title="${dica}">
           <span class="cabeca"><span class="titulo">${escapeHtml(f['System.Title'])}</span>${resp ? `<span class="avatar">${escapeHtml(C.initials(resp))}</span>` : ''}</span>
           <span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span>
           <span class="linha"><span class="rot">Item</span><span class="val">#${it.id}</span></span>
+          ${destino}
         </a></li>`;
       }).join('')}</ul>
     </section>`;

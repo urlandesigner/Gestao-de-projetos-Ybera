@@ -1,64 +1,77 @@
-# Transbordo de sprint no Panorama
+# Transbordo de sprint
 
-Pedido do Urlan em 05/10/2026. **Não implementado** — parado antes de codar, à
-espera de confirmar o `ASOF` contra o DevOps real e de decidir três pontos.
+Pedido do Urlan em 05/10/2026. **Implementado no mesmo dia**, depois de medir
+contra o DevOps real. Este documento guarda o que foi medido — os números são a
+parte que não se recupera lendo o código.
 
 ## Problema
 
-A coluna "Anterior" do Panorama mostra a sprint **como ela está hoje**, não como
-ela foi. O DevOps guarda só a iteração *atual* de cada item: quem não fechou e
-foi repriorizado some do backlog da sprint antiga sem deixar rastro lá.
+O DevOps guarda só a iteração **atual** de cada item. Quem não fecha e é
+repriorizado some do backlog da sprint antiga sem deixar rastro lá — então a
+coluna "Anterior" do Panorama e o board de uma sprint passada mostravam a sprint
+**como ela está**, não como foi.
 
-Caso real, Sprint 19 do Squad Ecommerce (05/10/2026): o Urlan via 2 PBIs no
-nome dele. Teve 5. Os outros três — 49931, 49959 e 51676 — saíram da 19 em
-28/09, no dia em que a Sprint 20 começou. O histórico confirmou `Sprint 19 →
-Sprint 20` nos três.
+Caso que originou tudo (Sprint 19 do Squad Ecommerce): o PO via **2 PBIs** no
+nome dele. A sprint teve **5**. Os três que faltavam — 46261, 49931 e 49959 —
+saíram em 28/09, no dia em que a Sprint 20 começou; o histórico de cada um
+confirmou `Sprint 19 → Sprint 20`.
 
-A leitura que isso produz é errada em duas direções: a sprint parece ter tido
-menos escopo do que teve, e some a informação de que houve transbordo — que é
-justamente o que o gestor precisa saber.
+## Como se descobre, e o que custou chegar nisso
 
-## Como descobrir, sem pagar caro
+Histórico item a item (`workitems/{id}/updates`) responde, mas é **uma chamada
+por item** — inviável numa tela de abertura com ~170 por sprint. A cláusula
+`ASOF` do WIQL responde a sprint inteira numa consulta.
 
-Histórico item a item (`workitems/{id}/updates`) resolve, mas é **uma chamada
-por item** — inviável numa tela de abertura com ~170 itens por sprint.
+**O que a medição mostrou, e as duas armadilhas que ela revelou:**
 
-O WIQL aceita a cláusula `ASOF`, que responde a sprint inteira numa consulta:
+| consulta (Sprint 19, em 05/10/2026) | itens |
+| --- | --- |
+| hoje, sem cerca de área | 333 |
+| hoje, com cerca de área | **141** |
+| no fim da sprint (ASOF), sem área | 474 |
+| no fim da sprint (ASOF), com área | **236** |
+| API da iteração do time (o que o Panorama usava) | 147 |
 
-```sql
-SELECT [System.Id] FROM WorkItems
-WHERE [System.IterationPath] = 'B2C\2026\Sprint 19'
-ASOF '2026-09-25T23:59:59Z'
-```
+**Armadilha 1 — a cerca de área não é opcional.** O `ASOF` avalia o `WHERE` com
+os valores da época. Sem a mesma cerca das outras consultas, ela varre o projeto
+inteiro: 474 contra 236, e gente de outras squads vira transbordo permanente,
+porque nunca esteve na lista do time.
 
-Comparando com a composição de hoje:
+**Armadilha 2 — as duas pontas têm que ser a MESMA pergunta.** Comparar a
+consulta WIQL (141) com a lista da API da iteração (147) misturava transbordo
+com desencontro de definição. Por isso existe **um construtor só**,
+`C.wiqlIteracao(path, areas, instante)`, em que `instante` é a única variável —
+e um teste compara as duas strings e falha se aparecer qualquer outra diferença.
 
-- nos dois conjuntos → entregue, ou ainda na sprint
-- só no `ASOF` → **transbordou**; o `IterationPath` atual diz para onde foi
-- só hoje → entrou na sprint depois que ela fechou (retroativo)
+Resultado com as duas corrigidas: **95 transbordos** na Sprint 19 — 3 deles PBIs
+no nome do Urlan, que é o que a tela mostra.
 
-Custo: **uma consulta a mais por coluna passada**. Nenhuma mudança em `api.js` —
-`ASOF` viaja dentro do texto da query que `runWiql` já envia.
+## O que ficou na tela
 
-## Pendente antes de codar
+**Panorama, coluna "Anterior".** Os que saíram vão no fim da lista, com selo
+âmbar `→ Sprint 20`, e uma linha resume ("3 itens transbordaram para a Sprint
+20") porque a prévia corta em 4 e o transbordo podia nunca aparecer.
 
-1. **Confirmar o `ASOF` na organização.** É cláusula padrão do WIQL, mas nunca
-   foi testada contra `dev.azure.com/nivello`. Se a retenção de histórico for
-   curta, pode vir vazio. O trecho de verificação está no transcript de
-   05/10/2026; ele compara `agora` × `ASOF` e deve acusar os três ids acima.
-2. **O placar.** Hoje a Sprint 19 daria `2/2`. Com transbordo vira `2/5` ou
-   continua `2/2` com uma linha "3 transbordaram"? **Recomendação: a segunda.**
-   O que a sprint entregou não muda por ela ter tido mais escopo, e misturar as
-   duas coisas num placar só é como se perde a régua.
-3. **Item que saiu e voltou** aparece nos dois conjuntos e não leva selo.
-   Parece certo, mas é escolha consciente.
+**Board da sprint.** Coluna **Transbordou** no fim, ponto âmbar — a mesma cor do
+selo, porque o mesmo fato não pode ter duas cores em duas telas. O cartão mostra
+**para onde** foi, e não o estado: o estado é de outra sprint, e lido ali
+sugeriria que o item anda dentro desta.
 
-## Escopo
+## Decisões
 
-Só a coluna "Anterior". Em "Em curso" e "Próxima" a pergunta não existe.
+- **O placar não conta o transbordo.** O que a sprint entregou não muda por ela
+  ter tido mais escopo. A Sprint 19 segue `2/2`, com o transbordo em linha
+  própria.
+- **Só a coluna "Anterior" e só sprint encerrada.** Na corrente ninguém
+  transbordou ainda; perguntar ali gastaria duas consultas por abertura pra
+  receber lista vazia, sempre.
+- **Item que saiu e voltou não leva selo.** Ele está na sprint agora, que é o
+  que a coluna afirma.
+- **A marca `transbordou` mora fora de `fields`.** Ali só entra o que veio do
+  DevOps; misturar marca própria com campo do servidor é como um filtro passa a
+  responder por dado que ninguém escreveu.
 
-## Desenho previsto
+## Fora de escopo
 
-`resumoDeSprint` ganha `transbordou` + `destino`; o cartão mostra um selo
-discreto (`→ Sprint 20`) ao lado do estado. A conta de transbordo é função pura
-em `core.js`, com teste próprio — como `itensDaIteracao` e `foraDaManutencao`.
+Contar tasks: a coluna ignora Task por desenho, e o Urlan confirmou que só PBI
+interessa.

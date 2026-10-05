@@ -786,7 +786,9 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
    selo, não o tamanho dele. */
 .sprint-fase {
   display: inline-block;
-  margin-bottom: 0.5rem;
+  /* O selo é retranca, não parte do título: precisa de ar suficiente pra ler
+     como etiqueta acima do bloco, e não como primeira linha dele. */
+  margin-bottom: 0.85rem;
   padding: 0.16rem 0.45rem;
   border-radius: 999px;
   font-size: 0.68rem;
@@ -804,9 +806,20 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
 .sprint-atual { box-shadow: 0 2px 8px rgba(28, 25, 23, 0.09); }
 .sprint-anterior, .sprint-proxima { box-shadow: none; }
 .sprint-atual .sprint-fase { background: var(--tinta); color: var(--fundo-pagina); }
-/* Ocupa a altura da barra sem desenhar nada: é o que mantém as listas de PBIs
-   das três colunas na mesma linha quando uma delas não tem progresso. */
-.barra-reservada { visibility: hidden; }
+/* Item que saiu desta sprint pra outra. Ocupa o lugar do estado na linha,
+   porque o estado dele é de OUTRA sprint agora — mostrar "In Progress" ali
+   sugeriria que ele ainda está aqui. A cor é a de atenção, não a de erro:
+   transbordar é informação de planejamento, não defeito. */
+.selo-transbordo {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  background: var(--atencao-fundo);
+  color: var(--atencao);
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
 /* Sprint anterior que não deixou nada pra trás é notícia boa e merece uma
    linha, não uma lista vazia. */
 .sprint-limpa { margin: 0.5rem 0 0; font-size: 0.8rem; }

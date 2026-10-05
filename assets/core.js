@@ -252,6 +252,79 @@
     return lista.filter((it) => inSprint(it, sprintPath));
   }
 
+  /* QUEM ESTÁ — OU ESTAVA — NESTA ITERAÇÃO.
+
+     O DevOps guarda só a iteração ATUAL de cada item: quem não fechou e foi
+     repriorizado some do backlog da sprint antiga sem deixar rastro lá. A
+     coluna "Anterior" do Panorama mostrava, por isso, a sprint como ela está
+     hoje — não como foi. Caso medido na Sprint 19 em 05/10/2026: o PO via 2
+     PBIs; teve 5, e três saíram em 28/09, no dia em que a Sprint 20 começou.
+
+     Histórico item a item (`workitems/{id}/updates`) responde, mas é UMA
+     chamada por item — inviável numa tela de abertura com ~170 por sprint. A
+     cláusula ASOF do WIQL responde a sprint inteira numa consulta só.
+
+     UM construtor só, e `instante` é a única variável: as duas pontas da
+     comparação têm que ser a MESMA pergunta feita em dois momentos. Enquanto
+     elas eram consultas diferentes — WIQL de um lado, API da iteração do outro
+     — a diferença misturava transbordo com desencontro de definição: 141
+     contra 147 na Sprint 19, e itens que nunca saíram apareciam como se
+     tivessem saído.
+
+     A cerca de ÁREA entra sempre, e por isso é parâmetro e não opção. Sem ela
+     a consulta varre o projeto inteiro: medido, 474 itens contra 236.
+
+     Sem recorte de tipo de propósito: a pergunta aqui é só "quem estava nesta
+     iteração". Quem decide o que vira cartão é o mesmo `resumoDeSprint` que
+     filtra a lista de hoje. */
+  function wiqlIteracao(sprintPath, areas, instante) {
+    const escapa = (s) => String(s).replace(/'/g, "''");
+    if (!sprintPath) return null;
+    const linhas = [
+      'SELECT [System.Id] FROM WorkItems',
+      'WHERE [System.TeamProject] = @project',
+      `AND [System.IterationPath] = '${escapa(sprintPath)}'`,
+      areaClause(areas),
+    ];
+    if (instante !== undefined && instante !== null) {
+      const t = Number.isFinite(instante) ? instante : Date.parse(instante);
+      if (Number.isNaN(t)) return null;
+      // ASOF fecha a consulta: é cláusula de instante, não de filtro.
+      linhas.push(`ASOF '${new Date(t).toISOString().replace(/\.\d{3}Z$/, 'Z')}'`);
+    }
+    return linhas.filter(Boolean).join('\n');
+  }
+
+  /* Transbordou = estava na iteração quando ela fechou e não está mais nela.
+
+     Item que saiu e VOLTOU aparece nos dois conjuntos e não é transbordo — ele
+     está lá agora, que é o que a coluna afirma. Item apagado no DevOps também
+     cai fora, porque o `getFields` de quem chama o omite. */
+  function transbordados(idsNoFim, itensDeHoje) {
+    const agora = new Set((itensDeHoje || []).map((it) => (it && it.id)));
+    const vistos = new Set();
+    return (idsNoFim || []).filter((id) => {
+      if (agora.has(id) || vistos.has(id)) return false;
+      vistos.add(id);
+      return true;
+    });
+  }
+
+  /* Transbordou = estava na sprint quando ela fechou e não está mais nela.
+
+     Item que saiu e VOLTOU aparece nos dois conjuntos e não é transbordo — ele
+     está lá agora, que é o que a coluna afirma. Item apagado no DevOps também
+     cai fora, porque o `getFields` de quem chama o omite. */
+  function transbordados(idsNoFim, itensDeHoje) {
+    const agora = new Set((itensDeHoje || []).map((it) => (it && it.id)));
+    const vistos = new Set();
+    return (idsNoFim || []).filter((id) => {
+      if (agora.has(id) || vistos.has(id)) return false;
+      vistos.add(id);
+      return true;
+    });
+  }
+
   // Fallback de ordenação de colunas quando a API de colunas falha:
   // ranqueia cada coluna pelo menor rank de fluxo dos estados dos seus itens.
   function orderColumnsFallback(columnNames, statesByColumn) {
@@ -1139,7 +1212,7 @@
     wiqlCounts, wiqlMyItems, levelOf, isTerminalState,
     aggregateCounts, sprintProgress, groupMyItemsBuckets,
     isAttentionState, typeSlug,
-    wiqlBoard, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
+    wiqlBoard, wiqlIteracao, transbordados, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
     iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, placarDeSprint, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
