@@ -2374,6 +2374,12 @@ secao('Autodescrição');
        bloco HEADER com o `.yb-header` — sao duas pecas documentadas e uma
        linha so. A checagem logo abaixo cobra essa diferenca pelo nome. */
     'blocos':      readdirSync(join(raiz, 'organisms/pecas')).filter(f => f.endsWith('.html')).length,
+    /* "componentes" e a palavra do menu para atomos + moleculas juntos, e ate
+       agora nao era cobrada em lugar nenhum — a capa podia prometer qualquer
+       numero. Sai das FICHAS, como `blocos`, e nao da matriz: e o numero de
+       pecas que a pessoa consegue abrir, que e o que uma capa promete. */
+    'componentes': ['atoms', 'molecules'].reduce((n, d) =>
+      n + readdirSync(join(raiz, `${d}/pecas`)).filter(f => f.endsWith('.html')).length, 0),
     'ícones':      icones,
     'símbolos':    icones,   // a capa chama o mesmo numero de "símbolos SVG"
     'tokens':      tokens,
@@ -2390,9 +2396,15 @@ secao('Autodescrição');
                 'icons/index.html', 'preview/index.html'];
 
   const erradas = [];
+  /* A TAG NO MEIO ESCONDIA O NUMERO. A faixa da capa escreve `<b>47</b>
+     componentes`, e a busca por "47 componentes" nunca casava — a promessa
+     ficava sem conferir justamente onde ela e maior, que e a capa. Trocar toda
+     tag por um espaco antes de procurar resolve, e vale para qualquer marcacao
+     que alguem venha a usar: `<strong>`, `<span>`, o que for. */
+  const prosa = (f) => f.endsWith('.html') ? ler(f).replace(/<[^>]+>/g, ' ') : ler(f);
   for (const f of ONDE) {
     if (!existsSync(join(raiz, f))) continue;
-    for (const m of ler(f).matchAll(new RegExp(`(\\d+)\\s+(${Object.keys(VERDADE).join('|')})\\b`, 'g'))) {
+    for (const m of prosa(f).matchAll(new RegExp(`(\\d+)\\s+(${Object.keys(VERDADE).join('|')})\\b`, 'g'))) {
       const certo = VERDADE[m[2]];
       if (certo && Number(m[1]) !== certo) erradas.push(`${f}: diz ${m[1]} ${m[2]}, são ${certo}`);
     }
