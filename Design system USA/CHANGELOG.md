@@ -214,6 +214,19 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   um painel e outro (Shape, State, Space e Typography), assim como a dos Icons.
   As oito ganharam título e saem fechadas. Nova checagem, a 142ª, reprova
   qualquer nota azul aberta numa página publicada.
+- **A capa deixou de ser um segundo menu.** Eram 24 cartões em 11 seções, e a
+  coluna da esquerda — que hoje está em toda página — já cobria 20 deles. Só
+  quatro tinham porta única: Principles, Decision log, Inventory e Contributing,
+  mais os dois Templates, que também não estão na coluna. As onze telas
+  apareciam em cartão aqui, em cartão na página de Examples (com descrição
+  melhor) e nome por nome na coluna: três cópias, e a maior delas empurrava
+  para baixo da dobra o que o sistema de fato é. Agora a capa abre com a
+  **faixa de números** — 380 tokens, 62 peças, 42 ícones, 142 checagens, todos
+  cobrados pelo validador —, três portas para as perguntas que levam alguém
+  ali ("ligar no projeto", "procurar uma peça", "ver a loja montada"), e só
+  depois o que não tem outro caminho. As telas viraram uma linha de links; a
+  checagem que exige toda tela-prova na capa continua passando, porque ela
+  procura o endereço e não o cartão. De 24 cartões para 9.
 - **A Fundação inteira na mesma fileira, com fio entre as linhas.** Faltavam
   Space e Elevation, e faltava o separador em toda parte. O Space não era a
   mesma peça: uma grade de três colunas com o valor jogado na direita, e o
