@@ -216,11 +216,24 @@ export function arvore() {
       ...TELAS.map(([arq, nome]) => ({ href: `pages/${arq}`, rotulo: nome, id: `tela-${arq}`, externa: true })),
     ] },
     { tipo: 'item', id: 'preview', rotulo: 'Preview', href: 'preview/index.html' },
-    /* Princípios, Decisões, Inventário, Contribuindo e Changelog NÃO estão na
-       coluna. Eles são documentos de processo — quem escreve o sistema os
-       consulta, quem usa o sistema não —, e na coluna ocupavam cinco linhas
-       permanentes ao lado das 50 peças que são o assunto da página. Continuam
-       na capa, que é a porta de quem vem pelo processo. */
+    /* OS DOCUMENTOS DE PROCESSO VOLTARAM, e num grupo que fecha.
+
+       Eles tinham saído da coluna com uma razão boa: são para quem ESCREVE o
+       sistema, não para quem o usa, e ocupavam cinco linhas permanentes ao
+       lado das peças, que são o assunto da página. Mas a única porta deles
+       passou a ser a capa — e a capa acabou de parar de ser um menu, então
+       depender dela para alcançar quatro páginas era pendurar o acesso no
+       lugar errado.
+
+       Como grupo, a objeção cai: fechado, ele é UMA linha, e só abre para
+       quem foi procurar. É a mesma forma dos outros grupos, pelo mesmo motivo
+       que eles a têm. */
+    { tipo: 'grupo', id: 'referencia', rotulo: 'Process', itens: [
+      { href: 'PRINCIPIOS.md', rotulo: 'Principles', id: 'principios' },
+      { href: 'decision-log/index.html', rotulo: 'Decision log', id: 'decision-log' },
+      { href: 'INVENTARIO.md', rotulo: 'Inventory', id: 'inventario' },
+      { href: 'CONTRIBUINDO.md', rotulo: 'Contributing', id: 'contribuindo' },
+    ] },
   ];
 }
 
