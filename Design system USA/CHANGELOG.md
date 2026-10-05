@@ -209,6 +209,32 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   que abre continua nativa**, de propósito: no celular ela é a roleta do
   sistema. De quebra, a barra do Catalog deixou de escrever `padding` em atalho
   — era o atalho que apagava a reserva da seta.
+- **Nota azul recolhida em toda a doc.** A regra só valia nas fichas: as
+  páginas de Foundation escreviam a nota sem título, e ela ficava aberta entre
+  um painel e outro (Shape, State, Space e Typography), assim como a dos Icons.
+  As oito ganharam título e saem fechadas. Nova checagem, a 142ª, reprova
+  qualquer nota azul aberta numa página publicada.
+- **A Fundação inteira na mesma fileira, com fio entre as linhas.** Faltavam
+  Space e Elevation, e faltava o separador em toda parte. O Space não era a
+  mesma peça: uma grade de três colunas com o valor jogado na direita, e o
+  "quem usa" que o gerador injeta não tinha coluna para cair, então quebrava de
+  linha e encostava no token seguinte. O Elevation eram sete cartões soltos no
+  cinza, sem painel nenhum. Os dois viraram fileira — e as quatro alturas de
+  controle junto, que eram cartões numa grade de quatro e agora empilham, que é
+  o que deixa comparar 36, 44 e 52. **O fio** separa as linhas de Shape, Space,
+  Elevation e State, e só delas: na Color as setenta e sete linhas continuam
+  apertadas, que é o que uma escala pede. O corte é a classe `ramp--explicada`,
+  e não uma contagem de filhos — o que separa os dois usos não é o tamanho da
+  lista, é o trilho explicar ou só listar. **Typography fica de fora de
+  propósito:** a amostra dela é a frase inteira em 64px, que não cabe em caixa
+  de 76 nem de 180. Saíram 16 regras de CSS que ficaram sem dono (`.sp`,
+  `.grid4`, `.rd`, `.el`, `.ar`, `.ct` e filhos).
+- **State e Shape no painel de fileiras.** As duas páginas eram caixas soltas
+  na tela cinza: no State, quatro faixas de largura cheia; no Shape, uma grade
+  em que o `full` caía sozinho na segunda linha. Agora usam a mesma fileira da
+  página Color — amostra, token, valor, etiqueta e quem usa — num painel
+  branco. No State, cada estado mostra os quatro tokens (texto, fundo, fio e
+  sólido) numa linha só; a seção separada do fio sumiu.
 - **Foundation na ordem de leitura.** How to use sobe para logo depois do
   Overview (era o último), Architecture vem em seguida, e State fica colado em
   Color, porque é cor também. Depois Typography, Space, Shape e Elevation, e

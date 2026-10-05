@@ -77,6 +77,72 @@ h3.sub{
 
 /* swatches */
 .ramp{display:flex; flex-direction:column; gap:var(--yb-space-1); margin-bottom:var(--yb-space-8)}
+/* State e Shape usam a mesma fileira da cor: amostra a esquerda, nome, valor
+   e quem usa a direita. Eram caixas soltas na tela cinza, de largura cheia no
+   State e em grade no Shape — duas formas a mais para a mesma coisa. */
+.sw .sw-chip--texto{
+  display:grid; place-content:center;
+  font-size:var(--yb-type-body-sm-size); font-weight:var(--yb-font-weight-semibold);
+}
+.sw .sw-chip--raio{background:var(--yb-gray-950); border:0}
+.sw .sw-chip--fio{border-radius:var(--yb-radius-sm)}
+/* A BARRA DO ESPACO. O valor e a largura — e o unico token da Fundacao cuja
+   amostra nao e uma cor nem uma forma, e sim um comprimento. 16px de altura
+   para ela ler como medida e nao como caixa. */
+.sw .sw-chip--espaco{
+  block-size:16px; justify-self:start; max-inline-size:100%;
+  background:var(--yb-magenta-600); border:0; border-radius:2px;
+}
+/* O DEGRAU DE ALTURA. Aqui quem varia e a altura, entao a largura e fixa: duas
+   caixas de alturas diferentes e larguras diferentes nao deixam comparar nada. */
+.sw .sw-chip--altura{
+  inline-size:72px; justify-self:start; block-size:auto;
+  display:grid; place-content:center;
+  background:var(--yb-gray-950); color:var(--yb-white); border:0;
+  border-radius:var(--yb-radius-control); font-size:var(--yb-type-caption-size);
+}
+/* A SOMBRA. Branca com fio, como era na grade: sem o fio, a mais rasa das sete
+   (card, 6% a 1px) desaparece contra o branco do painel e a fileira fica
+   parecendo vazia. */
+.sw .sw-chip--sombra{
+  background:var(--yb-surface); border:1px solid var(--yb-border-subtle);
+  border-radius:var(--yb-radius-card);
+}
+.sw .sw-chip--proporcao{
+  block-size:56px; inline-size:auto; max-inline-size:100%; justify-self:start;
+  background:var(--yb-bg-muted); border:1px solid var(--yb-border);
+  border-radius:var(--yb-radius-sm);
+}
+.ramp--largo .sw{grid-template-columns:180px 1fr}
+.sw-sub{
+  grid-column:2; margin:calc(var(--yb-space-1) * -1) 0 var(--yb-space-2);
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted); max-width:80ch;
+}
+.sw-sub code{color:var(--yb-text-secondary)}
+/* TRILHO EXPLICADO — onde uma linha acaba e a proxima comeca.
+
+   A rampa nasceu para a pagina de Cor: setenta e sete linhas de UMA linha cada,
+   todas da mesma familia, em que 4px de respiro bastam e mais que isso viraria
+   rolagem. O State usa a mesma fileira para outra coisa — quatro ou duas
+   linhas, cada uma com uma frase explicando quando usar —, e ali os mesmos 4px
+   passaram a separar coisas de pesos diferentes: a frase do verde ficava tao
+   perto do Aa amarelo quanto do proprio verde, e os quatro estados liam como um
+   paragrafo so. Na Opacidade e o mesmo: o "4 componentes" do primeiro token
+   quebrava de linha e caia colado no swatch do segundo.
+
+   A CLASSE, e nao uma contagem de filhos. Daria para escrever "trilho com menos
+   de N linhas" com `:has(.sw:nth-child(N))`, mas N seria escolhido a olho e
+   quebraria no dia em que um estado novo entrasse. O que separa os dois usos
+   nao e o tamanho: e o trilho explicar ou so listar.
+
+   Fio entre as linhas, e nao caixa em cada uma: a amostra da esquerda ja diz de
+   quem e a linha, e o que faltava era so dizer onde ela termina. */
+.ramp--explicada > .sw{padding-block:var(--yb-space-4)}
+.ramp--explicada > .sw + .sw{border-block-start:1px solid var(--yb-border-subtle)}
+/* Nas pontas o respiro ja vem do painel do trilho; somar os dois abriria um vao
+   que nao separa nada. */
+.ramp--explicada > .sw:first-child{padding-block-start:0}
+.ramp--explicada > .sw:last-child{padding-block-end:0}
 .sw{display:grid; grid-template-columns:76px 1fr; gap:var(--yb-space-4); align-items:center}
 .sw.is-key .sw-meta code{color:var(--yb-text-primary); font-weight:var(--yb-font-weight-semibold)}
 .sw-chip{
@@ -124,31 +190,6 @@ h3.sub{
 .ty--caption{font-size:var(--yb-type-caption-size);line-height:var(--yb-type-caption-line);font-weight:var(--yb-type-caption-weight)}
 .ty--overline{font-size:var(--yb-type-overline-size);line-height:var(--yb-type-overline-line);letter-spacing:var(--yb-type-overline-track);font-weight:var(--yb-type-overline-weight);text-transform:uppercase}
 
-/* espaço / raio / elevação / estado */
-.sp{display:grid; grid-template-columns:150px 1fr 60px; gap:var(--yb-space-4); align-items:center; padding:var(--yb-space-2) 0}
-@media (max-width:520px){.sp{grid-template-columns:110px 1fr 48px; gap:var(--yb-space-2)}}
-.sp code{color:var(--yb-text-secondary)}
-/* a barra representa o valor do token, mas nunca pode empurrar o layout:
-   em 320px a coluna disponível é menor que --yb-space-24 (96px) */
-.sp-bar{height:16px; background:var(--yb-magenta-600); border-radius:2px; max-width:100%}
-.sp span{font-family:var(--yb-font-family-mono); font-size:.75rem; color:var(--yb-text-muted); text-align:right}
-
-.grid4{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:var(--yb-space-5)}
-.rd,.el{display:flex; flex-direction:column; gap:var(--yb-space-2)}
-.rd-box{height:72px; background:var(--yb-gray-950)}
-.el-box{height:72px; background:var(--yb-surface); border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card)}
-.rd code,.el code{color:var(--yb-text-secondary)}
-.rd span,.el span{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
-
-/* Media & control: caixa de proporcao, barra de medida, degrau de altura */
-.ar,.ct{display:flex; flex-direction:column; gap:var(--yb-space-2)}
-.ar-box{background:var(--yb-bg-muted); border:1px solid var(--yb-border-subtle);
-  border-radius:var(--yb-radius-media)}
-.ar code,.ct code{color:var(--yb-text-secondary)}
-.ar span,.ct span{font-size:var(--yb-type-caption-size); color:var(--yb-text-muted)}
-.ct-box{background:var(--yb-gray-950); border-radius:var(--yb-radius-control);
-  display:flex; align-items:center; justify-content:center;
-  color:var(--yb-white); font-size:var(--yb-type-caption-size)}
 .ms{border-inline-start:2px solid var(--yb-accent-border); padding-inline-start:var(--yb-space-4);
   margin-bottom:var(--yb-space-5)}
 .ms p{margin:0 0 var(--yb-space-1); color:var(--yb-text-secondary);
@@ -272,13 +313,20 @@ h3.sub{
    de fora: a rampa de cor, a escala de tipo e a de espaço eram fileiras
    soltas no cinza, e a Fundação parecia outra doc, de outro sistema.
 
-   SÓ AS TRÊS QUE SÃO LISTA. Raio, elevação, proporção e estado já mostram
-   caixas desenhadas, e caixa branca dentro de painel branco é moldura em cima
-   de moldura — ali o cinza da página é justamente o que deixa a caixa aparecer
-   (a de elevação precisa dele: sombra sobre o próprio fundo não se vê).
+   TODAS USAM A MESMA FILEIRA HOJE: amostra à esquerda, nome, valor e quem usa
+   à direita, dentro de um `.ramp`. Esta nota dizia o contrário — que raio,
+   elevação e estado ficavam de fora porque "caixa branca dentro de painel
+   branco é moldura em cima de moldura", e que a de elevação precisava do cinza
+   da página porque "sombra sobre o próprio fundo não se vê". As duas ressalvas
+   caíram quando as caixas viraram a AMOSTRA da fileira em vez de um cartão
+   solto: a de elevação manteve o fio que já tinha, e é esse fio que segura a
+   mais rasa das sete (card, 6% a 1px).
 
-   Sem sombra: a corrida de fileiras é um painel feito de vizinhos, e sombra
-   em cada um desenharia o vinco entre elas em vez da borda do conjunto.
+   TIPOGRAFIA É A ÚNICA QUE NÃO VIRA FILEIRA, e a razão é o conteúdo: a amostra
+   dela é a frase inteira em 64px, que não cabe em caixa de 76 nem de 180. Lá o
+   painel se faz com os VIZINHOS — cada linha branca, e só as pontas da corrida
+   arredondando. Sem sombra, porque sombra em cada linha desenharia o vinco
+   entre elas em vez da borda do conjunto.
    =========================================================================== */
 .ramp{
   padding:var(--yb-space-4) var(--yb-space-5);
@@ -287,20 +335,20 @@ h3.sub{
   border-radius:var(--yb-radius-card);
   box-shadow:var(--yb-elevation-card);
 }
-:is(.ty, .sp){
+.ty{
   background:var(--yb-surface);
   padding-inline:var(--yb-space-5);
   border-inline:1px solid var(--yb-border-subtle);
   border-block-end:1px solid var(--yb-border-subtle);
 }
 /* A primeira de cada corrida: a que NÃO vem depois de uma igual. */
-:is(.ty, .sp):not(:is(.ty, .sp) + *){
+.ty:not(.ty + *){
   border-block-start:1px solid var(--yb-border-subtle);
   border-start-start-radius:var(--yb-radius-card);
   border-start-end-radius:var(--yb-radius-card);
 }
 /* E a última: a que não tem uma igual logo depois. */
-:is(.ty, .sp):not(:has(+ :is(.ty, .sp))){
+.ty:not(:has(+ .ty)){
   border-end-start-radius:var(--yb-radius-card);
   border-end-end-radius:var(--yb-radius-card);
 }

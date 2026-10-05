@@ -1059,6 +1059,29 @@ secao('Moldura');
       : ok('toda amostra de token diz quem a consome', 'índice invertido em dia');
   }
 
+  /* NOTA AZUL NASCE FECHADA, em toda pagina. A regra valia so nas fichas: as
+     de token escreviam `<p class="note">`, sem titulo, que o `recolherNotas`
+     nao reconhece, e a Foundation empilhava caixa azul aberta entre um painel
+     e outro. Cobra o resultado publicado, e nao a fonte — a fonte pode
+     escrever `<div class="note"><b>`, desde que saia `<details>`. */
+  {
+    const abertas = [];
+    const dirs = ['.', 'atoms', 'molecules', 'organisms', 'templates', 'tokens', 'icons',
+                  'components', 'decision-log', 'preview', 'validacao'];
+    for (const d of dirs) {
+      if (!existsSync(join(raiz, d))) continue;
+      for (const f of readdirSync(join(raiz, d)).filter(x => x.endsWith('.html'))) {
+        const html = ler(d === '.' ? f : `${d}/${f}`);
+        const n = (html.match(/<(?:p|div)\b[^>]*class="note"/g) || []).length;
+        if (n) abertas.push(`${d === '.' ? '' : d + '/'}${f}: ${n}`);
+      }
+    }
+    abertas.length
+      ? falha('nota azul aberta na página', abertas.join(' · ')
+          + ' — nota é <div class="note"><b>Título</b>…, para sair recolhida')
+      : ok('toda nota azul nasce recolhida', 'fichas, Foundation e Icons');
+  }
+
   /* OS CHIPS DO DEGRAU. O catalogo ja teve um controle que nunca apareceu — o
      campo `.grade-filtro`, `hidden` no HTML esperando um script que pegava
      outro campo. Controle morto nao acusa nada: ele so nao esta la. Estas duas

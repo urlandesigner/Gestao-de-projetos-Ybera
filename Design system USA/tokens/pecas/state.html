@@ -1,69 +1,94 @@
 <h2>State</h2>
     <p class="when">As cores de sucesso, aviso, erro e informação, todas com contraste suficiente para texto sobre branco.</p>
-<div class="st">
-        <div class="st-banner" style="background:var(--yb-success-surface); color:var(--yb-success-text); border-color:var(--yb-success-600)">Pedido confirmado</div>
-        <code>--yb-success-text</code><span>#1F7A34 · 5.40:1</span>
+<h3 class="sub">Sucesso, atenção, erro e informação</h3>
+      <div class="note">
+        <b>Os quatro tokens de cada estado</b>
+        <p>Cada estado tem quatro tokens: texto, fundo, fio e sólido. O texto é o
+      tom 600 e passa AA em letra pequena; o fundo é o 50 e mede só 1.10 a 1.16:1 contra o
+      branco, por isso a caixa tingida leva o fio, que é o 200.</p>
       </div>
-      <div class="st">
-        <div class="st-banner" style="background:var(--yb-warning-surface); color:var(--yb-warning-text); border-color:var(--yb-warning-600)">Estoque baixo</div>
-        <code>--yb-warning-text</code><span>#8A5A00 · 5.93:1</span>
+      <div class="ramp ramp--explicada">
+      <div class="sw is-key">
+        <div class="sw-chip sw-chip--texto" style="background:var(--yb-success-surface); border-color:var(--yb-success-border); color:var(--yb-success-text)">Aa</div>
+        <div class="sw-meta">
+          <code>--yb-success-text</code>
+          <span class="sw-hex">#1F7A34</span>
+          <span class="sw-cr" data-tag="AA">5.40:1 · AA</span>
+          <span class="sw-note">Sucesso</span>
+        </div>
+        <p class="sw-sub">Pedido confirmado, item no carrinho, frete grátis alcançado. Fundo <code>--yb-success-surface</code>, fio <code>--yb-success-border</code>, sólido <code>--yb-success-solid</code>.</p>
       </div>
-      <div class="st">
-        <div class="st-banner" style="background:var(--yb-danger-surface); color:var(--yb-danger-text); border-color:var(--yb-danger-600)">Pagamento recusado</div>
-        <code>--yb-danger-text</code><span>#B3261E · 6.54:1</span>
+      <div class="sw is-key">
+        <div class="sw-chip sw-chip--texto" style="background:var(--yb-warning-surface); border-color:var(--yb-warning-border); color:var(--yb-warning-text)">Aa</div>
+        <div class="sw-meta">
+          <code>--yb-warning-text</code>
+          <span class="sw-hex">#8A5A00</span>
+          <span class="sw-cr" data-tag="AA">5.93:1 · AA</span>
+          <span class="sw-note">Atenção</span>
+        </div>
+        <p class="sw-sub">Estoque baixo, prazo apertado, algo que pede cuidado. Fundo <code>--yb-warning-surface</code>, fio <code>--yb-warning-border</code>, sólido <code>--yb-warning-solid</code>.</p>
       </div>
-      <div class="st">
-        <div class="st-banner" style="background:var(--yb-info-surface); color:var(--yb-info-text); border-color:var(--yb-info-600)">Envio em 2 dias</div>
-        <code>--yb-info-text</code><span>#1B5FA8 · 6.46:1</span>
+      <div class="sw is-key">
+        <div class="sw-chip sw-chip--texto" style="background:var(--yb-danger-surface); border-color:var(--yb-danger-border); color:var(--yb-danger-text)">Aa</div>
+        <div class="sw-meta">
+          <code>--yb-danger-text</code>
+          <span class="sw-hex">#B3261E</span>
+          <span class="sw-cr" data-tag="AA">6.54:1 · AA</span>
+          <span class="sw-note">Erro</span>
+        </div>
+        <p class="sw-sub">Pagamento recusado, campo inválido, esgotado. Fundo <code>--yb-danger-surface</code>, fio <code>--yb-danger-border</code>, sólido <code>--yb-danger-solid</code>.</p>
+      </div>
+      <div class="sw is-key">
+        <div class="sw-chip sw-chip--texto" style="background:var(--yb-info-surface); border-color:var(--yb-info-border); color:var(--yb-info-text)">Aa</div>
+        <div class="sw-meta">
+          <code>--yb-info-text</code>
+          <span class="sw-hex">#1B5FA8</span>
+          <span class="sw-cr" data-tag="AA">6.46:1 · AA</span>
+          <span class="sw-note">Informação</span>
+        </div>
+        <p class="sw-sub">Prazo de envio, aviso neutro que não pede ação. Fundo <code>--yb-info-surface</code>, fio <code>--yb-info-border</code>, sólido <code>--yb-info-solid</code>.</p>
+      </div>
       </div>
 
-
-      <h3>Fio da caixa tingida</h3>
-      <p class="note">A tinta de estado mede de 1.10 a 1.16:1 contra o branco: sozinha,
-      a caixa só existe para quem distingue a cor. O fio sai do 200 da mesma rampa,
-      um degrau acima da tinta, e é o que Alert e Toast usam.</p>
-      <div class="grid4">
-        <div class="ct">
-          <div class="ct-box" style="background:var(--yb-success-surface); border:1px solid var(--yb-success-border); color:var(--yb-success-text)">Sucesso</div>
-          <code>--yb-success-border</code><span>success-200 · 1.38:1</span>
-        </div>
-        <div class="ct">
-          <div class="ct-box" style="background:var(--yb-warning-surface); border:1px solid var(--yb-warning-border); color:var(--yb-warning-text)">Atenção</div>
-          <code>--yb-warning-border</code><span>warning-200 · 1.38:1</span>
-        </div>
-        <div class="ct">
-          <div class="ct-box" style="background:var(--yb-danger-surface); border:1px solid var(--yb-danger-border); color:var(--yb-danger-text)">Erro</div>
-          <code>--yb-danger-border</code><span>danger-200 · 1.38:1</span>
-        </div>
-        <div class="ct">
-          <div class="ct-box" style="background:var(--yb-info-surface); border:1px solid var(--yb-info-border); color:var(--yb-info-text)">Informação</div>
-          <code>--yb-info-border</code><span>info-200 · 1.38:1</span>
+      <h3 class="sub">Seleção de texto</h3>
+      <div class="note">
+        <b>Onde a seleção vale</b>
+        <p>O fundo do trecho que a pessoa seleciona com o mouse ou o dedo. Sem
+      ele, aparece o azul do navegador. Vale só dentro das peças do sistema.</p>
+      </div>
+      <div class="ramp ramp--explicada">
+      <div class="sw">
+        <div class="sw-chip sw-chip--texto" style="background:var(--yb-selection-bg); color:var(--yb-selection-text)">Aa</div>
+        <div class="sw-meta">
+          <code>--yb-selection-bg</code>
+          <span class="sw-hex">magenta-300</span>
+          <span class="sw-cr" data-tag="AAA">texto primário a 11:1</span>
         </div>
       </div>
-
-      <h3>Seleção de texto</h3>
-      <p class="note">O fundo do trecho que a pessoa seleciona com o mouse ou o dedo. Sem
-      ele, aparece o azul do navegador, a única cor da página que não é da marca.
-      Vale só dentro das peças do sistema; o tema em volta segue com a dele.</p>
-      <div class="grid4">
-        <div class="ct">
-          <div class="ct-box" style="background:var(--yb-selection-bg); color:var(--yb-selection-text)">Texto selecionado</div>
-          <code>--yb-selection-bg</code><span>magenta-300 · texto primário a 11:1</span>
-        </div>
       </div>
 
-      <h3>Opacidade</h3>
-      <p class="note">Opacidade tem <b>uma regra dura</b>: nunca sobre texto.
-      Aplicada a palavra, ela derruba o contraste sem que nada no CSS registre a
+      <h3 class="sub">Opacidade</h3>
+      <div class="note">
+        <b>Opacidade nunca vai sobre texto</b>
+        <p>Aplicada a palavra, ela derruba o contraste sem que nada no CSS registre a
       queda — 5.15:1 a 65% vira 2.9:1, e nenhuma medição do sistema vê. Para
       texto apagado existe <code>--yb-text-muted</code>, que é medido.</p>
-      <div class="grid4">
-        <div class="ct">
-          <div class="ct-box" style="height:var(--yb-target-min); opacity:var(--yb-opacity-control-disabled)">.45</div>
-          <code>--yb-opacity-control-disabled</code><span>só superfície e ícone</span>
+      </div>
+      <div class="ramp ramp--explicada">
+      <div class="sw">
+        <div class="sw-chip" style="background:var(--yb-gray-950); opacity:var(--yb-opacity-control-disabled)"></div>
+        <div class="sw-meta">
+          <code>--yb-opacity-control-disabled</code>
+          <span class="sw-hex">.45</span>
+          <span class="sw-cr" data-tag="—">só superfície e ícone, nunca texto</span>
         </div>
-        <div class="ct">
-          <div class="ct-box" style="height:var(--yb-target-min); background:var(--yb-surface-overlay)">.55</div>
-          <code>--yb-surface-overlay</code><span>o véu atrás do modal</span>
+      </div>
+      <div class="sw">
+        <div class="sw-chip" style="background:var(--yb-surface-overlay)"></div>
+        <div class="sw-meta">
+          <code>--yb-surface-overlay</code>
+          <span class="sw-hex">.55</span>
+          <span class="sw-cr" data-tag="—">o véu atrás do modal e da gaveta</span>
         </div>
+      </div>
       </div>
