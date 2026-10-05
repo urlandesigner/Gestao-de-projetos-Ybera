@@ -168,6 +168,12 @@ h3.sub{
 }
 .layer h3{margin:0 0 var(--yb-space-2); font-size:var(--yb-type-body-size); font-weight:var(--yb-font-weight-semibold)}
 .layer p{margin:0 0 var(--yb-space-2); font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
+/* Termo e explicacao: o nome do arquivo (ou do metodo) e o <dt>, e o que ele
+   serve e o <dd>. Lista de paragrafos nao diria qual palavra e o nome. */
+.layer dl{margin:0 0 var(--yb-space-2); font-size:var(--yb-type-body-sm-size)}
+.layer dt{margin-block-start:var(--yb-space-4); color:var(--yb-text-primary)}
+.layer dt:first-child{margin-block-start:0}
+.layer dd{margin:var(--yb-space-1) 0 0; color:var(--yb-text-secondary)}
 .layer pre{
   margin:0; padding:var(--yb-space-3); background:var(--yb-bg-muted);
   border-radius:var(--yb-radius-sm); overflow-x:auto;

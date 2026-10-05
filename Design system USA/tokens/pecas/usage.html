@@ -2,6 +2,27 @@
     <p class="when">Baixe o pacote no <b>Download</b> do topo e descompacte no projeto: tokens, componentes e ícones vêm juntos, e o HTML de cada peça está na aba Código da ficha.</p>
 <div class="layers">
       <div class="layer">
+        <h3>O que vem no pacote</h3>
+        <p>Oito arquivos. Quatro você liga no passo 1, o <code>README.txt</code>
+        repete a ordem, e sobram três que ninguém explica se esta página não
+        explicar:</p>
+        <dl>
+          <dt><code>ybera-icons.svg</code></dt>
+          <dd>O sprite. Não entra no <code>&lt;head&gt;</code>: é o arquivo que
+          cada <code>&lt;use href&gt;</code> vai buscar, e por isso precisa ficar
+          ao lado dos outros. Sumiu daqui, some o ícone de toda a tela.</dd>
+          <dt><code>ybera-tokens.json</code></dt>
+          <dd>Os mesmos tokens em formato W3C (DTCG), derivados do CSS a cada
+          build. São para quem não lê CSS — Figma Variables, Style Dictionary,
+          tema nativo. Em projeto web, você não precisa dele.</dd>
+          <dt><code>ybera-bridge.css</code></dt>
+          <dd>Só para o tema Shopify atual da ybera.us: traduz os tokens para as
+          variáveis que o tema, o Ecomposer e o Judge.me já expõem lá. Em
+          qualquer outro projeto, ignore — e não o use de exemplo, porque ele é
+          a única peça autorizada a consumir cor da camada 0.</dd>
+        </dl>
+      </div>
+      <div class="layer">
         <h3>1 · Ligue os arquivos, nesta ordem</h3>
         <p>O zip vem <b>plano</b>, sem pasta dentro: os caminhos abaixo supõem que
         você descompactou numa pasta <code>ybera/</code> do projeto. Descompactado
@@ -24,6 +45,31 @@
         <h3>3 · Sirva por HTTP</h3>
         <p>Aberta como arquivo (<code>file://</code>), a página perde os ícones: o navegador bloqueia o sprite externo.</p>
         <pre>python3 -m http.server 8080</pre>
+      </div>
+      <div class="layer">
+        <h3>O que o script expõe</h3>
+        <p>Quase tudo liga sozinho pelos atributos <code>data-yb-*</code>, e é
+        assim que as fichas mostram. O <code>window.Ybera</code> existe para os
+        três casos em que atributo não resolve:</p>
+        <dl>
+          <dt><code>Ybera.init(raiz)</code></dt>
+          <dd>Religa tudo o que o script liga, dentro de um pedaço de DOM que
+          chegou depois — seção carregada pelo tema, resultado de busca, carrinho
+          que voltou do servidor. Idempotente: o que já está ligado leva
+          <code>data-yb-bound</code> e é pulado, então chamar duas vezes não
+          duplica nada.</dd>
+          <dt><code>Ybera.toast({ title, text, variant, duration })</code></dt>
+          <dd>Levanta um toast de código, para quando o aviso nasce de uma
+          resposta e não de um clique. <code>variant</code> aceita
+          <code>success</code>, <code>warning</code>, <code>danger</code> e
+          <code>info</code>; sem ela, o neutro. Some em 5s, e
+          <code>duration: 0</code> o mantém até alguém fechar — é esse o único
+          caso que ganha o × (<a href="../molecules/toast.html">Toast</a>).</dd>
+          <dt><code>Ybera.openDialog(id, gatilho)</code></dt>
+          <dd>Abre o <a href="../organisms/dialog.html">Modal</a> daquele
+          <code>id</code>. O <code>gatilho</code> é para onde o foco volta quando
+          fechar; sem ele, volta para o que estava focado na hora.</dd>
+        </dl>
       </div>
       <div class="layer">
         <h3>O chão da tela</h3>
