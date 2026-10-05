@@ -49,15 +49,31 @@ test('as duas páginas carregam o módulo e a folha compartilhados', () => {
    dependência. Com o briefing antes, root.CentralRoadmapVisao ainda é
    undefined quando ele roda, e a seção de roadmap some do relatório sem erro
    visível na tela. */
-test('o entregas.html carrega o módulo ANTES do briefing que depende dele', () => {
-  // Só as tags <script>: o comentário do arquivo cita os dois nomes em prosa, e
-  // procurar pelo nome solto media a ordem do texto, não a do carregamento.
-  const ordem = [...ler('entregas.html').matchAll(/<script src="assets\/([a-z-]+\.js)/g)]
-    .map((m) => m[1]);
-  assert.ok(ordem.indexOf('roadmap-visao.js') > -1 && ordem.indexOf('briefing-entregas.js') > -1,
-    'os dois scripts precisam estar na página');
-  assert.ok(ordem.indexOf('roadmap-visao.js') < ordem.indexOf('briefing-entregas.js'),
-    'ordem invertida: o briefing não acharia o desenho e a seção sumiria calada');
+/* Vale pra TODA página que carrega o briefing, não só pro entregas.html.
+
+   A versão anterior deste teste nomeava duas páginas, e por isso não viu o
+   diagnostico.html ficar quebrado desde a extração de 02/10: ele carregava o
+   briefing sem o desenho e abria com TypeError no console, sem o módulo sequer
+   se registrar. Uma página de diagnóstico "parece funcionar" o bastante pra
+   ninguém abrir o console — ficou meses assim. A regra é sobre a dependência,
+   então o teste procura quem depende, em vez de listar nomes à mão. */
+test('toda página que carrega o briefing carrega o desenho ANTES dele', () => {
+  const fs2 = require('node:fs');
+  const paginas = fs2.readdirSync(raiz).filter((f) => f.endsWith('.html'));
+  let conferidas = 0;
+  for (const pagina of paginas) {
+    // Só as tags <script>: o comentário do arquivo cita os dois nomes em prosa,
+    // e procurar pelo nome solto media a ordem do texto, não a do carregamento.
+    const ordem = [...ler(pagina).matchAll(/<script src="assets\/([a-z-]+\.js)/g)].map((m) => m[1]);
+    const iBrief = ordem.indexOf('briefing-entregas.js');
+    if (iBrief === -1) continue;
+    conferidas += 1;
+    const iDesenho = ordem.indexOf('roadmap-visao.js');
+    assert.ok(iDesenho > -1, `${pagina} carrega o briefing sem o roadmap-visao.js`);
+    assert.ok(iDesenho < iBrief,
+      `${pagina}: ordem invertida — o briefing não acha o desenho e quebra no carregamento`);
+  }
+  assert.ok(conferidas >= 2, 'eram ao menos duas páginas dependentes; se caiu pra uma, revisar');
 });
 
 /* A folha do componente precisa dos tokens de cor nas DUAS paletas. Faltando

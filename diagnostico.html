@@ -60,6 +60,17 @@
 </div>
 
 <section class="grupo" style="margin-bottom:2rem">
+  <h2>Transbordo de sprint</h2>
+  <p class="meta">Responde de uma vez por que a coluna "Anterior" do Panorama mostra menos do que a
+  sprint teve. Compara quem está na iteração HOJE com quem estava quando ela fechou (cláusula
+  <code>ASOF</code>), nas quatro combinações de recorte — e, pra uma amostra da diferença, mostra a
+  área e a iteração de cada um, que é o que decide se o transbordo é real ou artefato da consulta.</p>
+  <p style="margin:.8rem 0 0"><input id="tbSprint" value="Sprint 19" style="padding:.5rem .7rem;border:1px solid var(--borda);border-radius:8px;font:inherit;width:11rem">
+  <button id="transbordo" style="padding:.5rem 1rem;border:1px solid var(--borda);border-radius:999px;background:var(--superficie);font:inherit;font-weight:600;cursor:pointer">medir</button></p>
+  <div id="tb"></div>
+</section>
+
+<section class="grupo" style="margin-bottom:2rem">
   <h2>Sondar uma Feature</h2>
   <p class="meta">Busca <b>todos</b> os filhos dela no projeto — sem o recorte de área que a consulta do report aplica — e diz, item a item, se ele chega ou não ao documento e por quê.</p>
   <p style="margin:.8rem 0 0"><input id="fid" type="number" placeholder="44271" style="padding:.5rem .7rem;border:1px solid var(--borda);border-radius:8px;font:inherit;width:11rem">
@@ -71,6 +82,12 @@
 
 <script src="assets/core.js"></script>
 <script src="assets/api.js"></script>
+<!-- O roadmap-visao vem ANTES do briefing: desde a extração de 02/10 o briefing
+     lê corpoRoadmap dele na hora em que é definido, e sem esta linha a página
+     abria com TypeError e o módulo nem chegava a se registrar. Passou meses
+     assim porque o erro ficava no console, que ninguém olha numa página de
+     diagnóstico que "parece funcionar". -->
+<script src="assets/roadmap-visao.js"></script>
 <script src="assets/briefing-entregas.js"></script>
 <script>
 (async function () {
@@ -324,6 +341,77 @@
       '<br>Projetos onde os filhos moram — ' + esc(projetos.join(' · ')) + '</p>' +
       '<table><thead><tr><th>id</th><th>título</th><th>tipo</th><th>responsável</th><th>estado</th><th>área</th><th>chega ao documento?</th></tr></thead><tbody>' +
       linhas + '</tbody></table>';
+  });
+
+  /* ---------------- Transbordo de sprint ----------------
+     Nasceu de uma rodada de consultas manuais coladas no console, uma por
+     pergunta — caro pra quem roda e lento pra decidir. Aqui tudo sai de um
+     clique: as quatro combinações de recorte lado a lado, e a amostra com
+     área e iteração, que é o dado que separa transbordo real de artefato.
+
+     A pergunta que isto existe pra responder: a consulta ASOF avalia o WHERE
+     com os valores da ÉPOCA. Se o recorte de área entra nela, item que mudou
+     de área depois aparece como "saiu da sprint" sem nunca ter saído. */
+  const btnTb = document.getElementById('transbordo');
+  if (btnTb) btnTb.addEventListener('click', async () => {
+    const alvo = document.getElementById('tbSprint').value.trim();
+    const tb = document.getElementById('tb');
+    tb.innerHTML = '<p class="meta">medindo…</p>';
+    try {
+      const p0 = config.projects.filter((x) => !x.hidden)[0];
+      const its = await A.teamIterations(ctx, p0.projectName, p0.teamName);
+      const sp = its.find((i) => i.name === alvo);
+      if (!sp) throw new Error('não achei a iteração "' + alvo + '" — nomes: ' + its.map((i) => i.name).join(', '));
+      const areas = await A.teamAreas(ctx, p0.projectName, p0.teamName);
+      const quando = Date.parse(sp.finish) + 86399000;
+      /* Usa o MESMO construtor do app, de propósito: uma cópia da consulta aqui
+         mediria o diagnóstico, não o produto — e as duas versões divergiriam
+         no primeiro ajuste. */
+      const q = (comArea, comAsOf) =>
+        C.wiqlIteracao(sp.path, comArea ? areas : [], comAsOf ? quando : undefined);
+
+      const [hojeSem, hojeCom, fimSem, fimCom] = await Promise.all([
+        A.runWiql(ctx, p0.projectName, p0.teamName, q(false, false)),
+        A.runWiql(ctx, p0.projectName, p0.teamName, q(true, false)),
+        A.runWiql(ctx, p0.projectName, p0.teamName, q(false, true)),
+        A.runWiql(ctx, p0.projectName, p0.teamName, q(true, true)),
+      ]);
+      const daIteracao = await A.sprintItemIds(ctx, p0.projectName, p0.teamName, sp.id);
+
+      const dif = (a, b) => { const s2 = new Set(b); return a.filter((x) => !s2.has(x)); };
+      const quadro = '<table><thead><tr><th>consulta</th><th>itens</th><th>diferença p/ "hoje, com área"</th></tr></thead><tbody>'
+        + [['hoje, sem área', hojeSem], ['hoje, com área', hojeCom],
+           ['no fim da sprint (ASOF), sem área', fimSem], ['no fim da sprint (ASOF), com área', fimCom],
+           ['API da iteração do time (o que o Panorama usa)', daIteracao]]
+          .map(([rot, lista]) => '<tr><td>' + esc(rot) + '</td><td><b>' + lista.length + '</b></td><td>'
+            + dif(lista, hojeCom).length + '</td></tr>').join('')
+        + '</tbody></table>';
+
+      /* A amostra é da diferença do caminho que o app usa de verdade. Área e
+         iteração ATUAIS de cada um: se vierem itens que ainda estão nesta
+         sprint, a diferença não é transbordo — é desencontro de recorte. */
+      const extras = dif(fimCom, daIteracao);
+      const amostra = extras.slice(0, 15);
+      let tabela = '';
+      if (amostra.length) {
+        const ex = await A.getFields(ctx, amostra, ['System.Title', 'System.WorkItemType', 'System.AreaPath', 'System.IterationPath', 'System.AssignedTo']);
+        const naSprint = ex.filter((it) => it.fields['System.IterationPath'] === sp.path).length;
+        tabela = '<p class="meta">Dos ' + ex.length + ' amostrados, <b>' + naSprint
+          + '</b> ainda estão nesta sprint hoje — esses seriam transbordo FALSO.</p>'
+          + '<table><thead><tr><th>id</th><th>título</th><th>tipo</th><th>área hoje</th><th>iteração hoje</th><th>responsável</th></tr></thead><tbody>'
+          + ex.map((it) => { const f = it.fields; const falso = f['System.IterationPath'] === sp.path;
+            return '<tr' + (falso ? ' style="background:var(--erro-fundo)"' : '') + '><td>' + it.id + '</td><td>'
+              + esc(String(f['System.Title']).slice(0, 45)) + '</td><td>' + esc(f['System.WorkItemType']) + '</td><td>'
+              + esc(f['System.AreaPath']) + '</td><td>' + esc(f['System.IterationPath']) + '</td><td>'
+              + esc((f['System.AssignedTo'] || {}).displayName || '—') + '</td></tr>'; }).join('')
+          + '</tbody></table>';
+      }
+      tb.innerHTML = '<p class="meta">Iteração <b>' + esc(sp.path) + '</b> · fecha em '
+        + esc(String(sp.finish).slice(0, 10)) + ' · áreas do time: ' + esc(areas.map((a) => a.path).join(' | ') || 'nenhuma')
+        + '</p>' + quadro + tabela;
+    } catch (e) {
+      tb.innerHTML = '<p class="meta" style="color:var(--erro)">parou: ' + esc(e.message) + '</p>';
+    }
   });
 
   const quem = document.getElementById('quem');
