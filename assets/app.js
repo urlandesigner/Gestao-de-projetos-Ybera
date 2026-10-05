@@ -216,6 +216,9 @@ function wizardConclude() {
 const FIELDS_COUNTS = [
   'System.WorkItemType', 'System.State', 'System.AssignedTo',
   'System.Title', 'Microsoft.VSTS.Scheduling.TargetDate', 'System.ChangedDate',
+  // Sem isto não dá pra separar o que é DA sprint do que só apareceu na
+  // hierarquia dela — ver C.itensDaIteracao.
+  'System.IterationPath',
 ];
 const FIELDS_BOARD = ['System.Title', 'System.State', 'System.WorkItemType', 'System.BoardColumn', 'System.AssignedTo', 'System.IterationPath'];
 // A consulta sem corte de data alimenta Produtos (progresso) e Report (entregas
@@ -264,7 +267,15 @@ async function refreshCard(p) {
   try {
     // Recorte pelas áreas do time — senão times do mesmo projeto contam igual
     let areas = [];
-    try { areas = await A.teamAreas(ctx(), p.projectName, p.teamName); } catch (e) { /* segue projeto inteiro */ }
+    try { areas = await A.teamAreas(ctx(), p.projectName, p.teamName); } catch (e) {
+      /* Sem área, areaClause devolve string vazia e a consulta deixa de ter
+         recorte: passa a contar o projeto inteiro. Não é degradação suave — é
+         número MAIOR que a realidade, e antes isso acontecia sem nada na tela
+         nem no console. */
+      console.warn('[Central] não deu pra ler as áreas de ' + p.teamName
+          + ' — a consulta passa a valer pro PROJETO INTEIRO, e os números incham com itens de outros times.'
+          + ' Motivo: ' + mensagemDeErro(e));
+    }
     const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlCounts(30, areas));
     const items = ids.length ? await A.getFields(ctx(), ids, FIELDS_COUNTS) : [];
     // Guarda os itens enxutos (só o que filterItems/aggregateCounts leem) —
@@ -313,7 +324,8 @@ async function refreshCard(p) {
           const sp = janela[qual];
           if (!sp) { entry.janela[qual] = null; continue; }
           const ids = await A.sprintItemIds(ctx(), p.projectName, p.teamName, sp.id);
-          const itens = ids.length ? await A.getFields(ctx(), ids, FIELDS_COUNTS) : [];
+          const brutos = ids.length ? await A.getFields(ctx(), ids, FIELDS_COUNTS) : [];
+          const itens = C.itensDaIteracao(brutos, sp.path);
           entry.janela[qual] = { sprint: sp, progress: C.sprintProgress(itens), itens: resumoDeSprint(itens) };
         }
         // A corrente segue nos campos antigos: o card do Projetos lê de lá, e
@@ -330,7 +342,8 @@ async function refreshCard(p) {
     if (sprint && !entry.progress) {
       entry.sprint = sprint;
       const sids = await A.sprintItemIds(ctx(), p.projectName, p.teamName, sprint.id);
-      const sitems = sids.length ? await A.getFields(ctx(), sids, FIELDS_COUNTS) : [];
+      const sbrutos = sids.length ? await A.getFields(ctx(), sids, FIELDS_COUNTS) : [];
+      const sitems = C.itensDaIteracao(sbrutos, sprint.path);
       entry.progress = C.sprintProgress(sitems);
       // Prévia do card: o que ainda falta fazer na sprint corrente.
       entry.itensSprintAbertos = resumoDeSprint(sitems).filter((x) => !x.feito);
@@ -654,7 +667,14 @@ function renderPanorama() {
         ? `<p class="sprint-limpa mudo">Nada no nome de ${escapeHtml(respSprint)} nesta sprint.</p>`
         : (chave === 'proxima' ? '' : '<p class="sprint-limpa mudo">Sprint sem itens.</p>');
       const corpo = (lista || semLista) + (chave === 'proxima' ? NOTA_PLANEJAMENTO : '');
-      const barra = chave === 'proxima' ? '' : `<span class="barra"><span class="barra-cheia" style="width:${pct}%"></span></span>`;
+      /* A próxima não tem progresso pra mostrar — mas o espaço da barra fica
+         reservado, senão a lista de PBIs dela sobe uns 13px e desalinha das
+         vizinhas. Reservado e invisível, não uma barra vazia: trilho zerado ao
+         lado de "1 item" (sem denominador) leria como "nenhum dos itens feito",
+         que é afirmação sobre uma sprint que nem começou. */
+      const barra = chave === 'proxima'
+        ? '<span class="barra barra-reservada" aria-hidden="true"></span>'
+        : `<span class="barra"><span class="barra-cheia" style="width:${pct}%"></span></span>`;
       const nProxima = doResponsavel(col.itens).length;
       const placar = chave === 'proxima'
         ? `${nProxima} ${nProxima === 1 ? 'item' : 'itens'}`
@@ -712,7 +732,12 @@ async function carregarRoadmap() {
     const dado = await resp.json();
     roadmapState.itens = C.saneRoadmapItens(dado.itens);
     renderRoadmap();
-  } catch (e) { /* rede ou JSON torto: mesma degradação — sem bloco, sem erro na cara */ }
+  } catch (e) {
+    /* Degradação de propósito: o Panorama continua de pé sem o bloco. Mas ele
+       some sem deixar buraco, e aí "não temos roadmap" e "o arquivo não
+       carregou" ficam idênticos na tela. */
+    console.warn('[Central] roadmap.json não carregou: o bloco de Roadmap não vai aparecer. Motivo: ' + e.message);
+  }
 }
 
 /* ---------- Produtos ---------- */
@@ -738,7 +763,15 @@ async function carregarBase(forcar) {
     const porTime = [];
     for (const p of state.config.projects.filter((x) => !x.hidden)) {
       let areas = [];
-      try { areas = await A.teamAreas(ctx(), p.projectName, p.teamName); } catch (e) { /* segue projeto inteiro */ }
+      try { areas = await A.teamAreas(ctx(), p.projectName, p.teamName); } catch (e) {
+      /* Sem área, areaClause devolve string vazia e a consulta deixa de ter
+         recorte: passa a contar o projeto inteiro. Não é degradação suave — é
+         número MAIOR que a realidade, e antes isso acontecia sem nada na tela
+         nem no console. */
+      console.warn('[Central] não deu pra ler as áreas de ' + p.teamName
+          + ' — a consulta passa a valer pro PROJETO INTEIRO, e os números incham com itens de outros times.'
+          + ' Motivo: ' + mensagemDeErro(e));
+    }
       const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlProdutos(areas));
       const crus = ids.length ? await A.getFields(ctx(), ids, FIELDS_BASE) : [];
       // anota o projeto: o Report junta os times e ainda precisa montar o link
@@ -781,10 +814,12 @@ function renderProdutos() {
     box.innerHTML = erroHtml + (baseState.erro ? '' : '<p class="mudo">carregando produtos…</p>');
     return;
   }
-  // Squad Ecommerce não tem épico próprio aqui — quem carrega produto de
-  // verdade são Vertical Ecommerce e Growth. Só some do card de Produtos;
-  // Squad Ecommerce continua valendo pro Panorama (sprint).
-  const porTimeProdutos = baseState.porTime.filter(({ p }) => p.teamName !== 'Squad Ecommerce');
+  // O time de sprint não tem épico próprio aqui — quem carrega produto de
+  // verdade são Vertical Ecommerce e Growth. Só some do card de Produtos; ele
+  // continua valendo pro Panorama (sprint). Lê a MESMA constante do quadro de
+  // sprints: o nome estava escrito à mão aqui, e renomear o time no DevOps
+  // deixaria as duas telas discordando sobre quem ele é.
+  const porTimeProdutos = baseState.porTime.filter(({ p }) => p.teamName !== TIME_COM_SPRINT);
   // Bloco (fundo cinza) sempre presente, mesmo com um time só: o card do
   // épico é branco (.card.produto) e depende do bloco pra não desaparecer
   // sobre o fundo branco da própria seção — some junto se o bloco sumir.
@@ -1279,7 +1314,14 @@ async function resolverSprintDoBoard(p) {
       if (boardState.sprint) return;
     }
     boardState.sprint = await A.currentSprint(ctx(), p.projectName, p.teamName);
-  } catch (e) { /* board segue sem filtro de sprint */ }
+  } catch (e) {
+    /* Sem sprint resolvida, o filtro "só sprint corrente" não tem path pra
+       comparar e é pulado: o board passa a mostrar o BACKLOG INTEIRO do time
+       no lugar da sprint pedida. Mostra demais, e o botão fica ligado dizendo
+       que está recortando. */
+    console.warn('[Central] não deu pra resolver a sprint do board de ' + p.teamName
+      + ' — o quadro mostra o backlog inteiro em vez da sprint. Motivo: ' + mensagemDeErro(e));
+  }
 }
 
 /* Quanto passado pedir ao DevOps. 30 dias serve o board corrente; pra uma
@@ -1308,7 +1350,15 @@ async function carregarBoard(p, force) {
   renderBoard(p);
   try {
     let areas = [];
-    try { areas = await A.teamAreas(ctx(), p.projectName, p.teamName); } catch (e) { /* segue sem recorte de área */ }
+    try { areas = await A.teamAreas(ctx(), p.projectName, p.teamName); } catch (e) {
+      /* Sem área, areaClause devolve string vazia e a consulta deixa de ter
+         recorte: passa a contar o projeto inteiro. Não é degradação suave — é
+         número MAIOR que a realidade, e antes isso acontecia sem nada na tela
+         nem no console. */
+      console.warn('[Central] não deu pra ler as áreas de ' + p.teamName
+          + ' — a consulta passa a valer pro PROJETO INTEIRO, e os números incham com itens de outros times.'
+          + ' Motivo: ' + mensagemDeErro(e));
+    }
     /* A sprint é resolvida ANTES da consulta, e não depois, porque ela decide
        quanto passado pedir. O wiqlBoard descarta o que foi concluído há mais de
        30 dias — regra boa pro board corrente, e furo garantido numa sprint
@@ -1340,6 +1390,13 @@ function renderBoard(p) {
   const cols = $('board-colunas');
   const filtro = $('board-filtro-sprint');
   filtro.hidden = !(boardState.sprint && boardState.sprint.path);
+  /* "Só sprint corrente" era verdade quando o board só abria na sprint atual.
+     Desde que a rota carrega o id da iteração, dá pra entrar numa sprint
+     passada — e aí o rótulo afirmava "corrente" sobre a Sprint 19. O botão
+     nomeia a sprint que está na tela, que é o que ele de fato filtra. */
+  filtro.textContent = boardState.sprint && boardState.sprint.name
+    ? 'Só a ' + boardState.sprint.name
+    : 'Só esta sprint';
   filtro.setAttribute('aria-pressed', String(boardState.soSprint));
   filtro.classList.toggle('ativo', boardState.soSprint);
   const filtros = $('board-filtros');
@@ -1347,10 +1404,21 @@ function renderBoard(p) {
   if (boardState.erro) { filtros.hidden = true; st.innerHTML = `<span class="erro">${escapeHtml(boardState.erro)}</span>`; st.hidden = false; cols.innerHTML = ''; return; }
   const todos = boardState.items || [];
   filtros.hidden = !todos.length;
-  renderChipsTipo($('board-tipos'), todos, boardState.filtro, () => renderBoard(p));
-  let items = todos;
-  if (boardState.soSprint && boardState.sprint) items = items.filter((it) => C.inSprint(it, boardState.sprint.path));
-  items = C.filterItems(items, Object.assign({}, boardState.filtro, { resp: respAtivo() }));
+  /* Os chips contavam `todos` — o board inteiro do time — enquanto as colunas
+     mostravam o recorte. Dentro da Sprint 19 a barra dizia "PBIs 110 · Bugs
+     96" com 39 cartões na tela: dois conjuntos diferentes lado a lado, e o
+     número maior é o que o olho lê primeiro.
+
+     Agora cada chip conta o que os OUTROS filtros deixam passar — sprint,
+     busca e responsável —, mas não o filtro de tipo em si: contar com ele
+     dentro zeraria os chips não selecionados e tiraria o caminho de volta. É o
+     comportamento normal de filtro facetado. */
+  const semTipo = Object.assign({}, boardState.filtro, { tipos: null, resp: respAtivo() });
+  let base = todos;
+  if (boardState.soSprint && boardState.sprint) base = base.filter((it) => C.inSprint(it, boardState.sprint.path));
+  base = C.filterItems(base, semTipo);
+  renderChipsTipo($('board-tipos'), base, boardState.filtro, () => renderBoard(p));
+  const items = C.filterItems(base, { tipos: boardState.filtro.tipos });
   const porColuna = new Map();
   for (const it of items) {
     const f = it.fields || {};

@@ -82,6 +82,11 @@ const st = {
   resp: (() => { const f = loadJSON(LS.filtros) || {}; return f.resp === undefined ? null : f.resp; })(),
   items: null,
   pais: [],        // pais buscados por id, fora da consulta por área
+  /* Ligado quando a leitura das áreas do time falhou: a consulta passou a
+     valer pro projeto inteiro e os totais estão MAIORES que a realidade. Fica
+     visível só pro PO — quem decide publicar o link é ele, e o leitor do link
+     recebe um documento já fechado. */
+  areaIncerta: false,
   erro: null,
   carregando: false,
   vazio: false,
@@ -139,7 +144,12 @@ async function carregarRoadmap() {
     if (!resp.ok) return; // arquivo ainda não existe: seção some, sem quebrar o resto
     const dado = await resp.json();
     st.roadmap = saneRoadmapItens(dado.itens);
-  } catch (e) { /* rede falhou ou JSON inválido: mesma degradação — sem roadmap, sem erro */ }
+  } catch (e) {
+    /* Degradação de propósito: sem roadmap o documento continua de pé. Mas o PO
+       precisa saber que a seção sumiu antes de publicar — some sem deixar
+       buraco, e quem lê o link não tem como suspeitar que faltou algo. */
+    console.warn('[Report] roadmap.json não carregou: a seção de projetos não vai aparecer. Motivo: ' + e.message);
+  }
 }
 
 /* ---------- Nome de negócio: a camada editorial ---------- */
@@ -168,7 +178,10 @@ async function carregarNomes() {
     if (!resp.ok) return; // sem arquivo: títulos originais, sem erro
     const dado = await resp.json();
     st.nomes = saneNomes(dado.itens);
-  } catch (e) { /* JSON inválido ou rede: mesma degradação */ }
+  } catch (e) {
+    console.warn('[Report] report-nomes.json não carregou: os títulos saem como estão no DevOps,'
+      + ' não com os nomes de negócio. Motivo: ' + e.message);
+  }
 }
 
 function renderBadge() {
@@ -178,7 +191,26 @@ function renderBadge() {
   b.textContent = { 'sem-token': 'sem token', vencido: 'erro', atualizando: 'atualizando…', conectado: 'conectado' }[estado];
 }
 
+/* Aviso de escopo furado, só no modo PO. Não entra no corpo do documento: o
+   leitor do link recebe dado já fechado, e enfiar alerta de ferramenta no que
+   vai pro stakeholder é ruído. Quem precisa decidir "publico ou não" é o PO. */
+function avisarAreaIncerta() {
+  const barra = $('filtro-global') || $('resp-global');
+  if (!barra || !barra.parentNode) return;
+  let aviso = $('aviso-area');
+  if (!st.areaIncerta) { if (aviso) aviso.remove(); return; }
+  if (!aviso) {
+    aviso = document.createElement('p');
+    aviso.id = 'aviso-area';
+    aviso.className = 'erro';
+    aviso.textContent = 'Não deu pra ler as áreas do time: esta consulta valeu pro projeto'
+      + ' inteiro e os totais estão maiores que a realidade. Atualize antes de publicar o link.';
+    barra.parentNode.insertBefore(aviso, barra.nextSibling);
+  }
+}
+
 function renderFiltro() {
+  avisarAreaIncerta();
   const sel = $('resp-global');
   const nomes = new Set();
   for (const it of st.items || []) {
@@ -408,6 +440,7 @@ async function carregar() {
   if (!st.config || !st.pat || st.carregando) return;
   st.carregando = true;
   st.erro = null;
+  st.areaIncerta = false; // cada carga responde por si: aviso velho mentiria
   render();
   try {
     if (!st.usuario) {
@@ -416,7 +449,17 @@ async function carregar() {
     const todos = [];
     for (const p of st.config.projects.filter((x) => !x.hidden)) {
       let areas = [];
-      try { areas = await A.teamAreas(ctx(), p.projectName, p.teamName); } catch (e) { /* segue projeto inteiro */ }
+      try {
+        areas = await A.teamAreas(ctx(), p.projectName, p.teamName);
+      } catch (e) {
+        /* Aqui o estrago é publicado: sem área o documento conta o projeto
+           inteiro e o total sai maior que a realidade. O PO precisa ver antes
+           de mandar o link. */
+        st.areaIncerta = true;
+        console.warn('[Central] não deu pra ler as áreas de ' + p.teamName
+          + ' — a consulta passa a valer pro PROJETO INTEIRO, e os números incham com itens de outros times.'
+          + ' Motivo: ' + mensagemDeErro(e));
+      }
       const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlProdutos(areas));
       const crus = ids.length ? await A.getFields(ctx(), ids, CAMPOS) : [];
       for (const it of crus) todos.push(Object.assign({ projeto: p.projectName }, it));
@@ -425,7 +468,13 @@ async function carregar() {
     // meio do refresh (grupos desmontando na tela) e, num fetch falho, deixava
     // itens novos com pais de ninguém — e o link era reescrito desse estado.
     st.pais = await buscarPais(todos);
-    st.items = todos;
+    /* Sustentação sai aqui, uma vez só, e não em cada lugar que conta: daqui
+       descem o documento, o placar e o pacote do link de leitura — filtrar num
+       e esquecer de outro é como a capa e o corpo passam a discordar.
+       Os pais entram na leitura da cadeia mas NÃO são filtrados: o guarda-chuva
+       costuma estar fora do recorte do PO, e sem ele os filhos pareceriam
+       órfãos e continuariam contando. */
+    st.items = C.foraDaManutencao(todos, todos.concat(st.pais));
   } catch (e) {
     st.erro = mensagemDeErro(e);
   } finally {

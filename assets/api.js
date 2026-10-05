@@ -9,6 +9,29 @@
   'use strict';
   const API = 'api-version=7.1';
 
+  /* Teto de resultados. O do WIQL é o do próprio serviço (20 mil); os outros
+     dois são folga larga sobre o que uma organização real tem.
+
+     O valor antigo do WIQL era 2000, e isso era um defeito grave e mudo: a
+     consulta de produtos puxa o histórico INTEIRO do time, não tem ORDER BY, e
+     um time que roda 21 sprints a ~150 itens passa de 2000 sem esforço. Ao
+     estourar, o DevOps corta e devolve 200 OK — a Central contava a menos e
+     nada na tela dizia isso. Número menor que a realidade num relatório que vai
+     pro stakeholder é pior que erro na cara. */
+  const TETO = { wiql: 20000, projetos: 500, times: 500 };
+
+  /* Resultado no teto é indistinguível de resultado cortado, então trata-se
+     como cortado. Erro na cara é a resposta certa: seguir com a lista pela
+     metade produz todos os números da tela errados, e para menos. */
+  function semCorte(lista, teto, oque) {
+    if (lista.length >= teto) {
+      throw new Error(`A consulta de ${oque} bateu no teto de ${teto} itens. `
+        + 'O resultado está cortado e os números sairiam menores que a realidade. '
+        + 'Reduza o escopo (área do time) ou divida a consulta.');
+    }
+    return lista;
+  }
+
   class AuthError extends Error {}
   class NetworkError extends Error {}
 
@@ -53,22 +76,22 @@
   }
 
   async function listProjects(ctx) {
-    const data = await adoFetch(ctx, `/_apis/projects?$top=500&${API}`);
-    return data.value.map((p) => ({ id: p.id, name: p.name }));
+    const data = await adoFetch(ctx, `/_apis/projects?$top=${TETO.projetos}&${API}`);
+    return semCorte(data.value.map((p) => ({ id: p.id, name: p.name })), TETO.projetos, 'projetos');
   }
 
   async function listTeams(ctx, projectId) {
-    const data = await adoFetch(ctx, `/_apis/projects/${projectId}/teams?$top=100&${API}`);
-    return data.value.map((t) => ({ id: t.id, name: t.name }));
+    const data = await adoFetch(ctx, `/_apis/projects/${projectId}/teams?$top=${TETO.times}&${API}`);
+    return semCorte(data.value.map((t) => ({ id: t.id, name: t.name })), TETO.times, 'times');
   }
 
   async function runWiql(ctx, project, team, query) {
     const p = encodeURIComponent(project), t = encodeURIComponent(team);
-    const data = await adoFetch(ctx, `/${p}/${t}/_apis/wit/wiql?$top=2000&${API}`, {
+    const data = await adoFetch(ctx, `/${p}/${t}/_apis/wit/wiql?$top=${TETO.wiql}&${API}`, {
       method: 'POST',
       body: JSON.stringify({ query }),
     });
-    return (data.workItems || []).map((w) => w.id);
+    return semCorte((data.workItems || []).map((w) => w.id), TETO.wiql, 'itens de trabalho');
   }
 
   async function getFields(ctx, ids, fields) {

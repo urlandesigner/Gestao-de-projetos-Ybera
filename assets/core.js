@@ -75,14 +75,37 @@
   // A query traz o time inteiro de propósito: o recorte por responsável é
   // client-side (seletor na página filtra os itens do cache) — assim trocar
   // de pessoa não custa outra chamada à API.
+  /* O QUE CONTA COMO ENTREGA. Este recorte é a régua da Central inteira: os
+     tiles do Panorama, a página de Produtos, o board da sprint e o relatório
+     de Entregas leem daqui. Por isso mora numa constante só — três cópias da
+     mesma lista é como duas telas passam a dar números diferentes pro mesmo
+     mês, que é o defeito que este projeto já pagou caro.
+
+     BugCategory entrou em 05/10/2026, por decisão do Urlan. Até então a
+     Central enxergava só RequirementCategory, e nesta organização Bug está na
+     categoria de Bug — o que significa que correção não aparecia em lugar
+     nenhum: nem no board da sprint, nem nos tiles, nem no relatório. Só na
+     Sprint 19 eram ~26 bugs concluídos invisíveis.
+
+     Consequência assumida: o número de "entregues no mês" do relatório sobe, e
+     sobe num documento que já foi publicado. A escolha foi contar correção
+     como entrega — não existe meia régua. */
+  const TIPOS_REQUISITO = [
+    "[System.WorkItemType] IN GROUP 'Microsoft.RequirementCategory'",
+    "[System.WorkItemType] IN GROUP 'Microsoft.BugCategory'",
+  ];
+  const TIPOS_ENTREGA = [
+    "[System.WorkItemType] IN GROUP 'Microsoft.EpicCategory'",
+    "[System.WorkItemType] IN GROUP 'Microsoft.FeatureCategory'",
+  ].concat(TIPOS_REQUISITO);
+  const clausulaDeTipos = (lista) => 'AND (' + lista.join('\n  OR ') + ')';
+
   function wiqlCounts(doneCutoffDays = 30, areas = []) {
     const naoRemovidos = TERMINAL_STATES.filter((s) => s !== 'Removed').map((s) => `'${s}'`).join(',');
     return [
       'SELECT [System.Id] FROM WorkItems',
       'WHERE [System.TeamProject] = @project',
-      "AND ([System.WorkItemType] IN GROUP 'Microsoft.EpicCategory'",
-      "  OR [System.WorkItemType] IN GROUP 'Microsoft.FeatureCategory'",
-      "  OR [System.WorkItemType] IN GROUP 'Microsoft.RequirementCategory')",
+      clausulaDeTipos(TIPOS_ENTREGA),
       "AND [System.State] <> 'Removed'",
       `AND ([System.State] NOT IN (${naoRemovidos}) OR [System.ChangedDate] >= @Today - ${doneCutoffDays})`,
       areaClause(areas),
@@ -187,7 +210,7 @@
     return [
       'SELECT [System.Id] FROM WorkItems',
       'WHERE [System.TeamProject] = @project',
-      "AND [System.WorkItemType] IN GROUP 'Microsoft.RequirementCategory'",
+      clausulaDeTipos(TIPOS_REQUISITO),
       "AND [System.State] <> 'Removed'",
       `AND ([System.State] NOT IN (${done}) OR [System.ChangedDate] >= @Today - ${doneCutoffDays})`,
       areaClause(areas),
@@ -207,6 +230,26 @@
   function inSprint(item, sprintPath) {
     if (!sprintPath) return false;
     return ((item || {}).fields || {})['System.IterationPath'] === sprintPath;
+  }
+
+  /* A API `teamsettings/iterations/{id}/workitems` NÃO devolve "os itens da
+     sprint": devolve a HIERARQUIA da sprint. Junto com os itens vêm os pais
+     deles — e um pai mora onde quiser. Medido em 05/10/2026 na Sprint 19 do
+     Squad Ecommerce: 147 ids devolvidos, 14 com IterationPath de outra
+     iteração. Três PBIs apareciam ao mesmo tempo na coluna da 19 e na da 20 do
+     Panorama, o que é impossível — um item está numa iteração só.
+
+     O estrago não era visual: o placar da sprint contava os intrusos. O
+     Panorama dizia 3/5 numa sprint que tinha 2/2.
+
+     O filtro é por IterationPath exato, que é o mesmo critério do board — as
+     duas telas passam a responder a mesma pergunta. Sem path conhecido a lista
+     passa inteira: melhor mostrar demais que zerar a tela por falta de um
+     campo. */
+  function itensDaIteracao(items, sprintPath) {
+    const lista = Array.isArray(items) ? items : [];
+    if (!sprintPath) return lista.slice();
+    return lista.filter((it) => inSprint(it, sprintPath));
   }
 
   // Fallback de ordenação de colunas quando a API de colunas falha:
@@ -402,9 +445,7 @@
     return [
       'SELECT [System.Id] FROM WorkItems',
       'WHERE [System.TeamProject] = @project',
-      "AND ([System.WorkItemType] IN GROUP 'Microsoft.EpicCategory'",
-      "  OR [System.WorkItemType] IN GROUP 'Microsoft.FeatureCategory'",
-      "  OR [System.WorkItemType] IN GROUP 'Microsoft.RequirementCategory')",
+      clausulaDeTipos(TIPOS_ENTREGA),
       "AND [System.State] <> 'Removed'",
       areaClause(areas),
     ].filter(Boolean).join('\n');
@@ -725,6 +766,62 @@
       .sort((a, b) => (a.mes < b.mes ? 1 : a.mes > b.mes ? -1 : 0)); // mês mais novo primeiro
   }
 
+  /* SUSTENTAÇÃO NÃO É ENTREGA (decisão do Urlan, 05/10/2026).
+
+     Correção conta como entrega — por isso BugCategory entrou na régua —, mas
+     o que está pendurado no guarda-chuva de Sustentação é manutenção: entra na
+     sprint, ocupa o time, e não é o que o relatório mensal promete contar.
+
+     O item em si não se chama "Sustentação": o bug se chama "Cobrança
+     incorreta de frete…" e é o PAI dele que é o guarda-chuva. Por isso a regra
+     sobe a cadeia inteira, e não olha só o título de quem está sendo contado.
+
+     O casamento é por TÍTULO, e isso é uma fraqueza conhecida: o guarda-chuva
+     é um PBI novo a cada sprint ("Sustentação Sprint 19", "Sustentação Sprint
+     20"), não um épico fixo que pudesse ser referenciado por id. Se alguém
+     renomear o item, os filhos voltam a contar como entrega sem erro nenhum na
+     tela. A âncora no começo do título é de propósito: "Bug na sustentação do
+     checkout" é entrega de verdade e não pode cair aqui. */
+  const PADRAO_MANUTENCAO = /^[\s[\](){}.,:\-–—]*sustenta[çc][ãa]o\b/i;
+  function ehItemDeManutencao(titulo) {
+    return PADRAO_MANUTENCAO.test(String(titulo || ''));
+  }
+
+  /* Ids do ramo de manutenção: o guarda-chuva e tudo que desce dele.
+     Recebe a base COMPLETA (itens + pais), porque o guarda-chuva pode estar
+     fora do recorte de quem se está contando. */
+  function idsDeManutencao(items) {
+    const lista = Array.isArray(items) ? items : [];
+    const porId = new Map(lista.map((it) => [it.id, it]));
+    const resposta = new Map();
+    const resolver = (inicio) => {
+      const caminho = [];
+      const vistos = new Set();
+      let atual = inicio;
+      while (atual !== null && atual !== undefined && !vistos.has(atual) && !resposta.has(atual)) {
+        vistos.add(atual);
+        const it = porId.get(atual);
+        if (!it) break; // pai fora da base: não dá pra afirmar, e na dúvida conta
+        caminho.push(atual);
+        if (ehItemDeManutencao((it.fields || {})['System.Title'])) { resposta.set(atual, true); break; }
+        atual = (it.fields || {})['System.Parent'];
+      }
+      const herdado = resposta.has(atual) ? resposta.get(atual) : false;
+      for (const id of caminho) if (!resposta.has(id)) resposta.set(id, herdado);
+      return resposta.get(inicio) === true;
+    };
+    const fora = new Set();
+    for (const it of lista) if (resolver(it.id)) fora.add(it.id);
+    return fora;
+  }
+
+  /* `base` é de onde se lê a cadeia de pais; `items` é o que se filtra. São
+     conjuntos diferentes no report: o pai costuma estar fora do recorte do PO. */
+  function foraDaManutencao(items, base) {
+    const fora = idsDeManutencao(base || items);
+    return (Array.isArray(items) ? items : []).filter((it) => it && !fora.has(it.id));
+  }
+
   // Produto de cada item: sobe a cadeia de pais e devolve o primeiro Épico.
   // Sem épico na cadeia, devolve o ancestral mais alto que achou — uma Feature
   // já diz muito mais que "sem produto associado", e é o que o DevOps tem.
@@ -877,14 +974,24 @@
         continue; // concluído não está em execução nem tem prazo a vencer
       }
       const bucket = stateBucket(estado);
+      /* Épico é iniciativa, não item de execução: no report ele é a frente (e o
+         cabeçalho de produto), com o próprio prazo no card. Contá-lo em
+         execução/fila/prazos fazia a capa dizer "5 em execução" com 2 deles
+         sendo as próprias iniciativas. Travado continua: iniciativa parada é
+         notícia.
+
+         A exclusão era `else if (… === 'epic') continue`, e o `else` abria uma
+         fresta: o épico TRAVADO não chegava nessa linha — caía na primeira —,
+         não dava `continue`, e seguia direto pros prazos. Resultado: épico
+         bloqueado aparecia em "atrasados"/"este mês" e épico normal não, sem
+         nenhum critério que o leitor pudesse adivinhar. A saída agora é por
+         fora da cadeia, e vale para os dois. */
+      const ehEpico = levelOf(f['System.WorkItemType']) === 'epic';
       if (bucket === 'atencao') travados.push({ item: it, dias: diasSemToque(f, hoje) });
-      // Épico é iniciativa, não item de execução: no report ele é a frente (e o
-      // cabeçalho de produto), com o próprio prazo no card. Contá-lo em
-      // execução/fila/prazos fazia a capa dizer "5 em execução" com 2 deles
-      // sendo as próprias iniciativas. Travado continua: iniciativa parada é notícia.
-      else if (levelOf(f['System.WorkItemType']) === 'epic') continue;
+      else if (ehEpico) { /* nada: nem execução, nem fila */ }
       else if (bucket === 'andamento') execucao.push({ item: it });
       else if (bucket === 'todo') fila.push({ item: it });
+      if (ehEpico) continue; // iniciativa não tem prazo de execução a cobrar
       const alvo = dataValida(f[CAMPO_ALVO]);
       if (alvo === null) continue;
       if (diaUTC(alvo) < hoje) prazos.atrasados.push({ item: it, alvo });
@@ -1032,9 +1139,9 @@
     wiqlCounts, wiqlMyItems, levelOf, isTerminalState,
     aggregateCounts, sprintProgress, groupMyItemsBuckets,
     isAttentionState, typeSlug,
-    wiqlBoard, initials, inSprint, orderColumnsFallback, filterItems,
+    wiqlBoard, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, placarDeSprint, mapaDeProdutos, descricaoLimpa, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, placarDeSprint, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };

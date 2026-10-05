@@ -140,9 +140,6 @@
 
   function plural(n, um, muitos) { return n + ' ' + (n === 1 ? um : muitos); }
 
-  const MESES_COMPARATIVO = 12;
-  const SEM_PRODUTO = 'Sem produto associado';
-  const nomeProduto = (p) => (p ? p.titulo : SEM_PRODUTO);
   const chaveDe = (p) => (p ? 'p' + p.id : 'sem');
 
   // ---- Nome de negócio ----
@@ -161,20 +158,6 @@
      "PBI"/"Feature"/"DevOps"), nada afirmado além do que o dado mostra,
      e reconciliação entre os números da capa e o texto das seções.
      ================================================================== */
-  const NOME_TIPO = {
-    epic: ['frente', 'frentes'], feature: ['funcionalidade nova', 'funcionalidades novas'],
-    pbi: ['melhoria', 'melhorias'], bug: ['correção', 'correções'], task: ['tarefa', 'tarefas'],
-    outro: ['item de outro tipo', 'itens de outros tipos'],
-  };
-
-
-
-
-
-
-
-
-  const CAP_NOMES_FRENTE = 3;
 
   /* ==================================================================
      FORMA — daqui pra baixo é tudo novo.
@@ -680,7 +663,7 @@
      não tem que dar o número da capa.
 
      O épico segue como reserva pro cartão que ainda não declarou `featureIds`,
-     pra migração ser cartão a cartão. Ele é doblemente impreciso enquanto
+     pra migração ser cartão a cartão. Ele é duplamente impreciso enquanto
      durar: grosso demais, e agora também sem recorte de tempo. */
   function pbisPorChave(items, porId, mapa) {
     const porFeature = new Map();
@@ -753,13 +736,21 @@
     nomesAtivos = o.nomes && typeof o.nomes === 'object' ? o.nomes : {};
     const mapa = C.mapaDeProdutos(o.todos || items);
     for (const p of mapa.values()) p.titulo = nomeDe(p.id, p.titulo);
-    const infoProd = o.produtos || C.resumoProdutos(o.todos || items);
-    const meses = C.resumoMensal(C.reportPorMes(items), mapa);
-    for (const m of meses) for (const e of m.resumo.epicosFechados) e.titulo = nomeDe(e.id, e.titulo);
+    /* Este documento NÃO conta por mês: o número da capa e o de cada seção
+       saem de `contaDeCartoes`, sobre as frentes declaradas. Daqui saíram, na
+       varredura de 05/10/2026, quatro variáveis que ninguém lia — `infoProd`,
+       `meses`, `fechado` e `mesAlvo` — e com elas duas varreduras da base
+       inteira (`resumoProdutos` e `reportPorMes` + `resumoMensal`) a cada
+       render.
+
+       O custo pior não era o tempo: código morto com esses nomes faz quem lê
+       acreditar que a capa é recortada por mês, que é exatamente a confusão
+       que já produziu a capa dizendo 28 com 8 entregas embaixo.
+
+       `infoProd` continua vivo no briefing.js e no v2, que de fato o usam —
+       por isso o link de leitura segue carregando `produtos`. */
     const b = C.briefingDoMes(items, agora);
     const escolhido = /^\d{4}-(0[1-9]|1[0-2])$/.test(o.mes || '') ? o.mes : b.mes;
-    const fechado = escolhido !== b.mes;
-    const mesAlvo = meses.find((m) => m.mes === escolhido) || null;
     /* O período vem da constante declarada; `o.periodo` existe pros testes
        poderem fixar um recorte sem depender do calendário real.
 
@@ -778,9 +769,6 @@
       doAno.push(ano + '-' + String(m).padStart(2, '0'));
     }
     const listaMeses = doAno.includes(escolhido) ? doAno : doAno.concat(escolhido);
-    const mesesDoAno = meses.filter((m) => m.mes.slice(0, 4) === ano);
-    const temPrazoVivo = b.prazos.atrasados.length + b.prazos.esteMes.length
-      + b.prazos.proximoMes.length + b.prazos.depois.length > 0;
     /* NÃO existe documento vazio aqui, e a saída antecipada que existia foi
        removida por isso.
 
@@ -797,21 +785,6 @@
 
        `vazio` continua no retorno porque o report.js e a Central leem esse
        campo; ele é só sempre falso, que é a verdade deste documento. */
-
-    // Travado e atrasado responde às duas perguntas do core; no documento,
-    // aparecer duas vezes lado a lado parece defeito. Fica em Decisão, com o
-    // prazo na linha, e sai de Próximos passos.
-    const idsTravados = new Set(b.travados.map((r) => r.item.id));
-    const semTravados = (regs) => regs.filter((r) => !idsTravados.has(r.item.id));
-    const travadosVencidos = b.prazos.atrasados.filter((r) => idsTravados.has(r.item.id)).length;
-    const bVivo = Object.assign({}, b, {
-      prazos: {
-        atrasados: semTravados(b.prazos.atrasados),
-        esteMes: semTravados(b.prazos.esteMes),
-        proximoMes: semTravados(b.prazos.proximoMes),
-        depois: semTravados(b.prazos.depois),
-      },
-    });
 
     const meta = [];
     // "Product Owner" por extenso em vez de "P.O responsável": o ponto no meio

@@ -197,3 +197,78 @@ test('toda página que pode virar origem tem rota que a reconhece', () => {
   assert.match(rota, /setPagina\('panorama'\); \/\/ abertura/,
     '#panorama depende do caminho padrão do renderRoute — se ele sumir, o voltar do Panorama quebra');
 });
+
+/* ---------- o que é DA sprint e o que só passou por ela ---------- */
+/* Defeito real, medido no DevOps do Urlan em 05/10/2026.
+
+   `teamsettings/iterations/{id}/workitems` não devolve "os itens da sprint":
+   devolve a hierarquia dela. Junto com os itens vêm os PBIs-pai, e um pai mora
+   na iteração que quiser. Na Sprint 19 do Squad Ecommerce: 147 ids devolvidos,
+   14 com IterationPath de outra sprint. Os PBIs 49931, 49959 e 51676 estavam
+   ao mesmo tempo na coluna da 19 e na da 20 do Panorama — impossível, um item
+   está numa iteração só.
+
+   E não era só enfeite: o placar contava os intrusos. O Panorama dizia 3/5
+   numa sprint que, para aquele PO, tinha 2/2 — e a página do board, que já
+   comparava IterationPath, mostrava os 2 certos. Duas telas, duas respostas,
+   e a errada era a da capa. */
+const comPath = (id, path, estado) => ({
+  id,
+  fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.State': estado || 'Done', 'System.IterationPath': path },
+});
+const S19 = 'B2C\\2026\\Sprint 19';
+const S20 = 'B2C\\2026\\Sprint 20';
+
+test('o pai que mora em outra sprint não entra na lista', () => {
+  const brutos = [comPath(1, S19), comPath(2, S20), comPath(3, S19)];
+  assert.deepEqual(C.itensDaIteracao(brutos, S19).map((x) => x.id), [1, 3]);
+});
+
+test('o placar da sprint muda quando os intrusos saem — era o estrago', () => {
+  /* O caso do Urlan, reduzido: 2 feitos da sprint + 2 abertos de outra. */
+  const brutos = [
+    comPath(49173, S19, 'Done'), comPath(50906, S19, 'Done'),
+    comPath(49931, S20, 'In Progress'), comPath(49959, S20, 'In Progress'),
+  ];
+  assert.deepEqual(C.sprintProgress(brutos), { done: 2, total: 4 }, 'sem filtrar, conta o que não é da sprint');
+  assert.deepEqual(C.sprintProgress(C.itensDaIteracao(brutos, S19)), { done: 2, total: 2 });
+});
+
+/* O mesmo item não pode sair em duas colunas do Panorama. Foi o sintoma que
+   denunciou o defeito: o leitor vê o PBI repetido lado a lado e não tem como
+   saber qual das duas colunas está mentindo. */
+test('o mesmo item não aparece em duas sprints depois do filtro', () => {
+  const brutos = [comPath(49931, S20, 'In Progress'), comPath(49173, S19, 'Done')];
+  const na19 = C.itensDaIteracao(brutos, S19).map((x) => x.id);
+  const na20 = C.itensDaIteracao(brutos, S20).map((x) => x.id);
+  assert.deepEqual(na19.filter((id) => na20.includes(id)), [], 'item repetido entre colunas');
+});
+
+/* Sem path a tela não pode zerar: iteração sem `path` é dado faltando no
+   DevOps, não motivo pra esconder a sprint inteira do PO. */
+test('sem path conhecido a lista passa inteira', () => {
+  const brutos = [comPath(1, S19), comPath(2, S20)];
+  assert.equal(C.itensDaIteracao(brutos, null).length, 2);
+  assert.equal(C.itensDaIteracao(brutos, '').length, 2);
+});
+
+test('item sem IterationPath não derruba o filtro', () => {
+  const brutos = [{ id: 1, fields: {} }, comPath(2, S19)];
+  assert.deepEqual(C.itensDaIteracao(brutos, S19).map((x) => x.id), [2]);
+  assert.deepEqual(C.itensDaIteracao(null, S19), []);
+});
+
+/* O filtro só serve se o campo vier na consulta — e ele foi adicionado ao
+   FIELDS_COUNTS justamente por isto. Sem o campo, todo item vira "não é da
+   sprint" e as três colunas do Panorama aparecem vazias. */
+test('a consulta do Panorama pede o IterationPath', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const fonte = fs.readFileSync(path.join(__dirname, '..', 'assets', 'app.js'), 'utf8');
+  const campos = /const FIELDS_COUNTS = \[[\s\S]*?\];/.exec(fonte);
+  assert.ok(campos, 'FIELDS_COUNTS mudou de forma');
+  assert.match(campos[0], /'System\.IterationPath'/,
+    'sem o campo o filtro reprova tudo e o quadro de sprints fica vazio');
+  assert.match(fonte, /C\.itensDaIteracao\(brutos, sp\.path\)/, 'a janela de três sprints precisa filtrar');
+  assert.match(fonte, /C\.itensDaIteracao\(sbrutos, sprint\.path\)/, 'a sprint corrente também');
+});

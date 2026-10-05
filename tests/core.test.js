@@ -642,7 +642,14 @@ test('briefingDoMes não conta épico como execução, fila ou prazo — ele é 
   assert.deepEqual(b.execucao.map((x) => x.item.id), [10]);
   assert.deepEqual(b.prazos.esteMes.map((x) => x.item.id), [10]);
   assert.deepEqual(b.travados.map((x) => x.item.id), [2]);
-  assert.deepEqual(b.prazos.atrasados.map((x) => x.item.id), [2]);
+  /* Este teste se contradizia: o nome dele diz "nem prazo", e a asserção
+     exigia o épico travado DENTRO de prazos.atrasados. A asserção estava
+     congelando um vazamento do código — o épico travado caía na primeira
+     condição da cadeia, nunca chegava ao `continue` que excluía épico, e
+     seguia pros prazos. Corrigido na varredura de 05/10/2026, do lado do
+     código e do lado do teste. */
+  assert.deepEqual(b.prazos.atrasados.map((x) => x.item.id), [],
+    'épico não entra em prazos nem quando está travado — o prazo dele é o do card da frente');
 });
 
 /* ---- Por frente ---- */
@@ -767,4 +774,91 @@ test('duracaoRolagem tem piso, teto e não liga pro sentido', () => {
   assert.equal(C.duracaoRolagem(800), 400);
   assert.equal(C.duracaoRolagem(5000), 600);    // teto: página inteira não arrasta
   assert.equal(C.duracaoRolagem(-800), 400);    // subir custa o mesmo que descer
+});
+
+/* ---------- A RÉGUA DE TIPOS: o que a Central conta como entrega ---------- */
+/* Decisão do Urlan em 05/10/2026: Bug conta. Até então a Central pedia só
+   RequirementCategory, e nesta organização Bug vive em BugCategory — correção
+   não aparecia em lugar nenhum. Só na Sprint 19 eram ~26 bugs concluídos
+   invisíveis no board, nos tiles e no relatório.
+
+   Por que isto é teste e não só uma linha de código: a régua é a MESMA para
+   quatro telas que o gestor lê lado a lado (tiles do Panorama, Produtos, board
+   da sprint e o relatório de Entregas). Se uma delas perder a categoria, o mês
+   passa a ter dois totais e ninguém descobre olhando — este projeto já pagou
+   por isso uma vez, quando a capa do report dizia 28 e o corpo contava 8. */
+const categorias = (q) => (q.match(/Microsoft\.\w+Category/g) || []).sort();
+
+test('bug conta nas três consultas da Central', () => {
+  for (const [nome, q] of [['wiqlCounts', C.wiqlCounts()], ['wiqlProdutos', C.wiqlProdutos()], ['wiqlBoard', C.wiqlBoard([])]]) {
+    assert.ok(q.includes("IN GROUP 'Microsoft.BugCategory'"), `${nome} deixou o bug de fora`);
+  }
+});
+
+test('a régua do Panorama e a do relatório são a mesma lista de tipos', () => {
+  assert.deepEqual(categorias(C.wiqlCounts()), categorias(C.wiqlProdutos()),
+    'os tiles e o relatório contariam tipos diferentes para o mesmo mês');
+});
+
+/* O board é de nível de requisito — não mostra épico nem feature —, mas DENTRO
+   do nível de requisito tem que valer a mesma regra das outras telas. */
+test('o board usa o mesmo recorte de requisito, sem épico e sem feature', () => {
+  const board = categorias(C.wiqlBoard([]));
+  assert.deepEqual(board, ['Microsoft.BugCategory', 'Microsoft.RequirementCategory']);
+  for (const c of board) {
+    assert.ok(categorias(C.wiqlCounts()).includes(c), `${c} está no board e não na régua geral`);
+  }
+});
+
+/* Com bug na consulta, `levelOf` passa a ser carga: é ele que decide em qual
+   balde o bug cai no "Por nível" e na ordenação do relatório. Fora dos três
+   níveis conhecidos, `aggregateCounts` escreveria em out[undefined] e o item
+   sumiria da contagem sem erro nenhum. */
+test('bug cai no nível de requisito, junto com os PBIs', () => {
+  const bug = { id: 1, fields: { 'System.WorkItemType': 'Bug', 'System.State': 'Done' } };
+  const pbi = { id: 2, fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.State': 'Done' } };
+  const c = C.aggregateCounts([bug, pbi]);
+  assert.equal(c.pbi.Done, 2, 'bug e PBI contam no mesmo nível');
+  assert.deepEqual(Object.keys(c).sort(), ['epic', 'feature', 'pbi']);
+});
+
+test('bug entrega conta no mês, como qualquer item concluído', () => {
+  const bug = { id: 1, fields: { 'System.WorkItemType': 'Bug', 'System.State': 'Done',
+    'Microsoft.VSTS.Common.ClosedDate': '2026-09-20T00:00:00Z' } };
+  const mes = C.reportPorMes([bug]).find((m) => m.mes === '2026-09');
+  assert.equal(mes.total, 1);
+  assert.equal(mes.porNivel.pbi, 1);
+});
+
+/* Bug tem selo e cor próprios — se cair em "outro", o leitor perde a distinção
+   justamente agora que eles aparecem na tela. */
+test('bug tem slug próprio pro selo', () => {
+  assert.equal(C.typeSlug('Bug'), 'bug');
+});
+
+/* O épico é frente, não item de execução — e a exclusão dele dos prazos tinha
+   uma fresta. A regra era `else if (… === 'epic') continue`, dentro da cadeia
+   que começa em "travado": épico TRAVADO caía na primeira condição, nunca
+   chegava ao `continue`, e seguia direto pros prazos.
+
+   O efeito na tela: épico bloqueado aparecia em "atrasados"/"este mês" e épico
+   normal não. Dois épicos com a mesma data, um listado e outro não, sem
+   critério que o leitor pudesse adivinhar — e inflando a lista de prazos do
+   documento com iniciativas. Achado na varredura de 05/10/2026. */
+const AGORA_EP = Date.parse('2026-10-05T12:00:00Z');
+/* O item de execução com a MESMA data continua entrando — a correção é sobre
+   épico, não sobre prazo. Sem este par, a regra poderia ser "esvaziar prazos"
+   e o teste acima passaria igual. */
+test('PBI travado e vencido continua contando nos prazos', () => {
+  const pbi = {
+    id: 9,
+    fields: {
+      'System.WorkItemType': 'Product Backlog Item',
+      'System.State': 'Impediment',
+      'Microsoft.VSTS.Scheduling.TargetDate': '2026-09-01T00:00:00Z',
+    },
+  };
+  const b = C.briefingDoMes([pbi], AGORA_EP);
+  assert.deepEqual(b.travados.map((x) => x.item.id), [9]);
+  assert.deepEqual(b.prazos.atrasados.map((x) => x.item.id), [9]);
 });

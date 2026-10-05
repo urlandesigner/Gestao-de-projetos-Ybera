@@ -83,10 +83,11 @@
       const modBarra = feito ? ' rl-rm-barra-feita'
         : testando ? ' rl-rm-barra-teste'
         : rodando ? ' rl-rm-barra-andamento' : '';
-      const tituloBarra = '';
+      // (`tituloBarra`, sempre vazia, era o resto da remoção descrita acima e
+      // saiu na varredura de 05/10/2026 — não mudava nada no que é desenhado.)
       return `<div class="rl-rm-item">
         <span class="rl-rm-titulo"><span class="rl-rm-nome">${esc(it.titulo)}</span>${selo}</span>
-        <span class="rl-rm-trilha"><span class="rl-rm-barra${modBarra}"${tituloBarra} style="left:${esquerda.toFixed(2)}%;width:${largura.toFixed(2)}%"></span></span>
+        <span class="rl-rm-trilha"><span class="rl-rm-barra${modBarra}" style="left:${esquerda.toFixed(2)}%;width:${largura.toFixed(2)}%"></span></span>
       </div>`;
     }).join('');
 
