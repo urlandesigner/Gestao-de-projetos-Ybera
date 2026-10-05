@@ -209,6 +209,10 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   que abre continua nativa**, de propósito: no celular ela é a roleta do
   sistema. De quebra, a barra do Catalog deixou de escrever `padding` em atalho
   — era o atalho que apagava a reserva da seta.
+- **Architecture em uma linha.** As três camadas ficam lado a lado, com seta
+  na ordem em que uma usa a outra, no lugar de quatro cartões de largura cheia
+  com duas linhas de código cada. A camada de mercado, vazia, virou nota
+  embaixo. Abaixo de 1200px voltam a empilhar.
 - **Legenda da anatomia lida de cima para baixo.** Nas duas colunas a ordem
   ia por linha (1 2 / 3 4); agora desce a esquerda e continua na direita.
 - **Nada de cinza sobre cinza.** O quadro da Anatomia era `bg-subtle`, o mesmo

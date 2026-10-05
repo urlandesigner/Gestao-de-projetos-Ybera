@@ -158,7 +158,27 @@ h3.sub{
 .layer--0{border-left:3px solid var(--yb-gray-400)}
 .layer--1{border-left:3px solid var(--yb-magenta-600)}
 .layer--2{border-left:3px solid var(--yb-gray-300)}
-.layer--m{border-left:3px solid var(--yb-gold-600)}
+.layers__nota{
+  margin:var(--yb-space-4) 0 0; max-width:70ch;
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+}
+.layers__nota b{color:var(--yb-text-primary)}
+/* Architecture: as tres camadas lado a lado, porque cada uma le a anterior —
+   empilhadas em largura cheia, o codigo de duas linhas boiava num cartao de
+   1800px. A seta no vao diz a direcao da leitura. O How to use continua
+   empilhado: ali sao passos com blocos de codigo longos. Os exemplos ja vem
+   quebrados depois dos dois-pontos no HTML — `pre-wrap` quebrava no hifen,
+   no meio do nome do token. Abaixo de 1200 a coluna nao cabe nem o nome. */
+@media (min-width:1200px){
+  .layers--fluxo{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:var(--yb-space-8)}
+  .layers--fluxo .layer{position:relative; display:flex; flex-direction:column}
+  .layers--fluxo .layer pre{margin-block-start:auto}
+  .layers--fluxo .layer + .layer::before{
+    content:"→"; position:absolute; top:50%; transform:translateY(-50%);
+    inset-inline-start:calc(-1 * var(--yb-space-8) - 3px); inline-size:var(--yb-space-8);
+    text-align:center; color:var(--yb-text-muted); font-size:var(--yb-type-body-size);
+  }
+}
 
 /* .doc-credit e nao `footer`: seletor de elemento solto numa pagina que
    exibe componentes vaza para dentro do demo. O `max-width:70ch` daqui

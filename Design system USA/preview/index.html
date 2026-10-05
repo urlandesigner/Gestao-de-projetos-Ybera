@@ -85,6 +85,68 @@ body{
   overflow:hidden; max-width:100%;
 }
 iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
+
+/* =========================================================================
+   A PAREDE — as onze telas lado a lado.
+
+   Mesma regra do quadro único, e é ela que decide o desenho inteiro: o que
+   garante que a tela não minta é a LARGURA do iframe, porque é a largura que
+   as media queries consultam. Por isso o iframe continua nascendo com a
+   largura real do aparelho e quem encolhe é o `transform` — encolher pelo
+   atributo entregaria o CSS de desktop espremido, que é exatamente o defeito
+   que o iframe existe para evitar.
+
+   A caixa de fora recebe a medida JÁ multiplicada pelo zoom. Sem isso o
+   `transform` desenha menor mas continua ocupando o tamanho cheio no fluxo, e
+   a grade abriria com buracos do tamanho do que foi encolhido.
+
+   A ALTURA DA PAREDE NÃO É A DO APARELHO. 812px de uma home que tem oito mil
+   mostram o cabeçalho e mais nada, e ver onze cabeçalhos juntos não responde
+   nenhuma pergunta. Aqui a janela é alta de propósito; a largura, que é o que
+   governa o layout, continua honesta.
+   ========================================================================= */
+/* `[hidden]` sozinho nao esconde nada aqui: ele vale `display:none` pela folha
+   do navegador, e qualquer `display` escrito por nos ganha dele. Os tres
+   elementos que trocam de vista declaram display proprio, entao os tres
+   precisam dizer em voz alta que somem. */
+.aparelho[hidden],
+.parede[hidden],
+.grupo-ctrl[hidden]{display:none}
+
+.parede{
+  display:flex; flex-wrap:wrap; justify-content:center;
+  gap:var(--yb-space-8) var(--yb-space-6);
+  align-items:flex-start;
+}
+.tela{display:flex; flex-direction:column; gap:var(--yb-space-2)}
+/* O nome é um botão porque leva ao quadro único daquela tela: na parede se
+   escolhe, no quadro se olha de perto. */
+.tela__nome{
+  appearance:none; background:none; border:0; padding:0;
+  display:flex; align-items:baseline; gap:var(--yb-space-2);
+  font-family:inherit; font-size:var(--yb-type-body-sm-size);
+  font-weight:var(--yb-font-weight-semibold); color:var(--yb-text-primary);
+  cursor:pointer; text-align:start;
+}
+.tela__nome:hover{text-decoration:underline}
+.tela__nome:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
+}
+.tela__nome small{
+  font-weight:var(--yb-font-weight-regular); color:var(--yb-text-muted);
+  font-size:var(--yb-type-caption-size); font-variant-numeric:tabular-nums;
+}
+.tela__caixa{
+  position:relative; overflow:hidden;
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-card);
+  box-shadow:var(--yb-elevation-raised); background:var(--yb-bg-page);
+}
+/* `max-width:100%` da regra geral de iframe mede contra a CAIXA, que ja esta
+   encolhida pelo zoom — o quadro de 375 era espremido para a largura da caixa
+   e so depois escalado, e sobrava branco do lado direito de cada tela. Aqui a
+   largura vem do atributo e de mais ninguem: e ela que as media queries leem. */
+.tela__caixa iframe{transform-origin:top left; max-inline-size:none}
 .nota{
   margin:0; padding:var(--yb-space-4) var(--doc-respiro-largo);
   font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
@@ -237,7 +299,13 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
 
 <div class="topo">
 
-  <div class="grupo-ctrl" role="group" aria-label="Página">
+  <div class="grupo-ctrl" role="group" aria-label="Vista">
+    <span class="rot">Vista</span>
+    <button class="btn" type="button" data-vista="uma" aria-pressed="true">Uma tela</button>
+    <button class="btn" type="button" data-vista="parede" aria-pressed="false">Todas juntas</button>
+  </div>
+
+  <div class="grupo-ctrl" id="grupo-pagina" role="group" aria-label="Página">
     <span class="rot">Página</span>
     <!-- So pagina, e nao as galerias de atoms/molecules/organisms/templates.
          Aquelas sao DOCUMENTACAO: ja tem o quadro de 375px dentro de cada
@@ -265,28 +333,54 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
     <button class="btn" type="button" data-w="768" data-h="1024" aria-pressed="false">768 <small>iPad</small></button>
     <button class="btn" type="button" data-w="1280" data-h="900" aria-pressed="false">1280 <small>desktop</small></button>
   </div>
+
+  <div class="grupo-ctrl" id="grupo-zoom" role="group" aria-label="Zoom" hidden>
+    <span class="rot">Zoom</span>
+    <button class="btn" type="button" data-z="0.25" aria-pressed="false">25%</button>
+    <button class="btn" type="button" data-z="0.5" aria-pressed="true">50%</button>
+    <button class="btn" type="button" data-z="0.75" aria-pressed="false">75%</button>
+    <button class="btn" type="button" data-z="1" aria-pressed="false">100%</button>
+  </div>
 </div>
 
 <div class="palco">
-  <div class="aparelho">
+  <div class="aparelho" id="aparelho">
     <span class="medida" id="medida">375 × 812</span>
     <div class="moldura">
       <iframe id="quadro" title="Pré-visualização" src="../pages/home.html" width="375" height="812"></iframe>
     </div>
   </div>
+  <!-- A parede e montada pelo script a partir dos botoes de Pagina acima: uma
+       lista so, escrita uma vez. Segunda lista a mao seria a primeira coisa a
+       ficar para tras quando uma tela nova aparecesse. -->
+  <div class="parede" id="parede" hidden></div>
 </div>
 
 <p class="nota">
   Cada quadro se comporta como um aparelho daquela largura, e não como uma caixa
   encolhida: o que você vê aqui é o que a pessoa vê no celular, no tablet e no
-  desktop.
+  desktop. Em <b>todas juntas</b>, o zoom encolhe o desenho mas não a largura —
+  as telas continuam sendo medidas pelo tamanho escolhido, e a janela é mais
+  alta que a do aparelho só para caber mais do que o cabeçalho. O nome de cada
+  uma leva ao quadro de perto.
 </p>
 
 <script>
 (function () {
   'use strict';
-  var quadro = document.getElementById('quadro');
-  var medida = document.getElementById('medida');
+  var quadro   = document.getElementById('quadro');
+  var medida   = document.getElementById('medida');
+  var aparelho = document.getElementById('aparelho');
+  var parede   = document.getElementById('parede');
+  var grPagina = document.getElementById('grupo-pagina');
+  var grZoom   = document.getElementById('grupo-zoom');
+
+  /* A JANELA DA PAREDE E ALTA, e nao a altura do aparelho: 812px de uma home
+     que tem oito mil mostram o cabecalho e mais nada, e onze cabecalhos lado a
+     lado nao respondem nenhuma pergunta. A LARGURA continua a do aparelho
+     escolhido, que e o que as media queries consultam — e por isso a parede
+     continua dizendo a verdade sobre o layout. */
+  var ALTURA_PAREDE = 1200;
 
   function marcar(botao) {
     var irmaos = botao.parentElement.querySelectorAll('.btn');
@@ -295,31 +389,115 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
     });
   }
 
+  function escolhido(sel) { return document.querySelector(sel + '[aria-pressed="true"]'); }
+
   function estado() {
-    var w = document.querySelector('[data-w][aria-pressed="true"]');
-    var p = document.querySelector('[data-src][aria-pressed="true"]');
-    return { w: w, p: p };
+    return {
+      w: escolhido('[data-w]'),
+      p: escolhido('[data-src]'),
+      v: escolhido('[data-vista]'),
+      z: escolhido('[data-z]'),
+    };
+  }
+
+  /* A PAREDE SAI DOS BOTOES DE PAGINA. Montar aqui uma segunda lista com as
+     mesmas onze telas seria a primeira coisa a ficar para tras no dia em que
+     uma tela nova entrasse no grupo de cima — e ninguem veria, porque as duas
+     listas so se encontram na cabeca de quem lembrar das duas. */
+  var montada = false;
+  function montar() {
+    if (montada) return;
+    var telas = document.querySelectorAll('#grupo-pagina [data-src]');
+    Array.prototype.forEach.call(telas, function (b) {
+      var tela = document.createElement('div');
+      tela.className = 'tela';
+
+      var nome = document.createElement('button');
+      nome.type = 'button';
+      nome.className = 'tela__nome';
+      nome.dataset.ir = b.dataset.src;
+      nome.innerHTML = '<span></span><small></small>';
+      nome.firstChild.textContent = b.textContent.trim();
+
+      var caixa = document.createElement('div');
+      caixa.className = 'tela__caixa';
+
+      var q = document.createElement('iframe');
+      q.title = b.textContent.trim();
+      q.src = b.dataset.src;
+
+      caixa.appendChild(q);
+      tela.appendChild(nome);
+      tela.appendChild(caixa);
+      parede.appendChild(tela);
+    });
+    montada = true;
+  }
+
+  /* Medida e escala em funcoes separadas, e nao numa so, porque trocar o zoom
+     NAO pode recarregar as onze telas: mudar `width` relayouta o documento de
+     dentro (que e o que se quer ao trocar de aparelho), mas o `transform` so
+     redesenha. */
+  function medirParede(w) {
+    Array.prototype.forEach.call(parede.querySelectorAll('iframe'), function (q) {
+      q.width = w;
+      q.height = ALTURA_PAREDE;
+    });
+  }
+
+  function escalarParede(w, z) {
+    Array.prototype.forEach.call(parede.querySelectorAll('.tela'), function (tela) {
+      var caixa = tela.querySelector('.tela__caixa');
+      var q = tela.querySelector('iframe');
+      /* A caixa recebe a medida JA multiplicada. Sem isso o `transform`
+         desenha menor mas continua ocupando o tamanho cheio no fluxo, e a
+         grade abre com buracos do tamanho do que foi encolhido. */
+      caixa.style.inlineSize = Math.round(w * z) + 'px';
+      caixa.style.blockSize  = Math.round(ALTURA_PAREDE * z) + 'px';
+      q.style.transform = 'scale(' + z + ')';
+      tela.querySelector('.tela__nome small').textContent = w + 'px';
+    });
   }
 
   function aplicar() {
     var e = estado();
-    if (!e.w || !e.p) return;
-    quadro.width = e.w.dataset.w;
-    quadro.height = e.w.dataset.h;
-    if (quadro.getAttribute('src') !== e.p.dataset.src) quadro.src = e.p.dataset.src;
-    medida.textContent = e.w.dataset.w + ' × ' + e.w.dataset.h;
+    if (!e.w || !e.p || !e.v || !e.z) return;
+    var parede_ = e.v.dataset.vista === 'parede';
+
+    aparelho.hidden = parede_;
+    parede.hidden   = !parede_;
+    grPagina.hidden = parede_;
+    grZoom.hidden   = !parede_;
+
+    if (parede_) {
+      montar();
+      medirParede(e.w.dataset.w);
+      escalarParede(Number(e.w.dataset.w), Number(e.z.dataset.z));
+    } else {
+      quadro.width = e.w.dataset.w;
+      quadro.height = e.w.dataset.h;
+      if (quadro.getAttribute('src') !== e.p.dataset.src) quadro.src = e.p.dataset.src;
+      medida.textContent = e.w.dataset.w + ' × ' + e.w.dataset.h;
+    }
+
     // guarda a escolha; voltar para a página não deve reabrir no padrão
     try {
       localStorage.setItem('yb-preview', JSON.stringify({
         w: e.w.dataset.w, src: e.p.dataset.src,
+        vista: e.v.dataset.vista, z: e.z.dataset.z,
       }));
     } catch (err) { /* janela anônima, ou storage bloqueado */ }
   }
 
   document.addEventListener('click', function (ev) {
     var b = ev.target.closest('.btn');
-    if (!b) return;
-    marcar(b);
+    if (b) { marcar(b); aplicar(); return; }
+    // o nome da tela na parede leva ao quadro unico daquela tela
+    var n = ev.target.closest('.tela__nome');
+    if (!n) return;
+    var alvo = document.querySelector('[data-src="' + n.dataset.ir + '"]');
+    if (alvo) marcar(alvo);
+    marcar(document.querySelector('[data-vista="uma"]'));
     aplicar();
   });
 
@@ -332,8 +510,12 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
     if (salvo) {
       var bw = document.querySelector('[data-w="' + salvo.w + '"]');
       var bp = document.querySelector('[data-src="' + salvo.src + '"]');
+      var bv = salvo.vista && document.querySelector('[data-vista="' + salvo.vista + '"]');
+      var bz = salvo.z && document.querySelector('[data-z="' + salvo.z + '"]');
       if (bw) marcar(bw);
       if (bp) marcar(bp);
+      if (bv) marcar(bv);
+      if (bz) marcar(bz);
     }
   } catch (err) { /* sem storage: segue no padrão */ }
   aplicar();

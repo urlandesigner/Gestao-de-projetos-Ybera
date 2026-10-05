@@ -1,6 +1,6 @@
 <h2>Architecture</h2>
-    <p class="when">Os tokens são organizados em três níveis, mais um reservado para diferenças entre países. Os componentes usam só o nível do meio: os tokens com nome de uso, como <code>--yb-action-primary-bg</code>.</p>
-<div class="layers">
+    <p class="when">Os tokens são organizados em três níveis, e cada um usa o anterior. Os componentes usam só o nível do meio: os tokens com nome de uso, como <code>--yb-action-primary-bg</code>.</p>
+<div class="layers layers--fluxo">
         <div class="layer layer--0">
           <h3>Camada 0 · Primitivos</h3>
           <p>Os valores puros: cada cor, tamanho e medida do sistema. Nenhum componente usa direto.</p>
@@ -11,18 +11,20 @@
           <h3>Camada 1 · Semânticos</h3>
           <p>O nome de uso de cada valor, como “fundo do botão principal”. É o que os
           componentes usam, e o que você deve usar ao criar algo novo.</p>
-          <pre>--yb-action-primary-bg: var(--yb-gray-950);
---yb-accent-signal: var(--yb-magenta-600);</pre>
+          <pre>--yb-action-primary-bg:
+  var(--yb-gray-950);
+--yb-accent-signal:
+  var(--yb-magenta-600);</pre>
         </div>
         <div class="layer layer--2">
           <h3>Camada 2 · Componente</h3>
           <p>Ajuste de um componente específico, quando ele precisa fugir do padrão.</p>
-          <pre>.yb-card{ --yb-card-title-lines: 2; }</pre>
-        </div>
-        <div class="layer layer--m">
-          <h3>Camada de mercado</h3>
-          <p>Onde entraria uma diferença visual entre a loja dos EUA e a do Brasil. Hoje
-          está vazia: as duas usam os mesmos valores.</p>
-          <pre>[data-market="br"] { }</pre>
+          <pre>.yb-card{
+  --yb-card-title-lines: 2;
+}</pre>
         </div>
       </div>
+      <p class="layers__nota"><b>E a diferença entre países?</b> Se a loja dos EUA e a
+      do Brasil precisarem de um visual diferente, a troca entra em
+      <code>[data-market="br"]</code>, por cima da camada 1. Hoje esse lugar está
+      vazio: as duas usam os mesmos valores.</p>
