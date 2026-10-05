@@ -7,7 +7,13 @@
   --superficie: #ffffff;
   --superficie-2: #f3f3f1;
   --tinta: #1c1c1a;
-  --mudo: #78716c;
+  /* #78716c dava 4,32:1 sobre --superficie-2 (#f3f3f1), abaixo do mínimo AA de
+     4,5:1 — e é justamente esse o par do menu lateral e dos contadores. Este
+     valor dá 4,78:1 ali, 5,09 sobre a página e 5,31 sobre o branco. A folga é
+     de propósito: se um dia a superfície clarear ou escurecer um pouco, o
+     contraste não cai abaixo do mínimo sem ninguém notar.
+     Não atinge o relatório de Entregas: entregas.css declara o seu próprio. */
+  --mudo: #716a65;
   --borda: #e9e7e4;
   --positivo: #15803d;
   --positivo-fundo: #e7f8ef;
@@ -18,6 +24,15 @@
   --sombra-cartao: 0 1px 2px rgba(28, 25, 23, 0.05);
   --raio-painel: 24px;
   --raio-cartao: 16px;
+  /* Altura dos chips da barra do topo. Virou token porque a faixa da marca, na
+     coluna da esquerda, precisa ter exatamente esta altura: é o que faz o
+     painel do menu começar na mesma linha da folha branca do conteúdo ao lado.
+     Número solto em dois lugares = desalinho na primeira vez que um mudar. */
+  --altura-topo: 38px;
+  /* O respiro em volta da página inteira. Virou token porque a lateral agora
+     ocupa a altura da tela MENOS ele, dos dois lados — e um número solto em
+     três lugares é desalinho garantido na primeira vez que um mudar. */
+  --respiro-pagina: clamp(0.35rem, 0.7vw, 0.6rem);
   /* Série do gráfico de ritmo: uma cor por frente. Escurece do topo pro fim da
      lista em vez de usar matiz aleatório — a frente que mais entrega fica mais
      forte, e a leitura funciona mesmo pra quem não distingue cor, porque a
@@ -40,7 +55,7 @@
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  padding: clamp(0.35rem, 0.7vw, 0.6rem);
+  padding: var(--respiro-pagina);
   background: var(--fundo-pagina);
   color: var(--tinta);
   font: 15px/1.5 var(--sans);
@@ -62,15 +77,39 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
   padding: 0;
   margin-bottom: 1.1rem;
 }
-.nome-app { font-size: 1rem; margin: 0; font-weight: 700; }
+/* O nome do produto é RÓTULO, não manchete: a marca da casa, logo acima, é
+   quem assina a tela. Com os dois em preto cheio e peso 700 eles disputavam a
+   mesma atenção e nenhum vencia. O tratamento é o mesmo dos títulos de bloco
+   (.blocos .bloco > h3, "SPRINTS", "AGORA") — papel igual, estilo igual, sem
+   inventar valor novo. */
+/* A sobra na faixa é de 7px. Com a Plus Jakarta Sans carregada o nome cabe;
+   se ela falhar, a fonte de sistema é mais larga e ele vazaria por cima da
+   coluna do conteúdo. Truncar com reticências é um defeito menor que invadir
+   a página, e some assim que a fonte chega. */
+.nome-app {
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--mudo);
+}
 .acoes { margin-left: auto; display: flex; align-items: center; gap: 0.55rem; }
 /* Chips do topo: cinza sobre a página clara, como "Search"/"Create Job" */
 .acoes button, #alternar-lateral {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  width: var(--altura-topo);
+  height: var(--altura-topo);
+  /* Numa linha apertada o flex encolhe o chip pela largura e ele deixa de ser
+     quadrado — aconteceu com o recolher na coluna estreita, que saiu 37,1 de
+     38. A medida é fixa, não uma sugestão. */
+  flex: none;
   font-size: 1rem;
   border: none;
   background: var(--superficie-2);
@@ -79,7 +118,11 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
   color: var(--tinta);
 }
 .acoes button:hover, #alternar-lateral:hover { background: #ebebe8; }
-#alternar-lateral { color: var(--mudo); }
+/* Dentro do painel, o cinza dos chips (--superficie-2) é a cor do próprio
+   painel: o botão sumia e sobrava só o ícone solto. Branco é o mesmo fundo do
+   item de menu ativo, logo abaixo — lê como chip de novo. */
+#alternar-lateral { color: var(--mudo); background: var(--superficie); }
+#alternar-lateral:hover { background: #ebebe8; }
 /* Painel lateral com barra — mesma família de linha dos ícones da nav */
 #alternar-lateral::before {
   content: '';
@@ -103,41 +146,74 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
    a lateral continua do tamanho do próprio conteúdo) e daí pra main (flex).
    Sem isso, nenhuma seção consegue saber "até onde vai a tela" pra usar
    min-height: 100% e preencher o espaço vazio de uma lista curta. */
-.app { display: flex; flex-direction: column; min-height: calc(100vh - clamp(0.35rem, 0.7vw, 0.6rem) * 2); }
+.app { display: flex; flex-direction: column; min-height: calc(100vh - var(--respiro-pagina) * 2); }
 
 /* ---------- Corpo: sidebar + conteúdo (como na referência) ---------- */
 /* Sidebar vai até o topo — o header antes ficava por cima das duas colunas
    e empurrava a lateral pra baixo; agora ela é a própria primeira linha do
    grid, no mesmo nível do header da coluna de conteúdo. */
+/* Sem padding próprio: ele moraria ENTRE a borda da tela e a lateral, e a
+   lateral precisa alcançar o topo e o rodapé. O respiro do conteúdo passou a
+   ser da .coluna-principal, que é quem de fato precisa dele. */
 .corpo {
   display: grid;
   grid-template-columns: 232px minmax(0, 1fr);
   gap: 1.1rem;
   align-items: start;
-  padding: 0.9rem clamp(0.8rem, 1vw, 1.1rem) 1.6rem;
   flex: 1;
 }
-.coluna-principal { display: flex; flex-direction: column; min-width: 0; align-self: stretch; }
-/* Sidebar: painel cinza próprio — a nav ativa (branca) salta dele */
-.lateral {
-  position: sticky;
-  top: 0.9rem;
+.coluna-principal {
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  min-width: 0;
+  align-self: stretch;
+  padding: 0.9rem clamp(0.8rem, 1vw, 1.1rem) 1.6rem 0;
+}
+/* Marca + nome do produto, um sobre o outro, no alto do painel. Ficam no
+   MESMO bloco porque são par: a casa e o produto dela. O botão de recolher
+   divide a linha do logo porque os três lado a lado não cabem — logo (62px) +
+   nome (143px) + botão (38px) dá 254 numa coluna de 232. */
+.marca { display: flex; flex-direction: column; gap: 0.45rem; padding: 0 0.35rem; }
+/* Altura travada com `width: auto` é o que preserva a proporção do arquivo de
+   360x139; travar a largura entortaria a marca. E `align-self` não é enfeite:
+   o padrão do flex é `stretch`, que vence a largura automática e achata o
+   wordmark — já aconteceu duas vezes aqui. */
+.marca-logo { display: block; align-self: center; height: 24px; width: auto; }
+/* Sidebar: painel cinza próprio, da altura da tela — a nav ativa (branca)
+   salta dele. A altura é fixa (viewport menos o respiro de cima e de baixo) e
+   não "o tamanho do conteúdo": é isso que faz o painel encostar no rodapé
+   mesmo com sete itens de menu numa tela grande.
+   `sticky` mantém o painel parado enquanto o conteúdo rola; com
+   altura cheia ele nunca sai da tela, mas sem o sticky ele subiria junto numa
+   página longa. `overflow-y: auto` é a saída de emergência de uma tela baixa:
+   a nav rola dentro do painel em vez de vazar por cima da página. */
+.lateral {
+  position: sticky;
+  /* `top: 0` grudava o painel na borda da tela ao rolar: ele perdia o respiro
+     de cima e sobrava o dobro embaixo. O deslocamento tem que ser o mesmo
+     respiro que já existe na posição de repouso. */
+  top: var(--respiro-pagina);
+  height: calc(100vh - var(--respiro-pagina) * 2);
+  display: flex;
+  flex-direction: column;
+  /* O vão entre o bloco da marca e o menu é o que separa identidade de
+     navegação — são duas zonas, não uma lista de cinco coisas. Com 1rem o
+     rótulo encostava no primeiro item e os dois liam como um bloco só. A
+     coluna tem altura de tela e sobram ~300px no rodapé: o espaço aqui não
+     custa nada a ninguém. */
+  gap: 1.9rem;
+  overflow-y: auto;
   background: var(--superficie-2);
   border-radius: 20px;
-  padding: 0.8rem 0.7rem 1rem;
+  padding: 0.95rem 0.7rem 1rem;
 }
-/* Logo + recolher, no topo do próprio painel — a marca mora na sidebar */
+/* A linha de cima do bloco da marca: logo à esquerda, recolher à direita. */
 .lateral-topo {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
-  padding: 0.3rem 0.4rem 0.5rem;
 }
-body.lateral-recolhida .lateral-topo { justify-content: center; }
 .paginas { display: flex; flex-direction: column; gap: 0.3rem; }
 .paginas a {
   display: flex;
@@ -215,12 +291,23 @@ main > section {
   padding: 1.6rem 1.7rem 1.7rem;
 }
 
-/* Sidebar recolhida: só os ícones */
+/* ---------- Sidebar recolhida: só os ícones ---------- */
 body.lateral-recolhida .corpo { grid-template-columns: 62px minmax(0, 1fr); }
 body.lateral-recolhida .lateral { padding: 0.8rem 0.45rem 1rem; }
 body.lateral-recolhida .rotulo-nav,
 body.lateral-recolhida .conta-nav,
 body.lateral-recolhida .nome-app { display: none; }
+/* Recolhida, a coluna mostra só o botão de recolher: a marca sai.
+   Tentei duas saídas pra mantê-la aqui e as duas custaram mais do que valiam.
+   O wordmark inteiro só cabia em 15px de altura, ilegível. O Y recortado dele
+   ficava legível, mas tem 20,5px de largura e, ao lado do chip de 38, obrigava
+   a coluna a abrir de 62 pra 84px — larga demais pro que uma coluna recolhida
+   serve, que é devolver espaço pro conteúdo.
+   Pra marca voltar a aparecer aqui ela precisa ser um arquivo próprio e
+   quadrado; recorte de wordmark não resolve nesta largura. */
+body.lateral-recolhida .marca { padding: 0; }
+body.lateral-recolhida .marca-logo { display: none; }
+body.lateral-recolhida .lateral-topo { justify-content: center; }
 body.lateral-recolhida .paginas a { justify-content: center; padding: 0.7rem 0; gap: 0; }
 h2 { font-size: 1.25rem; margin: 0 0 1rem; }
 /* Troca de página: esconde todas e mostra só a ativa. Antes era par a par
@@ -690,20 +777,36 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
   align-items: start;
 }
 /* A retranca de fase é o que diferencia as três colunas num relance — sem ela
-   o leitor teria que ler o nome da sprint e saber de cabeça qual é qual. */
+   o leitor teria que ler o nome da sprint e saber de cabeça qual é qual.
+
+   É selo nas TRÊS, com a MESMA caixa: antes só a do meio era selo e as
+   vizinhas eram texto solto, mais baixo. A diferença de altura ia parar na
+   barra de progresso, que descia alguns pixels só na coluna do meio e
+   desalinhava as três no topo do bloco. Quem separa as colunas é a cor do
+   selo, não o tamanho dele. */
 .sprint-fase {
-  display: block;
-  margin-bottom: 0.4rem;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  padding: 0.16rem 0.45rem;
+  border-radius: 999px;
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  background: var(--superficie-2);
   color: var(--mudo);
 }
-/* A coluna em curso é a que o time olha todo dia: ganha a tinta cheia na
-   retranca e uma régua à esquerda. As vizinhas ficam em voz baixa. */
-.sprint-atual .sprint-fase { color: var(--tinta); }
-.sprint-atual { box-shadow: inset 2px 0 0 var(--tinta); }
+/* A coluna em curso é a que o time olha todo dia. O destaque mora na cor do
+   selo e na elevação, não numa borda: "EM CURSO" em tinta cheia e o cartão um
+   degrau acima, enquanto as vizinhas ficam em selo neutro e rentes ao bloco.
+   A régua preta à esquerda saiu porque lia como borda de caixa — brigava com o
+   raio do cartão e pesava mais que o próprio conteúdo da coluna. */
+.sprint-atual { box-shadow: 0 2px 8px rgba(28, 25, 23, 0.09); }
+.sprint-anterior, .sprint-proxima { box-shadow: none; }
+.sprint-atual .sprint-fase { background: var(--tinta); color: var(--fundo-pagina); }
+/* Ocupa a altura da barra sem desenhar nada: é o que mantém as listas de PBIs
+   das três colunas na mesma linha quando uma delas não tem progresso. */
+.barra-reservada { visibility: hidden; }
 /* Sprint anterior que não deixou nada pra trás é notícia boa e merece uma
    linha, não uma lista vazia. */
 .sprint-limpa { margin: 0.5rem 0 0; font-size: 0.8rem; }
@@ -814,8 +917,6 @@ body.pagina-report .corpo { grid-template-columns: minmax(0, 1fr); }
 #baixar { background: var(--tinta); color: #fff; }
 #baixar:hover { background: #3f3f46; }
 /* No arquivo gerado não há nada pra clicar no topo — só o título do documento */
-body.gerado .topo { padding-bottom: 0.2rem; }
-body.gerado .nome-app { font-size: 1.15rem; }
 
 /* Caixa do link compartilhável */
 .caixa-link {
@@ -1097,11 +1198,24 @@ details summary { cursor: pointer; color: var(--mudo); font-size: 0.88rem; }
   .quadro { grid-auto-columns: 84vw; scroll-snap-type: x mandatory; }
   .quadro-etapas { grid-template-columns: repeat(3, 84vw); } /* etapas seguem o deck no celular */
   .coluna { scroll-snap-align: start; }
-  /* Sidebar vira barra horizontal acima do conteúdo; recolher não se aplica,
-     e o logo não cabe junto da tira de pílulas — some, como o "recolher". */
+  /* No celular a lateral não é coluna: vira um bloco acima do conteúdo, com a
+     marca numa linha e os itens em tira de pílulas na outra. Altura cheia e
+     sticky saem — numa tela de 812px um painel de altura de viewport empurra
+     todo o conteúdo pra fora. O recolher não se aplica aqui e some. */
   .corpo { display: block; }
-  .lateral { position: static; flex-direction: row; align-items: center; gap: 0.6rem; margin-bottom: 0.9rem; padding: 0.5rem 0.6rem; }
-  .lateral-topo { display: none; }
+  .coluna-principal { padding: 0; }
+  .lateral {
+    position: static;
+    height: auto;
+    overflow: visible;
+    gap: 0.6rem;
+    margin-bottom: 0.9rem;
+    padding: 0.6rem 0.6rem 0.55rem;
+  }
+  /* `contents` dissolve a linha do logo: o logo passa a ser irmão do nome e os
+     dois ficam lado a lado. O botão é o outro filho, mas está escondido. */
+  .marca { flex-direction: row; align-items: center; gap: 0.5rem; padding: 0 0.2rem; }
+  .lateral-topo { display: contents; }
   .paginas { flex-direction: row; gap: 0.35rem; }
   .paginas a { padding: 0.5rem 0.85rem; }
   #carimbo { display: none; } /* no topo só cabe a bolinha + estado */

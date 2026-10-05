@@ -16,9 +16,15 @@
 
 <div class="corpo">
 <aside class="lateral">
-  <div class="lateral-topo">
+  <!-- Marca da casa + nome do produto, dentro do painel e um sobre o outro. O
+       arquivo e as dimensões intrínsecas são os mesmos das capas do report e
+       do catálogo — uma marca só, um cache só. -->
+  <div class="marca">
+    <div class="lateral-topo">
+      <img class="marca-logo" src="assets/brand/ybera-logo.webp" alt="Ybera" width="360" height="139">
+      <button id="alternar-lateral" title="Recolher/expandir menu" aria-label="Recolher ou expandir o menu"></button>
+    </div>
     <h1 class="nome-app">Central de Projetos</h1>
-    <button id="alternar-lateral" title="Recolher/expandir menu" aria-label="Recolher ou expandir o menu"></button>
   </div>
   <nav class="paginas">
     <a id="nav-panorama" href="#panorama"><span class="rotulo-nav">Panorama</span></a>
@@ -88,7 +94,8 @@
         <p id="board-sub" class="mudo"></p>
       </div>
       <div class="board-acoes">
-        <button id="board-filtro-sprint" aria-pressed="false">Só sprint corrente</button>
+        <!-- O rótulo é escrito pelo app.js com o nome da sprint aberta; este é só o estado inicial. -->
+        <button id="board-filtro-sprint" aria-pressed="false">Só esta sprint</button>
         <a id="board-devops" target="_blank" rel="noopener">Abrir no DevOps</a>
         <button id="board-atualizar" title="Atualizar board">↻</button>
       </div>
