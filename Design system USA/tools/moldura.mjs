@@ -146,17 +146,19 @@ export const MARCA_FECHA = '<!-- /@moldura -->';
    rolavam a mesma tela. Agora cada uma é página, com vizinho anterior e
    próximo, como as fichas de componente.
 
-   A ORDEM É A DO ARQUIVO, e não alfabética. A doc de token vai de fundamento a
-   estado — arquitetura, cor, tipo, espaço, forma, mídia, elevação, estado, uso
-   — e alfabetá-la destruiria a única coisa que ela ensina além do valor: a
-   ordem em que se aprende. O validador sabe disso: a checagem de sumário
+   A ORDEM É A DO ARQUIVO, e não alfabética: é a ordem em que se aprende.
+   Primeiro como ligar o pacote (How to use) e como os tokens se organizam
+   (Architecture); depois as famílias de valor, com State logo depois de Color
+   porque é cor também; e Icons fecha, por ser desenho e não valor. O How to
+   use já foi o último, e quem chegava pela primeira vez lia oito páginas de
+   valor antes de saber ligar o arquivo. O validador sabe disso: a checagem de sumário
    alfabético vale para catálogo, não para sequência de leitura. */
 /* Houve uma 'media' aqui ("Media & control"): quatro familias que nao tinham
    nada em comum alem de terem chegado por ultimo. Cada uma foi para onde se
    procura — proporcao e borda em Shape, altura de controle em Space, medida de
    leitura em Typography, opacidade em State. */
-const ORDEM_TOKENS = ['architecture', 'color', 'typography', 'space', 'shape',
-                      'elevation', 'state', 'usage'];
+const ORDEM_TOKENS = ['usage', 'architecture', 'color', 'state', 'typography',
+                      'space', 'shape', 'elevation'];
 const secoesDeTokens = () => ORDEM_TOKENS
   .filter((id) => existsSync(join(raizFs, `tokens/pecas/${id}.html`)))
   .map((id) => {
@@ -404,8 +406,7 @@ function corpoDoGrupo(g) {
 
   <section class="grade-grupo">
     <h2>Tokens <span class="grade-conta">${tokens}</span></h2>
-    <p class="grade-lede">Todos os valores do sistema, em ${secoes.length} páginas: da organização
-    dos tokens às cores de estado. Os mesmos tokens em JSON,
+    <p class="grade-lede">Em ${secoes.length} páginas: como ligar o pacote, como os tokens se organizam e cada família de valor, da cor à sombra. Os tokens também em JSON,
     no formato W3C Design Tokens, para Figma ou Style Dictionary:
     <a href="../dist/ybera-tokens.json" download="ybera-tokens.json">ybera-tokens.json</a>.</p>
     <div class="grade">

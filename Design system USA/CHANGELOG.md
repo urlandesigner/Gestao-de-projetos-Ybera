@@ -209,6 +209,27 @@ Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
   que abre continua nativa**, de propósito: no celular ela é a roleta do
   sistema. De quebra, a barra do Catalog deixou de escrever `padding` em atalho
   — era o atalho que apagava a reserva da seta.
+- **Foundation na ordem de leitura.** How to use sobe para logo depois do
+  Overview (era o último), Architecture vem em seguida, e State fica colado em
+  Color, porque é cor também. Depois Typography, Space, Shape e Elevation, e
+  Icons fecha. A ordem vale para a coluna, para os botões de anterior e
+  próximo e para a grade do Overview.
+- **Raio 20 e 24 reservados.** `--yb-radius-2xl` (20px) e `--yb-radius-3xl`
+  (24px) entram na camada de valores puros sem consumidor, para superfície
+  grande (modal, gaveta, cartão de largura cheia), e aparecem na página Shape
+  como "reservado". Quem usar primeiro cria o nome de uso na camada 1. 380
+  tokens.
+- **Borda de estado e cor de seleção.** Quatro tokens novos,
+  `--yb-success-border`, `--yb-warning-border`, `--yb-danger-border` e
+  `--yb-info-border` (o 200 de cada rampa), e o Alert e o Toast tingidos passam
+  a ter fio: a tinta sozinha mede 1.10 a 1.16:1 contra o branco. Isso desfaz a
+  regra anterior de "tingido não leva fio". `--yb-selection-bg` (magenta-300)
+  e `--yb-selection-text` pintam o texto selecionado dentro das peças, no lugar
+  do azul do navegador. Os dois aparecem na página State.
+- **Dourado explicado na página Color.** O título diz o que vale ("cor da
+  marca, só sobre fundo escuro") e, embaixo, cada token de uso com o degrau e
+  onde aparece: dos onze tons, só 300, 500, 600 e 700 têm dono. O 300 e o 600
+  ganharam a etiqueta que o 500 e o 700 já tinham.
 - **Architecture em uma linha.** As três camadas ficam lado a lado, com seta
   na ordem em que uma usa a outra, no lugar de quatro cartões de largura cheia
   com duas linhas de código cada. A camada de mercado, vazia, virou nota

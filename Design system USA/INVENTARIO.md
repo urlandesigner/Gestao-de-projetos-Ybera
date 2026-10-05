@@ -44,7 +44,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | SWITCH | `.yb-switch` | Átomo | Estável | — | 3 | 13 | sim | sim | sim | sim |
 | ACCOUNT MENU | `.yb-account` | Molécula | Estável | — | 3 | 23 | sim | sim | — | sim |
 | ACORDEÃO | `.yb-accordion` | Molécula | Estável | — | 2 | 19 | sim | sim | — | sim |
-| ALERT | `.yb-alert` | Molécula | Beta | 4 | 3 | 24 | sim | sim | sim | — |
+| ALERT | `.yb-alert` | Molécula | Beta | 4 | 3 | 29 | sim | sim | sim | — |
 | BANNER HERO | `.yb-bannerhero` | Molécula | Estável | 6 | 2 | 45 | sim | sim | — | sim |
 | BANNER MEDIA | `.yb-bannermedia` | Molécula | Estável | 3 | — | 3 | sim | n/a | — | sim |
 | BREADCRUMB | `.yb-crumb` | Molécula | Estável | — | 3 | 8 | sim | sim | — | sim |
@@ -62,7 +62,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | RATING | `.yb-rating` | Molécula | Estável | — | — | 7 | sim | n/a | — | sim |
 | REVIEW | `.yb-reviews` | Molécula | Estável | — | 1 | 28 | sim | sim | sim | sim |
 | TABS | `.yb-tabs` | Molécula | Beta | 1 | 3 | 24 | sim | sim | sim | — |
-| TOAST | `.yb-toast` | Molécula | Beta | 5 | 2 | 31 | sim | — | sim | — |
+| TOAST | `.yb-toast` | Molécula | Beta | 5 | 2 | 35 | sim | — | sim | — |
 | TOOLTIP | `.yb-tooltip` | Molécula | Beta | 3 | 2 | 12 | sim | sim | sim | — |
 | TRACK | `.yb-track` | Molécula | Beta | 2 | 1 | 8 | sim | — | sim | sim |
 | VARIANT PICKER | `.yb-swatches` | Molécula | Estável | 2 | 4 | 37 | sim | sim | sim | sim |

@@ -46,14 +46,14 @@
     <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5.5 8 3l6 2.5L8 8 2 5.5Z"/><path d="M2 8.8 8 11.3l6-2.5"/><path d="M2 12l6 2.5 6-2.5"/></svg>Foundation</summary>
     <ul>
       <li><a href="../tokens/index.html">Overview</a></li>
+      <li><a href="../tokens/usage.html" aria-current="page">How to use</a></li>
       <li><a href="../tokens/architecture.html">Architecture</a></li>
       <li><a href="../tokens/color.html">Color</a></li>
+      <li><a href="../tokens/state.html">State</a></li>
       <li><a href="../tokens/typography.html">Typography</a></li>
       <li><a href="../tokens/space.html">Space</a></li>
       <li><a href="../tokens/shape.html">Shape</a></li>
       <li><a href="../tokens/elevation.html">Elevation</a></li>
-      <li><a href="../tokens/state.html">State</a></li>
-      <li><a href="../tokens/usage.html" aria-current="page">How to use</a></li>
       <li><a href="../icons/index.html">Icons</a></li>
     </ul>
   </details>
@@ -161,8 +161,8 @@
       <b aria-current="page">How to use</b>
     </nav>
     <nav class="ficha-passo" aria-label="Seção anterior e próxima">
-      <a href="state.html" rel="prev"><span aria-hidden="true">←</span> State</a>
       <span></span>
+      <a href="architecture.html" rel="next">Architecture <span aria-hidden="true">→</span></a>
     </nav>
   </div>
   <h1 class="ficha-titulo">How to use</h1>
@@ -171,6 +171,10 @@
 <div class="layers">
       <div class="layer">
         <h3>1 · Ligue os arquivos, nesta ordem</h3>
+        <p>O zip vem <b>plano</b>, sem pasta dentro: os caminhos abaixo supõem que
+        você descompactou numa pasta <code>ybera/</code> do projeto. Descompactado
+        solto na raiz, tire o <code>ybera/</code> dos cinco endereços — ou os cinco
+        dão 404 e a página abre sem estilo nenhum.</p>
         <p>A fonte não vem no pacote; sem ela, a página cai na fonte do sistema.</p>
         <pre>&lt;link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&amp;display=swap"&gt;
 &lt;link rel="stylesheet" href="ybera/ybera-tokens.css"&gt;
@@ -219,9 +223,16 @@
 </div>
       <div class="rule">
         <b>A regra que sustenta o sistema</b>
-        <p>Componente nunca consome a camada 0. Se você escreveu
+        <p>Componente nunca consome <b>cor</b> da camada 0. Se você escreveu
         <code>var(--yb-magenta-600)</code> num componente, ou falta um token semântico
         ou o componente está errado. Nos dois casos, a correção é na camada 1.</p>
+        <p>Espaço, peso, entrelinha e tamanho de ícone <b>vêm</b> da camada 0, e não
+        por tolerância: é assim que o sistema é feito. A diferença é o que cada
+        camada decide. Cor muda de significado conforme o lugar — o mesmo grafite é
+        texto numa tela e fundo de ação em outra, e é a camada 1 que diz qual é
+        qual. Um degrau de espaço não muda de significado: 16px é 16px em toda
+        tela, e dar um nome semântico a ele só acrescentaria um salto para
+        ninguém ler.</p>
       </div>
 
   <!-- Gerada por tools/moldura.mjs a partir de tokens/pecas/usage.html. Não edite à mão: ./build.sh -->

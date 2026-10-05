@@ -2028,7 +2028,7 @@ body:has(.yb-buybar:not([hidden])) .yb-footer{padding-block-end:calc(var(--yb-sp
        de contraste nota.
 
    2 · Magenta. A producao usa #DB2955, um dos tres magentas divergentes da
-       loja. O sistema tem um so: --yb-action-primary-bg (#CA235F).
+       loja. O sistema tem um so, o magenta-600 (#CA235F), que aqui chega como --yb-text-link.
 
    Os menus sao acordeao no mobile e lista aberta no desktop, com um DOM so:
    o checkbox governa o estado abaixo de 768 e a media query o ignora acima.

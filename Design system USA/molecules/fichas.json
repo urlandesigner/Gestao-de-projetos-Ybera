@@ -892,7 +892,7 @@
         {
           "alvo": ".yb-toast",
           "nome": "Toast",
-          "texto": "Criado pelo script e removido sozinho em 5s. <code>role=\"status\"</code> espera a pausa do leitor de tela; o <code>--danger</code> usa <code>alert</code>, que interrompe. Tingido não leva fio — quem leva é o neutro, que é branco sobre fundo branco."
+          "texto": "Criado pelo script e removido sozinho em 5s. <code>role=\"status\"</code> espera a pausa do leitor de tela; o <code>--danger</code> usa <code>alert</code>, que interrompe. O neutro tem fio cinza; os tingidos, o fio do 200 da própria cor, porque a tinta sozinha quase não se vê no branco."
         },
         {
           "alvo": ".yb-toast__icon",

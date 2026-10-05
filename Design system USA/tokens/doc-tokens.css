@@ -50,12 +50,30 @@ h3.sub{
   padding:var(--yb-space-4) var(--yb-space-5); border-radius:0 var(--yb-radius-sm) var(--yb-radius-sm) 0;
   margin:var(--yb-space-6) 0; max-width:70ch;
 }
-.rule b{
+/* `>` e nao descendente: o titulo e filho direto do bloco. Sem isso, qualquer
+   <b> dentro de um paragrafo da regra virava um segundo titulo — em caixa alta,
+   vermelho e em linha propria, partindo a frase ao meio. */
+.rule > b{
   display:block; font-size:var(--yb-type-overline-size); letter-spacing:var(--yb-tracking-wider);
   text-transform:uppercase; color:var(--yb-danger-text); margin-bottom:var(--yb-space-2);
   font-weight:var(--yb-font-weight-semibold);
 }
 .rule p{margin:0; font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary)}
+/* A regra passou a ter dois paragrafos — o que a lei proibe e o que ela
+   permite. Com `margin:0` nos dois eles encostavam e liam como um bloco so. */
+.rule p + p{margin-block-start:var(--yb-space-3)}
+
+/* Onde cada tom de uma familia aparece: o token, o degrau e a peca, uma linha
+   por token, para ler de relance quais degraus da rampa tem dono. Sao <p> e
+   nao <li> de proposito: o gerador de "quem usa" pula o <code> da prosa, e
+   aqui o token e citado, nao amostrado. */
+.uso-cor{
+  margin:0 0 var(--yb-space-6); max-width:80ch;
+  display:grid; gap:var(--yb-space-2);
+  font-size:var(--yb-type-body-sm-size); color:var(--yb-text-secondary);
+}
+.uso-cor p{margin:0}
+.uso-cor code{color:var(--yb-text-primary)}
 
 /* swatches */
 .ramp{display:flex; flex-direction:column; gap:var(--yb-space-1); margin-bottom:var(--yb-space-8)}

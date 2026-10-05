@@ -60,6 +60,15 @@
    `opacity`, que e o que essas propriedades existem para dizer. */
 [hidden]{ display: none !important; }
 
+/* Selecao com a cor da marca, e so dentro do sistema: o seletor e o mesmo do
+   box-sizing, mais os descendentes — o texto de um <p> sem classe dentro de um
+   bloco nosso tambem e nosso. O tema em volta segue com o que ele escolheu. */
+[class*="yb-"]::selection,
+[class*="yb-"] ::selection{
+  background: var(--yb-selection-bg);
+  color: var(--yb-selection-text);
+}
+
 /* =========================================================================
    MOVIMENTO — corte global
    -------------------------------------------------------------------------

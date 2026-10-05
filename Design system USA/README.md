@@ -4,7 +4,7 @@ A fundação da marca Ybera em tokens. **Independente de plataforma por decisão
 projeto**: a loja US roda Shopify e a BR roda Wake Commerce — CSS custom properties
 é o único denominador comum entre as duas.
 
-Versão **0.12.1** — fundação de 372 tokens e uma escada atômica de 19 átomos,
+Versão **0.12.1** — fundação de 380 tokens e uma escada atômica de 19 átomos,
 25 moléculas, 16 organismos e 1 template, com
 comportamento, 42 ícones, governança, decisões registradas e 141 checagens
 automatizadas.

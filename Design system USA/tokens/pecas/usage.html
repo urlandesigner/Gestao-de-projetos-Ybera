@@ -3,6 +3,10 @@
 <div class="layers">
       <div class="layer">
         <h3>1 · Ligue os arquivos, nesta ordem</h3>
+        <p>O zip vem <b>plano</b>, sem pasta dentro: os caminhos abaixo supõem que
+        você descompactou numa pasta <code>ybera/</code> do projeto. Descompactado
+        solto na raiz, tire o <code>ybera/</code> dos cinco endereços — ou os cinco
+        dão 404 e a página abre sem estilo nenhum.</p>
         <p>A fonte não vem no pacote; sem ela, a página cai na fonte do sistema.</p>
         <pre>&lt;link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&amp;display=swap"&gt;
 &lt;link rel="stylesheet" href="ybera/ybera-tokens.css"&gt;
@@ -51,7 +55,14 @@
 </div>
       <div class="rule">
         <b>A regra que sustenta o sistema</b>
-        <p>Componente nunca consome a camada 0. Se você escreveu
+        <p>Componente nunca consome <b>cor</b> da camada 0. Se você escreveu
         <code>var(--yb-magenta-600)</code> num componente, ou falta um token semântico
         ou o componente está errado. Nos dois casos, a correção é na camada 1.</p>
+        <p>Espaço, peso, entrelinha e tamanho de ícone <b>vêm</b> da camada 0, e não
+        por tolerância: é assim que o sistema é feito. A diferença é o que cada
+        camada decide. Cor muda de significado conforme o lugar — o mesmo grafite é
+        texto numa tela e fundo de ação em outra, e é a camada 1 que diz qual é
+        qual. Um degrau de espaço não muda de significado: 16px é 16px em toda
+        tela, e dar um nome semântico a ele só acrescentaria um salto para
+        ninguém ler.</p>
       </div>

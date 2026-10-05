@@ -46,14 +46,14 @@
     <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5.5 8 3l6 2.5L8 8 2 5.5Z"/><path d="M2 8.8 8 11.3l6-2.5"/><path d="M2 12l6 2.5 6-2.5"/></svg>Foundation</summary>
     <ul>
       <li><a href="../tokens/index.html">Overview</a></li>
+      <li><a href="../tokens/usage.html">How to use</a></li>
       <li><a href="../tokens/architecture.html">Architecture</a></li>
       <li><a href="../tokens/color.html">Color</a></li>
+      <li><a href="../tokens/state.html" aria-current="page">State</a></li>
       <li><a href="../tokens/typography.html">Typography</a></li>
       <li><a href="../tokens/space.html">Space</a></li>
       <li><a href="../tokens/shape.html">Shape</a></li>
       <li><a href="../tokens/elevation.html">Elevation</a></li>
-      <li><a href="../tokens/state.html" aria-current="page">State</a></li>
-      <li><a href="../tokens/usage.html">How to use</a></li>
       <li><a href="../icons/index.html">Icons</a></li>
     </ul>
   </details>
@@ -161,8 +161,8 @@
       <b aria-current="page">State</b>
     </nav>
     <nav class="ficha-passo" aria-label="Seção anterior e próxima">
-      <a href="elevation.html" rel="prev"><span aria-hidden="true">←</span> Elevation</a>
-      <a href="usage.html" rel="next">How to use <span aria-hidden="true">→</span></a>
+      <a href="color.html" rel="prev"><span aria-hidden="true">←</span> Color</a>
+      <a href="typography.html" rel="next">Typography <span aria-hidden="true">→</span></a>
     </nav>
   </div>
   <h1 class="ficha-titulo">State</h1>
@@ -185,6 +185,40 @@
         <code>--yb-info-text</code><span>#1B5FA8 · 6.46:1</span>
       <details class="uso"><summary>2 componentes</summary><ul class="uso__lista"><li><a href="../molecules/alert.html">Alert</a> <code>.yb-alert</code></li><li><a href="../molecules/toast.html">Toast</a> <code>.yb-toast</code></li></ul></details></div>
 
+
+      <h3>Fio da caixa tingida</h3>
+      <p class="note">A tinta de estado mede de 1.10 a 1.16:1 contra o branco: sozinha,
+      a caixa só existe para quem distingue a cor. O fio sai do 200 da mesma rampa,
+      um degrau acima da tinta, e é o que Alert e Toast usam.</p>
+      <div class="grid4">
+        <div class="ct">
+          <div class="ct-box" style="background:var(--yb-success-surface); border:1px solid var(--yb-success-border); color:var(--yb-success-text)">Sucesso</div>
+          <code>--yb-success-border</code><span>success-200 · 1.38:1</span>
+        <details class="uso"><summary>2 componentes</summary><ul class="uso__lista"><li><a href="../molecules/alert.html">Alert</a> <code>.yb-alert</code></li><li><a href="../molecules/toast.html">Toast</a> <code>.yb-toast</code></li></ul></details></div>
+        <div class="ct">
+          <div class="ct-box" style="background:var(--yb-warning-surface); border:1px solid var(--yb-warning-border); color:var(--yb-warning-text)">Atenção</div>
+          <code>--yb-warning-border</code><span>warning-200 · 1.38:1</span>
+        <details class="uso"><summary>2 componentes</summary><ul class="uso__lista"><li><a href="../molecules/alert.html">Alert</a> <code>.yb-alert</code></li><li><a href="../molecules/toast.html">Toast</a> <code>.yb-toast</code></li></ul></details></div>
+        <div class="ct">
+          <div class="ct-box" style="background:var(--yb-danger-surface); border:1px solid var(--yb-danger-border); color:var(--yb-danger-text)">Erro</div>
+          <code>--yb-danger-border</code><span>danger-200 · 1.38:1</span>
+        <details class="uso"><summary>2 componentes</summary><ul class="uso__lista"><li><a href="../molecules/alert.html">Alert</a> <code>.yb-alert</code></li><li><a href="../molecules/toast.html">Toast</a> <code>.yb-toast</code></li></ul></details></div>
+        <div class="ct">
+          <div class="ct-box" style="background:var(--yb-info-surface); border:1px solid var(--yb-info-border); color:var(--yb-info-text)">Informação</div>
+          <code>--yb-info-border</code><span>info-200 · 1.38:1</span>
+        <details class="uso"><summary>2 componentes</summary><ul class="uso__lista"><li><a href="../molecules/alert.html">Alert</a> <code>.yb-alert</code></li><li><a href="../molecules/toast.html">Toast</a> <code>.yb-toast</code></li></ul></details></div>
+      </div>
+
+      <h3>Seleção de texto</h3>
+      <p class="note">O fundo do trecho que a pessoa seleciona com o mouse ou o dedo. Sem
+      ele, aparece o azul do navegador, a única cor da página que não é da marca.
+      Vale só dentro das peças do sistema; o tema em volta segue com a dele.</p>
+      <div class="grid4">
+        <div class="ct">
+          <div class="ct-box" style="background:var(--yb-selection-bg); color:var(--yb-selection-text)">Texto selecionado</div>
+          <code>--yb-selection-bg</code><span>magenta-300 · texto primário a 11:1</span>
+        <span class="uso uso--zero">sem classe consumidora</span></div>
+      </div>
 
       <h3>Opacidade</h3>
       <p class="note">Opacidade tem <b>uma regra dura</b>: nunca sobre texto.

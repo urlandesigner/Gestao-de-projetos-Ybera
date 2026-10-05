@@ -186,13 +186,19 @@
   --yb-space-32: 8rem;      /* 128px */
 
   /* ---------------------------------------------------------------------
-     RAIO — 5 valores. A loja hoje tem 12 (9999/22/20/16/12/10/8/6/4/2/50%/100)
+     RAIO — 8 valores. A loja hoje tem 12 (9999/22/20/16/12/10/8/6/4/2/50%/100)
+     `2xl` e `3xl` sao RESERVADOS desde 0.13: entraram sem consumidor, para
+     superficie grande (modal, gaveta que sobe no celular, cartao de largura
+     cheia). Quem for o primeiro a usar cria o nome de uso na camada 1 —
+     `--yb-radius-sheet`, por exemplo — e nao o numero direto.
      --------------------------------------------------------------------- */
   --yb-radius-none: 0;
   --yb-radius-sm:   4px;
   --yb-radius-md:   8px;
   --yb-radius-lg:   12px;    /* padrão da direção escolhida */
   --yb-radius-xl:   16px;
+  --yb-radius-2xl:  20px;    /* reservado — sem uso ainda */
+  --yb-radius-3xl:  24px;    /* reservado — sem uso ainda */
   --yb-radius-full: 9999px;
 
   /* ---------------------------------------------------------------------

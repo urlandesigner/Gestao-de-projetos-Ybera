@@ -1432,6 +1432,7 @@
    e no topo porque o alerta pode ter duas linhas e o icone acompanha a primeira. */
 .yb-alert{
   display:flex; gap:var(--yb-space-3); padding:var(--yb-space-4) var(--yb-space-5);
+  border:var(--yb-border-hairline) solid transparent;
   border-radius:var(--yb-radius-card);
   font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-relaxed);
 }
@@ -1468,16 +1469,17 @@
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:calc(var(--yb-focus-offset) * -1);
 }
-/* SEM `border-color` AQUI, e isso e remocao e nao esquecimento: as quatro
-   variantes declaravam uma cor de borda que nunca desenhou, porque o
-   `.yb-alert` nao tem `border-style`. Codigo morto que PARECE intencao e o que
-   faz a proxima pessoa "consertar" acrescentando o estilo que falta — e mudar
-   a cara do alerta sem saber que mudou. O alerta e tingido e sem fio por
-   decisao; o toast segue a mesma, e quem leva fio la e so o neutro. */
-.yb-alert--success{background:var(--yb-success-surface); color:var(--yb-success-text)}
-.yb-alert--warning{background:var(--yb-warning-surface); color:var(--yb-warning-text)}
-.yb-alert--danger {background:var(--yb-danger-surface);  color:var(--yb-danger-text)}
-.yb-alert--info   {background:var(--yb-info-surface);    color:var(--yb-info-text)}
+/* TINGIDO LEVA FIO desde 0.13, e isso desfaz uma decisao anterior de
+   proposito. Ela dizia que a tinta ja desenhava a caixa; medida, nao desenha:
+   a superficie de estado fica entre 1.10 e 1.16:1 contra o branco, e a caixa
+   so existia para quem distingue a cor. O fio sai do 200 da mesma rampa
+   (`--yb-*-border`), um degrau acima da tinta, e por isso nao vira segunda
+   borda dizendo outra coisa. O `transparent` na base reserva o 1px: trocar a
+   variante nao move o texto. */
+.yb-alert--success{background:var(--yb-success-surface); border-color:var(--yb-success-border); color:var(--yb-success-text)}
+.yb-alert--warning{background:var(--yb-warning-surface); border-color:var(--yb-warning-border); color:var(--yb-warning-text)}
+.yb-alert--danger {background:var(--yb-danger-surface);  border-color:var(--yb-danger-border);  color:var(--yb-danger-text)}
+.yb-alert--info   {background:var(--yb-info-surface);    border-color:var(--yb-info-border);    color:var(--yb-info-text)}
 .yb-alert p{margin:0; color:var(--yb-text-secondary)}
 
 /* =========================================================================
@@ -1645,20 +1647,15 @@
    não um valor copiado. Quem afinar `--yb-success-surface` move as duas peças
    no mesmo passo.
 
-   TINGIDO NÃO LEVA FIO, e é aqui que o toast e o Alert voltam a se encontrar: a
-   tinta já desenha a caixa, e um fio em volta dela faz duas bordas dizendo a
-   mesma coisa. Quem precisa do fio é o NEUTRO, que é branco sobre conteúdo
-   branco — sem ele não há caixa nenhuma.
-
-   `transparent` e não `border:0`: o fio continua ocupando o lugar dele na
-   caixa, então as cinco variações têm a mesma medida e o mesmo respiro, e
-   trocar a tinta não move o texto 1px. Em alto contraste o navegador devolve
-   uma cor de sistema a esse fio, e a caixa volta a existir sozinha — que é
-   justamente onde a tinta some. */
-.yb-toast--success{background:var(--yb-success-surface); border-color:transparent; color:var(--yb-success-text)}
-.yb-toast--warning{background:var(--yb-warning-surface); border-color:transparent; color:var(--yb-warning-text)}
-.yb-toast--danger {background:var(--yb-danger-surface);  border-color:transparent; color:var(--yb-danger-text)}
-.yb-toast--info   {background:var(--yb-info-surface);    border-color:transparent; color:var(--yb-info-text)}
+   TINGIDO LEVA FIO desde 0.13, como no Alert: a tinta sozinha mede 1.10 a
+   1.16:1 contra o branco e não desenha caixa nenhuma para quem não distingue
+   a cor. O fio é o 200 da mesma rampa (`--yb-*-border`), um degrau acima da
+   tinta. As cinco variações continuam com o mesmo fio de 1px, só muda a cor,
+   então trocar a tinta não move o texto. */
+.yb-toast--success{background:var(--yb-success-surface); border-color:var(--yb-success-border); color:var(--yb-success-text)}
+.yb-toast--warning{background:var(--yb-warning-surface); border-color:var(--yb-warning-border); color:var(--yb-warning-text)}
+.yb-toast--danger {background:var(--yb-danger-surface);  border-color:var(--yb-danger-border);  color:var(--yb-danger-text)}
+.yb-toast--info   {background:var(--yb-info-surface);    border-color:var(--yb-info-border);    color:var(--yb-info-text)}
 /* A sombra some em alto contraste junto com a tinta; sem isto o toast encosta
    no que estiver atrás e vira uma mancha sem fim definido. */
 @media (forced-colors: active){

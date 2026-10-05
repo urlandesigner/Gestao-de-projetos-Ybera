@@ -382,6 +382,14 @@
       },
       "$type": "color"
     },
+    "border": {
+      "$value": "{success.200}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-success-border",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
     "solid": {
       "$value": "{success.600}",
       "$extensions": {
@@ -492,6 +500,14 @@
       "$value": "{warning.50}",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-warning-surface",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "border": {
+      "$value": "{warning.200}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-warning-border",
         "com.ybera.layer": "semantic"
       },
       "$type": "color"
@@ -610,6 +626,14 @@
       },
       "$type": "color"
     },
+    "border": {
+      "$value": "{danger.200}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-danger-border",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
     "solid": {
       "$value": "{danger.600}",
       "$extensions": {
@@ -720,6 +744,14 @@
       "$value": "{info.50}",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-info-surface",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "border": {
+      "$value": "{info.200}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-info-border",
         "com.ybera.layer": "semantic"
       },
       "$type": "color"
@@ -1280,6 +1312,22 @@
       "$value": "16px",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-radius-xl",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "2xl": {
+      "$value": "20px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-radius-2xl",
+        "com.ybera.layer": "primitive"
+      },
+      "$type": "dimension"
+    },
+    "3xl": {
+      "$value": "24px",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-radius-3xl",
         "com.ybera.layer": "primitive"
       },
       "$type": "dimension"
@@ -2647,6 +2695,24 @@
       "$value": "{accent.signal.default}",
       "$extensions": {
         "com.ybera.cssVariable": "--yb-accent-love",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    }
+  },
+  "selection": {
+    "bg": {
+      "$value": "{magenta.300}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-selection-bg",
+        "com.ybera.layer": "semantic"
+      },
+      "$type": "color"
+    },
+    "text": {
+      "$value": "{text.primary}",
+      "$extensions": {
+        "com.ybera.cssVariable": "--yb-selection-text",
         "com.ybera.layer": "semantic"
       },
       "$type": "color"

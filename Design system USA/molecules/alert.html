@@ -49,14 +49,14 @@
     <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5.5 8 3l6 2.5L8 8 2 5.5Z"/><path d="M2 8.8 8 11.3l6-2.5"/><path d="M2 12l6 2.5 6-2.5"/></svg>Foundation</summary>
     <ul>
       <li><a href="../tokens/index.html">Overview</a></li>
+      <li><a href="../tokens/usage.html">How to use</a></li>
       <li><a href="../tokens/architecture.html">Architecture</a></li>
       <li><a href="../tokens/color.html">Color</a></li>
+      <li><a href="../tokens/state.html">State</a></li>
       <li><a href="../tokens/typography.html">Typography</a></li>
       <li><a href="../tokens/space.html">Space</a></li>
       <li><a href="../tokens/shape.html">Shape</a></li>
       <li><a href="../tokens/elevation.html">Elevation</a></li>
-      <li><a href="../tokens/state.html">State</a></li>
-      <li><a href="../tokens/usage.html">How to use</a></li>
       <li><a href="../icons/index.html">Icons</a></li>
     </ul>
   </details>
@@ -277,6 +277,7 @@
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
         <pre><code>.yb-alert{
   display:flex; gap:var(--yb-space-3); padding:var(--yb-space-4) var(--yb-space-5);
+  border:var(--yb-border-hairline) solid transparent;
   border-radius:var(--yb-radius-card);
   font-size:var(--yb-type-body-sm-size); line-height:var(--yb-line-height-relaxed);
 }
@@ -299,10 +300,10 @@
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:calc(var(--yb-focus-offset) * -1);
 }
-.yb-alert--success{background:var(--yb-success-surface); color:var(--yb-success-text)}
-.yb-alert--warning{background:var(--yb-warning-surface); color:var(--yb-warning-text)}
-.yb-alert--danger{background:var(--yb-danger-surface);  color:var(--yb-danger-text)}
-.yb-alert--info{background:var(--yb-info-surface);    color:var(--yb-info-text)}
+.yb-alert--success{background:var(--yb-success-surface); border-color:var(--yb-success-border); color:var(--yb-success-text)}
+.yb-alert--warning{background:var(--yb-warning-surface); border-color:var(--yb-warning-border); color:var(--yb-warning-text)}
+.yb-alert--danger{background:var(--yb-danger-surface);  border-color:var(--yb-danger-border);  color:var(--yb-danger-text)}
+.yb-alert--info{background:var(--yb-info-surface);    border-color:var(--yb-info-border);    color:var(--yb-info-text)}
 .yb-alert p{margin:0; color:var(--yb-text-secondary)}</code></pre>
       </div>
     </div>
@@ -321,12 +322,15 @@
     <div class="codigo__painel" data-code-panel="tokens" hidden>
       <div class="snippet">
         <button class="snippet-copiar" type="button" data-yb-copy>Copiar</button>
-        <pre><code>--yb-danger-surface: #FBEAE9;
+        <pre><code>--yb-border-hairline: 1px;
+--yb-danger-border: #FFD1CD;
+--yb-danger-surface: #FBEAE9;
 --yb-danger-text: #B3261E;
 --yb-focus-color: #1E1E1F;
 --yb-focus-offset: 0;
 --yb-focus-width: 2px;
 --yb-font-weight-semibold: 600;
+--yb-info-border: #C2DEFE;
 --yb-info-surface: #E9F1FA;
 --yb-info-text: #1B5FA8;
 --yb-line-height-none: 1;
@@ -337,12 +341,14 @@
 --yb-space-3: 0.75rem;
 --yb-space-4: 1rem;
 --yb-space-5: 1.25rem;
+--yb-success-border: #BEE5C4;
 --yb-success-surface: #EAF6EC;
 --yb-success-text: #1F7A34;
 --yb-text-primary: #1E1E1F;
 --yb-text-secondary: #535356;
 --yb-transition-control: 120ms cubic-bezier(.2, 0, 0, 1);
 --yb-type-body-sm-size: 0.875rem;
+--yb-warning-border: #EDD9B8;
 --yb-warning-surface: #FBF3E3;
 --yb-warning-text: #8A5A00;</code></pre>
       </div>
@@ -386,13 +392,17 @@
     <div class="api-linha"><span class="api-linha__rotulo">Estados</span><div class="api-linha__corpo"><code>:focus-visible</code> · <code>:hover</code></div></div>
     <div class="api-linha"><span class="api-linha__rotulo">Comportamento</span><div class="api-linha__corpo">Precisa de <code>ybera-behavior.js</code>. Sem ele aparece, mas não responde.</div></div>
     </div>
-    <p class="rotulo">Tokens <span class="rotulo-conta">24</span></p>
+    <p class="rotulo">Tokens <span class="rotulo-conta">29</span></p>
     <div class="tokens">
       <div class="tokens__grupo">
-        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>10</span></p>
+        <p class="tokens__familia"><a href="../tokens/color.html">Cor</a> <span>15</span></p>
         <ul class="tokens__lista">
+          <li><i class="tokens__cor" style="background:var(--yb-danger-border)" aria-hidden="true"></i><code>--yb-danger-border</code><span class="tokens__valor">#FFD1CD</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-info-border)" aria-hidden="true"></i><code>--yb-info-border</code><span class="tokens__valor">#C2DEFE</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-info-surface)" aria-hidden="true"></i><code>--yb-info-surface</code><span class="tokens__valor">#E9F1FA</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-info-text)" aria-hidden="true"></i><code>--yb-info-text</code><span class="tokens__valor">#1B5FA8</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-success-border)" aria-hidden="true"></i><code>--yb-success-border</code><span class="tokens__valor">#BEE5C4</span></li>
+          <li><i class="tokens__cor" style="background:var(--yb-warning-border)" aria-hidden="true"></i><code>--yb-warning-border</code><span class="tokens__valor">#EDD9B8</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-warning-surface)" aria-hidden="true"></i><code>--yb-warning-surface</code><span class="tokens__valor">#FBF3E3</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-success-surface)" aria-hidden="true"></i><code>--yb-success-surface</code><span class="tokens__valor">#EAF6EC</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-warning-text)" aria-hidden="true"></i><code>--yb-warning-text</code><span class="tokens__valor">#8A5A00</span></li>
@@ -401,6 +411,7 @@
           <li><i class="tokens__cor" style="background:var(--yb-success-text)" aria-hidden="true"></i><code>--yb-success-text</code><span class="tokens__valor">#1F7A34</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-secondary)" aria-hidden="true"></i><code>--yb-text-secondary</code><span class="tokens__valor">#535356</span></li>
           <li><i class="tokens__cor" style="background:var(--yb-text-primary)" aria-hidden="true"></i><code>--yb-text-primary</code><span class="tokens__valor">#1E1E1F</span></li>
+          <li><code>--yb-border-hairline</code><span class="tokens__valor">1px</span></li>
         </ul>
       </div>
       <div class="tokens__grupo">

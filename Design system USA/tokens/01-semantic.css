@@ -376,21 +376,36 @@
   /* =====================================================================
      ESTADO
      ===================================================================== */
+  /* `-border` desde 0.13: o fio da caixa tingida. A superficie (50) mede
+     1.10 a 1.16:1 contra o branco — a caixa existia so pela cor, nao pelo
+     contraste, o mesmo defeito do cinza sobre cinza com outra tinta. O 200
+     (1.38:1) desenha a borda sem virar segunda cor. */
   --yb-success-text:    var(--yb-success-600);
   --yb-success-surface: var(--yb-success-50);
+  --yb-success-border:  var(--yb-success-200);
   --yb-success-solid:   var(--yb-success-600);
 
   --yb-warning-text:    var(--yb-warning-600);
   --yb-warning-surface: var(--yb-warning-50);
+  --yb-warning-border:  var(--yb-warning-200);
   --yb-warning-solid:   var(--yb-warning-600);
 
   --yb-danger-text:     var(--yb-danger-600);
   --yb-danger-surface:  var(--yb-danger-50);
+  --yb-danger-border:   var(--yb-danger-200);
   --yb-danger-solid:    var(--yb-danger-600);
 
   --yb-info-text:       var(--yb-info-600);
   --yb-info-surface:    var(--yb-info-50);
+  --yb-info-border:     var(--yb-info-200);
   --yb-info-solid:      var(--yb-info-600);
+
+  /* SELECAO DE TEXTO. Sem ela, quem seleciona um trecho na loja ve o azul do
+     navegador — a unica cor da pagina que nao e da marca. Magenta-300 (1.51:1
+     contra o branco) aparece sem gritar, e o texto continua o primario:
+     11:1 sobre ele. */
+  --yb-selection-bg:    var(--yb-magenta-300);
+  --yb-selection-text:  var(--yb-text-primary);
 
   /* =====================================================================
      FOCO — obrigatório e visível. Nunca `outline: none` sem substituto.
