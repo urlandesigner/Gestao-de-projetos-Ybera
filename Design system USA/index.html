@@ -43,7 +43,12 @@ h1{font-size:var(--yb-type-display-2-size);line-height:var(--yb-type-display-2-l
    numero dela e cobrado pelo `test/validate.mjs`: escrever 61 pecas onde ha 62
    reprova o build. Numero de capa escrito a mao e o primeiro a envelhecer, e e
    justamente o numero de capa que decide se alguem confia na biblioteca. */
-.facts{display:flex;flex-wrap:wrap;gap:var(--yb-space-2);margin:0 0 var(--yb-space-10)}
+.facts{display:flex;flex-wrap:wrap;gap:var(--yb-space-2);margin:0 0 var(--yb-space-10);
+  /* `<ul>`, porque e uma lista de fatos — e lista pede o marcador zerado. A
+     regra irma em `tokens/doc-tokens.css` nasceu para `<div>`/`<span>` e nunca
+     precisou disto; copiada para ca sem o corte, cada fato ganhou a bolinha do
+     navegador na frente. */
+  list-style:none;padding:0}
 .fact{border:1px solid var(--yb-border);border-radius:var(--yb-radius-badge);
   padding:var(--yb-space-2) var(--yb-space-3);font-size:var(--yb-type-caption-size);
   color:var(--yb-text-secondary);background:var(--yb-surface)}
