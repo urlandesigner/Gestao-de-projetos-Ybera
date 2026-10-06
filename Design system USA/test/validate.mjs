@@ -2443,6 +2443,34 @@ secao('Autodescrição');
         `${VERDADE['átomos']} átomos · ${VERDADE['moléculas']} moléculas · ${VERDADE['organismos']} organismos · ${VERDADE['templates']} template · ${VERDADE['tokens']} tokens`);
 }
 
+/* A VERSAO E UMA SO, e ela mora no package.json.
+
+   Ela aparece em tres lugares: o package.json, o cabecalho do CHANGELOG e a
+   barra do topo de toda pagina. O da barra e gerado — `tools/moldura.mjs` le o
+   package.json —, mas a capa ainda escreve o numero a mao no rodape, e o
+   CHANGELOG depende de alguem lembrar de fechar a secao.
+
+   Esta checagem e o que faz a regra do GOVERNANCA ter dente: publicar sem
+   mexer no numero reprova, porque o CHANGELOG nao vai estar aberto na versao
+   que o package.json diz. Nao da para subir um update em silencio. */
+{
+  const versao = (ler('package.json').match(/"version":\s*"([^"]+)"/) || [, ''])[1];
+  /* A primeira linha `## [x.y.z]` do CHANGELOG. `[Unreleased]` nao casa, de
+     proposito: trabalho em andamento pode ficar la em cima sem travar nada. */
+  const noLog = (ler('CHANGELOG.md').match(/^## \[(\d+\.\d+\.\d+)\]/m) || [, ''])[1];
+  const erradas = [];
+  if (noLog !== versao) erradas.push(`CHANGELOG.md abre em ${noLog || '(nenhuma)'}`);
+  for (const f of ['index.html', 'preview/index.html']) {
+    if (!existsSync(join(raiz, f))) continue;
+    for (const m of ler(f).matchAll(/\bv(\d+\.\d+\.\d+)\b/g))
+      if (m[1] !== versao) erradas.push(`${f} diz v${m[1]}`);
+  }
+  erradas.length
+    ? falha(`a versão não é a mesma em todo lugar — o package.json diz ${versao}`,
+        erradas.join(' · ') + ' — publicar sem mexer no número é publicar em silêncio')
+    : ok('a versão é a mesma em todo lugar', `v${versao}`);
+}
+
 {
   const ARQS = ['README.md', 'GOVERNANCA.md', 'CONTRIBUINDO.md', 'index.html'];
   // +1 porque esta checagem tambem conta, e ela ainda nao foi registrada

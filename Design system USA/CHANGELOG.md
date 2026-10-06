@@ -5,8 +5,21 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
-Entradas de 2026-09-10 a 2026-09-16 que ainda não receberam número. Pela
-[GOVERNANCA.md](GOVERNANCA.md), componente novo pede versão **menor** (0.13.0).
+Nada ainda. A próxima mudança escreve a entrada dela aqui, e o número sobe
+quando for publicada — a checagem `a versão é a mesma em todo lugar` reprova
+quem publicar sem mexer nos dois.
+
+## [1.0.0] — 2026-10-06
+
+**O sistema para de ser 0.x.** Não é um corte técnico: nenhum token sumiu nem
+mudou de significado nesta entrega. É o compromisso começando a valer — de
+0.x em diante, "qualquer coisa pode mudar" era a regra implícita, e a partir
+daqui a tabela do [GOVERNANCA.md](GOVERNANCA.md) vale de verdade: token
+semântico só some em versão maior, e com o ciclo de depreciação cumprido.
+
+O que o número cobre hoje: 380 tokens em duas camadas, 47 componentes e 17
+blocos com ficha, 42 ícones, 11 telas da loja remontadas só com as peças, e
+143 checagens que rodam a cada build.
 
 ### Adicionado
 - **Tabs em trilho — `--segmented`.** Mesma peça, mesma ARIA, mesmo

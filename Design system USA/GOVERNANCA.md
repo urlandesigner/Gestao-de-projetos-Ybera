@@ -34,6 +34,32 @@ Semver adaptado. O número comunica **o que quem consome precisa fazer**.
 linha — é exatamente para isso que a camada existe. Mudança maior é quando o
 token **some** ou passa a significar outra coisa.
 
+**O 1.0.0 é o começo da promessa, não uma quebra.** Até 0.x a regra implícita
+era "qualquer coisa pode mudar". De 1.0.0 em diante a tabela acima vale de
+verdade: token semântico só sai em versão maior, e só depois do ciclo de
+depreciação.
+
+### Toda publicação muda o número
+
+O número mora num lugar só: o campo `version` do `package.json`. A barra do
+topo de toda página lê dali, e o build reescreve. Nunca se escreve a versão a
+mão em outro arquivo.
+
+Publicar é sempre três passos, nesta ordem:
+
+1. Escolher o degrau na tabela acima e editar o `version` do `package.json`.
+2. Fechar a seção `[Unreleased]` do [CHANGELOG.md](CHANGELOG.md) com o número
+   e a data, e abrir uma `[Unreleased]` vazia no lugar.
+3. `npm run check` e publicar.
+
+A ordem importa porque o passo 3 confere o 1 e o 2: a checagem **a versão é a
+mesma em todo lugar** compara o `package.json` com o cabeçalho mais recente do
+changelog e com qualquer `vX.Y.Z` escrito nas páginas. Subir um update sem
+mexer no número reprova o build — não é possível publicar em silêncio.
+
+Mudança que não vai ao ar não precisa de número: enquanto estiver só no
+`[Unreleased]`, nada é cobrado.
+
 ## Depreciação
 
 Nada é removido de uma vez. O ciclo é:
@@ -106,7 +132,7 @@ Quebrar qualquer uma delas exige mudança maior e justificativa no changelog.
 
 ## Antes de publicar uma versão
 
-O checklist virou comando. As 142 checagens rodam sozinhas:
+O checklist virou comando. As 143 checagens rodam sozinhas:
 
 ```bash
 npm run check
