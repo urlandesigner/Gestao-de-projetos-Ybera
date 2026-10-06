@@ -16,20 +16,34 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-# O nome é declarado pelo DOCUMENTO (arquivoDeDados, em
-# assets/briefing-entregas-v2.js) e lido daqui, não repetido: duas cópias do
-# mesmo nome divergem na primeira vez que a edição virar outro mês.
-DESTINO=$(grep -o "ARQUIVO_DE_DADOS = '[^']*'" assets/briefing-entregas-v2.js \
-  | head -1 | sed "s/.*'\(.*\)'/\1/")
-[ -n "$DESTINO" ] || { echo "não achei ARQUIVO_DE_DADOS em assets/briefing-entregas-v2.js" >&2; exit 1; }
-NOME=$(basename "$DESTINO")
+# Cada EDIÇÃO declara o endereço dos dados dela (arquivoDeDados, nos módulos de
+# briefing) e o nome é lido daqui, nunca repetido: duas cópias divergem na
+# primeira vez que uma edição virar outro mês.
+DESTINOS=$(grep -ho "arquivoDeDados = '[^']*'\|ARQUIVO_DE_DADOS = '[^']*'" \
+  assets/briefing-entregas.js assets/briefing-entregas-v2.js \
+  | sed "s/.*'\(.*\)'/\1/")
+[ -n "$DESTINOS" ] || { echo "nenhuma edição declara arquivoDeDados" >&2; exit 1; }
 
-ORIGEM="${1:-$HOME/Downloads/$NOME}"
-[ -f "$ORIGEM" ] || {
-  echo "não achei $ORIGEM" >&2
-  echo "abra o relatório com ?po=1 e clique em \"Publicar dados\" — ele baixa $NOME" >&2
+# Com um argumento, publica aquele arquivo na edição a que o NOME dele pertence.
+# Sem argumento, pega o que estiver em Downloads — e se houver mais de um, para:
+# publicar a edição errada sobrescreve um relatório já compartilhado.
+ORIGEM=""
+DESTINO=""
+for d in $DESTINOS; do
+  candidato="${1:-$HOME/Downloads/$(basename "$d")}"
+  [ "$(basename "$candidato")" = "$(basename "$d")" ] || continue
+  [ -f "$candidato" ] || continue
+  [ -z "$ORIGEM" ] || { echo "achei mais de um arquivo pra publicar; passe um por vez:" >&2;
+    echo "  $ORIGEM" >&2; echo "  $candidato" >&2; exit 1; }
+  ORIGEM="$candidato"; DESTINO="$d"
+done
+[ -n "$ORIGEM" ] || {
+  echo "não achei nenhum arquivo de dados pra publicar." >&2
+  echo "abra o relatório com ?po=1 e clique em \"Publicar dados\". Os nomes esperados:" >&2
+  for d in $DESTINOS; do echo "  ~/Downloads/$(basename "$d")" >&2; done
   exit 1
 }
+echo "edição: $DESTINO"
 
 # Conferir ANTES de sobrescrever: um arquivo cortado pela metade substituindo um
 # bom deixaria o documento no ar dizendo "ainda não foi publicado". O `em` é o

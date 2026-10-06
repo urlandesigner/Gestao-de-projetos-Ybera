@@ -594,9 +594,15 @@ function saneRitmo(lista) {
      `feito` reduzido a booleano — é ele que pinta o ponto de verde, e um valor
      torto ali marcaria como entregue o que não está. O teto de 300 por sprint é
      folga sobre as ~170 de uma sprint real. */
+  /* `tipo` viaja porque o selo do cartão o mostra, e um Bug marcado "PBI" seria
+     o documento afirmando o que não é. Vocabulário fechado, como o estado da
+     sprint: o que não está na lista vira 'outro' em vez de virar classe de CSS
+     escrita por quem editou a URL. */
+  const TIPOS = ['epic', 'feature', 'pbi', 'bug', 'task', 'outro'];
   const itensDe = (v) => (Array.isArray(v) ? v : []).slice(0, 300).map((y) => ({
     titulo: txt((y || {}).titulo, 200),
     estado: txt((y || {}).estado, 40),
+    tipo: TIPOS.includes((y || {}).tipo) ? y.tipo : 'outro',
     feito: !!(y || {}).feito,
   })).filter((y) => y.titulo);
   return (Array.isArray(lista) ? lista : []).slice(0, 60).map((x) => ({

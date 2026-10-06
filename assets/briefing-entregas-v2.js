@@ -111,91 +111,81 @@
      Transbordo zero não vira "0 transbordaram": número zero ocupa a linha pra
      dizer que não houve nada: a ausência já diz. O que a seção mede está
      escrito na intro, uma vez só. */
-  /* A tarja, só pra sprint que NÃO fechou.
+  /* A RETRANCA da sprint — a mesma pílula do cartão do Panorama, e os mesmos
+     três estados. "Em curso" em tinta cheia e o cartão um degrau acima; as
+     outras em selo neutro e rentes ao bloco. O destaque mora na cor do selo e
+     na elevação, não numa borda: régua à esquerda briga com o raio do cartão e
+     pesa mais que o conteúdo da coluna.
 
-     Fechada não ganha tarja porque é o estado que os números pressupõem: "2 de
-     5 entregues" sobre uma sprint encerrada é resultado. Tarjar o normal faria
-     o olho procurar diferença onde não há. Já numa sprint que ainda corre, o
-     mesmo "1 de 12" é um retrato no meio do caminho — e sem a tarja o leitor o
-     lê como fracasso. */
-  const TARJA = { corrente: 'em curso', futura: 'não começou' };
+     Encerrada também ganha retranca aqui, diferente do que eu tinha feito
+     antes: no Panorama as três colunas são rotuladas, e um cartão sem pílula no
+     meio de dois com pílula lê como peça faltando. */
+  const FASE = { fechada: 'Encerrada', corrente: 'Em curso', futura: 'Próxima' };
+  const ROTULO_TIPO = {
+    epic: 'Épico', feature: 'Feature', pbi: 'PBI', bug: 'Bug', task: 'Task', outro: 'Item',
+  };
 
   /* A lista de itens da sprint. É o que transformou este documento de retrato
      mensal em acompanhamento: quem abre toda semana quer saber o que está
      planejado, e um placar não responde isso.
 
-     Os que transbordaram vêm no fim, com o selo âmbar — mesma cor do board da
-     Central, porque o mesmo fato não pode ter duas cores em duas telas. */
+     Mesma linha-cartão do Panorama (.lista-linhas .item-linha): selo de tipo,
+     título, estado à direita. Sem link e sem #id, que é a única diferença — quem
+     lê este documento não tem acesso ao DevOps, e um link que não abre é pior
+     que link nenhum.
+
+     Aqui a lista NÃO é cortada em 4 como a do Panorama. Lá ela é prévia de um
+     cartão que leva ao board; aqui ela é o conteúdo, e esconder item seria
+     esconder o que o leitor veio ver. */
   function itensHtml(s) {
     const dentro = Array.isArray(s.itens) ? s.itens : [];
     const fora = Array.isArray(s.transbordados) ? s.transbordados : [];
     if (!dentro.length && !fora.length) return '';
-    const classe = (x, saiu) => (saiu ? ' rt-transbordou' : (x.feito ? ' rt-ok' : ''));
-    const li = (x, saiu) => `<li class="rt-item${classe(x, saiu)}">
-      <span class="rt-ponto" aria-hidden="true"></span>
+    const tipo = (x) => (ROTULO_TIPO[x.tipo] ? x.tipo : 'outro');
+    const li = (x, saiu) => `<li class="rt-item${saiu ? ' rt-transbordou' : ''}">
+      <span class="rt-badge rt-tipo-${tipo(x)}">${esc(ROTULO_TIPO[tipo(x)])}</span>
       <span class="rt-item-nome">${esc(x.titulo)}</span>
-      <span class="rt-item-estado">${esc(saiu ? 'transbordou' : (x.estado || ''))}</span>
+      <span class="rt-item-estado">${saiu
+        ? '<span class="rt-selo-transbordo">transbordou</span>'
+        : esc(x.estado || '')}</span>
     </li>`;
-    return `<ul class="rt-itens">
-      ${dentro.map((x) => li(x, false)).join('')}
-      ${fora.map((x) => li(x, true)).join('')}
-    </ul>`;
+    return `<ul class="rt-itens">${dentro.map((x) => li(x, false)).join('')}`
+      + `${fora.map((x) => li(x, true)).join('')}</ul>`;
   }
 
+  /* O CARTÃO, com a anatomia do Panorama: retranca em cima, depois a linha
+     nome + período à esquerda e placar à direita, a barra, o fio, e os itens.
+
+     O placar segue a régua daqui, não a de lá: "2 de 5" conta o que ficou MAIS
+     o que saiu, porque numa sprint encerrada dizer "2 de 2" seria verdade sobre
+     a sprint de hoje e mentira sobre a que aconteceu. A sprint que não começou
+     mostra o escopo na fila, como a coluna "Próxima" do Panorama. */
   function linhaHtml(s) {
-    const estado = TARJA[s.estado] ? s.estado : 'fechada';
+    const estado = FASE[s.estado] ? s.estado : 'fechada';
     const entregues = Math.max(0, Number(s.entregues) || 0);
     const saiu = Math.max(0, Number(s.transbordaram) || 0);
     const escopo = Math.max(0, Number(s.total) || 0) + saiu;
     const pct = (n) => (escopo ? (n / escopo) * 100 : 0);
     const datas = periodoCurto(s.start, s.finish);
-    /* A sprint que não começou não tem placar: dizer "0 de 1 entregue" sobre
-       trabalho que nem foi iniciado lê como zero de resultado, e o que existe
-       ali é só o escopo que já foi posto na fila. A barra fica vazia pelo
-       mesmo motivo — e fica, em vez de sumir, porque é ela que deixa as linhas
-       comparáveis de relance. */
-    const numeros = estado === 'futura'
-      ? `<span class="rt-n">${escopo
-        ? `<b>${escopo}</b> ${escopo === 1 ? 'item planejado' : 'itens planejados'}`
-        : 'ainda sendo planejada'}</span>`
-      : `<span class="rt-n"><b>${entregues}</b> de ${escopo} ${escopo === 1 ? 'entregue' : 'entregues'}</span>
-         ${saiu ? `<span class="rt-n rt-amb"><b>${saiu}</b> ${saiu === 1 ? 'transbordou' : 'transbordaram'}</span>` : ''}`;
+    const placar = estado === 'futura'
+      ? (escopo ? plural(escopo, 'item', 'itens') : 'em planejamento')
+      : `${entregues}/${escopo}`;
     return `<li class="rt-linha rt-${estado}">
+      <span class="rt-fase">${esc(FASE[estado])}</span>
       <p class="rt-topo">
-        <span class="rt-nome">${esc(s.nome)}</span>
-        ${datas ? `<span class="rt-datas">${esc(datas)}</span>` : ''}
-        ${TARJA[estado] ? `<span class="rt-tarja">${esc(TARJA[estado])}</span>` : ''}
+        <span class="rt-nome"><b>${esc(s.nome)}</b>${datas ? ` <span class="rt-datas">${esc(datas)}</span>` : ''}</span>
+        <span class="rt-placar">${esc(placar)}</span>
       </p>
       <span class="rt-barra" aria-hidden="true">
         ${estado === 'futura' ? '' : `<span class="rt-feito" style="width:${pct(entregues)}%"></span>
         <span class="rt-saiu" style="width:${pct(saiu)}%"></span>`}
       </span>
-      <p class="rt-nums">${numeros}</p>
+      ${saiu ? `<p class="rt-nums"><span class="rt-n rt-amb"><b>${saiu}</b> ${saiu === 1 ? 'transbordou' : 'transbordaram'}</span></p>` : ''}
       ${itensHtml(s)}
     </li>`;
   }
 
-  /* CARIMBO DE DATA, e ele não é enfeite.
-
-     O leitor do link NÃO fala com o DevOps: o dado viaja dentro da própria
-     página, congelado no instante em que foi publicado. Sem dizer de quando é,
-     quem abre o mesmo endereço toda segunda vê os mesmos números e conclui que
-     nada andou. Num documento de acompanhamento isso é pior que não ter
-     documento.
-
-     Hora junto, e não só a data: numa sprint em curso o dia inteiro cabe entre
-     dois estados diferentes do mesmo item. */
-  function carimbo(agora) {
-    const t = Number(agora);
-    if (!Number.isFinite(t) || t <= 0) return '';
-    const d = new Date(t);
-    const dois = (n) => String(n).padStart(2, '0');
-    const quando = `${dois(d.getDate())}/${dois(d.getMonth() + 1)}/${d.getFullYear()}`
-      + `, ${dois(d.getHours())}h${dois(d.getMinutes())}`;
-    return `<p class="rt-carimbo">Dados de ${esc(quando)}</p>`;
-  }
-
-  /* A seção inteira, ou string vazia quando não há sprint fechada no período.
+  /* A seção inteira, ou string vazia quando não há sprint no período.
 
      Vazia é o certo: sem sprint medida, um título com lista em branco faria o
      leitor procurar o que não existe. O PO, esse sim, recebe o aviso no console
@@ -216,13 +206,128 @@
     </section>`;
   }
 
+  /* AS DUAS ABAS.
+
+     O documento responde duas perguntas com ritmos diferentes: o que o time
+     ENTREGOU (texto curado, escrito uma vez por mês, que congela) e o que está
+     ACONTECENDO (sprints e roadmap, que mudam sozinhos). Juntas numa página só,
+     a segunda empurra a primeira pra baixo e o leitor que quer uma rola pela
+     outra.
+
+     Quem troca de aba é um script na página, não este módulo: aqui é render
+     puro, testado no Node, sem evento de DOM. Ele esconde as seções pelo id —
+     `ritmo` e `roadmap` são de Acompanhar, todas as outras são de Entregas.
+     Sem o script as duas aparecem empilhadas, que é o documento de antes: a
+     aba é melhoria de leitura, não requisito pra ele fazer sentido.
+
+     Botões com `aria-pressed`, e não um widget de abas com role="tab": os
+     painéis não são dois contêineres, são conjuntos de seções que já saem do
+     documento com `hidden` quando escondidas. Fingir um widget que não existe
+     seria pior pro leitor de tela do que dizer a verdade — dois botões, um
+     deles ativo. */
+  /* As abas moram ANTES da capa. Postas no meio do documento — depois do logo,
+     do título e dos dois números —, o leitor já tinha se comprometido com uma
+     leitura quando descobria que havia uma escolha. Navegação depois do
+     conteúdo quase nunca funciona.
+
+     E porque elas vêm antes, a CAPA pertence à aba: em Acompanhar o título
+     dizer "Entregas de Outubro" seria meia verdade. Cada aba carrega o texto
+     que a capa deve mostrar; o que ela NÃO declara fica como o base escreveu —
+     é assim que a aba Entregas não precisa repetir string nenhuma do documento
+     original, e as duas não têm como divergir. */
+  const ABAS = [
+    { id: 'entregas', rotulo: 'Entregas' },
+    {
+      id: 'acompanhar',
+      rotulo: 'Acompanhar',
+      titulo: 'Acompanhamento de',
+      situacao: 'O que está em curso nas sprints do período, e o planejamento dos próximos meses.',
+    },
+  ];
+  const ABA_PADRAO = 'entregas';
+  // As seções que pertencem a Acompanhar. Quem não está aqui é de Entregas —
+  // assim uma frente nova entra sem ninguém precisar lembrar desta lista.
+  const SECOES_ACOMPANHAR = ['ritmo', 'roadmap'];
+  /* Os dois números da capa são de ENTREGAS: contam cartões curados e PBIs
+     fechados sob as Features que eles citam. Em Acompanhar não dizem nada sobre
+     o que está em curso — e, pior, dizem ZERO ao lado de duas sprints com itens
+     na tela, que lê como contradição. Então eles acompanham a aba deles.
+
+     É seletor e não id porque o bloco é do documento base: ele não tem id, e
+     dar um a ele seria mexer no relatório de Agosto e Setembro. */
+  const SO_EM_ENTREGAS = '.rl-bento-capa';
+
+  /* AS EDIÇÕES, pro seletor do cabeçalho. A sem `url` é esta.
+
+     Ele NAVEGA, não redesenha. A edição de Agosto e Setembro é outro arquivo
+     (entregas.html) com a lista curada dentro dele, e o que ela consegue
+     exportar são só os campos de contagem — sem `resumo` e sem `imagens`.
+     Redesenhá-la aqui produziria títulos com selo e nenhum texto nem tela: uma
+     versão capenga de um relatório que já foi publicado e lido.
+
+     Fica no cabeçalho, visível nas duas abas, porque a edição é do DOCUMENTO
+     inteiro e não de uma parte dele — como as próprias abas. */
+  const EDICOES = [
+    { rotulo: 'Outubro de 2026' },
+    { rotulo: 'Agosto e Setembro de 2026', url: 'entregas.html' },
+  ];
+
+  /* O que cada aba diz quando não tem seção nenhuma. A de Entregas é o caso
+     real de hoje — outubro começou sem cartão escrito —, e sem ela a aba abre
+     com capa, abas e rodapé, que lê como documento quebrado. A frase é escrita
+     pra quem LÊ, não pra quem mantém: "ainda sendo escritas" é informação sobre
+     o mês, não um aviso de sistema. */
+  const VAZIO = {
+    entregas: 'As entregas deste período ainda estão sendo escritas.',
+    acompanhar: 'Nenhuma sprint fechou ou começou neste período.',
+  };
+
+  function abasHtml() {
+    const botoes = ABAS.map((a) => `<button type="button" class="rl-aba" data-aba="${a.id}"`
+      + (a.titulo ? ` data-titulo="${esc(a.titulo)}"` : '')
+      + (a.situacao ? ` data-situacao="${esc(a.situacao)}"` : '')
+      + ` aria-pressed="${a.id === ABA_PADRAO}">${esc(a.rotulo)}</button>`).join('');
+    /* O seletor de edição ocupa o mesmo encaixe que o seletor de mês ocupa no
+       report v2 — fim da pílula, com a mesma moldura. `value` é o endereço:
+       vazio é esta edição, e o script só navega quando vem preenchido. Assim o
+       seletor não precisa saber qual é a atual: ela é a única sem para onde ir. */
+    const opcoes = EDICOES.map((e) => `<option value="${esc(e.url || '')}"`
+      + `${e.url ? '' : ' selected'}>${esc(e.rotulo)}</option>`).join('');
+    const selecionar = EDICOES.length > 1
+      ? `<div class="rl-mes-borda"><select class="rl-edicao rl-mes" aria-label="Edição do relatório">${opcoes}</select></div>`
+      : '';
+    /* A PÍLULA DE VIDRO do report v2, no mesmo lugar que ela ocupa lá: logo
+       depois da capa, flutuando e grudando no topo quando a página rola. Sem
+       cabeçalho próprio — a capa deste documento é a mesma do relatório de
+       Agosto e Setembro, com a marca dentro dela, e um segundo topo acima
+       disputaria com ela.
+
+       Aqui dentro vão BOTÕES, não âncoras como lá. A diferença é de função: no
+       report v2 o menu é sumário de um documento corrido e cada item rola até
+       uma seção; aqui ele troca entre duas partes que não convivem na tela — e
+       é a troca que faz a capa mudar junto. Âncora prometeria rolagem e
+       entregaria outra coisa. */
+    return `<nav class="rl-nav rl-abas" aria-label="Partes do documento"`
+      + ` data-acompanhar="${SECOES_ACOMPANHAR.join(' ')}"`
+      + ` data-so-entregas="${esc(SO_EM_ENTREGAS)}">`
+      + `<div class="rl-nav-borda"><div class="rl-nav-int">${botoes}${selecionar}</div></div>`
+      + `</nav>`;
+  }
+
+  // As frases de aba vazia moram no CORPO, com as seções que elas substituem —
+  // a barra de abas fica fora dele, no topo da página.
+  function vaziosHtml() {
+    return ABAS.map((a) => `<p class="rl-aba-vazia mudo" data-de="${a.id}" hidden>${esc(VAZIO[a.id] || '')}</p>`).join('');
+  }
+
   /* A costura. Falha fechada de propósito: sem a âncora, devolve o documento
      intacto em vez de pendurar a seção num lugar qualquer. Um documento sem a
      seção ainda está certo; a seção no lugar errado, não. */
-  function injetar(html, secao) {
-    const i = html.indexOf(ANCORA);
+  function injetar(html, secao, ancora, antes) {
+    const alvo = ancora || ANCORA;
+    const i = html.indexOf(alvo);
     if (i < 0) return html;
-    const corte = i + ANCORA.length;
+    const corte = antes ? i : i + alvo.length;
     return html.slice(0, corte) + secao + html.slice(corte);
   }
 
@@ -236,13 +341,16 @@
     });
     const r = base.htmlReport(entrada);
     if (!r || !r.html) return r;
-    /* O carimbo vem ANTES da seção porque ele vale pro documento inteiro — os
-       números da capa inclusive —, e não só pelas sprints. Fica no topo do
-       corpo e não no masthead porque o masthead é desenho do base, e mexer lá
-       mudaria o relatório de Agosto e Setembro junto. */
-    const acrescimo = carimbo((o || {}).agora) + secaoRitmo((o || {}).sprints);
-    if (!acrescimo) return r;
-    return Object.assign({}, r, { html: injetar(r.html, acrescimo) });
+    /* Duas costuras, em dois lugares, porque as peças pertencem a alturas
+       diferentes do documento:
+
+       a PÍLULA entra entre a capa e o corpo, como no report v2 — e é ela que
+       faz a capa mudar, porque a capa pertence à parte escolhida;
+
+       as frases de vazio e a seção de sprints entram no topo do CORPO. */
+    let html = injetar(r.html, abasHtml(), ANCORA, true);
+    html = injetar(html, vaziosHtml() + secaoRitmo((o || {}).sprints));
+    return Object.assign({}, r, { html });
   }
 
   /* `esc`, `camposDoLink` e `contagensDoLink` continuam vindo do base: são
@@ -262,9 +370,15 @@
     cartoesDoDocumento: () => ENTREGAS_OUTUBRO.map((c) => Object.assign({}, c)),
     // Expostos pro teste medir a costura sem reimplementá-la.
     secaoRitmo,
-    carimbo,
+    abasHtml,
+    vaziosHtml,
     injetar,
+    EDICOES,
     ANCORA,
     PERIODO,
+    ABAS,
+    ABA_PADRAO,
+    SECOES_ACOMPANHAR,
+    SO_EM_ENTREGAS,
   });
 });

@@ -999,5 +999,17 @@
      do board, o campo entra AQUI antes. */
   const camposDoLink = ['System.WorkItemType', 'System.State', 'System.Parent'];
 
-  return { htmlReport, mesPorExtenso, dataCurta, esc, periodoDoDocumento, cartoesDoDocumento, camposDoLink, contagensDoLink };
+  /* O ENDEREÇO FIXO DOS DADOS desta edição.
+
+     Entrou quando o relatório de Outubro ganhou um seletor de edição: escolher
+     "Agosto e Setembro" leva pra cá, e até então esta página só abria com token
+     ou com o #r= no endereço — o stakeholder caía numa porta fechada.
+
+     NÃO muda o documento. Ele é desenhado exatamente como sempre foi; o que
+     muda é de onde o dado vem quando não há token nem fragmento. E o fragmento
+     continua tendo precedência no report.js, então todo link já compartilhado
+     abre exatamente o que ele carrega, como antes. */
+  const arquivoDeDados = 'assets/dados-ago-set.json';
+
+  return { htmlReport, mesPorExtenso, dataCurta, esc, periodoDoDocumento, cartoesDoDocumento, camposDoLink, contagensDoLink, arquivoDeDados };
 });

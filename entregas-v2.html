@@ -90,6 +90,115 @@
 <script src="assets/briefing-entregas-v2.js?v=2026100602"></script>
 <script src="assets/report.js?v=2026100602"></script>
 <script>
+/* AS ABAS — Entregas e Acompanhar.
+
+   Vive aqui pela mesma razão que o visor da galeria: o report.js é
+   compartilhado com três documentos que não têm aba, e o briefing é módulo de
+   render puro, testado no Node, que não deve tocar em evento de DOM.
+
+   O clique é delegado em #report porque o documento é redesenhado inteiro a
+   cada troca de dado — ouvir no container é o que sobrevive a isso. E a aba
+   ativa é reaplicada depois de cada redesenho, senão um refresh de dados jogava
+   o leitor de volta pra Entregas no meio da leitura.
+
+   Qual seção é de qual aba vem do próprio documento, em data-acompanhar: quem
+   decide isso é quem o desenha, e repetir a lista aqui seria a segunda cópia
+   que diverge na primeira seção nova.
+
+   A aba escolhida entra no endereço (#acompanhar), pra que o link
+   compartilhado abra onde quem mandou estava. Fragmento que começa com `r=` é
+   dado do report e não se toca — nesse caso a aba só não viaja. */
+(function () {
+  'use strict';
+  const box = document.getElementById('report');
+  if (!box) return;
+  const ehPacote = () => /^#r=/.test(location.hash || '');
+  const daUrl = () => (ehPacote() ? '' : (location.hash || '').replace(/^#/, ''));
+  let atual = '';
+
+  function aplicar(aba, gravarNaUrl) {
+    const nav = box.querySelector('.rl-abas');
+    if (!nav) return;
+    const conhecidas = [...nav.querySelectorAll('.rl-aba')].map((b) => b.dataset.aba);
+    if (!conhecidas.includes(aba)) aba = conhecidas[0];
+    atual = aba;
+    const deAcompanhar = new Set((nav.dataset.acompanhar || '').split(/\s+/).filter(Boolean));
+    for (const sec of box.querySelectorAll('.rl-sec')) {
+      const ehDeAcompanhar = deAcompanhar.has(sec.id);
+      sec.hidden = ehDeAcompanhar !== (aba === 'acompanhar');
+    }
+    /* A CAPA PERTENCE À ABA. Em Acompanhar, "Entregas de Outubro" seria meia
+       verdade — o título e a linha de apoio trocam.
+
+       O texto de Entregas NÃO é declarado em lugar nenhum: é guardado do que o
+       documento base escreveu, na primeira aplicação, e restaurado depois.
+       Declará-lo seria uma segunda cópia de uma frase que mora no outro
+       arquivo, e as duas divergiriam no primeiro ajuste de texto lá. */
+    const btn = nav.querySelector('.rl-aba[data-aba="' + aba + '"]');
+    for (const [sel, chave] of [['.rl-titulo-fraco', 'titulo'], ['.rl-capa-situacao', 'situacao']]) {
+      const el = box.querySelector(sel);
+      if (!el) continue;
+      if (el.dataset.orig === undefined) el.dataset.orig = el.textContent;
+      el.textContent = (btn && btn.dataset[chave]) || el.dataset.orig;
+    }
+    for (const b of nav.querySelectorAll('.rl-aba')) {
+      b.setAttribute('aria-pressed', String(b.dataset.aba === aba));
+    }
+    /* Aba sem seção nenhuma mostra a frase dela. O caso real é Entregas num mês
+       cujos cartões ainda não foram escritos: sem isto a aba abre com capa,
+       abas e rodapé, e lê como documento quebrado. */
+    const vazia = !box.querySelector('.rl-sec:not([hidden])');
+    for (const p of box.querySelectorAll('.rl-aba-vazia')) {
+      p.hidden = !(vazia && p.dataset.de === aba);
+    }
+    /* Os blocos que só valem em Entregas — hoje, os dois números da capa.
+
+       Somem em Acompanhar, onde contariam entrega e diriam zero ao lado das
+       sprints em curso. E somem TAMBÉM quando a própria aba Entregas está
+       vazia: dois zeros gigantes em cima de "as entregas ainda estão sendo
+       escritas" é a mesma ausência dita duas vezes, e a segunda com peso de
+       manchete.
+
+       A regra parceira `[hidden]` está na ritmo.css: sem ela o `display: grid`
+       do bloco ganharia do navegador e ele não sumiria. */
+    const soEntregas = nav.dataset.soEntregas;
+    if (soEntregas) {
+      for (const el of box.querySelectorAll(soEntregas)) el.hidden = aba !== 'entregas' || vazia;
+    }
+    // replaceState, e não um href: trocar de aba não é navegação nova, e encher
+    // o histórico faria o Voltar do navegador percorrer cliques de aba em vez
+    // de sair da página.
+    if (gravarNaUrl && !ehPacote()) {
+      history.replaceState(null, '', location.pathname + location.search + '#' + aba);
+    }
+  }
+
+  box.addEventListener('click', (ev) => {
+    const b = ev.target.closest('.rl-aba');
+    if (!b) return;
+    aplicar(b.dataset.aba, true);
+  });
+
+  /* O seletor de edição NAVEGA — a edição antiga é outro arquivo, com a lista
+     curada dentro dele. O valor vazio é a edição atual, e aí não há pra onde
+     ir. Delegado como o clique das abas, pelo mesmo motivo: o documento é
+     redesenhado inteiro a cada troca de dado. */
+  box.addEventListener('change', (ev) => {
+    const sel = ev.target.closest('.rl-edicao');
+    if (!sel || !sel.value) return;
+    location.href = sel.value;
+  });
+
+  /* O documento é reescrito a cada render do report.js, e a aba ativa some com
+     ele. Observar o container devolve o estado sem o report.js precisar saber
+     que abas existem. */
+  new MutationObserver(() => {
+    if (box.querySelector('.rl-abas')) aplicar(atual || daUrl(), false);
+  }).observe(box, { childList: true });
+
+  aplicar(daUrl(), false);
+})();
+
 /* Visor da galeria — vive aqui, e não no report.js nem no briefing.
 
    No report.js porque ele é compartilhado com report.html e report-v2.html, que

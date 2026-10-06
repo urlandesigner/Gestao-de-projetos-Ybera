@@ -54,16 +54,17 @@ test('o v2 é a edição de Outubro, e começa sem cartão', () => {
   assert.match(V2.htmlReport(entrada()).html, /Outubro de 2026/);
 });
 
-/* O que o v2 ACRESCENTA ao documento do base: o carimbo e a seção, nada mais.
-   Tirados os dois, tem que sobrar a mesma string que o base desenha com as
-   entradas da edição de outubro. Se um dia alguém fizer o v2 "ajustar" o
+/* O que o v2 ACRESCENTA ao documento do base: a barra de abas e a seção de
+   sprints, nada mais. Tiradas as duas, tem que sobrar a mesma string que o base
+   desenha com as entradas da edição de outubro. Se um dia alguém fizer o v2 "ajustar" o
    documento por fora, é aqui que estoura. */
 const semAcrescimos = (html) => String(html)
-  .replace(/<p class="rt-carimbo">[\s\S]*?<\/p>/, '')
+  .replace(/<nav class="rl-nav rl-abas"[\s\S]*?<\/nav>/, '')
+  .replace(/<p class="rl-aba-vazia mudo"[\s\S]*?<\/p>/g, '')
   .replace(/<section class="rl-sec" id="ritmo">[\s\S]*?<\/section>/, '');
 
 /* O teste mais importante do arquivo. */
-test('tirados carimbo e seção, o v2 devolve exatamente o que o base desenha', () => {
+test('tiradas abas e seção, o v2 devolve exatamente o que o base desenha', () => {
   const a = BASE.htmlReport(entrada({ periodo: V2.PERIODO, cartoes: [] }));
   const b = V2.htmlReport(entrada({ sprints: SPRINTS }));
   assert.equal(semAcrescimos(b.html), a.html, 'o v2 mexeu no documento além do que acrescenta');
@@ -80,20 +81,7 @@ test('lista de sprints vazia, nula ou só com lixo também não desenha seção'
   }
 });
 
-/* O carimbo entra SEMPRE, com ou sem sprint: ele fala do documento inteiro —
-   os números da capa inclusive —, não da seção. */
-test('o carimbo diz de quando é o dado, e entra mesmo sem sprint nenhuma', () => {
-  const html = V2.htmlReport(entrada()).html;
-  assert.match(html, /<p class="rt-carimbo">Dados de \d{2}\/\d{2}\/\d{4}, \d{2}h\d{2}<\/p>/);
-});
 
-/* Sem instante não há o que carimbar, e inventar uma data seria pior que não
-   ter nenhuma: o leitor acreditaria nela. */
-test('sem instante válido não há carimbo', () => {
-  for (const t of [0, null, undefined, NaN, 'ontem', -5]) {
-    assert.equal(V2.carimbo(t), '', `carimbou com agora=${JSON.stringify(t)}`);
-  }
-});
 
 /* Antes, lista vazia caía de volta na lista curada por causa de um `.length`, e
    a edição nova abria com os cartões da anterior. Quem não passa a opção segue
@@ -142,20 +130,16 @@ test('a âncora existe no documento do base, e exatamente uma vez', () => {
     `o base abre o corpo ${vezes} vez(es) com ${V2.ANCORA} — a costura do v2 depende de ser uma só`);
 });
 
-/* A ordem no topo do corpo: abertura, carimbo, seção de sprints, e só então as
-   seções do base. O carimbo primeiro porque vale pro documento inteiro; a
-   seção antes das entregas porque é o que o leitor de acompanhamento abre pra
-   ver. */
-test('carimbo e seção entram no topo do corpo, nesta ordem', () => {
+/* A seção de sprints vem antes das entregas: é o que o leitor de
+   acompanhamento abre pra ver. */
+test('a seção de sprints entra no topo do corpo, antes das do base', () => {
   const html = V2.htmlReport(entrada({ sprints: SPRINTS })).html;
   const corpo = html.indexOf(V2.ANCORA);
-  const data = html.indexOf('<p class="rt-carimbo">');
   const ritmo = html.indexOf('<section class="rl-sec" id="ritmo">');
   const fimDoRitmo = ritmo + V2.secaoRitmo(SPRINTS).length;
   const doBase = html.indexOf('<section class="rl-sec"', fimDoRitmo);
   assert.ok(corpo >= 0, 'a âncora sumiu');
-  assert.ok(corpo < data, 'o carimbo caiu fora do corpo');
-  assert.ok(data < ritmo, 'a seção veio antes do carimbo');
+  assert.ok(corpo < ritmo, 'o ritmo caiu fora do corpo');
   assert.ok(ritmo < doBase || doBase === -1, 'o ritmo entrou depois de uma seção do base');
 });
 
@@ -169,13 +153,13 @@ test('sem a âncora, devolve o documento intacto em vez de pendurar a seção em
 test('o escopo da linha é o que ficou MAIS o que saiu — a conta tem que fechar', () => {
   const html = V2.secaoRitmo([SPRINTS[1]]);
   // Sprint 19: 2 entregues, 2 na sprint hoje, 3 transbordaram → 2 de 5.
-  assert.match(html, /<b>2<\/b> de 5 entregues/);
+  assert.match(html, /<span class="rt-placar">2\/5<\/span>/);
   assert.match(html, /<b>3<\/b> transbordaram/);
 });
 
 test('transbordo zero não vira "0 transbordaram"', () => {
   const html = V2.secaoRitmo([{ nome: 'Sprint 17', start: '2026-08-17T00:00:00Z', finish: '2026-08-28T00:00:00Z', entregues: 5, total: 5, transbordaram: 0 }]);
-  assert.match(html, /<b>5<\/b> de 5 entregues/);
+  assert.match(html, /<span class="rt-placar">5\/5<\/span>/);
   assert.doesNotMatch(html, /transbordaram|transbordou/);
 });
 
@@ -326,23 +310,22 @@ const S21 = { name: 'Sprint 21', path: 'P\\Sprint 21', start: '2026-10-12T00:00:
 
 test('sprint em curso é tarjada, e o parcial dela não vira resultado', () => {
   const html = V2.secaoRitmo([linhaDe(S20)]);
-  assert.match(html, /<span class="rt-tarja">em curso<\/span>/);
-  assert.match(html, /<b>1<\/b> de 3 entregues/);
+  assert.match(html, /<span class="rt-fase">Em curso<\/span>/);
+  assert.match(html, /<span class="rt-placar">1\/3<\/span>/);
 });
 
 /* "0 de 1 entregue" sobre trabalho que nem começou lê como zero de resultado.
    O que existe ali é o escopo já posto na fila. */
 test('sprint que não começou mostra o planejado, não um placar zerado', () => {
   const html = V2.secaoRitmo([linhaDe(S21)]);
-  assert.match(html, /<span class="rt-tarja">não começou<\/span>/);
-  assert.match(html, /<b>1<\/b> item planejado/);
-  assert.doesNotMatch(html, /entregue/);
+  assert.match(html, /<span class="rt-fase">Próxima<\/span>/);
+  assert.match(html, /<span class="rt-placar">1 item<\/span>/);
   assert.doesNotMatch(html, /rt-feito|rt-saiu/, 'a barra da sprint que não começou tem segmento');
 });
 
 test('sprint que não começou e não tem nada na fila diz isso', () => {
   const html = V2.secaoRitmo([C.ritmoDaSprint(S21, null, null, [], HOJE)]);
-  assert.match(html, /ainda sendo planejada/);
+  assert.match(html, /<span class="rt-placar">em planejamento<\/span>/);
 });
 
 /* ---------- a lista de itens ---------- */
@@ -363,7 +346,7 @@ test('a sprint lista seus itens, entregue primeiro', () => {
     ['Brinde indevido', 'Produto único para ads', 'Assinatura inteligente'],
     'a ordem é feito, depois o que anda, depois a fila');
   const html = V2.secaoRitmo([linha]);
-  assert.match(html, /<li class="rt-item rt-ok">[\s\S]*?Brinde indevido/);
+  assert.match(html, /<li class="rt-item">\s*<span class="rt-badge rt-tipo-pbi">PBI<\/span>\s*<span class="rt-item-nome">Brinde indevido/);
   assert.match(html, /Assinatura inteligente<\/span>\s*<span class="rt-item-estado">To Do/);
 });
 
@@ -400,17 +383,19 @@ test('sprint fechada não leva tarja', () => {
   const fechada = C.ritmoDaSprint(
     { name: 'Sprint 19', path: 'P\\Sprint 19', start: '2026-09-14T00:00:00Z', finish: '2026-09-25T00:00:00Z' },
     [], [], [], HOJE);
-  assert.doesNotMatch(V2.secaoRitmo([fechada]), /rt-tarja/);
+  assert.match(V2.secaoRitmo([fechada]), /<span class="rt-fase">Encerrada<\/span>/);
 });
 
 /* A tarja qualifica o número; ela não alarma sobre ele. A cor nesta seção está
    reservada pro que significa — verde entregue, âmbar transbordo. */
 test('a tarja é cinza, sem cor de significado', () => {
   const css = ler('assets/ritmo.css');
-  const regra = /\.rt-tarja \{[^}]*\}/.exec(css);
-  assert.ok(regra, 'a regra da tarja sumiu');
+  const regra = /\.rt-fase \{[^}]*\}/.exec(css);
+  assert.ok(regra, 'a regra da retranca sumiu');
   assert.match(regra[0], /color: var\(--mudo\)/);
   assert.doesNotMatch(regra[0], /--positivo|--atencao|--erro|--transbordo-barra/);
+  // Só a em curso ganha tinta cheia — o destaque é da coluna que o time olha.
+  assert.match(css, /\.rt-corrente \.rt-fase \{ background: var\(--tinta\); color: var\(--fundo-pagina\); \}/);
 });
 
 /* ---------- o controlador compartilhado ---------- */
@@ -437,7 +422,7 @@ test('o que é publicado passa pela mesma poda que o que é lido', () => {
     itens: [{ id: 51676, titulo: 'Assinatura', estado: 'To Do', feito: false, resp: 'Fulano de Tal', tipo: 'pbi' }],
     transbordados: [],
   }]);
-  assert.deepEqual(Object.keys(linha.itens[0]).sort(), ['estado', 'feito', 'titulo']);
+  assert.deepEqual(Object.keys(linha.itens[0]).sort(), ['estado', 'feito', 'tipo', 'titulo']);
   assert.equal(JSON.stringify(linha).includes('Fulano de Tal'), false,
     'o nome do responsável sobreviveu à poda e vai parar no arquivo publicado');
   assert.equal(JSON.stringify(linha).includes('51676'), false, 'o id viajou à toa');
@@ -495,14 +480,155 @@ test('as linhas que chegam pelo link passam por saneamento', () => {
   assert.deepEqual(saneRitmo([{ nome: '' }]), [], 'linha sem nome não desenha');
 });
 
+/* ---------- as duas abas ---------- */
+
+/* O documento responde duas perguntas com ritmos diferentes: o que o time
+   ENTREGOU (texto curado, congela) e o que está ACONTECENDO (sprints e roadmap,
+   mudam sozinhos). Numa página só, a segunda empurra a primeira pra baixo. */
+/* A pílula fica ENTRE a capa e o corpo, como o .rl-nav do report v2. Não há
+   cabeçalho próprio: a capa deste documento é a mesma do relatório de Agosto e
+   Setembro, com a marca dentro dela, e um segundo topo acima disputaria com
+   ela. */
+test('a pílula entra entre a capa e o corpo', () => {
+  const html = V2.htmlReport(entrada({ sprints: SPRINTS })).html;
+  const capa = html.indexOf('<header class="rl-capa">');
+  const pilula = html.indexOf('<nav class="rl-nav rl-abas"');
+  const corpo = html.indexOf(V2.ANCORA);
+  assert.ok(capa >= 0 && pilula >= 0 && corpo >= 0, 'sumiu a capa, a pílula ou o corpo');
+  assert.ok(capa < pilula, 'a pílula voltou pra antes da capa');
+  assert.ok(pilula < corpo, 'a pílula caiu dentro do corpo');
+  assert.match(html, /data-aba="entregas" aria-pressed="true"/);
+  assert.match(html, /data-aba="acompanhar"[^>]*aria-pressed="false"/);
+  assert.equal(V2.ABA_PADRAO, 'entregas', 'o documento abre no que ele é: um relatório de entregas');
+});
+
+/* A marca segue onde o documento base a desenha: dentro da capa. Esconder o
+   topo da capa foi coisa do cabeçalho, que não existe mais. */
+test('a marca continua na capa, intocada', () => {
+  const css = ler('assets/ritmo.css');
+  assert.doesNotMatch(css, /\.rl-capa-topo/, 'a folha ainda mexe no topo da capa');
+  assert.doesNotMatch(css, /rl-topo/, 'sobrou regra do cabeçalho que foi removido');
+  assert.doesNotMatch(V2.abasHtml(), /<img/, 'a pílula não desenha marca nenhuma');
+});
+
+/* A capa muda com a aba, e o texto de Entregas não é declarado em lugar nenhum:
+   o script guarda o que o base escreveu e restaura. Declarar seria uma segunda
+   cópia de uma frase que mora no outro arquivo. */
+test('só a aba Acompanhar declara texto de capa', () => {
+  const html = V2.abasHtml();
+  assert.match(html, /data-aba="acompanhar" data-titulo="Acompanhamento de" data-situacao="[^"]+"/);
+  const entregas = /<button[^>]*data-aba="entregas"[^>]*>/.exec(html)[0];
+  assert.doesNotMatch(entregas, /data-titulo|data-situacao/,
+    'a aba Entregas repetiu texto do documento base');
+  const pagina = ler('entregas-v2.html');
+  assert.match(pagina, /if \(el\.dataset\.orig === undefined\) el\.dataset\.orig = el\.textContent;/);
+  assert.match(pagina, /el\.textContent = \(btn && btn\.dataset\[chave\]\) \|\| el\.dataset\.orig;/);
+});
+
+/* O .rl-bento declara `display: grid`, e regra de autor ganha do
+   `[hidden] { display:none }` do navegador. Sem a regra parceira o bloco de
+   números continuaria na tela com o JS achando que escondeu — mesmo defeito que
+   já apareceu aqui com a barra de ferramentas e com o seletor de mês. */
+test('o bloco de números tem a regra parceira do hidden, e na folha da v2', () => {
+  assert.match(ler('assets/ritmo.css'), /\.rl-bento-capa\[hidden\] \{ display: none; \}/);
+  assert.doesNotMatch(ler('assets/entregas.css'), /\.rl-bento-capa\[hidden\]/,
+    'a regra vazou pra folha compartilhada com Agosto e Setembro');
+  assert.equal(V2.SO_EM_ENTREGAS, '.rl-bento-capa');
+});
+
+/* Quem decide a que aba cada seção pertence é quem DESENHA o documento. Repetir
+   a lista no script da página seria a segunda cópia, que diverge na primeira
+   seção nova. */
+test('a lista de seções de Acompanhar viaja na marcação, não no script', () => {
+  assert.deepEqual(V2.SECOES_ACOMPANHAR, ['ritmo', 'roadmap']);
+  assert.match(V2.abasHtml(), /data-acompanhar="ritmo roadmap"/);
+  const pagina = ler('entregas-v2.html');
+  assert.match(pagina, /nav\.dataset\.acompanhar/);
+  assert.doesNotMatch(pagina.replace(/\/\*[\s\S]*?\*\//g, ''), /'roadmap'/,
+    'o script escreveu o id à mão em vez de ler do documento');
+});
+
+/* Entregas sem cartão é o caso REAL de hoje: outubro começou sem nada escrito.
+   Sem a frase, a aba abre com capa, abas e rodapé — lê como documento
+   quebrado. */
+test('cada aba tem a frase de quando está vazia', () => {
+  const html = V2.vaziosHtml();
+  assert.match(html, /<p class="rl-aba-vazia mudo" data-de="entregas" hidden>As entregas deste período ainda estão sendo escritas\.<\/p>/);
+  assert.match(html, /<p class="rl-aba-vazia mudo" data-de="acompanhar" hidden>/);
+  // Nascem escondidas: quem as acende é o script, e só quando não há seção.
+  assert.equal((html.match(/class="rl-aba-vazia mudo"[^>]*hidden>/g) || []).length, 2);
+});
+
+/* Sem o script as duas partes aparecem empilhadas, que é o documento de antes.
+   A aba é melhoria de leitura, não requisito pra ele fazer sentido. */
+test('o documento renderiza inteiro sem o script da página', () => {
+  const html = V2.htmlReport(entrada({ sprints: SPRINTS })).html;
+  assert.match(html, /<section class="rl-sec" id="ritmo">/);
+  assert.doesNotMatch(html, /<section class="rl-sec" id="ritmo" hidden>/,
+    'nenhuma seção pode nascer escondida — sem JS elas somem de vez');
+});
+
+/* O fragmento é onde mora o pacote de dados dos links antigos. Escrever a aba
+   ali apagaria o documento de quem abrir um deles. */
+test('a aba só entra no endereço quando o fragmento não é pacote', () => {
+  const pagina = ler('entregas-v2.html');
+  assert.match(pagina, /const ehPacote = \(\) => \/\^#r=\/\.test\(location\.hash \|\| ''\);/);
+  assert.match(pagina, /if \(gravarNaUrl && !ehPacote\(\)\)/);
+  // replaceState: trocar de aba não é navegação nova, e o Voltar do navegador
+  // tem que sair da página, não percorrer cliques de aba.
+  assert.match(pagina, /history\.replaceState\(null, '', location\.pathname \+ location\.search \+ '#' \+ aba\);/);
+  assert.doesNotMatch(pagina, /history\.pushState/);
+});
+
+/* O report.js reescreve #report inteiro a cada render, e a aba ativa some com
+   ele. Sem devolver o estado, um refresh de dados jogaria o leitor de volta
+   pra Entregas no meio da leitura. */
+test('a aba ativa sobrevive ao redesenho do documento', () => {
+  const pagina = ler('entregas-v2.html');
+  assert.match(pagina, /new MutationObserver\(\(\) => \{[\s\S]*?aplicar\(atual \|\| daUrl\(\), false\);/);
+});
+
 /* ---------- publicação em arquivo ---------- */
 
 /* Documento de acompanhamento não cabe no fragmento: lá o dado anda junto com o
-   link, e cada atualização vira um link novo pra reenviar. As outras três
-   edições não declaram e seguem só com o fragmento. */
-test('só a edição de acompanhamento declara endereço fixo de dados', () => {
+   link, e cada atualização vira um link novo pra reenviar.
+
+   A edição de Agosto e Setembro ganhou endereço próprio quando o seletor passou
+   a levar até ela: sem isso, quem não tem token caía em "Sem token neste
+   navegador". Cada edição tem o SEU arquivo — um só serviria uma delas. */
+test('cada edição declara o endereço fixo dos dados dela', () => {
   assert.equal(V2.arquivoDeDados, 'assets/dados-outubro.json');
-  assert.equal(BASE.arquivoDeDados, undefined);
+  assert.equal(BASE.arquivoDeDados, 'assets/dados-ago-set.json');
+  assert.notEqual(V2.arquivoDeDados, BASE.arquivoDeDados);
+});
+
+/* O report e o v2 não declaram, e seguem só com o fragmento — nenhuma
+   requisição a mais e nenhum comportamento novo. */
+test('report e v2 continuam sem endereço fixo', () => {
+  for (const f of ['assets/briefing.js', 'assets/briefing-v2.js']) {
+    assert.equal(require('../' + f).arquivoDeDados, undefined, `${f} não devia ter ganhado`);
+  }
+});
+
+/* O seletor NAVEGA, não redesenha: o que a edição antiga exporta não tem
+   `resumo` nem `imagens`, e redesenhá-la aqui daria títulos com selo e nenhum
+   texto nem tela — uma versão capenga de um relatório já publicado. */
+test('o seletor de edição leva pro outro arquivo, e a atual não tem pra onde ir', () => {
+  const html = V2.abasHtml();
+  assert.match(html, /<div class="rl-mes-borda"><select class="rl-edicao rl-mes" aria-label="Edição do relatório">/);
+  assert.match(html, /<option value="" selected>Outubro de 2026<\/option>/);
+  assert.match(html, /<option value="entregas\.html">Agosto e Setembro de 2026<\/option>/);
+  assert.equal(V2.EDICOES.filter((e) => !e.url).length, 1, 'só a edição atual fica sem destino');
+  const pagina = ler('entregas-v2.html');
+  assert.match(pagina, /if \(!sel \|\| !sel\.value\) return;/, 'a edição atual não pode navegar pra lugar nenhum');
+  assert.match(pagina, /location\.href = sel\.value;/);
+});
+
+/* Prova de que a declaração não mexeu no documento: o campo é lido pelo
+   report.js, nunca desenhado. */
+test('a declaração não entra no documento de Agosto e Setembro', () => {
+  const html = BASE.htmlReport(entrada()).html;
+  assert.doesNotMatch(html, /dados-ago-set/);
 });
 
 /* Duas entradas pro mesmo dado — o fragmento e o arquivo — com saneamentos
@@ -549,11 +675,17 @@ test('documento não publicado explica o que falta, sem cara de erro', () => {
 
 /* O nome do arquivo é declarado pelo DOCUMENTO e lido pelo script. Duas cópias
    divergem na primeira vez que a edição virar outro mês. */
-test('o script de publicação lê o nome do arquivo do módulo, não repete', () => {
+test('o script de publicação lê os nomes dos módulos, e serve as duas edições', () => {
   const sh = ler('scripts/publicar-dados.sh');
-  assert.match(sh, /grep -o "ARQUIVO_DE_DADOS = '\[\^'\]\*'" assets\/briefing-entregas-v2\.js/);
-  assert.doesNotMatch(sh.replace(/^#.*$/gm, ''), /dados-outubro\.json/,
-    'o script escreveu o nome à mão em vez de ler do módulo');
+  assert.match(sh, /assets\/briefing-entregas\.js assets\/briefing-entregas-v2\.js/,
+    'o script precisa conhecer as duas edições');
+  const semComentario = sh.replace(/^#.*$/gm, '');
+  for (const nome of ['dados-outubro.json', 'dados-ago-set.json']) {
+    assert.ok(!semComentario.includes(nome), `o script escreveu ${nome} à mão em vez de ler do módulo`);
+  }
+  /* Publicar a edição errada sobrescreve um relatório já compartilhado — com
+     dois arquivos esperando em Downloads, o script para em vez de escolher. */
+  assert.match(semComentario, /achei mais de um arquivo pra publicar/);
 });
 
 /* ---------- a página ---------- */
@@ -589,9 +721,11 @@ test('duas colunas só a partir de 720px, e nunca fora do @media', () => {
   const largo = /@media \(min-width: 720px\) \{[\s\S]*?\n\}/.exec(css);
   assert.ok(largo, 'o @media de 720px sumiu da folha do ritmo');
   assert.match(largo[0], /\.rt-lista \{ grid-template-columns: repeat\(2, minmax\(0, 1fr\)\); \}/);
+  /* Só a regra da LISTA: o cabeçalho também declara colunas, e fora de @media
+     mesmo — ele é de três colunas em qualquer largura acima do telefone. */
   const foraDoMedia = css.replace(/@media[^{]*\{(?:[^{}]|\{[^{}]*\})*\}/g, '');
-  assert.doesNotMatch(foraDoMedia, /grid-template-columns/,
-    'a regra de colunas vazou pro telefone e espreme os cartões em 375px');
+  assert.doesNotMatch(foraDoMedia, /\.rt-lista \{[^}]*grid-template-columns/,
+    'a regra de colunas da lista vazou pro telefone e espreme os cartões em 375px');
 });
 
 /* Meia largura com um vão do lado lê como cartão que faltou carregar, e não
@@ -640,7 +774,90 @@ test('a v2 declara data-ferramentas="local", como o original', () => {
 test('só a v2 tem o botão de publicar', () => {
   assert.match(pagina, /<button id="publicar"/);
   assert.match(fonteReport, /if \(\$\('publicar'\)\) \$\('publicar'\)\.addEventListener\('click', publicarDados\);/);
-  for (const f of ['entregas.html', 'report.html', 'report-v2.html']) {
+  /* O entregas.html também publica, desde que o seletor passou a levar até
+     ele: cada edição gera o arquivo dela. É chrome do PO — a barra só se monta
+     em localhost —, então o leitor nunca vê o botão e o documento não muda. */
+  assert.match(ler('entregas.html'), /<button id="publicar"/);
+  for (const f of ['report.html', 'report-v2.html']) {
     assert.doesNotMatch(ler(f), /id="publicar"/, `${f} não devia ter ganhado o botão`);
   }
+});
+
+/* ---------- o cabeçalho ---------- */
+
+
+/* Grade de três colunas, e não flex com space-between: as abas ficam no centro
+   da PÁGINA, e não no meio do espaço que sobrou da marca. */
+/* FIXA, e não sticky: sticky só gruda depois que a rolagem alcança a peça, e
+   quem abre numa parte e quer a outra teria que voltar ao começo pra achar o
+   menu. */
+test('a pílula fica fixa no topo, centrada', () => {
+  const css = ler('assets/ritmo.css').replace(/\/\*[\s\S]*?\*\//g, '');
+  const regra = /\.rl-abas \{[^}]*\}/.exec(css);
+  assert.ok(regra, 'a regra da pílula sumiu');
+  assert.match(regra[0], /position:\s*fixed/);
+  assert.match(regra[0], /top:\s*0\.6rem/);
+  assert.match(regra[0], /justify-content:\s*center/);
+  /* Fora do fluxo ela não pode reservar espaço: com margem, abriria um vão
+     entre a capa e o corpo onde ela nem está mais. */
+  assert.match(regra[0], /margin:\s*0;/);
+});
+
+
+
+/* Dois zeros gigantes em cima de "as entregas ainda estão sendo escritas" é a
+   mesma ausência dita duas vezes, e a segunda com peso de manchete. */
+test('os números da capa somem também quando a própria aba Entregas está vazia', () => {
+  const pagina = ler('entregas-v2.html');
+  assert.match(pagina, /el\.hidden = aba !== 'entregas' \|\| vazia;/);
+  // `vazia` precisa ser calculada ANTES — senão a linha acima lê undefined e
+  // os números ficam na tela justamente no caso que ela existe pra resolver.
+  assert.ok(pagina.indexOf('const vazia =') < pagina.indexOf("el.hidden = aba !== 'entregas' || vazia;"),
+    'o cálculo de `vazia` ficou depois de quem o usa');
+});
+
+/* Hover quebrado, visto pelo Urlan: a aba ficava preta com o texto sumido. Duas
+   definições de `.rl-aba` na mesma folha — a antiga sobrevivera a uma troca e
+   vinha DEPOIS, então ganhava, e o `:hover` dela devolvia a tinta ao texto
+   sobre fundo de tinta. Uma regra só é o que impede isso de voltar. */
+test('a aba tem uma definição só, e o hover não some com o texto', () => {
+  const css = ler('assets/ritmo.css').replace(/\/\*[\s\S]*?\*\//g, '');
+  const definicoes = (css.match(/(^|\n)\.rl-aba \{/g) || []).length;
+  assert.equal(definicoes, 1, 'há mais de uma regra .rl-aba — a última ganha, e as duas divergem');
+  assert.equal((css.match(/(^|\n)\.rl-aba:hover/g) || []).length, 1);
+  // Fundo de tinta exige texto claro, nos dois estados em que ele aparece.
+  for (const re of [/\.rl-aba:hover \{ background: var\(--tinta\); color: #fff; \}/,
+    /\.rl-aba\[aria-pressed="true"\] \{ background: var\(--tinta\); color: #fff; \}/]) {
+    assert.match(css, re);
+  }
+});
+
+/* A lista abria POR CIMA do controle: num <select> comum o popup é desenhado
+   pelo sistema, e no macOS ele alinha o item selecionado sobre o botão.
+   `appearance: base-select` entrega o desenho pro CSS e o picker vira um
+   popover ancorado que nasce embaixo. */
+test('a lista de edições abre abaixo do controle', () => {
+  const css = ler('assets/ritmo.css');
+  const bloco = /@supports \(appearance: base-select\) \{[\s\S]*?\n\}/.exec(css);
+  assert.ok(bloco, 'o bloco de suporte sumiu');
+  assert.match(bloco[0], /\.rl-edicao \{ appearance: base-select; \}/);
+  assert.match(bloco[0], /position-area:\s*block-end span-inline-start/);
+});
+
+/* Atrás de @supports de propósito: onde o navegador não conhece, o <select>
+   segue nativo e funcionando — pior posicionado, nunca quebrado. E continua
+   sendo um <select> de verdade nos dois casos, então teclado, leitor de tela e
+   o seletor do celular vêm do navegador, não de código nosso. */
+test('o seletor continua sendo um <select>, não um menu de mentira', () => {
+  assert.match(V2.abasHtml(), /<select class="rl-edicao rl-mes"/);
+  /* Sem os comentários, e tirando o bloco pela MESMA extração do teste acima:
+     o comentário que explica o `appearance: base-select` cita a declaração, e
+     um teste que casa com o texto que o explica é falso positivo garantido. */
+  const css = ler('assets/ritmo.css').replace(/\/\*[\s\S]*?\*\//g, '');
+  const bloco = /@supports \(appearance: base-select\) \{[\s\S]*?\n\}/.exec(css)[0];
+  const foraDoSupports = css.replace(bloco, '');
+  assert.doesNotMatch(foraDoSupports, /appearance: base-select/,
+    'base-select fora do @supports quebra quem não suporta');
+  assert.match(foraDoSupports, /\.rl-edicao \{[\s\S]*?appearance: none/,
+    'sem suporte, o controle precisa continuar com a aparência própria');
 });

@@ -50,80 +50,143 @@
   .rt-linha:only-child { grid-column: 1 / -1; }
 }
 
+/* O CARTÃO DE SPRINT — mesma anatomia do cartão do Panorama (.sprint-card, em
+   assets/style.css): retranca em cima, linha de nome e placar, barra, fio, e os
+   itens em linha-cartão.
+
+   As regras estão escritas aqui e não importadas de lá porque são DUAS FOLHAS:
+   a entregas.css já nasceu cópia declarada do :root da style.css, pela mesma
+   razão — o relatório é um documento próprio, servido sozinho, e não carrega a
+   folha da Central. Os valores abaixo foram copiados de lá; mexeu num, confira
+   o outro. */
 .rt-linha {
-  padding: 0.85rem 1rem 0.9rem;
-  border: var(--fio);
-  border-radius: var(--raio-p);
   background: var(--superficie);
+  border-radius: 12px;
+  padding: 0.75rem 0.85rem 0.8rem;
+  box-shadow: none;
 }
+/* A sprint em curso é a que o time olha todo dia: selo em tinta cheia e o
+   cartão um degrau acima. As vizinhas ficam rentes ao bloco. */
+.rt-corrente { box-shadow: 0 2px 8px rgba(28, 25, 23, 0.09); }
 
-/* Nome e datas na mesma linha, com o nome em peso de título e a data em
-   anotação — a hierarquia que o cartão de sprint do Panorama já usa. Quebram
-   uma embaixo da outra no celular, sem apertar. */
-.rt-topo {
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.2rem 0.5rem;
-}
-.rt-nome {
-  font-weight: 700;
-  font-size: 0.98rem;
-  letter-spacing: -0.015em;
-  color: var(--tinta);
-}
-.rt-datas {
-  font-size: 0.82rem;
-  color: var(--mudo);
-}
-
-/* Tarja de sprint que não fechou. Cinza, e não colorida: ela qualifica o
-   número, não alarma sobre ele — uma sprint em curso não é problema. A cor
-   nesta seção está reservada pro que SIGNIFICA (verde entregue, âmbar
-   transbordo), e uma terceira cor aqui disputaria com as duas.
-
-   `margin-left: auto` empurra pra direita da linha; no celular ela cai junto
-   com o resto, porque o .rt-topo quebra. */
-.rt-tarja {
-  margin-left: auto;
-  padding: 0.1rem 0.45rem;
+/* Retranca: etiqueta ACIMA do bloco, não primeira linha dele — por isso o ar
+   embaixo é maior que o entre-linhas do conteúdo. */
+.rt-fase {
+  display: inline-block;
+  margin-bottom: 0.85rem;
+  padding: 0.16rem 0.45rem;
   border-radius: 999px;
-  background: var(--superficie-2);
-  color: var(--mudo);
   font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  background: var(--superficie-2);
+  color: var(--mudo);
+}
+.rt-corrente .rt-fase { background: var(--tinta); color: var(--fundo-pagina); }
+
+.rt-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0;
+  font-size: 0.8rem;
+}
+.rt-nome { min-width: 0; }
+.rt-nome b { font-weight: 700; }
+.rt-datas { color: var(--mudo); }
+.rt-placar {
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
+  color: var(--mudo);
+  font-weight: 600;
 }
 
-/* A barra é o escopo inteiro da sprint: o verde é o que foi entregue, o âmbar
-   é o que escorreu pra seguinte, e o que sobra em cinza é o que ficou aberto
-   dentro dela. Três leituras numa régua só — e a soma fecha, que é o ponto. */
+/* A barra: trilho cinza, verde o que foi entregue, âmbar o que escorreu. O
+   âmbar é a única coisa que esta barra tem a mais que a do Panorama, e existe
+   porque aqui ela mede uma sprint que já pode ter perdido escopo. */
 .rt-barra {
   display: flex;
-  height: 6px;
-  margin: 0.6rem 0 0.5rem;
+  height: 5px;
+  margin-top: 0.5rem;
   border-radius: 999px;
   overflow: hidden;
-  background: var(--superficie-2);
+  background: #e4e4e7;
 }
 .rt-feito { background: var(--positivo); }
 .rt-saiu { background: var(--transbordo-barra); }
 
 .rt-nums {
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.2rem 1rem;
-  font-size: 0.84rem;
+  margin: 0.55rem 0 0;
+  font-size: 0.78rem;
   color: var(--mudo);
   font-variant-numeric: tabular-nums;
 }
-.rt-nums b {
-  font-weight: 700;
+.rt-nums b { font-weight: 700; }
+.rt-amb b { color: var(--atencao); }
+
+/* Os itens, com o fio que os separa da barra. O fio precisa de ar dos dois
+   lados: espremido, ele lê como borda de caixa e não como separação. */
+.rt-itens {
+  list-style: none;
+  margin: 0.95rem 0 0;
+  padding: 0.9rem 0 0;
+  border-top: 1px solid var(--borda);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+/* Fundo --superficie-2 e sem sombra: a linha está DENTRO de um cartão que já é
+   branco, e branco sobre branco a faria desaparecer. */
+.rt-item {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: var(--superficie-2);
+  border-radius: 10px;
+  padding: 0.5rem 0.65rem;
+  font-size: 0.85rem;
   color: var(--tinta);
+}
+.rt-item-nome {
+  flex: 1;
+  min-width: 0;
+  font-weight: 500;
+}
+.rt-item-estado {
+  flex: none;
+  font-size: 0.74rem;
+  color: var(--mudo);
+  white-space: nowrap;
+}
+
+/* Selo de tipo: as mesmas cores do badge da Central, uma por tipo de item. */
+.rt-badge {
+  flex: none;
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.16rem 0.6rem;
+  background: var(--superficie-2);
+  color: var(--mudo);
+}
+.rt-tipo-epic { background: #ffefdd; color: #b45309; }
+.rt-tipo-feature { background: #f3e8fa; color: #7e22ce; }
+.rt-tipo-pbi { background: #e0f2fe; color: #0369a1; }
+.rt-tipo-bug { background: #fee2e2; color: #b91c1c; }
+.rt-tipo-task { background: #fef9c3; color: #a16207; }
+
+/* Item que saiu desta sprint. Ocupa o lugar do estado, porque o estado dele é
+   de OUTRA sprint agora. Âmbar e não vermelho: transbordar é planejamento. */
+.rt-selo-transbordo {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  background: var(--atencao-fundo);
+  color: var(--atencao);
+  font-weight: 600;
 }
 
 /* Carimbo de data: primeiro elemento do corpo, discreto mas presente. O leitor
@@ -136,6 +199,203 @@
   letter-spacing: 0.02em;
   color: var(--mudo);
   font-variant-numeric: tabular-nums;
+}
+
+/* AS ABAS. Duas, e por isso não é barra de navegação nem menu: são dois
+   botões lado a lado, o ativo em tinta cheia. Pílula de fundo no ativo, e não
+   sublinhado, porque o documento inteiro usa pílula (os selos dos cartões, as
+   tarjas das sprints) e um sublinhado seria um idioma a mais.
+
+   Sticky no topo: a aba Acompanhar é longa e quem rola até o fim do roadmap
+   precisa conseguir voltar sem subir a página toda. */
+/* A PÍLULA DE VIDRO — a mesma peça do report v2 (.rl-nav, em
+   assets/report-v2.css), trazida inteira. Valores copiados de lá; mexeu num,
+   confira o outro. As duas folhas são separadas por desenho: cada documento é
+   servido sozinho e não carrega a folha do outro.
+
+   Camada 1, a borda: não é `border`, são 2px de padding sobre fundo em
+   gradiente. Os dois gradientes apontam pra diagonais quase opostas, então o
+   brilho muda de intensidade ao redor da pílula em vez de ficar uniforme — é o
+   que dá a leitura de vidro biselado. A sombra mora aqui, não no vidro de
+   dentro: é o conjunto que flutua. */
+/* FIXA NO TOPO, sempre visível — e não `sticky`, que só gruda depois que a
+   rolagem alcança a peça. Aqui ela é o controle do documento: quem abre numa
+   parte e quer a outra não deveria precisar voltar ao começo pra achar o menu.
+
+   Fora do fluxo, ela não reserva espaço: a capa segue encostada no alto, com a
+   marca dela à esquerda, e a pílula flutua centrada ao lado. As duas não se
+   cruzam porque uma está na margem e a outra no meio. Rolando, o conteúdo
+   passa por baixo do vidro — que é justamente o que o blur desta peça foi
+   feito pra mostrar. */
+.rl-abas {
+  position: fixed;
+  top: 0.6rem;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0 var(--gutter);
+}
+.rl-nav-borda {
+  max-width: 100%;
+  padding: 2px;
+  border-radius: 99px;
+  box-shadow: 0 16px 32px rgba(28, 25, 23, 0.12);
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0) 69%, rgba(255, 255, 255, 0.6)),
+    linear-gradient(157deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 40%);
+}
+/* Camada 2 — o vidro. O fundo translúcido é o --superficie-2 da Central
+   (quente), não um cinza frio: é o que mantém a peça dentro da paleta. */
+.rl-nav-int {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  max-width: 100%;
+  padding: 0.375rem 0.5rem 0.375rem 0.375rem;
+  overflow-x: auto;
+  border-radius: 99px;
+  background: rgba(233, 231, 228, 0.78);
+  backdrop-filter: blur(8px) saturate(1.8);
+  -webkit-backdrop-filter: blur(8px) saturate(1.8);
+  scrollbar-width: none;
+}
+.rl-nav-int::-webkit-scrollbar { display: none; }
+/* Os itens são <button> e não <a>, mas leem igual aos de lá: mesma pílula,
+   mesmo peso, mesma inversão no hover. */
+.rl-aba {
+  flex: none;
+  font: inherit;
+  padding: 0.375rem 0.75rem;
+  border: none;
+  border-radius: 99px;
+  background: none;
+  color: var(--tinta);
+  font-size: 0.86rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.rl-aba:hover { background: var(--tinta); color: #fff; }
+/* O item ATIVO fica em tinta cheia — no report v2 nenhum item é "o atual",
+   porque lá o menu é sumário e todos levam a seções do mesmo documento. Aqui a
+   escolha persiste, e sem marcá-la o leitor não sabe onde está. */
+.rl-aba[aria-pressed="true"] { background: var(--tinta); color: #fff; }
+@media (prefers-reduced-motion: reduce) { .rl-aba { transition: none; } }
+
+/* O seletor de edição, no mesmo encaixe do seletor de mês do report v2 —
+   inclusive os dois ícones desenhados em SVG no próprio fundo: o calendário à
+   esquerda e a seta à direita. */
+.rl-mes-borda {
+  flex: none;
+  margin-left: 0.25rem;
+  padding: 1px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, rgba(28, 25, 23, 0.18), rgba(255, 255, 255, 0.7) 7%, rgba(255, 255, 255, 0.7) 92%, rgba(28, 25, 23, 0.18));
+  box-shadow: 0 8px 16px rgba(28, 25, 23, 0.14);
+}
+.rl-edicao {
+  appearance: none;
+  -webkit-appearance: none;
+  max-width: 13rem;
+  padding: 0.375rem 2.1rem;
+  border: none;
+  border-radius: 9999px;
+  background-color: #dedbd6;
+  color: var(--tinta);
+  font-family: inherit;
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%231c1c1a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%231c1c1a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' opacity='0.7'%3E%3Cpath d='M8 2v4'/%3E%3Cpath d='M16 2v4'/%3E%3Crect width='18' height='18' x='3' y='4' rx='2'/%3E%3Cpath d='M3 10h18'/%3E%3C/svg%3E");
+  background-repeat: no-repeat, no-repeat;
+  background-position: right 0.85rem center, left 0.8rem center;
+}
+
+/* A LISTA ABRE ABAIXO DO CONTROLE, e não por cima dele.
+
+   Com um <select> comum não há como pedir isso: o popup é desenhado pelo
+   sistema, e no macOS ele alinha o item selecionado sobre o botão — foi o que
+   o Urlan viu, a lista cobrindo a própria pílula.
+
+   `appearance: base-select` entrega o desenho do popup pro CSS, e aí ele vira
+   um popover ancorado que nasce embaixo. Fica atrás de @supports de propósito:
+   onde o navegador não conhece, o <select> segue nativo e funcionando como
+   hoje — pior posicionado, nunca quebrado. E continua sendo um <select> de
+   verdade nos dois casos: teclado, leitor de tela e o seletor do celular vêm
+   do navegador, não de código meu. */
+@supports (appearance: base-select) {
+  .rl-edicao { appearance: base-select; }
+  /* O chevron do navegador sai: os dois ícones já estão desenhados no fundo, e
+     dois chevrons na mesma pílula seria o controle dizendo a mesma coisa duas
+     vezes. */
+  .rl-edicao::picker-icon { display: none; }
+  .rl-edicao::picker(select) {
+    position-area: block-end span-inline-start;
+    margin-block-start: 0.4rem;
+    padding: 0.25rem;
+    border: none;
+    border-radius: 14px;
+    background: var(--superficie);
+    box-shadow: 0 12px 28px rgba(28, 25, 23, 0.16);
+    opacity: 1;
+    transition: none;
+  }
+  .rl-edicao option {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.7rem;
+    border-radius: 10px;
+    font-size: 0.86rem;
+    color: var(--tinta);
+    background: none;
+  }
+  .rl-edicao option:hover,
+  .rl-edicao option:focus { background: var(--superficie-2); }
+  /* A edição aberta fica marcada: sem isso o leitor perde de vista em qual
+     está, justamente na hora de trocar. */
+  .rl-edicao option:checked { font-weight: 700; }
+}
+
+/* No telefone não cabem marca e abas na mesma linha sem apertar as duas: a
+   marca sai e as abas ficam com a largura toda, centradas. A identidade segue
+   na capa logo abaixo — que no telefone é centrada — e no rodapé. */
+/* A pílula vira caixa arredondada e quebra em duas linhas, como no report v2:
+   em 375px os dois itens mais o seletor não cabem numa linha só. */
+@media (max-width: 599px) {
+  .rl-nav-borda, .rl-nav-int { border-radius: 22px; }
+  .rl-nav-int { flex-wrap: wrap; justify-content: center; row-gap: 0.15rem; overflow-x: visible; }
+}
+/* Impressão: a pílula é controle de tela e não existe no papel — e o script que
+   a governa não roda numa folha impressa, então as duas partes saem juntas, que
+   é o documento inteiro. */
+@media print { .rl-abas { display: none !important; } }
+
+/* REGRA PARCEIRA do [hidden], e ela não é opcional: o .rl-bento declara
+   `display: grid`, e regra de autor ganha do `[hidden] { display:none }` do
+   navegador — sem isto o bloco de números continuaria na tela em Acompanhar,
+   com o JS achando que escondeu. Mesmo defeito que já apareceu neste projeto
+   com a barra de ferramentas e com o seletor de mês.
+
+   Mora aqui e não na entregas.css porque aquela folha é compartilhada com o
+   relatório de Agosto e Setembro, que não tem abas e não deve ganhar regra
+   nenhuma por causa desta. */
+.rl-bento-capa[hidden] { display: none; }
+
+/* A frase da aba vazia ocupa o lugar que as seções ocupariam, pra que a página
+   não feche no rodapé logo abaixo das abas. */
+.rl-aba-vazia {
+  margin: 0;
+  padding: clamp(2.5rem, 6vw, 4.5rem) 0;
+  text-align: center;
+  font-size: 0.95rem;
 }
 
 /* A lista de itens da sprint. Separada dos números por um fio, e não por um
