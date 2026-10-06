@@ -6,6 +6,13 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 ## [Unreleased]
 
 ### Mudado
+- **Templates entra na coluna, e a capa fica só com "Por onde começar".** O
+  degrau ficava fora do menu com a razão de que seria "uma promessa — um item
+  com uma peça e uma lista de cinco esqueletos por escrever". São duas peças
+  agora, e as duas estão em uso: `.yb-page` e `.yb-block` aparecem nas onze
+  telas. O grupo entra depois de Blocks e antes de Examples, que é a ordem em
+  que uma tela se monta — a peça, a região, o esqueleto, a tela. A pendência
+  continua declarada, na galeria do degrau, que é o primeiro item do grupo.
 - **A capa parou de abrir os documentos de processo.** Principles, Decision
   log, Inventory e Contributing saíram: eles são para quem escreve o sistema,
   e o site publicado é para quem o consome. Continuam linkados no

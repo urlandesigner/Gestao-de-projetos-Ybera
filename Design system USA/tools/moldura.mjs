@@ -206,11 +206,20 @@ export function arvore() {
        ordem em que se monta uma tela — a peça existe antes da região que a
        usa. É a mesma ordem da cascata. */
     { tipo: 'grupo', id: 'blocks', rotulo: 'Blocks', itens: pecasDoGrupo(BLOCOS) },
-    /* Templates fica FORA da coluna por enquanto. O degrau existe — a folha
-       `templates/ybera-templates.css` carrega na cascata e o Page layout tem
-       ficha —, mas no menu ele seria uma promessa: um item com uma peça e uma
-       lista de cinco esqueletos por escrever. Continua alcançável pela capa,
-       que é onde a pendência segue declarada. */
+    /* TEMPLATES ENTRA DEPOIS DE BLOCKS e antes de Examples, que é a ordem em
+       que uma tela se monta: a peça, a região que a usa, o esqueleto que
+       segura as regiões, e enfim a tela pronta.
+
+       Ele ficou fora por um tempo com a razão de que seria "uma promessa — um
+       item com uma peça e uma lista de cinco esqueletos por escrever". São
+       duas peças agora, e as duas estão em uso: `.yb-page` e `.yb-block`
+       aparecem nas onze telas. A pendência não sumiu, mas ela mora na galeria
+       do degrau, que é o primeiro item daqui — e pendência declarada dentro
+       do grupo é melhor do que grupo nenhum. */
+    { tipo: 'grupo', id: 'templates', rotulo: 'Templates', itens: [
+      { href: 'templates/index.html', rotulo: 'Overview', id: 'templates' },
+      ...pecasDoGrupo(NIVEIS.filter((n) => n.dir === 'templates')),
+    ] },
     { tipo: 'grupo', id: 'pages', rotulo: 'Examples', itens: [
       { href: 'pages/index.html', rotulo: 'Overview', id: 'pages' },
       ...TELAS.map(([arq, nome]) => ({ href: `pages/${arq}`, rotulo: nome, id: `tela-${arq}`, externa: true })),
