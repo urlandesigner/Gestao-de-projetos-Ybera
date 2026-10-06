@@ -1,0 +1,125 @@
+/* ==========================================================================
+   RITMO DAS SPRINTS — a seção que só existe no entregas-v2.html.
+
+   Folha própria, e não um bloco no fim do entregas.css, porque o entregas.css
+   é compartilhado com o documento de Entregas original: um arquivo separado é
+   o que garante que a página antiga não mude nem por acidente.
+
+   Tudo aqui sai do :root do entregas.css, que a página carrega antes desta
+   folha: --tinta, --mudo, --borda, --superficie-2, --positivo, --atencao,
+   --raio-p, --fio. Cor só onde SIGNIFICA — verde é entrega, âmbar é transbordo.
+   ========================================================================== */
+
+:root {
+  /* O âmbar da BARRA, que não é o mesmo do texto.
+
+     O --atencao (#92400e) é âmbar escuro, feito pra ler como texto sobre fundo
+     claro. Em faixa de 6px ao lado do verde ele some pra marrom-avermelhado e
+     passa a dizer "erro" — e transbordo não é defeito, é decisão de
+     planejamento. Este é o MESMO valor do ponto de transbordo no board da
+     Central (corColunaPorBucket, em app.js): o mesmo fato não pode ter duas
+     cores em duas telas. O número embaixo da barra segue em --atencao, onde a
+     leitura é que manda. */
+  --transbordo-barra: #d97706;
+}
+
+/* UMA coluna por padrão, duas a partir de 720px — o mesmo corte que a
+   entregas.css usa em todo o resto do documento.
+
+   Duas e não `auto-fit`: o relatório costuma fechar duas sprints por período, e
+   `auto-fit` daria três colunas num período de seis sprints, quebrando a
+   leitura em linhas de tamanhos diferentes. Duas é a forma do conteúdo, não do
+   espaço disponível.
+
+   `minmax(0, 1fr)` e não `1fr`: o mínimo implícito de uma coluna de grid é
+   `auto`, que é o tamanho do conteúdo — nome de sprint longo empurraria a
+   coluna e estouraria a linha em vez de quebrar dentro dela. */
+.rt-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+@media (min-width: 720px) {
+  .rt-lista { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Sprint sozinha ocupa a linha inteira. A meia largura com um vão do lado
+     parece cartão que faltou carregar, e não período de uma sprint só. Com
+     número ímpar maior (3, 5…) o vão é só o fim da lista, e aí ele lê certo. */
+  .rt-linha:only-child { grid-column: 1 / -1; }
+}
+
+.rt-linha {
+  padding: 0.85rem 1rem 0.9rem;
+  border: var(--fio);
+  border-radius: var(--raio-p);
+  background: var(--superficie);
+}
+
+/* Nome e datas na mesma linha, com o nome em peso de título e a data em
+   anotação — a hierarquia que o cartão de sprint do Panorama já usa. Quebram
+   uma embaixo da outra no celular, sem apertar. */
+.rt-topo {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.5rem;
+}
+.rt-nome {
+  font-weight: 700;
+  font-size: 0.98rem;
+  letter-spacing: -0.015em;
+  color: var(--tinta);
+}
+.rt-datas {
+  font-size: 0.82rem;
+  color: var(--mudo);
+}
+
+/* A barra é o escopo inteiro da sprint: o verde é o que foi entregue, o âmbar
+   é o que escorreu pra seguinte, e o que sobra em cinza é o que ficou aberto
+   dentro dela. Três leituras numa régua só — e a soma fecha, que é o ponto. */
+.rt-barra {
+  display: flex;
+  height: 6px;
+  margin: 0.6rem 0 0.5rem;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--superficie-2);
+}
+.rt-feito { background: var(--positivo); }
+.rt-saiu { background: var(--transbordo-barra); }
+
+.rt-nums {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1rem;
+  font-size: 0.84rem;
+  color: var(--mudo);
+  font-variant-numeric: tabular-nums;
+}
+.rt-nums b {
+  font-weight: 700;
+  color: var(--tinta);
+}
+/* O número do transbordo em âmbar, igual ao segmento da barra logo acima — é a
+   mesma informação dita duas vezes, e cor diferente faria parecerem duas. */
+.rt-amb b { color: var(--atencao); }
+
+/* Impressão: fundo de cor não sai na impressora doméstica por padrão, e sem
+   isto a barra vira um retângulo branco. O `print-color-adjust` pede pra
+   imprimir como está na tela; onde o navegador ignorar, os números embaixo
+   seguem dizendo tudo — a barra nunca foi a única fonte. */
+@media print {
+  .rt-linha {
+    break-inside: avoid;
+    box-shadow: none;
+  }
+  .rt-barra, .rt-feito, .rt-saiu {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

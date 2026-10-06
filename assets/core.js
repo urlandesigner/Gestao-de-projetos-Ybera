@@ -657,6 +657,105 @@
     return { done: lista.filter((x) => x && x.feito).length, total: lista.length };
   }
 
+  /* Itens de uma sprint, na forma CURTA que `placarDeSprint` consome — a ponte
+     entre o item cru do DevOps e as duas telas que contam sprint.
+
+     Morava no app.js, que é só da Central. Veio pra cá quando o relatório de
+     Entregas passou a mostrar o ritmo das sprints: a alternativa era uma
+     segunda função dizendo o que conta como entrega, e duas réguas pra mesma
+     pergunta é exatamente o defeito que o `placarDeSprint` existe pra impedir.
+
+     Task fica de fora — mesmo corte que o `sprintProgress` já faz: é sub-item
+     de outro item, não uma entrega em si, e contá-la inflaria o placar.
+
+     Guarda `feito` em vez de devolver só os abertos: a coluna da sprint
+     ANTERIOR precisa do placar (de todos) e da lista do que não fechou (dos
+     abertos), e quem filtra é quem desenha. */
+  function resumoDeSprint(itens) {
+    return (Array.isArray(itens) ? itens : [])
+      .filter((it) => it && ((it.fields || {})['System.WorkItemType']) !== 'Task')
+      .map((it) => {
+        const f = it.fields || {};
+        const at = f['System.AssignedTo'];
+        return {
+          id: it.id,
+          titulo: f['System.Title'] || ('item #' + it.id),
+          resp: at && at.displayName ? at.displayName : null,
+          tipo: typeSlug(f['System.WorkItemType']),
+          estado: f['System.State'] || '',
+          feito: stateBucket(f['System.State']) === 'feito',
+        };
+      });
+  }
+
+  /* A sprint vale até o FIM do dia que o DevOps chama de `finish` — ele manda a
+     data sem hora útil. Perguntar pela meia-noite devolve a véspera e perde o
+     que foi mexido no último dia, que é justamente quando a sprint se decide. */
+  const FIM_DO_DIA = 86399000; // 23:59:59 em ms
+
+  /* As sprints que FECHARAM dentro dos meses do documento.
+
+     Fechadas, não "que tocam o período": numa sprint em curso ninguém
+     transbordou ainda e o placar sai pela metade — a linha diria 1/12 sobre uma
+     sprint que ainda tem uma semana. O `agora` existe por isso, e o FIM_DO_DIA
+     também: no último dia a sprint ainda é a sprint.
+
+     Ordem crescente, do mais antigo pro mais novo: é série temporal, e o
+     Panorama já lê o ritmo nessa direção. */
+  function sprintsDoPeriodo(iteracoes, meses, agora) {
+    const alvo = new Set(Array.isArray(meses) ? meses : []);
+    if (!alvo.size) return [];
+    return (Array.isArray(iteracoes) ? iteracoes : [])
+      .map((s) => {
+        const fim = s && s.finish ? Date.parse(s.finish) : NaN;
+        return Number.isNaN(fim) ? null : { s, fim };
+      })
+      .filter((x) => x && x.fim + FIM_DO_DIA < agora && alvo.has(rotuloMes(x.fim)))
+      .sort((a, b) => a.fim - b.fim)
+      .map((x) => x.s);
+  }
+
+  /* UMA LINHA DO RITMO: o que a sprint entregou e o que escorreu pra seguinte.
+
+     `itensDoDocumento` é a MESMA lista que desenha o resto do relatório — já
+     sem sustentação e já no recorte de responsável que o leitor está vendo. É
+     o ponto da função: a linha da sprint e o corpo do documento não podem
+     contar com réguas diferentes, que foi o defeito de "a capa dizia 28 e o
+     leitor contava 8".
+
+     Só nível de requisito (PBI, User Story, Bug). Épico e Feature às vezes têm
+     iteração preenchida e entrariam como se fossem entrega da sprint, contando
+     duas vezes o trabalho dos filhos.
+
+     `idsAgora` e `idsNoFim` vêm do MESMO construtor (wiqlIteracao), variando só
+     o instante — e por isso a diferença entre eles é transbordo, e não
+     desencontro de definição. Eles chegam crus de propósito, Task inclusive:
+     recortar antes de comparar marcaria como transbordo tudo que o recorte
+     tirou. O recorte entra DEPOIS, na hora de dizer quem são os que saíram. */
+  function ritmoDaSprint(sprint, idsAgora, idsNoFim, itensDoDocumento) {
+    const lista = Array.isArray(itensDoDocumento) ? itensDoDocumento : [];
+    const ehRequisito = (it) => levelOf(((it || {}).fields || {})['System.WorkItemType']) === 'pbi';
+    const naSprint = itensDaIteracao(lista, sprint && sprint.path).filter(ehRequisito);
+    const placar = placarDeSprint(resumoDeSprint(naSprint));
+    const porId = new Map(lista.map((it) => [it.id, it]));
+    /* Quem saiu e não está em `itensDoDocumento` simplesmente não conta: ou é
+       Task, ou é sustentação, ou está fora do recorte, ou mudou de área. Nos
+       quatro casos ele não é entrega deste documento, e afirmar o contrário
+       encheria a linha de item que o leitor não acharia em lugar nenhum. */
+    const saiu = transbordados(idsNoFim, (idsAgora || []).map((id) => ({ id })))
+      .map((id) => porId.get(id))
+      .filter((it) => it && ehRequisito(it));
+    return {
+      nome: (sprint && sprint.name) || '',
+      path: (sprint && sprint.path) || '',
+      start: (sprint && sprint.start) || null,
+      finish: (sprint && sprint.finish) || null,
+      entregues: placar.done,
+      total: placar.total,
+      transbordaram: resumoDeSprint(saiu).length,
+    };
+  }
+
   /* ---------- Panorama: ritmo e risco ---------- */
 
   /* Entregas por mês, divididas por frente — o gráfico do Panorama.
@@ -1199,7 +1298,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, wiqlIteracao, transbordados, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, placarDeSprint, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };

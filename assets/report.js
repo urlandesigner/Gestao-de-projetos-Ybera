@@ -32,6 +32,11 @@ const CAMPOS = [
   'System.Title', 'System.State', 'System.WorkItemType', 'System.Parent',
   'System.AssignedTo', 'Microsoft.VSTS.Scheduling.StartDate', 'Microsoft.VSTS.Scheduling.TargetDate',
   'Microsoft.VSTS.Common.ClosedDate', 'System.ChangedDate', 'System.Description',
+  // Entra pelo documento que mede ritmo de sprint: com a iteração junto, saber
+  // quem está em qual sprint é filtro local sobre uma lista que já veio, e não
+  // uma consulta por sprint. Não viaja no link — quem decide isso é o
+  // `camposDoLink` do documento, e nenhum dos três declara este campo.
+  'System.IterationPath',
 ];
 
 // A consulta é presa à área do time (areaClause). Épico e Feature costumam
@@ -82,6 +87,11 @@ const st = {
   resp: (() => { const f = loadJSON(LS.filtros) || {}; return f.resp === undefined ? null : f.resp; })(),
   items: null,
   pais: [],        // pais buscados por id, fora da consulta por área
+  /* Ritmo das sprints, só pra quem declara `precisaDeSprints`.
+     `sprintsBrutas` é o material do DevOps (ids por sprint) e vira linha no
+     render; `sprints` são as linhas já contadas que chegam pelo link. */
+  sprintsBrutas: null,
+  sprints: [],
   /* Ligado quando a leitura das áreas do time falhou: a consulta passou a
      valer pro projeto inteiro e os totais estão MAIORES que a realidade. Fica
      visível só pro PO — quem decide publicar o link é ele, e o leitor do link
@@ -387,9 +397,14 @@ function render() {
   const erroHtml = st.erro ? `<p class="erro">${B.esc(st.erro)}</p>` : '';
   if (!st.items) { box.innerHTML = erroHtml + (st.erro ? '' : '<p class="mudo">carregando…</p>'); return; }
   if (!st.leitura) renderFiltro();
+  const itensDoDoc = st.leitura ? st.items : st.items.filter(noNome);
   const r = B.htmlReport({
-    items: st.leitura ? st.items : st.items.filter(noNome),
+    items: itensDoDoc,
     todos: st.items.concat(st.pais), // o produto mora no pai — de outro dono, ou de outra área
+    /* O ritmo é contado AQUI, sobre a mesma lista que desenha o corpo — nunca
+       numa lista própria. É o que mantém a linha da sprint e as entregas do
+       documento na mesma régua quando o recorte de responsável muda. */
+    sprints: st.leitura ? st.sprints : ritmoAgora(itensDoDoc),
     // No link, o objetivo + rumo e os pedidos de decisão vêm prontos (o backlog
     // inteiro não viaja). Ao vivo (PO), ficam undefined e o briefing calcula.
     produtos: st.leitura ? st.produtos : undefined,
@@ -447,6 +462,7 @@ async function carregar() {
       try { st.usuario = await A.currentUser(ctx()); } catch (e) { /* filtro só começa em "todos" */ }
     }
     const todos = [];
+    const escopos = []; // projeto + área de cada time, pra quem mede sprint depois
     for (const p of st.config.projects.filter((x) => !x.hidden)) {
       let areas = [];
       try {
@@ -460,6 +476,7 @@ async function carregar() {
           + ' — a consulta passa a valer pro PROJETO INTEIRO, e os números incham com itens de outros times.'
           + ' Motivo: ' + mensagemDeErro(e));
       }
+      escopos.push({ p, areas });
       const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlProdutos(areas));
       const crus = ids.length ? await A.getFields(ctx(), ids, CAMPOS) : [];
       for (const it of crus) todos.push(Object.assign({ projeto: p.projectName }, it));
@@ -475,6 +492,7 @@ async function carregar() {
        costuma estar fora do recorte do PO, e sem ele os filhos pareceriam
        órfãos e continuariam contando. */
     st.items = C.foraDaManutencao(todos, todos.concat(st.pais));
+    st.sprintsBrutas = B.precisaDeSprints === true ? await buscarRitmo(escopos) : null;
   } catch (e) {
     st.erro = mensagemDeErro(e);
   } finally {
@@ -484,6 +502,80 @@ async function carregar() {
     // está na barra corresponde a ele. Não se publica estado incerto.
     if (st.items && !st.erro) await gravarLink();
   }
+}
+
+/* ---------- Ritmo das sprints ---------- */
+/* Só existe pra documento que DECLARA precisar, em `B.precisaDeSprints`. É o
+   mesmo arranjo de `camposDoLink` e `contagensDoLink`, e pelo mesmo motivo:
+   este arquivo serve três documentos, e dois deles não falam de sprint. Quem
+   não declara não gasta uma requisição sequer, e segue byte a byte como antes.
+
+   O que volta daqui é MATÉRIA-PRIMA, não a linha pronta: só os ids que estavam
+   na sprint hoje e no fim dela. Quem está em qual sprint HOJE sai de `st.items`,
+   que já veio, por isso não há uma consulta por sprint pra isso. E a linha é
+   montada no render, porque ela depende do recorte de responsável — que troca
+   sem recarregar. Montá-la aqui congelaria o número do recorte antigo embaixo
+   de um documento já redesenhado. */
+async function buscarRitmo(escopos) {
+  const periodo = typeof B.periodoDoDocumento === 'function' ? B.periodoDoDocumento() : [];
+  if (!periodo.length) return [];
+  const agora = Date.now();
+  const linhas = [];
+  for (const { p, areas } of escopos) {
+    let iteracoes = [];
+    try {
+      iteracoes = await A.teamIterations(ctx(), p.projectName, p.teamName);
+    } catch (e) {
+      /* Sem as iterações o documento perde a seção, não a página: o resto dele
+         não depende de sprint nenhuma. Mas avisa, senão "o time não fechou
+         sprint no período" e "a chamada falhou" ficam idênticos na tela. */
+      console.warn('[Central] não deu pra ler as sprints de ' + p.teamName
+        + ' — a seção de ritmo sai do documento. Motivo: ' + mensagemDeErro(e));
+      continue;
+    }
+    for (const sp of C.sprintsDoPeriodo(iteracoes, periodo, agora)) {
+      /* As duas pontas saem do MESMO construtor, variando só o instante. Foi o
+         que fez o transbordo parar de misturar "saiu da sprint" com "as duas
+         consultas perguntavam coisas diferentes" — medido, 141 contra 147. */
+      const qAgora = C.wiqlIteracao(sp.path, areas);
+      const qNoFim = C.wiqlIteracao(sp.path, areas, Date.parse(sp.finish) + C.FIM_DO_DIA);
+      if (!qAgora || !qNoFim) continue;
+      try {
+        const [idsAgora, idsNoFim] = await Promise.all([
+          A.runWiql(ctx(), p.projectName, p.teamName, qAgora),
+          A.runWiql(ctx(), p.projectName, p.teamName, qNoFim),
+        ]);
+        linhas.push({ sprint: sp, idsAgora, idsNoFim });
+      } catch (e) {
+        console.warn('[Central] não deu pra medir a ' + sp.name
+          + ' — ela sai da seção de ritmo. Motivo: ' + mensagemDeErro(e));
+      }
+    }
+  }
+  // Ordem crescente mesmo com mais de um time: a seção é série temporal, e
+  // concatenar por projeto deixaria setembro de um antes de agosto do outro.
+  return linhas.sort((a, b) => Date.parse(a.sprint.finish) - Date.parse(b.sprint.finish));
+}
+
+/* A linha pronta, no recorte que o leitor está vendo agora. */
+function ritmoAgora(itensNoEscopo) {
+  return (st.sprintsBrutas || []).map((x) =>
+    C.ritmoDaSprint(x.sprint, x.idsAgora, x.idsNoFim, itensNoEscopo));
+}
+
+/* Vindo do link, as linhas já estão contadas — e são forjáveis como todo o
+   resto do pacote. Texto curto, número inteiro e não negativo. */
+function saneRitmo(lista) {
+  const n = (v) => (Number.isFinite(v) && v >= 0 ? Math.floor(v) : 0);
+  const txt = (v, max) => String(v == null ? '' : v).trim().slice(0, max);
+  return (Array.isArray(lista) ? lista : []).slice(0, 60).map((x) => ({
+    nome: txt((x || {}).nome, 80),
+    start: txt((x || {}).start, 40) || null,
+    finish: txt((x || {}).finish, 40) || null,
+    entregues: n((x || {}).entregues),
+    total: n((x || {}).total),
+    transbordaram: n((x || {}).transbordaram),
+  })).filter((x) => x.nome);
 }
 
 /* ---------- Link de leitura ---------- */
@@ -698,6 +790,11 @@ async function gravarLink() {
     const pacote = typeof B.contagensDoLink === 'function'
       ? Object.assign(cabecalho, {
         contagens: B.contagensDoLink(mostrados, st.items.concat(st.pais)),
+        /* As linhas de sprint viajam CONTADAS, como as contagens: são quatro
+           números por sprint, e mandar os itens pra recontar do outro lado
+           colocaria o backlog inteiro dentro da URL. Fica de fora quando o
+           documento não pede sprint — e aí a chave nem existe no pacote. */
+        sprints: B.precisaDeSprints === true ? ritmoAgora(mostrados) : undefined,
       })
       : Object.assign(cabecalho, {
         items: enxugar(mostrados),
@@ -800,6 +897,7 @@ async function lerDoLink() {
     st.nomes = saneNomes(pacote.nomes); // forjável como o resto: texto curto, id numérico
     // Formato curto: vem saneado no briefing, que é quem sabe a forma dele.
     st.contagens = pacote.contagens || null;
+    st.sprints = saneRitmo(pacote.sprints); // link antigo não traz: vira lista vazia
     st.escopo = pacote.escopo || '';
     st.agora = pacote.em || Date.now();
     st.mes = pacote.mes || null;

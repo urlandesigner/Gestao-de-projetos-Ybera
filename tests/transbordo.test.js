@@ -105,7 +105,10 @@ const fonteApp = fs.readFileSync(path.join(raiz, 'assets', 'app.js'), 'utf8');
    Perguntar pela meia-noite devolveria a véspera e perderia tudo que foi mexido
    no último dia da sprint — justamente quando se move o que não fechou. */
 test('a pergunta é pelo último instante do dia em que a sprint fecha', () => {
-  assert.match(fonteApp, /const FIM_DO_DIA = 86399000;/);
+  // A constante mora no core desde que o relatório de Entregas passou a medir
+  // sprint: duas telas com o mesmo fim de dia, escrito num lugar só.
+  assert.equal(C.FIM_DO_DIA, 86399000);
+  assert.match(fonteApp, /const FIM_DO_DIA = C\.FIM_DO_DIA;/);
   assert.match(fonteApp, /const qNoFim = C\.wiqlIteracao\(sp\.path, areas, fim \+ FIM_DO_DIA\);/);
   assert.match(fonteApp, /const qAgora = C\.wiqlIteracao\(sp\.path, areas\);/,
     'as duas pontas precisam sair do mesmo construtor');

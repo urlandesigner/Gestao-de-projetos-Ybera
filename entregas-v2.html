@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entregas v2 — Central de Projetos</title>
+
+<!-- SEM TAGS DE PREVIEW (Open Graph), de propósito, enquanto esta é a versão em
+     prova. As do entregas.html afirmam a URL e a imagem DAQUELE documento;
+     copiadas pra cá, o cartaz deste link mandaria todo mundo pro documento
+     antigo — e preview que mente é pior que preview nenhum.
+
+     Quando esta versão virar a oficial, o caminho é o mesmo do original:
+     ./scripts/og-entregas.sh "<período>" e as tags entram aqui, com a og:url
+     apontando pra ESTA página. -->
+<meta name="description" content="O que o time entregou no período, o ritmo das sprints e o planejamento dos próximos meses.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
+<!-- A folha do roadmap é do COMPONENTE, compartilhada com a Central (o
+     Panorama desenha o mesmo gráfico). Vem antes: a entregas.css ainda ajusta
+     essas classes no @media print. -->
+<link rel="stylesheet" href="assets/roadmap.css?v=2026100502">
+<link rel="stylesheet" href="assets/entregas.css?v=2026100502">
+<!-- Depois da entregas.css, e nunca dentro dela: a ritmo.css só existe nesta
+     página, e a entregas.css é compartilhada com o documento original. Os
+     tokens que a ritmo.css usa (--tinta, --mudo, --positivo, --atencao…) vêm
+     do :root da folha de cima, então a ordem importa. -->
+<link rel="stylesheet" href="assets/ritmo.css?v=2026100502">
+</head>
+<!-- ENTREGAS v2. É o entregas.html mais UMA seção: o ritmo das sprints que
+     fecharam no período.
+
+     Não é um documento novo escrito do zero, e nem uma cópia do outro: a página
+     carrega o MESMO briefing-entregas.js e, por cima dele,
+     briefing-entregas-v2.js, que pega o documento pronto e injeta a seção. A
+     ordem dos dois <script> é o contrato — o v2 lê o base pelo window. Por isso
+     a lista curada de cartões continua existindo num lugar só, e o entregas.html
+     segue intocado.
+
+     data-ferramentas="local": mesma postura do original. Esta página também
+     pode acabar na mão de alguém, e a barra do PO só se monta em localhost. Em
+     produção ela ainda abre com &ferramentas=1, que é como se gera o link de
+     leitura (ele usa location.origin, então precisa nascer no endereço de
+     produção). --><body data-pagina="report" data-ferramentas="local" class="pagina-entregas">
+<div class="app">
+<div class="corpo">
+<main>
+  <section id="secao-report">
+    <div id="report"><p class="mudo">carregando…</p></div>
+  </section>
+</main>
+</div>
+</div>
+
+<div class="ferramentas" id="ferramentas" hidden>
+  <span id="badge" data-estado="sem-token">sem token</span>
+  <select id="resp-global" aria-label="Recorte por responsável" title="Recorte por responsável" hidden><option value="">todos os responsáveis</option></select>
+  <button id="atualizar" aria-label="Atualizar agora" title="Atualizar agora">↻</button>
+  <button id="sem-nome" class="botao-texto" hidden title="Épicos e Features que aparecem no report e ainda não têm nome de negócio — copia a lista em JSON pra preencher assets/report-nomes.json"></button>
+  <button id="copiar" class="botao-texto" title="Copia o endereço desta página — quem abrir lê o report sem token">Copiar link</button>
+  <a id="ver-entregas" class="botao-texto" href="entregas.html?po=1" title="Abrir o documento de Entregas sem a seção de ritmo">v1</a>
+  <a id="voltar" class="botao-texto" href="central.html#panorama" title="Voltar para a Central">Central</a>
+</div>
+<div id="caixa-link" class="caixa-link" hidden></div>
+
+<!-- Visor das telas da galeria. Mora na página, não no documento: o report.js
+     redesenha #report inteiro a cada render, e o <dialog> precisa sobreviver a
+     isso. Por ser <dialog> nativo, Esc pra fechar, foco preso dentro e fundo
+     escurecido vêm de graça — sem biblioteca. -->
+<dialog id="visor" class="rl-visor" aria-label="Visualização da tela">
+  <button type="button" id="visor-fechar" class="rl-visor-fechar" aria-label="Fechar">✕</button>
+  <img id="visor-img" alt="">
+  <p id="visor-legenda" class="rl-visor-legenda"></p>
+</dialog>
+
+<script src="assets/core.js?v=2026100502"></script>
+<script src="assets/api.js?v=2026100502"></script>
+<!-- Antes do briefing: ele pega o desenho do roadmap daqui. -->
+<script src="assets/roadmap-visao.js?v=2026100502"></script>
+<!-- Os dois briefings, nesta ordem: o base desenha o documento, o v2 pega o
+     que ele devolveu e acrescenta a seção de ritmo. Invertida a ordem, o v2
+     não acha o base e a página não desenha nada. -->
+<script src="assets/briefing-entregas.js?v=2026100502"></script>
+<script src="assets/briefing-entregas-v2.js?v=2026100502"></script>
+<script src="assets/report.js?v=2026100502"></script>
+<script>
+/* Visor da galeria — vive aqui, e não no report.js nem no briefing.
+
+   No report.js porque ele é compartilhado com report.html e report-v2.html, que
+   não têm galeria; no briefing porque ele é módulo de render puro, testado no
+   Node, e não deve tocar em evento de DOM.
+
+   O clique é delegado em #report: o documento é redesenhado a cada troca de
+   dado, e ouvir no container é o que sobrevive a isso. O <a> continua válido —
+   se este script falhar, o clique leva à imagem como antes. */
+(function () {
+  'use strict';
+  const box = document.getElementById('report');
+  const visor = document.getElementById('visor');
+  const img = document.getElementById('visor-img');
+  const legenda = document.getElementById('visor-legenda');
+  if (!box || !visor || !visor.showModal) return; // sem <dialog>, o <a> resolve
+
+  box.addEventListener('click', (ev) => {
+    const link = ev.target.closest('.rl-fig-link');
+    if (!link) return;
+    ev.preventDefault();
+    const fig = link.closest('.rl-fig');
+    const texto = fig && fig.querySelector('figcaption');
+    img.src = link.getAttribute('href');
+    img.alt = texto ? texto.textContent : '';
+    legenda.textContent = texto ? texto.textContent : '';
+    visor.showModal();
+  });
+
+  // Fechar solta a imagem na hora, e não no evento `close`: o `close` do
+  // <dialog> é disparado de forma assíncrona, então confiar nele deixava o src
+  // da tela anterior pendurado por um tempo indefinido. O listener continua
+  // como rede pro Esc, que fecha sem passar por aqui.
+  function fechar() {
+    visor.close();
+    img.removeAttribute('src');
+  }
+  // Clique no fundo fecha: o alvo só é o próprio <dialog> quando o ponto cai
+  // fora da área do conteúdo.
+  visor.addEventListener('click', (ev) => { if (ev.target === visor) fechar(); });
+  document.getElementById('visor-fechar').addEventListener('click', fechar);
+  visor.addEventListener('close', () => { img.removeAttribute('src'); });
+})();
+</script>
+</body>
+</html>

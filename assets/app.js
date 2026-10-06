@@ -239,30 +239,10 @@ const FIELDS_ITEMS = [
   'System.AssignedTo',
 ];
 
-/* Itens de uma sprint, na forma curta que as telas usam.
-
-   Task fica de fora — mesmo corte que o C.sprintProgress já faz: é sub-item de
-   outro item, não uma entrega em si, e contá-la inflaria o placar.
-
-   Guarda `feito` em vez de devolver só os abertos: a coluna da sprint ANTERIOR
-   precisa do placar (de todos) e da lista do que não fechou (dos abertos), e
-   quem filtra é quem desenha. */
-function resumoDeSprint(itens) {
-  return (itens || [])
-    .filter((it) => ((it.fields || {})['System.WorkItemType']) !== 'Task')
-    .map((it) => {
-      const f = it.fields || {};
-      const at = f['System.AssignedTo'];
-      return {
-        id: it.id,
-        titulo: f['System.Title'] || ('item #' + it.id),
-        resp: at && at.displayName ? at.displayName : null,
-        tipo: C.typeSlug(f['System.WorkItemType']),
-        estado: f['System.State'] || '',
-        feito: C.stateBucket(f['System.State']) === 'feito',
-      };
-    });
-}
+/* Mora no core.js desde que o relatório de Entregas passou a mostrar o ritmo
+   das sprints: as duas telas contam a mesma coisa e precisam contar igual.
+   O apelido fica porque é o nome por que as quatro chamadas daqui o conhecem. */
+const resumoDeSprint = C.resumoDeSprint;
 
 /* O QUE SAIU DA SPRINT DEPOIS QUE ELA FECHOU.
 
@@ -277,7 +257,7 @@ function resumoDeSprint(itens) {
    que era até hoje — a sprint como está agora —, que é informação correta,
    só menos completa. Mas avisa, senão "não houve transbordo" e "o ASOF não
    funciona nesta organização" ficam idênticos na tela. */
-const FIM_DO_DIA = 86399000; // 23:59:59 em ms, somado à data de `finish`
+const FIM_DO_DIA = C.FIM_DO_DIA; // 23:59:59 em ms, somado à data de `finish`
 
 async function buscarTransbordo(p, sp, areas) {
   const fim = sp && sp.finish ? Date.parse(sp.finish) : NaN;
