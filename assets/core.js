@@ -310,21 +310,6 @@
     });
   }
 
-  /* Transbordou = estava na sprint quando ela fechou e não está mais nela.
-
-     Item que saiu e VOLTOU aparece nos dois conjuntos e não é transbordo — ele
-     está lá agora, que é o que a coluna afirma. Item apagado no DevOps também
-     cai fora, porque o `getFields` de quem chama o omite. */
-  function transbordados(idsNoFim, itensDeHoje) {
-    const agora = new Set((itensDeHoje || []).map((it) => (it && it.id)));
-    const vistos = new Set();
-    return (idsNoFim || []).filter((id) => {
-      if (agora.has(id) || vistos.has(id)) return false;
-      vistos.add(id);
-      return true;
-    });
-  }
-
   // Fallback de ordenação de colunas quando a API de colunas falha:
   // ranqueia cada coluna pelo menor rank de fluxo dos estados dos seus itens.
   function orderColumnsFallback(columnNames, statesByColumn) {
