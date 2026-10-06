@@ -62,6 +62,16 @@
 }
 .log__versao li b{color:var(--yb-text-primary)}
 .log__versao p{color:var(--yb-text-secondary); max-inline-size:74ch}
+/* A area de espera nao e cartao: fio tracejado, sem sombra e sem fundo
+   proprio — e um rascunho preso na pagina, nao uma entrega. */
+.log__versao--espera{
+  background:none; box-shadow:none;
+  border-style:dashed; border-color:var(--yb-border);
+}
+.log__aviso{
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+  font-weight:var(--yb-font-weight-regular);
+}
 .log__codigo{
   margin:0 0 var(--yb-space-5); padding:var(--yb-space-4);
   background:var(--yb-bg-muted); border:1px solid var(--yb-border-subtle);
@@ -221,14 +231,15 @@
   <h1 class="ficha-titulo">Changelog</h1>
   <p class="ficha-quando">Formato: <a href="https://keepachangelog.com/pt-BR/1.1.0/">Keep a Changelog</a>. Versionamento descrito em <a href="GOVERNANCA.md">GOVERNANCA.md</a>.</p>
 
-<details class="log__versao" open>
-<summary><h2>[Unreleased]</h2></summary>
+<details class="log__versao log__versao--espera" open>
+<summary><h2>Em aberto</h2><span class="log__aviso">ainda não publicado — o número sai quando subir</span></summary>
 <h3>Adicionado</h3>
 <ul>
 <li><b>O changelog virou página, e entrou na coluna.</b> Era o único documento que não dava para ler pelo site: o servidor manda <code>.md</code> como <code>text/markdown</code> e o navegador baixa em vez de abrir. Agora <code>tools/changelog.mjs</code> gera <code>changelog/index.html</code> a cada build, uma gaveta por versão — a mais recente aberta, as outras quinze esperando. A fonte continua sendo o <code>.md</code>; a página é derivada como as fichas, e o CI pega se ficar para trás. O conversor é próprio, de umas setenta linhas, porque o projeto não tem dependência nenhuma e trazer um renderizador inteiro para seis construções sairia caro. <b>Dos quatro documentos de processo, só ele entra na coluna</b>, e a razão é a pergunta que ele responde: "o que mudou na versão que eu acabei de instalar?" é pergunta de quem usa. Princípios, Decisões e Contribuindo são de quem escreve o sistema, e seguem fora.</li>
 </ul>
 <h3>Corrigido</h3>
 <ul>
+<li><b>O <code>[Unreleased]</code> parecia uma versão sem número.</b> Na página ele tinha a mesma caixa, a mesma sombra e o mesmo peso das dezesseis versões lançadas, e a pergunta que isso gera é justamente a que a regra já responde: o número só é escolhido na hora de publicar. Agora ele se chama <b>Em aberto</b>, vem com a linha "ainda não publicado — o número sai quando subir", e tem fio tracejado sem sombra: é rascunho preso na página, não entrega. O markdown não muda — a distinção é de leitura.</li>
 <li><b>A checagem do preview móvel cobrava um arquivo da página errada.</b> Ela procurava <code>solo.html?c=</code> como texto em qualquer lugar da página, e a página do changelog <b>cita</b> esse endereço dentro de um <code>&lt;code&gt;</code> — contando a história de quando o recurso nasceu. A checagem passou a exigir que o endereço esteja num atributo (<code>src=</code> ou <code>href=</code>), que é como quem usa de verdade o escreve.</li>
 </ul>
 </details>

@@ -20,6 +20,13 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
   de quem escreve o sistema, e seguem fora.
 
 ### Corrigido
+- **O `[Unreleased]` parecia uma versão sem número.** Na página ele tinha a
+  mesma caixa, a mesma sombra e o mesmo peso das dezesseis versões lançadas, e
+  a pergunta que isso gera é justamente a que a regra já responde: o número só
+  é escolhido na hora de publicar. Agora ele se chama **Em aberto**, vem com a
+  linha "ainda não publicado — o número sai quando subir", e tem fio tracejado
+  sem sombra: é rascunho preso na página, não entrega. O markdown não muda — a
+  distinção é de leitura.
 - **A checagem do preview móvel cobrava um arquivo da página errada.** Ela
   procurava `solo.html?c=` como texto em qualquer lugar da página, e a página
   do changelog **cita** esse endereço dentro de um `<code>` — contando a

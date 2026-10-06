@@ -93,8 +93,16 @@ export function converter(md) {
       fechaTudo(); fechaVersao();
       versoes++;
       aberta = true;
-      out.push(`<details class="log__versao"${versoes === 1 ? ' open' : ''}>`);
-      out.push(`<summary><h2>${linha(h2[1])}</h2></summary>`);
+      /* `[Unreleased]` NAO E UMA VERSAO, e parar de parecer uma e o ponto.
+         Com a mesma caixa e o mesmo peso das outras quinze, ela lia como "uma
+         versao sem numero" — e a pergunta que isso gera e justamente a que a
+         regra ja responde: o numero so e escolhido na hora de publicar. Aqui
+         ela ganha a cara de area de espera e diz isso em uma linha. */
+      const espera = /^\[Unreleased\]/i.test(h2[1]);
+      out.push(`<details class="log__versao${espera ? ' log__versao--espera' : ''}"${versoes === 1 ? ' open' : ''}>`);
+      out.push(`<summary><h2>${espera ? 'Em aberto' : linha(h2[1])}</h2>`
+        + (espera ? '<span class="log__aviso">ainda não publicado — o número sai quando subir</span>' : '')
+        + '</summary>');
       continue;
     }
     const h3 = crua.match(/^### (.+)$/);
@@ -206,6 +214,16 @@ export function pagina() {
 }
 .log__versao li b{color:var(--yb-text-primary)}
 .log__versao p{color:var(--yb-text-secondary); max-inline-size:74ch}
+/* A area de espera nao e cartao: fio tracejado, sem sombra e sem fundo
+   proprio — e um rascunho preso na pagina, nao uma entrega. */
+.log__versao--espera{
+  background:none; box-shadow:none;
+  border-style:dashed; border-color:var(--yb-border);
+}
+.log__aviso{
+  font-size:var(--yb-type-caption-size); color:var(--yb-text-muted);
+  font-weight:var(--yb-font-weight-regular);
+}
 .log__codigo{
   margin:0 0 var(--yb-space-5); padding:var(--yb-space-4);
   background:var(--yb-bg-muted); border:1px solid var(--yb-border-subtle);
