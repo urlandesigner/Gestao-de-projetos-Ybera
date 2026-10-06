@@ -19,6 +19,15 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
   link lá dentro — ali a matriz mostraria o cabeçalho inteiro cinco vezes.
 
 ### Corrigido
+- **A matriz espremia a coluna e o Switch perdia o trilho.** Três defeitos que
+  só apareceram com a grade montada nas doze: a coluna encolhia abaixo da
+  amostra e uma peça invadia a vizinha (o Tabs pedia 166px numa coluna de 138);
+  a largura declarada pela própria peça era apagada, e o Switch de 32×20 virava
+  um círculo de 20, com metade do trilho fora; e o campo entrava com a largura
+  que o HTML dá de graça — 180px no textarea, 195 no stepper —, empurrando a
+  coluna Disabled para fora do quadro. Medido nas doze de 900 a 1440: nenhuma
+  célula vaza e nenhuma grade rola. Abaixo de 900 rola dentro do quadro, como
+  as tabelas de API já faziam.
 - **A matriz não pintava o estado de peça embrulhada.** O script pegava o
   primeiro elemento `yb-*` da célula, e no Checkbox esse é o `<label>` — mas a
   regra é `.yb-check input:not(:checked):hover`, que pinta o `<input>`. A
