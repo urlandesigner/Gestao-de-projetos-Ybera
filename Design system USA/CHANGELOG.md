@@ -6,6 +6,12 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 ## [Unreleased]
 
 ### Mudado
+- **A capa parou de abrir os documentos de processo.** Principles, Decision
+  log, Inventory e Contributing saíram: eles são para quem escreve o sistema,
+  e o site publicado é para quem o consome. Continuam linkados no
+  [README.md](README.md) e entre si, que é por onde se chega a eles no
+  repositório — mas deixam de ter porta pelo site. A capa fica com duas
+  seções e cinco cartões.
 - **A capa parou de listar as telas, e a checagem foi para o lugar certo.** A
   seção "As telas" existia porque uma checagem exigia toda tela-prova linkada
   na capa — regra escrita quando a capa era o único lugar que as listava. Hoje
