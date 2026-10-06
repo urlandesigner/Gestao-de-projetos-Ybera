@@ -5,6 +5,13 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
+### Corrigido
+- **A área "Em aberto" do changelog aparecia vazia depois de publicar.** Logo
+  depois de fechar uma versão ela fica sem um item sequer, e uma gaveta que
+  abre e não mostra nada lê como travada, não como vazia: quem olha clica, não
+  acontece nada, e a conclusão é que a página quebrou. Agora a seção só existe
+  quando há algo escrito nela — e volta sozinha no primeiro item.
+
 ## [1.0.3] — 2026-10-06
 
 ### Adicionado

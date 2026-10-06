@@ -52,11 +52,24 @@ const linha = (t) => escapar(t)
   .replace(/\[([^\]]+)\]\(([^)]+)\)/g,
     (_, texto, destino) => `<a href="${/^(?:https?:|mailto:|#|\/|\.\.\/)/.test(destino) ? destino : '../' + destino}">${texto}</a>`);
 
+/* `[Unreleased]` VAZIA NAO VIRA GAVETA. Logo depois de publicar ela fica sem
+   um item sequer — e uma gaveta que abre e nao mostra nada le como travada,
+   nao como vazia. Quem olha clica, nada acontece, e a conclusao e que a pagina
+   quebrou. A secao volta sozinha no primeiro item escrito la. */
+function semEsperaVazia(linhas) {
+  const i = linhas.findIndex((l) => /^## \[Unreleased\]/i.test(l.trimEnd()));
+  if (i === -1) return linhas;
+  let f = i + 1;
+  while (f < linhas.length && !/^## /.test(linhas[f])) f++;
+  const temConteudo = linhas.slice(i + 1, f).some((l) => l.trim());
+  return temConteudo ? linhas : [...linhas.slice(0, i), ...linhas.slice(f)];
+}
+
 /* Uma versão por `<details>`. São dezesseis, e abertas de uma vez dão uma
    página de 177 KB em que a de hoje e a de um ano atrás pesam igual. A
    primeira nasce aberta porque é a que a pessoa veio ver. */
 export function converter(md) {
-  const linhas = md.split('\n');
+  const linhas = semEsperaVazia(md.split('\n'));
   const out = [];
   let lista = false, paragrafo = [], tabela = false, versoes = 0, aberta = false;
 
