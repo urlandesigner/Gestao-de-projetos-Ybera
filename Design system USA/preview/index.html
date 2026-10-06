@@ -43,8 +43,12 @@ body{
   text-transform:uppercase; color:var(--yb-text-muted);
   font-weight:var(--yb-font-weight-semibold); margin-inline-end:var(--yb-space-1);
 }
+/* 36 E NAO 44, e o sistema autoriza: o degrau compacto vale em controle que
+   vive em FILEIRA, onde o espaco entre alvos da a folga que o tamanho nao da
+   (ver Foundation / Space). Aqui sao vinte e dois botoes em quatro fileiras —
+   a 44 o topo media 493px, quase metade de uma tela de 1000, so de cromo. */
 .btn{
-  min-height:var(--yb-target-min); padding:0 var(--yb-space-4);
+  min-height:var(--yb-control-height-compact); padding:0 var(--yb-space-3);
   display:inline-flex; align-items:center; gap:var(--yb-space-2);
   border:1px solid var(--yb-border); border-radius:var(--yb-radius-control);
   background:var(--yb-surface); color:var(--yb-text-secondary);
@@ -57,9 +61,22 @@ body{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);
   outline-offset:var(--yb-focus-offset);
 }
+/* O ESCOLHIDO ENCHE DE GRAFITE. Ele usava `--yb-action-secondary-bg` no fundo
+   E na borda — e o secundario do sistema e branco com fio, entao pintar os
+   dois de branco apagava a caixa: o botao ligado virava texto solto e o
+   desligado era o unico com desenho. Estava ao contrario.
+
+   Grafite cheio e o mesmo gesto do chip de degrau nas galerias e da aba em
+   trilho: no cromo da doc, "onde voce esta" se marca com o texto do sistema,
+   nunca com a cor de acao da loja. */
 .btn[aria-pressed="true"]{
-  background:var(--yb-action-secondary-bg); color:var(--yb-action-secondary-text);
-  border-color:var(--yb-action-secondary-bg);
+  background:var(--yb-text-primary); color:var(--yb-bg-page);
+  border-color:var(--yb-text-primary);
+}
+.btn[aria-pressed="true"] small{opacity:.75}
+/* Sem a cor, o escolhido some — e e ele que diz o que esta na tela. */
+@media (forced-colors:active){
+  .btn[aria-pressed="true"]{outline:2px solid CanvasText; outline-offset:2px}
 }
 .btn small{font-size:var(--yb-type-overline-size); opacity:.7}
 
