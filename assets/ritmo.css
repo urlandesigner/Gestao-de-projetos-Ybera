@@ -78,6 +78,26 @@
   color: var(--mudo);
 }
 
+/* Tarja de sprint que não fechou. Cinza, e não colorida: ela qualifica o
+   número, não alarma sobre ele — uma sprint em curso não é problema. A cor
+   nesta seção está reservada pro que SIGNIFICA (verde entregue, âmbar
+   transbordo), e uma terceira cor aqui disputaria com as duas.
+
+   `margin-left: auto` empurra pra direita da linha; no celular ela cai junto
+   com o resto, porque o .rt-topo quebra. */
+.rt-tarja {
+  margin-left: auto;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: var(--superficie-2);
+  color: var(--mudo);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 /* A barra é o escopo inteiro da sprint: o verde é o que foi entregue, o âmbar
    é o que escorreu pra seguinte, e o que sobra em cinza é o que ficou aberto
    dentro dela. Três leituras numa régua só — e a soma fecha, que é o ponto. */
@@ -105,6 +125,62 @@
   font-weight: 700;
   color: var(--tinta);
 }
+
+/* Carimbo de data: primeiro elemento do corpo, discreto mas presente. O leitor
+   do link não fala com o DevOps — sem esta linha ele não tem como saber se
+   está vendo hoje ou o mês passado. */
+.rt-carimbo {
+  margin: clamp(1.4rem, 3vw, 2.2rem) 0 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--mudo);
+  font-variant-numeric: tabular-nums;
+}
+
+/* A lista de itens da sprint. Separada dos números por um fio, e não por um
+   vão: o fio diz que a lista PERTENCE àquela sprint, e com três cartões
+   empilhados o vão sozinho ficava ambíguo. */
+.rt-itens {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0.7rem 0 0;
+  border-top: var(--fio);
+  display: grid;
+  gap: 0.3rem;
+}
+.rt-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: var(--tinta);
+}
+/* Ponto de estado em vez de ícone: a mesma linguagem do board da Central.
+   Cinza é fila ou andamento, verde é concluído, âmbar é transbordo. */
+.rt-ponto {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin-top: 0.35rem;
+  border-radius: 999px;
+  background: var(--neutro);
+  align-self: flex-start;
+}
+.rt-ok .rt-ponto { background: var(--positivo); }
+.rt-transbordou .rt-ponto { background: var(--transbordo-barra); }
+.rt-item-nome { flex: 1 1 auto; }
+/* O estado à direita, em anotação: ele qualifica o título, não disputa com
+   ele. `white-space: nowrap` porque "In Progress" quebrando em duas linhas
+   empurraria a linha inteira. */
+.rt-item-estado {
+  flex: none;
+  font-size: 0.74rem;
+  color: var(--mudo);
+  white-space: nowrap;
+}
+.rt-transbordou .rt-item-estado { color: var(--atencao); }
 /* O número do transbordo em âmbar, igual ao segmento da barra logo acima — é a
    mesma informação dita duas vezes, e cor diferente faria parecerem duas. */
 .rt-amb b { color: var(--atencao); }

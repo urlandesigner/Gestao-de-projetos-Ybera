@@ -591,10 +591,15 @@
   // vira ruído.
   /* `o.cartoes` substitui a lista curada. Existe pros testes poderem exercitar a
      contagem por Feature sem depender dos ids reais do board, do mesmo jeito que
-     `o.periodo` existe pra fixar o recorte sem depender do calendário. Em
-     produção ninguém passa isso: report.js não conhece a opção. */
+     `o.periodo` existe pra fixar o recorte sem depender do calendário.
+
+     Lista VAZIA é uma resposta, não uma ausência: o documento de Outubro nasceu
+     sem cartão nenhum, esperando o Urlan ditar. Antes o `.length` mandava o
+     vazio cair de volta na lista curada, e a edição nova abria com os cartões da
+     anterior. Quem não quer escolher continua não passando a opção — e é esse o
+     caminho de quem renderiza o documento de Agosto e Setembro. */
   function listaDeCartoes(o) {
-    return (Array.isArray(o.cartoes) && o.cartoes.length) ? o.cartoes : ENTREGAS_RECENTES;
+    return Array.isArray(o.cartoes) ? o.cartoes : ENTREGAS_RECENTES;
   }
 
   function corpoEntregasRecentes(lista, mostrarProduto) {

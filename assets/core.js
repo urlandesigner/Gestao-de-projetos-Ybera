@@ -702,7 +702,7 @@
 
      Ordem crescente, do mais antigo pro mais novo: é série temporal, e o
      Panorama já lê o ritmo nessa direção. */
-  function sprintsDoPeriodo(iteracoes, meses, agora) {
+  function sprintsDoPeriodo(iteracoes, meses) {
     const alvo = new Set(Array.isArray(meses) ? meses : []);
     if (!alvo.size) return [];
     return (Array.isArray(iteracoes) ? iteracoes : [])
@@ -710,9 +710,37 @@
         const fim = s && s.finish ? Date.parse(s.finish) : NaN;
         return Number.isNaN(fim) ? null : { s, fim };
       })
-      .filter((x) => x && x.fim + FIM_DO_DIA < agora && alvo.has(rotuloMes(x.fim)))
+      .filter((x) => x && alvo.has(rotuloMes(x.fim)))
       .sort((a, b) => a.fim - b.fim)
       .map((x) => x.s);
+  }
+
+  /* EM QUE PÉ A SPRINT ESTÁ, no instante que o documento declara ser "agora".
+
+     Existe porque o relatório passou a cobrir o mês CORRENTE: em 06/10/2026 as
+     duas sprints de outubro ainda não tinham fechado, e a seção sairia vazia num
+     documento que fala justamente delas. Então em vez de esconder, a linha diz
+     em que pé cada uma está — e os números são lidos à luz disso.
+
+     O instante vem de fora, e não de Date.now(), porque o documento viaja num
+     link com os dados congelados. Lá o "agora" é o da geração, e é ele que tem
+     que mandar: um link feito em 06/10 que dissesse "fechada" ao ser aberto em
+     dezembro estaria afirmando sobre dezembro um número medido em outubro.
+
+     FIM_DO_DIA nas duas pontas: no último dia a sprint ainda é a sprint, e no
+     primeiro ela já é. Sem data pra decidir, devolve '' — e quem desenha não
+     afirma nada, que é melhor que chutar. */
+  function estadoDaSprint(sprint, agora) {
+    const t = (v) => {
+      const n = v ? Date.parse(v) : NaN;
+      return Number.isNaN(n) ? null : n;
+    };
+    const ini = t(sprint && sprint.start);
+    const fim = t(sprint && sprint.finish);
+    if (fim !== null && fim + FIM_DO_DIA < agora) return 'fechada';
+    if (ini !== null && ini > agora) return 'futura';
+    if (ini !== null && fim !== null) return 'corrente';
+    return '';
   }
 
   /* UMA LINHA DO RITMO: o que a sprint entregou e o que escorreu pra seguinte.
@@ -732,7 +760,7 @@
      desencontro de definição. Eles chegam crus de propósito, Task inclusive:
      recortar antes de comparar marcaria como transbordo tudo que o recorte
      tirou. O recorte entra DEPOIS, na hora de dizer quem são os que saíram. */
-  function ritmoDaSprint(sprint, idsAgora, idsNoFim, itensDoDocumento) {
+  function ritmoDaSprint(sprint, idsAgora, idsNoFim, itensDoDocumento, agora) {
     const lista = Array.isArray(itensDoDocumento) ? itensDoDocumento : [];
     const ehRequisito = (it) => levelOf(((it || {}).fields || {})['System.WorkItemType']) === 'pbi';
     const naSprint = itensDaIteracao(lista, sprint && sprint.path).filter(ehRequisito);
@@ -745,14 +773,37 @@
     const saiu = transbordados(idsNoFim, (idsAgora || []).map((id) => ({ id })))
       .map((id) => porId.get(id))
       .filter((it) => it && ehRequisito(it));
+    /* Os ITENS, e não só a contagem deles, desde que o documento virou
+       acompanhamento: quem abre o link toda semana quer saber o que está
+       planejado, e "2 de 12" não responde isso.
+
+       Entregue primeiro, depois o que anda, depois o resto — dentro de cada
+       grupo a ordem é a que o DevOps devolveu. É a mesma leitura do board da
+       Central, da esquerda pra direita. */
+    const curto = resumoDeSprint(naSprint);
+    const ordem = (x) => (x.feito ? 0 : (stateBucket(x.estado) === 'andamento' ? 1 : 2));
+    const itens = curto.slice().sort((a, b) => ordem(a) - ordem(b));
+    const fora = resumoDeSprint(saiu);
     return {
       nome: (sprint && sprint.name) || '',
       path: (sprint && sprint.path) || '',
       start: (sprint && sprint.start) || null,
       finish: (sprint && sprint.finish) || null,
+      /* O estado sai DAQUI, junto dos números que ele qualifica, e não do
+         desenho: é ele que diz se "2 de 5" é um resultado ou um parcial.
+         Separados, nada impediria de viajarem no link medidos em instantes
+         diferentes. */
+      estado: estadoDaSprint(sprint, agora),
       entregues: placar.done,
       total: placar.total,
-      transbordaram: resumoDeSprint(saiu).length,
+      transbordaram: fora.length,
+      itens,
+      /* Os que saíram ficam em lista PRÓPRIA, e não misturados com `itens`
+         sob uma marca: eles não estão mais nesta sprint, e uma lista que
+         misturasse os dois precisaria que todo leitor do campo lembrasse de
+         filtrar — o tipo de descuido que faz um número sair maior que o outro
+         na mesma tela. */
+      transbordados: fora,
     };
   }
 
@@ -1298,7 +1349,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, wiqlIteracao, transbordados, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };
