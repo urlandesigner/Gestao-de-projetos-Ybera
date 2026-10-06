@@ -231,6 +231,14 @@ export function arvore() {
       ...TELAS.map(([arq, nome]) => ({ href: `pages/${arq}`, rotulo: nome, id: `tela-${arq}`, externa: true })),
     ] },
     { tipo: 'item', id: 'preview', rotulo: 'Preview', href: 'preview/index.html' },
+    /* O CHANGELOG E O UNICO DOCUMENTO DE PROCESSO NA COLUNA, e a razao e que
+       ele e o unico que responde a uma pergunta de quem USA: "o que mudou na
+       versao que eu acabei de instalar?". Principios, Decisoes e Contribuindo
+       respondem a quem escreve o sistema, e continuam fora.
+
+       E ele cabe aqui porque virou PAGINA (`tools/changelog.mjs`). Os outros
+       tres sao `.md`, e `.md` na coluna e linha de menu que baixa arquivo. */
+    { tipo: 'item', id: 'changelog', rotulo: 'Changelog', href: 'changelog/index.html' },
     /* Princípios, Decisões, Inventário, Contribuindo e Changelog NÃO estão na
        coluna. Eles são documentos de processo — quem escreve o sistema os
        consulta, quem usa o sistema não —, e na coluna ocupavam cinco linhas
@@ -304,6 +312,7 @@ ${n.itens.map(link).join('\n')}
     referencia: '<path d="M3 2.5h6.5L13 6v7.5H3z"/><path d="M9.5 2.5V6H13"/><path d="M5.5 9h5"/><path d="M5.5 11h3"/>',
     preview: '<rect x="1.5" y="3" width="13" height="8.5" rx="1.5"/><path d="M5.5 14h5"/><path d="M8 11.5V14"/>',
     'decision-log': '<path d="M3 2.5h7.5L13 5v8.5H3z"/><path d="M10 2.5V5h3"/><path d="M5.5 8.5l1.5 1.5 3-3"/>',
+    changelog: '<path d="M3 2.5h7.5L13 5v8.5H3z"/><path d="M10 2.5V5h3"/><path d="M5.5 8h5"/><path d="M5.5 10.5h3"/>',
   };
   const icone = (id) => ICONE[id]
     ? `<svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONE[id]}</svg>`

@@ -5,7 +5,27 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
-Nada ainda.
+### Adicionado
+- **O changelog virou página, e entrou na coluna.** Era o único documento que
+  não dava para ler pelo site: o servidor manda `.md` como `text/markdown` e o
+  navegador baixa em vez de abrir. Agora `tools/changelog.mjs` gera
+  `changelog/index.html` a cada build, uma gaveta por versão — a mais recente
+  aberta, as outras quinze esperando. A fonte continua sendo o `.md`; a página
+  é derivada como as fichas, e o CI pega se ficar para trás. O conversor é
+  próprio, de umas setenta linhas, porque o projeto não tem dependência
+  nenhuma e trazer um renderizador inteiro para seis construções sairia caro.
+  **Dos quatro documentos de processo, só ele entra na coluna**, e a razão é a
+  pergunta que ele responde: "o que mudou na versão que eu acabei de
+  instalar?" é pergunta de quem usa. Princípios, Decisões e Contribuindo são
+  de quem escreve o sistema, e seguem fora.
+
+### Corrigido
+- **A checagem do preview móvel cobrava um arquivo da página errada.** Ela
+  procurava `solo.html?c=` como texto em qualquer lugar da página, e a página
+  do changelog **cita** esse endereço dentro de um `<code>` — contando a
+  história de quando o recurso nasceu. A checagem passou a exigir que o
+  endereço esteja num atributo (`src=` ou `href=`), que é como quem usa de
+  verdade o escreve.
 
 ## [1.0.1] — 2026-10-06
 

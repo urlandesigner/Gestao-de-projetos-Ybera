@@ -76,6 +76,8 @@ node tools/fichas.mjs || exit 1
 # O cabecalho das paginas escritas a mao (capa, tokens, icones, preview,
 # decisoes). As geradas ja saem com ele — o gerador importa a mesma funcao.
 node tools/moldura.mjs || exit 1
+# O CHANGELOG virou pagina. Depois da moldura, porque importa `cabecalho()` dela.
+node tools/changelog.mjs > /dev/null || exit 1
 
 # ---------------------------------------------------------------------------
 # PAGES — o ultimo degrau da escada

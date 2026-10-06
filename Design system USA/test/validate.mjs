@@ -1851,7 +1851,12 @@ secao('Páginas');
       .filter(f => f.endsWith('.html')).map(f => `${PASTA[n]}/${f}`));
     for (const p of [...paginas, ...fichas]) {
       const h = ler(p);
-      if (!h.includes("solo.html?c=")) continue;
+      /* O ENDERECO TEM DE ESTAR NUM ATRIBUTO, e nao solto no texto. A busca
+         era por substring, e a pagina do CHANGELOG — que conta a historia do
+         proprio sistema — CITA `solo.html?c=` dentro de um <code>. A checagem
+         passou a cobrar dela um `solo.html` que ela nunca teve por que ter.
+         Quem usa de verdade escreve `src="solo.html?c=..."`. */
+      if (!/(?:src|href)="[^"]*solo\.html\?c=/.test(h)) continue;
       const solo = join(dirname(p), 'solo.html');
       if (!existsSync(join(raiz, solo))) { problemas.push(`${p}: falta ${solo}`); continue; }
       // todo id de secao tem de ter quadro, e todo quadro tem de ter secao
