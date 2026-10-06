@@ -206,20 +206,26 @@ export function arvore() {
        ordem em que se monta uma tela — a peça existe antes da região que a
        usa. É a mesma ordem da cascata. */
     { tipo: 'grupo', id: 'blocks', rotulo: 'Blocks', itens: pecasDoGrupo(BLOCOS) },
-    /* TEMPLATES ENTRA DEPOIS DE BLOCKS e antes de Examples, que é a ordem em
-       que uma tela se monta: a peça, a região que a usa, o esqueleto que
-       segura as regiões, e enfim a tela pronta.
+    /* TEMPLATES FICA FORA DO MENU. O degrau existe — a folha
+       `templates/ybera-templates.css` carrega na cascata, e `.yb-page` e
+       `.yb-block` estão nas onze telas —, mas são duas peças e uma lista de
+       esqueletos por escrever, e um grupo de dois ao lado de um de dezessete
+       pesa mais do que entrega.
 
-       Ele ficou fora por um tempo com a razão de que seria "uma promessa — um
-       item com uma peça e uma lista de cinco esqueletos por escrever". São
-       duas peças agora, e as duas estão em uso: `.yb-page` e `.yb-block`
-       aparecem nas onze telas. A pendência não sumiu, mas ela mora na galeria
-       do degrau, que é o primeiro item daqui — e pendência declarada dentro
-       do grupo é melhor do que grupo nenhum. */
-    { tipo: 'grupo', id: 'templates', rotulo: 'Templates', itens: [
-      { href: 'templates/index.html', rotulo: 'Overview', id: 'templates' },
-      ...pecasDoGrupo(NIVEIS.filter((n) => n.dir === 'templates')),
-    ] },
+       JÁ ENTROU, como grupo proprio, e saiu no mesmo dia. Fica o que a
+       tentativa esclareceu, porque e a pergunta que volta: o lugar dele NAO e
+       dentro de Blocks. Bloco e regiao que se ve e se coloca — cabecalho,
+       gaveta, rodape; o esqueleto e o que ESPACA as regioes, e nao se coloca
+       em lugar nenhum. Quem abrisse Blocks atras de uma regiao encontraria uma
+       regra de largura maxima.
+
+       O comentario de `tools/escada.mjs` aponta um terceiro lugar — "mora no
+       grupo Paginas junto com as telas" —, e ele tambem nao fecha: no menu,
+       Examples sao as onze telas da loja, que abrem em aba nova e tem catalogo
+       dentro. Esqueleto nao e tela.
+
+       Enquanto o degrau nao crescer, as duas fichas se alcancam pela trilha de
+       uma a outra e pela galeria do degrau. */
     { tipo: 'grupo', id: 'pages', rotulo: 'Examples', itens: [
       { href: 'pages/index.html', rotulo: 'Overview', id: 'pages' },
       ...TELAS.map(([arq, nome]) => ({ href: `pages/${arq}`, rotulo: nome, id: `tela-${arq}`, externa: true })),
