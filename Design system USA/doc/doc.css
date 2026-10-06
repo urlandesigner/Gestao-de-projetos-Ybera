@@ -576,7 +576,11 @@
      estados declarados abre quatro colunas, nao cinco com uma vazia. O
      gerador escreve `--cols` ao lado de `data-doc-states`; cinco e so o que
      sobra se alguem esquecer. */
-  grid-template-columns:auto repeat(var(--cols, 5), minmax(0, 1fr));
+  /* `max-content` como PISO, nao `0`: com minmax(0,1fr) a coluna encolhia
+     abaixo da amostra e a peca de uma celula invadia a vizinha — o Tabs e o
+     Textarea pediam 166px numa coluna de 138. Com o piso, a grade prefere
+     estourar a propria largura, e o `overflow-x` abaixo vira a barra. */
+  grid-template-columns:auto repeat(var(--cols, 5), minmax(max-content, 1fr));
   align-items:center;
   padding:var(--yb-space-6);
   border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card);
@@ -594,11 +598,18 @@
 .matriz__col{text-align:center}
 .matriz__cel{display:flex; justify-content:center; min-inline-size:0}
 /* A peca dentro da celula nao estica: a matriz compara COR e contorno, e um
-   botao esticado faria a largura virar a diferenca mais visivel entre linhas. */
-.matriz__cel > *{inline-size:auto}
-@media (max-width:767.98px){
-  .matriz{grid-template-columns:auto repeat(5, max-content)}
-}
+   botao esticado faria a largura virar a diferenca mais visivel entre linhas.
+   `flex:0 0 auto` e nao `inline-size:auto`: a largura declarada pela propria
+   peca e dado dela, nao enfeite — com `auto` o Switch perdia os 32px do trilho
+   e aparecia como um circulo de 20, que nao e o componente. */
+.matriz__cel > *{flex:0 0 auto}
+/* CAMPO ESTREITO AQUI, e so aqui. O campo nasce com a largura que o HTML da
+   de graca — `cols` do textarea da 180px, o `type=number` do stepper da 195 —,
+   e nao com a largura que a comparacao precisa. O que se compara nesta grade e
+   contorno e cor, nao medida: nas larguras de origem o Textarea e o Stepper
+   empurravam a coluna Disabled para fora do quadro. */
+.matriz__cel .yb-field{inline-size:7.5rem}
+.matriz__cel .yb-stepper input{inline-size:2.5rem}
 
 /* PALCO DO POPOVER — cresce com o painel e encolhe quando ele fecha.
    O painel e absoluto: o palco nao o mede, e sem altura minima ele vazava por
