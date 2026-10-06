@@ -1,7 +1,7 @@
 {
   "$description": "Ybera Design System — tokens em W3C Design Tokens Community Group format. DERIVADO de tokens/00-primitives.css e tokens/01-semantic.css: o CSS é a fonte. Não edite este arquivo — rode ./build.sh. dimension sai como string (a escala usa em/ch, que o formato objeto não admite). Token cujo nome é prefixo de outro vira <grupo>.default; o nome original está sempre em $extensions[\"com.ybera.cssVariable\"].",
   "$extensions": {
-    "com.ybera.version": "1.0.2",
+    "com.ybera.version": "1.0.3",
     "com.ybera.source": [
       "tokens/00-primitives.css",
       "tokens/01-semantic.css"

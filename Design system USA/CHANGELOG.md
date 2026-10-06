@@ -5,6 +5,8 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
+## [1.0.3] — 2026-10-06
+
 ### Adicionado
 - **Matriz de estados em doze controles, e agora ela é gerada.** Era escrita à
   mão, só no Button: vinte células repetindo o mesmo `<button>` com cinco
@@ -19,6 +21,10 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
   link lá dentro — ali a matriz mostraria o cabeçalho inteiro cinco vezes.
 
 ### Corrigido
+- **O número da versão no rodapé da capa envelhecia sozinho.** A barra do topo
+  lê do `package.json`, mas o rodapé da capa tinha o número escrito à mão — na
+  primeira publicação depois da regra a barra já dizia o novo e o rodapé ainda
+  dizia o anterior. A checagem pegou. Agora o build reescreve os dois.
 - **A matriz espremia a coluna e o Switch perdia o trilho.** Três defeitos que
   só apareceram com a grade montada nas doze: a coluna encolhia abaixo da
   amostra e uma peça invadia a vizinha (o Tabs pedia 166px numa coluna de 138);

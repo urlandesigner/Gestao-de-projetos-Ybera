@@ -92,7 +92,7 @@
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
-  <p class="ds-top__versao">v1.0.2</p>
+  <p class="ds-top__versao">v1.0.3</p>
   <a class="ds-top__baixar" href="../dist/ybera-design-system.zip" download="ybera-design-system.zip" aria-label="Download do pacote: tokens, componentes e ícones">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8"/><path d="M4.5 7.5 8 11l3.5-3.5"/><path d="M2.5 13.5h11"/></svg>
     <span>Download</span>
@@ -233,12 +233,16 @@
 
 <details class="log__versao log__versao--espera" open>
 <summary><h2>Em aberto</h2><span class="log__aviso">ainda não publicado — o número sai quando subir</span></summary>
+</details>
+<details class="log__versao">
+<summary><h2>[1.0.3] — 2026-10-06</h2></summary>
 <h3>Adicionado</h3>
 <ul>
 <li><b>Matriz de estados em doze controles, e agora ela é gerada.</b> Era escrita à mão, só no Button: vinte células repetindo o mesmo <code>&lt;button&gt;</code> com cinco atributos diferentes. Para doze peças isso seria cópia garantida de envelhecer. Agora a ficha declara duas coisas no <code>fichas.json</code> — o molde da amostra e as linhas — e o gerador expande a grade. <b>As colunas saem do CSS</b>: a mesma leitura que alimenta a aba de API decide quais existem, então Checkbox abre quatro colunas (não tem <code>:active</code>) e Button abre cinco, e peça que ganhar um estado novo ganha a coluna junto. Entraram Button, Icon button, Checkbox, Radio, Switch, Input, Select, Textarea, Chip, Variant picker, Quantity stepper e Tabs. Ficaram de fora as 24 peças cujo <code>:hover</code> é de um link lá dentro — ali a matriz mostraria o cabeçalho inteiro cinco vezes.</li>
 </ul>
 <h3>Corrigido</h3>
 <ul>
+<li><b>O número da versão no rodapé da capa envelhecia sozinho.</b> A barra do topo lê do <code>package.json</code>, mas o rodapé da capa tinha o número escrito à mão — na primeira publicação depois da regra a barra já dizia o novo e o rodapé ainda dizia o anterior. A checagem pegou. Agora o build reescreve os dois.</li>
 <li><b>A matriz espremia a coluna e o Switch perdia o trilho.</b> Três defeitos que só apareceram com a grade montada nas doze: a coluna encolhia abaixo da amostra e uma peça invadia a vizinha (o Tabs pedia 166px numa coluna de 138); a largura declarada pela própria peça era apagada, e o Switch de 32×20 virava um círculo de 20, com metade do trilho fora; e o campo entrava com a largura que o HTML dá de graça — 180px no textarea, 195 no stepper —, empurrando a coluna Disabled para fora do quadro. Medido nas doze de 900 a 1440: nenhuma célula vaza e nenhuma grade rola. Abaixo de 900 rola dentro do quadro, como as tabelas de API já faziam.</li>
 <li><b>A matriz não pintava o estado de peça embrulhada.</b> O script pegava o primeiro elemento <code>yb-*</code> da célula, e no Checkbox esse é o <code>&lt;label&gt;</code> — mas a regra é <code>.yb-check input:not(:checked):hover</code>, que pinta o <code>&lt;input&gt;</code>. A coluna Hover saía idêntica à Default em toda peça cujo estado mora num filho: checkbox, radio e os campos com <code>.yb-field</code>. Agora todo elemento da célula é candidato, e a regra se aplica em quem ela de fato mira.</li>
 <li><b>O quadro de 375px mostrava documentação em vez da peça.</b> Ele copia a ficha inteira menos a prosa, e com isso a matriz de estados — uma grade de cinco colunas que fala sobre o CSS — entrava junto e transbordava a largura do telefone. O que se avaliava ali passava a ser a doc, não o produto. Agora os aparelhos de documentação ficam de fora, e o rótulo que os anunciava sai junto: título sem o bloco embaixo é título de nada. Varridos os 66 quadros depois: nenhum transborda.</li>

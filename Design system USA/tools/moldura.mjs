@@ -693,6 +693,11 @@ function aplicar(html, { raiz, atual, grupo, moldura }) {
     html = html.replace(/<body([^>]*)>/, (m, attrs) =>
       `<body${attrs.replace(/\s*data-frame="[^"]*"/, '')} data-frame="${moldura}">`);
   }
+  /* A VERSAO NO CORPO DA PAGINA tambem e reescrita, e nao so a da barra. A
+     capa repete o numero no rodape, e escrito a mao ele envelhece sozinho: na
+     1.0.3 a barra ja dizia o novo e o rodape ainda dizia o anterior. Quem
+     escrever `v0.0.0` em qualquer `.ver` ganha o numero certo no build. */
+  html = html.replace(/(<p class="ver">\s*)v\d+\.\d+\.\d+/g, `$1v${versao}`);
   return html;
 }
 
