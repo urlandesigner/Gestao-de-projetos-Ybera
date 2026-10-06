@@ -41,8 +41,16 @@ const linha = (t) => escapar(t)
      `[^*]+` o par nunca fechava — os dois asteriscos saiam crus na tela. */
   .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
   /* Link para `.md` continua `.md`: o destino é o repositório, e fingir que
-     existe uma página para ele seria link quebrado. */
-  .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+     existe uma página para ele seria link quebrado.
+
+     O `../` NÃO É ENFEITE. Os endereços do markdown são escritos a partir da
+     RAIZ do projeto (`GOVERNANCA.md`, `decision-log/DDR-001-....md`), e esta
+     página mora em `changelog/`: sem o degrau a mais, cada um deles apontava
+     para `changelog/GOVERNANCA.md`, que não existe. Foram dez links mortos na
+     primeira geração, e quem pegou foi o verificador do repositório de
+     protótipos — o validador daqui não confere link entre documentos. */
+  .replace(/\[([^\]]+)\]\(([^)]+)\)/g,
+    (_, texto, destino) => `<a href="${/^(?:https?:|mailto:|#|\/|\.\.\/)/.test(destino) ? destino : '../' + destino}">${texto}</a>`);
 
 /* Uma versão por `<details>`. São dezesseis, e abertas de uma vez dão uma
    página de 177 KB em que a de hoje e a de um ano atrás pesam igual. A

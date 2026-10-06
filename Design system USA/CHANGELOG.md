@@ -24,6 +24,12 @@ Nada ainda.
   de quem escreve o sistema, e seguem fora.
 
 ### Corrigido
+- **Os links do changelog apontavam para o lugar errado.** Os endereços do
+  markdown são escritos a partir da raiz do projeto, e a página mora em
+  `changelog/`: sem o degrau a mais, `GOVERNANCA.md` virava
+  `changelog/GOVERNANCA.md`. Foram dez links mortos na primeira geração, e quem
+  pegou foi o verificador do repositório de protótipos — o validador daqui não
+  confere link entre documentos.
 - **O `[Unreleased]` parecia uma versão sem número.** Na página ele tinha a
   mesma caixa, a mesma sombra e o mesmo peso das dezesseis versões lançadas, e
   a pergunta que isso gera é justamente a que a regra já responde: o número só
