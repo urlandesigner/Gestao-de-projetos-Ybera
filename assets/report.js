@@ -533,7 +533,16 @@ async function buscarRitmo(escopos) {
         + ' — a seção de ritmo sai do documento. Motivo: ' + mensagemDeErro(e));
       continue;
     }
-    for (const sp of C.sprintsDoPeriodo(iteracoes, periodo, agora)) {
+    for (const sp of C.sprintsDoPeriodo(iteracoes, periodo)) {
+      /* Transbordo só existe em sprint FECHADA, e por isso só ela custa
+         consulta. Na corrente ninguém transbordou ainda; na futura nem começou.
+         Perguntar ali gastaria duas chamadas por abertura pra receber lista
+         vazia, sempre — e um ASOF numa data futura não quer dizer nada.
+         Quem está na sprint HOJE sai da lista que o documento já carregou. */
+      if (C.estadoDaSprint(sp, agora) !== 'fechada') {
+        linhas.push({ sprint: sp, idsAgora: null, idsNoFim: null });
+        continue;
+      }
       /* As duas pontas saem do MESMO construtor, variando só o instante. Foi o
          que fez o transbordo parar de misturar "saiu da sprint" com "as duas
          consultas perguntavam coisas diferentes" — medido, 141 contra 147. */
@@ -547,8 +556,12 @@ async function buscarRitmo(escopos) {
         ]);
         linhas.push({ sprint: sp, idsAgora, idsNoFim });
       } catch (e) {
-        console.warn('[Central] não deu pra medir a ' + sp.name
-          + ' — ela sai da seção de ritmo. Motivo: ' + mensagemDeErro(e));
+        /* A sprint continua na seção, sem o transbordo: o que ela entregou sai
+           da lista local e segue correto. Some só a parte que a consulta
+           responderia. */
+        console.warn('[Central] não deu pra saber o que transbordou da ' + sp.name
+          + ' — a linha dela fica sem essa parte. Motivo: ' + mensagemDeErro(e));
+        linhas.push({ sprint: sp, idsAgora: null, idsNoFim: null });
       }
     }
   }
@@ -557,10 +570,15 @@ async function buscarRitmo(escopos) {
   return linhas.sort((a, b) => Date.parse(a.sprint.finish) - Date.parse(b.sprint.finish));
 }
 
-/* A linha pronta, no recorte que o leitor está vendo agora. */
+/* A linha pronta, no recorte que o leitor está vendo agora.
+
+   O instante é o MESMO que o documento usa pra tudo — o de hoje pro PO, o da
+   geração pra quem abre o link. É ele que decide se a sprint está fechada, e
+   um "agora" próprio aqui faria a linha discordar da data impressa na capa. */
 function ritmoAgora(itensNoEscopo) {
+  const agora = st.leitura ? st.agora : Date.now();
   return (st.sprintsBrutas || []).map((x) =>
-    C.ritmoDaSprint(x.sprint, x.idsAgora, x.idsNoFim, itensNoEscopo));
+    C.ritmoDaSprint(x.sprint, x.idsAgora, x.idsNoFim, itensNoEscopo, agora));
 }
 
 /* Vindo do link, as linhas já estão contadas — e são forjáveis como todo o
@@ -568,13 +586,29 @@ function ritmoAgora(itensNoEscopo) {
 function saneRitmo(lista) {
   const n = (v) => (Number.isFinite(v) && v >= 0 ? Math.floor(v) : 0);
   const txt = (v, max) => String(v == null ? '' : v).trim().slice(0, max);
+  // O estado é vocabulário fechado: fora da lista vira '' e a linha não afirma
+  // nada, em vez de imprimir na tela o que veio escrito na URL.
+  const ESTADOS = ['fechada', 'corrente', 'futura'];
+  /* Os itens viajam desde que o documento virou acompanhamento. Título e estado
+     são texto que veio do DevOps e volta pela URL: cortados no tamanho, e o
+     `feito` reduzido a booleano — é ele que pinta o ponto de verde, e um valor
+     torto ali marcaria como entregue o que não está. O teto de 300 por sprint é
+     folga sobre as ~170 de uma sprint real. */
+  const itensDe = (v) => (Array.isArray(v) ? v : []).slice(0, 300).map((y) => ({
+    titulo: txt((y || {}).titulo, 200),
+    estado: txt((y || {}).estado, 40),
+    feito: !!(y || {}).feito,
+  })).filter((y) => y.titulo);
   return (Array.isArray(lista) ? lista : []).slice(0, 60).map((x) => ({
     nome: txt((x || {}).nome, 80),
     start: txt((x || {}).start, 40) || null,
     finish: txt((x || {}).finish, 40) || null,
+    estado: ESTADOS.includes((x || {}).estado) ? x.estado : '',
     entregues: n((x || {}).entregues),
     total: n((x || {}).total),
     transbordaram: n((x || {}).transbordaram),
+    itens: itensDe((x || {}).itens),
+    transbordados: itensDe((x || {}).transbordados),
   })).filter((x) => x.nome);
 }
 
@@ -761,49 +795,63 @@ async function copiarSemNome() {
 
 let geracaoLink = 0; // troca rápida de mês: só a gravação mais nova pode escrever
 
+/* O DOCUMENTO VIRA PACOTE — e esta função é a única porta, como `aplicarPacote`
+   é a única na volta.
+
+   Duas saídas usam o mesmo pacote: o fragmento do link e o arquivo publicado.
+   Montá-lo em dois lugares faria o arquivo e o link divergirem no primeiro
+   campo novo, e aí o mesmo documento diria coisas diferentes conforme o
+   caminho por onde chegou. */
+function pacoteDoDocumento() {
+  const mostrados = st.items.filter(noNome);
+  /* Dois formatos de pacote, e o documento escolhe.
+
+     O report e o v2 LISTAM itens: título, estado e prazo de cada um vão pra
+     tela, então o link precisa levá-los. O Entregas não lista nada disso —
+     ele extrai do board cinco números, e só. Quando o documento sabe fazer
+     essa conta (`contagensDoLink`), ela é feita AQUI, no navegador de quem
+     gera, e o link leva o resultado em vez do material bruto.
+
+     O leitor aceita os dois: link novo traz `contagens`, link já
+     compartilhado traz `items` e continua contando como antes. É o que
+     impede que encurtar o link de hoje quebre o que já está no grupo de
+     alguém. */
+  const cabecalho = {
+    v: 1,
+    em: Date.now(),
+    escopo: respAtivo(),
+    mes: st.mes, // quem abrir o link cai no mês que eu estava vendo
+    roadmap: st.roadmap, // já veio saneado de assets/roadmap.json
+  };
+  const pacote = typeof B.contagensDoLink === 'function'
+    ? Object.assign(cabecalho, {
+      contagens: B.contagensDoLink(mostrados, st.items.concat(st.pais)),
+      /* As linhas de sprint viajam CONTADAS — e passam pelo MESMO saneador
+         que lê o pacote do outro lado. Não é zelo repetido: `ritmoDaSprint`
+         devolve a forma curta inteira (id, responsável, tipo), e nada disso
+         é desenhado. Sem a poda, o nome de cada pessoa do time entraria num
+         arquivo publicado à toa, e o pacote carregaria três campos mortos por
+         item. Uma função só nas duas pontas é o que garante que o que sai é
+         exatamente o que entra. */
+      sprints: B.precisaDeSprints === true ? saneRitmo(ritmoAgora(mostrados)) : undefined,
+    })
+    : Object.assign(cabecalho, {
+      items: enxugar(mostrados),
+      ancestrais: cadeiaDeProdutos(mostrados, st.items.concat(st.pais)),
+      produtos: produtosDoLink(mostrados), // objetivo + rumo, prontos
+      decisoes: decisoesDoLink(mostrados), // pedido de decisão por item travado
+      nomes: nomesDoLink(mostrados), // nome de negócio só do que o leitor vê
+    });
+  return pacote;
+}
+
 async function gravarLink() {
   if (st.leitura) return; // o link já É a página: reescrever apagaria o dado
   const minha = ++geracaoLink;
   st.link = '';
   if (!st.items || st.vazio) { history.replaceState(null, '', location.pathname + location.search); return; }
   try {
-    const mostrados = st.items.filter(noNome);
-    /* Dois formatos de pacote, e o documento escolhe.
-
-       O report e o v2 LISTAM itens: título, estado e prazo de cada um vão pra
-       tela, então o link precisa levá-los. O Entregas não lista nada disso —
-       ele extrai do board cinco números, e só. Quando o documento sabe fazer
-       essa conta (`contagensDoLink`), ela é feita AQUI, no navegador de quem
-       gera, e o link leva o resultado em vez do material bruto.
-
-       O leitor aceita os dois: link novo traz `contagens`, link já
-       compartilhado traz `items` e continua contando como antes. É o que
-       impede que encurtar o link de hoje quebre o que já está no grupo de
-       alguém. */
-    const cabecalho = {
-      v: 1,
-      em: Date.now(),
-      escopo: respAtivo(),
-      mes: st.mes, // quem abrir o link cai no mês que eu estava vendo
-      roadmap: st.roadmap, // já veio saneado de assets/roadmap.json
-    };
-    const pacote = typeof B.contagensDoLink === 'function'
-      ? Object.assign(cabecalho, {
-        contagens: B.contagensDoLink(mostrados, st.items.concat(st.pais)),
-        /* As linhas de sprint viajam CONTADAS, como as contagens: são quatro
-           números por sprint, e mandar os itens pra recontar do outro lado
-           colocaria o backlog inteiro dentro da URL. Fica de fora quando o
-           documento não pede sprint — e aí a chave nem existe no pacote. */
-        sprints: B.precisaDeSprints === true ? ritmoAgora(mostrados) : undefined,
-      })
-      : Object.assign(cabecalho, {
-        items: enxugar(mostrados),
-        ancestrais: cadeiaDeProdutos(mostrados, st.items.concat(st.pais)),
-        produtos: produtosDoLink(mostrados), // objetivo + rumo, prontos
-        decisoes: decisoesDoLink(mostrados), // pedido de decisão por item travado
-        nomes: nomesDoLink(mostrados), // nome de negócio só do que o leitor vê
-      });
-    const carga = '#r=' + await comprimir(JSON.stringify(pacote));
+    const carga = '#r=' + await comprimir(JSON.stringify(pacoteDoDocumento()));
     if (minha !== geracaoLink) return; // outra gravação começou depois: ela manda
     // O link que ele copia é limpo. O que fica na barra de endereços preserva o
     // ?po=1, senão um F5 tiraria as ferramentas dele.
@@ -813,6 +861,43 @@ async function gravarLink() {
     // Link é conveniência: falhar em montá-lo não é falha do DOCUMENTO, que está
     // na tela. Reportar como erro derrubava badge e redesenho — avisa na caixa.
     if (minha === geracaoLink) mostrarLink('', 'Não deu pra montar o link agora: ' + e.message);
+  }
+}
+
+/* PUBLICAR: baixa o pacote como arquivo, pro endereço fixo do documento.
+
+   O navegador não escreve no repositório — então "publicar" é sempre levar um
+   arquivo até lá. O botão entrega o arquivo já com o nome certo; quem fecha o
+   ciclo é ./scripts/publicar-dados.sh, que o tira de Downloads, põe no lugar e
+   sincroniza.
+
+   Sem compressão, diferente do fragmento: lá o limite é o tamanho da URL, aqui
+   é um arquivo servido por HTTP, que já chega comprimido pelo gzip do
+   servidor. Em texto puro, `git diff` mostra o que mudou entre duas
+   publicações — comprimido seria um borrão binário a cada commit. */
+function publicarDados() {
+  const caixa = $('caixa-link');
+  const arquivo = (typeof B.arquivoDeDados === 'string' ? B.arquivoDeDados : '').split('/').pop();
+  if (!arquivo) return;
+  if (!st.items || st.vazio) { mostrarLink('', 'Não há documento pra publicar ainda.'); return; }
+  try {
+    const url = URL.createObjectURL(new Blob([JSON.stringify(pacoteDoDocumento(), null, 1)],
+      { type: 'application/json' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = arquivo;
+    a.click();
+    // Soltar na hora vazaria o blob antes do download começar em alguns
+    // navegadores; um tique depois o arquivo já foi lido.
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    if (caixa) {
+      caixa.hidden = false;
+      caixa.innerHTML = '<p class="link-aviso">Baixei <b>' + B.esc(arquivo) + '</b>.'
+        + ' Agora rode <b>./scripts/publicar-dados.sh</b> pra ele entrar no ar —'
+        + ' o endereço do documento não muda, quem já tem o link vê o estado novo.</p>';
+    }
+  } catch (e) {
+    mostrarLink('', 'Não deu pra gerar o arquivo agora: ' + e.message);
   }
 }
 
@@ -847,11 +932,68 @@ function mostrarLink(url, aviso) {
 }
 
 // Modo leitura: o link traz o dado, então não há nada a buscar nem a filtrar.
+/* O PACOTE VIRA DOCUMENTO — e esta função é a ÚNICA porta.
+
+   Existem duas entradas pro mesmo dado: o fragmento do link (#r=) e o arquivo
+   publicado. Cada uma com seu próprio saneamento seriam duas definições do que
+   é um pacote válido, e a segunda ia ficar para trás na primeira vez que a
+   primeira ganhasse um campo. Quem chama decide de ONDE vem; o que vale lá
+   dentro se decide aqui, uma vez.
+
+   Tudo que entra é forjável — o fragmento porque qualquer um edita a URL, o
+   arquivo porque é texto num site público. O briefing escapa toda interpolação;
+   aqui vai a segunda tranca. */
+function aplicarPacote(pacote) {
+  // id numérico de verdade, e só os campos que o report conhece.
+  const sanear = (lista) => (Array.isArray(lista) ? lista : [])
+    .filter((it) => it && Number.isFinite(Number(it.id)))
+    .map((it) => ({ id: Number(it.id), projeto: it.projeto, fields: it.fields || {} }));
+  // Objetivo + rumo também são forjáveis: número vira número (feitos nunca passa
+  // do total, senão a barra estoura de 100%), e a descrição é texto que o
+  // briefing escapa. Sem isso, um link torto pintaria %/HTML na tela.
+  const saneProdutos = (obj) => {
+    const out = {};
+    if (obj && typeof obj === 'object') {
+      for (const k of Object.keys(obj)) {
+        const v = obj[k] || {};
+        const total = Math.max(0, Math.floor(Number(v.total)) || 0);
+        const feitos = Math.min(total, Math.max(0, Math.floor(Number(v.feitos)) || 0));
+        out[k] = { descricao: String(v.descricao || ''), feitos, total };
+      }
+    }
+    return out;
+  };
+  // Decisões também são forjáveis: cada uma vira texto (o briefing escapa).
+  const saneMapaTexto = (obj) => {
+    const out = {};
+    if (obj && typeof obj === 'object') for (const k of Object.keys(obj)) out[k] = String(obj[k] || '');
+    return out;
+  };
+  st.items = sanear(pacote.items);
+  st.pais = sanear(pacote.ancestrais);
+  st.produtos = saneProdutos(pacote.produtos);
+  st.decisoes = saneMapaTexto(pacote.decisoes);
+  st.roadmap = saneRoadmapItens(pacote.roadmap);
+  st.nomes = saneNomes(pacote.nomes); // forjável como o resto: texto curto, id numérico
+  // Formato curto: vem saneado no briefing, que é quem sabe a forma dele.
+  st.contagens = pacote.contagens || null;
+  st.sprints = saneRitmo(pacote.sprints); // link antigo não traz: vira lista vazia
+  st.escopo = pacote.escopo || '';
+  st.agora = pacote.em || Date.now();
+  st.mes = pacote.mes || null;
+}
+
+/* Entra em modo leitura: sem token neste navegador, o documento é o que
+   chegou pronto, e nada daqui pra frente fala com o DevOps. */
+function entrarEmLeitura() {
+  document.body.classList.add('modo-leitura');
+  st.leitura = true;
+}
+
 async function lerDoLink() {
   const m = (location.hash || '').match(/^#r=(.+)$/);
   if (!m) return false;
-  document.body.classList.add('modo-leitura');
-  st.leitura = true;
+  entrarEmLeitura();
   // Colar outro link na mesma aba só troca o fragmento: o navegador não recarrega
   // nada e a página ficaria mostrando o report antigo. Recarrega na mão — mas só
   // se o fragmento novo for outro report, senão qualquer âncora derrubaria a tela.
@@ -861,49 +1003,41 @@ async function lerDoLink() {
     if (novo && novo[1] !== carga) location.reload();
   });
   try {
-    const pacote = JSON.parse(await descomprimir(m[1]));
-    // O fragmento é dado que QUALQUER UM pode forjar — um link malicioso não pode
-    // virar HTML dentro da página. O briefing escapa toda interpolação; aqui vai a
-    // segunda tranca: id numérico de verdade, e só os campos que o report conhece.
-    const sanear = (lista) => (Array.isArray(lista) ? lista : [])
-      .filter((it) => it && Number.isFinite(Number(it.id)))
-      .map((it) => ({ id: Number(it.id), projeto: it.projeto, fields: it.fields || {} }));
-    // Objetivo + rumo também são forjáveis: número vira número (feitos nunca passa
-    // do total, senão a barra estoura de 100%), e a descrição é texto que o
-    // briefing escapa. Sem isso, um link torto pintaria %/HTML na tela.
-    const saneProdutos = (obj) => {
-      const out = {};
-      if (obj && typeof obj === 'object') {
-        for (const k of Object.keys(obj)) {
-          const v = obj[k] || {};
-          const total = Math.max(0, Math.floor(Number(v.total)) || 0);
-          const feitos = Math.min(total, Math.max(0, Math.floor(Number(v.feitos)) || 0));
-          out[k] = { descricao: String(v.descricao || ''), feitos, total };
-        }
-      }
-      return out;
-    };
-    // Decisões também são forjáveis: cada uma vira texto (o briefing escapa).
-    const saneMapaTexto = (obj) => {
-      const out = {};
-      if (obj && typeof obj === 'object') for (const k of Object.keys(obj)) out[k] = String(obj[k] || '');
-      return out;
-    };
-    st.items = sanear(pacote.items);
-    st.pais = sanear(pacote.ancestrais);
-    st.produtos = saneProdutos(pacote.produtos);
-    st.decisoes = saneMapaTexto(pacote.decisoes);
-    st.roadmap = saneRoadmapItens(pacote.roadmap);
-    st.nomes = saneNomes(pacote.nomes); // forjável como o resto: texto curto, id numérico
-    // Formato curto: vem saneado no briefing, que é quem sabe a forma dele.
-    st.contagens = pacote.contagens || null;
-    st.sprints = saneRitmo(pacote.sprints); // link antigo não traz: vira lista vazia
-    st.escopo = pacote.escopo || '';
-    st.agora = pacote.em || Date.now();
-    st.mes = pacote.mes || null;
+    aplicarPacote(JSON.parse(await descomprimir(carga)));
     render(); // daqui pra frente o seletor de mês redesenha do próprio pacote
   } catch (e) {
     $('report').innerHTML = '<p class="erro">Este link não pôde ser lido. Ele pode ter sido cortado ao ser copiado — peça outro a quem enviou.</p>';
+  }
+  return true;
+}
+
+/* O DADO PUBLICADO, num endereço fixo.
+
+   O documento de acompanhamento não pode viver no fragmento: lá o dado anda
+   junto com o link, então cada atualização é um link novo pra reenviar. Aqui o
+   endereço nunca muda e quem já tem vê o estado da última publicação.
+
+   Só existe pro documento que declara `arquivoDeDados`. O report e o v2 não
+   declaram e seguem só com o fragmento.
+
+   Cache-buster no pedido: a página é servida por CDN, e um documento de
+   acompanhamento servindo a versão de ontem é exatamente o defeito que ele
+   existe pra não ter. */
+async function lerDoArquivo() {
+  const arquivo = typeof B.arquivoDeDados === 'string' ? B.arquivoDeDados : '';
+  if (!arquivo) return false;
+  entrarEmLeitura();
+  try {
+    const resp = await fetch(arquivo + '?t=' + Date.now(), { cache: 'no-store' });
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    aplicarPacote(await resp.json());
+    render();
+  } catch (e) {
+    /* Nomear o arquivo na mensagem é de propósito: quem abre isto e não vê
+       nada precisa saber que falta uma PUBLICAÇÃO, e não que o documento
+       quebrou. A frase vale pro leitor e pro PO. */
+    $('report').innerHTML = '<p class="mudo">Este documento ainda não foi publicado.'
+      + ' Quem mantém o relatório precisa abrir a versão do PO e clicar em <b>Publicar dados</b>.</p>';
   }
   return true;
 }
@@ -921,7 +1055,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     clearTimeout(temporizadorRedimensiona);
     temporizadorRedimensiona = setTimeout(medirAlturaNav, 150);
   });
-  if (!(st.config && st.pat) && await lerDoLink()) return;
+  /* Sem token neste navegador, o dado vem pronto — e a ordem importa: o
+     fragmento primeiro, porque um link que já circula tem que continuar
+     abrindo exatamente o que ele carrega, mesmo depois de o documento ganhar
+     endereço fixo. Só quem chega sem fragmento cai no arquivo publicado. */
+  if (!(st.config && st.pat) && (await lerDoLink() || await lerDoArquivo())) return;
   // Não bloqueia o primeiro render nem espera o DevOps: o arquivo é local e
   // pequeno, chega rápido, e quando chega o render() de novo é barato.
   carregarRoadmap().then(render);
@@ -931,6 +1069,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   $('atualizar').addEventListener('click', carregar);
   $('sem-nome').addEventListener('click', copiarSemNome);
   $('copiar').addEventListener('click', copiarLink);
+  // Só a edição de acompanhamento tem este botão no HTML. Quem não tem não
+  // ganha comportamento novo — nem precisa declarar nada.
+  if ($('publicar')) $('publicar').addEventListener('click', publicarDados);
   $('resp-global').addEventListener('change', async () => {
     st.resp = $('resp-global').value;
     const f = loadJSON(LS.filtros) || {};
