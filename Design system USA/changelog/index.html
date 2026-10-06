@@ -233,7 +233,11 @@
 
 <details class="log__versao log__versao--espera" open>
 <summary><h2>Em aberto</h2><span class="log__aviso">ainda não publicado — o número sai quando subir</span></summary>
-<p>Nada ainda.</p>
+<h3>Corrigido</h3>
+<ul>
+<li><b>O quadro de 375px mostrava documentação em vez da peça.</b> Ele copia a ficha inteira menos a prosa, e com isso a matriz de estados — uma grade de cinco colunas que fala sobre o CSS — entrava junto e transbordava a largura do telefone. O que se avaliava ali passava a ser a doc, não o produto. Agora os aparelhos de documentação ficam de fora, e o rótulo que os anunciava sai junto: título sem o bloco embaixo é título de nada. Varridos os 66 quadros depois: nenhum transborda.</li>
+<li><b>O fio do rótulo de fileira quebrava a doc em tela estreita.</b> Em 375 o rótulo e o <code>&lt;code&gt;</code> dele viravam dois itens de flex que não cabiam lado a lado — "sem modificador · atual" quebrava em duas linhas, o <code>[aria-current="page"]</code> descia como bloco solto e o fio sobrava como um toco no canto. Abaixo de 520px o fio some e o rótulo volta a ser texto que quebra como texto. O fio é refino de tela larga.</li>
+</ul>
 </details>
 <details class="log__versao">
 <summary><h2>[1.0.2] — 2026-10-06</h2></summary>

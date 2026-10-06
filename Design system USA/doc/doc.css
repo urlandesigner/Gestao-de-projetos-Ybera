@@ -377,6 +377,17 @@
   font-weight:var(--yb-font-weight-semibold);
   margin:var(--yb-space-8) 0 var(--yb-space-3);
 }
+/* O FIO E REFINO DE TELA LARGA, e some quando ela aperta. Em 375 o rotulo e o
+   `<code>` dele viram dois itens de flex que nao cabem lado a lado: "sem
+   modificador · atual" quebrava em duas linhas, o `[aria-current="page"]`
+   descia como um bloco solto e o fio sobrava como um toco de 32px no canto.
+   Sem flex, o rotulo volta a ser texto que quebra como texto. */
+@media (max-width:520px){
+  .rotulo,
+  .row-label{display:block}
+  .rotulo::after,
+  .row-label::after{display:none}
+}
 .rotulo::after,
 .row-label::after{
   /* Nao encolhe: ha rotulos de duas linhas nas fichas, e com `shrink` o fio

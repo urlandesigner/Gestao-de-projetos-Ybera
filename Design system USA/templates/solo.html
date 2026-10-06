@@ -93,8 +93,22 @@
 
     // fica o que é peça renderizada; sai o que é prosa e sai .duo, que é
     // moldura de quadro — copiá-la aqui abriria um iframe dentro do iframe
+    /* SAI TAMBÉM O QUE É APARELHO DE DOCUMENTAÇÃO. O quadro de 375 existe para
+       mostrar a PEÇA no telefone; a matriz de estados é uma grade de cinco
+       colunas que fala sobre o CSS, e dentro de 375 ela transborda — o que se
+       avalia passa a ser a doc, não o produto. É o mesmo motivo pelo qual as
+       galerias não entram no Preview.
+
+       E O RÓTULO SAI JUNTO: "matriz de estados — o que o CSS diz" sem a matriz
+       embaixo é título de nada, e no quadro ele ainda quebrava em duas linhas. */
+    var aparelhoDeDoc = '.matriz, [data-doc-states], [data-doc-measure]';
     Array.prototype.forEach.call(frag.children, function (n) {
       if (n.matches('h2, p.when, .note, .duo')) return;
+      if (n.matches(aparelhoDeDoc)) {
+        var ultimo = caixa.lastElementChild;
+        if (ultimo && ultimo.matches('.row-label, .rotulo')) ultimo.remove();
+        return;
+      }
       if (estado && n.matches('[data-state]') && n.getAttribute('data-state') !== estado) return;
       if (estado && !n.matches('[data-state="' + estado + '"]')) return;
       var c = n.cloneNode(true);

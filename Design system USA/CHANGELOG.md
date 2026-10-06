@@ -5,7 +5,20 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
-Nada ainda.
+### Corrigido
+- **O quadro de 375px mostrava documentação em vez da peça.** Ele copia a ficha
+  inteira menos a prosa, e com isso a matriz de estados — uma grade de cinco
+  colunas que fala sobre o CSS — entrava junto e transbordava a largura do
+  telefone. O que se avaliava ali passava a ser a doc, não o produto. Agora os
+  aparelhos de documentação ficam de fora, e o rótulo que os anunciava sai
+  junto: título sem o bloco embaixo é título de nada. Varridos os 66 quadros
+  depois: nenhum transborda.
+- **O fio do rótulo de fileira quebrava a doc em tela estreita.** Em 375 o
+  rótulo e o `<code>` dele viravam dois itens de flex que não cabiam lado a
+  lado — "sem modificador · atual" quebrava em duas linhas, o
+  `[aria-current="page"]` descia como bloco solto e o fio sobrava como um toco
+  no canto. Abaixo de 520px o fio some e o rótulo volta a ser texto que quebra
+  como texto. O fio é refino de tela larga.
 
 ## [1.0.2] — 2026-10-06
 
