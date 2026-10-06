@@ -1,6 +1,6 @@
 {
   "name": "ybera-design-system",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "description": "Design system da Ybera — tokens, componentes e padrões, independente de plataforma",
   "type": "module",

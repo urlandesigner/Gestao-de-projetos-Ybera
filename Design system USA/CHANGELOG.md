@@ -5,6 +5,8 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
+## [1.0.4] — 2026-10-06
+
 ### Corrigido
 - **A área "Em aberto" do changelog aparecia vazia depois de publicar.** Logo
   depois de fechar uma versão ela fica sem um item sequer, e uma gaveta que
