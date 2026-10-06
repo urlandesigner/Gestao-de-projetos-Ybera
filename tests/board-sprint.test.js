@@ -178,3 +178,72 @@ test('a frase de vazio nomeia a sprint, não diz "corrente"', () => {
   assert.match(fonteApp, /'nada na ' \+ boardState\.sprint\.name/);
   assert.ok(!/nada na sprint corrente/.test(semComentarios(fonteApp)));
 });
+
+/* ---------- 4. o board da sprint encerrada mudava de forma ---------- */
+/* Pedido do Urlan em 06/10/2026, olhando a Sprint 19: Feito e Transbordou
+   sumiam quando vazias, a vizinha esticava e ocupava a tela.
+
+   A primeira tentativa fixou TODAS as colunas oficiais e encheu o board de
+   etapas que ele não usa — ele viu e cortou. O recorte é: duas colunas
+   garantidas, só na sprint encerrada, e nada mais muda. */
+test('as duas garantidas valem só na sprint encerrada', () => {
+  assert.match(fonteApp, /const sprintEncerrada = boardState\.soSprint && boardState\.sprint\s*\n\s*&& C\.estadoDaSprint\(boardState\.sprint, Date\.now\(\)\) === 'fechada';/);
+  assert.match(fonteApp, /const garantidas = new Set\(sprintEncerrada && colunaFinal \? \[colunaFinal\.name\] : \[\]\);/,
+    'fora da sprint encerrada o conjunto tem que ser vazio — a corrente não muda');
+});
+
+/* Garantir as duas é o pedido; esvaziar o board das outras não. Item parado
+   numa etapa do meio de uma sprint encerrada precisa continuar visível. */
+test('as outras colunas seguem como sempre: sem item, não aparecem', () => {
+  assert.match(fonteApp,
+    /nomes = boardState\.columns\.map\(\(c\) => c\.name\)\.filter\(\(n\) => porColuna\.has\(n\) \|\| garantidas\.has\(n\)\);/);
+});
+
+/* Pelo TIPO, não pelo nome: quem renomear a coluna no DevOps não perde a
+   garantia aqui, e o código não passa a depender da palavra "Feito". */
+test('a coluna final é achada pelo tipo da coluna no DevOps', () => {
+  assert.match(fonteApp, /\.find\(\(c\) => String\(c\.type \|\| ''\)\.toLowerCase\(\) === 'outgoing'\)/);
+  assert.doesNotMatch(semComentarios(fonteApp), /garantidas = new Set\(\['Feito'\]/);
+});
+
+test('coluna sem item mostra aviso no lugar da lista, não uma lista vazia', () => {
+  assert.match(fonteApp,
+    /\$\{!lista\.length \? `<p class="coluna-vazia mudo">\$\{nome === COLUNA_TRANSBORDO \? 'nada transbordou' : 'nada nesta etapa'\}<\/p>` : `<ul>/,
+    'o aviso e a lista precisam ser excludentes — senão as duas disputam a altura');
+});
+
+/* Numa sprint encerrada "nenhum item transbordou" é um resultado e merece a
+   coluna. Na corrente ninguém transbordou ainda e nem se consultou
+   (buscarTransbordoDoBoard sai cedo), então a coluna afirmaria ter medido o
+   que não mediu. */
+test('a coluna Transbordou vazia só aparece em sprint encerrada', () => {
+  assert.match(fonteApp, /const sprintEncerrada = boardState\.soSprint && boardState\.sprint\s*\n\s*&& C\.estadoDaSprint\(boardState\.sprint, Date\.now\(\)\) === 'fechada';/);
+  assert.match(fonteApp, /if \(porColuna\.has\(COLUNA_TRANSBORDO\) \|\| sprintEncerrada\) \{/);
+  // A régua é a do core, a mesma que o relatório usa pra decidir o mesmo.
+  const sp = { start: '2026-09-14T00:00:00Z', finish: '2026-09-25T00:00:00Z' };
+  assert.equal(C.estadoDaSprint(sp, Date.parse('2026-10-06T12:00:00Z')), 'fechada');
+  assert.notEqual(C.estadoDaSprint({ start: '2026-09-28T00:00:00Z', finish: '2026-10-09T00:00:00Z' },
+    Date.parse('2026-10-06T12:00:00Z')), 'fechada');
+});
+
+/* Board sem item NENHUM continua sendo uma frase: quando não há o que mostrar,
+   o leitor precisa saber por quê — filtro, sprint vazia —, e isso não cabe
+   numa coluna. Um esqueleto de colunas vazias não responde nada. */
+test('board inteiro vazio é frase, não esqueleto de colunas', () => {
+  assert.match(fonteApp, /if \(!items\.length \|\| !nomes\.length\) \{/);
+});
+
+/* O `.coluna-vazia` já existia em Meus itens e Produtos, encostado à esquerda.
+   Centrar lá seria mudar duas telas que ninguém pediu — por isso a regra é
+   presa ao board, o único quadro em que a coluna vazia fica ao lado de colunas
+   cheias. */
+test('o aviso centrado vale só no board', () => {
+  const css = fs.readFileSync(path.join(raiz, 'assets', 'style.css'), 'utf8');
+  const regra = /\.quadro-board \.coluna-vazia \{[^}]*\}/.exec(css);
+  assert.ok(regra, 'a regra do aviso centrado sumiu');
+  for (const prop of [/align-items:\s*center/, /justify-content:\s*center/, /flex:\s*1/]) {
+    assert.match(regra[0], prop);
+  }
+  const solta = /(^|\n)\.coluna-vazia \{[^}]*\}/.exec(css);
+  if (solta) assert.doesNotMatch(solta[0], /align-items:\s*center/, 'a centralização vazou pras outras telas');
+});

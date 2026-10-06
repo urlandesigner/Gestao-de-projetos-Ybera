@@ -563,7 +563,7 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
 .nivel {
   background: var(--superficie);
   border-radius: 12px;
-  padding: 0.6rem 0.7rem 0.55rem;
+  padding: 0.75rem 0.8rem 0.7rem;
   box-shadow: var(--sombra-cartao);
   min-width: 0;
 }
@@ -583,15 +583,44 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
   font-variant-numeric: tabular-nums;
 }
 .nivel.vazio .nivel-total { color: var(--mudo); }
+/* A quebra é uma TABELINHA de duas colunas, não três frases empilhadas.
+   O fio separa o total do detalhe: o número grande é o assunto, a lista é a
+   repartição dele. Sem o fio os quatro números pareciam uma lista só, e o
+   primeiro competia com os de baixo. */
 .nivel-quebra {
   list-style: none;
-  margin: 0.15rem 0 0;
-  padding: 0;
+  margin: 0.55rem 0 0;
+  padding: 0.5rem 0 0;
+  border-top: 1px solid var(--borda);
   color: var(--mudo);
   font-size: 0.73rem;
-  line-height: 1.45;
+  line-height: 1.5;
+  display: grid;
+  gap: 0.1rem;
 }
+.nivel-quebra li {
+  display: grid;
+  /* Largura FIXA, e não minmax(…, auto): cada <li> é um grid próprio, então
+     com `auto` a linha de 128 abria mais a coluna que as de 5 e 6 e os rótulos
+     desalinhavam dentro da mesma célula. Fixa em 2.2em cabem três dígitos, e aí
+     tudo alinha — entre as linhas e entre as três células. */
+  grid-template-columns: 2.2em 1fr;
+  gap: 0.4em;
+  align-items: baseline;
+}
+.nivel-quebra b {
+  font-weight: 700;
+  text-align: right;
+  color: var(--tinta);
+  font-variant-numeric: tabular-nums;
+}
+/* Sem número, a palavra ocupa as duas colunas em vez de ficar recuada
+   esperando um dígito que não existe. */
+.nivel-quebra .sem-nada { grid-template-columns: 1fr; }
 .nivel-quebra .bloq-linha { color: var(--erro); font-weight: 600; }
+/* O número do bloqueado herda o vermelho da linha: pintá-lo de tinta separaria
+   o dígito do rótulo que o explica. */
+.nivel-quebra .bloq-linha b { color: inherit; }
 /* Sprint: faixa cheia com barra de progresso */
 .sprint-link {
   display: block;
@@ -1140,6 +1169,24 @@ body.modo-leitura .caixa-link { display: none !important; }
 .board-acoes button:hover { background: #e9e9eb; }
 #board-filtro-sprint.ativo { background: var(--tinta); color: #fff; }
 .quadro-board .coluna ul { max-height: calc(100vh - 320px); }
+/* Coluna vazia no board do sprint: o aviso ocupa o lugar da lista e centra nos
+   dois eixos. Só aqui — nas outras telas o `.coluna-vazia` é uma linha curta
+   encostada à esquerda, e o board é o único quadro em que a coluna vazia fica
+   ao lado de colunas cheias e precisa ler como etapa sem nada, não como erro.
+
+   `flex: 1` porque a .coluna é flex-column: sem isso o parágrafo ficaria no
+   topo e a altura que o grid dá à coluna sobraria vazia embaixo.
+   `min-height: 7rem` segura a coluna quando TODAS estão vazias e não há
+   vizinha cheia pra esticá-la. */
+.quadro-board .coluna-vazia {
+  flex: 1;
+  min-height: 7rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
 
 /* ---------- Diálogos ---------- */
 dialog {

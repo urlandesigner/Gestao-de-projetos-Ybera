@@ -1102,12 +1102,21 @@ function renderCard(p) {
 function htmlNiveis(counts) {
   const celulas = [['epic', 'Épicos'], ['feature', 'Features'], ['pbi', 'PBIs']].map(([nivel, rotulo]) => {
     const b = C.bucketCounts(counts[nivel]);
+    /* Número e rótulo em células separadas, e não "3 a fazer" numa frase só:
+       com 18 ao lado de 5 e 6, cada palavra começava num lugar e as três
+       células ficavam impossíveis de comparar de relance. Agora os números
+       alinham numa coluna e os rótulos noutra — inclusive ENTRE as células,
+       porque a coluna do número tem largura mínima fixa. */
+    const linha = (n, texto, classe) => `<li${classe ? ` class="${classe}"` : ''}>`
+      + `<b>${n}</b><span>${texto}</span></li>`;
     const quebra = [];
-    if (b.todo) quebra.push(`<li>${b.todo} a fazer</li>`);
-    if (b.andamento) quebra.push(`<li>${b.andamento} em andamento</li>`);
-    if (b.feito) quebra.push(`<li>${b.feito} concluído${b.feito > 1 ? 's' : ''} (30d)</li>`);
-    if (b.atencao) quebra.push(`<li class="bloq-linha">${b.atencao} bloqueado${b.atencao > 1 ? 's' : ''}</li>`);
-    if (!b.total) quebra.push('<li>nenhum</li>');
+    if (b.todo) quebra.push(linha(b.todo, 'a fazer'));
+    if (b.andamento) quebra.push(linha(b.andamento, 'em andamento'));
+    if (b.feito) quebra.push(linha(b.feito, `concluído${b.feito > 1 ? 's' : ''} (30d)`));
+    if (b.atencao) quebra.push(linha(b.atencao, `bloqueado${b.atencao > 1 ? 's' : ''}`, 'bloq-linha'));
+    // Sem número: ocupa as duas colunas, senão a palavra ficaria recuada
+    // esperando um dígito que não existe.
+    if (!b.total) quebra.push('<li class="sem-nada"><span>nenhum</span></li>');
     return `<div class="nivel${b.total ? '' : ' vazio'}">
       <span class="nivel-rot">${rotulo}</span>
       <b class="nivel-total">${b.total}</b>
@@ -1536,11 +1545,36 @@ function renderBoard(p) {
     if (!porColuna.has(col)) porColuna.set(col, []);
     porColuna.get(col).push(it);
   }
+  /* DUAS COLUNAS GARANTIDAS, E SÓ NA SPRINT ENCERRADA.
+
+     Numa sprint que já fechou as duas perguntas são "o que saiu pronto" e "o
+     que escorreu pra seguinte" — e cada uma tem resposta mesmo quando é zero.
+     Vazias elas sumiam, a vizinha esticava e ocupava a tela, e a ausência
+     deixava de ser legível porque não havia onde lê-la.
+
+     Na sprint CORRENTE nada muda: ninguém transbordou ainda (nem se consultou —
+     buscarTransbordoDoBoard sai cedo), e o board serve pra ver o trabalho
+     andando pelo fluxo. Garantir "Feito" ali seria prometer uma etapa vazia no
+     primeiro dia da sprint.
+
+     "Feito" é achado pelo TIPO da coluna no DevOps, não pelo nome: quem
+     renomear a coluna lá não perde a garantia aqui. */
+  const sprintEncerrada = boardState.soSprint && boardState.sprint
+    && C.estadoDaSprint(boardState.sprint, Date.now()) === 'fechada';
+  const colunaFinal = (boardState.columns || [])
+    .find((c) => String(c.type || '').toLowerCase() === 'outgoing');
+  const garantidas = new Set(sprintEncerrada && colunaFinal ? [colunaFinal.name] : []);
+
   let nomes;
   if (boardState.columns && boardState.columns.length) {
-    nomes = boardState.columns.map((c) => c.name).filter((n) => porColuna.has(n));
+    /* As demais seguem como sempre foram: sem item, não aparecem. Garantir as
+       duas é o pedido; esvaziar o board das outras não — item parado numa etapa
+       do meio precisa continuar visível, senão some trabalho da tela. */
+    nomes = boardState.columns.map((c) => c.name).filter((n) => porColuna.has(n) || garantidas.has(n));
     for (const n of porColuna.keys()) if (!nomes.includes(n)) nomes.push(n); // colunas fora da lista oficial vão pro fim
   } else {
+    /* Sem a lista oficial do DevOps não há como saber qual coluna é a final —
+       só as que têm item se conhecem. Aqui o board segue exatamente como era. */
     const statesByColumn = {};
     for (const [n, lista] of porColuna) statesByColumn[n] = lista.map((it) => (it.fields || {})['System.State']);
     nomes = C.orderColumnsFallback([...porColuna.keys()], statesByColumn);
@@ -1548,10 +1582,13 @@ function renderBoard(p) {
   /* Fecha o board, sempre: o fluxo da sprint termina em "Feito", e o que saiu
      vem depois — não é etapa do caminho, é o que não chegou ao fim dele. Vale
      pros dois caminhos de ordenação, o oficial do DevOps e o de reserva. */
-  if (porColuna.has(COLUNA_TRANSBORDO)) {
+  if (porColuna.has(COLUNA_TRANSBORDO) || sprintEncerrada) {
     nomes = nomes.filter((n) => n !== COLUNA_TRANSBORDO).concat(COLUNA_TRANSBORDO);
   }
-  if (!nomes.length) {
+  /* Board sem item NENHUM continua sendo uma frase, e não um esqueleto de
+     colunas vazias: quando não há o que mostrar, o que o leitor precisa saber é
+     por quê — filtro, sprint vazia — e isso não cabe numa coluna. */
+  if (!items.length || !nomes.length) {
     const temFiltro = boardState.filtro.busca || respAtivo() || boardState.filtro.tipos;
     const naSprint = boardState.soSprint && boardState.sprint && boardState.sprint.name
       ? 'nada na ' + boardState.sprint.name
@@ -1574,7 +1611,7 @@ function renderBoard(p) {
     else if (lista.length && lista.every((it) => C.isTerminalState((it.fields || {})['System.State']))) bucket = 'feito';
     return `<section class="coluna${bucket === 'atencao' ? ' atencao' : ''}">
       <header><h4><span class="ponto" style="background:${corColunaPorBucket(bucket)}"></span>${escapeHtml(nome)}</h4><span class="conta">${lista.length}</span></header>
-      <ul>${lista.map((it) => {
+      ${!lista.length ? `<p class="coluna-vazia mudo">${nome === COLUNA_TRANSBORDO ? 'nada transbordou' : 'nada nesta etapa'}</p>` : `<ul>${lista.map((it) => {
         const f = it.fields || {};
         const slug = C.typeSlug(f['System.WorkItemType']);
         const resp = f['System.AssignedTo'] && f['System.AssignedTo'].displayName ? f['System.AssignedTo'].displayName : '';
@@ -1593,7 +1630,7 @@ function renderBoard(p) {
           <span class="linha"><span class="rot">Item</span><span class="val">#${it.id}</span></span>
           ${destino}
         </a></li>`;
-      }).join('')}</ul>
+      }).join('')}</ul>`}
     </section>`;
   }).join('');
 }

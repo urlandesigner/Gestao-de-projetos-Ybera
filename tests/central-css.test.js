@@ -259,3 +259,47 @@ test('a barra de progresso aparece nas três colunas', () => {
   assert.ok(!/barra-reservada/.test(app) && !/barra-reservada/.test(ler('assets/style.css')),
     'a barra reservada saiu — classe órfã vira dúvida pra quem lê depois');
 });
+
+/* ---------- Por nível: número e rótulo em colunas ---------- */
+/* Pedido do Urlan em 06/10/2026, olhando o bloco "Por nível": o número estava
+   dentro da frase ("3 a fazer"), então com 18 ao lado de 5 e 6 cada palavra
+   começava num lugar e as três células não se comparavam de relance. */
+const folha = fs.readFileSync(path.join(__dirname, '../assets/style.css'), 'utf8');
+const fonteDoApp = fs.readFileSync(path.join(__dirname, '../assets/app.js'), 'utf8');
+
+test('a quebra por nível sai em duas colunas, número e rótulo', () => {
+  assert.match(fonteDoApp, /const linha = \(n, texto, classe\) =>/);
+  assert.match(fonteDoApp, /<b>\$\{n\}<\/b><span>\$\{texto\}<\/span>/);
+  // A frase montada à mão é o que isto substitui — se voltar, o alinhamento vai junto.
+  assert.doesNotMatch(fonteDoApp, /<li>\$\{b\.todo\} a fazer<\/li>/);
+});
+
+/* Largura FIXA, e não `auto`: cada <li> é um grid próprio, então com `auto` a
+   linha de 128 abre mais a coluna que as de 5 e 6, e os rótulos desalinham
+   dentro da MESMA célula. Medido no navegador: 34.4px nas linhas curtas contra
+   38.5px na de três dígitos. */
+test('a coluna do número tem largura fixa, pra três dígitos', () => {
+  /* Sem os comentários: o comentário DESTA regra explica por que `minmax` não
+     serve, e cita a palavra. Um teste que casa com o texto que o explica é
+     falso positivo garantido — já aconteceu aqui antes, com outro arquivo. */
+  const semComentariosCss = folha.replace(/\/\*[\s\S]*?\*\//g, '');
+  const regra = /\.nivel-quebra li \{[^}]*\}/.exec(semComentariosCss);
+  assert.ok(regra, 'a regra da linha sumiu');
+  assert.match(regra[0], /grid-template-columns:\s*2\.2em 1fr/);
+  assert.doesNotMatch(regra[0], /minmax\(/, 'minmax volta a desalinhar quando um número é maior');
+  assert.match(folha, /\.nivel-quebra b \{[^}]*text-align:\s*right/);
+  assert.match(folha, /\.nivel-quebra b \{[^}]*tabular-nums/);
+});
+
+/* Pintar o dígito de tinta separaria o número do rótulo que o explica — "1" em
+   preto e "bloqueado" em vermelho leem como duas coisas. */
+test('o número do bloqueado herda o vermelho da linha', () => {
+  assert.match(folha, /\.nivel-quebra \.bloq-linha b \{[^}]*color:\s*inherit/);
+});
+
+/* Sem número a palavra ocuparia a segunda coluna, recuada, esperando um dígito
+   que não existe. */
+test('a linha "nenhum" ocupa as duas colunas', () => {
+  assert.match(fonteDoApp, /<li class="sem-nada"><span>nenhum<\/span><\/li>/);
+  assert.match(folha, /\.nivel-quebra \.sem-nada \{[^}]*grid-template-columns:\s*1fr/);
+});
