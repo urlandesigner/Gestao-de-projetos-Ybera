@@ -50,6 +50,27 @@
           "texto": "Opcional e decorativo (<code>aria-hidden</code>). Antes do rótulo quando mostra o que a ação faz; depois quando mostra direção."
         }
       ]
+    },
+    "matriz": {
+      "molde": "<button class=\"yb-btn {v}\" type=\"button\" tabindex=\"-1\"{d}>Button</button>",
+      "linhas": [
+        [
+          "Primary",
+          "yb-btn--primary"
+        ],
+        [
+          "Secondary",
+          "yb-btn--secondary"
+        ],
+        [
+          "Ghost",
+          "yb-btn--ghost"
+        ],
+        [
+          "Danger",
+          "yb-btn--danger"
+        ]
+      ]
     }
   },
   "iconbtn": {
@@ -79,7 +100,20 @@
         "nome": "Ícone",
         "texto": "Vem do sprite e herda a cor do botão. Decorativo: quem nomeia a ação é o rótulo acessível."
       }
-    ]
+    ],
+    "matriz": {
+      "molde": "<button class=\"yb-iconbtn {v}\" type=\"button\" tabindex=\"-1\" aria-label=\"Buscar\"{d}><svg class=\"yb-icon\" aria-hidden=\"true\"><use href=\"../icons/ybera-icons.svg#yb-search\"/></svg></button>",
+      "linhas": [
+        [
+          "Padrão",
+          ""
+        ],
+        [
+          "Sobre foto",
+          "yb-iconbtn--on-media"
+        ]
+      ]
+    }
   },
   "link": {
     "a11y": [
@@ -320,7 +354,20 @@
         "nome": "Botão",
         "texto": "Desliza de um lado ao outro. A posição é o estado — e a cor do trilho é a segunda pista."
       }
-    ]
+    ],
+    "matriz": {
+      "molde": "<button class=\"yb-switch\" type=\"button\" tabindex=\"-1\" role=\"switch\" aria-checked=\"{v}\" aria-label=\"Seguro\"{d}><span class=\"yb-switch__knob\"></span></button>",
+      "linhas": [
+        [
+          "Desligado",
+          "false"
+        ],
+        [
+          "Ligado",
+          "true"
+        ]
+      ]
+    }
   },
   "avatar": {
     "a11y": [
@@ -402,6 +449,15 @@
         }
       ],
       "medidas": ".yb-field__box"
+    },
+    "matriz": {
+      "molde": "<div class=\"yb-field\"><div class=\"yb-field__box\"><input class=\"yb-input\" type=\"text\" placeholder=\" \" tabindex=\"-1\"{d}><label class=\"yb-field__label\">Email</label></div></div>",
+      "linhas": [
+        [
+          "Campo",
+          ""
+        ]
+      ]
     }
   },
   "select": {
@@ -476,6 +532,15 @@
           "medidas": ".yb-field__box"
         }
       ]
+    },
+    "matriz": {
+      "molde": "<div class=\"yb-field\"><div class=\"yb-field__box\"><select class=\"yb-select\" tabindex=\"-1\"{d}><option>Straight</option></select><label class=\"yb-field__label\">Hair type</label></div></div>",
+      "linhas": [
+        [
+          "Campo",
+          ""
+        ]
+      ]
     }
   },
   "textarea": {
@@ -522,6 +587,15 @@
         }
       ],
       "medidas": ".yb-field__box"
+    },
+    "matriz": {
+      "molde": "<div class=\"yb-field\"><div class=\"yb-field__box\"><textarea class=\"yb-textarea\" rows=\"2\" placeholder=\" \" tabindex=\"-1\"{d}></textarea><label class=\"yb-field__label\">Gift note</label></div></div>",
+      "linhas": [
+        [
+          "Campo",
+          ""
+        ]
+      ]
     }
   },
   "checkbox": {
@@ -558,6 +632,19 @@
         }
       ],
       "medidas": ".yb-check input"
+    },
+    "matriz": {
+      "molde": "<label class=\"yb-check\"><input type=\"checkbox\" tabindex=\"-1\"{v}{d}><span>Embrulho</span></label>",
+      "linhas": [
+        [
+          "Desmarcado",
+          ""
+        ],
+        [
+          "Marcado",
+          " checked"
+        ]
+      ]
     }
   },
   "radio": {
@@ -595,6 +682,19 @@
         }
       ],
       "medidas": ".yb-radio input"
+    },
+    "matriz": {
+      "molde": "<label class=\"yb-radio\"><input type=\"radio\" name=\"m{v}\" tabindex=\"-1\"{v}{d}><span>Padrão</span></label>",
+      "linhas": [
+        [
+          "Desmarcado",
+          ""
+        ],
+        [
+          "Marcado",
+          " checked"
+        ]
+      ]
     }
   },
   "stars": {
@@ -649,6 +749,19 @@
     "naoFaca": {
       "legenda": "<code>&lt;span&gt;</code> com classe de ativo: não recebe foco, não responde a Enter e o leitor de tela lê só o texto.",
       "html": "<span class=\"yb-chip\" style=\"background:var(--yb-gray-950);color:#fff\">Keratin ×</span>"
+    },
+    "matriz": {
+      "molde": "<button type=\"button\" class=\"yb-chip\" tabindex=\"-1\" aria-pressed=\"{v}\"{d}>Color-safe</button>",
+      "linhas": [
+        [
+          "Solto",
+          "false"
+        ],
+        [
+          "Escolhido",
+          "true"
+        ]
+      ]
     }
   },
   "panel": {

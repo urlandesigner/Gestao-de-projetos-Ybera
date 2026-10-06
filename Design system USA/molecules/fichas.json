@@ -869,7 +869,20 @@
         "nome": "Menos",
         "texto": "Desabilita no mínimo. Precisa de <code>aria-label</code> — o sinal sozinho não se anuncia."
       }
-    ]
+    ],
+    "matriz": {
+      "molde": "<div class=\"yb-stepper {v}\"><button type=\"button\" tabindex=\"-1\" aria-label=\"Menos\"{d}>&minus;</button><input type=\"number\" value=\"3\" tabindex=\"-1\" aria-label=\"Quantidade\"{d}><button type=\"button\" tabindex=\"-1\" aria-label=\"Mais\"{d}>+</button></div>",
+      "linhas": [
+        [
+          "Padrão",
+          ""
+        ],
+        [
+          "Compacto",
+          "yb-stepper--sm"
+        ]
+      ]
+    }
   },
   "toast": {
     "a11y": [
@@ -1000,6 +1013,19 @@
           "nome": "Indisponível",
           "texto": "Visível e fora de alcance. Sumir esconderia que o tamanho existe."
         }
+      ]
+    },
+    "matriz": {
+      "molde": "<div class=\"yb-swatches\"><input type=\"radio\" name=\"{i}\" id=\"{i}\" tabindex=\"-1\"{v}{d}><label for=\"{i}\">500g</label></div>",
+      "linhas": [
+        [
+          "Solto",
+          ""
+        ],
+        [
+          "Escolhido",
+          " checked"
+        ]
       ]
     }
   },
@@ -1235,6 +1261,19 @@
           "nome": "Conteúdo",
           "texto": "Um de cada vez. Os outros ficam com <code>hidden</code>, que é o estado certo quando o JavaScript não roda."
         }
+      ]
+    },
+    "matriz": {
+      "molde": "<div class=\"yb-tabs {v}\"><div class=\"yb-tabs__list\" role=\"tablist\"><button class=\"yb-tabs__tab\" role=\"tab\" aria-selected=\"true\" type=\"button\" tabindex=\"-1\"{d}>Escolhida</button><button class=\"yb-tabs__tab\" role=\"tab\" aria-selected=\"false\" type=\"button\" tabindex=\"-1\"{d}>Outra</button></div></div>",
+      "linhas": [
+        [
+          "Sublinhado",
+          ""
+        ],
+        [
+          "Em trilho",
+          "yb-tabs--segmented"
+        ]
       ]
     }
   },

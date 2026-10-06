@@ -5,7 +5,26 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
+### Adicionado
+- **Matriz de estados em doze controles, e agora ela é gerada.** Era escrita à
+  mão, só no Button: vinte células repetindo o mesmo `<button>` com cinco
+  atributos diferentes. Para doze peças isso seria cópia garantida de
+  envelhecer. Agora a ficha declara duas coisas no `fichas.json` — o molde da
+  amostra e as linhas — e o gerador expande a grade. **As colunas saem do
+  CSS**: a mesma leitura que alimenta a aba de API decide quais existem, então
+  Checkbox abre quatro colunas (não tem `:active`) e Button abre cinco, e peça
+  que ganhar um estado novo ganha a coluna junto. Entraram Button, Icon button,
+  Checkbox, Radio, Switch, Input, Select, Textarea, Chip, Variant picker,
+  Quantity stepper e Tabs. Ficaram de fora as 24 peças cujo `:hover` é de um
+  link lá dentro — ali a matriz mostraria o cabeçalho inteiro cinco vezes.
+
 ### Corrigido
+- **A matriz não pintava o estado de peça embrulhada.** O script pegava o
+  primeiro elemento `yb-*` da célula, e no Checkbox esse é o `<label>` — mas a
+  regra é `.yb-check input:not(:checked):hover`, que pinta o `<input>`. A
+  coluna Hover saía idêntica à Default em toda peça cujo estado mora num filho:
+  checkbox, radio e os campos com `.yb-field`. Agora todo elemento da célula é
+  candidato, e a regra se aplica em quem ela de fato mira.
 - **O quadro de 375px mostrava documentação em vez da peça.** Ele copia a ficha
   inteira menos a prosa, e com isso a matriz de estados — uma grade de cinco
   colunas que fala sobre o CSS — entrava junto e transbordava a largura do

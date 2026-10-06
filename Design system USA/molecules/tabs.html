@@ -268,6 +268,24 @@
       <p>As outras nascem com <code>hidden</code>. É o estado certo para ficar preso: a
       pessoa lê um conteúdo inteiro em vez de ver três títulos e nenhum texto.</p>
     </details>
+    <h3 class="row-label">Matriz de estados &mdash; o que o CSS diz, lido do pr&oacute;prio CSS</h3>
+    <div class="matriz" data-doc-states inert style="--cols:4">
+      <span></span>
+      <span class="matriz__col">Default</span>
+      <span class="matriz__col">Hover</span>
+      <span class="matriz__col">Focus</span>
+      <span class="matriz__col">Disabled</span>
+      <span class="matriz__linha">Sublinhado</span>
+      <span class="matriz__cel" data-doc-state="default"><div class="yb-tabs "><div class="yb-tabs__list" role="tablist"><button class="yb-tabs__tab" role="tab" aria-selected="true" type="button" tabindex="-1">Escolhida</button><button class="yb-tabs__tab" role="tab" aria-selected="false" type="button" tabindex="-1">Outra</button></div></div></span>
+      <span class="matriz__cel" data-doc-state="hover"><div class="yb-tabs "><div class="yb-tabs__list" role="tablist"><button class="yb-tabs__tab" role="tab" aria-selected="true" type="button" tabindex="-1">Escolhida</button><button class="yb-tabs__tab" role="tab" aria-selected="false" type="button" tabindex="-1">Outra</button></div></div></span>
+      <span class="matriz__cel" data-doc-state="focus"><div class="yb-tabs "><div class="yb-tabs__list" role="tablist"><button class="yb-tabs__tab" role="tab" aria-selected="true" type="button" tabindex="-1">Escolhida</button><button class="yb-tabs__tab" role="tab" aria-selected="false" type="button" tabindex="-1">Outra</button></div></div></span>
+      <span class="matriz__cel" data-doc-state="disabled"><div class="yb-tabs "><div class="yb-tabs__list" role="tablist"><button class="yb-tabs__tab" role="tab" aria-selected="true" type="button" tabindex="-1" disabled>Escolhida</button><button class="yb-tabs__tab" role="tab" aria-selected="false" type="button" tabindex="-1" disabled>Outra</button></div></div></span>
+      <span class="matriz__linha">Em trilho</span>
+      <span class="matriz__cel" data-doc-state="default"><div class="yb-tabs yb-tabs--segmented"><div class="yb-tabs__list" role="tablist"><button class="yb-tabs__tab" role="tab" aria-selected="true" type="button" tabindex="-1">Escolhida</button><button class="yb-tabs__tab" role="tab" aria-selected="false" type="button" tabindex="-1">Outra</button></div></div></span>
+      <span class="matriz__cel" data-doc-state="hover"><div class="yb-tabs yb-tabs--segmented"><div class="yb-tabs__list" role="tablist"><button class="yb-tabs__tab" role="tab" aria-selected="true" type="button" tabindex="-1">Escolhida</button><button class="yb-tabs__tab" role="tab" aria-selected="false" type="button" tabindex="-1">Outra</button></div></div></span>
+      <span class="matriz__cel" data-doc-state="focus"><div class="yb-tabs yb-tabs--segmented"><div class="yb-tabs__list" role="tablist"><button class="yb-tabs__tab" role="tab" aria-selected="true" type="button" tabindex="-1">Escolhida</button><button class="yb-tabs__tab" role="tab" aria-selected="false" type="button" tabindex="-1">Outra</button></div></div></span>
+      <span class="matriz__cel" data-doc-state="disabled"><div class="yb-tabs yb-tabs--segmented"><div class="yb-tabs__list" role="tablist"><button class="yb-tabs__tab" role="tab" aria-selected="true" type="button" tabindex="-1" disabled>Escolhida</button><button class="yb-tabs__tab" role="tab" aria-selected="false" type="button" tabindex="-1" disabled>Outra</button></div></div></span>
+    </div>
 
     <h3 class="rotulo">No celular</h3>
     <div class="quadro-mob">

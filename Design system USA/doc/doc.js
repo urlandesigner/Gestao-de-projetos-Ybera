@@ -205,9 +205,21 @@
     for (const matriz of matrizes) {
       for (const cel of matriz.querySelectorAll('[data-doc-state]')) {
         const estado = cel.getAttribute("data-doc-state");
-        const alvo = cel.querySelector('.yb-btn, .yb-input, .yb-chip, [class*="yb-"]');
-        if (!alvo) continue;
-        if (estado === 'disabled') { alvo.disabled = true; continue; }
+        /* TODO ELEMENTO DA CELULA E CANDIDATO, e nao so o primeiro `yb-*`.
+           A regra nem sempre mira a peca de fora: a do Checkbox e
+           `.yb-check input:not(:checked):hover` — ela pinta o INPUT, e o
+           primeiro `yb-*` da celula e o <label> que o embrulha. Pegando so o
+           primeiro, a coluna Hover saia identica a Default em toda peca cujo
+           estado mora num filho: checkbox, radio, campo com `.yb-field`. */
+        const candidatos = [cel.firstElementChild, ...cel.querySelectorAll('*')].filter(Boolean);
+        if (!candidatos.length) continue;
+        /* `disabled` ja vem escrito na marcacao (o `{d}` do molde), que e o
+           unico jeito de funcionar em peca embrulhada. Isto aqui fica para a
+           matriz que porventura nao use molde. */
+        if (estado === 'disabled') {
+          for (const el of candidatos) if ('disabled' in el) el.disabled = true;
+          continue;
+        }
         const pseudo = ESTADO_PSEUDO[estado];
         if (!pseudo) continue;
         /* Na ORDEM DA FOLHA, para o empate se resolver como no navegador:
@@ -220,11 +232,13 @@
           const semPseudo = r.selectorText.split(',')
             .map((s) => s.trim().split(pseudo).join(''))
             .filter(Boolean);
-          let casa = false;
+          const casam = [];
           for (const sel of semPseudo) {
-            try { if (alvo.matches(sel)) { casa = true; break; } } catch (e) { /* seletor nao avaliavel */ }
+            for (const el of candidatos) {
+              try { if (el.matches(sel) && !casam.includes(el)) casam.push(el); } catch (e) { /* seletor nao avaliavel */ }
+            }
           }
-          if (!casa) continue;
+          if (!casam.length) continue;
           /* `cssText` e nao propriedade a propriedade: no CSSOM, um atalho com
              `var()` dentro — `background: var(--yb-action-primary-bg-hover)` —
              fica com valor PENDENTE, e `getPropertyValue('background')` devolve
@@ -232,7 +246,7 @@
              sem cor nenhuma e so o `transform` chegava, porque ele e longhand e
              sem var. Com `cssText` o atalho vai inteiro, e o `+=` preserva a
              ordem da folha: quem vem depois ganha, como no navegador. */
-          alvo.style.cssText += r.style.cssText;
+          for (const el of casam) el.style.cssText += r.style.cssText;
         }
       }
     }

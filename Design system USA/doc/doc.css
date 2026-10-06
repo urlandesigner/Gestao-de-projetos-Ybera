@@ -572,7 +572,11 @@
    seria uma segunda verdade sobre o botao. */
 .matriz{
   display:grid; gap:var(--yb-space-3) var(--yb-space-4);
-  grid-template-columns:auto repeat(5, minmax(0, 1fr));
+  /* O NUMERO DE COLUNAS VEM DA PECA, e nao fixo em cinco: peca com tres
+     estados declarados abre quatro colunas, nao cinco com uma vazia. O
+     gerador escreve `--cols` ao lado de `data-doc-states`; cinco e so o que
+     sobra se alguem esquecer. */
+  grid-template-columns:auto repeat(var(--cols, 5), minmax(0, 1fr));
   align-items:center;
   padding:var(--yb-space-6);
   border:1px solid var(--yb-border-subtle); border-radius:var(--yb-radius-card);

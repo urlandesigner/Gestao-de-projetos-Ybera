@@ -186,6 +186,74 @@ function apiDe(base) {
   return { elementos: ord(el), modificadores: ord(mod), estados: ord(est), tokens: ord(tok) };
 }
 
+/* ===========================================================================
+   A MATRIZ DE ESTADOS — gerada, e nao escrita a mao.
+
+   Ela nasceu escrita a mao na ficha do Button: vinte celulas repetindo o mesmo
+   `<button>` com cinco atributos diferentes. Para uma peca da para sustentar;
+   para doze, e copia garantida de envelhecer — basta alguem trocar o rotulo da
+   amostra num lugar e esquecer dos outros onze.
+
+   O QUE A FICHA DECLARA sao duas coisas: o MOLDE da amostra, com `{v}` onde
+   entra o modificador e `{d}` onde entra o `disabled`; e as LINHAS, cada uma um
+   par [rotulo, modificador]. O resto e conta.
+
+   AS COLUNAS SAEM DO CSS. `apiDe()` ja le quais pseudo-classes a familia
+   declara, e e a mesma leitura que alimenta a aba de API — se o Checkbox nao
+   tem `:active`, a coluna "Pressed" nao existe na matriz dele em vez de
+   aparecer vazia. Peca que ganhar um estado novo ganha a coluna junto, sem
+   ninguem lembrar de voltar aqui.
+
+   `inert` e `tabindex="-1"`: a matriz e um desenho de estados, nao um painel
+   de controles. Sem isso, o teclado percorreria sessenta botoes falsos antes
+   de chegar ao proximo trecho de leitura.
+   =========================================================================== */
+const COLUNAS = [
+  ['default', 'Default', null],
+  ['hover', 'Hover', ':hover'],
+  ['pressed', 'Pressed', ':active'],
+  ['focus', 'Focus', ':focus-visible'],
+  ['disabled', 'Disabled', ':disabled'],
+];
+
+function matrizDeEstados(f, api) {
+  /* `f.texto` e a entrada do `fichas.json`. A chave e `matriz` e nao `estados`
+     porque `p.estados` ja existe e e outra coisa: a lista de `data-state` que
+     monta o PAR de quadros de 375. Dois significados no mesmo nome seria o
+     tipo de erro que so aparece meses depois. */
+  const d = f.texto && f.texto.matriz;
+  if (!d || !d.molde || !d.linhas || !d.linhas.length) return '';
+  const tem = new Set(api.estados);
+  const colunas = COLUNAS.filter(([id, , pseudo]) => !pseudo
+    || tem.has(pseudo)
+    || (id === 'disabled' && tem.has('[disabled]')));
+  /* Uma coluna so (Default) nao e matriz, e uma amostra — e a ficha ja a tem. */
+  if (colunas.length < 3) return '';
+
+  /* `{i}` E UM IDENTIFICADOR UNICO POR CELULA, e existe por causa do Variant
+     picker: o desenho dele e `input:checked + label`, entao cada celula precisa
+     do proprio par id/for. Repetindo o mesmo id trinta vezes, o `for` de todos
+     os rotulos aponta para o primeiro input da pagina e a matriz inteira
+     responde ao clique de uma celula so. */
+  const celula = (variante, estado, i) => d.molde
+    .split('{i}').join(`${f.id}-${i}`)
+    .split('{v}').join(variante)
+    .split('{d}').join(estado === 'disabled' ? ' disabled' : '');
+
+  const linhas = d.linhas.map(([rotulo, variante], l) =>
+    `      <span class="matriz__linha">${rotulo}</span>\n`
+    + colunas.map(([id], c) =>
+      `      <span class="matriz__cel" data-doc-state="${id}">${celula(variante, id, `${l}${c}`)}</span>`).join('\n')
+  ).join('\n');
+
+  return `    <h3 class="row-label">Matriz de estados &mdash; o que o CSS diz, lido do pr&oacute;prio CSS</h3>
+    <div class="matriz" data-doc-states inert style="--cols:${colunas.length}">
+      <span></span>
+${colunas.map(([, rotulo]) => `      <span class="matriz__col">${rotulo}</span>`).join('\n')}
+${linhas}
+    </div>`;
+}
+
 /* --------------------------------------------------------------- 4. snippet
    Sai da PRIMEIRA demo da peca, nao de um exemplo escrito a parte: a doc
    mostrando uma marcacao e o codigo entregando outra e o defeito classico de
@@ -959,6 +1027,7 @@ for (const n of NIVEIS) {
   <section class="bloco" id="demos" data-tab="Componente">
     <h2 class="bloco-titulo">Como se parece</h2>
     ${recolherNotas(f.palco)}
+${matrizDeEstados(f, f.api)}
 
     <h3 class="rotulo">No celular</h3>
     ${f.estados.length
