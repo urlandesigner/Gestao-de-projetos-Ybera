@@ -53,16 +53,6 @@ h1{font-size:var(--yb-type-display-2-size);line-height:var(--yb-type-display-2-l
   padding:var(--yb-space-2) var(--yb-space-3);font-size:var(--yb-type-caption-size);
   color:var(--yb-text-secondary);background:var(--yb-surface)}
 .fact b{color:var(--yb-text-primary);font-weight:var(--yb-font-weight-semibold)}
-/* As onze telas em linha, e nao em cartao. A coluna da esquerda ja lista as
-   onze, e a pagina de Examples ja descreve cada uma com mais do que cabia aqui
-   — na capa elas eram uma terceira copia, e a maior das tres: onze cartoes
-   empurravam para baixo da dobra o que o sistema de fato e. A checagem que
-   cobra toda tela-prova na capa continua satisfeita: ela procura o endereco,
-   nao o cartao. */
-.telas{display:flex;flex-wrap:wrap;gap:var(--yb-space-1) var(--yb-space-3);
-  margin:0;font-size:var(--yb-type-body-sm-size)}
-.telas a{color:var(--yb-text-secondary)}
-.telas a:hover{color:var(--yb-text-primary)}
 </style>
 <link rel="stylesheet" href="doc/doc-nav.css">
 <script src="doc/doc.js" defer></script>
@@ -242,26 +232,6 @@ h1{font-size:var(--yb-type-display-2-size);line-height:var(--yb-type-display-2-l
       <a class="peca" href="INVENTARIO.md"><b>Inventory</b><span>as peças com maturidade conferida a cada build</span></a>
       <a class="peca" href="CONTRIBUINDO.md"><b>Contributing</b><span>o laço local e o que o CI reprova</span></a>
     </div>
-  </section>
-
-  <section class="grupo" aria-label="Telas montadas com o sistema">
-    <h2>As telas</h2>
-    <p>As páginas da loja remontadas só com as peças daqui — é delas que sai a
-    coluna de maturidade do inventário. O que distingue cada uma está em
-    <a href="pages/">Examples</a>; lado a lado, em <a href="preview/">Preview</a>.</p>
-    <p class="telas">
-      <a href="pages/home.html" target="_blank" rel="noopener">Home v1<span class="ds-sr-only"> (abre em nova aba)</span></a>
-      <a href="pages/index-v2.html" target="_blank" rel="noopener">Home v2<span class="ds-sr-only"> (abre em nova aba)</span></a>
-      <a href="pages/index-v3.html" target="_blank" rel="noopener">Home v3<span class="ds-sr-only"> (abre em nova aba)</span></a>
-      <a href="pages/index-logado.html" target="_blank" rel="noopener">Home · logged in<span class="ds-sr-only"> (abre em nova aba)</span></a>
-      <a href="pages/pdp.html" target="_blank" rel="noopener">PDP<span class="ds-sr-only"> (abre em nova aba)</span></a>
-      <a href="pages/pdp-influencer.html" target="_blank" rel="noopener">PDP · influencer link<span class="ds-sr-only"> (abre em nova aba)</span></a>
-      <a href="pages/pdp-esgotado.html" target="_blank" rel="noopener">PDP · sold out<span class="ds-sr-only"> (abre em nova aba)</span></a>
-      <a href="pages/pdp-variante.html" target="_blank" rel="noopener">PDP · with variant<span class="ds-sr-only"> (abre em nova aba)</span></a>
-      <a href="pages/pdp-oferta.html" target="_blank" rel="noopener">PDP · on sale<span class="ds-sr-only"> (abre em nova aba)</span></a>
-      <a href="pages/faq.html" target="_blank" rel="noopener">FAQ<span class="ds-sr-only"> (abre em nova aba)</span></a>
-      <a href="pages/404.html" target="_blank" rel="noopener">404<span class="ds-sr-only"> (abre em nova aba)</span></a>
-    </p>
   </section>
 
   <p class="ver">v1.0.0 · sempre em <code>localhost:8080</code></p>

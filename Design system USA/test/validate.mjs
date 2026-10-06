@@ -2262,19 +2262,31 @@ secao('Véu leve e blur');
    arquivo — por isso o link do diretorio conta como cobertura de index.html.
    =========================================================================== */
 {
+  /* O INDICE DAS TELAS E A PAGINA DO GRUPO, e nao mais a capa.
+
+     A checagem nasceu quando a capa era o unico lugar que listava as onze, e
+     por isso cobrava a capa. Hoje quem lista e `pages/index.html` — com a
+     linha que distingue cada uma — e a coluna da esquerda, as duas a partir da
+     mesma lista escrita a mao em `tools/moldura.mjs`. A capa deixou de ser
+     indice; cobrar dela era prender a tela num lugar que nao e o dela.
+
+     O dente continua o mesmo: a lista e MANUAL, entao um arquivo novo largado
+     em `pages/` sem entrar nela fica invisivel na coluna e na galeria — e e
+     exatamente isso que esta checagem pega. */
   const dir = 'pages';
-  if (!existsSync(join(raiz, dir)) || !existsSync(join(raiz, 'index.html'))) {
-    aviso('não deu para conferir telas órfãs', 'capa ou pasta de telas-prova ausente');
+  const indice = `${dir}/index.html`;
+  if (!existsSync(join(raiz, dir)) || !existsSync(join(raiz, indice))) {
+    aviso('não deu para conferir telas órfãs', 'galeria ou pasta de telas-prova ausente');
   } else {
-    const capa = ler('index.html');
-    // `index.html` e a pagina do GRUPO, gerada, e nao uma tela
+    const galeria = ler(indice);
+    // `index.html` e a propria galeria, e nao uma tela
     const telas = readdirSync(join(raiz, dir))
       .filter(f => f.endsWith('.html') && f !== 'index.html');
-    const orfas = telas.filter(f => !capa.includes(`${dir}/${f}`));
+    const orfas = telas.filter(f => !galeria.includes(`href="${f}"`));
     orfas.length
-      ? falha('tela-prova que a capa não lista', orfas.join(', ')
+      ? falha('tela-prova que a galeria não lista', orfas.join(', ')
           + ' — tela que ninguém encontra é tela que ninguém revisa')
-      : ok('toda tela-prova está na capa', `${telas.length} telas`);
+      : ok('toda tela-prova está na galeria', `${telas.length} telas`);
   }
 }
 

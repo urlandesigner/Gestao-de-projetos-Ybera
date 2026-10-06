@@ -5,9 +5,15 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
-Nada ainda. A próxima mudança escreve a entrada dela aqui, e o número sobe
-quando for publicada — a checagem `a versão é a mesma em todo lugar` reprova
-quem publicar sem mexer nos dois.
+### Mudado
+- **A capa parou de listar as telas, e a checagem foi para o lugar certo.** A
+  seção "As telas" existia porque uma checagem exigia toda tela-prova linkada
+  na capa — regra escrita quando a capa era o único lugar que as listava. Hoje
+  quem lista é a galeria de Examples, com a linha que distingue cada uma, e a
+  coluna da esquerda, as duas a partir da mesma lista escrita à mão em
+  `tools/moldura.mjs`. A checagem passou a cobrar a galeria. O dente é o mesmo:
+  a lista é manual, então arquivo novo largado em `pages/` sem entrar nela
+  continua sendo pego.
 
 ## [1.0.0] — 2026-10-06
 
