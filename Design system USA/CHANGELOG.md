@@ -5,6 +5,10 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
+Nada ainda.
+
+## [1.0.1] — 2026-10-06
+
 ### Mudado
 - **Templates entra na coluna, e a capa fica só com "Por onde começar".** O
   degrau ficava fora do menu com a razão de que seria "uma promessa — um item
