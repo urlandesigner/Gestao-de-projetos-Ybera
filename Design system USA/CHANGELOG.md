@@ -5,6 +5,10 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
+Nada ainda.
+
+## [1.0.2] — 2026-10-06
+
 ### Adicionado
 - **O changelog virou página, e entrou na coluna.** Era o único documento que
   não dava para ler pelo site: o servidor manda `.md` como `text/markdown` e o

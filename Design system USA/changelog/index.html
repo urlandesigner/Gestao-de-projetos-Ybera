@@ -92,7 +92,7 @@
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
-  <p class="ds-top__versao">v1.0.1</p>
+  <p class="ds-top__versao">v1.0.2</p>
   <a class="ds-top__baixar" href="../dist/ybera-design-system.zip" download="ybera-design-system.zip" aria-label="Download do pacote: tokens, componentes e ícones">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8"/><path d="M4.5 7.5 8 11l3.5-3.5"/><path d="M2.5 13.5h11"/></svg>
     <span>Download</span>
@@ -233,6 +233,10 @@
 
 <details class="log__versao log__versao--espera" open>
 <summary><h2>Em aberto</h2><span class="log__aviso">ainda não publicado — o número sai quando subir</span></summary>
+<p>Nada ainda.</p>
+</details>
+<details class="log__versao">
+<summary><h2>[1.0.2] — 2026-10-06</h2></summary>
 <h3>Adicionado</h3>
 <ul>
 <li><b>O changelog virou página, e entrou na coluna.</b> Era o único documento que não dava para ler pelo site: o servidor manda <code>.md</code> como <code>text/markdown</code> e o navegador baixa em vez de abrir. Agora <code>tools/changelog.mjs</code> gera <code>changelog/index.html</code> a cada build, uma gaveta por versão — a mais recente aberta, as outras quinze esperando. A fonte continua sendo o <code>.md</code>; a página é derivada como as fichas, e o CI pega se ficar para trás. O conversor é próprio, de umas setenta linhas, porque o projeto não tem dependência nenhuma e trazer um renderizador inteiro para seis construções sairia caro. <b>Dos quatro documentos de processo, só ele entra na coluna</b>, e a razão é a pergunta que ele responde: "o que mudou na versão que eu acabei de instalar?" é pergunta de quem usa. Princípios, Decisões e Contribuindo são de quem escreve o sistema, e seguem fora.</li>
