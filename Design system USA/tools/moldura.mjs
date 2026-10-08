@@ -651,7 +651,6 @@ const FOLHA = 'doc/doc-nav.css';
 const ESCRITAS = [
   { arq: 'index.html', raiz: '', atual: 'inicio', moldura: 'centered' },
   { arq: 'icons/index.html', raiz: '../', atual: 'icons', moldura: 'centered' },
-  { arq: 'preview/index.html', raiz: '../', atual: 'preview', moldura: 'wide' },
   { arq: 'decision-log/index.html', raiz: '../', atual: 'decision-log', moldura: 'centered' },
 ];
 

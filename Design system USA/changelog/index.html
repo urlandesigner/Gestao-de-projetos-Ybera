@@ -231,7 +231,15 @@
   <h1 class="ficha-titulo">Changelog</h1>
   <p class="ficha-quando">Formato: <a href="https://keepachangelog.com/pt-BR/1.1.0/">Keep a Changelog</a>. Versionamento descrito em <a href="../GOVERNANCA.md">GOVERNANCA.md</a>.</p>
 
-<details class="log__versao" open>
+<details class="log__versao log__versao--espera" open>
+<summary><h2>Em aberto</h2><span class="log__aviso">ainda não publicado — o número sai quando subir</span></summary>
+<h3>Modificado</h3>
+<ul>
+<li><b>A página de Preview virou bancada: sem barra do topo e sem coluna.</b> Medido em 1024×768, o cromo comia mais do que entregava — sobravam 744×467 para a prova, 44% da janela, e o aparelho de 375×812 não cabia em pé. Mas tirar a moldura resolvia só metade: a barra de controles sozinha media 233px, e clonada em três larguras continuava em 233 até 1440. O que a quebrava em quatro fileiras eram as onze telas em botão, que pediam 1117px de fileira — mais do que a janela inteira. Viraram um <code>&lt;select&gt;</code> de 220, e o nome do aparelho saiu do rótulo dos botões de largura para o <code>title</code>. Resultado: a barra cai de 233 para <b>37px</b>, o palco vai de 44% para <b>87%</b> da janela, e o telefone de 375 aparece inteiro.</li>
+<li><b>A volta é o link da própria bancada.</b> Ela é a única página da doc sem a coluna, então sem esse link não haveria caminho de volta. A <code>COM_MOLDURA</code> do validador deixou de exigir a barra nela, com a razão escrita; e a checagem de versão passou a olhar só a capa, porque sem cabeçalho ninguém reescreveria o carimbo ali e número que ninguém reescreve é número que envelhece — que é exatamente o que aquela checagem existe para impedir.</li>
+</ul>
+</details>
+<details class="log__versao">
 <summary><h2>[1.0.7] — 2026-10-08</h2></summary>
 <h3>Corrigido</h3>
 <ul>

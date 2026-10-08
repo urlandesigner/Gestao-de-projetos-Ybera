@@ -21,10 +21,30 @@
    queries de 320px disparam de verdade.
    ========================================================================= */
 *{box-sizing:border-box}
+/* A BANCADA OCUPA A JANELA INTEIRA. Ela saiu da moldura da doc — sem barra do
+   topo e sem coluna — porque o cromo comia mais do que entregava: medido em
+   1024x768, sobravam 744x467 para a prova, 44% da janela, e o aparelho de
+   375x812 nem cabia em pe.
+
+   `100dvh` e nao `100vh`: no celular a barra do navegador entra e sai, e com
+   `vh` o palco nasce mais alto que a tela e empurra a barra de controles para
+   fora. O corpo nao rola; quem rola e o palco. */
 body{
   margin:0; background:var(--doc-canvas, var(--yb-bg-page)); color:var(--yb-text-primary);
   font-family:var(--yb-font-family-base); -webkit-font-smoothing:antialiased;
-  min-height:100vh; display:flex; flex-direction:column;
+  block-size:100dvh; display:flex; flex-direction:column; overflow:hidden;
+}
+/* O seletor de pagina veste o mesmo que os botoes da fileira: e um controle da
+   mesma barra, e dois desenhos para a mesma altura leem como dois sistemas. */
+.sel{
+  min-height:var(--yb-control-height-compact); padding:0 var(--yb-space-3);
+  border:1px solid var(--yb-border); border-radius:var(--yb-radius-control);
+  background:var(--yb-surface); color:var(--yb-text-primary);
+  font-family:inherit; font-size:var(--yb-type-body-sm-size); cursor:pointer;
+}
+.sel:focus-visible{
+  outline:var(--yb-focus-width) solid var(--yb-focus-color);
+  outline-offset:var(--yb-focus-offset);
 }
 .topo{
   display:flex; align-items:center; gap:var(--yb-space-6); flex-wrap:wrap;
@@ -80,10 +100,17 @@ body{
 }
 .btn small{font-size:var(--yb-type-overline-size); opacity:.7}
 
+/* DUAS CAMADAS, e nao uma: o palco e quem ROLA, a area e quem CENTRALIZA.
+   Com as duas no mesmo elemento, a nota do rodape virava um irmao flex do
+   aparelho e sentava ao lado dele, como se fosse mais uma tela da parede. */
 .palco{
+  flex:1; min-block-size:0; overflow:auto;
+  display:flex; flex-direction:column;
+  background:var(--yb-bg-muted);
+}
+.palco__area{
   flex:1; display:flex; justify-content:center; align-items:flex-start;
-  padding:var(--yb-space-8); background:var(--yb-bg-muted);
-  overflow:auto;
+  padding:var(--yb-space-8);
 }
 .aparelho{
   display:flex; flex-direction:column; gap:var(--yb-space-3);
@@ -179,145 +206,12 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
   .nota{padding:var(--yb-space-3) var(--doc-respiro-largo)}
 }
 </style>
-<link rel="stylesheet" href="../doc/doc-nav.css">
-<script src="../doc/doc.js" defer></script>
 </head>
-<body data-frame="wide">
-<!-- @moldura · gerada por tools/moldura.mjs · não edite -->
-<header class="ds-top">
-  <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
-  <p class="ds-top__versao">v1.0.7</p>
-  <a class="ds-top__baixar" href="../dist/ybera-design-system.zip" download="ybera-design-system.zip" aria-label="Download do pacote: tokens, componentes e ícones">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8"/><path d="M4.5 7.5 8 11l3.5-3.5"/><path d="M2.5 13.5h11"/></svg>
-    <span>Download</span>
-  </a>
-</header>
-<nav class="ds-nav" aria-label="Navegação do design system">
-  <div class="ds-busca" hidden>
-    <label class="ds-sr-only" for="ds-filter">Buscar no design system</label>
-    <input id="ds-filter" type="search" placeholder="Buscar…"
-           autocomplete="off" data-yb-filter>
-    <p class="nav-conta" role="status" aria-live="polite"></p>
-  </div>
-  <ul class="ds-nav__solta">
-    <li><a href="../index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 7 8 2.5 13.5 7"/><path d="M4 6.5V13h8V6.5"/><path d="M6.5 13V9.5h3V13"/></svg>Home</a></li>
-  </ul>
-  <details class="ds-nav__grupo">
-    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5.5 8 3l6 2.5L8 8 2 5.5Z"/><path d="M2 8.8 8 11.3l6-2.5"/><path d="M2 12l6 2.5 6-2.5"/></svg>Foundation</summary>
-    <ul>
-      <li><a href="../tokens/index.html">Overview</a></li>
-      <li><a href="../tokens/usage.html">How to use</a></li>
-      <li><a href="../tokens/architecture.html">Architecture</a></li>
-      <li><a href="../tokens/color.html">Color</a></li>
-      <li><a href="../tokens/state.html">State</a></li>
-      <li><a href="../tokens/typography.html">Typography</a></li>
-      <li><a href="../tokens/space.html">Space</a></li>
-      <li><a href="../tokens/shape.html">Shape</a></li>
-      <li><a href="../tokens/elevation.html">Elevation</a></li>
-      <li><a href="../icons/index.html">Icons</a></li>
-    </ul>
-  </details>
-  <details class="ds-nav__grupo">
-    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Components</summary>
-    <ul>
-      <li><a href="../molecules/accordion.html">Accordion</a></li>
-      <li><a href="../molecules/account.html">Account menu</a></li>
-      <li><a href="../molecules/alert.html">Alert</a></li>
-      <li><a href="../atoms/avatar.html">Avatar</a></li>
-      <li><a href="../atoms/badge.html">Badge</a></li>
-      <li><a href="../molecules/bannerhero.html">Banner hero</a></li>
-      <li><a href="../molecules/bannermedia.html">Banner media</a></li>
-      <li><a href="../molecules/crumb.html">Breadcrumb</a></li>
-      <li><a href="../atoms/button.html">Button</a></li>
-      <li><a href="../molecules/offercard.html">Card offer</a></li>
-      <li><a href="../molecules/card.html">Card product</a></li>
-      <li><a href="../atoms/seals.html">Certification seals</a></li>
-      <li><a href="../atoms/checkbox.html">Checkbox</a></li>
-      <li><a href="../atoms/chip.html">Chip</a></li>
-      <li><a href="../molecules/collection.html">Collection card</a></li>
-      <li><a href="../atoms/count.html">Count</a></li>
-      <li><a href="../atoms/divider.html">Divider</a></li>
-      <li><a href="../molecules/dropdown.html">Dropdown</a></li>
-      <li><a href="../molecules/empty.html">Empty state</a></li>
-      <li><a href="../atoms/iconbtn.html">Icon button</a></li>
-      <li><a href="../atoms/input.html">Input</a></li>
-      <li><a href="../atoms/link.html">Link</a></li>
-      <li><a href="../atoms/logo.html">Logo</a></li>
-      <li><a href="../atoms/notice.html">Notice</a></li>
-      <li><a href="../atoms/offerseal.html">Offer seal</a></li>
-      <li><a href="../molecules/pagination.html">Pagination</a></li>
-      <li><a href="../atoms/panel.html">Panel</a></li>
-      <li><a href="../molecules/partner.html">Partner</a></li>
-      <li><a href="../molecules/popover.html">Popover</a></li>
-      <li><a href="../molecules/post.html">Post</a></li>
-      <li><a href="../molecules/price.html">Price</a></li>
-      <li><a href="../atoms/progress.html">Progress bar</a></li>
-      <li><a href="../molecules/stepper.html">Quantity stepper</a></li>
-      <li><a href="../atoms/radio.html">Radio</a></li>
-      <li><a href="../molecules/rating.html">Rating</a></li>
-      <li><a href="../molecules/review.html">Review</a></li>
-      <li><a href="../atoms/select.html">Select</a></li>
-      <li><a href="../atoms/skeleton.html">Skeleton</a></li>
-      <li><a href="../atoms/stars.html">Stars</a></li>
-      <li><a href="../atoms/switch.html">Switch</a></li>
-      <li><a href="../molecules/tabs.html">Tabs</a></li>
-      <li><a href="../atoms/textarea.html">Textarea</a></li>
-      <li><a href="../molecules/toast.html">Toast</a></li>
-      <li><a href="../molecules/tooltip.html">Tooltip</a></li>
-      <li><a href="../molecules/track.html">Track</a></li>
-      <li><a href="../molecules/variant.html">Variant picker</a></li>
-      <li><a href="../molecules/video.html">Vertical video carousel</a></li>
-    </ul>
-  </details>
-  <details class="ds-nav__grupo">
-    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2.5" width="12" height="3" rx="1"/><rect x="2" y="6.8" width="12" height="3" rx="1"/><rect x="2" y="11.1" width="12" height="2.4" rx="1"/></svg>Blocks</summary>
-    <ul>
-      <li><a href="../organisms/quote.html">Brand quote</a></li>
-      <li><a href="../organisms/buybox.html">Buy box</a></li>
-      <li><a href="../organisms/cart-drawer.html">Cart drawer</a></li>
-      <li><a href="../organisms/catalog.html">Catalog</a></li>
-      <li><a href="../organisms/drawer.html">Drawer</a></li>
-      <li><a href="../organisms/faq.html">FAQ</a></li>
-      <li><a href="../organisms/footer.html">Footer</a></li>
-      <li><a href="../organisms/shipping-progress.html">Free shipping progress</a></li>
-      <li><a href="../organisms/gallery.html">Gallery</a></li>
-      <li><a href="../organisms/header.html">Header</a></li>
-      <li><a href="../organisms/hero.html">Hero</a></li>
-      <li><a href="../organisms/logobar.html">Logo bar</a></li>
-      <li><a href="../organisms/manifesto.html">Manifesto</a></li>
-      <li><a href="../organisms/dialog.html">Modal</a></li>
-      <li><a href="../organisms/nav.html">Nav</a></li>
-      <li><a href="../organisms/search.html">Search overlay</a></li>
-      <li><a href="../organisms/split.html">Split</a></li>
-    </ul>
-  </details>
-  <details class="ds-nav__grupo">
-    <summary><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3.5" width="9" height="9" rx="1.5"/><path d="M5.5 3.5V1.5h9v9h-2"/></svg>Examples</summary>
-    <ul>
-      <li><a href="../pages/index.html">Overview</a></li>
-      <li><a href="../pages/home.html" target="_blank" rel="noopener">Home v1<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
-      <li><a href="../pages/index-v2.html" target="_blank" rel="noopener">Home v2<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
-      <li><a href="../pages/index-v3.html" target="_blank" rel="noopener">Home v3<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
-      <li><a href="../pages/index-logado.html" target="_blank" rel="noopener">Home · logged in<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
-      <li><a href="../pages/pdp.html" target="_blank" rel="noopener">PDP<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
-      <li><a href="../pages/pdp-influencer.html" target="_blank" rel="noopener">PDP · influencer link<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
-      <li><a href="../pages/pdp-esgotado.html" target="_blank" rel="noopener">PDP · sold out<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
-      <li><a href="../pages/pdp-variante.html" target="_blank" rel="noopener">PDP · with variant<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
-      <li><a href="../pages/pdp-oferta.html" target="_blank" rel="noopener">PDP · on sale<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
-      <li><a href="../pages/faq.html" target="_blank" rel="noopener">FAQ<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
-      <li><a href="../pages/404.html" target="_blank" rel="noopener">404<span class="ds-sr-only"> (abre em nova aba)</span></a></li>
-    </ul>
-  </details>
-  <ul class="ds-nav__solta">
-    <li><a href="../preview/index.html" aria-current="page"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3" width="13" height="8.5" rx="1.5"/><path d="M5.5 14h5"/><path d="M8 11.5V14"/></svg>Preview</a></li>
-  </ul>
-  <ul class="ds-nav__solta">
-    <li><a href="../changelog/index.html"><svg class="ds-nav__icone" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 2.5h7.5L13 5v8.5H3z"/><path d="M10 2.5V5h3"/><path d="M5.5 8h5"/><path d="M5.5 10.5h3"/></svg>Changelog</a></li>
-  </ul>
-</nav>
-<!-- /@moldura -->
+<body>
 
 <div class="topo">
+  <a class="voltar" href="../index.html">&larr; Design System</a>
+
 
   <div class="grupo-ctrl" role="group" aria-label="Vista">
     <span class="rot">Vista</span>
@@ -325,33 +219,30 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
     <button class="btn" type="button" data-vista="parede" aria-pressed="false">Todas juntas</button>
   </div>
 
-  <div class="grupo-ctrl" id="grupo-pagina" role="group" aria-label="Página">
-    <span class="rot">Página</span>
-    <!-- So pagina, e nao as galerias de atoms/molecules/organisms/templates.
-         Aquelas sao DOCUMENTACAO: ja tem o quadro de 375px dentro de cada
-         ficha, e vistas aqui dentro de um iframe de 320 viravam uma doc
-         espremida — o que se avaliava era a doc, nao o produto. Esta tela
-         serve para olhar a LOJA em tamanhos de tela diferentes. -->
-    <button class="btn" type="button" data-src="../pages/home.html" aria-pressed="true">Home</button>
-    <button class="btn" type="button" data-src="../pages/index-v2.html" aria-pressed="false">Home v2</button>
-    <button class="btn" type="button" data-src="../pages/index-v3.html" aria-pressed="false">Home v3</button>
-    <button class="btn" type="button" data-src="../pages/index-logado.html" aria-pressed="false">Home logado</button>
-    <button class="btn" type="button" data-src="../pages/pdp.html" aria-pressed="false">PDP</button>
-    <button class="btn" type="button" data-src="../pages/pdp-influencer.html" aria-pressed="false">PDP influencer</button>
-    <button class="btn" type="button" data-src="../pages/pdp-esgotado.html" aria-pressed="false">PDP esgotada</button>
-    <button class="btn" type="button" data-src="../pages/pdp-variante.html" aria-pressed="false">PDP variante</button>
-    <button class="btn" type="button" data-src="../pages/pdp-oferta.html" aria-pressed="false">PDP promoção</button>
-    <button class="btn" type="button" data-src="../pages/faq.html" aria-pressed="false">FAQ</button>
-    <button class="btn" type="button" data-src="../pages/404.html" aria-pressed="false">404</button>
+  <div class="grupo-ctrl" id="grupo-pagina">
+    <label class="rot" for="sel-pagina">Página</label>
+    <select class="sel" id="sel-pagina">
+      <option data-src="../pages/home.html" selected>Home</option>
+      <option data-src="../pages/index-v2.html">Home v2</option>
+      <option data-src="../pages/index-v3.html">Home v3</option>
+      <option data-src="../pages/index-logado.html">Home logado</option>
+      <option data-src="../pages/pdp.html">PDP</option>
+      <option data-src="../pages/pdp-influencer.html">PDP influencer</option>
+      <option data-src="../pages/pdp-esgotado.html">PDP esgotada</option>
+      <option data-src="../pages/pdp-variante.html">PDP variante</option>
+      <option data-src="../pages/pdp-oferta.html">PDP promoção</option>
+      <option data-src="../pages/faq.html">FAQ</option>
+      <option data-src="../pages/404.html">404</option>
+    </select>
   </div>
 
   <div class="grupo-ctrl" role="group" aria-label="Largura">
     <span class="rot">Largura</span>
-    <button class="btn" type="button" data-w="320" data-h="568" aria-pressed="false">320 <small>iPhone SE</small></button>
-    <button class="btn" type="button" data-w="375" data-h="812" aria-pressed="true">375 <small>iPhone 13 mini</small></button>
-    <button class="btn" type="button" data-w="414" data-h="896" aria-pressed="false">414 <small>iPhone 11</small></button>
-    <button class="btn" type="button" data-w="768" data-h="1024" aria-pressed="false">768 <small>iPad</small></button>
-    <button class="btn" type="button" data-w="1280" data-h="900" aria-pressed="false">1280 <small>desktop</small></button>
+    <button class="btn" type="button" data-w="320" data-h="568" aria-pressed="false" title="iPhone SE">320</button>
+    <button class="btn" type="button" data-w="375" data-h="812" aria-pressed="true" title="iPhone 13 mini">375</button>
+    <button class="btn" type="button" data-w="414" data-h="896" aria-pressed="false" title="iPhone 11">414</button>
+    <button class="btn" type="button" data-w="768" data-h="1024" aria-pressed="false" title="iPad">768</button>
+    <button class="btn" type="button" data-w="1280" data-h="900" aria-pressed="false" title="desktop">1280</button>
   </div>
 
   <div class="grupo-ctrl" id="grupo-zoom" role="group" aria-label="Zoom" hidden>
@@ -364,6 +255,7 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
 </div>
 
 <div class="palco">
+  <div class="palco__area">
   <div class="aparelho" id="aparelho">
     <span class="medida" id="medida">375 × 812</span>
     <div class="moldura">
@@ -374,16 +266,17 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
        lista so, escrita uma vez. Segunda lista a mao seria a primeira coisa a
        ficar para tras quando uma tela nova aparecesse. -->
   <div class="parede" id="parede" hidden></div>
+  </div>
+  <p class="nota">
+    Cada quadro se comporta como um aparelho daquela largura, e não como uma caixa
+    encolhida: o que você vê aqui é o que a pessoa vê no celular, no tablet e no
+    desktop. Em <b>todas juntas</b>, o zoom encolhe o desenho mas não a largura —
+    as telas continuam sendo medidas pelo tamanho escolhido, e a janela é mais
+    alta que a do aparelho só para caber mais do que o cabeçalho. O nome de cada
+    uma leva ao quadro de perto.
+  </p>
 </div>
 
-<p class="nota">
-  Cada quadro se comporta como um aparelho daquela largura, e não como uma caixa
-  encolhida: o que você vê aqui é o que a pessoa vê no celular, no tablet e no
-  desktop. Em <b>todas juntas</b>, o zoom encolhe o desenho mas não a largura —
-  as telas continuam sendo medidas pelo tamanho escolhido, e a janela é mais
-  alta que a do aparelho só para caber mais do que o cabeçalho. O nome de cada
-  uma leva ao quadro de perto.
-</p>
 
 <script>
 (function () {
@@ -403,6 +296,11 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
   var ALTURA_PAREDE = 1200;
 
   function marcar(botao) {
+    /* A PAGINA VIROU <select> e os outros tres grupos continuam botoes, entao
+       `marcar` atende os dois. Sao onze telas: em botao elas sozinhas pediam
+       1117px de fileira — mais do que a janela inteira —, e eram elas que
+       quebravam a barra em quatro linhas. Em `select` ocupam 220. */
+    if (botao.tagName === 'OPTION') { botao.selected = true; return; }
     var irmaos = botao.parentElement.querySelectorAll('.btn');
     Array.prototype.forEach.call(irmaos, function (b) {
       b.setAttribute('aria-pressed', String(b === botao));
@@ -414,7 +312,7 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
   function estado() {
     return {
       w: escolhido('[data-w]'),
-      p: escolhido('[data-src]'),
+      p: document.getElementById('sel-pagina').selectedOptions[0],
       v: escolhido('[data-vista]'),
       z: escolhido('[data-z]'),
     };
@@ -508,6 +406,8 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
       }));
     } catch (err) { /* janela anônima, ou storage bloqueado */ }
   }
+
+  document.getElementById('sel-pagina').addEventListener('change', aplicar);
 
   document.addEventListener('click', function (ev) {
     var b = ev.target.closest('.btn');

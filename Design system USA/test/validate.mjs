@@ -1003,8 +1003,12 @@ secao('Moldura');
   /* Toda pagina de doc tem de ter a barra, e todas tem de ter a MESMA. A
      comparacao ignora o `aria-current` e a profundidade do caminho, que sao
      justamente o que muda de pagina para pagina. */
+  /* `preview/index.html` NAO esta aqui desde a 1.0.8: a bancada saiu da moldura
+     de proposito. Com barra do topo e coluna, sobravam 744x467 de uma janela de
+     1024x768 — 44% — e o aparelho de 375x812 nao cabia em pe. Ela e a unica
+     pagina da doc sem a barra, e a volta e o link da propria bancada. */
   const COM_MOLDURA = ['index.html', 'tokens/index.html', 'icons/index.html',
-    'preview/index.html', 'decision-log/index.html',
+    'decision-log/index.html',
     ...ESCADA.flatMap(n => readdirSync(join(raiz, PASTA[n]))
       .filter(f => f.endsWith('.html') && f !== 'solo.html').map(f => `${PASTA[n]}/${f}`))];
   /* Ignora o que MUDA de pagina para pagina: qual item esta aberto, qual esta
@@ -2477,7 +2481,12 @@ secao('Autodescrição');
   const noLog = (ler('CHANGELOG.md').match(/^## \[(\d+\.\d+\.\d+)\]/m) || [, ''])[1];
   const erradas = [];
   if (noLog !== versao) erradas.push(`CHANGELOG.md abre em ${noLog || '(nenhuma)'}`);
-  for (const f of ['index.html', 'preview/index.html']) {
+  /* So a capa: a bancada saiu da moldura e por isso nao tem mais o carimbo de
+     versao do cabecalho. Nada escreveria o numero la, e um carimbo que ninguem
+     reescreve e um numero que envelhece — exatamente o que esta checagem
+     existe para impedir. O dente da regra continua inteiro: a capa e o
+     CHANGELOG sao os dois que o GOVERNANCA cita. */
+  for (const f of ['index.html']) {
     if (!existsSync(join(raiz, f))) continue;
     for (const m of ler(f).matchAll(/\bv(\d+\.\d+\.\d+)\b/g))
       if (m[1] !== versao) erradas.push(`${f} diz v${m[1]}`);

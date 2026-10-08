@@ -5,6 +5,24 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
+### Modificado
+- **A página de Preview virou bancada: sem barra do topo e sem coluna.** Medido
+  em 1024×768, o cromo comia mais do que entregava — sobravam 744×467 para a
+  prova, 44% da janela, e o aparelho de 375×812 não cabia em pé. Mas tirar a
+  moldura resolvia só metade: a barra de controles sozinha media 233px, e
+  clonada em três larguras continuava em 233 até 1440. O que a quebrava em
+  quatro fileiras eram as onze telas em botão, que pediam 1117px de fileira —
+  mais do que a janela inteira. Viraram um `<select>` de 220, e o nome do
+  aparelho saiu do rótulo dos botões de largura para o `title`. Resultado: a
+  barra cai de 233 para **37px**, o palco vai de 44% para **87%** da janela, e
+  o telefone de 375 aparece inteiro.
+- **A volta é o link da própria bancada.** Ela é a única página da doc sem a
+  coluna, então sem esse link não haveria caminho de volta. A `COM_MOLDURA` do
+  validador deixou de exigir a barra nela, com a razão escrita; e a checagem de
+  versão passou a olhar só a capa, porque sem cabeçalho ninguém reescreveria o
+  carimbo ali e número que ninguém reescreve é número que envelhece — que é
+  exatamente o que aquela checagem existe para impedir.
+
 ## [1.0.7] — 2026-10-08
 
 ### Corrigido
