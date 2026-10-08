@@ -88,7 +88,7 @@ const base = JSON.parse(readFileSync(BASE, 'utf8'));
 const porId = (arr) => Object.fromEntries(arr.map((r) => [idDe(r), r]));
 const B = porId(base), A = porId(lista);
 
-let mudancas = 0, sumiram = 0, nasceram = 0;
+let mudancas = 0, sumiram = 0, nasceram = 0, ausentes = 0;
 const linhas = [];
 
 for (const id of Object.keys(A)) {
@@ -117,7 +117,18 @@ for (const id of Object.keys(A)) {
     if (dif.length) { mudancas++; linhas.push(vermelho(`  ✗ ${id} · ${chave}`) + `\n      ${dif.join(' · ')}`); }
   }
 }
-for (const id of Object.keys(B)) if (!A[id]) linhas.push(cinza(`  ~ ${id} — não foi capturado desta vez`));
+/* Retrato que esta na base e NAO veio na captura conta como falha, nao como
+   observacao. Esta linha era cinza e nao somava em lugar nenhum: quando as
+   telas-prova sairam de `_captura/nova-loja/` para `pages/`, a base continuou
+   apontando para as paginas antigas e a ferramenta imprimiu SEM DERIVA em
+   verde com SEIS retratos orfaos e seis retratos novos. A rede ficou
+   desligada por duas semanas sem ninguem ver.
+
+   Mudar o conjunto de paginas e uma decisao, e decisao se toma com
+   `--aceitar`. O que nao pode e a base envelhecer em silencio. */
+for (const id of Object.keys(B)) {
+  if (!A[id]) { ausentes++; linhas.push(vermelho(`  ✗ ${id} — está na base e não foi capturado`)); }
+}
 
 console.log('');
 console.log('Layout · comparação com a base');
@@ -125,11 +136,12 @@ console.log('─'.repeat(56));
 if (linhas.length) linhas.forEach((l) => console.log(l));
 
 const pecas = lista.reduce((n, r) => n + r.pecas, 0);
-const resumo = `${lista.length} retrato(s) · ${pecas} peças · ${mudancas} mudança(s) · ${sumiram} sumiço(s) · ${nasceram} nova(s)`;
+const resumo = `${lista.length} retrato(s) · ${pecas} peças · ${mudancas} mudança(s) · ${sumiram} sumiço(s) · ${nasceram} nova(s) · ${ausentes} ausente(s)`;
 console.log('─'.repeat(56));
 
-if (mudancas || sumiram) {
+if (mudancas || sumiram || ausentes) {
   console.log(vermelho(`MUDOU — ${resumo}`));
+  if (ausentes) console.log(cinza('Retrato ausente é base velha, não página boa: ou capture a página, ou promova o conjunto novo.'));
   console.log(cinza('Se a mudança é intencional: node tools/baseline.mjs --aceitar'));
   process.exit(1);
 }

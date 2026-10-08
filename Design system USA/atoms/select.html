@@ -263,10 +263,10 @@
       <span class="matriz__col">Focus</span>
       <span class="matriz__col">Disabled</span>
       <span class="matriz__linha">Campo</span>
-      <span class="matriz__cel" data-doc-state="default"><div class="yb-field"><div class="yb-field__box"><select class="yb-select" tabindex="-1"><option>Straight</option></select><label class="yb-field__label">Hair type</label></div></div></span>
-      <span class="matriz__cel" data-doc-state="hover"><div class="yb-field"><div class="yb-field__box"><select class="yb-select" tabindex="-1"><option>Straight</option></select><label class="yb-field__label">Hair type</label></div></div></span>
-      <span class="matriz__cel" data-doc-state="focus"><div class="yb-field"><div class="yb-field__box"><select class="yb-select" tabindex="-1"><option>Straight</option></select><label class="yb-field__label">Hair type</label></div></div></span>
-      <span class="matriz__cel" data-doc-state="disabled"><div class="yb-field"><div class="yb-field__box"><select class="yb-select" tabindex="-1" disabled><option>Straight</option></select><label class="yb-field__label">Hair type</label></div></div></span>
+      <span class="matriz__cel" data-doc-state="default"><div class="yb-field"><div class="yb-field__box"><select class="yb-select" id="select-00" tabindex="-1"><option>Straight</option></select><label class="yb-field__label" for="select-00">Hair type</label></div></div></span>
+      <span class="matriz__cel" data-doc-state="hover"><div class="yb-field"><div class="yb-field__box"><select class="yb-select" id="select-01" tabindex="-1"><option>Straight</option></select><label class="yb-field__label" for="select-01">Hair type</label></div></div></span>
+      <span class="matriz__cel" data-doc-state="focus"><div class="yb-field"><div class="yb-field__box"><select class="yb-select" id="select-02" tabindex="-1"><option>Straight</option></select><label class="yb-field__label" for="select-02">Hair type</label></div></div></span>
+      <span class="matriz__cel" data-doc-state="disabled"><div class="yb-field"><div class="yb-field__box"><select class="yb-select" id="select-03" tabindex="-1" disabled><option>Straight</option></select><label class="yb-field__label" for="select-03">Hair type</label></div></div></span>
     </div>
 
     <h3 class="rotulo">No celular</h3>
@@ -371,7 +371,8 @@
   }
 }
 .yb-field__box &gt; :is(.yb-input,.yb-select,.yb-textarea){
-  border:0; background:transparent; padding:0; min-height:0;
+  border:0; background:transparent; min-height:0;
+  padding:var(--yb-space-3) 0; align-self:stretch;
   border-radius:0; flex:1; min-inline-size:0;
 }
 .yb-field__box &gt; :is(.yb-input,.yb-select,.yb-textarea):focus-visible{outline:0}

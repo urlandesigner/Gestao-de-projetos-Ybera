@@ -247,10 +247,10 @@
       <span class="matriz__col">Focus</span>
       <span class="matriz__col">Disabled</span>
       <span class="matriz__linha">Campo</span>
-      <span class="matriz__cel" data-doc-state="default"><div class="yb-field"><div class="yb-field__box"><textarea class="yb-textarea" rows="2" placeholder=" " tabindex="-1"></textarea><label class="yb-field__label">Gift note</label></div></div></span>
-      <span class="matriz__cel" data-doc-state="hover"><div class="yb-field"><div class="yb-field__box"><textarea class="yb-textarea" rows="2" placeholder=" " tabindex="-1"></textarea><label class="yb-field__label">Gift note</label></div></div></span>
-      <span class="matriz__cel" data-doc-state="focus"><div class="yb-field"><div class="yb-field__box"><textarea class="yb-textarea" rows="2" placeholder=" " tabindex="-1"></textarea><label class="yb-field__label">Gift note</label></div></div></span>
-      <span class="matriz__cel" data-doc-state="disabled"><div class="yb-field"><div class="yb-field__box"><textarea class="yb-textarea" rows="2" placeholder=" " tabindex="-1" disabled></textarea><label class="yb-field__label">Gift note</label></div></div></span>
+      <span class="matriz__cel" data-doc-state="default"><div class="yb-field"><div class="yb-field__box"><textarea class="yb-textarea" id="textarea-00" rows="2" placeholder=" " tabindex="-1"></textarea><label class="yb-field__label" for="textarea-00">Gift note</label></div></div></span>
+      <span class="matriz__cel" data-doc-state="hover"><div class="yb-field"><div class="yb-field__box"><textarea class="yb-textarea" id="textarea-01" rows="2" placeholder=" " tabindex="-1"></textarea><label class="yb-field__label" for="textarea-01">Gift note</label></div></div></span>
+      <span class="matriz__cel" data-doc-state="focus"><div class="yb-field"><div class="yb-field__box"><textarea class="yb-textarea" id="textarea-02" rows="2" placeholder=" " tabindex="-1"></textarea><label class="yb-field__label" for="textarea-02">Gift note</label></div></div></span>
+      <span class="matriz__cel" data-doc-state="disabled"><div class="yb-field"><div class="yb-field__box"><textarea class="yb-textarea" id="textarea-03" rows="2" placeholder=" " tabindex="-1" disabled></textarea><label class="yb-field__label" for="textarea-03">Gift note</label></div></div></span>
     </div>
 
     <h3 class="rotulo">No celular</h3>
@@ -315,7 +315,8 @@
   background-size:var(--yb-icon-md) var(--yb-icon-md);
 }
 .yb-field__box &gt; :is(.yb-input,.yb-select,.yb-textarea){
-  border:0; background:transparent; padding:0; min-height:0;
+  border:0; background:transparent; min-height:0;
+  padding:var(--yb-space-3) 0; align-self:stretch;
   border-radius:0; flex:1; min-inline-size:0;
 }
 .yb-field__box &gt; :is(.yb-input,.yb-select,.yb-textarea):focus-visible{outline:0}

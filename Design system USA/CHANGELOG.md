@@ -5,6 +5,36 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
+### Corrigido
+- **O campo só era clicável nos 20px do texto, e não nos 50 da caixa.** O
+  respiro vertical morava em `.yb-field__box` — e a caixa é um `<span>`, não um
+  `<label>`, então os 12px de cima e os de baixo não levavam a lugar nenhum:
+  clicar ali não focava o controle. Medido no campo de newsletter do rodapé,
+  370×20 de área clicável, nas onze telas-prova. O respiro passou para o
+  controle, com `align-self:stretch` para ele ocupar a caixa inteira. São
+  370×48 agora, e o desenho não mudou um pixel: a altura continua vindo do
+  `min-height`, o rótulo flutuante é absoluto e nunca dependeu desse padding, e
+  a linha de calcular frete continua casando com o botão em 50.
+- **A matriz de estados acusava falha de acessibilidade em célula que ninguém
+  consegue clicar.** Dois defeitos somados. O molde do Input, do Select e do
+  Textarea não usava o `{i}` que a matriz já oferece, então os quatro campos de
+  cada grade saíam com `<label>` sem `for` — e o auditor, com razão, lia campo
+  sem rótulo. E a grade inteira é `inert`: dentro dela nada recebe foco nem
+  entra na árvore de acessibilidade, mas o auditor media alvo de toque assim
+  mesmo, e a ficha do Input nascia com 14 falhas de alvo que não existem. O
+  molde ganhou o par `id`/`for`, e o auditor passa ao largo de subárvore
+  `inert` nas duas checagens de interação. **Contraste não** usa essa porta:
+  `inert` tira do teclado, não do olho.
+- **A rede de layout dizia SEM DERIVA com a base apontando para páginas que não
+  existem.** Quando as telas-prova saíram de `_captura/nova-loja/` para
+  `pages/`, a base continuou guardando os retratos antigos. Retrato que está na
+  base e não vem na captura só gerava uma linha cinza que não somava em lugar
+  nenhum — a ferramenta imprimia verde com seis retratos órfãos e seis
+  retratos novos, e a rede ficou desligada duas semanas sem ninguém ver. Agora
+  conta como falha e o comando sai com erro. Mudar o conjunto de páginas
+  continua sendo possível, mas por decisão: `--aceitar`. A base foi recapturada
+  em `pages/home.html` e `pages/pdp.html`, nas três larguras.
+
 ## [1.0.4] — 2026-10-06
 
 ### Corrigido

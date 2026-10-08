@@ -1335,7 +1335,15 @@ button.yb-link{
 .yb-field__box{
   position:relative;
   display:flex; align-items:center; gap:var(--yb-space-2);
-  padding:var(--yb-space-3) var(--yb-space-4);
+  /* O respiro vertical mora no CONTROLE, nao na caixa. Com ele aqui, o
+     <input> ficava com os 20px da altura natural do texto dentro de um campo
+     de 50px, e os 12px de cima e de baixo nao focavam nada: a caixa e um
+     <span>, nao um <label>, entao clicar na borracha nao chega ao controle.
+     Medido no campo de newsletter do rodape — 370x20 de area clicavel, em
+     todas as onze telas-prova. Com o padding no controle sao 370x48, e o
+     desenho nao muda um pixel: a altura da caixa continua vindo do
+     `min-height` e do conteudo. */
+  padding-block:0; padding-inline:var(--yb-space-4);
   /* trava com a altura do .yb-btn padrão: os dois vivem lado a lado na linha
      de calcular frete, e 4px de diferença ali é a primeira coisa que se vê. */
   min-height:var(--yb-control-h);
@@ -1346,7 +1354,10 @@ button.yb-link{
              box-shadow var(--yb-transition-control);
 }
 .yb-field__box > :is(.yb-input,.yb-select,.yb-textarea){
-  border:0; background:transparent; padding:0; min-height:0;
+  border:0; background:transparent; min-height:0;
+  /* `align-self:stretch` e o par do `padding-block:0` da caixa: sem ele o
+     controle volta a ter a altura do texto, porque a caixa centraliza. */
+  padding:var(--yb-space-3) 0; align-self:stretch;
   border-radius:0; flex:1; min-inline-size:0;
 }
 /* O anel é da caixa, não do controle — dois anéis concêntricos piscariam. */

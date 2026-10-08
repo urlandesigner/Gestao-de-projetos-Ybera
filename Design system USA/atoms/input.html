@@ -341,10 +341,10 @@
       <span class="matriz__col">Focus</span>
       <span class="matriz__col">Disabled</span>
       <span class="matriz__linha">Campo</span>
-      <span class="matriz__cel" data-doc-state="default"><div class="yb-field"><div class="yb-field__box"><input class="yb-input" type="text" placeholder=" " tabindex="-1"><label class="yb-field__label">Email</label></div></div></span>
-      <span class="matriz__cel" data-doc-state="hover"><div class="yb-field"><div class="yb-field__box"><input class="yb-input" type="text" placeholder=" " tabindex="-1"><label class="yb-field__label">Email</label></div></div></span>
-      <span class="matriz__cel" data-doc-state="focus"><div class="yb-field"><div class="yb-field__box"><input class="yb-input" type="text" placeholder=" " tabindex="-1"><label class="yb-field__label">Email</label></div></div></span>
-      <span class="matriz__cel" data-doc-state="disabled"><div class="yb-field"><div class="yb-field__box"><input class="yb-input" type="text" placeholder=" " tabindex="-1" disabled><label class="yb-field__label">Email</label></div></div></span>
+      <span class="matriz__cel" data-doc-state="default"><div class="yb-field"><div class="yb-field__box"><input class="yb-input" id="input-00" type="text" placeholder=" " tabindex="-1"><label class="yb-field__label" for="input-00">Email</label></div></div></span>
+      <span class="matriz__cel" data-doc-state="hover"><div class="yb-field"><div class="yb-field__box"><input class="yb-input" id="input-01" type="text" placeholder=" " tabindex="-1"><label class="yb-field__label" for="input-01">Email</label></div></div></span>
+      <span class="matriz__cel" data-doc-state="focus"><div class="yb-field"><div class="yb-field__box"><input class="yb-input" id="input-02" type="text" placeholder=" " tabindex="-1"><label class="yb-field__label" for="input-02">Email</label></div></div></span>
+      <span class="matriz__cel" data-doc-state="disabled"><div class="yb-field"><div class="yb-field__box"><input class="yb-input" id="input-03" type="text" placeholder=" " tabindex="-1" disabled><label class="yb-field__label" for="input-03">Email</label></div></div></span>
     </div>
 
     <h3 class="rotulo">No celular</h3>
@@ -409,7 +409,8 @@
 }
 [dir="rtl"] .yb-input[aria-invalid="true"]{background-position:left var(--yb-space-3) center;}
 .yb-field__box &gt; :is(.yb-input,.yb-select,.yb-textarea){
-  border:0; background:transparent; padding:0; min-height:0;
+  border:0; background:transparent; min-height:0;
+  padding:var(--yb-space-3) 0; align-self:stretch;
   border-radius:0; flex:1; min-inline-size:0;
 }
 .yb-field__box &gt; :is(.yb-input,.yb-select,.yb-textarea):focus-visible{outline:0}

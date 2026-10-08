@@ -45,6 +45,19 @@
   const falhas = [], avisos = [];
   const visivel = (e) => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
 
+  /* Subarvore `inert`: desenho de controle, nao controle. A matriz de estados
+     da doc e exatamente isso — ela pinta Default/Hover/Focus/Disabled lado a
+     lado para quem OLHA, e leva `inert` justamente para o teclado nao
+     percorrer sessenta botoes falsos. Dentro de `inert` nada recebe foco e
+     nada entra na arvore de acessibilidade, entao alvo de toque e rotulo
+     acessivel nao se aplicam: a pagina do Input acusava 14 falhas de alvo
+     que ninguem consegue clicar nem alcancar.
+
+     Contraste NAO usa esta porta, de proposito. O `inert` tira do teclado,
+     nao do olho — o texto da matriz continua sendo lido, e e a unica coisa
+     que vale medir ali. */
+  const operavel = (e) => !e.closest('[inert]');
+
   // Input visualmente oculto cujo <label> é o alvo real — padrão de swatch,
   // segmented control e galeria. O auditor precisa saber disso, senão acusa
   // um radio de 13×13 que ninguém clica.
@@ -120,7 +133,7 @@
   const CONTROLES = 'button, a[href], input:not([type=hidden]), select, textarea, summary, [role=button]';
   let controles = 0;
   for (const e of document.querySelectorAll(CONTROLES)) {
-    if (!visivel(e)) continue;
+    if (!visivel(e) || !operavel(e)) continue;
     if (ocultoComLabel(e)) continue;        // o <label> é o alvo, não o input
     controles++;
     const r = alvoEfetivo(e);
@@ -136,7 +149,7 @@
 
   /* 3 · rótulo acessível */
   for (const e of document.querySelectorAll(CONTROLES)) {
-    if (!visivel(e)) continue;
+    if (!visivel(e) || !operavel(e)) continue;
     if (e.tagName === 'INPUT' || e.tagName === 'SELECT' || e.tagName === 'TEXTAREA') {
       const id = e.id;
       const temLabel = (id && document.querySelector(`label[for="${CSS.escape(id)}"]`)) ||

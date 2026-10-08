@@ -231,7 +231,16 @@
   <h1 class="ficha-titulo">Changelog</h1>
   <p class="ficha-quando">Formato: <a href="https://keepachangelog.com/pt-BR/1.1.0/">Keep a Changelog</a>. Versionamento descrito em <a href="../GOVERNANCA.md">GOVERNANCA.md</a>.</p>
 
-<details class="log__versao" open>
+<details class="log__versao log__versao--espera" open>
+<summary><h2>Em aberto</h2><span class="log__aviso">ainda não publicado — o número sai quando subir</span></summary>
+<h3>Corrigido</h3>
+<ul>
+<li><b>O campo só era clicável nos 20px do texto, e não nos 50 da caixa.</b> O respiro vertical morava em <code>.yb-field__box</code> — e a caixa é um <code>&lt;span&gt;</code>, não um <code>&lt;label&gt;</code>, então os 12px de cima e os de baixo não levavam a lugar nenhum: clicar ali não focava o controle. Medido no campo de newsletter do rodapé, 370×20 de área clicável, nas onze telas-prova. O respiro passou para o controle, com <code>align-self:stretch</code> para ele ocupar a caixa inteira. São 370×48 agora, e o desenho não mudou um pixel: a altura continua vindo do <code>min-height</code>, o rótulo flutuante é absoluto e nunca dependeu desse padding, e a linha de calcular frete continua casando com o botão em 50.</li>
+<li><b>A matriz de estados acusava falha de acessibilidade em célula que ninguém consegue clicar.</b> Dois defeitos somados. O molde do Input, do Select e do Textarea não usava o <code>{i}</code> que a matriz já oferece, então os quatro campos de cada grade saíam com <code>&lt;label&gt;</code> sem <code>for</code> — e o auditor, com razão, lia campo sem rótulo. E a grade inteira é <code>inert</code>: dentro dela nada recebe foco nem entra na árvore de acessibilidade, mas o auditor media alvo de toque assim mesmo, e a ficha do Input nascia com 14 falhas de alvo que não existem. O molde ganhou o par <code>id</code>/<code>for</code>, e o auditor passa ao largo de subárvore <code>inert</code> nas duas checagens de interação. <b>Contraste não</b> usa essa porta: <code>inert</code> tira do teclado, não do olho.</li>
+<li><b>A rede de layout dizia SEM DERIVA com a base apontando para páginas que não existem.</b> Quando as telas-prova saíram de <code>_captura/nova-loja/</code> para <code>pages/</code>, a base continuou guardando os retratos antigos. Retrato que está na base e não vem na captura só gerava uma linha cinza que não somava em lugar nenhum — a ferramenta imprimia verde com seis retratos órfãos e seis retratos novos, e a rede ficou desligada duas semanas sem ninguém ver. Agora conta como falha e o comando sai com erro. Mudar o conjunto de páginas continua sendo possível, mas por decisão: <code>--aceitar</code>. A base foi recapturada em <code>pages/home.html</code> e <code>pages/pdp.html</code>, nas três larguras.</li>
+</ul>
+</details>
+<details class="log__versao">
 <summary><h2>[1.0.4] — 2026-10-06</h2></summary>
 <h3>Corrigido</h3>
 <ul>

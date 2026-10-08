@@ -451,7 +451,7 @@
       "medidas": ".yb-field__box"
     },
     "matriz": {
-      "molde": "<div class=\"yb-field\"><div class=\"yb-field__box\"><input class=\"yb-input\" type=\"text\" placeholder=\" \" tabindex=\"-1\"{d}><label class=\"yb-field__label\">Email</label></div></div>",
+      "molde": "<div class=\"yb-field\"><div class=\"yb-field__box\"><input class=\"yb-input\" id=\"{i}\" type=\"text\" placeholder=\" \" tabindex=\"-1\"{d}><label class=\"yb-field__label\" for=\"{i}\">Email</label></div></div>",
       "linhas": [
         [
           "Campo",
@@ -534,7 +534,7 @@
       ]
     },
     "matriz": {
-      "molde": "<div class=\"yb-field\"><div class=\"yb-field__box\"><select class=\"yb-select\" tabindex=\"-1\"{d}><option>Straight</option></select><label class=\"yb-field__label\">Hair type</label></div></div>",
+      "molde": "<div class=\"yb-field\"><div class=\"yb-field__box\"><select class=\"yb-select\" id=\"{i}\" tabindex=\"-1\"{d}><option>Straight</option></select><label class=\"yb-field__label\" for=\"{i}\">Hair type</label></div></div>",
       "linhas": [
         [
           "Campo",
@@ -589,7 +589,7 @@
       "medidas": ".yb-field__box"
     },
     "matriz": {
-      "molde": "<div class=\"yb-field\"><div class=\"yb-field__box\"><textarea class=\"yb-textarea\" rows=\"2\" placeholder=\" \" tabindex=\"-1\"{d}></textarea><label class=\"yb-field__label\">Gift note</label></div></div>",
+      "molde": "<div class=\"yb-field\"><div class=\"yb-field__box\"><textarea class=\"yb-textarea\" id=\"{i}\" rows=\"2\" placeholder=\" \" tabindex=\"-1\"{d}></textarea><label class=\"yb-field__label\" for=\"{i}\">Gift note</label></div></div>",
       "linhas": [
         [
           "Campo",
