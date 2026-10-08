@@ -643,6 +643,41 @@
     };
   }
 
+  /* AS VIZINHAS DE UMA SPRINT na linha do tempo do time.
+
+     Serve a navegação dentro do board de uma sprint: estando na Sprint 19, qual
+     é a 18 e qual é a 20. Não é "a de antes na lista" — a lista que o DevOps
+     devolve não promete ordem —, é a de antes NO CALENDÁRIO.
+
+     Mesma régua do janelaDeSprints, de propósito: ordena por início e descarta
+     iteração sem as duas datas. Sprint sem data não tem lugar numa linha do
+     tempo, e adivinhar um lugar pra ela faria o "anterior" apontar pra algo que
+     o time não reconhece. Se a própria sprint aberta estiver sem data, ela não
+     está na lista e o resultado é duas ausências — a navegação some, em vez de
+     oferecer um salto arbitrário.
+
+     Casa por ID e não por nome: dois times podem ter "Sprint 20", e o nome é
+     editável no DevOps. */
+  function vizinhasDaSprint(iteracoes, id) {
+    const vazio = { anterior: null, proxima: null };
+    if (id === null || id === undefined || id === '') return vazio;
+    const t = (v) => {
+      const n = v ? Date.parse(v) : NaN;
+      return Number.isNaN(n) ? null : n;
+    };
+    const ordenadas = (Array.isArray(iteracoes) ? iteracoes : [])
+      .map((s) => (s ? { s, ini: t(s.start), fim: t(s.finish) } : null))
+      .filter((x) => x && x.ini !== null && x.fim !== null)
+      .sort((a, b) => a.ini - b.ini)
+      .map((x) => x.s);
+    const i = ordenadas.findIndex((s) => String(s.id) === String(id));
+    if (i < 0) return vazio;
+    return {
+      anterior: i > 0 ? ordenadas[i - 1] : null,
+      proxima: i < ordenadas.length - 1 ? ordenadas[i + 1] : null,
+    };
+  }
+
   /* Placar de uma sprint a partir da forma CURTA (a que o app.js guarda no
      cache), e não dos itens crus do DevOps.
 
@@ -1349,7 +1384,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, wiqlIteracao, transbordados, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, vizinhasDaSprint, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };

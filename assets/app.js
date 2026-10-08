@@ -626,6 +626,37 @@ function renderRoadmap() {
   box.innerHTML = R.corpoRoadmap(itens, Date.now());
 }
 
+/* O QUE O DIÁLOGO DA SPRINT MOSTRA, por coluna ('anterior' | 'atual' |
+   'proxima'). Escrito pelo renderPanorama e lido no clique do "+N mais".
+
+   Fora da função porque o clique acontece DEPOIS do render — e tem que achar a
+   lista do render mais recente, não a de quando o ouvinte foi ligado. Zerado no
+   começo de cada render: coluna que deixou de existir (time que tirou a sprint
+   seguinte do DevOps) não pode continuar abrindo. */
+const sprintInteira = {};
+
+/* O diálogo é preenchido no clique, não no render: na maioria das aberturas do
+   Panorama ninguém clica, e desenhar 60 linhas invisíveis a cada render custa
+   sem comprar nada. */
+function abrirSprintInteira(chave) {
+  const d = $('sprint-tudo');
+  const dados = sprintInteira[chave];
+  // Sem <dialog> no navegador, o cartão continua como está e o clique não faz
+  // nada — degradação silenciosa é melhor que um botão que estoura.
+  if (!d || !d.showModal || !dados) return;
+  $('sprint-tudo-fase').textContent = dados.rotulo;
+  $('sprint-tudo-nome').textContent = dados.nome;
+  $('sprint-tudo-periodo').textContent = dados.periodo;
+  $('sprint-tudo-corpo').innerHTML = `<ul class="lista-linhas">${dados.linhas}</ul>${dados.nota}`;
+  const board = $('sprint-tudo-board');
+  board.href = dados.href;
+  // O MESMO destino do cabeçalho do cartão. O diálogo é vista rápida; quem quer
+  // trabalhar na sprint continua indo pro board, e daqui também.
+  board.textContent = 'Abrir o board desta sprint →';
+  d.showModal();
+  d.scrollTop = 0;
+}
+
 function renderPanorama() {
   const box = $('panorama');
   if (!box || !state.config) return;
@@ -679,21 +710,42 @@ function renderPanorama() {
         itens: (doCard.itensSprintAbertos || []).map((x) => Object.assign({ feito: false }, x)) } } : null);
   const respSprint = respAtivo();
   const doResponsavel = (itens) => itens.filter((it) => !respSprint || it.resp === respSprint);
-  const listaDeItens = (itens, link) => {
-    const lista = doResponsavel(itens);
-    if (!lista.length) return '';
-    return `<ul class="lista-linhas">${lista.slice(0, CAP_PBIS_SPRINT).map((it) =>
-      `<li><a class="item-linha" href="${link.workItem(it.id)}" target="_blank" rel="noopener" title="${escapeHtml(it.titulo)}">
+  /* A LINHA DE UM ITEM, uma só pros dois lugares que a desenham: a prévia do
+     cartão e a lista inteira do diálogo. Eram duas cópias quando o diálogo
+     entrou, e duas cópias da mesma linha divergem no primeiro ajuste de uma
+     delas — um selo novo apareceria num lugar e não no outro. */
+  const linhaDeItem = (it, link) =>
+    `<li><a class="item-linha" href="${link.workItem(it.id)}" target="_blank" rel="noopener" title="${escapeHtml(it.titulo)}">
         <span class="badge-tipo tipo-${it.tipo}">${ROTULO_TIPO_CURTO[it.tipo]}</span>
         <span class="titulo">${escapeHtml(it.titulo)}</span>
         <span class="quando">${it.transbordou
           ? `<span class="selo-transbordo" title="Saiu desta sprint e foi pra ${escapeHtml(it.destino || 'outra')}">→ ${escapeHtml(it.destino || 'outra sprint')}</span>`
           : escapeHtml(it.estado)}</span>
         <span class="id">#${it.id}</span>
-      </a></li>`
-    ).join('')}${lista.length > CAP_PBIS_SPRINT ? `<li class="sprint-pbis-mais">+${lista.length - CAP_PBIS_SPRINT} mais</li>` : ''}</ul>`;
+      </a></li>`;
+
+  /* O "+N mais" vira BOTÃO, e é ele que abre a sprint inteira.
+
+     Botão e não link: não há endereço pra onde ir — o que falta já está na
+     memória, e o que o clique faz é mostrar. E é o gatilho certo porque ele
+     aparece exatamente quando há algo escondido: numa sprint de três itens não
+     existe "mais", e nada na tela pede clique à toa.
+
+     `data-sprint` é a coluna, e o resto o diálogo lê de sprintInteira — montado
+     neste mesmo render, com os MESMOS itens que o cartão usou. */
+  const listaDeItens = (itens, link, chave) => {
+    const lista = doResponsavel(itens);
+    if (!lista.length) return '';
+    const resto = lista.length - CAP_PBIS_SPRINT;
+    const mais = resto > 0
+      ? `<li><button type="button" class="sprint-pbis-mais" data-sprint="${chave}"`
+        + ` aria-haspopup="dialog">+${resto} mais</button></li>`
+      : '';
+    return `<ul class="lista-linhas">${lista.slice(0, CAP_PBIS_SPRINT)
+      .map((it) => linhaDeItem(it, link)).join('')}${mais}</ul>`;
   };
   let sprints = '';
+  for (const k2 of Object.keys(sprintInteira)) delete sprintInteira[k2];
   if (pr && janela) {
     const link = C.deepLinks(state.config.org, pr.projectName, '');
     const COLUNAS = [
@@ -745,7 +797,7 @@ function renderPanorama() {
          transbordo podia nunca aparecer na tela. */
       const saiu = doResponsavel(col.transbordados || []);
       const emOrdem = [...col.itens].sort((a, b) => Number(a.feito) - Number(b.feito)).concat(saiu);
-      const lista = listaDeItens(emOrdem, link);
+      const lista = listaDeItens(emOrdem, link, chave);
       const destinos = [...new Set(saiu.map((x) => x.destino).filter(Boolean))];
       const NOTA_TRANSBORDO = saiu.length
         ? `<p class="sprint-nota mudo">${saiu.length === 1 ? '1 item transbordou' : saiu.length + ' itens transbordaram'}`
@@ -765,6 +817,21 @@ function renderPanorama() {
       const placar = chave === 'proxima'
         ? `${nProxima} ${nProxima === 1 ? 'item' : 'itens'}`
         : `${prog.done}/${prog.total}`;
+      /* O que o diálogo vai mostrar sai DAQUI, não de uma segunda conta: os
+         mesmos itens, na mesma ordem, com o mesmo filtro por responsável que o
+         cartão aplicou. Recalcular lá dentro abriria a porta pro diálogo e o
+         cartão discordarem — e discordar sobre o que a sprint tem é o defeito
+         mais caro que esta tela pode ter. */
+      sprintInteira[chave] = {
+        rotulo,
+        nome: col.sprint.name,
+        periodo: periodo(col.sprint.start, col.sprint.finish),
+        placar,
+        pct,
+        href: rotaBoard(pr, true, col.sprint.id),
+        linhas: doResponsavel(emOrdem).map((it) => linhaDeItem(it, link)).join(''),
+        nota: NOTA_TRANSBORDO,
+      };
       return `<div class="sprint-card sprint-${chave}">
         <span class="sprint-fase">${rotulo}</span>
         <a class="sprint-card-link" href="${rotaBoard(pr, true, col.sprint.id)}" title="Abrir o board de ${escapeHtml(col.sprint.name)}">
@@ -1236,7 +1303,7 @@ function cssId(s) { return s.replace(/[^a-z0-9]/gi, '-').toLowerCase(); }
 function escapeHtml(s) { const d = document.createElement('div'); d.textContent = String(s == null ? '' : s); return d.innerHTML.replace(/"/g, '&quot;'); }
 
 /* ---------- Board dedicado ---------- */
-const boardState = { p: null, chave: null, items: null, columns: null, sprint: null, iteracaoId: null, voltarPara: null, soSprint: false, carregando: false, erro: null, transbordados: [], filtro: { tipos: null, resp: '', busca: '' } };
+const boardState = { p: null, chave: null, items: null, columns: null, sprint: null, iteracaoId: null, iteracoes: [], voltarPara: null, soSprint: false, carregando: false, erro: null, transbordados: [], filtro: { tipos: null, resp: '', busca: '' } };
 // Rótulo da coluna dos que saíram. Constante porque dois lugares a usam: o
 // agrupamento e a ordenação que a empurra pro fim.
 const COLUNA_TRANSBORDO = 'Transbordou';
@@ -1408,6 +1475,10 @@ async function resolverSprintDoBoard(p) {
   try {
     if (boardState.iteracaoId) {
       const todas = await A.teamIterations(ctx(), p.projectName, p.teamName);
+      /* Guardadas pra navegação entre sprints. Nenhuma consulta a mais: esta
+         lista já era buscada aqui pra achar a sprint pedida — o que faltava era
+         não jogá-la fora depois. */
+      boardState.iteracoes = todas;
       boardState.sprint = todas.find((x) => String(x.id) === String(boardState.iteracaoId)) || null;
       if (boardState.sprint) return;
     }
@@ -1441,6 +1512,9 @@ async function carregarBoard(p, force) {
   boardState.items = null;
   boardState.columns = null;
   boardState.sprint = null;
+  // Zerada junto: a lista é do TIME, e trocar de time sem limpar deixaria o
+  // "anterior" apontando pra uma sprint de outro quadro.
+  boardState.iteracoes = [];
   boardState.erro = null;
   boardState.filtro = { tipos: null, busca: '' };
   $('board-busca').value = '';
@@ -1481,6 +1555,38 @@ async function carregarBoard(p, force) {
   renderBoard(p);
 }
 
+/* IR PRA SPRINT DE ANTES E PRA DE DEPOIS, sem passar pelo Panorama.
+
+   Só no board DE UMA SPRINT: no board do time não existe "anterior", porque ele
+   não está em sprint nenhuma — e um par de setas ali prometeria uma linha do
+   tempo que aquela tela não percorre.
+
+   Os botões NOMEIAM o destino em vez de dizerem só "anterior"/"próxima". A tela
+   inteira é sobre qual sprint está aberta; "← Sprint 18" responde pra onde o
+   clique leva antes do clique, e é o mesmo que o cabeçalho já escreve.
+
+   Ponta da linha some em vez de desabilitar: botão apagado que não responde faz
+   a pessoa clicar pra descobrir que não dá. Ausência diz na primeira olhada. */
+function renderNavSprint(p, sprintNaRota) {
+  const nav = $('board-sprint-nav');
+  if (!nav) return;
+  const viz = sprintNaRota
+    ? C.vizinhasDaSprint(boardState.iteracoes, boardState.iteracaoId)
+    : { anterior: null, proxima: null };
+  for (const [id, sp, seta] of [['board-sprint-ant', viz.anterior, '←'],
+    ['board-sprint-prox', viz.proxima, '→']]) {
+    const b = $(id);
+    b.hidden = !sp;
+    if (!sp) continue;
+    b.textContent = seta === '←' ? seta + ' ' + sp.name : sp.name + ' ' + seta;
+    b.title = 'Abrir o board de ' + sp.name;
+    // O id vai no dataset e não num closure: o ouvinte é ligado uma vez no
+    // boot, e o render reescreve só o dado.
+    b.dataset.iteracao = sp.id;
+  }
+  nav.hidden = !(viz.anterior || viz.proxima);
+}
+
 function renderBoard(p) {
   $('board-titulo').textContent = p.teamName;
   $('board-sub').textContent = p.projectName + (boardState.sprint ? ' · ' + boardState.sprint.name : '');
@@ -1499,6 +1605,7 @@ function renderBoard(p) {
      deixaria o recorte desligado e sem jeito de religar. */
   const sprintNaRota = !!boardState.iteracaoId;
   if (sprintNaRota) boardState.soSprint = true;
+  renderNavSprint(p, sprintNaRota);
   filtro.hidden = sprintNaRota || !(boardState.sprint && boardState.sprint.path);
   /* "Só sprint corrente" era verdade quando o board só abria na sprint atual.
      Desde que a rota carrega o id da iteração, dá pra entrar numa sprint
@@ -1763,20 +1870,53 @@ document.addEventListener('DOMContentLoaded', () => {
   $('wizard-descobrir').addEventListener('click', wizardDiscover);
   $('wizard-importar').addEventListener('change', wizardImport);
   $('wizard-concluir').addEventListener('click', wizardConclude);
+  /* O ↻ DO TOPO É O ÚNICO. Ele refaz o cache geral (cartões, Panorama, Meus
+     Itens) e, por cima, o que a página aberta busca por conta própria.
+
+     Cada tela com busca própria entra aqui — e esquecer de entrar é o defeito
+     silencioso desta função: o botão gira, o selo diz "atualizado agora", e a
+     tela na frente continua com o dado velho. */
   $('atualizar').addEventListener('click', () => {
     refreshAll(true);
+    const pagina = document.body.dataset.pagina;
     // Produtos lê a base direto, com cache próprio
-    if (document.body.dataset.pagina === 'produtos') carregarBase(true);
+    if (pagina === 'produtos') carregarBase(true);
+    /* O board também: os itens dele vêm de uma consulta por sprint que o
+       refreshAll não faz. O board tinha um ↻ só pra isso, e dois botões iguais
+       no mesmo canto — um recarregando o quadro, o outro não — obrigavam a
+       adivinhar qual era qual. */
+    if (pagina === 'board' && boardState.p) carregarBoard(boardState.p, true);
   });
   $('abrir-config').addEventListener('click', openSettings);
   $('board-voltar').addEventListener('click', () => { location.hash = boardState.voltarPara || VOLTA_PADRAO; });
   $('epico-voltar').addEventListener('click', () => { location.hash = '#produtos'; });
-  $('board-atualizar').addEventListener('click', () => { if (boardState.p) carregarBoard(boardState.p, true); });
+  /* Navegar entre sprints é trocar a ROTA, não mexer no estado por baixo: o
+     endereço passa a nomear a sprint aberta, o Voltar do navegador desfaz o
+     salto e um F5 cai na mesma sprint. O abrirBoard já força a recarga quando a
+     iteração muda — a chave do cache é o time, não a sprint. */
+  $('board-sprint-nav').addEventListener('click', (ev) => {
+    const b = ev.target.closest('button[data-iteracao]');
+    if (!b || !boardState.p) return;
+    location.hash = rotaBoard(boardState.p, true, b.dataset.iteracao);
+  });
   $('board-filtro-sprint').addEventListener('click', () => {
     boardState.soSprint = !boardState.soSprint;
     if (boardState.p) renderBoard(boardState.p);
   });
   window.addEventListener('hashchange', renderRoute);
+  /* TROCOU DE ROTA, FECHA O DIÁLOGO. O link do board é um #hash desta mesma
+     página: nada recarrega, então o diálogo ficava aberto por cima do board que
+     ele mandou abrir. Vale também pro Voltar do navegador, que mudaria a tela
+     por baixo de um diálogo ainda em pé.
+
+     No hashchange, e não no clique do link: assim qualquer rota aberta de
+     dentro do diálogo fecha, hoje e depois. As linhas dos itens não entram
+     nisso — elas vão pro DevOps em outra aba (target="_blank"), e quem volta
+     continua lendo a lista de onde parou. */
+  window.addEventListener('hashchange', () => {
+    const d = $('sprint-tudo');
+    if (d && d.open) d.close();
+  });
   $('mi-busca').addEventListener('input', () => {
     state.filtrosMI.busca = $('mi-busca').value;
     renderMyItems();
@@ -1803,6 +1943,19 @@ document.addEventListener('DOMContentLoaded', () => {
   $('conf-exportar').addEventListener('click', settingsExport);
   $('conf-importar').addEventListener('change', settingsImport);
   $('conf-fechar').addEventListener('click', () => $('config').close());
+  /* O "+N mais" abre a sprint inteira. Delegado no #panorama porque aquele nó é
+     reescrito a cada render: um ouvinte no próprio botão morreria com ele. */
+  $('panorama').addEventListener('click', (ev) => {
+    const b = ev.target.closest('.sprint-pbis-mais');
+    if (b) abrirSprintInteira(b.dataset.sprint);
+  });
+  $('sprint-tudo-fechar').addEventListener('click', () => $('sprint-tudo').close());
+  /* Clique no fundo fecha. O alvo só é o próprio <dialog> quando o ponto cai
+     fora da caixa — dentro dela, o alvo é algum filho. É a mesma leitura que o
+     visor de imagens do relatório faz. */
+  $('sprint-tudo').addEventListener('click', (ev) => {
+    if (ev.target === ev.currentTarget) ev.currentTarget.close();
+  });
   $('conf-lista').addEventListener('click', (ev) => {
     const li = ev.target.closest('li');
     if (!li) return;

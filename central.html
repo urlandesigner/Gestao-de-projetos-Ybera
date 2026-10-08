@@ -7,9 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026100801">
+<link rel="stylesheet" href="assets/style.css?v=2026100802">
 <!-- Mesma folha que o relatório de Entregas usa pro gráfico do roadmap. -->
-<link rel="stylesheet" href="assets/roadmap.css?v=2026100801">
+<link rel="stylesheet" href="assets/roadmap.css?v=2026100802">
 </head>
 <body data-pagina="panorama">
 <div class="app">
@@ -94,10 +94,24 @@
         <p id="board-sub" class="mudo"></p>
       </div>
       <div class="board-acoes">
+        <!-- Navegação entre as sprints do time. Só aparece no board DE UMA SPRINT
+             (a rota que nomeia a iteração): no board do time não há "anterior",
+             porque ele não está em sprint nenhuma. Os rótulos são escritos pelo
+             app.js com o nome da sprint vizinha; aqui vai só o esqueleto.
+
+             Primeira do grupo da direita: ela diz PRA ONDE ir, e as duas
+             seguintes são o que fazer com a sprint que já está na tela. -->
+        <nav class="board-sprint-nav" id="board-sprint-nav" aria-label="Navegar entre sprints" hidden>
+          <button type="button" id="board-sprint-ant"></button>
+          <button type="button" id="board-sprint-prox"></button>
+        </nav>
         <!-- O rótulo é escrito pelo app.js com o nome da sprint aberta; este é só o estado inicial. -->
         <button id="board-filtro-sprint" aria-pressed="false">Só esta sprint</button>
+        <!-- Sem ↻ próprio: o do topo da página recarrega o board junto, como já
+             fazia com a tela de Produtos. Dois botões idênticos lado a lado, um
+             deles recarregando metade do que o outro recarrega, só obrigava a
+             pessoa a adivinhar qual era qual. -->
         <a id="board-devops" target="_blank" rel="noopener">Abrir no DevOps</a>
-        <button id="board-atualizar" title="Atualizar board">↻</button>
       </div>
     </header>
     <div class="filtros" id="board-filtros" hidden>
@@ -183,9 +197,32 @@
   </form>
 </dialog>
 
-<script src="assets/core.js?v=2026100801"></script>
-<script src="assets/roadmap-visao.js?v=2026100801"></script>
-<script src="assets/api.js?v=2026100801"></script>
-<script src="assets/app.js?v=2026100801"></script>
+<!-- A SPRINT INTEIRA. O cartão do Panorama mostra quatro linhas e conta o resto
+     num "+N mais"; este diálogo é esse resto, aberto por ali. Nenhuma consulta
+     nova: a lista completa da sprint já está no cache que desenhou o cartão.
+
+     <dialog> nativo, como o wizard e as configurações: Esc fecha, o foco fica
+     preso dentro e o fundo escurece sem uma linha de JavaScript pra isso.
+
+     Vazio no HTML — quem o preenche é o renderPanorama, no clique. Mora FORA do
+     #panorama de propósito: aquele nó é reescrito inteiro a cada render, e um
+     diálogo aberto lá dentro sumiria no meio da leitura. -->
+<dialog id="sprint-tudo" class="sprint-tudo" aria-labelledby="sprint-tudo-nome">
+  <div class="sprint-tudo-cab">
+    <div class="sprint-tudo-titulo">
+      <span class="sprint-fase" id="sprint-tudo-fase"></span>
+      <h2 id="sprint-tudo-nome"></h2>
+      <p class="mudo" id="sprint-tudo-periodo"></p>
+    </div>
+    <button type="button" id="sprint-tudo-fechar" class="sprint-tudo-fechar" aria-label="Fechar">✕</button>
+  </div>
+  <div id="sprint-tudo-corpo" class="sprint-tudo-corpo"></div>
+  <a id="sprint-tudo-board" class="sprint-tudo-board" href="#"></a>
+</dialog>
+
+<script src="assets/core.js?v=2026100802"></script>
+<script src="assets/roadmap-visao.js?v=2026100802"></script>
+<script src="assets/api.js?v=2026100802"></script>
+<script src="assets/app.js?v=2026100802"></script>
 </body>
 </html>

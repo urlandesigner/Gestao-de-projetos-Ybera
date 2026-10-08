@@ -742,7 +742,86 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
 .sprint-card .lista-linhas { margin-top: 0.95rem; padding-top: 0.9rem; border-top: 1px solid #e6e6e9; }
 .sprint-card .lista-linhas .item-linha { background: var(--superficie-2); box-shadow: none; }
 .sprint-card .lista-linhas .item-linha:hover { background: #ececea; }
-.sprint-pbis-mais { font-size: 0.75rem; color: var(--mudo); }
+/* O "+N mais" virou botão e tem que continuar parecendo a linha discreta que
+   era — ele conta um resto, não convida a uma ação. O que muda em relação ao
+   <li> de antes é só o que torna um botão clicável: cursor, alvo maior e o
+   sublinhado pontilhado que diz "isto responde". */
+.sprint-pbis-mais {
+  font: inherit;
+  font-size: 0.75rem;
+  color: var(--mudo);
+  border: none;
+  background: none;
+  padding: 0.25rem 0;
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+.sprint-pbis-mais:hover { color: var(--tinta); }
+
+/* ---------- A sprint inteira, no diálogo ---------- */
+/* Mais larga que os outros dois diálogos: eles são formulário, este é lista —
+   e lista de títulos longos num 560px volta a cortar o que o cartão já cortava,
+   que é justamente o motivo deste diálogo existir. */
+.sprint-tudo { max-width: 720px; padding: 1.25rem 1.4rem 1.4rem; }
+.sprint-tudo-cab {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+/* O selo de fase repete o do cartão, pra quem abriu saber de qual dos três veio.
+   Aqui ele não precisa da folga de baixo que separa selo e bloco lá. */
+.sprint-tudo-cab .sprint-fase { margin-bottom: 0.5rem; }
+.sprint-tudo-cab h2 { margin: 0; font-size: 1.05rem; letter-spacing: -0.01em; }
+.sprint-tudo-cab p { margin: 0.15rem 0 0; font-size: 0.82rem; }
+.sprint-tudo-fechar {
+  flex: none;
+  border: none;
+  background: none;
+  padding: 0.2rem 0.35rem;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--mudo);
+  cursor: pointer;
+}
+.sprint-tudo-fechar:hover { color: var(--tinta); background: none; }
+/* A lista rola DENTRO do diálogo, não a página: o cabeçalho com o nome da
+   sprint e o link do board ficam à vista numa sprint de 60 itens. */
+.sprint-tudo-corpo {
+  margin-top: 1rem;
+  max-height: 60vh;
+  overflow: auto;
+  /* Ar à direita pro trilho de rolagem não encostar nas linhas. */
+  padding-right: 0.3rem;
+}
+.sprint-tudo-corpo .lista-linhas .item-linha { background: var(--superficie-2); box-shadow: none; }
+.sprint-tudo-corpo .lista-linhas .item-linha:hover { background: #ececea; }
+/* No cartão o título é cortado numa linha porque a coluna é estreita; aqui ele
+   cabe inteiro, e é esse o ganho do diálogo. */
+.sprint-tudo-corpo .item-linha .titulo { white-space: normal; }
+.sprint-tudo-board {
+  display: inline-block;
+  margin-top: 1.1rem;
+  font-size: 0.82rem;
+  font-weight: 550;
+  color: var(--mudo);
+  text-decoration: none;
+}
+.sprint-tudo-board:hover { color: var(--tinta); }
+/* NO TELEFONE A LINHA EMPILHA. Ela foi desenhada pra uma coluna larga — tipo,
+   título, estado e #id lado a lado —, e em 375px sobram ~200px pro título:
+   medido, "Assinatura Inteligente (PDP + Checkout)" virava três linhas e a de
+   um Bug longo virava cinco, com estado e #id ocupando a largura ao lado.
+
+   Aqui o título toma a linha inteira e os três selos descem pra uma segunda,
+   com o #id empurrado pra direita. O título em primeiro (`order: -1`) porque é
+   ele que a pessoa está procurando; os selos qualificam o que ela já leu. */
+@media (max-width: 560px) {
+  .sprint-tudo-corpo .item-linha { flex-wrap: wrap; row-gap: 0.35rem; }
+  .sprint-tudo-corpo .item-linha .titulo { flex-basis: 100%; order: -1; }
+  .sprint-tudo-corpo .item-linha .id { margin-left: auto; }
+}
 /* Rodapé: atalhos do DevOps rebaixados a links de texto */
 .atalhos {
   display: flex;
@@ -1168,6 +1247,38 @@ body.modo-leitura .caixa-link { display: none !important; }
 .board-acoes a:hover,
 .board-acoes button:hover { background: #e9e9eb; }
 #board-filtro-sprint.ativo { background: var(--tinta); color: #fff; }
+/* NAVEGAÇÃO ENTRE SPRINTS. Primeira do grupo da direita, na mesma linha do
+   "Abrir no DevOps": ela diz pra onde IR, e as duas seguintes são o que fazer
+   com a sprint que já está na tela.
+
+   O par fica mais leve que as ações: mesma pílula, sem fundo. Duas setas
+   nomeadas competindo em peso com "Abrir no DevOps" dariam três botões de igual
+   importância num cabeçalho que já tem o botão de voltar.
+
+   `gap: 0` entre as duas setas, e o respiro dos lados vem do padding delas: sem
+   fundo, a folga do .board-acoes abriria um vão grande demais entre um par que
+   é uma coisa só. */
+.board-sprint-nav { display: flex; align-items: center; gap: 0; }
+.board-sprint-nav button {
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 550;
+  color: var(--mudo);
+  background: none;
+  border: none;
+  border-radius: 999px;
+  padding: 0.4rem 0.7rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.board-sprint-nav button:hover { background: var(--superficie-2); color: var(--tinta); }
+.board-sprint-nav button:focus-visible { outline: 2px solid var(--tinta); outline-offset: 2px; }
+/* No telefone o grupo da direita já quebra sozinho (.board-acoes é flex-wrap);
+   a nav vira a primeira linha dele, encostada à esquerda do grupo. */
+@media (max-width: 640px) {
+  .board-sprint-nav { flex-basis: 100%; }
+  .board-sprint-nav button:first-child { padding-left: 0; }
+}
 .quadro-board .coluna ul { max-height: calc(100vh - 320px); }
 /* Coluna vazia no board do sprint: o aviso ocupa o lugar da lista e centra nos
    dois eixos. Só aqui — nas outras telas o `.coluna-vazia` é uma linha curta
