@@ -726,4 +726,79 @@
     });
     abrir('html');
   }
+
+  /* =====================================================================
+     COR NO CÓDIGO
+
+     Sem dependência, pelo mesmo motivo de todo o resto: o sistema inteiro se
+     sustenta sem um pacote, e um colorizador de quatro linguagens cabe aqui.
+     Prism e highlight.js resolveriam mais casos do que a doc tem — e cada um
+     custa mais do que todo o CSS do sistema junto.
+
+     MONTADO PELO DOM, e nunca por string de HTML. O que está dentro do <code>
+     é TEXTO: `<div class="x">` são caracteres, não marcação. Remontar isso com
+     `innerHTML` é precisamente como se injeta marcação sem querer — e aqui o
+     texto vem de ficheiro gerado, mas a regra não depende da origem ser
+     confiável, depende de o caminho ser seguro.
+
+     Por consequência, `textContent` não muda: só nasce um <span> em volta de
+     trechos que já existiam. É o que mantém o botão Copiar honesto, porque ele
+     copia `codigo.textContent` — e há checagem comparando os dois.
+
+     A LINGUAGEM VEM DO PAINEL. As abas de código já marcam
+     `data-code-panel="html|css|js|tokens"` no ancestral; os poucos blocos
+     soltos (tokens/usage, tokens/architecture, changelog, icons) dizem
+     `data-lang`. Bloco sem nenhum dos dois fica como está, em preto — é o
+     comportamento de hoje, e não ter cor é melhor do que ter a cor errada.
+     ===================================================================== */
+  const CORES = {
+    html: /(?<nota><!--[\s\S]*?-->)|(?<valor>"[^"]*"|'[^']*')|(?<tag><\/?[\w-]+)|(?<pont>\/?>)|(?<chave>[\w-]+(?==))/g,
+    css:  /(?<nota>\/\*[\s\S]*?\*\/)|(?<valor>"[^"]*"|'[^']*')|(?<num>--[\w-]+|\b\d+(?:\.\d+)?[a-z%]*)|(?<chave>[\w-]+(?=\s*:))|(?<tag>[.#][\w-]+|::?[\w-]+)|(?<pont>[{}();,])/g,
+    js:   /(?<nota>\/\/[^\n]*|\/\*[\s\S]*?\*\/)|(?<valor>"[^"]*"|'[^']*'|`[^`]*`)|(?<chave>\b(?:const|let|var|function|return|if|else|for|while|new|class|this|typeof|null|true|false|undefined|async|await|try|catch|of|in)\b)|(?<num>\b\d+(?:\.\d+)?\b)|(?<tag>\b[A-Za-z_$][\w$]*(?=\())|(?<pont>=>|[{}()[\];,.])/g,
+    tokens: /(?<nota>\/\*[\s\S]*?\*\/)|(?<chave>--[\w-]+)|(?<valor>#[0-9A-Fa-f]{3,8}\b)|(?<num>\b\d+(?:\.\d+)?[a-z%]*)|(?<pont>[:;])/g,
+  };
+
+  function pintarCodigo(codigo, lingua) {
+    const re = CORES[lingua];
+    if (!re) return;
+    const texto = codigo.textContent;
+    const peca = document.createDocumentFragment();
+    let i = 0, m, profundidade = 0;
+    re.lastIndex = 0;
+    while ((m = re.exec(texto)) !== null) {
+      /* Alternativa que casa vazio travaria o laço no mesmo índice para
+         sempre. Nenhuma das quatro expressões casa vazio hoje; a guarda existe
+         para que acrescentar uma quinta não possa pendurar a página. */
+      if (m[0] === '') { re.lastIndex++; continue; }
+      if (m.index > i) peca.appendChild(document.createTextNode(texto.slice(i, m.index)));
+      let papel = Object.keys(m.groups).find((k) => m.groups[k] !== undefined);
+      /* `:alguma-coisa` é PSEUDO-CLASSE fora das chaves e VALOR dentro delas, e
+         nenhuma expressão plana distingue as duas: `summary:hover` e
+         `display:flex` têm a mesma forma. Sem isto, todo valor de propriedade
+         saía com a cor de seletor — `flex`, `center`, `pointer`, `none`, a
+         folha inteira. Contar chave que abre e chave que fecha resolve, e é a
+         única memória que este colorizador precisa ter. */
+      if (lingua === 'css') {
+        for (const ch of texto.slice(i, re.lastIndex)) {
+          if (ch === '{') profundidade++;
+          else if (ch === '}') profundidade--;
+        }
+        if (papel === 'tag' && profundidade > 0 && /^:[^:]/.test(m[0])) papel = 'valor';
+      }
+      const span = document.createElement('span');
+      span.className = 'cod-' + papel;
+      span.textContent = m[0];
+      peca.appendChild(span);
+      i = re.lastIndex;
+    }
+    if (i < texto.length) peca.appendChild(document.createTextNode(texto.slice(i)));
+    codigo.textContent = '';
+    codigo.appendChild(peca);
+  }
+
+  document.querySelectorAll('pre > code').forEach((codigo) => {
+    const dono = codigo.closest('[data-code-panel], [data-lang]');
+    if (!dono) return;
+    pintarCodigo(codigo, dono.dataset.codePanel || dono.dataset.lang);
+  });
 })();

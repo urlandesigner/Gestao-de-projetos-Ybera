@@ -5,6 +5,38 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
+### Adicionado
+- **O código da doc ganhou cor.** Eram 335 blocos em 72 páginas, todos em preto
+  — e código em preto obriga a ler palavra por palavra para achar onde está o
+  valor que se quer trocar. Agora tag e propriedade saem em azul, seletor e
+  palavra-chave em vinho, string e valor em verde, número e `--token` em
+  marrom, pontuação em cinza e comentário em cinza itálico. Seis cores e não
+  doze: aqui se lê e se copia, não se escreve.
+  **Sem dependência** — Prism ou highlight.js custariam mais do que todo o CSS
+  do sistema junto, para resolver casos que a doc não tem. São 60 linhas em
+  `doc/doc.js`, e a passada mais pesada (23 blocos, 7.922 caracteres, 1.014
+  marcas) leva **4,1ms**.
+  **Montado pelo DOM e nunca por string**: o que está dentro do `<code>` é
+  texto — `<div class="x">` são caracteres —, e remontar isso com `innerHTML`
+  é transformar texto em marcação. Por consequência o `textContent` não muda,
+  que é o que mantém o botão Copiar honesto.
+  As cores saem da paleta existente, medidas sobre o `#F5F5F5` do bloco e não
+  contra branco: a mais fraca é o comentário, em 4,73:1.
+- **Checagem 144 — toda linguagem de bloco tem cor, e o código vira DOM.** Ela
+  pega dois silêncios. Abrir uma aba nova no painel de código sem escrever a
+  regra de cor faria o bloco nascer preto, que é exatamente a aparência de
+  antes — ninguém veria. E alguém "simplificar" a montagem para `innerHTML`
+  reabriria o caminho de injeção. As duas foram provadas quebrando de
+  propósito.
+
+### Corrigido
+- **O valor de propriedade saía com a cor de seletor.** `summary:hover` e
+  `display:flex` têm a mesma forma, e nenhuma expressão plana distingue as
+  duas: `flex`, `center`, `pointer`, `none` — a folha inteira — nasciam com a
+  cor de pseudo-classe. O colorizador agora conta chave que abre e chave que
+  fecha, e é a única memória que ele precisa ter: fora das chaves é
+  pseudo-classe, dentro é valor.
+
 ## [1.0.8] — 2026-10-08
 
 ### Adicionado

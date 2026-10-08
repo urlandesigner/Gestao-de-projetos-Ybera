@@ -231,7 +231,19 @@
   <h1 class="ficha-titulo">Changelog</h1>
   <p class="ficha-quando">Formato: <a href="https://keepachangelog.com/pt-BR/1.1.0/">Keep a Changelog</a>. Versionamento descrito em <a href="../GOVERNANCA.md">GOVERNANCA.md</a>.</p>
 
-<details class="log__versao" open>
+<details class="log__versao log__versao--espera" open>
+<summary><h2>Em aberto</h2><span class="log__aviso">ainda não publicado — o número sai quando subir</span></summary>
+<h3>Adicionado</h3>
+<ul>
+<li><b>O código da doc ganhou cor.</b> Eram 335 blocos em 72 páginas, todos em preto — e código em preto obriga a ler palavra por palavra para achar onde está o valor que se quer trocar. Agora tag e propriedade saem em azul, seletor e palavra-chave em vinho, string e valor em verde, número e <code>--token</code> em marrom, pontuação em cinza e comentário em cinza itálico. Seis cores e não doze: aqui se lê e se copia, não se escreve. <b>Sem dependência</b> — Prism ou highlight.js custariam mais do que todo o CSS do sistema junto, para resolver casos que a doc não tem. São 60 linhas em <code>doc/doc.js</code>, e a passada mais pesada (23 blocos, 7.922 caracteres, 1.014 marcas) leva <b>4,1ms</b>. <b>Montado pelo DOM e nunca por string</b>: o que está dentro do <code>&lt;code&gt;</code> é texto — <code>&lt;div class="x"&gt;</code> são caracteres —, e remontar isso com <code>innerHTML</code> é transformar texto em marcação. Por consequência o <code>textContent</code> não muda, que é o que mantém o botão Copiar honesto. As cores saem da paleta existente, medidas sobre o <code>#F5F5F5</code> do bloco e não contra branco: a mais fraca é o comentário, em 4,73:1.</li>
+<li><b>Checagem 144 — toda linguagem de bloco tem cor, e o código vira DOM.</b> Ela pega dois silêncios. Abrir uma aba nova no painel de código sem escrever a regra de cor faria o bloco nascer preto, que é exatamente a aparência de antes — ninguém veria. E alguém "simplificar" a montagem para <code>innerHTML</code> reabriria o caminho de injeção. As duas foram provadas quebrando de propósito.</li>
+</ul>
+<h3>Corrigido</h3>
+<ul>
+<li><b>O valor de propriedade saía com a cor de seletor.</b> <code>summary:hover</code> e <code>display:flex</code> têm a mesma forma, e nenhuma expressão plana distingue as duas: <code>flex</code>, <code>center</code>, <code>pointer</code>, <code>none</code> — a folha inteira — nasciam com a cor de pseudo-classe. O colorizador agora conta chave que abre e chave que fecha, e é a única memória que ele precisa ter: fora das chaves é pseudo-classe, dentro é valor.</li>
+</ul>
+</details>
+<details class="log__versao">
 <summary><h2>[1.0.8] — 2026-10-08</h2></summary>
 <h3>Adicionado</h3>
 <ul>
@@ -731,7 +743,7 @@
 <ul>
 <li><b>O campo de formulário ganhou rótulo flutuante.</b> O rótulo vive dentro da caixa e sobe para cima da borda quando o campo tem foco ou valor, abrindo um entalhe com o próprio fundo. Sem JS: o input leva <code>placeholder=" "</code>, que é o que dá a <code>:placeholder-shown</code> algo em que casar. <b>O markup mudou</b> — o controle agora vive dentro de um <code>.yb-field__box</code> e o <code>&lt;label&gt;</code> vem *depois* dele, senão o combinador <code>~</code> não o alcança:</li>
 </ul>
-<pre class="log__codigo"><code>&lt;div class="yb-field"&gt;
+<pre class="log__codigo"><code data-lang="html">&lt;div class="yb-field"&gt;
   &lt;div class="yb-field__box"&gt;
     &lt;input class="yb-input" id="zip" placeholder=" "&gt;
     &lt;label class="yb-field__label" for="zip"&gt;ZIP code&lt;/label&gt;

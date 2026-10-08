@@ -102,7 +102,10 @@ export function converter(md) {
       fechaTudo();
       const dentro = [];
       while (++i < linhas.length && !/^\s*```/.test(linhas[i])) dentro.push(linhas[i].replace(/^ {0,2}/, ''));
-      out.push(`<pre class="log__codigo"><code>${escapar(dentro.join('\n'))}</code></pre>`);
+      /* `data-lang` para o colorizador da doc saber o que pintar. Todo trecho
+         de codigo que o CHANGELOG abriu ate hoje e marcacao; se um dia entrar
+         CSS ou JS aqui, o lugar de decidir e este, lendo a cerca do markdown. */
+      out.push(`<pre class="log__codigo"><code data-lang="html">${escapar(dentro.join('\n'))}</code></pre>`);
       continue;
     }
 

@@ -29,17 +29,17 @@
         solto na raiz, tire o <code>ybera/</code> dos cinco endereços — ou os cinco
         dão 404 e a página abre sem estilo nenhum.</p>
         <p>A fonte não vem no pacote; sem ela, a página cai na fonte do sistema.</p>
-        <pre>&lt;link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&amp;display=swap"&gt;
+        <pre><code data-lang="html">&lt;link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&amp;display=swap"&gt;
 &lt;link rel="stylesheet" href="ybera/ybera-tokens.css"&gt;
 &lt;link rel="stylesheet" href="ybera/ybera-components.css"&gt;
 &lt;link rel="stylesheet" href="ybera/ybera-icons.css"&gt;
-&lt;script src="ybera/ybera-components.js" defer&gt;&lt;/script&gt;</pre>
+&lt;script src="ybera/ybera-components.js" defer&gt;&lt;/script&gt;</code></pre>
       </div>
       <div class="layer">
         <h3>2 · Monte com o HTML das fichas</h3>
         <p>Copie da aba Código. O comportamento (gaveta, modal, toast, galeria, trilho) liga sozinho pelos atributos <code>data-yb-*</code>; conteúdo que entra depois do carregamento pede <code>window.Ybera.init(elemento)</code>.</p>
-        <pre>&lt;button type="button" class="yb-btn yb-btn--primary"&gt;Add to cart&lt;/button&gt;
-&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera/ybera-icons.svg#yb-cart"/&gt;&lt;/svg&gt;</pre>
+        <pre><code data-lang="html">&lt;button type="button" class="yb-btn yb-btn--primary"&gt;Add to cart&lt;/button&gt;
+&lt;svg class="yb-icon" aria-hidden="true"&gt;&lt;use href="ybera/ybera-icons.svg#yb-cart"/&gt;&lt;/svg&gt;</code></pre>
       </div>
       <div class="layer">
         <h3>3 · Sirva por HTTP</h3>
@@ -80,23 +80,23 @@
         do <a href="../atoms/panel.html">Panel</a> com <code>--flat</code>. Com chão
         branco, o Panel sem modificador: ele traz fio e elevação, que é o que o faz
         existir.</p>
-        <pre>&lt;!-- chão branco --&gt;
+        <pre><code data-lang="html">&lt;!-- chão branco --&gt;
 &lt;div class="yb-panel"&gt;…&lt;/div&gt;
 
 &lt;!-- chão --yb-bg-subtle --&gt;
-&lt;div class="yb-panel yb-panel--flat"&gt;…&lt;/div&gt;</pre>
+&lt;div class="yb-panel yb-panel--flat"&gt;…&lt;/div&gt;</code></pre>
       </div>
       <div class="layer">
         <h3>Peça própria, com os tokens</h3>
         <p>Quando o sistema não tem a peça, use os tokens semânticos, nunca o valor.</p>
-        <pre>.meu-botao {
+        <pre><code data-lang="css">.meu-botao {
   background: var(--yb-action-primary-bg);
   color: var(--yb-action-primary-text);
   border-radius: var(--yb-radius-control);
   padding: var(--yb-space-4) var(--yb-space-6);
   font-size: var(--yb-type-body-size);
   transition: background var(--yb-transition-control);
-}</pre>
+}</code></pre>
       </div>
 </div>
       <div class="rule">

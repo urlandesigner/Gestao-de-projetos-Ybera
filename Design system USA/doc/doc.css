@@ -938,6 +938,41 @@ details.note > :last-child{padding-block-end:var(--yb-space-4)}
    quadro em vez de empurrar a pagina inteira de lado. */
 .rolagem{overflow-x:auto}
 
+/* ------------------------------------------------------ cores do código
+   CROMO DA DOC, e não tokens do sistema: a loja nunca pinta código, então um
+   `--yb-code-*` seria promessa sem consumidor. Estes `--doc-*` são a camada
+   semântica DA DOCUMENTAÇÃO, e por isso podem referenciar a camada 0 direto —
+   é o mesmo que `--doc-canvas` já faz.
+
+   Medidos sobre o `--yb-bg-muted` (#F5F5F5) do bloco, que é mais escuro que o
+   branco contra o qual as rampas foram calculadas. Os números abaixo são
+   contra o FUNDO REAL, não contra branco:
+
+     tag, propriedade   info-700     7,80:1
+     seletor, palavra   magenta-700  8,19:1
+     string, valor      success-700  7,77:1
+     número, var()      warning-700  7,81:1
+     pontuação          gray-700     7,03:1
+     comentário         gray-600     4,73:1   ← o mais fraco do conjunto
+
+   Seis cores e não doze: o que importa num trecho de doc é separar ESTRUTURA
+   de CONTEÚDO — o que é marcação e o que é o valor que a pessoa vai trocar.
+   Editor de código distingue mais porque ali se escreve; aqui se lê e se copia. */
+:root{
+  --doc-code-tag:    var(--yb-info-700);
+  --doc-code-chave:  var(--yb-magenta-700);
+  --doc-code-valor:  var(--yb-success-700);
+  --doc-code-num:    var(--yb-warning-700);
+  --doc-code-pont:   var(--yb-gray-700);
+  --doc-code-nota:   var(--yb-gray-600);
+}
+.cod-tag{color:var(--doc-code-tag)}
+.cod-chave{color:var(--doc-code-chave)}
+.cod-valor{color:var(--doc-code-valor)}
+.cod-num{color:var(--doc-code-num)}
+.cod-pont{color:var(--doc-code-pont)}
+.cod-nota{color:var(--doc-code-nota); font-style:italic}
+
 /* --------------------------------------------------------------- snippet */
 .snippet{position:relative}
 .snippet pre{

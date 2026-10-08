@@ -175,24 +175,24 @@
         <div class="layer layer--0">
           <h3>Camada 0 · Primitivos</h3>
           <p>Os valores puros: cada cor, tamanho e medida do sistema. Nenhum componente usa direto.</p>
-          <pre>--yb-gray-950: #1E1E1F;
---yb-magenta-600: #CA235F;</pre>
+          <pre><code data-lang="tokens">--yb-gray-950: #1E1E1F;
+--yb-magenta-600: #CA235F;</code></pre>
         </div>
         <div class="layer layer--1">
           <h3>Camada 1 · Semânticos</h3>
           <p>O nome de uso de cada valor, como “fundo do botão principal”. É o que os
           componentes usam, e o que você deve usar ao criar algo novo.</p>
-          <pre>--yb-action-primary-bg:
+          <pre><code data-lang="tokens">--yb-action-primary-bg:
   var(--yb-gray-950);
 --yb-accent-signal:
-  var(--yb-magenta-600);</pre>
+  var(--yb-magenta-600);</code></pre>
         </div>
         <div class="layer layer--2">
           <h3>Camada 2 · Componente</h3>
           <p>Ajuste de um componente específico, quando ele precisa fugir do padrão.</p>
-          <pre>.yb-card{
+          <pre><code data-lang="css">.yb-card{
   --yb-card-title-lines: 2;
-}</pre>
+}</code></pre>
         </div>
       </div>
       <p class="layers__nota"><b>E a diferença entre países?</b> Se a loja dos EUA e a

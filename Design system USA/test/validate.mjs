@@ -1042,6 +1042,44 @@ secao('Moldura');
     ? falha('a coluna de navegação entrou nas telas', invadidas.join(', '))
     : ok('as telas não levam cromo de documentação', `${readdirSync(join(raiz, 'pages')).filter(f => f.endsWith('.html')).length} telas limpas`);
 
+  /* TODA LINGUAGEM DE BLOCO TEM REGRA DE COR, e o colorizador nao remonta
+     marcacao por string.
+
+     A primeira metade pega o defeito silencioso: acrescentar uma aba nova no
+     painel de codigo — digamos `json` — faz o bloco nascer sem cor nenhuma e
+     ninguem ve, porque preto e exatamente a aparencia de antes. Aqui a
+     linguagem que aparece nas paginas tem de existir em `CORES`.
+
+     A segunda e seguranca, e nao estetica: o que esta dentro do <code> e
+     TEXTO. `<div class="x">` sao caracteres, e remontar isso com `innerHTML`
+     seria transformar texto em marcacao — o caminho classico de injecao. O
+     colorizador monta por `createElement` e `textContent`; esta checagem
+     impede que alguem "simplifique" isso depois. */
+  {
+    const js = ler('doc/doc.js');
+    const trecho = js.slice(js.indexOf('const CORES'), js.indexOf('document.querySelectorAll(\'pre > code\')'));
+    const comRegra = new Set([...trecho.matchAll(/^\s{4}(\w+):\s*\//gm)].map(m => m[1]));
+    const usadas = new Set();
+    const paginas = [];
+    const varrer = (dir) => {
+      for (const f of readdirSync(join(raiz, dir), { withFileTypes: true })) {
+        if (f.isDirectory() && !['dist', '_canvas', '_captura', 'node_modules', '.git'].includes(f.name)) varrer(join(dir, f.name));
+        else if (f.isFile() && f.name.endsWith('.html')) paginas.push(join(dir, f.name));
+      }
+    };
+    varrer('.');
+    for (const f of paginas)
+      for (const m of ler(f).matchAll(/data-(?:code-panel|lang)="([a-z]+)"/g)) usadas.add(m[1]);
+    const semRegra = [...usadas].filter(l => !comRegra.has(l));
+    const problemas = [];
+    if (semRegra.length) problemas.push(`sem regra de cor: ${semRegra.join(', ')}`);
+    if (/innerHTML/.test(trecho)) problemas.push('o colorizador remonta por innerHTML');
+    problemas.length
+      ? falha('o colorizador de código não cobre o que a doc mostra', problemas.join(' · '))
+      : ok('toda linguagem de bloco tem cor, e o código vira DOM e não string',
+          `${[...usadas].sort().join(', ')}`);
+  }
+
   /* QUEM USA CADA TOKEN. A anotacao e escrita por tools/tokens-uso.mjs a cada
      build, e o `--check` da moldura nao a protege: se alguem tirar a chamada,
      as paginas nascem sem a lista e o `--check` passa, porque comparam-se com
