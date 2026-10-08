@@ -5,6 +5,8 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
+## [1.0.8] — 2026-10-08
+
 ### Adicionado
 - **A parede filtra por tema: todas as Homes, todas as PDPs, as outras.** Eram
   onze telas numa grade só, e comparar as cinco PDPs entre si exigia rolar por
