@@ -408,8 +408,11 @@ const fonteReport = ler('assets/report.js');
 test('a busca de sprint só acende pra quem declara — os outros dois documentos não gastam requisição', () => {
   assert.match(fonteReport, /st\.sprintsBrutas = B\.precisaDeSprints === true \? await buscarRitmo\(escopos\) : null;/,
     'a busca deixou de ser condicional e o report.html passou a consultar sprint à toa');
-  assert.match(fonteReport, /sprints: B\.precisaDeSprints === true \? saneRitmo\(ritmoAgora\(mostrados\)\) : undefined,/,
+  assert.match(fonteReport, /sprints: B\.precisaDeSprints === true \? saneRitmo\(ritmoLinhas\) : undefined,/,
     'o pacote do link ganhou sprint em documento que não pediu');
+  // `ritmoLinhas` é calculado UMA vez e serve ao pacote e às pendências: duas
+  // chamadas dariam duas fotos de instantes diferentes do mesmo documento.
+  assert.match(fonteReport, /const ritmoLinhas = B\.precisaDeSprints === true \? ritmoAgora\(mostrados\) : \[\];/);
 });
 
 /* `ritmoDaSprint` devolve a forma curta inteira — id, responsável e tipo —, e
@@ -422,13 +425,25 @@ test('o que é publicado passa pela mesma poda que o que é lido', () => {
   const saneRitmo = eval(`(${m[0]})`);
   const [linha] = saneRitmo([{
     nome: 'Sprint 20', estado: 'corrente', entregues: 1, total: 3, transbordaram: 0,
-    itens: [{ id: 51676, titulo: 'Assinatura', estado: 'To Do', feito: false, resp: 'Fulano de Tal', tipo: 'pbi' }],
+    itens: [{
+      id: 51676, titulo: 'Assinatura', estado: 'To Do', feito: false, resp: 'Fulano de Tal', tipo: 'pbi',
+      resumo: 'Deixa o cliente assinar o produto e receber todo mês.',
+      // Nunca deve sobreviver: é material local, e o arquivo é público.
+      descricao: 'Contexto interno com link da planilha e nome do fornecedor.',
+    }],
     transbordados: [],
   }]);
-  assert.deepEqual(Object.keys(linha.itens[0]).sort(), ['estado', 'feito', 'tipo', 'titulo']);
+  assert.deepEqual(Object.keys(linha.itens[0]).sort(),
+    ['estado', 'feito', 'resumo', 'tipo', 'titulo']);
   assert.equal(JSON.stringify(linha).includes('Fulano de Tal'), false,
     'o nome do responsável sobreviveu à poda e vai parar no arquivo publicado');
   assert.equal(JSON.stringify(linha).includes('51676'), false, 'o id viajou à toa');
+  /* A descrição crua é o que este desenho inteiro existe pra manter fora do ar:
+     ela tem link interno, nome de fornecedor e observação escrita achando que
+     era interna. O que viaja é o RESUMO, texto escrito pra fora. */
+  assert.equal(JSON.stringify(linha).includes('fornecedor'), false,
+    'a descrição crua sobreviveu à poda e iria pro arquivo publicado');
+  assert.equal(linha.itens[0].resumo, 'Deixa o cliente assinar o produto e receber todo mês.');
 });
 
 test('item forjado no pacote não pinta de verde nem estoura o documento', () => {
@@ -858,6 +873,35 @@ test('a aba tem uma definição só, e o hover não some com o texto', () => {
     /\.rl-aba\[aria-pressed="true"\] \{ background: var\(--tinta\); color: #fff; \}/]) {
     assert.match(css, re);
   }
+});
+
+/* Mesmo defeito, segundo lugar: `.rt-itens`, `.rt-item` e `.rt-item-nome` tinham
+   DUAS definições cada, em pontos distantes da folha, e a de baixo sobrescrevia
+   parte da de cima. O resultado era uma folha que descrevia um desenho (selo de
+   tipo) e entregava outro: alinhamento, vão e tamanho vinham de um desenho
+   anterior, com ponto de estado em vez de selo.
+
+   A fusão de 08/10/2026 foi medida no navegador antes e depois — 47 caixas, a
+   altura da página e 24 propriedades computadas idênticas. É este teste que
+   impede a duplicata de voltar. */
+test('a linha do item de sprint tem uma definição só', () => {
+  const css = ler('assets/ritmo.css').replace(/\/\*[\s\S]*?\*\//g, '');
+  for (const sel of ['.rt-itens', '.rt-item', '.rt-item-nome', '.rt-item-estado']) {
+    const n = (css.match(new RegExp('(^|\n)' + sel.replace('.', '\\.') + ' \\{', 'g')) || []).length;
+    assert.equal(n, 1, `há ${n} regras ${sel} fora de media query — a última ganha, e as duas divergem`);
+  }
+});
+
+test('o ponto de estado saiu: o módulo desenha selo, não ponto', () => {
+  /* `.rt-ponto` era de um desenho anterior. A página de verdade tinha ZERO
+     deles — regra morta que fazia a folha descrever o que a tela não tem. */
+  const css = ler('assets/ritmo.css').replace(/\/\*[\s\S]*?\*\//g, '');
+  assert.doesNotMatch(css, /rt-ponto/);
+  assert.doesNotMatch(ler('assets/briefing-entregas-v2.js'), /rt-ponto/);
+  // O selo, que é o que existe, continua de pé.
+  assert.match(css, /\.rt-badge \{/);
+  // E o estado do transbordo, que vive na mesma família, não foi junto.
+  assert.match(css, /\.rt-transbordou \.rt-item-estado/);
 });
 
 /* A lista abria POR CIMA do controle: num <select> comum o popup é desenhado

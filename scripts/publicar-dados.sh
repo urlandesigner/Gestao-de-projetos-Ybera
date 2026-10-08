@@ -57,6 +57,23 @@ except Exception as e:
     sys.exit(f'o arquivo não é JSON válido: {e}')
 if not isinstance(p, dict) or 'em' not in p:
     sys.exit('o JSON não parece um pacote deste relatório (falta "em")')
+
+# O PORTÃO DAS DESCRIÇÕES. O bloco `_descricoes` é material LOCAL: descrição de
+# PBI tem link interno, nome de fornecedor e observação escrita achando que era
+# interna, e este arquivo vai pra um site PÚBLICO. Ele só existe enquanto houver
+# PBI sem resumo; quem o consome e apaga é quem gera os resumos.
+#
+# Parar aqui, e não avisar, é o ponto: aviso num script depende de alguém ler.
+pend = p.get('_descricoes')
+if pend:
+    print(f'o pacote ainda traz {len(pend)} descrição(ões) de PBI, que NÃO podem ir pro ar.',
+          file=sys.stderr)
+    print('peça ao Claude Code: "gera os resumos" — ele lê o arquivo em Downloads,',
+          file=sys.stderr)
+    print('escreve assets/resumos.json e tira o bloco. Depois rode isto de novo.',
+          file=sys.stderr)
+    sys.exit(1)
+
 n = len(p.get('sprints') or [])
 print(f'  pacote de {p["em"]}, {n} sprint(s)')
 PY

@@ -111,6 +111,8 @@ const st = {
   agora: 0,
   roadmap: [], // vem de assets/roadmap.json (PO) ou do link (leitura) — nunca do DevOps
   nomes: {},   // nome de negócio por item: assets/report-nomes.json (PO) ou o link (leitura)
+  resumos: {}, // uma linha por PBI: assets/resumos.json — só o PO lê o arquivo; o
+               // leitor recebe a linha já embutida em cada item de sprint
 };
 
 function respAtivo() { return st.resp === null ? (st.usuario || '') : st.resp; }
@@ -193,6 +195,47 @@ async function carregarNomes() {
   } catch (e) {
     console.warn('[Report] report-nomes.json não carregou: os títulos saem como estão no DevOps,'
       + ' não com os nomes de negócio. Motivo: ' + e.message);
+  }
+}
+
+/* ---------- Resumo de PBI: a segunda camada editorial ---------- */
+/* assets/resumos.json: id do item → { resumo, de }. Existe porque o cartão de
+   sprint mostra o TÍTULO da PBI, e título de PBI é escrito pra quem trabalha
+   nela — "[DESIGN] Viabilização Design System para loja Ybera.us" não diz nada
+   a quem lê de fora.
+
+   Separado do report-nomes.json de propósito, apesar da forma parecida: aquele
+   RENOMEIA épico e Feature (o nome substitui o título), este ACRESCENTA uma
+   linha abaixo do título da PBI. Juntá-los faria um arquivo com duas regras de
+   uso e dois donos — e o nomes.json é lido pelos quatro documentos, enquanto
+   este só serve ao Entregas v2.
+
+   `de` é a impressão digital da descrição que gerou a linha. Não é lido aqui —
+   quem o usa é quem gera —, mas passa pelo saneamento pra não virar depósito
+   de texto arbitrário num arquivo que o navegador lê. */
+function saneResumos(obj) {
+  const out = {};
+  if (obj && typeof obj === 'object') {
+    for (const k of Object.keys(obj)) {
+      if (!/^\d+$/.test(k)) continue;
+      const v = obj[k] || {};
+      const resumo = String(v.resumo || '').trim().slice(0, 240);
+      if (!resumo) continue;
+      out[k] = { resumo, de: String(v.de || '').trim().slice(0, 64) };
+    }
+  }
+  return out;
+}
+
+async function carregarResumos() {
+  try {
+    const resp = await fetch('assets/resumos.json', { cache: 'no-store' });
+    if (!resp.ok) return; // sem arquivo: cartão só com o título, sem erro
+    const dado = await resp.json();
+    st.resumos = saneResumos(dado.itens);
+  } catch (e) {
+    console.warn('[Report] resumos.json não carregou: os cartões de sprint ficam só com o'
+      + ' título da PBI. Motivo: ' + e.message);
   }
 }
 
@@ -460,8 +503,30 @@ async function carregar() {
   st.areaIncerta = false; // cada carga responde por si: aviso velho mentiria
   render();
   try {
+    /* QUEM É O DONO DO TOKEN — e a resposta fica guardada.
+
+       Não é só o padrão do filtro: é a ASSINATURA da capa ("Product Owner: X"),
+       e um documento que perde a assinatura porque uma chamada falhou é pior
+       que um filtro que começa em "todos".
+
+       E falha: em 08/10/2026 a mesma página devolveu o nome às 14h50 e nada às
+       17h16, com o erro engolido aqui dentro. Gravado uma vez, ele sobrevive à
+       falha seguinte — o nome do dono do token não muda entre duas cargas. */
     if (!st.usuario) {
-      try { st.usuario = await A.currentUser(ctx()); } catch (e) { /* filtro só começa em "todos" */ }
+      try {
+        st.usuario = await A.currentUser(ctx());
+        /* Gravado NO CACHE DA CENTRAL, que é de onde o st.usuario foi lido lá em
+           cima — e não numa chave própria. Duas fontes pro mesmo nome é como
+           elas passam a discordar. */
+        if (st.usuario) {
+          const c = loadJSON(LS.cache) || {};
+          c.usuario = st.usuario;
+          try { localStorage.setItem(LS.cache, JSON.stringify(c)); } catch (e2) { /* cheio: segue sem gravar */ }
+        }
+      } catch (e) {
+        console.warn('[Report] não deu pra perguntar quem é o dono do token ao DevOps;'
+          + ' seguindo com o nome guardado. Motivo: ' + e.message);
+      }
     }
     const todos = [];
     const escopos = []; // projeto + área de cada time, pra quem mede sprint depois
@@ -579,8 +644,51 @@ async function buscarRitmo(escopos) {
    um "agora" próprio aqui faria a linha discordar da data impressa na capa. */
 function ritmoAgora(itensNoEscopo) {
   const agora = st.leitura ? st.agora : Date.now();
-  return (st.sprintsBrutas || []).map((x) =>
+  const linhas = (st.sprintsBrutas || []).map((x) =>
     C.ritmoDaSprint(x.sprint, x.idsAgora, x.idsNoFim, itensNoEscopo, agora));
+  /* A linha editorial entra AQUI, enquanto o item ainda tem `id` — o saneador
+     tira o id logo depois, e do outro lado não haveria por onde casar. Item sem
+     entrada em resumos.json fica sem `resumo`, e o cartão mostra só o título:
+     é a verdade sobre uma PBI que ninguém descreveu, não uma falha. */
+  for (const linha of linhas) {
+    for (const lista of [linha.itens, linha.transbordados]) {
+      for (const it of (lista || [])) {
+        const e = st.resumos[String(it.id)];
+        if (e && e.resumo) it.resumo = e.resumo;
+      }
+    }
+  }
+  return linhas;
+}
+
+/* AS DESCRIÇÕES QUE AINDA PRECISAM DE RESUMO, pro arquivo que o botão baixa.
+
+   Viajam num bloco com underscore porque ele é LOCAL: o publicar-dados.sh se
+   recusa a publicar um arquivo que ainda o tenha. Não é disciplina de quem
+   roda, é portão — descrição de PBI tem link interno, nome de fornecedor e
+   observação escrita achando que era interna, e o arquivo publicado é público.
+
+   Só entra o que falta: item sem resumo, ou com resumo gerado de uma descrição
+   que mudou desde então. Quando não falta nada, o bloco não existe e o portão
+   nem se pronuncia. */
+function descricoesPendentes(linhas) {
+  const porId = new Map((st.items || []).map((it) => [it.id, it]));
+  const fora = [];
+  for (const linha of linhas) {
+    for (const lista of [linha.itens, linha.transbordados]) {
+      for (const it of (lista || [])) {
+        const bruto = porId.get(it.id);
+        const texto = C.descricaoLimpa(((bruto || {}).fields || {})['System.Description']);
+        if (!texto) continue; // nada pra resumir: o cartão fica com o título
+        const e = st.resumos[String(it.id)];
+        // Sem `de`, a linha foi escrita à mão: não se regera, mesmo se a
+        // descrição mudar. Quem escreveu decide quando reescrever.
+        if (e && e.resumo && (!e.de || e.de === C.digitalDoTexto(texto))) continue;
+        fora.push({ id: it.id, sprint: linha.nome, titulo: it.titulo, descricao: texto });
+      }
+    }
+  }
+  return fora;
 }
 
 /* Vindo do link, as linhas já estão contadas — e são forjáveis como todo o
@@ -601,8 +709,14 @@ function saneRitmo(lista) {
      sprint: o que não está na lista vira 'outro' em vez de virar classe de CSS
      escrita por quem editou a URL. */
   const TIPOS = ['epic', 'feature', 'pbi', 'bug', 'task', 'outro'];
+  /* `resumo` é a linha editorial do assets/resumos.json, embutida item a item
+     no momento de montar o pacote. Vai pronta porque quem LÊ não tem como
+     buscá-la: o leitor do link não baixa arquivo nenhum, e casar resumo com
+     item do outro lado exigiria o `id` no pacote — justamente o campo que a
+     poda tira. Texto curto e cortado, como o título. */
   const itensDe = (v) => (Array.isArray(v) ? v : []).slice(0, 300).map((y) => ({
     titulo: txt((y || {}).titulo, 200),
+    resumo: txt((y || {}).resumo, 240),
     estado: txt((y || {}).estado, 40),
     tipo: TIPOS.includes((y || {}).tipo) ? y.tipo : 'outro',
     feito: !!(y || {}).feito,
@@ -851,6 +965,12 @@ function pacoteDoDocumento(semRecorte) {
     mes: st.mes, // quem abrir o link cai no mês que eu estava vendo
     roadmap: st.roadmap, // já veio saneado de assets/roadmap.json
   };
+  /* Uma passada só pelo ritmo: as linhas servem ao pacote (saneadas) e à lista
+     de pendências (cruas, com id). Chamar `ritmoAgora` duas vezes daria duas
+     fotos de instantes diferentes do mesmo documento. */
+  const ritmoLinhas = B.precisaDeSprints === true ? ritmoAgora(mostrados) : [];
+  const pendentes = (semRecorte && B.precisaDeSprints === true)
+    ? descricoesPendentes(ritmoLinhas) : [];
   const pacote = typeof B.contagensDoLink === 'function'
     ? Object.assign(cabecalho, {
       contagens: B.contagensDoLink(mostrados, st.items.concat(st.pais)),
@@ -861,7 +981,11 @@ function pacoteDoDocumento(semRecorte) {
          arquivo publicado à toa, e o pacote carregaria três campos mortos por
          item. Uma função só nas duas pontas é o que garante que o que sai é
          exatamente o que entra. */
-      sprints: B.precisaDeSprints === true ? saneRitmo(ritmoAgora(mostrados)) : undefined,
+      sprints: B.precisaDeSprints === true ? saneRitmo(ritmoLinhas) : undefined,
+      /* Só no ARQUIVO, nunca no link: o link já é o conteúdo final, não passa
+         por script nenhum, e um bloco de descrições cruas dentro dele iria
+         inteiro pra quem recebesse. Ausente quando não há pendência. */
+      _descricoes: (semRecorte && pendentes && pendentes.length) ? pendentes : undefined,
     })
     : Object.assign(cabecalho, {
       items: enxugar(mostrados),
@@ -1100,6 +1224,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Os nomes podem chegar depois do link já gravado — regrava, senão o
   // stakeholder abre um link com título cru.
   carregarNomes().then(async () => { render(); if (st.items && !st.erro) await gravarLink(); });
+  /* Os resumos só valem pro documento que declara arquivo de dados — hoje, o
+     Entregas v2. Os outros três não têm cartão de sprint, e pedir o arquivo
+     neles seria um 404 no console a cada abertura, dizendo que falta algo que
+     não faz falta. Regrava o link pelo mesmo motivo dos nomes. */
+  if (B.precisaDeSprints === true) {
+    carregarResumos().then(async () => { render(); if (st.items && !st.erro) await gravarLink(); });
+  }
   $('atualizar').addEventListener('click', carregar);
   $('sem-nome').addEventListener('click', copiarSemNome);
   $('copiar').addEventListener('click', copiarLink);

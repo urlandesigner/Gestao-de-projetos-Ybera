@@ -1,0 +1,182 @@
+{
+  "_leia": "Uma linha de resumo por PBI, para os cartões de sprint da aba Acompanhar do relatório de entregas. O título da PBI é jargão de time ('[DESIGN] Viabilização Design System para loja Ybera.us') e não diz nada a quem lê de fora; esta é a camada que traduz. id do item -> { resumo, de }. `de` é a impressão digital da descrição que gerou o resumo: quando a descrição muda no DevOps, o resumo fica desatualizado e precisa ser refeito — é isso que o `de` detecta. Quem escreve: o Claude Code, a partir das descrições que o botão 'Publicar dados' baixa no bloco _descricoes. Linha que você editar à mão é preservada, desde que você apague o `de` dela (sem `de`, ela nunca é regerada). PBI sem descrição no DevOps não entra aqui: o cartão fica só com o título, que é a verdade — não há o que resumir.",
+  "atualizadoEm": "2026-10-08",
+  "itens": {
+    "42884": {
+      "resumo": "Destaca a opção de assinatura na página do produto e sugere no checkout, para quem quer comprar de forma recorrente.",
+      "de": "ead8014a"
+    },
+    "43087": {
+      "resumo": "Compara as ferramentas pagas de assinatura recorrente e escolhe a que suporta o crescimento do produto.",
+      "de": "259dde2f"
+    },
+    "44075": {
+      "resumo": "Deixa o cliente ver e remover os cartões salvos na conta dele.",
+      "de": "b78abd1f"
+    },
+    "44746": {
+      "resumo": "Prepara o piloto do aplicativo Ybera.com: acesso, orientação de instalação e canal de feedback para o grupo de teste.",
+      "de": "2424f478"
+    },
+    "46261": {
+      "resumo": "Um produto só passa a servir Ads e Influenciadores, com preço conforme a origem do acesso — hoje são dois cadastros, o que atrapalha o SEO e o Google Shopping.",
+      "de": "de5a23a6"
+    },
+    "48033": {
+      "resumo": "A influenciadora aceita o termo anti-revenda antes de fechar a compra, e o aceite fica registrado.",
+      "de": "bb5f79fb"
+    },
+    "48034": {
+      "resumo": "Permite definir quanto de cada produto uma influenciadora pode comprar por ciclo, direto na página do produto.",
+      "de": "8f99b934"
+    },
+    "48246": {
+      "resumo": "A comissão da rede passa a ser calculada só sobre o que foi pago em dinheiro, saldo ou cartão — o valor pago em Lybera sai da conta.",
+      "de": "8ce6336d"
+    },
+    "48854": {
+      "resumo": "Avalia se a TILOPAY serve como meio de pagamento da loja do Panamá, e o que seria preciso mudar para integrá-la.",
+      "de": "b10a97c7"
+    },
+    "49147": {
+      "resumo": "Mostra ao cliente quanto falta para alcançar o frete grátis.",
+      "de": "653166c9"
+    },
+    "49183": {
+      "resumo": "Permite ao time trocar os banners das lojas internas sozinho, sem depender de alguém técnico.",
+      "de": "0e1f87b4"
+    },
+    "49639": {
+      "resumo": "Levanta o que é preciso para cada influenciadora ter até três endereços de entrega ativos.",
+      "de": "b21ddee2"
+    },
+    "49882": {
+      "resumo": "Atualiza a loja do México para a versão mais nova do tema global e refaz a home com os componentes oficiais.",
+      "de": "8308ad31"
+    },
+    "49931": {
+      "resumo": "Corrige o brinde que estava sendo incluído em pedidos que não atingiam o valor mínimo da promoção.",
+      "de": "a12d8b80"
+    },
+    "49959": {
+      "resumo": "Define como cada marca pode se expressar dentro de um padrão comum, para manter a identidade de cada uma sem perder a consistência da loja.",
+      "de": "62c6c5f5"
+    },
+    "50483": {
+      "resumo": "Atualiza o visual do cabeçalho e do rodapé de todas as páginas da loja.",
+      "de": "c7121bf0"
+    },
+    "50484": {
+      "resumo": "Aplica as cores, a tipografia e os espaçamentos novos nas páginas da loja Ybera.com, para a identidade visual ficar igual em todas elas.",
+      "de": "1d63161c"
+    },
+    "50944": {
+      "resumo": "Põe a listagem de categorias da home no padrão visual novo.",
+      "de": "aa4e0600"
+    },
+    "50946": {
+      "resumo": "Unifica o cartão de produto, que hoje tem quatro versões diferentes, num padrão só.",
+      "de": "8e43a3e9"
+    },
+    "50951": {
+      "resumo": "Finaliza e valida a tradução da loja nos três idiomas, sem trechos em inglês nem imagem fora de contexto.",
+      "de": "a1cfac54"
+    },
+    "50956": {
+      "resumo": "Dá frete grátis na primeira compra do mês de cada influenciadora, como a política do Club comunica.",
+      "de": "bc83dc27"
+    },
+    "51004": {
+      "resumo": "Adiciona o NuPay como meio de pagamento no checkout, com o desconto e o crédito do Nubank.",
+      "de": "26efa155"
+    },
+    "51022": {
+      "resumo": "Atualiza o visual do carrinho para o padrão novo.",
+      "de": "15b43296"
+    },
+    "51139": {
+      "resumo": "Prototipa uma forma mais simples de usar e combinar saldos no checkout das lojas internas.",
+      "de": "75f6f252"
+    },
+    "51676": {
+      "resumo": "Ajusta o app de reviews que já está na loja para atender o que a pesquisa definiu, em vez de contratar outro.",
+      "de": "ada52005"
+    },
+    "51679": {
+      "resumo": "Investiga usar a API de conteúdos da Wake para montar uma ferramenta própria de publicação na loja.",
+      "de": "e64f2b3c"
+    },
+    "51698": {
+      "resumo": "Junta saldo desbloqueado e bloqueado num só, para a influenciadora pagar sem precisar diferenciar os dois no checkout.",
+      "de": "b4944345"
+    },
+    "51704": {
+      "resumo": "Permite subir uma planilha de preços e agendar quando a mudança entra, em vez de alterar produto por produto.",
+      "de": "aaee642b"
+    },
+    "51738": {
+      "resumo": "Reúne num painel só os principais indicadores da operação, para acompanhar o resultado e ver variação rápido.",
+      "de": "8196766e"
+    },
+    "51853": {
+      "resumo": "Troca o SDK que captura o comportamento do cliente no site, sem perder o histórico que vai para o HubSpot.",
+      "de": "eb89924f"
+    },
+    "51868": {
+      "resumo": "Mostra na confirmação e no e-mail por qual parceira a compra foi feita, sem a cliente precisar falar com o atendimento.",
+      "de": "7f24a5ae"
+    },
+    "51870": {
+      "resumo": "Avisa a cliente no checkout quando o endereço não cabe no formato que a transportadora aceita, antes de o pedido sair.",
+      "de": "0bf766bf"
+    },
+    "51941": {
+      "resumo": "Testa o AddressGuard e as alternativas de verificação de endereço antes de escolher qual implementar.",
+      "de": "f0d90ed7"
+    },
+    "51942": {
+      "resumo": "O checkout confere o endereço e avisa a cliente na hora, em vez de a Ybera ter de entrar em contato depois.",
+      "de": "4c930caf"
+    },
+    "51945": {
+      "resumo": "Verifica se dá para oferecer Venmo, Zelle e Klarna no checkout e o que cada um exige.",
+      "de": "a708b2ac"
+    },
+    "51953": {
+      "resumo": "Faz as ofertas respeitarem o período configurado e alinha o carrinho lateral ao padrão das outras lojas.",
+      "de": "e7a1ee9b"
+    },
+    "52014": {
+      "resumo": "Corrige o preço do compre junto e devolve as sugestões de produtos complementares na página do produto, no carrinho e no checkout.",
+      "de": "0e934d44"
+    },
+    "52049": {
+      "resumo": "Libera a compra do ingresso digital Brasil Influencer sem passar pela validação de estoque físico.",
+      "de": "c02bfe2c"
+    },
+    "52121": {
+      "resumo": "Permite cadastrar e vender os conteúdos do Ybera Academy pelo Pass, sem depender de configuração técnica.",
+      "de": "48fbaeff"
+    },
+    "52122": {
+      "resumo": "O comprador acessa o conteúdo direto pela conta dele no Ybera, sem procurar e-mail nem fazer outro login.",
+      "de": "22756c47"
+    },
+    "52123": {
+      "resumo": "Avisa o comprador quando o acesso é liberado, dizendo o que ele pode acessar e por quanto tempo.",
+      "de": "6a09c946"
+    },
+    "52124": {
+      "resumo": "Permite comprar ingressos e produtos do Pass direto pela loja, sem precisar de uma segunda compra.",
+      "de": "1efd9367"
+    },
+    "52148": {
+      "resumo": "Abre a venda do ingresso digital Brasil Influencer 2026 nas lojas internas do PRO e dos EUA.",
+      "de": "b4e0c49c"
+    },
+    "52250": {
+      "resumo": "Traz as campanhas de brinde para o app próprio da loja e tira o Dr Free Gift, que custava e dava conflito no carrinho.",
+      "de": "7cb13dde"
+    }
+  }
+}

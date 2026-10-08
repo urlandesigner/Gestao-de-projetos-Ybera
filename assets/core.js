@@ -1079,12 +1079,62 @@
       .replace(/<\/\s*(p|div|li|tr|h[1-6])\s*>/gi, '\n')
       .replace(/<\s*li[^>]*>/gi, '\n')
       .replace(/<[^>]+>/g, '');
+    /* Entidades. As NUMÉRICAS primeiro, e genéricas (&#233; ou &#xE9;): cobrem
+       qualquer caractere, e são o que a maioria dos editores emite.
+
+       As NOMEADAS acentuadas vêm de texto colado de Word e afins, e passavam
+       cruas — "c&aacute;lculo" chegava assim na tela. Não é só da sonda que
+       mediu isto: `pedidoDeDecisao` lê daqui, então um pedido de decisão com
+       acento colado saía com a entidade à mostra num documento de stakeholder.
+
+       `&amp;` por último, senão "&amp;lt;" viraria "<" em vez de "&lt;". */
+    const NOMEADAS = {
+      nbsp: ' ', lt: '<', gt: '>', quot: '"', apos: "'", hellip: '…',
+      ndash: '–', mdash: '—', lsquo: '\u2018', rsquo: '\u2019',
+      ldquo: '\u201c', rdquo: '\u201d', ordm: 'º', ordf: 'ª', deg: '°',
+      aacute: 'á', agrave: 'à', atilde: 'ã', acirc: 'â', auml: 'ä',
+      eacute: 'é', egrave: 'è', ecirc: 'ê', euml: 'ë',
+      iacute: 'í', icirc: 'î', iuml: 'ï',
+      oacute: 'ó', ocirc: 'ô', otilde: 'õ', ouml: 'ö',
+      uacute: 'ú', ucirc: 'û', uuml: 'ü', ccedil: 'ç', ntilde: 'ñ',
+    };
     s = s
-      .replace(/&nbsp;/gi, ' ').replace(/&lt;/gi, '<').replace(/&gt;/gi, '>')
-      .replace(/&quot;/gi, '"').replace(/&#39;/gi, "'").replace(/&apos;/gi, "'")
-      .replace(/&amp;/gi, '&'); // &amp; por último pra não desfazer duas vezes
+      .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+      .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
+      // Nome casado sem distinguir caixa, mas a MAIÚSCULA do nome é outra letra:
+      // &Aacute; é Á, não á. Por isso a decisão é pela primeira letra do nome.
+      .replace(/&([a-z]+);/gi, (inteiro, nome) => {
+        const base = NOMEADAS[nome.toLowerCase()];
+        if (base === undefined) return inteiro; // entidade que não conheço fica como está
+        return /^[A-Z]/.test(nome) && /[a-zà-ÿ]/.test(base) ? base.toUpperCase() : base;
+      })
+      .replace(/&amp;/gi, '&');
     return s.replace(/[ \t]+/g, ' ').replace(/ *\n */g, '\n')
       .replace(/\n{3,}/g, '\n\n').trim();
+  }
+
+  /* IMPRESSÃO DIGITAL DE UM TEXTO. Serve pra uma pergunta só: a descrição desta
+     PBI é a mesma que gerou o resumo guardado, ou mudou no DevOps desde então?
+
+     FNV-1a, de propósito, e não SHA via crypto.subtle: aquele é assíncrono e
+     só existe em contexto seguro, e esta conta roda no navegador DURANTE a
+     montagem do pacote e também no node, nos testes. Não é segurança — é
+     detectar mudança —, e pra isso 32 bits em 8 dígitos hexadecimais bastam:
+     a alternativa a uma colisão improvável é um resumo desatualizado, não um
+     furo. Guardar a descrição inteira pra comparar seria pôr o texto cru no
+     arquivo público, que é o que este projeto está evitando.
+
+     Normaliza espaço antes: reindentar a descrição no DevOps não é mudança de
+     conteúdo, e regerar por isso custaria à toa. */
+  function digitalDoTexto(texto) {
+    const s = String(texto == null ? '' : texto).replace(/\s+/g, ' ').trim();
+    let h = 0x811c9dc5;
+    for (let i = 0; i < s.length; i++) {
+      h ^= s.charCodeAt(i);
+      // O FNV-1a multiplica por 16777619; em JS o >>> 0 mantém 32 bits sem sinal.
+      h = Math.imul(h, 0x01000193) >>> 0;
+    }
+    return h.toString(16).padStart(8, '0');
   }
 
   // Pedido de decisão de um item travado: a linha da descrição que começa com
@@ -1384,7 +1434,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, wiqlIteracao, transbordados, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, vizinhasDaSprint, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, vizinhasDaSprint, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, digitalDoTexto, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };

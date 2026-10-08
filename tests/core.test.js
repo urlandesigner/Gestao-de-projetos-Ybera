@@ -488,6 +488,26 @@ test('descricaoLimpa tira o HTML e devolve texto legível', () => {
   assert.ok(txt.includes('\n'));                          // <br> e </p> viraram linha
 });
 
+/* Acento colado de editor externo chegava cru na tela: "c&aacute;lculo".
+   Achado em 08/10/2026 montando a sonda de descrição, mas o estrago era no
+   produto — `pedidoDeDecisao` lê daqui, e o pedido de decisão aparece num
+   documento de stakeholder. */
+test('descricaoLimpa decodifica acento nomeado e numérico', () => {
+  assert.equal(C.descricaoLimpa('<p>C&aacute;lculo de cup&otilde;es</p>'), 'Cálculo de cupões');
+  assert.equal(C.descricaoLimpa('<p>Pre&ccedil;o &#233; isto &#x2026;</p>'), 'Preço é isto …');
+  // A MAIÚSCULA do nome é outra letra: &Aacute; é Á, não á.
+  assert.equal(C.descricaoLimpa('<p>&Aacute;rea &mdash; S&atilde;o Paulo</p>'), 'Área — São Paulo');
+});
+
+test('descricaoLimpa não inventa: entidade desconhecida fica como está', () => {
+  assert.equal(C.descricaoLimpa('<p>&naoexiste; segue inteiro</p>'), '&naoexiste; segue inteiro');
+});
+
+test('descricaoLimpa: &amp; por último, senão desfaz duas vezes', () => {
+  // "&amp;lt;" é o texto literal "&lt;", e não o sinal "<".
+  assert.equal(C.descricaoLimpa('<p>&amp;lt;b&amp;gt;</p>'), '&lt;b&gt;');
+});
+
 test('descricaoLimpa: vazio, nulo e indefinido viram string vazia', () => {
   assert.equal(C.descricaoLimpa(''), '');
   assert.equal(C.descricaoLimpa(null), '');

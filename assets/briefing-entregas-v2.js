@@ -178,9 +178,18 @@
     const fora = Array.isArray(s.transbordados) ? s.transbordados : [];
     if (!dentro.length && !fora.length) return '';
     const tipo = (x) => (ROTULO_TIPO[x.tipo] ? x.tipo : 'outro');
+    /* A LINHA DE RESUMO, abaixo do título. O título da PBI é escrito pra quem
+       trabalha nela — "[DESIGN] Viabilização Design System para loja Ybera.us"
+       não diz nada a quem lê de fora, e este documento é lido de fora.
+
+       Vem pronta no pacote (assets/resumos.json, embutida item a item pelo
+       report.js). Item sem resumo não ganha a linha e fica só com o título: é
+       a verdade sobre uma PBI que ninguém descreveu, não um buraco a tapar com
+       texto inventado. */
     const li = (x, saiu) => `<li class="rt-item${saiu ? ' rt-transbordou' : ''}">
       <span class="rt-badge rt-tipo-${tipo(x)}">${esc(ROTULO_TIPO[tipo(x)])}</span>
-      <span class="rt-item-nome">${esc(x.titulo)}</span>
+      <span class="rt-item-nome">${esc(x.titulo)}${x.resumo
+        ? `<span class="rt-item-resumo">${esc(x.resumo)}</span>` : ''}</span>
       <span class="rt-item-estado">${saiu
         ? '<span class="rt-selo-transbordo">transbordou</span>'
         : esc(x.estado || '')}</span>

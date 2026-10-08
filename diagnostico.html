@@ -78,6 +78,19 @@
   <div id="sonda"></div>
 </section>
 
+<section class="grupo" style="margin-bottom:2rem">
+  <h2>A descrição das PBIs serve de resumo?</h2>
+  <p class="meta">Pergunta de 08/10/2026: os cartões de sprint do relatório mostram só o título, e título de PBI
+    costuma ser técnico demais pra quem lê de fora. A ideia é pôr uma linha de resumo embaixo — extraída da
+    descrição, com o PO corrigindo o que sair ruim. Antes de construir, medir se a fonte presta.</p>
+  <p class="meta">Mede as sprints que você nomear (separadas por vírgula) e mostra, pra cada PBI:
+    se tem descrição, o tamanho dela, e a <b>primeira linha útil</b> — que é exatamente o que o extrator pegaria.
+    Nada daqui vai pro ar: esta página fica fora do deploy.</p>
+  <p style="margin:.8rem 0 0"><input id="dsSprints" value="Sprint 20, Sprint 21" style="padding:.5rem .7rem;border:1px solid var(--borda);border-radius:8px;font:inherit;width:18rem">
+  <button id="descricoes" style="padding:.5rem 1rem;border:1px solid var(--borda);border-radius:999px;background:var(--superficie);font:inherit;font-weight:600;cursor:pointer">medir</button></p>
+  <div id="ds"></div>
+</section>
+
 <div id="saida"></div>
 
 <script src="assets/core.js"></script>
@@ -411,6 +424,98 @@
         + '</p>' + quadro + tabela;
     } catch (e) {
       tb.innerHTML = '<p class="meta" style="color:var(--erro)">parou: ' + esc(e.message) + '</p>';
+    }
+  });
+
+  /* ---------------- A descrição serve de resumo? ----------------
+     Mede, não opina: pra cada PBI das sprints pedidas, diz se há descrição,
+     quanto texto tem, e qual seria a PRIMEIRA LINHA ÚTIL — a que um extrator
+     automático pegaria. Com isso dá pra decidir em trinta segundos se vale
+     construir o extrator ou se o caminho é escrever as linhas à mão.
+
+     A primeira linha útil NÃO é a primeira linha: descrição de PBI começa com
+     cabeçalho ("Contexto", "Objetivo:", "## Descrição"), com marcador de lista
+     ou com uma linha de uma palavra. Pular isso é o mínimo que o extrator de
+     verdade faria, então a sonda tem que pular também — medir a linha crua
+     responderia uma pergunta diferente da que vamos fazer.
+
+     Usa a MESMA limpeza de HTML do produto (C.descricaoLimpa): uma cópia aqui
+     mediria a sonda, não o que o relatório mostraria. */
+  const CABECALHO = /^(contexto|objetivo|descri[çc][ãa]o|resumo|hist[óo]ria|user story|crit[ée]rios?[^:]*|aceite|dod|definition of done|tarefas?|observa[çc][õo]es)\s*:?\s*$/i;
+  function primeiraLinhaUtil(texto) {
+    for (let linha of String(texto || '').split('\n')) {
+      linha = linha.replace(/^\s*(#{1,6}|[-*•]|\d+[.)])\s*/, '').trim();
+      // Linha curta demais é rótulo, não frase. 25 caracteres é onde "Objetivo
+      // do negócio" (20) cai fora e "Permitir que o cliente edite" (29) entra.
+      if (linha.length < 25) continue;
+      if (CABECALHO.test(linha)) continue;
+      return linha;
+    }
+    return '';
+  }
+
+  const btnDs = document.getElementById('descricoes');
+  if (btnDs) btnDs.addEventListener('click', async () => {
+    const caixa = document.getElementById('ds');
+    const nomes = document.getElementById('dsSprints').value.split(',').map((x) => x.trim()).filter(Boolean);
+    caixa.innerHTML = '<p class="meta">medindo…</p>';
+    try {
+      const p0 = config.projects.filter((x) => !x.hidden)[0];
+      const its = await A.teamIterations(ctx, p0.projectName, p0.teamName);
+      let linhas = '';
+      let total = 0, comDesc = 0, comLinha = 0;
+      for (const nome of nomes) {
+        const sp = its.find((i) => i.name === nome);
+        if (!sp) { linhas += '<tr><td colspan="5"><b>' + esc(nome) + '</b>: não achei essa iteração</td></tr>'; continue; }
+        const ids = await A.sprintItemIds(ctx, p0.projectName, p0.teamName, sp.id);
+        const crus = ids.length
+          ? await A.getFields(ctx, ids, ['System.Title', 'System.WorkItemType', 'System.Description'])
+          : [];
+        /* MESMO RECORTE DO CARTÃO, e não "tudo que não é Task": o cartão mostra
+           só REQUISITO — o `ehRequisito` do ritmoDaSprint é `levelOf(tipo) ===
+           'pbi'`, que deixa Épico e Feature de fora. Medir com eles dentro
+           infla o denominador e responde outra pergunta: na primeira medição
+           deu 76 itens contra os 45 que o relatório mostra, e 55% de um
+           conjunto que não é o do cartão não decide nada.
+
+           `levelOf` devolve 'pbi' pra Task também (é o padrão pra "não é épico
+           nem feature"), então o Task sai por nome, como o resumoDeSprint faz. */
+        const itens = crus.filter((it) => {
+          const t = (it.fields || {})['System.WorkItemType'];
+          return t !== 'Task' && C.levelOf(t) === 'pbi';
+        });
+        const fora = crus.length - itens.length;
+        linhas += '<tr><td colspan="5" style="padding-top:1rem"><b>' + esc(sp.name)
+          + '</b> — ' + itens.length + ' requisitos'
+          + (fora ? ' <span class="meta">(' + fora + ' fora: Task, Épico ou Feature)</span>' : '')
+          + '</td></tr>';
+        for (const it of itens) {
+          const f = it.fields || {};
+          const texto = C.descricaoLimpa(f['System.Description']);
+          const linha = primeiraLinhaUtil(texto);
+          total += 1;
+          if (texto) comDesc += 1;
+          if (linha) comLinha += 1;
+          const veredito = !texto ? '<b style="color:var(--erro)">sem descrição</b>'
+            : !linha ? '<b style="color:var(--atencao)">só cabeçalho/lista curta</b>'
+            : '<b style="color:var(--positivo)">serve</b>';
+          linhas += '<tr><td class="id">#' + it.id + '</td>'
+            + '<td style="max-width:22rem">' + esc(f['System.Title']) + '</td>'
+            + '<td class="id">' + (texto ? texto.length : 0) + '</td>'
+            + '<td>' + veredito + '</td>'
+            + '<td style="max-width:30rem">' + esc(linha ? linha.slice(0, 220) : '—') + '</td></tr>';
+        }
+      }
+      const pct = (n) => (total ? Math.round((n / total) * 100) : 0);
+      caixa.innerHTML = '<p class="meta" style="margin-top:1rem"><b>' + total + ' itens</b> · '
+        + 'com descrição: <b>' + comDesc + '</b> (' + pct(comDesc) + '%) · '
+        + 'com primeira linha aproveitável: <b>' + comLinha + '</b> (' + pct(comLinha) + '%)'
+        + '<br>Abaixo de uns 60% aproveitáveis, o extrator vira trabalho de revisão '
+        + 'e vale escrever as linhas à mão desde o começo.</p>'
+        + '<table><thead><tr><th>id</th><th>título</th><th>tam.</th><th>veredito</th>'
+        + '<th>o que o extrator pegaria</th></tr></thead><tbody>' + linhas + '</tbody></table>';
+    } catch (e) {
+      caixa.innerHTML = '<p class="meta" style="color:var(--erro)">parou: ' + esc(e.message) + '</p>';
     }
   });
 
