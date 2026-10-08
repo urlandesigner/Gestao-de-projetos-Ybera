@@ -5,6 +5,8 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
+## [1.0.9] — 2026-10-08
+
 ### Adicionado
 - **O código da doc ganhou cor.** Eram 335 blocos em 72 páginas, todos em preto
   — e código em preto obriga a ler palavra por palavra para achar onde está o
