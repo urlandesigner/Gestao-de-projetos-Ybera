@@ -67,14 +67,50 @@
      declaram e seguem só com o fragmento. */
   const ARQUIVO_DE_DADOS = 'assets/dados-outubro.json';
 
-  /* Os cartões de outubro, que o Urlan dita. Começa vazia a pedido dele: até a
-     primeira entrega entrar, o documento é a capa, as sprints e o roadmap — e
-     isso é verdade sobre o mês, não falha de carregamento.
+  /* Os cartões de outubro, que o Urlan dita.
 
      Mesma forma dos cartões do documento base (titulo, status, resumo,
-     iniciativa/produto, epicoId/featureIds, contaFixa). Mexer aqui é a forma de
-     incluir, remover ou reescrever cartão: não há tela pra isso. */
-  const ENTREGAS_OUTUBRO = [];
+     iniciativa/produto, epicoId/featureIds, contaFixa, progresso, link). Mexer
+     aqui é a forma de incluir, remover ou reescrever cartão: não há tela pra
+     isso. Lista vazia é uma resposta — o documento vira capa, sprints e roadmap,
+     com a frase de VAZIO no lugar das seções. */
+  const ENTREGAS_OUTUBRO = [
+    {
+      /* A continuação da frente que atravessou setembro. O cartão veio do
+         documento de Agosto e Setembro com a mesma forma; só o texto e a conta
+         são de outubro — e o texto de lá, que falava do prazo de 30 de setembro
+         e do que viraria nova demanda, não foi trazido: aquele prazo já passou,
+         e repeti-lo em outubro contaria o futuro no passado. */
+      titulo: 'Tratativas do Google compliance',
+      iniciativa: 'Compliance Google',
+      produto: 'Loja Clube USA',
+      epicoId: 49290,
+      /* `entregue` e não `andamento`: a entrega é do NOSSO lado, e é isso que o
+         documento conta. O item que falta não está com o time — dizer "em
+         andamento" por causa dele atribuiria à Tecnologia um trabalho que ela
+         já terminou. O parágrafo diz de quem é o que resta, pra que o selo não
+         fique sozinho prometendo 18 de 18. */
+      status: 'entregue',
+      resumo: [
+        'Finalizamos 17 dos 18 itens da planilha que recebemos da agência. A única pendência é o item 11, que está com o Fabian.',
+        'Chegamos ao fim do prazo do projeto com tudo o que dependia do nosso time entregue, então estamos considerando esta frente concluída do nosso lado. Quando o Fabian fechar o item 11, a planilha fica completa.',
+      ],
+      // A barra e o texto contam a MESMA coisa de dois jeitos: 17 feitos de 18.
+      // Ao mexer num, refaça a conta no outro — em setembro o par chegou a
+      // divergir, e a barra desmentia o parágrafo logo acima dela.
+      progresso: { feito: 17, total: 18, rotulo: 'itens concluídos' },
+      // Sem Feature no board: a planilha inteira é um item de trabalho só.
+      contaFixa: 1,
+      /* Mesma planilha de setembro, e o mesmo `/view`: ela é pública para
+         LEITURA, e o `/edit` faz o Google avaliar se quem abre pode editar —
+         quem está logado numa conta sem essa permissão cai no pedido de acesso
+         em vez da planilha. Quem lê este report é leitor, não editor. */
+      link: {
+        href: 'https://docs.google.com/spreadsheets/d/1kC8iL2vZGl0aAy7xWdn5e6IrN2BYqe-6dYQYjKKWj6E/view?gid=0#gid=0',
+        rotulo: 'Abrir a planilha de demandas',
+      },
+    },
+  ];
 
   const MES_CURTO = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun',
     'jul', 'ago', 'set', 'out', 'nov', 'dez'];

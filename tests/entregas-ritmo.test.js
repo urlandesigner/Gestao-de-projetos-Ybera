@@ -48,10 +48,13 @@ test('o base continua sendo Agosto e Setembro, com os cartões dele', () => {
   assert.match(BASE.htmlReport(entrada()).html, /Agosto e Setembro de 2026/);
 });
 
-test('o v2 é a edição de Outubro, e começa sem cartão', () => {
+test('o v2 é a edição de Outubro, com a lista curada dele', () => {
   assert.deepEqual(V2.periodoDoDocumento(), ['2026-10']);
-  assert.deepEqual(V2.cartoesDoDocumento(), []);
   assert.match(V2.htmlReport(entrada()).html, /Outubro de 2026/);
+  // A lista é de outubro, não a de Agosto e Setembro reaproveitada: o `.length`
+  // que fazia lista vazia cair de volta na curada do base já causou isso uma vez.
+  const titulos = (lista) => lista.map((c) => c.titulo).join('|');
+  assert.notEqual(titulos(V2.cartoesDoDocumento()), titulos(BASE.cartoesDoDocumento()));
 });
 
 /* O que o v2 ACRESCENTA ao documento do base: a barra de abas e a seção de
@@ -65,7 +68,7 @@ const semAcrescimos = (html) => String(html)
 
 /* O teste mais importante do arquivo. */
 test('tiradas abas e seção, o v2 devolve exatamente o que o base desenha', () => {
-  const a = BASE.htmlReport(entrada({ periodo: V2.PERIODO, cartoes: [] }));
+  const a = BASE.htmlReport(entrada({ periodo: V2.PERIODO, cartoes: V2.cartoesDoDocumento() }));
   const b = V2.htmlReport(entrada({ sprints: SPRINTS }));
   assert.equal(semAcrescimos(b.html), a.html, 'o v2 mexeu no documento além do que acrescenta');
   assert.equal(b.vazio, a.vazio);
@@ -73,7 +76,7 @@ test('tiradas abas e seção, o v2 devolve exatamente o que o base desenha', () 
 });
 
 test('lista de sprints vazia, nula ou só com lixo também não desenha seção', () => {
-  const base = BASE.htmlReport(entrada({ periodo: V2.PERIODO, cartoes: [] })).html;
+  const base = BASE.htmlReport(entrada({ periodo: V2.PERIODO, cartoes: V2.cartoesDoDocumento() })).html;
   for (const s of [[], null, undefined, 'nada', [null, {}, { nome: '' }]]) {
     const html = V2.htmlReport(entrada({ sprints: s })).html;
     assert.doesNotMatch(html, /id="ritmo"/, `sprints=${JSON.stringify(s)} desenhou seção`);

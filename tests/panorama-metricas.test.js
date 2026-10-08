@@ -183,9 +183,16 @@ test('o roadmap de verdade dá o retrato que o desenho prometeu', () => {
   const itens = C.saneRoadmapItens(require('../assets/roadmap.json').itens);
   const r = C.riscoDoRoadmap(itens, AGORA);
   assert.equal(r.total, 13);
-  assert.equal(r.concluidos, 4);
-  assert.equal(r.vencidos, 1, 'Compliance Google, fim 30/09 e ainda em andamento');
-  assert.ok(r.lista.some((x) => x.titulo === 'Compliance Google' && x.vencido));
+  assert.equal(r.concluidos, 5);
+  /* Nenhum projeto vencido hoje. O único era o Compliance Google, de fim 30/09:
+     em 08/10 ele virou `concluido` porque a entrega do time terminou — o que
+     falta está com a agência, e o roadmap mede o que é nosso.
+
+     O caminho do vencido não ficou sem teste: os dois casos logo acima o
+     exercitam com dados sintéticos, que é onde ele deve ser medido. Aqui o que
+     se guarda é que o arquivo REAL ainda bate com o retrato do desenho. */
+  assert.equal(r.vencidos, 0);
+  assert.ok(r.lista.every((x) => !x.vencido));
 });
 
 test('roadmap vazio não quebra e não inventa risco', () => {
