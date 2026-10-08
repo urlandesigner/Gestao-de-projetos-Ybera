@@ -5,6 +5,36 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
+### Corrigido
+- **O chevron da coluna era o único glifo que não vinha do set.** Ele era um
+  quadrado de 6,4px girado 45°, desenhado com borda CSS de 1,5px e canto vivo,
+  ao lado de ícones de 16px com traço 1,3 e ponta arredondada — menor em pixel
+  e mais pesado no olho, o que o fazia ler como o elemento mais forte da linha.
+  Agora é o mesmo desenho dos vizinhos, aplicado como máscara para a cor poder
+  acompanhar o estado (repouso, hover, aberto), coisa que cor cozida num
+  `background-image` não faz. E ele **descola do canto de graça**: o glifo
+  ocupa 7 dos 16px da caixa, então o traço cai a 21px da borda em vez dos 14,7
+  da ponta do quadrado girado — sem mexer na margem da coluna.
+- **O chevron disputava a linha com o nome do grupo.** Herdava `currentColor`,
+  então ficava grafite junto com o rótulo do grupo aberto. Agora anda um
+  degrau atrás: cinza em repouso, um tom acima no hover e no aberto.
+- **A busca gastava 77px de coluna para um campo de 44.** O que sobrava não era
+  respiro, era moldura: 16px em cima, 16 embaixo. Agora são 12, e o bloco cai
+  para 69. O campo também tinha preenchimento cinza **e** contorno — duas
+  superfícies empilhadas numa coluna que já é branca. Ficou branco com o fio,
+  que é o que `.yb-field__box` pratica no sistema inteiro; tirar o fio em vez
+  do fundo deixaria a fronteira em 1,04:1, que é nenhuma.
+
+### Adicionado
+- **Os grupos da coluna abrem animados.** Era seco. É a mesma receita do
+  acordeão do sistema, e não uma segunda invenção para o mesmo problema:
+  `interpolate-size` destrava a animação até `auto` e a altura transiciona em
+  `::details-content`, com `allow-discrete` para o conteúdo não sumir no
+  primeiro quadro do fechamento. Onde `::details-content` não existe, o grupo
+  volta a abrir seco — degradação, não quebra. O corte de movimento aqui é
+  local de propósito: o corte global do sistema mira `[class*="yb-"]` e esta
+  coluna é `ds-`, documentação e não produto.
+
 ## [1.0.6] — 2026-10-08
 
 ### Corrigido

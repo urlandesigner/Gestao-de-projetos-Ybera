@@ -34,6 +34,20 @@
   --ds-nav-label: calc(var(--ds-nav-gutter) + var(--ds-nav-glifo) + var(--ds-nav-gap));
   /* o filete cai no centro do ícone */
   --ds-nav-rule: calc(var(--ds-nav-gutter) + var(--ds-nav-glifo) / 2);
+  /* O CHEVRON É DO SET, e não um quadrado girado. Ele era o único glifo da
+     coluna desenhado com borda CSS: 6,4px de lado, traço de 1,5 e canto vivo,
+     ao lado de ícones de 16px com traço 1,3 e ponta arredondada. Menor em
+     pixel e mais pesado no olho — lia como o elemento mais forte da linha,
+     que é o oposto do que ele é.
+
+     Como máscara e não como `background-image`: a cor tem de acompanhar o
+     estado (repouso, hover, aberto), e cor cozida no data URI não acompanha.
+     A máscara pinta com `background-color`, que herda a mudança de estado.
+
+     O desenho ocupa 7 dos 16px da caixa, centrado. É isso que resolve o
+     "colado no canto" sem mexer na margem: o traço passa a cair a ~20px da
+     borda, e não a ~14,7 como a ponta do quadrado girado caía. */
+  --ds-nav-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4.5 6.5 3.5 3.5 3.5-3.5'/%3E%3C/svg%3E");
   --ds-top-h: 4.25rem;
   /* O FUNDO DA DOCUMENTAÇÃO É CINZA, e o das peças é branco.
 
@@ -219,7 +233,9 @@ body{
    caixa que não filtra nada. */
 .ds-busca{
   position:sticky; inset-block-start:0; z-index:1;
-  padding:var(--yb-space-4) var(--ds-nav-gutter);
+  /* 12 e nao 16: o bloco gastava 77px de coluna para um campo de 44. O que
+     sobrava nao era respiro, era moldura. */
+  padding:var(--yb-space-3) var(--ds-nav-gutter);
   margin-block-end:var(--yb-space-2);
   background:var(--yb-surface);
   border-block-end:1px solid var(--yb-border-subtle);
@@ -229,7 +245,12 @@ body{
   inline-size:100%; min-block-size:var(--yb-target-min);
   padding:0 var(--yb-space-3);
   border:1px solid var(--yb-border); border-radius:var(--yb-radius-control);
-  background:var(--yb-bg-subtle); color:var(--yb-text-primary);
+  /* BRANCO, e nao `--yb-bg-subtle`. Preenchimento cinza MAIS contorno sao duas
+     superficies empilhadas numa coluna que ja e branca, e o campo lia como uma
+     caixa parada em cima dela. Branco com fio e exatamente o que `.yb-field__box`
+     pratica no sistema inteiro — tirar o fio em vez do fundo deixaria a
+     fronteira em 1,04:1, que e nenhuma. */
+  background:var(--yb-surface); color:var(--yb-text-primary);
   font-family:inherit; font-size:var(--yb-type-body-sm-size);
 }
 .ds-busca input:focus-visible{
@@ -276,12 +297,21 @@ body{
    que a pessoa lê primeiro tem de ser o nome do grupo. */
 .ds-nav__grupo > summary::after{
   content:""; margin-inline-start:auto; flex:none;
-  inline-size:.4rem; block-size:.4rem;
-  border-inline-end:1.5px solid currentColor; border-block-end:1.5px solid currentColor;
-  transform:translateY(-1px) rotate(45deg);
-  transition:transform var(--yb-transition-control);
+  inline-size:var(--ds-nav-glifo); block-size:var(--ds-nav-glifo);
+  /* CINZA, e não `currentColor`. Herdando a cor do rótulo, o chevron ficava
+     grafite junto com o nome do grupo aberto e os dois disputavam a linha —
+     mas só um deles é o conteúdo. Ele acompanha o estado um degrau atrás. */
+  background-color:var(--yb-text-muted);
+  -webkit-mask:var(--ds-nav-chevron) center / 100% 100% no-repeat;
+  mask:var(--ds-nav-chevron) center / 100% 100% no-repeat;
+  transition:transform var(--yb-transition-control),
+             background-color var(--yb-transition-control);
 }
-.ds-nav__grupo[open] > summary::after{transform:translateY(2px) rotate(-135deg)}
+.ds-nav__grupo > summary:hover::after{background-color:var(--yb-text-secondary)}
+.ds-nav__grupo[open] > summary::after{
+  transform:rotate(180deg);
+  background-color:var(--yb-text-secondary);
+}
 
 /* O ÍCONE É PARTE DO RÓTULO, e não uma peça ao lado dele. Ele morava numa
    caixa de 32 com fundo próprio, e a caixa custava mais do que entregava: ela
@@ -312,6 +342,34 @@ body{
    mudar de uma vez em vez de pela metade. */
 .ds-nav__grupo[open] > summary .ds-nav__icone{
   color:var(--yb-text-primary);
+}
+
+/* ------------------------------------------------------- abrir sem seco
+   A MESMA RECEITA DO ACORDEÃO do sistema, e não uma segunda invenção para o
+   mesmo problema: `interpolate-size` destrava a animação até `auto`, a altura
+   transiciona em `::details-content` — o elemento que o navegador cria para o
+   conteúdo do `<details>` — e `allow-discrete` faz `content-visibility`
+   acompanhar, senão o conteúdo some no primeiro quadro do fechamento e a
+   altura anima sobre o vazio.
+
+   Onde `::details-content` não existe, nada disto casa e o grupo volta a abrir
+   seco, que é o comportamento de hoje. Degradação, não quebra.
+
+   O CORTE DE MOVIMENTO É LOCAL. O corte global do sistema mira `[class*="yb-"]`
+   e esta coluna é `ds-`: ela está fora dele de propósito (é documentação, não
+   produto), e por isso respeita `prefers-reduced-motion` por conta própria —
+   como a nota recolhível de doc.css já faz. */
+.ds-nav{ interpolate-size:allow-keywords; }
+.ds-nav__grupo::details-content{
+  block-size:0; overflow:hidden;
+  transition:block-size var(--yb-transition-surface),
+             content-visibility var(--yb-transition-surface);
+  transition-behavior:allow-discrete;
+}
+.ds-nav__grupo[open]::details-content{ block-size:auto; }
+@media (prefers-reduced-motion:reduce){
+  .ds-nav__grupo::details-content{transition-duration:1ms}
+  .ds-nav__grupo > summary::after{transition:none}
 }
 
 .ds-nav__grupo > ul{
