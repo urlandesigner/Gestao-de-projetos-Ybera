@@ -14,6 +14,13 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
   os onze iframes a cada troca de tema.
 
 ### Corrigido
+- **A seta do seletor de página nascia colada na borda.** Ele ficou com a seta
+  nativa, que o navegador desenha encostada no fim do controle e que ignora o
+  `padding-inline-end` — não há como posicioná-la. Agora usa a receita do
+  `.yb-select` do sistema: desliga a nativa e pinta a nossa, com o glifo no
+  tamanho pequeno porque o controle da barra é o compacto de 36px (a seta de
+  20 encostaria em cima e embaixo). O seletor passou a medir igual aos botões
+  ao lado: 36 de altura, mesmo topo.
 - **A barra da bancada ficou sem respiro nenhum.** `--doc-respiro-largo` e
   `--doc-canvas` moravam em `doc/doc-nav.css`, que saiu da cabeça junto com a
   moldura. O primeiro não tem valor de reserva, e `padding:var(--yb-space-4)

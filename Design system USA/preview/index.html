@@ -54,6 +54,19 @@ body{
   border:1px solid var(--yb-border); border-radius:var(--yb-radius-control);
   background:var(--yb-surface); color:var(--yb-text-primary);
   font-family:inherit; font-size:var(--yb-type-body-sm-size); cursor:pointer;
+  /* A SETA E A DO SISTEMA, pelo mesmo motivo do `.yb-select`: a nativa se
+     desenha colada na borda do controle e ignora o `padding-inline-end`, entao
+     o unico jeito de posiciona-la e desligar a nativa e pintar a nossa. O
+     glifo e o `--yb-icon-sm` e nao o `md` porque este controle e o compacto de
+     36px, o mesmo dos botoes ao lado — a seta de 20 num campo de 36 encosta em
+     cima e embaixo. O recuo do texto reserva a folga mais a seta mais o vao:
+     12 + 16 + 8. */
+  appearance:none; -webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236D6D71' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right var(--yb-space-3) center;
+  background-size:var(--yb-icon-sm) var(--yb-icon-sm);
+  padding-inline-end:calc(var(--yb-space-3) + var(--yb-icon-sm) + var(--yb-space-2));
 }
 .sel:focus-visible{
   outline:var(--yb-focus-width) solid var(--yb-focus-color);

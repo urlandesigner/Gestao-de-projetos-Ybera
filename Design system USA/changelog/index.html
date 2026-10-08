@@ -239,6 +239,7 @@
 </ul>
 <h3>Corrigido</h3>
 <ul>
+<li><b>A seta do seletor de página nascia colada na borda.</b> Ele ficou com a seta nativa, que o navegador desenha encostada no fim do controle e que ignora o <code>padding-inline-end</code> — não há como posicioná-la. Agora usa a receita do <code>.yb-select</code> do sistema: desliga a nativa e pinta a nossa, com o glifo no tamanho pequeno porque o controle da barra é o compacto de 36px (a seta de 20 encostaria em cima e embaixo). O seletor passou a medir igual aos botões ao lado: 36 de altura, mesmo topo.</li>
 <li><b>A barra da bancada ficou sem respiro nenhum.</b> <code>--doc-respiro-largo</code> e <code>--doc-canvas</code> moravam em <code>doc/doc-nav.css</code>, que saiu da cabeça junto com a moldura. O primeiro não tem valor de reserva, e <code>padding:var(--yb-space-4) var(--doc-respiro-largo)</code> é atalho: com uma parte inválida, a declaração inteira é descartada. A barra ficou com padding zero e a volta nasceu colada na borda da tela. A bancada agora declara as duas, com a mesma medida e o mesmo degrau de 900 que tinham lá.</li>
 <li><b>As células escondidas da parede continuavam na tela.</b> <code>.tela{display:flex}</code> é seletor de classe e ganha do <code>[hidden]</code> da folha do navegador, que é de elemento. O filtro marcava e nada sumia — e conferir pela propriedade <code>hidden</code> dava verde, porque a propriedade estava certa. O que vale é a altura pintada.</li>
 </ul>
