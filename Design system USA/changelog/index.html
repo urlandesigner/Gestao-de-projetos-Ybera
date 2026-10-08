@@ -92,7 +92,7 @@
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
-  <p class="ds-top__versao">v1.0.5</p>
+  <p class="ds-top__versao">v1.0.6</p>
   <a class="ds-top__baixar" href="../dist/ybera-design-system.zip" download="ybera-design-system.zip" aria-label="Download do pacote: tokens, componentes e ícones">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8"/><path d="M4.5 7.5 8 11l3.5-3.5"/><path d="M2.5 13.5h11"/></svg>
     <span>Download</span>
@@ -231,8 +231,8 @@
   <h1 class="ficha-titulo">Changelog</h1>
   <p class="ficha-quando">Formato: <a href="https://keepachangelog.com/pt-BR/1.1.0/">Keep a Changelog</a>. Versionamento descrito em <a href="../GOVERNANCA.md">GOVERNANCA.md</a>.</p>
 
-<details class="log__versao log__versao--espera" open>
-<summary><h2>Em aberto</h2><span class="log__aviso">ainda não publicado — o número sai quando subir</span></summary>
+<details class="log__versao" open>
+<summary><h2>[1.0.6] — 2026-10-08</h2></summary>
 <h3>Corrigido</h3>
 <ul>
 <li><b>O link da nota na PDP tinha 17px de altura clicável.</b> As estrelas com "5.0 (6 reviews)" são um link que desce para as avaliações, e ele se encolhia no conteúdo: 177×17, a altura da fileira de estrelas e mais nada. 17px é cerca de 3mm no celular, abaixo dos 24 que a WCAG 2.5.8 pede — parado se acerta, andando se toca no preço. O alvo agora cresce para fora da linha, com margem negativa do mesmo tamanho do respiro, do jeito que o coração da buybox logo acima já fazia: 177×33, e as estrelas não saem do pixel onde estavam. Não vai aos 44 de propósito: exigiria 13px para cada lado e a área invadiria o preço, e tocar no número indo parar nas avaliações é defeito pior que o consertado. Sobram 4px de folga até a caixa do título e 16 até a do preço, medidos em 390 e em 1024.</li>

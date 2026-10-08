@@ -5,6 +5,8 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
+## [1.0.6] — 2026-10-08
+
 ### Corrigido
 - **O link da nota na PDP tinha 17px de altura clicável.** As estrelas com
   "5.0 (6 reviews)" são um link que desce para as avaliações, e ele se
