@@ -6669,6 +6669,21 @@ li > .yb-collection--card{ flex:1; min-inline-size:0; }
 .yb-buybox__rating{
   display:inline-flex; align-self:flex-start;
   text-decoration:none; color:inherit; border-radius:var(--yb-radius-badge);
+  /* O ALVO CRESCE PARA FORA DA LINHA, como no coracao logo acima. O link se
+     encolhia no conteudo e media 177x17 — a altura da fileira de estrelas e
+     mais nada. 17px e cerca de 3mm no celular, abaixo dos 24 que a WCAG 2.5.8
+     pede: parado se acerta, andando se toca no preco.
+
+     O respiro vem com a margem negativa do mesmo tamanho, entao a caixa
+     clicavel cresce e NADA se move — as estrelas ficam no pixel onde estavam.
+     8px e o que cabe: a coluna separa os blocos com 12px de folga, e o alvo
+     avanca 8 deles para cima, deixando 4px antes da caixa do titulo. Para
+     baixo sobra mais, porque o `__ship` vazio soma um segundo intervalo.
+     Chegar aos 44px exigiria 13 para cada lado e a area invadiria o preco —
+     tocar no numero levaria para as avaliacoes, que e defeito pior do que o
+     consertado. 33px limpa o minimo sem roubar o clique de ninguem. */
+  padding-block:var(--yb-space-2);
+  margin-block:calc(var(--yb-space-2) * -1);
 }
 @media (hover:hover){
   .yb-buybox__rating:hover .yb-rating__count{color:var(--yb-text-primary)}

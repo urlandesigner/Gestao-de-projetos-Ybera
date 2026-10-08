@@ -5,6 +5,19 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
+### Corrigido
+- **O link da nota na PDP tinha 17px de altura clicável.** As estrelas com
+  "5.0 (6 reviews)" são um link que desce para as avaliações, e ele se
+  encolhia no conteúdo: 177×17, a altura da fileira de estrelas e mais nada.
+  17px é cerca de 3mm no celular, abaixo dos 24 que a WCAG 2.5.8 pede — parado
+  se acerta, andando se toca no preço. O alvo agora cresce para fora da linha,
+  com margem negativa do mesmo tamanho do respiro, do jeito que o coração da
+  buybox logo acima já fazia: 177×33, e as estrelas não saem do pixel onde
+  estavam. Não vai aos 44 de propósito: exigiria 13px para cada lado e a área
+  invadiria o preço, e tocar no número indo parar nas avaliações é defeito
+  pior que o consertado. Sobram 4px de folga até a caixa do título e 16 até a
+  do preço, medidos em 390 e em 1024.
+
 ## [1.0.5] — 2026-10-08
 
 ### Corrigido
