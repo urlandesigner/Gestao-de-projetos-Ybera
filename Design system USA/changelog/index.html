@@ -92,7 +92,7 @@
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
-  <p class="ds-top__versao">v1.0.4</p>
+  <p class="ds-top__versao">v1.0.5</p>
   <a class="ds-top__baixar" href="../dist/ybera-design-system.zip" download="ybera-design-system.zip" aria-label="Download do pacote: tokens, componentes e ícones">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8"/><path d="M4.5 7.5 8 11l3.5-3.5"/><path d="M2.5 13.5h11"/></svg>
     <span>Download</span>
@@ -231,8 +231,8 @@
   <h1 class="ficha-titulo">Changelog</h1>
   <p class="ficha-quando">Formato: <a href="https://keepachangelog.com/pt-BR/1.1.0/">Keep a Changelog</a>. Versionamento descrito em <a href="../GOVERNANCA.md">GOVERNANCA.md</a>.</p>
 
-<details class="log__versao log__versao--espera" open>
-<summary><h2>Em aberto</h2><span class="log__aviso">ainda não publicado — o número sai quando subir</span></summary>
+<details class="log__versao" open>
+<summary><h2>[1.0.5] — 2026-10-08</h2></summary>
 <h3>Corrigido</h3>
 <ul>
 <li><b>O campo só era clicável nos 20px do texto, e não nos 50 da caixa.</b> O respiro vertical morava em <code>.yb-field__box</code> — e a caixa é um <code>&lt;span&gt;</code>, não um <code>&lt;label&gt;</code>, então os 12px de cima e os de baixo não levavam a lugar nenhum: clicar ali não focava o controle. Medido no campo de newsletter do rodapé, 370×20 de área clicável, nas onze telas-prova. O respiro passou para o controle, com <code>align-self:stretch</code> para ele ocupar a caixa inteira. São 370×48 agora, e o desenho não mudou um pixel: a altura continua vindo do <code>min-height</code>, o rótulo flutuante é absoluto e nunca dependeu desse padding, e a linha de calcular frete continua casando com o botão em 50.</li>

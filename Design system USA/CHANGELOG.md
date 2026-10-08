@@ -5,6 +5,8 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
+## [1.0.5] — 2026-10-08
+
 ### Corrigido
 - **O campo só era clicável nos 20px do texto, e não nos 50 da caixa.** O
   respiro vertical morava em `.yb-field__box` — e a caixa é um `<span>`, não um
