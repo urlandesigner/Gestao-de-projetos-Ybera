@@ -1,6 +1,6 @@
 {
  "v": 1,
- "em": 1791481919927,
+ "em": 1791490580932,
  "escopo": "Urlan Dipre",
  "mes": null,
  "roadmap": [
@@ -283,252 +283,294 @@
    "itens": [
     {
      "titulo": "Comissionamento: Bonificação de Rede - Lybera PRO",
+     "resumo": "A comissão da rede passa a ser calculada só sobre o que foi pago em dinheiro, saldo ou cartão — o valor pago em Lybera sai da conta.",
      "estado": "Done",
      "tipo": "pbi",
      "feito": true
     },
     {
      "titulo": "Discovery Técnico | Viabilidade de Integração TILOPAY",
+     "resumo": "Avalia se a TILOPAY serve como meio de pagamento da loja do Panamá, e o que seria preciso mudar para integrá-la.",
      "estado": "Done",
      "tipo": "pbi",
      "feito": true
     },
     {
      "titulo": "Atualização do Tema Global (México)",
+     "resumo": "Atualiza a loja do México para a versão mais nova do tema global e refaz a home com os componentes oficiais.",
      "estado": "Done",
      "tipo": "pbi",
      "feito": true
     },
     {
      "titulo": "[Bug] Brinde incluído indevidamente em pedidos abaixo de US$100",
+     "resumo": "Corrige o brinde que estava sendo incluído em pedidos que não atingiam o valor mínimo da promoção.",
      "estado": "Done",
      "tipo": "pbi",
      "feito": true
     },
     {
      "titulo": "[BRA] Aplicar componentes do UI Kit no template atual",
+     "resumo": "Aplica as cores, a tipografia e os espaçamentos novos nas páginas da loja Ybera.com, para a identidade visual ficar igual em todas elas.",
      "estado": "Done",
      "tipo": "pbi",
      "feito": true
     },
     {
      "titulo": "[BRA] Atualização UI Kit - Componente Categorias (home)",
+     "resumo": "Põe a listagem de categorias da home no padrão visual novo.",
      "estado": "Done",
      "tipo": "pbi",
      "feito": true
     },
     {
      "titulo": "[IMPLEMENTAÇÃO] Tradução da loja com o Translate & Adapt",
+     "resumo": "Finaliza e valida a tradução da loja nos três idiomas, sem trechos em inglês nem imagem fora de contexto.",
      "estado": "Done",
      "tipo": "pbi",
      "feito": true
     },
     {
      "titulo": "Ajustar configuração do app de review atual na loja USA",
+     "resumo": "Ajusta o app de reviews que já está na loja para atender o que a pesquisa definiu, em vez de contratar outro.",
      "estado": "Done",
      "tipo": "pbi",
      "feito": true
     },
     {
      "titulo": "Unificação do Saldo Virtual e Saldo Bloqueado - Loja Interna e PRO",
+     "resumo": "Junta saldo desbloqueado e bloqueado num só, para a influenciadora pagar sem precisar diferenciar os dois no checkout.",
      "estado": "Done",
      "tipo": "pbi",
      "feito": true
     },
     {
      "titulo": "Limite de caracteres nos campos de endereço do checkout",
+     "resumo": "Avisa a cliente no checkout quando o endereço não cabe no formato que a transportadora aceita, antes de o pedido sair.",
      "estado": "Done",
      "tipo": "pbi",
      "feito": true
     },
     {
      "titulo": "Corrigir a descrição da PBI comportamentos indevidos.",
+     "resumo": "",
      "estado": "Done",
      "tipo": "bug",
      "feito": true
     },
     {
      "titulo": "[BRA] Corrigir preço do compre junto e reexibir upsell/cross-sell na jornada de compra",
+     "resumo": "Corrige o preço do compre junto e devolve as sugestões de produtos complementares na página do produto, no carrinho e no checkout.",
      "estado": "Done",
      "tipo": "pbi",
      "feito": true
     },
     {
      "titulo": "Permitir venda do Brasil Influencer Digital sem validação de estoque",
+     "resumo": "Libera a compra do ingresso digital Brasil Influencer sem passar pela validação de estoque físico.",
      "estado": "Done",
      "tipo": "pbi",
      "feito": true
     },
     {
      "titulo": "Pagamentos com cartão e pix com erro em homolog.",
+     "resumo": "",
      "estado": "Done",
      "tipo": "bug",
      "feito": true
     },
     {
      "titulo": "Habilitação de Venda do Brasil Influencer na loja PRO e EUA",
+     "resumo": "Abre a venda do ingresso digital Brasil Influencer 2026 nas lojas internas do PRO e dos EUA.",
      "estado": "Done",
      "tipo": "pbi",
      "feito": true
     },
     {
      "titulo": "Exibir Header e Footer em todas as páginas da loja",
+     "resumo": "",
      "estado": "Done",
      "tipo": "bug",
      "feito": true
     },
     {
      "titulo": "[BRA] Preparação do Go-Live Controlado do Aplicativo Ybera.com",
+     "resumo": "Prepara o piloto do aplicativo Ybera.com: acesso, orientação de instalação e canal de feedback para o grupo de teste.",
      "estado": "Follow-up",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "Controle de Limite de Compra por Produto",
+     "resumo": "Permite definir quanto de cada produto uma influenciadora pode comprar por ciclo, direto na página do produto.",
      "estado": "In Progress",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "[BRA] Barra de Progresso de Frete (V2)",
+     "resumo": "Mostra ao cliente quanto falta para alcançar o frete grátis.",
      "estado": "In Progress",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "[DESIGN] Viabilização Design System para loja Ybera.us",
+     "resumo": "Define como cada marca pode se expressar dentro de um padrão comum, para manter a identidade de cada uma sem perder a consistência da loja.",
      "estado": "In Progress",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "[BRA] Atualizar visual de Header e Footer conforme UI Kit",
-     "estado": "In Progress",
+     "resumo": "Atualiza o visual do cabeçalho e do rodapé de todas as páginas da loja.",
+     "estado": "Validation",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "[BRA] Atualização UI Kit - Spot de Produtos",
+     "resumo": "Unifica o cartão de produto, que hoje tem quatro versões diferentes, num padrão só.",
      "estado": "In Progress",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "[BRA] Habilitar Nupay como meio de pagamento",
+     "resumo": "Adiciona o NuPay como meio de pagamento no checkout, com o desconto e o crédito do Nubank.",
      "estado": "In Progress",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "[BRA] AtualizaçãoUI Kit - Carrinho",
+     "resumo": "Atualiza o visual do carrinho para o padrão novo.",
      "estado": "In Progress",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "Design Discovery: Checkout da Loja Interna e PRO",
+     "resumo": "Prototipa uma forma mais simples de usar e combinar saldos no checkout das lojas internas.",
      "estado": "In Progress",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "Discovery Nova CMS Wake",
+     "resumo": "Investiga usar a API de conteúdos da Wake para montar uma ferramenta própria de publicação na loja.",
      "estado": "In Progress",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "[BRA] Migração do SDK de Eventos",
+     "resumo": "Troca o SDK que captura o comportamento do cliente no site, sem perder o histórico que vai para o HubSpot.",
      "estado": "In Progress",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "Exibir a parceira vinculada ao pedido na confirmação da compra e no e-mail",
+     "resumo": "Mostra na confirmação e no e-mail por qual parceira a compra foi feita, sem a cliente precisar falar com o atendimento.",
      "estado": "In Progress",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "Discovery técnico: verificação de endereço no checkout",
+     "resumo": "Testa o AddressGuard e as alternativas de verificação de endereço antes de escolher qual implementar.",
      "estado": "In Progress",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "Evolução de Componentes das lojas Ecom Panamá, Chile e México",
+     "resumo": "Faz as ofertas respeitarem o período configurado e alinha o carrinho lateral ao padrão das outras lojas.",
      "estado": "Validation",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "Campanhas de brinde no app personalizado e remoção do Dr Free Gift (Ybera USA)",
+     "resumo": "Traz as campanhas de brinde para o app próprio da loja e tira o Dr Free Gift, que custava e dava conflito no carrinho.",
      "estado": "In Progress",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "Assinatura Inteligente (PDP + Checkout)",
+     "resumo": "Destaca a opção de assinatura na página do produto e sugere no checkout, para quem quer comprar de forma recorrente.",
      "estado": "To Do",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "Pesquisa e Validação de Plataforma de Assinaturas",
+     "resumo": "Compara as ferramentas pagas de assinatura recorrente e escolhe a que suporta o crescimento do produto.",
      "estado": "New",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "[BRA] Gestão de Cartões Salvos na Área Minha Conta",
+     "resumo": "Deixa o cliente ver e remover os cartões salvos na conta dele.",
      "estado": "Impediment",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "Produto Único para Ads e Influenciadores",
+     "resumo": "Um produto só passa a servir Ads e Influenciadores, com preço conforme a origem do acesso — hoje são dois cadastros, o que atrapalha o SEO e o Google Shopping.",
      "estado": "Impediment",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "Gerenciamento de Banners para a Lybera Shop global",
+     "resumo": "Permite ao time trocar os banners das lojas internas sozinho, sem depender de alguém técnico.",
      "estado": "To Do",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "[Loja Interna] Gratuidade na primeira compra do mês",
+     "resumo": "Dá frete grátis na primeira compra do mês de cada influenciadora, como a política do Club comunica.",
      "estado": "Ready",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "Discovery técnico: (spike): Venmo, Zelle e Klarna como formas de pagamento",
+     "resumo": "Verifica se dá para oferecer Venmo, Zelle e Klarna no checkout e o que cada um exige.",
      "estado": "New",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "Produto digital Ybera Academy",
+     "resumo": "Permite cadastrar e vender os conteúdos do Ybera Academy pelo Pass, sem depender de configuração técnica.",
      "estado": "New",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "Acesso ao produto por dentro do Ybera — visão do comprador",
+     "resumo": "O comprador acessa o conteúdo direto pela conta dele no Ybera, sem procurar e-mail nem fazer outro login.",
      "estado": "New",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "[Pass] Liberação de acesso Ybera Academy (regra e disparo)",
+     "resumo": "Avisa o comprador quando o acesso é liberado, dizendo o que ele pode acessar e por quanto tempo.",
      "estado": "New",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "Integração Loja E-commerce",
+     "resumo": "Permite comprar ingressos e produtos do Pass direto pela loja, sem precisar de uma segunda compra.",
      "estado": "New",
      "tipo": "pbi",
      "feito": false
@@ -542,23 +584,40 @@
    "finish": "2026-10-23T00:00:00Z",
    "estado": "futura",
    "entregues": 0,
-   "total": 3,
+   "total": 5,
    "transbordaram": 0,
    "itens": [
     {
+     "titulo": "Aceite e Versionamento do Termo Anti-Revenda",
+     "resumo": "A influenciadora aceita o termo anti-revenda antes de fechar a compra, e o aceite fica registrado.",
+     "estado": "New",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "Discovery Técnico: Implementação de até 3 Endereços de Entrega na Lybera Shop",
+     "resumo": "Levanta o que é preciso para cada influenciadora ter até três endereços de entrega ativos.",
+     "estado": "New",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
      "titulo": "Upload, Agendamento e Atualização Massiva de Preços | Lybera Shop",
+     "resumo": "Permite subir uma planilha de preços e agendar quando a mudança entra, em vez de alterar produto por produto.",
      "estado": "New",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "Dashboard Consolidado de Performance da Operação",
+     "resumo": "Reúne num painel só os principais indicadores da operação, para acompanhar o resultado e ver variação rápido.",
      "estado": "New",
      "tipo": "pbi",
      "feito": false
     },
     {
      "titulo": "Implementação da verificação de endereço no checkout (Ybera USA)",
+     "resumo": "O checkout confere o endereço e avisa a cliente na hora, em vez de a Ybera ter de entrar em contato depois.",
      "estado": "New",
      "tipo": "pbi",
      "feito": false
