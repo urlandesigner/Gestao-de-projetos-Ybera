@@ -1,0 +1,570 @@
+{
+ "v": 1,
+ "em": 1791481919927,
+ "escopo": "",
+ "mes": null,
+ "roadmap": [
+  {
+   "titulo": "Nova PDP",
+   "inicio": "2026-07-01",
+   "fim": "2026-08-31",
+   "status": "concluido"
+  },
+  {
+   "titulo": "Compliance Google",
+   "inicio": "2026-07-01",
+   "fim": "2026-09-30",
+   "status": "concluido"
+  },
+  {
+   "titulo": "Translate loja",
+   "inicio": "2026-08-01",
+   "fim": "2026-09-30",
+   "status": "concluido"
+  },
+  {
+   "titulo": "Nova Homepage",
+   "inicio": "2026-08-15",
+   "fim": "2026-09-30",
+   "status": "concluido"
+  },
+  {
+   "titulo": "Novo Design System",
+   "inicio": "2026-09-01",
+   "fim": "2026-10-31",
+   "status": "andamento"
+  },
+  {
+   "titulo": "Melhorias Review",
+   "inicio": "2026-09-01",
+   "fim": "2026-09-30",
+   "status": "concluido"
+  },
+  {
+   "titulo": "Novo Tema da Loja USA/Global",
+   "inicio": "2026-11-01",
+   "fim": "2027-01-31",
+   "status": null
+  },
+  {
+   "titulo": "Subscription",
+   "inicio": "2026-10-01",
+   "fim": "2026-10-31",
+   "status": "andamento"
+  },
+  {
+   "titulo": "App Rewards Loyalty (Yotpo)",
+   "inicio": "2026-11-01",
+   "fim": "2026-11-30",
+   "status": null
+  },
+  {
+   "titulo": "Loja da Influencer",
+   "inicio": "2027-01-01",
+   "fim": "2027-04-30",
+   "status": null
+  },
+  {
+   "titulo": "Quiz Ybera AI",
+   "inicio": "2027-01-01",
+   "fim": "2027-02-28",
+   "status": null
+  },
+  {
+   "titulo": "Ybera Reviews",
+   "inicio": "2027-03-01",
+   "fim": "2027-04-30",
+   "status": null
+  },
+  {
+   "titulo": "Ybera Europa - Crossborder USA",
+   "inicio": "2027-03-01",
+   "fim": "2027-06-30",
+   "status": null
+  }
+ ],
+ "contagens": {
+  "f": {
+   "24440": 1,
+   "24585": 1,
+   "24850": 3,
+   "24910": 1,
+   "25739": 1,
+   "26077": 7,
+   "26080": 1,
+   "26917": 1,
+   "26925": 2,
+   "27081": 2,
+   "27097": 16,
+   "27694": 1,
+   "27696": 1,
+   "27811": 1,
+   "28507": 1,
+   "28566": 1,
+   "28614": 1,
+   "28621": 2,
+   "28895": 1,
+   "29076": 1,
+   "29117": 1,
+   "29173": 2,
+   "29284": 1,
+   "29388": 1,
+   "29456": 2,
+   "29476": 1,
+   "29497": 1,
+   "29501": 1,
+   "29516": 1,
+   "29812": 1,
+   "30088": 3,
+   "30113": 1,
+   "30208": 1,
+   "30485": 1,
+   "30893": 2,
+   "30928": 1,
+   "30996": 1,
+   "31134": 1,
+   "31144": 9,
+   "31172": 7,
+   "31216": 3,
+   "31967": 19,
+   "32022": 1,
+   "32027": 3,
+   "32204": 3,
+   "32229": 9,
+   "32424": 1,
+   "32431": 3,
+   "33196": 3,
+   "33382": 7,
+   "33530": 5,
+   "33856": 1,
+   "33969": 3,
+   "34001": 3,
+   "34109": 1,
+   "34202": 4,
+   "34322": 1,
+   "34482": 1,
+   "34699": 27,
+   "34853": 1,
+   "34865": 1,
+   "34873": 1,
+   "35263": 2,
+   "35778": 2,
+   "36246": 1,
+   "36404": 2,
+   "36599": 1,
+   "36808": 5,
+   "36978": 1,
+   "37254": 1,
+   "37516": 4,
+   "37526": 1,
+   "37676": 4,
+   "37807": 2,
+   "37810": 1,
+   "37814": 5,
+   "38422": 1,
+   "38552": 2,
+   "38725": 1,
+   "38730": 1,
+   "38760": 7,
+   "38812": 1,
+   "38918": 3,
+   "39252": 1,
+   "39499": 2,
+   "39503": 5,
+   "40014": 1,
+   "40015": 1,
+   "40100": 1,
+   "40102": 5,
+   "40171": 1,
+   "40261": 2,
+   "40458": 1,
+   "40594": 4,
+   "41247": 1,
+   "41391": 1,
+   "41446": 1,
+   "41849": 2,
+   "41891": 1,
+   "41943": 5,
+   "42103": 1,
+   "42269": 3,
+   "43107": 3,
+   "43184": 7,
+   "43570": 1,
+   "44271": 10,
+   "44272": 4,
+   "44541": 4,
+   "44708": 1,
+   "45007": 2,
+   "45272": 13,
+   "45421": 1,
+   "45424": 1,
+   "45526": 3,
+   "45723": 2,
+   "46262": 1,
+   "46415": 1,
+   "46903": 2,
+   "47062": 1,
+   "48226": 3,
+   "48235": 4,
+   "48242": 1,
+   "48244": 5,
+   "48588": 1,
+   "48811": 1,
+   "49164": 1,
+   "49447": 3,
+   "49617": 1,
+   "49824": 1,
+   "49881": 1,
+   "49896": 1,
+   "49920": 2,
+   "49956": 1,
+   "50184": 1,
+   "50423": 1,
+   "50905": 2,
+   "51017": 1,
+   "51140": 1,
+   "51697": 3,
+   "51943": 1,
+   "52048": 1
+  },
+  "e": {
+   "24102": 1,
+   "24545": 3,
+   "24585": 1,
+   "24849": 4,
+   "24944": 1,
+   "24945": 18,
+   "25107": 1,
+   "25730": 1,
+   "26229": 1,
+   "26280": 4,
+   "26925": 2,
+   "27070": 2,
+   "27212": 1,
+   "27288": 3,
+   "27401": 1,
+   "27693": 2,
+   "28207": 2,
+   "28560": 5,
+   "28635": 3,
+   "28903": 3,
+   "29107": 1,
+   "29115": 8,
+   "29333": 2,
+   "29592": 17,
+   "29811": 23,
+   "29816": 3,
+   "30369": 2,
+   "31133": 4,
+   "31171": 59,
+   "39942": 2,
+   "40707": 2,
+   "49275": 7,
+   "49276": 9,
+   "49279": 1,
+   "49290": 37,
+   "49292": 11,
+   "49293": 1,
+   "49294": 4,
+   "49301": 4,
+   "49302": 2,
+   "49387": 152
+  }
+ },
+ "sprints": [
+  {
+   "nome": "Sprint 20",
+   "start": "2026-09-28T00:00:00Z",
+   "finish": "2026-10-09T00:00:00Z",
+   "estado": "corrente",
+   "entregues": 16,
+   "total": 42,
+   "transbordaram": 0,
+   "itens": [
+    {
+     "titulo": "Comissionamento: Bonificação de Rede - Lybera PRO",
+     "estado": "Done",
+     "tipo": "pbi",
+     "feito": true
+    },
+    {
+     "titulo": "Discovery Técnico | Viabilidade de Integração TILOPAY",
+     "estado": "Done",
+     "tipo": "pbi",
+     "feito": true
+    },
+    {
+     "titulo": "Atualização do Tema Global (México)",
+     "estado": "Done",
+     "tipo": "pbi",
+     "feito": true
+    },
+    {
+     "titulo": "[Bug] Brinde incluído indevidamente em pedidos abaixo de US$100",
+     "estado": "Done",
+     "tipo": "pbi",
+     "feito": true
+    },
+    {
+     "titulo": "[BRA] Aplicar componentes do UI Kit no template atual",
+     "estado": "Done",
+     "tipo": "pbi",
+     "feito": true
+    },
+    {
+     "titulo": "[BRA] Atualização UI Kit - Componente Categorias (home)",
+     "estado": "Done",
+     "tipo": "pbi",
+     "feito": true
+    },
+    {
+     "titulo": "[IMPLEMENTAÇÃO] Tradução da loja com o Translate & Adapt",
+     "estado": "Done",
+     "tipo": "pbi",
+     "feito": true
+    },
+    {
+     "titulo": "Ajustar configuração do app de review atual na loja USA",
+     "estado": "Done",
+     "tipo": "pbi",
+     "feito": true
+    },
+    {
+     "titulo": "Unificação do Saldo Virtual e Saldo Bloqueado - Loja Interna e PRO",
+     "estado": "Done",
+     "tipo": "pbi",
+     "feito": true
+    },
+    {
+     "titulo": "Limite de caracteres nos campos de endereço do checkout",
+     "estado": "Done",
+     "tipo": "pbi",
+     "feito": true
+    },
+    {
+     "titulo": "Corrigir a descrição da PBI comportamentos indevidos.",
+     "estado": "Done",
+     "tipo": "bug",
+     "feito": true
+    },
+    {
+     "titulo": "[BRA] Corrigir preço do compre junto e reexibir upsell/cross-sell na jornada de compra",
+     "estado": "Done",
+     "tipo": "pbi",
+     "feito": true
+    },
+    {
+     "titulo": "Permitir venda do Brasil Influencer Digital sem validação de estoque",
+     "estado": "Done",
+     "tipo": "pbi",
+     "feito": true
+    },
+    {
+     "titulo": "Pagamentos com cartão e pix com erro em homolog.",
+     "estado": "Done",
+     "tipo": "bug",
+     "feito": true
+    },
+    {
+     "titulo": "Habilitação de Venda do Brasil Influencer na loja PRO e EUA",
+     "estado": "Done",
+     "tipo": "pbi",
+     "feito": true
+    },
+    {
+     "titulo": "Exibir Header e Footer em todas as páginas da loja",
+     "estado": "Done",
+     "tipo": "bug",
+     "feito": true
+    },
+    {
+     "titulo": "[BRA] Preparação do Go-Live Controlado do Aplicativo Ybera.com",
+     "estado": "Follow-up",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "Controle de Limite de Compra por Produto",
+     "estado": "In Progress",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "[BRA] Barra de Progresso de Frete (V2)",
+     "estado": "In Progress",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "[DESIGN] Viabilização Design System para loja Ybera.us",
+     "estado": "In Progress",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "[BRA] Atualizar visual de Header e Footer conforme UI Kit",
+     "estado": "In Progress",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "[BRA] Atualização UI Kit - Spot de Produtos",
+     "estado": "In Progress",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "[BRA] Habilitar Nupay como meio de pagamento",
+     "estado": "In Progress",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "[BRA] AtualizaçãoUI Kit - Carrinho",
+     "estado": "In Progress",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "Design Discovery: Checkout da Loja Interna e PRO",
+     "estado": "In Progress",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "Discovery Nova CMS Wake",
+     "estado": "In Progress",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "[BRA] Migração do SDK de Eventos",
+     "estado": "In Progress",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "Exibir a parceira vinculada ao pedido na confirmação da compra e no e-mail",
+     "estado": "In Progress",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "Discovery técnico: verificação de endereço no checkout",
+     "estado": "In Progress",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "Evolução de Componentes das lojas Ecom Panamá, Chile e México",
+     "estado": "Validation",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "Campanhas de brinde no app personalizado e remoção do Dr Free Gift (Ybera USA)",
+     "estado": "In Progress",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "Assinatura Inteligente (PDP + Checkout)",
+     "estado": "To Do",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "Pesquisa e Validação de Plataforma de Assinaturas",
+     "estado": "New",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "[BRA] Gestão de Cartões Salvos na Área Minha Conta",
+     "estado": "Impediment",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "Produto Único para Ads e Influenciadores",
+     "estado": "Impediment",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "Gerenciamento de Banners para a Lybera Shop global",
+     "estado": "To Do",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "[Loja Interna] Gratuidade na primeira compra do mês",
+     "estado": "Ready",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "Discovery técnico: (spike): Venmo, Zelle e Klarna como formas de pagamento",
+     "estado": "New",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "Produto digital Ybera Academy",
+     "estado": "New",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "Acesso ao produto por dentro do Ybera — visão do comprador",
+     "estado": "New",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "[Pass] Liberação de acesso Ybera Academy (regra e disparo)",
+     "estado": "New",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "Integração Loja E-commerce",
+     "estado": "New",
+     "tipo": "pbi",
+     "feito": false
+    }
+   ],
+   "transbordados": []
+  },
+  {
+   "nome": "Sprint 21",
+   "start": "2026-10-12T00:00:00Z",
+   "finish": "2026-10-23T00:00:00Z",
+   "estado": "futura",
+   "entregues": 0,
+   "total": 3,
+   "transbordaram": 0,
+   "itens": [
+    {
+     "titulo": "Upload, Agendamento e Atualização Massiva de Preços | Lybera Shop",
+     "estado": "New",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "Dashboard Consolidado de Performance da Operação",
+     "estado": "New",
+     "tipo": "pbi",
+     "feito": false
+    },
+    {
+     "titulo": "Implementação da verificação de endereço no checkout (Ybera USA)",
+     "estado": "New",
+     "tipo": "pbi",
+     "feito": false
+    }
+   ],
+   "transbordados": []
+  }
+ ]
+}
