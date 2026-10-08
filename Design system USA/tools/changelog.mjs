@@ -169,11 +169,22 @@ export function converter(md) {
 
 export function pagina() {
   const md = ler('CHANGELOG.md');
-  /* A lede da página é a primeira linha de prosa do arquivo, e não um texto
-     escrito aqui: duas frases dizendo a mesma coisa em lugares diferentes é
-     uma para envelhecer. */
-  const lede = (md.match(/^# Changelog\n\n([\s\S]*?)\n\n/) || [, ''])[1]
-    .split('\n').join(' ');
+  /* A LEDE DESCREVE A PÁGINA, e não o arquivo.
+
+     Ela saía da primeira prosa do `CHANGELOG.md` — "Formato: Keep a Changelog.
+     Versionamento descrito em GOVERNANCA.md." O argumento era não repetir a
+     mesma frase em dois lugares, e ele continua de pé; o que estava errado era
+     supor que as duas frases QUEREM dizer a mesma coisa.
+
+     Aquelas duas linhas falam com quem abre o arquivo e vai escrever nele:
+     dizem em que formato escrever e onde está a regra de versão. Quem abre a
+     PÁGINA veio ler o que mudou. Anunciar o formato do arquivo para essa
+     pessoa é responder uma pergunta que ela não fez, e empurrar a primeira
+     versão para baixo da dobra.
+
+     O arquivo mantém as duas linhas, que é onde elas servem. */
+  const lede = 'O que mudou em cada versão, da mais recente para a mais antiga: '
+    + 'o que entrou, o que foi corrigido, e a razão de cada mudança.';
   return `<!doctype html>
 <html lang="pt-BR">
 <head>

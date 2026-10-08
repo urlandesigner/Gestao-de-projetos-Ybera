@@ -229,7 +229,7 @@
     <b aria-current="page">Changelog</b>
   </nav>
   <h1 class="ficha-titulo">Changelog</h1>
-  <p class="ficha-quando">Formato: <a href="https://keepachangelog.com/pt-BR/1.1.0/">Keep a Changelog</a>. Versionamento descrito em <a href="../GOVERNANCA.md">GOVERNANCA.md</a>.</p>
+  <p class="ficha-quando">O que mudou em cada versão, da mais recente para a mais antiga: o que entrou, o que foi corrigido, e a razão de cada mudança.</p>
 
 <details class="log__versao log__versao--espera" open>
 <summary><h2>Em aberto</h2><span class="log__aviso">ainda não publicado — o número sai quando subir</span></summary>
@@ -240,6 +240,7 @@
 </ul>
 <h3>Corrigido</h3>
 <ul>
+<li><b>A página do changelog abria falando do formato do arquivo.</b> A lede dizia "Formato: Keep a Changelog. Versionamento descrito em GOVERNANCA.md" — tirada da primeira prosa do <code>CHANGELOG.md</code>, para não repetir a mesma frase em dois lugares. O argumento continua de pé; o que estava errado era supor que as duas frases querem dizer a mesma coisa. Aquelas linhas falam com quem vai <b>escrever</b> no arquivo; quem abre a página veio <b>ler</b> o que mudou. Agora a lede descreve o conteúdo, e a primeira versão sobe uma linha. O arquivo mantém as duas linhas, que é onde elas servem.</li>
 <li><b>O valor de propriedade saía com a cor de seletor.</b> <code>summary:hover</code> e <code>display:flex</code> têm a mesma forma, e nenhuma expressão plana distingue as duas: <code>flex</code>, <code>center</code>, <code>pointer</code>, <code>none</code> — a folha inteira — nasciam com a cor de pseudo-classe. O colorizador agora conta chave que abre e chave que fecha, e é a única memória que ele precisa ter: fora das chaves é pseudo-classe, dentro é valor.</li>
 </ul>
 </details>

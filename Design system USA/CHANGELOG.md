@@ -30,6 +30,14 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
   propósito.
 
 ### Corrigido
+- **A página do changelog abria falando do formato do arquivo.** A lede dizia
+  "Formato: Keep a Changelog. Versionamento descrito em GOVERNANCA.md" —
+  tirada da primeira prosa do `CHANGELOG.md`, para não repetir a mesma frase
+  em dois lugares. O argumento continua de pé; o que estava errado era supor
+  que as duas frases querem dizer a mesma coisa. Aquelas linhas falam com quem
+  vai **escrever** no arquivo; quem abre a página veio **ler** o que mudou.
+  Agora a lede descreve o conteúdo, e a primeira versão sobe uma linha. O
+  arquivo mantém as duas linhas, que é onde elas servem.
 - **O valor de propriedade saía com a cor de seletor.** `summary:hover` e
   `display:flex` têm a mesma forma, e nenhuma expressão plana distingue as
   duas: `flex`, `center`, `pointer`, `none` — a folha inteira — nasciam com a
