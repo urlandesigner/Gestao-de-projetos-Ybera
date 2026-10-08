@@ -100,7 +100,7 @@ body {
 .ini-seta { margin: auto 0 0; padding-top: 0.9rem; font-size: 1.1rem; line-height: 1; color: var(--mudo); }
 .ini-card:hover .ini-seta, .ini-card:focus-visible .ini-seta { color: var(--tinta); }
 
-/* A âncora escura é a ferramenta: os outros três são leitura, ela é onde se
+/* A âncora escura é a ferramenta: os outros cartões são leitura, ela é onde se
    trabalha. Mesma superfície escura do rodapé dos documentos. */
 .ini-card-escuro {
   border-color: transparent;
@@ -124,8 +124,10 @@ body {
   color: var(--mudo);
 }
 
+/* Os documentos são quatro: meia largura cada, duas fileiras de dois. Em `span 4`
+   o quarto cartão sobrava sozinho numa fileira de três, encostado à esquerda. */
 @media (min-width: 720px) {
-  .ini-card { grid-column: span 4; }
+  .ini-card { grid-column: span 6; }
   .ini-card-escuro { grid-column: span 12; }
 }
 
