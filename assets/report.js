@@ -114,12 +114,14 @@ const st = {
 };
 
 function respAtivo() { return st.resp === null ? (st.usuario || '') : st.resp; }
-function noNome(it) {
-  const alvo = respAtivo();
+/* O alvo é parâmetro porque a publicação precisa do time INTEIRO, e não do
+   recorte que estiver na tela — ver pacoteDoDocumento. Vazio passa tudo. */
+function doResponsavel(it, alvo) {
   if (!alvo) return true;
   const r = ((it || {}).fields || {})['System.AssignedTo'];
   return !!r && r.displayName === alvo;
 }
+function noNome(it) { return doResponsavel(it, respAtivo()); }
 function ctx() { return { base: st.config.org, pat: st.pat, fetchImpl: window.fetch.bind(window) }; }
 
 // Mesma armadilha do app.js: PAT vencido pode chegar como NetworkError, e não
@@ -808,8 +810,28 @@ let geracaoLink = 0; // troca rápida de mês: só a gravação mais nova pode e
    Montá-lo em dois lugares faria o arquivo e o link divergirem no primeiro
    campo novo, e aí o mesmo documento diria coisas diferentes conforme o
    caminho por onde chegou. */
-function pacoteDoDocumento() {
-  const mostrados = st.items.filter(noNome);
+/* `semRecorte` é o que separa as duas saídas que passam por aqui.
+
+   O LINK carrega o que está na tela: mandar a sua fatia pra alguém é um uso
+   legítimo dele, e o filtro é a forma de escolher a fatia.
+
+   O ARQUIVO PUBLICADO, não. Ele mora num endereço fixo que o time inteiro abre
+   toda semana — e sai do mesmo botão, na mesma tela, sem jeito de quem abre
+   saber que veio recortado. Aconteceu em 08/10/2026: a primeira publicação de
+   outubro saiu com o filtro no PO, e a Sprint 20 foi publicada com 12 itens em
+   vez de 42. Documento de acompanhamento de time nunca quer o recorte de uma
+   pessoa, então a decisão deixou de ser do estado da tela. */
+function pacoteDoDocumento(semRecorte) {
+  const recorte = semRecorte ? '' : respAtivo();
+  const mostrados = st.items.filter((it) => doResponsavel(it, recorte));
+  /* O `escopo` do pacote é a ASSINATURA da capa ("Product Owner: X"), não o
+     recorte — nada do lado do leitor filtra por ele, porque os itens já chegam
+     filtrados. Os dois andavam no mesmo campo, e por isso desligar o filtro
+     apagava a assinatura: a primeira publicação de outubro foi ao ar sem ela.
+
+     Sem recorte, assina quem é dono do token. É o mesmo nome que o filtro
+     mostraria se ninguém o tivesse mexido — `respAtivo()` já parte dele. */
+  const escopo = recorte || st.usuario || '';
   /* Dois formatos de pacote, e o documento escolhe.
 
      O report e o v2 LISTAM itens: título, estado e prazo de cada um vão pra
@@ -825,7 +847,7 @@ function pacoteDoDocumento() {
   const cabecalho = {
     v: 1,
     em: Date.now(),
-    escopo: respAtivo(),
+    escopo,
     mes: st.mes, // quem abrir o link cai no mês que eu estava vendo
     roadmap: st.roadmap, // já veio saneado de assets/roadmap.json
   };
@@ -887,7 +909,7 @@ function publicarDados() {
   if (!arquivo) return;
   if (!st.items || st.vazio) { mostrarLink('', 'Não há documento pra publicar ainda.'); return; }
   try {
-    const url = URL.createObjectURL(new Blob([JSON.stringify(pacoteDoDocumento(), null, 1)],
+    const url = URL.createObjectURL(new Blob([JSON.stringify(pacoteDoDocumento(true), null, 1)],
       { type: 'application/json' }));
     const a = document.createElement('a');
     a.href = url;
@@ -898,7 +920,13 @@ function publicarDados() {
     setTimeout(() => URL.revokeObjectURL(url), 2000);
     if (caixa) {
       caixa.hidden = false;
-      caixa.innerHTML = '<p class="link-aviso">Baixei <b>' + B.esc(arquivo) + '</b>.'
+      /* Quando o que foi publicado NÃO é o que está na tela, a tela diz. Sem
+         isto a divergência é invisível: o PO olha o recorte dele, clica, e o
+         arquivo sai com outro conteúdo — certo, mas sem ninguém saber. */
+      const recorte = respAtivo();
+      caixa.innerHTML = '<p class="link-aviso">Baixei <b>' + B.esc(arquivo) + '</b>'
+        + (recorte ? ', com <b>o time inteiro</b> — não o recorte de '
+          + B.esc(recorte) + ' que está na tela' : '') + '.'
         + ' Agora rode <b>./scripts/publicar-dados.sh</b> pra ele entrar no ar —'
         + ' o endereço do documento não muda, quem já tem o link vê o estado novo.</p>';
     }

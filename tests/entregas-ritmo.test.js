@@ -649,9 +649,34 @@ test('as duas entradas de dado passam pela MESMA porta', () => {
    link divergirem, e o mesmo documento diria coisas diferentes conforme o
    caminho por onde chegou. */
 test('as duas saídas montam o pacote pela MESMA porta', () => {
-  assert.match(fonteReport, /function pacoteDoDocumento\(\) \{/);
+  assert.match(fonteReport, /function pacoteDoDocumento\(semRecorte\) \{/);
   assert.match(fonteReport, /comprimir\(JSON\.stringify\(pacoteDoDocumento\(\)\)\)/);
-  assert.match(fonteReport, /JSON\.stringify\(pacoteDoDocumento\(\), null, 1\)/);
+  assert.match(fonteReport, /JSON\.stringify\(pacoteDoDocumento\(true\), null, 1\)/);
+});
+
+/* O ARQUIVO PUBLICADO LEVA O TIME INTEIRO, sempre — e o link continua levando o
+   que está na tela. Em 08/10/2026 a primeira publicação de outubro saiu com o
+   filtro no PO, e a Sprint 20 foi ao ar com 12 itens em vez de 42, sem nada
+   avisando. O endereço fixo é de acompanhamento de time; o recorte de uma
+   pessoa é uso do link, onde escolher a fatia é a intenção. */
+test('publicar ignora o filtro de responsável; o link, não', () => {
+  assert.match(fonteReport, /JSON\.stringify\(pacoteDoDocumento\(true\), null, 1\)/);
+  assert.match(fonteReport, /comprimir\(JSON\.stringify\(pacoteDoDocumento\(\)\)\)/);
+  assert.match(fonteReport, /const recorte = semRecorte \? '' : respAtivo\(\);/);
+});
+
+test('quando o publicado diverge da tela, a tela diz', () => {
+  // Sem isto a divergência é invisível: o PO olha o recorte dele, clica, e o
+  // arquivo sai com outro conteúdo — certo, mas sem ninguém saber.
+  assert.match(fonteReport, /com <b>o time inteiro<\/b> — não o recorte de /);
+});
+
+test('a assinatura da capa não depende do filtro', () => {
+  /* `escopo` vira "Product Owner: X" na capa, e nada do lado do leitor filtra
+     por ele — os itens já chegam filtrados. Os dois andavam no mesmo campo, e
+     desligar o filtro apagava a assinatura: a primeira publicação de outubro
+     foi ao ar sem ela. */
+  assert.match(fonteReport, /const escopo = recorte \|\| st\.usuario \|\| '';/);
 });
 
 /* Um link que já circula tem que continuar abrindo o que ele carrega, mesmo
