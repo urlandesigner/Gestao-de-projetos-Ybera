@@ -126,40 +126,61 @@
 .rt-nums b { font-weight: 700; }
 .rt-amb b { color: var(--atencao); }
 
-/* Os itens, com o fio que os separa da barra. O fio precisa de ar dos dois
-   lados: espremido, ele lê como borda de caixa e não como separação. */
+/* A LISTA DE ITENS DA SPRINT, separada dos números por um fio e não por um vão:
+   o fio diz que a lista PERTENCE àquela sprint, e com os cartões lado a lado o
+   vão sozinho ficava ambíguo. O fio precisa de ar dos dois lados — espremido,
+   ele lê como borda de caixa.
+
+   ESTE É O ÚNICO LUGAR onde .rt-itens, .rt-item e .rt-item-nome são definidos.
+   Eram dois, em pontos distantes do arquivo, e o de baixo sobrescrevia parte do
+   de cima: a folha descrevia um desenho (selo de tipo) e entregava outro
+   (alinhamento e tamanho de um desenho anterior, com ponto de estado). Mesmo
+   defeito que já quebrou o hover das abas aqui. Os valores abaixo são os que
+   estavam VALENDO, medidos no navegador antes da fusão — nada mudou na tela. */
 .rt-itens {
   list-style: none;
-  margin: 0.95rem 0 0;
-  padding: 0.9rem 0 0;
-  border-top: 1px solid var(--borda);
-  display: flex;
-  flex-direction: column;
+  margin: 0.75rem 0 0;
+  padding: 0.7rem 0 0;
+  border-top: var(--fio);
+  display: grid;
   gap: 0.3rem;
 }
 /* Fundo --superficie-2 e sem sombra: a linha está DENTRO de um cartão que já é
    branco, e branco sobre branco a faria desaparecer. */
 .rt-item {
   display: flex;
-  align-items: center;
-  gap: 0.55rem;
+  align-items: baseline;
+  gap: 0.5rem;
   background: var(--superficie-2);
   border-radius: 10px;
   padding: 0.5rem 0.65rem;
-  font-size: 0.85rem;
+  font-size: 0.84rem;
+  line-height: 1.45;
   color: var(--tinta);
 }
 .rt-item-nome {
-  flex: 1;
+  flex: 1 1 auto;
   min-width: 0;
   font-weight: 500;
 }
+/* O estado à direita, em anotação: ele qualifica o título, não disputa com
+   ele. `white-space: nowrap` porque "In Progress" quebrando em duas linhas
+   empurraria a linha inteira.
+
+   Esta regra vivia DEPOIS da media query do telefone, numa segunda cópia
+   idêntica. Ordem frágil: bastava alguém acrescentar `margin-left` aqui pra
+   matar, em silêncio, o `margin-left: auto` que empurra o estado pra direita no
+   telefone. A media query é a última palavra sobre estes seletores, e agora ela
+   é mesmo a última. */
 .rt-item-estado {
   flex: none;
   font-size: 0.74rem;
   color: var(--mudo);
   white-space: nowrap;
 }
+/* Âmbar, igual ao segmento da barra: transbordo é informação de planejamento,
+   não erro. */
+.rt-transbordou .rt-item-estado { color: var(--atencao); }
 
 /* Selo de tipo: as mesmas cores do badge da Central, uma por tipo de item. */
 .rt-badge {
@@ -398,49 +419,40 @@
   font-size: 0.95rem;
 }
 
-/* A lista de itens da sprint. Separada dos números por um fio, e não por um
-   vão: o fio diz que a lista PERTENCE àquela sprint, e com três cartões
-   empilhados o vão sozinho ficava ambíguo. */
-.rt-itens {
-  list-style: none;
-  margin: 0.75rem 0 0;
-  padding: 0.7rem 0 0;
-  border-top: var(--fio);
-  display: grid;
-  gap: 0.3rem;
-}
-.rt-item {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  font-size: 0.84rem;
-  line-height: 1.45;
-  color: var(--tinta);
-}
-/* Ponto de estado em vez de ícone: a mesma linguagem do board da Central.
-   Cinza é fila ou andamento, verde é concluído, âmbar é transbordo. */
-.rt-ponto {
-  flex: none;
-  width: 6px;
-  height: 6px;
-  margin-top: 0.35rem;
-  border-radius: 999px;
-  background: var(--neutro);
-  align-self: flex-start;
-}
-.rt-ok .rt-ponto { background: var(--positivo); }
-.rt-transbordou .rt-ponto { background: var(--transbordo-barra); }
-.rt-item-nome { flex: 1 1 auto; }
-/* O estado à direita, em anotação: ele qualifica o título, não disputa com
-   ele. `white-space: nowrap` porque "In Progress" quebrando em duas linhas
-   empurraria a linha inteira. */
-.rt-item-estado {
-  flex: none;
-  font-size: 0.74rem;
+/* O ponto de estado saiu daqui junto com a duplicata: ele era de um desenho
+   anterior, o módulo desenha `.rt-badge` e nunca `.rt-ponto`, e a página de
+   verdade tinha ZERO deles. Com ele foram `.rt-ok .rt-ponto` e
+   `.rt-transbordou .rt-ponto`; `.rt-transbordou .rt-item-estado`, que é viva,
+   continua mais abaixo. */
+/* A LINHA DE RESUMO, abaixo do título. Ela traduz o jargão da PBI pra quem lê
+   de fora — e por isso tem que ler como anotação do título, não como segundo
+   título: menor, apagada, e colada nele.
+
+   `display: block` dentro do .rt-item-nome porque os dois são <span>: sem isso
+   o resumo correria na mesma linha do título, separado por um espaço.
+
+   O item vira `align-items: flex-start` quando há resumo — com `baseline` e um
+   título de duas linhas, o selo de tipo e o estado desciam até a base da
+   última linha, e o olho perdia a correspondência entre selo e título. */
+.rt-item:has(.rt-item-resumo) { align-items: flex-start; }
+.rt-item-resumo {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.4;
   color: var(--mudo);
-  white-space: nowrap;
 }
-.rt-transbordou .rt-item-estado { color: var(--atencao); }
+/* NO TELEFONE O TÍTULO TOMA A LINHA. A coluna do nome divide a largura com o
+   estado ("In Progress"), e em 375px sobram ~155px: medido, o resumo saía em
+   quatro linhas de três palavras. Aqui o título e o resumo ocupam a primeira
+   linha inteira, e o selo de tipo e o estado descem pra segunda — a mesma
+   decisão que o diálogo da sprint, no Panorama, já tinha tomado. */
+@media (max-width: 599px) {
+  .rt-item { flex-wrap: wrap; row-gap: 0.3rem; }
+  .rt-item-nome { flex-basis: 100%; order: -1; }
+  .rt-item-estado { margin-left: auto; }
+}
 /* O número do transbordo em âmbar, igual ao segmento da barra logo acima — é a
    mesma informação dita duas vezes, e cor diferente faria parecerem duas. */
 .rt-amb b { color: var(--atencao); }
