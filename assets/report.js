@@ -111,6 +111,7 @@ const st = {
   agora: 0,
   roadmap: [], // vem de assets/roadmap.json (PO) ou do link (leitura) — nunca do DevOps
   nomes: {},   // nome de negócio por item: assets/report-nomes.json (PO) ou o link (leitura)
+  po: '',      // quem assina a capa, do mesmo arquivo — ver `escopo` em pacoteDoDocumento
   resumos: {}, // uma linha por PBI: assets/resumos.json — só o PO lê o arquivo; o
                // leitor recebe a linha já embutida em cada item de sprint
 };
@@ -192,6 +193,7 @@ async function carregarNomes() {
     if (!resp.ok) return; // sem arquivo: títulos originais, sem erro
     const dado = await resp.json();
     st.nomes = saneNomes(dado.itens);
+    st.po = String(dado.po || '').trim().slice(0, 80);
   } catch (e) {
     console.warn('[Report] report-nomes.json não carregou: os títulos saem como estão no DevOps,'
       + ' não com os nomes de negócio. Motivo: ' + e.message);
@@ -945,7 +947,13 @@ function pacoteDoDocumento(semRecorte) {
 
      Sem recorte, assina quem é dono do token. É o mesmo nome que o filtro
      mostraria se ninguém o tivesse mexido — `respAtivo()` já parte dele. */
-  const escopo = recorte || st.usuario || '';
+  /* E, por último, o nome escrito à mão em report-nomes.json. Não é zelo: o
+     `currentUser` do DevOps devolve STRING VAZIA sem lançar erro quando a
+     resposta não traz o usuário autenticado — então não há exceção pra tratar,
+     o cache não guarda nada, e a capa some sem ninguém saber. Aconteceu três
+     vezes em 08/10/2026, e nas duas primeiras eu remendei o arquivo publicado
+     à mão. Assinatura é texto editorial; mora com o resto do texto editorial. */
+  const escopo = recorte || st.usuario || st.po || '';
   /* Dois formatos de pacote, e o documento escolhe.
 
      O report e o v2 LISTAM itens: título, estado e prazo de cada um vão pra

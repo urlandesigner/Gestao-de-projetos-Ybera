@@ -686,12 +686,21 @@ test('quando o publicado diverge da tela, a tela diz', () => {
   assert.match(fonteReport, /com <b>o time inteiro<\/b> — não o recorte de /);
 });
 
-test('a assinatura da capa não depende do filtro', () => {
+test('a assinatura da capa não depende do filtro nem da rede', () => {
   /* `escopo` vira "Product Owner: X" na capa, e nada do lado do leitor filtra
      por ele — os itens já chegam filtrados. Os dois andavam no mesmo campo, e
      desligar o filtro apagava a assinatura: a primeira publicação de outubro
-     foi ao ar sem ela. */
-  assert.match(fonteReport, /const escopo = recorte \|\| st\.usuario \|\| '';/);
+     foi ao ar sem ela.
+
+     O terceiro degrau é o nome escrito à mão. O `currentUser` do DevOps devolve
+     STRING VAZIA sem lançar erro quando a resposta não traz o usuário — não há
+     exceção pra tratar, o cache não guarda nada, e a capa some em silêncio.
+     Aconteceu três vezes em 08/10/2026. */
+  assert.match(fonteReport, /const escopo = recorte \|\| st\.usuario \|\| st\.po \|\| '';/);
+  assert.match(fonteReport, /st\.po = String\(dado\.po \|\| ''\)\.trim\(\)\.slice\(0, 80\);/);
+  // E o nome está escrito lá, senão o degrau existe e não segura nada.
+  const nomes = JSON.parse(ler('assets/report-nomes.json'));
+  assert.ok(nomes.po && nomes.po.trim(), 'report-nomes.json não declara quem assina');
 });
 
 /* Um link que já circula tem que continuar abrindo o que ele carrega, mesmo

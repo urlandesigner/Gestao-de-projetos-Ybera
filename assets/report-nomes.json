@@ -1,5 +1,6 @@
 {
-  "_leia": "Camada editorial do report: id do item → { nome, resumo }. nome = como o stakeholder chama a frente/funcionalidade; resumo = uma linha do que ela entrega (só épicos precisam). Só épicos e Features entram — PBI fica com o título original, agrupado embaixo. Sem entrada, o report usa o título do sistema. Rascunho: botão 'N sem nome' no report (modo PO) copia o esqueleto em JSON.",
+  "_leia": "Camada editorial do report: id do item → { nome, resumo }. nome = como o stakeholder chama a frente/funcionalidade; resumo = uma linha do que ela entrega (só épicos precisam). Só épicos e Features entram — PBI fica com o título original, agrupado embaixo. Sem entrada, o report usa o título do sistema. Rascunho: botão 'N sem nome' no report (modo PO) copia o esqueleto em JSON. Fora dos itens, o campo `po` é quem assina a capa (\"Product Owner: X\"): texto editorial, não dado do sistema. Vive aqui porque o DevOps devolve o nome do dono do token quando quer — e documento que perde a assinatura porque uma chamada falhou é pior que um nome escrito à mão.",
+  "po": "Urlan Dipre",
   "atualizadoEm": "2026-09-17",
   "itens": {}
 }
