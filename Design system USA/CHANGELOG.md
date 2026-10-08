@@ -5,6 +5,8 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
+## [1.0.7] — 2026-10-08
+
 ### Corrigido
 - **O chevron da coluna era o único glifo que não vinha do set.** Ele era um
   quadrado de 6,4px girado 45°, desenhado com borda CSS de 1,5px e canto vivo,

@@ -92,7 +92,7 @@
 <!-- @moldura · gerada por tools/moldura.mjs · não edite -->
 <header class="ds-top">
   <a class="ds-top__marca" href="../index.html">Ybera <b>Design System <span class="ds-top__usa">USA</span></b></a>
-  <p class="ds-top__versao">v1.0.6</p>
+  <p class="ds-top__versao">v1.0.7</p>
   <a class="ds-top__baixar" href="../dist/ybera-design-system.zip" download="ybera-design-system.zip" aria-label="Download do pacote: tokens, componentes e ícones">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8"/><path d="M4.5 7.5 8 11l3.5-3.5"/><path d="M2.5 13.5h11"/></svg>
     <span>Download</span>
@@ -231,8 +231,8 @@
   <h1 class="ficha-titulo">Changelog</h1>
   <p class="ficha-quando">Formato: <a href="https://keepachangelog.com/pt-BR/1.1.0/">Keep a Changelog</a>. Versionamento descrito em <a href="../GOVERNANCA.md">GOVERNANCA.md</a>.</p>
 
-<details class="log__versao log__versao--espera" open>
-<summary><h2>Em aberto</h2><span class="log__aviso">ainda não publicado — o número sai quando subir</span></summary>
+<details class="log__versao" open>
+<summary><h2>[1.0.7] — 2026-10-08</h2></summary>
 <h3>Corrigido</h3>
 <ul>
 <li><b>O chevron da coluna era o único glifo que não vinha do set.</b> Ele era um quadrado de 6,4px girado 45°, desenhado com borda CSS de 1,5px e canto vivo, ao lado de ícones de 16px com traço 1,3 e ponta arredondada — menor em pixel e mais pesado no olho, o que o fazia ler como o elemento mais forte da linha. Agora é o mesmo desenho dos vizinhos, aplicado como máscara para a cor poder acompanhar o estado (repouso, hover, aberto), coisa que cor cozida num <code>background-image</code> não faz. E ele <b>descola do canto de graça</b>: o glifo ocupa 7 dos 16px da caixa, então o traço cai a 21px da borda em vez dos 14,7 da ponta do quadrado girado — sem mexer na margem da coluna.</li>
