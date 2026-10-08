@@ -21,6 +21,19 @@
    queries de 320px disparam de verdade.
    ========================================================================= */
 *{box-sizing:border-box}
+/* A BANCADA DECLARA O PROPRIO RESPIRO. Estes dois moravam em `doc/doc-nav.css`,
+   que saiu da cabeca junto com a moldura — e `--doc-respiro-largo` nao tem
+   valor de reserva: o `padding:var(--yb-space-4) var(--doc-respiro-largo)` caia
+   inteiro, porque atalho com uma parte invalida e descartado por completo. A
+   barra ficava sem respiro nenhum e a volta nascia colada na borda. Mesma
+   medida de la, inclusive o degrau de 900. */
+:root{
+  --doc-canvas: var(--yb-bg-subtle);
+  --doc-respiro-largo: var(--yb-space-6);
+}
+@media (max-width:900px){
+  :root{ --doc-respiro-largo: var(--yb-page-gutter); }
+}
 /* A BANCADA OCUPA A JANELA INTEIRA. Ela saiu da moldura da doc — sem barra do
    topo e sem coluna — porque o cromo comia mais do que entregava: medido em
    1024x768, sobravam 744x467 para a prova, 44% da janela, e o aparelho de
@@ -163,6 +176,11 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
   align-items:flex-start;
 }
 .tela{display:flex; flex-direction:column; gap:var(--yb-space-2)}
+/* `display` de CLASSE ganha do `[hidden]` da folha do navegador, que e de
+   elemento. Sem esta linha o filtro de tema marcava as celulas como escondidas
+   e elas continuavam na tela — e conferir pela PROPRIEDADE `hidden` dava
+   verde, porque a propriedade estava certa. O que vale e a altura pintada. */
+.tela[hidden]{display:none}
 /* O nome é um botão porque leva ao quadro único daquela tela: na parede se
    escolhe, no quadro se olha de perto. */
 .tela__nome{
@@ -222,17 +240,17 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
   <div class="grupo-ctrl" id="grupo-pagina">
     <label class="rot" for="sel-pagina">Página</label>
     <select class="sel" id="sel-pagina">
-      <option data-src="../pages/home.html" selected>Home</option>
-      <option data-src="../pages/index-v2.html">Home v2</option>
-      <option data-src="../pages/index-v3.html">Home v3</option>
-      <option data-src="../pages/index-logado.html">Home logado</option>
-      <option data-src="../pages/pdp.html">PDP</option>
-      <option data-src="../pages/pdp-influencer.html">PDP influencer</option>
-      <option data-src="../pages/pdp-esgotado.html">PDP esgotada</option>
-      <option data-src="../pages/pdp-variante.html">PDP variante</option>
-      <option data-src="../pages/pdp-oferta.html">PDP promoção</option>
-      <option data-src="../pages/faq.html">FAQ</option>
-      <option data-src="../pages/404.html">404</option>
+      <option data-src="../pages/home.html" data-fam="home" selected>Home</option>
+      <option data-src="../pages/index-v2.html" data-fam="home">Home v2</option>
+      <option data-src="../pages/index-v3.html" data-fam="home">Home v3</option>
+      <option data-src="../pages/index-logado.html" data-fam="home">Home logado</option>
+      <option data-src="../pages/pdp.html" data-fam="pdp">PDP</option>
+      <option data-src="../pages/pdp-influencer.html" data-fam="pdp">PDP influencer</option>
+      <option data-src="../pages/pdp-esgotado.html" data-fam="pdp">PDP esgotada</option>
+      <option data-src="../pages/pdp-variante.html" data-fam="pdp">PDP variante</option>
+      <option data-src="../pages/pdp-oferta.html" data-fam="pdp">PDP promoção</option>
+      <option data-src="../pages/faq.html" data-fam="outras">FAQ</option>
+      <option data-src="../pages/404.html" data-fam="outras">404</option>
     </select>
   </div>
 
@@ -243,6 +261,14 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
     <button class="btn" type="button" data-w="414" data-h="896" aria-pressed="false" title="iPhone 11">414</button>
     <button class="btn" type="button" data-w="768" data-h="1024" aria-pressed="false" title="iPad">768</button>
     <button class="btn" type="button" data-w="1280" data-h="900" aria-pressed="false" title="desktop">1280</button>
+  </div>
+
+  <div class="grupo-ctrl" id="grupo-tema" role="group" aria-label="Tema" hidden>
+    <span class="rot">Tema</span>
+    <button class="btn" type="button" data-tema="todas" aria-pressed="true">Todas</button>
+    <button class="btn" type="button" data-tema="home" aria-pressed="false">Homes</button>
+    <button class="btn" type="button" data-tema="pdp" aria-pressed="false">PDPs</button>
+    <button class="btn" type="button" data-tema="outras" aria-pressed="false">Outras</button>
   </div>
 
   <div class="grupo-ctrl" id="grupo-zoom" role="group" aria-label="Zoom" hidden>
@@ -287,6 +313,7 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
   var parede   = document.getElementById('parede');
   var grPagina = document.getElementById('grupo-pagina');
   var grZoom   = document.getElementById('grupo-zoom');
+  var grTema   = document.getElementById('grupo-tema');
 
   /* A JANELA DA PAREDE E ALTA, e nao a altura do aparelho: 812px de uma home
      que tem oito mil mostram o cabecalho e mais nada, e onze cabecalhos lado a
@@ -315,6 +342,7 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
       p: document.getElementById('sel-pagina').selectedOptions[0],
       v: escolhido('[data-vista]'),
       z: escolhido('[data-z]'),
+      t: escolhido('[data-tema]'),
     };
   }
 
@@ -329,6 +357,7 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
     Array.prototype.forEach.call(telas, function (b) {
       var tela = document.createElement('div');
       tela.className = 'tela';
+      tela.dataset.fam = b.dataset.fam;
 
       var nome = document.createElement('button');
       nome.type = 'button';
@@ -379,16 +408,24 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
 
   function aplicar() {
     var e = estado();
-    if (!e.w || !e.p || !e.v || !e.z) return;
+    if (!e.w || !e.p || !e.v || !e.z || !e.t) return;
     var parede_ = e.v.dataset.vista === 'parede';
 
     aparelho.hidden = parede_;
     parede.hidden   = !parede_;
     grPagina.hidden = parede_;
     grZoom.hidden   = !parede_;
+    grTema.hidden   = !parede_;
 
     if (parede_) {
       montar();
+      /* O TEMA FILTRA A PAREDE, e nao a lista de cima: a parede ja nasce das
+         mesmas onze telas do seletor, e esconder celula e mais barato do que
+         remontar iframe — remontar recarregaria as onze a cada troca de tema. */
+      var tema = e.t.dataset.tema;
+      Array.prototype.forEach.call(parede.querySelectorAll('.tela'), function (tela) {
+        tela.hidden = tema !== 'todas' && tela.dataset.fam !== tema;
+      });
       medirParede(e.w.dataset.w);
       escalarParede(Number(e.w.dataset.w), Number(e.z.dataset.z));
     } else {
@@ -402,7 +439,7 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
     try {
       localStorage.setItem('yb-preview', JSON.stringify({
         w: e.w.dataset.w, src: e.p.dataset.src,
-        vista: e.v.dataset.vista, z: e.z.dataset.z,
+        vista: e.v.dataset.vista, z: e.z.dataset.z, tema: e.t.dataset.tema,
       }));
     } catch (err) { /* janela anônima, ou storage bloqueado */ }
   }
@@ -432,10 +469,12 @@ iframe{display:block; border:0; background:var(--yb-bg-page); max-width:100%}
       var bp = document.querySelector('[data-src="' + salvo.src + '"]');
       var bv = salvo.vista && document.querySelector('[data-vista="' + salvo.vista + '"]');
       var bz = salvo.z && document.querySelector('[data-z="' + salvo.z + '"]');
+      var bt = salvo.tema && document.querySelector('[data-tema="' + salvo.tema + '"]');
       if (bw) marcar(bw);
       if (bp) marcar(bp);
       if (bv) marcar(bv);
       if (bz) marcar(bz);
+      if (bt) marcar(bt);
     }
   } catch (err) { /* sem storage: segue no padrão */ }
   aplicar();

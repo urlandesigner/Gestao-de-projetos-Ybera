@@ -5,6 +5,28 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
+### Adicionado
+- **A parede filtra por tema: todas as Homes, todas as PDPs, as outras.** Eram
+  onze telas numa grade só, e comparar as cinco PDPs entre si exigia rolar por
+  cima das quatro Homes. Os chips aparecem só em "todas juntas", porque em uma
+  tela não há o que filtrar, e a escolha fica guardada junto com as outras.
+  O filtro esconde célula em vez de remontar a parede — remontar recarregaria
+  os onze iframes a cada troca de tema.
+
+### Corrigido
+- **A barra da bancada ficou sem respiro nenhum.** `--doc-respiro-largo` e
+  `--doc-canvas` moravam em `doc/doc-nav.css`, que saiu da cabeça junto com a
+  moldura. O primeiro não tem valor de reserva, e `padding:var(--yb-space-4)
+  var(--doc-respiro-largo)` é atalho: com uma parte inválida, a declaração
+  inteira é descartada. A barra ficou com padding zero e a volta nasceu colada
+  na borda da tela. A bancada agora declara as duas, com a mesma medida e o
+  mesmo degrau de 900 que tinham lá.
+- **As células escondidas da parede continuavam na tela.** `.tela{display:flex}`
+  é seletor de classe e ganha do `[hidden]` da folha do navegador, que é de
+  elemento. O filtro marcava e nada sumia — e conferir pela propriedade
+  `hidden` dava verde, porque a propriedade estava certa. O que vale é a
+  altura pintada.
+
 ### Modificado
 - **A página de Preview virou bancada: sem barra do topo e sem coluna.** Medido
   em 1024×768, o cromo comia mais do que entregava — sobravam 744×467 para a

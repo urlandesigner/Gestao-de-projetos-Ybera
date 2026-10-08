@@ -233,6 +233,15 @@
 
 <details class="log__versao log__versao--espera" open>
 <summary><h2>Em aberto</h2><span class="log__aviso">ainda não publicado — o número sai quando subir</span></summary>
+<h3>Adicionado</h3>
+<ul>
+<li><b>A parede filtra por tema: todas as Homes, todas as PDPs, as outras.</b> Eram onze telas numa grade só, e comparar as cinco PDPs entre si exigia rolar por cima das quatro Homes. Os chips aparecem só em "todas juntas", porque em uma tela não há o que filtrar, e a escolha fica guardada junto com as outras. O filtro esconde célula em vez de remontar a parede — remontar recarregaria os onze iframes a cada troca de tema.</li>
+</ul>
+<h3>Corrigido</h3>
+<ul>
+<li><b>A barra da bancada ficou sem respiro nenhum.</b> <code>--doc-respiro-largo</code> e <code>--doc-canvas</code> moravam em <code>doc/doc-nav.css</code>, que saiu da cabeça junto com a moldura. O primeiro não tem valor de reserva, e <code>padding:var(--yb-space-4) var(--doc-respiro-largo)</code> é atalho: com uma parte inválida, a declaração inteira é descartada. A barra ficou com padding zero e a volta nasceu colada na borda da tela. A bancada agora declara as duas, com a mesma medida e o mesmo degrau de 900 que tinham lá.</li>
+<li><b>As células escondidas da parede continuavam na tela.</b> <code>.tela{display:flex}</code> é seletor de classe e ganha do <code>[hidden]</code> da folha do navegador, que é de elemento. O filtro marcava e nada sumia — e conferir pela propriedade <code>hidden</code> dava verde, porque a propriedade estava certa. O que vale é a altura pintada.</li>
+</ul>
 <h3>Modificado</h3>
 <ul>
 <li><b>A página de Preview virou bancada: sem barra do topo e sem coluna.</b> Medido em 1024×768, o cromo comia mais do que entregava — sobravam 744×467 para a prova, 44% da janela, e o aparelho de 375×812 não cabia em pé. Mas tirar a moldura resolvia só metade: a barra de controles sozinha media 233px, e clonada em três larguras continuava em 233 até 1440. O que a quebrava em quatro fileiras eram as onze telas em botão, que pediam 1117px de fileira — mais do que a janela inteira. Viraram um <code>&lt;select&gt;</code> de 220, e o nome do aparelho saiu do rótulo dos botões de largura para o <code>title</code>. Resultado: a barra cai de 233 para <b>37px</b>, o palco vai de 44% para <b>87%</b> da janela, e o telefone de 375 aparece inteiro.</li>
