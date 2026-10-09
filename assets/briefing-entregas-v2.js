@@ -110,6 +110,33 @@
         rotulo: 'Abrir a planilha de demandas',
       },
     },
+    {
+      /* Ditado pelo Urlan em 09/10/2026. O primeiro parágrafo é o que ele
+         escreveu, posto na voz do documento; o segundo sai da descrição da PBI
+         "Campanhas de brinde no app personalizado e remoção do Dr Free Gift
+         (Ybera USA)", que é de onde veio a linha de resumo do cartão de sprint.
+
+         Nenhum dos dois inventa mecânica: o que "acumulativo" faz por dentro
+         não está escrito em lugar nenhum que eu possa ler, e descrever isso de
+         cabeça seria afirmar regra de promoção pro stakeholder. */
+      titulo: 'Novo app de brindes',
+      /* Seção própria porque foi o que ele pediu. Não há linha de brindes no
+         roadmap.json, então este nome não tem barra pra casar lá embaixo — é a
+         única frente do documento nessa situação, e o jeito de fechar isso é
+         criar a linha no roadmap, não apagar a seção. */
+      iniciativa: 'Novo app de brindes',
+      /* `andamento` é o que o BOARD diz: a PBI estava In Progress no pacote de
+         08/10. O selo é julgamento do Urlan, não do DevOps — se a frente já
+         entregou, é uma palavra que muda. */
+      status: 'andamento',
+      resumo: [
+        'Aplicativo próprio, desenvolvido pela Ybera, para as promoções em que a cliente compra um produto e ganha um brinde. Ele atende dois formatos: brinde único e brindes acumulativos.',
+        'Ele assume as campanhas de brinde da loja no lugar do Dr Free Gift, o aplicativo de terceiro usado até aqui — que tinha custo mensal e dava conflito no carrinho.',
+      ],
+      // Uma PBI, um item de trabalho: a conta é declarada porque o cartão ainda
+      // não tem o id da Feature pra deixar o board contar sozinho.
+      contaFixa: 1,
+    },
   ];
 
   const MES_CURTO = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun',
