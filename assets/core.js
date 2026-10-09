@@ -631,10 +631,22 @@
       .map((s) => (s ? { s, ini: t(s.start), fim: t(s.finish) } : null))
       .filter((x) => x && x.ini !== null && x.fim !== null)
       .sort((a, b) => a.ini - b.ini);
-    const atual = comData.find((x) => x.ini <= agora && agora <= x.fim) || null;
+    /* FIM_DO_DIA nas comparações, e é a MESMA régua do estadoDaSprint, que o
+       relatório usa. O `finish` do DevOps é MEIA-NOITE do último dia: sem o
+       acréscimo, às 10h do dia em que a sprint fecha ela já conta como passada,
+       a coluna "atual" fica sem ninguém e o quadro mostra só anterior e
+       próxima. Foi o que o Urlan viu em 09/10/2026, último dia da Sprint 20 —
+       enquanto o relatório, na outra tela, dizia "em curso" sobre a mesma
+       sprint. O mesmo fato não pode ter duas respostas em duas telas.
+
+       O comentário acima já prometia isto desde sempre; o código é que não
+       cumpria. O teste não pegou porque a fixture dele montava o `finish` às
+       23:59:59 — uma forma que o DevOps não devolve. */
+    const fimReal = (x) => x.fim + FIM_DO_DIA;
+    const atual = comData.find((x) => x.ini <= agora && agora <= fimReal(x)) || null;
     // A anterior é a que fechou MAIS PERTO de hoje, não a primeira da lista:
     // com a lista ordenada por início, é a última que já terminou.
-    const passadas = comData.filter((x) => x.fim < agora);
+    const passadas = comData.filter((x) => fimReal(x) < agora);
     const futuras = comData.filter((x) => x.ini > agora);
     return {
       anterior: passadas.length ? passadas[passadas.length - 1].s : null,

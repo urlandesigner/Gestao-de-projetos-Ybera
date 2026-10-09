@@ -11,10 +11,22 @@ const assert = require('node:assert/strict');
 const C = require('../assets/core.js');
 
 const HOJE = Date.parse('2026-10-02T12:00:00Z');
+/* MEIA-NOITE NAS DUAS PONTAS, que é a forma que o DevOps devolve de verdade.
+
+   Esta fixture montava o `finish` às 23:59:59, e com isso o teste do dia da
+   virada passava há meses sobre um dado que não existe: no ar, a sprint que
+   fechava hoje já contava como passada às 10h da manhã, a coluna "atual" ficava
+   sem ninguém e o quadro mostrava só anterior e próxima. Foi o que o Urlan viu
+   em 09/10/2026, e nenhum teste tinha como pegar — a fixture tinha, embutida
+   nela, a correção que faltava no código.
+
+   Quem acrescenta o fim do dia é o core, uma vez só (FIM_DO_DIA), pras duas
+   telas responderem igual. Fixture que já chega corrigida esconde exatamente o
+   defeito que ela deveria expor. */
 const it = (nome, inicio, fim) => ({
   id: nome, name: nome, path: 'Projeto\\' + nome,
   start: inicio ? inicio + 'T00:00:00Z' : null,
-  finish: fim ? fim + 'T23:59:59Z' : null,
+  finish: fim ? fim + 'T00:00:00Z' : null,
 });
 
 const TRES = [
@@ -46,6 +58,34 @@ test('o primeiro e o último dia ainda são da sprint', () => {
   const ultimo = Date.parse('2026-10-12T23:59:00Z');
   assert.equal(C.janelaDeSprints(TRES, primeiro).atual.name, 'Sprint 12');
   assert.equal(C.janelaDeSprints(TRES, ultimo).atual.name, 'Sprint 12');
+  /* O MEIO DO ÚLTIMO DIA é a hora em que isto quebrou no ar: a sprint fecha
+     hoje, são 10h, e ela tem que continuar sendo a atual. Meia-noite do dia do
+     fechamento também, que é o instante exato do `finish` cru. */
+  for (const h of ['T00:00:00Z', 'T10:00:00Z', 'T23:58:00Z']) {
+    const j = C.janelaDeSprints(TRES, Date.parse('2026-10-12' + h));
+    assert.equal(j.atual && j.atual.name, 'Sprint 12', 'a sprint sumiu da coluna atual em ' + h);
+    assert.equal(j.anterior.name, 'Sprint 11', 'a sprint do dia escorregou pra coluna anterior');
+  }
+});
+
+/* A MESMA RÉGUA NAS DUAS TELAS. O quadro do Panorama e a seção do relatório
+   respondem a mesma pergunta — em que pé esta sprint está — por caminhos
+   diferentes (`janelaDeSprints` e `estadoDaSprint`). Elas divergiram: no dia
+   09/10/2026 o relatório dizia "em curso" e o Panorama botava a mesma sprint em
+   "anterior". Duas telas do mesmo projeto discordando sobre o mesmo fato é pior
+   que as duas erradas, porque quem olha não sabe em qual acreditar. */
+test('o Panorama e o relatório concordam sobre qual sprint está em curso', () => {
+  const sprint = TRES[2]; // Sprint 12, 29/09 a 12/10
+  for (const q of ['2026-09-29T00:00:00Z', '2026-10-05T12:00:00Z', '2026-10-12T10:00:00Z']) {
+    const agora = Date.parse(q);
+    const noQuadro = C.janelaDeSprints(TRES, agora).atual;
+    assert.equal(C.estadoDaSprint(sprint, agora), 'corrente', 'o relatório mudou de ideia em ' + q);
+    assert.equal(noQuadro && noQuadro.id, sprint.id, 'o quadro discordou do relatório em ' + q);
+  }
+  // E depois que ela fecha de vez, os dois também concordam.
+  const depois = Date.parse('2026-10-13T00:00:01Z');
+  assert.equal(C.estadoDaSprint(sprint, depois), 'fechada');
+  assert.equal(C.janelaDeSprints(TRES, depois).anterior.id, sprint.id);
 });
 
 /* Time entre sprints: a anterior fechou, a próxima ainda não abriu. Inventar
