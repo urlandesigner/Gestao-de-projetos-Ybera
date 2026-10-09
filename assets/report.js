@@ -706,11 +706,19 @@ function saneRitmo(lista) {
      `feito` reduzido a booleano — é ele que pinta o ponto de verde, e um valor
      torto ali marcaria como entregue o que não está. O teto de 300 por sprint é
      folga sobre as ~170 de uma sprint real. */
-  /* `tipo` viaja porque o selo do cartão o mostra, e um Bug marcado "PBI" seria
-     o documento afirmando o que não é. Vocabulário fechado, como o estado da
-     sprint: o que não está na lista vira 'outro' em vez de virar classe de CSS
-     escrita por quem editou a URL. */
-  const TIPOS = ['epic', 'feature', 'pbi', 'bug', 'task', 'outro'];
+  /* `tipo` NÃO viaja mais. Ele existia pra alimentar o selo "PBI/Bug/Task" na
+     linha do item, e esse selo saiu: pra quem lê de fora, saber que um item é
+     PBI e o outro é Bug não muda decisão nenhuma — todos os itens da lista são
+     a mesma coisa, trabalho da sprint. O lugar que o selo ocupava é do ESTADO,
+     que é o que o leitor abre o documento pra saber.
+
+     No lugar dele viaja `familia`: o estado reduzido às quatro etapas (a fazer,
+     em andamento, atenção, concluído), que é quem pinta o selo. Vocabulário
+     fechado, como o estado da sprint — fora da lista vira '' e o selo sai sem
+     cor, em vez de virar classe de CSS escrita por quem editou a URL. Pintar
+     de verde por causa de uma palavra digitada na barra de endereço seria o
+     documento afirmando entrega que não houve. */
+  const FAMILIAS = ['todo', 'andamento', 'atencao', 'feito'];
   /* `resumo` é a linha editorial do assets/resumos.json, embutida item a item
      no momento de montar o pacote. Vai pronta porque quem LÊ não tem como
      buscá-la: o leitor do link não baixa arquivo nenhum, e casar resumo com
@@ -720,7 +728,7 @@ function saneRitmo(lista) {
     titulo: txt((y || {}).titulo, 200),
     resumo: txt((y || {}).resumo, 240),
     estado: txt((y || {}).estado, 40),
-    tipo: TIPOS.includes((y || {}).tipo) ? y.tipo : 'outro',
+    familia: FAMILIAS.includes((y || {}).familia) ? y.familia : '',
     feito: !!(y || {}).feito,
   })).filter((y) => y.titulo);
   return (Array.isArray(lista) ? lista : []).slice(0, 60).map((x) => ({

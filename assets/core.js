@@ -724,13 +724,22 @@
       .map((it) => {
         const f = it.fields || {};
         const at = f['System.AssignedTo'];
+        /* `familia` é o estado reduzido às quatro etapas da Central (a fazer,
+           em andamento, atenção, concluído). Ela viaja ao lado do estado cru
+           porque quem desenha precisa das duas coisas: o TEXTO diz "Testing",
+           que é informação que o leitor quer, e a FAMÍLIA é o que pinta o selo
+           — e "Testing", "In Progress" e "Prototype" têm que sair da mesma cor.
+           Calculada aqui, uma vez, com o mesmo `stateBucket` que ordena a
+           lista: selo e ordem discordando seria a lista dizendo duas coisas. */
+        const familia = stateBucket(f['System.State']);
         return {
           id: it.id,
           titulo: f['System.Title'] || ('item #' + it.id),
           resp: at && at.displayName ? at.displayName : null,
           tipo: typeSlug(f['System.WorkItemType']),
           estado: f['System.State'] || '',
-          feito: stateBucket(f['System.State']) === 'feito',
+          familia,
+          feito: familia === 'feito',
         };
       });
   }

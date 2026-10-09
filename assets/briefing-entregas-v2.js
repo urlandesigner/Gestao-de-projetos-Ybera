@@ -157,9 +157,11 @@
      antes: no Panorama as três colunas são rotuladas, e um cartão sem pílula no
      meio de dois com pílula lê como peça faltando. */
   const FASE = { fechada: 'Encerrada', corrente: 'Em curso', futura: 'Próxima' };
-  const ROTULO_TIPO = {
-    epic: 'Épico', feature: 'Feature', pbi: 'PBI', bug: 'Bug', task: 'Task', outro: 'Item',
-  };
+  /* As quatro etapas da Central, e são elas que PINTAM o selo — o texto dele é
+     o estado cru do board ("Done", "In Progress", "Testing"). Vocabulário
+     fechado: família fora da lista sai sem classe, e o selo fica neutro em vez
+     de verde. */
+  const FAMILIAS = ['todo', 'andamento', 'atencao', 'feito'];
 
   /* A lista de itens da sprint. É o que transformou este documento de retrato
      mensal em acompanhamento: quem abre toda semana quer saber o que está
@@ -177,7 +179,16 @@
     const dentro = Array.isArray(s.itens) ? s.itens : [];
     const fora = Array.isArray(s.transbordados) ? s.transbordados : [];
     if (!dentro.length && !fora.length) return '';
-    const tipo = (x) => (ROTULO_TIPO[x.tipo] ? x.tipo : 'outro');
+    /* PACOTE ANTIGO NÃO TINHA `familia` — nem o arquivo de dados publicado
+       antes desta mudança, nem link já compartilhado. Sem a volta pelo `feito`,
+       que SEMPRE viajou, esses dois sairiam com a lista inteira em cinza, e o
+       documento perderia exatamente o que esta mudança foi fazer. O que o
+       pacote velho não sabe dizer é a diferença entre "To Do" e "In Progress":
+       os dois ficam neutros, que é a verdade sobre um dado que não veio. */
+    const fam = (x) => {
+      if (FAMILIAS.includes(x.familia)) return ' rt-fam-' + x.familia;
+      return x.feito ? ' rt-fam-feito' : '';
+    };
     /* A LINHA DE RESUMO, abaixo do título. O título da PBI é escrito pra quem
        trabalha nela — "[DESIGN] Viabilização Design System para loja Ybera.us"
        não diz nada a quem lê de fora, e este documento é lido de fora.
@@ -186,12 +197,23 @@
        report.js). Item sem resumo não ganha a linha e fica só com o título: é
        a verdade sobre uma PBI que ninguém descreveu, não um buraco a tapar com
        texto inventado. */
+    /* O SELO É O ESTADO, e só ele. Antes a linha abria com um selo de tipo
+       ("PBI", "Bug") e o estado ia no fim, em cinza miúdo, como anotação. Era
+       a hierarquia trocada: o tipo não muda decisão nenhuma pra quem lê de
+       fora — todos os itens da lista são trabalho da sprint —, enquanto o
+       estado é o que a pessoa abriu o documento pra saber. O peso visual foi
+       pro estado e o selo de tipo saiu.
+
+       O texto é o do board, não um rótulo traduzido: "Testing" e "In Progress"
+       são estados diferentes e o leitor quer a diferença. Quem agrupa é a COR,
+       pela família — os dois saem do mesmo tom porque nenhum dos dois está
+       pronto. Traduzir custaria um dicionário de todo estado que o board pode
+       ter, e o estado novo que ninguém mapeasse sairia em branco. */
     const li = (x, saiu) => `<li class="rt-item${saiu ? ' rt-transbordou' : ''}">
-      <span class="rt-badge rt-tipo-${tipo(x)}">${esc(ROTULO_TIPO[tipo(x)])}</span>
       <span class="rt-item-nome">${esc(x.titulo)}${x.resumo
         ? `<span class="rt-item-resumo">${esc(x.resumo)}</span>` : ''}</span>
-      <span class="rt-item-estado">${saiu
-        ? '<span class="rt-selo-transbordo">transbordou</span>'
+      <span class="rt-item-estado${saiu ? '' : fam(x)}">${saiu
+        ? 'transbordou'
         : esc(x.estado || '')}</span>
     </li>`;
     return `<ul class="rt-itens">${dentro.map((x) => li(x, false)).join('')}`

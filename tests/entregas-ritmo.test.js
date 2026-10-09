@@ -349,8 +349,14 @@ test('a sprint lista seus itens, entregue primeiro', () => {
     ['Brinde indevido', 'Produto único para ads', 'Assinatura inteligente'],
     'a ordem é feito, depois o que anda, depois a fila');
   const html = V2.secaoRitmo([linha]);
-  assert.match(html, /<li class="rt-item">\s*<span class="rt-badge rt-tipo-pbi">PBI<\/span>\s*<span class="rt-item-nome">Brinde indevido/);
-  assert.match(html, /Assinatura inteligente<\/span>\s*<span class="rt-item-estado">To Do/);
+  // A linha abre no TÍTULO: o selo de tipo ("PBI") saiu de lá, e o lugar de
+  // destaque passou a ser do estado, que é o que o leitor veio saber.
+  assert.match(html, /<li class="rt-item">\s*<span class="rt-item-nome">Brinde indevido/);
+  assert.doesNotMatch(html, /rt-badge|rt-tipo-/, 'o selo de tipo voltou pra linha');
+  // O texto do selo é o estado CRU do board, e a classe é a família que o pinta.
+  assert.match(html, /<span class="rt-item-estado rt-fam-feito">Done<\/span>/);
+  assert.match(html, /<span class="rt-item-estado rt-fam-andamento">In Progress<\/span>/);
+  assert.match(html, /<span class="rt-item-estado rt-fam-todo">To Do<\/span>/);
 });
 
 /* Eles não estão mais nesta sprint. Numa lista só, todo leitor do campo teria
@@ -456,15 +462,17 @@ test('o que é publicado passa pela mesma poda que o que é lido', () => {
   const [linha] = saneRitmo([{
     nome: 'Sprint 20', estado: 'corrente', entregues: 1, total: 3, transbordaram: 0,
     itens: [{
-      id: 51676, titulo: 'Assinatura', estado: 'To Do', feito: false, resp: 'Fulano de Tal', tipo: 'pbi',
+      id: 51676, titulo: 'Assinatura', estado: 'To Do', familia: 'todo', feito: false, resp: 'Fulano de Tal', tipo: 'pbi',
       resumo: 'Deixa o cliente assinar o produto e receber todo mês.',
       // Nunca deve sobreviver: é material local, e o arquivo é público.
       descricao: 'Contexto interno com link da planilha e nome do fornecedor.',
     }],
     transbordados: [],
   }]);
+  /* `tipo` saiu do pacote junto com o selo que o mostrava, e `familia` entrou
+     no lugar: ela é quem pinta o selo de estado. */
   assert.deepEqual(Object.keys(linha.itens[0]).sort(),
-    ['estado', 'feito', 'resumo', 'tipo', 'titulo']);
+    ['estado', 'familia', 'feito', 'resumo', 'titulo']);
   assert.equal(JSON.stringify(linha).includes('Fulano de Tal'), false,
     'o nome do responsável sobreviveu à poda e vai parar no arquivo publicado');
   assert.equal(JSON.stringify(linha).includes('51676'), false, 'o id viajou à toa');
@@ -972,16 +980,62 @@ test('a linha do item de sprint tem uma definição só', () => {
   }
 });
 
-test('o ponto de estado saiu: o módulo desenha selo, não ponto', () => {
-  /* `.rt-ponto` era de um desenho anterior. A página de verdade tinha ZERO
-     deles — regra morta que fazia a folha descrever o que a tela não tem. */
+test('a folha não descreve selo que a linha não desenha', () => {
+  /* Duas gerações de regra morta já moraram aqui. `.rt-ponto` era de um desenho
+     anterior e a página tinha ZERO deles; `.rt-badge`/`.rt-tipo-*` eram o selo
+     de tipo, que saiu da linha quando o destaque passou pro estado. Regra que
+     descreve o que a tela não tem é o que faz alguém editar a folha achando que
+     mudou a página. */
   const css = ler('assets/ritmo.css').replace(/\/\*[\s\S]*?\*\//g, '');
-  assert.doesNotMatch(css, /rt-ponto/);
-  assert.doesNotMatch(ler('assets/briefing-entregas-v2.js'), /rt-ponto/);
-  // O selo, que é o que existe, continua de pé.
-  assert.match(css, /\.rt-badge \{/);
+  const modulo = ler('assets/briefing-entregas-v2.js');
+  for (const morto of [/rt-ponto/, /rt-badge/, /rt-tipo-/, /rt-selo-transbordo/]) {
+    assert.doesNotMatch(css, morto, `a folha ainda tem ${morto}`);
+    assert.doesNotMatch(modulo, morto, `o módulo ainda desenha ${morto}`);
+  }
+  // O selo que EXISTE, e as três famílias que o pintam.
+  assert.match(css, /\.rt-item-estado \{/);
+  for (const fam of ['andamento', 'feito', 'atencao']) {
+    assert.match(css, new RegExp('\\.rt-fam-' + fam + ' \\{'), `falta a cor de ${fam}`);
+  }
   // E o estado do transbordo, que vive na mesma família, não foi junto.
   assert.match(css, /\.rt-transbordou \.rt-item-estado/);
+});
+
+/* Arquivo de dados publicado ANTES desta mudança, e link já compartilhado, não
+   têm `familia`. Eles continuam no ar e continuam sendo abertos — se a volta
+   pelo `feito` sumir, a lista inteira deles vira cinza de uma vez. */
+test('pacote sem familia ainda pinta o que foi entregue', () => {
+  const html = V2.secaoRitmo([{
+    nome: 'Sprint 20', estado: 'corrente', entregues: 1, total: 2, transbordaram: 0,
+    itens: [
+      { titulo: 'Fechada', estado: 'Done', feito: true },
+      { titulo: 'Andando', estado: 'In Progress', feito: false },
+    ],
+    transbordados: [],
+  }]);
+  assert.match(html, /<span class="rt-item-estado rt-fam-feito">Done<\/span>/);
+  // O que o pacote velho não sabe dizer fica neutro, em vez de chutar cor.
+  assert.match(html, /<span class="rt-item-estado">In Progress<\/span>/);
+});
+
+/* A cor do selo e a ordem da lista saem do MESMO `stateBucket`. Se alguém
+   classificar o selo por outro caminho, a lista passa a ordenar por uma régua
+   e pintar por outra — e ninguém vê, porque as duas continuam plausíveis. */
+test('a família do item é a mesma régua que ordena a lista', () => {
+  const comTitulo = (id, t, estado) => ({
+    id, fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.Title': t, 'System.State': estado, 'System.IterationPath': 'P\\Sprint 20' },
+  });
+  const linha = C.ritmoDaSprint(S20, null, null, [
+    comTitulo(1, 'Fila', 'To Do'),
+    comTitulo(2, 'Em teste', 'Testing'),
+    comTitulo(3, 'Fechada', 'Done'),
+  ], HOJE);
+  assert.deepEqual(linha.itens.map((x) => x.familia), ['feito', 'andamento', 'todo'],
+    'a família não acompanhou a ordem — selo e ordenação discordam');
+  // "Testing" mostra o nome que tem e sai na cor de quem ainda não terminou.
+  const emTeste = linha.itens.find((x) => x.estado === 'Testing');
+  assert.equal(emTeste.familia, 'andamento');
+  assert.equal(emTeste.feito, false);
 });
 
 /* A lista abria POR CIMA do controle: num <select> comum o popup é desenhado

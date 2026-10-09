@@ -206,8 +206,13 @@
   min-width: 0;
   font-weight: 500;
 }
-/* O estado à direita, em anotação: ele qualifica o título, não disputa com
-   ele. `white-space: nowrap` porque "In Progress" quebrando em duas linhas
+/* O ESTADO, agora em selo — é o único selo da linha, e ele herdou a forma e o
+   peso do selo de tipo que saiu daqui. A troca foi de hierarquia, não de
+   enfeite: "PBI" ocupava o lugar de destaque sem mudar decisão nenhuma de quem
+   lê de fora, enquanto o estado — que é o que a pessoa veio saber — ia no fim
+   em cinza miúdo, lido como anotação.
+
+   `white-space: nowrap` porque "In Progress" quebrando em duas linhas
    empurraria a linha inteira.
 
    Esta regra vivia DEPOIS da media query do telefone, numa segunda cópia
@@ -217,40 +222,36 @@
    é mesmo a última. */
 .rt-item-estado {
   flex: none;
-  font-size: 0.74rem;
+  display: inline-block;
+  padding: 0.16rem 0.6rem;
+  border: 1px solid var(--borda);
+  border-radius: 999px;
+  background: var(--superficie);
+  font-size: 0.72rem;
+  font-weight: 600;
   color: var(--mudo);
   white-space: nowrap;
 }
-/* Âmbar, igual ao segmento da barra: transbordo é informação de planejamento,
-   não erro. */
-.rt-transbordou .rt-item-estado { color: var(--atencao); }
+/* A COR VEM DA FAMÍLIA, não do texto. "Testing", "In Progress" e "Prototype"
+   são estados diferentes e a linha mostra os três com o nome que têm — mas os
+   três saem do mesmo tom, porque pra quem lê a diferença que importa é pronto
+   ou não pronto. Quem classifica é o `stateBucket` do core, o mesmo que ordena
+   a lista.
 
-/* Selo de tipo: as mesmas cores do badge da Central, uma por tipo de item. */
-.rt-badge {
-  flex: none;
-  display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 600;
-  border-radius: 999px;
-  padding: 0.16rem 0.6rem;
-  background: var(--superficie-2);
-  color: var(--mudo);
-}
-.rt-tipo-epic { background: #ffefdd; color: #b45309; }
-.rt-tipo-feature { background: #f3e8fa; color: #7e22ce; }
-.rt-tipo-pbi { background: #e0f2fe; color: #0369a1; }
-.rt-tipo-bug { background: #fee2e2; color: #b91c1c; }
-.rt-tipo-task { background: #fef9c3; color: #a16207; }
+   Família ausente não ganha regra: o selo fica neutro. É o que acontece com
+   item forjado na URL — ele mostra o texto que trouxe, sem a cor que afirmaria
+   entrega. */
+.rt-fam-andamento { border-color: var(--neutro); color: var(--tinta); }
+.rt-fam-feito { border-color: transparent; background: var(--positivo-fundo); color: var(--positivo); }
+.rt-fam-atencao { border-color: transparent; background: var(--erro-fundo); color: var(--erro); }
 
 /* Item que saiu desta sprint. Ocupa o lugar do estado, porque o estado dele é
-   de OUTRA sprint agora. Âmbar e não vermelho: transbordar é planejamento. */
-.rt-selo-transbordo {
-  display: inline-block;
-  padding: 0.1rem 0.4rem;
-  border-radius: 999px;
+   de OUTRA sprint agora. Âmbar e não vermelho: transbordar é planejamento —
+   mesma cor do segmento da barra, que é o mesmo fato dito duas vezes. */
+.rt-transbordou .rt-item-estado {
+  border-color: transparent;
   background: var(--atencao-fundo);
   color: var(--atencao);
-  font-weight: 600;
 }
 
 /* Carimbo de data: primeiro elemento do corpo, discreto mas presente. O leitor
@@ -463,10 +464,9 @@
 }
 
 /* O ponto de estado saiu daqui junto com a duplicata: ele era de um desenho
-   anterior, o módulo desenha `.rt-badge` e nunca `.rt-ponto`, e a página de
-   verdade tinha ZERO deles. Com ele foram `.rt-ok .rt-ponto` e
-   `.rt-transbordou .rt-ponto`; `.rt-transbordou .rt-item-estado`, que é viva,
-   continua mais abaixo. */
+   anterior e a página de verdade tinha ZERO deles. Com ele foram
+   `.rt-ok .rt-ponto` e `.rt-transbordou .rt-ponto`; `.rt-transbordou
+   .rt-item-estado`, que é viva, continua mais acima. */
 /* A LINHA DE RESUMO, abaixo do título. Ela traduz o jargão da PBI pra quem lê
    de fora — e por isso tem que ler como anotação do título, não como segundo
    título: menor, apagada, e colada nele.
@@ -475,8 +475,8 @@
    o resumo correria na mesma linha do título, separado por um espaço.
 
    O item vira `align-items: flex-start` quando há resumo — com `baseline` e um
-   título de duas linhas, o selo de tipo e o estado desciam até a base da
-   última linha, e o olho perdia a correspondência entre selo e título. */
+   título de duas linhas, o selo de estado descia até a base da última linha, e
+   o olho perdia a correspondência entre selo e título. */
 .rt-item:has(.rt-item-resumo) { align-items: flex-start; }
 .rt-item-resumo {
   display: block;
@@ -489,12 +489,17 @@
 /* NO TELEFONE O TÍTULO TOMA A LINHA. A coluna do nome divide a largura com o
    estado ("In Progress"), e em 375px sobram ~155px: medido, o resumo saía em
    quatro linhas de três palavras. Aqui o título e o resumo ocupam a primeira
-   linha inteira, e o selo de tipo e o estado descem pra segunda — a mesma
-   decisão que o diálogo da sprint, no Panorama, já tinha tomado. */
+   linha inteira e o estado desce pra segunda — a mesma decisão que o diálogo
+   da sprint, no Panorama, já tinha tomado.
+
+   Sem `margin-left: auto`: ele existia pra empurrar o estado pra direita
+   quando o selo de tipo dividia a segunda linha com ele. Agora o estado está
+   sozinho ali, e jogado na direita ele ficaria longe do título que qualifica,
+   com um vão vazio no meio. Alinhado à esquerda ele nasce embaixo da primeira
+   palavra do título. */
 @media (max-width: 599px) {
-  .rt-item { flex-wrap: wrap; row-gap: 0.3rem; }
+  .rt-item { flex-wrap: wrap; row-gap: 0.35rem; }
   .rt-item-nome { flex-basis: 100%; order: -1; }
-  .rt-item-estado { margin-left: auto; }
 }
 /* O número do transbordo em âmbar, igual ao segmento da barra logo acima — é a
    mesma informação dita duas vezes, e cor diferente faria parecerem duas. */
