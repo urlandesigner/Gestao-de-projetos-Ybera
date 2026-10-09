@@ -1,14 +1,38 @@
 {
   "_leia": "Uma linha de resumo por PBI, para os cartões de sprint da aba Acompanhar do relatório de entregas. O título da PBI é jargão de time ('[DESIGN] Viabilização Design System para loja Ybera.us') e não diz nada a quem lê de fora; esta é a camada que traduz. id do item -> { resumo, de }. `de` é a impressão digital da descrição que gerou o resumo: quando a descrição muda no DevOps, o resumo fica desatualizado e precisa ser refeito — é isso que o `de` detecta. Quem escreve: o Claude Code, a partir das descrições que o botão 'Publicar dados' baixa no bloco _descricoes. Linha que você editar à mão é preservada, desde que você apague o `de` dela (sem `de`, ela nunca é regerada). PBI sem descrição no DevOps não entra aqui: o cartão fica só com o título, que é a verdade — não há o que resumir.",
-  "atualizadoEm": "2026-10-08",
+  "atualizadoEm": "2026-10-09",
   "itens": {
     "42884": {
-      "resumo": "Destaca a opção de assinatura na página do produto e sugere no checkout, para quem quer comprar de forma recorrente.",
-      "de": "ead8014a"
+      "resumo": "Destaca a assinatura na página do produto e a sugere no checkout, com renovação a cada 30 dias no cartão de crédito, para quem quer comprar de forma recorrente.",
+      "de": "fd8cbc12"
     },
     "43087": {
       "resumo": "Compara as ferramentas pagas de assinatura recorrente e escolhe a que suporta o crescimento do produto.",
       "de": "259dde2f"
+    },
+    "43801": {
+      "resumo": "Permite ao time trocar a imagem e o link do banner principal da home sozinho, pelo Design Studio da Wake, sem pedir desenvolvimento.",
+      "de": "22b5ff80"
+    },
+    "43802": {
+      "resumo": "Monta vitrines de produtos na home a partir de um hotsite: o time informa a URL e os produtos entram sozinhos.",
+      "de": "c2de88e5"
+    },
+    "43803": {
+      "resumo": "A mesma vitrine de produtos, agora com uma imagem de campanha ao lado — imagem, link e produtos todos configuráveis pelo time.",
+      "de": "668b9c64"
+    },
+    "44018": {
+      "resumo": "Põe na home um bloco de categorias em destaque, cada uma com imagem, título e link para a página dela.",
+      "de": "f02176c4"
+    },
+    "44019": {
+      "resumo": "Deixa o time atualizar o texto e a imagem institucionais da home, para mudar a comunicação da marca sem desenvolvimento.",
+      "de": "a479d41e"
+    },
+    "44022": {
+      "resumo": "Permite trocar os textos do bloco de newsletter da home; o funcionamento do formulário continua o mesmo.",
+      "de": "1adbade1"
     },
     "44075": {
       "resumo": "Deixa o cliente ver e remover os cartões salvos na conta dele.",
@@ -30,6 +54,14 @@
       "resumo": "Permite definir quanto de cada produto uma influenciadora pode comprar por ciclo, direto na página do produto.",
       "de": "8f99b934"
     },
+    "48236": {
+      "resumo": "Abre a venda do ingresso digital do Brasil Influencer 2026 na loja do Brasil: compra separada dos outros produtos, uma por CPF, e as orientações de acesso ao evento logo após o pagamento.",
+      "de": "4b1074f0"
+    },
+    "48245": {
+      "resumo": "Deixa o profissional pagar combinando Lybera, saldo, cartão e PIX na loja PRO, para usar o Lybera acumulado mesmo quando ele não cobre o pedido inteiro.",
+      "de": "146a6114"
+    },
     "48246": {
       "resumo": "A comissão da rede passa a ser calculada só sobre o que foi pago em dinheiro, saldo ou cartão — o valor pago em Lybera sai da conta.",
       "de": "8ce6336d"
@@ -42,17 +74,37 @@
       "resumo": "Mostra ao cliente quanto falta para alcançar o frete grátis.",
       "de": "653166c9"
     },
+    "49173": {
+      "resumo": "Põe link de verificação nos selos da Judge.me e tira do feed do Google os produtos sem estoque, para o Google parar de reprovar itens que não dá para comprar.",
+      "de": "0e1963bc"
+    },
     "49183": {
       "resumo": "Permite ao time trocar os banners das lojas internas sozinho, sem depender de alguém técnico.",
       "de": "0e1f87b4"
+    },
+    "49618": {
+      "resumo": "Coloca em produção a integração da Loja Interna USA com o Shopify, que passa a ser o motor de pedidos no lugar do Ordoro, com plano de volta definido antes da virada.",
+      "de": "8a2c05c3"
     },
     "49639": {
       "resumo": "Levanta o que é preciso para cada influenciadora ter até três endereços de entrega ativos.",
       "de": "b21ddee2"
     },
+    "49757": {
+      "resumo": "Abre a venda do ingresso digital Brasil Influencer na Loja Interna, com preço próprio do canal e pagamento por saldo, PIX ou cartão — Lybera não entra.",
+      "de": "cd694bff"
+    },
+    "49825": {
+      "resumo": "Liga a página de produto do padrão global nas lojas de fora dos EUA, configurando os componentes que já existem em vez de criar novos.",
+      "de": "4d4c0ab7"
+    },
     "49882": {
       "resumo": "Atualiza a loja do México para a versão mais nova do tema global e refaz a home com os componentes oficiais.",
       "de": "8308ad31"
+    },
+    "49897": {
+      "resumo": "Compara as duas lojas internas, PRO e Influencer, e classifica cada diferença entre comum, parametrizável e específica, para decidir o que pode virar uma base só.",
+      "de": "770d1f1c"
     },
     "49931": {
       "resumo": "Corrige o brinde que estava sendo incluído em pedidos que não atingiam o valor mínimo da promoção.",
@@ -62,6 +114,14 @@
       "resumo": "Define como cada marca pode se expressar dentro de um padrão comum, para manter a identidade de cada uma sem perder a consistência da loja.",
       "de": "62c6c5f5"
     },
+    "50180": {
+      "resumo": "Traz o FAQ da home para o Design Studio, com categorias e perguntas editáveis pelo time, e encerra a gestão desse conteúdo no Strapi.",
+      "de": "faaff3b1"
+    },
+    "50433": {
+      "resumo": "Libera o Saldo Bloqueado como forma de pagamento na Lybera Shop, descontando o que já está comprometido com lançamentos futuros.",
+      "de": "5a96ac5a"
+    },
     "50483": {
       "resumo": "Atualiza o visual do cabeçalho e do rodapé de todas as páginas da loja.",
       "de": "c7121bf0"
@@ -69,6 +129,18 @@
     "50484": {
       "resumo": "Aplica as cores, a tipografia e os espaçamentos novos nas páginas da loja Ybera.com, para a identidade visual ficar igual em todas elas.",
       "de": "1d63161c"
+    },
+    "50726": {
+      "resumo": "Corrige o e-mail que não era enviado quando um ingresso é transferido, e passa a permitir cadastrar cupom depois de o ingresso já estar criado.",
+      "de": "b44d42f3"
+    },
+    "50906": {
+      "resumo": "Compara os aplicativos de review da Shopify App Store e recomenda um ou dois finalistas, com o custo mensal no cenário da loja USA.",
+      "de": "f67a8d75"
+    },
+    "50939": {
+      "resumo": "Mantém um botão de compra fixo na tela da página de produto, para a cliente adicionar à sacola sem rolar de volta.",
+      "de": "59e6278f"
     },
     "50944": {
       "resumo": "Põe a listagem de categorias da home no padrão visual novo.",
@@ -90,6 +162,10 @@
       "resumo": "Adiciona o NuPay como meio de pagamento no checkout, com o desconto e o crédito do Nubank.",
       "de": "26efa155"
     },
+    "51018": {
+      "resumo": "Leva a home e o carrinho lateral dos EUA para as lojas da América Latina, só configurando os componentes existentes para cada país.",
+      "de": "467a6b98"
+    },
     "51022": {
       "resumo": "Atualiza o visual do carrinho para o padrão novo.",
       "de": "15b43296"
@@ -97,6 +173,10 @@
     "51139": {
       "resumo": "Prototipa uma forma mais simples de usar e combinar saldos no checkout das lojas internas.",
       "de": "75f6f252"
+    },
+    "51201": {
+      "resumo": "Habilita o Saldo Bloqueado como forma de pagamento também na Loja PRO, com a mesma regra já especificada para a Lybera Shop.",
+      "de": "f6c4f890"
     },
     "51676": {
       "resumo": "Ajusta o app de reviews que já está na loja para atender o que a pesquisa definiu, em vez de contratar outro.",
@@ -135,8 +215,8 @@
       "de": "f0d90ed7"
     },
     "51942": {
-      "resumo": "O checkout confere o endereço e avisa a cliente na hora, em vez de a Ybera ter de entrar em contato depois.",
-      "de": "4c930caf"
+      "resumo": "O checkout confere o endereço nas bases das transportadoras e bloqueia a compra quando falta o número do apartamento, em vez de a Ybera ter de entrar em contato depois.",
+      "de": "738e3f54"
     },
     "51945": {
       "resumo": "Verifica se dá para oferecer Venmo, Zelle e Klarna no checkout e o que cada um exige.",
@@ -177,6 +257,34 @@
     "52250": {
       "resumo": "Traz as campanhas de brinde para o app próprio da loja e tira o Dr Free Gift, que custava e dava conflito no carrinho.",
       "de": "7cb13dde"
+    },
+    "53098": {
+      "resumo": "Testa as ofertas de upsell do Zipify antes de ativar qualquer uma, para saber quais funcionam sem conflitar com o carrinho próprio, os brindes e a integração de pedidos.",
+      "de": "dd77ae3e"
+    },
+    "53104": {
+      "resumo": "Liga as ofertas de upsell aprovadas no discovery, para a cliente aceitar produtos complementares com um clique, sem precisar fazer outro pedido.",
+      "de": "3778ce6f"
+    },
+    "53105": {
+      "resumo": "Desenha o template novo da loja usando só os componentes do Design System, em desktop e no celular, em seções que o time das lojas consiga montar sozinho no Shopify.",
+      "de": "ebf48008"
+    },
+    "53172": {
+      "resumo": "Ajusta a identificação fiscal dos pedidos da Loja Interna enviados ao Bling, para reduzir os erros de importação que sobrecarregam a logística em campanha.",
+      "de": "6fb7c88f"
+    },
+    "53173": {
+      "resumo": "Habilita cartão de crédito e Yappy na Loja Interna do Panamá, inclusive combinados com os saldos, sem perder a contagem da compra para a Taxa de Ativação.",
+      "de": "88a95f55"
+    },
+    "53176": {
+      "resumo": "Valida o estorno automático nos pagamentos simples e combinados, depois das últimas correções, para decidir com evidência se ainda falta desenvolvimento.",
+      "de": "4446dc39"
+    },
+    "53181": {
+      "resumo": "Traz para o Bling a etiqueta de envio dos pedidos de marketplace faturados na Anymarket, para a expedição imprimir sem sair do ERP.",
+      "de": "b65d3763"
     }
   }
 }
