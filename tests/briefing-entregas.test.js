@@ -693,7 +693,19 @@ test('contagens forjadas viram número, ou não entram', () => {
    vivo, nunca vê. Por isso o teste compara a lista com o que o código de fato
    referencia. */
 test('o link declara exatamente os campos que o documento lê', () => {
-  const fonte = fs.readFileSync(path.join(__dirname, '../assets/briefing-entregas.js'), 'utf8');
+  const bruto = fs.readFileSync(path.join(__dirname, '../assets/briefing-entregas.js'), 'utf8');
+  /* O `entregasConcluidas` sai da varredura, e é a ÚNICA exceção: ele não
+     desenha nada e nunca roda sobre pacote de link. Ele produz o material de
+     trabalho do PO, a partir da busca ao vivo do report.js — que pede Title,
+     ClosedDate e Description na lista CAMPOS dele. Exigir esses campos no
+     `camposDoLink` engordaria a URL do stakeholder com dado que ninguém lê do
+     outro lado, e o teste logo abaixo existe justamente pra mantê-los fora.
+
+     A exceção só vale enquanto a função ficar na mão do PO: o teste seguinte
+     trava isso no report.js. */
+  const corte = /function entregasConcluidas\([\s\S]*?\n  \}\n/.exec(bruto);
+  assert.ok(corte, 'o entregasConcluidas sumiu — a exceção da varredura perdeu o dono');
+  const fonte = bruto.replace(corte[0], '');
   const lidos = new Set((fonte.match(/'(?:System|Microsoft\.VSTS)\.[A-Za-z.]+'/g) || [])
     .map((x) => x.slice(1, -1)));
   // A própria declaração aparece na varredura; ela não é uma leitura.
@@ -701,6 +713,55 @@ test('o link declara exatamente os campos que o documento lê', () => {
   assert.deepEqual([...lidos], [],
     `o módulo lê ${[...lidos].join(', ')} e não declara em camposDoLink — no link de leitura esse campo chega vazio`);
   assert.ok(BE.camposDoLink.length >= 3, 'a lista não pode estar vazia');
+});
+
+/* A exceção acima tem preço: se o `entregasConcluidas` passasse a rodar no
+   caminho do leitor, ele leria campos que o link não carrega e devolveria
+   título vazio e descrição vazia — calado, porque campo ausente não estoura.
+   Então o lugar onde ele é chamado faz parte do contrato. */
+test('o material de entregas só é montado no caminho do PO', () => {
+  const report = fs.readFileSync(path.join(__dirname, '../assets/report.js'), 'utf8');
+  const chamada = /const material = \(semRecorte && B\.precisaDeEntregas === true[\s\S]*?: null;/
+    .exec(report);
+  assert.ok(chamada, 'o material de entregas mudou de forma — reveja a exceção da varredura');
+  assert.match(chamada[0], /B\.entregasConcluidas\(mostrados, st\.items\.concat\(st\.pais\)/,
+    'o material passou a ser montado de outra fonte que não a busca ao vivo');
+  // E o bloco nasce com `_`: é o contrato que o portão do publicar-dados.sh lê.
+  assert.match(report, /_entregas: \(material && material\.itens\.length\) \? material : undefined,/);
+});
+
+/* O teste acima lê a chamada; este RODA. Casar o texto garante que a linha está
+   escrita, não que ela faz o que diz — e os dois portões dela (só sem recorte,
+   só pra quem declara) falham em silêncio quando erram: o bloco simplesmente
+   não aparece, e quem for escrever os cartões acha que o mês não teve entrega.
+
+   `pacoteDoDocumento` mora num arquivo que fala com window; aqui a expressão é
+   recortada e corrida com dublês, que é a mesma técnica que o saneRitmo usa. */
+test('os dois portões do material funcionam, e não só estão escritos', () => {
+  const report = fs.readFileSync(path.join(__dirname, '../assets/report.js'), 'utf8');
+  const trecho = /const material = \(semRecorte[\s\S]*?: null;/.exec(report)[0];
+  const rodar = (semRecorte, B) => {
+    const st = { items: [{ id: 1 }], pais: [] };
+    const mostrados = st.items;
+    // eslint-disable-next-line no-eval
+    return eval(trecho + '\nmaterial;');
+  };
+  const ferramenta = { entregasConcluidas: () => ({ itens: ['x'], frentes: ['f'] }),
+    periodoDoDocumento: () => ['2026-10'] };
+
+  const ligado = rodar(true, Object.assign({ precisaDeEntregas: true }, ferramenta));
+  assert.deepEqual(ligado, { itens: ['x'], frentes: ['f'] }, 'o material não foi montado');
+
+  // Com filtro de responsável ligado: as entregas de uma pessoa não podem ser
+  // apresentadas como as do time.
+  assert.equal(rodar(false, Object.assign({ precisaDeEntregas: true }, ferramenta)), null);
+
+  // Sem declarar: é o documento de Agosto e Setembro, que já foi escrito.
+  assert.equal(rodar(true, ferramenta), null);
+
+  // E a ferramenta ausente não estoura — o report.html e o report-v2.html nem a
+  // têm, porque não carregam o módulo de entregas.
+  assert.equal(rodar(true, { precisaDeEntregas: true }), null);
 });
 
 test('o link não carrega título nem datas — o documento não os mostra', () => {
@@ -1007,4 +1068,114 @@ test('galeria: só aparece em cartão que declara imagens', () => {
   for (const c of cartoes.filter((c) => !c.includes('rl-galeria'))) {
     assert.ok(!c.includes('<figure'), 'cartão sem imagens declaradas não desenha moldura');
   }
+});
+
+/* ---- O MATERIAL PRA ESCREVER A ABA ENTREGAS ----
+
+   A aba Entregas é texto curado: um cartão por frente, escrito à mão. O Urlan
+   pediu em 09/10/2026 que o trabalho de escrever saísse das costas dele — o
+   Claude Code lê o que foi entregue e escreve o cartão, ele revisa.
+
+   `entregasConcluidas` é a matéria-prima desse trabalho. Ela não desenha nada:
+   junta as PBIs concluídas do mês, cada uma com a frente dela e a descrição
+   crua. O que estes testes guardam é o que torna esse material confiável —
+   material errado produz cartão errado, e o cartão é o que o stakeholder lê.
+
+   O bloco que carrega isto NUNCA é publicado; quem garante é o portão do
+   publicar-dados.sh, testado no resumo-pbi.test.js. */
+
+const comDescricao = (it, texto) => {
+  it.fields['System.Description'] = texto;
+  return it;
+};
+// Dois meses de distância entre as datas: AGORA é 22/09, então `fechadoDias: 2`
+// cai em setembro e `fechadoDias: 40` cai em agosto.
+function material(meses) {
+  const items = [
+    epico(1, 'Loja Clube USA', 30),
+    filho(10, 'Feature', 'Done', 'Verificação de endereço', 1, { fechadoDias: 3 }),
+    comDescricao(filho(100, 'Product Backlog Item', 'Done', 'Limite de caracteres', 10,
+      { fechadoDias: 2 }), '<p>Avisa a cliente no checkout.</p>'),
+    filho(101, 'Product Backlog Item', 'Done', 'Discovery do AddressGuard', 10,
+      { fechadoDias: 40 }),
+    filho(102, 'Product Backlog Item', 'In Progress', 'Ainda rodando', 10),
+    filho(20, 'Feature', 'In Progress', 'Assinatura', 1),
+    filho(200, 'Product Backlog Item', 'Done', 'Pesquisa de plataforma', 20,
+      { fechadoDias: 1 }),
+    // Pendurada direto no épico: não tem Feature, e por isso não tem frente.
+    filho(300, 'Product Backlog Item', 'Done', 'Avulsa', 1, { fechadoDias: 1 }),
+  ];
+  return BE.entregasConcluidas(items, items, meses);
+}
+
+test('a frente é a Feature, e o épico vem junto como produto', () => {
+  /* Agrupar pelo épico juntaria num cartão só o que são frentes diferentes —
+     cinco cartões do documento real dividem o épico 49290. */
+  const m = material(['2026-09']);
+  const endereco = m.frentes.find((f) => f.feature && f.feature.id === 10);
+  assert.ok(endereco, 'a frente da Feature 10 não apareceu');
+  assert.equal(endereco.feature.nome, 'Verificação de endereço');
+  assert.equal(endereco.epico.nome, 'Loja Clube USA');
+  const assinatura = m.frentes.find((f) => f.feature && f.feature.id === 20);
+  assert.ok(assinatura, 'Feature em andamento com PBI concluída tem que entrar');
+});
+
+test('PBI sem Feature não some — vira frente própria', () => {
+  // Sumir calada é o pior resultado: quem escreve nunca fica sabendo que ela
+  // existiu, e a entrega não aparece no relatório.
+  const m = material(['2026-09']);
+  assert.ok(m.itens.some((x) => x.id === 300), 'a PBI sem Feature sumiu do material');
+});
+
+test('só entra o que foi CONCLUÍDO dentro do período do documento', () => {
+  const m = material(['2026-09']);
+  const ids = m.itens.map((x) => x.id).sort((a, b) => a - b);
+  assert.deepEqual(ids, [100, 200, 300]);
+  // 101 fechou em agosto, 102 não fechou, e a Feature 10 não é PBI.
+  assert.equal(m.itens.some((x) => x.id === 101), false, 'entrou item de outro mês');
+  assert.equal(m.itens.some((x) => x.id === 102), false, 'entrou item não concluído');
+  assert.equal(m.itens.some((x) => x.id === 10), false, 'a Feature entrou como se fosse PBI');
+});
+
+test('a frente diz quanto entregou no mês e quanto já entregou na vida', () => {
+  /* As duas contas respondem perguntas diferentes, e é por isso que as duas
+     viajam: sem `total`, quem escreve conta como novidade uma frente que já
+     vinha entregando antes desta edição. */
+  const m = material(['2026-09']);
+  const endereco = m.frentes.find((f) => f.feature && f.feature.id === 10);
+  assert.equal(endereco.noPeriodo, 1);
+  assert.equal(endereco.total, 2, 'o fechado em agosto tem que contar no total');
+});
+
+test('frente sem nada no período não entra — não é assunto desta edição', () => {
+  const m = material(['2026-10']);
+  assert.deepEqual(m.itens, []);
+  assert.deepEqual(m.frentes, []);
+});
+
+test('a descrição vem limpa, que é o texto que serve pra escrever', () => {
+  const m = material(['2026-09']);
+  const it = m.itens.find((x) => x.id === 100);
+  assert.equal(it.descricao, 'Avisa a cliente no checkout.');
+  // Quem não tem descrição vem com vazio, e quem escreve diz que faltou em vez
+  // de preencher com texto plausível.
+  assert.equal(m.itens.find((x) => x.id === 200).descricao, '');
+});
+
+test('item concluído sem data de fechamento fica fora', () => {
+  // Sem data não dá pra afirmar que é deste mês, e atribuir ao mês errado é
+  // pior que omitir: o relatório passaria a contar no mês errado.
+  const items = [
+    epico(1, 'Produto', 30),
+    filho(10, 'Feature', 'Done', 'Frente', 1, { fechadoDias: 3 }),
+    filho(100, 'Product Backlog Item', 'Done', 'Sem data', 10),
+  ];
+  const m = BE.entregasConcluidas(items, items, ['2026-09']);
+  assert.deepEqual(m.itens, []);
+});
+
+test('sem período declarado, não recorta nada', () => {
+  // É o comportamento de quem chama sem janela: devolve tudo que fechou.
+  const m = material([]);
+  assert.equal(m.itens.length, 4, 'a janela vazia passou a filtrar');
 });

@@ -684,6 +684,77 @@
     return { porFeature, porEpico };
   }
 
+  /* O MATERIAL BRUTO DAS ENTREGAS — toda PBI concluída no período, com a frente
+     a que ela pertence e a descrição que alguém escreveu nela.
+
+     ESTE DOCUMENTO NÃO DESENHA NADA DISTO. É ferramenta, e mora aqui porque a
+     cadeia já mora aqui: `ehPbi`, `featureDe` e o mapa de produtos do core. Uma
+     segunda subida até a Feature, escrita noutro arquivo, divergiria da
+     primeira no dia em que uma das duas fosse corrigida.
+
+     Quem consome é o PO, pelo bloco local do pacote: ele lê daqui o que foi
+     entregue e escreve o cartão da frente — o texto da aba Entregas, que até
+     hoje era digitado do zero toda edição. Por isso sai com a descrição CRUA, e
+     por isso o bloco que a carrega nunca é publicado.
+
+     A frente é a Feature, não o épico: cinco cartões dividem o épico 49290, e
+     agrupar por ele juntaria num cartão só o que são cinco entregas diferentes.
+     O épico vem junto, mas como o produto que encabeça o cartão.
+
+     Duas contas por frente, e elas respondem perguntas diferentes: `noPeriodo` é
+     o que fechou dentro do mês do documento, e `total` é tudo que a frente já
+     entregou. A segunda existe pra quem escreve saber que a frente tem história
+     antes desta edição, em vez de contar como novidade o que já foi contado.
+
+     Item concluído sem data de fechamento fica fora do recorte: sem ela não dá
+     pra afirmar que é deste mês, e atribuir ao mês errado é pior que omitir. */
+  function entregasConcluidas(items, todos, meses) {
+    const base = todos || items || [];
+    const porId = new Map(base.map((it) => [it.id, it]));
+    const mapa = C.mapaDeProdutos(base);
+    const janela = new Set(Array.isArray(meses) ? meses : []);
+    const tit = (id) => {
+      const x = porId.get(id);
+      return x ? String((x.fields || {})['System.Title'] || '').trim() : '';
+    };
+    const itens = [];
+    const frentes = new Map();
+    for (const it of (items || [])) {
+      if (!ehPbi(it)) continue;
+      const f = it.fields || {};
+      if (!C.isTerminalState(f['System.State'])) continue;
+      const quando = String(f['Microsoft.VSTS.Common.ClosedDate'] || '').slice(0, 10);
+      const fid = featureDe(it.id, porId);
+      const prod = mapa && mapa.get(it.id);
+      /* Sem Feature e sem épico a PBI não tem dono: entra numa frente própria em
+         vez de sumir, senão quem escreve nunca fica sabendo que ela existiu. */
+      const chave = fid ? 'f:' + fid : (prod ? 'e:' + prod.id : 'sem-frente');
+      if (!frentes.has(chave)) {
+        frentes.set(chave, {
+          chave,
+          feature: fid ? { id: fid, nome: tit(fid) } : null,
+          epico: prod ? { id: prod.id, nome: prod.titulo } : null,
+          noPeriodo: 0,
+          total: 0,
+        });
+      }
+      const fr = frentes.get(chave);
+      fr.total += 1;
+      if (!quando || (janela.size && !janela.has(quando.slice(0, 7)))) continue;
+      fr.noPeriodo += 1;
+      itens.push({
+        id: it.id,
+        titulo: String(f['System.Title'] || '').trim(),
+        estado: String(f['System.State'] || '').trim(),
+        fechadoEm: quando,
+        frente: chave,
+        descricao: C.descricaoLimpa(f['System.Description']),
+      });
+    }
+    // Frente sem nada no período não entra: ela não é assunto desta edição.
+    return { itens, frentes: [...frentes.values()].filter((x) => x.noPeriodo > 0) };
+  }
+
   /* CONTAGENS PRONTAS — o formato curto do link de leitura.
 
      O documento extrai do board exatamente cinco números: quantas PBIs
@@ -1011,5 +1082,5 @@
      abre exatamente o que ele carrega, como antes. */
   const arquivoDeDados = 'assets/dados-ago-set.json';
 
-  return { htmlReport, mesPorExtenso, dataCurta, esc, periodoDoDocumento, cartoesDoDocumento, camposDoLink, contagensDoLink, arquivoDeDados };
+  return { htmlReport, mesPorExtenso, dataCurta, esc, periodoDoDocumento, cartoesDoDocumento, camposDoLink, contagensDoLink, entregasConcluidas, arquivoDeDados };
 });

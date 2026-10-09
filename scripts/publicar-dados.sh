@@ -58,19 +58,24 @@ except Exception as e:
 if not isinstance(p, dict) or 'em' not in p:
     sys.exit('o JSON não parece um pacote deste relatório (falta "em")')
 
-# O PORTÃO DAS DESCRIÇÕES. O bloco `_descricoes` é material LOCAL: descrição de
-# PBI tem link interno, nome de fornecedor e observação escrita achando que era
-# interna, e este arquivo vai pra um site PÚBLICO. Ele só existe enquanto houver
-# PBI sem resumo; quem o consome e apaga é quem gera os resumos.
+# O PORTÃO DO MATERIAL LOCAL, e o sublinhado é o contrato: chave que começa com
+# `_` é material de trabalho do PO. Dentro dela vai descrição crua de PBI, que
+# tem link interno, nome de fornecedor e observação escrita achando que era
+# interna — e este arquivo vai pra um site PÚBLICO e indexável.
 #
 # Parar aqui, e não avisar, é o ponto: aviso num script depende de alguém ler.
-pend = p.get('_descricoes')
-if pend:
-    print(f'o pacote ainda traz {len(pend)} descrição(ões) de PBI, que NÃO podem ir pro ar.',
-          file=sys.stderr)
+#
+# Por PREFIXO e não por lista de nomes: hoje são dois blocos (`_descricoes`, com
+# as PBIs sem linha de resumo, e `_entregas`, com o material pra escrever os
+# cartões), e a lista ficaria velha no dia em que alguém criasse o terceiro e
+# esquecesse de atualizá-la aqui. Esse esquecimento sai publicado em silêncio.
+locais = sorted(k for k in p if k.startswith('_'))
+if locais:
+    print('o pacote ainda traz material local, que NÃO pode ir pro ar: '
+          + ', '.join(locais), file=sys.stderr)
     print('peça ao Claude Code: "gera os resumos" — ele lê o arquivo em Downloads,',
           file=sys.stderr)
-    print('escreve assets/resumos.json e tira o bloco. Depois rode isto de novo.',
+    print('escreve o que tem que escrever e limpa os blocos. Depois rode isto de novo.',
           file=sys.stderr)
     sys.exit(1)
 

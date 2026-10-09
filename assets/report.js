@@ -979,6 +979,21 @@ function pacoteDoDocumento(semRecorte) {
   const ritmoLinhas = B.precisaDeSprints === true ? ritmoAgora(mostrados) : [];
   const pendentes = (semRecorte && B.precisaDeSprints === true)
     ? descricoesPendentes(ritmoLinhas) : [];
+  /* O MATERIAL PRA ESCREVER A ABA ENTREGAS. Quem declara é o documento, em
+     `precisaDeEntregas` — mesmo arranjo de `precisaDeSprints`, e pelo mesmo
+     motivo: a ferramenta mora no módulo base, então os DOIS documentos de
+     entregas a enxergam, e só o que declara é que a usa. O de Agosto e Setembro
+     já foi escrito e publicado; gerar material pra ele seria trabalho sobre
+     texto que não se reescreve mais.
+
+     Só `semRecorte`: isto é bloco de trabalho do PO, e com um filtro de
+     responsável ligado ele mostraria as entregas de uma pessoa como se fossem
+     as do time. */
+  const material = (semRecorte && B.precisaDeEntregas === true
+    && typeof B.entregasConcluidas === 'function')
+    ? B.entregasConcluidas(mostrados, st.items.concat(st.pais),
+      typeof B.periodoDoDocumento === 'function' ? B.periodoDoDocumento() : [])
+    : null;
   const pacote = typeof B.contagensDoLink === 'function'
     ? Object.assign(cabecalho, {
       contagens: B.contagensDoLink(mostrados, st.items.concat(st.pais)),
@@ -994,6 +1009,13 @@ function pacoteDoDocumento(semRecorte) {
          por script nenhum, e um bloco de descrições cruas dentro dele iria
          inteiro pra quem recebesse. Ausente quando não há pendência. */
       _descricoes: (semRecorte && pendentes && pendentes.length) ? pendentes : undefined,
+      /* Mesma regra do bloco acima, e o sublinhado é o contrato: chave que
+         começa com `_` é material local: o portão do publicar-dados.sh recusa o
+         pacote inteiro enquanto houver uma, e o aplicar-resumos.js tira todas
+         antes de publicar. Aqui dentro vão descrições cruas de PBI — link
+         interno, nome de fornecedor, observação escrita achando que era
+         interna — e o arquivo publicado é público e indexável. */
+      _entregas: (material && material.itens.length) ? material : undefined,
     })
     : Object.assign(cabecalho, {
       items: enxugar(mostrados),

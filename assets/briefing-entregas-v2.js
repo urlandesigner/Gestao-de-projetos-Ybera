@@ -410,6 +410,11 @@
   return Object.assign({}, base, {
     htmlReport,
     precisaDeSprints: true,
+    /* O material bruto das entregas do mês, no bloco local do pacote. A
+       ferramenta vem do base (entregasConcluidas) e os dois documentos a
+       enxergam; só esta edição declara que a quer. O relatório de Agosto e
+       Setembro já foi escrito e publicado — não se reescreve. */
+    precisaDeEntregas: true,
     arquivoDeDados: ARQUIVO_DE_DADOS,
     periodoDoDocumento: () => PERIODO.slice(),
     cartoesDoDocumento: () => ENTREGAS_OUTUBRO.map((c) => Object.assign({}, c)),

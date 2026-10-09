@@ -67,10 +67,16 @@ for (const d of (pacote._descricoes || [])) {
   postos += 1;
 }
 
-/* O bloco sai SEMPRE, mesmo que algum item tenha ficado sem linha: ele é
-   material local, e o portão do publicar-dados.sh existe pra que ele nunca
-   alcance o ar. Item sem linha fica só com o título, que é a verdade. */
-delete pacote._descricoes;
+/* TODO bloco local sai SEMPRE, mesmo que algum item tenha ficado sem linha: é
+   material de trabalho, e o portão do publicar-dados.sh existe pra que ele
+   nunca alcance o ar. Item sem linha fica só com o título, que é a verdade.
+
+   Por PREFIXO e não por nome: o `_entregas`, que carrega o material pra
+   escrever os cartões, nasceu depois do `_descricoes` — e a próxima chave que
+   alguém criar também vai nascer depois deste arquivo. Lista de nomes fica
+   velha calada; prefixo não. */
+const locais = Object.keys(pacote).filter((k) => k.startsWith('_'));
+for (const k of locais) delete pacote[k];
 fs.writeFileSync(alvo, JSON.stringify(pacote, null, 1) + '\n');
 
 console.log(`resumos aplicados: ${postos}`);
@@ -80,4 +86,4 @@ if (ambiguos.length) {
 }
 const comResumo = [...porChave.values()].filter((x) => x.resumo).length;
 console.log(`no pacote: ${comResumo} de ${porChave.size} itens com resumo`);
-console.log('bloco _descricoes removido — o pacote está pronto pra publicar.');
+console.log(`blocos locais removidos (${locais.join(', ') || 'nenhum'}) — o pacote está pronto pra publicar.`);

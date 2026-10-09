@@ -33,13 +33,27 @@ const css = semComentarios(ler('assets/ritmo.css'));
 
 /* ---------- 1. a descrição crua não chega em produção ---------- */
 
-test('o publicar-dados.sh PARA se o pacote ainda trouxer descrições', () => {
+test('o publicar-dados.sh PARA se o pacote ainda trouxer material local', () => {
   // Parar, e não avisar: aviso em script depende de alguém ler a saída.
-  assert.match(publicar, /pend = p\.get\('_descricoes'\)/);
-  assert.match(publicar, /if pend:/);
+  //
+  // Por PREFIXO e não por nome: o portão nasceu conhecendo só o `_descricoes`, e
+  // o `_entregas` chegou depois. Uma lista de nomes teria deixado o segundo
+  // passar calada — que é exatamente o acidente que este portão existe pra
+  // impedir, e o único em que ninguém percebe o estrago.
+  assert.match(publicar, /locais = sorted\(k for k in p if k\.startswith\('_'\)\)/);
+  assert.match(publicar, /if locais:/);
   assert.match(publicar, /sys\.exit\(1\)/);
   // E o erro diz o que fazer, não só que deu errado.
   assert.match(publicar, /gera os resumos/);
+});
+
+/* Mesmo motivo, na outra ponta: o aplicar-resumos.js é quem limpa o pacote
+   antes de publicar. Se ele tirasse só o bloco que conhece, o pacote sairia
+   limpo pela metade e o portão barraria a publicação sem ninguém entender. */
+test('o aplicar-resumos.js tira TODO bloco local, não só o que ele conhece', () => {
+  const script = ler('scripts/aplicar-resumos.js');
+  assert.match(script, /Object\.keys\(pacote\)\.filter\(\(k\) => k\.startsWith\('_'\)\)/);
+  assert.match(script, /for \(const k of locais\) delete pacote\[k\];/);
 });
 
 test('as descrições só entram no ARQUIVO, nunca no link', () => {
