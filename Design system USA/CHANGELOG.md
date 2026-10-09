@@ -5,6 +5,8 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
+## [1.0.10] — 2026-10-09
+
 ### Corrigido
 - **O bloco do Tolstoy deixava um vão de 128px quando o script não vinha.** O
   widget é a única coisa de fora da home-prova — vídeos, classes e imagens são
