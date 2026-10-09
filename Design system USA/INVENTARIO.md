@@ -37,7 +37,7 @@ componente que a próxima pessoa reescreve — e aí o sistema tem dois.
 | LOGO | `.yb-logo` | Átomo | Estável | 4 | 1 | 5 | sim | sim | — | sim |
 | NOTICE | `.yb-notice` | Átomo | Estável | 2 | 2 | 20 | sim | sim | — | sim |
 | OFFER SEAL | `.yb-offerseal` | Átomo | Estável | 2 | — | 10 | sim | n/a | — | sim |
-| PANEL | `.yb-panel` | Átomo | Beta | 1 | — | 13 | sim | n/a | — | — |
+| PANEL | `.yb-panel` | Átomo | Beta | 1 | — | 12 | sim | n/a | — | — |
 | PROGRESS BAR | `.yb-progress` | Átomo | Estável | 3 | — | 10 | sim | n/a | — | sim |
 | SKELETON | `.yb-skeleton` | Átomo | Beta | 6 | — | 9 | sim | n/a | — | — |
 | STARS | `.yb-stars` | Átomo | Estável | — | — | 5 | sim | n/a | — | sim |

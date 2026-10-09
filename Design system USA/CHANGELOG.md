@@ -5,6 +5,30 @@ Versionamento descrito em [GOVERNANCA.md](GOVERNANCA.md).
 
 ## [Unreleased]
 
+### Corrigido
+- **O bloco do Tolstoy deixava um vão de 128px quando o script não vinha.** O
+  widget é a única coisa de fora da home-prova — vídeos, classes e imagens são
+  todos injetados por ele em tempo de execução. Com o script bloqueado o
+  `<tolstoy-widget>` ficava vazio e a seção mantinha 64px de respiro em cima e
+  64 embaixo, com nada no meio. Medido. Agora `:has()` esconde a seção enquanto
+  o widget não tiver filhos: sem o script o vão é zero, com ele os 820px de
+  sempre. Conteúdo de terceiro que não chegou não merece espaço reservado.
+- **Onze tokens prometiam remoção numa versão que já passou.** Todos os
+  `@deprecated` diziam "Remoção em 1.0", e o sistema está na 1.0.x — a
+  GOVERNANCA só permite remover em versão maior, então o comentário prometia o
+  que não podia cumprir. Passaram para "Remoção em 2.0", inclusive o exemplo da
+  própria política. Medido antes: 16 dos 17 nomes já não têm consumidor
+  nenhum; o único que tinha, `--yb-elevation-flat` em `.yb-panel--flat`,
+  contradizia a própria depreciação ("sem sombra é a ausência da propriedade")
+  e virou `box-shadow:none`. Os nomes ficam até a 2.0, porque o tema da loja
+  pode consumi-los e isso não dá para medir daqui.
+
+### Modificado
+- **Toda release ganha tag no git.** Dez releases existiam como commits com
+  "release(1.0.x)" na mensagem e nenhuma marca: voltar para uma versão era
+  procurar o commit. As dez (1.0.0 a 1.0.9) foram marcadas pelo commit de cada
+  `release(...)`, e o passo de publicar na GOVERNANCA passou a incluir a tag.
+
 ## [1.0.9] — 2026-10-08
 
 ### Adicionado

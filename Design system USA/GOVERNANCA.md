@@ -69,7 +69,7 @@ Nada é removido de uma vez. O ciclo é:
 3. **Remover.** Só na próxima versão maior, e listado no changelog.
 
 ```css
-/* @deprecated desde 0.4 — use --yb-text-muted. Remoção em 1.0. */
+/* @deprecated desde 0.4 — use --yb-text-muted. Remoção em 2.0. */
 --yb-text-light: var(--yb-text-muted);
 ```
 
@@ -131,6 +131,19 @@ medição — os números anotados em `00-primitives.css` são medidos, não est
 Quebrar qualquer uma delas exige mudança maior e justificativa no changelog.
 
 ## Antes de publicar uma versão
+
+Toda release ganha uma **tag** no commit que a fecha, com o mesmo número do
+`package.json`:
+
+```bash
+git tag v1.0.9 && git push central v1.0.9
+```
+
+Sem tag, voltar para uma versão é procurar o commit pela mensagem; com tag é
+`git checkout v1.0.5`, e o GitHub lista cada uma com o pacote para baixar. As
+nove primeiras releases (1.0.0 a 1.0.9) foram marcadas depois, pelo commit de
+cada `release(...)`.
+
 
 O checklist virou comando. As 144 checagens rodam sozinhas:
 

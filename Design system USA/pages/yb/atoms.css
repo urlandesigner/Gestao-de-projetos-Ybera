@@ -1490,7 +1490,11 @@ button.yb-link{
 }
 /* Sobre chão cinza o fio já basta: a sombra que separava do branco vira borrão
    na superfície escurecida, e duas delas lado a lado leem como sujeira. */
-.yb-panel--flat{box-shadow:var(--yb-elevation-flat)}
+/* `none` e nao o token: `--yb-elevation-flat` esta depreciado desde 0.10 com a
+   razao escrita nele — "sem sombra" e a ausencia da propriedade, nao um valor.
+   Esta era a unica linha do sistema que ainda o consumia, e contradizia a
+   propria depreciacao. */
+.yb-panel--flat{box-shadow:none}
 /* O título do painel, quando ele tem um. Fica no degrau h4 — o mesmo do
    diálogo —, porque painel e diálogo são a mesma pergunta em lugares
    diferentes: uma caixa que se intitula. */
