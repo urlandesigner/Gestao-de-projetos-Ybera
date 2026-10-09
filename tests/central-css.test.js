@@ -231,9 +231,16 @@ test('as três retrancas de sprint têm a mesma caixa', () => {
   const css = ler('assets/style.css');
   const base = /\n\.sprint-fase \{[^}]*\}/.exec(css);
   assert.ok(base, 'a regra .sprint-fase sumiu');
-  for (const prop of ['display', 'padding', 'border-radius', 'font-size', 'margin-bottom']) {
+  /* `margin-bottom` saiu desta lista em 09/10/2026: no cartão o selo deixou de
+     ser etiqueta acima do bloco e passou a ser o item direito da linha do
+     título, onde o alinhamento é do flex e não da margem. Quem ainda o empilha é
+     o diálogo da sprint, e a folga mora na regra DELE. O que esta lista guarda
+     continua sendo a CAIXA comum às três retrancas. */
+  for (const prop of ['display', 'padding', 'border-radius', 'font-size']) {
     assert.match(base[0], new RegExp(`${prop}:`), `${prop} saiu da regra base e a caixa deixa de ser comum`);
   }
+  assert.match(css, /\.sprint-tudo-cab \.sprint-fase \{ margin-bottom: 0\.5rem; \}/,
+    'o selo empilhado do diálogo perdeu a folga que a base deixou de dar');
   assert.match(base[0], /display:\s*inline-block/, 'em display:block o selo vira faixa da largura toda');
 
   const atual = /\.sprint-atual \.sprint-fase \{[^}]*\}/.exec(css);

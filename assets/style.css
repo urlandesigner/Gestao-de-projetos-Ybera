@@ -632,8 +632,35 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
   color: var(--tinta);
 }
 .sprint-link:hover { background: #fafafa; }
-.sprint-linha { display: flex; justify-content: space-between; align-items: baseline; gap: 0.6rem; font-size: 0.8rem; }
-.sprint-nome { min-width: 0; }
+/* O TÍTULO E A RETRANCA na mesma linha, ele à esquerda e ela encostada na
+   direita. `flex-start` e não `baseline`: com um nome de sprint que quebre em
+   duas linhas, o baseline desceria o selo até a última delas e o olho perderia a
+   correspondência entre os dois. */
+.sprint-topo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+/* 0.95rem põe o nome um degrau ACIMA do título dos itens da prévia (0.85rem, em
+   .lista-linhas .item-linha). Ele vinha em 0.8rem, dentro da .sprint-linha —
+   menor que o título de cada item que o cartão lista. */
+.sprint-nome {
+  min-width: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+/* A DATA é legenda do título: fica na linha de baixo, à esquerda, e o placar
+   segue à direita, perto da barra que ele descreve.
+
+   A FOLGA É MEDIDA PELA DIREITA, não pela esquerda. Com 0.15rem o vão dava 5px
+   embaixo do título e só 2px embaixo do selo — porque o selo é 2px mais alto que
+   o texto e come o respiro da coluna dele. O olho lê o aperto no lado do selo,
+   que é o elemento mais pesado da linha. Em 0.5rem são ~8px embaixo do selo, o
+   mesmo vão que a data já tem até a barra. */
+.sprint-linha { display: flex; justify-content: space-between; align-items: baseline; gap: 0.6rem; font-size: 0.8rem; margin-top: 0.5rem; }
+.sprint-datas { min-width: 0; }
 .sprint-prog { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--mudo); font-weight: 600; }
 .sprint-link .seta { color: var(--mudo); }
 /* ---------- Panorama: ritmo (gráfico) e roadmap ---------- */
@@ -771,7 +798,11 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
   gap: 1rem;
 }
 /* O selo de fase repete o do cartão, pra quem abriu saber de qual dos três veio.
-   Aqui ele não precisa da folga de baixo que separa selo e bloco lá. */
+
+   AQUI ele continua empilhado acima do título — o diálogo tem o botão de fechar
+   no canto direito, e o selo ao lado dele apertaria os dois. É a única folga de
+   baixo que o selo tem: a base deixou de ter margem quando, no cartão, ele virou
+   o item direito da linha do título. */
 .sprint-tudo-cab .sprint-fase { margin-bottom: 0.5rem; }
 .sprint-tudo-cab h2 { margin: 0; font-size: 1.05rem; letter-spacing: -0.01em; }
 .sprint-tudo-cab p { margin: 0.15rem 0 0; font-size: 0.82rem; }
@@ -894,11 +925,15 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
    barra de progresso, que descia alguns pixels só na coluna do meio e
    desalinhava as três no topo do bloco. Quem separa as colunas é a cor do
    selo, não o tamanho dele. */
+/* A CAIXA DO SELO, comum às três retrancas — é a cor que separa "em curso" das
+   outras, nunca o tamanho. Caixa diferente numa delas desalinha o topo das três
+   colunas, e desalinha em silêncio: continua bonito, só torto.
+
+   A margem de baixo saiu da base em 09/10/2026: no cartão o selo deixou de ser
+   etiqueta acima do bloco e passou a ser o item direito da linha do título. Quem
+   ainda o usa empilhado é o diálogo da sprint, e a folga mora lá agora. */
 .sprint-fase {
   display: inline-block;
-  /* O selo é retranca, não parte do título: precisa de ar suficiente pra ler
-     como etiqueta acima do bloco, e não como primeira linha dele. */
-  margin-bottom: 0.85rem;
   padding: 0.16rem 0.45rem;
   border-radius: 999px;
   font-size: 0.68rem;

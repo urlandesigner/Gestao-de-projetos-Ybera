@@ -865,10 +865,23 @@ function renderPanorama() {
         linhas: doResponsavel(emOrdem).map((it) => linhaDeItem(it, link)).join(''),
         nota: NOTA_TRANSBORDO,
       };
+      /* O TOPO DO CARTÃO, redesenhado a pedido do Urlan em 09/10/2026: o nome da
+         sprint é o TÍTULO, a retranca vai pro canto direito da mesma linha, e a
+         data desce pra linha de baixo, como legenda dele.
+
+         Antes a retranca era uma etiqueta acima do bloco e o nome dividia uma
+         linha de 0.8rem com a data — o que punha o nome da sprint MENOR que o
+         título dos itens dentro dela (0.85rem). Mesmo defeito de hierarquia que
+         a seção de sprints do relatório tinha, e pela mesma razão: quem manda na
+         lista lia mais baixo que a lista.
+
+         A retranca entrou DENTRO do link. Ela não é interativa e o cabeçalho
+         todo já abre o board; deixá-la fora exigiria posicionamento absoluto, e
+         aí um nome de sprint longo passaria por baixo dela. */
       return `<div class="sprint-card sprint-${chave}">
-        <span class="sprint-fase">${rotulo}</span>
         <a class="sprint-card-link" href="${rotaBoard(pr, true, col.sprint.id)}" title="Abrir o board de ${escapeHtml(col.sprint.name)}">
-          <span class="sprint-linha"><span class="sprint-nome"><b>${escapeHtml(col.sprint.name)}</b> <span class="mudo">${periodo(col.sprint.start, col.sprint.finish)}</span></span><span class="sprint-prog">${placar} <span class="seta">→</span></span></span>
+          <span class="sprint-topo"><b class="sprint-nome">${escapeHtml(col.sprint.name)}</b><span class="sprint-fase">${rotulo}</span></span>
+          <span class="sprint-linha"><span class="sprint-datas mudo">${periodo(col.sprint.start, col.sprint.finish)}</span><span class="sprint-prog">${placar} <span class="seta">→</span></span></span>
           ${barra}
         </a>
         ${corpo}
