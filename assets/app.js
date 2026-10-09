@@ -12,6 +12,11 @@ function saveJSON(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
 
 const state = {
   config: null,
+  // Mapa id -> { resumo }, do assets/resumos.json. Fora do cache de
+  // localStorage: é arquivo local e pequeno, relido a cada abertura, e guardar
+  // cópia dele faria a tela mostrar linha velha depois de eu reescrever o
+  // arquivo.
+  resumos: {},
   pat: localStorage.getItem(LS.pat) || '',
   cache: loadJSON(LS.cache) || { byCard: {}, myItems: null, myItemsError: null, fetchedAt: 0, lastSuccessAt: 0 },
   discovery: null,
@@ -224,20 +229,44 @@ const FIELDS_COUNTS = [
   'System.IterationPath',
 ];
 const FIELDS_BOARD = ['System.Title', 'System.State', 'System.WorkItemType', 'System.BoardColumn', 'System.AssignedTo', 'System.IterationPath'];
-// A consulta sem corte de data alimenta Produtos (progresso) e Report (entregas
-// por mês). ClosedDate é a data de conclusão; ChangedDate é o plano B dela.
-const FIELDS_BASE = [
-  'System.Title', 'System.State', 'System.WorkItemType', 'System.Parent',
-  'System.AssignedTo', 'Microsoft.VSTS.Scheduling.StartDate', 'Microsoft.VSTS.Scheduling.TargetDate',
-  'Microsoft.VSTS.Common.ClosedDate', 'System.ChangedDate',
-];
-const FIELDS_ITEMS = [
-  'System.Title', 'System.State', 'System.WorkItemType', 'System.TeamProject',
-  'System.Parent', 'System.IterationPath',
-  // Sem este campo o filtro por responsável não tem o que comparar: comparava
-  // undefined com o nome e derrubava a lista inteira.
-  'System.AssignedTo',
-];
+/* O RESUMO DA PBI, o MESMO do relatório.
+
+   Vem do assets/resumos.json — linha escrita à mão a partir da descrição
+   inteira, não um pedaço dela. A primeira versão disto pegava a primeira frase
+   da descrição e colava embaixo do título; o Urlan viu na hora que não era
+   resumo, era cópia. Descrição de PBI começa com contexto, com cabeçalho ou com
+   a frase que o autor escreveu primeiro — nada disso é a explicação do item.
+
+   O arquivo é o mesmo do relatório de propósito: a mesma PBI não pode ter duas
+   explicações em duas telas do mesmo projeto. Quem não tem linha ainda fica só
+   com o título, que é a verdade — e a linha aparece quando alguém escrever.
+
+   Casa por id, nunca por posição: `resumoDeSprint` tira as Tasks, então a lista
+   enxuta é menor que a crua, e parear por índice penduraria o resumo de um item
+   no título de outro — erro que a tela mostraria com cara de certo. */
+const resumoDoItem = (id) => ((state.resumos || {})[String(id)] || {}).resumo || '';
+
+function comResumo(enxutos) {
+  return enxutos.map((x) => {
+    const r = resumoDoItem(x.id);
+    return r ? Object.assign({}, x, { resumo: r }) : x;
+  });
+}
+
+/* Arquivo local, pequeno, lido uma vez por carregamento de página. Ausente, o
+   quadro fica como era: só os títulos. Não é erro — é um arquivo editorial que
+   pode simplesmente não existir ainda. */
+async function carregarResumos() {
+  try {
+    const resp = await fetch('assets/resumos.json?t=' + Date.now(), { cache: 'no-store' });
+    if (!resp.ok) return;
+    const dado = await resp.json();
+    state.resumos = C.saneResumos(dado.itens);
+  } catch (e) {
+    console.warn('[Central] resumos.json não carregou: os itens da sprint ficam só com o'
+      + ' título. Motivo: ' + e.message);
+  }
+}
 
 /* Mora no core.js desde que o relatório de Entregas passou a mostrar o ritmo
    das sprints: as duas telas contam a mesma coisa e precisam contar igual.
@@ -284,7 +313,10 @@ async function buscarTransbordo(p, sp, areas) {
     const destinoDe = new Map(extras.map((it) => [
       it.id, C.iterationLabel((it.fields || {})['System.IterationPath']),
     ]));
-    return resumoDeSprint(extras).map((x) => Object.assign({}, x, {
+    /* O resumo entra aqui também: na coluna "Anterior" os que saíram aparecem na
+       MESMA lista dos que ficaram, e uma lista em que metade tem linha e metade
+       não lê como carregamento pela metade. */
+    return comResumo(resumoDeSprint(extras)).map((x) => Object.assign({}, x, {
       transbordou: true,
       destino: destinoDe.get(x.id) || '',
     }));
@@ -396,7 +428,7 @@ async function refreshCard(p) {
           entry.janela[qual] = {
             sprint: sp,
             progress: C.sprintProgress(itens),
-            itens: resumoDeSprint(itens),
+            itens: comResumo(resumoDeSprint(itens)),
             transbordados: qual === 'anterior' ? await buscarTransbordo(p, sp, areas) : [],
           };
         }
@@ -717,7 +749,8 @@ function renderPanorama() {
   const linhaDeItem = (it, link) =>
     `<li><a class="item-linha" href="${link.workItem(it.id)}" target="_blank" rel="noopener" title="${escapeHtml(it.titulo)}">
         <span class="badge-tipo tipo-${it.tipo}">${ROTULO_TIPO_CURTO[it.tipo]}</span>
-        <span class="titulo">${escapeHtml(it.titulo)}</span>
+        <span class="titulo"><span class="titulo-txt">${escapeHtml(it.titulo)}</span>${it.resumo
+          ? `<span class="item-linha-desc">${escapeHtml(it.resumo)}</span>` : ''}</span>
         <span class="quando">${it.transbordou
           ? `<span class="selo-transbordo" title="Saiu desta sprint e foi pra ${escapeHtml(it.destino || 'outra')}">→ ${escapeHtml(it.destino || 'outra sprint')}</span>`
           : escapeHtml(it.estado)}</span>
@@ -1731,8 +1764,15 @@ function renderBoard(p) {
         const destino = it.transbordou
           ? `<span class="linha"><span class="rot">Foi pra</span><span class="val">${escapeHtml(C.iterationLabel(f['System.IterationPath']))}</span></span>`
           : '';
+        /* A MESMA linha do quadro de sprints do Panorama, do mesmo
+           assets/resumos.json. O cartão do board mostra título, selo e id — e o
+           título é jargão de time. Quem abre a Sprint 19 três semanas depois
+           não reconstrói "[DISCOVERY] Aplicativo para reviews na loja" de
+           cabeça. Item sem linha escrita fica só com o título. */
+        const resumo = resumoDoItem(it.id);
         return `<li><a class="item" href="${link}" target="_blank" rel="noopener" title="${dica}">
           <span class="cabeca"><span class="titulo">${escapeHtml(f['System.Title'])}</span>${resp ? `<span class="avatar">${escapeHtml(C.initials(resp))}</span>` : ''}</span>
+          ${resumo ? `<span class="item-linha-desc">${escapeHtml(resumo)}</span>` : ''}
           <span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span>
           <span class="linha"><span class="rot">Item</span><span class="val">#${it.id}</span></span>
           ${destino}
@@ -1863,6 +1903,10 @@ function boot() {
   // Panorama sozinho quando chega. Não entra no refreshAll porque não é
   // consulta — não tem o que ficar obsoleto a cada F5 do board.
   carregarRoadmap();
+  /* Mesma natureza do roadmap: arquivo local, sem token, e redesenha o Panorama
+     quando chega. Fica fora do refreshAll porque não é consulta — não há o que
+     ficar obsoleto a cada F5 do board. */
+  carregarResumos().then(renderAll);
   renderRoute(); // abre o board direto se a URL já apontar pra um (#board/...)
 }
 

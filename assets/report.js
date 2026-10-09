@@ -215,26 +215,12 @@ async function carregarNomes() {
    `de` é a impressão digital da descrição que gerou a linha. Não é lido aqui —
    quem o usa é quem gera —, mas passa pelo saneamento pra não virar depósito
    de texto arbitrário num arquivo que o navegador lê. */
-function saneResumos(obj) {
-  const out = {};
-  if (obj && typeof obj === 'object') {
-    for (const k of Object.keys(obj)) {
-      if (!/^\d+$/.test(k)) continue;
-      const v = obj[k] || {};
-      const resumo = String(v.resumo || '').trim().slice(0, 240);
-      if (!resumo) continue;
-      out[k] = { resumo, de: String(v.de || '').trim().slice(0, 64) };
-    }
-  }
-  return out;
-}
-
 async function carregarResumos() {
   try {
     const resp = await fetch('assets/resumos.json', { cache: 'no-store' });
     if (!resp.ok) return; // sem arquivo: cartão só com o título, sem erro
     const dado = await resp.json();
-    st.resumos = saneResumos(dado.itens);
+    st.resumos = C.saneResumos(dado.itens);
   } catch (e) {
     console.warn('[Report] resumos.json não carregou: os cartões de sprint ficam só com o'
       + ' título da PBI. Motivo: ' + e.message);

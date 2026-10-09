@@ -135,10 +135,11 @@ test('o resumos.json é válido e se explica', () => {
 });
 
 test('o saneamento do resumos.json corta texto e exige id numérico', () => {
-  const m = /function saneResumos\(obj\) \{[\s\S]*?\n\}/.exec(fonteReport);
-  // eslint-disable-next-line no-eval
-  const saneResumos = eval(`(${m[0]})`);
-  const out = saneResumos({
+  /* O saneador mudou de casa em 09/10/2026: foi pro core quando a Central
+     passou a ler o MESMO arquivo no quadro de sprints do Panorama. Duas cópias
+     divergiriam no dia em que o corte de 240 mudasse numa só, e o arquivo
+     passaria a significar uma coisa pra quem publica e outra pra quem olha. */
+  const out = C.saneResumos({
     51676: { resumo: '  linha boa  ', de: 'abcd1234' },
     'não-id': { resumo: 'entra pela chave errada' },
     51677: { resumo: '' },                      // sem texto, não entra

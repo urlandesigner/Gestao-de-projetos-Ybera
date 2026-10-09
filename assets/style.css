@@ -799,7 +799,9 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
 .sprint-tudo-corpo .lista-linhas .item-linha:hover { background: #ececea; }
 /* No cartão o título é cortado numa linha porque a coluna é estreita; aqui ele
    cabe inteiro, e é esse o ganho do diálogo. */
-.sprint-tudo-corpo .item-linha .titulo { white-space: normal; }
+/* `display: block` junto: o título e a linha da descrição são dois textos
+   empilhados dentro desta coluna, cada um com o seu próprio corte. */
+.sprint-tudo-corpo .item-linha .titulo { display: block; white-space: normal; }
 .sprint-tudo-board {
   display: inline-block;
   margin-top: 1.1rem;
@@ -945,13 +947,52 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
 .sprints-quadro .lista-linhas .id { display: none; }
 .sprints-quadro .lista-linhas .item-linha { align-items: flex-start; }
 .sprints-quadro .lista-linhas .badge-tipo, .sprints-quadro .lista-linhas .quando { margin-top: 0.1rem; }
-.sprints-quadro .lista-linhas .titulo {
-  white-space: normal;
+/* O TÍTULO VIRA COLUNA, e o corte em duas linhas desce pro texto dele.
+
+   Era o próprio `.titulo` que carregava o `-webkit-line-clamp: 2`. Com a linha
+   da descrição entrando embaixo, o corte passaria a contar as duas juntas: um
+   título de duas linhas comeria a descrição inteira, e um de uma linha deixaria
+   só o primeiro pedaço dela. O clamp tem que morar em cada texto, separado. */
+.sprints-quadro .lista-linhas .titulo { display: block; white-space: normal; }
+.sprints-quadro .lista-linhas .titulo-txt,
+.sprint-tudo-corpo .item-linha .titulo-txt {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  overflow: hidden;
   line-height: 1.3;
 }
+/* O RESUMO DA PBI: anotação do título, nunca um segundo título. Menor, apagado
+   e colado nele.
+
+   SEM CORTE AQUI, de propósito. O corte vivia nesta regra, em duas linhas, e
+   medi o estrago: numa coluna de board de 300 a 380px — que é a largura real —
+   64 dos 71 resumos terminavam em reticência. O lugar onde a pessoa vai pra
+   entender o item era justamente o que mostrava menos. Quem corta é só a prévia
+   densa do Panorama, logo abaixo, porque lá o diálogo mostra o resto.
+
+   `em` e não `rem`: é relativo ao corpo da linha, então acompanha se o tamanho
+   do item mudar. */
+.item-linha-desc {
+  display: block;
+  margin-top: 0.12rem;
+  font-size: 0.78em;
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--mudo);
+}
+/* A PRÉVIA do cartão de sprint do Panorama, e só ela: quatro itens, linha
+   estreita, e o "+N mais" abrindo o diálogo com a lista inteira. Cortar aqui não
+   esconde nada — o texto completo está a um clique, no diálogo e no board. */
+.sprints-quadro .lista-linhas .item-linha-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+/* No cartão do board o resumo é o conteúdo, não um detalhe: mais ar acima,
+   porque ali ele divide a vertical com o selo de tipo e os metadados. */
+.coluna .item .item-linha-desc { margin-top: 0.3rem; }
 .pan-atencao {
   list-style: none;
   margin: 0;

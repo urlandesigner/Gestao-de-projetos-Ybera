@@ -169,9 +169,15 @@ test('o "+N mais" continua discreto, e parece clicável', () => {
 });
 
 test('no diálogo o título cabe inteiro — é o ganho dele sobre o cartão', () => {
-  // No cartão o título trunca porque a coluna é estreita (.lista-linhas .titulo
-  // é nowrap + ellipsis). Aqui ele quebra.
-  assert.match(css, /\.sprint-tudo-corpo \.item-linha \.titulo \{ white-space: normal; \}/);
+  /* No cartão o título trunca porque a coluna é estreita (.lista-linhas .titulo
+     é nowrap + ellipsis). Aqui ele quebra.
+
+     `display: block` entrou junto em 09/10/2026, quando a linha da descrição
+     passou a morar dentro desta coluna: são dois textos empilhados, cada um com
+     o seu corte. Os dois na MESMA regra porque duas definições do mesmo seletor
+     fora de media query é o defeito que já apareceu três vezes neste projeto —
+     a de baixo sobrescreve parte da de cima, calada. */
+  assert.match(css, /\.sprint-tudo-corpo \.item-linha \.titulo \{ display: block; white-space: normal; \}/);
 });
 
 test('no telefone a linha empilha em vez de espremer o título', () => {

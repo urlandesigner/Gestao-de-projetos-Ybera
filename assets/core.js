@@ -1158,6 +1158,35 @@
     return h.toString(16).padStart(8, '0');
   }
 
+  /* O CONTRATO DO assets/resumos.json, lido nas DUAS telas que o usam.
+
+     O arquivo é editorial: uma linha por PBI, escrita à mão a partir da
+     descrição inteira. O relatório publica essa linha nos cartões de sprint; a
+     Central mostra a mesma linha no quadro de sprints do Panorama — e é a MESMA
+     linha de propósito, senão a mesma PBI teria duas explicações diferentes em
+     duas telas do mesmo projeto.
+
+     Mora no core porque são dois leitores. Era uma função dentro do report.js, e
+     uma segunda cópia no app.js divergiria da primeira no dia em que o corte de
+     240 mudasse num e não no outro — o arquivo passaria a significar uma coisa
+     pra quem publica e outra pra quem olha.
+
+     Chave que não é id numérico não entra, e linha vazia não entra: o arquivo é
+     escrito à mão, e o que ele promete é id -> texto. */
+  function saneResumos(obj) {
+    const out = {};
+    if (obj && typeof obj === 'object') {
+      for (const k of Object.keys(obj)) {
+        if (!/^\d+$/.test(k)) continue;
+        const v = obj[k] || {};
+        const resumo = String(v.resumo || '').trim().slice(0, 240);
+        if (!resumo) continue;
+        out[k] = { resumo, de: String(v.de || '').trim().slice(0, 64) };
+      }
+    }
+    return out;
+  }
+
   // Pedido de decisão de um item travado: a linha da descrição que começa com
   // "Decisão:" (com/sem acento, maiúsc./minúsc.). O texto depois do marcador é o
   // pedido — o PO escreve ali de quem depende e o impacto. Sem marcador, string
@@ -1455,7 +1484,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, wiqlIteracao, transbordados, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts,
-    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, vizinhasDaSprint, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, digitalDoTexto, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, vizinhasDaSprint, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, digitalDoTexto, saneResumos, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };
