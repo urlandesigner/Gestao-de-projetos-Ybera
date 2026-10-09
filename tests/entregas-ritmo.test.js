@@ -401,6 +401,36 @@ test('a tarja é cinza, sem cor de significado', () => {
   assert.match(css, /\.rt-corrente \.rt-fase \{ background: var\(--tinta\); color: var\(--fundo-pagina\); \}/);
 });
 
+/* QUEM DIZ QUAL É A SPRINT DE HOJE É A PÍLULA, e só ela. A elevação já foi
+   dessa função: o cartão em curso tinha sombra e os outros não. Lia bem
+   enquanto os cartões ficavam lado a lado; empilhados em faixa, um com sombra
+   seguido de um sem lê como peça que não carregou — foi o que o Urlan viu em
+   09/10/2026, olhando o cartão da próxima sprint. */
+test('a sombra é de todo cartão de sprint, não só do da sprint em curso', () => {
+  const css = ler('assets/ritmo.css');
+  const regra = /\.rt-linha \{[^}]*\}/.exec(css);
+  assert.ok(regra, 'a regra do cartão sumiu');
+  assert.match(regra[0], /box-shadow: 0 2px 8px rgba\(28, 25, 23, 0\.09\);/);
+  const semImpressao = css.replace(/@media print \{(?:[^{}]|\{[^{}]*\})*\}/g, '');
+  assert.doesNotMatch(semImpressao, /\.rt-corrente \{[^}]*box-shadow/,
+    'a elevação voltou a ser exclusiva da sprint em curso');
+});
+
+/* O nome da sprint e o período são DOIS assuntos — qual, e quando — e estavam
+   encostados, lendo como um título só. Espaço maior não resolveria: espaço diz
+   "respira aqui", fio diz "outro assunto". É o mesmo fio que a capa usa entre o
+   lugar e a autoria. */
+test('um fio separa o nome da sprint do período, e o espaço literal saiu do HTML', () => {
+  const regra = /\.rt-datas \{[^}]*\}/.exec(ler('assets/ritmo.css'));
+  assert.ok(regra, 'a regra do período sumiu');
+  assert.match(regra[0], /border-left: 1px solid var\(--neutro\)/);
+  /* Com o fio, o espaço que havia no template viraria um vão a mais de um lado
+     só — o fio tem que nascer no meio do respiro, não encostado nele. */
+  assert.match(ler('assets/briefing-entregas-v2.js'),
+    /<\/b>\$\{datas \? `<span class="rt-datas">/,
+    'o espaço literal voltou pro template e desbalanceou o fio');
+});
+
 /* ---------- o controlador compartilhado ---------- */
 
 const fonteReport = ler('assets/report.js');
@@ -764,26 +794,67 @@ test('o estilo do ritmo mora em folha própria, fora da folha compartilhada', ()
   assert.match(ler('assets/ritmo.css'), /\.rt-lista/);
 });
 
-/* Duas por linha é o formato do CONTEÚDO — o relatório costuma fechar duas
-   sprints por período. No telefone não cabe, e o corte é o mesmo 720px que a
-   entregas.css usa no resto do documento. Uma regra de coluna que vazasse do
-   @media espremeria os dois cartões em 375px. */
-test('duas colunas só a partir de 720px, e nunca fora do @media', () => {
+/* UMA SPRINT POR FAIXA, e a lista de sprints não divide a linha com ninguém.
+
+   Duas por linha foi a primeira forma, e ela errava pelo motivo que o Urlan viu
+   em 09/10/2026: a sprint em curso tem sempre muito mais item que a próxima, e
+   no grid o cartão estica até a altura da LINHA. Medido antes da troca, em
+   1024px, os dois cartões tinham a mesma altura — 4035px — com 42 itens de um
+   lado e 5 do outro. Metade disso era caixa vazia, e piorava quanto melhor o
+   time planejava. */
+test('a lista de sprints nunca declara coluna, em largura nenhuma', () => {
   const css = ler('assets/ritmo.css');
-  const largo = /@media \(min-width: 720px\) \{[\s\S]*?\n\}/.exec(css);
-  assert.ok(largo, 'o @media de 720px sumiu da folha do ritmo');
-  assert.match(largo[0], /\.rt-lista \{ grid-template-columns: repeat\(2, minmax\(0, 1fr\)\); \}/);
-  /* Só a regra da LISTA: o cabeçalho também declara colunas, e fora de @media
-     mesmo — ele é de três colunas em qualquer largura acima do telefone. */
-  const foraDoMedia = css.replace(/@media[^{]*\{(?:[^{}]|\{[^{}]*\})*\}/g, '');
-  assert.doesNotMatch(foraDoMedia, /\.rt-lista \{[^}]*grid-template-columns/,
-    'a regra de colunas da lista vazou pro telefone e espreme os cartões em 375px');
+  assert.doesNotMatch(css, /\.rt-lista \{[^}]*grid-template-columns/,
+    'as sprints voltaram a dividir a linha, e o cartão da próxima volta a esticar');
+  assert.doesNotMatch(css, /only-child/,
+    'sobrou a regra do vão de meia largura, que só existia por causa das duas colunas');
 });
 
-/* Meia largura com um vão do lado lê como cartão que faltou carregar, e não
-   como período de uma sprint só. */
-test('sprint sozinha ocupa a linha inteira', () => {
-  assert.match(ler('assets/ritmo.css'), /\.rt-linha:only-child \{ grid-column: 1 \/ -1; \}/);
+/* A COLUNA AGORA É DE ITEM, e o limite é a leitura, não a tela: abaixo de 26rem
+   o título mais a linha de resumo viram quatro linhas de três palavras — foi o
+   que a medição em 375px mostrou quando o resumo entrou.
+
+   `auto-fill` e não `auto-fit`: com `auto-fit` a coluna vazia colapsa e o item
+   único da próxima sprint esticaria pela largura inteira do cartão, numa medida
+   diferente da que a sprint em curso usa logo acima. */
+/* A HIERARQUIA ESTAVA INVERTIDA, e era o que fazia a seção inteira ler como uma
+   coisa só — "os cards me dão impressão que são a mesma coisa", em 09/10/2026.
+   Medido na tela: "Sprint 20" saía em 12.8px, MENOR que o título de cada item
+   dentro dela (13.44px) e quase igual ao resumo do item (12.48px). E o vão entre
+   duas sprints era 9px contra 4.8px entre dois itens — a fronteira grande quase
+   do tamanho da pequena. Nada dizia quem continha quem.
+
+   O teste lê os valores em rem e COMPARA, em vez de fixar número: o que não pode
+   voltar é a inversão, não é este tamanho em particular. */
+const rem = (txt, regra, prop) => {
+  const bloco = new RegExp(regra.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ' \\{[^}]*\\}').exec(txt);
+  assert.ok(bloco, 'sumiu a regra ' + regra);
+  const m = new RegExp(prop + ':\\s*([\\d.]+)rem').exec(bloco[0]);
+  assert.ok(m, regra + ' não declara ' + prop + ' em rem');
+  return Number(m[1]);
+};
+
+test('o nome da sprint é maior que o título dos itens que ela contém', () => {
+  const css = ler('assets/ritmo.css');
+  assert.ok(rem(css, '.rt-nome b', 'font-size') > rem(css, '.rt-item', 'font-size'),
+    'o dono da lista voltou a ler mais baixo que a lista');
+});
+
+test('o vão entre sprints é bem maior que o vão entre itens', () => {
+  const css = ler('assets/ritmo.css');
+  const entreSprints = rem(css, '.rt-lista', 'gap');
+  const entreItens = Number(/\.rt-itens \{[^}]*gap:\s*([\d.]+)rem/.exec(css)[1]);
+  assert.ok(entreSprints >= entreItens * 3,
+    `fronteira de sprint (${entreSprints}rem) perto demais da de item (${entreItens}rem)`);
+});
+
+test('os itens é que se dividem em colunas, e só onde cabem 26rem', () => {
+  const regra = /\.rt-itens \{[^}]*\}/.exec(ler('assets/ritmo.css'));
+  assert.ok(regra, 'a regra da lista de itens sumiu da folha do ritmo');
+  assert.match(regra[0],
+    /grid-template-columns: repeat\(auto-fill, minmax\(min\(100%, 26rem\), 1fr\)\);/);
+  assert.doesNotMatch(regra[0], /auto-fit/,
+    'os dois cartões passam a usar medidas diferentes de item');
 });
 
 /* O mesmo fato não pode ter duas cores em duas telas. O transbordo já tem cor

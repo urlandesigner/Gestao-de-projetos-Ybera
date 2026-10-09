@@ -218,7 +218,7 @@
     return `<li class="rt-linha rt-${estado}">
       <span class="rt-fase">${esc(FASE[estado])}</span>
       <p class="rt-topo">
-        <span class="rt-nome"><b>${esc(s.nome)}</b>${datas ? ` <span class="rt-datas">${esc(datas)}</span>` : ''}</span>
+        <span class="rt-nome"><b>${esc(s.nome)}</b>${datas ? `<span class="rt-datas">${esc(datas)}</span>` : ''}</span>
         <span class="rt-placar">${esc(placar)}</span>
       </p>
       <span class="rt-barra" aria-hidden="true">

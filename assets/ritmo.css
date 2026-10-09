@@ -23,31 +23,29 @@
   --transbordo-barra: #d97706;
 }
 
-/* UMA coluna por padrão, duas a partir de 720px — o mesmo corte que a
-   entregas.css usa em todo o resto do documento.
+/* UMA SPRINT POR FAIXA, na largura inteira, em qualquer tela — e por isso esta
+   lista NUNCA declara coluna.
 
-   Duas e não `auto-fit`: o relatório costuma fechar duas sprints por período, e
-   `auto-fit` daria três colunas num período de seis sprints, quebrando a
-   leitura em linhas de tamanhos diferentes. Duas é a forma do conteúdo, não do
-   espaço disponível.
+   Eram duas por linha, e a forma estava errada: a sprint em curso tem sempre
+   muito mais item que a próxima, e num grid o cartão estica até a altura da
+   linha. Medido antes da troca, em 1024px: os DOIS cartões com 4035px de
+   altura, um com 42 itens e o outro com 5 — meia página de caixa vazia. E o
+   desenho piorava justamente quando o time planejava bem, com a próxima sprint
+   ainda enxuta.
 
-   `minmax(0, 1fr)` e não `1fr`: o mínimo implícito de uma coluna de grid é
-   `auto`, que é o tamanho do conteúdo — nome de sprint longo empurraria a
-   coluna e estouraria a linha em vez de quebrar dentro dela. */
+   A largura que sobrava virou coluna de ITEM, na regra da lista de itens lá
+   embaixo: é a lista que é longa, então é ela que ganha a horizontal. */
+/* O VÃO AQUI É DE FRONTEIRA GRANDE. Era 0.55rem — 9px entre um cartão e outro,
+   contra 4.8px entre um item e outro. Quatro pixels separando duas SPRINTS e
+   quatro separando dois itens: pro olho, tudo irmão do mesmo nível. Agora são
+   24px, cinco vezes o vão interno, e a distância passa a dizer de que tamanho é
+   a fronteira que ela marca. */
 .rt-lista {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 0.55rem;
-}
-
-@media (min-width: 720px) {
-  .rt-lista { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  /* Sprint sozinha ocupa a linha inteira. A meia largura com um vão do lado
-     parece cartão que faltou carregar, e não período de uma sprint só. Com
-     número ímpar maior (3, 5…) o vão é só o fim da lista, e aí ele lê certo. */
-  .rt-linha:only-child { grid-column: 1 / -1; }
+  gap: 1.5rem;
 }
 
 /* O CARTÃO DE SPRINT — mesma anatomia do cartão do Panorama (.sprint-card, em
@@ -59,15 +57,22 @@
    razão — o relatório é um documento próprio, servido sozinho, e não carrega a
    folha da Central. Os valores abaixo foram copiados de lá; mexeu num, confira
    o outro. */
+/* A ELEVAÇÃO É DE TODO CARTÃO, e não só do da sprint em curso.
+
+   Era só dele, e fazia sentido enquanto os cartões ficavam lado a lado: o
+   destaque lia como "este aqui". Empilhados em faixa, um com sombra seguido de
+   um sem lê como peça que não terminou de carregar — foi o que o Urlan viu em
+   09/10/2026. Quem diz qual é a sprint de hoje é a pílula preta da retranca,
+   que basta e não depende de comparar duas sombras. */
 .rt-linha {
   background: var(--superficie);
   border-radius: 12px;
-  padding: 0.75rem 0.85rem 0.8rem;
-  box-shadow: none;
+  /* Ar suficiente pra moldura existir: em faixa inteira, 13.6px de lado era um
+     fio branco em volta das caixas cinzas, e o cartão sumia atrás do conteúdo
+     dele. */
+  padding: 1rem 1.1rem 1.1rem;
+  box-shadow: 0 2px 8px rgba(28, 25, 23, 0.09);
 }
-/* A sprint em curso é a que o time olha todo dia: selo em tinta cheia e o
-   cartão um degrau acima. As vizinhas ficam rentes ao bloco. */
-.rt-corrente { box-shadow: 0 2px 8px rgba(28, 25, 23, 0.09); }
 
 /* Retranca: etiqueta ACIMA do bloco, não primeira linha dele — por isso o ar
    embaixo é maior que o entre-linhas do conteúdo. */
@@ -94,8 +99,30 @@
   font-size: 0.8rem;
 }
 .rt-nome { min-width: 0; }
-.rt-nome b { font-weight: 700; }
-.rt-datas { color: var(--mudo); }
+/* O NOME DA SPRINT SAI DA LINHA, e por um defeito de hierarquia: a .rt-topo
+   inteira vinha em 0.8rem, então "Sprint 20" ficava em 12.8px — MENOR que o
+   título de cada item dentro dela (13.44px) e quase do tamanho do resumo do
+   item (12.48px). Quem manda na lista lia mais baixo que a lista.
+
+   1.05rem põe o nome um degrau acima do item e ainda bem abaixo do título da
+   seção (1.25–1.7rem), que é quem manda na página. Só o nome cresce: a data e o
+   placar seguem em 0.8rem, porque são anotação dele — e a linha é `baseline`,
+   então os três continuam assentados na mesma reta. */
+.rt-nome b { font-weight: 700; font-size: 1.05rem; }
+/* UM FIO entre o nome e o período, e não um espaço maior: são dois assuntos
+   (qual sprint, e quando), e espaço sozinho só diz "respira aqui" — o nome e a
+   data ficavam encostados e liam como uma coisa só.
+
+   É o mesmo fio que a capa já usa entre o lugar e a autoria (.rl-capa-autoria,
+   na entregas.css), com os mesmos valores em `em` pra acompanhar o corpo da
+   linha. --neutro e não --borda pelo motivo de lá: a borda é do tom das caixas
+   e some sobre o fundo. */
+.rt-datas {
+  margin-left: 0.55em;
+  padding-left: 0.6em;
+  border-left: 1px solid var(--neutro);
+  color: var(--mudo);
+}
 .rt-placar {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -137,13 +164,29 @@
    (alinhamento e tamanho de um desenho anterior, com ponto de estado). Mesmo
    defeito que já quebrou o hover das abas aqui. Os valores abaixo são os que
    estavam VALENDO, medidos no navegador antes da fusão — nada mudou na tela. */
+/* E É AQUI QUE A LARGURA É GASTA: o que couber de coluna de 26rem, cabe.
+
+   26rem é medida de leitura, não de tela: abaixo disso o título mais a linha de
+   resumo embaixo dele viram quatro linhas de três palavras — é o mesmo limite
+   que fez o item empilhar no telefone, lá no fim da folha. Com o documento
+   travado em 1180px, isso dá uma coluna no telefone e no tablet e duas no
+   computador; o dia em que a página alargar, dá três sozinho.
+
+   `auto-fill` e não `auto-fit`: com `auto-fit` a coluna vazia some e o item
+   único da próxima sprint esticaria pela largura inteira do cartão, numa medida
+   diferente da que a sprint em curso usa logo acima. A grade tem que ser a
+   mesma nos dois cartões — é o que faz o olho ler os dois como uma coisa só.
+
+   O vão entre colunas é maior que o entre linhas porque ali encostam o estado
+   de um item e o título do seguinte, que são de assuntos diferentes. */
 .rt-itens {
   list-style: none;
   margin: 0.75rem 0 0;
   padding: 0.7rem 0 0;
   border-top: var(--fio);
   display: grid;
-  gap: 0.3rem;
+  gap: 0.3rem 0.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr));
 }
 /* Fundo --superficie-2 e sem sombra: a linha está DENTRO de um cartão que já é
    branco, e branco sobre branco a faria desaparecer. */
