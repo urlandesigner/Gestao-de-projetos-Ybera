@@ -16,8 +16,8 @@
    seção sumir calada.
 
    De onde vem o dado: o report.js é quem fala com o DevOps, e ele só busca
-   sprint pra documento que declara `precisaDeSprints`. O report.html e o
-   report-v2.html não declaram e seguem sem gastar requisição. O que chega aqui
+   sprint pra documento que declara `precisaDeSprints`. O report-v2.html não
+   declara e segue sem gastar requisição. O que chega aqui
    em `o.sprints` já vem contado e já no recorte de responsável que o leitor
    está vendo — este módulo não conta nada, só desenha.
 

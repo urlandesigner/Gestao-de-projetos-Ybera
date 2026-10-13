@@ -8,7 +8,8 @@
       relatório atual" é só uma frase;
    2. a costura de texto depende de UMA âncora no HTML do base. Âncora é
       frágil, então ela é testada dos dois lados: existe lá, e é usada aqui;
-   3. o report.js é compartilhado com report.html e report-v2.html — a busca de
+   3. o report.js é compartilhado com report-v2.html e as duas edições de
+      Entregas — a busca de
       sprint só pode acender pra quem declara.
 
    A conta em si (quem entregou, quem transbordou) mora no core.js e é testada
@@ -446,7 +447,7 @@ const fonteReport = ler('assets/report.js');
 
 test('a busca de sprint só acende pra quem declara — os outros dois documentos não gastam requisição', () => {
   assert.match(fonteReport, /st\.sprintsBrutas = B\.precisaDeSprints === true \? await buscarRitmo\(escopos\) : null;/,
-    'a busca deixou de ser condicional e o report.html passou a consultar sprint à toa');
+    'a busca deixou de ser condicional e o report-v2.html passou a consultar sprint à toa');
   assert.match(fonteReport, /sprints: B\.precisaDeSprints === true \? saneRitmo\(ritmoLinhas\) : undefined,/,
     'o pacote do link ganhou sprint em documento que não pediu');
   // `ritmoLinhas` é calculado UMA vez e serve ao pacote e às pendências: duas
@@ -661,12 +662,12 @@ test('cada edição declara o endereço fixo dos dados dela', () => {
   assert.notEqual(V2.arquivoDeDados, BASE.arquivoDeDados);
 });
 
-/* O report e o v2 não declaram, e seguem só com o fragmento — nenhuma
-   requisição a mais e nenhum comportamento novo. */
-test('report e v2 continuam sem endereço fixo', () => {
-  for (const f of ['assets/briefing.js', 'assets/briefing-v2.js']) {
-    assert.equal(require('../' + f).arquivoDeDados, undefined, `${f} não devia ter ganhado`);
-  }
+/* O report não declara, e segue só com o fragmento — nenhuma requisição a mais
+   e nenhum comportamento novo. Era "o report e o v2": o v1 (assets/briefing.js)
+   foi excluído do projeto em 13/10/2026, a pedido do Urlan. */
+test('o report continua sem endereço fixo', () => {
+  assert.equal(require('../assets/briefing-v2.js').arquivoDeDados, undefined,
+    'o briefing-v2 não devia ter ganhado endereço fixo');
 });
 
 /* O seletor NAVEGA, não redesenha: o que a edição antiga exporta não tem
@@ -942,9 +943,8 @@ test('só a v2 tem o botão de publicar', () => {
      ele: cada edição gera o arquivo dela. É chrome do PO — a barra só se monta
      em localhost —, então o leitor nunca vê o botão e o documento não muda. */
   assert.match(ler('entregas.html'), /<button id="publicar"/);
-  for (const f of ['report.html', 'report-v2.html']) {
-    assert.doesNotMatch(ler(f), /id="publicar"/, `${f} não devia ter ganhado o botão`);
-  }
+  assert.doesNotMatch(ler('report-v2.html'), /id="publicar"/,
+    'report-v2.html não devia ter ganhado o botão');
 });
 
 /* ---------- o cabeçalho ---------- */

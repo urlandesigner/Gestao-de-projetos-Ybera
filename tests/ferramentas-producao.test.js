@@ -39,7 +39,7 @@ function porta() {
 }
 
 const ENTREGAS = { pagina: 'report', ferramentas: 'local' }; // o que entregas.html declara
-const REPORT = { pagina: 'report' };                          // report.html e o v2
+const REPORT = { pagina: 'report' };                          // o report-v2.html
 
 test('entregas: em produção a barra não aparece nem com ?po=1', () => {
   const f = porta();
@@ -129,8 +129,8 @@ test('entregas.html declara data-ferramentas="local" — senão o portão é let
     'entregas.html perdeu a declaração: a barra volta a aparecer em produção');
 });
 
-test('report.html e report-v2.html NÃO declaram — o pedido era só do Entregas', () => {
-  for (const f of ['report.html', 'report-v2.html']) {
-    assert.doesNotMatch(ler(f), /data-ferramentas=/, `${f} não devia ter mudado`);
-  }
+test('o report-v2.html NÃO declara — o pedido era só do Entregas', () => {
+  // Era "report.html e report-v2.html": o v1 foi excluído em 13/10/2026.
+  assert.doesNotMatch(ler('report-v2.html'), /data-ferramentas=/,
+    'report-v2.html não devia ter mudado');
 });

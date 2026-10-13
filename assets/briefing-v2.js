@@ -1,9 +1,10 @@
 /* Central de Projetos — REPORT v2 ("Ledger"), de dado a HTML.
 
-   Irmão de briefing.js (v1) e substituto dele por arquivo: expõe a MESMA
+   Nasceu irmão do briefing.js (v1) e substituto dele por arquivo — o v1 foi
+   excluído do projeto em 13/10/2026. Expõe a MESMA
    interface (`esc`, `htmlReport`) e registra-se no MESMO nome global, então
    report.js não sabe qual dos dois está carregado — quem escolhe é a página
-   (report.html carrega o v1, report-v2.html carrega este).
+   (report-v2.html carrega este).
 
    Por que uma cópia em vez de um "tema" do v1: o v1 está congelado como
    versão publicada e não deve mudar mais. Compartilhar código faria cada

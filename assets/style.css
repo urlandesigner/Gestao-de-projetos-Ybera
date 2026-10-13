@@ -1091,7 +1091,7 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
 /* contador ao lado do nome do time, no cabeçalho do bloco */
 .blocos .bloco > h3 .conta { margin-left: auto; }
 
-/* Página report.html: sem sidebar, uma coluna. O botão de texto conviveria
+/* Página do report: sem sidebar, uma coluna. O botão de texto conviveria
    mal com os quadrados de ícone, então tem largura própria. */
 body.pagina-report .corpo { grid-template-columns: minmax(0, 1fr); }
 .acoes .botao-texto {

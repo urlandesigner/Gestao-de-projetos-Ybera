@@ -53,7 +53,8 @@
      (entregas recentes e roadmap) e linguagem de negócio. Usa o MESMO
      report.js do report — quem muda o desenho é assets/briefing-entregas.js,
      que se registra no mesmo window.CentralBriefing, e a folha própria. Por
-     isso report.html e report-v2.html seguem intocados.
+     isso o report-v2.html segue intocado (e o report.html, que também seguia,
+     foi excluído do projeto em 13/10/2026).
      O link de leitura (#r=...) gerado aqui abre aqui.
 
      data-ferramentas="local": este é O documento que vai pro stakeholder, e a
@@ -111,7 +112,7 @@
 <script>
 /* Visor da galeria — vive aqui, e não no report.js nem no briefing.
 
-   No report.js porque ele é compartilhado com report.html e report-v2.html, que
+   No report.js porque ele é compartilhado com o report-v2.html, que
    não têm galeria; no briefing porque ele é módulo de render puro, testado no
    Node, e não deve tocar em evento de DOM.
 

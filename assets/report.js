@@ -1,4 +1,7 @@
-/* Página report.html — autônoma, para stakeholder ver só o report.
+/* O CONTROLADOR dos documentos — autônomo, para stakeholder ver só o report.
+
+   Nasceu para a report.html, que foi excluída do projeto em 13/10/2026. Hoje
+   serve o report-v2.html e as duas edições de Entregas.
 
    Dois modos, decididos no carregamento:
 
@@ -51,7 +54,7 @@ const CAMPOS_PAI = ['System.WorkItemType', 'System.Title', 'System.Parent',
 const NIVEIS_ACIMA = 4; // PBI → Feature → Épico usa 2; 4 é folga pra hierarquia torta
 
 // As ferramentas do PO só existem quando a URL pede: é assim que a Central
-// chama esta página (report.html?po=1). O link que vai pro stakeholder é montado
+// chama esta página com ?po=1. O link que vai pro stakeholder é montado
 // sem query nenhuma, então ele nunca vê ferramenta — não por estar escondida,
 // mas por não ser montada. Abrindo a URL crua, esta é uma página de leitura.
 // Uma página pode ainda exigir que as ferramentas existam SÓ em

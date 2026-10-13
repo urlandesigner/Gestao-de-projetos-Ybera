@@ -12,7 +12,8 @@
 <!-- Report v2 ("Ledger"). Mesma página autônoma do v1 e o MESMO report.js: o
      que muda é quem desenha (assets/briefing-v2.js, que se registra no mesmo
      window.CentralBriefing) e a folha de estilo, que aqui é própria e não
-     carrega style.css. Por isso o v1 continua intocado em report.html.
+     carrega style.css. (Era por isso que o v1 ficava intocado em report.html; o
+     v1 foi excluído do projeto em 13/10/2026, a pedido do Urlan.)
      O link de leitura (#r=...) gerado aqui abre aqui — cada versão
      compartilha a sua. -->
 <body data-pagina="report" class="pagina-report-v2">
@@ -32,7 +33,6 @@
   <button id="atualizar" aria-label="Atualizar agora" title="Atualizar agora">↻</button>
   <button id="sem-nome" class="botao-texto" hidden title="Épicos e Features que aparecem no report e ainda não têm nome de negócio — copia a lista em JSON pra preencher assets/report-nomes.json"></button>
   <button id="copiar" class="botao-texto" title="Copia o endereço desta página — quem abrir lê o report sem token">Copiar link</button>
-  <a id="ver-v1" class="botao-texto" href="report.html?po=1" title="Abrir a versão 1 do report">v1</a>
   <a id="ver-entregas" class="botao-texto" href="entregas.html?po=1" title="Abrir o relatório de Entregas">Entregas</a>
   <a id="voltar" class="botao-texto" href="central.html#panorama" title="Voltar para a Central">Central</a>
 </div>

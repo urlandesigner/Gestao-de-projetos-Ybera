@@ -56,8 +56,9 @@
 
    Compartilha o controlador com o report: expõe a MESMA interface (`esc`,
    `htmlReport`) e registra-se no MESMO nome global, então report.js não sabe
-   qual arquivo está carregado — quem escolhe é a página (report.html carrega
-   o v1, report-v2.html o v2, entregas.html este).
+   qual arquivo está carregado — quem escolhe é a página (report-v2.html carrega
+   o v2, entregas.html este). O v1, em report.html, foi excluído do projeto em
+   13/10/2026.
 
    Contrato de DOM com report.js (não mexer sem mexer lá):
    .report-doc · #mes-global · seções com id próprio. Os ganchos de busca
@@ -823,7 +824,8 @@
        acreditar que a capa é recortada por mês, que é exatamente a confusão
        que já produziu a capa dizendo 28 com 8 entregas embaixo.
 
-       `infoProd` continua vivo no briefing.js e no v2, que de fato o usam —
+       `infoProd` continua vivo no briefing-v2.js, que de fato o usa (era "no
+       briefing.js e no v2" até o v1 sair do projeto, em 13/10/2026) —
        por isso o link de leitura segue carregando `produtos`. */
     const b = C.briefingDoMes(items, agora);
     const escolhido = /^\d{4}-(0[1-9]|1[0-2])$/.test(o.mes || '') ? o.mes : b.mes;

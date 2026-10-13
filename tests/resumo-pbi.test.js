@@ -153,7 +153,7 @@ test('o saneamento do resumos.json corta texto e exige id numérico', () => {
 /* ---------- 5. só o documento que declara ---------- */
 
 test('os outros três documentos não pedem o arquivo', () => {
-  /* Pedir resumos.json no report.html seria um 404 no console a cada abertura,
+  /* Pedir resumos.json no report-v2.html seria um 404 no console a cada abertura,
      dizendo que falta algo que não faz falta — eles não têm cartão de sprint. */
   assert.match(fonteReport, /if \(B\.precisaDeSprints === true\) \{\s*\n\s*carregarResumos\(\)/);
 });

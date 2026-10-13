@@ -759,7 +759,7 @@ test('os dois portões do material funcionam, e não só estão escritos', () =>
   // Sem declarar: é o documento de Agosto e Setembro, que já foi escrito.
   assert.equal(rodar(true, ferramenta), null);
 
-  // E a ferramenta ausente não estoura — o report.html e o report-v2.html nem a
+  // E a ferramenta ausente não estoura — o report-v2.html nem a
   // têm, porque não carregam o módulo de entregas.
   assert.equal(rodar(true, { precisaDeEntregas: true }), null);
 });
