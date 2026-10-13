@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Como começar — Central de Projetos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/inicio.css?v=2026101305">
+</head>
+<!-- PRIMEIRO ACESSO. Existe desde 13/10/2026, quando a ferramenta deixou de ter
+     um usuário só: a Isadora e a Daniele passaram a usá-la, e até então o único
+     lugar que explicava o token era um <details> dentro do próprio assistente —
+     que só aparece pra quem já descobriu que precisa abrir a central.html.
+
+     Escrita pra quem nunca abriu, não pra quem mantém: sem caminho de arquivo,
+     sem nome de função, sem "localStorage". O que ela precisa responder é o que
+     a pessoa vai perguntar em voz alta — "de onde tiro esse token", "alguém vê
+     o meu", "por que sumiu depois de uns meses".
+
+     Estática pura, como o index: nenhum script, nenhuma leitura do DevOps. -->
+<body>
+<div class="ini-folha">
+
+  <img class="ini-logo" src="assets/brand/ybera-logo.webp" alt="Ybera" width="360" height="139">
+
+  <h1 class="ini-titulo">
+    <span class="ini-fraco">Como</span>
+    <span class="ini-forte">começar</span>
+  </h1>
+  <p class="ini-linha">A Central lê o Azure DevOps direto no seu navegador. Para isso ela precisa de um token seu — são três passos, uma vez só.</p>
+
+  <ol class="ini-passos">
+
+    <li class="ini-passo">
+      <h2 class="ini-passo-nome">Gere o seu token no Azure DevOps</h2>
+      <p>Abra o Azure DevOps, clique no seu avatar, no canto superior direito, e vá em <b>Personal access tokens</b> → <b>New Token</b>.</p>
+      <p>Marque exatamente dois escopos, os dois só de leitura:</p>
+      <ul class="ini-itens">
+        <li><b>Work Items</b> → Read</li>
+        <li><b>Project and Team</b> → Read</li>
+      </ul>
+      <p>Em validade, escolha <b>90 dias</b>, que é o máximo. Copie o token: o DevOps mostra o código uma vez só e nunca mais.</p>
+    </li>
+
+    <li class="ini-passo">
+      <h2 class="ini-passo-nome">Cole na Central</h2>
+      <p>Abra a <a href="central.html">Central de Projetos</a>. Como é a sua primeira vez, ela abre pedindo o endereço da organização e o token.</p>
+      <p>No endereço, use o que aparece na barra do navegador quando você está no DevOps — algo como <code>dev.azure.com/sua-organizacao</code>. Cole o token no campo de baixo e clique em <b>Descobrir projetos</b>.</p>
+    </li>
+
+    <li class="ini-passo">
+      <h2 class="ini-passo-nome">Marque os seus times</h2>
+      <p>Ela lista os projetos e os times que o seu acesso alcança. Marque os seus e clique em <b>Montar a central</b>. Pronto — daqui em diante ela abre direto.</p>
+      <p>Errou ou quer incluir outro time depois? O botão de configuração, no topo da Central, abre a mesma lista.</p>
+    </li>
+
+  </ol>
+
+  <section class="ini-bloco">
+    <h2 class="ini-bloco-nome">O token é seu, e fica só com você</h2>
+    <p>Ele é guardado dentro do seu navegador, nesta máquina. Não vai para arquivo nenhum, não é enviado para lugar nenhum e ninguém mais tem como lê-lo — nem quem mantém a ferramenta. Abrir em outro computador significa gerar outro token lá.</p>
+    <p>Por consequência, a Central mostra exatamente o que o <b>seu</b> acesso no DevOps alcança. Ela não amplia nem reduz o que você já podia ver.</p>
+  </section>
+
+  <section class="ini-bloco">
+    <h2 class="ini-bloco-nome">Em 90 dias ele vence — e isso é normal</h2>
+    <p>O DevOps não emite token sem prazo. Quando o seu vencer, a Central mostra um aviso de token vencido em vez de dados velhos sem avisar. É só repetir o passo 1 e colar o novo na configuração: a sua escolha de times continua lá.</p>
+  </section>
+
+  <section class="ini-bloco">
+    <h2 class="ini-bloco-nome">O que é seu e o que é de todo mundo</h2>
+    <p>O quadro da sprint, as pendências, os produtos e os seus itens saem do seu próprio board — cada PO vê o dela.</p>
+    <p>O <b>Roadmap</b> também é por pessoa, mas ele não vem do DevOps: é escrito à mão, projeto a projeto. Enquanto o seu não estiver escrito, a aba diz isso em vez de mostrar o de outra pessoa. Para incluir os seus, fale com quem publica a ferramenta.</p>
+    <p>Os <b>documentos</b> da página inicial são relatórios prontos, escritos por uma PO para os stakeholders dela. Eles não mudam conforme quem abre: são leitura, não a sua visão.</p>
+  </section>
+
+  <p class="ini-nota">Ficou em pé alguma coisa que esta página não respondeu? Vale avisar — a próxima pessoa vai esbarrar no mesmo ponto.</p>
+
+  <p class="ini-voltar"><a href="index.html">← Voltar para a página inicial</a></p>
+
+</div>
+</body>
+</html>

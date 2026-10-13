@@ -142,3 +142,141 @@ body {
   .ini-card { transition: none; }
   .ini-card:hover, .ini-card:focus-visible { transform: none; }
 }
+
+/* ==========================================================================
+   COMO COMEÇAR (comecar.html)
+
+   Mesma folha do index de propósito: são as duas páginas estáticas da porta,
+   mesma família visual e mesmos tokens. Uma folha por página aqui significaria
+   manter dois :root idênticos.
+
+   O desenho é o oposto do index: lá são cartões, para escolher; aqui é coluna
+   única e larga de leitura, para seguir na ordem. Quem abre esta página não
+   está escolhendo, está executando.
+   ========================================================================== */
+
+.ini-passos {
+  list-style: none;
+  counter-reset: passo;
+  margin: clamp(2rem, 5vw, 3rem) 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+/* O número em marcador desenhado, e não no `list-style` do navegador: ele
+   precisa do mesmo peso do resto da família (800, apertado) e de um lugar fixo
+   na margem, que o marcador nativo não dá sem truque maior que este. */
+.ini-passo {
+  counter-increment: passo;
+  position: relative;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  padding-left: clamp(3.6rem, 7vw, 5rem);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  background: var(--superficie);
+  box-shadow: var(--sombra-cartao);
+}
+.ini-passo::before {
+  content: counter(passo);
+  position: absolute;
+  top: clamp(1.25rem, 3vw, 1.8rem);
+  left: clamp(1.4rem, 3vw, 2rem);
+  font-size: clamp(1.5rem, 3.4vw, 2rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--borda);
+}
+.ini-passo-nome {
+  margin: 0 0 0.6rem;
+  font-size: clamp(1.1rem, 2.2vw, 1.3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.ini-passo p, .ini-bloco p {
+  margin: 0 0 0.7rem;
+  max-width: 62ch;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--mudo);
+}
+.ini-passo p:last-child, .ini-bloco p:last-child { margin-bottom: 0; }
+.ini-passo b, .ini-bloco b { color: var(--tinta); font-weight: 600; }
+
+.ini-itens {
+  margin: 0 0 0.7rem;
+  padding-left: 1.1rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--mudo);
+}
+
+/* O endereço da organização é a única coisa desta página que se digita letra
+   por letra — monoespaçada, porque é onde um caractere errado custa caro. */
+.ini-passo code {
+  padding: 0.1rem 0.35rem;
+  border-radius: 6px;
+  background: var(--superficie-2);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.88em;
+  color: var(--tinta);
+}
+
+/* Os três blocos do fim não são passos: são o que a pessoa pergunta depois de
+   já estar dentro. Sem caixa e sem número, separados por um fio — assim eles
+   não disputam com a sequência numerada logo acima. */
+.ini-bloco {
+  margin-top: clamp(1.75rem, 4vw, 2.5rem);
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--borda);
+}
+.ini-bloco-nome {
+  margin: 0 0 0.6rem;
+  font-size: 1.02rem;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.ini-passo a, .ini-bloco a, .ini-voltar a { color: var(--tinta); text-decoration-color: var(--borda); }
+.ini-passo a:hover, .ini-bloco a:hover, .ini-voltar a:hover { text-decoration-color: var(--tinta); }
+
+.ini-voltar { margin: clamp(1.75rem, 4vw, 2.5rem) 0 0; font-size: 0.9rem; }
+
+/* ---------- Seções da entrada ---------- */
+/* A ferramenta e os documentos são coisas de naturezas diferentes, e numa
+   lista só de cartões isso não aparecia: a Central mostra o board de quem
+   abriu; os documentos são de UMA PO e não mudam conforme o leitor. A linha de
+   apoio de cada seção diz isso uma vez, no lugar onde a pessoa decide pra onde
+   ir — e não depois, quando ela já estiver lendo o mês de outra pessoa. */
+.ini-secao { margin-top: clamp(2.25rem, 5vw, 3.25rem); }
+.ini-secao-nome {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mudo);
+}
+.ini-secao-sub {
+  margin: 0.5rem 0 1.1rem;
+  max-width: 68ch;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--mudo);
+}
+.ini-secao .ini-grade { margin-top: 0; }
+
+/* A chamada de primeiro acesso. Acima dos cartões porque quem nunca abriu não
+   sabe que precisa de um token — e descobrir isso ao esbarrar no assistente,
+   lá dentro, é descobrir tarde. */
+.ini-comecar {
+  margin: 1.1rem 0 0;
+  font-size: 0.95rem;
+  color: var(--mudo);
+}
+.ini-comecar a {
+  font-weight: 600;
+  color: var(--tinta);
+  text-decoration-color: var(--borda);
+}
+.ini-comecar a:hover { text-decoration-color: var(--tinta); }
