@@ -124,11 +124,18 @@ body {
   color: var(--mudo);
 }
 
-/* Os documentos são quatro: meia largura cada, duas fileiras de dois. Em `span 4`
-   o quarto cartão sobrava sozinho numa fileira de três, encostado à esquerda. */
+/* Os documentos que leem o DevOps são quatro: meia largura cada, duas fileiras
+   de dois. Em `span 4` o quarto cartão sobrava sozinho numa fileira de três,
+   encostado à esquerda.
+
+   O QUINTO documento reabriria esse vão — ele cairia só na terceira fileira,
+   em meia largura, lendo como cartão que faltou carregar. Por isso ele ocupa a
+   fileira inteira, e a escolha não é só de encaixe: é o único documento do
+   conjunto escrito à mão, que não consulta o Azure DevOps e abre sem token.
+   Largura inteira diz isso antes de qualquer texto. */
 @media (min-width: 720px) {
   .ini-card { grid-column: span 6; }
-  .ini-card-escuro { grid-column: span 12; }
+  .ini-card-escuro, .ini-card-largo { grid-column: span 12; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Status de demandas — Loja US</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/status-demandas.css?v=2026101301">
+</head>
+<body>
+<div class="page">
+  <header>
+    <img class="logo" src="assets/brand/ybera-logo.webp" alt="Ybera" width="360" height="139">
+    <h1 class="title">
+      <span class="title__lead">Status de demandas</span>
+      <span class="title__main">Loja US</span>
+    </h1>
+    <!-- REGRA DESTA PÁGINA: mexeu no conteúdo, atualiza a linha abaixo com a
+         data e a hora de BRASÍLIA — o atributo datetime (com o -03:00) e o
+         texto visível, os dois. O conteúdo é escrito à mão e não há nada que
+         marque a data sozinho; sem isso o leitor não tem como saber se está
+         vendo hoje ou a semana passada. É a mesma razão do carimbo de data no
+         relatório de entregas. -->
+    <p class="scope">Acompanhamento de demandas específicas, atualizado em <time datetime="2026-10-13T14:15-03:00">13/10/2026 às 14:15</time></p>
+    <div class="kpis">
+      <article class="kpi">
+        <p class="kpi__label">Demandas acompanhadas</p>
+        <p class="kpi__value">8</p>
+      </article>
+      <article class="kpi kpi--dark">
+        <p class="kpi__label">Concluídas</p>
+        <p class="kpi__value">1</p>
+      </article>
+      <article class="kpi kpi--dark">
+        <p class="kpi__label">Em andamento</p>
+        <p class="kpi__value">6</p>
+      </article>
+      <article class="kpi kpi--dark">
+        <p class="kpi__label">Futuro</p>
+        <p class="kpi__value">1</p>
+      </article>
+    </div>
+  </header>
+
+  <main>
+    <section class="group" aria-labelledby="g0">
+      <div class="group__head">
+        <h2 class="group__title" id="g0">App Alia</h2>
+        <p class="group__sub">1 demanda.</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <div class="card__top">
+            <h3 class="card__title">Upgrade do plano</h3>
+            <div class="card__meta">
+              <p class="card__id">#517164</p>
+              <div class="card__tags"><span class="tag tag--done">concluído</span></div>
+            </div>
+          </div>
+          <p class="card__text">Upgrade urgente: o limite de visitantes do plano atual foi excedido.</p>
+          <p class="card__return"><strong>Retorno:</strong> Upgrade autorizado e realizado na sexta-feira, 09/10/2026.</p>
+        </article>
+      </div>
+    </section>
+    <section class="group" aria-labelledby="g1">
+      <div class="group__head">
+        <h2 class="group__title" id="g1">Checkout e entrega</h2>
+        <p class="group__sub">4 demandas.</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <div class="card__top">
+            <h3 class="card__title">AddressGuard</h3>
+            <div class="card__meta">
+              <p class="card__id">#508677</p>
+              <div class="card__tags"><span class="tag tag--progress">em andamento</span></div>
+            </div>
+          </div>
+          <p class="card__text">Implementar a validação de endereços no checkout.</p>
+          <p class="card__return"><strong>Retorno:</strong> discovery finalizado. Em desenvolvimento nesta sprint, com entrega prevista até o fim dela, em 28/10/2026.</p>
+        </article>
+        <article class="card">
+          <div class="card__top">
+            <h3 class="card__title">Alteração de endereço</h3>
+            <div class="card__meta">
+              <p class="card__id">#517152</p>
+              <div class="card__tags"><span class="tag">planejado</span></div>
+            </div>
+          </div>
+          <p class="card__text">Permitir que o próprio cliente corrija seu endereço de entrega.</p>
+          <p class="card__return"><strong>Retorno:</strong> o AddressGuard (#508677) precisa ser implementado primeiro, porque é prioridade para a Black November e define quais dados o cliente poderá editar. Além disso, ainda é preciso mais tempo para mapear os cenários e desenhar o fluxo de edição do endereço pelo próprio cliente depois que o pedido é confirmado.</p>
+          <p class="card__next"><strong>Próximo passo:</strong> vamos atuar nesta demanda nas próximas sprints.</p>
+        </article>
+        <article class="card">
+          <div class="card__top">
+            <h3 class="card__title">Route</h3>
+            <div class="card__meta">
+              <p class="card__id">#511241</p>
+              <div class="card__tags"><span class="tag tag--blocked">impedimento</span></div>
+            </div>
+          </div>
+          <p class="card__text">Corrigir a aplicação da proteção de entrega para clientes logados.</p>
+          <p class="card__return"><strong>Retorno:</strong> o suporte do Route identificou a causa do problema e está trabalhando em uma atualização para corrigi-lo. Seguimos no aguardo, pois não há ação possível do nosso lado até essa atualização sair.</p>
+          <p class="card__next"><strong>Previsão:</strong> no nosso radar para entrega ainda nesta sprint, que vai até 28/10/2026.</p>
+        </article>
+        <article class="card">
+          <div class="card__top">
+            <h3 class="card__title">Checkout</h3>
+            <div class="card__meta">
+              <p class="card__id">#517115</p>
+              <div class="card__tags"><span class="tag tag--blocked">impedimento</span></div>
+            </div>
+          </div>
+          <p class="card__text">Corrigir a divergência na quantidade de itens exibida.</p>
+          <p class="card__return"><strong>Retorno:</strong> o problema está ligado ao Route (#511241), que precisa ser corrigido antes.</p>
+          <p class="card__next"><strong>Previsão:</strong> no nosso radar para entrega ainda nesta sprint, que vai até 28/10/2026.</p>
+        </article>
+      </div>
+    </section>
+    <section class="group" aria-labelledby="g2">
+      <div class="group__head">
+        <h2 class="group__title" id="g2">Vendas e pós-compra</h2>
+        <p class="group__sub">2 demandas.</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <div class="card__top">
+            <h3 class="card__title">OneClickUpsell</h3>
+            <div class="card__meta">
+              <p class="card__id">#517155</p>
+              <div class="card__tags"><span class="tag tag--progress">em discovery</span></div>
+            </div>
+          </div>
+          <p class="card__text">Implementação do aplicativo solicitado pelo Fabian para otimização das vendas.</p>
+          <p class="card__return"><strong>Retorno:</strong> a sprint começou hoje, 13/10/2026, com um discovery logo no início. A implementação só começa depois do resultado, que vai indicar o caminho entre três opções: construir essas funcionalidades internamente, adotar outra solução ou implementar o app. O discovery será uma análise completa e aprofundada para responder a essas perguntas.</p>
+          <p class="card__risk"><strong>Risco:</strong> dependendo do resultado do discovery, pode não haver prazo suficiente para uma entrega segura antes da Black.</p>
+        </article>
+        <article class="card">
+          <div class="card__top">
+            <h3 class="card__title">Identificação da parceira</h3>
+            <div class="card__meta">
+              <p class="card__id">#508327</p>
+              <div class="card__tags"><span class="tag tag--progress">em testes</span></div>
+            </div>
+          </div>
+          <p class="card__text">Exibir a parceira vinculada ao pedido na confirmação da compra e no e-mail.</p>
+          <p class="card__return"><strong>Retorno:</strong> já está pronto e em validação. Previsão de entrega nesta sprint, que vai até 28/10/2026.</p>
+        </article>
+      </div>
+    </section>
+    <section class="group" aria-labelledby="g3">
+      <div class="group__head">
+        <h2 class="group__title" id="g3">Live Black November</h2>
+        <p class="group__sub">1 demanda.</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <div class="card__top">
+            <h3 class="card__title">Live Black November</h3>
+            <div class="card__meta">
+              <div class="card__tags"><span class="tag tag--progress">em análise</span></div>
+            </div>
+          </div>
+          <p class="card__return"><strong>Retorno:</strong> estamos verificando como a funcionalidade está hoje e levantando os ajustes necessários.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <img class="footer__logo" src="assets/brand/ybera-logo.webp" alt="Ybera" width="360" height="139">
+    <p class="footer__team">Time de Tecnologia</p>
+    <p class="footer__claim">Comprometidos com transparência, inovação e colaboração</p>
+    <p class="footer__contact">Para dúvidas ou sugestões<br><a href="mailto:urlan.dipre@ybera.com">urlan.dipre@ybera.com</a></p>
+  </footer>
+</div>
+</body>
+</html>
