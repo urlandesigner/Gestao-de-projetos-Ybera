@@ -240,7 +240,7 @@
       <span class="rt-item-nome">${esc(x.titulo)}${x.resumo
         ? `<span class="rt-item-resumo">${esc(x.resumo)}</span>` : ''}</span>
       <span class="rt-item-estado${saiu ? '' : fam(x)}">${saiu
-        ? 'transbordou'
+        ? 'Transbordou'
         : esc(x.estado || '')}</span>
     </li>`;
     return `<ul class="rt-itens">${dentro.map((x) => li(x, false)).join('')}`

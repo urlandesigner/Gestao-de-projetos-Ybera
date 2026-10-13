@@ -41,6 +41,17 @@ state.cache.lastSuccessAt = state.cache.lastSuccessAt || state.cache.fetchedAt |
 
 const ROTULOS_TIPO = { epic: 'Épicos', feature: 'Features', pbi: 'PBIs', bug: 'Bugs', task: 'Tasks', outro: 'Outros' };
 const ROTULO_TIPO_CURTO = { epic: 'Épico', feature: 'Feature', pbi: 'PBI', bug: 'Bug', task: 'Task', outro: 'Item' };
+/* O MOTIVO TEM DOIS NOMES, e é de propósito: 'atrasado' é CÓDIGO — o
+   C.pendencias o devolve e o app o compara (`reg.motivo === 'atrasado'`) —, e
+   'Atrasado' é o rótulo que vai pra tela. Trocar o código pra arrumar a tela
+   quebraria a comparação em silêncio; trocar só na tela é o que esta tabela faz,
+   igual ao ROTULO_TIPO_CURTO logo acima.
+
+   Tag não começa com minúscula: pedido do Urlan em 13/10/2026. Estas três eram
+   as únicas da Central que chegavam assim — medido injetando cada classe de selo
+   e lendo o text-transform aplicado. */
+const ROTULO_MOTIVO = { bloqueado: 'Bloqueado', atrasado: 'Atrasado', parado: 'Parado' };
+const rotuloMotivo = (m) => ROTULO_MOTIVO[m] || m;
 const ORDEM_TIPO = ['epic', 'feature', 'pbi', 'bug', 'task', 'outro'];
 // Ponto da coluna: código semântico próprio — NUNCA as cores de tipo
 // (laranja/roxo/azul/vermelho/amarelo são de Épico/Feature/PBI/Bug/Task).
@@ -902,7 +913,7 @@ function renderPanorama() {
         const titulo = f['System.Title'] || ('item #' + item.id); // cache antigo não guardava título
         return `<li><a class="item" href="${link}" target="_blank" rel="noopener">
           <span class="cabeca"><span class="titulo">${escapeHtml(titulo)}</span><span class="id">#${item.id}</span></span>
-          <span class="selos"><span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span><span class="badge-tipo selo-alerta">${motivo}</span></span>
+          <span class="selos"><span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span><span class="badge-tipo selo-alerta">${rotuloMotivo(motivo)}</span></span>
           <span class="linha"><span class="rot">Estado</span><span class="val">${escapeHtml(f['System.State'])}</span></span>
         </a></li>`;
       }).join('')}</ul>`
@@ -1103,7 +1114,9 @@ function htmlPendencia(reg) {
     ? `<span class="linha"><span class="rot">Sem toque</span><span class="val">há ${reg.dias} d</span></span>`
     : '';
   // Uma marca só, com os motivos juntos: duas etiquetas quebravam linha na coluna
-  const secundarias = reg.tambem.length ? `<span class="badge-tipo">também ${reg.tambem.join(' · ')}</span>` : '';
+  const secundarias = reg.tambem.length
+    ? `<span class="badge-tipo">Também ${reg.tambem.map(rotuloMotivo).join(' · ')}</span>`
+    : '';
   return `<li><a class="item" href="${link}" target="_blank" rel="noopener" title="${escapeHtml(f['System.WorkItemType'])}">
     <span class="cabeca"><span class="titulo">${escapeHtml(titulo)}</span><span class="id">#${it.id}</span></span>
     <span class="selos"><span class="badge-tipo tipo-${slug}">${ROTULO_TIPO_CURTO[slug]}</span>${secundarias}</span>

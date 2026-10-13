@@ -372,7 +372,10 @@ test('o que transbordou vem em lista própria, no fim e marcado', () => {
   assert.deepEqual(linha.transbordados.map((x) => x.titulo), ['Escorreu']);
   const html = V2.secaoRitmo([linha]);
   assert.ok(html.indexOf('Ficou') < html.indexOf('Escorreu'), 'o que saiu devia fechar a lista');
-  assert.match(html, /<li class="rt-item rt-transbordou">[\s\S]*?Escorreu[\s\S]*?transbordou</);
+  /* `Transbordou` com maiúscula desde 13/10/2026: tag não começa com minúscula,
+     e esta é a única do relatório que começava — medido na tela, com o
+     text-transform aplicado, contra todas as outras. */
+  assert.match(html, /<li class="rt-item rt-transbordou">[\s\S]*?Escorreu[\s\S]*?Transbordou</);
 });
 
 test('título de item com HTML é escapado', () => {
