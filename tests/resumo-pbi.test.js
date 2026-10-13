@@ -59,8 +59,8 @@ test('o aplicar-resumos.js tira TODO bloco local, não só o que ele conhece', (
 test('as descrições só entram no ARQUIVO, nunca no link', () => {
   /* O link é o conteúdo final: não passa por script nenhum, e um bloco de
      descrições cruas dentro dele iria inteiro pra quem recebesse. */
-  assert.match(fonteReport, /_descricoes: \(semRecorte && pendentes && pendentes\.length\) \? pendentes : undefined,/);
-  assert.match(fonteReport, /const pendentes = \(semRecorte && B\.precisaDeSprints === true\)/);
+  assert.match(fonteReport, /_descricoes: \(paraArquivo && pendentes && pendentes\.length\) \? pendentes : undefined,/);
+  assert.match(fonteReport, /const pendentes = \(paraArquivo && B\.precisaDeSprints === true\)/);
 });
 
 test('o saneador não deixa descrição passar, nos dois sentidos', () => {

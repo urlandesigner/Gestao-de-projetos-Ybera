@@ -27,15 +27,32 @@ DESTINOS=$(grep -ho "arquivoDeDados = '[^']*'\|ARQUIVO_DE_DADOS = '[^']*'" \
 # Com um argumento, publica aquele arquivo na edição a que o NOME dele pertence.
 # Sem argumento, pega o que estiver em Downloads — e se houver mais de um, para:
 # publicar a edição errada sobrescreve um relatório já compartilhado.
+# CADA PO TEM O SEU ARQUIVO: `dados-outubro.json` é o do dono histórico, e os
+# das outras saem com sufixo — `dados-outubro-isadora.json`. Desde que o pacote
+# passou a levar o recorte da pessoa (14/10/2026), publicar o arquivo de uma no
+# lugar do da outra apaga um documento que já está no ar.
 ORIGEM=""
 DESTINO=""
 for d in $DESTINOS; do
-  candidato="${1:-$HOME/Downloads/$(basename "$d")}"
-  [ "$(basename "$candidato")" = "$(basename "$d")" ] || continue
-  [ -f "$candidato" ] || continue
-  [ -z "$ORIGEM" ] || { echo "achei mais de um arquivo pra publicar; passe um por vez:" >&2;
-    echo "  $ORIGEM" >&2; echo "  $candidato" >&2; exit 1; }
-  ORIGEM="$candidato"; DESTINO="$d"
+  base=$(basename "$d" .json)
+  dir=$(dirname "$d")
+  # com argumento, só o nome dele; sem, varre o do dono e os com sufixo
+  if [ -n "${1:-}" ]; then candidatos="$1"; else
+    candidatos="$HOME/Downloads/$base.json"
+    for extra in "$HOME/Downloads/$base"-*.json; do [ -f "$extra" ] && candidatos="$candidatos
+$extra"; done
+  fi
+  while IFS= read -r candidato; do
+    [ -n "$candidato" ] || continue
+    nome=$(basename "$candidato" .json)
+    case "$nome" in "$base"|"$base"-*) ;; *) continue ;; esac
+    [ -f "$candidato" ] || continue
+    [ -z "$ORIGEM" ] || { echo "achei mais de um arquivo pra publicar; passe um por vez:" >&2;
+      echo "  $ORIGEM" >&2; echo "  $candidato" >&2; exit 1; }
+    ORIGEM="$candidato"; DESTINO="$dir/$nome.json"
+  done <<EOF
+$candidatos
+EOF
 done
 [ -n "$ORIGEM" ] || {
   echo "não achei nenhum arquivo de dados pra publicar." >&2

@@ -709,26 +709,48 @@ test('as duas entradas de dado passam pela MESMA porta', () => {
    link divergirem, e o mesmo documento diria coisas diferentes conforme o
    caminho por onde chegou. */
 test('as duas saídas montam o pacote pela MESMA porta', () => {
-  assert.match(fonteReport, /function pacoteDoDocumento\(semRecorte\) \{/);
+  assert.match(fonteReport, /function pacoteDoDocumento\(paraArquivo\) \{/);
   assert.match(fonteReport, /comprimir\(JSON\.stringify\(pacoteDoDocumento\(\)\)\)/);
   assert.match(fonteReport, /JSON\.stringify\(pacoteDoDocumento\(true\), null, 1\)/);
 });
 
-/* O ARQUIVO PUBLICADO LEVA O TIME INTEIRO, sempre — e o link continua levando o
-   que está na tela. Em 08/10/2026 a primeira publicação de outubro saiu com o
-   filtro no PO, e a Sprint 20 foi ao ar com 12 itens em vez de 42, sem nada
-   avisando. O endereço fixo é de acompanhamento de time; o recorte de uma
-   pessoa é uso do link, onde escolher a fatia é a intenção. */
-test('publicar ignora o filtro de responsável; o link, não', () => {
-  assert.match(fonteReport, /JSON\.stringify\(pacoteDoDocumento\(true\), null, 1\)/);
-  assert.match(fonteReport, /comprimir\(JSON\.stringify\(pacoteDoDocumento\(\)\)\)/);
-  assert.match(fonteReport, /const recorte = semRecorte \? '' : respAtivo\(\);/);
+/* O ARQUIVO E O LINK LEVAM O MESMO RECORTE, e é o da tela.
+
+   Até 14/10/2026 a publicação zerava o filtro e mandava o time inteiro. Parecia
+   zelo e era divergência: o PO revisava a fatia dele na tela e o stakeholder
+   abria outro documento, sem jeito de nenhum dos dois perceber. O Urlan decidiu
+   que o relatório é do PO e mostra o que está atribuído a ele — nas duas pontas.
+
+   `paraArquivo` sobrou pra separar a única coisa que de fato difere: os blocos
+   de material de trabalho, que vão no arquivo e nunca no link. */
+test('o arquivo e o link levam o mesmo recorte: o da tela', () => {
+  assert.match(fonteReport, /const recorte = respAtivo\(\);/);
+  assert.doesNotMatch(fonteReport, /semRecorte/);
 });
 
-test('quando o publicado diverge da tela, a tela diz', () => {
-  // Sem isto a divergência é invisível: o PO olha o recorte dele, clica, e o
-  // arquivo sai com outro conteúdo — certo, mas sem ninguém saber.
-  assert.match(fonteReport, /com <b>o time inteiro<\/b> — não o recorte de /);
+test('cada PO publica no arquivo dele, não no de outra pessoa', () => {
+  /* Com o recorte por pessoa, o arquivo passou a conter a fatia de quem
+     publicou — e havia um arquivo só por edição. Publicar no arquivo errado é
+     apagar o documento do stakeholder de outra pessoa, em silêncio e num
+     endereço público. */
+  assert.match(fonteReport, /const arquivo = arquivoDoPO\(C\.chaveDePessoa\(respAtivo\(\)\)\)/);
+  assert.match(fonteReport, /function arquivoDoPO\(chave\)/);
+  // e quem LÊ escolhe pelo endereço, porque não tem token nem seletor
+  assert.match(fonteReport, /const arquivo = arquivoDoPO\(chaveDoEndereco\(\)\)/);
+});
+
+test('o dono histórico mantém o nome original do arquivo', () => {
+  /* `assets/dados-outubro.json` é o arquivo que o documento JÁ PUBLICADO serve.
+     Renomeá-lo deixaria o endereço de hoje em 404 até alguém republicar, e todo
+     link que já circula aponta pra lá. */
+  assert.match(fonteReport, /const DONO_HISTORICO = 'urlan';/);
+  assert.match(fonteReport, /if \(!base \|\| !chave \|\| chave === DONO_HISTORICO\) return base;/);
+});
+
+test('a tela diz de quem é o arquivo que saiu', () => {
+  // O nome do arquivo muda conforme quem está selecionado; sem isso o PO não
+  // tem como saber que baixou o arquivo de outra pessoa.
+  assert.match(fonteReport, /com o que está atribuído a <b>/);
 });
 
 test('a assinatura da capa não depende do filtro nem da rede', () => {

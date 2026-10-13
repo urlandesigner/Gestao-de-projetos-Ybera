@@ -987,19 +987,20 @@ let geracaoLink = 0; // troca rápida de mês: só a gravação mais nova pode e
    Montá-lo em dois lugares faria o arquivo e o link divergirem no primeiro
    campo novo, e aí o mesmo documento diria coisas diferentes conforme o
    caminho por onde chegou. */
-/* `semRecorte` é o que separa as duas saídas que passam por aqui.
+/* `paraArquivo` diz se esta saída é a PUBLICAÇÃO (o arquivo do endereço fixo)
+   ou o LINK. Separa uma coisa só: os blocos de material de trabalho do PO, que
+   vão no arquivo e nunca no link.
 
-   O LINK carrega o que está na tela: mandar a sua fatia pra alguém é um uso
-   legítimo dele, e o filtro é a forma de escolher a fatia.
+   O RECORTE É O MESMO NAS DUAS. Decisão do Urlan em 14/10/2026: o relatório é
+   do PO, e mostra o que está atribuído a ele. Até aqui a publicação zerava o
+   filtro e mandava o time inteiro — o que fazia a tela dele e o documento do
+   stakeholder mostrarem coisas diferentes, e ele revisava um documento que não
+   era o que saía.
 
-   O ARQUIVO PUBLICADO, não. Ele mora num endereço fixo que o time inteiro abre
-   toda semana — e sai do mesmo botão, na mesma tela, sem jeito de quem abre
-   saber que veio recortado. Aconteceu em 08/10/2026: a primeira publicação de
-   outubro saiu com o filtro no PO, e a Sprint 20 foi publicada com 12 itens em
-   vez de 42. Documento de acompanhamento de time nunca quer o recorte de uma
-   pessoa, então a decisão deixou de ser do estado da tela. */
-function pacoteDoDocumento(semRecorte) {
-  const recorte = semRecorte ? '' : respAtivo();
+   O custo é conhecido e foi aceito com o número na frente: a sprint publicada
+   deixa de ser a do squad e passa a ser a fatia do PO. */
+function pacoteDoDocumento(paraArquivo) {
+  const recorte = respAtivo();
   const mostrados = st.items.filter((it) => doResponsavel(it, recorte));
   /* O `escopo` do pacote é a ASSINATURA da capa ("Product Owner: X"), não o
      recorte — nada do lado do leitor filtra por ele, porque os itens já chegam
@@ -1036,7 +1037,7 @@ function pacoteDoDocumento(semRecorte) {
      de pendências (cruas, com id). Chamar `ritmoAgora` duas vezes daria duas
      fotos de instantes diferentes do mesmo documento. */
   const ritmoLinhas = B.precisaDeSprints === true ? ritmoAgora(mostrados) : [];
-  const pendentes = (semRecorte && B.precisaDeSprints === true)
+  const pendentes = (paraArquivo && B.precisaDeSprints === true)
     ? descricoesPendentes(ritmoLinhas) : [];
   /* O MATERIAL PRA ESCREVER A ABA ENTREGAS. Quem declara é o documento, em
      `precisaDeEntregas` — mesmo arranjo de `precisaDeSprints`, e pelo mesmo
@@ -1045,10 +1046,9 @@ function pacoteDoDocumento(semRecorte) {
      já foi escrito e publicado; gerar material pra ele seria trabalho sobre
      texto que não se reescreve mais.
 
-     Só `semRecorte`: isto é bloco de trabalho do PO, e com um filtro de
-     responsável ligado ele mostraria as entregas de uma pessoa como se fossem
-     as do time. */
-  const material = (semRecorte && B.precisaDeEntregas === true
+     Só na publicação: é bloco de trabalho do PO, e no link ele viajaria
+     inteiro pra quem recebesse. */
+  const material = (paraArquivo && B.precisaDeEntregas === true
     && typeof B.entregasConcluidas === 'function')
     ? B.entregasConcluidas(mostrados, st.items.concat(st.pais),
       typeof B.periodoDoDocumento === 'function' ? B.periodoDoDocumento() : [])
@@ -1067,7 +1067,7 @@ function pacoteDoDocumento(semRecorte) {
       /* Só no ARQUIVO, nunca no link: o link já é o conteúdo final, não passa
          por script nenhum, e um bloco de descrições cruas dentro dele iria
          inteiro pra quem recebesse. Ausente quando não há pendência. */
-      _descricoes: (semRecorte && pendentes && pendentes.length) ? pendentes : undefined,
+      _descricoes: (paraArquivo && pendentes && pendentes.length) ? pendentes : undefined,
       /* Mesma regra do bloco acima, e o sublinhado é o contrato: chave que
          começa com `_` é material local: o portão do publicar-dados.sh recusa o
          pacote inteiro enquanto houver uma, e o aplicar-resumos.js tira todas
@@ -1118,7 +1118,9 @@ async function gravarLink() {
    publicações — comprimido seria um borrão binário a cada commit. */
 function publicarDados() {
   const caixa = $('caixa-link');
-  const arquivo = (typeof B.arquivoDeDados === 'string' ? B.arquivoDeDados : '').split('/').pop();
+  // No arquivo de QUEM está na tela: o pacote leva a fatia dele, e gravar isso
+  // no arquivo de outra pessoa apagaria o documento dela.
+  const arquivo = arquivoDoPO(C.chaveDePessoa(respAtivo())).split('/').pop();
   if (!arquivo) return;
   if (!st.items || st.vazio) { mostrarLink('', 'Não há documento pra publicar ainda.'); return; }
   try {
@@ -1133,13 +1135,13 @@ function publicarDados() {
     setTimeout(() => URL.revokeObjectURL(url), 2000);
     if (caixa) {
       caixa.hidden = false;
-      /* Quando o que foi publicado NÃO é o que está na tela, a tela diz. Sem
-         isto a divergência é invisível: o PO olha o recorte dele, clica, e o
-         arquivo sai com outro conteúdo — certo, mas sem ninguém saber. */
+      /* A tela diz DE QUEM é o arquivo que saiu. O pacote agora leva o recorte
+         da tela, então o nome do arquivo muda conforme quem está selecionado —
+         e publicar no arquivo errado é apagar o documento de outra pessoa. */
       const recorte = respAtivo();
       caixa.innerHTML = '<p class="link-aviso">Baixei <b>' + B.esc(arquivo) + '</b>'
-        + (recorte ? ', com <b>o time inteiro</b> — não o recorte de '
-          + B.esc(recorte) + ' que está na tela' : '') + '.'
+        + (recorte ? ', com o que está atribuído a <b>' + B.esc(recorte) + '</b>'
+          : ', com <b>o time inteiro</b>') + '.'
         + ' Agora rode <b>./scripts/publicar-dados.sh</b> pra ele entrar no ar —'
         + ' o endereço do documento não muda, quem já tem o link vê o estado novo.</p>';
     }
@@ -1297,8 +1299,35 @@ function falhaDeLeitura(motivo, arquivo, detalhe) {
   console.warn('[Report] ' + motivo + ' ao ler ' + arquivo + ': ' + detalhe);
 }
 
+/* O ARQUIVO DE DADOS DE CADA PO.
+
+   Com o recorte por pessoa, o arquivo passou a conter a fatia de quem publicou
+   — e havia UM arquivo por edição. A Isadora clicando Publicar sobrescreveria
+   o documento do stakeholder do Urlan com os itens dela, em silêncio, num
+   endereço público. Cada PO tem o seu.
+
+   O dono histórico fica no nome original: `assets/dados-outubro.json` é do
+   Urlan, e é o arquivo que o documento já publicado serve. Trocar o nome dele
+   deixaria o endereço de hoje em 404 até alguém republicar.
+
+   Quem LÊ não tem token nem seletor, então quem diz de quem é o relatório é o
+   endereço: `?de=isadora`. Sem o parâmetro, é o do dono histórico — todo link
+   que já circula continua abrindo o que sempre abriu. */
+const DONO_HISTORICO = 'urlan';
+
+function chaveDoEndereco() {
+  const m = /(?:^|[?&])de=([a-z]+)(?:&|$)/.exec(location.search);
+  return m ? m[1] : '';
+}
+
+function arquivoDoPO(chave) {
+  const base = typeof B.arquivoDeDados === 'string' ? B.arquivoDeDados : '';
+  if (!base || !chave || chave === DONO_HISTORICO) return base;
+  return base.replace(/\.json$/, '-' + chave + '.json');
+}
+
 async function lerDoArquivo() {
-  const arquivo = typeof B.arquivoDeDados === 'string' ? B.arquivoDeDados : '';
+  const arquivo = arquivoDoPO(chaveDoEndereco());
   if (!arquivo) return false;
   entrarEmLeitura();
   let pacote;

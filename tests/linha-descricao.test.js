@@ -253,9 +253,20 @@ test('o nome do arquivo é impublicável por construção', () => {
   assert.ok(declarados.length >= 2, 'não achei os arquivos de dados declarados');
   assert.equal(declarados.includes('material-resumos.json'), false,
     'o material passou a ter o nome de uma edição e pode ser publicado por engano');
-  assert.match(ler('scripts/publicar-dados.sh'),
-    /\[ "\$\(basename "\$candidato"\)" = "\$\(basename "\$d"\)" \] \|\| continue/,
-    'o publicar-dados.sh deixou de casar pelo nome — o material passa a ser publicável');
+  /* E o script RODANDO, não a linha dele: desde 14/10/2026 ele aceita também o
+     sufixo por PO (`dados-outubro-isadora.json`), e um padrão frouxo demais
+     passaria a engolir o material. Passar o arquivo como argumento é o caminho
+     mais permissivo que existe — se nem assim ele entra, não entra nunca. */
+  const fs2 = require('node:fs');
+  const os2 = require('node:os');
+  const tmp = fs2.mkdtempSync(path.join(os2.tmpdir(), 'pub-'));
+  const forjado = path.join(tmp, 'material-resumos.json');
+  fs2.writeFileSync(forjado, JSON.stringify({ em: 1, sprints: [] }));
+  const r = require('node:child_process').spawnSync('./scripts/publicar-dados.sh', [forjado],
+    { cwd: raiz, encoding: 'utf8' });
+  fs2.rmSync(tmp, { recursive: true, force: true });
+  assert.equal(r.status, 1, 'o script aceitou o nome do material — ele virou publicável');
+  assert.match(r.stderr, /não achei nenhum arquivo de dados pra publicar/);
 });
 
 test('só pede o que falta, e a régua é a mesma do relatório', () => {

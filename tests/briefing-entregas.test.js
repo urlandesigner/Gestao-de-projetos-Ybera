@@ -728,7 +728,7 @@ test('o link declara exatamente os campos que o documento lê', () => {
    Então o lugar onde ele é chamado faz parte do contrato. */
 test('o material de entregas só é montado no caminho do PO', () => {
   const report = fs.readFileSync(path.join(__dirname, '../assets/report.js'), 'utf8');
-  const chamada = /const material = \(semRecorte && B\.precisaDeEntregas === true[\s\S]*?: null;/
+  const chamada = /const material = \(paraArquivo && B\.precisaDeEntregas === true[\s\S]*?: null;/
     .exec(report);
   assert.ok(chamada, 'o material de entregas mudou de forma — reveja a exceção da varredura');
   assert.match(chamada[0], /B\.entregasConcluidas\(mostrados, st\.items\.concat\(st\.pais\)/,
@@ -738,7 +738,7 @@ test('o material de entregas só é montado no caminho do PO', () => {
 });
 
 /* O teste acima lê a chamada; este RODA. Casar o texto garante que a linha está
-   escrita, não que ela faz o que diz — e os dois portões dela (só sem recorte,
+   escrita, não que ela faz o que diz — e os dois portões dela (só na publicação,
    só pra quem declara) falham em silêncio quando erram: o bloco simplesmente
    não aparece, e quem for escrever os cartões acha que o mês não teve entrega.
 
@@ -746,8 +746,8 @@ test('o material de entregas só é montado no caminho do PO', () => {
    recortada e corrida com dublês, que é a mesma técnica que o saneRitmo usa. */
 test('os dois portões do material funcionam, e não só estão escritos', () => {
   const report = fs.readFileSync(path.join(__dirname, '../assets/report.js'), 'utf8');
-  const trecho = /const material = \(semRecorte[\s\S]*?: null;/.exec(report)[0];
-  const rodar = (semRecorte, B) => {
+  const trecho = /const material = \(paraArquivo[\s\S]*?: null;/.exec(report)[0];
+  const rodar = (paraArquivo, B) => {
     const st = { items: [{ id: 1 }], pais: [] };
     const mostrados = st.items;
     // eslint-disable-next-line no-eval
@@ -759,8 +759,8 @@ test('os dois portões do material funcionam, e não só estão escritos', () =>
   const ligado = rodar(true, Object.assign({ precisaDeEntregas: true }, ferramenta));
   assert.deepEqual(ligado, { itens: ['x'], frentes: ['f'] }, 'o material não foi montado');
 
-  // Com filtro de responsável ligado: as entregas de uma pessoa não podem ser
-  // apresentadas como as do time.
+  // No LINK, não: é material de trabalho do PO, e no link ele viajaria inteiro
+  // pra quem recebesse — com descrição crua de PBI dentro.
   assert.equal(rodar(false, Object.assign({ precisaDeEntregas: true }, ferramenta)), null);
 
   // Sem declarar: é o documento de Agosto e Setembro, que já foi escrito.
