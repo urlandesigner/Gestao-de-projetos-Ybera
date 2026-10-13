@@ -101,9 +101,10 @@ test('o uppercase que cobre os relatórios publicados não pode sair do CSS', ()
   };
   regra('assets/entregas.css', '.rl-selo');      // entregas.html e entregas-v2.html
   regra('assets/report-v2.css', '.rl-selo');     // report-v2.html
-  regra('assets/style.css', '.frente-selo');     // report.html
-  regra('assets/style.css', '.roadmap-feito');   // report.html
   regra('assets/report-v2.css', '.rl-rm-feito'); // report-v2.html
+  /* `.frente-selo` e `.roadmap-feito` saíram desta lista em 13/10/2026: eram da
+     style.css e serviam só ao report.html, que foi excluído do projeto. As
+     regras foram embora com ele, na limpeza da folha. */
   // E o roadmap compartilhado, que serve a Central e as duas edições de Entregas.
   for (const sel of ['.rl-rm-feito', '.rl-rm-andamento', '.rl-rm-teste']) regra('assets/roadmap.css', sel);
 });
