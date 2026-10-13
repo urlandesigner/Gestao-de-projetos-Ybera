@@ -1205,21 +1205,57 @@ async function lerDoLink() {
    Cache-buster no pedido: a página é servida por CDN, e um documento de
    acompanhamento servindo a versão de ontem é exatamente o defeito que ele
    existe pra não ter. */
+/* QUATRO MOTIVOS, QUATRO FRASES — e isto é correção de um defeito real.
+
+   Até 13/10/2026 havia um `catch` só, e ele dizia "ainda não foi publicado"
+   para qualquer coisa: arquivo ausente, leitura bloqueada e erro de desenho. O
+   Urlan abriu o relatório, recebeu essa frase, e o arquivo estava publicado e
+   válido — medido, 200 e 17KB. A frase mandava o PO clicar num botão que não
+   consertaria nada, e o erro de verdade era engolido sem nem ir pro console.
+
+   Causa diferente, conserto diferente: publicar resolve um dos quatro casos. E
+   o erro real vai SEMPRE pro console, porque sem ele a próxima investigação
+   começa do zero. */
+function falhaDeLeitura(motivo, arquivo, detalhe) {
+  const FRASES = {
+    ausente: 'Este documento ainda não foi publicado.'
+      + ' Quem mantém o relatório precisa abrir a versão do PO e clicar em <b>Publicar dados</b>.',
+    disco: 'Este arquivo foi aberto direto do disco, e aí o navegador bloqueia a leitura dos'
+      + ' dados — é regra dele, não falta de publicação. Abra pelo endereço publicado do'
+      + ' relatório, ou por um servidor local.',
+    rede: 'Não deu pra ler os dados deste relatório agora. Pode ser a conexão;'
+      + ' se insistir, o arquivo pode ter saído do ar.',
+    desenho: 'Os dados chegaram, mas o documento não desenhou. Isto é defeito nosso,'
+      + ' não falta de publicação — o motivo está no console.',
+  };
+  $('report').innerHTML = '<p class="mudo">' + (FRASES[motivo] || FRASES.rede) + '</p>';
+  console.warn('[Report] ' + motivo + ' ao ler ' + arquivo + ': ' + detalhe);
+}
+
 async function lerDoArquivo() {
   const arquivo = typeof B.arquivoDeDados === 'string' ? B.arquivoDeDados : '';
   if (!arquivo) return false;
   entrarEmLeitura();
+  let pacote;
   try {
     const resp = await fetch(arquivo + '?t=' + Date.now(), { cache: 'no-store' });
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    aplicarPacote(await resp.json());
+    /* Resposta HTTP existe: 404 é "não publicado" de verdade, e é o único caso
+       em que pedir uma publicação é o conselho certo. */
+    if (!resp.ok) { falhaDeLeitura('ausente', arquivo, 'HTTP ' + resp.status); return true; }
+    pacote = await resp.json();
+  } catch (e) {
+    /* Não houve resposta HTTP nenhuma, ou ela não era JSON. O caso mais comum é
+       o arquivo aberto DO DISCO: em `file://` a leitura relativa é bloqueada
+       pelo navegador, e o sintoma fica idêntico ao de um documento que ninguém
+       publicou. Reproduzido: TypeError "Failed to fetch". */
+    falhaDeLeitura(location.protocol === 'file:' ? 'disco' : 'rede', arquivo, e.message);
+    return true;
+  }
+  try {
+    aplicarPacote(pacote);
     render();
   } catch (e) {
-    /* Nomear o arquivo na mensagem é de propósito: quem abre isto e não vê
-       nada precisa saber que falta uma PUBLICAÇÃO, e não que o documento
-       quebrou. A frase vale pro leitor e pro PO. */
-    $('report').innerHTML = '<p class="mudo">Este documento ainda não foi publicado.'
-      + ' Quem mantém o relatório precisa abrir a versão do PO e clicar em <b>Publicar dados</b>.</p>';
+    falhaDeLeitura('desenho', arquivo, e.message);
   }
   return true;
 }

@@ -698,7 +698,10 @@ test('as duas entradas de dado passam pela MESMA porta', () => {
   const chamadas = (fonteReport.match(/aplicarPacote\(/g) || []).length;
   assert.equal(chamadas, 3, 'esperado: a definição, o caminho do link e o do arquivo');
   assert.match(fonteReport, /aplicarPacote\(JSON\.parse\(await descomprimir\(carga\)\)\)/);
-  assert.match(fonteReport, /aplicarPacote\(await resp\.json\(\)\)/);
+  /* O caminho do arquivo deixou de aplicar o pacote dentro do `try` da leitura:
+     o `await resp.json()` ficou separado do desenho pra que um erro de DESENHO
+     não seja contado como arquivo ausente. A porta continua a mesma. */
+  assert.match(fonteReport, /\n    aplicarPacote\(pacote\);/);
 });
 
 /* Mesma regra na saída: montar o pacote em dois lugares faria o arquivo e o
@@ -760,10 +763,37 @@ test('o arquivo é pedido sem cache', () => {
 /* Sem publicação, o leitor precisa saber que falta um PASSO — não que o
    documento quebrou. */
 test('documento não publicado explica o que falta, sem cara de erro', () => {
-  const m = /async function lerDoArquivo\(\) \{[\s\S]*?\n\}/.exec(fonteReport);
-  assert.ok(m, 'lerDoArquivo sumiu');
-  assert.match(m[0], /ainda não foi publicado/);
+  assert.match(fonteReport, /ausente: 'Este documento ainda não foi publicado\./);
+  const m = /function falhaDeLeitura\(motivo, arquivo, detalhe\) \{[\s\S]*?\n\}/.exec(fonteReport);
+  assert.ok(m, 'falhaDeLeitura sumiu');
   assert.doesNotMatch(m[0], /class="erro"/, 'falta de publicação não é erro da página');
+});
+
+/* CAUSA DIFERENTE, FRASE DIFERENTE — e isto é conserto de defeito, não capricho.
+
+   Havia um `catch` só, dizendo "ainda não foi publicado" para tudo. Em
+   13/10/2026 o Urlan recebeu essa frase com o arquivo publicado e válido (200,
+   17KB, medido): a mensagem mandava o PO clicar num botão que não consertaria
+   nada, e o erro real era engolido sem ir pro console.
+
+   O caso mais traiçoeiro é o `file://`: abrir o HTML do disco faz o navegador
+   BLOQUEAR a leitura relativa — reproduzido, TypeError "Failed to fetch" — e o
+   sintoma fica idêntico ao de um documento que ninguém publicou. */
+test('cada motivo de falha tem a sua frase, e o erro real vai pro console', () => {
+  const f = /function falhaDeLeitura\(motivo, arquivo, detalhe\) \{[\s\S]*?\n\}/.exec(fonteReport)[0];
+  for (const motivo of ['ausente', 'disco', 'rede', 'desenho']) {
+    assert.match(f, new RegExp(motivo + ':'), 'falta a frase de ' + motivo);
+  }
+  // Sem o console, a próxima investigação começa do zero.
+  assert.match(f, /console\.warn\('\[Report\] ' \+ motivo \+ ' ao ler ' \+ arquivo \+ ': ' \+ detalhe\)/);
+
+  const ler = /async function lerDoArquivo\(\) \{[\s\S]*?\n\}/.exec(fonteReport)[0];
+  // 404 é o único caso em que pedir publicação é o conselho certo.
+  assert.match(ler, /if \(!resp\.ok\) \{ falhaDeLeitura\('ausente', arquivo, 'HTTP ' \+ resp\.status\); return true; \}/);
+  // Arquivo aberto do disco se reconhece pelo protocolo, não pela mensagem do erro.
+  assert.match(ler, /location\.protocol === 'file:' \? 'disco' : 'rede'/);
+  // E o desenho tem o seu próprio try: erro ali não é falta de publicação.
+  assert.match(ler, /falhaDeLeitura\('desenho', arquivo, e\.message\)/);
 });
 
 /* O nome do arquivo é declarado pelo DOCUMENTO e lido pelo script. Duas cópias
