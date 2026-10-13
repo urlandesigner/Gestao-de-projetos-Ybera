@@ -145,6 +145,9 @@
 .rt-saiu { background: var(--transbordo-barra); }
 
 .rt-nums {
+  /* `<span>` dentro do `<summary>` (parágrafo não é phrasing content): sem o
+     block, a margem de cima não existiria e a linha colaria na barra. */
+  display: block;
   margin: 0.55rem 0 0;
   font-size: 0.78rem;
   color: var(--mudo);
@@ -152,6 +155,53 @@
 }
 .rt-nums b { font-weight: 700; }
 .rt-amb b { color: var(--atencao); }
+
+/* A DOBRA DO CARTÃO.
+
+   Duas sprints abertas de uma vez empurravam a segunda pra fora da tela, e a
+   encerrada — que é a que menos interessa a quem abre pra acompanhar — ficava
+   ocupando o topo. Agora cada cartão dobra, e a encerrada nasce fechada.
+
+   `<details>` nativo, sem script: o documento viaja congelado dentro de um link
+   `#r=` e é servido como arquivo estático. Uma dobra em JavaScript ficaria
+   presa aberta pra quem abre com script bloqueado, e o teclado teria que ser
+   reimplementado à mão — o `<summary>` já é um botão, já responde a Enter e a
+   Espaço, e já anuncia estado expandido pro leitor de tela.
+
+   O marcador padrão sai: ele nasce colado no primeiro filho e o primeiro filho
+   aqui é o selo, que é uma etiqueta com fundo próprio. A seta ocupa a ponta
+   direita da LINHA DO SELO, que estava vazia — assim o nome, as datas e o
+   placar continuam exatamente onde estavam, sem ninguém precisar reaprender a
+   ler o cartão. */
+.rt-resumo {
+  cursor: pointer;
+  list-style: none; /* Firefox */
+}
+.rt-resumo::-webkit-details-marker { display: none; }
+.rt-resumo:focus-visible { outline: 2px solid var(--tinta); outline-offset: 3px; border-radius: 6px; }
+
+.rt-cab {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+/* Afordância: sem ela a dobra é invisível, e controle que ninguém descobre não
+   existe. Desenhada com borda em vez de glifo — o caractere depende da fonte
+   instalada e some como retângulo vazio quando ela falta. */
+.rt-seta {
+  flex: none;
+  width: 0.46rem;
+  height: 0.46rem;
+  margin-top: 0.32rem;
+  border-right: 2px solid var(--mudo);
+  border-bottom: 2px solid var(--mudo);
+  transform: rotate(45deg);
+  transition: transform 0.15s ease;
+}
+.rt-dobra[open] .rt-seta { transform: rotate(-135deg); }
+@media (prefers-reduced-motion: reduce) { .rt-seta { transition: none; } }
 
 /* A LISTA DE ITENS DA SPRINT, separada dos números por um fio e não por um vão:
    o fio diz que a lista PERTENCE àquela sprint, e com os cartões lado a lado o

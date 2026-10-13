@@ -1129,3 +1129,88 @@ test('o seletor continua sendo um <select>, não um menu de mentira', () => {
   assert.match(foraDoSupports, /\.rl-edicao \{[\s\S]*?appearance: none/,
     'sem suporte, o controle precisa continuar com a aparência própria');
 });
+
+/* ---------- A DOBRA DO CARTÃO DE SPRINT ---------- */
+
+/* Duas sprints abertas de uma vez empurravam a segunda pra fora da tela, e a
+   encerrada — a que menos interessa a quem abre pra acompanhar — ficava
+   ocupando o topo. Pedido do Urlan em 14/10/2026: cada cartão dobra, e o que já
+   encerrou nasce fechado.
+
+   O que estes testes guardam é O QUE SOBRA FECHADO. Esconder a lista de itens é
+   o ponto; esconder o placar ou a barra junto tornaria o cartão fechado inútil,
+   e isso não se vê num teste de "existe um <details>". */
+const comItens = (n, extra) => Object.assign({
+  nome: 'Sprint 20', start: '2026-09-28T00:00:00Z', finish: '2026-10-09T00:00:00Z',
+  estado: 'fechada', entregues: 8, total: 8, transbordaram: 3,
+  itens: Array.from({ length: 8 }, (_, i) => ({ titulo: 'Item ' + i, estado: 'Done', feito: true })),
+  transbordados: Array.from({ length: n }, (_, i) => ({ titulo: 'Saiu ' + i, estado: 'New' })),
+}, extra || {});
+
+// O <summary> de uma linha: o que o cartão mostra quando está fechado.
+function sumarioDe(html) {
+  const m = /<summary class="rt-resumo">([\s\S]*?)<\/summary>/.exec(html);
+  assert.ok(m, 'não achei o <summary> — o cartão deixou de dobrar');
+  return m[1];
+}
+
+test('a sprint encerrada nasce fechada; as outras, abertas', () => {
+  const fechada = V2.secaoRitmo([comItens(3)]);
+  assert.match(fechada, /<details class="rt-dobra">/);
+  assert.doesNotMatch(fechada, /<details class="rt-dobra" open>/);
+
+  for (const estado of ['corrente', 'futura']) {
+    assert.match(V2.secaoRitmo([comItens(3, { estado })]), /<details class="rt-dobra" open>/,
+      'a sprint ' + estado + ' nasceu fechada');
+  }
+});
+
+test('fechado, o cartão ainda responde "em que pé está"', () => {
+  /* Selo, nome, datas, placar, barra e transbordo continuam à vista. Some só a
+     lista de itens — que é o que ocupava a tela. */
+  const s = sumarioDe(V2.secaoRitmo([comItens(3)]));
+  assert.match(s, /rt-fase">Encerrada</);
+  assert.match(s, /<b>Sprint 20<\/b>/);
+  assert.match(s, /rt-datas">28 de set/);
+  assert.match(s, /rt-placar">8\/11</);
+  assert.match(s, /rt-barra/);
+  assert.match(s, /<b>3<\/b> transbordaram/);
+  // e a lista fica FORA do sumário, senão fechar não esconderia nada
+  assert.doesNotMatch(s, /rt-itens/);
+  assert.match(V2.secaoRitmo([comItens(3)]), /<\/summary>\s*<ul class="rt-itens"/);
+});
+
+test('sprint sem item não vira dobra, e não ganha seta', () => {
+  /* Seta que abre o nada é promessa falsa, e um `<summary>` sem conteúdo ainda
+     recebe o foco do teclado: o leitor tabula até um controle que não faz nada. */
+  const vazia = V2.secaoRitmo([{ nome: 'Sprint 22', estado: 'futura', total: 0,
+    start: '2026-10-26T00:00:00Z', finish: '2026-11-06T00:00:00Z' }]);
+  assert.match(vazia, /class="rt-linha rt-futura"/);
+  assert.doesNotMatch(vazia, /<details/);
+  assert.doesNotMatch(vazia, /rt-seta/);
+  // e quem dobra, ganha
+  assert.match(V2.secaoRitmo([comItens(3)]), /rt-seta/);
+});
+
+test('o sumário não carrega parágrafo — <p> ali deixa o documento inválido', () => {
+  /* O conteúdo permitido num `<summary>` é phrasing content; `<p>` é flow. Os
+     dois blocos eram `<p>` antes da dobra, e o browser reorganizaria a árvore
+     por conta dele se tivessem ficado. O desenho não mudou: as duas regras são
+     flex na folha, e `.rt-nums` ganhou `display: block` pela margem. */
+  assert.doesNotMatch(sumarioDe(V2.secaoRitmo([comItens(3)])), /<p[\s>]/);
+  assert.match(ler('assets/ritmo.css'), /\.rt-nums \{[^}]*display: block;/);
+});
+
+test('a dobra é nativa: nenhum script precisa existir pra ela funcionar', () => {
+  /* O documento viaja congelado dentro de um link `#r=` e é servido como
+     arquivo estático. Dobra em JavaScript ficaria presa aberta pra quem abre
+     com script bloqueado, e o teclado teria que ser reimplementado à mão. */
+  const fonte = ler('assets/briefing-entregas-v2.js');
+  assert.match(fonte, /<summary class="rt-resumo">/);
+  assert.doesNotMatch(fonte, /addEventListener\('click'[\s\S]{0,200}rt-linha/);
+  // o marcador padrão sai pelos dois caminhos, senão o Firefox mostra o triângulo
+  const css = ler('assets/ritmo.css');
+  assert.match(css, /\.rt-resumo \{[^}]*list-style: none;/);
+  assert.match(css, /\.rt-resumo::-webkit-details-marker \{ display: none; \}/);
+  assert.match(css, /\.rt-resumo:focus-visible/);
+});

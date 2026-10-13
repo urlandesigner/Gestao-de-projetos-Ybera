@@ -279,18 +279,44 @@
     const placar = estado === 'futura'
       ? (escopo ? plural(escopo, 'item', 'itens') : 'em planejamento')
       : `${entregues}/${escopo}`;
-    return `<li class="rt-linha rt-${estado}">
-      <span class="rt-fase">${esc(FASE[estado])}</span>
-      <p class="rt-topo">
+    const itens = itensHtml(s);
+    /* O QUE O CARTÃO MOSTRA FECHADO: selo, nome, datas, placar, barra e a linha
+       de transbordo. Some só a lista de itens — o resto é o que responde "em
+       que pé está", e esconder isso tornaria o cartão fechado inútil. */
+    const cabeca = (dobra) => `<span class="rt-cab">
+        <span class="rt-fase">${esc(FASE[estado])}</span>
+        ${dobra ? '<span class="rt-seta" aria-hidden="true"></span>' : ''}
+      </span>
+      <span class="rt-topo">
         <span class="rt-nome"><b>${esc(s.nome)}</b>${datas ? `<span class="rt-datas">${esc(datas)}</span>` : ''}</span>
         <span class="rt-placar">${esc(placar)}</span>
-      </p>
+      </span>
       <span class="rt-barra" aria-hidden="true">
         ${estado === 'futura' ? '' : `<span class="rt-feito" style="width:${pct(entregues)}%"></span>
         <span class="rt-saiu" style="width:${pct(saiu)}%"></span>`}
       </span>
-      ${saiu ? `<p class="rt-nums"><span class="rt-n rt-amb"><b>${saiu}</b> ${saiu === 1 ? 'transbordou' : 'transbordaram'}</span></p>` : ''}
-      ${itensHtml(s)}
+      ${saiu ? `<span class="rt-nums"><span class="rt-n rt-amb"><b>${saiu}</b> ${saiu === 1 ? 'transbordou' : 'transbordaram'}</span></span>` : ''}`;
+    /* SEM ITENS NÃO HÁ O QUE DOBRAR, e aí o cartão não vira `details`: seta que
+       abre o nada é promessa falsa, e `summary` vazio ainda recebe foco do
+       teclado — o leitor tabula até um controle que não faz coisa alguma.
+
+       A seta também não sai — ela é a afordância DA dobra, e desenhada num
+       cartão que não abre ela promete conteúdo que não existe.
+
+       `<span>` no lugar de `<p>`: o conteúdo permitido num `<summary>` é
+       phrasing content, e parágrafo não é. Os dois eram `<p>` e o desenho não
+       muda (as duas regras são flex na folha), mas um `<p>` ali deixaria o
+       documento inválido e o browser reorganizaria a árvore por conta dele. */
+    if (!itens) return `<li class="rt-linha rt-${estado}">${cabeca(false)}</li>`;
+    /* ENCERRADA NASCE FECHADA. O que já terminou não é o que o leitor veio
+       conferir, e duas sprints abertas de uma vez empurram a segunda pra fora
+       da tela — foi o problema que esta dobra resolve. */
+    const aberta = estado !== 'fechada' ? ' open' : '';
+    return `<li class="rt-linha rt-${estado}">
+      <details class="rt-dobra"${aberta}>
+        <summary class="rt-resumo">${cabeca(true)}</summary>
+        ${itens}
+      </details>
     </li>`;
   }
 
