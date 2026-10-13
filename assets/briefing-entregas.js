@@ -312,8 +312,16 @@
 
   // Rodapé: única superfície escura do documento — e é onde o dourado da marca
   // pode existir (regra do DS: gold-500 nunca é texto sobre claro).
-  const EMAIL_CONTATO = 'urlan.dipre@ybera.com';
-  function rodape() {
+  /* O contato é de QUEM ASSINA o documento, não um endereço fixo: o stakeholder
+     que responde o rodapé tem que cair na PO daquele relatório. Vem da ficha em
+     core.js, junto da retranca — os dois dizem "de quem é isto", e separá-los
+     seria a mesma divergência de sempre em duas cópias.
+
+     Quem não está na ficha mantém este endereço. Rodapé sem contato é pior que
+     contato genérico: a pergunta do stakeholder não tem pra onde ir. */
+  const EMAIL_PADRAO = 'urlan.dipre@ybera.com';
+  function rodape(ficha) {
+    const EMAIL_CONTATO = (ficha && ficha.email) || EMAIL_PADRAO;
     return `<footer class="rl-rodape">
       <div class="rl-tile rl-tile-escuro rl-rodape-int">
         <img class="rl-logo rl-logo-inv" src="assets/brand/ybera-logo.webp" alt="Ybera" width="360" height="139">
@@ -844,6 +852,11 @@
     const prontas = sanearContagens(o.contagens);
     const agora = o.agora || Date.now();
     const escopo = o.escopo || '';
+    /* A FICHA DA PO DESTE DOCUMENTO: retranca e contato. Vem da mesma chave que
+       escolhe os cartões, então as três coisas nunca podem apontar pra pessoas
+       diferentes. `null` pra quem não está na lista — e aí vale o que o
+       controlador mandou, que é o comportamento de sempre. */
+    const ficha = C.fichaDaPessoa(o.chavePO);
     nomesAtivos = o.nomes && typeof o.nomes === 'object' ? o.nomes : {};
     const mapa = C.mapaDeProdutos(o.todos || items);
     for (const p of mapa.values()) p.titulo = nomeDe(p.id, p.titulo);
@@ -1073,12 +1086,17 @@
     const html = `<div class="report-doc rl-doc">
       ${masthead(periodo, kpis,
         heroi(totalDeItens, apoioItens),
-        [o.unidade, 'E-commerce'].filter(Boolean).join(' · '),
+        /* ONDE e O QUÊ, separados pelo fio: "Ybera US · E-commerce" pro Urlan,
+           "Ybera Brasil · E-commerce" pra Daniele, "Ybera Global · Loja interna"
+           pra Isadora. Sem ficha, continua valendo a unidade que o controlador
+           manda — nenhum documento já publicado muda por causa disto. */
+        [(ficha && ficha.unidade) || o.unidade, (ficha && ficha.area) || 'E-commerce']
+          .filter(Boolean).join(' · '),
         'O que o time entregou no período, e o planejamento dos próximos meses.',
         meta.join(' · '),
         seletorMes(listaMeses, escolhido))}
       <div class="rl-corpo">${secoes.map((x) => secaoHtml(x)).join('')}</div>
-      ${rodape()}
+      ${rodape(ficha)}
     </div>`;
 
     return { vazio: false, meses: listaMeses, html };

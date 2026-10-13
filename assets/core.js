@@ -989,6 +989,37 @@
       .normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   }
 
+  /* A FICHA DE CADA PO: o que muda de uma pra outra dentro do documento.
+
+     Uma declaração só, e aqui, porque a mesma pessoa já aparece em quatro
+     lugares — a lista do seletor da Central, o bloco do roadmap, os cartões de
+     cada edição e o rodapé. Listas paralelas divergem na primeira vez que
+     alguém entra ou sai do time, e a divergência sai publicada: foi um nome
+     seguindo um caminho e o conteúdo seguindo outro que, em 13/10/2026, pôs a
+     assinatura de uma PO em cima das entregas de outro.
+
+     `unidade` e `area` são os dois registros da retranca, separados por um fio
+     desenhado no CSS: ONDE e O QUÊ. `email` é o contato do rodapé.
+
+     Não guarda o nome completo de propósito: quem diz o nome é o DevOps, e a
+     chave existe justamente porque esse nome muda sem avisar. */
+  const FICHA_POR_PO = {
+    urlan: { unidade: 'Ybera US', area: 'E-commerce', email: 'urlan.dipre@ybera.com' },
+    isadora: { unidade: 'Ybera Global', area: 'Loja interna', email: 'isadora.brunner@ybera.com' },
+    daniele: { unidade: 'Ybera Brasil', area: 'E-commerce', email: 'daniele.depaula@ybera.com' },
+  };
+
+  /* Aceita o nome de exibição ou a chave já resolvida — quem chama nem sempre
+     tem a mesma coisa na mão, e exigir uma das duas formas espalharia
+     `chaveDePessoa` por todo lugar que precisa de um email.
+
+     DEVOLVE `null` pra quem não está na lista, e não uma ficha genérica: o
+     documento sabe o que fazer com "não sei quem é" (mantém o que já tinha),
+     e não saberia o que fazer com uma unidade inventada. */
+  function fichaDaPessoa(quem) {
+    return FICHA_POR_PO[chaveDePessoa(quem)] || null;
+  }
+
   /* O RECORTE DO ROADMAP DE UMA PESSOA.
 
      Cada PO tem o seu: o arquivo guarda um bloco por pessoa sob `por`, com a
@@ -1526,7 +1557,7 @@
     aggregateCounts, sprintProgress, groupMyItemsBuckets,
     isAttentionState, typeSlug,
     wiqlBoard, wiqlIteracao, transbordados, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
-    stateBucket, bucketCounts, chaveDePessoa, roadmapDaPessoa,
+    stateBucket, bucketCounts, chaveDePessoa, fichaDaPessoa, roadmapDaPessoa,
     iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, vizinhasDaSprint, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, digitalDoTexto, saneResumos, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,
