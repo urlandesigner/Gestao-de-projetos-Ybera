@@ -387,168 +387,16 @@
     teste:     { texto: 'em teste',     classe: 'rl-selo-teste' },
     entregue:  { texto: 'entregue',     classe: 'rl-selo-ok' },
   };
-  /* OS CARTÕES, POR PO.
+  /* OS CARTÕES NÃO MORAM MAIS AQUI.
 
-     Cada PO vê os cartões dela — decisão do Urlan em 14/10/2026: o PO
-     selecionado tem que ver o que é dele, na Central, no roadmap e no
-     relatório. A chave é a mesma do roadmap (primeiro nome, minúscula, sem
-     acento), normalizada pelo core e recebida pronta em `o.chavePO`.
+     Até 13/10/2026 eram 145 linhas de texto escritas dentro deste arquivo, e
+     cada edição nova do relatório era código novo. Agora são dado: um arquivo
+     por PO em assets/conteudo/<po>/edicoes/<edicao>.json, lido e saneado pelo
+     report.js e entregue em `o.cartoes`. É o que permite cada PO escrever o
+     relatório dela sem desenvolvedor.
 
-     PO SEM CARTÃO É LISTA VAZIA, e é resposta — não ausência. O documento abre
-     com a estrutura inteira (capa, abas, rodapé) e a frase de vazio no lugar
-     das seções, em vez de cair nos cartões de outra pessoa. Foi exatamente o
-     defeito de 13/10: escolher a Isadora punha o nome dela em cima das
-     entregas do Urlan. */
-  const ENTREGAS_POR_PO = {
-    urlan: [
-      {
-        titulo: 'Novos componentes visuais para HOME',
-        status: 'entregue',
-        iniciativa: 'Nova Homepage',
-        produto: 'Loja Clube USA',
-        epicoId: 49290,
-        // A contagem da seção vem daqui, e não do épico: o 49290 é a loja inteira
-        // e junta as Features de PDP, compliance e tradução junto com esta.
-        featureIds: [45272],
-        resumo: [
-          'Foram criadas novas opções visuais de todas as seções da home do site.',
-          'Ao todo, 12 componentes: Banner, Bundle, Quiz AI, Card de produto, Blog, Shop by concern, Autoridade, Antes e Depois, Reviews, Produto em destaque, Shop by collection e Listagem de produtos.',
-        ],
-        // `pasta` + `imagens` é a convenção pra qualquer cartão que queira mostrar
-        // tela: a pasta fica em assets/entregas/<frente>/ e cada arquivo leva a
-        // legenda que nomeia o componente. Ordem = a mesma da lista do resumo.
-        // Os originais são capturas de 13MB em PNG; aqui entram em JPEG a 1600px
-        // de largura, o que dá 1MB no total — o repositório e a página de quem
-        // abre por link agradecem.
-        pasta: 'assets/entregas/nova-homepage-usa',
-        imagens: [
-          { arquivo: 'banner.jpg', legenda: 'Banner' },
-          { arquivo: 'bundle.jpg', legenda: 'Bundle' },
-          { arquivo: 'quiz-ai.jpg', legenda: 'Quiz AI' },
-          { arquivo: 'blog.jpg', legenda: 'Blog' },
-          { arquivo: 'shop-by-concern.jpg', legenda: 'Shop by concern' },
-          { arquivo: 'autoridade.jpg', legenda: 'Autoridade' },
-          { arquivo: 'antes-e-depois.jpg', legenda: 'Antes e Depois' },
-          { arquivo: 'produto-em-destaque.jpg', legenda: 'Produto em destaque' },
-          { arquivo: 'shop-by-collection.jpg', legenda: 'Shop by collection' },
-        ],
-      },
-      {
-        titulo: 'Novo cart drawer',
-        status: 'entregue',
-        produto: 'Loja Clube USA',
-        epicoId: 49290,
-        featureIds: [45723],
-        resumo: 'Melhoria geral da experiência do cart drawer, no desktop e no mobile.',
-        pasta: 'assets/entregas/novo-cart-drawer',
-        imagens: [
-          { arquivo: 'mobile.jpg', legenda: 'Mobile' },
-        ],
-      },
-      {
-        titulo: 'Novos componentes visuais para PDP',
-        status: 'entregue',
-        iniciativa: 'Nova PDP',
-        produto: 'Loja Clube USA',
-        epicoId: 49290,
-        featureIds: [44271],
-        resumo: 'Foram criadas novas opções visuais dos componentes da PDP do site.',
-        // Aqui o resumo não enumera os componentes como o da HOME, então as
-        // legendas saíram da própria tela: quando a seção tem título no site, é
-        // ele que vira legenda; nos outros casos, descrição. A ordem é a da
-        // captura, que desce a página.
-        pasta: 'assets/entregas/nova-pdp-usa',
-        imagens: [
-          { arquivo: 'see-it-in-action.jpg', legenda: 'See it in action' },
-          { arquivo: 'kerafive-22.jpg', legenda: 'Powered by Kerafive-22' },
-          { arquivo: 'avaliacao-e-beneficios.jpg', legenda: 'Avaliação e benefícios' },
-          { arquivo: 'banner-do-produto.jpg', legenda: 'Banner do produto' },
-          { arquivo: 'resultados-profissionais.jpg', legenda: 'Resultados profissionais' },
-        ],
-      },
-      {
-        titulo: 'Testes Shipsmart',
-        status: 'andamento',
-        produto: 'Shipsmart',
-        epicoId: 49300,
-        // Sem Feature no board: a frente é um item de trabalho só.
-        contaFixa: 1,
-        resumo: [
-          'Concluímos os testes da automação do fluxo da Shipsmart para pedidos que têm estoque no Brasil e são entregues nos EUA.',
-          'Agora vamos fazer um teste de envio real do produto ao destinatário final, para validar se todo o fluxo está funcionando corretamente.',
-        ],
-      },
-      {
-        titulo: 'Tratativas do Google compliance',
-        iniciativa: 'Compliance Google',
-        produto: 'Loja Clube USA',
-        epicoId: 49290,
-        status: 'andamento',
-        /* A data por extenso, e não "ainda este mês": o documento é lido depois de
-           escrito, e em 30/09 "este mês" já queria dizer "hoje" sem dizer. Data
-           não envelhece — "hoje" envelheceria no dia seguinte. */
-        resumo: [
-          'Avançamos nos itens que recebemos da agência: faltam apenas 4 dos 18 para finalizar. O prazo final deste projeto é 30 de setembro.',
-          'O que não for finalizado até essa data será tratado como nova demanda, a partir de outubro. Essas novas demandas serão avaliadas e priorizadas junto com as que já estão em andamento.',
-        ],
-        // 14 concluídos é o complemento dos 4 que faltam, ditos no texto. A barra
-        // guarda o total e o feito; o texto conta pelo que sobra, que é o que
-        // interessa a esta altura. Ao mexer num, refaça a conta no outro: 18 - 13
-        // = 5. Porcentagem no texto já foi tentada e saiu — "50%" era exato em 9
-        // de 18 e mentia em 10.
-        progresso: { feito: 14, total: 18, rotulo: 'itens concluídos' },
-        // Sem Feature no board: a planilha inteira é um item de trabalho só.
-        contaFixa: 1,
-        /* `/view` e não `/edit`: a planilha é pública para LEITURA, e o /edit faz o
-           Google avaliar se a identidade de quem abre pode editar — quem está
-           logado numa conta sem permissão de edição cai no pedido de acesso em
-           vez da planilha. Quem lê este report é leitor, não editor.
-
-           O #gid=0 é a aba da planilha, não o hash desta página: o link abre em
-           outra aba, então não toca no hash daqui — que é por onde viaja o
-           conteúdo do link de leitura. */
-        link: {
-          href: 'https://docs.google.com/spreadsheets/d/1kC8iL2vZGl0aAy7xWdn5e6IrN2BYqe-6dYQYjKKWj6E/view?gid=0#gid=0',
-          rotulo: 'Abrir a planilha de demandas',
-        },
-      },
-      {
-        titulo: 'Migração de ERP — ajustes gerais',
-        status: 'entregue',
-        produto: 'ERP — Ordoro | Salesforce Rootstock',
-        epicoId: 49282,
-        contaFixa: 1,
-        resumo: 'Ajustes e configurações adicionais pós-migração para a Rootstock.',
-      },
-      {
-        titulo: 'Tradução do site',
-        status: 'entregue',
-        iniciativa: 'Translate loja',
-        produto: 'Loja Clube USA',
-        epicoId: 49290,
-        featureIds: [49920],
-        resumo: [
-          'Projeto concluído: todo o site foi configurado para ser traduzido, tanto os textos quanto as imagens, e a tradução está disponível para ativação no site.',
-          'No caso das imagens, elas deverão ser criadas em versões diferentes por idioma.',
-        ],
-      },
-      {
-        titulo: 'App Review — ajustes',
-        status: 'entregue',
-        iniciativa: 'Melhorias Review',
-        produto: 'Ybera Reviews / API de Reviews',
-        epicoId: 49302,
-        featureIds: [50905],
-        resumo: [
-          'Realizamos discovery para levantar as melhores opções de apps de reviews dentro do Shopify.',
-          'Depois da pesquisa, fizemos um alinhamento com o Wendel e decidimos que não seria produtivo trocar o app atual, o Judge.me, por outro: não haveria ganho real, seria basicamente trocar um pelo outro, e demandaria muitas horas do time técnico. Preferimos manter o Judge.me e fazer melhorias que atendem as necessidades do momento.',
-          { nota: 'Está planejada a construção de um app de reviews próprio, pelo time da Ybera, com início previsto para março de 2027 — ele já está no roadmap, mais abaixo.' },
-        ],
-      },
-    ],
-    isadora: [],
-    daniele: [],
-  };
+     Este módulo ficou com o DESENHO, que é o que ele sempre soube fazer. */
+  const edicao = '2026-08';
 
   // Mesmo cartão do v2 (.rl-frente), com menos dentro: aqui não há prazo,
   // progresso nem lista de itens porque não há dado por trás deles. Inventar
@@ -640,9 +488,11 @@
      vazio cair de volta na lista curada, e a edição nova abria com os cartões da
      anterior. Quem não quer escolher continua não passando a opção — e é esse o
      caminho de quem renderiza o documento de Agosto e Setembro. */
+  /* Sem lista de reserva: cartão que o documento não recebeu é documento vazio,
+     e vazio é resposta. Cair numa lista padrão é como o documento de outubro
+     chegou a abrir com os cartões de agosto. */
   function listaDeCartoes(o) {
-    if (Array.isArray(o.cartoes)) return o.cartoes;
-    return ENTREGAS_POR_PO[String((o || {}).chavePO || '')] || [];
+    return Array.isArray(o.cartoes) ? o.cartoes : [];
   }
 
   function corpoEntregasRecentes(lista, mostrarProduto) {
@@ -1108,18 +958,7 @@
 
      Devolvem cópias: quem lê não mexe no que o documento desenha. */
   const periodoDoDocumento = () => PERIODO_MESES.slice();
-  /* `chavePO` e não lista fixa: os cartões são por PO desde 14/10/2026, e quem
-     pergunta tem que dizer de quem. Sem chave, lista vazia — nunca a de outra
-     pessoa. */
-  const cartoesDoDocumento = (chavePO) => (ENTREGAS_POR_PO[String(chavePO || '')] || []).map((c) => ({
-    titulo: c.titulo, iniciativa: c.iniciativa || null,
-    produto: c.produto || null, epicoId: c.epicoId || null, status: c.status || null,
-    featureIds: Array.isArray(c.featureIds) ? c.featureIds.slice() : null,
-    // contaFixa precisa vir junto: sem ela, quem pergunta ao módulo vê o cartão
-    // do compliance como "ainda sem chave de contagem" e vai atrás de uma
-    // Feature que não existe.
-    contaFixa: typeof c.contaFixa === 'number' ? c.contaFixa : null,
-  }));
+
 
   /* Os ÚNICOS campos do DevOps que este documento lê. O report.js usa esta
      lista pra podar o pacote do link de leitura: o que não está aqui não viaja.
@@ -1145,7 +984,7 @@
      abre exatamente o que ele carrega, como antes. */
   const arquivoDeDados = 'assets/dados-ago-set.json';
 
-  /* OS CARTÕES SÃO TEXTO ESCRITO À MÃO, um bloco por PO (ENTREGAS_POR_PO).
+  /* OS CARTÕES SÃO TEXTO ESCRITO À MÃO, um arquivo por PO.
 
      Em 13/10/2026 este documento chegou a DESLIGAR o recorte por pessoa, porque
      escolher a Isadora no seletor punha o nome dela em cima das entregas do
@@ -1154,5 +993,5 @@
      cartões passaram a seguir a escolha junto com a capa e o roadmap. PO sem
      cartão abre o documento vazio, com a estrutura de pé. */
 
-  return { htmlReport, mesPorExtenso, dataCurta, esc, periodoDoDocumento, cartoesDoDocumento, camposDoLink, contagensDoLink, entregasConcluidas, arquivoDeDados };
+  return { htmlReport, mesPorExtenso, dataCurta, esc, periodoDoDocumento, edicao, camposDoLink, contagensDoLink, entregasConcluidas, arquivoDeDados };
 });

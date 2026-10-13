@@ -14,6 +14,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 const C = require('../assets/core.js');
+const { cartoesDe } = require('./conteudo'); // os cartões agora vêm do arquivo, não do módulo
 const BASE = require('../assets/briefing-entregas.js');
 
 const AGORA = Date.parse('2026-10-05T12:00:00Z');
@@ -23,7 +24,7 @@ function documentoDe(nome) {
   const chavePO = C.chaveDePessoa(nome);
   const html = BASE.htmlReport({
     items: [], todos: [], agora: AGORA, escopo: nome, unidade: 'Ybera US',
-    chavePO, periodo: BASE.periodoDoDocumento(), cartoes: BASE.cartoesDoDocumento(chavePO),
+    chavePO, periodo: BASE.periodoDoDocumento(), cartoes: cartoesDe(chavePO, BASE.edicao),
   }).html;
   return {
     html,
@@ -103,8 +104,8 @@ test('cartões, retranca e contato saem da MESMA chave', () => {
      duas ainda não foram escritos. Se um dia a retranca andar sem os cartões,
      volta o documento que assina um nome e mostra o conteúdo de outro. */
   const chave = C.chaveDePessoa('Isadora Brunner');
-  assert.deepEqual(BASE.cartoesDoDocumento(chave), [], 'a Isadora ainda não escreveu cartão');
+  assert.deepEqual(cartoesDe(chave, BASE.edicao), [], 'a Isadora ainda não escreveu cartão');
   const d = documentoDe('Isadora Brunner');
   assert.equal(d.retranca, 'Ybera Global · Loja interna');
-  assert.ok(BASE.cartoesDoDocumento(C.chaveDePessoa('Urlan Dipre')).length > 0);
+  assert.ok(cartoesDe(C.chaveDePessoa('Urlan Dipre'), BASE.edicao).length > 0);
 });

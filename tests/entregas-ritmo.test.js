@@ -20,6 +20,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const C = require('../assets/core.js');
+const { cartoesDe } = require('./conteudo'); // os cartões agora vêm do arquivo, não do módulo
 const BASE = require('../assets/briefing-entregas.js');
 // require do v2 DEPOIS do base: no navegador a ordem é a dos <script>, aqui é
 // a do require, e o módulo pega o base por ele.
@@ -30,7 +31,8 @@ const ler = (f) => fs.readFileSync(path.join(raiz, f), 'utf8');
 
 const AGORA = Date.parse('2026-10-05T12:00:00Z');
 const entrada = (extra) => Object.assign(
-  { items: [], todos: [], agora: AGORA, escopo: 'Urlan Dipre', chavePO: 'urlan', unidade: 'Ybera US' },
+  { items: [], todos: [], agora: AGORA, escopo: 'Urlan Dipre', chavePO: 'urlan',
+    cartoes: cartoesDe('urlan', BASE.edicao), unidade: 'Ybera US' },
   extra || {});
 
 const SPRINTS = [
@@ -45,7 +47,7 @@ const SPRINTS = [
    decisão da edição de outubro pode encostar neles. */
 test('o base continua sendo Agosto e Setembro, com os cartões dele', () => {
   assert.deepEqual(BASE.periodoDoDocumento(), ['2026-08', '2026-09']);
-  assert.ok(BASE.cartoesDoDocumento('urlan').length > 0, 'o base perdeu a lista curada');
+  assert.ok(cartoesDe('urlan', BASE.edicao).length > 0, 'o base perdeu a lista curada');
   assert.match(BASE.htmlReport(entrada()).html, /Agosto e Setembro de 2026/);
 });
 
@@ -55,7 +57,7 @@ test('o v2 é a edição de Outubro, com a lista curada dele', () => {
   // A lista é de outubro, não a de Agosto e Setembro reaproveitada: o `.length`
   // que fazia lista vazia cair de volta na curada do base já causou isso uma vez.
   const titulos = (lista) => lista.map((c) => c.titulo).join('|');
-  assert.notEqual(titulos(V2.cartoesDoDocumento('urlan')), titulos(BASE.cartoesDoDocumento('urlan')));
+  assert.notEqual(titulos(cartoesDe('urlan', V2.edicao)), titulos(cartoesDe('urlan', BASE.edicao)));
 });
 
 /* O que o v2 ACRESCENTA ao documento do base: a barra de abas e a seção de
@@ -69,17 +71,17 @@ const semAcrescimos = (html) => String(html)
 
 /* O teste mais importante do arquivo. */
 test('tiradas abas e seção, o v2 devolve exatamente o que o base desenha', () => {
-  const a = BASE.htmlReport(entrada({ periodo: V2.PERIODO, cartoes: V2.cartoesDoDocumento('urlan') }));
-  const b = V2.htmlReport(entrada({ sprints: SPRINTS }));
+  const a = BASE.htmlReport(entrada({ periodo: V2.PERIODO, cartoes: cartoesDe('urlan', V2.edicao) }));
+  const b = V2.htmlReport(entrada({ sprints: SPRINTS, cartoes: cartoesDe('urlan', V2.edicao), cartoes: cartoesDe('urlan', V2.edicao) }));
   assert.equal(semAcrescimos(b.html), a.html, 'o v2 mexeu no documento além do que acrescenta');
   assert.equal(b.vazio, a.vazio);
   assert.deepEqual(b.meses, a.meses);
 });
 
 test('lista de sprints vazia, nula ou só com lixo também não desenha seção', () => {
-  const base = BASE.htmlReport(entrada({ periodo: V2.PERIODO, cartoes: V2.cartoesDoDocumento('urlan') })).html;
+  const base = BASE.htmlReport(entrada({ periodo: V2.PERIODO, cartoes: cartoesDe('urlan', V2.edicao) })).html;
   for (const s of [[], null, undefined, 'nada', [null, {}, { nome: '' }]]) {
-    const html = V2.htmlReport(entrada({ sprints: s })).html;
+    const html = V2.htmlReport(entrada({ sprints: s, cartoes: cartoesDe('urlan', V2.edicao) })).html;
     assert.doesNotMatch(html, /id="ritmo"/, `sprints=${JSON.stringify(s)} desenhou seção`);
     assert.equal(semAcrescimos(html), base, `sprints=${JSON.stringify(s)} mexeu no documento`);
   }
@@ -105,7 +107,7 @@ test('cartões: lista vazia é uma resposta; ausência é que cai no padrão', (
    controlador buscaria sprint de agosto pra um documento que fala de outubro. */
 test('o v2 não herda do base o período nem os cartões', () => {
   assert.notDeepEqual(V2.periodoDoDocumento(), BASE.periodoDoDocumento());
-  assert.notEqual(V2.cartoesDoDocumento('urlan').length, BASE.cartoesDoDocumento('urlan').length);
+  assert.notEqual(cartoesDe('urlan', V2.edicao).length, cartoesDe('urlan', BASE.edicao).length);
 });
 
 test('o base não declara precisaDeSprints — é o que mantém o entregas.html sem busca nova', () => {
@@ -115,7 +117,7 @@ test('o base não declara precisaDeSprints — é o que mantém o entregas.html 
 
 test('o v2 reexpõe tudo que o report.js procura no briefing', () => {
   for (const chave of ['esc', 'htmlReport', 'camposDoLink', 'contagensDoLink',
-    'periodoDoDocumento', 'cartoesDoDocumento', 'mesPorExtenso', 'dataCurta']) {
+    'periodoDoDocumento', 'edicao', 'mesPorExtenso', 'dataCurta']) {
     assert.ok(V2[chave] !== undefined, `o v2 perdeu ${chave} e o report.js cai nele`);
   }
   // Mecanismo vem do base sem cópia: é o mesmo nas duas edições, e duas cópias
@@ -137,7 +139,7 @@ test('a âncora existe no documento do base, e exatamente uma vez', () => {
 /* A seção de sprints vem antes das entregas: é o que o leitor de
    acompanhamento abre pra ver. */
 test('a seção de sprints entra no topo do corpo, antes das do base', () => {
-  const html = V2.htmlReport(entrada({ sprints: SPRINTS })).html;
+  const html = V2.htmlReport(entrada({ sprints: SPRINTS, cartoes: cartoesDe('urlan', V2.edicao), cartoes: cartoesDe('urlan', V2.edicao) })).html;
   const corpo = html.indexOf(V2.ANCORA);
   const ritmo = html.indexOf('<section class="rl-sec" id="ritmo">');
   const fimDoRitmo = ritmo + V2.secaoRitmo(SPRINTS).length;
@@ -550,7 +552,7 @@ test('as linhas que chegam pelo link passam por saneamento', () => {
    Setembro, com a marca dentro dela, e um segundo topo acima disputaria com
    ela. */
 test('a pílula entra entre a capa e o corpo', () => {
-  const html = V2.htmlReport(entrada({ sprints: SPRINTS })).html;
+  const html = V2.htmlReport(entrada({ sprints: SPRINTS, cartoes: cartoesDe('urlan', V2.edicao), cartoes: cartoesDe('urlan', V2.edicao) })).html;
   const capa = html.indexOf('<header class="rl-capa">');
   const pilula = html.indexOf('<nav class="rl-nav rl-abas"');
   const corpo = html.indexOf(V2.ANCORA);
@@ -622,7 +624,7 @@ test('cada aba tem a frase de quando está vazia', () => {
 /* Sem o script as duas partes aparecem empilhadas, que é o documento de antes.
    A aba é melhoria de leitura, não requisito pra ele fazer sentido. */
 test('o documento renderiza inteiro sem o script da página', () => {
-  const html = V2.htmlReport(entrada({ sprints: SPRINTS })).html;
+  const html = V2.htmlReport(entrada({ sprints: SPRINTS, cartoes: cartoesDe('urlan', V2.edicao), cartoes: cartoesDe('urlan', V2.edicao) })).html;
   assert.match(html, /<section class="rl-sec" id="ritmo">/);
   assert.doesNotMatch(html, /<section class="rl-sec" id="ritmo" hidden>/,
     'nenhuma seção pode nascer escondida — sem JS elas somem de vez');

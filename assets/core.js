@@ -1051,6 +1051,87 @@
     return saneRoadmapItens(bloco.itens);
   }
 
+  /* OS CARTÕES DE UMA EDIÇÃO, saneados.
+
+     Desde 13/10/2026 os cartões são DADO, não código: saíram do .js e foram pra
+     um arquivo por PO, pra que cada uma escreva os dela sem desenvolvedor. E
+     dado que vem de arquivo editável entra pelo mesmo portão do roadmap —
+     vocabulário fechado, texto cortado, número conferido.
+
+     O portão não é paranoia com o arquivo: é o que impede que uma palavra
+     digitada por engano vire classe de CSS, e que um `progresso` sem total
+     vire NaN no meio da barra. Campo fora da lista some; cartão sem título
+     some inteiro, porque título é a única coisa que todo cartão tem.
+
+     A lista branca abaixo é a MESMA forma que o briefing desenha. Quem
+     acrescentar um campo lá acrescenta aqui, senão o campo novo é escrito no
+     arquivo, some no saneamento, e ninguém vê erro nenhum. */
+  function saneCartoes(lista) {
+    const txt = (v, max) => String(v == null ? '' : v).trim().slice(0, max);
+    const num = (v) => (Number.isFinite(v) && v >= 0 ? Math.floor(v) : null);
+    const STATUS = ['entregue', 'andamento', 'teste'];
+    return (Array.isArray(lista) ? lista : []).map((c) => {
+      const o = c && typeof c === 'object' ? c : {};
+      const cartao = { titulo: txt(o.titulo, 200) };
+      if (!cartao.titulo) return null;
+      /* `resumo` tem duas formas de propósito: string é parágrafo, e
+         `{ nota }` é a observação com desenho próprio. Misturá-las numa só
+         apagaria a diferença que o leitor vê na tela. */
+      /* `[].concat` porque o briefing aceita as DUAS formas e há cartão escrito
+         de cada jeito: `resumo: 'uma frase'` e `resumo: ['um', 'dois']`.
+         Tratar só a lista apagava, em silêncio, o texto de todo cartão de
+         parágrafo único — e o cartão continuava na tela, com o título e sem o
+         texto, que é a falha que não parece falha. */
+      cartao.resumo = [].concat(o.resumo || []).map((par) => {
+        if (typeof par === 'string') return txt(par, 2000);
+        const nota = txt((par || {}).nota, 2000);
+        return nota ? { nota } : '';
+      }).filter(Boolean);
+      if (STATUS.includes(o.status)) cartao.status = o.status;
+      for (const campo of ['iniciativa', 'produto', 'pasta']) {
+        const v = txt(o[campo], 200);
+        if (v) cartao[campo] = v;
+      }
+      if (num(o.epicoId) !== null) cartao.epicoId = num(o.epicoId);
+      if (num(o.contaFixa) !== null) cartao.contaFixa = num(o.contaFixa);
+      if (o.foraDoRoadmap === true) cartao.foraDoRoadmap = true;
+      if (Array.isArray(o.featureIds)) {
+        const ids = o.featureIds.map(num).filter((n) => n !== null);
+        if (ids.length) cartao.featureIds = ids;
+      }
+      if (Array.isArray(o.imagens)) {
+        const imgs = o.imagens.map((im) => {
+          const arquivo = txt((im || {}).arquivo, 200);
+          /* Caminho que sobe de pasta é o jeito de um arquivo de conteúdo
+             apontar pra fora da pasta da PO. A legenda é livre; o caminho não. */
+          if (!arquivo || arquivo.indexOf('..') >= 0 || arquivo.charAt(0) === '/') return null;
+          return { arquivo, legenda: txt((im || {}).legenda, 200) };
+        }).filter(Boolean);
+        if (imgs.length) cartao.imagens = imgs;
+      }
+      const href = txt((o.link || {}).href, 1000);
+      // Só http(s): `javascript:` num arquivo editável vira execução na página.
+      if (/^https?:\/\//i.test(href)) {
+        cartao.link = { href, rotulo: txt((o.link || {}).rotulo, 200) };
+      }
+      const prog = o.progresso || {};
+      if (num(prog.feito) !== null && num(prog.total) !== null && num(prog.total) > 0) {
+        cartao.progresso = { feito: num(prog.feito), total: num(prog.total) };
+        const rot = txt(prog.rotulo, 100);
+        if (rot) cartao.progresso.rotulo = rot;
+      }
+      return cartao;
+    }).filter(Boolean);
+  }
+
+  /* Uma edição inteira: o período que ela cobre e os cartões dela. */
+  function saneEdicao(doc) {
+    const o = doc && typeof doc === 'object' ? doc : {};
+    const periodo = (Array.isArray(o.periodo) ? o.periodo : [])
+      .filter((m) => typeof m === 'string' && /^\d{4}-\d{2}$/.test(m));
+    return { periodo, cartoes: saneCartoes(o.cartoes) };
+  }
+
   function saneRoadmapItens(lista) {
     const dataValida = (s) => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s)
       && !Number.isNaN(Date.parse(s + 'T00:00:00Z'));
@@ -1558,6 +1639,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, wiqlIteracao, transbordados, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts, chaveDePessoa, fichaDaPessoa, roadmapDaPessoa,
+    saneCartoes, saneEdicao,
     iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, vizinhasDaSprint, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, digitalDoTexto, saneResumos, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,

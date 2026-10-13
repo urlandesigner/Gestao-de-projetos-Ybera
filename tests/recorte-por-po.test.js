@@ -31,6 +31,7 @@ const raiz = path.join(__dirname, '..');
 const ler = (p) => fs.readFileSync(path.join(raiz, p), 'utf8');
 const BE = require('../assets/briefing-entregas.js');
 const V2 = require('../assets/briefing-entregas-v2.js');
+const { cartoesDe } = require('./conteudo'); // os cartões vêm do arquivo da PO
 const C = require('../assets/core.js');
 const fonteReport = ler('assets/report.js');
 
@@ -38,6 +39,8 @@ const AGORA = Date.UTC(2026, 8, 30, 12);
 const doc = (chavePO, escopo) => BE.htmlReport({
   items: [], todos: [], agora: AGORA, unidade: 'Ybera US',
   chavePO, escopo: escopo === undefined ? 'Urlan Dipre' : escopo,
+  // O report.js lê o arquivo da PO e entrega aqui; o teste faz o mesmo.
+  cartoes: cartoesDe(chavePO, BE.edicao),
 }).html;
 
 test('as três coisas saem da MESMA pessoa', () => {
@@ -50,11 +53,11 @@ test('as três coisas saem da MESMA pessoa', () => {
     'o roadmap deixou de seguir quem assina a capa');
 });
 
-test('cada PO tem o bloco dela nas duas edições', () => {
+test('cada PO tem o arquivo dela nas duas edições', () => {
   for (const [nome, mod] of [['ago/set', BE], ['outubro', V2]]) {
-    assert.ok(mod.cartoesDoDocumento('urlan').length > 0, `${nome}: o Urlan perdeu os cartões`);
+    assert.ok(cartoesDe('urlan', mod.edicao).length > 0, `${nome}: o Urlan perdeu os cartões`);
     for (const po of ['isadora', 'daniele']) {
-      assert.deepEqual(mod.cartoesDoDocumento(po), [], `${nome}: ${po} não deveria ter cartão ainda`);
+      assert.deepEqual(cartoesDe(po, mod.edicao), [], `${nome}: ${po} não deveria ter cartão ainda`);
     }
   }
 });
@@ -77,17 +80,20 @@ test('sem saber de quem é, nenhum cartão aparece', () => {
   /* Chave vazia não pode cair numa lista padrão. Era assim que "o documento de
      outubro abria com os cartões de agosto" acontecia, e é a mesma forma do
      roadmap sem dono. */
-  assert.deepEqual(BE.cartoesDoDocumento(''), []);
-  assert.deepEqual(BE.cartoesDoDocumento(undefined), []);
-  assert.deepEqual(V2.cartoesDoDocumento('ninguem'), []);
+  assert.deepEqual(cartoesDe('', BE.edicao), []);
+  assert.deepEqual(cartoesDe('ninguem', V2.edicao), []);
   assert.ok(!doc('', '').includes('Nova Homepage'), 'cartão do Urlan apareceu sem chave nenhuma');
+  /* E o módulo não guarda lista de reserva: sem receber cartões, desenha
+     documento vazio em vez de cair nos de alguém. */
+  const semCartoes = BE.htmlReport({ items: [], todos: [], agora: AGORA, chavePO: 'urlan', escopo: 'Urlan Dipre' }).html;
+  assert.ok(!semCartoes.includes('Nova Homepage'), 'o módulo voltou a ter lista embutida');
 });
 
 test('a chave sai do nome por uma régua só, a do core', () => {
   // "Urlan Maciel Dipré" e "Urlan Dipre" são a mesma pessoa; o DevOps troca o
   // nome de exibição sem avisar.
   assert.equal(C.chaveDePessoa('Urlan Maciel Dipré'), 'urlan');
-  assert.ok(BE.cartoesDoDocumento(C.chaveDePessoa('Urlan Maciel Dipré')).length > 0);
+  assert.ok(cartoesDe(C.chaveDePessoa('Urlan Maciel Dipré'), BE.edicao).length > 0);
   // E o report.js não tem régua própria: pede a do core.
   assert.doesNotMatch(fonteReport, /normalize\('NFD'\)/,
     'o report.js ganhou uma segunda régua de casar nome — ela vai divergir da do core');

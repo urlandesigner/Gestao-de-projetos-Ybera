@@ -198,6 +198,48 @@ async function carregarRoadmap() {
   }
 }
 
+/* OS CARTÕES DA EDIÇÃO, por PO.
+
+   Um arquivo por pessoa em assets/conteudo/<po>/edicoes/<edicao>.json. O
+   documento declara QUAL edição ele é (`B.edicao`); quem é a pessoa sai do
+   mesmo lugar que a assinatura da capa e o roadmap.
+
+   Guardado por chave e não numa variável só: trocar de PO no seletor troca de
+   arquivo, e o anterior continua valendo se ela voltar — sem buscar de novo.
+   `null` enquanto está em voo distingue "ainda não chegou" de "chegou vazia",
+   que é a diferença entre um documento que vai encher e um que está vazio
+   mesmo. */
+const edicoes = Object.create(null);
+
+async function carregarEdicao(chave) {
+  if (!chave || !B.edicao) return;
+  if (chave in edicoes) return;
+  edicoes[chave] = null; // em voo: não buscar duas vezes no mesmo render
+  try {
+    const url = 'assets/conteudo/' + encodeURIComponent(chave) + '/edicoes/' + encodeURIComponent(B.edicao) + '.json';
+    const resp = await fetch(url + '?t=' + Date.now(), { cache: 'no-store' });
+    /* 404 é "esta PO ainda não escreveu esta edição", que é o estado normal de
+       quem acabou de entrar — não é erro e não vai pro console. */
+    edicoes[chave] = resp.ok ? C.saneEdicao(await resp.json()).cartoes : [];
+  } catch (e) {
+    edicoes[chave] = [];
+    console.warn('[Report] não deu pra ler a edição de ' + chave + ': o documento abre sem cartões.'
+      + ' Motivo: ' + e.message);
+  }
+  render();
+}
+
+/* Os cartões de quem está selecionado. Dispara a busca na primeira vez que
+   alguém pergunta — o render é quem sabe de quem é o documento, e orquestrar
+   isso antes exigiria saber a identidade antes de ela chegar. */
+function cartoesDaVez() {
+  const chave = C.chaveDePessoa(st.leitura ? st.escopo : assinatura(respAtivo()));
+  if (!chave) return [];
+  if (chave in edicoes) return edicoes[chave] || [];
+  carregarEdicao(chave);
+  return [];
+}
+
 /* DE QUEM É O ROADMAP DESTE DOCUMENTO.
 
    No modo leitura não há recorte a fazer: o link carrega o roadmap já
@@ -516,6 +558,7 @@ function render() {
        nome ("Urlan Maciel Dipré" → urlan) é a mesma do roadmap, e duas cópias
        dela divergem na primeira vez que alguém mudar o nome no DevOps. */
     chavePO: C.chaveDePessoa(st.leitura ? st.escopo : assinatura(respAtivo())),
+    cartoes: cartoesDaVez(),
     unidade: UNIDADE,
     mes: st.mes,
   });

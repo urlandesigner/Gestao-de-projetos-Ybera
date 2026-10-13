@@ -1,0 +1,184 @@
+{
+  "periodo": [
+    "2026-08",
+    "2026-09"
+  ],
+  "publicadoEm": null,
+  "cartoes": [
+    {
+      "titulo": "Novos componentes visuais para HOME",
+      "status": "entregue",
+      "iniciativa": "Nova Homepage",
+      "produto": "Loja Clube USA",
+      "epicoId": 49290,
+      "featureIds": [
+        45272
+      ],
+      "resumo": [
+        "Foram criadas novas opções visuais de todas as seções da home do site.",
+        "Ao todo, 12 componentes: Banner, Bundle, Quiz AI, Card de produto, Blog, Shop by concern, Autoridade, Antes e Depois, Reviews, Produto em destaque, Shop by collection e Listagem de produtos."
+      ],
+      "pasta": "assets/entregas/nova-homepage-usa",
+      "imagens": [
+        {
+          "arquivo": "banner.jpg",
+          "legenda": "Banner"
+        },
+        {
+          "arquivo": "bundle.jpg",
+          "legenda": "Bundle"
+        },
+        {
+          "arquivo": "quiz-ai.jpg",
+          "legenda": "Quiz AI"
+        },
+        {
+          "arquivo": "blog.jpg",
+          "legenda": "Blog"
+        },
+        {
+          "arquivo": "shop-by-concern.jpg",
+          "legenda": "Shop by concern"
+        },
+        {
+          "arquivo": "autoridade.jpg",
+          "legenda": "Autoridade"
+        },
+        {
+          "arquivo": "antes-e-depois.jpg",
+          "legenda": "Antes e Depois"
+        },
+        {
+          "arquivo": "produto-em-destaque.jpg",
+          "legenda": "Produto em destaque"
+        },
+        {
+          "arquivo": "shop-by-collection.jpg",
+          "legenda": "Shop by collection"
+        }
+      ]
+    },
+    {
+      "titulo": "Novo cart drawer",
+      "status": "entregue",
+      "produto": "Loja Clube USA",
+      "epicoId": 49290,
+      "featureIds": [
+        45723
+      ],
+      "resumo": "Melhoria geral da experiência do cart drawer, no desktop e no mobile.",
+      "pasta": "assets/entregas/novo-cart-drawer",
+      "imagens": [
+        {
+          "arquivo": "mobile.jpg",
+          "legenda": "Mobile"
+        }
+      ]
+    },
+    {
+      "titulo": "Novos componentes visuais para PDP",
+      "status": "entregue",
+      "iniciativa": "Nova PDP",
+      "produto": "Loja Clube USA",
+      "epicoId": 49290,
+      "featureIds": [
+        44271
+      ],
+      "resumo": "Foram criadas novas opções visuais dos componentes da PDP do site.",
+      "pasta": "assets/entregas/nova-pdp-usa",
+      "imagens": [
+        {
+          "arquivo": "see-it-in-action.jpg",
+          "legenda": "See it in action"
+        },
+        {
+          "arquivo": "kerafive-22.jpg",
+          "legenda": "Powered by Kerafive-22"
+        },
+        {
+          "arquivo": "avaliacao-e-beneficios.jpg",
+          "legenda": "Avaliação e benefícios"
+        },
+        {
+          "arquivo": "banner-do-produto.jpg",
+          "legenda": "Banner do produto"
+        },
+        {
+          "arquivo": "resultados-profissionais.jpg",
+          "legenda": "Resultados profissionais"
+        }
+      ]
+    },
+    {
+      "titulo": "Testes Shipsmart",
+      "status": "andamento",
+      "produto": "Shipsmart",
+      "epicoId": 49300,
+      "contaFixa": 1,
+      "resumo": [
+        "Concluímos os testes da automação do fluxo da Shipsmart para pedidos que têm estoque no Brasil e são entregues nos EUA.",
+        "Agora vamos fazer um teste de envio real do produto ao destinatário final, para validar se todo o fluxo está funcionando corretamente."
+      ]
+    },
+    {
+      "titulo": "Tratativas do Google compliance",
+      "iniciativa": "Compliance Google",
+      "produto": "Loja Clube USA",
+      "epicoId": 49290,
+      "status": "andamento",
+      "resumo": [
+        "Avançamos nos itens que recebemos da agência: faltam apenas 4 dos 18 para finalizar. O prazo final deste projeto é 30 de setembro.",
+        "O que não for finalizado até essa data será tratado como nova demanda, a partir de outubro. Essas novas demandas serão avaliadas e priorizadas junto com as que já estão em andamento."
+      ],
+      "progresso": {
+        "feito": 14,
+        "total": 18,
+        "rotulo": "itens concluídos"
+      },
+      "contaFixa": 1,
+      "link": {
+        "href": "https://docs.google.com/spreadsheets/d/1kC8iL2vZGl0aAy7xWdn5e6IrN2BYqe-6dYQYjKKWj6E/view?gid=0#gid=0",
+        "rotulo": "Abrir a planilha de demandas"
+      }
+    },
+    {
+      "titulo": "Migração de ERP — ajustes gerais",
+      "status": "entregue",
+      "produto": "ERP — Ordoro | Salesforce Rootstock",
+      "epicoId": 49282,
+      "contaFixa": 1,
+      "resumo": "Ajustes e configurações adicionais pós-migração para a Rootstock."
+    },
+    {
+      "titulo": "Tradução do site",
+      "status": "entregue",
+      "iniciativa": "Translate loja",
+      "produto": "Loja Clube USA",
+      "epicoId": 49290,
+      "featureIds": [
+        49920
+      ],
+      "resumo": [
+        "Projeto concluído: todo o site foi configurado para ser traduzido, tanto os textos quanto as imagens, e a tradução está disponível para ativação no site.",
+        "No caso das imagens, elas deverão ser criadas em versões diferentes por idioma."
+      ]
+    },
+    {
+      "titulo": "App Review — ajustes",
+      "status": "entregue",
+      "iniciativa": "Melhorias Review",
+      "produto": "Ybera Reviews / API de Reviews",
+      "epicoId": 49302,
+      "featureIds": [
+        50905
+      ],
+      "resumo": [
+        "Realizamos discovery para levantar as melhores opções de apps de reviews dentro do Shopify.",
+        "Depois da pesquisa, fizemos um alinhamento com o Wendel e decidimos que não seria produtivo trocar o app atual, o Judge.me, por outro: não haveria ganho real, seria basicamente trocar um pelo outro, e demandaria muitas horas do time técnico. Preferimos manter o Judge.me e fazer melhorias que atendem as necessidades do momento.",
+        {
+          "nota": "Está planejada a construção de um app de reviews próprio, pelo time da Ybera, com início previsto para março de 2027 — ele já está no roadmap, mais abaixo."
+        }
+      ]
+    }
+  ]
+}

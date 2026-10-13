@@ -14,6 +14,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const BE = require('../assets/briefing-entregas.js');
+const { cartoesDe } = require('./conteudo'); // os cartões agora vêm do arquivo, não do módulo
 
 const AGORA = Date.parse('2026-09-22T12:00:00Z');
 const dia = 86400000;
@@ -50,7 +51,8 @@ function documento(extra) {
     /* `chavePO` porque os cartões são por PO desde 14/10/2026: sem dizer de
        quem é o documento, a lista sai vazia — que é o comportamento certo, e
        não o que estes testes querem exercitar. */
-    { items, todos: items, agora: AGORA, escopo: 'Urlan Dipre', chavePO: 'urlan', unidade: 'Ybera US' }, extra || {}));
+    { items, todos: items, agora: AGORA, escopo: 'Urlan Dipre', chavePO: 'urlan',
+      cartoes: cartoesDe('urlan', BE.edicao), unidade: 'Ybera US' }, extra || {}));
 }
 
 const TOPICOS = [
@@ -258,7 +260,7 @@ test('Entregas não emite os ganchos de busca de Entregas — report.js aguenta 
 test('Entregas escapa o que vier torto na lista curada e no DevOps', () => {
   const e = epico(1, '<img src=x onerror=alert(1)>', 10);
   const items = [e, filho(10, 'Feature', 'Done', 'ok', 1, { fechadoDias: 3 })];
-  const h = BE.htmlReport({ items, todos: items, agora: AGORA, chavePO: 'urlan' }).html;
+  const h = BE.htmlReport({ items, todos: items, agora: AGORA, chavePO: 'urlan', cartoes: cartoesDe('urlan', BE.edicao) }).html;
   assert.ok(!h.includes('<img src=x'));
 });
 
@@ -329,7 +331,7 @@ test('Entregas: a folha tem a regra parceira do [hidden] no seletor', () => {
    O defeito era latente: um board só de itens concluídos já disparava a saída.
    Apareceu ao testar o link curto, em que `items` chega vazio de propósito. */
 test('Entregas: board vazio NÃO esvazia o documento — os cartões são curados', () => {
-  const r = BE.htmlReport({ items: [], todos: [], agora: AGORA, chavePO: 'urlan' });
+  const r = BE.htmlReport({ items: [], todos: [], agora: AGORA, chavePO: 'urlan', cartoes: cartoesDe('urlan', BE.edicao) });
   assert.equal(r.vazio, false);
   assert.ok(!r.html.includes('Nada registrado'));
   for (const t of TOPICOS) assert.ok(r.html.includes(t), `"${t}" sumiu com o board vazio`);
@@ -406,7 +408,7 @@ function mesComNiveis(extra) {
     { id: 13, fields: { 'System.WorkItemType': 'Bug', 'System.State': 'Done', 'System.Title': 'B1', 'System.Parent': 10, 'Microsoft.VSTS.Common.ClosedDate': iso(AGORA - 6 * dia), 'System.ChangedDate': iso(AGORA - dia) } },
     { id: 20, fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.State': 'Done', 'System.Title': 'Mês passado', 'System.Parent': 10, 'Microsoft.VSTS.Common.ClosedDate': iso(AGORA - 35 * dia), 'System.ChangedDate': iso(AGORA - dia) } },
   ];
-  return BE.htmlReport(Object.assign({ items, todos: items, agora: AGORA, chavePO: 'urlan' }, extra || {})).html;
+  return BE.htmlReport(Object.assign({ items, todos: items, agora: AGORA, chavePO: 'urlan', cartoes: cartoesDe('urlan', BE.edicao) }, extra || {})).html;
 }
 // As mesmas opções, cruas, pra quem precisa variar o modo de agrupamento.
 function mesNiveisOpcoes() {
@@ -414,7 +416,7 @@ function mesNiveisOpcoes() {
     { id: 1, fields: { 'System.WorkItemType': 'Epic', 'System.State': 'Done', 'System.Title': 'Frente', 'Microsoft.VSTS.Common.ClosedDate': iso(AGORA - 2 * dia), 'System.ChangedDate': iso(AGORA - dia) } },
     { id: 11, fields: { 'System.WorkItemType': 'Product Backlog Item', 'System.State': 'Done', 'System.Title': 'P1', 'System.Parent': 1, 'Microsoft.VSTS.Common.ClosedDate': iso(AGORA - 4 * dia), 'System.ChangedDate': iso(AGORA - dia) } },
   ];
-  return { items, todos: items, agora: AGORA, chavePO: 'urlan' };
+  return { items, todos: items, agora: AGORA, chavePO: 'urlan', cartoes: cartoesDe('urlan', BE.edicao) };
 }
 const capaDe = (h) => h.slice(0, h.indexOf('rl-corpo'));
 
@@ -569,8 +571,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 test('toda iniciativa citada nos cartões existe no roadmap.json', () => {
-  const src = fs.readFileSync(path.join(__dirname, '../assets/briefing-entregas.js'), 'utf8');
-  const citadas = [...src.matchAll(/^\s*iniciativa: '([^']+)',$/gm)].map((m) => m[1]);
+  const citadas = cartoesDe('urlan', BE.edicao).map((c) => c.iniciativa).filter(Boolean);
   assert.ok(citadas.length > 0, 'se nenhum cartão cita iniciativa, o agrupamento perdeu o sentido');
 
   /* O BLOCO DO URLAN, e não o arquivo inteiro: o roadmap passou a ter um bloco
@@ -606,11 +607,9 @@ test('as seções seguem a ordem da lista de cartões, com o órfão no fim', ()
   // Quem manda é a sequência dos cartões: o primeiro cartão de cada grupo
   // decide onde o grupo entra. Mover um cartão de lugar move a seção junto —
   // é assim que o Urlan controla a ordem sem tocar no roadmap.json.
-  const src = fs.readFileSync(path.join(__dirname, '../assets/briefing-entregas.js'), 'utf8');
-  const lista = src.slice(src.indexOf('urlan: ['), src.indexOf('\n    ],', src.indexOf('urlan: [')));
   const esperado = [];
-  for (const bloco of lista.split(/\n      \{/).slice(1)) {
-    const ini = (bloco.match(/iniciativa: '([^']+)'/) || [])[1] || 'Outras entregas';
+  for (const c of cartoesDe('urlan', BE.edicao)) {
+    const ini = c.iniciativa || 'Outras entregas';
     if (!esperado.includes(ini)) esperado.push(ini);
   }
   const orfao = esperado.indexOf('Outras entregas');
@@ -671,7 +670,7 @@ test('link curto e link com itens desenham o MESMO documento', () => {
 
 test('link antigo continua abrindo: itens sem contagens seguem contando', () => {
   const { items, todos } = boardDeProva();
-  const r = BE.htmlReport({ items, todos, agora: AGORA, chavePO: 'urlan', unidade: 'Ybera US' });
+  const r = BE.htmlReport({ items, todos, agora: AGORA, chavePO: 'urlan', cartoes: cartoesDe('urlan', BE.edicao), unidade: 'Ybera US' });
   assert.equal(r.vazio, false);
   // 32 das cinco Features somadas, mais os 3 cartões de contagem fixa.
   assert.match(r.html, /rl-heroi-base[\s\S]*?rl-num">35</,
@@ -949,7 +948,7 @@ test('contagem: todo cartão declara como quer ser contado', () => {
      Este teste guarda o regime. Cartão novo sem chave não quebra a tela — cai no
      épico e mostra um número inflado que ninguém desconfia, que é o defeito mais
      caro que este documento teve. */
-  for (const c of BE.cartoesDoDocumento('urlan')) {
+  for (const c of cartoesDe('urlan', BE.edicao)) {
     const temChave = (Array.isArray(c.featureIds) && c.featureIds.length) || typeof c.contaFixa === 'number';
     assert.ok(temChave,
       `"${c.titulo}" não declara featureIds nem contaFixa — vai contar o épico inteiro`);
@@ -1243,11 +1242,11 @@ test('basta um cartão fora do roadmap pra frente inteira sair da conta', () => 
 
 test('o cartão de outubro declara, e a edição publicada não', () => {
   const v2 = require('../assets/briefing-entregas-v2.js');
-  const brindes = v2.cartoesDoDocumento('urlan').find((c) => /brindes/i.test(c.titulo));
+  const brindes = cartoesDe('urlan', v2.edicao).find((c) => /brindes/i.test(c.titulo));
   assert.ok(brindes, 'o cartão do app de brindes sumiu da edição de outubro');
   assert.equal(brindes.foraDoRoadmap, true);
   // E nenhum cartão de Agosto/Setembro declara: aquele documento não muda.
-  for (const c of BE.cartoesDoDocumento('urlan')) {
+  for (const c of cartoesDe('urlan', BE.edicao)) {
     assert.notEqual(c.foraDoRoadmap, true, `${c.titulo} passou a declarar e a capa de ago/set mudaria`);
   }
 });

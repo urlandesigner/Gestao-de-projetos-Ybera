@@ -1,0 +1,40 @@
+{
+  "periodo": [
+    "2026-10"
+  ],
+  "publicadoEm": null,
+  "cartoes": [
+    {
+      "titulo": "Tratativas do Google compliance",
+      "iniciativa": "Compliance Google",
+      "produto": "Loja Clube USA",
+      "epicoId": 49290,
+      "status": "entregue",
+      "resumo": [
+        "Finalizamos 17 dos 18 itens da planilha que recebemos da agência. A única pendência é o item 11, que está com o Fabian.",
+        "Chegamos ao fim do prazo do projeto com tudo o que dependia do nosso time entregue, então estamos considerando esta frente concluída do nosso lado. Quando o Fabian fechar o item 11, a planilha fica completa."
+      ],
+      "progresso": {
+        "feito": 17,
+        "total": 18,
+        "rotulo": "itens concluídos"
+      },
+      "contaFixa": 1,
+      "link": {
+        "href": "https://docs.google.com/spreadsheets/d/1kC8iL2vZGl0aAy7xWdn5e6IrN2BYqe-6dYQYjKKWj6E/view?gid=0#gid=0",
+        "rotulo": "Abrir a planilha de demandas"
+      }
+    },
+    {
+      "titulo": "Novo app de brindes",
+      "iniciativa": "Novo app de brindes",
+      "foraDoRoadmap": true,
+      "status": "andamento",
+      "resumo": [
+        "Aplicativo próprio, desenvolvido pela Ybera, para as promoções em que a cliente compra um produto e ganha um brinde. Ele atende dois formatos: brinde único e brindes acumulativos.",
+        "Ele assume as campanhas de brinde da loja no lugar do Dr Free Gift, o aplicativo de terceiro usado até aqui — que tinha custo mensal e dava conflito no carrinho."
+      ],
+      "contaFixa": 1
+    }
+  ]
+}
