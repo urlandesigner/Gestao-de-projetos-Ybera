@@ -126,7 +126,30 @@ const st = {
                // leitor recebe a linha já embutida em cada item de sprint
 };
 
-function respAtivo() { return st.resp === null ? (st.usuario || '') : st.resp; }
+/* QUAL RECORTE POR PESSOA ESTÁ VALENDO. Vazio = o time inteiro.
+
+   O documento EDITORIAL não tem recorte, e a resposta vem daqui porque é daqui
+   que TODOS os lugares perguntam: o filtro dos itens, o seletor, a capa, o
+   pacote do link e o aviso do Publicar. Uma régua só — o defeito de 13/10/2026
+   foi a capa e os itens responderem a perguntas diferentes. */
+function respAtivo() {
+  if (B.documentoEditorial === true) return '';
+  return st.resp === null ? (st.usuario || '') : st.resp;
+}
+
+/* QUEM ASSINA A CAPA ("Product Owner: X").
+
+   No documento editorial, quem escreveu: o campo `po` do report-nomes.json,
+   texto editorial que mora com o resto do texto editorial. Nunca o dono do
+   token — foi ele que pôs o nome de outra PO em cima das entregas do Urlan.
+
+   Fora dele, o recorte da tela, com os paraquedas de sempre: o `currentUser`
+   do DevOps devolve STRING VAZIA sem lançar erro quando não traz o usuário
+   autenticado, e capa sem assinatura é pior que nome escrito à mão. */
+function assinatura(recorte) {
+  if (B.documentoEditorial === true) return st.po || '';
+  return recorte || st.usuario || st.po || '';
+}
 /* O alvo é parâmetro porque a publicação precisa do time INTEIRO, e não do
    recorte que estiver na tela — ver pacoteDoDocumento. Vazio passa tudo. */
 function doResponsavel(it, alvo) {
@@ -177,18 +200,30 @@ async function carregarRoadmap() {
   }
 }
 
-/* O RECORTE DE QUEM ESTÁ USANDO.
+/* DE QUEM É O ROADMAP DESTE DOCUMENTO.
 
    No modo leitura não há recorte a fazer: o link carrega o roadmap já
    resolvido por quem o gerou, e o leitor não tem (nem precisa ter) nome.
 
-   Para o PO, quem decide é o dono do PAT. Sem nome — primeira carga, ou a
-   chamada de identidade que falhou — devolve null, e a seção não aparece. É de
-   propósito: um documento que mostra o roadmap de outra pessoa é pior que um
-   documento sem roadmap, porque ninguém tem como desconfiar. */
+   NO DOCUMENTO EDITORIAL, QUEM DECIDE É QUEM ASSINA — e não o dono do token.
+   Esta linha nasceu errada em 13/10/2026, usando `st.usuario`, e caiu na
+   mesma armadilha que a `assinatura()` logo acima já tinha caído e corrigido:
+   num documento cujos cartões foram escritos à mão por uma pessoa, a
+   identidade de quem abre o navegador não diz nada. Deu nos dois defeitos
+   esperados — o Urlan abriu o próprio relatório num navegador sem token e o
+   roadmap tinha sumido; e se a Isadora abrisse a edição dele com o token dela,
+   veria o roadmap DELA embaixo dos cartões DELE.
+
+   Fora do editorial vale o dono do token, com o mesmo paraquedas da
+   assinatura: o `currentUser` do DevOps devolve string vazia sem lançar erro.
+
+   Em qualquer caminho, não achar a pessoa devolve lista vazia e a seção some —
+   nunca o roadmap de outra pessoa, que é pior que roadmap nenhum porque
+   ninguém tem como desconfiar. */
 function roadmapDaVez() {
   if (st.leitura) return st.roadmap;
-  return C.roadmapDaPessoa(st.roadmapDoc, st.usuario) || [];
+  const dono = B.documentoEditorial === true ? st.po : (st.usuario || st.po);
+  return C.roadmapDaPessoa(st.roadmapDoc, dono) || [];
 }
 
 /* ---------- Nome de negócio: a camada editorial ---------- */
@@ -279,6 +314,10 @@ function avisarAreaIncerta() {
 function renderFiltro() {
   avisarAreaIncerta();
   const sel = $('resp-global');
+  /* Documento editorial não tem recorte por pessoa, então o controle não
+     aparece. Seletor que aceita escolha e não muda nada é pior que seletor
+     ausente: quem escolhe conclui que está vendo o recorte que pediu. */
+  if (B.documentoEditorial === true) { sel.hidden = true; return; }
   const nomes = new Set();
   for (const it of st.items || []) {
     const r = (it.fields || {})['System.AssignedTo'];
@@ -472,7 +511,7 @@ function render() {
     contagens: st.contagens, // só no formato curto; ao vivo fica null e o documento conta
     nomes: st.nomes, // idem: do arquivo (PO) ou do link (leitura), já saneado
     agora: st.leitura ? st.agora : Date.now(),
-    escopo: st.leitura ? st.escopo : respAtivo(),
+    escopo: st.leitura ? st.escopo : assinatura(respAtivo()),
     unidade: UNIDADE,
     mes: st.mes,
   });
@@ -963,15 +1002,11 @@ function pacoteDoDocumento(semRecorte) {
      filtrados. Os dois andavam no mesmo campo, e por isso desligar o filtro
      apagava a assinatura: a primeira publicação de outubro foi ao ar sem ela.
 
-     Sem recorte, assina quem é dono do token. É o mesmo nome que o filtro
-     mostraria se ninguém o tivesse mexido — `respAtivo()` já parte dele. */
-  /* E, por último, o nome escrito à mão em report-nomes.json. Não é zelo: o
-     `currentUser` do DevOps devolve STRING VAZIA sem lançar erro quando a
-     resposta não traz o usuário autenticado — então não há exceção pra tratar,
-     o cache não guarda nada, e a capa some sem ninguém saber. Aconteceu três
-     vezes em 08/10/2026, e nas duas primeiras eu remendei o arquivo publicado
-     à mão. Assinatura é texto editorial; mora com o resto do texto editorial. */
-  const escopo = recorte || st.usuario || st.po || '';
+     Quem assina, e os paraquedas de quando o DevOps não diz o nome, vivem em
+     `assinatura()` — e a TELA usa a mesma função. A cadeia estava escrita aqui,
+     e só aqui: por isso a tela e o pacote podiam discordar sobre a assinatura,
+     que foi metade do defeito de 13/10/2026. */
+  const escopo = assinatura(recorte);
   /* Dois formatos de pacote, e o documento escolhe.
 
      O report e o v2 LISTAM itens: título, estado e prazo de cada um vão pra

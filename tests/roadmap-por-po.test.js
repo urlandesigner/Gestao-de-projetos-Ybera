@@ -101,6 +101,33 @@ test('o nome que chega depois redesenha o roadmap', () => {
     'a Central voltou a guardar o roadmap já recortado');
 });
 
+/* A REGRESSÃO DE 13/10/2026, e ela foi pro ar.
+
+   O recorte nasceu usando `st.usuario`, o dono do token. Num documento
+   EDITORIAL — aquele cujos cartões foram escritos à mão por uma pessoa — isso
+   não quer dizer nada: o Urlan abriu o próprio relatório num navegador sem
+   token e o roadmap tinha sumido. E o espelho do mesmo defeito é pior: a
+   Isadora abrindo a edição dele com o token dela veria o roadmap DELA embaixo
+   dos cartões DELE.
+
+   A `assinatura()`, no mesmo arquivo, já tinha caído e saído dessa exata
+   armadilha — o comentário dela diz "nunca o dono do token". Este teste existe
+   pra que a terceira vez não aconteça. */
+test('no documento editorial o roadmap é de quem assina, não de quem abre', () => {
+  const src = ler('assets/report.js');
+  const m = /function roadmapDaVez\(\) \{[\s\S]*?\n\}/.exec(src);
+  assert.ok(m, 'roadmapDaVez sumiu — este teste precisa acompanhar');
+  assert.match(m[0], /B\.documentoEditorial === true \? st\.po\b/,
+    'o documento editorial voltou a perguntar quem é o dono do token');
+
+  // E quem assina vem do arquivo editorial, que existe sem token nenhum.
+  const nomes = JSON.parse(ler('assets/report-nomes.json'));
+  assert.ok(nomes.po, 'o report-nomes.json perdeu o campo `po` — a capa e o roadmap ficam sem dono');
+  const doc = JSON.parse(ler('assets/roadmap.json'));
+  assert.ok(C.roadmapDaPessoa(doc, nomes.po).length > 0,
+    `quem assina o documento ("${nomes.po}") não tem bloco no roadmap.json`);
+});
+
 /* No modo leitura não há recorte a fazer: o link carrega o roadmap que quem o
    gerou já resolveu, e o leitor não tem nome nenhum. Perguntar "de quem é" ali
    devolveria null e a seção sumiria do documento compartilhado. */

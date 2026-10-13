@@ -740,8 +740,15 @@ test('a assinatura da capa não depende do filtro nem da rede', () => {
      O terceiro degrau é o nome escrito à mão. O `currentUser` do DevOps devolve
      STRING VAZIA sem lançar erro quando a resposta não traz o usuário — não há
      exceção pra tratar, o cache não guarda nada, e a capa some em silêncio.
-     Aconteceu três vezes em 08/10/2026. */
-  assert.match(fonteReport, /const escopo = recorte \|\| st\.usuario \|\| st\.po \|\| '';/);
+     Aconteceu três vezes em 08/10/2026.
+
+     A cadeia saiu do `pacoteDoDocumento` e virou a função `assinatura()` em
+     13/10/2026, porque a TELA precisava da mesma régua — ela e o pacote
+     discordavam sobre quem assina. Os degraus são os mesmos; o alcance é que
+     dobrou. Quem guarda a regra do documento editorial é o
+     tests/assinatura-editorial.test.js. */
+  assert.match(fonteReport, /return recorte \|\| st\.usuario \|\| st\.po \|\| '';/);
+  assert.match(fonteReport, /const escopo = assinatura\(recorte\);/);
   assert.match(fonteReport, /st\.po = String\(dado\.po \|\| ''\)\.trim\(\)\.slice\(0, 80\);/);
   // E o nome está escrito lá, senão o degrau existe e não segura nada.
   const nomes = JSON.parse(ler('assets/report-nomes.json'));

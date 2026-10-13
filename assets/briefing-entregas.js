@@ -1107,5 +1107,28 @@
      abre exatamente o que ele carrega, como antes. */
   const arquivoDeDados = 'assets/dados-ago-set.json';
 
-  return { htmlReport, mesPorExtenso, dataCurta, esc, periodoDoDocumento, cartoesDoDocumento, camposDoLink, contagensDoLink, entregasConcluidas, arquivoDeDados };
+  /* ESTE DOCUMENTO É EDITORIAL, e declarar isso desliga o recorte por pessoa no
+     report.js — na tela, no link e na assinatura da capa.
+
+     Os cartões saem de ENTREGAS_RECENTES, texto escrito à mão. Filtrar texto
+     curado por responsável não significa nada: o texto não muda, só a capa
+     passa a assinar outro nome e a contagem de itens vira "quantas PBIs das
+     Features DESTES cartões estão atribuídas a essa pessoa" — um número que
+     não é de ninguém.
+
+     Foi assim que, em 13/10/2026, a capa de Agosto e Setembro saiu assinada
+     "Product Owner: Isadora Brunner" com 3 itens entregues em cima das
+     entregas do Urlan. O filtro mora no localStorage e é compartilhado com a
+     Central (`central.filtros`), então bastou escolher outra pessoa lá e abrir
+     este documento pelo menu. Mesma forma do roadmap sem dono, corrigido no
+     mesmo dia: desenho impecável, nome de outra pessoa, e quem lê não tem como
+     desconfiar.
+
+     Declarado no BASE porque o v2 faz Object.assign por cima dele e herda —
+     as duas edições de entregas são o mesmo tipo de documento. O report-v2,
+     que é tela de trabalho do PO e não documento, não declara e segue com o
+     seletor. */
+  const documentoEditorial = true;
+
+  return { htmlReport, mesPorExtenso, dataCurta, esc, periodoDoDocumento, cartoesDoDocumento, camposDoLink, contagensDoLink, entregasConcluidas, arquivoDeDados, documentoEditorial };
 });
