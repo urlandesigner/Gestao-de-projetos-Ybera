@@ -22,7 +22,15 @@ const path = require('node:path');
 
 const raiz = path.join(__dirname, '..');
 const fonteReport = fs.readFileSync(path.join(raiz, 'assets/report.js'), 'utf8');
-const roadmap = JSON.parse(fs.readFileSync(path.join(raiz, 'assets/roadmap.json'), 'utf8'));
+const roadmapDoc = JSON.parse(fs.readFileSync(path.join(raiz, 'assets/roadmap.json'), 'utf8'));
+/* O portão vale pra TODAS as POs, não só pro bloco do Urlan. O arquivo ganhou
+   um bloco por pessoa em 13/10/2026, e é justamente numa PO nova que o defeito
+   deste arquivo volta a acontecer: ela escreve um status que ninguém previu, o
+   saneamento zera, e o item some do desenho sem erro nenhum. Achatar os blocos
+   faz o alarme cobrir quem entrar depois. */
+const roadmap = {
+  itens: Object.values(roadmapDoc.por || {}).flatMap((b) => (b && b.itens) || []),
+};
 /* O desenho do roadmap mudou de arquivo em 02/10/2026 (briefing-entregas.js →
    roadmap-visao.js, pra Central poder usar o mesmo). Este teste olha os dois
    juntos de propósito: o que ele guarda é que ALGUÉM saiba desenhar cada

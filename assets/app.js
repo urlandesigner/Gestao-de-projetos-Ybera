@@ -513,6 +513,12 @@ async function refreshAll(force) {
     if (!state.cache.usuario) {
       try { state.cache.usuario = await A.currentUser(ctx()); }
       catch (e) { /* sem isso o filtro só começa em "todos" — não é motivo pra falhar */ }
+      /* O ROADMAP ESPERAVA POR ESTE NOME. Ele é por PO, e o arquivo chega antes
+         daqui — na primeira abertura de quem nunca usou, o bloco já tinha sido
+         desenhado dizendo "conecte o token". Sem este redesenho ele ficaria
+         assim até a pessoa recarregar a página, e ela não teria por que
+         recarregar: o resto da Central já estaria preenchido. */
+      if (state.cache.usuario) renderRoadmap();
     }
     const visiveis = state.config.projects.filter((p) => !p.hidden);
     await Promise.all([...visiveis.map(refreshCard), refreshMyItems()]);
@@ -658,10 +664,26 @@ function htmlRitmo() {
 function renderRoadmap() {
   const box = $('roadmap');
   if (!box) return;
-  const itens = roadmapState.itens;
-  if (!itens) { box.innerHTML = '<p class="mudo">carregando o roadmap…</p>'; return; }
+  if (!roadmapState.doc) { box.innerHTML = '<p class="mudo">carregando o roadmap…</p>'; return; }
+
+  /* O RECORTE É DE QUEM ESTÁ USANDO. O nome vem do dono do PAT, que a Central
+     já pergunta ao DevOps e guarda no cache — nenhuma requisição a mais.
+
+     `null` e `[]` dizem coisas diferentes e a tela também: `[]` é "você tem
+     roadmap e ele está vazio"; `null` é "não sei de quem é este navegador" ou
+     "ainda não há bloco pra você". Mostrar o roadmap de outra PO nos dois casos
+     seria o erro mais caro desta tela — quem lê não tem como desconfiar. */
+  const usuario = (state.cache && state.cache.usuario) || '';
+  const itens = C.roadmapDaPessoa(roadmapState.doc, usuario);
+  if (!itens) {
+    box.innerHTML = usuario
+      ? `<p class="mudo">Ainda não há roadmap para <b>${escapeHtml(usuario)}</b>. Ele é escrito à mão em`
+        + ' <b>assets/roadmap.json</b>, num bloco por PO — a chave é o primeiro nome em minúscula.</p>'
+      : '<p class="mudo">Conecte o token para ver o seu roadmap: é ele que diz de quem é esta Central.</p>';
+    return;
+  }
   if (!itens.length) {
-    box.innerHTML = '<p class="mudo">Nenhum projeto no roadmap. O arquivo é <b>assets/roadmap.json</b>, escrito à mão a partir do Notion.</p>';
+    box.innerHTML = '<p class="mudo">Nenhum projeto no seu roadmap. O arquivo é <b>assets/roadmap.json</b>, escrito à mão a partir do Notion.</p>';
     return;
   }
   // O MESMO desenho do relatório de Entregas, pelo módulo compartilhado —
@@ -933,14 +955,17 @@ function renderPanorama() {
 // report; entrou aqui em 02/10/2026 pro bloco Roadmap do Panorama, que é o
 // único lugar com dado pra responder "os projetos vão chegar na data" — os
 // épicos do DevOps estão quase todos sem filho e sem data de fim.
-const roadmapState = { itens: null };
+/* CADA PO TEM O SEU. O arquivo guarda um bloco por pessoa e aqui fica o
+   documento INTEIRO — o recorte é escolhido no render, pelo nome do dono do
+   PAT. Guardar já recortado não serve: o arquivo chega antes de o DevOps dizer
+   quem é a pessoa, e o bloco certo só existe depois disso. */
+const roadmapState = { doc: null };
 
 async function carregarRoadmap() {
   try {
     const resp = await fetch('assets/roadmap.json', { cache: 'no-store' });
     if (!resp.ok) return; // arquivo ausente: o bloco some, o resto da página fica de pé
-    const dado = await resp.json();
-    roadmapState.itens = C.saneRoadmapItens(dado.itens);
+    roadmapState.doc = await resp.json();
     renderRoadmap();
   } catch (e) {
     /* Degradação de propósito: o Panorama continua de pé sem o bloco. Mas ele

@@ -570,8 +570,12 @@ test('toda iniciativa citada nos cartões existe no roadmap.json', () => {
   const citadas = [...src.matchAll(/^\s*iniciativa: '([^']+)',$/gm)].map((m) => m[1]);
   assert.ok(citadas.length > 0, 'se nenhum cartão cita iniciativa, o agrupamento perdeu o sentido');
 
+  /* O BLOCO DO URLAN, e não o arquivo inteiro: o roadmap passou a ter um bloco
+     por PO, e estes cartões são a edição dele. Iniciativa que existe só no
+     roadmap de outra PO não legitima um cartão deste documento — casaria por
+     coincidência de nome e o cartão cairia em "Outras entregas" na tela real. */
   const roadmap = JSON.parse(fs.readFileSync(path.join(__dirname, '../assets/roadmap.json'), 'utf8'));
-  const titulos = new Set(roadmap.itens.map((i) => i.titulo));
+  const titulos = new Set(roadmap.por.urlan.itens.map((i) => i.titulo));
   for (const nome of citadas) {
     assert.ok(titulos.has(nome), `"${nome}" não existe no roadmap.json — o cartão cairia em "Outras entregas"`);
   }
@@ -579,7 +583,7 @@ test('toda iniciativa citada nos cartões existe no roadmap.json', () => {
 
 test('cartão sem iniciativa vai pro fim, num grupo próprio, e nunca some', () => {
   const roadmap = JSON.parse(
-    fs.readFileSync(path.join(__dirname, '../assets/roadmap.json'), 'utf8')).itens;
+    fs.readFileSync(path.join(__dirname, '../assets/roadmap.json'), 'utf8')).por.urlan.itens;
   const h = documento({ roadmap, agrupar: 'iniciativa' }).html;
   const titulos = [...h.matchAll(/<section class="rl-sec" id="ini-[\w-]+"[\s\S]*?<h2 class="rl-sec-titulo">([^<]+)</g)]
     .map((m) => m[1]);
@@ -591,7 +595,7 @@ test('cartão sem iniciativa vai pro fim, num grupo próprio, e nunca some', () 
 
 test('as seções seguem a ordem da lista de cartões, com o órfão no fim', () => {
   const roadmap = JSON.parse(
-    fs.readFileSync(path.join(__dirname, '../assets/roadmap.json'), 'utf8')).itens;
+    fs.readFileSync(path.join(__dirname, '../assets/roadmap.json'), 'utf8')).por.urlan.itens;
   const h = documento({ roadmap, agrupar: 'iniciativa' }).html;
   const titulos = [...h.matchAll(/<section class="rl-sec" id="ini-[\w-]+"[\s\S]*?<h2 class="rl-sec-titulo">([^<]+)</g)]
     .map((m) => m[1]);

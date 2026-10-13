@@ -977,6 +977,49 @@
 
      O arquivo é nosso, mas tratar o dado como se pudesse vir torto é grátis e
      evita NaN se algum dia alguém editar à mão e errar uma data. */
+  /* A CHAVE DE UMA PESSOA no roadmap: primeiro nome, sem acento, em minúscula.
+
+     Mesma régua que o filtro de responsável da Central já usava, e pelo mesmo
+     motivo: o DevOps devolve o nome de exibição completo, e esse nome muda sem
+     avisar — sobrenome que entra ou sai, nome social, grafia diferente entre
+     contas. Casar pela string inteira faria o roadmap da pessoa sumir calado no
+     dia em que ela corrigisse o próprio nome no DevOps. */
+  function chaveDePessoa(nome) {
+    return String(nome || '').trim().split(/\s+/)[0]
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
+  /* O RECORTE DO ROADMAP DE UMA PESSOA.
+
+     Cada PO tem o seu: o arquivo guarda um bloco por pessoa sob `por`, com a
+     chave acima. Antes era uma lista só, sem dono — e com mais de uma PO usando
+     a ferramenta, quem abrisse veria o roadmap de outra pessoa como se fosse o
+     dela. Mostrar o roadmap errado é pior que não mostrar nenhum: o leitor não
+     tem como desconfiar.
+
+     DEVOLVE `null`, E NÃO `[]`, quando não há bloco pra essa pessoa — são duas
+     respostas diferentes e as telas dizem coisas diferentes. `[]` é "ela tem
+     roadmap e ele está vazio"; `null` é "não sei o roadmap dela" (nome ainda
+     desconhecido, arquivo sem o bloco, arquivo fora do ar). Fundi-las faria a
+     tela afirmar que a pessoa não tem projeto nenhum quando o que houve foi uma
+     chamada que não respondeu. */
+  function roadmapDaPessoa(doc, nome) {
+    const chave = chaveDePessoa(nome);
+    if (!chave) return null;
+    const por = doc && typeof doc === 'object' ? doc.por : null;
+    if (!por || typeof por !== 'object') return null;
+    /* `hasOwnProperty.call` e não `por[chave]` direto: todo objeto herda
+       `constructor`, `toString` e `__proto__`, e uma PO chamada "proto" — ou um
+       arquivo editado torto — faria o acesso devolver algo que não é bloco
+       nenhum. Com `__proto__` o valor até passa por "é objeto", e a pessoa
+       receberia uma lista vazia ("você não tem projeto") onde a resposta certa
+       é "não sei de quem é isto". */
+    if (!Object.prototype.hasOwnProperty.call(por, chave)) return null;
+    const bloco = por[chave];
+    if (!bloco || typeof bloco !== 'object' || Array.isArray(bloco)) return null;
+    return saneRoadmapItens(bloco.itens);
+  }
+
   function saneRoadmapItens(lista) {
     const dataValida = (s) => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s)
       && !Number.isNaN(Date.parse(s + 'T00:00:00Z'));
@@ -1483,7 +1526,7 @@
     aggregateCounts, sprintProgress, groupMyItemsBuckets,
     isAttentionState, typeSlug,
     wiqlBoard, wiqlIteracao, transbordados, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
-    stateBucket, bucketCounts,
+    stateBucket, bucketCounts, chaveDePessoa, roadmapDaPessoa,
     iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, vizinhasDaSprint, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, digitalDoTexto, saneResumos, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,

@@ -112,7 +112,14 @@ const st = {
   leitura: false,
   escopo: '',
   agora: 0,
-  roadmap: [], // vem de assets/roadmap.json (PO) ou do link (leitura) — nunca do DevOps
+  roadmap: [], // só no modo leitura: o recorte já resolvido que veio no link
+  /* O arquivo INTEIRO, com um bloco por PO. O recorte é escolhido em
+     `roadmapDaVez()`, na hora de desenhar — e não aqui, no carregamento. A
+     ordem é o motivo: o arquivo chega antes de o DevOps dizer quem é o dono do
+     token, e resolver cedo demais mostraria nada (ou, pior, o bloco errado) na
+     primeira carga de quem nunca abriu. Resolvido no render, o roadmap aparece
+     assim que o nome chega, sem ninguém orquestrar nada. */
+  roadmapDoc: null,
   nomes: {},   // nome de negócio por item: assets/report-nomes.json (PO) ou o link (leitura)
   po: '',      // quem assina a capa, do mesmo arquivo — ver `escopo` em pacoteDoDocumento
   resumos: {}, // uma linha por PBI: assets/resumos.json — só o PO lê o arquivo; o
@@ -161,13 +168,27 @@ async function carregarRoadmap() {
     const resp = await fetch('assets/roadmap.json', { cache: 'no-store' });
     if (!resp.ok) return; // arquivo ainda não existe: seção some, sem quebrar o resto
     const dado = await resp.json();
-    st.roadmap = saneRoadmapItens(dado.itens);
+    st.roadmapDoc = dado;
   } catch (e) {
     /* Degradação de propósito: sem roadmap o documento continua de pé. Mas o PO
        precisa saber que a seção sumiu antes de publicar — some sem deixar
        buraco, e quem lê o link não tem como suspeitar que faltou algo. */
     console.warn('[Report] roadmap.json não carregou: a seção de projetos não vai aparecer. Motivo: ' + e.message);
   }
+}
+
+/* O RECORTE DE QUEM ESTÁ USANDO.
+
+   No modo leitura não há recorte a fazer: o link carrega o roadmap já
+   resolvido por quem o gerou, e o leitor não tem (nem precisa ter) nome.
+
+   Para o PO, quem decide é o dono do PAT. Sem nome — primeira carga, ou a
+   chamada de identidade que falhou — devolve null, e a seção não aparece. É de
+   propósito: um documento que mostra o roadmap de outra pessoa é pior que um
+   documento sem roadmap, porque ninguém tem como desconfiar. */
+function roadmapDaVez() {
+  if (st.leitura) return st.roadmap;
+  return C.roadmapDaPessoa(st.roadmapDoc, st.usuario) || [];
 }
 
 /* ---------- Nome de negócio: a camada editorial ---------- */
@@ -447,7 +468,7 @@ function render() {
     decisoes: st.leitura ? st.decisoes : undefined,
     // Roadmap não bifurca por modo: nos dois casos já chega pronto em
     // st.roadmap (do arquivo estático ou do link), nunca recalculado aqui.
-    roadmap: st.roadmap,
+    roadmap: roadmapDaVez(),
     contagens: st.contagens, // só no formato curto; ao vivo fica null e o documento conta
     nomes: st.nomes, // idem: do arquivo (PO) ou do link (leitura), já saneado
     agora: st.leitura ? st.agora : Date.now(),
@@ -968,7 +989,9 @@ function pacoteDoDocumento(semRecorte) {
     em: Date.now(),
     escopo,
     mes: st.mes, // quem abrir o link cai no mês que eu estava vendo
-    roadmap: st.roadmap, // já veio saneado de assets/roadmap.json
+    /* O recorte de quem GERA o link viaja resolvido: quem abre não tem nome
+       nem arquivo pra consultar. */
+    roadmap: roadmapDaVez(),
   };
   /* Uma passada só pelo ritmo: as linhas servem ao pacote (saneadas) e à lista
      de pendências (cruas, com id). Chamar `ritmoAgora` duas vezes daria duas

@@ -20,7 +20,7 @@ const R = require('../assets/roadmap-visao.js');
 const C = require('../assets/core.js');
 
 test('o módulo compartilhado desenha o roadmap de verdade', () => {
-  const itens = C.saneRoadmapItens(JSON.parse(ler('assets/roadmap.json')).itens);
+  const itens = C.saneRoadmapItens(JSON.parse(ler('assets/roadmap.json')).por.urlan.itens);
   const html = R.corpoRoadmap(itens, Date.parse('2026-10-02T12:00:00Z'));
   assert.equal((html.match(/rl-rm-item/g) || []).length, itens.length,
     'uma linha por projeto');

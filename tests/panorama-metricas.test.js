@@ -180,7 +180,7 @@ test('a lista traz vencidos primeiro — é o que exige ação', () => {
 });
 
 test('o roadmap de verdade dá o retrato que o desenho prometeu', () => {
-  const itens = C.saneRoadmapItens(require('../assets/roadmap.json').itens);
+  const itens = C.saneRoadmapItens(require('../assets/roadmap.json').por.urlan.itens);
   const r = C.riscoDoRoadmap(itens, AGORA);
   assert.equal(r.total, 13);
   assert.equal(r.concluidos, 5);
