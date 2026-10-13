@@ -120,11 +120,16 @@
          não está escrito em lugar nenhum que eu possa ler, e descrever isso de
          cabeça seria afirmar regra de promoção pro stakeholder. */
       titulo: 'Novo app de brindes',
-      /* Seção própria porque foi o que ele pediu. Não há linha de brindes no
-         roadmap.json, então este nome não tem barra pra casar lá embaixo — é a
-         única frente do documento nessa situação, e o jeito de fechar isso é
-         criar a linha no roadmap, não apagar a seção. */
+      /* Seção própria, e SEM barra no roadmap de propósito. Eu tinha anotado que
+         o jeito de fechar isso era criar a linha no roadmap; o Urlan corrigiu em
+         13/10/2026: nem tudo que entra em desenvolvimento é projeto — vem
+         demanda de sustentação, que não tem roadmap e nem deveria ter.
+
+         Daí o `foraDoRoadmap`: a seção fica, e a capa para de contá-la como
+         projeto do roadmap. Sem ele o documento afirmava "2 projetos do
+         roadmap" com uma barra só lá embaixo. */
       iniciativa: 'Novo app de brindes',
+      foraDoRoadmap: true,
       /* `andamento` é o que o BOARD diz: a PBI estava In Progress no pacote de
          08/10. O selo é julgamento do Urlan, não do DevOps — se a frente já
          entregou, é uma palavra que muda. */

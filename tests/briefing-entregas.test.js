@@ -1179,3 +1179,68 @@ test('sem período declarado, não recorta nada', () => {
   const m = material([]);
   assert.equal(m.itens.length, 4, 'a janela vazia passou a filtrar');
 });
+
+/* ---- Frente que NÃO é projeto do roadmap ----
+
+   A capa conta grupos e o rótulo dela diz "Projetos do roadmap contemplados
+   neste relatório" — uma afirmação que o leitor confere contra as barras do
+   roadmap, logo abaixo, no mesmo documento.
+
+   Em 13/10/2026 o relatório de outubro estava publicado dizendo 2, com barra
+   para um só: o "Novo app de brindes" não tem linha no roadmap. Minha leitura
+   foi que faltava criar a linha; o Urlan corrigiu — nem tudo que entra em
+   desenvolvimento é projeto, vem demanda de sustentação, que não tem roadmap e
+   nem deveria ter.
+
+   A saída que já existia era o cartão não declarar `iniciativa`: ele cai em
+   "Outras entregas" e sai da conta. Mas aí a frente perde o nome, e o nome era
+   o pedido. `foraDoRoadmap` guarda as duas coisas: a seção fica, a conta não
+   mente. */
+
+test('frente fora do roadmap mantém a seção e sai da conta da capa', () => {
+  const cartoes = [
+    { titulo: 'A', status: 'entregue', iniciativa: 'Projeto de verdade', contaFixa: 1, resumo: 'x' },
+    { titulo: 'B', status: 'andamento', iniciativa: 'Sustentação', contaFixa: 1, resumo: 'y', foraDoRoadmap: true },
+  ];
+  const r = BE.htmlReport({ items: [], todos: [], cartoes, agora: AGORA, unidade: 'Ybera US' });
+  // A seção da frente fora do roadmap continua existindo, com o nome dela.
+  assert.match(r.html, /rl-sec-titulo[^>]*>Sustentação</);
+  assert.match(r.html, /rl-sec-titulo[^>]*>Projeto de verdade</);
+  // E a capa conta UM projeto, não dois.
+  assert.match(r.html, /rl-num">1</);
+  assert.match(r.html, /Projeto atendido/, 'o rótulo tem de concordar no singular');
+});
+
+test('sem a declaração, nada muda — é o caso de Agosto e Setembro', () => {
+  /* O campo é opt-in, e tem de ser: os cartões do documento já publicado não o
+     declaram, e um default diferente reescreveria a capa deles. */
+  const cartoes = [
+    { titulo: 'A', status: 'entregue', iniciativa: 'Um', contaFixa: 1, resumo: 'x' },
+    { titulo: 'B', status: 'entregue', iniciativa: 'Dois', contaFixa: 1, resumo: 'y' },
+  ];
+  const r = BE.htmlReport({ items: [], todos: [], cartoes, agora: AGORA, unidade: 'Ybera US' });
+  assert.match(r.html, /rl-num">2</);
+  assert.match(r.html, /Projetos atendidos/);
+});
+
+test('basta um cartão fora do roadmap pra frente inteira sair da conta', () => {
+  /* Na dúvida, não contar: a capa afirma "do roadmap", e afirmar de menos é
+     recuperável — afirmar de mais é o documento mentindo pro stakeholder. */
+  const cartoes = [
+    { titulo: 'A', status: 'entregue', iniciativa: 'Mesma frente', contaFixa: 1, resumo: 'x' },
+    { titulo: 'B', status: 'entregue', iniciativa: 'Mesma frente', contaFixa: 1, resumo: 'y', foraDoRoadmap: true },
+  ];
+  const r = BE.htmlReport({ items: [], todos: [], cartoes, agora: AGORA, unidade: 'Ybera US' });
+  assert.match(r.html, /rl-num">0</);
+});
+
+test('o cartão de outubro declara, e a edição publicada não', () => {
+  const v2 = require('../assets/briefing-entregas-v2.js');
+  const brindes = v2.cartoesDoDocumento().find((c) => /brindes/i.test(c.titulo));
+  assert.ok(brindes, 'o cartão do app de brindes sumiu da edição de outubro');
+  assert.equal(brindes.foraDoRoadmap, true);
+  // E nenhum cartão de Agosto/Setembro declara: aquele documento não muda.
+  for (const c of BE.cartoesDoDocumento()) {
+    assert.notEqual(c.foraDoRoadmap, true, `${c.titulo} passou a declarar e a capa de ago/set mudaria`);
+  }
+});

@@ -28,6 +28,18 @@
         });
       }
       grupos.get(chave).cards.push(f);
+      /* FORA DO ROADMAP: o grupo tem nome e seção próprias, mas não é projeto.
+         Nem tudo que entra em desenvolvimento é projeto — vem demanda de
+         sustentação, que não tem barra no roadmap e nem deveria ter. Foi o que o
+         Urlan apontou em 13/10/2026, com o documento já publicado dizendo "2
+         projetos do roadmap" e só um deles tendo barra lá embaixo.
+
+         Um cartão basta pra marcar o grupo: se qualquer cartão dele está fora do
+         roadmap, o grupo não é projeto. Grupos assim não se misturam com outros
+         na prática (a chave é o nome da frente), e na dúvida é melhor não contar
+         do que contar errado — a capa diz "do roadmap", e isso é conferível
+         contra as barras. */
+      if (f.foraDoRoadmap === true) grupos.get(chave).foraDoRoadmap = true;
     }
     // A ordem é a da lista: o primeiro cartão de cada grupo define onde aquele
     // grupo entra no documento. Quem manda é a sequência em que o Urlan
@@ -342,7 +354,12 @@
      Um item da lista pode ser `{ nota: '...' }` em vez de string: é o parágrafo
      que NÃO conta a entrega, e sim algo ao lado dela — um plano futuro, uma
      condição que sobra. Sai com desenho próprio, senão ele lê como se fosse
-     mais uma linha do que foi feito. */
+     mais uma linha do que foi feito.
+
+     `foraDoRoadmap: true` diz que aquela frente NÃO é projeto do roadmap —
+     sustentação, por exemplo. A seção dela continua igual; o que muda é que ela
+     sai da conta de "Projetos do roadmap" na capa. Sem isso a capa afirma mais
+     projeto do que existe barra lá embaixo. */
 
   /* Vocabulário fechado de status. As palavras são as do Urlan: quem escreve o
      estado de uma frente é quem a conhece, e um status fora desta tabela é
@@ -901,9 +918,15 @@
     // O grupo órfão ("Outras entregas") NÃO entra na conta: ele é trabalho
     // entregue, mas não é uma iniciativa. Contá-lo faria a capa afirmar uma
     // iniciativa a mais do que existe no roadmap.
-    const gruposReais = grupos.filter((g) => !g.orfao);
+    //
+    // Pela mesma régua, e pela mesma frase, o grupo que se declara FORA DO
+    // ROADMAP também fica fora: ele tem nome e seção, mas não é projeto. O
+    // rótulo desta conta diz "Projetos do roadmap contemplados neste
+    // relatório", e isso é verificável — o leitor confere contra as barras.
+    const ehProjeto = (g) => !g.orfao && g.foraDoRoadmap !== true;
+    const gruposReais = grupos.filter(ehProjeto);
     const nGrupos = agrupar === 'plano'
-      ? agruparEntregas(cartoes, 'iniciativa').filter((g) => !g.orfao).length
+      ? agruparEntregas(cartoes, 'iniciativa').filter(ehProjeto).length
       : gruposReais.length;
     const rotuloGrupo = agrupar === 'epico'
       ? (nGrupos === 1 ? 'Frente atendida' : 'Frentes atendidas')
