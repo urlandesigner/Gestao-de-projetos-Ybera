@@ -99,33 +99,31 @@ test('o nome que chega depois redesenha o roadmap', () => {
     'o roadmap não é redesenhado quando o nome do dono do token chega');
   assert.match(app, /const roadmapState = \{ doc: null \};/,
     'a Central voltou a guardar o roadmap já recortado');
+  // E o recorte da Central sai do SELECT, não do dono do token.
+  const r = /function renderRoadmap\(\) \{[\s\S]*?\n\}/.exec(app);
+  assert.match(r[0], /const usuario = respAtivo\(\) \|\|/,
+    'o roadmap da Central deixou de seguir o PO selecionado');
+  /* "todos os responsáveis" é escolha válida e não tem roadmap: cai no dono da
+     Central em vez de dizer que ninguém tem plano nenhum. */
+  assert.match(r[0], /respAtivo\(\) \|\| \(state\.cache && state\.cache\.usuario\)/,
+    'o "todos" voltou a deixar o roadmap sem dono');
 });
 
 /* A REGRESSÃO DE 13/10/2026, e ela foi pro ar.
 
-   O recorte nasceu usando `st.usuario`, o dono do token. Num documento
-   EDITORIAL — aquele cujos cartões foram escritos à mão por uma pessoa — isso
-   não quer dizer nada: o Urlan abriu o próprio relatório num navegador sem
-   token e o roadmap tinha sumido. E o espelho do mesmo defeito é pior: a
-   Isadora abrindo a edição dele com o token dela veria o roadmap DELA embaixo
-   dos cartões DELE.
-
-   A `assinatura()`, no mesmo arquivo, já tinha caído e saído dessa exata
-   armadilha — o comentário dela diz "nunca o dono do token". Este teste existe
-   pra que a terceira vez não aconteça. */
-test('no documento editorial o roadmap é de quem assina, não de quem abre', () => {
+   O recorte nasceu usando `st.usuario`, o dono do token — que não é nem quem
+   escreveu o documento nem quem está selecionado. Em 14/10 passou a seguir a
+   assinatura da capa, que é a mesma pessoa dos cartões. A regra completa, com
+   o histórico das duas decisões, está em tests/recorte-por-po.test.js; aqui
+   fica só o elo visto do lado do roadmap. */
+test('o roadmap segue quem assina a capa, não o dono do token', () => {
   const src = ler('assets/report.js');
   const m = /function roadmapDaVez\(\) \{[\s\S]*?\n\}/.exec(src);
   assert.ok(m, 'roadmapDaVez sumiu — este teste precisa acompanhar');
-  assert.match(m[0], /B\.documentoEditorial === true \? st\.po\b/,
-    'o documento editorial voltou a perguntar quem é o dono do token');
-
-  // E quem assina vem do arquivo editorial, que existe sem token nenhum.
-  const nomes = JSON.parse(ler('assets/report-nomes.json'));
-  assert.ok(nomes.po, 'o report-nomes.json perdeu o campo `po` — a capa e o roadmap ficam sem dono');
-  const doc = JSON.parse(ler('assets/roadmap.json'));
-  assert.ok(C.roadmapDaPessoa(doc, nomes.po).length > 0,
-    `quem assina o documento ("${nomes.po}") não tem bloco no roadmap.json`);
+  assert.match(m[0], /assinatura\(respAtivo\(\)\)/,
+    'o roadmap deixou de seguir quem assina a capa');
+  assert.doesNotMatch(m[0], /st\.usuario/,
+    'o roadmap voltou a perguntar pelo dono do token');
 });
 
 /* No modo leitura não há recorte a fazer: o link carrega o roadmap que quem o

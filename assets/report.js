@@ -133,7 +133,6 @@ const st = {
    pacote do link e o aviso do Publicar. Uma régua só — o defeito de 13/10/2026
    foi a capa e os itens responderem a perguntas diferentes. */
 function respAtivo() {
-  if (B.documentoEditorial === true) return '';
   return st.resp === null ? (st.usuario || '') : st.resp;
 }
 
@@ -147,7 +146,6 @@ function respAtivo() {
    do DevOps devolve STRING VAZIA sem lançar erro quando não traz o usuário
    autenticado, e capa sem assinatura é pior que nome escrito à mão. */
 function assinatura(recorte) {
-  if (B.documentoEditorial === true) return st.po || '';
   return recorte || st.usuario || st.po || '';
 }
 /* O alvo é parâmetro porque a publicação precisa do time INTEIRO, e não do
@@ -222,8 +220,7 @@ async function carregarRoadmap() {
    ninguém tem como desconfiar. */
 function roadmapDaVez() {
   if (st.leitura) return st.roadmap;
-  const dono = B.documentoEditorial === true ? st.po : (st.usuario || st.po);
-  return C.roadmapDaPessoa(st.roadmapDoc, dono) || [];
+  return C.roadmapDaPessoa(st.roadmapDoc, assinatura(respAtivo())) || [];
 }
 
 /* ---------- Nome de negócio: a camada editorial ---------- */
@@ -314,10 +311,12 @@ function avisarAreaIncerta() {
 function renderFiltro() {
   avisarAreaIncerta();
   const sel = $('resp-global');
-  /* Documento editorial não tem recorte por pessoa, então o controle não
-     aparece. Seletor que aceita escolha e não muda nada é pior que seletor
-     ausente: quem escolhe conclui que está vendo o recorte que pediu. */
-  if (B.documentoEditorial === true) { sel.hidden = true; return; }
+  /* O seletor VOLTOU ao documento editorial em 14/10/2026, por decisão do
+     Urlan: o PO escolhido tem que ver o que é dele — na Central, no roadmap e
+     no relatório. Ele tinha sido escondido na véspera porque escolher outra PO
+     trocava só o nome da capa e deixava embaixo os cartões de quem escreveu.
+     Agora os cartões seguem a escolha também, e o seletor volta a dizer a
+     verdade sobre o que está na tela. */
   const nomes = new Set();
   for (const it of st.items || []) {
     const r = (it.fields || {})['System.AssignedTo'];
@@ -512,6 +511,11 @@ function render() {
     nomes: st.nomes, // idem: do arquivo (PO) ou do link (leitura), já saneado
     agora: st.leitura ? st.agora : Date.now(),
     escopo: st.leitura ? st.escopo : assinatura(respAtivo()),
+    /* A CHAVE DE QUEM ESTÁ SELECIONADO. O briefing guarda os cartões por PO e
+       escolhe por ela. Normalizada aqui, pelo core, e não lá: a regra de casar
+       nome ("Urlan Maciel Dipré" → urlan) é a mesma do roadmap, e duas cópias
+       dela divergem na primeira vez que alguém mudar o nome no DevOps. */
+    chavePO: C.chaveDePessoa(st.leitura ? st.escopo : assinatura(respAtivo())),
     unidade: UNIDADE,
     mes: st.mes,
   });

@@ -673,7 +673,15 @@ function renderRoadmap() {
      roadmap e ele está vazio"; `null` é "não sei de quem é este navegador" ou
      "ainda não há bloco pra você". Mostrar o roadmap de outra PO nos dois casos
      seria o erro mais caro desta tela — quem lê não tem como desconfiar. */
-  const usuario = (state.cache && state.cache.usuario) || '';
+  /* O SELECT MANDA, não o dono do token — decisão do Urlan em 14/10/2026: o PO
+     selecionado vê o que é dele na Central, no roadmap e nos relatórios. Sem
+     escolha explícita, `respAtivo()` já devolve o dono do token, que é o
+     padrão certo pra quem abre a própria Central. */
+  /* `|| usuario do token` por causa do "todos os responsáveis": ali nenhum PO
+     está escolhido, e roadmap não tem versão "de todos" — somar os três seria
+     inventar um plano que ninguém tem. Cai no dono da Central, que é de quem
+     ela é. Mesmo paraquedas que a assinatura do relatório já usa. */
+  const usuario = respAtivo() || (state.cache && state.cache.usuario) || '';
   const itens = C.roadmapDaPessoa(roadmapState.doc, usuario);
   if (!itens) {
     box.innerHTML = usuario
