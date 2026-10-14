@@ -2,7 +2,7 @@
 
    Nasceu dentro do briefing-entregas.js, pro relatório do stakeholder. Em
    02/10/2026 o Urlan pediu o mesmo desenho no Panorama da Central — e a saída
-   não podia ser copiar: as duas telas leem o MESMO assets/roadmap.json, e duas
+   não podia ser copiar: as duas telas leem o MESMO assets/conteudo/<po>/roadmap.json, e duas
    cópias do desenho divergem no primeiro ajuste. É a mesma lição do
    saneRoadmapItens, que já tinha mudado pro core.js pela mesma razão.
 
@@ -27,7 +27,7 @@
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
-  // Roadmap: o único dado que não vem do DevOps (assets/roadmap.json). Datas em
+  // Roadmap: o único dado que não vem do DevOps (assets/conteudo/<po>/roadmap.json). Datas em
   // dia UTC pra escala e barra baterem sem fuso torto.
   const MES_ABREV = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
   const diaUTC = (iso) => Date.parse(iso + 'T00:00:00Z');

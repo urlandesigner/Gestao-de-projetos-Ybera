@@ -664,7 +664,6 @@ function htmlRitmo() {
 function renderRoadmap() {
   const box = $('roadmap');
   if (!box) return;
-  if (!roadmapState.doc) { box.innerHTML = '<p class="mudo">carregando o roadmap…</p>'; return; }
 
   /* O RECORTE É DE QUEM ESTÁ USANDO. O nome vem do dono do PAT, que a Central
      já pergunta ao DevOps e guarda no cache — nenhuma requisição a mais.
@@ -682,16 +681,22 @@ function renderRoadmap() {
      inventar um plano que ninguém tem. Cai no dono da Central, que é de quem
      ela é. Mesmo paraquedas que a assinatura do relatório já usa. */
   const usuario = respAtivo() || (state.cache && state.cache.usuario) || '';
-  const itens = C.roadmapDaPessoa(roadmapState.doc, usuario);
-  if (!itens) {
-    box.innerHTML = usuario
-      ? `<p class="mudo">Ainda não há roadmap para <b>${escapeHtml(usuario)}</b>. Ele é escrito à mão em`
-        + ' <b>assets/roadmap.json</b>, num bloco por PO — a chave é o primeiro nome em minúscula.</p>'
-      : '<p class="mudo">Conecte o token para ver o seu roadmap: é ele que diz de quem é esta Central.</p>';
+  const chave = C.chaveDePessoa(usuario);
+  if (!chave) {
+    box.innerHTML = '<p class="mudo">Conecte o token para ver o seu roadmap: é ele que diz de quem é esta Central.</p>';
+    return;
+  }
+  if (!(chave in roadmapState.porChave)) carregarRoadmap(chave);
+  const itens = roadmapState.porChave[chave];
+  const arquivo = escapeHtml(C.caminhoDoConteudo(chave, 'roadmap.json'));
+  if (itens === undefined) { box.innerHTML = '<p class="mudo">carregando o roadmap…</p>'; return; }
+  if (itens === null) {
+    box.innerHTML = `<p class="mudo">Ainda não há roadmap para <b>${escapeHtml(usuario)}</b>. Ele é escrito à mão em`
+      + ` <b>${arquivo}</b>.</p>`;
     return;
   }
   if (!itens.length) {
-    box.innerHTML = '<p class="mudo">Nenhum projeto no seu roadmap. O arquivo é <b>assets/roadmap.json</b>, escrito à mão a partir do Notion.</p>';
+    box.innerHTML = `<p class="mudo">Nenhum projeto no seu roadmap. O arquivo é <b>${arquivo}</b>, escrito à mão a partir do Notion.</p>`;
     return;
   }
   // O MESMO desenho do relatório de Entregas, pelo módulo compartilhado —
@@ -959,28 +964,35 @@ function renderPanorama() {
 }
 
 /* ---------- Roadmap: a única peça da Central que não vem do DevOps ---------- */
-// Vive em assets/roadmap.json, escrito à parte do Notion. Era exclusivo do
-// report; entrou aqui em 02/10/2026 pro bloco Roadmap do Panorama, que é o
-// único lugar com dado pra responder "os projetos vão chegar na data" — os
-// épicos do DevOps estão quase todos sem filho e sem data de fim.
-/* CADA PO TEM O SEU. O arquivo guarda um bloco por pessoa e aqui fica o
-   documento INTEIRO — o recorte é escolhido no render, pelo nome do dono do
-   PAT. Guardar já recortado não serve: o arquivo chega antes de o DevOps dizer
-   quem é a pessoa, e o bloco certo só existe depois disso. */
-const roadmapState = { doc: null };
+// Vive em assets/conteudo/<po>/roadmap.json, um arquivo por PO, escrito à
+// parte do Notion. Era exclusivo do report; entrou aqui em 02/10/2026 pro bloco
+// Roadmap do Panorama, que é o único lugar com dado pra responder "os projetos
+// vão chegar na data" — os épicos do DevOps estão quase todos sem data de fim.
+/* UM ARQUIVO POR PO, buscado sob demanda pelo render — a mesma forma do
+   relatório (report.js), lendo o mesmo endereço (C.caminhoDoConteudo).
 
-async function carregarRoadmap() {
+   Os três estados de cada chave dizem coisas diferentes na tela: `undefined`
+   = em voo ("carregando"); `null` = essa PO não tem arquivo ("ainda não há
+   roadmap"); lista = o roadmap dela, vazio ou não. `Object.create(null)`
+   porque a chave vem de nome de pessoa, e um objeto comum herda `__proto__`. */
+const roadmapState = { porChave: Object.create(null) };
+
+async function carregarRoadmap(chave) {
+  if (!chave || chave in roadmapState.porChave) return;
+  roadmapState.porChave[chave] = undefined; // em voo
+  let itens = null;
   try {
-    const resp = await fetch('assets/roadmap.json', { cache: 'no-store' });
-    if (!resp.ok) return; // arquivo ausente: o bloco some, o resto da página fica de pé
-    roadmapState.doc = await resp.json();
-    renderRoadmap();
+    const resp = await fetch(C.caminhoDoConteudo(chave, 'roadmap.json') + '?t=' + Date.now(), { cache: 'no-store' });
+    // 404 é "essa PO ainda não tem roadmap" — estado normal de quem acabou de entrar.
+    if (resp.ok) itens = C.saneRoadmapItens((await resp.json() || {}).itens);
   } catch (e) {
-    /* Degradação de propósito: o Panorama continua de pé sem o bloco. Mas ele
-       some sem deixar buraco, e aí "não temos roadmap" e "o arquivo não
-       carregou" ficam idênticos na tela. */
-    console.warn('[Central] roadmap.json não carregou: o bloco de Roadmap não vai aparecer. Motivo: ' + e.message);
+    /* Degradação de propósito: o Panorama continua de pé sem o bloco. Mas
+       "não temos roadmap" e "o arquivo não carregou" ficariam idênticos na
+       tela, então o motivo vai pro console. */
+    console.warn('[Central] o roadmap de ' + chave + ' não carregou. Motivo: ' + e.message);
   }
+  roadmapState.porChave[chave] = itens;
+  renderRoadmap();
 }
 
 /* ---------- Produtos ---------- */
@@ -1958,10 +1970,8 @@ function boot() {
   }
   renderAll();
   refreshAll(false);
-  // Arquivo local, pequeno e sem token: chega antes do DevOps e redesenha o
-  // Panorama sozinho quando chega. Não entra no refreshAll porque não é
-  // consulta — não tem o que ficar obsoleto a cada F5 do board.
-  carregarRoadmap();
+  // O roadmap não é buscado aqui: ele é por PO, e quem pede é o renderRoadmap,
+  // que é quem sabe de quem é a Central (o select, ou o dono do token).
   /* Mesma natureza do roadmap: arquivo local, sem token, e redesenha o Panorama
      quando chega. Fica fora do refreshAll porque não é consulta — não há o que
      ficar obsoleto a cada F5 do board. */

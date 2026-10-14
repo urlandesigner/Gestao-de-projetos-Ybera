@@ -113,13 +113,6 @@ const st = {
   escopo: '',
   agora: 0,
   roadmap: [], // só no modo leitura: o recorte já resolvido que veio no link
-  /* O arquivo INTEIRO, com um bloco por PO. O recorte é escolhido em
-     `roadmapDaVez()`, na hora de desenhar — e não aqui, no carregamento. A
-     ordem é o motivo: o arquivo chega antes de o DevOps dizer quem é o dono do
-     token, e resolver cedo demais mostraria nada (ou, pior, o bloco errado) na
-     primeira carga de quem nunca abriu. Resolvido no render, o roadmap aparece
-     assim que o nome chega, sem ninguém orquestrar nada. */
-  roadmapDoc: null,
   nomes: {},   // nome de negócio por item: assets/report-nomes.json (PO) ou o link (leitura)
   po: '',      // quem assina a capa, do mesmo arquivo — ver `escopo` em pacoteDoDocumento
   resumos: {}, // uma linha por PBI: assets/resumos.json — só o PO lê o arquivo; o
@@ -169,33 +162,47 @@ function mensagemDeErro(e) {
 }
 
 /* ---------- Roadmap: única peça que não vem do DevOps ---------- */
-// Vive em assets/roadmap.json, escrito à parte — o Notion não pode ser
-// chamado do navegador (sem CORS liberado), e este report não guarda token
-// de Notion nenhum. O mesmo saneamento serve os dois caminhos que alimentam
-// st.roadmap: o arquivo (carregarRoadmap, abaixo) e o link (em lerDoLink).
-// O arquivo é meu, mas tratar os dois como dado que pode vir torto é grátis
-// e evita NaN se algum dia eu editar a mão e errar uma data.
-// Mudou de casa em 02/10/2026: o saneamento vive em core.js porque a Central
-// passou a ler o mesmo roadmap.json (bloco Roadmap do Panorama). Duplicar a
-// lista branca de status era repetir, de olhos abertos, o defeito que o
-// tests/roadmap-portao.test.js existe pra impedir: status novo entra num
-// arquivo, não entra no outro, e o item sai da tela sem selo e sem erro.
+// Vive em assets/conteudo/<po>/roadmap.json, um arquivo por PO, escrito à
+// parte — o Notion não pode ser chamado do navegador (sem CORS liberado), e
+// este report não guarda token de Notion nenhum. O mesmo saneamento serve os
+// dois caminhos que alimentam o roadmap: o arquivo (carregarRoadmap, abaixo) e
+// o link (em lerDoLink). Mudou de casa em 02/10/2026: o saneamento vive em
+// core.js porque a Central passou a ler o mesmo arquivo. Duplicar a lista
+// branca de status era repetir, de olhos abertos, o defeito que o
+// tests/roadmap-portao.test.js existe pra impedir.
 const saneRoadmapItens = C.saneRoadmapItens;
 
-// Independente do DevOps: busca uma vez, no boot, e não repete a cada render
-// nem a cada troca de mês — o roadmap não muda com o seletor de mês.
-async function carregarRoadmap() {
+/* UM ARQUIVO POR PO, buscado SOB DEMANDA — mesma forma dos cartões.
+
+   Até 14/10/2026 era um arquivo só com um bloco por pessoa, e por um dia
+   conviveu com os arquivos por PO criados na migração do conteúdo: o app lia
+   um, o editor gravaria no outro, e na primeira edição os dois divergiriam
+   sem erro nenhum. Agora a fonte é uma só.
+
+   Guardado por chave. Os três estados dizem coisas diferentes e a tela também:
+   ausente = ninguém pediu ainda; `undefined` = em voo; `null` = essa PO não
+   tem arquivo de roadmap; lista (vazia ou não) = o roadmap dela.
+   `Object.create(null)` porque a chave vem de nome de pessoa, e um objeto
+   comum herda `constructor` e `__proto__` — "proto" passaria por roadmap. */
+const roadmaps = Object.create(null);
+
+async function carregarRoadmap(chave) {
+  if (!chave || chave in roadmaps) return;
+  roadmaps[chave] = undefined; // em voo: não buscar duas vezes no mesmo render
+  let itens = null;
   try {
-    const resp = await fetch('assets/roadmap.json', { cache: 'no-store' });
-    if (!resp.ok) return; // arquivo ainda não existe: seção some, sem quebrar o resto
-    const dado = await resp.json();
-    st.roadmapDoc = dado;
+    const resp = await fetch(C.caminhoDoConteudo(chave, 'roadmap.json') + '?t=' + Date.now(), { cache: 'no-store' });
+    // 404 é "essa PO ainda não tem roadmap" — estado normal, não erro.
+    if (resp.ok) itens = saneRoadmapItens((await resp.json() || {}).itens);
   } catch (e) {
     /* Degradação de propósito: sem roadmap o documento continua de pé. Mas o PO
        precisa saber que a seção sumiu antes de publicar — some sem deixar
        buraco, e quem lê o link não tem como suspeitar que faltou algo. */
-    console.warn('[Report] roadmap.json não carregou: a seção de projetos não vai aparecer. Motivo: ' + e.message);
+    console.warn('[Report] o roadmap de ' + chave + ' não carregou: a seção de projetos não vai'
+      + ' aparecer. Motivo: ' + e.message);
   }
+  roadmaps[chave] = itens;
+  render();
 }
 
 /* OS CARTÕES DA EDIÇÃO, por PO.
@@ -216,7 +223,7 @@ async function carregarEdicao(chave) {
   if (chave in edicoes) return;
   edicoes[chave] = null; // em voo: não buscar duas vezes no mesmo render
   try {
-    const url = 'assets/conteudo/' + encodeURIComponent(chave) + '/edicoes/' + encodeURIComponent(B.edicao) + '.json';
+    const url = C.caminhoDoConteudo(chave, 'edicoes/' + encodeURIComponent(B.edicao) + '.json');
     const resp = await fetch(url + '?t=' + Date.now(), { cache: 'no-store' });
     /* 404 é "esta PO ainda não escreveu esta edição", que é o estado normal de
        quem acabou de entrar — não é erro e não vai pro console. */
@@ -262,7 +269,10 @@ function cartoesDaVez() {
    ninguém tem como desconfiar. */
 function roadmapDaVez() {
   if (st.leitura) return st.roadmap;
-  return C.roadmapDaPessoa(st.roadmapDoc, assinatura(respAtivo())) || [];
+  const chave = C.chaveDePessoa(assinatura(respAtivo()));
+  if (!chave) return [];
+  if (!(chave in roadmaps)) { carregarRoadmap(chave); return []; }
+  return roadmaps[chave] || [];
 }
 
 /* ---------- Nome de negócio: a camada editorial ---------- */
@@ -1417,7 +1427,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!(st.config && st.pat) && (await lerDoLink() || await lerDoArquivo())) return;
   // Não bloqueia o primeiro render nem espera o DevOps: o arquivo é local e
   // pequeno, chega rápido, e quando chega o render() de novo é barato.
-  carregarRoadmap().then(render);
+  // O roadmap não é buscado aqui: ele é por PO, e quem pede é o render, que é
+  // quem sabe de quem é o documento (ver roadmapDaVez).
   // Os nomes podem chegar depois do link já gravado — regrava, senão o
   // stakeholder abre um link com título cru.
   carregarNomes().then(async () => { render(); if (st.items && !st.erro) await gravarLink(); });

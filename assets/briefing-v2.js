@@ -519,7 +519,7 @@
       + bloco('Na fila, com data marcada', naFila, (it) => prazoDe(it, 'vence'));
   }
 
-  // Roadmap: o único dado que não vem do DevOps (assets/roadmap.json). Datas em
+  // Roadmap: o único dado que não vem do DevOps (assets/conteudo/<po>/roadmap.json). Datas em
   // dia UTC pra escala e barra baterem sem fuso torto.
   const MES_ABREV = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
   const diaUTC = (iso) => Date.parse(iso + 'T00:00:00Z');

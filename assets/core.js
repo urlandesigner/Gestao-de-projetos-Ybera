@@ -967,7 +967,7 @@
   }
 
   /* ---------- Roadmap ---------- */
-  /* O roadmap é a única peça que não vem do DevOps: vive em assets/roadmap.json,
+  /* O roadmap é a única peça que não vem do DevOps: vive em assets/conteudo/<po>/roadmap.json,
      escrito à parte, porque o Notion não pode ser chamado do navegador.
 
      Mora aqui, e não no report.js onde nasceu, desde 02/10/2026: a Central
@@ -1020,35 +1020,18 @@
     return FICHA_POR_PO[chaveDePessoa(quem)] || null;
   }
 
-  /* O RECORTE DO ROADMAP DE UMA PESSOA.
+  /* O ENDEREÇO DO CONTEÚDO DE UMA PO — assets/conteudo/<chave>/<arquivo>.
 
-     Cada PO tem o seu: o arquivo guarda um bloco por pessoa sob `por`, com a
-     chave acima. Antes era uma lista só, sem dono — e com mais de uma PO usando
-     a ferramenta, quem abrisse veria o roadmap de outra pessoa como se fosse o
-     dela. Mostrar o roadmap errado é pior que não mostrar nenhum: o leitor não
-     tem como desconfiar.
+     Um lugar só pra regra do caminho, porque são dois leitores (a Central e o
+     relatório) e dois tipos de arquivo (roadmap e edição), e o editor que vier
+     vai gravar no mesmo endereço que eles leem. Duas cópias desta regra
+     divergem na primeira pasta que mudar de nome, e aí a PO publica num lugar
+     e a tela lê de outro — sem erro nenhum, só conteúdo que não aparece.
 
-     DEVOLVE `null`, E NÃO `[]`, quando não há bloco pra essa pessoa — são duas
-     respostas diferentes e as telas dizem coisas diferentes. `[]` é "ela tem
-     roadmap e ele está vazio"; `null` é "não sei o roadmap dela" (nome ainda
-     desconhecido, arquivo sem o bloco, arquivo fora do ar). Fundi-las faria a
-     tela afirmar que a pessoa não tem projeto nenhum quando o que houve foi uma
-     chamada que não respondeu. */
-  function roadmapDaPessoa(doc, nome) {
-    const chave = chaveDePessoa(nome);
-    if (!chave) return null;
-    const por = doc && typeof doc === 'object' ? doc.por : null;
-    if (!por || typeof por !== 'object') return null;
-    /* `hasOwnProperty.call` e não `por[chave]` direto: todo objeto herda
-       `constructor`, `toString` e `__proto__`, e uma PO chamada "proto" — ou um
-       arquivo editado torto — faria o acesso devolver algo que não é bloco
-       nenhum. Com `__proto__` o valor até passa por "é objeto", e a pessoa
-       receberia uma lista vazia ("você não tem projeto") onde a resposta certa
-       é "não sei de quem é isto". */
-    if (!Object.prototype.hasOwnProperty.call(por, chave)) return null;
-    const bloco = por[chave];
-    if (!bloco || typeof bloco !== 'object' || Array.isArray(bloco)) return null;
-    return saneRoadmapItens(bloco.itens);
+     A chave é codificada; o `arquivo` não, porque é escrito por quem chama e
+     pode ter subpasta ("edicoes/2026-10.json"). */
+  function caminhoDoConteudo(chave, arquivo) {
+    return 'assets/conteudo/' + encodeURIComponent(String(chave || '')) + '/' + arquivo;
   }
 
   /* OS CARTÕES DE UMA EDIÇÃO, saneados.
@@ -1638,7 +1621,7 @@
     aggregateCounts, sprintProgress, groupMyItemsBuckets,
     isAttentionState, typeSlug,
     wiqlBoard, wiqlIteracao, transbordados, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
-    stateBucket, bucketCounts, chaveDePessoa, fichaDaPessoa, roadmapDaPessoa,
+    stateBucket, bucketCounts, chaveDePessoa, fichaDaPessoa, caminhoDoConteudo,
     saneCartoes, saneEdicao,
     iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, vizinhasDaSprint, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, digitalDoTexto, saneResumos, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,

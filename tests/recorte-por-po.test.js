@@ -49,7 +49,7 @@ test('as três coisas saem da MESMA pessoa', () => {
      divergência entre duas delas que produziu o defeito de 13/10. */
   assert.match(fonteReport, /chavePO: C\.chaveDePessoa\(st\.leitura \? st\.escopo : assinatura\(respAtivo\(\)\)\)/,
     'a chave dos cartões deixou de sair da mesma assinatura da capa');
-  assert.match(fonteReport, /C\.roadmapDaPessoa\(st\.roadmapDoc, assinatura\(respAtivo\(\)\)\)/,
+  assert.match(fonteReport, /const chave = C\.chaveDePessoa\(assinatura\(respAtivo\(\)\)\);\n  if \(!chave\) return \[\];\n  if \(!\(chave in roadmaps\)\)/,
     'o roadmap deixou de seguir quem assina a capa');
 });
 

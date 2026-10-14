@@ -91,7 +91,7 @@ test('os módulos não guardam lista de reserva', () => {
 
 test('o report lê o arquivo da PO, pela mesma pessoa que assina a capa', () => {
   const src = ler('assets/report.js');
-  assert.match(src, /'assets\/conteudo\/' \+ encodeURIComponent\(chave\) \+ '\/edicoes\/'/,
+  assert.match(src, /C\.caminhoDoConteudo\(chave, 'edicoes\/'/,
     'o caminho do conteúdo mudou — o editor e o app têm que concordar nele');
   const m = /function cartoesDaVez\(\) \{[\s\S]*?\n\}/.exec(src);
   assert.ok(m, 'cartoesDaVez sumiu — este teste precisa acompanhar');

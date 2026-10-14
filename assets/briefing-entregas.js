@@ -64,7 +64,7 @@
    - Entregas recentes — lista curada em ENTREGAS_RECENTES, aqui embaixo. Não
      vem do DevOps, não se atualiza sozinha: quem mexe sou eu, quando o Urlan
      pede. O épico de cada card é cópia congelada do nome que está lá.
-   - Roadmap — assets/roadmap.json, o mesmo do report.
+   - Roadmap — assets/conteudo/<po>/roadmap.json, o mesmo do report.
 
    Compartilha o controlador com o report: expõe a MESMA interface (`esc`,
    `htmlReport`) e registra-se no MESMO nome global, então report.js não sabe
