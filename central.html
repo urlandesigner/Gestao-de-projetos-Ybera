@@ -7,9 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026101404">
+<link rel="stylesheet" href="assets/style.css?v=2026101405">
 <!-- Mesma folha que o relatório de Entregas usa pro gráfico do roadmap. -->
-<link rel="stylesheet" href="assets/roadmap.css?v=2026101404">
+<link rel="stylesheet" href="assets/roadmap.css?v=2026101405">
 </head>
 <body data-pagina="panorama">
 <div class="app">
@@ -32,7 +32,12 @@
     <a id="nav-pendencias" href="#pendencias"><span class="rotulo-nav">Pendências</span></a>
     <a id="nav-produtos" href="#produtos"><span class="rotulo-nav">Produtos</span></a>
     <a id="nav-roadmap" href="#roadmap"><span class="rotulo-nav">Roadmap</span></a>
-    <a id="nav-entregas" href="entregas.html?po=1" title="Abre o relatório de Entregas em página própria — o documento que vai pro stakeholder."><span class="rotulo-nav">Entregas</span></a>
+    <!-- Os documentos moram aqui desde 14/10/2026, e não mais na página
+         inicial: lá eles disputavam com a Central, que é a porta do sistema.
+         Entregas abre a edição de outubro, que é o padrão do relatório e tem o
+         seletor que leva às edições anteriores. -->
+    <a id="nav-entregas" href="entregas-v2.html?po=1" title="Abre o relatório de Entregas em página própria — o documento que vai pro stakeholder."><span class="rotulo-nav">Entregas</span></a>
+    <a id="nav-status" href="status-demandas.html" title="Abre o Status de demandas da loja US — escrito à mão, abre sem token pra quem receber."><span class="rotulo-nav">Status de demandas</span></a>
     <a id="nav-projetos" href="#projetos"><span class="rotulo-nav">Projetos</span> <span id="conta-nav-proj" class="conta-nav"></span></a>
   </nav>
 </aside>
@@ -233,9 +238,9 @@
   <a id="sprint-tudo-board" class="sprint-tudo-board" href="#"></a>
 </dialog>
 
-<script src="assets/core.js?v=2026101404"></script>
-<script src="assets/roadmap-visao.js?v=2026101404"></script>
-<script src="assets/api.js?v=2026101404"></script>
-<script src="assets/app.js?v=2026101404"></script>
+<script src="assets/core.js?v=2026101405"></script>
+<script src="assets/roadmap-visao.js?v=2026101405"></script>
+<script src="assets/api.js?v=2026101405"></script>
+<script src="assets/app.js?v=2026101405"></script>
 </body>
 </html>

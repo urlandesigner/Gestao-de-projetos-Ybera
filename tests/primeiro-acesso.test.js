@@ -48,14 +48,35 @@ test('a página é alcançável dos dois lugares por onde se chega', () => {
   assert.match(central, /href="comecar\.html"/, 'o assistente perdeu o link da página');
 });
 
-test('a entrada separa a ferramenta dos documentos de uma PO', () => {
-  /* Numa lista só de cartões, "Entregas" lia como uma página da pessoa que
-     abriu — e ela veria o mês de outra sem nenhum sinal de que era isso. */
-  const secoes = [...index.matchAll(/<h2 class="ini-secao-nome">([^<]+)<\/h2>/g)].map((m) => m[1]);
-  assert.deepEqual(secoes, ['A ferramenta', 'Documentos'],
-    'a entrada voltou a ser uma lista só de cartões');
-  assert.match(index, /Cada PO vê o próprio board/);
-  assert.match(index, /Relatórios escritos por uma PO para os stakeholders dela/);
+test('a página inicial é só a porta do sistema', () => {
+  /* Até 13/10/2026 a entrada listava a Central e os documentos lado a lado. Em
+     14/10 o Urlan pediu que os documentos saíssem dela e passassem a ser
+     abertos pela Central: lá eles disputavam com a ferramenta, que é a porta.
+     Continuam acessíveis — só mudaram de lugar. */
+  const cartoes = [...index.matchAll(/<a class="ini-card[^"]*" href="([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(cartoes, ['central.html#panorama'], 'a página inicial voltou a listar documentos');
+  for (const doc of ['entregas.html', 'entregas-v2.html', 'status-demandas.html', 'report-v2.html']) {
+    assert.ok(!index.includes(`href="${doc}`), `${doc} voltou a ter link na página inicial`);
+  }
+});
+
+test('os documentos continuam acessíveis, pelo menu da Central', () => {
+  // Entregas abre a edição de outubro: o padrão do relatório, com o seletor de edições.
+  assert.match(central, /id="nav-entregas" href="entregas-v2\.html\?po=1"/);
+  assert.match(central, /id="nav-status" href="status-demandas\.html"/);
+  // E cada item do menu tem o ícone dele — sem regra, o item aparece sem ícone.
+  const css = fs.readFileSync(path.join(raiz, 'assets/style.css'), 'utf8');
+  assert.match(css, /#nav-status \{\s*--icone:/);
+});
+
+test('o Report v2 é estudo: fica fora da publicação, a não ser que se peça', () => {
+  const sync = fs.readFileSync(path.join(raiz, 'scripts/sincronizar-pages.sh'), 'utf8');
+  assert.match(sync, /ESTUDOS="report-v2\.html assets\/briefing-v2\.js assets\/report-v2\.css"/);
+  assert.match(sync, /--com-estudos\) COM_ESTUDOS="sim"/, 'sumiu o jeito de publicar o estudo quando pedir');
+  /* Excluir do rsync não basta: com --delete ele PROTEGE o que está excluído e
+     nunca apaga do destino. Sem a remoção explícita, o estudo que já tinha
+     subido continuaria no ar para sempre. */
+  assert.match(sync, /rm -f "\$DESTINO\/\$e"/, 'o estudo deixou de ser removido do destino');
 });
 
 test('a página de começar não promete tela que não existe', () => {
