@@ -240,6 +240,20 @@ const FIELDS_COUNTS = [
   'System.IterationPath',
 ];
 const FIELDS_BOARD = ['System.Title', 'System.State', 'System.WorkItemType', 'System.BoardColumn', 'System.AssignedTo', 'System.IterationPath'];
+// A consulta sem corte de data alimenta Produtos (progresso) e Report (entregas
+// por mês). ClosedDate é a data de conclusão; ChangedDate é o plano B dela.
+const FIELDS_BASE = [
+  'System.Title', 'System.State', 'System.WorkItemType', 'System.Parent',
+  'System.AssignedTo', 'Microsoft.VSTS.Scheduling.StartDate', 'Microsoft.VSTS.Scheduling.TargetDate',
+  'Microsoft.VSTS.Common.ClosedDate', 'System.ChangedDate',
+];
+const FIELDS_ITEMS = [
+  'System.Title', 'System.State', 'System.WorkItemType', 'System.TeamProject',
+  'System.Parent', 'System.IterationPath',
+  // Sem este campo o filtro por responsável não tem o que comparar: comparava
+  // undefined com o nome e derrubava a lista inteira.
+  'System.AssignedTo',
+];
 /* O RESUMO DA PBI, o MESMO do relatório.
 
    Vem do assets/resumos.json — linha escrita à mão a partir da descrição
