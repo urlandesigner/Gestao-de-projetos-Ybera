@@ -61,10 +61,32 @@ $extra"; done
 $candidatos
 EOF
 done
+# OS MESES NOVOS, PELO PADRÃO. Desde 14/10/2026 a lista de edições se monta
+# pela data (briefing-entregas-v2.js), e o nome do arquivo de cada mês segue
+# `dados-AAAA-MM.json` (e `dados-AAAA-MM-<po>.json` para as outras POs) — ele
+# não está escrito em lugar nenhum pra o grep acima achar. Os nomes antigos
+# (outubro, ago-set) continuam vindo de lá.
+PADRAO='^dados-20[0-9]{2}-(0[1-9]|1[0-2])(-[a-z]+)?$'
+if [ -n "${1:-}" ]; then candidatos="$1"; else
+  candidatos=$(ls "$HOME"/Downloads/dados-20*.json 2>/dev/null || true)
+fi
+while IFS= read -r candidato; do
+  [ -n "$candidato" ] || continue
+  nome=$(basename "$candidato" .json)
+  echo "$nome" | grep -Eq "$PADRAO" || continue
+  [ -f "$candidato" ] || continue
+  [ -z "$ORIGEM" ] || { echo "achei mais de um arquivo pra publicar; passe um por vez:" >&2;
+    echo "  $ORIGEM" >&2; echo "  $candidato" >&2; exit 1; }
+  ORIGEM="$candidato"; DESTINO="assets/$nome.json"
+done <<LISTA
+$candidatos
+LISTA
+
 [ -n "$ORIGEM" ] || {
   echo "não achei nenhum arquivo de dados pra publicar." >&2
   echo "abra o relatório com ?po=1 e clique em \"Publicar dados\". Os nomes esperados:" >&2
   for d in $DESTINOS; do echo "  ~/Downloads/$(basename "$d")" >&2; done
+  echo "  ~/Downloads/dados-AAAA-MM.json  (meses a partir de novembro de 2026)" >&2
   exit 1
 }
 echo "edição: $DESTINO"

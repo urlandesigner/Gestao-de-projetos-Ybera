@@ -64,43 +64,98 @@
        abre o mesmo endereço toda semana, e a publicação é que troca;
      - `id`: o nome do arquivo de cartões e o valor de `?edicao=` no endereço.
 
-     A primeira da lista é a que abre sem `?edicao=`: a mais recente. Edição
-     nova entra NO TOPO. */
-  const EDICOES = [
-    {
-      id: '2026-10',
-      rotulo: 'Outubro de 2026',
-      rotuloCurto: 'Out 2026',
-      periodo: ['2026-10'],
-      arquivoDeDados: 'assets/dados-outubro.json',
-    },
-    {
-      id: '2026-08',
-      rotulo: 'Agosto e Setembro de 2026',
-      rotuloCurto: 'Ago–Set 2026',
-      periodo: ['2026-08', '2026-09'],
-      arquivoDeDados: 'assets/dados-ago-set.json',
-    },
-  ];
+     A LISTA SE MONTA PELA DATA (14/10/2026). Antes, cada mês novo era uma
+     entrada escrita à mão aqui, e o relatório só ganhava novembro quando
+     alguém lembrasse de pedir. Agora todo mês de outubro de 2026 até o mês
+     corrente é uma edição — mês futuro nunca aparece. Agosto/setembro é a
+     única edição de dois meses e fica escrita, no fim.
+
+     O arquivo de dados segue o padrão `assets/dados-AAAA-MM.json`. Outubro é a
+     exceção: nasceu `dados-outubro.json`, e é esse o endereço que o documento
+     já publicado serve — trocar o nome deixaria o link de hoje em 404. O
+     publicar-dados.sh lê os nomes declarados aqui e aceita o padrão.
+
+     A ordem é do mais novo para o mais antigo. QUAL ABRE sem `?edicao=` não é
+     decidido aqui: é a mais recente que já tem conteúdo, e saber isso exige
+     perguntar ao servidor — o report.js pergunta e chama `escolherEdicao`. */
+  const PRIMEIRO_MES = '2026-10';
+  const NOMES_ANTIGOS = {
+    '2026-10': { arquivoDeDados: 'assets/dados-outubro.json' },
+  };
+  const MES_LONGO = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  const MES_TRES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+    'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+  const AGO_SET = {
+    id: '2026-08',
+    rotulo: 'Agosto e Setembro de 2026',
+    rotuloCurto: 'Ago–Set 2026',
+    periodo: ['2026-08', '2026-09'],
+    arquivoDeDados: 'assets/dados-ago-set.json',
+  };
+
+  function edicaoDoMes(id) {
+    const ano = id.slice(0, 4);
+    const m = Number(id.slice(5, 7)) - 1;
+    return Object.assign({
+      id,
+      rotulo: MES_LONGO[m] + ' de ' + ano,
+      rotuloCurto: MES_TRES[m] + ' ' + ano,
+      periodo: [id],
+      // Crase e não aspa: o publicar-dados.sh lê os nomes FIXOS por aspa simples,
+      // e este é o padrão, que ele aceita por conta própria.
+      arquivoDeDados: `assets/dados-${id}.json`,
+    }, NOMES_ANTIGOS[id] || {});
+  }
+
+  // As edições que existem em `agora`: do mês corrente até outubro de 2026,
+  // mais agosto/setembro. Mês pela data LOCAL — no Brasil, 31/10 às 22h ainda é
+  // outubro, e em UTC já seria novembro.
+  function edicoesAte(agora) {
+    const d = agora instanceof Date && !Number.isNaN(agora.getTime()) ? agora : new Date();
+    const lista = [];
+    let ano = d.getFullYear();
+    let mes = d.getMonth();
+    for (;;) {
+      const id = ano + '-' + String(mes + 1).padStart(2, '0');
+      if (id < PRIMEIRO_MES) break;
+      lista.push(edicaoDoMes(id));
+      if (mes === 0) { ano -= 1; mes = 11; } else mes -= 1;
+    }
+    if (!lista.length) lista.push(edicaoDoMes(PRIMEIRO_MES));
+    return lista.concat([AGO_SET]);
+  }
+
+  /* Fora do navegador (os testes), o relógio é fixo em 14/10/2026: teste que
+     depende do calendário passa hoje e quebra no mês que vem sem ninguém ter
+     mexido em nada. Quem quer outro mês chama `edicoesAte` com a data. */
+  const EDICOES = edicoesAte(root ? new Date() : new Date(2026, 9, 14));
 
   /* A edição que este carregamento da página mostra. Sai do endereço
-     (`?edicao=2026-08`); sem ele, ou com um id que não existe, a mais recente.
-     Id inventado não pode virar caminho de arquivo, então só vale o que está
-     na lista.
+     (`?edicao=2026-08`); sem ele, ou com um id que não existe, a primeira da
+     lista — até o report.js descobrir qual é a mais recente com conteúdo
+     (`escolherEdicao`). Id inventado não pode virar caminho de arquivo, então
+     só vale o que está na lista.
 
-     Resolvida UMA vez, na carga: trocar de edição recarrega a página (ver o
-     seletor), e é isso que deixa o report.js sem saber que edições existem —
-     ele continua lendo `edicao`, `arquivoDeDados` e `periodoDoDocumento()`
-     como sempre leu. */
-  function edicaoDaUrl(search) {
-    let id = '';
-    try { id = new URLSearchParams(search || '').get('edicao') || ''; } catch (e) { id = ''; }
-    return EDICOES.find((e) => e.id === id) || EDICOES[0];
+     Fixada antes do primeiro desenho: trocar de edição recarrega a página (ver
+     o seletor), e é isso que deixa o report.js sem saber que edições existem —
+     ele continua lendo `edicao`, `arquivoDeDados` e `periodoDoDocumento()`. */
+  function idDaUrl(search) {
+    try { return new URLSearchParams(search || '').get('edicao') || ''; } catch (e) { return ''; }
   }
-  const ATIVA = edicaoDaUrl(root && root.location ? root.location.search : '');
-  const PERIODO = ATIVA.periodo;
-  const ARQUIVO_DE_DADOS = ATIVA.arquivoDeDados;
-  const edicao = ATIVA.id;
+  function edicaoDaUrl(search) {
+    return EDICOES.find((e) => e.id === idDaUrl(search)) || EDICOES[0];
+  }
+  // O endereço PEDIU uma edição que existe? Aí ninguém escolhe por ele.
+  function edicaoPedidaNaUrl(search) {
+    return EDICOES.some((e) => e.id === idDaUrl(search));
+  }
+  let ATIVA = edicaoDaUrl(root && root.location ? root.location.search : '');
+  function escolherEdicao(id) {
+    const e = EDICOES.find((x) => x.id === id);
+    if (e) ATIVA = e;
+    return ATIVA;
+  }
 
   const MES_CURTO = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun',
     'jul', 'ago', 'set', 'out', 'nov', 'dez'];
@@ -427,7 +482,7 @@
      e é o mesmo contrato que o base já oferecia. */
   function htmlReport(o) {
     const entrada = Object.assign({}, o, {
-      periodo: (o && Array.isArray(o.periodo) && o.periodo.length) ? o.periodo : PERIODO,
+      periodo: (o && Array.isArray(o.periodo) && o.periodo.length) ? o.periodo : ATIVA.periodo,
       cartoes: (o && Array.isArray(o.cartoes)) ? o.cartoes : [],
     });
     const r = base.htmlReport(entrada);
@@ -453,16 +508,17 @@
      base faria o controlador buscar sprint de agosto pra um documento que fala
      de outubro — o tipo de divergência que o resto deste código existe pra
      impedir. */
-  return Object.assign({}, base, {
+  const modulo = Object.assign({}, base, {
     htmlReport,
     precisaDeSprints: true,
     /* O material bruto das entregas do mês, no bloco local do pacote. A
        ferramenta vem do base (entregasConcluidas); este documento declara que
        a quer, em qualquer edição. */
     precisaDeEntregas: true,
-    arquivoDeDados: ARQUIVO_DE_DADOS,
-    periodoDoDocumento: () => PERIODO.slice(),
-    edicao,
+    periodoDoDocumento: () => ATIVA.periodo.slice(),
+    escolherEdicao,
+    edicaoPedidaNaUrl,
+    edicoesAte,
     // Expostos pro teste medir a costura sem reimplementá-la.
     secaoRitmo,
     abasHtml,
@@ -471,10 +527,19 @@
     EDICOES,
     edicaoDaUrl,
     ANCORA,
-    PERIODO,
     ABAS,
     ABA_PADRAO,
     SECOES_ACOMPANHAR,
     SO_EM_ENTREGAS,
   });
+  /* Leitura AO VIVO da edição ativa: `escolherEdicao` pode trocá-la depois da
+     carga, e um valor copiado aqui ficaria preso na primeira. Por isso
+     getters, definidos depois do Object.assign — que copiaria o valor, não o
+     getter. */
+  Object.defineProperties(modulo, {
+    edicao: { get: () => ATIVA.id, enumerable: true },
+    arquivoDeDados: { get: () => ATIVA.arquivoDeDados, enumerable: true },
+    PERIODO: { get: () => ATIVA.periodo, enumerable: true },
+  });
+  return modulo;
 });

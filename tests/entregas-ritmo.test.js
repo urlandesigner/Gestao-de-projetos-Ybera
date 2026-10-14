@@ -696,7 +696,7 @@ test('cada edição declara período, arquivo publicado e id — e o endereço e
   for (const e of V2.EDICOES) {
     assert.match(e.id, /^\d{4}-\d{2}$/);
     assert.ok(e.periodo.length > 0 && e.periodo[0] === e.id, `${e.id}: o período não começa na edição`);
-    assert.match(e.arquivoDeDados, /^assets\/dados-[a-z-]+\.json$/);
+    assert.match(e.arquivoDeDados, /^assets\/dados-[a-z0-9-]+\.json$/);
   }
   // Sem ?edicao=, a mais recente; com ela, a pedida; inventada, a mais recente.
   assert.equal(V2.edicaoDaUrl('').id, V2.EDICOES[0].id);
@@ -769,7 +769,7 @@ test('cada PO publica no arquivo dele, não no de outra pessoa', () => {
      apagar o documento do stakeholder de outra pessoa, em silêncio e num
      endereço público. */
   assert.match(fonteReport, /const arquivo = arquivoDoPO\(C\.chaveDePessoa\(respAtivo\(\)\)\)/);
-  assert.match(fonteReport, /function arquivoDoPO\(chave\)/);
+  assert.match(fonteReport, /function arquivoDoPO\(chave, deOutraEdicao\)/);
   // e quem LÊ escolhe pelo endereço, porque não tem token nem seletor
   assert.match(fonteReport, /const arquivo = arquivoDoPO\(chaveDoEndereco\(\)\)/);
 });
@@ -1257,10 +1257,72 @@ test('edição sem dados oferece o caminho de volta pra mais recente', () => {
   const src = ler('assets/report.js');
   const m = /function saidaDaEdicao\(\) \{[\s\S]*?\n\}/.exec(src);
   assert.ok(m, 'saidaDaEdicao sumiu — este teste precisa acompanhar');
-  // Só quando a aberta não é a mais recente: na mais recente, voltar pra ela mesma é ruído.
-  assert.match(m[0], /B\.edicao === B\.EDICOES\[0\]\.id\) return '';/);
+  // Só quando o endereço PEDIU uma edição: sem `?edicao=` já se está na padrão.
+  assert.match(m[0], /!B\.edicaoPedidaNaUrl\(location\.search\)\) return '';/);
   // Tira só a edição do endereço; o `?de=` diz de quem é o relatório e fica.
   assert.match(m[0], /params\.delete\('edicao'\);/);
   assert.doesNotMatch(m[0], /params\.delete\('de'\)/);
   assert.match(src, /'<\/p>' \+ saidaDaEdicao\(\);/, 'a mensagem de falha deixou de oferecer a saída');
+});
+
+/* A LISTA DE EDIÇÕES SE MONTA PELA DATA (14/10/2026). Cada mês de outubro de
+   2026 até o corrente é uma edição; agosto/setembro fica escrito, no fim. */
+test('as edições se montam pela data, sem mês futuro', () => {
+  const ids = (d) => V2.edicoesAte(d).map((e) => e.id);
+  assert.deepEqual(ids(new Date(2026, 9, 14)), ['2026-10', '2026-08']);
+  assert.deepEqual(ids(new Date(2026, 10, 1)), ['2026-11', '2026-10', '2026-08']);
+  // virada de ano
+  assert.deepEqual(ids(new Date(2027, 0, 5)), ['2027-01', '2026-12', '2026-11', '2026-10', '2026-08']);
+  const nov = V2.edicoesAte(new Date(2026, 10, 1))[0];
+  assert.equal(nov.rotulo, 'Novembro de 2026');
+  assert.equal(nov.rotuloCurto, 'Nov 2026');
+  assert.deepEqual(nov.periodo, ['2026-11']);
+  assert.equal(nov.arquivoDeDados, 'assets/dados-2026-11.json');
+  // Outubro mantém o nome que o documento publicado já serve.
+  assert.equal(V2.edicoesAte(new Date(2026, 10, 1))[1].arquivoDeDados, 'assets/dados-outubro.json');
+});
+
+test('nos testes o relógio é fixo: a lista não muda com o calendário', () => {
+  assert.deepEqual(V2.EDICOES.map((e) => e.id), ['2026-10', '2026-08']);
+});
+
+/* A edição ativa é lida AO VIVO: o report.js escolhe a padrão depois da carga,
+   e quem leu `edicao`, `arquivoDeDados` ou o período tem que ver a escolhida. */
+test('escolherEdicao troca o que o documento lê', () => {
+  try {
+    V2.escolherEdicao('2026-08');
+    assert.equal(V2.edicao, '2026-08');
+    assert.equal(V2.arquivoDeDados, 'assets/dados-ago-set.json');
+    assert.deepEqual(V2.periodoDoDocumento(), ['2026-08', '2026-09']);
+    assert.match(V2.abasHtml(), /<option value="2026-08" selected/);
+    // id fora da lista não vira edição
+    V2.escolherEdicao('../../etc');
+    assert.equal(V2.edicao, '2026-08');
+  } finally {
+    V2.escolherEdicao('2026-10');
+  }
+  assert.equal(V2.edicao, '2026-10');
+});
+
+test('edicaoPedidaNaUrl só vale para edição que existe', () => {
+  assert.equal(V2.edicaoPedidaNaUrl('?edicao=2026-08'), true);
+  assert.equal(V2.edicaoPedidaNaUrl('?po=1'), false);
+  assert.equal(V2.edicaoPedidaNaUrl('?edicao=2099-01'), false);
+});
+
+/* OPÇÃO "b" do Urlan: sem `?edicao=`, abre a mais recente QUE TEM CONTEÚDO.
+   O leitor sem token só enxerga o publicado, então pergunta pelo arquivo de
+   dados; o PO, pelo arquivo de cartões dele. */
+test('a edição padrão é a mais recente com conteúdo, e o critério depende de quem abre', () => {
+  const src = ler('assets/report.js');
+  const m = /async function resolverEdicaoPadrao\(\) \{[\s\S]*?\n\}/.exec(src);
+  assert.ok(m, 'resolverEdicaoPadrao sumiu');
+  assert.match(m[0], /B\.edicaoPedidaNaUrl\(location\.search\) \|\| \/\^#r=\/\.test/);
+  assert.match(m[0], /C\.caminhoDoConteudo\(chave, 'edicoes\/'/);
+  assert.match(m[0], /arquivoDoPO\(chave, e\.arquivoDeDados\)/);
+  assert.match(m[0], /B\.escolherEdicao\(e\.id\)/);
+  // e roda antes de qualquer desenho ou leitura
+  const carga = src.slice(src.indexOf("document.addEventListener('DOMContentLoaded'"));
+  assert.ok(carga.indexOf('await resolverEdicaoPadrao()') < carga.indexOf('ligarDocumento()'),
+    'a edição precisa estar escolhida antes do documento ligar');
 });

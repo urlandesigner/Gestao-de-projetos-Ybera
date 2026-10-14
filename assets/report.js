@@ -1355,13 +1355,16 @@ async function lerDoLink() {
    tinha sido publicado, e não tinha mais como voltar. Então, se a edição
    aberta não é a mais recente, a mensagem leva até ela — com o resto do
    endereço (o `?de=` diz de quem é o relatório e tem que ficar). */
+/* Desde que a edição padrão passou a ser "a mais recente com conteúdo", a
+   saída é o endereço SEM `?edicao=` — que abre essa — e só aparece quando o
+   endereço pediu uma edição. Sem `?edicao=` já se está na padrão, e um link
+   para ela mesma seria voltar ao mesmo lugar. */
 function saidaDaEdicao() {
-  if (!Array.isArray(B.EDICOES) || !B.EDICOES.length || B.edicao === B.EDICOES[0].id) return '';
+  if (typeof B.edicaoPedidaNaUrl !== 'function' || !B.edicaoPedidaNaUrl(location.search)) return '';
   const params = new URLSearchParams(location.search);
   params.delete('edicao');
   const q = params.toString();
-  return '<p><a href="' + B.esc(location.pathname + (q ? '?' + q : '')) + '">Ver a edição de '
-    + B.esc(B.EDICOES[0].rotulo) + ' →</a></p>';
+  return '<p><a href="' + B.esc(location.pathname + (q ? '?' + q : '')) + '">Ver a edição mais recente →</a></p>';
 }
 
 function falhaDeLeitura(motivo, arquivo, detalhe) {
@@ -1401,8 +1404,9 @@ function chaveDoEndereco() {
   return m ? m[1] : '';
 }
 
-function arquivoDoPO(chave) {
-  const base = typeof B.arquivoDeDados === 'string' ? B.arquivoDeDados : '';
+function arquivoDoPO(chave, deOutraEdicao) {
+  const base = typeof deOutraEdicao === 'string' ? deOutraEdicao
+    : (typeof B.arquivoDeDados === 'string' ? B.arquivoDeDados : '');
   if (!base || !chave || chave === DONO_HISTORICO) return base;
   return base.replace(/\.json$/, '-' + chave + '.json');
 }
@@ -1435,8 +1439,55 @@ async function lerDoArquivo() {
   return true;
 }
 
+/* QUAL EDIÇÃO ABRE quando o endereço não diz (14/10/2026, opção "b" do Urlan).
+
+   A lista de edições se monta pela data, então em 1º de novembro novembro já
+   existe — e abrir o link do relatório num mês sem nada escrito passa a
+   impressão de documento quebrado, justamente para quem é de fora. A regra: abre
+   a edição mais recente QUE JÁ TEM CONTEÚDO; o mês novo fica no seletor e vira o
+   padrão sozinho quando ganhar conteúdo.
+
+   "Ter conteúdo" depende de quem abre:
+   - quem lê sem token só enxerga o que foi PUBLICADO — o arquivo de dados da
+     edição (o do PO do endereço, `?de=`). Se o critério fosse o arquivo de
+     cartões, o leitor cairia em novembro com os cartões escritos e os dados
+     ainda não publicados: "ainda não foi publicado", sem saída;
+   - o PO, com token, vê ao vivo: conta o arquivo de cartões DELE.
+
+   Uma pergunta HEAD por edição, da mais nova para a mais antiga, até a
+   primeira que existe. Nenhuma tem? Fica a mais recente — é o caso de quem
+   ainda não escreveu nada, e lá o documento já diz que está sendo escrito.
+
+   Endereço com `?edicao=` ou com `#r=` (link que carrega o próprio retrato)
+   não é decidido aqui: quem mandou o link já disse o que é. */
+async function existe(url) {
+  try {
+    const resp = await fetch(url + '?t=' + Date.now(), { method: 'HEAD', cache: 'no-store' });
+    return resp.ok;
+  } catch (e) {
+    return false;
+  }
+}
+
+async function resolverEdicaoPadrao() {
+  if (typeof B.escolherEdicao !== 'function' || !Array.isArray(B.EDICOES)) return;
+  if (B.edicaoPedidaNaUrl(location.search) || /^#r=/.test(location.hash || '')) return;
+  const comToken = !!(st.config && st.pat);
+  const chave = comToken
+    ? (C.chaveDePessoa(assinatura(respAtivo())) || DONO_HISTORICO)
+    : chaveDoEndereco();
+  for (const e of B.EDICOES) {
+    const url = comToken
+      ? C.caminhoDoConteudo(chave, 'edicoes/' + encodeURIComponent(e.id) + '.json')
+      : arquivoDoPO(chave, e.arquivoDeDados);
+    if (url && await existe(url)) { B.escolherEdicao(e.id); return; }
+  }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   try { st.config = C.normalizeConfig(loadJSON(LS.config)); } catch (e) { st.config = null; }
+  // Antes de qualquer desenho ou busca: período, sprints e arquivo dependem dela.
+  await resolverEdicaoPadrao();
   // Quem tem token manda: busca ao vivo e reescreve o link, mesmo se a URL já
   // trouxer um. Sem token, o link é a única fonte — é o caso do stakeholder.
   ligarDocumento();
