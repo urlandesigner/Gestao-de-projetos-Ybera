@@ -500,11 +500,28 @@
 /* No telefone não cabem marca e abas na mesma linha sem apertar as duas: a
    marca sai e as abas ficam com a largura toda, centradas. A identidade segue
    na capa logo abaixo — que no telefone é centrada — e no rodapé. */
-/* A pílula vira caixa arredondada e quebra em duas linhas, como no report v2:
-   em 375px os dois itens mais o seletor não cabem numa linha só. */
+/* NO TELEFONE A PÍLULA FICA NUMA LINHA, e a capa desce para não passar por
+   baixo dela (14/10/2026). Antes ela quebrava em duas linhas (87px) e cobria a
+   marca e a primeira linha da capa. Com o mês curto no seletor ("Out 2026"),
+   os três itens cabem numa linha a partir de 360px, com o respiro dos botões
+   um pouco menor.
+
+   A capa ganha o espaço da pílula no topo: 0.6rem de onde ela flutua + ~51px
+   de altura + folga. Sem `nowrap` garantido, uma fonte um pouco mais larga
+   faria a pílula voltar a duas linhas em cima da capa; com ele, o pior caso é
+   rolar de lado dentro da própria pílula. */
 @media (max-width: 599px) {
+  .rl-nav-int { flex-wrap: nowrap; padding: 0.3rem; }
+  .rl-aba { padding: 0.375rem 0.55rem; }
+  .rl-edicao { padding-left: 1.9rem; padding-right: 1.9rem; }
+  .rl-capa { padding-top: 4.75rem; }
+}
+/* Abaixo de 360px nem assim cabe: a pílula vira caixa de duas linhas, como no
+   report v2, e a capa desce a altura dela. */
+@media (max-width: 359px) {
   .rl-nav-borda, .rl-nav-int { border-radius: 22px; }
   .rl-nav-int { flex-wrap: wrap; justify-content: center; row-gap: 0.15rem; overflow-x: visible; }
+  .rl-capa { padding-top: 7rem; }
 }
 /* Impressão: a pílula é controle de tela e não existe no papel — e o script que
    a governa não roda numa folha impressa, então as duas partes saem juntas, que
