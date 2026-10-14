@@ -7,9 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026101402">
+<link rel="stylesheet" href="assets/style.css?v=2026101403">
 <!-- Mesma folha que o relatório de Entregas usa pro gráfico do roadmap. -->
-<link rel="stylesheet" href="assets/roadmap.css?v=2026101402">
+<link rel="stylesheet" href="assets/roadmap.css?v=2026101403">
 </head>
 <body data-pagina="panorama">
 <div class="app">
@@ -148,7 +148,11 @@
     <section id="wizard-passo-1">
       <h2>Conectar ao Azure DevOps</h2>
       <label>URL da organização
-        <input id="wizard-org" placeholder="dev.azure.com/sua-org" autocomplete="off">
+        <!-- Já vem preenchido: a organização é sempre a mesma pra todo mundo da
+             Ybera, e digitá-la era o único campo do assistente em que um erro
+             de letra derrubava a conexão sem dizer por quê. Continua editável
+             pro dia em que alguém precisar apontar pra outra. -->
+        <input id="wizard-org" value="dev.azure.com/nivello" placeholder="dev.azure.com/nivello" autocomplete="off">
       </label>
       <label>Personal Access Token (PAT)
         <input id="wizard-pat" type="password" autocomplete="off">
@@ -225,9 +229,9 @@
   <a id="sprint-tudo-board" class="sprint-tudo-board" href="#"></a>
 </dialog>
 
-<script src="assets/core.js?v=2026101402"></script>
-<script src="assets/roadmap-visao.js?v=2026101402"></script>
-<script src="assets/api.js?v=2026101402"></script>
-<script src="assets/app.js?v=2026101402"></script>
+<script src="assets/core.js?v=2026101403"></script>
+<script src="assets/roadmap-visao.js?v=2026101403"></script>
+<script src="assets/api.js?v=2026101403"></script>
+<script src="assets/app.js?v=2026101403"></script>
 </body>
 </html>

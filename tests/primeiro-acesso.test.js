@@ -83,3 +83,12 @@ test('tutorial e Central abrem um ao lado do outro, sem perder o lugar', () => {
   // Quem usa leitor de tela não vê a aba nova abrir: o aviso tem que estar no link.
   assert.match(comecar, /central\.html"[^>]*>[^<]*<span class="ini-nova-aba"> \(abre em outra aba\)<\/span>/);
 });
+
+test('o endereço da organização já vem preenchido, e o tutorial diz qual é', () => {
+  /* A organização é a mesma pra todo mundo da Ybera. Pedir pra digitar era o
+     único campo do assistente em que um erro de letra derrubava a conexão sem
+     dizer por quê. Assistente e tutorial têm que concordar no endereço. */
+  assert.match(central, /<input id="wizard-org" value="dev\.azure\.com\/nivello"/);
+  assert.match(comecar, /<code>dev\.azure\.com\/nivello<\/code>/);
+  assert.doesNotMatch(comecar, /sua-organizacao/, 'o tutorial voltou a pedir pra descobrir o endereço');
+});
