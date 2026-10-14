@@ -684,7 +684,7 @@ test('o seletor troca a edição desta página, e marca a que está aberta', () 
   assert.match(html, /<option value="2026-08" aria-label="Agosto e Setembro de 2026">Ago–Set 2026<\/option>/);
   const rico = V2.abasHtml(true);
   assert.match(rico, /<button type="button"><selectedcontent><\/selectedcontent><\/button>/);
-  assert.match(rico, /<option value="2026-10" selected><span class="rl-ed-curto">Out 2026<\/span><span class="rl-ed-longo">Outubro de 2026<\/span><\/option>/);
+  assert.match(rico, /<option value="2026-10" selected label="Outubro de 2026"><span class="rl-ed-curto">Out 2026<\/span><span class="rl-ed-longo">Outubro de 2026<\/span><\/option>/);
   assert.doesNotMatch(html, /entregas\.html/, 'o seletor voltou a mandar pra outra página');
   const pagina = ler('entregas-v2.html');
   assert.match(pagina, /params\.set\('edicao', sel\.value\);/);

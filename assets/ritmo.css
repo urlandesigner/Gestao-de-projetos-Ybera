@@ -469,7 +469,12 @@
   /* Curto no botão, inteiro na lista — ver abasHtml. */
   .rl-edicao selectedcontent .rl-ed-longo,
   .rl-edicao option .rl-ed-curto { display: none; }
+  /* O popup também precisa pedir `base-select` — o select sozinho não basta.
+     Sem isto, o botão ficava customizado e a lista seguia a do sistema, que
+     ignora o CSS das opções: mostrava "Out 2026Outubro de 2026", os dois
+     rótulos colados (visto pelo Urlan em 14/10/2026). */
   .rl-edicao::picker(select) {
+    appearance: base-select;
     position-area: block-end span-inline-start;
     margin-block-start: 0.4rem;
     padding: 0.25rem;

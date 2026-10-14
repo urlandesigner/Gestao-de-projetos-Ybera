@@ -362,7 +362,11 @@
      customizável (`appearance: base-select`): a opção leva os dois rótulos e o
      CSS esconde um de cada lado. Onde ele não existe, a opção não pode ter
      marcação dentro — o navegador juntaria os dois textos —, então vai só o
-     curto, com o nome inteiro no aria-label para o leitor de tela. */
+     curto, com o nome inteiro no aria-label para o leitor de tela.
+
+     O `label` da opção rica é a rede de proteção: se a lista sair desenhada
+     pelo sistema (navegador que customiza o botão mas não o popup), é o label
+     que ela mostra — o nome inteiro, e não os dois rótulos colados. */
   const SELECT_RICO = !!(root && root.CSS && typeof root.CSS.supports === 'function'
     && root.CSS.supports('appearance', 'base-select'));
 
@@ -377,7 +381,7 @@
     const opcoes = EDICOES.map((e) => `<option value="${esc(e.id)}"`
       + `${e.id === ATIVA.id ? ' selected' : ''}`
       + (rico
-        ? `><span class="rl-ed-curto">${esc(e.rotuloCurto)}</span><span class="rl-ed-longo">${esc(e.rotulo)}</span></option>`
+        ? ` label="${esc(e.rotulo)}"><span class="rl-ed-curto">${esc(e.rotuloCurto)}</span><span class="rl-ed-longo">${esc(e.rotulo)}</span></option>`
         : ` aria-label="${esc(e.rotulo)}">${esc(e.rotuloCurto)}</option>`)).join('');
     const botao = rico ? '<button type="button"><selectedcontent></selectedcontent></button>' : '';
     const selecionar = EDICOES.length > 1
