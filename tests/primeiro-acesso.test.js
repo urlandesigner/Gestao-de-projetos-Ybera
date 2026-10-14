@@ -73,3 +73,13 @@ test('comecar.html usa a folha da porta, e não carrega script nenhum', () => {
   assert.match(comecar, /href="assets\/inicio\.css\?v=\d{10}"/);
   assert.doesNotMatch(comecar, /<script/);
 });
+
+test('tutorial e Central abrem um ao lado do outro, sem perder o lugar', () => {
+  /* O passo 2 do tutorial manda abrir a Central e preencher. Na mesma aba, a
+     pessoa perdia o tutorial no meio do passo e voltava pelo histórico pra ler
+     o 3. O inverso vale do assistente pro tutorial. */
+  assert.match(comecar, /<a href="central\.html" target="_blank" rel="noopener">/);
+  assert.match(central, /<a href="comecar\.html" target="_blank" rel="noopener">/);
+  // Quem usa leitor de tela não vê a aba nova abrir: o aviso tem que estar no link.
+  assert.match(comecar, /central\.html"[^>]*>[^<]*<span class="ini-nova-aba"> \(abre em outra aba\)<\/span>/);
+});

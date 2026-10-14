@@ -280,3 +280,15 @@ body {
   text-decoration-color: var(--borda);
 }
 .ini-comecar a:hover { text-decoration-color: var(--tinta); }
+
+/* "(abre em outra aba)" existe pra quem usa leitor de tela, que não percebe a
+   aba nova abrindo. Na tela, a seta ↗ já diz isso. Fica fora da vista mas na
+   árvore de acessibilidade — `display:none` tiraria das duas. */
+.ini-nova-aba {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

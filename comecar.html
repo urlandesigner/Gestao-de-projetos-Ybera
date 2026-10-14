@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/inicio.css?v=2026101401">
+<link rel="stylesheet" href="assets/inicio.css?v=2026101402">
 </head>
 <!-- PRIMEIRO ACESSO. Existe desde 13/10/2026, quando a ferramenta deixou de ter
      um usuário só: a Isadora e a Daniele passaram a usá-la, e até então o único
@@ -46,7 +46,11 @@
 
     <li class="ini-passo">
       <h2 class="ini-passo-nome">Cole na Central</h2>
-      <p>Abra a <a href="central.html">Central de Projetos</a>. Como é a sua primeira vez, ela abre pedindo o endereço da organização e o token.</p>
+      <!-- Outra aba de propósito: este passo manda a pessoa preencher a Central
+           com o tutorial ainda na mão. Na mesma aba ela perdia a página no meio
+           do passo 2 e voltava pelo histórico pra ler o 3. O aviso no fim do
+           link é pra quem usa leitor de tela, que não vê a aba nova abrir. -->
+      <p>Abra a <a href="central.html" target="_blank" rel="noopener">Central de Projetos<span class="ini-nova-aba"> (abre em outra aba)</span> ↗</a>. Como é a sua primeira vez, ela abre pedindo o endereço da organização e o token.</p>
       <p>No endereço, use o que aparece na barra do navegador quando você está no DevOps — algo como <code>dev.azure.com/sua-organizacao</code>. Cole o token no campo de baixo e clique em <b>Descobrir projetos</b>.</p>
     </li>
 
