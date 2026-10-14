@@ -680,8 +680,11 @@ test('o report continua sem endereço fixo', () => {
 test('o seletor troca a edição desta página, e marca a que está aberta', () => {
   const html = V2.abasHtml();
   assert.match(html, /<div class="rl-mes-borda"><select class="rl-edicao rl-mes" aria-label="Edição do relatório">/);
-  assert.match(html, /<option value="2026-10" selected>Outubro de 2026<\/option>/);
-  assert.match(html, /<option value="2026-08">Agosto e Setembro de 2026<\/option>/);
+  assert.match(html, /<option value="2026-10" selected aria-label="Outubro de 2026">Out 2026<\/option>/);
+  assert.match(html, /<option value="2026-08" aria-label="Agosto e Setembro de 2026">Ago–Set 2026<\/option>/);
+  const rico = V2.abasHtml(true);
+  assert.match(rico, /<button type="button"><selectedcontent><\/selectedcontent><\/button>/);
+  assert.match(rico, /<option value="2026-10" selected><span class="rl-ed-curto">Out 2026<\/span><span class="rl-ed-longo">Outubro de 2026<\/span><\/option>/);
   assert.doesNotMatch(html, /entregas\.html/, 'o seletor voltou a mandar pra outra página');
   const pagina = ler('entregas-v2.html');
   assert.match(pagina, /params\.set\('edicao', sel\.value\);/);

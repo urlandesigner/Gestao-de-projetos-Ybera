@@ -70,12 +70,14 @@
     {
       id: '2026-10',
       rotulo: 'Outubro de 2026',
+      rotuloCurto: 'Out 2026',
       periodo: ['2026-10'],
       arquivoDeDados: 'assets/dados-outubro.json',
     },
     {
       id: '2026-08',
       rotulo: 'Agosto e Setembro de 2026',
+      rotuloCurto: 'Ago–Set 2026',
       periodo: ['2026-08', '2026-09'],
       arquivoDeDados: 'assets/dados-ago-set.json',
     },
@@ -352,7 +354,19 @@
     acompanhar: 'Nenhuma sprint fechou ou começou neste período.',
   };
 
-  function abasHtml() {
+  /* MÊS CURTO NO BOTÃO, NOME INTEIRO NA LISTA (14/10/2026). "Agosto e
+     Setembro de 2026" fechado ocupava metade da pílula; "Ago–Set 2026" diz o
+     mesmo. Aberta a lista, há espaço, e o nome inteiro lê melhor.
+
+     Mostrar um texto no botão e outro na lista só dá com o <select>
+     customizável (`appearance: base-select`): a opção leva os dois rótulos e o
+     CSS esconde um de cada lado. Onde ele não existe, a opção não pode ter
+     marcação dentro — o navegador juntaria os dois textos —, então vai só o
+     curto, com o nome inteiro no aria-label para o leitor de tela. */
+  const SELECT_RICO = !!(root && root.CSS && typeof root.CSS.supports === 'function'
+    && root.CSS.supports('appearance', 'base-select'));
+
+  function abasHtml(rico = SELECT_RICO) {
     const botoes = ABAS.map((a) => `<button type="button" class="rl-aba" data-aba="${a.id}"`
       + (a.titulo ? ` data-titulo="${esc(a.titulo)}"` : '')
       + (a.situacao ? ` data-situacao="${esc(a.situacao)}"` : '')
@@ -361,9 +375,13 @@
        report v2 — fim da pílula, com a mesma moldura. `value` é o id da
        edição; o script da página troca o `?edicao=` do endereço e recarrega. */
     const opcoes = EDICOES.map((e) => `<option value="${esc(e.id)}"`
-      + `${e.id === ATIVA.id ? ' selected' : ''}>${esc(e.rotulo)}</option>`).join('');
+      + `${e.id === ATIVA.id ? ' selected' : ''}`
+      + (rico
+        ? `><span class="rl-ed-curto">${esc(e.rotuloCurto)}</span><span class="rl-ed-longo">${esc(e.rotulo)}</span></option>`
+        : ` aria-label="${esc(e.rotulo)}">${esc(e.rotuloCurto)}</option>`)).join('');
+    const botao = rico ? '<button type="button"><selectedcontent></selectedcontent></button>' : '';
     const selecionar = EDICOES.length > 1
-      ? `<div class="rl-mes-borda"><select class="rl-edicao rl-mes" aria-label="Edição do relatório">${opcoes}</select></div>`
+      ? `<div class="rl-mes-borda"><select class="rl-edicao rl-mes" aria-label="Edição do relatório">${botao}${opcoes}</select></div>`
       : '';
     /* A PÍLULA DE VIDRO do report v2, no mesmo lugar que ela ocupa lá: logo
        depois da capa, flutuando e grudando no topo quando a página rola. Sem

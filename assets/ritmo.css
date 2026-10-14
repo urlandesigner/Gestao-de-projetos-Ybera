@@ -458,6 +458,17 @@
      dois chevrons na mesma pílula seria o controle dizendo a mesma coisa duas
      vezes. */
   .rl-edicao::picker-icon { display: none; }
+  /* O botão interno herda a moldura do próprio select: ícones, cor e
+     tamanho já estão nele. */
+  .rl-edicao > button {
+    all: unset;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  /* Curto no botão, inteiro na lista — ver abasHtml. */
+  .rl-edicao selectedcontent .rl-ed-longo,
+  .rl-edicao option .rl-ed-curto { display: none; }
   .rl-edicao::picker(select) {
     position-area: block-end span-inline-start;
     margin-block-start: 0.4rem;
