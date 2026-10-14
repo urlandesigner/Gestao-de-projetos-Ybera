@@ -430,7 +430,10 @@ test('capa: o bloco escuro conta PBI fechado no mês, não épico nem Feature', 
   // repetir o mês, que o título da capa já anuncia.
   assert.ok(capa.includes('>Itens entregues<'));
   assert.ok(!capa.includes('Azure DevOps'), 'o nome do sistema é jargão pra quem lê');
-  assert.ok(!capa.includes('setembro'), 'o mês mora no título, não nos rótulos');
+  // O selo de mês em andamento diz a data dos dados ("parcial até 22 de
+  // setembro") — é ele, e não um rótulo, que pode citar o mês.
+  const semSelo = capa.replace(/<p class="rl-capa-andamento">[\s\S]*?<\/p>/, '');
+  assert.ok(!semSelo.includes('setembro'), 'o mês mora no título, não nos rótulos');
   assert.ok(!/3 itens/.test(capa), 'a contagem mora no numeral, não na frase');
 });
 
@@ -1246,4 +1249,27 @@ test('o cartão de outubro declara, e a edição publicada não', () => {
   for (const c of cartoesDe('urlan', BE.edicao)) {
     assert.notEqual(c.foraDoRoadmap, true, `${c.titulo} passou a declarar e a capa de ago/set mudaria`);
   }
+});
+
+/* MÊS EM ANDAMENTO (14/10/2026). Sem aviso, dois cartões no dia 14 liam como
+   o mês inteiro. A régua é a data dos DADOS (`agora`: o instante publicado no
+   modo leitura), e o mês fecha à meia-noite de Brasília do dia 1º seguinte. */
+test('capa avisa quando o período ainda está em andamento', () => {
+  const capa = (periodo, agora) => capaDe(BE.htmlReport({ items: [], todos: [], agora, periodo,
+    chavePO: 'urlan', cartoes: [] }).html);
+  const selo = (h) => (/<p class="rl-capa-andamento">[\s\S]*?<\/p>/.exec(h) || [''])[0];
+
+  const meio = selo(capa(['2026-10'], Date.parse('2026-10-14T15:00:00Z')));
+  assert.match(meio, /Mês em andamento · parcial até 14 de outubro/);
+
+  // Fechado: nenhum selo.
+  assert.equal(selo(capa(['2026-10'], Date.parse('2026-11-02T12:00:00Z'))), '');
+  assert.equal(selo(capa(['2026-08', '2026-09'], Date.parse('2026-10-14T15:00:00Z'))), '');
+
+  // A virada é a meia-noite de Brasília: 31/10 às 23h (02h UTC de 1/11) ainda é outubro.
+  assert.match(selo(capa(['2026-10'], Date.parse('2026-11-01T02:00:00Z'))), /parcial até 31 de outubro/);
+  assert.equal(selo(capa(['2026-10'], Date.parse('2026-11-01T03:00:00Z'))), '');
+
+  // Período de dois meses ainda aberto diz "Período".
+  assert.match(selo(capa(['2026-08', '2026-09'], Date.parse('2026-09-10T12:00:00Z'))), /Período em andamento/);
 });

@@ -153,6 +153,31 @@
 
   function plural(n, um, muitos) { return n + ' ' + (n === 1 ? um : muitos); }
 
+  /* O PERÍODO AINDA ESTÁ ABERTO? (14/10/2026)
+
+     O Urlan viu o problema lendo como stakeholder: no relatório do mês
+     corrente, dois cartões e "2 itens entregues" leem como o mês inteiro — e
+     o mês está na metade. Nada na capa dizia que aquilo era parcial.
+
+     A régua é a DATA DOS DADOS, não o relógio de quem lê: `agora` é o instante
+     da publicação no modo leitura (pacote.em) e o de agora no modo ao vivo.
+     Quem abre em novembro um arquivo publicado em 14 de outubro está lendo
+     outubro até o dia 14 — e é isso que o selo diz.
+
+     O mês fecha à meia-noite de Brasília do dia 1º seguinte (03h UTC). Vazio
+     quando fechado: agosto/setembro não ganha selo nenhum. */
+  function andamentoDoPeriodo(chaves, agora) {
+    const ultimo = chaves[chaves.length - 1];
+    const [ano, mes] = String(ultimo || '').split('-').map(Number);
+    const t = new Date(agora).getTime();
+    if (!ano || !mes || Number.isNaN(t)) return '';
+    const fecha = Date.UTC(ano, mes, 1, 3);
+    if (t >= fecha) return '';
+    const dia = new Date(t).toLocaleDateString('pt-BR',
+      { day: 'numeric', month: 'long', timeZone: 'America/Sao_Paulo' });
+    return (chaves.length > 1 ? 'Período' : 'Mês') + ' em andamento · parcial até ' + dia;
+  }
+
   const chaveDe = (p) => (p ? 'p' + p.id : 'sem');
 
   // ---- Nome de negócio ----
@@ -286,7 +311,7 @@
       </div>`;
   }
 
-  function masthead(periodo, tiles, hero, retranca, situacao, autoria, mes) {
+  function masthead(periodo, tiles, hero, retranca, situacao, autoria, mes, andamento) {
     // Sem o " · " aqui: o separador entre a unidade e a autoria virou um fio
     // desenhado no CSS. São dois registros diferentes na mesma linha — onde e
     // quem — e o mesmo ponto que separa "Ybera US" de "E-commerce" dizia que
@@ -304,6 +329,7 @@
            dois pedaços — medido, o dobro de um espaço normal. Aqui o vão é
            declarado inteiro no CSS. -->
       <h1 class="rl-titulo"><span class="rl-titulo-fraco">Entregas de</span><span class="rl-titulo-forte">${esc(periodo)}</span></h1>
+      ${andamento ? `<p class="rl-capa-andamento"><span class="rl-capa-andamento-ponto" aria-hidden="true"></span>${esc(andamento)}</p>` : ''}
       ${situacao ? `<p class="rl-capa-situacao">${esc(situacao)}</p>` : ''}
       ${autoria ? `<p class="rl-meta">${esc(autoria)}</p>` : ''}
       <div class="rl-bento rl-bento-capa">${tiles}${hero}</div>
@@ -944,7 +970,8 @@
           .filter(Boolean).join(' · '),
         'O que o time entregou no período, e o planejamento dos próximos meses.',
         meta.join(' · '),
-        seletorMes(listaMeses, escolhido))}
+        seletorMes(listaMeses, escolhido),
+        andamentoDoPeriodo(chavesPeriodo, agora))}
       <div class="rl-corpo">${secoes.map((x) => secaoHtml(x)).join('')}</div>
       ${rodape(ficha)}
     </div>`;
