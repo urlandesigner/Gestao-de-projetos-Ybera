@@ -812,7 +812,7 @@ function renderPanorama() {
     k.semDatas ? tile('Fecham este mês', '—', false, NOTA_SEM_DATA) : tile('Fecham este mês', k.fechamMes, false),
     k.semDatas ? tile('Atrasados', '—', false, NOTA_SEM_DATA) : tile('Atrasados', k.atrasados, k.atrasados > 0),
     tile('Parados 14d+', k.parados, false),
-    tile('Meus itens', meus == null ? '—' : meus, false),
+    tile('Itens em aberto', meus == null ? '—' : meus, false),
   ].join('');
 
   /* QUADRO DE SPRINTS: anterior, atual e próxima, lado a lado.
