@@ -1,4 +1,65 @@
 {
-  "atualizadoEm": "2026-10-08",
-  "itens": []
+  "atualizadoEm": "2026-10-14",
+  "itens": [
+    {
+      "titulo": "App PRO - Loja do Profissional",
+      "inicio": "2026-07-01",
+      "fim": "2026-10-31"
+    },
+    {
+      "titulo": "CRM HubSpot + Analytics (Eventos)",
+      "inicio": "2026-07-01",
+      "fim": "2026-09-30"
+    },
+    {
+      "titulo": "App da Loja Brasil",
+      "inicio": "2026-07-01",
+      "fim": "2026-08-31"
+    },
+    {
+      "titulo": "Brasil Influencer - Ingresso digital 2026",
+      "inicio": "2026-08-01",
+      "fim": "2026-09-15"
+    },
+    {
+      "titulo": "Nova UI/UX Loja Brasil",
+      "inicio": "2026-08-01",
+      "fim": "2026-10-31"
+    },
+    {
+      "titulo": "Implementação Anymarket",
+      "inicio": "2026-09-01",
+      "fim": "2026-11-30"
+    },
+    {
+      "titulo": "IA de Recomendação e Quiz Ybera AI - na Wake",
+      "inicio": "2026-09-01",
+      "fim": "2026-12-01"
+    },
+    {
+      "titulo": "Loja Interna Brasil - Shopify - Disco",
+      "inicio": "2026-09-01",
+      "fim": "2026-12-31"
+    },
+    {
+      "titulo": "Loja da Influencer - Brasil",
+      "inicio": "2026-10-01",
+      "fim": "2027-01-31"
+    },
+    {
+      "titulo": "Copiloto de Atendimento SAC e Suporte / Motor de cancelamento",
+      "inicio": "2027-01-01",
+      "fim": "2027-06-30"
+    },
+    {
+      "titulo": "API Ybera Reviews e Wake/Shopify - Ybera Reviews",
+      "inicio": "2027-02-01",
+      "fim": "2027-05-31"
+    },
+    {
+      "titulo": "ERP Sênior - Canais de Venda",
+      "inicio": "2027-02-01",
+      "fim": "2027-07-31"
+    }
+  ]
 }

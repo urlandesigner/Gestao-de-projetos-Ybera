@@ -1,4 +1,30 @@
 {
-  "atualizadoEm": "2026-10-08",
-  "itens": []
+  "atualizadoEm": "2026-10-14",
+  "itens": [
+    {
+      "titulo": "Nova Home e PDP Global",
+      "inicio": "2026-09-01",
+      "fim": "2026-10-31"
+    },
+    {
+      "titulo": "Novo Tema da Loja Global - CL/PA/MX",
+      "inicio": "2027-01-01",
+      "fim": "2027-04-30"
+    },
+    {
+      "titulo": "App Shopify Quiz Ybera AI - Global - CL/PA/MX",
+      "inicio": "2027-03-01",
+      "fim": "2027-04-30"
+    },
+    {
+      "titulo": "Loja da Influencer - Global - CL/PA/MX",
+      "inicio": "2027-04-01",
+      "fim": "2027-06-30"
+    },
+    {
+      "titulo": "App Shopify - Ybera Reviews - Global - CL/PA/MX",
+      "inicio": "2027-05-01",
+      "fim": "2027-06-30"
+    }
+  ]
 }
