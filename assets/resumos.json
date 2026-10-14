@@ -1,6 +1,6 @@
 {
   "_leia": "Uma linha de resumo por PBI, para os cartões de sprint da aba Acompanhar do relatório de entregas. O título da PBI é jargão de time ('[DESIGN] Viabilização Design System para loja Ybera.us') e não diz nada a quem lê de fora; esta é a camada que traduz. id do item -> { resumo, de }. `de` é a impressão digital da descrição que gerou o resumo: quando a descrição muda no DevOps, o resumo fica desatualizado e precisa ser refeito — é isso que o `de` detecta. Quem escreve: o Claude Code, a partir das descrições que o botão 'Publicar dados' baixa no bloco _descricoes. Linha que você editar à mão é preservada, desde que você apague o `de` dela (sem `de`, ela nunca é regerada). PBI sem descrição no DevOps não entra aqui: o cartão fica só com o título, que é a verdade — não há o que resumir.",
-  "atualizadoEm": "2026-10-09",
+  "atualizadoEm": "2026-10-14",
   "itens": {
     "42884": {
       "resumo": "Destaca a assinatura na página do produto e a sugere no checkout, com renovação a cada 30 dias no cartão de crédito, para quem quer comprar de forma recorrente.",
@@ -259,12 +259,12 @@
       "de": "7cb13dde"
     },
     "53098": {
-      "resumo": "Testa as ofertas de upsell do Zipify antes de ativar qualquer uma, para saber quais funcionam sem conflitar com o carrinho próprio, os brindes e a integração de pedidos.",
-      "de": "dd77ae3e"
+      "resumo": "Levanta com o stakeholder o que ele quer resolver com ofertas de upsell e compara soluções, incluindo o app One Click Upsell, sem conflitar com carrinho, brindes, pagamentos e Rootstock.",
+      "de": "431c7f0b"
     },
     "53104": {
-      "resumo": "Liga as ofertas de upsell aprovadas no discovery, para a cliente aceitar produtos complementares com um clique, sem precisar fazer outro pedido.",
-      "de": "3778ce6f"
+      "resumo": "Ativa as ofertas de upsell aprovadas no discovery, para a cliente aceitar produtos complementares com um clique, durante ou depois da compra, sem refazer o pedido.",
+      "de": "72f7025d"
     },
     "53105": {
       "resumo": "Desenha o template novo da loja usando só os componentes do Design System, em desktop e no celular, em seções que o time das lojas consiga montar sozinho no Shopify.",
