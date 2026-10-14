@@ -1,5 +1,9 @@
 # Editor por PO — plano técnico
 
+> **SUBSTITUÍDO em 14/10/2026** por `2026-10-14-central-automatica-sem-token.md`.
+> A Etapa A (conteúdo fora do código) foi feita e continua valendo; as etapas
+> B–D (token de GitHub por PO, editor) não seguem.
+
 **Objetivo:** cada PO escreve o roadmap e o relatório dela dentro da Central e
 publica sozinha, com o token de GitHub dela. Sem terminal, sem arquivo JSON,
 sem passar pelo Urlan.
