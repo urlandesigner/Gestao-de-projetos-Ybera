@@ -269,17 +269,35 @@ body {
 /* A chamada de primeiro acesso. Acima dos cartões porque quem nunca abriu não
    sabe que precisa de um token — e descobrir isso ao esbarrar no assistente,
    lá dentro, é descobrir tarde. */
+/* Botão secundário (14/10/2026): era um link sublinhado e passava batido. Não
+   é preto porque o preto é do card da Central logo abaixo — a ação principal da
+   página. Aqui é a versão clara: pílula branca com borda, como os cards
+   claros, e a borda escurece no hover. */
 .ini-comecar {
-  margin: 1.1rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 1.25rem 0 0;
   font-size: 0.95rem;
   color: var(--mudo);
 }
 .ini-comecar a {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid var(--borda);
+  border-radius: 999px;
+  background: var(--superficie);
+  box-shadow: var(--sombra-cartao);
   font-weight: 600;
   color: var(--tinta);
-  text-decoration-color: var(--borda);
+  text-decoration: none;
+  transition: border-color 0.2s ease;
 }
-.ini-comecar a:hover { text-decoration-color: var(--tinta); }
+.ini-comecar a:hover { border-color: var(--tinta); }
+.ini-comecar a:focus-visible { outline: 2px solid var(--tinta); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .ini-comecar a { transition: none; } }
 
 /* "(abre em outra aba)" existe pra quem usa leitor de tela, que não percebe a
    aba nova abrindo. Na tela, a seta ↗ já diz isso. Fica fora da vista mas na
