@@ -7,9 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026101403">
+<link rel="stylesheet" href="assets/style.css?v=2026101404">
 <!-- Mesma folha que o relatório de Entregas usa pro gráfico do roadmap. -->
-<link rel="stylesheet" href="assets/roadmap.css?v=2026101403">
+<link rel="stylesheet" href="assets/roadmap.css?v=2026101404">
 </head>
 <body data-pagina="panorama">
 <div class="app">
@@ -175,7 +175,11 @@
       <p id="wizard-descobrindo" hidden>Descobrindo projetos…</p>
       <div class="linha-botoes">
         <button id="wizard-descobrir">Descobrir projetos</button>
-        <label class="botao" title="Restaura uma config exportada em outro navegador — cole o PAT acima antes">Importar JSON<input id="wizard-importar" type="file" accept="application/json" hidden></label>
+        <!-- "Importar JSON" saiu daqui em 14/10/2026: esta é a tela de primeiro
+             acesso, e quem chega pela primeira vez não tem arquivo nenhum pra
+             importar — o botão só competia com "Descobrir projetos". Quem troca
+             de computador acha o importar nas configurações, ao lado do
+             Exportar. -->
       </div>
     </section>
     <section id="wizard-passo-2" hidden>
@@ -229,9 +233,9 @@
   <a id="sprint-tudo-board" class="sprint-tudo-board" href="#"></a>
 </dialog>
 
-<script src="assets/core.js?v=2026101403"></script>
-<script src="assets/roadmap-visao.js?v=2026101403"></script>
-<script src="assets/api.js?v=2026101403"></script>
-<script src="assets/app.js?v=2026101403"></script>
+<script src="assets/core.js?v=2026101404"></script>
+<script src="assets/roadmap-visao.js?v=2026101404"></script>
+<script src="assets/api.js?v=2026101404"></script>
+<script src="assets/app.js?v=2026101404"></script>
 </body>
 </html>

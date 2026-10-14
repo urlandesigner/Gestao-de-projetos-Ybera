@@ -92,3 +92,14 @@ test('o endereço da organização já vem preenchido, e o tutorial diz qual é'
   assert.match(comecar, /<code>dev\.azure\.com\/nivello<\/code>/);
   assert.doesNotMatch(comecar, /sua-organizacao/, 'o tutorial voltou a pedir pra descobrir o endereço');
 });
+
+test('a tela de primeiro acesso não oferece importar arquivo', () => {
+  /* Quem chega pela primeira vez não tem arquivo nenhum pra importar — o botão
+     só competia com "Descobrir projetos". O importar continua nas
+     configurações, ao lado do Exportar, que é onde quem troca de computador
+     procura. */
+  const wizard = central.slice(central.indexOf('<dialog id="wizard"'), central.indexOf('</dialog>', central.indexOf('<dialog id="wizard"')));
+  assert.doesNotMatch(wizard, /type="file"/, 'o assistente voltou a pedir arquivo');
+  assert.match(central, /id="conf-importar"/, 'o importar sumiu também das configurações');
+  assert.match(central, /id="conf-exportar"/);
+});
