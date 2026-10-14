@@ -33,10 +33,10 @@
   // chega undefined e a página não desenha nada.
   // Sem core.js: este módulo não conta nada, só desenha o que já veio contado.
   const base = noNode ? require('./briefing-entregas.js') : root.CentralBriefing;
-  const api = factory(base);
+  const api = factory(base, noNode ? null : root);
   if (noNode) module.exports = api;
   else root.CentralBriefing = api;
-})(typeof self !== 'undefined' ? self : this, function (base) {
+})(typeof self !== 'undefined' ? self : this, function (base, root) {
   'use strict';
 
   // Reaproveitado do base: um escape só no documento, senão são duas regras
@@ -45,38 +45,60 @@
 
   const ANCORA = '<div class="rl-corpo">';
 
-  /* ESTE É O RELATÓRIO DE OUTUBRO. O de Agosto e Setembro continua sendo o
-     entregas.html, com os cartões e o período dele, congelado como foi
-     publicado — relatório já entregue não se reescreve.
+  /* O RELATÓRIO ÚNICO DE ENTREGAS, com todas as edições.
 
-     Período e cartões entram pelo documento base como OPÇÃO (`o.periodo` e
-     `o.cartoes`), que ele já aceitava. Por isso a edição nova não exigiu uma
-     cópia do arquivo: as duas edições são o mesmo desenho com entradas
-     diferentes. */
-  const PERIODO = ['2026-10'];
+     Até 14/10/2026 eram dois: este, de outubro, e o entregas.html, de agosto e
+     setembro, cada um com os cartões escritos dentro do próprio código. O
+     seletor de edição daqui NAVEGAVA para a outra página, porque redesenhar
+     agosto aqui produziria títulos sem texto nem tela — os cartões daquela
+     edição estavam presos no outro arquivo. Desde que os cartões viraram dado
+     (assets/conteudo/<po>/edicoes/<edicao>.json), as duas edições são o mesmo
+     desenho com entradas diferentes, e o Urlan pediu que virassem um relatório
+     só, no modelo deste: Entregas · Acompanhar · seletor de mês.
 
-  /* O ENDEREÇO FIXO DOS DADOS.
+     Cada edição declara três coisas:
+     - `periodo`: os meses que ela cobre — vira o título da capa e o recorte
+       das contagens e das sprints;
+     - `arquivoDeDados`: o endereço fixo do que o "Publicar dados" grava, que é
+       o que quem abre sem token lê. Documento de acompanhamento: a mesma pessoa
+       abre o mesmo endereço toda semana, e a publicação é que troca;
+     - `id`: o nome do arquivo de cartões e o valor de `?edicao=` no endereço.
 
-     Este documento é de acompanhamento: a mesma pessoa abre o mesmo endereço
-     toda semana. No fragmento do link isso não funciona — lá o dado anda junto
-     com o link, então cada atualização vira um link novo pra reenviar, e quem
-     guardou o antigo fica vendo outubro parado para sempre.
+     A primeira da lista é a que abre sem `?edicao=`: a mais recente. Edição
+     nova entra NO TOPO. */
+  const EDICOES = [
+    {
+      id: '2026-10',
+      rotulo: 'Outubro de 2026',
+      periodo: ['2026-10'],
+      arquivoDeDados: 'assets/dados-outubro.json',
+    },
+    {
+      id: '2026-08',
+      rotulo: 'Agosto e Setembro de 2026',
+      periodo: ['2026-08', '2026-09'],
+      arquivoDeDados: 'assets/dados-ago-set.json',
+    },
+  ];
 
-     Com o arquivo, o endereço nunca muda e a publicação é que troca. Quem
-     declara isto é o DOCUMENTO, e não o report.js: as outras três edições não
-     declaram e seguem só com o fragmento. */
-  const ARQUIVO_DE_DADOS = 'assets/dados-outubro.json';
+  /* A edição que este carregamento da página mostra. Sai do endereço
+     (`?edicao=2026-08`); sem ele, ou com um id que não existe, a mais recente.
+     Id inventado não pode virar caminho de arquivo, então só vale o que está
+     na lista.
 
-  /* Os cartões de outubro, que o Urlan dita.
-
-     Mesma forma dos cartões do documento base (titulo, status, resumo,
-     iniciativa/produto, epicoId/featureIds, contaFixa, progresso, link). Mexer
-     aqui é a forma de incluir, remover ou reescrever cartão: não há tela pra
-     isso. Lista vazia é uma resposta — o documento vira capa, sprints e roadmap,
-     com a frase de VAZIO no lugar das seções. */
-  /* OS CARTÕES DESTA EDIÇÃO MORAM EM ARQUIVO, como os do documento base:
-     assets/conteudo/<po>/edicoes/2026-10.json. Chegam em `o.cartoes`. */
-  const edicao = '2026-10';
+     Resolvida UMA vez, na carga: trocar de edição recarrega a página (ver o
+     seletor), e é isso que deixa o report.js sem saber que edições existem —
+     ele continua lendo `edicao`, `arquivoDeDados` e `periodoDoDocumento()`
+     como sempre leu. */
+  function edicaoDaUrl(search) {
+    let id = '';
+    try { id = new URLSearchParams(search || '').get('edicao') || ''; } catch (e) { id = ''; }
+    return EDICOES.find((e) => e.id === id) || EDICOES[0];
+  }
+  const ATIVA = edicaoDaUrl(root && root.location ? root.location.search : '');
+  const PERIODO = ATIVA.periodo;
+  const ARQUIVO_DE_DADOS = ATIVA.arquivoDeDados;
+  const edicao = ATIVA.id;
 
   const MES_CURTO = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun',
     'jul', 'ago', 'set', 'out', 'nov', 'dez'];
@@ -316,20 +338,9 @@
      dar um a ele seria mexer no relatório de Agosto e Setembro. */
   const SO_EM_ENTREGAS = '.rl-bento-capa';
 
-  /* AS EDIÇÕES, pro seletor do cabeçalho. A sem `url` é esta.
-
-     Ele NAVEGA, não redesenha. A edição de Agosto e Setembro é outro arquivo
-     (entregas.html) com a lista curada dentro dele, e o que ela consegue
-     exportar são só os campos de contagem — sem `resumo` e sem `imagens`.
-     Redesenhá-la aqui produziria títulos com selo e nenhum texto nem tela: uma
-     versão capenga de um relatório que já foi publicado e lido.
-
-     Fica no cabeçalho, visível nas duas abas, porque a edição é do DOCUMENTO
-     inteiro e não de uma parte dele — como as próprias abas. */
-  const EDICOES = [
-    { rotulo: 'Outubro de 2026' },
-    { rotulo: 'Agosto e Setembro de 2026', url: 'entregas.html' },
-  ];
+  /* O seletor de edição fica no cabeçalho, visível nas duas abas, porque a
+     edição é do DOCUMENTO inteiro e não de uma parte dele — como as próprias
+     abas. A lista é a de cima (EDICOES). */
 
   /* O que cada aba diz quando não tem seção nenhuma. A de Entregas é o caso
      real de hoje — outubro começou sem cartão escrito —, e sem ela a aba abre
@@ -347,11 +358,10 @@
       + (a.situacao ? ` data-situacao="${esc(a.situacao)}"` : '')
       + ` aria-pressed="${a.id === ABA_PADRAO}">${esc(a.rotulo)}</button>`).join('');
     /* O seletor de edição ocupa o mesmo encaixe que o seletor de mês ocupa no
-       report v2 — fim da pílula, com a mesma moldura. `value` é o endereço:
-       vazio é esta edição, e o script só navega quando vem preenchido. Assim o
-       seletor não precisa saber qual é a atual: ela é a única sem para onde ir. */
-    const opcoes = EDICOES.map((e) => `<option value="${esc(e.url || '')}"`
-      + `${e.url ? '' : ' selected'}>${esc(e.rotulo)}</option>`).join('');
+       report v2 — fim da pílula, com a mesma moldura. `value` é o id da
+       edição; o script da página troca o `?edicao=` do endereço e recarrega. */
+    const opcoes = EDICOES.map((e) => `<option value="${esc(e.id)}"`
+      + `${e.id === ATIVA.id ? ' selected' : ''}>${esc(e.rotulo)}</option>`).join('');
     const selecionar = EDICOES.length > 1
       ? `<div class="rl-mes-borda"><select class="rl-edicao rl-mes" aria-label="Edição do relatório">${opcoes}</select></div>`
       : '';
@@ -425,9 +435,8 @@
     htmlReport,
     precisaDeSprints: true,
     /* O material bruto das entregas do mês, no bloco local do pacote. A
-       ferramenta vem do base (entregasConcluidas) e os dois documentos a
-       enxergam; só esta edição declara que a quer. O relatório de Agosto e
-       Setembro já foi escrito e publicado — não se reescreve. */
+       ferramenta vem do base (entregasConcluidas); este documento declara que
+       a quer, em qualquer edição. */
     precisaDeEntregas: true,
     arquivoDeDados: ARQUIVO_DE_DADOS,
     periodoDoDocumento: () => PERIODO.slice(),
@@ -438,6 +447,7 @@
     vaziosHtml,
     injetar,
     EDICOES,
+    edicaoDaUrl,
     ANCORA,
     PERIODO,
     ABAS,

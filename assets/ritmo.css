@@ -412,10 +412,17 @@
   background: linear-gradient(90deg, rgba(28, 25, 23, 0.18), rgba(255, 255, 255, 0.7) 7%, rgba(255, 255, 255, 0.7) 92%, rgba(28, 25, 23, 0.18));
   box-shadow: 0 8px 16px rgba(28, 25, 23, 0.14);
 }
+/* `nowrap` e o teto maior desde que as edições viraram uma página só
+   (14/10/2026): até ali, "Agosto e Setembro de 2026" nunca aparecia
+   SELECIONADO — morava em outra página —, e quando passou a aparecer, quebrou
+   em duas linhas e esticou a pílula inteira. Os 16rem cabem o rótulo mais
+   longo; acima disso, reticências, nunca segunda linha. */
 .rl-edicao {
   appearance: none;
   -webkit-appearance: none;
-  max-width: 13rem;
+  max-width: 16rem;
+  white-space: nowrap;
+  overflow: hidden;
   padding: 0.375rem 2.1rem;
   border: none;
   border-radius: 9999px;

@@ -1139,6 +1139,17 @@ function pacoteDoDocumento(paraArquivo) {
   return pacote;
 }
 
+/* A EDIÇÃO VIAJA NO LINK, quando o documento tem mais de uma.
+
+   O link limpo descarta o `?po=1` de propósito — o leitor não é PO —, e com
+   ele ia junto o `?edicao=`. Num relatório de várias edições isso abria o
+   retrato de agosto debaixo do título de outubro: o pacote é de uma edição, e
+   quem decide qual o documento desenha é o endereço. Só o `edicao` volta; o
+   resto da busca continua fora. */
+function edicaoNoLink() {
+  return (Array.isArray(B.EDICOES) && B.edicao) ? '?edicao=' + encodeURIComponent(B.edicao) : '';
+}
+
 async function gravarLink() {
   if (st.leitura) return; // o link já É a página: reescrever apagaria o dado
   const minha = ++geracaoLink;
@@ -1149,7 +1160,7 @@ async function gravarLink() {
     if (minha !== geracaoLink) return; // outra gravação começou depois: ela manda
     // O link que ele copia é limpo. O que fica na barra de endereços preserva o
     // ?po=1, senão um F5 tiraria as ferramentas dele.
-    st.link = location.origin + location.pathname + carga;
+    st.link = location.origin + location.pathname + edicaoNoLink() + carga;
     history.replaceState(null, '', location.pathname + location.search + carga);
   } catch (e) {
     // Link é conveniência: falhar em montá-lo não é falha do DOCUMENTO, que está
@@ -1336,6 +1347,23 @@ async function lerDoLink() {
    Causa diferente, conserto diferente: publicar resolve um dos quatro casos. E
    o erro real vai SEMPRE pro console, porque sem ele a próxima investigação
    começa do zero. */
+/* A SAÍDA, quando a edição pedida não tem dados.
+
+   Esta mensagem substitui o documento inteiro — e com ele vai o seletor de
+   edição. Num relatório de várias edições isso virou beco sem saída em
+   14/10/2026: quem lia outubro sem token trocava pra agosto, que ainda não
+   tinha sido publicado, e não tinha mais como voltar. Então, se a edição
+   aberta não é a mais recente, a mensagem leva até ela — com o resto do
+   endereço (o `?de=` diz de quem é o relatório e tem que ficar). */
+function saidaDaEdicao() {
+  if (!Array.isArray(B.EDICOES) || !B.EDICOES.length || B.edicao === B.EDICOES[0].id) return '';
+  const params = new URLSearchParams(location.search);
+  params.delete('edicao');
+  const q = params.toString();
+  return '<p><a href="' + B.esc(location.pathname + (q ? '?' + q : '')) + '">Ver a edição de '
+    + B.esc(B.EDICOES[0].rotulo) + ' →</a></p>';
+}
+
 function falhaDeLeitura(motivo, arquivo, detalhe) {
   const FRASES = {
     ausente: 'Este documento ainda não foi publicado.'
@@ -1348,7 +1376,7 @@ function falhaDeLeitura(motivo, arquivo, detalhe) {
     desenho: 'Os dados chegaram, mas o documento não desenhou. Isto é defeito nosso,'
       + ' não falta de publicação — o motivo está no console.',
   };
-  $('report').innerHTML = '<p class="mudo">' + (FRASES[motivo] || FRASES.rede) + '</p>';
+  $('report').innerHTML = '<p class="mudo">' + (FRASES[motivo] || FRASES.rede) + '</p>' + saidaDaEdicao();
   console.warn('[Report] ' + motivo + ' ao ler ' + arquivo + ': ' + detalhe);
 }
 

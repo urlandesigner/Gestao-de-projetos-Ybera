@@ -248,7 +248,7 @@ test('o nome do arquivo é impublicável por construção', () => {
      de uma edição. Material de resumo tem descrição crua dentro — link interno,
      nome de fornecedor, observação escrita achando que era interna. */
   const declarados = [...ler('assets/briefing-entregas.js').matchAll(/arquivoDeDados = '([^']+)'/g),
-    ...ler('assets/briefing-entregas-v2.js').matchAll(/ARQUIVO_DE_DADOS = '([^']+)'/g)]
+    ...ler('assets/briefing-entregas-v2.js').matchAll(/arquivoDeDados: '([^']+)'/g)]
     .map((m) => m[1].split('/').pop());
   assert.ok(declarados.length >= 2, 'não achei os arquivos de dados declarados');
   assert.equal(declarados.includes('material-resumos.json'), false,

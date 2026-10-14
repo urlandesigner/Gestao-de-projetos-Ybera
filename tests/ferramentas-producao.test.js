@@ -97,8 +97,14 @@ test('nenhum link do site carrega ferramentas=1 — a porta é só digitada à m
 });
 
 test('o link copiado sai sem query — é o que mantém a porta de serviço fechada', () => {
-  assert.match(fonteReport, /st\.link = location\.origin \+ location\.pathname \+ carga;/,
+  /* Desde 14/10/2026 o link leva a EDIÇÃO (o relatório tem mais de uma), mas
+     só ela: `edicaoNoLink()` monta `?edicao=` do zero, a partir do módulo, e
+     nunca copia `location.search` — que é onde mora o `ferramentas=1`. */
+  assert.match(fonteReport, /st\.link = location\.origin \+ location\.pathname \+ edicaoNoLink\(\) \+ carga;/,
     'se o link copiado passar a levar a query, ele leva a porta de serviço junto');
+  const m = /function edicaoNoLink\(\) \{[\s\S]*?\n\}/.exec(fonteReport);
+  assert.ok(m, 'edicaoNoLink sumiu — este teste precisa acompanhar');
+  assert.doesNotMatch(m[0], /location\.search/, 'o link voltou a copiar a query inteira');
 });
 
 test('report e v2 não mudam de comportamento: o recorte é só de quem declara', () => {

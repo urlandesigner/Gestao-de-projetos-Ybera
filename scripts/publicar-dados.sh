@@ -19,9 +19,16 @@ cd "$(dirname "$0")/.."
 # Cada EDIÇÃO declara o endereço dos dados dela (arquivoDeDados, nos módulos de
 # briefing) e o nome é lido daqui, nunca repetido: duas cópias divergem na
 # primeira vez que uma edição virar outro mês.
-DESTINOS=$(grep -ho "arquivoDeDados = '[^']*'\|ARQUIVO_DE_DADOS = '[^']*'" \
+#
+# Duas formas de declarar, as duas lidas: `arquivoDeDados = '...'` (o documento
+# de uma edição só) e `arquivoDeDados: '...'` (cada edição dentro de EDICOES,
+# no relatório único). `sort -u` porque a mesma edição pode estar declarada nos
+# dois — agosto/setembro está no relatório único e na página dos links antigos
+# —, e o mesmo destino listado duas vezes faria o script parar achando que
+# havia dois arquivos pra publicar.
+DESTINOS=$(grep -ho "arquivoDeDados = '[^']*'\|arquivoDeDados: '[^']*'" \
   assets/briefing-entregas.js assets/briefing-entregas-v2.js \
-  | sed "s/.*'\(.*\)'/\1/")
+  | sed "s/.*'\(.*\)'/\1/" | sort -u)
 [ -n "$DESTINOS" ] || { echo "nenhuma edição declara arquivoDeDados" >&2; exit 1; }
 
 # Com um argumento, publica aquele arquivo na edição a que o NOME dele pertence.

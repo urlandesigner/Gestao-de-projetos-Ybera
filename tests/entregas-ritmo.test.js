@@ -672,18 +672,48 @@ test('o report continua sem endereço fixo', () => {
     'o briefing-v2 não devia ter ganhado endereço fixo');
 });
 
-/* O seletor NAVEGA, não redesenha: o que a edição antiga exporta não tem
-   `resumo` nem `imagens`, e redesenhá-la aqui daria títulos com selo e nenhum
-   texto nem tela — uma versão capenga de um relatório já publicado. */
-test('o seletor de edição leva pro outro arquivo, e a atual não tem pra onde ir', () => {
+/* UM RELATÓRIO SÓ, com as edições dentro (14/10/2026). Antes o seletor
+   NAVEGAVA para o entregas.html, porque os cartões de agosto estavam presos no
+   código daquela página. Com os cartões em arquivo, as duas edições são o mesmo
+   desenho com entradas diferentes, e o seletor troca o `?edicao=` desta mesma
+   página. */
+test('o seletor troca a edição desta página, e marca a que está aberta', () => {
   const html = V2.abasHtml();
   assert.match(html, /<div class="rl-mes-borda"><select class="rl-edicao rl-mes" aria-label="Edição do relatório">/);
-  assert.match(html, /<option value="" selected>Outubro de 2026<\/option>/);
-  assert.match(html, /<option value="entregas\.html">Agosto e Setembro de 2026<\/option>/);
-  assert.equal(V2.EDICOES.filter((e) => !e.url).length, 1, 'só a edição atual fica sem destino');
+  assert.match(html, /<option value="2026-10" selected>Outubro de 2026<\/option>/);
+  assert.match(html, /<option value="2026-08">Agosto e Setembro de 2026<\/option>/);
+  assert.doesNotMatch(html, /entregas\.html/, 'o seletor voltou a mandar pra outra página');
   const pagina = ler('entregas-v2.html');
-  assert.match(pagina, /if \(!sel \|\| !sel\.value\) return;/, 'a edição atual não pode navegar pra lugar nenhum');
-  assert.match(pagina, /location\.href = sel\.value;/);
+  assert.match(pagina, /params\.set\('edicao', sel\.value\);/);
+  // O fragmento fica pra trás: o #r= é retrato de uma edição só.
+  assert.match(pagina, /location\.href = location\.pathname \+ '\?' \+ params\.toString\(\);/);
+});
+
+test('cada edição declara período, arquivo publicado e id — e o endereço escolhe', () => {
+  for (const e of V2.EDICOES) {
+    assert.match(e.id, /^\d{4}-\d{2}$/);
+    assert.ok(e.periodo.length > 0 && e.periodo[0] === e.id, `${e.id}: o período não começa na edição`);
+    assert.match(e.arquivoDeDados, /^assets\/dados-[a-z-]+\.json$/);
+  }
+  // Sem ?edicao=, a mais recente; com ela, a pedida; inventada, a mais recente.
+  assert.equal(V2.edicaoDaUrl('').id, V2.EDICOES[0].id);
+  assert.equal(V2.edicaoDaUrl('?po=1&edicao=2026-08').id, '2026-08');
+  assert.deepEqual(V2.edicaoDaUrl('?edicao=2026-08').periodo, ['2026-08', '2026-09']);
+  assert.equal(V2.edicaoDaUrl('?edicao=../../etc').id, V2.EDICOES[0].id, 'id inventado virou edição');
+  // Os ids não se repetem: viram nome de arquivo e valor no endereço.
+  assert.equal(new Set(V2.EDICOES.map((e) => e.id)).size, V2.EDICOES.length);
+});
+
+/* A página antiga continua de pé SÓ para os links já compartilhados. Quem
+   chega sem `#r=` é mandado pro relatório único; quem chega com, fica — o
+   pacote dele é do formato daquela página. */
+test('o entregas.html vira porta dos links antigos', () => {
+  const pagina = ler('entregas.html');
+  assert.match(pagina, /if \(location\.hash\.indexOf\('#r='\) === 0\) return;/);
+  assert.match(pagina, /params\.set\('edicao', '2026-08'\);/);
+  assert.match(pagina, /location\.replace\('entregas-v2\.html\?' \+ params\.toString\(\)\);/);
+  // A edição pra onde ele manda existe de verdade no relatório único.
+  assert.ok(V2.EDICOES.some((e) => e.id === '2026-08'));
 });
 
 /* Prova de que a declaração não mexeu no documento: o campo é lido pelo
@@ -1215,4 +1245,19 @@ test('a dobra é nativa: nenhum script precisa existir pra ela funcionar', () =>
   assert.match(css, /\.rt-resumo \{[^}]*list-style: none;/);
   assert.match(css, /\.rt-resumo::-webkit-details-marker \{ display: none; \}/);
   assert.match(css, /\.rt-resumo:focus-visible/);
+});
+
+/* Beco sem saída de 14/10/2026: a mensagem de "não publicado" substitui o
+   documento inteiro, seletor incluso. Quem lia outubro sem token, trocava pra
+   agosto e não tinha mais como voltar. */
+test('edição sem dados oferece o caminho de volta pra mais recente', () => {
+  const src = ler('assets/report.js');
+  const m = /function saidaDaEdicao\(\) \{[\s\S]*?\n\}/.exec(src);
+  assert.ok(m, 'saidaDaEdicao sumiu — este teste precisa acompanhar');
+  // Só quando a aberta não é a mais recente: na mais recente, voltar pra ela mesma é ruído.
+  assert.match(m[0], /B\.edicao === B\.EDICOES\[0\]\.id\) return '';/);
+  // Tira só a edição do endereço; o `?de=` diz de quem é o relatório e fica.
+  assert.match(m[0], /params\.delete\('edicao'\);/);
+  assert.doesNotMatch(m[0], /params\.delete\('de'\)/);
+  assert.match(src, /'<\/p>' \+ saidaDaEdicao\(\);/, 'a mensagem de falha deixou de oferecer a saída');
 });

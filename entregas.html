@@ -5,6 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Entregas — Central de Projetos</title>
 
+<!-- ESTA PÁGINA VIROU SÓ A PORTA DOS LINKS ANTIGOS (14/10/2026).
+
+     O relatório de Agosto e Setembro passou a ser uma edição do relatório
+     único, entregas-v2.html?edicao=2026-08, no modelo de outubro (Entregas ·
+     Acompanhar · seletor de mês). Quem chega aqui SEM um `#r=` — favorito,
+     menu antigo, endereço digitado — é levado pra lá, com o resto do endereço
+     (?po=1 continua valendo).
+
+     Quem chega COM `#r=` fica: é um link já compartilhado com stakeholder,
+     inclusive o bit.ly, e o pacote dentro dele é do formato desta página.
+     Redirecionar arriscaria desenhar errado um documento que alguém já leu.
+
+     `location.replace` e não `href`: o botão Voltar não deve trazer a pessoa de
+     volta pra cá, só pra ser mandada embora de novo. -->
+<script>
+  (function () {
+    if (location.hash.indexOf('#r=') === 0) return;
+    var params = new URLSearchParams(location.search);
+    params.set('edicao', '2026-08');
+    location.replace('entregas-v2.html?' + params.toString());
+  })();
+</script>
+
 <!-- PREVIEW DE COMPARTILHAMENTO (Open Graph + Twitter Card).
      O link deste documento circula colado no WhatsApp, no Slack e no e-mail, e
      sem estas linhas ele chega como uma URL crua do github.io.
@@ -34,7 +57,7 @@
 <meta property="og:title" content="Entregas de Agosto e Setembro de 2026">
 <meta property="og:description" content="O que o time entregou no período, e o planejamento dos próximos meses.">
 <meta property="og:url" content="https://nivello-sistemas.github.io/ideias-e-inovacao/Central%20de%20Projetos/entregas.html">
-<meta property="og:image" content="https://nivello-sistemas.github.io/ideias-e-inovacao/Central%20de%20Projetos/assets/og-entregas.png?v=2026101405">
+<meta property="og:image" content="https://nivello-sistemas.github.io/ideias-e-inovacao/Central%20de%20Projetos/assets/og-entregas.png?v=2026101406">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -46,8 +69,8 @@
 <!-- A folha do roadmap é do COMPONENTE, compartilhada com a Central (o
      Panorama desenha o mesmo gráfico). Vem antes: a entregas.css ainda ajusta
      essas classes no @media print. -->
-<link rel="stylesheet" href="assets/roadmap.css?v=2026101405">
-<link rel="stylesheet" href="assets/entregas.css?v=2026101405">
+<link rel="stylesheet" href="assets/roadmap.css?v=2026101406">
+<link rel="stylesheet" href="assets/entregas.css?v=2026101406">
 </head>
 <!-- ENTREGAS. Não é uma versão do report: é outro documento, com duas seções
      (entregas recentes e roadmap) e linguagem de negócio. Usa o MESMO
@@ -103,12 +126,12 @@
   <p id="visor-legenda" class="rl-visor-legenda"></p>
 </dialog>
 
-<script src="assets/core.js?v=2026101405"></script>
-<script src="assets/api.js?v=2026101405"></script>
+<script src="assets/core.js?v=2026101406"></script>
+<script src="assets/api.js?v=2026101406"></script>
 <!-- Antes do briefing: ele pega o desenho do roadmap daqui. -->
-<script src="assets/roadmap-visao.js?v=2026101405"></script>
-<script src="assets/briefing-entregas.js?v=2026101405"></script>
-<script src="assets/report.js?v=2026101405"></script>
+<script src="assets/roadmap-visao.js?v=2026101406"></script>
+<script src="assets/briefing-entregas.js?v=2026101406"></script>
+<script src="assets/report.js?v=2026101406"></script>
 <script>
 /* Visor da galeria — vive aqui, e não no report.js nem no briefing.
 
