@@ -112,12 +112,19 @@
     ].filter(Boolean).join('\n');
   }
 
-  function wiqlMyItems() {
+  /* `pessoa` vazio = o dono do token (@Me). Preenchido = quem está no
+     seletor da Central — desde 14/10/2026 o seletor manda em tudo, e "Meus
+     itens" era a única tela que continuava presa ao token. Quem chama passa o
+     e-mail quando conhece (identifica sem ambiguidade); o nome de exibição
+     também funciona no WIQL quando é único. Aspa simples dobrada: é o escape
+     do WIQL, e um nome com apóstrofo quebraria a consulta. */
+  function wiqlMyItems(pessoa) {
     const terminais = TERMINAL_STATES.map((s) => `'${s}'`).join(',');
+    const quem = String(pessoa || '').trim();
     return [
       'SELECT [System.Id] FROM WorkItems',
       'WHERE [System.TeamProject] = @project',
-      'AND [System.AssignedTo] = @Me',
+      quem ? `AND [System.AssignedTo] = '${quem.replace(/'/g, "''")}'` : 'AND [System.AssignedTo] = @Me',
       `AND [System.State] NOT IN (${terminais})`,
       'ORDER BY [System.ChangedDate] DESC',
     ].join('\n');

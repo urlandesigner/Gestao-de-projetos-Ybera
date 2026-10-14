@@ -63,6 +63,14 @@ test('wiqlMyItems usa @Me e exclui estados terminais', () => {
   assert.ok(q.includes("NOT IN ('Done','Closed','Removed','Completed')"));
 });
 
+test('wiqlMyItems com pessoa busca no nome dela, não no dono do token', () => {
+  const q = C.wiqlMyItems('daniele.depaula@ybera.com');
+  assert.ok(q.includes("[System.AssignedTo] = 'daniele.depaula@ybera.com'"));
+  assert.ok(!q.includes('@Me'));
+  assert.ok(C.wiqlMyItems("Ana D'Ávila").includes("= 'Ana D''Ávila'"), 'apóstrofo sem escape quebra o WIQL');
+  assert.ok(C.wiqlMyItems('  ').includes('@Me'), 'vazio cai no dono do token');
+});
+
 test('aggregateCounts separa por nível e estado', () => {
   const items = [
     { id: 1, fields: { 'System.WorkItemType': 'Epic', 'System.State': 'Active' } },

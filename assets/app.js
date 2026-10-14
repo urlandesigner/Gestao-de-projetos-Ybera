@@ -491,18 +491,55 @@ async function refreshCard(p) {
   renderCard(p);
 }
 
+/* DE QUEM É "MEUS ITENS" (14/10/2026). Segue o seletor, como o resto da
+   Central: escolheu a Isadora, vê os itens da Isadora. Sem escolha (ou em
+   "todos os responsáveis"), cai no dono do token — é a Central dele.
+
+   A lista guardada leva o nome de quem ela é (`myItemsDe`). Sem isso, trocar o
+   seletor mostraria por um instante os itens da pessoa anterior com o nome da
+   nova em cima — a tela errada com cara de certa. Cache antigo, sem o campo,
+   era sempre do dono do token. */
+function donoDosMeusItens() {
+  return respAtivo() || state.cache.usuario || '';
+}
+function meusItensSaoDaVez() {
+  const de = state.cache.myItemsDe === undefined ? (state.cache.usuario || '') : state.cache.myItemsDe;
+  return de === donoDosMeusItens();
+}
+// Os itens da vez, já no nome de quem está selecionado; `null` = ainda não chegou.
+function meusItensDaVez() {
+  if (!state.cache.myItems || !meusItensSaoDaVez()) return null;
+  return C.filterItems(state.cache.myItems, { resp: respAtivo() });
+}
+
+/* Meus itens é uma consulta POR PESSOA. Trocou a pessoa (seletor) ou a lista
+   guardada é de outra (cache de uma visita anterior, ainda fresco demais pra o
+   refresh geral rodar), busca de novo só ela. */
+function garantirMeusItens() {
+  if (!state.pat || !state.config || meusItensSaoDaVez()) return;
+  refreshMyItems().then(() => { saveJSON(LS.cache, state.cache); renderMyItems(); });
+}
+
 async function refreshMyItems() {
   const itensAnteriores = state.cache.myItems;
+  const deAnterior = state.cache.myItemsDe;
+  const quem = donoDosMeusItens();
+  // Dono do token: @Me, que não depende de nome nenhum. Outra pessoa: o e-mail
+  // da ficha quando a Central a conhece, senão o nome de exibição.
+  const outraPessoa = quem && quem !== state.cache.usuario;
+  const ficha = outraPessoa ? C.fichaDaPessoa(quem) : null;
+  const filtro = outraPessoa ? ((ficha && ficha.email) || quem) : '';
   state.cache.myItemsError = null;
   try {
     const porProjeto = new Map(); // projectName -> teamName (qualquer time serve de contexto)
     for (const p of state.config.projects) if (!porProjeto.has(p.projectName)) porProjeto.set(p.projectName, p.teamName);
     const allIds = [];
     for (const [projeto, time] of porProjeto) {
-      allIds.push(...await A.runWiql(ctx(), projeto, time, C.wiqlMyItems()));
+      allIds.push(...await A.runWiql(ctx(), projeto, time, C.wiqlMyItems(filtro)));
     }
     const unicos = [...new Set(allIds)];
     state.cache.myItems = unicos.length ? await A.getFields(ctx(), unicos, FIELDS_ITEMS) : [];
+    state.cache.myItemsDe = quem;
     // Pai de cada item (Feature/Épico) — um lote só, pro contexto no cartão
     const paiIds = [...new Set(state.cache.myItems.map((it) => (it.fields || {})['System.Parent']).filter(Boolean))];
     const pais = paiIds.length ? await A.getFields(ctx(), paiIds, ['System.Title', 'System.WorkItemType']) : [];
@@ -512,6 +549,7 @@ async function refreshMyItems() {
     if (e instanceof A.AuthError) state.auth = 'vencido';
     state.cache.myItemsError = mensagemDeErro(e);
     state.cache.myItems = itensAnteriores;
+    state.cache.myItemsDe = deAnterior;
   }
   renderMyItems();
 }
@@ -552,7 +590,7 @@ function renderAll() { renderBadge(); renderPanorama(); renderPendencias(); rend
 
 // Contadores das linhas de navegação (eco do "Applicants 23" da referência)
 function renderNavContas() {
-  const mi = state.cache.myItems;
+  const mi = meusItensDaVez();
   $('conta-nav-mi').textContent = mi ? String(mi.length) : '';
   $('conta-nav-proj').textContent = state.config ? String(state.config.projects.filter((x) => !x.hidden).length) : '';
 }
@@ -758,7 +796,10 @@ function renderPanorama() {
 
   const agora = Date.now();
   const k = C.panoramaKpis(todos, agora);
-  const meus = state.cache.myItems ? state.cache.myItems.length : null;
+  // O MESMO número da tela Meus itens: a lista da pessoa do seletor, sem os
+  // chips de tipo (que são recorte de leitura daquela tela, não do total).
+  const daVez = meusItensDaVez();
+  const meus = daVez ? daVez.length : null;
   const NOTA_SEM_DATA = 'data-alvo não preenchida no DevOps';
   const tile = (rot, valor, alerta, nota) => `<div class="tile">
     <span class="tile-rot">${rot}</span>
@@ -1358,24 +1399,26 @@ function renderMyItems() {
   renderPanorama(); // o indicador "Meus itens" vive lá
   const box = $('meus-itens');
   const barra = $('mi-filtros');
-  const items = state.cache.myItems;
   const erroHtml = state.cache.myItemsError ? `<p class="erro">${escapeHtml(state.cache.myItemsError)}</p>` : '';
-  if (state.cache.myItemsError && !items) { barra.hidden = true; box.innerHTML = erroHtml; return; }
-  if (!items) { barra.hidden = true; box.innerHTML = '<p class="mudo">— configure o token pra ver seus itens —</p>'; return; }
-  if (!items.length) { barra.hidden = true; box.innerHTML = erroHtml + '<p class="mudo">Nada no seu nome.</p>'; return; }
+  if (!state.pat) { barra.hidden = true; box.innerHTML = '<p class="mudo">— configure o token pra ver seus itens —</p>'; return; }
+  const items = meusItensDaVez();
+  if (!items) {
+    barra.hidden = true;
+    box.innerHTML = state.cache.myItemsError ? erroHtml : '<p class="mudo">carregando…</p>';
+    return;
+  }
+  if (!items.length) {
+    barra.hidden = true;
+    const quem = donoDosMeusItens();
+    box.innerHTML = erroHtml + `<p class="mudo">Nada em aberto no nome de ${escapeHtml(quem || 'quem está selecionado')}.</p>`;
+    return;
+  }
   barra.hidden = false;
   renderChipsTipo($('mi-tipos'), items, state.filtrosMI, () => { salvarFiltrosMI(); renderMyItems(); });
   renderChipsProjeto($('mi-projetos'), items, state.filtrosMI, () => { salvarFiltrosMI(); renderMyItems(); });
-  const filtrados = C.filterItems(items, Object.assign({}, state.filtrosMI, { resp: respAtivo() }));
+  const filtrados = C.filterItems(items, state.filtrosMI);
   if (!filtrados.length) {
-    // A consulta desta página é @Me: só traz item do dono do token. Se o filtro
-    // global aponta pra outra pessoa, vazio é o resultado certo — mas tem que
-    // dizer por quê, senão parece defeito.
-    const dono = state.cache.usuario || '';
-    const outro = respAtivo() && dono && respAtivo() !== dono;
-    box.innerHTML = erroHtml + (outro
-      ? `<p class="mudo">Esta página traz só o que está no nome de <b>${escapeHtml(dono)}</b> (dono do token). O filtro está em <b>${escapeHtml(respAtivo())}</b>.</p>`
-      : '<p class="mudo">Nada com esses filtros.</p>');
+    box.innerHTML = erroHtml + '<p class="mudo">Nada com esses filtros.</p>';
     return;
   }
   const grupos = C.groupMyItemsBuckets(filtrados);
@@ -1949,7 +1992,7 @@ function boot() {
     return;
   }
   renderAll();
-  refreshAll(false);
+  refreshAll(false).then(garantirMeusItens);
   // O roadmap não é buscado aqui: ele é por PO, e quem pede é o renderRoadmap,
   // que é quem sabe de quem é a Central (o select, ou o dono do token).
   /* Mesma natureza do roadmap: arquivo local, sem token, e redesenha o Panorama
@@ -2020,6 +2063,7 @@ document.addEventListener('DOMContentLoaded', () => {
   $('resp-global').addEventListener('change', () => {
     state.resp = $('resp-global').value; // '' = todos, escolha explícita
     salvarFiltrosMI();
+    garantirMeusItens(); // antes do render: zera o erro da pessoa anterior
     renderAll();
     renderProdutos();
     if (boardState.p) renderBoard(boardState.p);
