@@ -53,6 +53,8 @@ if [ -z "$COM_ESTUDOS" ]; then
   for e in $ESTUDOS; do EXCLUI_ESTUDOS="$EXCLUI_ESTUDOS --exclude=/$e"; done
 fi
 
+# api/ é a função da Vercel (relatório ao vivo): no Pages ela não roda — o
+# Pages só serve arquivo —, e o relatório de lá chama a da Vercel.
 # README.md é do repositório de destino, não daqui — nunca sobrescrever.
 # publicar.command e scripts/ são ferramenta de quem mantém, não do site.
 # As caixas de entrada de captura (mês/) já são git-ignored, e ficam fora aqui
@@ -68,6 +70,7 @@ rsync -a --delete --itemize-changes $SECO \
   --exclude='/publicar.command' \
   --exclude='/scripts/' \
   --exclude='/diagnostico.html' \
+  --exclude='/api/' \
   --exclude='/README.md' \
   $EXCLUI_ESTUDOS \
   "$ORIGEM/" "$DESTINO/"

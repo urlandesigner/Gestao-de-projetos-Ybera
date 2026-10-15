@@ -1,0 +1,10 @@
+{
+  "_leia": "De onde a função da Vercel busca os dados desta PO no Azure DevOps. Não tem segredo (o token fica na Vercel, nunca aqui). Decisão do Urlan em 15/10/2026: as três POs usam os mesmos times; o recorte entre elas é pelo responsável dos itens (o e-mail da ficha em assets/core.js).",
+  "org": "https://dev.azure.com/nivello",
+  "times": [
+    {
+      "projectName": "B2C",
+      "teamName": "Squad Ecommerce"
+    }
+  ]
+}

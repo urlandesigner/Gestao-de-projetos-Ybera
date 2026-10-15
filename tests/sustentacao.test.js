@@ -91,13 +91,16 @@ test('lista vazia ou inválida não quebra', () => {
    da última vez. E os PAIS não podem ser filtrados junto: sem o guarda-chuva
    na base, os filhos viram órfãos e voltam a contar. */
 test('o report filtra uma vez só, na origem, e preserva os pais', () => {
+  /* A busca mudou de casa em 15/10/2026: mora no assets/pacote.js, que o
+     report.js e a função da Vercel usam. O ponto único de filtro foi junto. */
   const fs = require('node:fs');
   const path = require('node:path');
-  const fonte = fs.readFileSync(path.join(__dirname, '..', 'assets', 'report.js'), 'utf8');
-  const chamadas = fonte.match(/C\.foraDaManutencao\([^)]*\)/g) || [];
+  const pacote = fs.readFileSync(path.join(__dirname, '..', 'assets', 'pacote.js'), 'utf8');
+  const report = fs.readFileSync(path.join(__dirname, '..', 'assets', 'report.js'), 'utf8');
+  const chamadas = (pacote + report).match(/C\.foraDaManutencao\([^)]*\)/g) || [];
   assert.equal(chamadas.length, 1, 'mais de um ponto de filtro: um deles vai ficar pra trás');
-  assert.match(chamadas[0], /todos, todos\.concat\(st\.pais\)/,
+  assert.match(chamadas[0], /busca\.todos, busca\.todos\.concat\(pais\)/,
     'a cadeia precisa ser lida com os pais juntos, senão o guarda-chuva não é visto');
-  assert.match(fonte, /st\.items = C\.foraDaManutencao/,
+  assert.match(report, /st\.items = tudo\.itens;/,
     'o filtro tem que ser na origem: o link de leitura é empacotado a partir de st.items');
 });

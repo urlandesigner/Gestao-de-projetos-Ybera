@@ -1122,6 +1122,24 @@
     return { periodo, cartoes: saneCartoes(o.cartoes) };
   }
 
+  /* DE ONDE VÊM OS DADOS DE UMA PO, para quem busca sem navegador (a função da
+     Vercel). No navegador isso mora na config do localStorage de cada um; a
+     função não tem localStorage, então lê assets/conteudo/<po>/fontes.json.
+
+     Não é segredo — organização e nome de time —, mas é entrada: a org só vale
+     se for do dev.azure.com (o token vai junto pra esse endereço), e time sem
+     os dois nomes some. Inválido devolve null, e quem chama recusa a PO. */
+  function saneFontes(obj) {
+    const o = obj && typeof obj === 'object' ? obj : {};
+    let org = '';
+    try { org = orgBaseUrl(o.org); } catch (e) { return null; }
+    const txt = (v) => String(v == null ? '' : v).trim().slice(0, 120);
+    const times = (Array.isArray(o.times) ? o.times : []).slice(0, 10)
+      .map((t) => ({ projectName: txt((t || {}).projectName), teamName: txt((t || {}).teamName) }))
+      .filter((t) => t.projectName && t.teamName);
+    return times.length ? { org, times } : null;
+  }
+
   /* OS CARTÕES AUTOMÁTICOS DA ABA ENTREGAS (15/10/2026).
 
      Até aqui um cartão só existia se alguém o escrevesse, e o relatório do mês
@@ -1691,7 +1709,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, wiqlIteracao, transbordados, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts, chaveDePessoa, fichaDaPessoa, caminhoDoConteudo,
-    saneCartoes, saneEdicao, automaticosDoMaterial, saneAutomaticos,
+    saneCartoes, saneEdicao, automaticosDoMaterial, saneAutomaticos, saneFontes,
     iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, vizinhasDaSprint, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, digitalDoTexto, saneResumos, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,

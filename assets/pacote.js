@@ -143,6 +143,25 @@
     return linhas.sort((a, b) => Date.parse(a.sprint.finish) - Date.parse(b.sprint.finish));
   }
 
+  /* TUDO o que o documento precisa do DevOps, na ordem certa: itens, pais,
+     sustentação fora, e o ritmo das sprints quando o documento pede. É o que o
+     report.js faz ao carregar e o que a função da Vercel faz a cada pedido.
+
+     Itens e pais são UM par, devolvidos juntos: atribuir separado fazia o
+     documento degradar no meio do refresh. A sustentação sai aqui, uma vez só:
+     daqui descem o documento, o placar e o pacote, e filtrar num e esquecer de
+     outro é como a capa e o corpo passam a discordar. Os pais entram na leitura
+     da cadeia mas NÃO são filtrados. */
+  async function buscarTudo({ A, ctx, projetos, comRitmo, periodo, agora, avisar = avisoPadrao, mensagem = motivo }) {
+    const busca = await buscarItens({ A, ctx, projetos, avisar, mensagem });
+    const pais = await buscarPais({ A, ctx, base: busca.todos });
+    const itens = C.foraDaManutencao(busca.todos, busca.todos.concat(pais));
+    const sprintsBrutas = comRitmo
+      ? await buscarRitmo({ A, ctx, escopos: busca.escopos, periodo, agora, avisar, mensagem })
+      : null;
+    return { itens, pais, sprintsBrutas, areaIncerta: busca.areaIncerta };
+  }
+
   /* ---------- Montagem ---------- */
 
   /* A linha pronta, no recorte que o leitor está vendo agora. O instante é o
@@ -288,7 +307,7 @@
 
   return {
     CAMPOS, CAMPOS_PAI, NIVEIS_ACIMA,
-    buscarItens, buscarPais, buscarRitmo,
+    buscarItens, buscarPais, buscarRitmo, buscarTudo,
     ritmoDe, descricoesPendentes, saneRitmo, automaticos, montarEntregas,
   };
 });

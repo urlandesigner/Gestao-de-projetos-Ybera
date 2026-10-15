@@ -603,29 +603,19 @@ async function carregar() {
           + ' seguindo com o nome guardado. Motivo: ' + e.message);
       }
     }
-    /* A busca mora em assets/pacote.js (a função da Vercel faz a mesma). Área
-       que falhou vira aviso visível só pro PO: sem ela o documento conta o
+    /* A busca mora em assets/pacote.js — a função da Vercel faz exatamente a
+       mesma. Itens e pais chegam como UM par e são atribuídos juntos. Área que
+       falhou vira aviso visível só pro PO: sem ela o documento conta o
        projeto inteiro e o total sai maior que a realidade. */
-    const busca = await P.buscarItens({ A, ctx: ctx(), mensagem: mensagemDeErro,
-      projetos: st.config.projects.filter((x) => !x.hidden) });
-    const todos = busca.todos;
-    const escopos = busca.escopos; // projeto + área de cada time, pra quem mede sprint depois
-    if (busca.areaIncerta) st.areaIncerta = true;
-    // Itens e pais são UM par: atribuir separado fazia o documento degradar no
-    // meio do refresh (grupos desmontando na tela) e, num fetch falho, deixava
-    // itens novos com pais de ninguém — e o link era reescrito desse estado.
-    st.pais = await P.buscarPais({ A, ctx: ctx(), base: todos });
-    /* Sustentação sai aqui, uma vez só, e não em cada lugar que conta: daqui
-       descem o documento, o placar e o pacote do link de leitura — filtrar num
-       e esquecer de outro é como a capa e o corpo passam a discordar.
-       Os pais entram na leitura da cadeia mas NÃO são filtrados: o guarda-chuva
-       costuma estar fora do recorte do PO, e sem ele os filhos pareceriam
-       órfãos e continuariam contando. */
-    st.items = C.foraDaManutencao(todos, todos.concat(st.pais));
-    st.sprintsBrutas = B.precisaDeSprints === true
-      ? await P.buscarRitmo({ A, ctx: ctx(), escopos, agora: Date.now(), mensagem: mensagemDeErro,
-        periodo: typeof B.periodoDoDocumento === 'function' ? B.periodoDoDocumento() : [] })
-      : null;
+    const tudo = await P.buscarTudo({ A, ctx: ctx(), mensagem: mensagemDeErro,
+      projetos: st.config.projects.filter((x) => !x.hidden),
+      comRitmo: B.precisaDeSprints === true,
+      periodo: typeof B.periodoDoDocumento === 'function' ? B.periodoDoDocumento() : [],
+      agora: Date.now() });
+    if (tudo.areaIncerta) st.areaIncerta = true;
+    st.pais = tudo.pais;
+    st.items = tudo.itens;
+    st.sprintsBrutas = tudo.sprintsBrutas;
   } catch (e) {
     st.erro = mensagemDeErro(e);
   } finally {

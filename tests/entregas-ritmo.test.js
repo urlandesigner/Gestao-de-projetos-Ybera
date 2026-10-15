@@ -451,8 +451,9 @@ const fontePacote = ler('assets/pacote.js');
 const P = require('../assets/pacote.js');
 
 test('a busca de sprint só acende pra quem declara — os outros dois documentos não gastam requisição', () => {
-  assert.match(fonteReport, /st\.sprintsBrutas = B\.precisaDeSprints === true\s*\? await P\.buscarRitmo\(/,
+  assert.match(fonteReport, /comRitmo: B\.precisaDeSprints === true,/,
     'a busca deixou de ser condicional e o report-v2.html passou a consultar sprint à toa');
+  assert.match(fontePacote, /const sprintsBrutas = comRitmo\s*\? await buscarRitmo\(/);
   assert.match(fontePacote, /sprints: B\.precisaDeSprints === true \? saneRitmo\(ritmoLinhas\) : undefined,/,
     'o pacote do link ganhou sprint em documento que não pediu');
   // `ritmoLinhas` é calculado UMA vez e serve ao pacote e às pendências: duas
