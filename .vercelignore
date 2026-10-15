@@ -1,0 +1,21 @@
+# O que a Vercel NÃO publica — o mesmo recorte do scripts/sincronizar-pages.sh,
+# que é o que vai pro site oficial (Nivello-Sistemas/ideias-e-inovacao).
+# As duas listas andam juntas: quem mexer numa mexe na outra, senão as duas
+# produções voltam a mostrar coisas diferentes.
+
+# Ferramenta de quem mantém, não do site. diagnostico.html lê o PAT do
+# localStorage: não expõe token de ninguém, mas não tem o que fazer no ar.
+/scripts/
+/publicar.command
+/diagnostico.html
+
+# Estudos: só sobem quando o Urlan pedir (decisão de 14/10/2026).
+/report-v2.html
+/assets/briefing-v2.js
+/assets/report-v2.css
+
+# Caixas de entrada de captura (já fora do git).
+/setembro/
+/outubro/
+/novembro/
+/dezembro/
