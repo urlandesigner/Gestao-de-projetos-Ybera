@@ -1122,6 +1122,68 @@
     return { periodo, cartoes: saneCartoes(o.cartoes) };
   }
 
+  /* OS CARTÕES AUTOMÁTICOS DA ABA ENTREGAS (15/10/2026).
+
+     Até aqui um cartão só existia se alguém o escrevesse, e o relatório do mês
+     mostrava o que deu tempo de escrever — não o que o time entregou. Em 14/10
+     eram 2 cartões contra 6 PBIs concluídas fora deles, e quem lia achava que
+     só aquilo tinha saído.
+
+     Agora toda Feature que teve PBI concluída no período vira um cartão, com a
+     lista do que fechou. O texto escrito à mão continua mandando: frente que já
+     tem cartão escrito (pelo `featureIds` dele) não ganha o automático.
+
+     `automaticosDoMaterial` recebe o material de `entregasConcluidas` (o mesmo
+     do bloco local `_entregas`) e devolve SÓ o que pode ir a público: nome da
+     Feature e do épico, e título, data e linha de resumo de cada PBI. A
+     descrição crua fica para trás — ela é o motivo de o `_entregas` nunca ser
+     publicado. Item sem Feature não vira cartão: sem a frente não há título
+     honesto pra pôr em cima dele. */
+  function automaticosDoMaterial(material, resumos) {
+    const m = material && typeof material === 'object' ? material : {};
+    const linhas = resumos && typeof resumos === 'object' ? resumos : {};
+    const porFrente = new Map();
+    for (const fr of (Array.isArray(m.frentes) ? m.frentes : [])) {
+      if (!fr || !fr.feature || !fr.chave) continue;
+      porFrente.set(fr.chave, { feature: fr.feature, epico: fr.epico || null, itens: [] });
+    }
+    for (const it of (Array.isArray(m.itens) ? m.itens : [])) {
+      const fr = it && porFrente.get(it.frente);
+      if (!fr) continue;
+      fr.itens.push({
+        id: it.id,
+        titulo: it.titulo,
+        fechadoEm: it.fechadoEm,
+        resumo: (linhas[String(it.id)] || {}).resumo || '',
+      });
+    }
+    return saneAutomaticos([...porFrente.values()]);
+  }
+
+  /* Forjável como todo o resto do pacote: id vira número, texto vira texto
+     curto, e a lista tem teto. Frente sem item nenhum some — cartão vazio
+     dizendo que algo foi entregue seria mentira. */
+  function saneAutomaticos(lista) {
+    const num = (v) => (Number.isFinite(Number(v)) && Number(v) > 0 ? Number(v) : null);
+    const txt = (v, n) => String(v == null ? '' : v).trim().slice(0, n);
+    const data = (v) => (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : '');
+    return (Array.isArray(lista) ? lista : []).slice(0, 40)
+      .filter((f) => f && f.feature && num(f.feature.id) && txt(f.feature.nome, 200))
+      .map((f) => ({
+        feature: { id: num(f.feature.id), nome: txt(f.feature.nome, 200) },
+        epico: f.epico && num(f.epico.id) ? { id: num(f.epico.id), nome: txt(f.epico.nome, 200) } : null,
+        itens: (Array.isArray(f.itens) ? f.itens : []).slice(0, 60)
+          .filter((x) => x && num(x.id) && txt(x.titulo, 300))
+          .map((x) => ({
+            id: num(x.id),
+            titulo: txt(x.titulo, 300),
+            fechadoEm: data(x.fechadoEm),
+            resumo: txt(x.resumo, 400),
+          })),
+      }))
+      .filter((f) => f.itens.length);
+  }
+
   function saneRoadmapItens(lista) {
     const dataValida = (s) => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s)
       && !Number.isNaN(Date.parse(s + 'T00:00:00Z'));
@@ -1629,7 +1691,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, wiqlIteracao, transbordados, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts, chaveDePessoa, fichaDaPessoa, caminhoDoConteudo,
-    saneCartoes, saneEdicao,
+    saneCartoes, saneEdicao, automaticosDoMaterial, saneAutomaticos,
     iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, vizinhasDaSprint, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, digitalDoTexto, saneResumos, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,

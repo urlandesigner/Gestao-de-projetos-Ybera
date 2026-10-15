@@ -227,6 +227,32 @@ body.pagina-entregas {
 .rl-titulo span { display: block; }
 /* Linha de situação: diz o que o documento é. Largura de leitura curta de
    propósito — é uma frase, não um parágrafo. */
+/* A lista do cartão automático (15/10/2026): título da PBI em peso de texto
+   e a linha de resumo apagada embaixo, a mesma anatomia dos itens da aba
+   Acompanhar. Sem marcador: o fio entre os itens já separa. */
+.rl-frente-itens {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+}
+.rl-frente-itens li {
+  padding: 0.55rem 0;
+  border-top: var(--fio);
+}
+.rl-frente-itens li:first-child { border-top: none; padding-top: 0; }
+.rl-frente-item-titulo {
+  display: block;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--tinta);
+}
+.rl-frente-item-resumo {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--mudo);
+}
 /* O selo de mês em andamento: logo abaixo do título, porque é o título que ele
    qualifica — "Outubro de 2026", mas só até o dia 14. Âmbar e não vermelho: é
    aviso de leitura, não problema. */

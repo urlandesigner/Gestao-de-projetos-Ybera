@@ -260,5 +260,91 @@
    ],
    "transbordados": []
   }
+ ],
+ "automaticos": [
+  {
+   "feature": {
+    "id": 42883,
+    "nome": "[EUA] Subscriptions"
+   },
+   "epico": {
+    "id": 49290,
+    "nome": "Loja Clube USA"
+   },
+   "itens": [
+    {
+     "id": 43087,
+     "titulo": "Pesquisa e Validação de Plataforma de Assinaturas",
+     "fechadoEm": "2026-10-09",
+     "resumo": "Compara as ferramentas pagas de assinatura recorrente e escolhe a que suporta o crescimento do produto."
+    }
+   ]
+  },
+  {
+   "feature": {
+    "id": 50184,
+    "nome": "Integridade das regras de promoção — loja USA"
+   },
+   "epico": {
+    "id": 49290,
+    "nome": "Loja Clube USA"
+   },
+   "itens": [
+    {
+     "id": 49931,
+     "titulo": "[Bug] Brinde incluído indevidamente em pedidos abaixo de US$100",
+     "fechadoEm": "2026-10-08",
+     "resumo": "Corrige o brinde que estava sendo incluído em pedidos que não atingiam o valor mínimo da promoção."
+    }
+   ]
+  },
+  {
+   "feature": {
+    "id": 51944,
+    "nome": "[EUA] Identificação da parceira no pedido"
+   },
+   "epico": {
+    "id": 51944,
+    "nome": "[EUA] Identificação da parceira no pedido"
+   },
+   "itens": [
+    {
+     "id": 51868,
+     "titulo": "Exibir a parceira vinculada ao pedido na confirmação da compra e no e-mail",
+     "fechadoEm": "2026-10-09",
+     "resumo": "Mostra na confirmação e no e-mail por qual parceira a compra foi feita, sem a cliente precisar falar com o atendimento."
+    }
+   ]
+  },
+  {
+   "feature": {
+    "id": 51943,
+    "nome": "[EUA] Melhorias no checkout (Ybera USA)"
+   },
+   "epico": {
+    "id": 49290,
+    "nome": "Loja Clube USA"
+   },
+   "itens": [
+    {
+     "id": 51870,
+     "titulo": "Limite de caracteres nos campos de endereço do checkout",
+     "fechadoEm": "2026-10-08",
+     "resumo": "Avisa a cliente no checkout quando o endereço não cabe no formato que a transportadora aceita, antes de o pedido sair."
+    },
+    {
+     "id": 51941,
+     "titulo": "Discovery técnico: verificação de endereço no checkout",
+     "fechadoEm": "2026-10-09",
+     "resumo": "Testa o AddressGuard e as alternativas de verificação de endereço antes de escolher qual implementar."
+    },
+    {
+     "id": 51945,
+     "titulo": "Discovery técnico: (spike): Venmo, Zelle e Klarna como formas de pagamento",
+     "fechadoEm": "2026-10-13",
+     "resumo": "Verifica se dá para oferecer Venmo, Zelle e Klarna no checkout e o que cada um exige."
+    }
+   ]
+  }
  ]
 }

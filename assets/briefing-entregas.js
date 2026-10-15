@@ -521,6 +521,17 @@
     return Array.isArray(o.cartoes) ? o.cartoes : [];
   }
 
+  /* A lista do cartão automático: o que fechou na frente, com a linha de
+     resumo embaixo do título quando ela existe. O título da PBI é jargão de
+     time; a linha (assets/resumos.json) é a tradução — a mesma da aba
+     Acompanhar, pra mesma PBI não ter duas explicações. */
+  function listaEntregue(itens) {
+    return `<ul class="rl-frente-itens">${itens.map((x) => `<li>
+          <span class="rl-frente-item-titulo">${esc(x.titulo)}</span>
+          ${x.resumo ? `<span class="rl-frente-item-resumo">${esc(x.resumo)}</span>` : ''}
+        </li>`).join('')}</ul>`;
+  }
+
   function corpoEntregasRecentes(lista, mostrarProduto) {
     const cartoes = lista.map((f) => {
       const est = SELOS[f.status];
@@ -534,6 +545,7 @@
         ${[].concat(f.resumo || []).map((par) => (typeof par === 'string'
           ? `<p class="rl-frente-resumo">${esc(par)}</p>`
           : `<p class="rl-frente-nota">${esc(par.nota)}</p>`)).join('')}
+        ${(f.entregues || []).length ? listaEntregue(f.entregues) : ''}
         ${f.progresso ? barra(f.progresso) : ''}
         ${(f.imagens || []).length ? galeria(f) : ''}
         ${f.link ? cta(f.link) : ''}

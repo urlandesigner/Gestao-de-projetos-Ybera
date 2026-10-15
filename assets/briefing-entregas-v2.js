@@ -102,6 +102,9 @@
       rotulo: MES_LONGO[m] + ' de ' + ano,
       rotuloCurto: MES_TRES[m] + ' ' + ano,
       periodo: [id],
+      // Os cartões automáticos valem dos meses gerados pela data em diante.
+      // Agosto/setembro não: relatório fechado e já compartilhado.
+      cartoesAutomaticos: true,
       // Crase e não aspa: o publicar-dados.sh lê os nomes FIXOS por aspa simples,
       // e este é o padrão, que ele aceita por conta própria.
       arquivoDeDados: `assets/dados-${id}.json`,
@@ -477,13 +480,48 @@
     return html.slice(0, corte) + secao + html.slice(corte);
   }
 
+  /* O CARTÃO AUTOMÁTICO de uma frente: título da Feature, a lista do que
+     fechou nela no período, e a conta FIXA no que fechou no período.
+
+     `contaFixa`, e não `featureIds` na conta: a contagem por Feature do base é
+     de TUDO que a frente já entregou, e num relatório de mês uma Feature com
+     13 PBIs de história somaria 13 na capa por causa de uma que fechou agora.
+     O `featureIds` continua no cartão, mas só pra dizer de que frente ele é.
+
+     O "[EUA]" e afins no começo do nome da Feature saem: é etiqueta de board,
+     e o leitor já sabe de que loja é o relatório. */
+  const semEtiqueta = (t) => String(t || '').replace(/^(\s*\[[^\]]*\]\s*)+/, '').trim() || String(t || '');
+
+  function cartaoAutomatico(fr) {
+    return {
+      titulo: semEtiqueta(fr.feature.nome),
+      produto: fr.epico ? fr.epico.nome : '',
+      featureIds: [fr.feature.id],
+      contaFixa: fr.itens.length,
+      entregues: fr.itens,
+      automatico: true,
+    };
+  }
+
+  /* Os escritos primeiro, depois os automáticos das frentes que nenhum cartão
+     escrito cobre. "Cobrir" é declarar a Feature em `featureIds`: é o jeito de
+     o PO dizer "esta frente eu escrevi", e o automático sai da frente dele. */
+  function comAutomaticos(escritos, automaticos) {
+    if (!ATIVA.cartoesAutomaticos || !Array.isArray(automaticos) || !automaticos.length) return escritos;
+    const cobertas = new Set();
+    for (const c of escritos) for (const f of (Array.isArray(c.featureIds) ? c.featureIds : [])) cobertas.add(Number(f));
+    const novos = automaticos.filter((fr) => fr && fr.feature && !cobertas.has(Number(fr.feature.id)))
+      .map(cartaoAutomatico);
+    return escritos.concat(novos);
+  }
+
   /* O período e os cartões DESTA edição vão pro base como opção. Quem chamou
      manda — é assim que os testes fixam um recorte sem depender do calendário,
      e é o mesmo contrato que o base já oferecia. */
   function htmlReport(o) {
     const entrada = Object.assign({}, o, {
       periodo: (o && Array.isArray(o.periodo) && o.periodo.length) ? o.periodo : ATIVA.periodo,
-      cartoes: (o && Array.isArray(o.cartoes)) ? o.cartoes : [],
+      cartoes: comAutomaticos((o && Array.isArray(o.cartoes)) ? o.cartoes : [], (o || {}).automaticos),
     });
     const r = base.htmlReport(entrada);
     if (!r || !r.html) return r;
@@ -519,6 +557,7 @@
     escolherEdicao,
     edicaoPedidaNaUrl,
     edicoesAte,
+    comAutomaticos,
     // Expostos pro teste medir a costura sem reimplementá-la.
     secaoRitmo,
     abasHtml,

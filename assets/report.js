@@ -95,6 +95,7 @@ const st = {
      render; `sprints` são as linhas já contadas que chegam pelo link. */
   sprintsBrutas: null,
   sprints: [],
+  automaticos: [], // cartões automáticos do pacote (modo leitura)
   /* Ligado quando a leitura das áreas do time falhou: a consulta passou a
      valer pro projeto inteiro e os totais estão MAIORES que a realidade. Fica
      visível só pro PO — quem decide publicar o link é ele, e o leitor do link
@@ -569,6 +570,7 @@ function render() {
        dela divergem na primeira vez que alguém mudar o nome no DevOps. */
     chavePO: C.chaveDePessoa(st.leitura ? st.escopo : assinatura(respAtivo())),
     cartoes: cartoesDaVez(),
+    automaticos: st.leitura ? st.automaticos : automaticosAgora(itensDoDoc),
     unidade: UNIDADE,
     mes: st.mes,
   });
@@ -1052,6 +1054,17 @@ let geracaoLink = 0; // troca rápida de mês: só a gravação mais nova pode e
 
    O custo é conhecido e foi aceito com o número na frente: a sprint publicada
    deixa de ser a do squad e passa a ser a fatia do PO. */
+/* OS CARTÕES AUTOMÁTICOS, ao vivo: o mesmo material do bloco `_entregas`,
+   reduzido ao que pode ir a público (C.automaticosDoMaterial). Uma função só
+   pra tela e pro pacote — se fossem duas contas, o PO veria uma aba Entregas e
+   o leitor outra. Só no documento que declara `precisaDeEntregas`. */
+function automaticosAgora(lista) {
+  if (B.precisaDeEntregas !== true || typeof B.entregasConcluidas !== 'function') return [];
+  const material = B.entregasConcluidas(lista, st.items.concat(st.pais),
+    typeof B.periodoDoDocumento === 'function' ? B.periodoDoDocumento() : []);
+  return C.automaticosDoMaterial(material, st.resumos);
+}
+
 function pacoteDoDocumento(paraArquivo) {
   const recorte = respAtivo();
   const mostrados = st.items.filter((it) => doResponsavel(it, recorte));
@@ -1117,6 +1130,10 @@ function pacoteDoDocumento(paraArquivo) {
          item. Uma função só nas duas pontas é o que garante que o que sai é
          exatamente o que entra. */
       sprints: B.precisaDeSprints === true ? saneRitmo(ritmoLinhas) : undefined,
+      /* Os cartões automáticos viajam prontos, no arquivo E no link: quem lê
+         não tem os itens do board pra montá-los. Só título, data e linha de
+         resumo — a descrição crua continua só no `_entregas`, que não sai. */
+      automaticos: B.precisaDeEntregas === true ? automaticosAgora(mostrados) : undefined,
       /* Só no ARQUIVO, nunca no link: o link já é o conteúdo final, não passa
          por script nenhum, e um bloco de descrições cruas dentro dele iria
          inteiro pra quem recebesse. Ausente quando não há pendência. */
@@ -1291,6 +1308,7 @@ function aplicarPacote(pacote) {
   // Formato curto: vem saneado no briefing, que é quem sabe a forma dele.
   st.contagens = pacote.contagens || null;
   st.sprints = saneRitmo(pacote.sprints); // link antigo não traz: vira lista vazia
+  st.automaticos = C.saneAutomaticos(pacote.automaticos); // idem: pacote antigo, nenhum
   st.escopo = pacote.escopo || '';
   st.agora = pacote.em || Date.now();
   st.mes = pacote.mes || null;
