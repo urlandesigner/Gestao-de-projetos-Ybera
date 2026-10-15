@@ -102,3 +102,14 @@ test('o report não foi arrastado junto: o recorte é só da Central', () => {
   assert.ok(!/const POS = \[/.test(fonteReport),
     'report.js ganhou o recorte das POs sem ter sido pedido');
 });
+
+/* O "Status de demandas" some do menu pra Tazshida (15/10/2026) — só o item do
+   menu, pela mesma regra do roadmap: manda o seletor, senão o dono do token. */
+test('o Status de demandas some do menu da Tazshida, seguindo o seletor', () => {
+  const src = fonteApp;
+  assert.match(src, /const SEM_STATUS_NO_MENU = \['tazshida'\];/);
+  assert.match(src, /C\.chaveDePessoa\(respAtivo\(\) \|\| \(state\.cache && state\.cache\.usuario\) \|\| ''\)/);
+  assert.match(src, /function renderAll\(\) \{ renderBadge\(\); renderMenuPorPO\(\);/);
+  // A página em si não é escondida: o link dela circula sem token.
+  assert.doesNotMatch(fs.readFileSync(path.join(__dirname, '..', 'status-demandas.html'), 'utf8'), /Tazshida/);
+});

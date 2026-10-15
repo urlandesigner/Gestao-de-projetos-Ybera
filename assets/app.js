@@ -579,6 +579,7 @@ async function refreshAll(force) {
          assim até a pessoa recarregar a página, e ela não teria por que
          recarregar: o resto da Central já estaria preenchido. */
       if (state.cache.usuario) renderRoadmap();
+      renderMenuPorPO(); // o nome do dono do token também decide o menu
     }
     const visiveis = state.config.projects.filter((p) => !p.hidden);
     await Promise.all([...visiveis.map(refreshCard), refreshMyItems()]);
@@ -604,7 +605,20 @@ async function refreshAll(force) {
 }
 
 /* ---------- Render ---------- */
-function renderAll() { renderBadge(); renderPanorama(); renderPendencias(); renderMyItems(); renderGrid(); renderRoadmap(); }
+/* MENU POR PO (15/10/2026). O "Status de demandas" é da loja US e escrito à
+   mão; pra algumas POs ele não faz sentido e some do menu. Segue a mesma regra
+   do roadmap e dos relatórios: manda a PO do seletor, ou o dono do token
+   quando nada foi escolhido. É só o item do menu — a página continua abrindo
+   por endereço, porque o link dela circula sem token. */
+const SEM_STATUS_NO_MENU = ['tazshida'];
+function renderMenuPorPO() {
+  const item = $('nav-status');
+  if (!item) return;
+  const quem = C.chaveDePessoa(respAtivo() || (state.cache && state.cache.usuario) || '');
+  item.hidden = SEM_STATUS_NO_MENU.includes(quem);
+}
+
+function renderAll() { renderBadge(); renderMenuPorPO(); renderPanorama(); renderPendencias(); renderMyItems(); renderGrid(); renderRoadmap(); }
 
 // Contadores das linhas de navegação (eco do "Applicants 23" da referência)
 function renderNavContas() {
