@@ -30,7 +30,7 @@ function regra() {
 
 test('as três POs passam, com ou sem sobrenome', () => {
   const { ehPO } = regra();
-  for (const n of ['Urlan', 'Urlan Dipre', 'Isadora', 'Daniele']) {
+  for (const n of ['Urlan', 'Urlan Dipre', 'Isadora', 'Daniele', 'Taz', 'Taz Fulana', 'Carla', 'Carla Souza']) {
     assert.equal(ehPO(n), true, `${n} é PO e precisa aparecer no seletor`);
   }
 });
@@ -65,11 +65,15 @@ test('o casamento é do primeiro nome inteiro, não de prefixo', () => {
   assert.equal(ehPO('Daniel'), false);
   assert.equal(ehPO('Urla'), false);
   assert.equal(ehPO('Isa'), false);
+  // Carla não puxa Carlos, e Taz não puxa Tazio: nome inteiro, nunca prefixo.
+  assert.equal(ehPO('Carlos Silva'), false);
+  assert.equal(ehPO('Tazio'), false);
 });
 
 test('a lista declarada é exatamente a que o Urlan pediu', () => {
   const { POS } = regra();
-  assert.deepEqual(POS, ['Urlan', 'Isadora', 'Daniele']);
+  // Taz e Carla entraram em 15/10/2026, a pedido dele.
+  assert.deepEqual(POS, ['Urlan', 'Isadora', 'Daniele', 'Taz', 'Carla']);
 });
 
 /* A barra some quando não sobra ninguém pra escolher. Antes a checagem era
