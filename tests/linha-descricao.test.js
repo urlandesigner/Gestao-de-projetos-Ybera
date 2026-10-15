@@ -273,7 +273,7 @@ test('só pede o que falta, e a régua é a mesma do relatório', () => {
   // Cada linha custa trabalho: PBI já escrita cuja descrição não mudou fica
   // fora. Sem `de`, foi escrita à mão e nunca se regera.
   assert.match(diag, /if \(e && e\.resumo && \(!e\.de \|\| e\.de === C\.digitalDoTexto\(texto\)\)\)/);
-  assert.match(ler('assets/report.js'), /if \(e && e\.resumo && \(!e\.de \|\| e\.de === C\.digitalDoTexto\(texto\)\)\) continue;/);
+  assert.match(ler('assets/pacote.js'), /if \(e && e\.resumo && \(!e\.de \|\| e\.de === C\.digitalDoTexto\(texto\)\)\) continue;/);
 });
 
 test('PBI sem descrição não entra no material', () => {

@@ -726,32 +726,32 @@ test('o link declara exatamente os campos que o documento lê', () => {
    título vazio e descrição vazia — calado, porque campo ausente não estoura.
    Então o lugar onde ele é chamado faz parte do contrato. */
 test('o material de entregas só é montado no caminho do PO', () => {
+  /* A montagem mora no assets/pacote.js desde 15/10/2026. O contrato é o
+     mesmo: o material sai da busca AO VIVO (os itens e os pais que o PO
+     carregou), nunca do pacote do leitor. */
+  const pacote = fs.readFileSync(path.join(__dirname, '../assets/pacote.js'), 'utf8');
   const report = fs.readFileSync(path.join(__dirname, '../assets/report.js'), 'utf8');
   const chamada = /const material = \(paraArquivo && B\.precisaDeEntregas === true[\s\S]*?: null;/
-    .exec(report);
+    .exec(pacote);
   assert.ok(chamada, 'o material de entregas mudou de forma — reveja a exceção da varredura');
-  assert.match(chamada[0], /B\.entregasConcluidas\(mostrados, st\.items\.concat\(st\.pais\)/,
+  assert.match(chamada[0], /B\.entregasConcluidas\(mostrados, todos,/);
+  assert.match(report, /todos: st\.items\.concat\(st\.pais\),/,
     'o material passou a ser montado de outra fonte que não a busca ao vivo');
   // E o bloco nasce com `_`: é o contrato que o portão do publicar-dados.sh lê.
-  assert.match(report, /_entregas: \(material && material\.itens\.length\) \? material : undefined,/);
+  assert.match(pacote, /_entregas: \(material && material\.itens\.length\) \? material : undefined,/);
 });
 
-/* O teste acima lê a chamada; este RODA. Casar o texto garante que a linha está
-   escrita, não que ela faz o que diz — e os dois portões dela (só na publicação,
-   só pra quem declara) falham em silêncio quando erram: o bloco simplesmente
-   não aparece, e quem for escrever os cartões acha que o mês não teve entrega.
-
-   `pacoteDoDocumento` mora num arquivo que fala com window; aqui a expressão é
-   recortada e corrida com dublês, que é a mesma técnica que o saneRitmo usa. */
+/* O teste acima lê a chamada; este RODA a montagem de verdade. Os dois portões
+   do material (só na publicação, só pra quem declara) falham em silêncio quando
+   erram: o bloco simplesmente não aparece, e quem for escrever os cartões acha
+   que o mês não teve entrega. */
 test('os dois portões do material funcionam, e não só estão escritos', () => {
-  const report = fs.readFileSync(path.join(__dirname, '../assets/report.js'), 'utf8');
-  const trecho = /const material = \(paraArquivo[\s\S]*?: null;/.exec(report)[0];
-  const rodar = (paraArquivo, B) => {
-    const st = { items: [{ id: 1 }], pais: [] };
-    const mostrados = st.items;
-    // eslint-disable-next-line no-eval
-    return eval(trecho + '\nmaterial;');
-  };
+  const P = require('../assets/pacote.js');
+  const rodar = (paraArquivo, B) => P.montarEntregas(Object.assign({
+    B: Object.assign({ contagensDoLink: () => ({ f: {}, e: {} }) }, B),
+    mostrados: [{ id: 1 }], todos: [{ id: 1 }], todosItens: [{ id: 1 }],
+    sprintsBrutas: [], resumos: {}, roadmap: [], escopo: 'X', mes: null, agora: 1,
+  }, { paraArquivo }))._entregas;
   const ferramenta = { entregasConcluidas: () => ({ itens: ['x'], frentes: ['f'] }),
     periodoDoDocumento: () => ['2026-10'] };
 
@@ -760,14 +760,13 @@ test('os dois portões do material funcionam, e não só estão escritos', () =>
 
   // No LINK, não: é material de trabalho do PO, e no link ele viajaria inteiro
   // pra quem recebesse — com descrição crua de PBI dentro.
-  assert.equal(rodar(false, Object.assign({ precisaDeEntregas: true }, ferramenta)), null);
+  assert.equal(rodar(false, Object.assign({ precisaDeEntregas: true }, ferramenta)), undefined);
 
   // Sem declarar: é o documento de Agosto e Setembro, que já foi escrito.
-  assert.equal(rodar(true, ferramenta), null);
+  assert.equal(rodar(true, ferramenta), undefined);
 
-  // E a ferramenta ausente não estoura — o report-v2.html nem a
-  // têm, porque não carregam o módulo de entregas.
-  assert.equal(rodar(true, { precisaDeEntregas: true }), null);
+  // E a ferramenta ausente não estoura.
+  assert.equal(rodar(true, { precisaDeEntregas: true }), undefined);
 });
 
 test('o link não carrega título nem datas — o documento não os mostra', () => {

@@ -27,6 +27,11 @@ const raiz = path.join(__dirname, '..');
 const ler = (f) => fs.readFileSync(path.join(raiz, f), 'utf8');
 const semComentarios = (txt) => String(txt).replace(/\/\*[\s\S]*?\*\//g, '');
 const fonteReport = ler('assets/report.js');
+/* A montagem do pacote mudou de casa em 15/10/2026: foi pro assets/pacote.js,
+   que o navegador e a função da Vercel usam. Os testes de montagem leem e
+   RODAM o módulo. */
+const fontePacote = ler('assets/pacote.js');
+const P = require('../assets/pacote.js');
 const fonteV2 = ler('assets/briefing-entregas-v2.js');
 const publicar = ler('scripts/publicar-dados.sh');
 const css = semComentarios(ler('assets/ritmo.css'));
@@ -59,14 +64,12 @@ test('o aplicar-resumos.js tira TODO bloco local, não só o que ele conhece', (
 test('as descrições só entram no ARQUIVO, nunca no link', () => {
   /* O link é o conteúdo final: não passa por script nenhum, e um bloco de
      descrições cruas dentro dele iria inteiro pra quem recebesse. */
-  assert.match(fonteReport, /_descricoes: \(paraArquivo && pendentes && pendentes\.length\) \? pendentes : undefined,/);
-  assert.match(fonteReport, /const pendentes = \(paraArquivo && B\.precisaDeSprints === true\)/);
+  assert.match(fontePacote, /_descricoes: \(paraArquivo && pendentes && pendentes\.length\) \? pendentes : undefined,/);
+  assert.match(fontePacote, /const pendentes = \(paraArquivo && B\.precisaDeSprints === true\)/);
 });
 
 test('o saneador não deixa descrição passar, nos dois sentidos', () => {
-  const m = /function saneRitmo\(lista\) \{[\s\S]*?\n\}/.exec(fonteReport);
-  // eslint-disable-next-line no-eval
-  const saneRitmo = eval(`(${m[0]})`);
+  const saneRitmo = P.saneRitmo;
   const [linha] = saneRitmo([{
     nome: 'Sprint 20', estado: 'corrente',
     itens: [{ titulo: 'X', estado: 'To Do', tipo: 'pbi', descricao: 'segredo interno' }],
@@ -83,20 +86,22 @@ test('o resumo entra enquanto o item ainda tem id, e o id some depois', () => {
   /* Casar resumo com item do outro lado exigiria o `id` no pacote — justamente
      o campo que a poda tira. Por isso a linha vai PRONTA, embutida antes do
      saneamento. */
-  const i = fonteReport.indexOf('function ritmoAgora');
-  const corpo = fonteReport.slice(i, fonteReport.indexOf('function descricoesPendentes'));
-  assert.match(corpo, /const e = st\.resumos\[String\(it\.id\)\];/);
+  const i = fontePacote.indexOf('function ritmoDe');
+  const corpo = fontePacote.slice(i, fontePacote.indexOf('function descricoesPendentes'));
+  assert.match(corpo, /const e = r\[String\(it\.id\)\];/);
   assert.match(corpo, /if \(e && e\.resumo\) it\.resumo = e\.resumo;/);
   // e a ordem: embutir ANTES de sanear.
-  assert.ok(fonteReport.indexOf('it.resumo = e.resumo')
-    < fonteReport.indexOf('saneRitmo(ritmoLinhas)'));
+  assert.ok(fontePacote.indexOf('it.resumo = e.resumo')
+    < fontePacote.indexOf('saneRitmo(ritmoLinhas)'));
+  // e o report passa os resumos da página pra montagem.
+  assert.match(fonteReport, /resumos: st\.resumos,/);
 });
 
 /* ---------- 3. só gera o que falta ---------- */
 
 test('item já resumido, com a descrição intacta, não volta pra fila', () => {
-  const i = fonteReport.indexOf('function descricoesPendentes');
-  const corpo = fonteReport.slice(i, fonteReport.indexOf('\n}', i) + 2);
+  const i = fontePacote.indexOf('function descricoesPendentes');
+  const corpo = fontePacote.slice(i, fontePacote.indexOf('\n  }', i) + 4);
   assert.match(corpo, /if \(e && e\.resumo && \(!e\.de \|\| e\.de === C\.digitalDoTexto\(texto\)\)\) continue;/);
   // Item sem descrição nenhuma não entra: não há o que resumir.
   assert.match(corpo, /if \(!texto\) continue;/);
@@ -115,8 +120,8 @@ test('a impressão digital muda com o conteúdo, não com o espaço', () => {
 test('linha escrita à mão (sem `de`) nunca é regerada', () => {
   // `!e.de` curto-circuita antes da comparação: quem escreveu decide quando
   // reescrever, não a mudança da descrição.
-  const i = fonteReport.indexOf('function descricoesPendentes');
-  const corpo = fonteReport.slice(i, fonteReport.indexOf('\n}', i) + 2);
+  const i = fontePacote.indexOf('function descricoesPendentes');
+  const corpo = fontePacote.slice(i, fontePacote.indexOf('\n  }', i) + 4);
   assert.match(corpo, /!e\.de \|\|/);
 });
 

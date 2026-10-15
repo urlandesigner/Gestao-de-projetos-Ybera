@@ -31,27 +31,10 @@ function loadJSON(k) { try { return JSON.parse(localStorage.getItem(k)); } catch
 // Mesmos campos da base da Central: o report precisa de conclusão, prazo e pai.
 // Description entra pra virar o "objetivo" do produto no cabeçalho (só o épico/
 // Feature usa; nas linhas ela é ignorada).
-const CAMPOS = [
-  'System.Title', 'System.State', 'System.WorkItemType', 'System.Parent',
-  'System.AssignedTo', 'Microsoft.VSTS.Scheduling.StartDate', 'Microsoft.VSTS.Scheduling.TargetDate',
-  'Microsoft.VSTS.Common.ClosedDate', 'System.ChangedDate', 'System.Description',
-  // Entra pelo documento que mede ritmo de sprint: com a iteração junto, saber
-  // quem está em qual sprint é filtro local sobre uma lista que já veio, e não
-  // uma consulta por sprint. Não viaja no link — quem decide isso é o
-  // `camposDoLink` do documento, e nenhum dos três declara este campo.
-  'System.IterationPath',
-];
-
-// A consulta é presa à área do time (areaClause). Épico e Feature costumam
-// morar em outra área — ou em outro projeto — e simplesmente não vêm. Sem eles
-// a cadeia do produto quebra no primeiro salto e tudo cai em "sem produto".
-// workitemsbatch busca POR ID e não olha área: então pedimos os pais que
-// faltam, um nível por volta, até a cadeia fechar.
-// Estado, prazo e descrição entram porque o produto virou cabeçalho de grupo no
-// report — mostra em que pé o épico está e o objetivo dele, não só o nome.
-const CAMPOS_PAI = ['System.WorkItemType', 'System.Title', 'System.Parent',
-  'System.State', 'Microsoft.VSTS.Scheduling.TargetDate', 'System.Description'];
-const NIVEIS_ACIMA = 4; // PBI → Feature → Épico usa 2; 4 é folga pra hierarquia torta
+/* Os campos que o documento pede ao DevOps, e quantos níveis de pai ele sobe,
+   moram em assets/pacote.js desde 15/10/2026: a função da Vercel busca
+   exatamente o mesmo, e duas listas divergiriam. */
+const P = window.CentralPacote;
 
 // As ferramentas do PO só existem quando a URL pede: é assim que a Central
 // chama esta página com ?po=1. O link que vai pro stakeholder é montado
@@ -588,24 +571,6 @@ function render() {
   renderSemNome();
 }
 
-async function buscarPais(base) {
-  const porId = new Map(base.map((it) => [it.id, it]));
-  const tentados = new Set();
-  const extras = [];
-  for (let volta = 0; volta < NIVEIS_ACIMA; volta++) {
-    const faltando = [...new Set([...porId.values()]
-      .map((it) => (it.fields || {})['System.Parent'])
-      .filter((pai) => pai && !porId.has(pai) && !tentados.has(pai)))];
-    if (!faltando.length) break;
-    faltando.forEach((id) => tentados.add(id)); // pai sem permissão não volta: não insiste
-    let crus = [];
-    try { crus = await A.getFields(ctx(), faltando, CAMPOS_PAI); } catch (e) { break; }
-    if (!crus.length) break;
-    for (const it of crus) { porId.set(it.id, it); extras.push(it); }
-  }
-  return extras;
-}
-
 async function carregar() {
   if (!st.config || !st.pat || st.carregando) return;
   st.carregando = true;
@@ -638,30 +603,18 @@ async function carregar() {
           + ' seguindo com o nome guardado. Motivo: ' + e.message);
       }
     }
-    const todos = [];
-    const escopos = []; // projeto + área de cada time, pra quem mede sprint depois
-    for (const p of st.config.projects.filter((x) => !x.hidden)) {
-      let areas = [];
-      try {
-        areas = await A.teamAreas(ctx(), p.projectName, p.teamName);
-      } catch (e) {
-        /* Aqui o estrago é publicado: sem área o documento conta o projeto
-           inteiro e o total sai maior que a realidade. O PO precisa ver antes
-           de mandar o link. */
-        st.areaIncerta = true;
-        console.warn('[Central] não deu pra ler as áreas de ' + p.teamName
-          + ' — a consulta passa a valer pro PROJETO INTEIRO, e os números incham com itens de outros times.'
-          + ' Motivo: ' + mensagemDeErro(e));
-      }
-      escopos.push({ p, areas });
-      const ids = await A.runWiql(ctx(), p.projectName, p.teamName, C.wiqlProdutos(areas));
-      const crus = ids.length ? await A.getFields(ctx(), ids, CAMPOS) : [];
-      for (const it of crus) todos.push(Object.assign({ projeto: p.projectName }, it));
-    }
+    /* A busca mora em assets/pacote.js (a função da Vercel faz a mesma). Área
+       que falhou vira aviso visível só pro PO: sem ela o documento conta o
+       projeto inteiro e o total sai maior que a realidade. */
+    const busca = await P.buscarItens({ A, ctx: ctx(), mensagem: mensagemDeErro,
+      projetos: st.config.projects.filter((x) => !x.hidden) });
+    const todos = busca.todos;
+    const escopos = busca.escopos; // projeto + área de cada time, pra quem mede sprint depois
+    if (busca.areaIncerta) st.areaIncerta = true;
     // Itens e pais são UM par: atribuir separado fazia o documento degradar no
     // meio do refresh (grupos desmontando na tela) e, num fetch falho, deixava
     // itens novos com pais de ninguém — e o link era reescrito desse estado.
-    st.pais = await buscarPais(todos);
+    st.pais = await P.buscarPais({ A, ctx: ctx(), base: todos });
     /* Sustentação sai aqui, uma vez só, e não em cada lugar que conta: daqui
        descem o documento, o placar e o pacote do link de leitura — filtrar num
        e esquecer de outro é como a capa e o corpo passam a discordar.
@@ -669,7 +622,10 @@ async function carregar() {
        costuma estar fora do recorte do PO, e sem ele os filhos pareceriam
        órfãos e continuariam contando. */
     st.items = C.foraDaManutencao(todos, todos.concat(st.pais));
-    st.sprintsBrutas = B.precisaDeSprints === true ? await buscarRitmo(escopos) : null;
+    st.sprintsBrutas = B.precisaDeSprints === true
+      ? await P.buscarRitmo({ A, ctx: ctx(), escopos, agora: Date.now(), mensagem: mensagemDeErro,
+        periodo: typeof B.periodoDoDocumento === 'function' ? B.periodoDoDocumento() : [] })
+      : null;
   } catch (e) {
     st.erro = mensagemDeErro(e);
   } finally {
@@ -682,175 +638,18 @@ async function carregar() {
 }
 
 /* ---------- Ritmo das sprints ---------- */
-/* Só existe pra documento que DECLARA precisar, em `B.precisaDeSprints`. É o
-   mesmo arranjo de `camposDoLink` e `contagensDoLink`, e pelo mesmo motivo:
-   este arquivo serve três documentos, e dois deles não falam de sprint. Quem
-   não declara não gasta uma requisição sequer, e segue byte a byte como antes.
-
-   O que volta daqui é MATÉRIA-PRIMA, não a linha pronta: só os ids que estavam
-   na sprint hoje e no fim dela. Quem está em qual sprint HOJE sai de `st.items`,
-   que já veio, por isso não há uma consulta por sprint pra isso. E a linha é
-   montada no render, porque ela depende do recorte de responsável — que troca
-   sem recarregar. Montá-la aqui congelaria o número do recorte antigo embaixo
-   de um documento já redesenhado. */
-async function buscarRitmo(escopos) {
-  const periodo = typeof B.periodoDoDocumento === 'function' ? B.periodoDoDocumento() : [];
-  if (!periodo.length) return [];
-  const agora = Date.now();
-  const linhas = [];
-  for (const { p, areas } of escopos) {
-    let iteracoes = [];
-    try {
-      iteracoes = await A.teamIterations(ctx(), p.projectName, p.teamName);
-    } catch (e) {
-      /* Sem as iterações o documento perde a seção, não a página: o resto dele
-         não depende de sprint nenhuma. Mas avisa, senão "o time não fechou
-         sprint no período" e "a chamada falhou" ficam idênticos na tela. */
-      console.warn('[Central] não deu pra ler as sprints de ' + p.teamName
-        + ' — a seção de ritmo sai do documento. Motivo: ' + mensagemDeErro(e));
-      continue;
-    }
-    for (const sp of C.sprintsDoPeriodo(iteracoes, periodo)) {
-      /* Transbordo só existe em sprint FECHADA, e por isso só ela custa
-         consulta. Na corrente ninguém transbordou ainda; na futura nem começou.
-         Perguntar ali gastaria duas chamadas por abertura pra receber lista
-         vazia, sempre — e um ASOF numa data futura não quer dizer nada.
-         Quem está na sprint HOJE sai da lista que o documento já carregou. */
-      if (C.estadoDaSprint(sp, agora) !== 'fechada') {
-        linhas.push({ sprint: sp, idsAgora: null, idsNoFim: null });
-        continue;
-      }
-      /* As duas pontas saem do MESMO construtor, variando só o instante. Foi o
-         que fez o transbordo parar de misturar "saiu da sprint" com "as duas
-         consultas perguntavam coisas diferentes" — medido, 141 contra 147. */
-      const qAgora = C.wiqlIteracao(sp.path, areas);
-      const qNoFim = C.wiqlIteracao(sp.path, areas, Date.parse(sp.finish) + C.FIM_DO_DIA);
-      if (!qAgora || !qNoFim) continue;
-      try {
-        const [idsAgora, idsNoFim] = await Promise.all([
-          A.runWiql(ctx(), p.projectName, p.teamName, qAgora),
-          A.runWiql(ctx(), p.projectName, p.teamName, qNoFim),
-        ]);
-        linhas.push({ sprint: sp, idsAgora, idsNoFim });
-      } catch (e) {
-        /* A sprint continua na seção, sem o transbordo: o que ela entregou sai
-           da lista local e segue correto. Some só a parte que a consulta
-           responderia. */
-        console.warn('[Central] não deu pra saber o que transbordou da ' + sp.name
-          + ' — a linha dela fica sem essa parte. Motivo: ' + mensagemDeErro(e));
-        linhas.push({ sprint: sp, idsAgora: null, idsNoFim: null });
-      }
-    }
-  }
-  // Ordem crescente mesmo com mais de um time: a seção é série temporal, e
-  // concatenar por projeto deixaria setembro de um antes de agosto do outro.
-  return linhas.sort((a, b) => Date.parse(a.sprint.finish) - Date.parse(b.sprint.finish));
-}
-
-/* A linha pronta, no recorte que o leitor está vendo agora.
+/* A busca, a linha pronta, as pendências de resumo e o saneador moram em
+   assets/pacote.js desde 15/10/2026 — a função da Vercel usa os mesmos. Aqui
+   ficam só os atalhos que leem o estado desta página.
 
    O instante é o MESMO que o documento usa pra tudo — o de hoje pro PO, o da
-   geração pra quem abre o link. É ele que decide se a sprint está fechada, e
-   um "agora" próprio aqui faria a linha discordar da data impressa na capa. */
+   geração pra quem abre o link. */
 function ritmoAgora(itensNoEscopo) {
-  const agora = st.leitura ? st.agora : Date.now();
-  const linhas = (st.sprintsBrutas || []).map((x) =>
-    C.ritmoDaSprint(x.sprint, x.idsAgora, x.idsNoFim, itensNoEscopo, agora));
-  /* A linha editorial entra AQUI, enquanto o item ainda tem `id` — o saneador
-     tira o id logo depois, e do outro lado não haveria por onde casar. Item sem
-     entrada em resumos.json fica sem `resumo`, e o cartão mostra só o título:
-     é a verdade sobre uma PBI que ninguém descreveu, não uma falha. */
-  for (const linha of linhas) {
-    for (const lista of [linha.itens, linha.transbordados]) {
-      for (const it of (lista || [])) {
-        const e = st.resumos[String(it.id)];
-        if (e && e.resumo) it.resumo = e.resumo;
-      }
-    }
-  }
-  return linhas;
+  return P.ritmoDe({ sprintsBrutas: st.sprintsBrutas, itens: itensNoEscopo,
+    agora: st.leitura ? st.agora : Date.now(), resumos: st.resumos });
 }
 
-/* AS DESCRIÇÕES QUE AINDA PRECISAM DE RESUMO, pro arquivo que o botão baixa.
-
-   Viajam num bloco com underscore porque ele é LOCAL: o publicar-dados.sh se
-   recusa a publicar um arquivo que ainda o tenha. Não é disciplina de quem
-   roda, é portão — descrição de PBI tem link interno, nome de fornecedor e
-   observação escrita achando que era interna, e o arquivo publicado é público.
-
-   Só entra o que falta: item sem resumo, ou com resumo gerado de uma descrição
-   que mudou desde então. Quando não falta nada, o bloco não existe e o portão
-   nem se pronuncia. */
-function descricoesPendentes(linhas) {
-  const porId = new Map((st.items || []).map((it) => [it.id, it]));
-  const fora = [];
-  for (const linha of linhas) {
-    for (const lista of [linha.itens, linha.transbordados]) {
-      for (const it of (lista || [])) {
-        const bruto = porId.get(it.id);
-        const texto = C.descricaoLimpa(((bruto || {}).fields || {})['System.Description']);
-        if (!texto) continue; // nada pra resumir: o cartão fica com o título
-        const e = st.resumos[String(it.id)];
-        // Sem `de`, a linha foi escrita à mão: não se regera, mesmo se a
-        // descrição mudar. Quem escreveu decide quando reescrever.
-        if (e && e.resumo && (!e.de || e.de === C.digitalDoTexto(texto))) continue;
-        fora.push({ id: it.id, sprint: linha.nome, titulo: it.titulo, descricao: texto });
-      }
-    }
-  }
-  return fora;
-}
-
-/* Vindo do link, as linhas já estão contadas — e são forjáveis como todo o
-   resto do pacote. Texto curto, número inteiro e não negativo. */
-function saneRitmo(lista) {
-  const n = (v) => (Number.isFinite(v) && v >= 0 ? Math.floor(v) : 0);
-  const txt = (v, max) => String(v == null ? '' : v).trim().slice(0, max);
-  // O estado é vocabulário fechado: fora da lista vira '' e a linha não afirma
-  // nada, em vez de imprimir na tela o que veio escrito na URL.
-  const ESTADOS = ['fechada', 'corrente', 'futura'];
-  /* Os itens viajam desde que o documento virou acompanhamento. Título e estado
-     são texto que veio do DevOps e volta pela URL: cortados no tamanho, e o
-     `feito` reduzido a booleano — é ele que pinta o ponto de verde, e um valor
-     torto ali marcaria como entregue o que não está. O teto de 300 por sprint é
-     folga sobre as ~170 de uma sprint real. */
-  /* `tipo` NÃO viaja mais. Ele existia pra alimentar o selo "PBI/Bug/Task" na
-     linha do item, e esse selo saiu: pra quem lê de fora, saber que um item é
-     PBI e o outro é Bug não muda decisão nenhuma — todos os itens da lista são
-     a mesma coisa, trabalho da sprint. O lugar que o selo ocupava é do ESTADO,
-     que é o que o leitor abre o documento pra saber.
-
-     No lugar dele viaja `familia`: o estado reduzido às quatro etapas (a fazer,
-     em andamento, atenção, concluído), que é quem pinta o selo. Vocabulário
-     fechado, como o estado da sprint — fora da lista vira '' e o selo sai sem
-     cor, em vez de virar classe de CSS escrita por quem editou a URL. Pintar
-     de verde por causa de uma palavra digitada na barra de endereço seria o
-     documento afirmando entrega que não houve. */
-  const FAMILIAS = ['todo', 'andamento', 'atencao', 'feito'];
-  /* `resumo` é a linha editorial do assets/resumos.json, embutida item a item
-     no momento de montar o pacote. Vai pronta porque quem LÊ não tem como
-     buscá-la: o leitor do link não baixa arquivo nenhum, e casar resumo com
-     item do outro lado exigiria o `id` no pacote — justamente o campo que a
-     poda tira. Texto curto e cortado, como o título. */
-  const itensDe = (v) => (Array.isArray(v) ? v : []).slice(0, 300).map((y) => ({
-    titulo: txt((y || {}).titulo, 200),
-    resumo: txt((y || {}).resumo, 240),
-    estado: txt((y || {}).estado, 40),
-    familia: FAMILIAS.includes((y || {}).familia) ? y.familia : '',
-    feito: !!(y || {}).feito,
-  })).filter((y) => y.titulo);
-  return (Array.isArray(lista) ? lista : []).slice(0, 60).map((x) => ({
-    nome: txt((x || {}).nome, 80),
-    start: txt((x || {}).start, 40) || null,
-    finish: txt((x || {}).finish, 40) || null,
-    estado: ESTADOS.includes((x || {}).estado) ? x.estado : '',
-    entregues: n((x || {}).entregues),
-    total: n((x || {}).total),
-    transbordaram: n((x || {}).transbordaram),
-    itens: itensDe((x || {}).itens),
-    transbordados: itensDe((x || {}).transbordados),
-  })).filter((x) => x.nome);
-}
+const saneRitmo = (lista) => P.saneRitmo(lista);
 
 /* ---------- Link de leitura ---------- */
 // O stakeholder abre um LINK, não um arquivo. E ele não tem PAT — então o dado
@@ -1054,15 +853,9 @@ let geracaoLink = 0; // troca rápida de mês: só a gravação mais nova pode e
 
    O custo é conhecido e foi aceito com o número na frente: a sprint publicada
    deixa de ser a do squad e passa a ser a fatia do PO. */
-/* OS CARTÕES AUTOMÁTICOS, ao vivo: o mesmo material do bloco `_entregas`,
-   reduzido ao que pode ir a público (C.automaticosDoMaterial). Uma função só
-   pra tela e pro pacote — se fossem duas contas, o PO veria uma aba Entregas e
-   o leitor outra. Só no documento que declara `precisaDeEntregas`. */
+/* Os cartões automáticos, ao vivo — a mesma conta que vai no pacote. */
 function automaticosAgora(lista) {
-  if (B.precisaDeEntregas !== true || typeof B.entregasConcluidas !== 'function') return [];
-  const material = B.entregasConcluidas(lista, st.items.concat(st.pais),
-    typeof B.periodoDoDocumento === 'function' ? B.periodoDoDocumento() : []);
-  return C.automaticosDoMaterial(material, st.resumos);
+  return P.automaticos({ B, itens: lista, todos: st.items.concat(st.pais), resumos: st.resumos });
 }
 
 function pacoteDoDocumento(paraArquivo) {
@@ -1070,27 +863,31 @@ function pacoteDoDocumento(paraArquivo) {
   const mostrados = st.items.filter((it) => doResponsavel(it, recorte));
   /* O `escopo` do pacote é a ASSINATURA da capa ("Product Owner: X"), não o
      recorte — nada do lado do leitor filtra por ele, porque os itens já chegam
-     filtrados. Os dois andavam no mesmo campo, e por isso desligar o filtro
-     apagava a assinatura: a primeira publicação de outubro foi ao ar sem ela.
-
-     Quem assina, e os paraquedas de quando o DevOps não diz o nome, vivem em
-     `assinatura()` — e a TELA usa a mesma função. A cadeia estava escrita aqui,
-     e só aqui: por isso a tela e o pacote podiam discordar sobre a assinatura,
-     que foi metade do defeito de 13/10/2026. */
+     filtrados. Quem assina, e os paraquedas de quando o DevOps não diz o nome,
+     vivem em `assinatura()` — e a TELA usa a mesma função. */
   const escopo = assinatura(recorte);
   /* Dois formatos de pacote, e o documento escolhe.
 
-     O report e o v2 LISTAM itens: título, estado e prazo de cada um vão pra
-     tela, então o link precisa levá-los. O Entregas não lista nada disso —
-     ele extrai do board cinco números, e só. Quando o documento sabe fazer
-     essa conta (`contagensDoLink`), ela é feita AQUI, no navegador de quem
-     gera, e o link leva o resultado em vez do material bruto.
-
-     O leitor aceita os dois: link novo traz `contagens`, link já
-     compartilhado traz `items` e continua contando como antes. É o que
-     impede que encurtar o link de hoje quebre o que já está no grupo de
-     alguém. */
-  const cabecalho = {
+     O Entregas extrai do board números e linhas prontas (`contagensDoLink`):
+     a montagem mora em assets/pacote.js, porque a função da Vercel monta o
+     MESMO pacote pra quem não tem token. O report e o v2 LISTAM itens, e
+     seguem montados aqui. */
+  if (typeof B.contagensDoLink === 'function') {
+    return P.montarEntregas({
+      B,
+      mostrados,
+      todos: st.items.concat(st.pais),
+      todosItens: st.items,
+      sprintsBrutas: st.sprintsBrutas,
+      resumos: st.resumos,
+      roadmap: roadmapDaVez(),
+      escopo,
+      mes: st.mes,
+      agora: Date.now(),
+      paraArquivo,
+    });
+  }
+  return {
     v: 1,
     em: Date.now(),
     escopo,
@@ -1098,62 +895,12 @@ function pacoteDoDocumento(paraArquivo) {
     /* O recorte de quem GERA o link viaja resolvido: quem abre não tem nome
        nem arquivo pra consultar. */
     roadmap: roadmapDaVez(),
+    items: enxugar(mostrados),
+    ancestrais: cadeiaDeProdutos(mostrados, st.items.concat(st.pais)),
+    produtos: produtosDoLink(mostrados), // objetivo + rumo, prontos
+    decisoes: decisoesDoLink(mostrados), // pedido de decisão por item travado
+    nomes: nomesDoLink(mostrados), // nome de negócio só do que o leitor vê
   };
-  /* Uma passada só pelo ritmo: as linhas servem ao pacote (saneadas) e à lista
-     de pendências (cruas, com id). Chamar `ritmoAgora` duas vezes daria duas
-     fotos de instantes diferentes do mesmo documento. */
-  const ritmoLinhas = B.precisaDeSprints === true ? ritmoAgora(mostrados) : [];
-  const pendentes = (paraArquivo && B.precisaDeSprints === true)
-    ? descricoesPendentes(ritmoLinhas) : [];
-  /* O MATERIAL PRA ESCREVER A ABA ENTREGAS. Quem declara é o documento, em
-     `precisaDeEntregas` — mesmo arranjo de `precisaDeSprints`, e pelo mesmo
-     motivo: a ferramenta mora no módulo base, então os DOIS documentos de
-     entregas a enxergam, e só o que declara é que a usa. O de Agosto e Setembro
-     já foi escrito e publicado; gerar material pra ele seria trabalho sobre
-     texto que não se reescreve mais.
-
-     Só na publicação: é bloco de trabalho do PO, e no link ele viajaria
-     inteiro pra quem recebesse. */
-  const material = (paraArquivo && B.precisaDeEntregas === true
-    && typeof B.entregasConcluidas === 'function')
-    ? B.entregasConcluidas(mostrados, st.items.concat(st.pais),
-      typeof B.periodoDoDocumento === 'function' ? B.periodoDoDocumento() : [])
-    : null;
-  const pacote = typeof B.contagensDoLink === 'function'
-    ? Object.assign(cabecalho, {
-      contagens: B.contagensDoLink(mostrados, st.items.concat(st.pais)),
-      /* As linhas de sprint viajam CONTADAS — e passam pelo MESMO saneador
-         que lê o pacote do outro lado. Não é zelo repetido: `ritmoDaSprint`
-         devolve a forma curta inteira (id, responsável, tipo), e nada disso
-         é desenhado. Sem a poda, o nome de cada pessoa do time entraria num
-         arquivo publicado à toa, e o pacote carregaria três campos mortos por
-         item. Uma função só nas duas pontas é o que garante que o que sai é
-         exatamente o que entra. */
-      sprints: B.precisaDeSprints === true ? saneRitmo(ritmoLinhas) : undefined,
-      /* Os cartões automáticos viajam prontos, no arquivo E no link: quem lê
-         não tem os itens do board pra montá-los. Só título, data e linha de
-         resumo — a descrição crua continua só no `_entregas`, que não sai. */
-      automaticos: B.precisaDeEntregas === true ? automaticosAgora(mostrados) : undefined,
-      /* Só no ARQUIVO, nunca no link: o link já é o conteúdo final, não passa
-         por script nenhum, e um bloco de descrições cruas dentro dele iria
-         inteiro pra quem recebesse. Ausente quando não há pendência. */
-      _descricoes: (paraArquivo && pendentes && pendentes.length) ? pendentes : undefined,
-      /* Mesma regra do bloco acima, e o sublinhado é o contrato: chave que
-         começa com `_` é material local: o portão do publicar-dados.sh recusa o
-         pacote inteiro enquanto houver uma, e o aplicar-resumos.js tira todas
-         antes de publicar. Aqui dentro vão descrições cruas de PBI — link
-         interno, nome de fornecedor, observação escrita achando que era
-         interna — e o arquivo publicado é público e indexável. */
-      _entregas: (material && material.itens.length) ? material : undefined,
-    })
-    : Object.assign(cabecalho, {
-      items: enxugar(mostrados),
-      ancestrais: cadeiaDeProdutos(mostrados, st.items.concat(st.pais)),
-      produtos: produtosDoLink(mostrados), // objetivo + rumo, prontos
-      decisoes: decisoesDoLink(mostrados), // pedido de decisão por item travado
-      nomes: nomesDoLink(mostrados), // nome de negócio só do que o leitor vê
-    });
-  return pacote;
 }
 
 /* A EDIÇÃO VIAJA NO LINK, quando o documento tem mais de uma.

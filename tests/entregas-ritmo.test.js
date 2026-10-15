@@ -446,15 +446,18 @@ test('um fio separa o nome da sprint do período, e o espaço literal saiu do HT
 /* ---------- o controlador compartilhado ---------- */
 
 const fonteReport = ler('assets/report.js');
+// A busca e a montagem moram no assets/pacote.js desde 15/10/2026.
+const fontePacote = ler('assets/pacote.js');
+const P = require('../assets/pacote.js');
 
 test('a busca de sprint só acende pra quem declara — os outros dois documentos não gastam requisição', () => {
-  assert.match(fonteReport, /st\.sprintsBrutas = B\.precisaDeSprints === true \? await buscarRitmo\(escopos\) : null;/,
+  assert.match(fonteReport, /st\.sprintsBrutas = B\.precisaDeSprints === true\s*\? await P\.buscarRitmo\(/,
     'a busca deixou de ser condicional e o report-v2.html passou a consultar sprint à toa');
-  assert.match(fonteReport, /sprints: B\.precisaDeSprints === true \? saneRitmo\(ritmoLinhas\) : undefined,/,
+  assert.match(fontePacote, /sprints: B\.precisaDeSprints === true \? saneRitmo\(ritmoLinhas\) : undefined,/,
     'o pacote do link ganhou sprint em documento que não pediu');
   // `ritmoLinhas` é calculado UMA vez e serve ao pacote e às pendências: duas
   // chamadas dariam duas fotos de instantes diferentes do mesmo documento.
-  assert.match(fonteReport, /const ritmoLinhas = B\.precisaDeSprints === true \? ritmoAgora\(mostrados\) : \[\];/);
+  assert.match(fontePacote, /const ritmoLinhas = B\.precisaDeSprints === true\s*\? ritmoDe\(\{ sprintsBrutas, itens: mostrados, agora, resumos \}\) : \[\];/);
 });
 
 /* `ritmoDaSprint` devolve a forma curta inteira — id, responsável e tipo —, e
@@ -462,9 +465,7 @@ test('a busca de sprint só acende pra quem declara — os outros dois documento
    entraria num arquivo publicado à toa. O mesmo saneador nas duas pontas é o
    que garante que o que sai é exatamente o que entra. */
 test('o que é publicado passa pela mesma poda que o que é lido', () => {
-  const m = /function saneRitmo\(lista\) \{[\s\S]*?\n\}/.exec(fonteReport);
-  // eslint-disable-next-line no-eval
-  const saneRitmo = eval(`(${m[0]})`);
+  const saneRitmo = P.saneRitmo;
   const [linha] = saneRitmo([{
     nome: 'Sprint 20', estado: 'corrente', entregues: 1, total: 3, transbordaram: 0,
     itens: [{
@@ -491,9 +492,7 @@ test('o que é publicado passa pela mesma poda que o que é lido', () => {
 });
 
 test('item forjado no pacote não pinta de verde nem estoura o documento', () => {
-  const m = /function saneRitmo\(lista\) \{[\s\S]*?\n\}/.exec(fonteReport);
-  // eslint-disable-next-line no-eval
-  const saneRitmo = eval(`(${m[0]})`);
+  const saneRitmo = P.saneRitmo;
   const [linha] = saneRitmo([{
     nome: 'S', itens: [{ titulo: 'T'.repeat(900), estado: 'E'.repeat(99), feito: 'sim' }, { titulo: '' }],
   }]);
@@ -508,8 +507,8 @@ test('item forjado no pacote não pinta de verde nem estoura o documento', () =>
    Enquanto eram consultas diferentes, a diferença entre elas misturava
    transbordo com desencontro de definição — 141 contra 147 na Sprint 19. */
 test('as duas consultas da sprint saem do mesmo construtor', () => {
-  assert.match(fonteReport, /const qAgora = C\.wiqlIteracao\(sp\.path, areas\);/);
-  assert.match(fonteReport, /const qNoFim = C\.wiqlIteracao\(sp\.path, areas, Date\.parse\(sp\.finish\) \+ C\.FIM_DO_DIA\);/);
+  assert.match(fontePacote, /const qAgora = C\.wiqlIteracao\(sp\.path, areas\);/);
+  assert.match(fontePacote, /const qNoFim = C\.wiqlIteracao\(sp\.path, areas, Date\.parse\(sp\.finish\) \+ C\.FIM_DO_DIA\);/);
 });
 
 /* O recorte de responsável troca sem recarregar a página. Se a linha fosse
@@ -522,16 +521,14 @@ test('a linha é contada no render, sobre a MESMA lista que desenha o corpo', ()
 });
 
 test('a iteração entra nos campos buscados — senão não há como saber quem está em qual sprint', () => {
-  assert.match(fonteReport, /const CAMPOS = \[[\s\S]*?'System\.IterationPath',[\s\S]*?\];/);
+  assert.ok(P.CAMPOS.includes('System.IterationPath'));
 });
 
 /* O link é forjável como todo o resto do pacote: ele é texto numa URL. */
 test('as linhas que chegam pelo link passam por saneamento', () => {
   assert.match(fonteReport, /st\.sprints = saneRitmo\(pacote\.sprints\);/);
-  const m = /function saneRitmo\(lista\) \{[\s\S]*?\n\}/.exec(fonteReport);
-  assert.ok(m, 'saneRitmo sumiu');
-  // eslint-disable-next-line no-eval
-  const saneRitmo = eval(`(${m[0]})`);
+  assert.match(fonteReport, /const saneRitmo = \(lista\) => P\.saneRitmo\(lista\);/);
+  const saneRitmo = P.saneRitmo;
   assert.deepEqual(saneRitmo(null), []);
   assert.deepEqual(saneRitmo('nada'), []);
   const [x] = saneRitmo([{ nome: 'S'.repeat(500), entregues: -3, total: 1.7, transbordaram: 'x' }]);

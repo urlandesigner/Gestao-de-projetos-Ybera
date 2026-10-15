@@ -88,8 +88,17 @@ test('o cartão automático aparece no documento com a lista e conta na capa', (
 
 test('o pacote leva os automáticos ao leitor, saneados nas duas pontas', () => {
   const src = ler('assets/report.js');
-  // Fora do bloco local (sem sublinhado): vai pro arquivo E pro link.
-  assert.match(src, /\n {6}automaticos: B\.precisaDeEntregas === true \? automaticosAgora\(mostrados\) : undefined,/);
   assert.match(src, /st\.automaticos = C\.saneAutomaticos\(pacote\.automaticos\);/);
   assert.match(src, /automaticos: st\.leitura \? st\.automaticos : automaticosAgora\(itensDoDoc\),/);
+  // RODANDO a montagem: fora do bloco local (sem sublinhado), vai pro link e
+  // pra função da Vercel — e nada com `_` sai quando não é arquivo.
+  const P = require('../assets/pacote.js');
+  const B = { precisaDeEntregas: true, contagensDoLink: () => ({ f: {}, e: {} }),
+    entregasConcluidas: () => MATERIAL, periodoDoDocumento: () => ['2026-10'] };
+  const pacote = P.montarEntregas({ B, mostrados: [], todos: [], todosItens: [], sprintsBrutas: [],
+    resumos: RESUMOS, roadmap: [], escopo: 'Urlan Dipre', mes: null, agora: 1, paraArquivo: false });
+  assert.equal(pacote.automaticos.length, 2);
+  // Pela ida e volta em JSON, que é como o pacote sai: chave `undefined` some.
+  assert.deepEqual(Object.keys(JSON.parse(JSON.stringify(pacote))).filter((k) => k.startsWith('_')), []);
+  assert.doesNotMatch(JSON.stringify(pacote), /TEXTO INTERNO/);
 });
