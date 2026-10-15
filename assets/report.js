@@ -1215,6 +1215,74 @@ async function lerDoArquivo() {
 
    Endereço com `?edicao=` ou com `#r=` (link que carrega o próprio retrato)
    não é decidido aqui: quem mandou o link já disse o que é. */
+/* O RELATÓRIO AO VIVO (15/10/2026). Quem lê sem token pede o pacote à função
+   da Vercel, que busca no DevOps com um token guardado lá e devolve o MESMO
+   pacote que o "Publicar dados" gravaria (assets/pacote.js nas duas pontas).
+   Ninguém precisa mais publicar pra o leitor ver o mês atualizado.
+
+   Endereço absoluto: o site oficial (Pages da Nivello) não roda função, e
+   chama a da Vercel por CORS — que a função libera só pros sites do relatório.
+
+   REDE DE SEGURANÇA: função fora do ar, token vencido ou resposta lenta (mais
+   de 10 s) devolvem null, e o relatório cai no arquivo publicado, como era
+   antes. Nunca tela branca por causa da função.
+
+   Um pedido por edição por carga de página: a escolha da edição padrão e a
+   leitura usam o mesmo pacote, guardado aqui. */
+const FUNCAO_AO_VIVO = 'https://gestao-de-projetos-ybera.vercel.app/api/relatorio';
+const pacotesAoVivo = Object.create(null);
+
+function edicaoAoVivo(id) {
+  const e = Array.isArray(B.EDICOES) ? B.EDICOES.find((x) => x.id === id) : null;
+  return !!(e && e.aoVivo);
+}
+
+async function pedirAoVivo(id) {
+  if (!edicaoAoVivo(id)) return null;
+  if (id in pacotesAoVivo) return pacotesAoVivo[id];
+  const de = chaveDoEndereco() || DONO_HISTORICO;
+  const params = new URLSearchParams({ edicao: id, de });
+  const corte = typeof AbortController === 'function' ? new AbortController() : null;
+  const relogio = corte ? setTimeout(() => corte.abort(), 10000) : null;
+  let pacote = null;
+  try {
+    const resp = await fetch(FUNCAO_AO_VIVO + '?' + params.toString(), corte ? { signal: corte.signal } : {});
+    if (resp.ok) pacote = await resp.json();
+    else console.warn('[Report] a leitura ao vivo respondeu ' + resp.status + ' — o relatório usa o arquivo publicado.');
+  } catch (e) {
+    console.warn('[Report] a leitura ao vivo falhou — o relatório usa o arquivo publicado. Motivo: ' + e.message);
+  } finally {
+    if (relogio) clearTimeout(relogio);
+  }
+  pacotesAoVivo[id] = pacote && typeof pacote === 'object' ? pacote : null;
+  return pacotesAoVivo[id];
+}
+
+/* Edição "com conteúdo", pro leitor: entrega no mês (cartão automático) ou
+   cartão escrito pela PO. Sprint andando sem nada entregue ainda não conta —
+   abrir o link num mês sem entrega nenhuma é o "documento vazio" que a regra
+   da edição padrão existe pra evitar. */
+async function temConteudoAoVivo(id, chave) {
+  const pacote = await pedirAoVivo(id);
+  if (!pacote) return null; // a função não respondeu: quem decide é o arquivo
+  if (Array.isArray(pacote.automaticos) && pacote.automaticos.length) return true;
+  return existe(C.caminhoDoConteudo(chave || DONO_HISTORICO, 'edicoes/' + encodeURIComponent(id) + '.json'));
+}
+
+async function lerAoVivo() {
+  if (!edicaoAoVivo(B.edicao)) return false;
+  const pacote = await pedirAoVivo(B.edicao);
+  if (!pacote) return false;
+  entrarEmLeitura();
+  try {
+    aplicarPacote(pacote);
+    render();
+  } catch (e) {
+    falhaDeLeitura('desenho', FUNCAO_AO_VIVO, e.message);
+  }
+  return true;
+}
+
 async function existe(url) {
   try {
     const resp = await fetch(url + '?t=' + Date.now(), { method: 'HEAD', cache: 'no-store' });
@@ -1232,6 +1300,13 @@ async function resolverEdicaoPadrao() {
     ? (C.chaveDePessoa(assinatura(respAtivo())) || DONO_HISTORICO)
     : chaveDoEndereco();
   for (const e of B.EDICOES) {
+    /* Leitor, edição ao vivo: pergunta à função. Se ela não respondeu (null),
+       vale o critério antigo — o arquivo publicado existe? */
+    if (!comToken && e.aoVivo) {
+      const vivo = await temConteudoAoVivo(e.id, chave);
+      if (vivo === true) { B.escolherEdicao(e.id); return; }
+      if (vivo === false) continue;
+    }
     const url = comToken
       ? C.caminhoDoConteudo(chave, 'edicoes/' + encodeURIComponent(e.id) + '.json')
       : arquivoDoPO(chave, e.arquivoDeDados);
@@ -1258,7 +1333,7 @@ document.addEventListener('DOMContentLoaded', async () => {
      fragmento primeiro, porque um link que já circula tem que continuar
      abrindo exatamente o que ele carrega, mesmo depois de o documento ganhar
      endereço fixo. Só quem chega sem fragmento cai no arquivo publicado. */
-  if (!(st.config && st.pat) && (await lerDoLink() || await lerDoArquivo())) return;
+  if (!(st.config && st.pat) && (await lerDoLink() || await lerAoVivo() || await lerDoArquivo())) return;
   // Não bloqueia o primeiro render nem espera o DevOps: o arquivo é local e
   // pequeno, chega rápido, e quando chega o render() de novo é barato.
   // O roadmap não é buscado aqui: ele é por PO, e quem pede é o render, que é

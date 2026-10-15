@@ -730,7 +730,8 @@ test('a declaração não entra no documento de Agosto e Setembro', () => {
 test('as duas entradas de dado passam pela MESMA porta', () => {
   assert.match(fonteReport, /function aplicarPacote\(pacote\) \{/);
   const chamadas = (fonteReport.match(/aplicarPacote\(/g) || []).length;
-  assert.equal(chamadas, 3, 'esperado: a definição, o caminho do link e o do arquivo');
+  // Desde 15/10/2026 são três entradas: o link, a função ao vivo e o arquivo.
+  assert.equal(chamadas, 4, 'esperado: a definição, o caminho do link, o da função ao vivo e o do arquivo');
   assert.match(fonteReport, /aplicarPacote\(JSON\.parse\(await descomprimir\(carga\)\)\)/);
   /* O caminho do arquivo deixou de aplicar o pacote dentro do `try` da leitura:
      o `await resp.json()` ficou separado do desenho pra que um erro de DESENHO
@@ -813,8 +814,28 @@ test('a assinatura da capa não depende do filtro nem da rede', () => {
 /* Um link que já circula tem que continuar abrindo o que ele carrega, mesmo
    depois de o documento ganhar endereço fixo. */
 test('o fragmento tem precedência sobre o arquivo publicado', () => {
+  /* E a leitura ao vivo (função da Vercel, 15/10/2026) fica no meio: o link
+     que circula continua mandando, e o arquivo vira a rede de segurança de
+     quando a função não responde. */
   assert.match(fonteReport,
-    /if \(!\(st\.config && st\.pat\) && \(await lerDoLink\(\) \|\| await lerDoArquivo\(\)\)\) return;/);
+    /if \(!\(st\.config && st\.pat\) && \(await lerDoLink\(\) \|\| await lerAoVivo\(\) \|\| await lerDoArquivo\(\)\)\) return;/);
+});
+
+test('a leitura ao vivo cai no arquivo quando a função não responde', () => {
+  const i = fonteReport.indexOf('async function pedirAoVivo');
+  const corpo = fonteReport.slice(i, fonteReport.indexOf('\n}\n', i));
+  // Edição fechada (agosto/setembro) nem pergunta.
+  assert.match(corpo, /if \(!edicaoAoVivo\(id\)\) return null;/);
+  // Erro HTTP, falha de rede e demora viram null — e null manda pro arquivo.
+  assert.match(corpo, /if \(resp\.ok\) pacote = await resp\.json\(\);/);
+  assert.match(corpo, /setTimeout\(\(\) => corte\.abort\(\), 10000\)/);
+  const ler = fonteReport.slice(fonteReport.indexOf('async function lerAoVivo'));
+  assert.match(ler, /if \(!pacote\) return false;/);
+  // E o que chega da função passa pela mesma porta (e o mesmo saneamento) do link.
+  assert.match(ler, /aplicarPacote\(pacote\);/);
+  // Só as edições geradas pela data são ao vivo; agosto/setembro, não.
+  const V = require('../assets/briefing-entregas-v2.js');
+  assert.deepEqual(V.EDICOES.map((e) => [e.id, !!e.aoVivo]), [['2026-10', true], ['2026-08', false]]);
 });
 
 /* A página é servida por CDN. Um documento de acompanhamento entregando a

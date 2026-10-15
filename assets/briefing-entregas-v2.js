@@ -105,6 +105,9 @@
       // Os cartões automáticos valem dos meses gerados pela data em diante.
       // Agosto/setembro não: relatório fechado e já compartilhado.
       cartoesAutomaticos: true,
+      // Lida da função da Vercel (api/relatorio), ao vivo, por quem não tem
+      // token. Agosto/setembro não: fechado, continua no arquivo publicado.
+      aoVivo: true,
       // Crase e não aspa: o publicar-dados.sh lê os nomes FIXOS por aspa simples,
       // e este é o padrão, que ele aceita por conta própria.
       arquivoDeDados: `assets/dados-${id}.json`,
