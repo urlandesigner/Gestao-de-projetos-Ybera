@@ -121,3 +121,34 @@ test('preview: o molde do cartão não vai pro ar', () => {
   const sync = fs.readFileSync(path.join(raiz, 'scripts/sincronizar-pages.sh'), 'utf8');
   assert.match(sync, /--exclude='\/scripts\/'/, 'scripts/ saiu da lista de exclusão e o molde iria pro ar');
 });
+
+/* O RELATÓRIO ÚNICO (entregas-v2.html) tem o cartaz dele desde 15/10/2026. O
+   mesmo endereço serve vários relatórios (mês pelo ?edicao=, PO pelo ?de=), e
+   o robô não roda JavaScript: o cartaz não pode afirmar mês nem unidade. */
+test('preview do relatório único: genérico, absoluto, e a imagem existe em 1200x630', () => {
+  const v2 = fs.readFileSync(path.join(raiz, 'entregas-v2.html'), 'utf8');
+  const m = (chave) => {
+    const r = new RegExp(`<meta (?:property|name)="${chave}" content="([^"]*)">`).exec(v2);
+    return r ? r[1] : null;
+  };
+  assert.equal(m('og:title'), 'Relatório de Entregas');
+  assert.equal(m('twitter:card'), 'summary_large_image');
+  const src = m('og:image');
+  assert.ok(src && src.startsWith(BASE + 'assets/og-relatorio.png?v='), `og:image errada: "${src}"`);
+  // O cartaz não diz mês nem unidade: nenhum nome de mês e nenhum "Ybera US".
+  const texto = [m('og:title'), m('og:description'), m('og:image:alt')].join(' ');
+  assert.doesNotMatch(texto, /janeiro|fevereiro|março|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro/i);
+  assert.doesNotMatch(texto, /Ybera (US|Global|Brasil)/);
+  // Sem og:url: o mesmo relatório abre pela Vercel e pelo Pages.
+  assert.equal(m('og:url'), null);
+
+  const png = path.join(raiz, 'assets/og-relatorio.png');
+  const cab = Buffer.alloc(24);
+  const fd = fs.openSync(png, 'r');
+  fs.readSync(fd, cab, 0, 24, 0);
+  fs.closeSync(fd);
+  assert.equal(cab.readUInt32BE(16), 1200);
+  assert.equal(cab.readUInt32BE(20), 630);
+  assert.equal(m('og:image:width'), '1200');
+  assert.equal(m('og:image:height'), '630');
+});

@@ -1007,9 +1007,15 @@ test('a barra não usa o âmbar de texto', () => {
    lá, e cita os nomes delas pra isso. Documentação não é marcação — e um teste
    que casa com o próprio texto que o explica é falso positivo garantido. */
 test('a v2 não carrega preview emprestado do documento original', () => {
+  /* Desde 15/10/2026 a v2 tem o cartaz DELA (og-relatorio.png, genérico — ver
+     tests/og-entregas.test.js). O que continua proibido é o empréstimo: a
+     imagem e o endereço do entregas.html mandariam o leitor pro documento
+     antigo. */
   const semComentarios = pagina.replace(/<!--[\s\S]*?-->/g, '');
-  assert.doesNotMatch(semComentarios, /og:url|og:image/,
-    'a v2 ganhou tags de preview — confira se apontam pra ela mesma antes de liberar');
+  assert.match(semComentarios, /og:image" content="[^"]*og-relatorio\.png/);
+  const tags = (semComentarios.match(/<meta (?:property|name)="(?:og|twitter):[^>]*>/g) || []).join('\n');
+  assert.doesNotMatch(tags, /og-entregas\.png|entregas\.html/,
+    'a v2 pegou emprestado o preview do documento antigo');
 });
 
 test('a v2 declara data-ferramentas="local", como o original', () => {

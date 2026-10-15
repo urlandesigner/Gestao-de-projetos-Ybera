@@ -118,18 +118,22 @@ body {
 <div class="cartao">
   <img class="logo" src="../../assets/brand/ybera-logo.webp" alt="Ybera" width="360" height="139">
   <p class="retranca" id="retranca"></p>
-  <h1 class="titulo"><span class="titulo-fraco">Entregas de</span><span class="titulo-forte" id="periodo"></span></h1>
+  <h1 class="titulo"><span class="titulo-fraco" id="fraco"></span><span class="titulo-forte" id="periodo"></span></h1>
   <p class="situacao" id="situacao"></p>
 </div>
 <script>
   var q = new URLSearchParams(location.search);
-  var val = function (chave, padrao) { return q.get(chave) || padrao; };
+  // Parâmetro PRESENTE e vazio vale vazio (a peça some); ausente, o padrão.
+  // É assim que o cartão genérico do relatório único tira retranca e autoria.
+  var val = function (chave, padrao) { return q.has(chave) ? q.get(chave) : padrao; };
 
+  document.getElementById('fraco').textContent = val('fraco', 'Entregas de');
   document.getElementById('periodo').textContent = val('periodo', 'Agosto e Setembro de 2026');
   document.getElementById('situacao').textContent = val('situacao', 'O que o time entregou no período, e o planejamento dos próximos meses.');
 
   var retranca = document.getElementById('retranca');
   retranca.textContent = val('retranca', 'Ybera US · E-commerce');
+  if (!retranca.textContent) retranca.hidden = true;
   var autoria = val('autoria', 'Product Owner: Urlan Dipre');
   if (autoria) {
     var s = document.createElement('span');

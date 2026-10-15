@@ -26,13 +26,26 @@ MOLDE="$RAIZ/scripts/og/cartao-entregas.html"
 SAIDA="$RAIZ/assets/og-entregas.png"
 
 PERIODO="${1:-Agosto e Setembro de 2026}"
+EXTRA=""
+
+# O CARTÃO DO RELATÓRIO ÚNICO (15/10/2026). O entregas-v2.html serve vários
+# relatórios no mesmo endereço — outubro, agosto/setembro, cada PO pelo ?de= —
+# e o robô do WhatsApp não roda o JavaScript que decide qual. Então o cartão
+# dele não afirma mês nem unidade: só a marca e o que o documento é. Nunca
+# mente, seja qual for o link.
+#   ./scripts/og-entregas.sh --relatorio
+if [ "${1:-}" = "--relatorio" ]; then
+  SAIDA="$RAIZ/assets/og-relatorio.png"
+  PERIODO="Entregas"
+  EXTRA="&fraco=$(python3 -c 'import urllib.parse; print(urllib.parse.quote("Relatório de"))')&retranca=&autoria=&situacao=$(python3 -c 'import urllib.parse; print(urllib.parse.quote("O que o time entregou no mês, o ritmo das sprints e o planejamento dos próximos meses."))')"
+fi
 
 [ -x "$CHROME" ] || { echo "erro: Google Chrome não encontrado em $CHROME" >&2; exit 1; }
 [ -f "$MOLDE" ] || { echo "erro: molde não encontrado em $MOLDE" >&2; exit 1; }
 
 # A query string vai por URL: o molde lê os valores com URLSearchParams.
 codifica() { python3 -c 'import sys,urllib.parse; print(urllib.parse.quote(sys.argv[1]))' "$1"; }
-URL="file://$(codifica "$MOLDE" | sed 's|%2F|/|g')?periodo=$(codifica "$PERIODO")"
+URL="file://$(codifica "$MOLDE" | sed 's|%2F|/|g')?periodo=$(codifica "$PERIODO")$EXTRA"
 
 PERFIL="$(mktemp -d)"
 trap 'rm -rf "$PERFIL"' EXIT
