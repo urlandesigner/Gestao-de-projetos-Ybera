@@ -208,7 +208,21 @@ async function carregarEdicao(chave) {
   edicoes[chave] = null; // em voo: não buscar duas vezes no mesmo render
   try {
     const url = C.caminhoDoConteudo(chave, 'edicoes/' + encodeURIComponent(B.edicao) + '.json');
-    const resp = await fetch(url + '?t=' + Date.now(), { cache: 'no-store' });
+    const pedir = () => fetch(url + '?t=' + Date.now(), { cache: 'no-store' });
+    let resp = await pedir();
+    /* FALHA DO SERVIDOR NÃO É "SEM CARTÃO" (15/10/2026). Logo depois de uma
+       publicação o GitHub Pages respondeu 503 por um instante, e o relatório
+       abriu sem os dois cartões escritos do Urlan, calado — 503 caía no mesmo
+       ramo do 404. Agora erro 5xx ganha uma segunda tentativa, 1,5 s depois;
+       persistindo, vai pro console, porque aí é falha e não ausência. */
+    if (resp.status >= 500) {
+      await new Promise((ok) => setTimeout(ok, 1500));
+      resp = await pedir();
+      if (resp.status >= 500) {
+        console.warn('[Report] o servidor falhou ao entregar os cartões de ' + chave
+          + ' (HTTP ' + resp.status + '): o documento abre sem os cartões escritos.');
+      }
+    }
     /* 404 é "esta PO ainda não escreveu esta edição", que é o estado normal de
        quem acabou de entrar — não é erro e não vai pro console. */
     edicoes[chave] = resp.ok ? C.saneEdicao(await resp.json()).cartoes : [];

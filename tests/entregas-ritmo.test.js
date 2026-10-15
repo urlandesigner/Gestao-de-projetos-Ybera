@@ -1345,3 +1345,12 @@ test('a edição padrão é a mais recente com conteúdo, e o critério depende 
   assert.ok(carga.indexOf('await resolverEdicaoPadrao()') < carga.indexOf('ligarDocumento()'),
     'a edição precisa estar escolhida antes do documento ligar');
 });
+
+/* Falha do servidor não é "a PO não escreveu cartão" (15/10/2026): um 503
+   passageiro do Pages escondeu os cartões escritos do Urlan, calado. */
+test('erro 5xx nos cartões ganha uma segunda tentativa antes de abrir sem eles', () => {
+  const i = fonteReport.indexOf('async function carregarEdicao');
+  const corpo = fonteReport.slice(i, fonteReport.indexOf('\n}\n', i));
+  assert.match(corpo, /if \(resp\.status >= 500\) \{[\s\S]*?resp = await pedir\(\);/);
+  assert.match(corpo, /edicoes\[chave\] = resp\.ok \? C\.saneEdicao/);
+});
