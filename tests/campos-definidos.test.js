@@ -16,3 +16,15 @@ test('cada FIELDS_* usado no app.js está declarado', () => {
   const soltos = [...usados].filter((n) => !declarados.has(n));
   assert.deepStrictEqual(soltos, [], 'usado sem declaração: ' + soltos.join(', '));
 });
+
+/* O selo "conectado" só quando algo chegou (15/10/2026). Token vencido que
+   volta como falha de rede (redirecionamento pro login) deixava o selo verde
+   embaixo da mensagem vermelha de PAT vencido. */
+test('o selo não diz conectado quando nenhuma consulta deu certo', () => {
+  const src = fs.readFileSync(path.join(__dirname, '..', 'assets', 'app.js'), 'utf8');
+  assert.match(src, /if \(algumSucesso\) state\.auth = 'conectado';/);
+  assert.match(src, /navigator\.onLine === false\) \? 'offline' : 'vencido'/);
+  // E ao abrir com cache fresco, herda o resultado da última tentativa.
+  assert.match(src, /const ultimaFalhou = !!state\.cache\.fetchedAt && \(state\.cache\.lastSuccessAt \|\| 0\) < state\.cache\.fetchedAt;/);
+  assert.doesNotMatch(src, /if \(state\.auth === 'atualizando'\) state\.auth = 'conectado';/);
+});

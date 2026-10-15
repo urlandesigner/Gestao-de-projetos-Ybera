@@ -281,8 +281,8 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
 #badge::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #a8a29e; flex: none; }
 #badge[data-estado='conectado']::before { background: #22c55e; }
 #badge[data-estado='atualizando']::before { background: #eab308; }
-#badge[data-estado='vencido'], #badge[data-estado='sem-token'] { color: var(--erro); }
-#badge[data-estado='vencido']::before, #badge[data-estado='sem-token']::before { background: #ef4444; }
+#badge[data-estado='vencido'], #badge[data-estado='sem-token'], #badge[data-estado='offline'] { color: var(--erro); }
+#badge[data-estado='vencido']::before, #badge[data-estado='sem-token']::before, #badge[data-estado='offline']::before { background: #ef4444; }
 #carimbo { font-size: 0.78rem; margin-right: 0.3rem; white-space: nowrap; }
 
 /* ---------- Páginas como painéis flutuantes ---------- */

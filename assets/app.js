@@ -560,6 +560,7 @@ async function refreshAll(force) {
   if (!force && !C.isStale(state.cache.fetchedAt, Date.now())) { renderBadge(); return; }
   state.auth = 'atualizando';
   renderBadge();
+  let algumSucesso = false;
   try {
     // quem é o dono do PAT: uma vez só, pra o filtro global abrir nele
     if (!state.cache.usuario) {
@@ -575,11 +576,21 @@ async function refreshAll(force) {
     const visiveis = state.config.projects.filter((p) => !p.hidden);
     await Promise.all([...visiveis.map(refreshCard), refreshMyItems()]);
     state.cache.fetchedAt = Date.now();
-    const algumSucesso = (!visiveis.length && !state.cache.myItemsError)
+    algumSucesso = (!visiveis.length && !state.cache.myItemsError)
       || visiveis.some((p) => !(state.cache.byCard[cardKey(p)] || {}).error);
     if (state.auth !== 'vencido' && algumSucesso) state.cache.lastSuccessAt = Date.now();
   } finally {
-    if (state.auth === 'atualizando') state.auth = 'conectado';
+    /* O SELO NÃO PODE DIZER "CONECTADO" QUANDO NADA CHEGOU (15/10/2026).
+       Token vencido nem sempre volta como 401: muitas vezes o DevOps manda pro
+       login, o navegador corta a resposta, e o erro chega como falha de rede.
+       Esse caso não marcava `vencido`, e a Central mostrava a mensagem vermelha
+       "PAT vencido" embaixo de um selo verde "conectado" — o Urlan viu as duas
+       juntas, com um token de agosto. Agora: nenhuma consulta deu certo e o
+       navegador está online, o selo diz "token vencido"; offline, "sem conexão". */
+    if (state.auth === 'atualizando') {
+      if (algumSucesso) state.auth = 'conectado';
+      else state.auth = (typeof navigator !== 'undefined' && navigator.onLine === false) ? 'offline' : 'vencido';
+    }
     saveJSON(LS.cache, state.cache);
     renderBadge();
   }
@@ -596,8 +607,13 @@ function renderNavContas() {
 }
 
 function renderBadge() {
-  const rotulos = { 'sem-token': 'sem token', vencido: 'token vencido', atualizando: 'atualizando…', conectado: 'conectado' };
-  const auth = state.auth || (state.pat ? 'conectado' : 'sem-token');
+  const rotulos = { 'sem-token': 'sem token', vencido: 'token vencido', offline: 'sem conexão',
+    atualizando: 'atualizando…', conectado: 'conectado' };
+  /* Sem consulta nesta abertura (cache ainda fresco), o selo herda o resultado
+     da ÚLTIMA: se ela falhou (tentou depois do último sucesso), não é
+     "conectado" — é o mesmo estado que a mensagem de erro do cache descreve. */
+  const ultimaFalhou = !!state.cache.fetchedAt && (state.cache.lastSuccessAt || 0) < state.cache.fetchedAt;
+  const auth = state.auth || (state.pat ? (ultimaFalhou ? 'vencido' : 'conectado') : 'sem-token');
   const badge = $('badge');
   badge.textContent = rotulos[auth] || auth;
   badge.dataset.estado = auth;
