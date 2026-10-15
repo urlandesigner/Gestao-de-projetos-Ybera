@@ -25,6 +25,19 @@ leitor ──► entregas-v2.html (Pages ou Vercel)
            Azure DevOps  ──►  pacote (o mesmo formato de dados-*.json)
 ```
 
+## Situação (15/10/2026)
+
+- **Fases 1 a 4 no ar** nos dois sites. `assets/pacote.js` (busca + montagem),
+  `assets/conteudo/<po>/fontes.json`, `api/relatorio.js` + `api/_lib/relatorio.js`,
+  leitura ao vivo no `report.js` com o arquivo como rede de segurança.
+- Token: `AZDO_PAT` (Secret, Production) cadastrado pelo Urlan na Vercel em
+  15/10/2026 — token novo, só leitura (Work Items + Project and Team). A data
+  de vencimento está na nota da variável.
+- Recorte por PO pelo **e-mail** da ficha (`AssignedTo.uniqueName`), não pelo
+  nome de exibição.
+- **Fase 5 pendente**: aposentar o Publicar dados depois de ~2 semanas
+  estável (a partir de 29/10/2026).
+
 ## Restrições que valem para todas as tarefas
 
 - **O token nunca passa pela conversa, pelo código nem pelo repositório.** Quem
