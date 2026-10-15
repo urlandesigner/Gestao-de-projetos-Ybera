@@ -53,7 +53,13 @@ leitor ──► entregas-v2.html (Pages ou Vercel)
 | 0.2 | **De quem é o token** | O token precisa ver os boards das três POs. O do Urlan vence em 90 dias e para se ele sair. | Começar com o do Urlan; migrar para conta de serviço. Trocar é só trocar a variável. |
 | 0.3 | **Quais times cada PO usa** | Hoje a lista de times mora no navegador de cada um (localStorage). A função precisa dela num arquivo. Sabemos só a do Urlan (`B2C` / `Squad Ecommerce`). | Perguntar à Isadora e à Daniele, ou ler da Central de cada uma. |
 
-**Pronto quando:** as três respostas estão escritas no topo deste arquivo.
+**Respostas do Urlan (15/10/2026):**
+- **0.1** — Conta pessoal dele, no plano Hobby, **por enquanto**: o projeto está
+  em teste. Se for aprovado, ele migra para um plano da empresa. (Fica o risco
+  de termos do Hobby enquanto durar o teste; ver "Riscos".)
+- **0.2** — Token do Urlan para começar; conta de serviço depois.
+- **0.3** — As três POs usam os mesmos times: `B2C` / `Squad Ecommerce`. O
+  recorte entre elas é pelo responsável dos itens, não pelo time.
 
 ---
 
