@@ -43,6 +43,10 @@ const POS = {
     fontes: require('../../assets/conteudo/daniele/fontes.json'),
     roadmap: require('../../assets/conteudo/daniele/roadmap.json'),
   },
+  carla: {
+    fontes: require('../../assets/conteudo/carla/fontes.json'),
+    roadmap: require('../../assets/conteudo/carla/roadmap.json'),
+  },
 };
 const RESUMOS = C.saneResumos(require('../../assets/resumos.json').itens);
 

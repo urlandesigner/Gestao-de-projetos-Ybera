@@ -21,7 +21,7 @@ const BE = require('../assets/briefing-entregas.js');
 const V2 = require('../assets/briefing-entregas-v2.js');
 const { cartoesDe } = require('./conteudo');
 
-const POS = ['urlan', 'isadora', 'daniele'];
+const POS = ['urlan', 'isadora', 'daniele', 'carla'];
 
 test('cada PO tem pasta, e o arquivo dela é JSON válido', () => {
   for (const po of POS) {

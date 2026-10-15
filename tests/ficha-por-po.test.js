@@ -42,6 +42,7 @@ test('cada PO tem a sua unidade, a sua área e o seu email', () => {
     { unidade: 'Ybera Global', area: 'Loja interna', email: 'isadora.brunner@ybera.com' });
   assert.deepEqual(C.fichaDaPessoa('Daniele de Paula'),
     { unidade: 'Ybera Brasil', area: 'E-commerce', email: 'daniele.depaula@ybera.com' });
+  assert.equal(C.fichaDaPessoa('Carla Ferraz').email, 'carla.ferraz@ybera.com');
 });
 
 test('a ficha sobrevive a sobrenome, acento e caixa', () => {

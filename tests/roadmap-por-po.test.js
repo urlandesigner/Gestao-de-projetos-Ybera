@@ -40,7 +40,7 @@ test('a chave sobrevive a sobrenome, acento e caixa', () => {
 
 test('cada PO tem o arquivo dela, no endereço que os dois leitores usam', () => {
   assert.equal(C.caminhoDoConteudo('isadora', 'roadmap.json'), 'assets/conteudo/isadora/roadmap.json');
-  for (const po of ['urlan', 'isadora', 'daniele']) {
+  for (const po of ['urlan', 'isadora', 'daniele', 'carla']) {
     assert.ok(roadmapCruDe(po) !== null, `${po} perdeu o roadmap.json`);
   }
   assert.ok(roadmapCruDe('urlan').length > 0, 'o roadmap do Urlan esvaziou');
@@ -83,7 +83,7 @@ test('nome de pessoa não atravessa o protótipo do cache', () => {
 
 test('o portão de status cobre a pasta de toda PO', () => {
   // Quem entrar depois ganha pasta; o alarme do status tem que achá-la sozinho.
-  assert.deepEqual(posComConteudo().sort(), ['daniele', 'isadora', 'urlan']);
+  assert.deepEqual(posComConteudo().sort(), ['carla', 'daniele', 'isadora', 'urlan']);
 });
 
 test('o nome que chega depois redesenha o roadmap', () => {

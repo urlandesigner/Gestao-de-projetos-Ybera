@@ -1014,6 +1014,8 @@
     urlan: { unidade: 'Ybera US', area: 'E-commerce', email: 'urlan.dipre@ybera.com' },
     isadora: { unidade: 'Ybera Global', area: 'Loja interna', email: 'isadora.brunner@ybera.com' },
     daniele: { unidade: 'Ybera Brasil', area: 'E-commerce', email: 'daniele.depaula@ybera.com' },
+    // Unidade e área da Carla inferidas do conteúdo dela (Club, Escritório Virtual): confirmar.
+    carla: { unidade: 'Ybera Club', area: 'Escritório Virtual', email: 'carla.ferraz@ybera.com' },
   };
 
   /* Aceita o nome de exibição ou a chave já resolvida — quem chama nem sempre

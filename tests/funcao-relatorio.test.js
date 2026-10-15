@@ -145,3 +145,13 @@ test('agosto/setembro é servida com o período dos dois meses e cache de mês f
   const V = require('../assets/briefing-entregas-v2.js');
   assert.equal(V.EDICOES.find((e) => e.id === '2026-08').aoVivo, undefined, 'o relatório passou a ler agosto ao vivo');
 });
+
+test('a Carla é servida, com o e-mail dela, e ninguém recebe os itens dela', async () => {
+  const { fetchImpl } = devopsFalso();
+  const r = await responder(pedir('?edicao=2026-10&de=carla'), { env, fetchImpl, agora: OUTUBRO, avisar: () => {} });
+  assert.equal(r.status, 200);
+  const pacote = await r.json();
+  // Nenhum dos itens falsos é dela: o relatório sai vazio, não com o de outra PO.
+  assert.deepEqual(pacote.automaticos, []);
+  assert.equal(pacote.escopo, 'Carla');
+});

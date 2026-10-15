@@ -1,0 +1,10 @@
+{
+  "_leia": "De onde a função da Vercel busca os dados desta PO no Azure DevOps. Não tem segredo (o token fica na Vercel, nunca aqui). Time ainda a confirmar com a Carla: começa em B2C / Squad Ecommerce, o recorte pelo e-mail dela (assets/core.js) separa os itens.",
+  "org": "https://dev.azure.com/nivello",
+  "times": [
+    {
+      "projectName": "B2C",
+      "teamName": "Squad Ecommerce"
+    }
+  ]
+}

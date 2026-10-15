@@ -1,0 +1,81 @@
+{
+  "periodo": [
+    "2026-10"
+  ],
+  "publicadoEm": "2026-10-15",
+  "cartoes": [
+    {
+      "titulo": "Alteração da regra de Ativação Mensal – EUA",
+      "resumo": [
+        "Esta feature propõe uma nova dinâmica baseada em dois ciclos mensais, permitindo maior flexibilidade para que afiliadas regularizem sua ativação ao longo do mês.",
+        "A lógica passa a considerar um prazo maior para o pagamento da ativação mensal e a alteração da data do estorno dos bônus."
+      ]
+    },
+    {
+      "titulo": "Rollout Lybera Shop x Ativação Mensal para os EUA",
+      "resumo": [
+        "Rollout, para o escritório dos Estados Unidos (Club Internacional), da regra que já existe no Club Brasil desde a implementação original: pedidos realizados na Lybera Shop passam a contribuir para a ativação mensal da influencer, em paralelo aos pedidos do Ecommerce.",
+        "A Lybera Shop já opera nos EUA — esta Feature aplica a mesma regra de negócio já validada no Brasil, sem alteração de comportamento, apenas expansão de escopo geográfico."
+      ]
+    },
+    {
+      "titulo": "Acesso ao Club por recuperação de senha e OTP",
+      "resumo": [
+        "Oferecer alternativas de acesso e recuperação à plataforma sem dependência exclusiva da senha atual — por meio de (1) um código de uso único enviado ao e-mail para login sem senha, e (2) um link de redefinição enviado ao e-mail para criação de nova senha — reduzindo fricção no login, ampliando as opções de autenticação disponíveis e preparando a base para um ecossistema de segurança mais completo e flexível."
+      ]
+    },
+    {
+      "titulo": "Alterar Endpoint da Exibição de Kits no Catálogo do Escritório Virtual",
+      "resumo": [
+        "A funcionalidade de Kits/Combos da loja e-commerce passou por uma mudança de modelo de cadastro. Antes, criar um kit exigia que o admin da loja cadastrasse um produto novo no Bling/Wake reunindo os itens do combo, com SKU e ID próprios e uma PDP dedicada.",
+        "No modelo atual, o admin apenas seleciona os produtos que compõem o kit, e a própria funcionalidade gera a PDP automaticamente — sem precisar criar um produto adicional para representar o kit."
+      ]
+    },
+    {
+      "titulo": "Rollout Integrações omnichannel (TikTok) para PRO",
+      "resumo": [
+        "Estender ao escritório dos Estados Unidos a regra de contribuição da Lybera Shop para a ativação mensal, já validada e em produção no Club Brasil, permitindo que influencers americanas também consigam atingir sua ativação mensal através de compras realizadas na Lybera Shop — em paralelo aos pedidos do Ecommerce — sem depender exclusivamente das vendas via link de afiliado.",
+        "A expectativa é aumentar as vendas na Lybera Shop no mercado americano e apoiar as afiliadas no cumprimento da mensalidade."
+      ]
+    },
+    {
+      "titulo": "Metas — Considerar novas afiliadas",
+      "resumo": [
+        "Garantir que toda afiliada aprovada dentro do período de vigência de uma meta se torne automaticamente elegível a participar dela, independentemente da data de sua aprovação no escritório — eliminando a defasagem atual entre o momento da aprovação e a vinculação a metas ativas, e preservando essa elegibilidade mesmo quando a afiliada é transferida para outra gestora."
+      ]
+    },
+    {
+      "titulo": "Disponibilizar Pop-up CTA na Home do Club",
+      "resumo": [
+        "Disponibilizar, no Escritório Virtual, um modelo de popup reutilizável com vídeo obrigatório e CTA direto para a compra do Brasil Influencer, exibido para toda a base de afiliadas em duas janelas de tempo sequenciais (vídeo 1, depois vídeo 2, com troca automática em 7 dias).",
+        "Isso permite à Ybera rodar campanhas de alto impacto com a estrutura de comportamento e CTA pronta antecipadamente, para que a ativação final (embed dos vídeos) exija o mínimo de esforço técnico possível quando o time de desenvolvimento for acionado."
+      ]
+    },
+    {
+      "titulo": "Contador de Cupons",
+      "resumo": [
+        "Dar à afiliada elegível visibilidade, dentro do próprio Escritório Virtual, de quantas vezes o cupom dela foi usado durante a campanha. Assim ela acompanha o próprio desempenho e pode ajustar a divulgação enquanto a campanha está rodando."
+      ]
+    },
+    {
+      "titulo": "Refatoração do Módulo de Transmissão Escritório (Mensageria)",
+      "resumo": [
+        "O objetivo é que Comunicados substitua completamente os dois módulos anteriores, unificando toda comunicação — manual e automática — em um único ponto de entrada para o usuário."
+      ]
+    },
+    {
+      "titulo": "Palco Ybera — Meta Gamificada de Outubro",
+      "resumo": [
+        "Entregar, dentro do Escritório Virtual, a mecânica completa do Palco Ybera para outubro/2026: transformar a meta individual de cada participante numa trilha de progresso jogável, com marcos, recompensas colecionáveis e ofensiva diária, e conectar a virada de comissão (20%→25% retroativo) a um momento de celebração visível — sem alterar o cálculo da meta, a apuração de vendas válidas ou a comissão de rede de nenhuma vertical.",
+        "A Feature cobre Club Brasil de forma garantida e Ybera PRO com a planilha de metas já recebida do Diretor do PRO, com o mesmo motor de regras para as duas verticais."
+      ]
+    },
+    {
+      "titulo": "Tour de Novidades (Escritório Virtual)",
+      "resumo": [
+        "Apresentar, de forma guiada e autoexplicativa, as mudanças de navegação, menu e áreas do Escritório Virtual entregues na Feature #48807 a usuários que já utilizavam a plataforma — reduzindo a resistência e a fricção de adaptação à nova sidebar e demais mudanças de caminho, sem reverter a decisão de design já validada.",
+        "O tour deve ser leve, dispensável a qualquer momento (\"Pular\") e revisitável sob demanda (\"Rever tour\"), sem impor fricção adicional ao fluxo normal de uso."
+      ]
+    }
+  ]
+}
