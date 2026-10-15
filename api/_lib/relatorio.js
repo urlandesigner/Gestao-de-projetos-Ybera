@@ -12,7 +12,8 @@
      PO que estejam na lista;
    - bloco local (`_descricoes`, `_entregas`): descrição crua de PBI nunca sai
      daqui;
-   - agosto/setembro: relatório fechado e já compartilhado, continua no arquivo.
+   - ser a fonte de agosto/setembro: fechado e já compartilhado, o relatório o
+     lê do arquivo congelado (gerado uma vez por esta função, em 15/10/2026).
 
    O token NUNCA passa por este arquivo, pelo repositório nem pela conversa: o
    Urlan cola no painel da Vercel. Sem ele, a função responde 503 e o relatório
@@ -106,8 +107,11 @@ async function responder(request, { env = {}, fetchImpl, agora = Date.now(), avi
   const po = Object.prototype.hasOwnProperty.call(POS, de) ? POS[de] : null;
   if (!po) return json(400, { erro: 'po' }, origem);
   const edicao = V2.edicoesAte(hojeEmBrasilia(agora)).find((e) => e.id === idEdicao);
-  // Só as edições geradas pela data; agosto/setembro fica no arquivo.
-  if (!edicao || !edicao.cartoesAutomaticos) return json(400, { erro: 'edicao' }, origem);
+  /* Qualquer edição da lista. Agosto/setembro também é servida desde
+     15/10/2026, mas o relatório NÃO a lê daqui (ela não é `aoVivo`): a
+     resposta serviu pra gerar, uma vez, o arquivo congelado dessa edição, que
+     nunca tinha sido publicado. Edição fechada vem com cache de um dia. */
+  if (!edicao) return json(400, { erro: 'edicao' }, origem);
 
   const pat = String(env.AZDO_PAT || '').trim();
   if (!pat) return json(503, { erro: 'sem-token' }, origem);

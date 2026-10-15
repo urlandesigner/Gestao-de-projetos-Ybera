@@ -82,9 +82,9 @@ test('a Daniele recebe só os itens dela', async () => {
   assert.equal(pacote.escopo, 'Daniele de Paula');
 });
 
-test('só edição e PO da lista; agosto/setembro fica no arquivo', async () => {
+test('só edição e PO da lista', async () => {
   const { fetchImpl, pedidos } = devopsFalso();
-  for (const q of ['?edicao=2026-08&de=urlan', '?edicao=2099-01&de=urlan', '?edicao=../../x&de=urlan',
+  for (const q of ['?edicao=2099-01&de=urlan', '?edicao=../../x&de=urlan',
     '?edicao=2026-10&de=fulano', '?edicao=2026-10&de=__proto__', '?de=urlan']) {
     const r = await responder(pedir(q), { env, fetchImpl, agora: OUTUBRO });
     assert.equal(r.status, 400, q);
@@ -133,4 +133,15 @@ test('CORS só para os sites do relatório', async () => {
   const outro = await responder(pedir('?edicao=2026-10&de=urlan', { origin: 'https://evil.example' }),
     { env, fetchImpl, agora: OUTUBRO, avisar: () => {} });
   assert.equal(outro.headers.get('access-control-allow-origin'), null);
+});
+
+/* Agosto/setembro é servida (pra gerar o arquivo congelado dela), mas o
+   relatório não a lê daqui — ela não é `aoVivo`. Fechada: cache de um dia. */
+test('agosto/setembro é servida com o período dos dois meses e cache de mês fechado', async () => {
+  const { fetchImpl } = devopsFalso();
+  const r = await responder(pedir('?edicao=2026-08&de=urlan'), { env, fetchImpl, agora: OUTUBRO, avisar: () => {} });
+  assert.equal(r.status, 200);
+  assert.match(r.headers.get('cache-control'), /s-maxage=86400/);
+  const V = require('../assets/briefing-entregas-v2.js');
+  assert.equal(V.EDICOES.find((e) => e.id === '2026-08').aoVivo, undefined, 'o relatório passou a ler agosto ao vivo');
 });
