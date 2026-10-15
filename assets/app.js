@@ -605,17 +605,39 @@ async function refreshAll(force) {
 }
 
 /* ---------- Render ---------- */
-/* MENU POR PO (15/10/2026). O "Status de demandas" é da loja US e escrito à
-   mão; pra algumas POs ele não faz sentido e some do menu. Segue a mesma regra
-   do roadmap e dos relatórios: manda a PO do seletor, ou o dono do token
-   quando nada foi escolhido. É só o item do menu — a página continua abrindo
-   por endereço, porque o link dela circula sem token. */
-const SEM_STATUS_NO_MENU = ['tazshida'];
+/* MENU POR PO (15/10/2026). O item "Status de demandas" é da loja US e escrito
+   à mão: pra algumas POs ele não faz sentido e some do menu, e pra outras ele
+   vira o atalho de uma página delas (a Carla compara a versão escura do
+   relatório de Entregas dela ali). Segue a mesma regra do roadmap e dos
+   relatórios: manda a PO do seletor, ou o dono do token quando nada foi
+   escolhido. É só o menu — as páginas continuam abrindo por endereço, porque
+   o link delas circula sem token.
+
+   `null` = some do menu; objeto = troca destino, rótulo e dica do item. */
+const MENU_STATUS_POR_PO = {
+  tazshida: null,
+  carla: {
+    href: 'entregas-carla-status.html',
+    rotulo: 'Entregas (versão escura)',
+    dica: 'Abre as entregas da Carla no desenho do Status de demandas, que fica preto no modo escuro.',
+  },
+};
 function renderMenuPorPO() {
   const item = $('nav-status');
   if (!item) return;
+  const rotulo = item.querySelector('.rotulo-nav');
+  // O que o HTML trouxe fica guardado, pra voltar quando a PO muda no seletor.
+  if (!item.dataset.href) {
+    item.dataset.href = item.getAttribute('href');
+    item.dataset.dica = item.getAttribute('title') || '';
+    item.dataset.rotulo = rotulo ? rotulo.textContent : '';
+  }
   const quem = C.chaveDePessoa(respAtivo() || (state.cache && state.cache.usuario) || '');
-  item.hidden = SEM_STATUS_NO_MENU.includes(quem);
+  const regra = Object.prototype.hasOwnProperty.call(MENU_STATUS_POR_PO, quem) ? MENU_STATUS_POR_PO[quem] : undefined;
+  item.hidden = regra === null;
+  item.setAttribute('href', (regra && regra.href) || item.dataset.href);
+  item.setAttribute('title', (regra && regra.dica) || item.dataset.dica);
+  if (rotulo) rotulo.textContent = (regra && regra.rotulo) || item.dataset.rotulo;
 }
 
 function renderAll() { renderBadge(); renderMenuPorPO(); renderPanorama(); renderPendencias(); renderMyItems(); renderGrid(); renderRoadmap(); }

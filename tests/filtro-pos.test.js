@@ -103,13 +103,17 @@ test('o report não foi arrastado junto: o recorte é só da Central', () => {
     'report.js ganhou o recorte das POs sem ter sido pedido');
 });
 
-/* O "Status de demandas" some do menu pra Tazshida (15/10/2026) — só o item do
-   menu, pela mesma regra do roadmap: manda o seletor, senão o dono do token. */
-test('o Status de demandas some do menu da Tazshida, seguindo o seletor', () => {
+/* O item "Status de demandas" do menu muda por PO (15/10/2026): some pra
+   Tazshida e vira o atalho da versão escura das entregas pra Carla. Só o menu:
+   as páginas continuam abrindo por endereço. Manda o seletor, senão o token. */
+test('o menu muda por PO: Status some pra Tazshida e vira atalho pra Carla', () => {
   const src = fonteApp;
-  assert.match(src, /const SEM_STATUS_NO_MENU = \['tazshida'\];/);
+  assert.match(src, /tazshida: null,/);
+  assert.match(src, /href: 'entregas-carla-status\.html',/);
   assert.match(src, /C\.chaveDePessoa\(respAtivo\(\) \|\| \(state\.cache && state\.cache\.usuario\) \|\| ''\)/);
   assert.match(src, /function renderAll\(\) \{ renderBadge\(\); renderMenuPorPO\(\);/);
-  // A página em si não é escondida: o link dela circula sem token.
-  assert.doesNotMatch(fs.readFileSync(path.join(__dirname, '..', 'status-demandas.html'), 'utf8'), /Tazshida/);
+  // __proto__ e afins não viram regra: só chave própria.
+  assert.match(src, /Object\.prototype\.hasOwnProperty\.call\(MENU_STATUS_POR_PO, quem\)/);
+  // O destino da Carla existe no projeto.
+  assert.ok(fs.existsSync(path.join(__dirname, '..', 'entregas-carla-status.html')));
 });
