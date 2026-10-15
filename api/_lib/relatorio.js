@@ -68,11 +68,6 @@ function hojeEmBrasilia(agora) {
 }
 
 // O período fecha à meia-noite de Brasília do dia 1º seguinte (03h UTC).
-function periodoFechado(periodo, agora) {
-  const [ano, mes] = String(periodo[periodo.length - 1]).split('-').map(Number);
-  return agora >= Date.UTC(ano, mes, 1, 3);
-}
-
 /* DE QUEM É CADA ITEM: pelo e-mail da ficha da PO (assets/core.js), que é
    único no DevOps. O nome de exibição muda ("Urlan Dipre", "Urlan Maciel
    Dipré") e pode repetir o primeiro nome entre pessoas do mesmo time. Sem
@@ -152,7 +147,7 @@ async function responder(request, { env = {}, fetchImpl, agora = Date.now(), avi
   });
   /* Mês aberto: 60 s na CDN, e por mais 5 min serve o anterior enquanto busca o
      novo — ninguém espera o DevOps. Mês fechado não muda mais: um dia. */
-  const cache = periodoFechado(edicao.periodo, agora)
+  const cache = C.periodoFechado(edicao.periodo, agora)
     ? 'public, s-maxage=86400, stale-while-revalidate=86400'
     : 'public, s-maxage=60, stale-while-revalidate=300';
   return json(200, pacote, origem, { 'cache-control': cache });

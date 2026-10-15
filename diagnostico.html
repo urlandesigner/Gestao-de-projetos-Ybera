@@ -56,7 +56,7 @@
 <p class="sub">Lista, item a item, os PBIs e Bugs fechados no período, agrupados pela <b>Feature</b> dona de cada um. Serve pra descobrir qual Feature corresponde a cada cartão do documento — os itens moram nas Features, e o épico junta várias delas.</p>
 
 <div class="aviso">
-  <b>Como usar:</b> cada bloco é uma <b>Feature</b>. Ache a que corresponde a cada cartão e copie a linha <code>featureIds: [...]</code> pro cartão em <code>assets/briefing-entregas.js</code>. Cartão sem <code>featureIds</code> conta pelo épico — o número inflado que estamos corrigindo.<br><br>
+  <b>Como usar:</b> cada bloco é uma <b>Feature</b>. Ache a que corresponde a cada cartão e copie a linha <code>featureIds: [...]</code> pro cartão em <code>assets/conteudo/&lt;po&gt;/edicoes/&lt;edição&gt;.json</code>. Cartão sem <code>featureIds</code> conta pelo épico — o número inflado que estamos corrigindo.<br><br>
   <b>Dois filtros cortam itens antes da contagem</b>, e cada bloco mostra quanto cada um tirou:
   <b>o recorte por responsável</b> (o documento só conta itens atribuídos a <span id="quem">…</span>) e
   <b>o período</b> (só agosto e setembro; o que fechou em julho fica de fora).
@@ -235,7 +235,15 @@
     else b.itens.push(it);
   }
 
-  const cartoes = B.cartoesDoDocumento ? B.cartoesDoDocumento() : [];
+  // Os cartões moram em assets/conteudo/<po>/edicoes/<edicao>.json desde
+  // 13/10/2026 (o export cartoesDoDocumento saiu junto). Sem o arquivo, a
+  // sonda segue só com o board.
+  let cartoes = [];
+  try {
+    const rc = await fetch(C.caminhoDoConteudo(C.chaveDePessoa(alvoDoDocumento), 'edicoes/'
+      + encodeURIComponent(B.edicao) + '.json') + '?t=' + Date.now(), { cache: 'no-store' });
+    if (rc.ok) cartoes = C.saneEdicao(await rc.json()).cartoes;
+  } catch (e) { /* sem cartões */ }
   const jaUsada = (id) => cartoes.filter((c) => (c.featureIds || []).includes(id))
     .map((c) => c.iniciativa || 'Outras entregas');
 

@@ -22,17 +22,29 @@ const os = require('os');
 const raiz = path.join(__dirname, '..');
 const resumos = JSON.parse(fs.readFileSync(path.join(raiz, 'assets/resumos.json'), 'utf8')).itens || {};
 
-/* O nome do arquivo é LIDO do módulo da edição, nunca repetido aqui: duas
-   cópias divergem na primeira vez que uma edição virar outro mês. */
-function destinoDeclarado() {
-  const fonte = fs.readFileSync(path.join(raiz, 'assets/briefing-entregas-v2.js'), 'utf8');
-  const m = /ARQUIVO_DE_DADOS = '([^']+)'/.exec(fonte);
-  return m ? path.basename(m[1]) : null;
+/* SEM ARGUMENTO, procura o pacote em ~/Downloads. Até 15/10/2026 o nome vinha
+   de uma constante do briefing (`ARQUIVO_DE_DADOS`), que deixou de existir
+   quando as edições passaram a se montar pela data — e o script passou a
+   abrir a PASTA Downloads como se fosse o arquivo (EISDIR). Agora: um único
+   `dados-*.json` lá dentro é o pacote; mais de um, lista e pede o caminho.
+   Cópias que o navegador numera ("dados-outubro (2).json") ficam de fora,
+   como no publicar-dados.sh. */
+function pacoteEmDownloads() {
+  const pasta = path.join(os.homedir(), 'Downloads');
+  let nomes = [];
+  try { nomes = fs.readdirSync(pasta).filter((n) => /^dados-[a-z0-9-]+\.json$/.test(n)); } catch (e) { return null; }
+  if (nomes.length === 1) return path.join(pasta, nomes[0]);
+  if (nomes.length > 1) {
+    console.error('achei mais de um pacote em ~/Downloads; passe o caminho de um deles:');
+    for (const n of nomes) console.error('  ' + path.join(pasta, n));
+    process.exit(1);
+  }
+  return null;
 }
 
-const alvo = process.argv[2] || path.join(os.homedir(), 'Downloads', destinoDeclarado() || '');
-if (!alvo || !fs.existsSync(alvo)) {
-  console.error('não achei o pacote: ' + alvo);
+const alvo = process.argv[2] || pacoteEmDownloads();
+if (!alvo || !fs.existsSync(alvo) || !fs.statSync(alvo).isFile()) {
+  console.error('não achei o pacote' + (alvo ? ': ' + alvo : ' em ~/Downloads'));
   console.error('abra o relatório com ?po=1 e clique em "Publicar dados" primeiro.');
   process.exit(1);
 }

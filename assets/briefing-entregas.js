@@ -167,12 +167,11 @@
      O mês fecha à meia-noite de Brasília do dia 1º seguinte (03h UTC). Vazio
      quando fechado: agosto/setembro não ganha selo nenhum. */
   function andamentoDoPeriodo(chaves, agora) {
-    const ultimo = chaves[chaves.length - 1];
-    const [ano, mes] = String(ultimo || '').split('-').map(Number);
     const t = new Date(agora).getTime();
-    if (!ano || !mes || Number.isNaN(t)) return '';
-    const fecha = Date.UTC(ano, mes, 1, 3);
-    if (t >= fecha) return '';
+    if (Number.isNaN(t)) return '';
+    // A regra de fechamento é a do core (C.fimDoPeriodo): a mesma da função.
+    const fecha = C.fimDoPeriodo(chaves);
+    if (fecha === null || t >= fecha) return '';
     const dia = new Date(t).toLocaleDateString('pt-BR',
       { day: 'numeric', month: 'long', timeZone: 'America/Sao_Paulo' });
     return (chaves.length > 1 ? 'Período' : 'Mês') + ' em andamento · parcial até ' + dia;

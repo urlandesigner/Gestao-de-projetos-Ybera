@@ -890,3 +890,16 @@ test('PBI travado e vencido continua contando nos prazos', () => {
   assert.deepEqual(b.travados.map((x) => x.item.id), [9]);
   assert.deepEqual(b.prazos.atrasados.map((x) => x.item.id), [9]);
 });
+
+/* Uma regra só pro fechamento do mês (15/10/2026): capa e função da Vercel
+   leem daqui. Meia-noite de Brasília do dia 1º seguinte = 03h UTC. */
+test('fimDoPeriodo e periodoFechado: a virada é às 03h UTC do dia 1º seguinte', () => {
+  assert.equal(C.fimDoPeriodo(['2026-10']), Date.UTC(2026, 10, 1, 3));
+  assert.equal(C.fimDoPeriodo(['2026-08', '2026-09']), Date.UTC(2026, 9, 1, 3), 'vale o último mês');
+  assert.equal(C.fimDoPeriodo(['2026-12']), Date.UTC(2027, 0, 1, 3), 'vira o ano');
+  assert.equal(C.fimDoPeriodo([]), null);
+  assert.equal(C.fimDoPeriodo(['lixo']), null);
+  assert.equal(C.periodoFechado(['2026-10'], Date.parse('2026-11-01T02:59:00Z')), false);
+  assert.equal(C.periodoFechado(['2026-10'], Date.parse('2026-11-01T03:00:00Z')), true);
+  assert.equal(C.periodoFechado(['lixo'], Date.now()), false);
+});

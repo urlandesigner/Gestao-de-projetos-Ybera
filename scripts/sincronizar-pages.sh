@@ -72,6 +72,7 @@ rsync -a --delete --itemize-changes $SECO \
   --exclude='/diagnostico.html' \
   --exclude='/api/' \
   --exclude='/.vercelignore' \
+  --exclude='/tests/funcao-relatorio.test.js' \
   --exclude='/README.md' \
   $EXCLUI_ESTUDOS \
   "$ORIGEM/" "$DESTINO/"
@@ -83,6 +84,14 @@ if [ -z "$COM_ESTUDOS" ]; then
     else rm -f "$DESTINO/$e" && echo "*deleting   $e  (estudo: fica só no local)"; fi
   done
 fi
+# O teste da função da Vercel exige a pasta api/, que não vai pro Pages: sem
+# isto o npm test da cópia publicada quebra em MODULE_NOT_FOUND. Mesma
+# mecânica dos estudos — excluído do rsync, apagado do destino explicitamente.
+for e in tests/funcao-relatorio.test.js; do
+  [ -e "$DESTINO/$e" ] || continue
+  if [ -n "$SECO" ]; then echo "*deleting   $e  (só faz sentido onde há api/)"
+  else rm -f "$DESTINO/$e" && echo "*deleting   $e  (só faz sentido onde há api/)"; fi
+done
 
 echo
 if [ -n "$SECO" ]; then

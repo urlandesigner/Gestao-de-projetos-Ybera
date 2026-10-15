@@ -520,10 +520,15 @@ function garantirMeusItens() {
   refreshMyItems().then(() => { saveJSON(LS.cache, state.cache); renderMyItems(); });
 }
 
+/* DUAS TROCAS DE PO SEGUIDAS disparam duas buscas, e a mais lenta pode
+   terminar por último: gravaria a lista da pessoa anterior com o seletor já
+   em outra, e `meusItensSaoDaVez` ficaria falso pra sempre — "carregando…"
+   até recarregar. Cada busca leva um número; só a mais recente grava. */
+let geracaoMeusItens = 0;
+
 async function refreshMyItems() {
-  const itensAnteriores = state.cache.myItems;
-  const deAnterior = state.cache.myItemsDe;
   const quem = donoDosMeusItens();
+  const minha = ++geracaoMeusItens;
   // Dono do token: @Me, que não depende de nome nenhum. Outra pessoa: o e-mail
   // da ficha quando a Central a conhece, senão o nome de exibição.
   const outraPessoa = quem && quem !== state.cache.usuario;
@@ -538,18 +543,20 @@ async function refreshMyItems() {
       allIds.push(...await A.runWiql(ctx(), projeto, time, C.wiqlMyItems(filtro)));
     }
     const unicos = [...new Set(allIds)];
-    state.cache.myItems = unicos.length ? await A.getFields(ctx(), unicos, FIELDS_ITEMS) : [];
-    state.cache.myItemsDe = quem;
+    const itens = unicos.length ? await A.getFields(ctx(), unicos, FIELDS_ITEMS) : [];
     // Pai de cada item (Feature/Épico) — um lote só, pro contexto no cartão
-    const paiIds = [...new Set(state.cache.myItems.map((it) => (it.fields || {})['System.Parent']).filter(Boolean))];
+    const paiIds = [...new Set(itens.map((it) => (it.fields || {})['System.Parent']).filter(Boolean))];
     const pais = paiIds.length ? await A.getFields(ctx(), paiIds, ['System.Title', 'System.WorkItemType']) : [];
+    if (minha !== geracaoMeusItens) return; // veio outra troca de PO: o resultado dela é que vale
+    state.cache.myItems = itens;
+    state.cache.myItemsDe = quem;
     state.cache.myParents = {};
     for (const p of pais) state.cache.myParents[p.id] = { titulo: (p.fields || {})['System.Title'], tipo: (p.fields || {})['System.WorkItemType'] };
   } catch (e) {
+    if (minha !== geracaoMeusItens) return;
     if (e instanceof A.AuthError) state.auth = 'vencido';
     state.cache.myItemsError = mensagemDeErro(e);
-    state.cache.myItems = itensAnteriores;
-    state.cache.myItemsDe = deAnterior;
+    // A lista anterior fica como estava: nada foi gravado antes do erro.
   }
   renderMyItems();
 }
@@ -612,7 +619,9 @@ function renderBadge() {
   /* Sem consulta nesta abertura (cache ainda fresco), o selo herda o resultado
      da ÚLTIMA: se ela falhou (tentou depois do último sucesso), não é
      "conectado" — é o mesmo estado que a mensagem de erro do cache descreve. */
-  const ultimaFalhou = !!state.cache.fetchedAt && (state.cache.lastSuccessAt || 0) < state.cache.fetchedAt;
+  // `lastSuccessAt` ausente é cache de versão antiga, não falha: só número conta.
+  const ultimaFalhou = !!state.cache.fetchedAt && typeof state.cache.lastSuccessAt === 'number'
+    && state.cache.lastSuccessAt < state.cache.fetchedAt;
   const auth = state.auth || (state.pat ? (ultimaFalhou ? 'vencido' : 'conectado') : 'sem-token');
   const badge = $('badge');
   badge.textContent = rotulos[auth] || auth;

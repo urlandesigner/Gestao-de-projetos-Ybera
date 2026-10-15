@@ -731,14 +731,14 @@ test('o material de entregas só é montado no caminho do PO', () => {
      carregou), nunca do pacote do leitor. */
   const pacote = fs.readFileSync(path.join(__dirname, '../assets/pacote.js'), 'utf8');
   const report = fs.readFileSync(path.join(__dirname, '../assets/report.js'), 'utf8');
-  const chamada = /const material = \(paraArquivo && B\.precisaDeEntregas === true[\s\S]*?: null;/
+  const chamada = /const material = \(B\.precisaDeEntregas === true[\s\S]*?: null;/
     .exec(pacote);
   assert.ok(chamada, 'o material de entregas mudou de forma — reveja a exceção da varredura');
   assert.match(chamada[0], /B\.entregasConcluidas\(mostrados, todos,/);
   assert.match(report, /todos: st\.items\.concat\(st\.pais\),/,
     'o material passou a ser montado de outra fonte que não a busca ao vivo');
   // E o bloco nasce com `_`: é o contrato que o portão do publicar-dados.sh lê.
-  assert.match(pacote, /_entregas: \(material && material\.itens\.length\) \? material : undefined,/);
+  assert.match(pacote, /_entregas: \(paraArquivo && material && material\.itens\.length\) \? material : undefined,/);
 });
 
 /* O teste acima lê a chamada; este RODA a montagem de verdade. Os dois portões

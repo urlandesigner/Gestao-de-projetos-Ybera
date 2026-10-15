@@ -282,10 +282,10 @@
       ? ritmoDe({ sprintsBrutas, itens: mostrados, agora, resumos }) : [];
     const pendentes = (paraArquivo && B.precisaDeSprints === true)
       ? descricoesPendentes({ linhas: ritmoLinhas, todosItens, resumos }) : [];
-    /* O material pra escrever a aba Entregas: só na publicação, e só no
-       documento que declara `precisaDeEntregas`. */
-    const material = (paraArquivo && B.precisaDeEntregas === true
-      && typeof B.entregasConcluidas === 'function')
+    /* O material das entregas do período, UMA vez: dele saem os cartões
+       automáticos (sempre) e o bloco local `_entregas` (só na publicação). Só
+       no documento que declara `precisaDeEntregas`. */
+    const material = (B.precisaDeEntregas === true && typeof B.entregasConcluidas === 'function')
       ? B.entregasConcluidas(mostrados, todos,
         typeof B.periodoDoDocumento === 'function' ? B.periodoDoDocumento() : [])
       : null;
@@ -299,9 +299,9 @@
          quem lê não tem os itens do board pra montá-los. Só título, data e
          linha de resumo. */
       automaticos: B.precisaDeEntregas === true
-        ? automaticos({ B, itens: mostrados, todos, resumos }) : undefined,
+        ? C.automaticosDoMaterial(material, resumos || {}) : undefined,
       _descricoes: (paraArquivo && pendentes && pendentes.length) ? pendentes : undefined,
-      _entregas: (material && material.itens.length) ? material : undefined,
+      _entregas: (paraArquivo && material && material.itens.length) ? material : undefined,
     });
   }
 

@@ -1202,6 +1202,23 @@
       .filter((f) => f.itens.length);
   }
 
+  /* QUANDO UM PERÍODO FECHA: meia-noite de Brasília do dia 1º seguinte ao
+     último mês (03h UTC). Uma regra só, porque dois lugares a usam — a capa
+     (selo "em andamento") e a função da Vercel (cache de mês fechado) — e
+     duas cópias divergiriam: a função cachearia por um dia um mês que a capa
+     ainda marca aberto. Devolve o instante em ms, ou null se o período não
+     tem mês válido. */
+  function fimDoPeriodo(chaves) {
+    const lista = Array.isArray(chaves) ? chaves : [];
+    const [ano, mes] = String(lista[lista.length - 1] || '').split('-').map(Number);
+    if (!ano || !mes || mes < 1 || mes > 12) return null;
+    return Date.UTC(ano, mes, 1, 3);
+  }
+  function periodoFechado(chaves, agora) {
+    const fecha = fimDoPeriodo(chaves);
+    return fecha !== null && Number(agora) >= fecha;
+  }
+
   function saneRoadmapItens(lista) {
     const dataValida = (s) => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s)
       && !Number.isNaN(Date.parse(s + 'T00:00:00Z'));
@@ -1709,7 +1726,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, wiqlIteracao, transbordados, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts, chaveDePessoa, fichaDaPessoa, caminhoDoConteudo,
-    saneCartoes, saneEdicao, automaticosDoMaterial, saneAutomaticos, saneFontes,
+    saneCartoes, saneEdicao, automaticosDoMaterial, saneAutomaticos, saneFontes, fimDoPeriodo, periodoFechado,
     iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, vizinhasDaSprint, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, digitalDoTexto, saneResumos, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,

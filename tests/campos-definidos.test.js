@@ -25,6 +25,9 @@ test('o selo não diz conectado quando nenhuma consulta deu certo', () => {
   assert.match(src, /if \(algumSucesso\) state\.auth = 'conectado';/);
   assert.match(src, /navigator\.onLine === false\) \? 'offline' : 'vencido'/);
   // E ao abrir com cache fresco, herda o resultado da última tentativa.
-  assert.match(src, /const ultimaFalhou = !!state\.cache\.fetchedAt && \(state\.cache\.lastSuccessAt \|\| 0\) < state\.cache\.fetchedAt;/);
+  assert.match(src, /const ultimaFalhou = !!state\.cache\.fetchedAt && typeof state\.cache\.lastSuccessAt === 'number'/);
+  // Só a busca mais recente grava Meus itens (trocas rápidas de PO).
+  assert.match(src, /const minha = \+\+geracaoMeusItens;/);
+  assert.match(src, /if \(minha !== geracaoMeusItens\) return;/);
   assert.doesNotMatch(src, /if \(state\.auth === 'atualizando'\) state\.auth = 'conectado';/);
 });
