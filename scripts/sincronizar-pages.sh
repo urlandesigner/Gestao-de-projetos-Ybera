@@ -71,6 +71,7 @@ rsync -a --delete --itemize-changes $SECO \
   --exclude='/scripts/' \
   --exclude='/diagnostico.html' \
   --exclude='/api/' \
+  --exclude='/.vercelignore' \
   --exclude='/README.md' \
   $EXCLUI_ESTUDOS \
   "$ORIGEM/" "$DESTINO/"
