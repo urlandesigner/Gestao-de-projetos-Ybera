@@ -1289,7 +1289,7 @@ function cardTemResp(p, resp) {
    nome social, grafia diferente entre contas. Casar pela string inteira faria
    a pessoa sumir do seletor calada; casar pelo primeiro nome sobrevive a isso.
    Se alguma PO não aparecer, é aqui que se mexe. */
-const POS = ['Urlan', 'Isadora', 'Daniele', 'Taz', 'Carla']; // Taz e Carla entram em 15/10/2026
+const POS = ['Urlan', 'Isadora', 'Daniele', 'Tazshida', 'Carla']; // Tazshida e Carla entram em 15/10/2026
 const primeiroNome = (n) => String(n || '').trim().split(/\s+/)[0]
   .normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const ehPO = (n) => POS.some((p) => primeiroNome(p) === primeiroNome(n));
