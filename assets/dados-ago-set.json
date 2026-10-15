@@ -1,0 +1,445 @@
+{
+ "v": 1,
+ "em": 1792072166579,
+ "escopo": "Urlan Dipre",
+ "mes": null,
+ "roadmap": [
+  {
+   "titulo": "Nova PDP",
+   "inicio": "2026-07-01",
+   "fim": "2026-08-31",
+   "status": "concluido"
+  },
+  {
+   "titulo": "Compliance Google",
+   "inicio": "2026-07-01",
+   "fim": "2026-09-30",
+   "status": "andamento"
+  },
+  {
+   "titulo": "Translate loja",
+   "inicio": "2026-08-01",
+   "fim": "2026-09-30",
+   "status": "concluido"
+  },
+  {
+   "titulo": "Nova Homepage",
+   "inicio": "2026-08-15",
+   "fim": "2026-09-30",
+   "status": "concluido"
+  },
+  {
+   "titulo": "Novo Design System",
+   "inicio": "2026-09-01",
+   "fim": "2026-10-31",
+   "status": "andamento"
+  },
+  {
+   "titulo": "Melhorias Review",
+   "inicio": "2026-09-01",
+   "fim": "2026-09-30",
+   "status": "concluido"
+  },
+  {
+   "titulo": "Novo Tema da Loja USA/Global",
+   "inicio": "2026-11-01",
+   "fim": "2027-01-31",
+   "status": null
+  },
+  {
+   "titulo": "Subscription",
+   "inicio": "2026-10-01",
+   "fim": "2026-10-31",
+   "status": null
+  },
+  {
+   "titulo": "App Rewards Loyalty (Yotpo)",
+   "inicio": "2026-11-01",
+   "fim": "2026-11-30",
+   "status": null
+  },
+  {
+   "titulo": "Loja da Influencer",
+   "inicio": "2027-01-01",
+   "fim": "2027-04-30",
+   "status": null
+  },
+  {
+   "titulo": "Quiz Ybera AI",
+   "inicio": "2027-01-01",
+   "fim": "2027-02-28",
+   "status": null
+  },
+  {
+   "titulo": "Ybera Reviews",
+   "inicio": "2027-03-01",
+   "fim": "2027-04-30",
+   "status": null
+  },
+  {
+   "titulo": "Ybera Europa - Crossborder USA",
+   "inicio": "2027-03-01",
+   "fim": "2027-06-30",
+   "status": null
+  }
+ ],
+ "contagens": {
+  "f": {
+   "42883": 1,
+   "44271": 9,
+   "44272": 4,
+   "45272": 13,
+   "45421": 1,
+   "45424": 1,
+   "45723": 2,
+   "46262": 1,
+   "48588": 1,
+   "49920": 2,
+   "49956": 1,
+   "50184": 1,
+   "50905": 2,
+   "51943": 3,
+   "51944": 1
+  },
+  "e": {
+   "49290": 39,
+   "49301": 1,
+   "49302": 2,
+   "51944": 1
+  }
+ },
+ "sprints": [
+  {
+   "nome": "Sprint 16",
+   "start": "2026-08-03T00:00:00Z",
+   "finish": "2026-08-14T00:00:00Z",
+   "estado": "fechada",
+   "entregues": 9,
+   "total": 9,
+   "transbordaram": 5,
+   "itens": [
+    {
+     "titulo": "3 - Rating, título e descrição reduzida",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "13 - Componentes de Ícones",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "14 - Componentes de Imagem + Copy",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "15 - Grid Editorial de Benefícios",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "16 - Hotspots Interativos",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "Melhorias das Lojas EUA e Brasil ao Tema Global",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "Discovery Técnico para Plataforma de Orquestração Shopify",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "[DESIGN] [Research e Protótipo] Refatoração da Experiência do Cart Drawer no Mobile",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "Publicar Apenas Produtos com Estoque no Google Merchant Center",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    }
+   ],
+   "transbordados": [
+    {
+     "titulo": "Assinatura Inteligente (PDP + Checkout)",
+     "resumo": "Destaca a assinatura na página do produto e a sugere no checkout, com renovação a cada 30 dias no cartão de crédito, para quem quer comprar de forma recorrente.",
+     "estado": "In Progress",
+     "familia": "andamento",
+     "feito": false
+    },
+    {
+     "titulo": "01: Hero Banner (Variantes Lifestyle e Product)",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "04: Produto Destaque",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "02: Quiz AI",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "03: Reviews",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    }
+   ]
+  },
+  {
+   "nome": "Sprint 17",
+   "start": "2026-08-17T00:00:00Z",
+   "finish": "2026-08-28T00:00:00Z",
+   "estado": "fechada",
+   "entregues": 10,
+   "total": 10,
+   "transbordaram": 2,
+   "itens": [
+    {
+     "titulo": "[Desenvolvimento] Refatoração da Experiência de Checkout do Mobile",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "01: Hero Banner (Variantes Lifestyle e Product)",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "06: Listagem de Produtos (1)",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "04: Produto Destaque",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "09: Shop by Collection (2)",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "07: Recursos de Conversão (Flash Deals) (3)",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "02: Quiz AI",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "11: Bundle & Upsell (6)",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "03: Reviews",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "10: Tolstoy (Grade de Vídeos estilo Reels) (4)",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    }
+   ],
+   "transbordados": [
+    {
+     "titulo": "[EUA]08: Shop by Concern (5)",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "Correções de compliance Google no ybera.us",
+     "resumo": "Põe link de verificação nos selos da Judge.me e tira do feed do Google os produtos sem estoque, para o Google parar de reprovar itens que não dá para comprar.",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    }
+   ]
+  },
+  {
+   "nome": "Sprint 18",
+   "start": "2026-08-31T00:00:00Z",
+   "finish": "2026-09-11T00:00:00Z",
+   "estado": "fechada",
+   "entregues": 6,
+   "total": 6,
+   "transbordaram": 2,
+   "itens": [
+    {
+     "titulo": "[EUA]08: Shop by Concern (5)",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "[EUA]12: Blog Section & Newsletter Section",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "[EUA]13:  Seção de Autoridade",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "[EUA]14: Before and After",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "[Discovery] Solução de tradução do site",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "[DESIGN] UI Kit da Loja Ybera.us",
+     "resumo": "",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    }
+   ],
+   "transbordados": [
+    {
+     "titulo": "Correções de compliance Google no ybera.us",
+     "resumo": "Põe link de verificação nos selos da Judge.me e tira do feed do Google os produtos sem estoque, para o Google parar de reprovar itens que não dá para comprar.",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "[Bug] Brinde incluído indevidamente em pedidos abaixo de US$100",
+     "resumo": "Corrige o brinde que estava sendo incluído em pedidos que não atingiam o valor mínimo da promoção.",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    }
+   ]
+  },
+  {
+   "nome": "Sprint 19",
+   "start": "2026-09-14T00:00:00Z",
+   "finish": "2026-09-25T00:00:00Z",
+   "estado": "fechada",
+   "entregues": 2,
+   "total": 2,
+   "transbordaram": 4,
+   "itens": [
+    {
+     "titulo": "Correções de compliance Google no ybera.us",
+     "resumo": "Põe link de verificação nos selos da Judge.me e tira do feed do Google os produtos sem estoque, para o Google parar de reprovar itens que não dá para comprar.",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "[DISCOVERY] Aplicativo para reviews na loja",
+     "resumo": "Compara os aplicativos de review da Shopify App Store e recomenda um ou dois finalistas, com o custo mensal no cenário da loja USA.",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    }
+   ],
+   "transbordados": [
+    {
+     "titulo": "[Bug] Brinde incluído indevidamente em pedidos abaixo de US$100",
+     "resumo": "Corrige o brinde que estava sendo incluído em pedidos que não atingiam o valor mínimo da promoção.",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "[DESIGN] Viabilização Design System para loja Ybera.us",
+     "resumo": "Define como cada marca pode se expressar dentro de um padrão comum, para manter a identidade de cada uma sem perder a consistência da loja.",
+     "estado": "In Progress",
+     "familia": "andamento",
+     "feito": false
+    },
+    {
+     "titulo": "[IMPLEMENTAÇÃO] Tradução da loja com o Translate & Adapt",
+     "resumo": "Finaliza e valida a tradução da loja nos três idiomas, sem trechos em inglês nem imagem fora de contexto.",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    },
+    {
+     "titulo": "Ajustar configuração do app de review atual na loja USA",
+     "resumo": "Ajusta o app de reviews que já está na loja para atender o que a pesquisa definiu, em vez de contratar outro.",
+     "estado": "Done",
+     "familia": "feito",
+     "feito": true
+    }
+   ]
+  }
+ ]
+}
