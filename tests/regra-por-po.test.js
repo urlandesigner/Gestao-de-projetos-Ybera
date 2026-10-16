@@ -1,0 +1,110 @@
+/* A REGRA "cada PO só altera o que é dela" (15/10/2026).
+
+   O que estes testes protegem: uma PO que está testando o sistema não consegue,
+   por engano ou de propósito, mudar o que as outras POs veem. A lista do que é
+   dela mora em scripts/regra-por-po.js; aqui se tenta furá-la. */
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+
+const { permitido, foraDoQueEDela, chaveValida } = require('../scripts/regra-por-po.js');
+const raiz = path.join(__dirname, '..');
+
+test('a PO altera o que é dela', () => {
+  for (const f of [
+    'assets/conteudo/carla/roadmap.json',
+    'assets/conteudo/carla/edicoes/2026-11.json',
+    'assets/conteudo/carla/imagens/tela.png',
+    'entregas-carla-status.html',
+    'entregas-carla-claro.html',
+    'scripts/gerar-entregas-carla.js',
+    'assets/dados-outubro-carla.json',
+    'assets/dados-2026-11-carla.json',
+  ]) {
+    assert.equal(permitido('carla', f), true, f + ' devia ser dela');
+  }
+});
+
+test('o que é compartilhado não é de nenhuma PO', () => {
+  for (const f of [
+    'assets/report.js', 'assets/core.js', 'assets/pacote.js', 'assets/app.js',
+    'assets/entregas.css', 'assets/ritmo.css', 'assets/style.css',
+    'assets/briefing-entregas.js', 'assets/briefing-entregas-v2.js',
+    'assets/resumos.json', 'assets/report-nomes.json', 'assets/dados-outubro.json',
+    'entregas-v2.html', 'central.html', 'index.html', 'status-demandas.html',
+    'api/relatorio.js', 'api/_lib/relatorio.js',
+    'tests/core.test.js', 'scripts/sincronizar-pages.sh', 'package.json', 'CLAUDE.md',
+    '.vercelignore', 'favicon.ico',
+  ]) {
+    assert.equal(permitido('carla', f), false, f + ' é compartilhado');
+    assert.equal(permitido('isadora', f), false, f + ' é compartilhado');
+  }
+});
+
+test('uma PO não mexe no que é de outra', () => {
+  for (const f of [
+    'assets/conteudo/isadora/roadmap.json',
+    'assets/conteudo/urlan/edicoes/2026-10.json',
+    'entregas-isadora-status.html',
+    'scripts/gerar-entregas-isadora.js',
+    'assets/dados-outubro-isadora.json',
+  ]) {
+    assert.equal(permitido('carla', f), false, 'a Carla mexeu em ' + f);
+  }
+  // E o nome parecido não engana: "carla" não é "carlos".
+  assert.equal(permitido('carla', 'assets/conteudo/carlos/roadmap.json'), false);
+  assert.equal(permitido('carla', 'entregas-carlos-x.html'), false);
+});
+
+test('não dá pra sair da pasta dela por caminho esperto', () => {
+  for (const f of [
+    'assets/conteudo/carla/../isadora/roadmap.json',
+    'assets/conteudo/carla/../../core.js',
+    '../assets/conteudo/carla/roadmap.json',
+    '/assets/conteudo/carla/roadmap.json',
+    'assets\\conteudo\\carla\\roadmap.json',
+    'assets/conteudo/carla',            // a pasta em si, sem arquivo
+    'assets/conteudo//carla/x.json',
+    './assets/conteudo/carla/x.json',
+    '', null, undefined, 42,
+  ]) {
+    assert.equal(permitido('carla', f), false, String(f));
+  }
+});
+
+test('a chave da PO é validada antes de virar parte de caminho ou regex', () => {
+  for (const po of ['', null, undefined, 'carla.*', 'ca rla', '../x', '__proto__', 'A', 'c', 'x'.repeat(31), 'carla/x']) {
+    assert.equal(chaveValida(po), false, String(po));
+    assert.equal(permitido(po, 'assets/conteudo/carla/roadmap.json'), false, String(po));
+  }
+});
+
+test('o Urlan é o dono: pode tudo', () => {
+  for (const f of ['assets/core.js', 'api/relatorio.js', 'assets/conteudo/carla/roadmap.json', 'CLAUDE.md']) {
+    assert.equal(permitido('urlan', f), true, f);
+  }
+});
+
+test('foraDoQueEDela devolve só o que passou do limite', () => {
+  const fora = foraDoQueEDela('carla', [
+    'assets/conteudo/carla/roadmap.json', 'assets/report.js', 'entregas-carla-status.html', 'assets/ritmo.css',
+  ]);
+  assert.deepEqual(fora, ['assets/report.js', 'assets/ritmo.css']);
+});
+
+/* O CLAUDE.md é como a regra chega a quem abre o projeto numa sessão do
+   Claude. Se ele sumir, ou deixar de citar o conferidor, a regra vira
+   costume — e costume não segura. */
+test('o CLAUDE.md da raiz carrega a regra e aponta pro conferidor', () => {
+  const md = fs.readFileSync(path.join(raiz, 'CLAUDE.md'), 'utf8');
+  assert.match(md, /cada PO só altera o que é dela/i);
+  assert.match(md, /scripts\/regra-por-po\.js/);
+  assert.match(md, /assets\/conteudo\/<po>\//);
+  assert.match(md, /Urlan/);
+});
+
+test('o projeto publicado não leva a regra nem o CLAUDE.md pro ar', () => {
+  assert.match(fs.readFileSync(path.join(raiz, '.vercelignore'), 'utf8'), /^\/CLAUDE\.md$/m);
+  assert.match(fs.readFileSync(path.join(raiz, 'scripts/sincronizar-pages.sh'), 'utf8'), /--exclude='\/CLAUDE\.md'/);
+});

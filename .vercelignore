@@ -19,3 +19,7 @@
 /outubro/
 /novembro/
 /dezembro/
+
+# A regra de contribuição das POs: é do repositório, não do site.
+/CLAUDE.md
+/.github/
