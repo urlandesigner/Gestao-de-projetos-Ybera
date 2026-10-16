@@ -74,7 +74,7 @@ function cli(argv) {
     return 2;
   }
   if (!arquivos.length) { console.log('nada alterado em relação a ' + base); return 0; }
-  const fora = foraDaQueEDela(po, arquivos);
+  const fora = foraDoQueEDela(po, arquivos);
   if (!fora.length) {
     console.log(po + ': ' + arquivos.length + ' arquivo(s), todos dela. Pode publicar.');
     return 0;

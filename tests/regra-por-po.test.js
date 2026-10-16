@@ -108,3 +108,51 @@ test('o projeto publicado não leva a regra nem o CLAUDE.md pro ar', () => {
   assert.match(fs.readFileSync(path.join(raiz, '.vercelignore'), 'utf8'), /^\/CLAUDE\.md$/m);
   assert.match(fs.readFileSync(path.join(raiz, 'scripts/sincronizar-pages.sh'), 'utf8'), /--exclude='\/CLAUDE\.md'/);
 });
+
+/* O comando de verdade, num repositório de mentira: o teste de unidade acima
+   não pegou um nome de função trocado dentro do `cli`, e o conferidor é o que
+   alguém vai rodar antes de publicar. Aqui ele roda do começo ao fim. */
+test('o conferidor, rodando: passa o que é dela e barra o que é compartilhado', () => {
+  const os = require('node:os');
+  const { spawnSync, execFileSync } = require('node:child_process');
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'regra-po-'));
+  try {
+    const git = (...a) => execFileSync('git', a, { cwd: tmp, encoding: 'utf8' });
+    git('init', '-q', '-b', 'main');
+    git('config', 'user.email', 't@t.t'); git('config', 'user.name', 't');
+    fs.mkdirSync(path.join(tmp, 'scripts'), { recursive: true });
+    fs.copyFileSync(path.join(raiz, 'scripts/regra-por-po.js'), path.join(tmp, 'scripts/regra-por-po.js'));
+    fs.mkdirSync(path.join(tmp, 'assets/conteudo/carla'), { recursive: true });
+    fs.writeFileSync(path.join(tmp, 'assets/core.js'), '// base\n');
+    fs.writeFileSync(path.join(tmp, 'assets/conteudo/carla/roadmap.json'), '{}\n');
+    git('add', '-A'); git('commit', '-q', '-m', 'base');
+
+    const rodar = (po) => spawnSync('node', ['scripts/regra-por-po.js', po, 'HEAD'], { cwd: tmp, encoding: 'utf8' });
+
+    // Sem mudança nenhuma.
+    assert.equal(rodar('carla').status, 0);
+
+    // Só o que é dela (arquivo novo solto + arquivo dela alterado).
+    fs.writeFileSync(path.join(tmp, 'assets/conteudo/carla/roadmap.json'), '{"a":1}\n');
+    fs.writeFileSync(path.join(tmp, 'entregas-carla-claro.html'), '<p>x</p>\n');
+    let r = rodar('carla');
+    assert.equal(r.status, 0, r.stderr);
+    assert.match(r.stdout, /2 arquivo\(s\), todos dela/);
+
+    // Mexeu também num arquivo compartilhado: barra e diz qual.
+    fs.appendFileSync(path.join(tmp, 'assets/core.js'), '// mexeu\n');
+    r = rodar('carla');
+    assert.equal(r.status, 1);
+    assert.match(r.stderr, /assets\/core\.js/);
+    assert.doesNotMatch(r.stderr, /roadmap\.json|entregas-carla/, 'listou arquivo que é dela');
+
+    // O mesmo conjunto, pra outra PO: tudo é de fora.
+    assert.equal(rodar('isadora').status, 1);
+    // O dono pode tudo.
+    assert.equal(rodar('urlan').status, 0);
+    // Chave inválida é erro de uso, não passa calada.
+    assert.equal(rodar('../x').status, 2);
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
+});
