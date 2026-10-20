@@ -217,6 +217,8 @@ async function varrer({ env = {}, fetchImpl, agora = Date.now(), avisar = consol
   const epicos = tudo.itens.concat(tudo.pais).filter((x) => (x.fields || {})['System.WorkItemType'] === 'Epic');
   const comTexto = epicos.filter((x) => C.descricaoLimpa((x.fields || {})['System.Description']));
   const epicosInfo = { vistos: new Set(epicos.map((x) => x.id)).size, comDescricao: new Set(comTexto.map((x) => x.id)).size };
+  const idsEpicos = [...new Set(epicos.map((x) => x.id))];
+  const textoDe = new Set(comTexto.map((x) => x.id));
   const rodada = fila.slice(0, TETO);
   const geradorDeVerdade = gerar || geradorHaiku(env);
   const novas = {};
@@ -246,6 +248,11 @@ async function varrer({ env = {}, fetchImpl, agora = Date.now(), avisar = consol
     atualizadoEm: new Date(agora).toISOString().slice(0, 10),
   });
   const r = { estado: semChave ? 'sem-chave' : 'ok', geradas: Object.keys(novas).length, pendentes, total: Object.keys(itens).length };
+  // Por épico: com frase, com descrição que o modelo não soube resumir, ou sem descrição.
+  epicosInfo.estados = idsEpicos.map((id) => {
+    const g = itens[String(id)] || FIXOS[String(id)];
+    return [id, g && g.resumo ? 'frase' : textoDe.has(id) ? 'sem-resumo' : 'sem-descricao'];
+  });
   r.epicos = epicosInfo;
   r.semFrase = fila.filter((x) => !novas[String(x.id)]).slice(0, 10).map((x) => x.id);
   if (erros) Object.assign(r, { erros, statusErro });
