@@ -88,7 +88,15 @@ function montarPedido({ tipo, titulo, produto, texto }) {
    padrão). Recusa do modelo (`refusal`) não é erro: o item fica sem linha. */
 function geradorHaiku(env) {
   const Anthropic = require('@anthropic-ai/sdk');
-  const client = new (Anthropic.default || Anthropic)({ apiKey: String(env.ANTHROPIC_API_KEY || '').trim() });
+  /* Chave que não nasceu dentro de um workspace pede o ID dele em cada pedido
+     (400 "not scoped to a workspace"). É o que acontece com a chave criada
+     pelo caminho "Obter chaves de API" da conta. ANTHROPIC_WORKSPACE_ID é
+     opcional: com chave já presa a um workspace, fica de fora. */
+  const workspace = String(env.ANTHROPIC_WORKSPACE_ID || '').trim();
+  const client = new (Anthropic.default || Anthropic)({
+    apiKey: String(env.ANTHROPIC_API_KEY || '').trim(),
+    defaultHeaders: workspace ? { 'anthropic-workspace-id': workspace } : undefined,
+  });
   return async function gerar(item) {
     const r = await client.messages.create({
       model: MODELO,

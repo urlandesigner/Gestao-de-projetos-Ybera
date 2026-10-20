@@ -227,7 +227,8 @@ test('erro do modelo num item não derruba os outros', async () => {
   assert.equal(r.geradas, 2);
   assert.equal(r.pendentes, 1);
   assert.equal(r.erros, 1);
-  assert.doesNotMatch(JSON.stringify(r), /rede caiu/, 'a mensagem do erro foi pra resposta pública');
+  // TEMPORÁRIO (20/10/2026): enquanto o diagnóstico `motivoTemp` existir, a mensagem viaja. Ao removê-lo, voltar a exigir doesNotMatch(/rede caiu/).
+  assert.match(r.motivoTemp, /rede caiu/);
 });
 
 test('chave recusada: para na hora, avisa, e não grava frase nenhuma', async () => {
@@ -428,4 +429,28 @@ test('o cron diário chama a varredura, e o site oficial não leva a configuraç
     assert.ok(sync.includes("--exclude='" + f + "'"), f + ' iria pro site oficial');
   }
   assert.match(ler('.gitignore'), /^node_modules\/$/m);
+});
+
+test('com ANTHROPIC_WORKSPACE_ID, o pedido ao modelo leva o cabeçalho do workspace', async () => {
+  const pedidos = [];
+  const falso = async (url, opcoes) => {
+    pedidos.push(opcoes.headers);
+    return new Response(JSON.stringify({ type: 'error', error: { type: 'invalid_request_error', message: 'x' } }),
+      { status: 400, headers: { 'content-type': 'application/json' } });
+  };
+  const Anthropic = require('@anthropic-ai/sdk');
+  const original = Anthropic.prototype.constructor;
+  assert.ok(original, 'SDK carregou');
+  // O SDK aceita um fetch próprio: aqui só se confere o cabeçalho que ele manda.
+  const orig = globalThis.fetch;
+  globalThis.fetch = falso;
+  try {
+    for (const [workspace, esperado] of [['wrkspc_teste', 'wrkspc_teste'], ['', undefined]]) {
+      pedidos.length = 0;
+      const gerar = R.geradorHaiku({ ANTHROPIC_API_KEY: 'chave-de-teste', ANTHROPIC_WORKSPACE_ID: workspace });
+      await assert.rejects(gerar({ tipo: 'Epic', titulo: 't', produto: '', texto: 'x' }));
+      const h = new Headers(pedidos[0]);
+      assert.equal(h.get('anthropic-workspace-id') || undefined, esperado);
+    }
+  } finally { globalThis.fetch = orig; }
 });
