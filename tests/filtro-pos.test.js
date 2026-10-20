@@ -117,3 +117,18 @@ test('o menu muda por PO: Status some pra Tazshida e vira atalho pra Carla', () 
   // O destino da Carla existe no projeto.
   assert.ok(fs.existsSync(path.join(__dirname, '..', 'entregas-carla-status.html')));
 });
+
+/* O topo de cada tela (16/10/2026). O hash do menu (`#panorama`) é o id do bloco
+   de conteúdo, logo abaixo do título: o navegador rolava até ele e o título da
+   seção ficava escondido. A margem de rolagem de uma tela inteira trava a
+   âncora em zero — sem script, e valendo também pra rolagem tardia. */
+test('toda âncora do menu leva ao topo da tela, não ao bloco de conteúdo', () => {
+  const css = fs.readFileSync(path.join(__dirname, '..', 'assets', 'style.css'), 'utf8');
+  const m = /(#panorama[^{]*)\{\s*scroll-margin-top:\s*100vh;\s*\}/.exec(css);
+  assert.ok(m, 'a margem de rolagem das âncoras do menu sumiu');
+  const html = fs.readFileSync(path.join(__dirname, '..', 'central.html'), 'utf8');
+  // Todo hash do menu que também é id de um bloco precisa estar na regra.
+  for (const [, alvo] of html.matchAll(/<a id="nav-[a-z-]+" href="#([a-z-]+)"/g)) {
+    if (html.includes(`id="${alvo}"`)) assert.ok(m[1].includes('#' + alvo), `#${alvo} é âncora de um bloco e ficou fora da regra`);
+  }
+});

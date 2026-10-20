@@ -1358,3 +1358,16 @@ details summary { cursor: pointer; color: var(--mudo); font-size: 0.88rem; }
   
   
 }
+
+/* O TOPO DE CADA TELA (16/10/2026). Os links do menu são `#panorama`,
+   `#pendencias`… e esses ids são os dos blocos de CONTEÚDO, logo abaixo do
+   título da seção. O navegador trata o hash como âncora e rola até o bloco: com
+   a tela alta, o título e o respiro de cima ficavam escondidos e o Panorama
+   abria já no card "Agora".
+
+   Cada tela da Central é uma página inteira, não um trecho de uma maior. Uma
+   margem de rolagem de uma tela inteira faz a posição pedida ficar ACIMA do
+   topo, e o navegador a trava em zero — a âncora passa a levar ao começo, e
+   isso vale também quando ele rola depois do evento (tela que estava escondida
+   e acabou de aparecer), onde um scrollTo nosso chegava tarde. */
+#panorama, #pendencias, #produtos, #roadmap, #meus-itens { scroll-margin-top: 100vh; }
