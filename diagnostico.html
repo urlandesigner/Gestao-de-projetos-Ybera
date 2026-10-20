@@ -98,6 +98,11 @@
   <p style="margin:.8rem 0 0"><input id="dsSprints" value="Sprint 19, Sprint 20, Sprint 21" style="padding:.5rem .7rem;border:1px solid var(--borda);border-radius:8px;font:inherit;width:22rem">
   <button id="descricoes" style="padding:.5rem 1rem;border:1px solid var(--borda);border-radius:999px;background:var(--superficie);font:inherit;font-weight:600;cursor:pointer">baixar material</button></p>
   <div id="ds"></div>
+
+  <h2 style="margin-top:2rem">Material dos produtos (épicos)</h2>
+  <p class="meta">Pra escrever a linha "do que se trata" de cada épico na página Produtos. Baixa só os épicos que ainda não têm linha (ou cuja descrição mudou) e depois você pede ao Claude Code: <b>"gera os resumos dos produtos"</b>.</p>
+  <p style="margin:.8rem 0 0"><button id="descProdutos" style="padding:.5rem 1rem;border:1px solid var(--borda);border-radius:999px;background:var(--superficie);font:inherit;font-weight:600;cursor:pointer">baixar material dos produtos</button></p>
+  <div id="dp"></div>
 </section>
 
 <div id="saida"></div>
@@ -552,6 +557,75 @@
         + aviso + '</p>'
         + '<table><thead><tr><th>id</th><th>título</th><th>tam. da descr.</th><th>situação</th></tr></thead>'
         + '<tbody>' + linhas + '</tbody></table>';
+    } catch (e) {
+      caixa.innerHTML = '<p class="meta" style="color:var(--erro)">parou: ' + esc(e.message) + '</p>';
+    }
+  });
+
+  /* ---------------- Material dos produtos ----------------
+
+     Mesma regra do material das PBIs, e pelo mesmo motivo: a linha é escrita,
+     não recortada. Só entra quem precisa — épico sem linha, ou com linha gerada
+     de uma descrição que mudou desde então (`de`); linha escrita à mão (sem
+     `de`) nunca é refeita. Arquivo local, `material-produtos.json`: nome que
+     nenhuma edição declara, então o publicar-dados.sh não o aceita. */
+  const btnDp = document.getElementById('descProdutos');
+  if (btnDp) btnDp.addEventListener('click', async () => {
+    const caixa = document.getElementById('dp');
+    caixa.innerHTML = '<p class="meta">buscando…</p>';
+    try {
+      let jaEscritos = {};
+      try {
+        const rr = await fetch('assets/resumos.json?t=' + Date.now(), { cache: 'no-store' });
+        if (rr.ok) jaEscritos = C.saneResumos((await rr.json()).itens);
+      } catch (e) { /* sem o arquivo, pede de todos */ }
+      const porId = new Map();
+      for (const p of config.projects.filter((x) => !x.hidden)) {
+        let areas = [];
+        try { areas = await A.teamAreas(ctx, p.projectName, p.teamName); } catch (e) { /* projeto inteiro */ }
+        const ids = await A.runWiql(ctx, p.projectName, p.teamName, C.wiqlEpicos(areas));
+        const crus = ids.length ? await A.getFields(ctx, ids, ['System.Title', 'System.State', 'System.Description']) : [];
+        for (const it of crus) porId.set(it.id, Object.assign({ time: p.teamName }, it));
+      }
+      const material = [];
+      let linhas = '', jaTem = 0, semDesc = 0;
+      for (const it of [...porId.values()].sort((a, b) => a.id - b.id)) {
+        const f = it.fields || {};
+        const texto = C.descricaoLimpa(f['System.Description']);
+        const e = jaEscritos[String(it.id)];
+        let situacao;
+        if (!texto) {
+          semDesc += 1;
+          situacao = '<b style="color:var(--atencao)">sem descrição</b> <span class="meta">— fica sem linha</span>';
+        } else if (e && e.resumo && (!e.de || e.de === C.digitalDoTexto(texto))) {
+          jaTem += 1;
+          situacao = '<span class="meta">já escrito: ' + esc(e.resumo.slice(0, 90)) + '</span>';
+        } else {
+          material.push({ id: it.id, time: it.time, titulo: f['System.Title'] || '',
+            estado: f['System.State'] || '', descricao: texto });
+          situacao = e && e.resumo
+            ? '<b style="color:var(--atencao)">a descrição mudou — refazer</b>'
+            : '<b style="color:var(--positivo)">falta escrever</b>';
+        }
+        linhas += '<tr><td class="id">#' + it.id + '</td><td style="max-width:24rem">' + esc(f['System.Title'])
+          + '</td><td class="id">' + (texto ? texto.length : 0) + '</td><td style="max-width:34rem">' + situacao + '</td></tr>';
+      }
+      let aviso;
+      if (material.length) {
+        const blob = new Blob([JSON.stringify({ gerado: new Date().toISOString(), itens: material }, null, 1) + '\n'],
+          { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'material-produtos.json';
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+        aviso = '<b>' + material.length + '</b> pra escrever — baixei <code>material-produtos.json</code>. Peça ao Claude Code: <b>"gera os resumos dos produtos"</b>.';
+      } else {
+        aviso = '<b>nada a fazer</b>: todo épico com descrição já tem linha escrita.';
+      }
+      caixa.innerHTML = '<p class="meta" style="margin-top:1rem">' + porId.size + ' épicos · já escritos: <b>' + jaTem
+        + '</b> · sem descrição: <b>' + semDesc + '</b> · ' + aviso + '</p>'
+        + '<table><thead><tr><th>id</th><th>título</th><th>tam. da descr.</th><th>situação</th></tr></thead><tbody>' + linhas + '</tbody></table>';
     } catch (e) {
       caixa.innerHTML = '<p class="meta" style="color:var(--erro)">parou: ' + esc(e.message) + '</p>';
     }

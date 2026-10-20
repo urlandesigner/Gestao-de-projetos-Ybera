@@ -928,3 +928,13 @@ test('o número do Panorama e a coluna Sem movimento da Pendências sempre batem
   ];
   assert.equal(C.panoramaKpis(itens, AGORA).parados, C.pendencias(itens, AGORA).parados.length);
 });
+
+/* Material dos produtos (16/10/2026): só os épicos, pra escrever a linha "do que
+   se trata" da página Produtos. */
+test('wiqlEpicos pede só épico, sem removidos, presa à área do time', () => {
+  const q = C.wiqlEpicos([{ path: 'B2C\\Growth', children: true }]);
+  assert.match(q, /\[System\.WorkItemType\] = 'Epic'/);
+  assert.match(q, /\[System\.State\] <> 'Removed'/);
+  assert.match(q, /\[System\.AreaPath\] UNDER 'B2C\\Growth'/);
+  assert.doesNotMatch(C.wiqlEpicos([]), /AreaPath/);
+});

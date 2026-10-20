@@ -287,6 +287,7 @@ async function carregarResumos() {
     if (!resp.ok) return;
     const dado = await resp.json();
     state.resumos = C.saneResumos(dado.itens);
+    renderProdutos(); // a linha de cada épico vem do mesmo arquivo
   } catch (e) {
     console.warn('[Central] resumos.json não carregou: os itens da sprint ficam só com o'
       + ' título. Motivo: ' + e.message);
@@ -1214,12 +1215,21 @@ function htmlProduto(reg, p) {
   const { total, feitos } = reg.filhos;
   const pct = total ? Math.round((feitos / total) * 100) : 0;
   const bloqueado = C.stateBucket(f['System.State']) === 'atencao';
+  /* "DO QUE SE TRATA", uma linha. Vem do assets/resumos.json — o MESMO arquivo e
+     a MESMA regra dos resumos de PBI: linha escrita a partir da descrição do
+     épico, não recorte dela (recortar não é resumir). Épico sem linha ainda diz
+     isso, em vez de calar e deixar a dúvida se não carregou. */
+  const resumo = resumoDoItem(reg.item.id);
+  const doQueSeTrata = resumo
+    ? `<p class="produto-desc">${escapeHtml(resumo)}</p>`
+    : '<p class="produto-desc mudo">Resumo ainda não escrito.</p>';
   return `<article class="card produto">
     <h3><a href="${link}" target="_blank" rel="noopener">${escapeHtml(f['System.Title'] || ('item #' + reg.item.id))}</a> <span class="id">#${reg.item.id}</span></h3>
     <div class="selos">
       <span class="badge-tipo tipo-epic">Épico</span>
       <span class="badge-tipo${bloqueado ? ' selo-alerta' : ''}">${escapeHtml(f['System.State'])}</span>
     </div>
+    ${doQueSeTrata}
     <div class="linha"><span class="rot">Janela</span><span class="val">${janela(f['Microsoft.VSTS.Scheduling.StartDate'], f['Microsoft.VSTS.Scheduling.TargetDate'])}</span></div>
     <div class="linha"><span class="rot">Responsável</span><span class="val">${resp ? escapeHtml(resp) : 'sem responsável'}</span></div>
     <a class="progresso" href="${linkEpico}" title="Ver Features e PBIs deste épico">

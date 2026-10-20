@@ -200,3 +200,18 @@ test('com resumo, o selo de tipo alinha pelo topo', () => {
   // o olho perdia a correspondência entre selo e título.
   assert.match(css, /\.rt-item:has\(\.rt-item-resumo\) \{ align-items: flex-start; \}/);
 });
+
+/* A linha de cada épico na página Produtos (16/10/2026): do MESMO arquivo e da
+   MESMA regra das PBIs — escrita, nunca recorte da descrição. O app não busca
+   `System.Description` em lugar nenhum (tests/linha-descricao.test.js); o material
+   pra escrever vem da sonda local, que é de quem tem o token. */
+test('Produtos mostra a linha escrita do épico, e diz quando ainda não há', () => {
+  const fonteApp = ler('assets/app.js');
+  assert.match(fonteApp, /const resumo = resumoDoItem\(reg\.item\.id\);/);
+  assert.match(fonteApp, /Resumo ainda não escrito\./);
+  assert.match(fonteApp, /state\.resumos = C\.saneResumos\(dado\.itens\);\s*renderProdutos\(\);/);
+  const diag = ler('diagnostico.html');
+  assert.match(diag, /id="descProdutos"/);
+  assert.match(diag, /C\.wiqlEpicos\(areas\)/);
+  assert.match(diag, /a\.download = 'material-produtos\.json'/);
+});

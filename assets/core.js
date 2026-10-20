@@ -64,6 +64,18 @@
   const TERMINAL_STATES = ['Done', 'Closed', 'Removed', 'Completed'];
 
   // Recorte pelas áreas do time — sem ele, times do mesmo projeto contam igual
+  /* SÓ OS ÉPICOS do time, pro material dos resumos de produto (16/10/2026).
+     A wiqlProdutos traz a árvore inteira (épico, Feature, PBI); pra escrever a
+     linha de cada produto basta o épico. */
+  function wiqlEpicos(areas) {
+    return [
+      'SELECT [System.Id] FROM WorkItems',
+      'WHERE [System.TeamProject] = @project',
+      "AND [System.WorkItemType] = 'Epic'",
+      "AND [System.State] <> 'Removed'",
+      areaClause(areas),
+    ].filter(Boolean).join('\n');
+  }
   function areaClause(areas) {
     if (!areas || !areas.length) return '';
     const escapa = (s) => String(s).replace(/'/g, "''");
@@ -1742,7 +1754,7 @@
     aggregateCounts, sprintProgress, groupMyItemsBuckets,
     isAttentionState, typeSlug,
     wiqlBoard, wiqlIteracao, transbordados, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
-    stateBucket, bucketCounts, estaParado, chaveDePessoa, fichaDaPessoa, caminhoDoConteudo,
+    stateBucket, bucketCounts, estaParado, wiqlEpicos, chaveDePessoa, fichaDaPessoa, caminhoDoConteudo,
     saneCartoes, saneEdicao, automaticosDoMaterial, saneAutomaticos, saneFontes, fimDoPeriodo, periodoFechado,
     iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, vizinhasDaSprint, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, digitalDoTexto, saneResumos, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
