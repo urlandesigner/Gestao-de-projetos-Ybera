@@ -132,3 +132,17 @@ test('toda âncora do menu leva ao topo da tela, não ao bloco de conteúdo', ()
     if (html.includes(`id="${alvo}"`)) assert.ok(m[1].includes('#' + alvo), `#${alvo} é âncora de um bloco e ficou fora da regra`);
   }
 });
+
+/* "Projetos" saiu do menu (16/10/2026): o card de cada time repetia o Panorama.
+   Os atalhos de Board, Backlog e afins foram pro bloco "Times" do Panorama, e o
+   voltar do board, sem origem guardada, cai no Panorama. A rota #projetos
+   continua abrindo por endereço. */
+test('Projetos sai do menu e os atalhos dos times vão pro Panorama', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'central.html'), 'utf8');
+  assert.doesNotMatch(html.replace(/<!--[\s\S]*?-->/g, ''), /id="nav-projetos"|conta-nav-proj/);
+  assert.match(fonteApp, /function atalhosDoTime\(p\) \{/);
+  // Uma lista de atalhos só, usada pelo card e pelo Panorama.
+  assert.equal((fonteApp.match(/atalhosDoTime\(p\)/g) || []).length, 3);
+  assert.match(fonteApp, /<h3>Times<\/h3>/);
+  assert.match(fonteApp, /if \(hash === '#projetos'\) \{ setPagina\('projetos'\); return; \}/);
+});

@@ -222,7 +222,7 @@ test('o voltar do board usa a origem guardada, não um destino fixo', () => {
     'o destino fixo voltou: quem entrar pelo Panorama sai no Projetos');
   assert.match(fonteApp, /if \(de && de !== 'board'\) boardState\.voltarPara = '#' \+ de;/,
     'board → board (trocar de sprint) não pode virar origem, senão o voltar não sai do lugar');
-  assert.match(fonteApp, /const VOLTA_PADRAO = '#projetos';/,
+  assert.match(fonteApp, /const VOLTA_PADRAO = '#panorama';/,
     'sem origem guardada (link colado, F5 no board) ainda precisa ter pra onde ir');
 });
 

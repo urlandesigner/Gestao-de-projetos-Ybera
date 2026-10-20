@@ -646,7 +646,6 @@ function renderAll() { renderBadge(); renderMenuPorPO(); renderPanorama(); rende
 function renderNavContas() {
   const mi = meusItensDaVez();
   $('conta-nav-mi').textContent = mi ? String(mi.length) : '';
-  $('conta-nav-proj').textContent = state.config ? String(state.config.projects.filter((x) => !x.hidden).length) : '';
 }
 
 function renderBadge() {
@@ -1076,6 +1075,7 @@ function renderPanorama() {
     ${sprints ? `<section class="bloco"><h3>Sprints</h3><div class="sprints sprints-quadro">${sprints}</div></section>` : ''}
     <section class="bloco"><h3>Por nível</h3>${htmlNiveis(C.aggregateCounts(todos))}</section>
     <section class="bloco"><h3>Atenção agora${verTodas}</h3>${listaAtencao}</section>
+    <section class="bloco"><h3>Times</h3><div class="times-atalhos">${visiveis.map((p) => `<div class="time-atalhos"><span class="time-atalhos-nome">${escapeHtml(p.teamName)}</span>${atalhosDoTime(p)}</div>`).join('')}</div></section>
   </div>`;
 }
 
@@ -1354,21 +1354,28 @@ function renderFiltroGlobal() {
     lista.map((n) => `<option value="${escapeHtml(n)}"${n === respAtivo() ? ' selected' : ''}>${escapeHtml(n)}</option>`).join('');
 }
 
-function buildCard(p) {
+/* Os atalhos de um time no DevOps. Uma função só, pros dois lugares que os
+   desenham — o card da página Projetos e o bloco "Times" do Panorama —, porque
+   duas listas de links divergem no primeiro atalho novo. */
+function atalhosDoTime(p) {
   const links = C.deepLinks(state.config.org, p.projectName, p.teamName);
-  const card = document.createElement('article');
-  card.className = 'card';
-  card.id = 'card-' + cssId(cardKey(p));
-  card.innerHTML = `
-    <h3>${escapeHtml(p.teamName)}</h3>
-    <div class="vivo"></div>
-    <nav class="atalhos">
+  return `<nav class="atalhos" aria-label="Atalhos de ${escapeHtml(p.teamName)}">
       <a href="${links.board}" target="_blank" rel="noopener">Board</a>
       <a href="${links.backlog}" target="_blank" rel="noopener">Backlog</a>
       <a href="${links.sprints}" target="_blank" rel="noopener">Sprints</a>
       <a href="${links.queries}" target="_blank" rel="noopener">Queries</a>
       <a href="${links.dashboards}" target="_blank" rel="noopener">Dashboards</a>
     </nav>`;
+}
+
+function buildCard(p) {
+  const card = document.createElement('article');
+  card.className = 'card';
+  card.id = 'card-' + cssId(cardKey(p));
+  card.innerHTML = `
+    <h3>${escapeHtml(p.teamName)}</h3>
+    <div class="vivo"></div>
+    ${atalhosDoTime(p)}`;
   fillCardLive(card, p);
   return card;
 }
@@ -1570,7 +1577,6 @@ function setPagina(pagina) {
   $('nav-produtos').classList.toggle('ativa', pagina === 'produtos' || pagina === 'epico');
   $('nav-roadmap').classList.toggle('ativa', pagina === 'roadmap');
   $('nav-meus-itens').classList.toggle('ativa', pagina === 'meus-itens');
-  $('nav-projetos').classList.toggle('ativa', pagina === 'projetos' || pagina === 'board');
 }
 
 /* Pra onde o "voltar" do board leva. O botão tinha '#projetos' fixo, de quando
@@ -1581,7 +1587,7 @@ function setPagina(pagina) {
    Guardado em memória, e não lido do histórico do navegador: history.back()
    acerta quando houve navegação de verdade, mas abandona a página inteira se o
    board foi a PRIMEIRA tela (link colado, F5 em cima dele). */
-const VOLTA_PADRAO = '#projetos';
+const VOLTA_PADRAO = '#panorama';
 function abrirBoard(p, comSprint, iteracaoId) {
   // Board → board (trocar de sprint) não é origem: senão o voltar passaria a
   // apontar pro próprio board e o botão não sairia do lugar.

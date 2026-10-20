@@ -1374,3 +1374,10 @@ details summary { cursor: pointer; color: var(--mudo); font-size: 0.88rem; }
    isso vale também quando ele rola depois do evento (tela que estava escondida
    e acabou de aparecer), onde um scrollTo nosso chegava tarde. */
 #panorama, #pendencias, #produtos, #roadmap, #meus-itens { scroll-margin-top: 100vh; }
+
+/* O bloco "Times" do Panorama (16/10/2026): os atalhos que eram dos cards da
+   página Projetos, que saiu do menu. Uma linha por time. */
+.times-atalhos { display: flex; flex-direction: column; gap: 0.6rem; }
+.time-atalhos { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 1rem; }
+.time-atalhos-nome { font-size: 0.86rem; font-weight: 650; color: var(--tinta); }
+.time-atalhos .atalhos { margin: 0; padding: 0; border: 0; }
