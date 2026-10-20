@@ -50,7 +50,7 @@ const ROTULO_TIPO_CURTO = { epic: 'Épico', feature: 'Feature', pbi: 'PBI', bug:
    Tag não começa com minúscula: pedido do Urlan em 13/10/2026. Estas três eram
    as únicas da Central que chegavam assim — medido injetando cada classe de selo
    e lendo o text-transform aplicado. */
-const ROTULO_MOTIVO = { bloqueado: 'Bloqueado', atrasado: 'Atrasado', parado: 'Parado' };
+const ROTULO_MOTIVO = { bloqueado: 'Bloqueado', atrasado: 'Atrasado', parado: 'Sem movimento' };
 const rotuloMotivo = (m) => ROTULO_MOTIVO[m] || m;
 const ORDEM_TIPO = ['epic', 'feature', 'pbi', 'bug', 'task', 'outro'];
 // Ponto da coluna: código semântico próprio — NUNCA as cores de tipo
@@ -871,7 +871,7 @@ function renderPanorama() {
     tile('Bloqueados', k.bloqueados, k.bloqueados > 0),
     k.semDatas ? tile('Fecham este mês', '—', false, NOTA_SEM_DATA) : tile('Fecham este mês', k.fechamMes, false),
     k.semDatas ? tile('Atrasados', '—', false, NOTA_SEM_DATA) : tile('Atrasados', k.atrasados, k.atrasados > 0),
-    tile('Parados 14d+', k.parados, false, 'em andamento, sem mudança'),
+    tile('Sem movimento 14d+', k.parados, false, 'em andamento, sem mudança'),
     tile('Itens em aberto', meus == null ? '—' : meus, false),
   ].join('');
 
@@ -1232,7 +1232,10 @@ function htmlProduto(reg, p) {
 /* ---------- Pendências ---------- */
 // Três colunas por motivo, exclusivas (ver C.pendencias). O Panorama dá o
 // número e um vislumbre; aqui é a lista de trabalho inteira, com quem destrava.
-const ROTULO_PEND = { bloqueados: 'Bloqueados', atrasados: 'Atrasados', parados: 'Parados' };
+/* "Parados" lia como pendente/travado, e não é: é o que COMEÇOU e deixou de
+   andar. A chave interna segue `parados` (é código); só o rótulo mudou, em
+   16/10/2026. */
+const ROTULO_PEND = { bloqueados: 'Bloqueados', atrasados: 'Atrasados', parados: 'Sem movimento' };
 // Rampa de gravidade — vermelho, âmbar, cinza. É a única cor âmbar do projeto e
 // existe pra separar "travado" de "esquecido" sem usar duas vezes o vermelho.
 const COR_PEND = { bloqueados: '#ef4444', atrasados: '#f59e0b', parados: '#a1a1aa' };
@@ -1249,7 +1252,7 @@ function renderPendencias() {
   const grupos = C.pendencias(todos, Date.now());
   const total = grupos.bloqueados.length + grupos.atrasados.length + grupos.parados.length;
   if (!total) {
-    box.innerHTML = erroHtml + '<p class="mudo">Nada bloqueado, atrasado ou parado. Nenhuma pendência agora.</p>';
+    box.innerHTML = erroHtml + '<p class="mudo">Nada bloqueado, atrasado ou sem movimento. Nenhuma pendência agora.</p>';
     return;
   }
   const colunas = ['bloqueados', 'atrasados', 'parados'].map((chave) => {
@@ -1276,7 +1279,7 @@ function htmlPendencia(reg) {
     ? `<span class="linha"><span class="rot">Prazo</span><span class="val val-alerta">venceu ${dataCurta(reg.alvo)}</span></span>`
     : '';
   const linhaParado = reg.motivo === 'parado' || reg.tambem.includes('parado')
-    ? `<span class="linha"><span class="rot">Sem toque</span><span class="val">há ${reg.dias} d</span></span>`
+    ? `<span class="linha"><span class="rot">Última mudança</span><span class="val">há ${reg.dias} d</span></span>`
     : '';
   // Uma marca só, com os motivos juntos: duas etiquetas quebravam linha na coluna
   const secundarias = reg.tambem.length

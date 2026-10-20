@@ -36,7 +36,7 @@ test('o motivo tem dois nomes: código minúsculo, rótulo com maiúscula', () =
      a comparação em silêncio, que é o pior resultado possível aqui. */
   const pend = C.pendencias ? 'existe' : '';
   assert.equal(pend, 'existe', 'o C.pendencias sumiu — o motivo perdeu a origem');
-  assert.match(fonteApp, /const ROTULO_MOTIVO = \{ bloqueado: 'Bloqueado', atrasado: 'Atrasado', parado: 'Parado' \};/);
+  assert.match(fonteApp, /const ROTULO_MOTIVO = \{ bloqueado: 'Bloqueado', atrasado: 'Atrasado', parado: 'Sem movimento' \};/);
   assert.match(ler('assets/core.js'), /motivo: 'bloqueado'/,
     'o código do motivo subiu de caixa e as comparações do app deixam de casar');
   assert.match(fonteApp, /reg\.motivo === 'atrasado'/,

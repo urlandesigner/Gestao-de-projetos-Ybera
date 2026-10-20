@@ -919,7 +919,7 @@ test('item que ainda não começou nunca é parado, por mais velho que seja', ()
   }
 });
 
-test('o número do Panorama e a coluna Parados da Pendências sempre batem', () => {
+test('o número do Panorama e a coluna Sem movimento da Pendências sempre batem', () => {
   const itens = [
     pit(1, 'New', null, '2026-01-01T10:00:00Z'),
     pit(2, 'Active', null, '2026-01-01T10:00:00Z'),
