@@ -46,6 +46,9 @@ const PARALELO = 6;
 /* Subir quando o prompt mudar: cada linha guardada leva a versão que a gerou, e a
    de versão antiga é refeita (3: "só o que está escrito", 20/10/2026). */
 const VERSAO_PROMPT = 3;
+// O épico tem regra própria no pedido (descrição de produto é genérica por natureza): versão à parte.
+const VERSAO_EPICO = 4;
+const versaoDe = (tipo) => (tipo === 'Epic' ? VERSAO_EPICO : VERSAO_PROMPT);
 const TRAVA_MS = 4 * 60 * 1000; // uma varredura por vez; vence sozinha se a função cair
 
 const SISTEMA = [
@@ -79,6 +82,7 @@ function montarPedido({ tipo, titulo, produto, texto }) {
     'Tipo: ' + (TIPOS[tipo] || tipo),
     'Título: ' + titulo,
     ...(produto ? ['Produto (épico): ' + produto] : []),
+    ...(tipo === 'Epic' ? ['', 'Este item é um épico, ou seja, um produto: a descrição de um produto é geral por natureza. Basta ela dizer o que o produto é e para quem; escreva isso, só com o que está escrito, sem listar partes que a descrição não cita. Responda SEM_RESUMO apenas se a descrição for texto de modelo ou falar só de processo.'] : []),
     '',
     '<descricao>',
     texto,
@@ -173,7 +177,7 @@ function pendentesDe({ itens, pais, guardadas, fixos = FIXOS }) {
     if (!C.precisaDeLinha(fixos[String(it.id)], texto)) continue;
     // Já gerada desta mesma descrição, com este mesmo prompt (inclusive "sem resumo possível").
     const g = guardadas[String(it.id)];
-    if (g && g.de === de && g.v === VERSAO_PROMPT) continue;
+    if (g && g.de === de && g.v === versaoDe(tipo)) continue;
     fora.push({ id: it.id, tipo, titulo: String(f['System.Title'] || ''), produto: tipo === 'Epic' ? '' : produtoDe(it, porId), texto, de });
   }
   return fora.sort((a, b) => (b.tipo === 'Epic') - (a.tipo === 'Epic') || a.id - b.id);
@@ -249,7 +253,7 @@ async function varrer({ env = {}, fetchImpl, agora = Date.now(), avisar = consol
     try {
       const linha = limparLinha(await geradorDeVerdade({ tipo: item.tipo, titulo: item.titulo, produto: item.produto, texto: item.texto }));
       if (linha === null) { avisar('[resumos] frase recusada pelo filtro (link, e-mail ou longa demais): item ' + item.id); return; }
-      novas[String(item.id)] = { resumo: linha, de: item.de, v: VERSAO_PROMPT }; // '' = "sem resumo possível", não repete
+      novas[String(item.id)] = { resumo: linha, de: item.de, v: versaoDe(item.tipo) }; // '' = "sem resumo possível", não repete
     } catch (e) {
       if (e && (e.status === 401 || e.status === 403)) { semChave = true; return; }
       erros++;

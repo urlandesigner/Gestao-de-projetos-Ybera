@@ -297,6 +297,26 @@ test('o prompt manda usar só o que está escrito e dar SEM_RESUMO em texto de m
   assert.match(R.SISTEMA, /SEM_RESUMO/);
 });
 
+test('épico é pedido como produto (descrição geral basta); PBI não ganha essa folga', () => {
+  const epico = R.montarPedido({ tipo: 'Epic', titulo: 'Loja', texto: 'Loja de e-commerce nos EUA.' });
+  assert.match(epico, /um épico, ou seja, um produto/);
+  assert.match(epico, /sem listar partes que a descrição não cita/);
+  assert.doesNotMatch(R.montarPedido({ tipo: 'Product Backlog Item', titulo: 'x', texto: 'y' }), /épico, ou seja/);
+});
+
+test('linha de épico guardada com o pedido antigo é refeita; a de PBI não', async () => {
+  const m = mundo();
+  const arm = armazemFalso();
+  await rodar(m, { gerar: modeloFalso().gerar, armazem: arm });
+  assert.equal(arm.dado.itens['900100'].v, 4);
+  assert.equal(arm.dado.itens['900001'].v, 3);
+  arm.dado.itens['900100'].v = 3; // como estava antes da regra própria do épico
+  const { gerar, chamadas } = modeloFalso();
+  await rodar(m, { gerar, armazem: arm });
+  assert.equal(chamadas.length, 1);
+  assert.equal(chamadas[0].tipo, 'Epic');
+});
+
 test('linha guardada de item que ficou sem descrição é apagada; a de item fora da consulta fica', async () => {
   const m = mundo();
   const arm = armazemFalso();
