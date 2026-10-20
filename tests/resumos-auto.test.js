@@ -132,7 +132,7 @@ test('linha escrita à mão não se regera; linha de descrição antiga, sim', (
 test('já gerada desta descrição não se paga de novo; mudou, sim', () => {
   const m = mundo();
   const texto = C.descricaoLimpa(m.itens[0].fields['System.Description']);
-  const guardadas = { 900001: { resumo: 'ok', de: C.digitalDoTexto(texto) } };
+  const guardadas = { 900001: { resumo: 'ok', de: C.digitalDoTexto(texto), v: 3 } };
   let fila = R.pendentesDe({ itens: m.itens, pais: m.pais, guardadas, fixos: {} });
   assert.ok(!fila.some((x) => x.id === 900001));
   guardadas[900001].de = '00000000';
@@ -156,7 +156,7 @@ test('gera o que falta e guarda só a frase e a impressão digital', async () =>
   // …mas o armazém guarda só a frase.
   const guardado = JSON.stringify(arm.dado);
   assert.doesNotMatch(guardado, new RegExp(CRU));
-  assert.deepEqual(Object.keys(arm.dado.itens['900001']).sort(), ['de', 'resumo']);
+  assert.deepEqual(Object.keys(arm.dado.itens['900001']).sort(), ['de', 'resumo', 'v']);
   assert.equal(arm.dado.varridoEm, AGORA);
   assert.equal(arm.dado.travaAte, 0, 'a trava tem que soltar no fim');
   assert.equal(arm.dado.atualizadoEm, '2026-10-20');
@@ -279,60 +279,49 @@ test('DevOps recusou: a trava solta e o erro sobe', async () => {
   assert.equal(arm.dado.travaAte, 0);
 });
 
-/* ---------- 3b. épicos: o que ele entrega vem dos itens dentro dele ---------- */
+/* ---------- 3b. só informação certa: nada de deduzir ---------- */
 
-test('o modelo vê os itens dentro do épico, sem Task', () => {
+test('épico sem descrição não ganha frase, por mais itens que tenha dentro', async () => {
   const m = mundo();
+  m.pais[1].fields['System.Description'] = '';
   const fila = R.pendentesDe({ itens: m.itens, pais: m.pais, guardadas: {}, fixos: {} });
-  const epico = fila.find((x) => x.id === 900100);
-  assert.deepEqual(epico.filhos, ['Feature', 'PBI com texto', 'PBI sem descrição', 'Bug com texto']);
-  const pedido = R.montarPedido(epico);
-  assert.match(pedido, /Itens dentro deste épico:\n- Feature\n- PBI com texto/);
-  assert.doesNotMatch(pedido, /Task não conta/);
-  // PBI não leva lista de filhos.
-  assert.deepEqual(fila.find((x) => x.id === 900001).filhos, []);
+  assert.ok(!fila.some((x) => x.id === 900100), 'gerou frase de épico a partir dos itens de dentro');
+  // E o pedido ao modelo nunca leva título de item filho.
+  assert.doesNotMatch(R.montarPedido({ tipo: 'Epic', titulo: 'E', texto: 'descrição real' }), /Itens dentro/);
 });
 
-test('épico sem descrição é resumido pelos itens dentro dele, se forem o bastante', () => {
-  const m = mundo();
-  m.pais[1].fields['System.Description'] = '';
-  let fila = R.pendentesDe({ itens: m.itens, pais: m.pais, guardadas: {}, fixos: {} });
-  const e = fila.find((x) => x.id === 900100);
-  assert.ok(e, 'épico com 4 itens e sem descrição ficou de fora');
-  assert.equal(e.texto, '');
-  // Poucos itens: não há o que dizer, e inventar não vale.
-  const pouco = mundo();
-  pouco.pais[1].fields['System.Description'] = '';
-  pouco.itens = pouco.itens.filter((x) => x.id === 900001);
-  pouco.pais[0].fields['System.Parent'] = null; // a Feature sai da cadeia do épico
-  fila = R.pendentesDe({ itens: pouco.itens, pais: pouco.pais, guardadas: {}, fixos: {} });
-  assert.ok(!fila.some((x) => x.id === 900100));
+test('o prompt manda usar só o que está escrito e dar SEM_RESUMO em texto de modelo', () => {
+  assert.match(R.SISTEMA, /SOMENTE o que está escrito na descrição/);
+  assert.match(R.SISTEMA, /Não deduza nada pelo título/);
+  assert.match(R.SISTEMA, /texto padrão ou de modelo/);
+  assert.match(R.SISTEMA, /SEM_RESUMO/);
 });
 
-test('a impressão do épico sem descrição muda quando a lista de itens muda', () => {
-  const m = mundo();
-  m.pais[1].fields['System.Description'] = '';
-  const a = R.pendentesDe({ itens: m.itens, pais: m.pais, guardadas: {}, fixos: {} }).find((x) => x.id === 900100).de;
-  m.itens.push(item(900005, 'Product Backlog Item', 'PBI novo', 900010, '<p>novo</p>'));
-  const b = R.pendentesDe({ itens: m.itens, pais: m.pais, guardadas: {}, fixos: {} }).find((x) => x.id === 900100).de;
-  assert.notEqual(a, b);
-});
-
-test('descrição que o modelo não soube resumir é refeita UMA vez quando o prompt muda', async () => {
+test('linha guardada de item que ficou sem descrição é apagada; a de item fora da consulta fica', async () => {
   const m = mundo();
   const arm = armazemFalso();
-  await rodar(m, { gerar: modeloFalso('SEM_RESUMO').gerar, armazem: arm });
-  assert.equal(arm.dado.itens['900100'].resumo, '');
-  // Mesma versão do prompt: não repete.
-  const igual = modeloFalso();
-  await rodar(m, { gerar: igual.gerar, armazem: arm });
-  assert.equal(igual.chamadas.length, 0);
-  // Versão antiga (ou ausente): repete, e agora com sucesso.
-  arm.dado.versaoPrompt = 0;
-  const segunda = modeloFalso('Loja nova para o público dos Estados Unidos.');
+  await rodar(m, { gerar: modeloFalso().gerar, armazem: arm });
+  assert.ok(arm.dado.itens['900100'].resumo);
+  // A descrição do épico some no DevOps: a linha não tem mais em que se apoiar.
+  m.pais[1].fields['System.Description'] = '';
+  // Uma linha de item que a consulta nem traz: não prova nada, fica.
+  arm.dado.itens['999999'] = { resumo: 'De um item fora da consulta.', de: 'aaaaaaaa', v: 3 };
+  const r = await rodar(m, { gerar: modeloFalso().gerar, armazem: arm });
+  assert.equal(r.apagadas, 1);
+  assert.equal(arm.dado.itens['900100'], undefined);
+  assert.ok(arm.dado.itens['999999']);
+});
+
+test('linha gerada por um prompt antigo é refeita uma vez, mesmo com a mesma descrição', async () => {
+  const m = mundo();
+  const arm = armazemFalso();
+  await rodar(m, { gerar: modeloFalso().gerar, armazem: arm });
+  // Simula o que existia antes: linhas sem a versão do prompt.
+  for (const k of Object.keys(arm.dado.itens)) delete arm.dado.itens[k].v;
+  const segunda = modeloFalso('Mostra a assinatura no checkout, conforme a descrição.');
   await rodar(m, { gerar: segunda.gerar, armazem: arm });
   assert.equal(segunda.chamadas.length, 3);
-  assert.equal(arm.dado.itens['900100'].resumo, 'Loja nova para o público dos Estados Unidos.');
+  assert.equal(arm.dado.itens['900001'].v, 3);
   const terceira = modeloFalso();
   await rodar(m, { gerar: terceira.gerar, armazem: arm });
   assert.equal(terceira.chamadas.length, 0);
@@ -392,7 +381,7 @@ test('varrer=1 faz a rodada e responde só com contagens', async () => {
   assert.equal(r.status, 200);
   assert.equal(r.headers.get('cache-control'), 'no-store');
   const corpo = await r.json();
-  assert.deepEqual(Object.keys(corpo).sort(), ['epicos', 'estado', 'geradas', 'pendentes', 'semFrase', 'total']);
+  assert.deepEqual(Object.keys(corpo).sort(), ['apagadas', 'epicos', 'estado', 'geradas', 'pendentes', 'semFrase', 'total']);
   assert.equal(corpo.epicos.vistos, 1);
   assert.equal(corpo.epicos.comDescricao, 1);
   assert.deepEqual(corpo.epicos.estados, [[900100, 'frase']]);
