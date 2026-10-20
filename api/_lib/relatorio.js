@@ -26,6 +26,7 @@ const C = require('../../assets/core.js');
 const A = require('../../assets/api.js');
 const P = require('../../assets/pacote.js');
 const V2 = require('../../assets/briefing-entregas-v2.js');
+const R = require('./resumos.js');
 
 /* `require` estático, e não leitura por caminho montado: é assim que o
    empacotador da Vercel sabe que estes arquivos vão junto com a função. A lista
@@ -97,7 +98,7 @@ function json(status, corpo, origem, extra) {
   return new Response(JSON.stringify(corpo), { status, headers: cabecalhos(origem, extra) });
 }
 
-async function responder(request, { env = {}, fetchImpl, agora = Date.now(), avisar } = {}) {
+async function responder(request, { env = {}, fetchImpl, agora = Date.now(), avisar, armazem } = {}) {
   const url = new URL(request.url);
   const origem = request.headers.get('origin') || '';
   const de = url.searchParams.get('de') || 'urlan';
@@ -129,6 +130,17 @@ async function responder(request, { env = {}, fetchImpl, agora = Date.now(), avi
     return json(502, { erro: 'devops' }, origem);
   }
 
+  /* As linhas escritas sozinhas (api/resumos) completam as do arquivo. Sem
+     armazém, ou com ele fora do ar, o relatório sai só com as do arquivo — a
+     frase é enfeite do cartão, não pode derrubar o relatório. */
+  let resumos = RESUMOS;
+  try {
+    const auto = await R.linhasGuardadas({ armazem, env });
+    if (auto) resumos = C.mesclarResumos(RESUMOS, auto.itens);
+  } catch (e) {
+    (avisar || console.warn)('[relatorio] sem as frases automáticas: ' + ((e && e.message) || e));
+  }
+
   const mostrados = tudo.itens.filter(daPO(de));
   const quem = mostrados.map((it) => ((it.fields || {})['System.AssignedTo'] || {}).displayName).find(Boolean);
   /* O módulo do relatório, com o período DESTA edição. Uma cópia rasa por
@@ -142,7 +154,7 @@ async function responder(request, { env = {}, fetchImpl, agora = Date.now(), avi
     todos: tudo.itens.concat(tudo.pais),
     todosItens: tudo.itens,
     sprintsBrutas: tudo.sprintsBrutas,
-    resumos: RESUMOS,
+    resumos,
     roadmap: C.saneRoadmapItens((po.roadmap || {}).itens),
     escopo: quem || (de.charAt(0).toUpperCase() + de.slice(1)),
     mes: null,

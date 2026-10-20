@@ -3,5 +3,9 @@
   "private": true,
   "scripts": {
     "test": "node --test tests/*.test.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.135.0",
+    "@vercel/blob": "^2.8.2"
   }
 }

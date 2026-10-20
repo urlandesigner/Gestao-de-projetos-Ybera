@@ -11,3 +11,6 @@
 /outubro/
 /novembro/
 /dezembro/
+
+# Dependências das funções da Vercel (a Vercel instala; não entra no repositório).
+node_modules/

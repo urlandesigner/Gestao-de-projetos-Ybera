@@ -278,6 +278,27 @@ function comResumo(enxutos) {
   });
 }
 
+/* As frases que a função da Vercel escreve sozinha (api/resumos). Endereço
+   absoluto porque a Central também roda no site oficial (Pages) e no
+   localhost; o CORS da função já os conhece. Qualquer falha — função fora do
+   ar, armazém ainda vazio, resposta lenta (6 s) — devolve {} e a tela segue só
+   com o arquivo. */
+const FUNCAO_RESUMOS = 'https://gestao-de-projetos-ybera.vercel.app/api/resumos';
+async function buscarResumosAuto() {
+  const corte = typeof AbortController === 'function' ? new AbortController() : null;
+  const relogio = corte ? setTimeout(() => corte.abort(), 6000) : null;
+  try {
+    const resp = await fetch(FUNCAO_RESUMOS, corte ? { signal: corte.signal } : {});
+    if (!resp.ok) return {};
+    const dado = await resp.json();
+    return C.saneResumos(dado && dado.itens);
+  } catch (e) {
+    return {};
+  } finally {
+    if (relogio) clearTimeout(relogio);
+  }
+}
+
 /* Arquivo local, pequeno, lido uma vez por carregamento de página. Ausente, o
    quadro fica como era: só os títulos. Não é erro — é um arquivo editorial que
    pode simplesmente não existir ainda. */
@@ -288,6 +309,13 @@ async function carregarResumos() {
     const dado = await resp.json();
     state.resumos = C.saneResumos(dado.itens);
     renderProdutos(); // a linha de cada épico vem do mesmo arquivo
+    // As frases escritas sozinhas completam o arquivo; se a função não
+    // responder, fica o que o arquivo tem.
+    const auto = await buscarResumosAuto();
+    if (Object.keys(auto).length) {
+      state.resumos = C.mesclarResumos(state.resumos, auto);
+      renderProdutos();
+    }
   } catch (e) {
     console.warn('[Central] resumos.json não carregou: os itens da sprint ficam só com o'
       + ' título. Motivo: ' + e.message);

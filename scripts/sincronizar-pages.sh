@@ -72,10 +72,14 @@ rsync -a --delete --itemize-changes $SECO \
   --exclude='/diagnostico.html' \
   --exclude='/api/' \
   --exclude='/.vercelignore' \
+  --exclude='/vercel.json' \
+  --exclude='/node_modules/' \
+  --exclude='/package-lock.json' \
   --exclude='/CLAUDE.md' \
   --exclude='/.github/' \
   --exclude='/tests/funcao-relatorio.test.js' \
   --exclude='/tests/regra-por-po.test.js' \
+  --exclude='/tests/resumos-auto.test.js' \
   --exclude='/README.md' \
   $EXCLUI_ESTUDOS \
   "$ORIGEM/" "$DESTINO/"

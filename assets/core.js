@@ -1458,6 +1458,34 @@
     return out;
   }
 
+  /* PRECISA DE LINHA NOVA? Uma pergunta, três lugares que a fazem (o bloco local
+     do "Publicar dados", a varredura automática da Vercel e a mescla abaixo).
+     - sem linha, ou linha de uma descrição que mudou desde então: precisa;
+     - linha SEM `de` foi escrita à mão: nunca se regera, mesmo que a descrição
+       mude — quem escreveu decide quando reescrever. */
+  function precisaDeLinha(entrada, texto) {
+    if (!entrada || !entrada.resumo) return true;
+    if (!entrada.de) return false;
+    return entrada.de !== digitalDoTexto(texto);
+  }
+
+  /* LINHAS DO ARQUIVO + LINHAS AUTOMÁTICAS (api/resumos, 20/10/2026), as duas já
+     passadas por saneResumos. Quem escreveu à mão (sem `de`) ganha sempre. Linha
+     do arquivo com a MESMA impressão da automática também ganha: é a mesma
+     descrição, e a escrita pelo Urlan vale mais. Só quando a descrição mudou
+     (impressões diferentes) a automática, que é a mais nova, toma o lugar. */
+  function mesclarResumos(fixos, auto) {
+    const out = Object.assign({}, fixos || {});
+    for (const k of Object.keys(auto || {})) {
+      const a = auto[k];
+      if (!a || !a.resumo) continue;
+      const f = out[k];
+      if (f && f.resumo && (!f.de || f.de === a.de)) continue;
+      out[k] = a;
+    }
+    return out;
+  }
+
   // Pedido de decisão de um item travado: a linha da descrição que começa com
   // "Decisão:" (com/sem acento, maiúsc./minúsc.). O texto depois do marcador é o
   // pedido — o PO escreve ali de quem depende e o impacto. Sem marcador, string
@@ -1756,7 +1784,7 @@
     wiqlBoard, wiqlIteracao, transbordados, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts, estaParado, wiqlEpicos, chaveDePessoa, fichaDaPessoa, caminhoDoConteudo,
     saneCartoes, saneEdicao, automaticosDoMaterial, saneAutomaticos, saneFontes, fimDoPeriodo, periodoFechado,
-    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, vizinhasDaSprint, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, digitalDoTexto, saneResumos, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
+    iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, vizinhasDaSprint, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, digitalDoTexto, saneResumos, precisaDeLinha, mesclarResumos, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,
   };
