@@ -211,6 +211,12 @@ async function varrer({ env = {}, fetchImpl, agora = Date.now(), avisar = consol
   }
 
   const fila = pendentesDe({ itens: tudo.itens, pais: tudo.pais, guardadas: dado.itens });
+  /* Pra quem for conferir "por que este épico está sem linha": quantos épicos a
+     consulta viu, quantos têm descrição e quantos já têm frase. Só contagens e
+     números de item — nada do texto. */
+  const epicos = tudo.itens.concat(tudo.pais).filter((x) => (x.fields || {})['System.WorkItemType'] === 'Epic');
+  const comTexto = epicos.filter((x) => C.descricaoLimpa((x.fields || {})['System.Description']));
+  const epicosInfo = { vistos: new Set(epicos.map((x) => x.id)).size, comDescricao: new Set(comTexto.map((x) => x.id)).size };
   const rodada = fila.slice(0, TETO);
   const geradorDeVerdade = gerar || geradorHaiku(env);
   const novas = {};
@@ -240,6 +246,8 @@ async function varrer({ env = {}, fetchImpl, agora = Date.now(), avisar = consol
     atualizadoEm: new Date(agora).toISOString().slice(0, 10),
   });
   const r = { estado: semChave ? 'sem-chave' : 'ok', geradas: Object.keys(novas).length, pendentes, total: Object.keys(itens).length };
+  r.epicos = epicosInfo;
+  r.semFrase = fila.filter((x) => !novas[String(x.id)]).slice(0, 10).map((x) => x.id);
   if (erros) Object.assign(r, { erros, statusErro });
   return r;
 }

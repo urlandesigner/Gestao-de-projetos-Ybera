@@ -333,7 +333,8 @@ test('varrer=1 faz a rodada e responde só com contagens', async () => {
   assert.equal(r.status, 200);
   assert.equal(r.headers.get('cache-control'), 'no-store');
   const corpo = await r.json();
-  assert.deepEqual(Object.keys(corpo).sort(), ['estado', 'geradas', 'pendentes', 'total']);
+  assert.deepEqual(Object.keys(corpo).sort(), ['epicos', 'estado', 'geradas', 'pendentes', 'semFrase', 'total']);
+  assert.deepEqual(corpo.epicos, { vistos: 1, comDescricao: 1 });
   assert.doesNotMatch(JSON.stringify(corpo), new RegExp(CRU));
 });
 
