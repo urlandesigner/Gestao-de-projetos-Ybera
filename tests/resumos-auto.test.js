@@ -227,8 +227,7 @@ test('erro do modelo num item não derruba os outros', async () => {
   assert.equal(r.geradas, 2);
   assert.equal(r.pendentes, 1);
   assert.equal(r.erros, 1);
-  // TEMPORÁRIO (20/10/2026): enquanto o diagnóstico `motivoTemp` existir, a mensagem viaja. Ao removê-lo, voltar a exigir doesNotMatch(/rede caiu/).
-  assert.match(r.motivoTemp, /rede caiu/);
+  assert.doesNotMatch(JSON.stringify(r), /rede caiu/, 'a mensagem do erro foi pra resposta pública');
 });
 
 test('chave recusada: para na hora, avisa, e não grava frase nenhuma', async () => {

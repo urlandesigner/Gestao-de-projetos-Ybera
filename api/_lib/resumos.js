@@ -217,7 +217,6 @@ async function varrer({ env = {}, fetchImpl, agora = Date.now(), avisar = consol
   let semChave = false;
   let erros = 0;
   let statusErro = 0; // só o número: a mensagem do erro não vai pra resposta pública
-  let motivoTemp = ''; // TEMPORÁRIO (20/10/2026): diagnóstico do primeiro 400; REMOVER
   await emLotes(rodada, PARALELO, async (item) => {
     try {
       const linha = limparLinha(await geradorDeVerdade({ tipo: item.tipo, titulo: item.titulo, produto: item.produto, texto: item.texto }));
@@ -227,7 +226,6 @@ async function varrer({ env = {}, fetchImpl, agora = Date.now(), avisar = consol
       if (e && (e.status === 401 || e.status === 403)) { semChave = true; return; }
       erros++;
       statusErro = (e && Number.isInteger(e.status)) ? e.status : 0;
-      if (!motivoTemp) motivoTemp = String((e && e.message) || e).slice(0, 300);
       avisar('[resumos] falhou no item ' + item.id + ': ' + ((e && e.message) || e));
     }
   }, () => semChave);
@@ -242,7 +240,7 @@ async function varrer({ env = {}, fetchImpl, agora = Date.now(), avisar = consol
     atualizadoEm: new Date(agora).toISOString().slice(0, 10),
   });
   const r = { estado: semChave ? 'sem-chave' : 'ok', geradas: Object.keys(novas).length, pendentes, total: Object.keys(itens).length };
-  if (erros) Object.assign(r, { erros, statusErro, motivoTemp });
+  if (erros) Object.assign(r, { erros, statusErro });
   return r;
 }
 
