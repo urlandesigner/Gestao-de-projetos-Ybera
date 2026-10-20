@@ -279,6 +279,65 @@ test('DevOps recusou: a trava solta e o erro sobe', async () => {
   assert.equal(arm.dado.travaAte, 0);
 });
 
+/* ---------- 3b. épicos: o que ele entrega vem dos itens dentro dele ---------- */
+
+test('o modelo vê os itens dentro do épico, sem Task', () => {
+  const m = mundo();
+  const fila = R.pendentesDe({ itens: m.itens, pais: m.pais, guardadas: {}, fixos: {} });
+  const epico = fila.find((x) => x.id === 900100);
+  assert.deepEqual(epico.filhos, ['Feature', 'PBI com texto', 'PBI sem descrição', 'Bug com texto']);
+  const pedido = R.montarPedido(epico);
+  assert.match(pedido, /Itens dentro deste épico:\n- Feature\n- PBI com texto/);
+  assert.doesNotMatch(pedido, /Task não conta/);
+  // PBI não leva lista de filhos.
+  assert.deepEqual(fila.find((x) => x.id === 900001).filhos, []);
+});
+
+test('épico sem descrição é resumido pelos itens dentro dele, se forem o bastante', () => {
+  const m = mundo();
+  m.pais[1].fields['System.Description'] = '';
+  let fila = R.pendentesDe({ itens: m.itens, pais: m.pais, guardadas: {}, fixos: {} });
+  const e = fila.find((x) => x.id === 900100);
+  assert.ok(e, 'épico com 4 itens e sem descrição ficou de fora');
+  assert.equal(e.texto, '');
+  // Poucos itens: não há o que dizer, e inventar não vale.
+  const pouco = mundo();
+  pouco.pais[1].fields['System.Description'] = '';
+  pouco.itens = pouco.itens.filter((x) => x.id === 900001);
+  pouco.pais[0].fields['System.Parent'] = null; // a Feature sai da cadeia do épico
+  fila = R.pendentesDe({ itens: pouco.itens, pais: pouco.pais, guardadas: {}, fixos: {} });
+  assert.ok(!fila.some((x) => x.id === 900100));
+});
+
+test('a impressão do épico sem descrição muda quando a lista de itens muda', () => {
+  const m = mundo();
+  m.pais[1].fields['System.Description'] = '';
+  const a = R.pendentesDe({ itens: m.itens, pais: m.pais, guardadas: {}, fixos: {} }).find((x) => x.id === 900100).de;
+  m.itens.push(item(900005, 'Product Backlog Item', 'PBI novo', 900010, '<p>novo</p>'));
+  const b = R.pendentesDe({ itens: m.itens, pais: m.pais, guardadas: {}, fixos: {} }).find((x) => x.id === 900100).de;
+  assert.notEqual(a, b);
+});
+
+test('descrição que o modelo não soube resumir é refeita UMA vez quando o prompt muda', async () => {
+  const m = mundo();
+  const arm = armazemFalso();
+  await rodar(m, { gerar: modeloFalso('SEM_RESUMO').gerar, armazem: arm });
+  assert.equal(arm.dado.itens['900100'].resumo, '');
+  // Mesma versão do prompt: não repete.
+  const igual = modeloFalso();
+  await rodar(m, { gerar: igual.gerar, armazem: arm });
+  assert.equal(igual.chamadas.length, 0);
+  // Versão antiga (ou ausente): repete, e agora com sucesso.
+  arm.dado.versaoPrompt = 0;
+  const segunda = modeloFalso('Loja nova para o público dos Estados Unidos.');
+  await rodar(m, { gerar: segunda.gerar, armazem: arm });
+  assert.equal(segunda.chamadas.length, 3);
+  assert.equal(arm.dado.itens['900100'].resumo, 'Loja nova para o público dos Estados Unidos.');
+  const terceira = modeloFalso();
+  await rodar(m, { gerar: terceira.gerar, armazem: arm });
+  assert.equal(terceira.chamadas.length, 0);
+});
+
 /* ---------- 4. a porta HTTP ---------- */
 
 const pedir = (q, extra) => new Request('https://gestao-de-projetos-ybera.vercel.app/api/resumos' + q,
@@ -334,7 +393,9 @@ test('varrer=1 faz a rodada e responde só com contagens', async () => {
   assert.equal(r.headers.get('cache-control'), 'no-store');
   const corpo = await r.json();
   assert.deepEqual(Object.keys(corpo).sort(), ['epicos', 'estado', 'geradas', 'pendentes', 'semFrase', 'total']);
-  assert.deepEqual(corpo.epicos, { vistos: 1, comDescricao: 1 });
+  assert.equal(corpo.epicos.vistos, 1);
+  assert.equal(corpo.epicos.comDescricao, 1);
+  assert.deepEqual(corpo.epicos.estados, [[900100, 'frase']]);
   assert.doesNotMatch(JSON.stringify(corpo), new RegExp(CRU));
 });
 
