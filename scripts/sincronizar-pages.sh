@@ -94,7 +94,7 @@ fi
 # O teste da função da Vercel exige a pasta api/, que não vai pro Pages: sem
 # isto o npm test da cópia publicada quebra em MODULE_NOT_FOUND. Mesma
 # mecânica dos estudos — excluído do rsync, apagado do destino explicitamente.
-for e in tests/funcao-relatorio.test.js tests/regra-por-po.test.js CLAUDE.md; do
+for e in tests/funcao-relatorio.test.js tests/regra-por-po.test.js tests/resumos-auto.test.js CLAUDE.md; do
   [ -e "$DESTINO/$e" ] || continue
   if [ -n "$SECO" ]; then echo "*deleting   $e  (só faz sentido no repositório de origem)"
   else rm -f "$DESTINO/$e" && echo "*deleting   $e  (só faz sentido no repositório de origem)"; fi
