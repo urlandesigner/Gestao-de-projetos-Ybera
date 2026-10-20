@@ -173,7 +173,10 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 650; }
    MESMO bloco porque são par: a casa e o produto dela. O botão de recolher
    divide a linha do logo porque os três lado a lado não cabem — logo (62px) +
    nome (143px) + botão (38px) dá 254 numa coluna de 232. */
-.marca { display: flex; flex-direction: column; gap: 0.45rem; padding: 0 0.35rem; }
+/* Gap curto de propósito (16/10/2026): a linha do logo tem a altura do botão de
+   recolher (38px) e o logo (24px) fica centrado nela, então ~7px de folga já
+   vêm de graça entre o logo e o nome. Com 0.45rem somados, o nome parecia solto. */
+.marca { display: flex; flex-direction: column; gap: 0.1rem; padding: 0 0.35rem; }
 /* Altura travada com `width: auto` é o que preserva a proporção do arquivo de
    360x139; travar a largura entortaria a marca. E `align-self` não é enfeite:
    o padrão do flex é `stretch`, que vence a largura automática e achata o
