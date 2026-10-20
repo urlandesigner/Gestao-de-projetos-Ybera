@@ -234,7 +234,7 @@ test('panoramaKpis conta bloqueado, atrasado, do mês e parado', () => {
     pit(2, 'New', '2026-08-05T00:00:00Z'),   // alvo já passou → atrasado
     pit(3, 'New', '2026-08-31T00:00:00Z'),   // alvo neste mês, à frente → fecha no mês
     pit(4, 'New', '2026-09-15T00:00:00Z'),   // mês que vem → nenhum dos dois
-    pit(5, 'New', null, '2026-08-01T10:00:00Z'), // 19 dias sem tocar → parado
+    pit(5, 'Active', null, '2026-08-01T10:00:00Z'), // começou e está há 19 dias sem tocar → parado
   ], AGORA);
   assert.equal(k.bloqueados, 1);
   assert.equal(k.atrasados, 1);
@@ -262,8 +262,8 @@ test('panoramaKpis: fechamMes e atrasados são disjuntos', () => {
 });
 
 test('panoramaKpis: limite exato de parado são 14 dias', () => {
-  const treze = C.panoramaKpis([pit(1, 'New', null, '2026-08-07T12:00:00Z')], AGORA);
-  const quatorze = C.panoramaKpis([pit(1, 'New', null, '2026-08-06T12:00:00Z')], AGORA);
+  const treze = C.panoramaKpis([pit(1, 'Active', null, '2026-08-07T12:00:00Z')], AGORA);
+  const quatorze = C.panoramaKpis([pit(1, 'Active', null, '2026-08-06T12:00:00Z')], AGORA);
   assert.equal(treze.parados, 0);
   assert.equal(quatorze.parados, 1);
 });
@@ -292,7 +292,7 @@ test('pendencias agrupa em três, exclusivo por precedência, com marcas secund�
   const g = C.pendencias([
     pit(1, 'Blocked', '2026-08-01T00:00:00Z', '2026-07-01T10:00:00Z'), // travado + vencido + parado
     pit(2, 'New', '2026-08-10T00:00:00Z'),                             // só atrasado
-    pit(3, 'New', null, '2026-07-20T10:00:00Z'),                       // só parado
+    pit(3, 'Active', null, '2026-07-20T10:00:00Z'),                    // só parado
     pit(4, 'New', '2026-12-01T00:00:00Z'),                             // nada: em dia
     pit(5, 'Done', '2026-01-01T00:00:00Z', '2026-01-01T10:00:00Z'),    // concluído fica fora
   ], AGORA);
@@ -310,8 +310,8 @@ test('pendencias ordena cada grupo pela própria gravidade', () => {
     pit(2, 'Blocked', null, '2026-07-01T10:00:00Z'), // travado há 50 dias
     pit(3, 'New', '2026-08-19T00:00:00Z'),           // venceu ontem
     pit(4, 'New', '2026-06-01T00:00:00Z'),           // venceu em junho
-    pit(5, 'New', null, '2026-08-01T10:00:00Z'),     // parado há 19 dias
-    pit(6, 'New', null, '2026-07-01T10:00:00Z'),     // parado há 50 dias
+    pit(5, 'Active', null, '2026-08-01T10:00:00Z'),  // parado há 19 dias
+    pit(6, 'Active', null, '2026-07-01T10:00:00Z'),  // parado há 50 dias
   ], AGORA);
   assert.deepEqual(g.bloqueados.map((x) => x.item.id), [2, 1]); // travado há mais tempo na frente
   assert.deepEqual(g.atrasados.map((x) => x.item.id), [4, 3]);  // mais vencido na frente
@@ -902,4 +902,29 @@ test('fimDoPeriodo e periodoFechado: a virada é às 03h UTC do dia 1º seguinte
   assert.equal(C.periodoFechado(['2026-10'], Date.parse('2026-11-01T02:59:00Z')), false);
   assert.equal(C.periodoFechado(['2026-10'], Date.parse('2026-11-01T03:00:00Z')), true);
   assert.equal(C.periodoFechado(['lixo'], Date.now()), false);
+});
+
+/* Parado não é "ainda não começou" (16/10/2026): item na fila (New, To Do…) não
+   é esquecido, só não foi puxado. Só conta quem já saiu da fila. */
+test('item que ainda não começou nunca é parado, por mais velho que seja', () => {
+  const velho = '2026-01-01T10:00:00Z';
+  for (const estado of ['New', 'To Do', 'Proposed', 'Backlog', 'Approved', 'Ready']) {
+    assert.equal(C.panoramaKpis([pit(1, estado, null, velho)], AGORA).parados, 0, estado);
+    assert.equal(C.pendencias([pit(1, estado, null, velho)], AGORA).parados.length, 0, estado);
+  }
+  // Já em andamento e sem toque: parado, nos dois lugares, na mesma conta.
+  for (const estado of ['Active', 'In Progress', 'Testing', 'Prototype']) {
+    assert.equal(C.panoramaKpis([pit(1, estado, null, velho)], AGORA).parados, 1, estado);
+    assert.equal(C.pendencias([pit(1, estado, null, velho)], AGORA).parados.length, 1, estado);
+  }
+});
+
+test('o número do Panorama e a coluna Parados da Pendências sempre batem', () => {
+  const itens = [
+    pit(1, 'New', null, '2026-01-01T10:00:00Z'),
+    pit(2, 'Active', null, '2026-01-01T10:00:00Z'),
+    pit(3, 'In Progress', null, '2026-08-18T10:00:00Z'),
+    pit(4, 'Done', null, '2026-01-01T10:00:00Z'),
+  ];
+  assert.equal(C.panoramaKpis(itens, AGORA).parados, C.pendencias(itens, AGORA).parados.length);
 });

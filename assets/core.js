@@ -411,6 +411,21 @@
     return Number.isNaN(t) ? null : t;
   }
 
+  /* PARADO NÃO É "AINDA NÃO COMEÇOU" (16/10/2026). A coluna Parados da
+     Pendências e o número do Panorama contavam todo item sem mudança há 14 dias
+     — e item em New ou To Do, que ninguém puxou ainda, não tem por que mudar:
+     ele estava na fila, não esquecido. O Urlan apontou: parado sem atenção é
+     coisa que COMEÇOU e deixou de andar. Item na fila não entra; quando entrar
+     em andamento e ficar 14 dias sem toque, aí sim.
+
+     Uma regra só, pros dois lugares que contam: duas cópias dela divergem — e o
+     número do Panorama deixaria de bater com a lista da Pendências. */
+  function estaParado(estado, mudou, hoje, diasParado = DIAS_PARADO) {
+    if (mudou === null) return false;
+    if (stateBucket(estado) === 'todo') return false;
+    return (hoje - diaUTC(mudou)) / 86400000 >= diasParado;
+  }
+
   // Números do Panorama. Item concluído nunca conta como atrasado nem parado.
   // `fechamMes` e `atrasados` são DISJUNTOS: o que ainda vai fechar no mês
   // versus o que já passou da data. Contar o mesmo item nos dois infla a
@@ -433,7 +448,7 @@
         else if (mesUTC(alvo) === mesAgora) out.fechamMes += 1;
       }
       const mudou = dataValida(f['System.ChangedDate']);
-      if (mudou !== null && (hoje - diaUTC(mudou)) / 86400000 >= DIAS_PARADO) out.parados += 1;
+      if (estaParado(estado, mudou, hoje)) out.parados += 1;
     }
     return out;
   }
@@ -474,7 +489,7 @@
       const mudou = dataValida(f['System.ChangedDate']);
       const atrasado = alvo !== null && diaUTC(alvo) < hoje;
       const dias = mudou === null ? null : Math.floor((hoje - diaUTC(mudou)) / 86400000);
-      const parado = dias !== null && dias >= diasParado;
+      const parado = estaParado(estado, mudou, hoje, diasParado);
       const bloqueado = stateBucket(estado) === 'atencao';
       if (!bloqueado && !atrasado && !parado) continue;
       const tambem = [];
@@ -1727,7 +1742,7 @@
     aggregateCounts, sprintProgress, groupMyItemsBuckets,
     isAttentionState, typeSlug,
     wiqlBoard, wiqlIteracao, transbordados, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
-    stateBucket, bucketCounts, chaveDePessoa, fichaDaPessoa, caminhoDoConteudo,
+    stateBucket, bucketCounts, estaParado, chaveDePessoa, fichaDaPessoa, caminhoDoConteudo,
     saneCartoes, saneEdicao, automaticosDoMaterial, saneAutomaticos, saneFontes, fimDoPeriodo, periodoFechado,
     iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, vizinhasDaSprint, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, digitalDoTexto, saneResumos, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,

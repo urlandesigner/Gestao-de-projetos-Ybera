@@ -871,7 +871,7 @@ function renderPanorama() {
     tile('Bloqueados', k.bloqueados, k.bloqueados > 0),
     k.semDatas ? tile('Fecham este mês', '—', false, NOTA_SEM_DATA) : tile('Fecham este mês', k.fechamMes, false),
     k.semDatas ? tile('Atrasados', '—', false, NOTA_SEM_DATA) : tile('Atrasados', k.atrasados, k.atrasados > 0),
-    tile('Parados 14d+', k.parados, false),
+    tile('Parados 14d+', k.parados, false, 'em andamento, sem mudança'),
     tile('Itens em aberto', meus == null ? '—' : meus, false),
   ].join('');
 
@@ -1236,6 +1236,9 @@ const ROTULO_PEND = { bloqueados: 'Bloqueados', atrasados: 'Atrasados', parados:
 // Rampa de gravidade — vermelho, âmbar, cinza. É a única cor âmbar do projeto e
 // existe pra separar "travado" de "esquecido" sem usar duas vezes o vermelho.
 const COR_PEND = { bloqueados: '#ef4444', atrasados: '#f59e0b', parados: '#a1a1aa' };
+// Só o Parados precisa se explicar: "parado" lê como "esquecido", e item que ainda
+// nem começou não é isso (16/10/2026).
+const DICA_PEND = { parados: 'Já em andamento e sem mudança há 14 dias ou mais. O que ainda não começou não entra.' };
 
 function renderPendencias() {
   const box = $('pendencias');
@@ -1254,6 +1257,7 @@ function renderPendencias() {
     const cartoes = lista.map((reg) => htmlPendencia(reg)).join('');
     return `<section class="coluna${chave === 'bloqueados' && lista.length ? ' atencao' : ''}">
       <header><h4><span class="ponto" style="background:${COR_PEND[chave]}"></span>${ROTULO_PEND[chave]}</h4><span class="conta">${lista.length}</span></header>
+      ${DICA_PEND[chave] ? `<p class="coluna-dica mudo">${DICA_PEND[chave]}</p>` : ''}
       ${lista.length ? `<ul>${cartoes}</ul>` : '<p class="coluna-vazia mudo">nada aqui</p>'}
     </section>`;
   }).join('');

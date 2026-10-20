@@ -1381,3 +1381,6 @@ details summary { cursor: pointer; color: var(--mudo); font-size: 0.88rem; }
 .time-atalhos { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 1rem; }
 .time-atalhos-nome { font-size: 0.86rem; font-weight: 650; color: var(--tinta); }
 .time-atalhos .atalhos { margin: 0; padding: 0; border: 0; }
+
+/* A explicação curta da coluna Parados, logo abaixo do título dela. */
+.coluna-dica { margin: 0 0 0.6rem; font-size: 0.78rem; line-height: 1.4; }
