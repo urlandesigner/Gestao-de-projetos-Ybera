@@ -35,6 +35,47 @@
         "Ele assume as campanhas de brinde da loja no lugar do Dr Free Gift, o aplicativo de terceiro usado até aqui — que tinha custo mensal e dava conflito no carrinho."
       ],
       "contaFixa": 1
+    },
+    {
+      "titulo": "Teste de envio real com a Shipsmart",
+      "iniciativa": "Shipsmart",
+      "foraDoRoadmap": true,
+      "status": "andamento",
+      "resumo": [
+        "Fizemos um envio real de produto para validar o fluxo de entrega. O pedido chegou corretamente, mas alguns pontos precisaram de acionamento manual junto ao time de distribuição.",
+        "Os próximos passos são mais dois envios, agora depois do alinhamento entre os times envolvidos. Em paralelo, o time do João Nobrega está mapeando e desenhando o fluxo do caminho não feliz."
+      ],
+      "contaFixa": 1
+    },
+    {
+      "titulo": "Divergência na quantidade de itens no checkout",
+      "iniciativa": "Route",
+      "foraDoRoadmap": true,
+      "status": "andamento",
+      "resumo": [
+        "O checkout exibia uma quantidade de itens diferente da real. A causa é o aplicativo Route, e a correção está sendo feita pelo time do próprio Route."
+      ],
+      "contaFixa": 1
+    },
+    {
+      "titulo": "Proteção de entrega para clientes logados",
+      "iniciativa": "Route",
+      "foraDoRoadmap": true,
+      "status": "andamento",
+      "resumo": [
+        "A proteção de entrega não estava sendo aplicada corretamente para clientes logados. A equipe do Route reproduziu o problema e está resolvendo."
+      ],
+      "contaFixa": 1
+    },
+    {
+      "titulo": "Live na loja",
+      "iniciativa": "Black November",
+      "foraDoRoadmap": true,
+      "resumo": [
+        "Configuramos o ambiente de live dentro da loja."
+      ],
+      "contaFixa": 1,
+      "status": "entregue"
     }
   ]
 }

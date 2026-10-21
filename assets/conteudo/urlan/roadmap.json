@@ -46,7 +46,10 @@
       "titulo": "Subscription",
       "inicio": "2026-10-01",
       "fim": "2026-10-31",
-      "status": "andamento"
+      "status": "andamento",
+      "featureIds": [
+        42883
+      ]
     },
     {
       "titulo": "App Rewards Loyalty (Yotpo)",

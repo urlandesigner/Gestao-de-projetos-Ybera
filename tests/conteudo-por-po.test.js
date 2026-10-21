@@ -38,9 +38,12 @@ test('as duas edições publicadas continuam tendo os cartões que tinham', () =
   const agoSet = cartoesDe('urlan', BE.edicao);
   assert.equal(agoSet.length, 8);
   assert.ok(agoSet.some((c) => c.titulo === 'Novos componentes visuais para HOME'));
+  /* Outubro é edição aberta: cartão novo entra durante o mês. O alarme aqui é
+     piso, não igualdade — some um cartão e o teste cai; chega um, não. */
   const outubro = cartoesDe('urlan', V2.edicao);
-  assert.equal(outubro.length, 2);
+  assert.ok(outubro.length >= 2, 'outubro perdeu cartão: ' + outubro.length);
   assert.ok(outubro.some((c) => c.titulo === 'Novo app de brindes'));
+  assert.ok(outubro.some((c) => c.titulo === 'Tratativas do Google compliance'));
 });
 
 /* O DEFEITO QUE QUASE PASSOU. O briefing aceita as duas formas de `resumo` e há

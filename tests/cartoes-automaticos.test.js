@@ -63,6 +63,45 @@ test('o cartão escrito cobre a frente que declara; o resto ganha o automático'
   assert.equal(novo.titulo, 'Melhorias no checkout', 'a etiqueta [EUA] do board sai do título');
 });
 
+/* A PONTE COM O ROADMAP (21/10/2026). Sem ela todo cartão automático caía em
+   "Outras entregas", inclusive frente que É projeto do roadmap: o Subscription
+   de outubro ficou lá, e a capa contou 1 projeto em vez de 2. A linha do
+   roadmap agora declara as Features dela em `featureIds`. */
+test('a Feature declarada no roadmap herda a iniciativa daquela linha', () => {
+  const auto = C.automaticosDoMaterial(MATERIAL, RESUMOS);
+  const roadmap = [
+    { titulo: 'Promoções da loja', inicio: '2026-10-01', fim: '2026-10-31', featureIds: [100] },
+  ];
+  const todos = V2.comAutomaticos([], auto, roadmap);
+  assert.equal(todos[0].iniciativa, 'Promoções da loja');
+  assert.equal(todos[0].foraDoRoadmap, undefined, 'frente do roadmap não é marcada como fora dele');
+  assert.deepEqual(todos[0].entregues.map((i) => i.id), [11], 'a lista de itens continua no cartão');
+  assert.equal(todos[1].iniciativa, undefined, 'Feature não declarada segue sem iniciativa');
+});
+
+test('sem roadmap, ou com linha sem featureIds, nada muda', () => {
+  const auto = C.automaticosDoMaterial(MATERIAL, RESUMOS);
+  for (const rm of [undefined, [], 'lixo', [{ titulo: 'X', inicio: '2026-10-01', fim: '2026-10-31' }]]) {
+    assert.ok(V2.comAutomaticos([], auto, rm).every((c) => c.iniciativa === undefined));
+  }
+});
+
+test('a mesma Feature em duas linhas do roadmap fica na primeira', () => {
+  const auto = C.automaticosDoMaterial(MATERIAL, RESUMOS);
+  const roadmap = [
+    { titulo: 'Primeira', inicio: '2026-10-01', fim: '2026-10-31', featureIds: [100] },
+    { titulo: 'Segunda', inicio: '2026-10-01', fim: '2026-10-31', featureIds: [100] },
+  ];
+  assert.equal(V2.comAutomaticos([], auto, roadmap)[0].iniciativa, 'Primeira');
+});
+
+test('o cartão escrito que declara a Feature continua mandando nela', () => {
+  const auto = C.automaticosDoMaterial(MATERIAL, RESUMOS);
+  const roadmap = [{ titulo: 'Promoções da loja', inicio: '2026-10-01', fim: '2026-10-31', featureIds: [100] }];
+  const todos = V2.comAutomaticos([{ titulo: 'Escrito', featureIds: [100] }], auto, roadmap);
+  assert.deepEqual(todos.map((c) => c.titulo), ['Escrito', 'Melhorias no checkout']);
+});
+
 test('agosto/setembro não ganha cartão automático', () => {
   const auto = C.automaticosDoMaterial(MATERIAL, RESUMOS);
   try {

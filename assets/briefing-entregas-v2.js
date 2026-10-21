@@ -495,8 +495,8 @@
      e o leitor já sabe de que loja é o relatório. */
   const semEtiqueta = (t) => String(t || '').replace(/^(\s*\[[^\]]*\]\s*)+/, '').trim() || String(t || '');
 
-  function cartaoAutomatico(fr) {
-    return {
+  function cartaoAutomatico(fr, iniciativa) {
+    const cartao = {
       titulo: semEtiqueta(fr.feature.nome),
       produto: fr.epico ? fr.epico.nome : '',
       featureIds: [fr.feature.id],
@@ -504,17 +504,37 @@
       entregues: fr.itens,
       automatico: true,
     };
+    /* A linha do roadmap a que esta Feature pertence, quando o roadmap a
+       declara. É o que tira a frente de "Outras entregas" e a põe na conta de
+       projeto do roadmap da capa — sem o PO escrever cartão à mão e sem perder
+       a lista de PBIs, que continua aqui dentro. */
+    if (iniciativa) cartao.iniciativa = iniciativa;
+    return cartao;
+  }
+
+  /* Feature → título da linha do roadmap. Uma Feature declarada em duas linhas
+     fica com a primeira: o cartão mora numa seção só, e escolher em silêncio é
+     melhor que duplicá-lo em duas. */
+  function iniciativaPorFeature(roadmap) {
+    const mapa = new Map();
+    for (const it of (Array.isArray(roadmap) ? roadmap : [])) {
+      for (const id of (Array.isArray(it && it.featureIds) ? it.featureIds : [])) {
+        if (!mapa.has(Number(id))) mapa.set(Number(id), it.titulo);
+      }
+    }
+    return mapa;
   }
 
   /* Os escritos primeiro, depois os automáticos das frentes que nenhum cartão
      escrito cobre. "Cobrir" é declarar a Feature em `featureIds`: é o jeito de
      o PO dizer "esta frente eu escrevi", e o automático sai da frente dele. */
-  function comAutomaticos(escritos, automaticos) {
+  function comAutomaticos(escritos, automaticos, roadmap) {
     if (!ATIVA.cartoesAutomaticos || !Array.isArray(automaticos) || !automaticos.length) return escritos;
     const cobertas = new Set();
     for (const c of escritos) for (const f of (Array.isArray(c.featureIds) ? c.featureIds : [])) cobertas.add(Number(f));
+    const porFeature = iniciativaPorFeature(roadmap);
     const novos = automaticos.filter((fr) => fr && fr.feature && !cobertas.has(Number(fr.feature.id)))
-      .map(cartaoAutomatico);
+      .map((fr) => cartaoAutomatico(fr, porFeature.get(Number(fr.feature.id))));
     return escritos.concat(novos);
   }
 
@@ -524,7 +544,7 @@
   function htmlReport(o) {
     const entrada = Object.assign({}, o, {
       periodo: (o && Array.isArray(o.periodo) && o.periodo.length) ? o.periodo : ATIVA.periodo,
-      cartoes: comAutomaticos((o && Array.isArray(o.cartoes)) ? o.cartoes : [], (o || {}).automaticos),
+      cartoes: comAutomaticos((o && Array.isArray(o.cartoes)) ? o.cartoes : [], (o || {}).automaticos, (o || {}).roadmap),
     });
     const r = base.htmlReport(entrada);
     if (!r || !r.html) return r;

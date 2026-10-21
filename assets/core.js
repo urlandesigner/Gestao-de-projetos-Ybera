@@ -1269,6 +1269,18 @@
            meio do caminho. Quem acrescentar um status ali acrescenta aqui. */
         status: (x.status === 'concluido' || x.status === 'andamento' || x.status === 'teste')
           ? x.status : null,
+        /* A PONTE COM O BOARD (21/10/2026). As Features declaradas aqui
+           pertencem a esta linha do roadmap. Sem isso, o cartão automático de
+           uma Feature não tem iniciativa nenhuma e cai em "Outras entregas" —
+           mesmo quando a frente É projeto do roadmap, como aconteceu com o
+           Subscription, que ficou fora da conta da capa.
+
+           Feature, e não épico: o épico é grosso demais. "Loja Clube USA"
+           cobre o Subscription E o Compliance Google, que são duas linhas
+           distintas daqui; pelo épico as duas viriam coladas numa seção só. */
+        featureIds: (Array.isArray(x.featureIds) ? x.featureIds : [])
+          .map((n) => (Number.isFinite(n) && n > 0 ? Math.floor(n) : null))
+          .filter((n) => n !== null),
       }));
   }
 
