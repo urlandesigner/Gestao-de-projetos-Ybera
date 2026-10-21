@@ -10,9 +10,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026102103">
+<link rel="stylesheet" href="assets/style.css?v=2026102104">
 <!-- Mesma folha que o relatório de Entregas usa pro gráfico do roadmap. -->
-<link rel="stylesheet" href="assets/roadmap.css?v=2026102103">
+<link rel="stylesheet" href="assets/roadmap.css?v=2026102104">
 </head>
 <body data-pagina="panorama">
 <div class="app">
@@ -40,7 +40,11 @@
          Entregas abre a edição de outubro, que é o padrão do relatório e tem o
          seletor que leva às edições anteriores. -->
     <a id="nav-entregas" href="entregas-v2.html?po=1" title="Abre o relatório de Entregas em página própria — o documento que vai pro stakeholder."><span class="rotulo-nav">Entregas</span></a>
-    <a id="nav-status" href="status-demandas.html" title="Abre o Status de demandas da loja US — escrito à mão, abre sem token pra quem receber."><span class="rotulo-nav">Status de demandas</span></a>
+    <!-- Nasce ESCONDIDO: o destino é individual e quem o tem está em
+         MENU_STATUS_POR_PO, no app.js, que revela o item quando sabe quem
+         abriu. Visível no HTML, a primeira pintura mostrava o documento do
+         Urlan pra qualquer PO até o script resolver. -->
+    <a id="nav-status" hidden href="status-demandas.html" title="Abre o Status de demandas da loja US — escrito à mão, abre sem token pra quem receber."><span class="rotulo-nav">Status de demandas</span></a>
     <!-- "Projetos" saiu do menu em 16/10/2026: o card de cada time repetia o que
          o Panorama já mostra (Por nível, sprint). Os atalhos de Board, Backlog e
          afins foram pro bloco "Times" do Panorama. A rota #projetos continua
@@ -244,9 +248,9 @@
   <a id="sprint-tudo-board" class="sprint-tudo-board" href="#"></a>
 </dialog>
 
-<script src="assets/core.js?v=2026102103"></script>
-<script src="assets/roadmap-visao.js?v=2026102103"></script>
-<script src="assets/api.js?v=2026102103"></script>
-<script src="assets/app.js?v=2026102103"></script>
+<script src="assets/core.js?v=2026102104"></script>
+<script src="assets/roadmap-visao.js?v=2026102104"></script>
+<script src="assets/api.js?v=2026102104"></script>
+<script src="assets/app.js?v=2026102104"></script>
 </body>
 </html>

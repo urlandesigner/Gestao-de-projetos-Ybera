@@ -103,13 +103,20 @@ test('o report não foi arrastado junto: o recorte é só da Central', () => {
     'report.js ganhou o recorte das POs sem ter sido pedido');
 });
 
-/* O item "Status de demandas" do menu muda por PO (15/10/2026): some pra
-   Tazshida e vira o atalho da versão escura das entregas pra Carla. Só o menu:
-   as páginas continuam abrindo por endereço. Manda o seletor, senão o token. */
-test('o menu muda por PO: Status some pra Tazshida e vira atalho pra Carla', () => {
+/* O item "Status de demandas" do menu é POR PO, e o destino é individual.
+   A regra é LISTA DE QUEM TEM (21/10/2026): antes o padrão era mostrar e cada
+   exceção tirava uma pessoa, então Isadora e Daniele herdavam o documento do
+   Urlan. Só o menu: as páginas continuam abrindo por endereço. Manda o
+   seletor, senão o token. */
+test('o menu só mostra o Status pra quem tem documento próprio', () => {
   const src = fonteApp;
-  assert.match(src, /tazshida: null,/);
+  assert.match(src, /urlan: \{\s*href: 'status-demandas\.html',/,
+    'o dono do documento saiu da lista e ninguém mais vê o atalho');
   assert.match(src, /href: 'entregas-carla-status\.html',/);
+  // Sem entrada, `null` — e `null` esconde. É o que protege PO nova.
+  assert.match(src, /MENU_STATUS_POR_PO, quem\) \? MENU_STATUS_POR_PO\[quem\] : null;/);
+  assert.doesNotMatch(src, /tazshida: null,/,
+    'exceção por pessoa não é mais necessária: o padrão já é esconder');
   assert.match(src, /C\.chaveDePessoa\(respAtivo\(\) \|\| \(state\.cache && state\.cache\.usuario\) \|\| ''\)/);
   assert.match(src, /function renderAll\(\) \{ renderBadge\(\); renderMenuPorPO\(\);/);
   // __proto__ e afins não viram regra: só chave própria.

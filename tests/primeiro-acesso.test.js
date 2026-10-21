@@ -63,7 +63,10 @@ test('a página inicial é só a porta do sistema', () => {
 test('os documentos continuam acessíveis, pelo menu da Central', () => {
   // Entregas abre a edição de outubro: o padrão do relatório, com o seletor de edições.
   assert.match(central, /id="nav-entregas" href="entregas-v2\.html\?po=1"/);
-  assert.match(central, /id="nav-status" href="status-demandas\.html"/);
+  /* Nasce escondido: o destino é individual, e quem o tem está em
+     MENU_STATUS_POR_PO. Visível no HTML, a primeira pintura mostrava o
+     documento do Urlan pra qualquer PO até o script resolver. */
+  assert.match(central, /id="nav-status" hidden href="status-demandas\.html"/);
   // E cada item do menu tem o ícone dele — sem regra, o item aparece sem ícone.
   const css = fs.readFileSync(path.join(raiz, 'assets/style.css'), 'utf8');
   assert.match(css, /#nav-status \{\s*--icone:/);

@@ -642,9 +642,20 @@ async function refreshAll(force) {
    escolhido. É só o menu — as páginas continuam abrindo por endereço, porque
    o link delas circula sem token.
 
-   `null` = some do menu; objeto = troca destino, rótulo e dica do item. */
+   LISTA DE QUEM TEM, não de quem não tem (21/10/2026). Antes o padrão era
+   MOSTRAR e cada exceção tirava uma pessoa: quem entrasse sem linha aqui
+   herdava o documento do Urlan, e foi o que aconteceu com a Isadora e a
+   Daniele — o Status de demandas é individual, e elas viam o dele. Agora PO
+   sem linha aqui não vê o item. Esquecer de cadastrar esconde um atalho;
+   esquecer de excluir mostrava o documento de outra pessoa.
+
+   Cada entrada traz destino, rótulo e dica do item. */
 const MENU_STATUS_POR_PO = {
-  tazshida: null,
+  urlan: {
+    href: 'status-demandas.html',
+    rotulo: 'Status de demandas',
+    dica: 'Abre o Status de demandas da loja US — escrito à mão, abre sem token pra quem receber.',
+  },
   carla: {
     href: 'entregas-carla-status.html',
     rotulo: 'Entregas (versão escura)',
@@ -662,7 +673,11 @@ function renderMenuPorPO() {
     item.dataset.rotulo = rotulo ? rotulo.textContent : '';
   }
   const quem = C.chaveDePessoa(respAtivo() || (state.cache && state.cache.usuario) || '');
-  const regra = Object.prototype.hasOwnProperty.call(MENU_STATUS_POR_PO, quem) ? MENU_STATUS_POR_PO[quem] : undefined;
+  /* Chave própria só: `__proto__` e afins não viram regra. Sem entrada, `null`
+     — e `null` esconde. Enquanto não se sabe quem é (sem token, primeira
+     pintura), `quem` é vazio e o item fica escondido: mostrar o documento de
+     alguém por um instante é pior que um atalho que aparece um segundo depois. */
+  const regra = Object.prototype.hasOwnProperty.call(MENU_STATUS_POR_PO, quem) ? MENU_STATUS_POR_PO[quem] : null;
   item.hidden = regra === null;
   item.setAttribute('href', (regra && regra.href) || item.dataset.href);
   item.setAttribute('title', (regra && regra.dica) || item.dataset.dica);
