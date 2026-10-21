@@ -568,23 +568,31 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
 .vivo { display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.87rem; flex: 1; }
 .vivo > .erro { margin: 0; }
 .niveis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.55rem; flex: 1; }
+/* Rótulo e total na MESMA linha (21/10/2026): o rótulo é pequeno e deixava uma
+   faixa vazia à direita dele, com o número grande sozinho na linha de baixo.
+   Lado a lado, o cartão ganha uma linha de altura e a leitura vira uma frase
+   só — "Épicos: 8". Alinhados pela base, não pelo meio: são dois tamanhos bem
+   diferentes, e centralizar faria o rótulo flutuar no meio do número. */
 .nivel {
   background: var(--superficie);
   border-radius: 12px;
   padding: 0.75rem 0.8rem 0.7rem;
   box-shadow: var(--sombra-cartao);
   min-width: 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  column-gap: 0.5rem;
 }
 .nivel-rot {
-  display: block;
   color: var(--mudo);
   font-size: 0.66rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  min-width: 0;
 }
 .nivel-total {
-  display: block;
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 1.15;
@@ -603,19 +611,27 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
   color: var(--mudo);
   font-size: 0.73rem;
   line-height: 1.5;
+  /* UM grid pra lista inteira, não um por linha (21/10/2026). Com um grid por
+     <li> a coluna do número precisava de largura FIXA — `auto` media cada linha
+     sozinha e a de 19 abria mais que as de 3 e 5, desalinhando os rótulos. Mas
+     a largura fixa cabia três dígitos SEMPRE: num cartão de um dígito só, a
+     lista nascia recuada do total grande e da régua acima dela, e a de dois
+     dígitos ficava com a borda esquerda serrilhada. Era o que parecia defeito.
+
+     Com o grid na <ul>, `auto` mede a coluna uma vez, pela maior célula DAQUELE
+     cartão: a lista encosta na esquerda do cartão e os rótulos alinham. */
   display: grid;
-  gap: 0.1rem;
-}
-.nivel-quebra li {
-  display: grid;
-  /* Largura FIXA, e não minmax(…, auto): cada <li> é um grid próprio, então
-     com `auto` a linha de 128 abria mais a coluna que as de 5 e 6 e os rótulos
-     desalinhavam dentro da mesma célula. Fixa em 2.2em cabem três dígitos, e aí
-     tudo alinha — entre as linhas e entre as três células. */
-  grid-template-columns: 2.2em 1fr;
-  gap: 0.4em;
+  grid-template-columns: auto 1fr;
+  gap: 0.1rem 0.4em;
   align-items: baseline;
+  /* O cartão virou grid de duas colunas (rótulo | total); a lista atravessa as
+     duas, senão nasceria espremida na primeira. */
+  grid-column: 1 / -1;
 }
+/* As duas células de cada linha participam do grid da lista. O <li> continua
+   existindo pro leitor de tela; o que ele perde é a caixa, que aqui não pinta
+   nada — cor e peso do `.bloq-linha` seguem por herança. */
+.nivel-quebra li { display: contents; }
 .nivel-quebra b {
   font-weight: 700;
   text-align: right;
@@ -624,7 +640,7 @@ body:not([data-pagina='meus-itens']) #secao-meus-itens { display: none; }
 }
 /* Sem número, a palavra ocupa as duas colunas em vez de ficar recuada
    esperando um dígito que não existe. */
-.nivel-quebra .sem-nada { grid-template-columns: 1fr; }
+.nivel-quebra .sem-nada span { grid-column: 1 / -1; }
 .nivel-quebra .bloq-linha { color: var(--erro); font-weight: 600; }
 /* O número do bloqueado herda o vermelho da linha: pintá-lo de tinta separaria
    o dígito do rótulo que o explica. */
@@ -1293,6 +1309,10 @@ details summary { cursor: pointer; color: var(--mudo); font-size: 0.88rem; }
   #grid { grid-template-columns: 1fr; }
   .atalhos a { padding: 0.45rem 0; font-size: 0.85rem; } /* alvo de toque maior */
   .niveis { gap: 0.45rem; }
+  /* Rótulo e total voltam a empilhar: com três cartões lado a lado o cartão
+     fica com uns 90px, e na mesma linha "FEATURES" encosta no número. A linha
+     a mais vale menos que a colisão. */
+  .nivel { grid-template-columns: 1fr; }
   .nivel { padding: 0.55rem 0.6rem 0.5rem; }
   /* Quadro vira deck de swipe horizontal com snap */
   .quadro { grid-auto-columns: 84vw; scroll-snap-type: x mandatory; }

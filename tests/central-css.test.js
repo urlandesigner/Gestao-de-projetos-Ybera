@@ -281,21 +281,28 @@ test('a quebra por nível sai em duas colunas, número e rótulo', () => {
   assert.doesNotMatch(fonteDoApp, /<li>\$\{b\.todo\} a fazer<\/li>/);
 });
 
-/* Largura FIXA, e não `auto`: cada <li> é um grid próprio, então com `auto` a
-   linha de 128 abre mais a coluna que as de 5 e 6, e os rótulos desalinham
-   dentro da MESMA célula. Medido no navegador: 34.4px nas linhas curtas contra
-   38.5px na de três dígitos. */
-test('a coluna do número tem largura fixa, pra três dígitos', () => {
-  /* Sem os comentários: o comentário DESTA regra explica por que `minmax` não
-     serve, e cita a palavra. Um teste que casa com o texto que o explica é
-     falso positivo garantido — já aconteceu aqui antes, com outro arquivo. */
+/* UM grid pra lista inteira (21/10/2026). Antes era um grid por <li>, e aí a
+   coluna do número precisava de largura fixa pra três dígitos: num cartão de um
+   dígito só a lista nascia recuada do total grande e da régua acima dela, e a
+   de dois dígitos ficava serrilhada na esquerda. Com o grid na <ul>, `auto`
+   mede a coluna uma vez, pela maior célula daquele cartão. */
+test('a lista por nível é um grid só, com a coluna do número medida pelo cartão', () => {
+  /* Sem os comentários: o comentário DESTA regra explica por que o grid por
+     linha não serve, e cita as palavras. Um teste que casa com o texto que o
+     explica é falso positivo garantido — já aconteceu aqui antes. */
   const semComentariosCss = folha.replace(/\/\*[\s\S]*?\*\//g, '');
-  const regra = /\.nivel-quebra li \{[^}]*\}/.exec(semComentariosCss);
-  assert.ok(regra, 'a regra da linha sumiu');
-  assert.match(regra[0], /grid-template-columns:\s*2\.2em 1fr/);
-  assert.doesNotMatch(regra[0], /minmax\(/, 'minmax volta a desalinhar quando um número é maior');
+  const lista = /\.nivel-quebra \{[^}]*\}/.exec(semComentariosCss);
+  assert.ok(lista, 'a regra da lista sumiu');
+  assert.match(lista[0], /grid-template-columns:\s*auto 1fr/);
+  const linha = /\.nivel-quebra li \{[^}]*\}/.exec(semComentariosCss);
+  assert.ok(linha, 'a regra da linha sumiu');
+  assert.match(linha[0], /display:\s*contents/);
+  assert.doesNotMatch(linha[0], /grid-template-columns/,
+    'coluna declarada por linha volta a medir cada linha sozinha, e os rótulos desalinham');
   assert.match(folha, /\.nivel-quebra b \{[^}]*text-align:\s*right/);
   assert.match(folha, /\.nivel-quebra b \{[^}]*tabular-nums/);
+  // Sem número, a palavra atravessa as duas colunas em vez de ficar recuada.
+  assert.match(semComentariosCss, /\.nivel-quebra \.sem-nada span \{[^}]*grid-column:\s*1 \/ -1/);
 });
 
 /* Pintar o dígito de tinta separaria o número do rótulo que o explica — "1" em
@@ -308,5 +315,7 @@ test('o número do bloqueado herda o vermelho da linha', () => {
    que não existe. */
 test('a linha "nenhum" ocupa as duas colunas', () => {
   assert.match(fonteDoApp, /<li class="sem-nada"><span>nenhum<\/span><\/li>/);
-  assert.match(folha, /\.nivel-quebra \.sem-nada \{[^}]*grid-template-columns:\s*1fr/);
+  /* No <span>, e não no <li>: o <li> virou `display: contents` e não é mais
+     caixa de grid — quem ocupa as colunas agora é a célula. */
+  assert.match(folha, /\.nivel-quebra \.sem-nada span \{[^}]*grid-column:\s*1 \/ -1/);
 });
