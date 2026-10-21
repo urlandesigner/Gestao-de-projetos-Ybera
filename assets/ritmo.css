@@ -69,8 +69,15 @@
   border-radius: 12px;
   /* Ar suficiente pra moldura existir: em faixa inteira, 13.6px de lado era um
      fio branco em volta das caixas cinzas, e o cartão sumia atrás do conteúdo
-     dele. */
-  padding: 1rem 1.1rem 1.1rem;
+     dele.
+
+     Em variável porque o <summary> precisa do MESMO número pra anular este ar
+     e reconquistá-lo como área de clique — ver .rt-resumo. Dois literais em
+     dois lugares virariam uma borda morta de 18px no dia em que um mudasse. */
+  --rt-ar-topo: 1rem;
+  --rt-ar-lado: 1.1rem;
+  --rt-ar-base: 1.1rem;
+  padding: var(--rt-ar-topo) var(--rt-ar-lado) var(--rt-ar-base);
   box-shadow: 0 2px 8px rgba(28, 25, 23, 0.09);
 }
 
@@ -173,12 +180,29 @@
    direita da LINHA DO SELO, que estava vazia — assim o nome, as datas e o
    placar continuam exatamente onde estavam, sem ninguém precisar reaprender a
    ler o cartão. */
+/* A ÁREA DE CLIQUE VAI ATÉ A BORDA DO CARTÃO (21/10/2026, pedido do Urlan).
+   O <summary> nascia dentro do padding do cartão, então sobrava uma moldura
+   morta de ~18px: mirar a beirada do cartão não abria nada, e num alvo que
+   parece um cartão inteiro a pessoa mira a beirada. A margem negativa puxa o
+   summary por cima desse ar e o padding devolve o mesmo valor — o desenho não
+   muda um pixel, só o alvo cresce.
+
+   Embaixo, só quando FECHADO: aberto, quem vem depois do summary é a lista de
+   itens, e esticar o alvo por cima dela faria clicar num item fechar a sprint. */
 .rt-resumo {
   cursor: pointer;
   list-style: none; /* Firefox */
+  margin: calc(var(--rt-ar-topo) * -1) calc(var(--rt-ar-lado) * -1) 0;
+  padding: var(--rt-ar-topo) var(--rt-ar-lado) 0;
+}
+.rt-dobra:not([open]) .rt-resumo {
+  margin-bottom: calc(var(--rt-ar-base) * -1);
+  padding-bottom: var(--rt-ar-base);
 }
 .rt-resumo::-webkit-details-marker { display: none; }
-.rt-resumo:focus-visible { outline: 2px solid var(--tinta); outline-offset: 3px; border-radius: 6px; }
+/* Offset pra DENTRO: o alvo agora encosta na borda do cartão, e um anel por
+   fora dela vazaria pro fundo da página. */
+.rt-resumo:focus-visible { outline: 2px solid var(--tinta); outline-offset: -3px; border-radius: 12px; }
 
 .rt-cab {
   display: flex;
