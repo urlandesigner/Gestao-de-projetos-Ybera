@@ -103,6 +103,69 @@ test('o cartão escrito que declara a Feature continua mandando nela', () => {
   assert.deepEqual(todos.map((c) => c.titulo), ['Escrito', 'Melhorias no checkout']);
 });
 
+/* O SELO DO CARTÃO AUTOMÁTICO (22/10/2026). O cartão do Subscription mostrava
+   uma PBI concluída e mais nada, e a frente continuava rodando: sem selo, o
+   leitor conclui que aquela entrega solta é a história inteira. O material só
+   tem item CONCLUÍDO — é o laço que descarta o resto na entrada —, então quem
+   diz que a frente segue é a segunda passada, que conta o que está em aberto. */
+test('o cartão automático diz se a frente fechou ou segue rodando', () => {
+  const material = {
+    itens: [
+      { id: 1, titulo: 'Feita', fechadoEm: '2026-10-08', frente: 'f:10' },
+      { id: 2, titulo: 'Outra', fechadoEm: '2026-10-09', frente: 'f:20' },
+    ],
+    frentes: [
+      { chave: 'f:10', feature: { id: 10, nome: '[EUA] Segue rodando' }, epico: null, noPeriodo: 1, total: 1, abertas: 1 },
+      { chave: 'f:20', feature: { id: 20, nome: '[EUA] Fechou' }, epico: null, noPeriodo: 1, total: 1, abertas: 0 },
+    ],
+  };
+  const auto = C.automaticosDoMaterial(material, {});
+  assert.deepEqual(auto.map((f) => f.fechada), [false, true]);
+  const cards = V2.comAutomaticos([], auto);
+  assert.deepEqual(cards.map((c) => c.status), ['andamento', 'entregue']);
+  const html = V2.htmlReport({ items: [], todos: [], agora: Date.parse('2026-10-22T12:00:00Z'),
+    chavePO: 'urlan', cartoes: [], automaticos: auto }).html;
+  assert.match(html, /Segue rodando<\/h3>[\s\S]{0,400}?em andamento/);
+  assert.match(html, /Fechou<\/h3>[\s\S]{0,400}?entregue/);
+  /* TRÊS estados. Forjado, ou vindo de pacote antigo que não tem o campo, vira
+     AUSENTE — e sem o campo o cartão não ganha selo. `false` ali faria o
+     documento afirmar "em andamento" sobre frente que já tinha fechado. */
+  for (const mentira of ['sim', 1, {}, null, undefined]) {
+    const forjado = C.saneAutomaticos([{ feature: { id: 9, nome: 'X' }, fechada: mentira,
+      itens: [{ id: 1, titulo: 'a' }] }]);
+    assert.equal(forjado[0].fechada, undefined, JSON.stringify(mentira));
+    assert.equal(V2.comAutomaticos([], forjado)[0].status, undefined, 'sem saber, sem selo');
+  }
+  const semSaber = V2.htmlReport({ items: [], todos: [], agora: Date.parse('2026-10-22T12:00:00Z'),
+    chavePO: 'urlan', cartoes: [],
+    automaticos: C.saneAutomaticos([{ feature: { id: 9, nome: 'Sem saber' }, itens: [{ id: 1, titulo: 'a' }] }]) }).html;
+  // No CARTÃO: o resto do documento fala "em andamento" por outras razões.
+  const cartao = /rl-frente-nome">Sem saber<[\s\S]{0,500}/.exec(semSaber);
+  assert.ok(cartao, 'o cartão não saiu');
+  assert.doesNotMatch(cartao[0].slice(0, 300), /rl-selo/, 'sem saber, sem selo');
+});
+
+test('a frente em aberto é contada no mesmo recorte das entregas', () => {
+  const wi = (id, estado, pai, fechadoEm) => ({ id, fields: {
+    'System.WorkItemType': 'Product Backlog Item',
+    'System.State': estado,
+    'System.Title': 'Item ' + id,
+    'System.Parent': pai,
+    'Microsoft.VSTS.Common.ClosedDate': fechadoEm ? fechadoEm + 'T12:00:00Z' : undefined,
+  } });
+  const feature = { id: 70, fields: { 'System.WorkItemType': 'Feature', 'System.State': 'In Progress', 'System.Title': '[EUA] Assinaturas' } };
+  const BE = require('../assets/briefing-entregas.js');
+  const abertos = [feature, wi(71, 'Done', 70, '2026-10-09'), wi(72, 'In Progress', 70)];
+  const m1 = BE.entregasConcluidas(abertos, abertos, ['2026-10']);
+  assert.equal(m1.frentes[0].abertas, 1, 'a PBI em andamento é contada');
+  const sóFechados = [feature, wi(71, 'Done', 70, '2026-10-09')];
+  const m2 = BE.entregasConcluidas(sóFechados, sóFechados, ['2026-10']);
+  assert.equal(m2.frentes[0].abertas, 0);
+  // E nenhuma delas entra na lista de entregas nem na contagem do período.
+  assert.deepEqual(m1.itens.map((i) => i.id), [71]);
+  assert.equal(m1.frentes[0].noPeriodo, 1);
+});
+
 /* A JANELA DAS ENTREGAS SEGUE AS SPRINTS (22/10/2026). O documento tinha duas
    réguas: entrega cortada pelo calendário, sprint cortada pela data de
    fechamento dela. A sprint que fecha em novembro só aparece lá, mas o que ela

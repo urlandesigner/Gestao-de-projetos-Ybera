@@ -698,6 +698,12 @@
           epico: prod ? { id: prod.id, nome: prod.titulo } : null,
           noPeriodo: 0,
           total: 0,
+          /* PBIs da frente que NÃO fecharam — contadas na segunda passada, lá
+             embaixo. Tudo aqui dentro é item concluído (o laço descarta o
+             resto na primeira linha), e sem este número o cartão automático não
+             tem como saber que a frente continua: ele mostrava uma entrega
+             solta e o leitor concluía que a frente tinha acabado. */
+          abertas: 0,
         });
       }
       const fr = frentes.get(chave);
@@ -714,6 +720,20 @@
       });
     }
     // Frente sem nada no período não entra: ela não é assunto desta edição.
+    /* SEGUNDA PASSADA, só pelo que está em aberto. Separada da primeira porque
+       a primeira descarta o não-concluído na entrada — e é esse descarte que
+       mantém `itens` e `total` falando só de entrega. Conta no MESMO recorte
+       do documento (os itens do PO), como tudo o mais aqui. */
+    for (const it of (items || [])) {
+      if (!ehPbi(it)) continue;
+      const f = it.fields || {};
+      if (C.isTerminalState(f['System.State'])) continue;
+      const fid = featureDe(it.id, porId);
+      const prod = mapa && mapa.get(it.id);
+      const chave = fid ? 'f:' + fid : (prod ? 'e:' + prod.id : 'sem-frente');
+      const fr = frentes.get(chave);
+      if (fr) fr.abertas += 1; // frente sem entrega nenhuma não vira cartão
+    }
     return { itens, frentes: [...frentes.values()].filter((x) => x.noPeriodo > 0) };
   }
 

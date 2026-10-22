@@ -1192,7 +1192,16 @@
     const porFrente = new Map();
     for (const fr of (Array.isArray(m.frentes) ? m.frentes : [])) {
       if (!fr || !fr.feature || !fr.chave) continue;
-      porFrente.set(fr.chave, { feature: fr.feature, epico: fr.epico || null, itens: [] });
+      porFrente.set(fr.chave, {
+        feature: fr.feature,
+        epico: fr.epico || null,
+        /* A frente fechou quando não sobrou PBI em aberto nela. Viaja como
+           booleano, e não como a contagem: quem lê o documento não precisa
+           saber QUANTAS faltam — e o número de itens em aberto de uma frente é
+           dado interno que não tem por que sair daqui. */
+        fechada: Number(fr.abertas || 0) === 0,
+        itens: [],
+      });
     }
     for (const it of (Array.isArray(m.itens) ? m.itens : [])) {
       const fr = it && porFrente.get(it.frente);
@@ -1219,6 +1228,12 @@
       .map((f) => ({
         feature: { id: num(f.feature.id), nome: txt(f.feature.nome, 200) },
         epico: f.epico && num(f.epico.id) ? { id: num(f.epico.id), nome: txt(f.epico.nome, 200) } : null,
+        /* TRÊS estados, não dois: `true`, `false` e AUSENTE. Pacote montado
+           antes disto existir (a edição congelada, um link já compartilhado)
+           não sabe se a frente fechou — e `false` ali faria o documento afirmar
+           "em andamento" sobre frente que já acabou. Ausente, o cartão não
+           ganha selo, que é a verdade: não se sabe. */
+        fechada: (f.fechada === true || f.fechada === false) ? f.fechada : undefined,
         itens: (Array.isArray(f.itens) ? f.itens : []).slice(0, 60)
           .filter((x) => x && num(x.id) && txt(x.titulo, 300))
           .map((x) => ({

@@ -507,8 +507,19 @@
       featureIds: [fr.feature.id],
       contaFixa: fr.itens.length,
       entregues: fr.itens,
+      /* O SELO DO CARTÃO AUTOMÁTICO (22/10/2026). Sem ele, uma frente que
+         entregou um item e continua rodando mostrava aquela entrega sozinha, e
+         o leitor concluía que a frente tinha acabado — foi o que o Urlan viu no
+         cartão do Subscription. "entregue" só quando não sobrou PBI em aberto;
+         fora isso, a frente segue. Os dois valores são os mesmos que o cartão
+         escrito usa, porque o leitor não tem por que aprender dois vocabulários
+         no mesmo documento. */
       automatico: true,
     };
+    /* Só quando o pacote SABE. Sem o campo (pacote antigo, edição congelada),
+       nada de selo: "em andamento" sobre frente que já fechou é pior que selo
+       nenhum, e o documento calado continua verdadeiro. */
+    if (typeof fr.fechada === 'boolean') cartao.status = fr.fechada ? 'entregue' : 'andamento';
     /* A linha do roadmap a que esta Feature pertence, quando o roadmap a
        declara. É o que tira a frente de "Outras entregas" e a põe na conta de
        projeto do roadmap da capa — sem o PO escrever cartão à mão e sem perder
