@@ -77,6 +77,7 @@ const st = {
      `sprintsBrutas` é o material do DevOps (ids por sprint) e vira linha no
      render; `sprints` são as linhas já contadas que chegam pelo link. */
   sprintsBrutas: null,
+  janela: null, // só no modo leitura: o recorte que gerou os números do pacote
   sprints: [],
   automaticos: [], // cartões automáticos do pacote (modo leitura)
   /* Ligado quando a leitura das áreas do time falhou: a consulta passou a
@@ -543,13 +544,20 @@ function render() {
   if (!st.items) { box.innerHTML = erroHtml + (st.erro ? '' : '<p class="mudo">carregando…</p>'); return; }
   if (!st.leitura) renderFiltro();
   const itensDoDoc = st.leitura ? st.items : st.items.filter(noNome);
+  /* UMA foto do ritmo por render: a seção de sprints e a janela das entregas
+     leem a mesma lista. */
+  const linhasRitmo = st.leitura ? st.sprints : ritmoAgora(itensDoDoc);
+  /* A janela que ESTES números usam. Em leitura vem no pacote; ao vivo sai das
+     mesmas linhas que acabaram de ser contadas. Nunca recalculada no desenho:
+     a frase da capa tem que descrever o recorte que filtrou as entregas. */
+  const janelaDoDoc = st.leitura ? st.janela : P.recorteDoPeriodo(B, linhasRitmo);
   const r = B.htmlReport({
     items: itensDoDoc,
     todos: st.items.concat(st.pais), // o produto mora no pai — de outro dono, ou de outra área
     /* O ritmo é contado AQUI, sobre a mesma lista que desenha o corpo — nunca
        numa lista própria. É o que mantém a linha da sprint e as entregas do
        documento na mesma régua quando o recorte de responsável muda. */
-    sprints: st.leitura ? st.sprints : ritmoAgora(itensDoDoc),
+    sprints: linhasRitmo,
     // No link, o objetivo + rumo e os pedidos de decisão vêm prontos (o backlog
     // inteiro não viaja). Ao vivo (PO), ficam undefined e o briefing calcula.
     produtos: st.leitura ? st.produtos : undefined,
@@ -567,7 +575,8 @@ function render() {
        dela divergem na primeira vez que alguém mudar o nome no DevOps. */
     chavePO: C.chaveDePessoa(st.leitura ? st.escopo : assinatura(respAtivo())),
     cartoes: cartoesDaVez(),
-    automaticos: st.leitura ? st.automaticos : automaticosAgora(itensDoDoc),
+    automaticos: st.leitura ? st.automaticos : automaticosAgora(itensDoDoc, linhasRitmo),
+    janela: janelaDoDoc,
     unidade: UNIDADE,
     mes: st.mes,
   });
@@ -857,9 +866,14 @@ let geracaoLink = 0; // troca rápida de mês: só a gravação mais nova pode e
 
    O custo é conhecido e foi aceito com o número na frente: a sprint publicada
    deixa de ser a do squad e passa a ser a fatia do PO. */
-/* Os cartões automáticos, ao vivo — a mesma conta que vai no pacote. */
-function automaticosAgora(lista) {
-  return P.automaticos({ B, itens: lista, todos: st.items.concat(st.pais), resumos: st.resumos });
+/* Os cartões automáticos, ao vivo — a mesma conta que vai no pacote.
+
+   `linhas` são as MESMAS linhas de ritmo que a seção de sprints desenha: é
+   delas que sai a janela das entregas nas edições alinhadas à sprint. Recontar
+   o ritmo aqui daria duas fotos, e a tela do PO contaria um período e o
+   documento publicado outro. */
+function automaticosAgora(lista, linhas) {
+  return P.automaticos({ B, itens: lista, todos: st.items.concat(st.pais), resumos: st.resumos, linhas });
 }
 
 function pacoteDoDocumento(paraArquivo) {
@@ -1059,6 +1073,7 @@ function aplicarPacote(pacote) {
   // Formato curto: vem saneado no briefing, que é quem sabe a forma dele.
   st.contagens = pacote.contagens || null;
   st.sprints = saneRitmo(pacote.sprints); // link antigo não traz: vira lista vazia
+  st.janela = C.saneJanela(pacote.janela); // pacote antigo não traz: documento sem janela escrita
   st.automaticos = C.saneAutomaticos(pacote.automaticos); // idem: pacote antigo, nenhum
   st.escopo = pacote.escopo || '';
   st.agora = pacote.em || Date.now();

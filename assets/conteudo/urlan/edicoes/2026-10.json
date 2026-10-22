@@ -53,7 +53,8 @@
       "foraDoRoadmap": true,
       "status": "andamento",
       "resumo": [
-        "O checkout exibia uma quantidade de itens diferente da real. A causa é o aplicativo Route, e a correção está sendo feita pelo time do próprio Route."
+        "O checkout mostra uma quantidade de itens diferente da real. A correção dependia do time do Route resolver o problema do lado deles, o que já foi feito.",
+        "Com isso destravado, as tratativas agora estão do nosso lado. Até essa parte ficar pronta, a divergência continua acontecendo."
       ],
       "contaFixa": 1
     },
@@ -61,9 +62,9 @@
       "titulo": "Proteção de entrega para clientes logados",
       "iniciativa": "Route",
       "foraDoRoadmap": true,
-      "status": "andamento",
+      "status": "entregue",
       "resumo": [
-        "A proteção de entrega não estava sendo aplicada corretamente para clientes logados. A equipe do Route reproduziu o problema e está resolvendo."
+        "A proteção de entrega não estava sendo aplicada corretamente para clientes logados. A equipe do Route reproduziu o problema, corrigiu, e a proteção já está funcionando normalmente."
       ],
       "contaFixa": 1
     },

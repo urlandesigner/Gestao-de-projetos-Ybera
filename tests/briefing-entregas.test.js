@@ -721,6 +721,33 @@ test('o link declara exatamente os campos que o documento lê', () => {
   assert.ok(BE.camposDoLink.length >= 3, 'a lista não pode estar vazia');
 });
 
+/* A JANELA DAS SPRINTS, rodando a função de verdade (22/10/2026). O teste de
+   cima garante que o recorte chega até aqui; este garante o que ele faz com o
+   item. A Sprint 20 vai de 28/09 a 09/10 e pertence a outubro inteira, então o
+   que ela entregou em setembro é entrega de outubro — e o que a sprint
+   seguinte entregar depois de 23/10 é de novembro, mesmo fechando em outubro. */
+test('com recorte, a entrega entra pela janela das sprints e não pelo mês', () => {
+  const wi = (id, fechadoEm) => ({ id, fields: {
+    'System.WorkItemType': 'Product Backlog Item',
+    'System.State': 'Done',
+    'System.Title': 'Item ' + id,
+    'Microsoft.VSTS.Common.ClosedDate': fechadoEm + 'T12:00:00Z',
+  } });
+  const itens = [wi(1, '2026-09-29'), wi(2, '2026-10-08'), wi(3, '2026-10-28'), wi(4, '2026-09-10')];
+  const recorte = { inicio: '2026-09-28', fim: '2026-10-23' };
+  const comJanela = BE.entregasConcluidas(itens, itens, ['2026-10'], recorte);
+  assert.deepEqual(comJanela.itens.map((i) => i.id), [1, 2],
+    '29/09 entra pela Sprint 20; 28/10 fica pra sprint que fecha em novembro');
+  // Sem recorte, volta a ser o mês do calendário: entra o 28/10 e sai o 29/09.
+  const porMes = BE.entregasConcluidas(itens, itens, ['2026-10']);
+  assert.deepEqual(porMes.itens.map((i) => i.id), [2, 3]);
+  // Recorte quebrado não derruba nada: vale o mês.
+  for (const ruim of [null, {}, { inicio: '2026-09-28' }, 'x']) {
+    assert.deepEqual(BE.entregasConcluidas(itens, itens, ['2026-10'], ruim).itens.map((i) => i.id),
+      [2, 3], JSON.stringify(ruim));
+  }
+});
+
 /* A exceção acima tem preço: se o `entregasConcluidas` passasse a rodar no
    caminho do leitor, ele leria campos que o link não carrega e devolveria
    título vazio e descrição vazia — calado, porque campo ausente não estoura.

@@ -1284,6 +1284,52 @@
       }));
   }
 
+  /* O RECORTE DAS ENTREGAS QUANDO A EDIÇÃO SE ALINHA ÀS SPRINTS (22/10/2026).
+
+     O documento tinha DUAS RÉGUAS. As entregas eram cortadas pelo calendário
+     (fechou em outubro, é de outubro) e as sprints pela data de fechamento
+     delas (a Sprint 20 vai de 28/09 a 09/10 e pertence a outubro, inteira).
+     Resultado: a sprint que começa em 26/10 e fecha em 06/11 só aparece em
+     novembro, mas tudo que ela entregar entre 26 e 31 de outubro já contava em
+     outubro — o leitor via itens que não pertenciam a sprint nenhuma na lista.
+     Foi o que o Urlan notou enviando o relatório no fim do mês.
+
+     Agora a edição mensal corta do COMEÇO da primeira sprint que fecha nela
+     até o FIM da última. Outubro vira 28/09 a 23/10. O nome da edição e o
+     seletor não mudam: só a janela.
+
+     Devolve `null` quando não há sprint com data — e aí quem chama volta pro
+     mês cheio, que é o certo pra PO sem sprint e pra edição congelada. */
+  function recorteDasSprints(linhas) {
+    const dia = (v) => {
+      const d = String(v == null ? '' : v).slice(0, 10);
+      return /^\d{4}-\d{2}-\d{2}$/.test(d) ? d : null;
+    };
+    let inicio = null;
+    let fim = null;
+    for (const l of (Array.isArray(linhas) ? linhas : [])) {
+      const i = dia(l && l.start);
+      const f = dia(l && l.finish);
+      if (i !== null && (inicio === null || i < inicio)) inicio = i;
+      if (f !== null && (fim === null || f > fim)) fim = f;
+    }
+    return (inicio !== null && fim !== null) ? { inicio, fim } : null;
+  }
+
+  /* A janela como ela chega do outro lado (link, arquivo, função). É texto numa
+     URL como todo o resto do pacote: ou são duas datas AAAA-MM-DD em ordem, ou
+     não é janela nenhuma. */
+  function saneJanela(j) {
+    const dia = (v) => {
+      const d = String(v == null ? '' : v).slice(0, 10);
+      return /^\d{4}-\d{2}-\d{2}$/.test(d) && !Number.isNaN(Date.parse(d + 'T00:00:00Z')) ? d : null;
+    };
+    const o = j && typeof j === 'object' ? j : {};
+    const inicio = dia(o.inicio);
+    const fim = dia(o.fim);
+    return (inicio !== null && fim !== null && inicio <= fim) ? { inicio, fim } : null;
+  }
+
   function reportPorMes(items) {
     const meses = new Map();
     for (const it of items || []) {
@@ -1795,7 +1841,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, wiqlIteracao, transbordados, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts, estaParado, wiqlEpicos, chaveDePessoa, fichaDaPessoa, caminhoDoConteudo,
-    saneCartoes, saneEdicao, automaticosDoMaterial, saneAutomaticos, saneFontes, fimDoPeriodo, periodoFechado,
+    saneCartoes, saneEdicao, automaticosDoMaterial, recorteDasSprints, saneJanela, saneAutomaticos, saneFontes, fimDoPeriodo, periodoFechado,
     iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, vizinhasDaSprint, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, digitalDoTexto, saneResumos, precisaDeLinha, mesclarResumos, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,

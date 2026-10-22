@@ -105,6 +105,11 @@
       // Os cartões automáticos valem dos meses gerados pela data em diante.
       // Agosto/setembro não: relatório fechado e já compartilhado.
       cartoesAutomaticos: true,
+      /* A janela das entregas se alinha às sprints desta edição: do começo da
+         primeira que fecha no mês até o fim da última (22/10/2026). Só nas
+         edições geradas pelo calendário — agosto/setembro é documento fechado
+         e já compartilhado, e mexer na janela dele mudaria número publicado. */
+      janelaPorSprint: true,
       // Lida da função da Vercel (api/relatorio), ao vivo, por quem não tem
       // token. Agosto/setembro não: fechado, continua no arquivo publicado.
       aoVivo: true,
@@ -577,6 +582,9 @@
        a quer, em qualquer edição. */
     precisaDeEntregas: true,
     periodoDoDocumento: () => ATIVA.periodo.slice(),
+    /* Quem monta o pacote pergunta aqui se esta edição corta por sprint. Mora
+       no módulo da edição porque é ele que sabe qual edição está ativa. */
+    janelaPorSprint: () => ATIVA.janelaPorSprint === true,
     escolherEdicao,
     edicaoPedidaNaUrl,
     edicoesAte,

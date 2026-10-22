@@ -64,9 +64,14 @@ test('o v2 é a edição de Outubro, com a lista curada dele', () => {
    sprints, nada mais. Tiradas as duas, tem que sobrar a mesma string que o base
    desenha com as entradas da edição de outubro. Se um dia alguém fizer o v2 "ajustar" o
    documento por fora, é aqui que estoura. */
+/* Os acréscimos do v2 sobre o documento do base: as abas, as frases de aba
+   vazia, a seção de ritmo — e, desde 22/10/2026, a frase da janela na capa.
+   Ela é acréscimo pela mesma razão das outras: só existe onde há sprint, que é
+   o que o v2 acrescenta. Sem sprint, a capa volta a ser a do base. */
 const semAcrescimos = (html) => String(html)
   .replace(/<nav class="rl-nav rl-abas"[\s\S]*?<\/nav>/, '')
   .replace(/<p class="rl-aba-vazia mudo"[\s\S]*?<\/p>/g, '')
+  .replace(/Conta de [^·<]*, o período das sprints · /, '')
   .replace(/<section class="rl-sec" id="ritmo">[\s\S]*?<\/section>/, '');
 
 /* O teste mais importante do arquivo. */
@@ -518,7 +523,10 @@ test('as duas consultas da sprint saem do mesmo construtor', () => {
 test('a linha é contada no render, sobre a MESMA lista que desenha o corpo', () => {
   assert.match(fonteReport, /const itensDoDoc = st\.leitura \? st\.items : st\.items\.filter\(noNome\);/);
   assert.match(fonteReport, /items: itensDoDoc,/);
-  assert.match(fonteReport, /sprints: st\.leitura \? st\.sprints : ritmoAgora\(itensDoDoc\),/);
+  /* Uma foto só por render: a MESMA lista de linhas alimenta a seção de sprints
+     e a janela das entregas (22/10/2026). Duas chamadas dariam duas fotos. */
+  assert.match(fonteReport, /const linhasRitmo = st\.leitura \? st\.sprints : ritmoAgora\(itensDoDoc\);/);
+  assert.match(fonteReport, /sprints: linhasRitmo,/);
 });
 
 test('a iteração entra nos campos buscados — senão não há como saber quem está em qual sprint', () => {

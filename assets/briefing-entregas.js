@@ -177,6 +177,27 @@
     return (chaves.length > 1 ? 'Período' : 'Mês') + ' em andamento · parcial até ' + dia;
   }
 
+  /* QUAL PEDAÇO DE TEMPO ESTE DOCUMENTO CONTA (22/10/2026).
+
+     O título diz "Outubro", mas desde que a janela segue as sprints a conta vai
+     de 28 de setembro a 23 de outubro. Documento que conta um período e anuncia
+     outro é o defeito que este código inteiro evita; então a janela aparece
+     escrita, do lado do título, e o leitor confere contra as datas das sprints
+     logo abaixo.
+
+     Só quando ela DIVERGE do mês: dentro do próprio mês, repetir "1 a 31 de
+     outubro" embaixo de "Outubro" seria ruído. */
+  function janelaEscrita(recorte, chaves) {
+    if (!recorte || !recorte.inicio || !recorte.fim) return '';
+    const mesesDoRecorte = new Set([recorte.inicio.slice(0, 7), recorte.fim.slice(0, 7)]);
+    const mesmoMes = mesesDoRecorte.size === 1
+      && Array.isArray(chaves) && chaves.length === 1 && chaves[0] === recorte.inicio.slice(0, 7);
+    if (mesmoMes) return '';
+    const curta = (d) => new Date(d + 'T12:00:00Z').toLocaleDateString('pt-BR',
+      { day: 'numeric', month: 'short', timeZone: 'UTC' }).replace('.', '');
+    return 'Conta de ' + curta(recorte.inicio) + ' a ' + curta(recorte.fim) + ', o período das sprints';
+  }
+
   const chaveDe = (p) => (p ? 'p' + p.id : 'sem');
 
   // ---- Nome de negócio ----
@@ -638,11 +659,22 @@
 
      Item concluído sem data de fechamento fica fora do recorte: sem ela não dá
      pra afirmar que é deste mês, e atribuir ao mês errado é pior que omitir. */
-  function entregasConcluidas(items, todos, meses) {
+  /* `recorte` ({ inicio, fim } em AAAA-MM-DD) manda quando vem: é a janela das
+     sprints da edição, e ela é que faz as entregas e a seção de sprints falarem
+     do mesmo pedaço de tempo. Sem ele, vale o mês cheio, como sempre foi — é o
+     caso da edição congelada de agosto/setembro e de quem não roda sprint. */
+  function entregasConcluidas(items, todos, meses, recorte) {
     const base = todos || items || [];
     const porId = new Map(base.map((it) => [it.id, it]));
     const mapa = C.mapaDeProdutos(base);
     const janela = new Set(Array.isArray(meses) ? meses : []);
+    const r = (recorte && typeof recorte.inicio === 'string' && typeof recorte.fim === 'string')
+      ? recorte : null;
+    const dentroDoRecorte = (quando) => {
+      if (!quando) return false;
+      if (r) return quando >= r.inicio && quando <= r.fim;
+      return !janela.size || janela.has(quando.slice(0, 7));
+    };
     const tit = (id) => {
       const x = porId.get(id);
       return x ? String((x.fields || {})['System.Title'] || '').trim() : '';
@@ -670,7 +702,7 @@
       }
       const fr = frentes.get(chave);
       fr.total += 1;
-      if (!quando || (janela.size && !janela.has(quando.slice(0, 7)))) continue;
+      if (!dentroDoRecorte(quando)) continue;
       fr.noPeriodo += 1;
       itens.push({
         id: it.id,
@@ -979,7 +1011,9 @@
            manda — nenhum documento já publicado muda por causa disto. */
         [(ficha && ficha.unidade) || o.unidade, (ficha && ficha.area) || 'E-commerce']
           .filter(Boolean).join(' · '),
-        'O que o time entregou no período, e o planejamento dos próximos meses.',
+        [janelaEscrita(C.saneJanela(o.janela), chavesPeriodo),
+          'O que o time entregou no período, e o planejamento dos próximos meses.']
+          .filter(Boolean).join(' · '),
         meta.join(' · '),
         seletorMes(listaMeses, escolhido),
         andamentoDoPeriodo(chavesPeriodo, agora))}

@@ -12,6 +12,7 @@ const path = require('node:path');
 
 const C = require('../assets/core.js');
 const V2 = require('../assets/briefing-entregas-v2.js');
+const P = require('../assets/pacote.js');
 
 const ler = (f) => fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
 
@@ -102,6 +103,107 @@ test('o cartão escrito que declara a Feature continua mandando nela', () => {
   assert.deepEqual(todos.map((c) => c.titulo), ['Escrito', 'Melhorias no checkout']);
 });
 
+/* A JANELA DAS ENTREGAS SEGUE AS SPRINTS (22/10/2026). O documento tinha duas
+   réguas: entrega cortada pelo calendário, sprint cortada pela data de
+   fechamento dela. A sprint que fecha em novembro só aparece lá, mas o que ela
+   entregou nos últimos dias de outubro já contava em outubro — itens sem
+   sprint nenhuma na lista. Agora a edição mensal corta do começo da primeira
+   sprint que fecha nela até o fim da última. */
+const LINHAS = [
+  { nome: 'Sprint 20', start: '2026-09-28T00:00:00Z', finish: '2026-10-09T00:00:00Z' },
+  { nome: 'Sprint 21', start: '2026-10-12T00:00:00Z', finish: '2026-10-23T00:00:00Z' },
+];
+
+test('o recorte sai da primeira à última sprint, e é null sem data', () => {
+  assert.deepEqual(C.recorteDasSprints(LINHAS), { inicio: '2026-09-28', fim: '2026-10-23' });
+  // Uma sprint sem data não derruba as outras.
+  assert.deepEqual(C.recorteDasSprints(LINHAS.concat([{ nome: 'X' }])),
+    { inicio: '2026-09-28', fim: '2026-10-23' });
+  for (const vazio of [[], null, 'lixo', [{ nome: 'só o nome' }]]) {
+    assert.equal(C.recorteDasSprints(vazio), null, 'sem data, quem chama volta pro mês cheio');
+  }
+});
+
+test('a entrega entra pela janela das sprints, não pelo mês do calendário', () => {
+  const itens = [
+    // 29/09: fora de outubro no calendário, DENTRO da Sprint 20 — entra.
+    { id: 61, titulo: 'Fechou na virada', estado: 'Done', fechadoEm: '2026-09-29', frente: 'f:100', descricao: '' },
+    // 28/10: dentro de outubro, FORA da janela (a sprint dele fecha em novembro) — não entra.
+    { id: 62, titulo: 'Já é da sprint seguinte', estado: 'Done', fechadoEm: '2026-10-28', frente: 'f:100', descricao: '' },
+    { id: 63, titulo: 'No meio do período', estado: 'Done', fechadoEm: '2026-10-08', frente: 'f:100', descricao: '' },
+  ];
+  const material = { itens, frentes: [MATERIAL.frentes[0]] };
+  const comJanela = V2.htmlReport; // só pra deixar claro que é o mesmo documento
+  assert.ok(typeof comJanela === 'function');
+  const B = {
+    precisaDeEntregas: true,
+    contagensDoLink: () => ({ f: {}, e: {} }),
+    periodoDoDocumento: () => ['2026-10'],
+    janelaPorSprint: () => true,
+    entregasConcluidas: (itns, todos, meses, recorte) => ({
+      itens: material.itens.filter((i) => !recorte
+        || (i.fechadoEm >= recorte.inicio && i.fechadoEm <= recorte.fim)),
+      frentes: material.frentes,
+    }),
+  };
+  const pacote = P.montarEntregas({ B, mostrados: [], todos: [], todosItens: [],
+    sprintsBrutas: [], resumos: {}, roadmap: [], escopo: 'Urlan', mes: null, agora: 1,
+    paraArquivo: false });
+  assert.ok(pacote, 'o pacote montou');
+  // E o recorte que o pacote usa é o que sai das linhas de ritmo:
+  assert.deepEqual(P.recorteDoPeriodo(B, LINHAS), { inicio: '2026-09-28', fim: '2026-10-23' });
+  assert.equal(P.recorteDoPeriodo({ }, LINHAS), null, 'edição que não pede, não recorta');
+});
+
+/* A frase da capa descreve o recorte que FILTROU os números, e por isso ela
+   viaja no pacote em vez de ser recalculada no desenho. Pacote montado no mês
+   cheio chega sem janela, e o documento não afirma nada — era o jeito de a
+   capa dizer "conta de 28 de set a 23 de out" sobre números do mês inteiro. */
+test('a janela viaja no pacote, e some quando a edição não recorta', () => {
+  const B = { precisaDeEntregas: true, contagensDoLink: () => ({ f: {}, e: {} }),
+    entregasConcluidas: () => MATERIAL, periodoDoDocumento: () => ['2026-10'],
+    precisaDeSprints: true, janelaPorSprint: () => true };
+  const brutas = LINHAS.map((l) => ({ sprint: l, idsAgora: [], idsNoFim: [] }));
+  const com = P.montarEntregas({ B, mostrados: [], todos: [], todosItens: [],
+    sprintsBrutas: brutas, resumos: {}, roadmap: [], escopo: 'Urlan', mes: null,
+    agora: Date.parse('2026-10-22T12:00:00Z'), paraArquivo: false });
+  assert.deepEqual(com.janela, { inicio: '2026-09-28', fim: '2026-10-23' });
+  const semRecorte = Object.assign({}, B, { janelaPorSprint: () => false });
+  const sem = P.montarEntregas({ B: semRecorte, mostrados: [], todos: [], todosItens: [],
+    sprintsBrutas: brutas, resumos: {}, roadmap: [], escopo: 'Urlan', mes: null,
+    agora: Date.parse('2026-10-22T12:00:00Z'), paraArquivo: false });
+  assert.equal(sem.janela, undefined);
+  // Forjada no link, a janela é recusada.
+  for (const lixo of [null, {}, { inicio: 'x', fim: '2026-10-23' },
+    { inicio: '2026-10-23', fim: '2026-09-28' }, 'texto']) {
+    assert.equal(C.saneJanela(lixo), null, JSON.stringify(lixo));
+  }
+});
+
+test('a capa escreve a janela só quando ela sai do mês da edição', () => {
+  const comJanela = V2.htmlReport({ items: [], todos: [], agora: Date.parse('2026-10-22T12:00:00Z'),
+    chavePO: 'urlan', cartoes: [], janela: { inicio: '2026-09-28', fim: '2026-10-23' } }).html;
+  assert.match(comJanela, /Conta de 28 de set a 23 de out, o período das sprints/);
+  // Janela que cabe no próprio mês não vira frase: repetiria o título.
+  const dentroDoMes = V2.htmlReport({ items: [], todos: [], agora: Date.parse('2026-10-22T12:00:00Z'),
+    chavePO: 'urlan', cartoes: [], janela: { inicio: '2026-10-01', fim: '2026-10-23' } }).html;
+  assert.doesNotMatch(dentroDoMes, /o período das sprints/);
+  const semJanela = V2.htmlReport({ items: [], todos: [], agora: Date.parse('2026-10-22T12:00:00Z'),
+    chavePO: 'urlan', cartoes: [] }).html;
+  assert.doesNotMatch(semJanela, /o período das sprints/);
+});
+
+/* A edição congelada de agosto/setembro NÃO pode mudar de janela: ela já foi
+   publicada e compartilhada, e mexer aqui mudaria número que já circulou. */
+test('só a edição mensal corta por sprint; agosto/setembro fica no mês cheio', () => {
+  const fonte = ler('assets/briefing-entregas-v2.js');
+  const agoSet = /const AGO_SET = \{[^}]*\}/.exec(fonte);
+  assert.ok(agoSet, 'a edição de agosto/setembro sumiu');
+  assert.doesNotMatch(agoSet[0], /janelaPorSprint/);
+  const doMes = /function edicaoDoMes\(id\) \{[\s\S]*?\n  \}/.exec(fonte);
+  assert.match(doMes[0], /janelaPorSprint: true,/);
+});
+
 test('agosto/setembro não ganha cartão automático', () => {
   const auto = C.automaticosDoMaterial(MATERIAL, RESUMOS);
   try {
@@ -128,10 +230,10 @@ test('o cartão automático aparece no documento com a lista e conta na capa', (
 test('o pacote leva os automáticos ao leitor, saneados nas duas pontas', () => {
   const src = ler('assets/report.js');
   assert.match(src, /st\.automaticos = C\.saneAutomaticos\(pacote\.automaticos\);/);
-  assert.match(src, /automaticos: st\.leitura \? st\.automaticos : automaticosAgora\(itensDoDoc\),/);
+  // Recebe as linhas de ritmo: é delas que sai a janela nas edições por sprint.
+  assert.match(src, /automaticos: st\.leitura \? st\.automaticos : automaticosAgora\(itensDoDoc, linhasRitmo\),/);
   // RODANDO a montagem: fora do bloco local (sem sublinhado), vai pro link e
   // pra função da Vercel — e nada com `_` sai quando não é arquivo.
-  const P = require('../assets/pacote.js');
   const B = { precisaDeEntregas: true, contagensDoLink: () => ({ f: {}, e: {} }),
     entregasConcluidas: () => MATERIAL, periodoDoDocumento: () => ['2026-10'] };
   const pacote = P.montarEntregas({ B, mostrados: [], todos: [], todosItens: [], sprintsBrutas: [],

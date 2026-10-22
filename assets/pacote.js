@@ -244,13 +244,26 @@
     })).filter((x) => x.nome);
   }
 
+  /* A JANELA DAS ENTREGAS desta edição. Uma função só, usada pelos DOIS
+     caminhos (o pacote e a conta ao vivo da tela do PO): se cada um calculasse
+     o seu, a tela dele e o documento publicado contariam períodos diferentes —
+     exatamente o que o recorte por responsável já teve que consertar uma vez. */
+  function recorteDoPeriodo(B, linhas) {
+    return (typeof B.janelaPorSprint === 'function' && B.janelaPorSprint())
+      ? C.recorteDasSprints(linhas) : null;
+  }
+
   /* OS CARTÕES AUTOMÁTICOS: o mesmo material do bloco `_entregas`, reduzido ao
      que pode ir a público (C.automaticosDoMaterial). Só no documento que
-     declara `precisaDeEntregas`. */
-  function automaticos({ B, itens, todos, resumos }) {
+     declara `precisaDeEntregas`.
+
+     `linhas` são as linhas de ritmo que a tela já montou — é delas que sai a
+     janela. Sem elas, cai no mês cheio. */
+  function automaticos({ B, itens, todos, resumos, linhas }) {
     if (B.precisaDeEntregas !== true || typeof B.entregasConcluidas !== 'function') return [];
     const material = B.entregasConcluidas(itens, todos,
-      typeof B.periodoDoDocumento === 'function' ? B.periodoDoDocumento() : []);
+      typeof B.periodoDoDocumento === 'function' ? B.periodoDoDocumento() : [],
+      recorteDoPeriodo(B, linhas));
     return C.automaticosDoMaterial(material, resumos || {});
   }
 
@@ -285,9 +298,15 @@
     /* O material das entregas do período, UMA vez: dele saem os cartões
        automáticos (sempre) e o bloco local `_entregas` (só na publicação). Só
        no documento que declara `precisaDeEntregas`. */
+    /* A JANELA DAS ENTREGAS, quando a edição se alinha às sprints: do começo da
+       primeira sprint que fecha no período até o fim da última. Sai das linhas
+       de ritmo que acabaram de ser montadas — elas JÁ são as sprints desta
+       edição, então não há segunda consulta nem risco de as duas divergirem.
+       Sem sprint com data, `recorteDasSprints` devolve null e vale o mês cheio. */
+    const recorte = recorteDoPeriodo(B, ritmoLinhas);
     const material = (B.precisaDeEntregas === true && typeof B.entregasConcluidas === 'function')
       ? B.entregasConcluidas(mostrados, todos,
-        typeof B.periodoDoDocumento === 'function' ? B.periodoDoDocumento() : [])
+        typeof B.periodoDoDocumento === 'function' ? B.periodoDoDocumento() : [], recorte)
       : null;
     return Object.assign(cabecalho, {
       contagens: B.contagensDoLink(mostrados, todos),
@@ -300,6 +319,12 @@
          linha de resumo. */
       automaticos: B.precisaDeEntregas === true
         ? C.automaticosDoMaterial(material, resumos || {}) : undefined,
+      /* A JANELA VIAJA JUNTO, e não é recalculada do outro lado: ela descreve o
+         recorte que gerou ESTES números. Um pacote montado no mês cheio (a
+         edição congelada, ou a função antes deste deploy) chega sem ela, e o
+         documento não afirma janela nenhuma — melhor calado que contradizendo
+         a própria conta. */
+      janela: recorte || undefined,
       _descricoes: (paraArquivo && pendentes && pendentes.length) ? pendentes : undefined,
       _entregas: (paraArquivo && material && material.itens.length) ? material : undefined,
     });
@@ -307,7 +332,7 @@
 
   return {
     CAMPOS, CAMPOS_PAI, NIVEIS_ACIMA,
-    buscarItens, buscarPais, buscarRitmo, buscarTudo,
+    buscarItens, buscarPais, buscarRitmo, buscarTudo, recorteDoPeriodo,
     ritmoDe, descricoesPendentes, saneRitmo, automaticos, montarEntregas,
   };
 });
