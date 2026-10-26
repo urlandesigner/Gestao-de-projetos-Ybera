@@ -1299,3 +1299,41 @@ test('capa avisa quando o período ainda está em andamento', () => {
   // Período de dois meses ainda aberto diz "Período".
   assert.match(selo(capa(['2026-08', '2026-09'], Date.parse('2026-09-10T12:00:00Z'))), /Período em andamento/);
 });
+
+/* O RÓTULO DA LISTA DO CARTÃO.
+
+   Em 26/10/2026 o Urlan leu o cartão "Melhorias no checkout (Ybera USA)" — selo
+   "em andamento", cinco itens embaixo — como "em checkout só existe isto, e
+   está em andamento". É o oposto do que o cartão conta: os cinco estão
+   entregues, e o selo fala da FEATURE, que ainda tem PBI em aberto.
+
+   Duas informações faltavam, e nenhuma dava pra deduzir do que estava na tela:
+   que a lista é só o período, e que a frente continua. O rótulo nomeia a lista;
+   com ela nomeada, o selo volta a ser do único assunto que sobra, a frente.
+
+   Isto não se vê num teste de "existe uma lista": a lista renderiza igual com e
+   sem o rótulo, e o mal-entendido é silencioso. */
+test('a lista do cartão diz que é o entregue no período', () => {
+  const html = BE.htmlReport({
+    items: [], todos: [], agora: AGORA, chavePO: 'urlan',
+    cartoes: [{
+      titulo: 'Melhorias no checkout', iniciativa: 'Checkout', status: 'andamento',
+      entregues: [{ titulo: 'Limite de caracteres', resumo: 'Avisa a cliente.' }],
+    }],
+  }).html;
+  const i = html.indexOf('rl-frente-rotulo');
+  assert.notEqual(i, -1, 'a lista perdeu o rótulo e volta a ser ambígua');
+  assert.match(html.slice(i, i + 120), /Entregue no período/);
+  // E vem ANTES da lista: depois dela, nomearia o que o leitor já leu errado.
+  assert.ok(i < html.indexOf('rl-frente-itens'), 'o rótulo caiu depois da lista');
+});
+
+test('cartão sem lista não ganha rótulo solto', () => {
+  /* Rótulo sem lista anuncia um bloco que não existe. O cartão escrito à mão
+     que só tem texto continua como era. */
+  const html = BE.htmlReport({
+    items: [], todos: [], agora: AGORA, chavePO: 'urlan',
+    cartoes: [{ titulo: 'Compliance', iniciativa: 'Google', status: 'entregue', resumo: ['Uma linha.'] }],
+  }).html;
+  assert.doesNotMatch(html, /rl-frente-rotulo/);
+});

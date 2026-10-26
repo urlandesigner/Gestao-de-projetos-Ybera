@@ -165,7 +165,10 @@ test('o escopo da linha é o que ficou MAIS o que saiu — a conta tem que fecha
   const html = V2.secaoRitmo([SPRINTS[1]]);
   // Sprint 19: 2 entregues, 2 na sprint hoje, 3 transbordaram → 2 de 5.
   assert.match(html, /<span class="rt-placar">2\/5<\/span>/);
-  assert.match(html, /<b>3<\/b> transbordaram/);
+  /* A frase inteira, e não só o número: "3 transbordaram" deixava o leitor
+     perguntando pra onde foram. Pedido do Urlan em 26/10/2026. Casar só o
+     número aqui faria o complemento sumir sem ninguém notar. */
+  assert.match(html, /<b>3<\/b> transbordaram para a sprint seguinte/);
 });
 
 test('transbordo zero não vira "0 transbordaram"', () => {
@@ -176,7 +179,7 @@ test('transbordo zero não vira "0 transbordaram"', () => {
 
 test('singular e plural', () => {
   const um = V2.secaoRitmo([{ nome: 'S', start: '2026-09-14T00:00:00Z', finish: '2026-09-25T00:00:00Z', entregues: 0, total: 0, transbordaram: 1 }]);
-  assert.match(um, /<b>1<\/b> transbordou/);
+  assert.match(um, /<b>1<\/b> transbordou para a sprint seguinte/);
   assert.match(V2.secaoRitmo([SPRINTS[0]]), /2 sprints|1 sprint/);
   assert.match(V2.secaoRitmo([SPRINTS[0]]), /<p class="rl-sec-conta">1 sprint<\/p>/);
   assert.match(V2.secaoRitmo(SPRINTS), /<p class="rl-sec-conta">2 sprints<\/p>/);

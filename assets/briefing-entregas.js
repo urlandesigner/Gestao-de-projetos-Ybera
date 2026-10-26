@@ -545,8 +545,21 @@
      resumo embaixo do título quando ela existe. O título da PBI é jargão de
      time; a linha (assets/resumos.json) é a tradução — a mesma da aba
      Acompanhar, pra mesma PBI não ter duas explicações. */
+  /* O RÓTULO DA LISTA (26/10/2026).
+
+     Sem ele o cartão escondia duas coisas de quem lê: que a lista é só o que
+     SAIU no período, e que a frente pode ter trabalho fora dela. O selo diz o
+     segundo, mas ele mora no cabeçalho, colado no título, e lê como se
+     descrevesse a lista logo abaixo — então "Melhorias no checkout · em
+     andamento" com cinco itens virava "em checkout só existe isto, e está em
+     andamento". O oposto do que o cartão conta: os cinco estão entregues.
+
+     Rótulo e não frase de fecho: uma linha antes da lista arruma a leitura das
+     duas, porque nomeia o que a lista é. Com a lista nomeada, o selo volta a
+     ser do único assunto que sobrou pra ele, a frente. */
   function listaEntregue(itens) {
-    return `<ul class="rl-frente-itens">${itens.map((x) => `<li>
+    return `<p class="rl-frente-rotulo">Entregue no período</p>
+      <ul class="rl-frente-itens">${itens.map((x) => `<li>
           <span class="rl-frente-item-titulo">${esc(x.titulo)}</span>
           ${x.resumo ? `<span class="rl-frente-item-resumo">${esc(x.resumo)}</span>` : ''}
         </li>`).join('')}</ul>`;

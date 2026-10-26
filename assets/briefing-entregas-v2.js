@@ -193,7 +193,8 @@
   /* Uma linha por sprint.
 
      O escopo da linha é o que ESTÁ nela mais o que SAIU dela — é a conta que
-     fecha: "2 de 5 entregues, 3 transbordaram" se lê inteira. Dizer só "2 de 2"
+     fecha: "2 de 5 entregues, 3 transbordaram para a sprint seguinte" se lê
+     inteira. Dizer só "2 de 2"
      seria verdade sobre a sprint de hoje e mentira sobre a sprint que
      aconteceu, que é o que o documento conta.
 
@@ -309,7 +310,7 @@
         ${estado === 'futura' ? '' : `<span class="rt-feito" style="width:${pct(entregues)}%"></span>
         <span class="rt-saiu" style="width:${pct(saiu)}%"></span>`}
       </span>
-      ${saiu ? `<span class="rt-nums"><span class="rt-n rt-amb"><b>${saiu}</b> ${saiu === 1 ? 'transbordou' : 'transbordaram'}</span></span>` : ''}`;
+      ${saiu ? `<span class="rt-nums"><span class="rt-n rt-amb"><b>${saiu}</b> ${saiu === 1 ? 'transbordou' : 'transbordaram'} para a sprint seguinte</span></span>` : ''}`;
     /* SEM ITENS NÃO HÁ O QUE DOBRAR, e aí o cartão não vira `details`: seta que
        abre o nada é promessa falsa, e `summary` vazio ainda recebe foco do
        teclado — o leitor tabula até um controle que não faz coisa alguma.

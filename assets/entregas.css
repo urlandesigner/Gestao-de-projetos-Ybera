@@ -227,6 +227,19 @@ body.pagina-entregas {
 .rl-titulo span { display: block; }
 /* Linha de situação: diz o que o documento é. Largura de leitura curta de
    propósito — é uma frase, não um parágrafo. */
+/* O rótulo da lista: diz que o que vem abaixo é o ENTREGUE, e não a frente
+   inteira. Mesma régua da retranca da capa — maiúsculas pequenas e apagadas —,
+   porque é a mesma função: nomear o bloco sem competir com ele. */
+.rl-frente-rotulo {
+  margin: 0.9rem 0 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mudo);
+}
+.rl-frente-rotulo + .rl-frente-itens { margin-top: 0.4rem; }
+
 /* A lista do cartão automático (15/10/2026): título da PBI em peso de texto
    e a linha de resumo apagada embaixo, a mesma anatomia dos itens da aba
    Acompanhar. Sem marcador: o fio entre os itens já separa. */

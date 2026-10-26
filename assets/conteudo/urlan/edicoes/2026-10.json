@@ -43,7 +43,7 @@
       "status": "andamento",
       "resumo": [
         "Fizemos um envio real de produto para validar o fluxo de entrega. O pedido chegou corretamente, mas alguns pontos precisaram de acionamento manual junto ao time de distribuição.",
-        "Os próximos passos são mais dois envios, agora depois do alinhamento entre os times envolvidos. Em paralelo, o time do João Nobrega está mapeando e desenhando o fluxo do caminho não feliz."
+        "Estavam previstos mais dois envios de teste. O do kit de cápsulas já foi realizado; falta o segundo. Em paralelo, o time do João Nobrega está mapeando e desenhando o fluxo do caminho não feliz."
       ],
       "contaFixa": 1
     },
@@ -70,10 +70,10 @@
     },
     {
       "titulo": "Live na loja",
-      "iniciativa": "Black November",
+      "iniciativa": "Lives Black November",
       "foraDoRoadmap": true,
       "resumo": [
-        "Configuramos o ambiente de live dentro da loja."
+        "Configuramos o ambiente de live dentro da loja. O ambiente já está disponível para ser configurado com os dados da nova live."
       ],
       "contaFixa": 1,
       "status": "entregue"
