@@ -985,6 +985,31 @@
       const n = contaDeCartoes(g.cards);
       return n ? plural(n, 'item', 'itens') : '';
     };
+
+    /* DE ONDE VEIO ESTA SEÇÃO (26/10/2026).
+
+       A capa diz "Projetos do roadmap contemplados neste relatório: 2" e o
+       leitor desce por sete seções sem saber quais duas são. A régua é a MESMA
+       do número — `ehProjeto`, logo acima —, então o selo é conferível contra a
+       capa e contra as barras do Gantt lá embaixo; se divergirem, um dos dois
+       está mentindo e dá pra ver.
+
+       "Fora do roadmap" e não "suporte e solicitações": o que esses grupos têm
+       em comum é só não estarem no roadmap. O "Novo app de brindes" é um
+       aplicativo que a Ybera construiu e o Shipsmart é validação de integração
+       de entrega — chamar os dois de suporte seria mais errado que não dizer
+       nada. O selo afirma o fato; o motivo é de quem escreve o cartão.
+
+       O grupo órfão fica de fora: ele já se chama "Outras entregas", e selo que
+       repete o título é ruído. */
+    const origemDoGrupo = (g) => {
+      if (g.orfao) return '';
+      return ehProjeto(g) ? 'Projeto do roadmap' : 'Fora do roadmap';
+    };
+    /* Junto da contagem, separado por um ponto — e não no título. O h2 é o que
+       o leitor procura ao percorrer o documento; pendurar o selo nele faria a
+       varredura passar por duas informações onde havia uma. */
+    const legendaDoGrupo = (g) => [contaDoGrupo(g), origemDoGrupo(g)].filter(Boolean).join(' · ');
     // O número grande da capa é a soma das frentes. Antes ele contava os PBIs
     // fechados no período, uma régua diferente da do corpo: a capa dizia 28 e o
     // leitor contava 8 entregas embaixo. Agora é a mesma conta, e some as seções
@@ -1007,7 +1032,7 @@
           // PBIs do épico daquela frente fecharam no período, que é número que
           // não está à vista em lugar nenhum.
           id: (agrupar === 'epico' ? 'epico-' : 'ini-') + g.id, titulo: g.nome,
-          conta: contaDoGrupo(g),
+          conta: legendaDoGrupo(g),
           corpo: corpoEntregasRecentes(g.cards, false),
         });
       }

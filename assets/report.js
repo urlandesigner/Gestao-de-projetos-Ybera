@@ -226,9 +226,9 @@ async function carregarEdicao(chave) {
     }
     /* 404 é "esta PO ainda não escreveu esta edição", que é o estado normal de
        quem acabou de entrar — não é erro e não vai pro console. */
-    edicoes[chave] = resp.ok ? C.saneEdicao(await resp.json()).cartoes : [];
+    edicoes[chave] = resp.ok ? C.saneEdicao(await resp.json()) : { cartoes: [], frentes: {} };
   } catch (e) {
-    edicoes[chave] = [];
+    edicoes[chave] = { cartoes: [], frentes: {} };
     console.warn('[Report] não deu pra ler a edição de ' + chave + ': o documento abre sem cartões.'
       + ' Motivo: ' + e.message);
   }
@@ -238,13 +238,17 @@ async function carregarEdicao(chave) {
 /* Os cartões de quem está selecionado. Dispara a busca na primeira vez que
    alguém pergunta — o render é quem sabe de quem é o documento, e orquestrar
    isso antes exigiria saber a identidade antes de ela chegar. */
-function cartoesDaVez() {
+function edicaoDaVez() {
   const chave = C.chaveDePessoa(st.leitura ? st.escopo : assinatura(respAtivo()));
-  if (!chave) return [];
-  if (chave in edicoes) return edicoes[chave] || [];
+  if (!chave) return null;
+  if (chave in edicoes) return edicoes[chave];
   carregarEdicao(chave);
-  return [];
+  return null;
 }
+function cartoesDaVez() { return (edicaoDaVez() || {}).cartoes || []; }
+/* Como cada frente se apresenta: seção própria, e lista ou cartão por item.
+   Vem do mesmo arquivo dos cartões escritos — é decisão do PO sobre o mês. */
+function frentesDaVez() { return (edicaoDaVez() || {}).frentes || {}; }
 
 /* DE QUEM É O ROADMAP DESTE DOCUMENTO.
 
@@ -575,6 +579,7 @@ function render() {
        dela divergem na primeira vez que alguém mudar o nome no DevOps. */
     chavePO: C.chaveDePessoa(st.leitura ? st.escopo : assinatura(respAtivo())),
     cartoes: cartoesDaVez(),
+    frentes: frentesDaVez(),
     automaticos: st.leitura ? st.automaticos : automaticosAgora(itensDoDoc, linhasRitmo),
     janela: janelaDoDoc,
     unidade: UNIDADE,
@@ -1295,6 +1300,12 @@ async function temConteudoAoVivo(id, chave) {
   const pacote = await pedirAoVivo(id);
   if (!pacote) return null; // a função não respondeu: quem decide é o arquivo
   if (Array.isArray(pacote.automaticos) && pacote.automaticos.length) return true;
+  /* SPRINT EM CURSO É CONTEÚDO (26/10/2026). Sem isto, a edição nova só abria
+     quando a primeira PBI dela fechasse — e começo de sprint é justamente
+     quando nada fechou ainda, que é quando o PO mais quer acompanhar. A aba
+     Acompanhar já tem o que mostrar no primeiro dia: a sprint rodando, com o
+     placar zerado. A de Entregas fica vazia, e isso é a verdade. */
+  if (Array.isArray(pacote.sprints) && pacote.sprints.length) return true;
   return existe(C.caminhoDoConteudo(chave || DONO_HISTORICO, 'edicoes/' + encodeURIComponent(id) + '.json'));
 }
 

@@ -1148,7 +1148,37 @@
     const o = doc && typeof doc === 'object' ? doc : {};
     const periodo = (Array.isArray(o.periodo) ? o.periodo : [])
       .filter((m) => typeof m === 'string' && /^\d{4}-\d{2}$/.test(m));
-    return { periodo, cartoes: saneCartoes(o.cartoes) };
+    return { periodo, cartoes: saneCartoes(o.cartoes), frentes: saneFrentes(o.frentes) };
+  }
+
+  /* COMO CADA FRENTE SE APRESENTA NO DOCUMENTO (26/10/2026).
+
+     O cartão automático nasce de uma Feature e cai em "Outras entregas" quando
+     nenhuma linha do roadmap a reivindica. Faltava um jeito de o PO dizer
+     "esta frente é uma seção, e quero as entregas dela como cartões" sem
+     inventar uma linha de roadmap — porque linha de roadmap desenha barra no
+     Gantt e conta como projeto na capa, e nem toda frente é projeto.
+
+     Mora no arquivo da EDIÇÃO, junto dos cartões escritos: é decisão de como
+     aquele mês se apresenta, e é do PO. A chave é o id da Feature, em texto,
+     porque chave de objeto JSON é sempre texto.
+
+     `porItem` é a diferença entre um cartão com lista dentro e um cartão por
+     PBI entregue. Os dois saem do mesmo dado; o que muda é o desenho. */
+  function saneFrentes(obj) {
+    const out = {};
+    if (!obj || typeof obj !== 'object') return out;
+    for (const k of Object.keys(obj)) {
+      if (!/^\d+$/.test(k)) continue;
+      const v = obj[k] || {};
+      const iniciativa = String(v.iniciativa || '').trim().slice(0, 80);
+      out[k] = {
+        iniciativa,
+        foraDoRoadmap: v.foraDoRoadmap === true,
+        porItem: v.porItem === true,
+      };
+    }
+    return out;
   }
 
   /* DE ONDE VÊM OS DADOS DE UMA PO, para quem busca sem navegador (a função da
@@ -1856,7 +1886,7 @@
     isAttentionState, typeSlug,
     wiqlBoard, wiqlIteracao, transbordados, initials, inSprint, itensDaIteracao, orderColumnsFallback, filterItems,
     stateBucket, bucketCounts, estaParado, wiqlEpicos, chaveDePessoa, fichaDaPessoa, caminhoDoConteudo,
-    saneCartoes, saneEdicao, automaticosDoMaterial, recorteDasSprints, saneJanela, saneAutomaticos, saneFontes, fimDoPeriodo, periodoFechado,
+    saneCartoes, saneEdicao, saneFrentes, automaticosDoMaterial, recorteDasSprints, saneJanela, saneAutomaticos, saneFontes, fimDoPeriodo, periodoFechado,
     iterationLabel, panoramaKpis, itensAtencao, pendencias, wiqlProdutos, produtos, descendentesConcluidos, epicoDetalhe, reportPorMes, saneRoadmapItens, evolucaoMensal, riscoDoRoadmap, janelaDeSprints, vizinhasDaSprint, placarDeSprint, resumoDeSprint, sprintsDoPeriodo, estadoDaSprint, ritmoDaSprint, FIM_DO_DIA, mapaDeProdutos, ehItemDeManutencao, idsDeManutencao, foraDaManutencao, descricaoLimpa, digitalDoTexto, saneResumos, precisaDeLinha, mesclarResumos, resumoProdutos, pedidoDeDecisao, resumoMensal, briefingDoMes, frentes,
     suavizarRolagem, duracaoRolagem,
     isStale, timeAgoLabel, TERMINAL_STATES,

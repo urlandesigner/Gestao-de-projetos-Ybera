@@ -3,6 +3,13 @@
     "2026-10"
   ],
   "publicadoEm": null,
+  "frentes": {
+    "51943": {
+      "iniciativa": "Melhorias no checkout",
+      "foraDoRoadmap": true,
+      "porItem": true
+    }
+  },
   "cartoes": [
     {
       "titulo": "Tratativas do Google compliance",
@@ -26,10 +33,13 @@
       }
     },
     {
-      "titulo": "Novo app de brindes",
+      "titulo": "App próprio no lugar do Dr Free Gift",
       "iniciativa": "Novo app de brindes",
       "foraDoRoadmap": true,
-      "status": "andamento",
+      "featureIds": [
+        50184
+      ],
+      "status": "entregue",
       "resumo": [
         "Aplicativo próprio, desenvolvido pela Ybera, para as promoções em que a cliente compra um produto e ganha um brinde. Ele atende dois formatos: brinde único e brindes acumulativos.",
         "Ele assume as campanhas de brinde da loja no lugar do Dr Free Gift, o aplicativo de terceiro usado até aqui — que tinha custo mensal e dava conflito no carrinho."

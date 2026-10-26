@@ -92,12 +92,21 @@ test('só edição e PO da lista', async () => {
   assert.equal(pedidos.length, 0, 'pedido inválido não pode chegar ao DevOps');
 });
 
-test('novembro existe a partir de 1º/11 em Brasília, não em UTC', async () => {
+/* A virada de mês é de BRASÍLIA, não de UTC. Desde 26/10/2026 a lista inclui o
+   MÊS SEGUINTE — a sprint que fecha nele já começou —, então a fronteira que
+   este teste guarda andou um mês: em 31/10 às 23h daqui, novembro e dezembro
+   valem (corrente e seguinte) e janeiro não. */
+test('a virada de mês é em Brasília, não em UTC', async () => {
   const { fetchImpl } = devopsFalso();
   const opcoes = (agora) => ({ env, fetchImpl, agora, avisar: () => {} });
-  // 31/10 às 23h de Brasília = 02h UTC de 1º/11: ainda outubro.
-  assert.equal((await responder(pedir('?edicao=2026-11&de=urlan'), opcoes(Date.parse('2026-11-01T02:00:00Z')))).status, 400);
-  assert.equal((await responder(pedir('?edicao=2026-11&de=urlan'), opcoes(Date.parse('2026-11-01T03:30:00Z')))).status, 200);
+  const st = async (ed, agora) => (await responder(pedir('?edicao=' + ed + '&de=urlan'), opcoes(agora))).status;
+  // 31/10 às 23h de Brasília = 02h UTC de 1º/11: ainda outubro, então dezembro não existe.
+  assert.equal(await st('2026-12', Date.parse('2026-11-01T02:00:00Z')), 400);
+  assert.equal(await st('2026-11', Date.parse('2026-11-01T02:00:00Z')), 200, 'novembro é o mês seguinte');
+  // Meia-noite e meia de Brasília em 1º/11: novembro virou o corrente, dezembro entra.
+  assert.equal(await st('2026-12', Date.parse('2026-11-01T03:30:00Z')), 200);
+  // E nunca dois meses à frente.
+  assert.equal(await st('2027-01', Date.parse('2026-11-01T03:30:00Z')), 400);
 });
 
 test('sem token: 503, e nenhum pedido ao DevOps', async () => {

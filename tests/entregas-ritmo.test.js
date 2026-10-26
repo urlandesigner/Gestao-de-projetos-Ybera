@@ -707,11 +707,16 @@ test('cada edição declara período, arquivo publicado e id — e o endereço e
     assert.ok(e.periodo.length > 0 && e.periodo[0] === e.id, `${e.id}: o período não começa na edição`);
     assert.match(e.arquivoDeDados, /^assets\/dados-[a-z0-9-]+\.json$/);
   }
-  // Sem ?edicao=, a mais recente; com ela, a pedida; inventada, a mais recente.
-  assert.equal(V2.edicaoDaUrl('').id, V2.EDICOES[0].id);
+  /* Sem ?edicao=, a primeira que NÃO é o mês seguinte. O mês seguinte está na
+     lista pro seletor e pra função aceitarem, mas abrir nele seria abrir num
+     documento vazio — ver `proxima` no módulo. */
+  const padrao = V2.EDICOES.find((e) => e.proxima !== true);
+  assert.ok(padrao && padrao.proxima !== true);
+  assert.equal(V2.edicaoDaUrl('').id, padrao.id);
+  assert.equal(V2.EDICOES[0].proxima, true, 'o mês seguinte encabeça a lista');
   assert.equal(V2.edicaoDaUrl('?po=1&edicao=2026-08').id, '2026-08');
   assert.deepEqual(V2.edicaoDaUrl('?edicao=2026-08').periodo, ['2026-08', '2026-09']);
-  assert.equal(V2.edicaoDaUrl('?edicao=../../etc').id, V2.EDICOES[0].id, 'id inventado virou edição');
+  assert.equal(V2.edicaoDaUrl('?edicao=../../etc').id, padrao.id, 'id inventado virou edição');
   // Os ids não se repetem: viram nome de arquivo e valor no endereço.
   assert.equal(new Set(V2.EDICOES.map((e) => e.id)).size, V2.EDICOES.length);
 });
@@ -846,7 +851,8 @@ test('a leitura ao vivo cai no arquivo quando a função não responde', () => {
   assert.match(ler, /aplicarPacote\(pacote\);/);
   // Só as edições geradas pela data são ao vivo; agosto/setembro, não.
   const V = require('../assets/briefing-entregas-v2.js');
-  assert.deepEqual(V.EDICOES.map((e) => [e.id, !!e.aoVivo]), [['2026-10', true], ['2026-08', false]]);
+  assert.deepEqual(V.EDICOES.map((e) => [e.id, !!e.aoVivo]),
+    [['2026-11', true], ['2026-10', true], ['2026-08', false]]);
 });
 
 /* A página é servida por CDN. Um documento de acompanhamento entregando a
@@ -1303,23 +1309,33 @@ test('edição sem dados oferece o caminho de volta pra mais recente', () => {
 
 /* A LISTA DE EDIÇÕES SE MONTA PELA DATA (14/10/2026). Cada mês de outubro de
    2026 até o corrente é uma edição; agosto/setembro fica escrito, no fim. */
-test('as edições se montam pela data, sem mês futuro', () => {
+/* O MÊS SEGUINTE ENTRA NA LISTA (26/10/2026). A sprint 22 começou em 26/10 e
+   fecha em novembro: ela pertence à edição de novembro, que só existiria no dia
+   1º. Entre o fim da sprint 21 e a virada do mês, a sprint em curso não estava
+   em relatório nenhum. Ele entra marcado com `proxima`, que é o que o mantém
+   fora da edição que abre por padrão. */
+test('as edições se montam pela data, e o mês seguinte entra marcado', () => {
   const ids = (d) => V2.edicoesAte(d).map((e) => e.id);
-  assert.deepEqual(ids(new Date(2026, 9, 14)), ['2026-10', '2026-08']);
-  assert.deepEqual(ids(new Date(2026, 10, 1)), ['2026-11', '2026-10', '2026-08']);
-  // virada de ano
-  assert.deepEqual(ids(new Date(2027, 0, 5)), ['2027-01', '2026-12', '2026-11', '2026-10', '2026-08']);
-  const nov = V2.edicoesAte(new Date(2026, 10, 1))[0];
+  assert.deepEqual(ids(new Date(2026, 9, 14)), ['2026-11', '2026-10', '2026-08']);
+  assert.deepEqual(ids(new Date(2026, 10, 1)), ['2026-12', '2026-11', '2026-10', '2026-08']);
+  // virada de ano: dezembro traz janeiro do ano seguinte
+  assert.deepEqual(ids(new Date(2026, 11, 3)), ['2027-01', '2026-12', '2026-11', '2026-10', '2026-08']);
+  assert.deepEqual(ids(new Date(2027, 0, 5)), ['2027-02', '2027-01', '2026-12', '2026-11', '2026-10', '2026-08']);
+  // Só o primeiro é o mês seguinte; o resto são meses que já começaram.
+  for (const [i, e] of V2.edicoesAte(new Date(2026, 10, 1)).entries()) {
+    assert.equal(e.proxima === true, i === 0, e.id);
+  }
+  const nov = V2.edicoesAte(new Date(2026, 9, 14))[0];
   assert.equal(nov.rotulo, 'Novembro de 2026');
   assert.equal(nov.rotuloCurto, 'Nov 2026');
   assert.deepEqual(nov.periodo, ['2026-11']);
   assert.equal(nov.arquivoDeDados, 'assets/dados-2026-11.json');
   // Outubro mantém o nome que o documento publicado já serve.
-  assert.equal(V2.edicoesAte(new Date(2026, 10, 1))[1].arquivoDeDados, 'assets/dados-outubro.json');
+  assert.equal(V2.edicoesAte(new Date(2026, 9, 14))[1].arquivoDeDados, 'assets/dados-outubro.json');
 });
 
 test('nos testes o relógio é fixo: a lista não muda com o calendário', () => {
-  assert.deepEqual(V2.EDICOES.map((e) => e.id), ['2026-10', '2026-08']);
+  assert.deepEqual(V2.EDICOES.map((e) => e.id), ['2026-11', '2026-10', '2026-08']);
 });
 
 /* A edição ativa é lida AO VIVO: o report.js escolhe a padrão depois da carga,
@@ -1370,4 +1386,154 @@ test('erro 5xx nos cartões ganha uma segunda tentativa antes de abrir sem eles'
   const corpo = fonteReport.slice(i, fonteReport.indexOf('\n}\n', i));
   assert.match(corpo, /if \(resp\.status >= 500\) \{[\s\S]*?resp = await pedir\(\);/);
   assert.match(corpo, /edicoes\[chave\] = resp\.ok \? C\.saneEdicao/);
+});
+
+/* ---------- CARTÃO ESCRITO ADOTA AS ENTREGAS DA FEATURE ---------- */
+
+/* Declarar `featureIds` num cartão escrito sempre quis dizer "esta frente eu
+   escrevi", e o automático dela saía. Só que saía INTEIRO — e com ele a lista
+   de PBIs entregues. O PO escolhia entre o contexto que ele escreveu e a lista
+   que se mantém sozinha.
+
+   Era a escolha errada de oferecer. Em 26/10/2026 o cartão "Novo app de
+   brindes" explicava a iniciativa toda enquanto a Feature dela entregava um bug
+   em "Outras entregas", como se fossem dois assuntos. Agora o escrito absorve.
+
+   O que estes testes guardam é a borda: o que vem de fora é SÓ a lista. Título,
+   texto, selo, iniciativa e contagem continuam de quem escreveu — senão
+   declarar a Feature passa a sobrescrever o PO em silêncio. */
+const AUTOS = [
+  { feature: { id: 50184, nome: 'Integridade das regras de promoção — loja USA' },
+    epico: { id: 49290, nome: 'Loja Clube USA' }, fechada: false,
+    itens: [{ id: 49931, titulo: '[Bug] Brinde indevido', resumo: 'Corrige o brinde.' }] },
+  { feature: { id: 99999, nome: 'Frente que ninguém escreveu' }, fechada: true,
+    itens: [{ id: 1, titulo: 'Item solto', resumo: '' }] },
+];
+const ESCRITO = {
+  titulo: 'Novo app de brindes', iniciativa: 'Novo app de brindes', foraDoRoadmap: true,
+  featureIds: [50184], status: 'andamento', contaFixa: 1,
+  resumo: ['Aplicativo próprio da Ybera para as promoções de brinde.'],
+};
+/* O <article> DAQUELE cartão. Recortar por texto ("deste título até aquele")
+   engana: entre os dois pode cair o cartão de outra frente, e o teste passa a
+   medir o vizinho. Aconteceu aqui na primeira escrita. */
+function cartaoDe(html, titulo) {
+  const arts = html.split('<article class="rl-frente">').slice(1);
+  const achado = arts.find((a) => a.includes('>' + titulo + '<'));
+  assert.ok(achado, 'não achei o cartão "' + titulo + '"');
+  return achado.split('</article>')[0];
+}
+const monta = (cartoes, automaticos) => V2.htmlReport({
+  items: [], todos: [], agora: Date.parse('2026-10-26T12:00:00Z'), chavePO: 'urlan',
+  cartoes, automaticos, roadmap: [], periodo: ['2026-10'],
+}).html;
+
+test('o cartão escrito adota as entregas da Feature que declara', () => {
+  const html = monta([ESCRITO], AUTOS);
+  const cartao = cartaoDe(html, 'Novo app de brindes');
+  assert.match(cartao, /Entregue no período/);
+  assert.match(cartao, /\[Bug\] Brinde indevido/);
+  // o texto escrito continua lá, e é o dele que manda
+  assert.match(cartao, /Aplicativo próprio da Ybera/);
+  assert.match(cartao, /em andamento/);
+});
+
+test('a frente adotada não aparece duas vezes', () => {
+  /* O defeito que a adoção veio resolver: o contexto num cartão e a entrega da
+     mesma frente noutro, como se fossem dois assuntos. */
+  const html = monta([ESCRITO], AUTOS);
+  assert.doesNotMatch(html, /Integridade das regras de promoção/);
+  // e a frente que ninguém escreveu continua saindo sozinha
+  assert.match(html, /Frente que ninguém escreveu/);
+});
+
+test('lista própria do PO ganha da lista gerada', () => {
+  /* Se ele escreveu os itens à mão, foi porque quis dizer outra coisa que não
+     "o que o board fechou". */
+  const meu = Object.assign({}, ESCRITO, { entregues: [{ titulo: 'O que eu escolhi', resumo: '' }] });
+  const html = monta([meu], AUTOS);
+  assert.match(html, /O que eu escolhi/);
+  assert.doesNotMatch(html, /\[Bug\] Brinde indevido/);
+});
+
+test('cartão sem featureIds não ganha lista nenhuma', () => {
+  const semId = Object.assign({}, ESCRITO);
+  delete semId.featureIds;
+  const html = monta([semId], AUTOS);
+  assert.doesNotMatch(cartaoDe(html, 'Novo app de brindes'), /Entregue no período/);
+  // e sem ninguém cobrindo a 50184, ela volta a sair como cartão próprio
+  assert.match(html, /Integridade das regras de promoção/);
+});
+
+/* ---------- UM CARTÃO POR PBI, QUANDO A FRENTE PEDE ---------- */
+
+/* O cartão com lista dentro responde "o que esta frente entregou". Numa frente
+   larga — "Melhorias no checkout", cinco PBIs que vão de limite de caractere a
+   meio de pagamento — a lista vira um bloco onde cada entrega some dentro da
+   anterior. Pedido do Urlan em 26/10/2026: a frente vira seção e cada entrega
+   vira cartão.
+
+   A ficha mora no arquivo da EDIÇÃO (assets/conteudo/<po>/edicoes/), e não numa
+   linha de roadmap: linha de roadmap desenha barra no Gantt e conta como
+   projeto na capa, e nem toda frente é projeto. */
+const FR_LARGA = {
+  feature: { id: 51943, nome: '[EUA] Melhorias no checkout (Ybera USA)' },
+  epico: { id: 49290, nome: 'Loja Clube USA' }, fechada: false,
+  itens: [
+    { id: 51870, titulo: 'Limite de caracteres', resumo: 'Avisa a cliente.' },
+    { id: 51942, titulo: 'AddressGuard', resumo: 'Confere o endereço.' },
+    { id: 53098, titulo: 'Discovery: One Click Upsell', resumo: '' },
+  ],
+};
+const FICHA = { 51943: { iniciativa: 'Melhorias no checkout', foraDoRoadmap: true, porItem: true } };
+const montaFr = (frentes) => V2.htmlReport({
+  items: [], todos: [], agora: Date.parse('2026-10-26T12:00:00Z'), chavePO: 'urlan',
+  cartoes: [], automaticos: [FR_LARGA], roadmap: [], periodo: ['2026-10'], frentes,
+}).html;
+
+test('a frente que pede vira seção, e cada entrega vira um cartão', () => {
+  const html = montaFr(FICHA);
+  assert.match(html, /<h2 class="rl-sec-titulo">Melhorias no checkout<\/h2>/);
+  for (const t of ['Limite de caracteres', 'AddressGuard', 'Discovery: One Click Upsell']) {
+    assert.ok(cartaoDe(html, t), 'faltou o cartão de ' + t);
+  }
+  // o nome da Feature não vira cartão: quem titula agora é cada PBI
+  assert.doesNotMatch(html, /Melhorias no checkout \(Ybera USA\)/);
+});
+
+test('cada cartão por item conta 1 — a soma da capa não muda', () => {
+  /* Antes um cartão contava os três (contaFixa = itens.length). Agora são três
+     cartões de 1. Muda o desenho, não a conta: se divergirem, a capa passa a
+     dizer um número que o corpo não sustenta. */
+  const html = montaFr(FICHA);
+  assert.match(html, /<p class="rl-sec-conta">3 itens(?: ·|<)/);
+});
+
+test('item sem resumo vira cartão sem parágrafo, não cartão com vazio', () => {
+  const upsell = cartaoDe(montaFr(FICHA), 'Discovery: One Click Upsell');
+  assert.doesNotMatch(upsell, /rl-frente-resumo/);
+});
+
+test('sem ficha, a frente continua saindo como um cartão com lista', () => {
+  /* O desenho de antes é o padrão: quem não declarar nada não vê diferença. */
+  const html = montaFr({});
+  assert.match(html, /Melhorias no checkout \(Ybera USA\)/);
+  assert.match(html, /Entregue no período/);
+  assert.doesNotMatch(html, /<h2 class="rl-sec-titulo">Melhorias no checkout<\/h2>/);
+});
+
+test('a ficha pode dar seção à frente sem trocar o desenho', () => {
+  /* `porItem` é opcional: declarar só a iniciativa tira a frente de "Outras
+     entregas" e mantém o cartão com lista. */
+  const html = montaFr({ 51943: { iniciativa: 'Checkout', foraDoRoadmap: true } });
+  assert.match(html, /<h2 class="rl-sec-titulo">Checkout<\/h2>/);
+  assert.match(html, /Entregue no período/);
+});
+
+test('a ficha só aceita id de Feature, e nunca inventa seção', () => {
+  const C2 = require('../assets/core.js');
+  const s = C2.saneFrentes({ 51943: { iniciativa: 'Checkout', porItem: true }, 'solta': { porItem: true } });
+  assert.deepEqual(Object.keys(s), ['51943']);
+  assert.equal(C2.saneFrentes({ 1: {} })['1'].iniciativa, '');
+  assert.equal(C2.saneFrentes(null) && Object.keys(C2.saneFrentes(null)).length, 0);
 });

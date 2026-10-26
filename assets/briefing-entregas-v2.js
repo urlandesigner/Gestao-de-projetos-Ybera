@@ -122,11 +122,34 @@
   // As edições que existem em `agora`: do mês corrente até outubro de 2026,
   // mais agosto/setembro. Mês pela data LOCAL — no Brasil, 31/10 às 22h ainda é
   // outubro, e em UTC já seria novembro.
+  /* O MÊS SEGUINTE JÁ ENTRA NA LISTA (26/10/2026).
+
+     A sprint 22 começou em 26/10 e fecha em novembro, então ela pertence à
+     edição de novembro — que só existiria no dia 1º. De 24/10 até lá a sprint
+     em curso não aparecia em relatório NENHUM: nem no de outubro, porque ela
+     não fecha nele, nem no de novembro, porque ele não existia. Era a última
+     régua de calendário que tinha sobrado depois de o conteúdo passar a ser
+     cortado por sprint.
+
+     Entra sempre, e não "quando a sprint começa": a lista é montada antes de
+     qualquer dado do board, aqui e na função da Vercel, que valida o parâmetro
+     antes de consultar o DevOps. O preço é uma entrada a mais no seletor nas
+     primeiras semanas do mês, abrindo um documento que diz, com todas as
+     letras, que nenhuma sprint começou nele. Quem decide qual edição ABRE por
+     padrão é outro critério, o de ter conteúdo — e sprint em curso conta. */
   function edicoesAte(agora) {
     const d = agora instanceof Date && !Number.isNaN(agora.getTime()) ? agora : new Date();
     const lista = [];
     let ano = d.getFullYear();
     let mes = d.getMonth();
+    const seguinte = mes === 11
+      ? (ano + 1) + '-01'
+      : ano + '-' + String(mes + 2).padStart(2, '0');
+    /* `proxima` existe por UMA razão: a edição que abre sem `?edicao=` é a
+       primeira da lista, e o mês seguinte não pode ser essa. Ele costuma estar
+       vazio, e um documento que abre vazio lê como quebrado. Ele fica na
+       lista — pro seletor e pra função aceitarem — e fora do padrão. */
+    lista.push(Object.assign(edicaoDoMes(seguinte), { proxima: true }));
     for (;;) {
       const id = ano + '-' + String(mes + 1).padStart(2, '0');
       if (id < PRIMEIRO_MES) break;
@@ -154,8 +177,10 @@
   function idDaUrl(search) {
     try { return new URLSearchParams(search || '').get('edicao') || ''; } catch (e) { return ''; }
   }
+  // Sem `?edicao=`, a primeira que NÃO é o mês seguinte: ver `proxima`.
+  const PADRAO = EDICOES.find((e) => e.proxima !== true) || EDICOES[0];
   function edicaoDaUrl(search) {
-    return EDICOES.find((e) => e.id === idDaUrl(search)) || EDICOES[0];
+    return EDICOES.find((e) => e.id === idDaUrl(search)) || PADRAO;
   }
   // O endereço PEDIU uma edição que existe? Aí ninguém escolhe por ele.
   function edicaoPedidaNaUrl(search) {
@@ -544,15 +569,83 @@
 
   /* Os escritos primeiro, depois os automáticos das frentes que nenhum cartão
      escrito cobre. "Cobrir" é declarar a Feature em `featureIds`: é o jeito de
-     o PO dizer "esta frente eu escrevi", e o automático sai da frente dele. */
-  function comAutomaticos(escritos, automaticos, roadmap) {
+     o PO dizer "esta frente eu escrevi", e o automático sai da frente dele.
+
+     COBRIR PASSOU A SER ADOTAR (26/10/2026). Antes o automático sumia inteiro,
+     e com ele a lista de PBIs entregues — o PO escolhia entre o contexto que
+     ele escreveu e a lista que se mantém sozinha. Era a escolha errada de
+     oferecer: o cartão do "Novo app de brindes" explicava a iniciativa toda
+     enquanto a Feature dela entregava um bug em "Outras entregas", como se
+     fossem dois assuntos.
+
+     Agora o escrito ABSORVE as entregas das frentes que declara. Tudo o mais
+     continua dele — título, texto, selo, iniciativa, contagem —, porque
+     declarar a Feature é dizer "esta frente eu escrevi", e o que foi escrito
+     ganha do que foi gerado. Só a lista vem de fora, e só quando ele não trouxe
+     a própria. */
+  /* UM CARTÃO POR PBI ENTREGUE, quando a frente pede (26/10/2026).
+
+     O cartão com lista dentro responde "o que esta frente entregou". Para uma
+     frente larga — "Melhorias no checkout", cinco PBIs que vão de limite de
+     caractere a meio de pagamento — a lista vira um bloco onde cada entrega
+     some dentro da anterior. Nesse caso cada entrega vale um cartão, e a frente
+     vira a seção que os reúne.
+
+     Cada cartão conta 1: a soma da capa é a mesma de antes, quando um cartão
+     contava os cinco. Muda o desenho, não a conta.
+
+     Todos são `entregue` porque estão na lista do que FECHOU no período. O que
+     esta forma não diz é que a frente continua — o cartão com lista dizia, no
+     selo. Quem precisar do aviso usa a forma com lista. */
+  function cartoesPorItem(fr, ficha) {
+    return (fr.itens || []).map((it) => {
+      const cartao = {
+        titulo: it.titulo,
+        featureIds: [fr.feature.id],
+        contaFixa: 1,
+        status: 'entregue',
+        automatico: true,
+      };
+      if (it.resumo) cartao.resumo = [it.resumo];
+      if (ficha.iniciativa) cartao.iniciativa = ficha.iniciativa;
+      if (ficha.foraDoRoadmap) cartao.foraDoRoadmap = true;
+      return cartao;
+    });
+  }
+
+  function comAutomaticos(escritos, automaticos, roadmap, frentes) {
     if (!ATIVA.cartoesAutomaticos || !Array.isArray(automaticos) || !automaticos.length) return escritos;
+    const fichas = (frentes && typeof frentes === 'object') ? frentes : {};
+    /* Feature → as entregas dela. Um cartão pode declarar várias Features, e
+       duas Features podem ter entregado no mesmo período: a lista do cartão é a
+       soma, na ordem em que ele declarou. */
+    const entregasDaFeature = new Map();
+    for (const fr of automaticos) {
+      if (fr && fr.feature) entregasDaFeature.set(Number(fr.feature.id), Array.isArray(fr.itens) ? fr.itens : []);
+    }
     const cobertas = new Set();
-    for (const c of escritos) for (const f of (Array.isArray(c.featureIds) ? c.featureIds : [])) cobertas.add(Number(f));
+    const adotados = escritos.map((c) => {
+      const ids = Array.isArray(c.featureIds) ? c.featureIds.map(Number).filter((n) => Number.isFinite(n)) : [];
+      for (const f of ids) cobertas.add(f);
+      /* Lista própria manda: se o PO escreveu os itens à mão, foi porque quis
+         dizer outra coisa que não "o que o board fechou". */
+      if (!ids.length || (Array.isArray(c.entregues) && c.entregues.length)) return c;
+      const vindas = ids.reduce((acc, f) => acc.concat(entregasDaFeature.get(f) || []), []);
+      return vindas.length ? Object.assign({}, c, { entregues: vindas }) : c;
+    });
     const porFeature = iniciativaPorFeature(roadmap);
-    const novos = automaticos.filter((fr) => fr && fr.feature && !cobertas.has(Number(fr.feature.id)))
-      .map((fr) => cartaoAutomatico(fr, porFeature.get(Number(fr.feature.id))));
-    return escritos.concat(novos);
+    const novos = [];
+    for (const fr of automaticos) {
+      if (!fr || !fr.feature || cobertas.has(Number(fr.feature.id))) continue;
+      /* A ficha do PO manda na seção; sem ela vale a linha do roadmap, que é
+         como era antes de a ficha existir. */
+      const ficha = fichas[String(fr.feature.id)] || null;
+      if (ficha && ficha.porItem) { novos.push.apply(novos, cartoesPorItem(fr, ficha)); continue; }
+      const cartao = cartaoAutomatico(fr, (ficha && ficha.iniciativa) || porFeature.get(Number(fr.feature.id)));
+      if (ficha && ficha.foraDoRoadmap) cartao.foraDoRoadmap = true;
+      novos.push(cartao);
+    }
+    return adotados.concat(novos);
   }
 
   /* O período e os cartões DESTA edição vão pro base como opção. Quem chamou
@@ -561,7 +654,8 @@
   function htmlReport(o) {
     const entrada = Object.assign({}, o, {
       periodo: (o && Array.isArray(o.periodo) && o.periodo.length) ? o.periodo : ATIVA.periodo,
-      cartoes: comAutomaticos((o && Array.isArray(o.cartoes)) ? o.cartoes : [], (o || {}).automaticos, (o || {}).roadmap),
+      cartoes: comAutomaticos((o && Array.isArray(o.cartoes)) ? o.cartoes : [],
+        (o || {}).automaticos, (o || {}).roadmap, (o || {}).frentes),
     });
     const r = base.htmlReport(entrada);
     if (!r || !r.html) return r;

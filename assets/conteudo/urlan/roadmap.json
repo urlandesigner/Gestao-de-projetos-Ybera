@@ -17,7 +17,10 @@
       "titulo": "Translate loja",
       "inicio": "2026-08-01",
       "fim": "2026-09-30",
-      "status": "concluido"
+      "status": "concluido",
+      "featureIds": [
+        49920
+      ]
     },
     {
       "titulo": "Nova Homepage",
@@ -35,7 +38,10 @@
       "titulo": "Melhorias Review",
       "inicio": "2026-09-01",
       "fim": "2026-09-30",
-      "status": "concluido"
+      "status": "concluido",
+      "featureIds": [
+        50905
+      ]
     },
     {
       "titulo": "Novo Tema da Loja USA/Global",

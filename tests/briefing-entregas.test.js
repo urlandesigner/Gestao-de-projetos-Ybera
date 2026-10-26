@@ -895,7 +895,9 @@ test('contagem: cada seção conta a SUA Feature, não o épico inteiro', () => 
     { titulo: 'Tradução', iniciativa: 'Tradução', epicoId: 700, featureIds: [712], status: 'teste', resumo: 'x' },
   ];
   const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
-  const contas = [...h.matchAll(/<h2 class="rl-sec-titulo">([^<]+)<\/h2>\s*<p class="rl-sec-conta">([^<]+)</g)]
+  /* Só a CONTAGEM: a legenda ganhou um selo de origem depois do ponto
+     (26/10/2026), e este teste é sobre o número de cada seção. */
+  const contas = [...h.matchAll(/<h2 class="rl-sec-titulo">([^<]+)<\/h2>\s*<p class="rl-sec-conta">([^<·]+?)\s*(?:·[^<]*)?</g)]
     .map((m) => [m[1], m[2]]);
   assert.deepEqual(contas, [['Nova Homepage', '7 itens'], ['Nova PDP', '5 itens'], ['Tradução', '4 itens']]);
   // O teste que importa: os três somam o épico inteiro, sem repetição.
@@ -920,7 +922,7 @@ test('contagem: a Feature conta o que fechou FORA do período também', () => {
   const cartoes = [{ titulo: 'Home', iniciativa: 'Nova Homepage', epicoId: 700, featureIds: [710],
     status: 'entregue', resumo: 'x' }];
   const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
-  assert.match(h, /<p class="rl-sec-conta">9 itens</, '7 do período + 2 de julho');
+  assert.match(h, /<p class="rl-sec-conta">9 itens(?: ·|<)/, '7 do período + 2 de julho');
 });
 
 test('contagem: item não concluído não entra, mesmo dentro da Feature', () => {
@@ -931,7 +933,7 @@ test('contagem: item não concluído não entra, mesmo dentro da Feature', () =>
   const cartoes = [{ titulo: 'Home', iniciativa: 'Nova Homepage', epicoId: 700, featureIds: [710],
     status: 'andamento', resumo: 'x' }];
   const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
-  assert.match(h, /<p class="rl-sec-conta">7 itens</, 'o item em progresso fica de fora');
+  assert.match(h, /<p class="rl-sec-conta">7 itens(?: ·|<)/, 'o item em progresso fica de fora');
 });
 
 test('contagem: sem featureIds, o cartão ainda conta pelo épico', () => {
@@ -940,7 +942,7 @@ test('contagem: sem featureIds, o cartão ainda conta pelo épico', () => {
   const items = hierarquiaComFeatures();
   const cartoes = [{ titulo: 'Tudo', iniciativa: 'Loja', epicoId: 700, status: 'entregue', resumo: 'x' }];
   const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
-  assert.match(h, /<p class="rl-sec-conta">16 itens</, 'cai no épico, que soma as três Features');
+  assert.match(h, /<p class="rl-sec-conta">16 itens(?: ·|<)/, 'cai no épico, que soma as três Features');
 });
 
 test('contagem: dois cartões na mesma seção apontando pra mesma Feature contam uma vez', () => {
@@ -950,7 +952,7 @@ test('contagem: dois cartões na mesma seção apontando pra mesma Feature conta
     { titulo: 'B', iniciativa: 'Home', epicoId: 700, featureIds: [710], status: 'entregue', resumo: 'x' },
   ];
   const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
-  assert.match(h, /<p class="rl-sec-conta">7 itens</, 'e não 14');
+  assert.match(h, /<p class="rl-sec-conta">7 itens(?: ·|<)/, 'e não 14');
 });
 
 test('contagem: item pendurado direto no épico não inventa dono', () => {
@@ -963,7 +965,7 @@ test('contagem: item pendurado direto no épico não inventa dono', () => {
   const porFeature = [
     { titulo: 'Home', iniciativa: 'Nova Homepage', epicoId: 700, featureIds: [710], status: 'entregue', resumo: 'x' }];
   const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes: porFeature, periodo: ['2026-08', '2026-09'] }).html;
-  assert.match(h, /<p class="rl-sec-conta">7 itens</, 'o item solto não entra na Feature');
+  assert.match(h, /<p class="rl-sec-conta">7 itens(?: ·|<)/, 'o item solto não entra na Feature');
 });
 
 test('contagem: todo cartão declara como quer ser contado', () => {
@@ -989,7 +991,7 @@ test('contagem: contaFixa vale pra frente que não tem Feature no board', () => 
   const cartoes = [{ titulo: 'Planilha', iniciativa: 'Compliance', epicoId: 700,
     progresso: { feito: 14, total: 18 }, contaFixa: 1, status: 'andamento', resumo: 'x' }];
   const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
-  assert.match(h, /<p class="rl-sec-conta">1 item</, 'no singular');
+  assert.match(h, /<p class="rl-sec-conta">1 item(?: ·|<)/, 'no singular');
   assert.match(h, /aria-valuenow="14"/, 'e a barra continua dizendo 14 de 18');
 });
 
@@ -1000,7 +1002,7 @@ test('contagem: contaFixa soma junto com as Features da mesma seção', () => {
     { titulo: 'Normal', iniciativa: 'Mista', epicoId: 700, featureIds: [710], status: 'entregue', resumo: 'x' },
   ];
   const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
-  assert.match(h, /<p class="rl-sec-conta">8 itens</, '7 da Feature + 1 declarado');
+  assert.match(h, /<p class="rl-sec-conta">8 itens(?: ·|<)/, '7 da Feature + 1 declarado');
 });
 
 test('contagem: cartão que tem barra de progresso não entra na conta da seção', () => {
@@ -1013,7 +1015,10 @@ test('contagem: cartão que tem barra de progresso não entra na conta da seçã
       progresso: { feito: 14, total: 18 }, status: 'andamento', resumo: 'x' },
   ];
   const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
-  assert.ok(!/rl-sec-conta/.test(h), 'a seção não mostra contagem');
+  /* A CONTAGEM some; o selo de origem, não. Desde 26/10/2026 a legenda da
+     seção carrega as duas coisas, e a origem continua verdadeira mesmo quando
+     não há item pra contar — é de onde a seção veio, não quanto ela entregou. */
+  assert.doesNotMatch(h, /rl-sec-conta">\d+ ite/, 'a seção não mostra contagem');
   assert.match(h, /aria-valuenow="14"/, 'e a barra do cartão continua lá');
 });
 
@@ -1026,7 +1031,7 @@ test('contagem: numa seção mista, só os cartões sem barra contam', () => {
   ];
   const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
   // A Feature 710 tem 7; a 711 tem 5 e fica de fora porque aquele cartão se mede.
-  assert.match(h, /<p class="rl-sec-conta">7 itens</);
+  assert.match(h, /<p class="rl-sec-conta">7 itens(?: ·|<)/);
 });
 
 test('barra: o cartão do compliance mostra o progresso que o texto afirma', () => {
@@ -1268,7 +1273,10 @@ test('basta um cartão fora do roadmap pra frente inteira sair da conta', () => 
 
 test('o cartão de outubro declara, e a edição publicada não', () => {
   const v2 = require('../assets/briefing-entregas-v2.js');
-  const brindes = cartoesDe('urlan', v2.edicao).find((c) => /brindes/i.test(c.titulo));
+  /* Pela SEÇÃO (`iniciativa`), não pelo título: o título é camada editorial e
+     muda quando o PO reescreve o cartão — foi o que aconteceu em 26/10/2026,
+     quando ele deixou de repetir o nome da seção. A seção é o identificador. */
+  const brindes = cartoesDe('urlan', v2.edicao).find((c) => c.iniciativa === 'Novo app de brindes');
   assert.ok(brindes, 'o cartão do app de brindes sumiu da edição de outubro');
   assert.equal(brindes.foraDoRoadmap, true);
   // E nenhum cartão de Agosto/Setembro declara: aquele documento não muda.
@@ -1336,4 +1344,54 @@ test('cartão sem lista não ganha rótulo solto', () => {
     cartoes: [{ titulo: 'Compliance', iniciativa: 'Google', status: 'entregue', resumo: ['Uma linha.'] }],
   }).html;
   assert.doesNotMatch(html, /rl-frente-rotulo/);
+});
+
+/* DE ONDE VEIO ESTA SEÇÃO.
+
+   A capa diz "Projetos do roadmap contemplados neste relatório: 2" e o leitor
+   descia por sete seções sem saber quais duas eram. Pedido do Urlan em
+   26/10/2026.
+
+   O que estes testes guardam é que o selo e o NÚMERO DA CAPA saem da mesma
+   régua. Se divergirem, o documento passa a dizer duas coisas sobre o mesmo
+   fato — e essa é a família de defeito que este relatório já teve três vezes. */
+test('a seção diz se é projeto do roadmap, e bate com a conta da capa', () => {
+  const items = [
+    epico(600, 'Loja', null),
+    filho(610, 'Feature', 'Done', 'Frente A', 600, { fechadoDias: 5 }),
+    filho(611, 'Product Backlog Item', 'Done', 'PBI A', 610, { fechadoDias: 5 }),
+    filho(620, 'Feature', 'Done', 'Frente B', 600, { fechadoDias: 5 }),
+    filho(621, 'Product Backlog Item', 'Done', 'PBI B', 620, { fechadoDias: 5 }),
+  ];
+  const cartoes = [
+    { titulo: 'No roadmap', iniciativa: 'Projeto A', epicoId: 600, featureIds: [610],
+      status: 'entregue', resumo: 'x' },
+    { titulo: 'Sustentação', iniciativa: 'Avulso B', foraDoRoadmap: true, epicoId: 600,
+      featureIds: [620], status: 'entregue', resumo: 'x' },
+    { titulo: 'Sem frente', status: 'entregue', resumo: 'x', contaFixa: 1 },
+  ];
+  const h = BE.htmlReport({ items, todos: items, agora: AGORA, cartoes, periodo: ['2026-08', '2026-09'] }).html;
+  const legenda = (titulo) => {
+    const m = new RegExp('<h2 class="rl-sec-titulo">' + titulo
+      + '</h2>\\s*<p class="rl-sec-conta">([^<]*)<').exec(h);
+    assert.ok(m, 'não achei a seção ' + titulo);
+    return m[1];
+  };
+  assert.match(legenda('Projeto A'), /· Projeto do roadmap$/);
+  assert.match(legenda('Avulso B'), /· Fora do roadmap$/);
+  // o órfão já se chama "Outras entregas": selo que repete o título é ruído
+  assert.doesNotMatch(legenda('Outras entregas'), /roadmap/);
+  // e a capa conta exatamente as seções que o selo chama de projeto
+  assert.match(h, /<b class="rl-num">1<\/b>/);
+  assert.match(h, /Projeto do roadmap contemplado neste relatório/);
+});
+
+test('o selo não inventa projeto quando a seção não tem item contado', () => {
+  /* Origem é de onde a seção veio, não quanto ela entregou: uma frente medida
+     por barra de progresso não tem item na conta e continua sendo projeto. */
+  const cartoes = [{ titulo: 'Planilha', iniciativa: 'Compliance',
+    progresso: { feito: 14, total: 18 }, status: 'andamento', resumo: 'x' }];
+  const h = BE.htmlReport({ items: [], todos: [], agora: AGORA, cartoes, periodo: ['2026-08'] }).html;
+  assert.match(h, /<p class="rl-sec-conta">Projeto do roadmap<\/p>/);
+  assert.doesNotMatch(h, /rl-sec-conta">\d+ ite/);
 });

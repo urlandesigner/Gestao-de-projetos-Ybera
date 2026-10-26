@@ -42,7 +42,8 @@ test('as duas edições publicadas continuam tendo os cartões que tinham', () =
      piso, não igualdade — some um cartão e o teste cai; chega um, não. */
   const outubro = cartoesDe('urlan', V2.edicao);
   assert.ok(outubro.length >= 2, 'outubro perdeu cartão: ' + outubro.length);
-  assert.ok(outubro.some((c) => c.titulo === 'Novo app de brindes'));
+  // Pela seção, e não pelo título: o título é editorial e o PO reescreve.
+  assert.ok(outubro.some((c) => c.iniciativa === 'Novo app de brindes'));
   assert.ok(outubro.some((c) => c.titulo === 'Tratativas do Google compliance'));
 });
 
