@@ -448,12 +448,18 @@ test('capa: cada número diz o que conta, e sem jargão de sistema', () => {
   /* O que este teste guarda não é a frase, é a PALAVRA: o rótulo dizia
      "Projetos atendidos" e o apoio logo abaixo dizia "frentes de trabalho" —
      dois nomes pra mesma coisa, coladas, e o leitor parava pra decidir se eram
-     sinônimos. Vale pros dois blocos: o escuro diz "dentro desses <palavra>". */
+     sinônimos. Vale pro bloco das frentes. */
+  const apoios = (capa.match(/rl-tile-apoio">([^<]*)</g) || []);
   const palavra = /Projetos atendidos|Projeto atendido/.test(capa) ? 'projeto' : 'frente';
-  for (const apoio of capa.match(/rl-tile-apoio">([^<]*)</g) || []) {
-    assert.match(apoio.toLowerCase(), new RegExp(palavra),
-      `o apoio "${apoio}" usa palavra diferente da do rótulo ("${palavra}")`);
-  }
+  assert.match(apoios[0].toLowerCase(), new RegExp(palavra),
+    `o apoio "${apoios[0]}" usa palavra diferente da do rótulo ("${palavra}")`);
+  /* O BLOCO ESCURO NÃO (27/10/2026). Ele conta TUDO que foi concluído no
+     período, inclusive o que está fora do roadmap e o grupo "Outras entregas".
+     Herdar a palavra do vizinho fazia a capa prometer um recorte que o número
+     não tem: "14 itens dentro desses 4 projetos", com boa parte vinda de fora.
+     O rótulo dele pode repetir a palavra; a PROMESSA de recorte, não. */
+  assert.doesNotMatch(apoios[1].toLowerCase(), /dentro dess[ae]s|desses? (projeto|frente)/,
+    `o apoio "${apoios[1]}" promete um recorte que o número não tem`);
   for (const jargao of ['Azure DevOps', 'PBI', 'backlog', 'Feature']) {
     assert.ok(!capa.includes(jargao), `"${jargao}" é jargão: a capa é pro stakeholder`);
   }

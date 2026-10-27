@@ -941,7 +941,12 @@
                        : 'Frentes de trabalho contempladas neste relatório')
       : (nGrupos === 1 ? 'Projeto do roadmap contemplado neste relatório'
                        : 'Projetos do roadmap contemplados neste relatório');
-    const apoioItens = 'Soma dos itens concluídos dentro desses ' + palavra;
+    /* NÃO "desses projetos" (27/10/2026). O número ao lado conta PROJETO do
+       roadmap; este conta TUDO que foi concluído no período, inclusive o que
+       está fora do roadmap e o grupo "Outras entregas". Emprestar a palavra do
+       cartão vizinho fazia a capa prometer um recorte que o número não tem —
+       14 itens "dentro desses 4 projetos" quando boa parte veio de fora. */
+    const apoioItens = 'Tudo que foi concluído no período';
     const kpis = tile(rotuloGrupo, nGrupos, '', '', apoioGrupo);
 
     const porIdTodos = new Map((o.todos || items).map((it) => [it.id, it]));
