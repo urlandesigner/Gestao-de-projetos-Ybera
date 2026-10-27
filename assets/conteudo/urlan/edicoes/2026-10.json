@@ -43,8 +43,7 @@
       "resumo": [
         "Aplicativo próprio, desenvolvido pela Ybera, para as promoções em que a cliente compra um produto e ganha um brinde. Ele atende dois formatos: brinde único e brindes acumulativos.",
         "Ele assume as campanhas de brinde da loja no lugar do Dr Free Gift, o aplicativo de terceiro usado até aqui — que tinha custo mensal e dava conflito no carrinho."
-      ],
-      "contaFixa": 1
+      ]
     },
     {
       "titulo": "Teste de envio real com a Shipsmart",
@@ -54,8 +53,7 @@
       "resumo": [
         "Fizemos um envio real de produto para validar o fluxo de entrega. O pedido chegou corretamente, mas alguns pontos precisaram de acionamento manual junto ao time de distribuição.",
         "Estavam previstos mais dois envios de teste. O do kit de cápsulas já foi realizado; falta o segundo. Em paralelo, o time do João Nobrega está mapeando e desenhando o fluxo do caminho não feliz."
-      ],
-      "contaFixa": 1
+      ]
     },
     {
       "titulo": "Divergência na quantidade de itens no checkout",
@@ -65,8 +63,7 @@
       "resumo": [
         "O checkout mostra uma quantidade de itens diferente da real. A correção dependia do time do Route resolver o problema do lado deles, o que já foi feito.",
         "Com isso destravado, as tratativas agora estão do nosso lado. Até essa parte ficar pronta, a divergência continua acontecendo."
-      ],
-      "contaFixa": 1
+      ]
     },
     {
       "titulo": "Proteção de entrega para clientes logados",

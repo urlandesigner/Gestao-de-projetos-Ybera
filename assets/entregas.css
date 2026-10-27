@@ -230,15 +230,30 @@ body.pagina-entregas {
 /* O rótulo da lista: diz que o que vem abaixo é o ENTREGUE, e não a frente
    inteira. Mesma régua da retranca da capa — maiúsculas pequenas e apagadas —,
    porque é a mesma função: nomear o bloco sem competir com ele. */
+/* O BLOCO DO QUE FOI ENTREGUE (27/10/2026).
+
+   Rótulo e lista eram só mais duas linhas embaixo do título do cartão, todas
+   rentes à mesma margem e com pesos parecidos — 1.1rem no título do cartão
+   contra 0.92rem no do item, e o olho não achava onde a lista começava. Num
+   cartão de um item só, as quatro linhas liam como um parágrafo quebrado.
+
+   Agora o rótulo e a lista recuam atrás de um fio vertical contínuo: ele diz
+   "isto pertence ao cartão acima" sem abrir uma caixa dentro de outra caixa, e
+   o recuo sozinho já separa a parte escrita da parte que o board preenche.
+
+   O fio é contínuo porque o espaço entre rótulo e lista é padding, e não
+   margem — com margem, a linha quebraria no meio e viraria dois traços. */
 .rl-frente-rotulo {
-  margin: 0.9rem 0 0;
+  margin: 1.05rem 0 0;
+  padding: 0 0 0.3rem 0.85rem;
+  border-left: var(--fio);
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--mudo);
 }
-.rl-frente-rotulo + .rl-frente-itens { margin-top: 0.4rem; }
+.rl-frente-rotulo + .rl-frente-itens { margin-top: 0; }
 
 /* A lista do cartão automático (15/10/2026): título da PBI em peso de texto
    e a linha de resumo apagada embaixo, a mesma anatomia dos itens da aba
@@ -246,24 +261,28 @@ body.pagina-entregas {
 .rl-frente-itens {
   list-style: none;
   margin: 0.75rem 0 0;
-  padding: 0;
+  padding: 0 0 0 0.85rem;
+  border-left: var(--fio);
 }
 .rl-frente-itens li {
-  padding: 0.55rem 0;
+  padding: 0.5rem 0;
   border-top: var(--fio);
 }
 .rl-frente-itens li:first-child { border-top: none; padding-top: 0; }
+/* Um degrau a menos que o título do cartão (1.1rem) e um a mais que o resumo:
+   com 0.92 contra 0.85 os dois liam como a mesma voz. */
 .rl-frente-item-titulo {
   display: block;
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 600;
+  line-height: 1.35;
   color: var(--tinta);
 }
 .rl-frente-item-resumo {
   display: block;
-  margin-top: 0.15rem;
-  font-size: 0.85rem;
-  line-height: 1.45;
+  margin-top: 0.1rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
   color: var(--mudo);
 }
 /* O selo de mês em andamento: logo abaixo do título, porque é o título que ele
@@ -762,6 +781,10 @@ body.pagina-entregas {
 }
 .rl-frente-meta { display: flex; align-items: center; gap: 0.4rem; flex: none; flex-wrap: wrap; justify-content: flex-end; }
 .rl-prazo { font-size: 0.74rem; color: var(--mudo); white-space: nowrap; }
+/* O que falta, à esquerda do selo: mesma linha, mesma altura, peso de texto
+   apagado. É complemento do selo ("em andamento, 1 em aberto"), não um segundo
+   selo — pintá-lo de cápsula faria dois carimbos brigando no mesmo canto. */
+.rl-falta { font-size: 0.74rem; color: var(--mudo); white-space: nowrap; }
 .rl-atrasado { color: var(--erro); font-weight: 600; }
 .rl-selo {
   flex: none;

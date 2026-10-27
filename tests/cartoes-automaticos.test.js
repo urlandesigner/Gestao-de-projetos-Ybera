@@ -166,6 +166,53 @@ test('a frente em aberto é contada no mesmo recorte das entregas', () => {
   assert.equal(m1.frentes[0].noPeriodo, 1);
 });
 
+/* O QUE FALTA, E ONDE ELE MORA (27/10/2026). A seção dizia "1 item" e calava
+   sobre o resto: com PBI pendente pra sprint seguinte, o leitor concluía que a
+   frente tinha acabado. O número veio do board — e mora NO CARTÃO, ao lado do
+   selo. Na retranca da seção ele era a terceira voz falando do mesmo assunto,
+   junto do selo e do rótulo da lista. A seção fala de tamanho; o cartão, de em
+   que pé a frente está. */
+test('o que falta fica no cartão, ao lado do selo; a seção só conta', () => {
+  const comAbertas = (n) => C.saneAutomaticos([{ feature: { id: 1, nome: '[EUA] Frente' },
+    fechada: n === 0, abertas: n, itens: [{ id: 9, titulo: 'Saiu' }] }]);
+  const doc = (auto) => V2.htmlReport({ items: [], todos: [], agora: Date.parse('2026-10-27T12:00:00Z'),
+    chavePO: 'urlan', cartoes: [], automaticos: auto }).html;
+  const conta = (h) => (/<p class="rl-sec-conta">([^<]*)</.exec(h) || [])[1];
+
+  const aberto = doc(comAbertas(2));
+  assert.equal(conta(aberto), '1 entregue', 'a seção não fala de aberto');
+  assert.match(aberto, /<span class="rl-falta">2 em aberto<\/span>/);
+  // Dentro da meta do cartão, colado no selo — e não solto no corpo.
+  assert.match(aberto, /rl-frente-meta"><span class="rl-falta">2 em aberto<\/span><span class="rl-selo/);
+
+  const fechado = doc(comAbertas(0));
+  assert.equal(conta(fechado), '1 entregue');
+  assert.doesNotMatch(fechado, /rl-falta/, 'frente fechada não anuncia zero');
+
+  // Pacote antigo não traz o número: o cartão não afirma nada sobre aberto.
+  const semCampo = C.saneAutomaticos([{ feature: { id: 1, nome: 'Frente' },
+    itens: [{ id: 9, titulo: 'Saiu' }] }]);
+  assert.doesNotMatch(doc(semCampo), /rl-falta/);
+});
+
+test('o cartão escrito que adota herda o que falta, e conta pela janela', () => {
+  const auto = C.saneAutomaticos([{ feature: { id: 77, nome: '[EUA] Frente' }, fechada: false,
+    abertas: 3, itens: [{ id: 1, titulo: 'a' }, { id: 2, titulo: 'b' }] }]);
+  const escrito = { titulo: 'Escrito', iniciativa: 'Minha frente', featureIds: [77], resumo: 'x' };
+  const [card] = V2.comAutomaticos([escrito], auto);
+  assert.equal(card.abertas, 3, 'adotar é adotar inteiro');
+  assert.deepEqual(card.entregues.map((i) => i.id), [1, 2]);
+  const html = V2.htmlReport({ items: [], todos: [], agora: Date.parse('2026-10-27T12:00:00Z'),
+    chavePO: 'urlan', cartoes: [escrito], automaticos: auto }).html;
+  /* 2, da lista adotada — e não o que a Feature já fechou na vida inteira, que
+     é o que o caminho das `contagens` traria. */
+  assert.match(html, /<p class="rl-sec-conta">2 entregues(?: ·|<)/, 'a seção conta, e só');
+  assert.match(html, /<span class="rl-falta">3 em aberto<\/span>/, 'o que falta vai no cartão');
+  // E um `abertas` escrito à mão manda: o PO sabe de coisa que o board não tem.
+  const [proprio] = V2.comAutomaticos([Object.assign({}, escrito, { abertas: 9 })], auto);
+  assert.equal(proprio.abertas, 9);
+});
+
 /* A JANELA DAS ENTREGAS SEGUE AS SPRINTS (22/10/2026). O documento tinha duas
    réguas: entrega cortada pelo calendário, sprint cortada pela data de
    fechamento dela. A sprint que fecha em novembro só aparece lá, mas o que ela

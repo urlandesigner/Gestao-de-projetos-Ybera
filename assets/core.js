@@ -1230,6 +1230,14 @@
            saber QUANTAS faltam — e o número de itens em aberto de uma frente é
            dado interno que não tem por que sair daqui. */
         fechada: Number(fr.abertas || 0) === 0,
+        /* O NÚMERO, além do sim/não (27/10/2026). A seção dizia quantas
+           entregas aconteceram e calava sobre o que falta, então o leitor
+           concluía que aquilo era a frente inteira. `fechada` resolve o selo
+           do cartão; a retranca da seção precisa do número.
+
+           Os dois viajam porque `fechada` já está em links e arquivos que
+           circulam sem `abertas` — derivar um do outro quebraria o selo deles. */
+        abertas: Number(fr.abertas || 0),
         itens: [],
       });
     }
@@ -1264,6 +1272,8 @@
            "em andamento" sobre frente que já acabou. Ausente, o cartão não
            ganha selo, que é a verdade: não se sabe. */
         fechada: (f.fechada === true || f.fechada === false) ? f.fechada : undefined,
+        // Ausente em pacote antigo: a seção então não afirma nada sobre aberto.
+        abertas: num(f.abertas) !== null ? num(f.abertas) : (f.abertas === 0 ? 0 : undefined),
         itens: (Array.isArray(f.itens) ? f.itens : []).slice(0, 60)
           .filter((x) => x && num(x.id) && txt(x.titulo, 300))
           .map((x) => ({

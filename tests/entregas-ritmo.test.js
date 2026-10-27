@@ -1506,7 +1506,7 @@ test('cada cartão por item conta 1 — a soma da capa não muda', () => {
      cartões de 1. Muda o desenho, não a conta: se divergirem, a capa passa a
      dizer um número que o corpo não sustenta. */
   const html = montaFr(FICHA);
-  assert.match(html, /<p class="rl-sec-conta">3 itens(?: ·|<)/);
+  assert.match(html, /<p class="rl-sec-conta">3 entregues(?: ·|<)/);
 });
 
 test('item sem resumo vira cartão sem parágrafo, não cartão com vazio', () => {

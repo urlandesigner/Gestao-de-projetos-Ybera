@@ -569,11 +569,20 @@
     const cartoes = lista.map((f) => {
       const est = SELOS[f.status];
       const selo = est ? `<span class="rl-selo ${est.classe}">${esc(est.texto)}</span>` : '';
+      /* O QUE FALTA FICA JUNTO DO SELO (27/10/2026). Ele estava na retranca da
+         seção, e aí o mesmo assunto — em que pé esta frente está — era dito em
+         três lugares: o selo aqui, o rótulo da lista e os dois números lá em
+         cima. O leitor reconciliava três sinais pra uma informação só.
+
+         Aqui, colado no selo, vira uma frase: "em andamento, 1 em aberto". A
+         seção volta a falar só de tamanho, e só quando tem mais de um cartão. */
+      const falta = typeof f.abertas === 'number' && f.abertas > 0
+        ? `<span class="rl-falta">${f.abertas} em aberto</span>` : '';
       return `<article class="rl-frente">
         ${mostrarProduto && f.produto ? `<p class="rl-frente-produto">${esc(f.produto)}</p>` : ''}
         <div class="rl-frente-cab">
           <h3 class="rl-frente-nome">${esc(f.titulo)}</h3>
-          <div class="rl-frente-meta">${selo}</div>
+          <div class="rl-frente-meta">${falta}${selo}</div>
         </div>
         ${[].concat(f.resumo || []).map((par) => (typeof par === 'string'
           ? `<p class="rl-frente-resumo">${esc(par)}</p>`
@@ -966,6 +975,13 @@
            medidas de coisas diferentes: a seção conta itens de trabalho, a barra
            conta o avanço dentro de um deles. */
         if (typeof c.contaFixa === 'number') { fixo += c.contaFixa; continue; }
+        /* ADOTOU, CONTA O ADOTADO (27/10/2026). O cartão escrito que declara
+           uma Feature herda a lista de entregas dela; a conta tem que sair da
+           MESMA lista, senão a seção diz um número e a lista logo abaixo mostra
+           outro. Pelo caminho de baixo (`contagens`) ele contaria tudo que a
+           Feature já fechou, de qualquer período — a régua do documento é a
+           janela, não a história. */
+        if (Array.isArray(c.entregues)) { fixo += c.entregues.length; continue; }
         /* Sem contaFixa, cartão com `progresso` não entra na conta: já disse
            como quer ser medido, e um segundo número embaixo do título brigaria
            com o da barra. */
@@ -981,9 +997,22 @@
       }
       return n;
     };
+    /* O QUE FALTA, NÃO SÓ O QUE SAIU (27/10/2026).
+
+       A retranca dizia "1 item" e parava aí: quem lia concluía que aquilo era a
+       frente inteira, mesmo quando sobravam duas PBIs pra sprint seguinte. O
+       número em aberto vem do board, pelo pacote, e só aparece quando existe —
+       em frente fechada a ausência já diz que acabou, e o selo verde confirma.
+
+       "entregue" e não "item": item de quê era a pergunta que a palavra deixava
+       no ar. Somado por cartão, porque uma seção pode ter vários. */
+    /* A retranca da seção fala de TAMANHO, e só: quantas entregas tem ali.
+       Em que pé a frente está é assunto do cartão — o selo e, do lado dele, o
+       que ainda falta. Os dois moravam aqui também, e o mesmo fato era dito em
+       três lugares: o leitor reconciliava três sinais pra uma informação só. */
     const contaDoGrupo = (g) => {
       const n = contaDeCartoes(g.cards);
-      return n ? plural(n, 'item', 'itens') : '';
+      return n ? plural(n, 'entregue', 'entregues') : '';
     };
 
     /* DE ONDE VEIO ESTA SEÇÃO (26/10/2026).

@@ -546,6 +546,8 @@
        nada de selo: "em andamento" sobre frente que já fechou é pior que selo
        nenhum, e o documento calado continua verdadeiro. */
     if (typeof fr.fechada === 'boolean') cartao.status = fr.fechada ? 'entregue' : 'andamento';
+    // Quantas PBIs da frente seguem abertas — a retranca da seção soma isto.
+    if (typeof fr.abertas === 'number') cartao.abertas = fr.abertas;
     /* A linha do roadmap a que esta Feature pertence, quando o roadmap a
        declara. É o que tira a frente de "Outras entregas" e a põe na conta de
        projeto do roadmap da capa — sem o PO escrever cartão à mão e sem perder
@@ -620,8 +622,11 @@
        duas Features podem ter entregado no mesmo período: a lista do cartão é a
        soma, na ordem em que ele declarou. */
     const entregasDaFeature = new Map();
+    const abertasDaFeature = new Map();
     for (const fr of automaticos) {
-      if (fr && fr.feature) entregasDaFeature.set(Number(fr.feature.id), Array.isArray(fr.itens) ? fr.itens : []);
+      if (!fr || !fr.feature) continue;
+      entregasDaFeature.set(Number(fr.feature.id), Array.isArray(fr.itens) ? fr.itens : []);
+      if (typeof fr.abertas === 'number') abertasDaFeature.set(Number(fr.feature.id), fr.abertas);
     }
     const cobertas = new Set();
     const adotados = escritos.map((c) => {
@@ -631,7 +636,19 @@
          dizer outra coisa que não "o que o board fechou". */
       if (!ids.length || (Array.isArray(c.entregues) && c.entregues.length)) return c;
       const vindas = ids.reduce((acc, f) => acc.concat(entregasDaFeature.get(f) || []), []);
-      return vindas.length ? Object.assign({}, c, { entregues: vindas }) : c;
+      /* Adotar é adotar inteiro: junto das entregas vem quantas PBIs daquelas
+         Features seguem abertas. Sem isto, o cartão escrito dizia o que
+         entregou e calava sobre o que falta — que é a razão de o número
+         existir. O escrito manda, então um `abertas` próprio não é tocado. */
+      const abertas = ids.reduce((acc, f) => {
+        const n = abertasDaFeature.get(f);
+        return typeof n === 'number' ? acc + n : acc;
+      }, null);
+      if (!vindas.length && abertas === null) return c;
+      const extra = {};
+      if (vindas.length) extra.entregues = vindas;
+      if (abertas !== null && typeof c.abertas !== 'number') extra.abertas = abertas;
+      return Object.assign({}, c, extra);
     });
     const porFeature = iniciativaPorFeature(roadmap);
     const novos = [];
