@@ -1266,13 +1266,20 @@ async function lerDoArquivo() {
 const FUNCAO_AO_VIVO = 'https://gestao-de-projetos-ybera.vercel.app/api/relatorio';
 const pacotesAoVivo = Object.create(null);
 
-function edicaoAoVivo(id) {
+/* A edição busca ao vivo PARA ESTA PESSOA?
+
+   Agosto/setembro não busca — é documento publicado e compartilhado. Mas só
+   para quem o publicou: para as outras POs nunca houve documento ali, e a
+   edição pedia um arquivo que não existe. Ver `congeladaPara` no briefing. */
+function edicaoAoVivo(id, chave) {
   const e = Array.isArray(B.EDICOES) ? B.EDICOES.find((x) => x.id === id) : null;
-  return !!(e && e.aoVivo);
+  if (!e) return false;
+  if (e.aoVivo) return true;
+  return !!(e.congeladaPara && typeof B.congeladaPara === 'function' && !B.congeladaPara(e, chave));
 }
 
-async function pedirAoVivo(id) {
-  if (!edicaoAoVivo(id)) return null;
+async function pedirAoVivo(id, chave) {
+  if (!edicaoAoVivo(id, chave)) return null;
   if (id in pacotesAoVivo) return pacotesAoVivo[id];
   const de = chaveDoEndereco() || DONO_HISTORICO;
   const params = new URLSearchParams({ edicao: id, de });
@@ -1297,7 +1304,7 @@ async function pedirAoVivo(id) {
    abrir o link num mês sem entrega nenhuma é o "documento vazio" que a regra
    da edição padrão existe pra evitar. */
 async function temConteudoAoVivo(id, chave) {
-  const pacote = await pedirAoVivo(id);
+  const pacote = await pedirAoVivo(id, chave);
   if (!pacote) return null; // a função não respondeu: quem decide é o arquivo
   if (Array.isArray(pacote.automaticos) && pacote.automaticos.length) return true;
   /* SPRINT EM CURSO É CONTEÚDO (26/10/2026). Sem isto, a edição nova só abria
@@ -1310,8 +1317,11 @@ async function temConteudoAoVivo(id, chave) {
 }
 
 async function lerAoVivo() {
-  if (!edicaoAoVivo(B.edicao)) return false;
-  const pacote = await pedirAoVivo(B.edicao);
+  /* A chave de quem está lendo: a mesma que escolhe o arquivo e os cartões.
+     Ela decide também se a edição congelada vale para esta pessoa. */
+  const chave = chaveDoEndereco() || DONO_HISTORICO;
+  if (!edicaoAoVivo(B.edicao, chave)) return false;
+  const pacote = await pedirAoVivo(B.edicao, chave);
   if (!pacote) return false;
   entrarEmLeitura();
   try {
@@ -1342,7 +1352,7 @@ async function resolverEdicaoPadrao() {
   for (const e of B.EDICOES) {
     /* Leitor, edição ao vivo: pergunta à função. Se ela não respondeu (null),
        vale o critério antigo — o arquivo publicado existe? */
-    if (!comToken && e.aoVivo) {
+    if (!comToken && edicaoAoVivo(e.id, chave)) {
       const vivo = await temConteudoAoVivo(e.id, chave);
       if (vivo === true) { B.escolherEdicao(e.id); return; }
       if (vivo === false) continue;

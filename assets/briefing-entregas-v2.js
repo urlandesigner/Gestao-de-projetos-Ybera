@@ -92,7 +92,37 @@
     rotuloCurto: 'Ago–Set 2026',
     periodo: ['2026-08', '2026-09'],
     arquivoDeDados: 'assets/dados-ago-set.json',
+    /* CONGELADA PARA QUEM A PUBLICOU, e só para essa pessoa (28/10/2026).
+
+       Esta edição nasceu quando a ferramenta tinha um usuário só: é a única sem
+       `aoVivo` e sem `cartoesAutomaticos`, e o arquivo dela não leva nome de PO
+       porque não havia outra. O documento do Urlan foi publicado e
+       compartilhado — mexer nele agora mudaria número que já foi lido.
+
+       Para as outras POs nunca houve documento a congelar. Elas pediam
+       `dados-ago-set-<po>.json`, tomavam 404 e liam "ainda não foi publicado" —
+       uma instrução impossível de cumprir, porque a edição não busca nada. Para
+       elas a edição passa a funcionar como qualquer outro mês: ao vivo e com
+       cartões automáticos.
+
+       A chave é quem publicou, e não uma lista de quem está de fora: no dia em
+       que outra PO publicar o ago/set dela, é o arquivo dela que vale, e nada
+       aqui precisa mudar. */
+    congeladaPara: 'urlan',
   };
+
+  /* A edição está congelada PARA ESTA PESSOA? Só então ela deixa de buscar ao
+     vivo e de montar cartão automático.
+
+     SEM SABER QUEM É, VALE O CONGELADO. Descongelar no escuro trocaria um
+     documento publicado e lido por uma reconstrução ao vivo — e quem abre um
+     link antigo espera o que foi compartilhado. Só uma PO explicitamente
+     diferente de quem publicou destrava a edição. */
+  function congeladaPara(e, chave) {
+    if (!e || !e.congeladaPara) return false;
+    const k = String(chave || '');
+    return !k || k === e.congeladaPara;
+  }
 
   function edicaoDoMes(id) {
     const ano = id.slice(0, 4);
@@ -615,8 +645,13 @@
     });
   }
 
-  function comAutomaticos(escritos, automaticos, roadmap, frentes) {
-    if (!ATIVA.cartoesAutomaticos || !Array.isArray(automaticos) || !automaticos.length) return escritos;
+  function comAutomaticos(escritos, automaticos, roadmap, frentes, chavePO) {
+    if (!Array.isArray(automaticos) || !automaticos.length) return escritos;
+    /* A edição congelada não monta cartão automático — mas só para quem a
+       congelou. Quem não publicou aquele documento vê o mês como qualquer
+       outro. */
+    if (!ATIVA.cartoesAutomaticos && congeladaPara(ATIVA, chavePO)) return escritos;
+    if (!ATIVA.cartoesAutomaticos && !ATIVA.congeladaPara) return escritos;
     const fichas = (frentes && typeof frentes === 'object') ? frentes : {};
     /* Feature → as entregas dela. Um cartão pode declarar várias Features, e
        duas Features podem ter entregado no mesmo período: a lista do cartão é a
@@ -672,7 +707,7 @@
     const entrada = Object.assign({}, o, {
       periodo: (o && Array.isArray(o.periodo) && o.periodo.length) ? o.periodo : ATIVA.periodo,
       cartoes: comAutomaticos((o && Array.isArray(o.cartoes)) ? o.cartoes : [],
-        (o || {}).automaticos, (o || {}).roadmap, (o || {}).frentes),
+        (o || {}).automaticos, (o || {}).roadmap, (o || {}).frentes, (o || {}).chavePO),
     });
     const r = base.htmlReport(entrada);
     if (!r || !r.html) return r;
@@ -718,6 +753,7 @@
     vaziosHtml,
     injetar,
     EDICOES,
+    congeladaPara,
     edicaoDaUrl,
     ANCORA,
     ABAS,

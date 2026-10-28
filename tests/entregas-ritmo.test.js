@@ -840,8 +840,11 @@ test('o fragmento tem precedência sobre o arquivo publicado', () => {
 test('a leitura ao vivo cai no arquivo quando a função não responde', () => {
   const i = fonteReport.indexOf('async function pedirAoVivo');
   const corpo = fonteReport.slice(i, fonteReport.indexOf('\n}\n', i));
-  // Edição fechada (agosto/setembro) nem pergunta.
-  assert.match(corpo, /if \(!edicaoAoVivo\(id\)\) return null;/);
+  /* Edição fechada nem pergunta — e desde 28/10/2026 "fechada" é por PESSOA:
+     ago/set é documento publicado do Urlan, e para as outras POs nunca houve
+     documento ali. A chave viaja junto, senão a pergunta é respondida pelo
+     dono errado. */
+  assert.match(corpo, /if \(!edicaoAoVivo\(id, chave\)\) return null;/);
   // Erro HTTP, falha de rede e demora viram null — e null manda pro arquivo.
   assert.match(corpo, /if \(resp\.ok\) pacote = await resp\.json\(\);/);
   assert.match(corpo, /setTimeout\(\(\) => corte\.abort\(\), 10000\)/);
@@ -853,6 +856,14 @@ test('a leitura ao vivo cai no arquivo quando a função não responde', () => {
   const V = require('../assets/briefing-entregas-v2.js');
   assert.deepEqual(V.EDICOES.map((e) => [e.id, !!e.aoVivo]),
     [['2026-11', true], ['2026-10', true], ['2026-08', false]]);
+  /* E o `aoVivo: false` do ago/set vale só pra quem publicou aquele documento.
+     Sem saber quem é, vale o congelado: destravar no escuro trocaria um
+     documento compartilhado por uma reconstrução. */
+  const ago = V.EDICOES.find((e) => e.id === '2026-08');
+  assert.equal(V.congeladaPara(ago, 'urlan'), true);
+  assert.equal(V.congeladaPara(ago, ''), true);
+  assert.equal(V.congeladaPara(ago, 'isadora'), false);
+  assert.equal(V.congeladaPara(V.EDICOES[0], 'isadora'), false, 'mês normal não congela pra ninguém');
 });
 
 /* A página é servida por CDN. Um documento de acompanhamento entregando a
