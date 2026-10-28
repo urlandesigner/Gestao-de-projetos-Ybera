@@ -538,14 +538,14 @@ test('capa: o único número conta a lista curada, não os épicos do DevOps', (
   const porEpico = capaDe(BE.htmlReport(Object.assign(mesNiveisOpcoes(), { agrupar: 'epico' })).html);
   assert.match(porEpico, /Frentes atendidas[\s\S]*?rl-num">4</);
   const porIni = capaDe(BE.htmlReport(Object.assign(mesNiveisOpcoes(), { agrupar: 'iniciativa' })).html);
-  // Cinco iniciativas de verdade — "Outras entregas" não é uma delas.
-  assert.match(porIni, /Projetos atendidos[\s\S]*?rl-num">5</);
+  // Cinco frentes de verdade — "Outras entregas" não é uma delas.
+  assert.match(porIni, /Frentes atendidas[\s\S]*?rl-num">5</);
 });
 
 test('capa: o número bate com as seções do corpo, descontado o grupo órfão', () => {
   for (const [modo, rotulo, prefixo] of [
     ['epico', 'Frentes atendidas', 'id="epico-'],
-    ['iniciativa', 'Projetos atendidos', 'id="ini-'],
+    ['iniciativa', 'Frentes atendidas', 'id="ini-'],
   ]) {
     const h = BE.htmlReport(Object.assign(mesNiveisOpcoes(), { agrupar: modo })).html;
     const naCapa = Number((capaDe(h).match(new RegExp(rotulo + '[\\s\\S]*?rl-num">(\\d+)<')) || [])[1]);
@@ -1240,7 +1240,7 @@ test('sem período declarado, não recorta nada', () => {
    o pedido. `foraDoRoadmap` guarda as duas coisas: a seção fica, a conta não
    mente. */
 
-test('frente fora do roadmap mantém a seção e sai da conta da capa', () => {
+test('frente fora do roadmap mantém a seção, e agora também conta na capa', () => {
   const cartoes = [
     { titulo: 'A', status: 'entregue', iniciativa: 'Projeto de verdade', contaFixa: 1, resumo: 'x' },
     { titulo: 'B', status: 'andamento', iniciativa: 'Sustentação', contaFixa: 1, resumo: 'y', foraDoRoadmap: true },
@@ -1249,9 +1249,16 @@ test('frente fora do roadmap mantém a seção e sai da conta da capa', () => {
   // A seção da frente fora do roadmap continua existindo, com o nome dela.
   assert.match(r.html, /rl-sec-titulo[^>]*>Sustentação</);
   assert.match(r.html, /rl-sec-titulo[^>]*>Projeto de verdade</);
-  // E a capa conta UM projeto, não dois.
-  assert.match(r.html, /rl-num">1</);
-  assert.match(r.html, /Projeto atendido/, 'o rótulo tem de concordar no singular');
+  /* A CONTA MUDOU EM 28/10/2026: o número grande passou a contar FRENTE
+     atendida, e não projeto do roadmap — senão a capa de quem ainda não ligou
+     nada ao roadmap abria com zero. As duas frentes contam.
+
+     O que `foraDoRoadmap` guarda agora é o SELO da seção, que é onde a
+     informação do roadmap pode ser conferida uma a uma. */
+  assert.match(r.html, /rl-num">2</);
+  assert.match(r.html, /Frentes atendidas/);
+  assert.match(r.html, /Sustentação<\/h2>\s*<p class="rl-sec-conta">[^<]*Fora do roadmap</);
+  assert.match(r.html, /Projeto de verdade<\/h2>\s*<p class="rl-sec-conta">[^<]*Projeto do roadmap</);
 });
 
 test('sem a declaração, nada muda — é o caso de Agosto e Setembro', () => {
@@ -1263,18 +1270,23 @@ test('sem a declaração, nada muda — é o caso de Agosto e Setembro', () => {
   ];
   const r = BE.htmlReport({ items: [], todos: [], cartoes, agora: AGORA, unidade: 'Ybera US' });
   assert.match(r.html, /rl-num">2</);
-  assert.match(r.html, /Projetos atendidos/);
+  assert.match(r.html, /Frentes atendidas/);
 });
 
-test('basta um cartão fora do roadmap pra frente inteira sair da conta', () => {
-  /* Na dúvida, não contar: a capa afirma "do roadmap", e afirmar de menos é
-     recuperável — afirmar de mais é o documento mentindo pro stakeholder. */
+test('basta um cartão fora do roadmap pra frente inteira perder o selo', () => {
+  /* Na dúvida, não afirmar: o selo diz "do roadmap" e isso se confere contra as
+     barras. Afirmar de menos é recuperável — afirmar de mais é o documento
+     mentindo pro stakeholder.
+
+     A conta grande não se mexe: é UMA frente atendida, declare ela o que
+     declarar. O que `foraDoRoadmap` decide é o selo. */
   const cartoes = [
     { titulo: 'A', status: 'entregue', iniciativa: 'Mesma frente', contaFixa: 1, resumo: 'x' },
     { titulo: 'B', status: 'entregue', iniciativa: 'Mesma frente', contaFixa: 1, resumo: 'y', foraDoRoadmap: true },
   ];
   const r = BE.htmlReport({ items: [], todos: [], cartoes, agora: AGORA, unidade: 'Ybera US' });
-  assert.match(r.html, /rl-num">0</);
+  assert.match(r.html, /rl-num">1</);
+  assert.match(r.html, /rl-sec-conta">[^<]*Fora do roadmap</);
 });
 
 test('o cartão de outubro declara, e a edição publicada não', () => {
@@ -1361,7 +1373,7 @@ test('cartão sem lista não ganha rótulo solto', () => {
    O que estes testes guardam é que o selo e o NÚMERO DA CAPA saem da mesma
    régua. Se divergirem, o documento passa a dizer duas coisas sobre o mesmo
    fato — e essa é a família de defeito que este relatório já teve três vezes. */
-test('a seção diz se é projeto do roadmap, e bate com a conta da capa', () => {
+test('a seção diz se é projeto do roadmap', () => {
   const items = [
     epico(600, 'Loja', null),
     filho(610, 'Feature', 'Done', 'Frente A', 600, { fechadoDias: 5 }),
@@ -1387,9 +1399,13 @@ test('a seção diz se é projeto do roadmap, e bate com a conta da capa', () =>
   assert.match(legenda('Avulso B'), /· Fora do roadmap$/);
   // o órfão já se chama "Outras entregas": selo que repete o título é ruído
   assert.doesNotMatch(legenda('Outras entregas'), /roadmap/);
-  // e a capa conta exatamente as seções que o selo chama de projeto
-  assert.match(h, /<b class="rl-num">1<\/b>/);
-  assert.match(h, /Projeto do roadmap contemplado neste relatório/);
+  /* A CAPA DEIXOU DE SER A MESMA RÉGUA (28/10/2026): o número grande conta
+     FRENTE atendida — aqui duas, "Projeto A" e "Avulso B" — e o selo continua
+     dizendo, seção a seção, qual delas está no roadmap. São duas perguntas
+     diferentes, e juntá-las num número só foi o que deu o zero na capa de quem
+     ainda não ligou nada ao roadmap. */
+  assert.match(h, /<b class="rl-num">2<\/b>/);
+  assert.match(h, /Frentes de trabalho contempladas neste relatório/);
 });
 
 test('o selo não inventa projeto quando a seção não tem item contado', () => {
@@ -1400,4 +1416,44 @@ test('o selo não inventa projeto quando a seção não tem item contado', () =>
   const h = BE.htmlReport({ items: [], todos: [], agora: AGORA, cartoes, periodo: ['2026-08'] }).html;
   assert.match(h, /<p class="rl-sec-conta">Projeto do roadmap<\/p>/);
   assert.doesNotMatch(h, /rl-sec-conta">\d+ ite/);
+});
+
+/* O NÚMERO GRANDE CONTA FRENTE ATENDIDA (28/10/2026).
+
+   Antes contava só seção ligada ao roadmap. Para quem ligou, o número era bom —
+   se confere contra as barras do Gantt. Para quem não ligou era um ZERO: a
+   Isadora entregou onze frentes em outubro e a capa dela abria com "0 projetos
+   atendidos". O número estava certo e o documento mentia pelo que não dizia.
+
+   Contar por ÉPICO foi considerado e descartado com os números medidos: o épico
+   é mais grosso que o roadmap do Urlan — Compliance Google, Subscription,
+   Translate loja e Melhorias Review moram todos dentro de "Loja Clube USA" —, e
+   o número dele cairia de 4 pra 2 enquanto o corpo seguiria mostrando quatro
+   seções marcadas "Projeto do roadmap". */
+test('a capa conta toda frente com nome, ligada ao roadmap ou não', () => {
+  const cartoes = [
+    { titulo: 'A', status: 'entregue', iniciativa: 'Do roadmap', contaFixa: 1, resumo: 'x' },
+    { titulo: 'B', status: 'entregue', iniciativa: 'Sustentação', contaFixa: 1, resumo: 'y', foraDoRoadmap: true },
+    { titulo: 'C', status: 'entregue', iniciativa: 'Vinda do épico', contaFixa: 1, resumo: 'z', foraDoRoadmap: true },
+    { titulo: 'D', status: 'entregue', contaFixa: 1, resumo: 'w' }, // sem iniciativa: órfão
+  ];
+  const h = BE.htmlReport({ items: [], todos: [], cartoes, agora: AGORA, unidade: 'Ybera US' }).html;
+  assert.match(h, /<b class="rl-num">3<\/b>/, 'três frentes com nome');
+  /* O órfão fica de fora: ele é o que sobrou SEM frente, e contá-lo afirmaria
+     uma frente que não existe. */
+  assert.match(h, />Outras entregas</);
+});
+
+test('a capa não promete mais roadmap — quem promete é o selo da seção', () => {
+  /* A palavra "roadmap" saiu do número grande porque ele parou de medir
+     roadmap. Deixá-la seria o defeito de 13/10/2026 de volta, com outro sinal:
+     a capa afirmando uma régua e o corpo usando outra. */
+  const cartoes = [{ titulo: 'A', status: 'entregue', iniciativa: 'Só uma', contaFixa: 1, resumo: 'x',
+    foraDoRoadmap: true }];
+  const h = BE.htmlReport({ items: [], todos: [], cartoes, agora: AGORA, unidade: 'Ybera US' }).html;
+  const capa = h.slice(0, h.indexOf('rl-corpo'));
+  assert.match(capa, /Frente atendida/, 'singular quando é uma só');
+  assert.doesNotMatch(capa, /Projetos? do roadmap/);
+  // e a informação do roadmap continua viva, na seção
+  assert.match(h, /rl-sec-conta">[^<]*Fora do roadmap</);
 });

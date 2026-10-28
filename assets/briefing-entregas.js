@@ -915,13 +915,36 @@
     // rótulo desta conta diz "Projetos do roadmap contemplados neste
     // relatório", e isso é verificável — o leitor confere contra as barras.
     const ehProjeto = (g) => !g.orfao && g.foraDoRoadmap !== true;
-    const gruposReais = grupos.filter(ehProjeto);
+
+    /* O NÚMERO GRANDE CONTA FRENTES, E NÃO PROJETOS DO ROADMAP (28/10/2026).
+
+       Até aqui ele contava só as seções ligadas ao roadmap. Para quem ligou, o
+       número era bom: ele se confere contra as barras do Gantt logo abaixo. Para
+       quem não ligou, era um ZERO na capa — a Isadora entregou onze frentes em
+       outubro e a capa dela abria com "0 projetos atendidos". O número estava
+       certo e o documento mentia pelo que não dizia.
+
+       Contar por ÉPICO foi considerado e descartado com os números na frente:
+       o épico é mais grosso que o roadmap do Urlan (Compliance Google,
+       Subscription, Translate loja e Melhorias Review moram todos dentro de
+       "Loja Clube USA"), e o número dele cairia de 4 pra 2 enquanto o corpo
+       continuaria mostrando quatro seções marcadas "Projeto do roadmap".
+
+       Agora conta a FRENTE ATENDIDA: toda seção com nome, venha ela do roadmap,
+       da ficha da edição ou do épico. Continua conferível, e contra o que está
+       na mesma página — o leitor conta as seções abaixo.
+
+       O órfão ("Outras entregas") segue fora: ele é o que sobrou sem frente, e
+       contá-lo afirmaria uma frente que não existe.
+
+       E a informação do roadmap não se perdeu: ela desceu pro selo de cada
+       seção ("Projeto do roadmap" / "Fora do roadmap"), que é onde ela pode ser
+       conferida item a item em vez de virar um número só. */
+    const ehFrente = (g) => !g.orfao;
     const nGrupos = agrupar === 'plano'
-      ? agruparEntregas(cartoes, 'iniciativa').filter(ehProjeto).length
-      : gruposReais.length;
-    const rotuloGrupo = agrupar === 'epico'
-      ? (nGrupos === 1 ? 'Frente atendida' : 'Frentes atendidas')
-      : (nGrupos === 1 ? 'Projeto atendido' : 'Projetos atendidos');
+      ? agruparEntregas(cartoes, 'iniciativa').filter(ehFrente).length
+      : grupos.filter(ehFrente).length;
+    const rotuloGrupo = nGrupos === 1 ? 'Frente atendida' : 'Frentes atendidas';
     /* Os dois números da capa são de RÉGUAS DIFERENTES, e nenhum rótulo de duas
        palavras dá conta disso: um conta frentes de trabalho (o que está no
        roadmap), o outro conta itens fechados no board dentro dessas frentes.
@@ -935,12 +958,10 @@
        duas palavras pra mesma coisa, coladas, e o leitor parava pra decidir se
        eram sinônimos. O bloco escuro herda a mesma palavra ("dentro desses
        projetos"), senão a incoerência só atravessa a capa. */
-    const palavra = agrupar === 'epico' ? 'frentes' : 'projetos';
-    const apoioGrupo = agrupar === 'epico'
-      ? (nGrupos === 1 ? 'Frente de trabalho contemplada neste relatório'
-                       : 'Frentes de trabalho contempladas neste relatório')
-      : (nGrupos === 1 ? 'Projeto do roadmap contemplado neste relatório'
-                       : 'Projetos do roadmap contemplados neste relatório');
+    const palavra = 'frentes';
+    const apoioGrupo = nGrupos === 1
+      ? 'Frente de trabalho contemplada neste relatório'
+      : 'Frentes de trabalho contempladas neste relatório';
     /* NÃO "desses projetos" (27/10/2026). O número ao lado conta PROJETO do
        roadmap; este conta TUDO que foi concluído no período, inclusive o que
        está fora do roadmap e o grupo "Outras entregas". Emprestar a palavra do
