@@ -77,14 +77,39 @@ test('a Feature declarada no roadmap herda a iniciativa daquela linha', () => {
   assert.equal(todos[0].iniciativa, 'Promoções da loja');
   assert.equal(todos[0].foraDoRoadmap, undefined, 'frente do roadmap não é marcada como fora dele');
   assert.deepEqual(todos[0].entregues.map((i) => i.id), [11], 'a lista de itens continua no cartão');
-  assert.equal(todos[1].iniciativa, undefined, 'Feature não declarada segue sem iniciativa');
+  /* A linha do roadmap GANHA do épico: a Feature 200 também é da "Loja Clube
+     USA", e continua caindo nele; a 100 foi declarada e fica com o nome da
+     linha. Se o épico ganhasse, declarar no roadmap não serviria pra nada. */
+  assert.equal(todos[1].iniciativa, 'Loja Clube USA', 'a não declarada cai no épico dela');
+  assert.equal(todos[1].foraDoRoadmap, true, 'épico é organização do board, não projeto');
 });
 
-test('sem roadmap, ou com linha sem featureIds, nada muda', () => {
+/* O ÉPICO COMO ÚLTIMO RECURSO (28/10/2026).
+
+   Sem ficha e sem linha de roadmap, a frente caía em "Outras entregas" — e pra
+   quem ainda não escreveu nada, isso era o relatório inteiro num bloco só: a
+   Isadora tinha onze frentes de outubro empilhadas ali. O épico já vinha no
+   pacote e ninguém o usava.
+
+   Fora do roadmap SEMPRE: a capa diz "Projetos do roadmap contemplados" e o
+   leitor confere contra as barras. Seção nascida de épico não tem barra lá. */
+test('sem roadmap e sem ficha, a seção vem do épico — fora do roadmap', () => {
   const auto = C.automaticosDoMaterial(MATERIAL, RESUMOS);
   for (const rm of [undefined, [], 'lixo', [{ titulo: 'X', inicio: '2026-10-01', fim: '2026-10-31' }]]) {
-    assert.ok(V2.comAutomaticos([], auto, rm).every((c) => c.iniciativa === undefined));
+    const todos = V2.comAutomaticos([], auto, rm);
+    assert.ok(todos.every((c) => c.iniciativa === 'Loja Clube USA'), 'roadmap: ' + JSON.stringify(rm));
+    assert.ok(todos.every((c) => c.foraDoRoadmap === true));
   }
+});
+
+test('frente sem épico continua em "Outras entregas"', () => {
+  /* É o propósito do grupo órfão, e ele volta a guardar só isso. Nome inventado
+     seria pior que grupo sem nome. */
+  const auto = [{ feature: { id: 300, nome: 'Solta' }, epico: null, fechada: true,
+    itens: [{ id: 1, titulo: 'x', resumo: '' }] }];
+  const cartao = V2.comAutomaticos([], auto, [])[0];
+  assert.equal(cartao.iniciativa, undefined);
+  assert.equal(cartao.foraDoRoadmap, undefined);
 });
 
 test('a mesma Feature em duas linhas do roadmap fica na primeira', () => {
@@ -352,4 +377,25 @@ test('o pacote leva os automáticos ao leitor, saneados nas duas pontas', () => 
   // Pela ida e volta em JSON, que é como o pacote sai: chave `undefined` some.
   assert.deepEqual(Object.keys(JSON.parse(JSON.stringify(pacote))).filter((k) => k.startsWith('_')), []);
   assert.doesNotMatch(JSON.stringify(pacote), /TEXTO INTERNO/);
+});
+
+test('a Feature que é o próprio épico não vira seção com o nome dela', () => {
+  /* Quando o item não tem épico acima, o pacote devolve a própria Feature nesse
+     campo. A seção nascia com o nome do cartão que está dentro dela — e com
+     etiqueta de board: "[EUA] Identificação da parceira no pedido" sobre um
+     cartão de mesmo nome. Seção que repete o cartão não agrupa nada. */
+  const auto = [{ feature: { id: 51944, nome: '[EUA] Identificação da parceira' },
+    epico: { id: 51944, nome: '[EUA] Identificação da parceira' }, fechada: true,
+    itens: [{ id: 1, titulo: 'x', resumo: '' }] }];
+  const cartao = V2.comAutomaticos([], auto, [])[0];
+  assert.equal(cartao.iniciativa, undefined, 'devia cair em "Outras entregas"');
+});
+
+test('a etiqueta de board sai do nome da seção', () => {
+  /* "[EUA]" e afins são organização interna do board; o leitor já sabe de que
+     loja é o relatório. O nome do cartão já passava por isso. */
+  const auto = [{ feature: { id: 300, nome: 'Frente' },
+    epico: { id: 9, nome: '[BRA] Ecommerce Brasil' }, fechada: true,
+    itens: [{ id: 1, titulo: 'x', resumo: '' }] }];
+  assert.equal(V2.comAutomaticos([], auto, [])[0].iniciativa, 'Ecommerce Brasil');
 });

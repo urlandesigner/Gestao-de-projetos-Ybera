@@ -693,8 +693,38 @@
          como era antes de a ficha existir. */
       const ficha = fichas[String(fr.feature.id)] || null;
       if (ficha && ficha.porItem) { novos.push.apply(novos, cartoesPorItem(fr, ficha)); continue; }
-      const cartao = cartaoAutomatico(fr, (ficha && ficha.iniciativa) || porFeature.get(Number(fr.feature.id)));
-      if (ficha && ficha.foraDoRoadmap) cartao.foraDoRoadmap = true;
+      const declarada = (ficha && ficha.iniciativa) || porFeature.get(Number(fr.feature.id)) || '';
+      /* O ÉPICO COMO ÚLTIMO RECURSO (28/10/2026).
+
+         Sem ficha e sem linha de roadmap, a frente caía em "Outras entregas" —
+         e para quem ainda não escreveu nada, isso é o relatório inteiro num
+         bloco só. A Isadora tinha onze frentes de outubro empilhadas ali.
+
+         O épico já vem no pacote e ninguém o usava. Ele agrupa em "Loja Interna
+         BR", "Ecommerce Brasil", "Middleware Ybera" — nomes que o time escreveu
+         no board e que dizem mais que "Outras entregas". "Outras entregas" volta
+         a guardar o que ele deveria: o que não tem épico nenhum.
+
+         FORA DO ROADMAP, sempre: épico é organização do board, não promessa de
+         projeto. A capa diz "Projetos do roadmap contemplados" e isso se confere
+         contra as barras — uma seção nascida de épico não tem barra lá, e contar
+         faria a capa afirmar projeto que o leitor não acha.
+
+         ÚLTIMO e não primeiro: a ficha e a linha de roadmap ganham dele. É o que
+         faz a ficha virar exceção em vez de obrigação — quem quiser nomear uma
+         seção continua podendo, e quem não quiser já tem um nome. */
+      /* ÉPICO DE VERDADE, e não a Feature se repetindo. Quando o item não tem
+         épico acima dele, o pacote devolve a própria Feature nesse campo — e aí
+         a seção nascia com o nome do cartão que está dentro dela, com etiqueta
+         de board e tudo: "[EUA] Identificação da parceira no pedido" sobre um
+         cartão de mesmo nome. Seção que repete o cartão não agrupa nada.
+
+         Sem épico de verdade, "Outras entregas" é a resposta honesta. */
+      const epicoReal = (fr.epico && fr.epico.nome && Number(fr.epico.id) !== Number(fr.feature.id))
+        ? semEtiqueta(fr.epico.nome) : '';
+      const doEpico = declarada ? '' : epicoReal;
+      const cartao = cartaoAutomatico(fr, declarada || doEpico);
+      if ((ficha && ficha.foraDoRoadmap) || doEpico) cartao.foraDoRoadmap = true;
       novos.push(cartao);
     }
     return adotados.concat(novos);
